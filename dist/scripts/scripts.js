@@ -12240,7 +12240,7 @@ var a, b;
 _.each(l.serviceInstances, function(c) {
 var d = "True" === _.get(m(c, "Ready"), "status");
 d && (!a || c.metadata.creationTimestamp > a.metadata.creationTimestamp) && (a = c), d || b && !(c.metadata.creationTimestamp > b.metadata.creationTimestamp) || (b = c);
-}), l.serviceToBind = _.get(a, "metadata.name") || _.get(b, "metadata.name");
+}), l.serviceToBind = a || b;
 }, o = function() {
 l.serviceClasses && l.serviceInstances && (l.orderedServiceInstances = _.sortByAll(l.serviceInstances, function(a) {
 return _.get(l.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || a.spec.serviceClassName;
@@ -12317,10 +12317,10 @@ l.serviceClasses = a.by("metadata.name"), "Instance" === l.target.kind && (l.ser
 }, l.$onDestroy = function() {
 e && (e(), e = void 0), f && c.unwatch(f);
 }, l.bindService = function() {
-var a = "Instance" === l.target.kind ? l.target :l.serviceInstances[l.serviceToBind], b = "application" === l.bindType ? l.appToBind :void 0, e = {
+var a = "Instance" === l.target.kind ? l.target :l.serviceToBind, b = "application" === l.bindType ? l.appToBind :void 0, e = {
 namespace:_.get(a, "metadata.namespace")
-};
-d.bindService(e, _.get(a, "metadata.name"), b).then(function(a) {
+}, g = d.getServiceClassForInstance(a, l.serviceClasses);
+d.bindService(a, b, g).then(function(a) {
 l.binding = a, l.error = null, f = c.watchObject(d.bindingResource, _.get(l.binding, "metadata.name"), e, function(a) {
 l.binding = a;
 });
