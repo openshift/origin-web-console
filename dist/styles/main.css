@@ -4752,7 +4752,7 @@ h2+.list-view-pf{margin-top:20px}
 .navbar-pf-alt .system-status-mobile:before{content:'';display:block;position:absolute;top:0;left:-1px;width:1px;background:#050505;height:100%}
 .navbar-flex-btn{position:relative}
 .navbar-flex-btn .navbar-toggle.project-action-btn:before,.navbar-flex-btn+.navbar-flex-btn .add-to-project-btn:before{display:none}
-.navbar-flex-btn .add-to-project-btn{align-items:center;justify-content:center;flex:1 0 0%;font-weight:300}
+.navbar-flex-btn .add-to-project-btn{font-weight:300}
 .navbar-flex-btn .add-to-project-btn:before{background:rgba(255,255,255,.1);content:'';display:block;height:100%;left:0px;position:absolute;top:0;width:1px}
 @media (max-width:767px){.navbar-pf-alt .nav .dropdown-menu:after{right:13px}
 .layout-pf-alt-fixed .navbar-pf-alt{position:absolute}
@@ -4761,7 +4761,9 @@ h2+.list-view-pf{margin-top:20px}
 .navbar-flex-btn{flex:0 0 50px}
 .navbar-flex-btn>a{color:#fff;cursor:pointer;display:flex;font-size:18px}
 .navbar-flex-btn>a:active,.navbar-flex-btn>a:focus,.navbar-flex-btn>a:hover{background-color:#383f47;color:#dbdada}
-.navbar-pf-alt .nav .add-to-project-btn.nav-item-iconic{padding:14px}
+.navbar-pf-alt .nav-item-iconic{align-items:center;flex:1 1 auto;justify-content:center;padding:0!important}
+.navbar-pf-alt .nav-item-iconic.system-status:before{background:rgba(255,255,255,.1);content:'';display:block;height:100%;left:0px;position:absolute;top:0;width:1px}
+.navbar-pf-alt .nav-item-iconic.system-status:hover{background:0 0;text-decoration:none}
 }
 .build-count .icon-count,.build-count .icon-count [data-toggle=tooltip],.notification-icon-count [data-toggle=tooltip]{cursor:help}
 @media (max-width:479px){.navbar-flex-btn{flex:0 0 40px}

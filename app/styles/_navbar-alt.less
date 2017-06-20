@@ -232,20 +232,16 @@
     display: none; // remove inset border
   }
   .add-to-project-btn {
-    align-items: center;
-    justify-content: center;
-    flex: 1 0 0%;
     font-weight: 300;
     &:before {
-        background: @navbar-os-project-menu-border-inset;
-        content: '';
-        display: block;
-        height: 100%;
-        left: 0px;
-        position: absolute;
-        top: 0;
-        width: 1px;
-
+      background: @navbar-os-project-menu-border-inset;
+      content: '';
+      display: block;
+      height: 100%;
+      left: 0px;
+      position: absolute;
+      top: 0;
+      width: 1px;
     }
   }
 }
@@ -282,8 +278,27 @@
       }
     }
   }
-  .navbar-pf-alt .nav .add-to-project-btn.nav-item-iconic {
-    padding: 14px;
+  .navbar-pf-alt .nav-item-iconic {
+    align-items: center;
+    flex: 1 1 auto;
+    justify-content: center;
+    padding: 0 !important;
+    &.system-status{
+      &:before {
+        background: @navbar-os-project-menu-border-inset;
+        content: '';
+        display: block;
+        height: 100%;
+        left: 0px;
+        position: absolute;
+        top: 0;
+        width: 1px;
+      }
+      &:hover {
+        background: transparent;
+        text-decoration: none;
+      }
+    }
   }
 }
 
