@@ -368,8 +368,8 @@ errorNotification:!1
 Q.secrets = a.by("metadata.name");
 });
 }, 300), $a = function() {
-if (Q.bindingsByApplicationUID = {}, Q.applicationsByBinding = {}, !_.isEmpty(Q.bindings)) {
-var a = [ z.deploymentConfigs, z.vanillaReplicationControllers, z.deployments, z.vanillaReplicaSets, z.statefulSets ];
+if (Q.bindingsByApplicationUID = {}, Q.applicationsByBinding = {}, Q.deleteableBindingsByApplicationUID = {}, !_.isEmpty(Q.bindings)) {
+var a = [ z.deployments, z.deploymentConfigs, z.vanillaReplicationControllers, z.vanillaReplicaSets, z.statefulSets ];
 if (!_.some(a, function(a) {
 return !a;
 })) {
@@ -380,11 +380,16 @@ c && (b[a.metadata.name] = new LabelSelector(c));
 }), _.each(a, function(a) {
 _.each(a, function(a) {
 var c = T(a), d = new LabelSelector(_.get(a, "spec.selector"));
-Q.bindingsByApplicationUID[c] = [], _.each(b, function(b, e) {
-b.covers(d) && (Q.bindingsByApplicationUID[c].push(Q.bindings[e]), Q.applicationsByBinding[e] = Q.applicationsByBinding[e] || [], Q.applicationsByBinding[e].push(a));
+Q.bindingsByApplicationUID[c] = [], Q.deleteableBindingsByApplicationUID[c] = [], _.each(b, function(b, e) {
+b.covers(d) && (Q.bindingsByApplicationUID[c].push(Q.bindings[e]), _.get(Q.bindings[e], "metadata.deletionTimestamp") || Q.deleteableBindingsByApplicationUID[c].push(Q.bindings[e]), Q.applicationsByBinding[e] = Q.applicationsByBinding[e] || [], Q.applicationsByBinding[e].push(a));
 });
 });
-});
+}), z.bindingsByInstanceRef = _.reduce(z.bindingsByInstanceRef, function(a, b, c) {
+return a[c] = _.sortBy(b, function(a) {
+var b = _.get(Q.applicationsByBinding, [ a.metadata.name ]), c = _.get(_.first(b), [ "metadata", "name" ]);
+return c || a.metadata.name;
+}), a;
+}, {});
 }
 }
 }, _a = function() {
@@ -8842,7 +8847,7 @@ b.result.then(function() {
 var a = d.kind, b = d.resourceName, e = d.typeDisplayName || c("humanizeKind")(a), h = e + " '" + (d.displayName ? d.displayName :b) + "'", k = "Project" === d.kind ? {} :{
 namespace:d.projectName
 }, l = {};
-d.options.deleteImmediately && (l.gracePeriodSeconds = 0), g["delete"]({
+d.options.deleteImmediately && (l.gracePeriodSeconds = 0), "servicecatalog.k8s.io" === d.group && (l.propagationPolicy = null), g["delete"]({
 resource:f.kindToResource(a),
 group:d.group
 }, b, k, l).then(function() {
@@ -10360,7 +10365,11 @@ return {
 restrict:"A",
 scope:!1,
 link:function(c) {
-c.selectedTab = c.selectedTab || {}, a.tab && (c.selectedTab[a.tab] = !0), c.$watch("selectedTab", function() {
+c.selectedTab = c.selectedTab || {}, c.$watch(function() {
+return a.tab;
+}, function(a) {
+a && (c.selectedTab[a] = !0);
+}), c.$watch("selectedTab", function() {
 var a = _.keys(_.pick(c.selectedTab, function(a) {
 return a;
 }));
@@ -12342,7 +12351,9 @@ var d, e, f = this, g = b("serviceInstanceDisplayName"), h = function() {
 c["delete"]({
 group:"servicecatalog.k8s.io",
 resource:"bindings"
-}, f.selectedBinding.metadata.name, e).then(_.noop, function(a) {
+}, f.selectedBinding.metadata.name, e, {
+propagationPolicy:null
+}).then(_.noop, function(a) {
 f.error = a;
 });
 }, i = function() {
@@ -12372,9 +12383,6 @@ onShow:l
 } ], e = {
 namespace:_.get(f.target, "metadata.namespace")
 };
-}, f.firstAppForBindingName = function(a) {
-var b = a && _.sortBy(f.appsForBinding(a.metadata.name), "metadata.name");
-return _.get(_.first(b), [ "metadata", "name" ]);
 }, f.appsForBinding = function(a) {
 return _.get(f.applicationsByBinding, a);
 }, f.closeWizard = function() {
@@ -13092,6 +13100,8 @@ return _.get(g, [ "state", "serviceClasses", a, "description" ]);
 };
 g.$doCheck = function() {
 g.notifications = e.getNotifications(g.apiObject, g.state), g.displayName = i(g.apiObject, g.serviceClasses), g.description = j();
+}, g.$onChanges = function(a) {
+a.bindings && (g.deleteableBindings = _.reject(g.bindings, "metadata.deletionTimestamp"));
 }, g.getSecretForBinding = function(a) {
 return a && _.get(g, [ "state", "secrets", a.spec.secretName ]);
 }, g.isBindable = d.isServiceBindable(g.apiObject, g.state.serviceClasses), g.closeOverlayPanel = function() {
@@ -13126,6 +13136,8 @@ group:"servicecatalog.k8s.io",
 resource:"instances"
 }, g.apiObject.metadata.name, {
 namespace:g.apiObject.metadata.namespace
+}, {
+propagationPolicy:null
 }).then(function() {
 f.addNotification({
 type:"success",

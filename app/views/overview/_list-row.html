@@ -21,7 +21,7 @@
   <div ng-if="row.overlay.panelName === 'unbindService'">
     <unbind-service
       target="row.overlay.state.target"
-      bindings="row.bindings"
+      bindings="row.state.deleteableBindingsByApplicationUID[row.overlay.state.target.metadata.uid]"
       on-close="row.closeOverlayPanel"></unbind-service>
   </div>
 </overlay-panel>

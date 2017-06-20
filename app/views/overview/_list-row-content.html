@@ -39,7 +39,7 @@
   <div ng-if="row.apiObject.kind === 'DeploymentConfig'">
     <span class="mar-right-sm">
       <span class="hidden-xs">
-        {{row.apiObject.spec.strategy.type}} deployment
+        {{row.apiObject.spec.strategy.type}} deployment is
         {{row.current | deploymentStatus | lowercase}}&thinsp;<ellipsis-pulser color="dark" size="sm" display="inline" msg=""></ellipsis-pulser>
       </span>
       <!-- Don't show the strategy at phone resolutions to save space. -->
@@ -47,7 +47,9 @@
         <ellipsis-pulser color="dark" size="sm" display="inline" msg="Deploying"></ellipsis-pulser>
       </span>
     </span>
+    <a ng-href="project/{{row.apiObject.metadata.namespace}}/browse/events">View Events</a>
     <span ng-if="'replicationcontrollers' | canI : 'update'">
+      <span class="action-divider">|</span>
       <a href="" ng-click="row.cancelDeployment()" role="button">Cancel</a>
     </span>
   </div>

@@ -182,9 +182,15 @@ angular.module('openshiftConsole')
       scope: false,
       link: function(scope) {
         scope.selectedTab = scope.selectedTab || {};
-        if ($routeParams.tab) {
-          scope.selectedTab[$routeParams.tab] = true;
-        }
+        scope.$watch(function() {
+          return $routeParams.tab;
+        }, function(tab) {
+          if (!tab) {
+            return;
+          }
+
+          scope.selectedTab[tab] = true;
+        });
 
         scope.$watch('selectedTab', function() {
           var selected = _.keys(_.pick(scope.selectedTab, function(active) {return active;}));

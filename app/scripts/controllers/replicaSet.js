@@ -64,7 +64,6 @@ angular.module('openshiftConsole')
     $scope.renderOptions = $scope.renderOptions || {};
     $scope.renderOptions.hideFilterWidget = true;
     $scope.forms = {};
-
     $scope.logOptions = {};
 
     var watches = [];

@@ -1101,6 +1101,7 @@ function OverviewController($scope,
     // - API objects by binding name
     state.bindingsByApplicationUID = {};
     state.applicationsByBinding = {};
+    state.deleteableBindingsByApplicationUID = {};
 
     // If there are no bindings, nothing to do.
     if (_.isEmpty(state.bindings)) {
@@ -1109,9 +1110,9 @@ function OverviewController($scope,
 
     // All objects that can be a target for bindings.
     var objectsByKind = [
+      overview.deployments,
       overview.deploymentConfigs,
       overview.vanillaReplicationControllers,
-      overview.deployments,
       overview.vanillaReplicaSets,
       overview.statefulSets
     ];
@@ -1139,6 +1140,7 @@ function OverviewController($scope,
         // pod preset covers the selector.
         var applicationSelector = new LabelSelector(_.get(apiObject, 'spec.selector'));
         state.bindingsByApplicationUID[applicationUID] = [];
+        state.deleteableBindingsByApplicationUID[applicationUID] = [];
 
         // Look at each pod preset selector to see if it covers this API object selector.
         _.each(podPresetSelectors, function(podPresetSelector, bindingName) {
@@ -1147,12 +1149,24 @@ function OverviewController($scope,
             // the target. We want to show bindings both in the "application"
             // object rows and the service instance rows.
             state.bindingsByApplicationUID[applicationUID].push(state.bindings[bindingName]);
+            if (!_.get(state.bindings[bindingName], 'metadata.deletionTimestamp')) {
+              state.deleteableBindingsByApplicationUID[applicationUID].push(state.bindings[bindingName]);
+            }
             state.applicationsByBinding[bindingName] = state.applicationsByBinding[bindingName] || [];
             state.applicationsByBinding[bindingName].push(apiObject);
           }
         });
       });
     });
+
+    overview.bindingsByInstanceRef = _.reduce(overview.bindingsByInstanceRef, function(result, bindingList, key) {
+      result[key] = _.sortBy(bindingList, function(binding) {
+        var apps =  _.get(state.applicationsByBinding, [binding.metadata.name]);
+        var firstName = _.get(_.first(apps), ['metadata', 'name']);
+        return firstName || binding.metadata.name;
+      });
+      return result;
+    }, {});
   };
 
   // TODO: code duplicated from directives/bindService.js
