@@ -4089,31 +4089,31 @@ controller:!0
 });
 }
 };
-}), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "$rootScope", "AuthService", "Catalog", "Constants", "Navigate", "NotificationsService", "RecentlyViewedServiceItems", "GuidedTourService", "$timeout", "$routeParams", "$location", function(a, b, c, d, e, f, g, h, i, j, k, l) {
-function m() {
-if (o) if (k.startTour) j(function() {
-l.replace(), l.search("startTour", null), a.startGuidedTour();
-}, 500); else if (_.get(n, "auto_launch")) {
+}), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "$rootScope", "AuthService", "Catalog", "Constants", "Navigate", "NotificationsService", "RecentlyViewedServiceItems", "GuidedTourService", "HTMLService", "$timeout", "$routeParams", "$location", function(a, b, c, d, e, f, g, h, i, j, k, l, m) {
+function n() {
+if (p) if (l.startTour) k(function() {
+m.replace(), m.search("startTour", null), a.startGuidedTour();
+}, 500); else if (_.get(o, "auto_launch")) {
 var c = "openshift/viewedHomePage/" + b.user.metadata.name;
-"true" !== localStorage.getItem(c) && j(function() {
-localStorage.setItem(c, "true"), a.startGuidedTour();
+"true" !== localStorage.getItem(c) && k(function() {
+a.startGuidedTour() && localStorage.setItem(c, "true");
 }, 500);
 }
 }
-var n = _.get(e, "GUIDED_TOURS.landing_page_tour"), o = n && n.enabled && n.steps;
+var o = _.get(e, "GUIDED_TOURS.landing_page_tour"), p = o && o.enabled && o.steps;
 a.saasOfferings = e.SAAS_OFFERINGS, a.viewMembership = function(a) {
 f.toProjectMembership(a.metadata.name);
-}, o && (a.startGuidedTour = function() {
-i.startTour(n.steps);
+}, p && (a.startGuidedTour = function() {
+return !j.isWindowBelowBreakpoint(j.WINDOW_SIZE_SM) && (i.startTour(o.steps), !0);
 }), g.clearNotifications();
-var p = function() {
+var q = function() {
 var b = _.get(a, "template.metadata.uid");
 b && h.addItem(b);
 };
 a.templateSelected = function(b) {
 a.template = b;
 }, a.templateDialogClosed = function() {
-p(), a.template = null;
+q(), a.template = null;
 }, c.withUser().then(function() {
 var b = !_.get(e, "ENABLE_TECH_PREVIEW_FEATURE.template_service_broker");
 d.getCatalogItems(b).then(_.spread(function(b, c) {
@@ -4124,12 +4124,12 @@ message:c
 };
 g.addNotification(d);
 }
-a.catalogItems = b, m();
+a.catalogItems = b, n();
 }));
 }), a.$on("$destroy", function() {
-p();
-}), o && a.$on("$locationChangeStart", function(b) {
-l.search().startTour && (a.startGuidedTour(), b.preventDefault());
+q();
+}), p && a.$on("$locationChangeStart", function(b) {
+m.search().startTour && (a.startGuidedTour(), b.preventDefault());
 });
 } ]), angular.module("openshiftConsole").controller("ProjectsController", [ "$scope", "$filter", "$location", "$route", "$timeout", "AuthService", "DataService", "KeywordService", "Logger", "ProjectsService", function(a, b, c, d, e, f, g, h, i, j) {
 var k, l, m = [], n = [];
