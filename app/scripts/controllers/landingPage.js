@@ -11,6 +11,7 @@ angular.module('openshiftConsole')
                        NotificationsService,
                        RecentlyViewedServiceItems,
                        GuidedTourService,
+                       HTMLService,
                        $timeout,
                        $routeParams,
                        $location) {
@@ -25,7 +26,12 @@ angular.module('openshiftConsole')
 
     if (tourEnabled) {
       $scope.startGuidedTour = function () {
+        if (HTMLService.isWindowBelowBreakpoint(HTMLService.WINDOW_SIZE_SM)) {
+          return false;
+        }
+
         GuidedTourService.startTour(tourConfig.steps);
+        return true;
       };
     }
 
@@ -86,8 +92,9 @@ angular.module('openshiftConsole')
         var viewedHomePageKey = "openshift/viewedHomePage/" + $rootScope.user.metadata.name;
         if (localStorage.getItem(viewedHomePageKey) !== 'true') {
           $timeout(function() {
-            localStorage.setItem(viewedHomePageKey, 'true');
-            $scope.startGuidedTour();
+            if ($scope.startGuidedTour()) {
+              localStorage.setItem(viewedHomePageKey, 'true');
+            }
           }, 500);
         }
       }
