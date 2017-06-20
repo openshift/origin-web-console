@@ -10360,7 +10360,11 @@ return {
 restrict:"A",
 scope:!1,
 link:function(c) {
-c.selectedTab = c.selectedTab || {}, a.tab && (c.selectedTab[a.tab] = !0), c.$watch("selectedTab", function() {
+c.selectedTab = c.selectedTab || {}, c.$watch(function() {
+return a.tab;
+}, function(a) {
+a && (c.selectedTab[a] = !0);
+}), c.$watch("selectedTab", function() {
 var a = _.keys(_.pick(c.selectedTab, function(a) {
 return a;
 }));
