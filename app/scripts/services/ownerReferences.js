@@ -6,8 +6,15 @@ angular.module("openshiftConsole")
       return _.get(apiObject, 'metadata.ownerReferences');
     };
 
+    // Find the owners of an API object.
+    var getControllerReferences = function(apiObject) {
+      var ownerReferences = getOwnerReferences(apiObject);
+      return _.filter(ownerReferences, 'controller');
+    };
+
     return {
       getOwnerReferences: getOwnerReferences,
+      getControllerReferences: getControllerReferences,
 
       groupByControllerUID: function(apiObjects) {
         var objectsByControllerUID = {};

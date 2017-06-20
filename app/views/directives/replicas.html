@@ -29,11 +29,11 @@
        ng-attr-aria-disabled="{{form.scaling.$invalid ? 'true' : undefined}}"
        ng-click="scale()"
        role="button">
-      <i class="icon icon-ok" style="margin-left: 5px;"></i>
+      <i class="fa fa-check" style="margin-left: 5px;"></i>
       <span class="sr-only">Scale</span>
     </a>
     <a href="" title="Cancel" class="action-button" ng-click="cancel()" role="button">
-      <i class="icon icon-remove" style="margin-left: 5px;"></i>
+      <i class="fa fa-times" style="margin-left: 5px;"></i>
       <span class="sr-only">Cancel</span>
     </a>
     <div ng-if="form.scaling.$invalid" class="has-error">
