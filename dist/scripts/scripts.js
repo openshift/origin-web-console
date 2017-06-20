@@ -8842,7 +8842,7 @@ b.result.then(function() {
 var a = d.kind, b = d.resourceName, e = d.typeDisplayName || c("humanizeKind")(a), h = e + " '" + (d.displayName ? d.displayName :b) + "'", k = "Project" === d.kind ? {} :{
 namespace:d.projectName
 }, l = {};
-d.options.deleteImmediately && (l.gracePeriodSeconds = 0), g["delete"]({
+d.options.deleteImmediately && (l.gracePeriodSeconds = 0), "servicecatalog.k8s.io" === d.group && (l.propagationPolicy = null), g["delete"]({
 resource:f.kindToResource(a),
 group:d.group
 }, b, k, l).then(function() {
@@ -12342,7 +12342,9 @@ var d, e, f = this, g = b("serviceInstanceDisplayName"), h = function() {
 c["delete"]({
 group:"servicecatalog.k8s.io",
 resource:"bindings"
-}, f.selectedBinding.metadata.name, e).then(_.noop, function(a) {
+}, f.selectedBinding.metadata.name, e, {
+propagationPolicy:null
+}).then(_.noop, function(a) {
 f.error = a;
 });
 }, i = function() {
@@ -13126,6 +13128,8 @@ group:"servicecatalog.k8s.io",
 resource:"instances"
 }, g.apiObject.metadata.name, {
 namespace:g.apiObject.metadata.namespace
+}, {
+propagationPolicy:null
 }).then(function() {
 f.addNotification({
 type:"success",

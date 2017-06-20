@@ -92,7 +92,8 @@
           resource: 'instances'
         },
         row.apiObject.metadata.name,
-        { namespace: row.apiObject.metadata.namespace })
+        { namespace: row.apiObject.metadata.namespace },
+        { propagationPolicy: null }) // TODO - remove once this is resolved https://github.com/kubernetes-incubator/service-catalog/issues/942
         .then(function() {
           NotificationsService.addNotification({
             type: "success",

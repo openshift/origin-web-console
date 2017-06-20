@@ -29,7 +29,11 @@
       DataService.delete({
         group: 'servicecatalog.k8s.io',
         resource: 'bindings'
-      }, ctrl.selectedBinding.metadata.name, context).then(_.noop, function(err) {
+      },
+      ctrl.selectedBinding.metadata.name,
+      context,
+      { propagationPolicy: null })
+      .then(_.noop, function(err) {
         ctrl.error = err;
       });
     };

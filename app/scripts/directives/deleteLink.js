@@ -147,6 +147,11 @@ angular.module("openshiftConsole")
               deleteOptions.gracePeriodSeconds = 0;
             }
 
+            // TODO - remove once this is resolved https://github.com/kubernetes-incubator/service-catalog/issues/942
+            if (scope.group === 'servicecatalog.k8s.io') {
+              deleteOptions.propagationPolicy = null;
+            }
+
             DataService.delete({
               resource: APIService.kindToResource(kind),
               // group or undefined
