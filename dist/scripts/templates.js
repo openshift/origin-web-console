@@ -11753,7 +11753,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ellipsis-pulser color=\"dark\" size=\"sm\" display=\"inline\" msg=\"Deploying\"></ellipsis-pulser>\n" +
     "</span>\n" +
     "</span>\n" +
+    "<a ng-href=\"project/{{row.apiObject.metadata.namespace}}/browse/events\">View Events</a>\n" +
     "<span ng-if=\"'replicationcontrollers' | canI : 'update'\">\n" +
+    "<span class=\"action-divider\">|</span>\n" +
     "<a href=\"\" ng-click=\"row.cancelDeployment()\" role=\"button\">Cancel</a>\n" +
     "</span>\n" +
     "</div>\n" +
