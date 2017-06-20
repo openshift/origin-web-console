@@ -1163,7 +1163,7 @@ function OverviewController($scope,
       result[key] = _.sortBy(bindingList, function(binding) {
         var apps =  _.get(state.applicationsByBinding, [binding.metadata.name]);
         var firstName = _.get(_.first(apps), ['metadata', 'name']);
-        return firstName;
+        return firstName || binding.metadata.name;
       });
       return result;
     }, {});

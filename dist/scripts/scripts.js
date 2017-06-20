@@ -387,7 +387,7 @@ b.covers(d) && (Q.bindingsByApplicationUID[c].push(Q.bindings[e]), _.get(Q.bindi
 }), z.bindingsByInstanceRef = _.reduce(z.bindingsByInstanceRef, function(a, b, c) {
 return a[c] = _.sortBy(b, function(a) {
 var b = _.get(Q.applicationsByBinding, [ a.metadata.name ]), c = _.get(_.first(b), [ "metadata", "name" ]);
-return c;
+return c || a.metadata.name;
 }), a;
 }, {});
 }
