@@ -43,6 +43,12 @@
       row.description = getDescription();
     };
 
+    row.$onChanges = function(changes) {
+      if (changes.bindings) {
+        row.deleteableBindings = _.reject(row.bindings, 'metadata.deletionTimestamp');
+      }
+    };
+
     row.getSecretForBinding = function(binding) {
       return binding && _.get(row, ['state', 'secrets', binding.spec.secretName]);
     };

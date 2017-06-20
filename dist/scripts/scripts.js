@@ -368,7 +368,7 @@ errorNotification:!1
 Q.secrets = a.by("metadata.name");
 });
 }, 300), $a = function() {
-if (Q.bindingsByApplicationUID = {}, Q.applicationsByBinding = {}, !_.isEmpty(Q.bindings)) {
+if (Q.bindingsByApplicationUID = {}, Q.applicationsByBinding = {}, Q.deleteableBindingsByApplicationUID = {}, !_.isEmpty(Q.bindings)) {
 var a = [ z.deploymentConfigs, z.vanillaReplicationControllers, z.deployments, z.vanillaReplicaSets, z.statefulSets ];
 if (!_.some(a, function(a) {
 return !a;
@@ -380,8 +380,8 @@ c && (b[a.metadata.name] = new LabelSelector(c));
 }), _.each(a, function(a) {
 _.each(a, function(a) {
 var c = T(a), d = new LabelSelector(_.get(a, "spec.selector"));
-Q.bindingsByApplicationUID[c] = [], _.each(b, function(b, e) {
-b.covers(d) && (Q.bindingsByApplicationUID[c].push(Q.bindings[e]), Q.applicationsByBinding[e] = Q.applicationsByBinding[e] || [], Q.applicationsByBinding[e].push(a));
+Q.bindingsByApplicationUID[c] = [], Q.deleteableBindingsByApplicationUID[c] = [], _.each(b, function(b, e) {
+b.covers(d) && (Q.bindingsByApplicationUID[c].push(Q.bindings[e]), _.get(Q.bindings[e], "metadata.deletionTimestamp") || Q.deleteableBindingsByApplicationUID[c].push(Q.bindings[e]), Q.applicationsByBinding[e] = Q.applicationsByBinding[e] || [], Q.applicationsByBinding[e].push(a));
 });
 });
 });
@@ -13094,6 +13094,8 @@ return _.get(g, [ "state", "serviceClasses", a, "description" ]);
 };
 g.$doCheck = function() {
 g.notifications = e.getNotifications(g.apiObject, g.state), g.displayName = i(g.apiObject, g.serviceClasses), g.description = j();
+}, g.$onChanges = function(a) {
+a.bindings && (g.deleteableBindings = _.reject(g.bindings, "metadata.deletionTimestamp"));
 }, g.getSecretForBinding = function(a) {
 return a && _.get(g, [ "state", "secrets", a.spec.secretName ]);
 }, g.isBindable = d.isServiceBindable(g.apiObject, g.state.serviceClasses), g.closeOverlayPanel = function() {
