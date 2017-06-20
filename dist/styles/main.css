@@ -4303,6 +4303,7 @@ code.command{display:inline-block;line-height:1.3;margin-right:2px}
 .pod-donut .c3-tooltip-name--Empty .name{display:none}
 .donut-mini-text{display:inline-block;min-width:50px}
 .deployment-donut{justify-content:center}
+.browse-deployment-donut .deployment-donut{align-items:center}
 .deployment-donut .scaling-controls{justify-content:center;font-size:24px}
 .deployment-donut .scaling-controls a{color:#bbb}
 .deployment-donut .scaling-controls a:active,.deployment-donut .scaling-controls a:hover{color:#72767b;text-decoration:none}
@@ -4310,7 +4311,6 @@ code.command{display:inline-block;line-height:1.3;margin-right:2px}
 .deployment-donut .scaling-controls a.disabled:hover{color:#bbb}
 .deployment-donut .scaling-details{font-size:84%;color:#9c9c9c;text-align:center;align-items:center;margin-top:-5px;margin-bottom:7px}
 .deployment-donut .scaling-details .hpa-warning{cursor:help;margin-left:1px;vertical-align:-1px}
-.browse-deployment-donut .deployment-donut{align-items:center}
 .popover{font-size:13px;line-height:1.66667;min-width:300px;word-wrap:break-word}
 .ng-cloak,.x-ng-cloak,[data-ng-cloak],[ng-cloak],[ng\:cloak],[x-ng-cloak]{display:none!important}
 @media only screen and (max-device-width:736px) and (-webkit-min-device-pixel-ratio:0){.console-os .ace_editor,input[type=text],input[type=url],input[type=number],input[type=search],select,select.form-control,textarea,textarea.form-control{font-size:16px}
@@ -4327,8 +4327,7 @@ body{padding-right:0px!important}
 .surface-shaded .nav-tabs{border-color:rgba(0,0,0,.15)}
 .surface-shaded .ui-select-bootstrap .ui-select-match>.btn{background-color:#fff;background-image:linear-gradient(to bottom,#fff 0%,#fbfbfb 100%)}
 .breadcrumb{font-size:12px;padding-bottom:0}
-@media (min-width:768px){.browse-deployment-donut .deployment-donut{align-items:flex-end}
-.nav-tabs.nav-justified{border-bottom:1px solid #ededed}
+@media (min-width:768px){.nav-tabs.nav-justified{border-bottom:1px solid #ededed}
 }
 .nav-tabs.nav-justified>li:first-child>a{padding-left:15px}
 .nav-tabs>li:first-child>a,.nav-tabs>li>a{padding-left:0}

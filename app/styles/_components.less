@@ -100,6 +100,9 @@ code.command {
 
 .deployment-donut {
   justify-content: center;
+  .browse-deployment-donut & {
+    align-items: center;
+  }
   .scaling-controls {
     justify-content: center;
     font-size: 24px;
@@ -134,13 +137,6 @@ code.command {
       // where we want.
       vertical-align: -1px;
     }
-  }
-}
-
-.browse-deployment-donut .deployment-donut {
-  align-items: center;
-  @media (min-width: @screen-sm-min) {
-    align-items: flex-end;
   }
 }
 
