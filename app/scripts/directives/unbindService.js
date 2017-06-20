@@ -91,12 +91,6 @@
       };
     };
 
-    // TODO: sort bindings by app in overview && eliminate this filter function
-    ctrl.firstAppForBindingName = function(binding) {
-      var sorted = binding && _.sortBy(ctrl.appsForBinding(binding.metadata.name), 'metadata.name');
-      return _.get(_.first(sorted), ['metadata', 'name']);
-    };
-
     ctrl.appsForBinding = function(bindingName) {
       return _.get(ctrl.applicationsByBinding, bindingName);
     };

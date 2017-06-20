@@ -1110,9 +1110,9 @@ function OverviewController($scope,
 
     // All objects that can be a target for bindings.
     var objectsByKind = [
+      overview.deployments,
       overview.deploymentConfigs,
       overview.vanillaReplicationControllers,
-      overview.deployments,
       overview.vanillaReplicaSets,
       overview.statefulSets
     ];
@@ -1158,6 +1158,15 @@ function OverviewController($scope,
         });
       });
     });
+
+    overview.bindingsByInstanceRef = _.reduce(overview.bindingsByInstanceRef, function(result, bindingList, key) {
+      result[key] = _.sortBy(bindingList, function(binding) {
+        var apps =  _.get(state.applicationsByBinding, [binding.metadata.name]);
+        var firstName = _.get(_.first(apps), ['metadata', 'name']);
+        return firstName || binding.metadata.name;
+      });
+      return result;
+    }, {});
   };
 
   // TODO: code duplicated from directives/bindService.js
