@@ -44991,7 +44991,7 @@ imagestream:"="
 },
 templateUrl:"registry-image-widgets/views/imagestream-meta.html"
 };
-} ]).directive("registryImagestreamListing", [ "imagestreamTags", "$location", function(a, b) {
+} ]).directive("registryImagestreamListing", [ "imagestreamTags", "imagestreamTagFromName", "$location", function(a, b, c) {
 return {
 restrict:"E",
 scope:{
@@ -44999,21 +44999,21 @@ imagestream:"=",
 imagestreamFunc:"&imagestreamPath"
 },
 templateUrl:"registry-image-widgets/views/imagestream-listing.html",
-link:function(c, d, e) {
-function f(a, b) {
+link:function(d, e, f) {
+function g(a, b) {
 var c = a.metadata.namespace + "/" + a.metadata.name;
 return b && (c += "/" + b.name), c;
 }
-c.imagestreamTags = a, c.imagestreamPath = c.imagestreamFunc(), c.imagestreamActivate = function(a, d, e) {
+d.imagestreamTags = a, d.imagestreamPath = d.imagestreamFunc(), d.imagestreamTagFromName = b, d.imagestreamActivate = function(a, b, e) {
 var f;
-c.imagestreamExpanded(a, d) ? c.imagestreamToggle(a, d, e) :(f = c.$emit("activate", a, d, e), !f.defaultPrevented && c.imagestreamPath && b.path(c.imagestreamPath(a, d))), e.preventDefault();
+d.imagestreamExpanded(a, b) ? d.imagestreamToggle(a, b, e) :(f = d.$emit("activate", a, b, e), !f.defaultPrevented && d.imagestreamPath && c.path(d.imagestreamPath(a, b))), e.preventDefault();
 };
-var g = {};
-c.imagestreamExpanded = function(a, b) {
-return f(a, b) in g;
-}, c.imagestreamToggle = function(a, b, c) {
-var d = f(a, b);
-d in g ? delete g[d] :g[d] = !0, c.stopPropagation();
+var h = {};
+d.imagestreamExpanded = function(a, b) {
+return g(a, b) in h;
+}, d.imagestreamToggle = function(a, b, c) {
+var d = g(a, b);
+d in h ? delete h[d] :h[d] = !0, c.stopPropagation();
 };
 }
 };
@@ -45071,9 +45071,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<dt ng-if="annotations" translate>Annotations</dt>\n<dd ng-repeat="(name, value) in annotations">{{name}}: {{value}}</dd>\n', g = "registry-image-widgets/views/annotations.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<dt ng-if="annotations" translate>Annotations</dt> <dd ng-repeat="(name, value) in annotations">{{name}}: {{value}}</dd>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/annotations.html", f);
 } ]), a.exports = f;
 }, function(a, b) {
 var c, d = window.angular;
@@ -45082,9 +45082,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<dl class="dl-horizontal left">\n<dt ng-if="labels.name" translate>Name</dt>\n<dd ng-if="labels.name">{{ labels.name }}</dd>\n<dt ng-if="labels.summary" translate>Summary</dt>\n<dd ng-if="labels.summary">{{ labels.summary }}</dd>\n<dt ng-if="labels.description" translate>Description</dt>\n<dd ng-if="labels.description">{{ labels.description }}</dd>\n<dt ng-if="labels.url" translate>Source URL</dt>\n<dd ng-if="labels.url">\n<a href="labels.url"><i class="fa fa-external-link"></i> {{ labels.url }}</a>\n</dd>\n<dt translate>Author</dt>\n<dd ng-if="config.author">{{config.author}}</dd>\n<dd ng-if="!config.author && image.dockerImageMetadata.Author">{{image.dockerImageMetadata.Author}}</dd>\n<dd ng-if="!config.author && !image.dockerImageMetadata.Author"><em translate>Unknown</em></dd>\n<dt ng-if="labels[\'build-date\'] || layers[0].v1Compatibility.created || image.dockerImageMetadata.Created" translate>Built</dt>\n<dd ng-if="labels[\'build-date\']" title="{{labels[\'build-date\']}}">{{ labels[\'build-date\'] | dateRelative}}</dd>\n<dd ng-if="!labels[\'build-date\'] && layers[0].v1Compatibility.created" title="{{layers[0].v1Compatibility.created}}">{{ layers[0].v1Compatibility.created | dateRelative}}</dd>\n<dd ng-if="!labels[\'build-date\'] && !layers[0].v1Compatibility.created && image.dockerImageMetadata.Created" title="{{image.dockerImageMetadata.Created}}">{{image.dockerImageMetadata.Created | dateRelative}}</dd>\n<dt translate>Digest</dt>\n<dd class="indentifier"><tt>{{ image.metadata.name }}</tt></dd>\n<dt ng-if-start="config.Image" translate>Identifier</dt>\n<dd class="indentifier" ng-if-end><tt>{{ config.Image }}</tt></dd>\n</dl>\n<dl class="registry-image-tags" ng-if="names">\n<dt translate>Tags</dt>\n<dd><span class="registry-image-tag" ng-repeat="name in names">{{name}}</span></dd>\n</dl>\n', g = "registry-image-widgets/views/image-body.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<dl class="dl-horizontal left"> <dt ng-if="labels.name" translate>Name</dt> <dd ng-if="labels.name">{{ labels.name }}</dd> <dt ng-if="labels.summary" translate>Summary</dt> <dd ng-if="labels.summary">{{ labels.summary }}</dd> <dt ng-if="labels.description" translate>Description</dt> <dd ng-if="labels.description">{{ labels.description }}</dd> <dt ng-if="labels.url" translate>Source URL</dt> <dd ng-if="labels.url"> <a href="labels.url"><i class="fa fa-external-link"></i> {{ labels.url }}</a> </dd> <dt translate>Author</dt> <dd ng-if="config.author">{{config.author}}</dd> <dd ng-if="!config.author && image.dockerImageMetadata.Author">{{image.dockerImageMetadata.Author}}</dd> <dd ng-if="!config.author && !image.dockerImageMetadata.Author"><em translate>Unknown</em></dd> <dt ng-if="labels[\'build-date\'] || layers[0].v1Compatibility.created || image.dockerImageMetadata.Created" translate>Built</dt> <dd ng-if="labels[\'build-date\']" title="{{labels[\'build-date\']}}">{{ labels[\'build-date\'] | dateRelative}}</dd> <dd ng-if="!labels[\'build-date\'] && layers[0].v1Compatibility.created" title="{{layers[0].v1Compatibility.created}}">{{ layers[0].v1Compatibility.created | dateRelative}}</dd> <dd ng-if="!labels[\'build-date\'] && !layers[0].v1Compatibility.created && image.dockerImageMetadata.Created" title="{{image.dockerImageMetadata.Created}}">{{image.dockerImageMetadata.Created | dateRelative}}</dd> <dt translate>Digest</dt> <dd class="indentifier"><tt>{{ image.metadata.name }}</tt></dd> <dt ng-if-start="config.Image" translate>Identifier</dt> <dd class="indentifier" ng-if-end><tt>{{ config.Image }}</tt></dd> </dl> <dl class="registry-image-tags" ng-if="names"> <dt translate>Tags</dt> <dd><span class="registry-image-tag" ng-repeat="name in names">{{name}}</span></dd> </dl>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/image-body.html", f);
 } ]), a.exports = f;
 }, function(a, b) {
 var c, d = window.angular;
@@ -45093,9 +45093,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<dl class="dl-horizontal">\n<dt translate>Command</dt>\n<dd><code>{{ configCommand(config) }}</code></dd>\n</dl>\n<div class="row">\n<dl class="col-xs-12 col-sm-12 col-md-4 dl-horizontal">\n<dt translate>Run as</dt>\n<dd ng-if="config.User">{{config.User}}</dd>\n<dd ng-if="!config.User"><em translate>Default</em></dd>\n<dt translate>Directory</dt>\n<dd ng-if="config.WorkingDir">{{config.WorkingDir}}</dd>\n<dd ng-if="!config.WorkingDir">/</dd>\n<dt ng-if="config.StopSignal" translate>Stop with</dt>\n<dd ng-if="config.StopSignal">{{config.StopSignal}}</dd>\n<dt translate>Architecture</dt>\n<dd ng-if="config.architecture">{{config.architecture}}</dd>\n<dd ng-if="!config.architecture">{{image.dockerImageMetadata.Architecture}}</dd>\n</dl>\n<dl class="col-xs-12 col-sm-12 col-md-8 dl-horizontal full-width">\n<dt ng-if="config.Env.length" translate>Environment</dt>\n<dd ng-repeat="env in config.Env"><tt>{{env}}</tt></dd>\n</dl>\n</div>\n<div class="row">\n<dl class="col-xs-12 col-sm-12 col-md-4 dl-horizontal">\n<dt translate>Ports</dt>\n<dd ng-repeat="(port, data) in config.ExposedPorts">{{port}}</dd>\n<dd ng-if="!config.ExposedPorts"><em translate>None</em></dd>\n</dl>\n<dl class="col-xs-12 col-sm-12 col-md-8 dl-horizontal full-width">\n<dt ng-if="config.Volumes" translate>Volumes</dt>\n<dd ng-repeat="(volume, data) in config.Volumes">{{volume}}</dd>\n</dl>\n</div>\n', g = "registry-image-widgets/views/image-config.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<dl class="dl-horizontal"> <dt translate>Command</dt> <dd><code>{{ configCommand(config) }}</code></dd> </dl> <div class="row"> <dl class="col-xs-12 col-sm-12 col-md-4 dl-horizontal"> <dt translate>Run as</dt> <dd ng-if="config.User">{{config.User}}</dd> <dd ng-if="!config.User"><em translate>Default</em></dd> <dt translate>Directory</dt> <dd ng-if="config.WorkingDir">{{config.WorkingDir}}</dd> <dd ng-if="!config.WorkingDir">/</dd> <dt ng-if="config.StopSignal" translate>Stop with</dt> <dd ng-if="config.StopSignal">{{config.StopSignal}}</dd> <dt translate>Architecture</dt> <dd ng-if="config.architecture">{{config.architecture}}</dd> <dd ng-if="!config.architecture">{{image.dockerImageMetadata.Architecture}}</dd> </dl> <dl class="col-xs-12 col-sm-12 col-md-8 dl-horizontal full-width"> <dt ng-if="config.Env.length" translate>Environment</dt> <dd ng-repeat="env in config.Env"><tt>{{env}}</tt></dd> </dl> </div> <div class="row"> <dl class="col-xs-12 col-sm-12 col-md-4 dl-horizontal"> <dt translate>Ports</dt> <dd ng-repeat="(port, data) in config.ExposedPorts">{{port}}</dd> <dd ng-if="!config.ExposedPorts"><em translate>None</em></dd> </dl> <dl class="col-xs-12 col-sm-12 col-md-8 dl-horizontal full-width"> <dt ng-if="config.Volumes" translate>Volumes</dt> <dd ng-repeat="(volume, data) in config.Volumes">{{volume}}</dd> </dl> </div>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/image-config.html", f);
 } ]), a.exports = f;
 }, function(a, b) {
 var c, d = window.angular;
@@ -45104,9 +45104,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<ul class="registry-image-layers">\n<li ng-repeat="layer in layers" class="hint-{{ layer.hint }}">\n<span title="{{ layer.size }}">{{ formatSize(layer.size) }}</span>\n<p>{{ layer.label}}</p>\n</li>\n</ul>\n', g = "registry-image-widgets/views/image-layers.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<ul class="registry-image-layers"> <li ng-repeat="layer in layers" class="hint-{{ layer.hint }}"> <span title="{{ layer.size }}">{{ formatSize(layer.size) }}</span> <p>{{ layer.label}}</p> </li> </ul>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/image-layers.html", f);
 } ]), a.exports = f;
 }, function(a, b) {
 var c, d = window.angular;
@@ -45115,9 +45115,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<div>\n<dl class="dl-horizontal left">\n<dt ng-if="labels" translate>Labels</dt>\n<dd ng-repeat="(name, value) in labels" ng-show="name != \'description\' && name != \'name\'">\n<tt>{{name}}={{value}}</tt>\n</dd>\n<dt ng-if="config.OnBuild.length" translate>On Build</dt>\n<dd ng-repeat="line in config.OnBuild"><tt>{{line}}</tt></dd>\n<registry-annotations annotations="image.metadata.annotations"></registry-annotations>\n<dt translate>Docker Version</dt>\n<dd>{{image.dockerImageMetadata.DockerVersion}}</dd>\n</dl>\n</div>\n', g = "registry-image-widgets/views/image-meta.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<div> <dl class="dl-horizontal left"> <dt ng-if="labels" translate>Labels</dt> <dd ng-repeat="(name, value) in labels" ng-show="name != \'description\' && name != \'name\'"> <tt>{{name}}={{value}}</tt> </dd> <dt ng-if="config.OnBuild.length" translate>On Build</dt> <dd ng-repeat="line in config.OnBuild"><tt>{{line}}</tt></dd> <registry-annotations annotations="image.metadata.annotations"></registry-annotations> <dt translate>Docker Version</dt> <dd>{{image.dockerImageMetadata.DockerVersion}}</dd> </dl> </div>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/image-meta.html", f);
 } ]), a.exports = f;
 }, function(a, b) {
 var c, d = window.angular;
@@ -45126,9 +45126,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<div ng-if="names" class="registry-image-pull">\n<p>\n<i class="fa fa-info-circle"></i>\n<span translate>To pull this image:</span>\n</p>\n<code ng-if="!settings.registry.host">$ sudo docker pull <span class="placeholder">registry</span>/{{names[0]}}</code>\n<code ng-if="settings.registry.host">$ sudo docker pull <span>{{settings.registry.host}}</span>/{{names[0]}}</code>\n</div>\n', g = "registry-image-widgets/views/image-pull.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<div ng-if="names" class="registry-image-pull"> <p> <i class="fa fa-info-circle"></i>\n<span translate>To pull this image:</span> </p> <code ng-if="!settings.registry.host">$ sudo docker pull <span class="placeholder">registry</span>/{{names[0]}}</code>\n<code ng-if="settings.registry.host">$ sudo docker pull <span>{{settings.registry.host}}</span>/{{names[0]}}</code> </div>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/image-pull.html", f);
 } ]), a.exports = f;
 }, function(a, b) {
 var c, d = window.angular;
@@ -45137,9 +45137,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<div ng-repeat="statustags in imagestream.status.tags">\n<div ng-repeat="condition in statustags.conditions" ng-if="condition.type == \'ImportSuccess\' && condition.status == \'False\'" class="alert alert-danger">\n<span class="pficon pficon-error-circle-o"></span>\n<span translate>{{ condition.message }}. Timestamp: {{ condition.lastTransitionTime }} Error count: {{ condition.generation }}</span>\n<a translate ng-if="imagestreamModify" ng-click="imagestreamModify(imagestream)" class="alert-link">Edit image stream</a>\n</div>\n</div>\n<dl class="dl-horizontal left">\n<dt translate ng-if="projectSharing">Access Policy</dt>\n<dd ng-if="projectSharing" ng-switch="projectSharing(imagestream.metadata.namespace)">\n<div ng-switch-when="anonymous">\n<a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Images may be pulled by anonymous users</a>\n<span translate ng-if="!projectModify">Images may be pulled by anonymous users</span>\n<i title="Images accessible to anonymous users" class="fa fa-unlock registry-imagestream-lock"></i>\n</div>\n<div ng-switch-when="shared">\n<a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Images may be pulled by any authenticated user or group</a>\n<span translate ng-if="!projectModify">Images may be pulled by any authenticated user or group</span>\n<i title="Images accessible to authenticated users" class="fa fa-lock registry-imagestream-lock"></i>\n</div>\n<div ng-switch-when="private">\n<a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Images may only be pulled by specific users or groups</a>\n<span translate ng-if="!projectModify">Images may only be pulled by specific users or groups</span>\n<i title="Images only accessible to members" class="fa fa-lock registry-imagestream-lock"></i>\n</div>\n<div ng-switch-default>\n<a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Unknown</a>\n<span translate ng-if="!projectModify">Unknown</span>\n<i title="Unknown or invalid image access policy" class="fa fa-lock registry-imagestream-lock"></i>\n</div>\n</dd>\n<dt translate ng-if-start="imagestream.spec.dockerImageRepository">Follows docker repo</dt>\n<dd ng-if-end><tt>{{imagestream.spec.dockerImageRepository}}</tt></dd>\n<dt>Pulling repository</dt>\n<dd><tt>{{imagestream.status.dockerImageRepository}}</tt></dd>\n<dt translate>Image count</dt>\n<dd ng-if="imagestream.status.tags.length">{{imagestream.status.tags.length}}</dd>\n<dd ng-if="!imagestream.status.tags.length">0</dd>\n</dl>\n', g = "registry-image-widgets/views/imagestream-body.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<div ng-repeat="statustags in imagestream.status.tags"> <div ng-repeat="condition in statustags.conditions" ng-if="condition.type == \'ImportSuccess\' && condition.status == \'False\'" class="alert alert-danger"> <span class="pficon pficon-error-circle-o"></span>\n<span translate>{{ condition.message }}. Timestamp: {{ condition.lastTransitionTime }} Error count: {{ condition.generation }}</span>\n<a translate ng-if="imagestreamModify" ng-click="imagestreamModify(imagestream)" class="alert-link">Edit image stream</a> </div> </div> <dl class="dl-horizontal left"> <dt translate ng-if="projectSharing">Access Policy</dt> <dd ng-if="projectSharing" ng-switch="projectSharing(imagestream.metadata.namespace)"> <div ng-switch-when="anonymous"> <a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Images may be pulled by anonymous users</a>\n<span translate ng-if="!projectModify">Images may be pulled by anonymous users</span>\n<i title="Images accessible to anonymous users" class="fa fa-unlock registry-imagestream-lock"></i> </div> <div ng-switch-when="shared"> <a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Images may be pulled by any authenticated user or group</a>\n<span translate ng-if="!projectModify">Images may be pulled by any authenticated user or group</span>\n<i title="Images accessible to authenticated users" class="fa fa-lock registry-imagestream-lock"></i> </div> <div ng-switch-when="private"> <a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Images may only be pulled by specific users or groups</a>\n<span translate ng-if="!projectModify">Images may only be pulled by specific users or groups</span>\n<i title="Images only accessible to members" class="fa fa-lock registry-imagestream-lock"></i> </div> <div ng-switch-default> <a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Unknown</a>\n<span translate ng-if="!projectModify">Unknown</span>\n<i title="Unknown or invalid image access policy" class="fa fa-lock registry-imagestream-lock"></i> </div> </dd> <dt translate ng-if-start="imagestream.spec.dockerImageRepository">Follows docker repo</dt> <dd ng-if-end><tt>{{imagestream.spec.dockerImageRepository}}</tt></dd> <dt>Pulling repository</dt> <dd><tt>{{imagestream.status.dockerImageRepository}}</tt></dd> <dt translate>Image count</dt> <dd ng-if="imagestream.status.tags.length">{{imagestream.status.tags.length}}</dd> <dd ng-if="!imagestream.status.tags.length">0</dd> </dl>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/imagestream-body.html", f);
 } ]), a.exports = f;
 }, function(a, b) {
 var c, d = window.angular;
@@ -45148,9 +45148,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<table class="listing-ct">\n<thead>\n<tr>\n<th class="listing-ct-toggle"></th>\n<th translate="yes" width="20%">Tag</th>\n<th translate="yes">Identifier</th>\n<th translate="yes">From</th>\n<th translate="yes">Last Updated</th>\n</tr>\n</thead>\n<tbody ng-repeat-start="(link, stream) in (imagestreams || { \'one\': imagestream }) track by link" ng-if="imagestreams" data-id="{{ stream.metadata.namespace + \'/\' + stream.metadata.name }}" class="active" ng-class="{open: imagestreamExpanded(imagestream)}">\n<tr ng-click="imagestreamActivate(imagestream, null, $event)" class="listing-ct-item imagestream-item">\n<td ng-click="imagestreamToggle(imagestream, null, $event)" class="listing-ct-toggle">\n<i class="fa fa-fw"></i>\n</td>\n<th colspan="4">\n{{ stream.metadata.namespace + \'/\' + stream.metadata.name }}\n<div ng-repeat="statustags in stream.status.tags">\n<span ng-repeat="condition in statustags.conditions" ng-if="condition.type == \'ImportSuccess\' &amp;&amp; condition.status == \'False\'" class="pficon pficon-warning-triangle-o"></span>\n</div>\n</th>\n</tr>\n<tr class="listing-ct-panel" ng-if="imagestreamExpanded(imagestream)">\n<td colspan="4">\n<registry-imagestream-panel></registry-imagestream-panel>\n</td>\n</tr>\n</tbody>\n<tbody ng-repeat="tag in imagestreamTags(stream) | orderBy : \'tag.name\'" data-id="{{ stream.metadata.namespace + \'/\' + stream.metadata.name + \':\' + tag.name }}" ng-class="{open: imagestreamExpanded(stream, tag), last: $last, first: $first}">\n<tr ng-click="imagestreamActivate(stream, tag, $event)" class="listing-ct-item registry-listing">\n<td ng-click="imagestreamToggle(stream, tag, $event)" class="listing-ct-toggle">\n<i class="fa fa-fw"></i>\n</td>\n<td>\n<a class="registry-image-tag" ng-href="{{ imagestreamPath(stream, tag) }}" title="{{tag.name }}">{{ tag.name }}</a>\n</td>\n<td class="image-identifier">\n<div class="row" ng-init="annotations = stream.metadata.annotations">\n<div class="col col-xs-12" ng-if="!tag.status">\n<div ng-if="annotations[\'openshift.io/image.dockerRepositoryCheck\']">\n<span class="pficon pficon-warning-triangle-o" style="margin-right: 5px" ng-attr-title="{{annotations[\'openshift.io/image.dockerRepositoryCheck\']}}"></span>\n<span translate="yes">Unable to resolve</span>\n</div>\n<div ng-if="!annotations[\'openshift.io/image.dockerRepositoryCheck\']">\n<span ng-if="!tag.spec.from" translate="yes">Not yet synced</span>\n<span ng-if="tag.spec.from" translate="yes">Unresolved</span>\n</div>\n</div>\n<div class="col col-xs-12" ng-if="tag.status">\n<span ng-if="tag.status.items.length &amp;&amp; tag.status.items[0].image">\n<tt title="{{tag.status.items[0].image}}">{{tag.status.items[0].image}}</tt>\n</span>\n<span ng-if="!tag.status.items.length"><em translate="yes">none</em></span>\n</div>\n</div>\n</td>\n<td ng-init="name = imagestreamTagFromName(stream, tag.spec.from)">\n<div ng-if="!name"><em>pushed image</em></div>\n<div ng-if="name" title="{{tag.spec.from.name}}">\n<span ng-if="!name[0]">{{tag.spec.from.name}}</span>\n<span ng-if="name[0]">\n<span ng-if="name[0] === stream.metadata.name">{{name.qualified}}</span>\n<span ng-if="name[0] !== stream.metadata.name">\n<a ng-href="imagestreamPath({ metadata: { namespace: tag.spec.from.namespace, name: name[0] }})"><span ng-if="tag.spec.from.namespace &amp;&amp; tag.spec.from.namespace !== imageStream.metadata.namespace">{{tag.spec.from.namespace}}/</span>{{tag.spec.from._imageStreamName}}</a>{{name.delimiter}}{{name[1]}}\n</span>\n</span>\n</div>\n</td>\n<td>\n<div title="{{ tag.items[0].created }}">\n<span ng-if="tag.status.items.length &amp;&amp; tag.status.items[0].image" title="{{ tag.items[0].created }}">\n{{ tag.status.items[0].created | dateRelative }}\n</span>\n</div>\n</td>\n</tr>\n<tr class="listing-ct-panel" ng-if="imagestreamExpanded(stream, tag)" ng-repeat-end="">\n<td colspan="4">\n<registry-image-panel></registry-image-panel>\n</td>\n</tr>\n</tbody>\n<tbody data-ng-rubbish="" ng-if="0" ng-repeat-end="1">\n</tbody>\n<thead class="listing-ct-empty" ng-if="!quiet">\n<tr>\n<td colspan="4" ng-if="!failure && imagestreams" translate="yes">No image streams are present.</td>\n<td colspan="4" ng-if="!failure && !imagestreams" translate="yes">No tags are present.</td>\n<td colspan="4" ng-if="failure">{{failure}}</td>\n</tr>\n</thead>\n</table>\n', g = "registry-image-widgets/views/imagestream-listing.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<table class="listing-ct"> <thead> <tr> <th class="listing-ct-toggle"></th> <th translate="yes" width="20%">Tag</th> <th translate="yes">Identifier</th> <th translate="yes">From</th> <th translate="yes">Last Updated</th> </tr> </thead> <tbody ng-repeat-start="(link, stream) in (imagestreams || { \'one\': imagestream }) track by link" ng-if="imagestreams" data-id="{{ stream.metadata.namespace + \'/\' + stream.metadata.name }}" class="active" ng-class="{open: imagestreamExpanded(imagestream)}"> <tr ng-click="imagestreamActivate(imagestream, null, $event)" class="listing-ct-item imagestream-item"> <td ng-click="imagestreamToggle(imagestream, null, $event)" class="listing-ct-toggle"> <i class="fa fa-fw"></i> </td> <th colspan="4"> {{ stream.metadata.namespace + \'/\' + stream.metadata.name }} <div ng-repeat="statustags in stream.status.tags"> <span ng-repeat="condition in statustags.conditions" ng-if="condition.type == \'ImportSuccess\' &amp;&amp; condition.status == \'False\'" class="pficon pficon-warning-triangle-o"></span> </div> </th> </tr> <tr class="listing-ct-panel" ng-if="imagestreamExpanded(imagestream)"> <td colspan="4"> <registry-imagestream-panel></registry-imagestream-panel> </td> </tr> </tbody> <tbody ng-repeat="tag in imagestreamTags(stream) | orderBy : \'tag.name\'" data-id="{{ stream.metadata.namespace + \'/\' + stream.metadata.name + \':\' + tag.name }}" ng-class="{open: imagestreamExpanded(stream, tag), last: $last, first: $first}"> <tr ng-click="imagestreamActivate(stream, tag, $event)" class="listing-ct-item registry-listing"> <td ng-click="imagestreamToggle(stream, tag, $event)" class="listing-ct-toggle"> <i class="fa fa-fw"></i> </td> <td> <a class="registry-image-tag" ng-href="{{ imagestreamPath(stream, tag) }}" title="{{tag.name }}">{{ tag.name }}</a> </td> <td class="image-identifier"> <div class="row" ng-init="annotations = stream.metadata.annotations"> <div class="col col-xs-12" ng-if="!tag.status"> <div ng-if="annotations[\'openshift.io/image.dockerRepositoryCheck\']"> <span class="pficon pficon-warning-triangle-o" style="margin-right: 5px" ng-attr-title="{{annotations[\'openshift.io/image.dockerRepositoryCheck\']}}"></span>\n<span translate="yes">Unable to resolve</span> </div> <div ng-if="!annotations[\'openshift.io/image.dockerRepositoryCheck\']"> <span ng-if="!tag.spec.from" translate="yes">Not yet synced</span> \n<span ng-if="tag.spec.from" translate="yes">Unresolved</span> </div> </div> <div class="col col-xs-12" ng-if="tag.status"> <span ng-if="tag.status.items.length &amp;&amp; tag.status.items[0].image"> <tt title="{{tag.status.items[0].image}}">{{tag.status.items[0].image}}</tt> </span>\n<span ng-if="!tag.status.items.length"><em translate="yes">none</em></span> </div> </div> </td> <td ng-init="name = imagestreamTagFromName(stream, tag.spec.from)"> <div ng-if="!name || !tag.spec.from"><em>pushed image</em></div> <div ng-if="name" title="{{tag.spec.from.name}}"> <span ng-if="!name[0]">{{tag.spec.from.name}}</span>\n<span ng-if="name[0]"> <span ng-if="name[0] === stream.metadata.name">{{name.qualified}}</span>\n<span ng-if="name[0] !== stream.metadata.name"> <a ng-href="imagestreamPath({ metadata: { namespace: tag.spec.from.namespace, name: name[0] }})"><span ng-if="tag.spec.from.namespace &amp;&amp; tag.spec.from.namespace !== imageStream.metadata.namespace">{{tag.spec.from.namespace}}/</span>{{tag.spec.from._imageStreamName}}</a>{{name.delimiter}}{{name[1]}} </span> </span> </div> </td> <td> <div title="{{ tag.items[0].created }}"> <span ng-if="tag.status.items.length &amp;&amp; tag.status.items[0].image" title="{{ tag.items[0].created }}"> {{ tag.status.items[0].created | dateRelative }} </span> </div> </td> </tr> <tr class="listing-ct-panel" ng-if="imagestreamExpanded(stream, tag)" ng-repeat-end=""> <td colspan="4"> <registry-image-panel></registry-image-panel> </td> </tr> </tbody> <tbody data-ng-rubbish="" ng-if="0" ng-repeat-end="1"> </tbody> <thead class="listing-ct-empty" ng-if="!quiet"> <tr> <td colspan="4" ng-if="!failure && imagestreams" translate="yes">No image streams are present.</td> <td colspan="4" ng-if="!failure && !imagestreams" translate="yes">No tags are present.</td> <td colspan="4" ng-if="failure">{{failure}}</td> </tr> </thead> </table>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/imagestream-listing.html", f);
 } ]), a.exports = f;
 }, function(a, b) {
 var c, d = window.angular;
@@ -45159,9 +45159,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<dl class="dl-horizontal left">\n<registry-annotations annotations="imagestream.metadata.annotations"></registry-annotations>\n</dl>\n', g = "registry-image-widgets/views/imagestream-meta.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<dl class="dl-horizontal left"> <registry-annotations annotations="imagestream.metadata.annotations"></registry-annotations> </dl>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/imagestream-meta.html", f);
 } ]), a.exports = f;
 }, function(a, b) {
 var c, d = window.angular;
@@ -45170,9 +45170,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<div class="registry-imagestream-push">\n<p>\n<i class="fa fa-info-circle"></i>\n<span translate>To push an image to this image stream:</span>\n</p>\n<code ng-if="settings.registry.host">$ sudo docker tag <em>myimage</em> <span>{{settings.registry.host}}</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}:<em>tag</em>\n$ sudo docker push <span>{{settings.registry.host}}</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}</code>\n<code ng-if="!settings.registry.host">$ sudo docker tag <em>myimage</em> <span class="placeholder">registry</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}:<em>tag</em>\n$ sudo docker push <span class="placeholder">registry</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}</code>\n</div>\n', g = "registry-image-widgets/views/imagestream-push.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<div class="registry-imagestream-push"> <p> <i class="fa fa-info-circle"></i>\n<span translate>To push an image to this image stream:</span> </p> <code ng-if="settings.registry.host">$ sudo docker tag <em>myimage</em> <span>{{settings.registry.host}}</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}:<em>tag</em>\n$ sudo docker push <span>{{settings.registry.host}}</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}</code>\n<code ng-if="!settings.registry.host">$ sudo docker tag <em>myimage</em> <span class="placeholder">registry</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}:<em>tag</em>\n$ sudo docker push <span class="placeholder">registry</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}</code> </div>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/imagestream-push.html", f);
 } ]), a.exports = f;
 }, function(a, b, c) {
 c(4), c(2), c(3), c(5), c(0), c(1), c(6), c(7), c(8), c(10), c(9), c(11), c(12), c(13), c(14), a.exports = c(15);
