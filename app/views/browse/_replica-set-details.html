@@ -50,6 +50,10 @@
       <dd ng-if-end>
         <a ng-href="{{replicaSet | configURLForResource}}">{{deploymentConfigName}}</a>
       </dd>
+      <dt ng-if-start="deployment">Deployment:</dt>
+      <dd ng-if-end>
+        <a ng-href="{{deployment | navigateResourceURL}}">{{deployment.metadata.name}}</a>
+      </dd>
       <dt ng-if-start="replicaSet | annotation:'deploymentStatusReason'">Status Reason:</dt>
       <dd ng-if-end>
         {{replicaSet | annotation:'deploymentStatusReason'}}

@@ -1308,6 +1308,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{dcName | navigateResourceURL : 'DeploymentConfig' : pod.metadata.namespace}}\">{{dcName}}</a><span ng-if=\"rcName\">,\n" +
     "<a ng-href=\"{{rcName | navigateResourceURL : 'ReplicationController' : pod.metadata.namespace}}\"><span ng-if=\"deploymentVersion\">#{{deploymentVersion}}</span><span ng-if=\"!deploymentVersion\">{{rcName}}</span></a></span>\n" +
     "</dd>\n" +
+    "<dt ng-if-start=\"!dcName && controllerRef\">\n" +
+    "{{controllerRef.kind | humanizeKind : true}}:\n" +
+    "</dt>\n" +
+    "<dd ng-if-end>\n" +
+    "<a ng-href=\"{{controllerRef.name | navigateResourceURL : controllerRef.kind : pod.metadata.namespace}}\">{{controllerRef.name}}</a>\n" +
+    "</dd>\n" +
     "<dt ng-if-start=\"pod.metadata.deletionTimestamp && pod.spec.terminationGracePeriodSeconds\">Grace Period:</dt>\n" +
     "<dd ng-if-end>\n" +
     "\n" +
@@ -1441,6 +1447,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt ng-if-start=\"replicaSet | hasDeploymentConfig\">Deployment Config:</dt>\n" +
     "<dd ng-if-end>\n" +
     "<a ng-href=\"{{replicaSet | configURLForResource}}\">{{deploymentConfigName}}</a>\n" +
+    "</dd>\n" +
+    "<dt ng-if-start=\"deployment\">Deployment:</dt>\n" +
+    "<dd ng-if-end>\n" +
+    "<a ng-href=\"{{deployment | navigateResourceURL}}\">{{deployment.metadata.name}}</a>\n" +
     "</dd>\n" +
     "<dt ng-if-start=\"replicaSet | annotation:'deploymentStatusReason'\">Status Reason:</dt>\n" +
     "<dd ng-if-end>\n" +
