@@ -5850,7 +5850,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h3>\n" +
     "<form name=\"ctrl.bindingSelection\" class=\"mar-bottom-lg\">\n" +
     "<fieldset ng-disabled=\"ctrl.isDisabled\">\n" +
-    "<div ng-repeat=\"binding in ctrl.bindings | orderBy: ctrl.firstAppForBindingName\" class=\"radio\">\n" +
+    "<div ng-repeat=\"binding in ctrl.bindings\" class=\"radio\">\n" +
     "<label>\n" +
     "<input type=\"radio\" ng-model=\"ctrl.selectedBinding\" ng-value=\"{{binding}}\">\n" +
     "<div ng-if=\"ctrl.appsForBinding(binding.metadata.name) | size\" ng-repeat=\"appForBinding in ctrl.appsForBinding(binding.metadata.name)\">\n" +

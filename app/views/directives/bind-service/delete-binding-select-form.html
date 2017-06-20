@@ -3,7 +3,7 @@
 </h3>
 <form name="ctrl.bindingSelection" class="mar-bottom-lg">
   <fieldset ng-disabled="ctrl.isDisabled">
-    <div ng-repeat="binding in ctrl.bindings | orderBy: ctrl.firstAppForBindingName" class="radio">
+    <div ng-repeat="binding in ctrl.bindings" class="radio">
       <label>
           <input
             type="radio"
@@ -17,7 +17,6 @@
           <div ng-if="!(ctrl.appsForBinding(binding.metadata.name)  | size)">
             {{binding.spec.secretName}} <small class="text-muted">&ndash; Secret</small>
           </div>
-
       </label>
     </div>
   </fieldset>

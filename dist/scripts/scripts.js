@@ -369,7 +369,7 @@ Q.secrets = a.by("metadata.name");
 });
 }, 300), $a = function() {
 if (Q.bindingsByApplicationUID = {}, Q.applicationsByBinding = {}, Q.deleteableBindingsByApplicationUID = {}, !_.isEmpty(Q.bindings)) {
-var a = [ z.deploymentConfigs, z.vanillaReplicationControllers, z.deployments, z.vanillaReplicaSets, z.statefulSets ];
+var a = [ z.deployments, z.deploymentConfigs, z.vanillaReplicationControllers, z.vanillaReplicaSets, z.statefulSets ];
 if (!_.some(a, function(a) {
 return !a;
 })) {
@@ -384,7 +384,12 @@ Q.bindingsByApplicationUID[c] = [], Q.deleteableBindingsByApplicationUID[c] = []
 b.covers(d) && (Q.bindingsByApplicationUID[c].push(Q.bindings[e]), _.get(Q.bindings[e], "metadata.deletionTimestamp") || Q.deleteableBindingsByApplicationUID[c].push(Q.bindings[e]), Q.applicationsByBinding[e] = Q.applicationsByBinding[e] || [], Q.applicationsByBinding[e].push(a));
 });
 });
-});
+}), z.bindingsByInstanceRef = _.reduce(z.bindingsByInstanceRef, function(a, b, c) {
+return a[c] = _.sortBy(b, function(a) {
+var b = _.get(Q.applicationsByBinding, [ a.metadata.name ]), c = _.get(_.first(b), [ "metadata", "name" ]);
+return c;
+}), a;
+}, {});
 }
 }
 }, _a = function() {
@@ -12378,9 +12383,6 @@ onShow:l
 } ], e = {
 namespace:_.get(f.target, "metadata.namespace")
 };
-}, f.firstAppForBindingName = function(a) {
-var b = a && _.sortBy(f.appsForBinding(a.metadata.name), "metadata.name");
-return _.get(_.first(b), [ "metadata", "name" ]);
 }, f.appsForBinding = function(a) {
 return _.get(f.applicationsByBinding, a);
 }, f.closeWizard = function() {
