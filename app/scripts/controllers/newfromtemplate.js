@@ -182,6 +182,7 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project) {
         $scope.project = project;
         // Update project breadcrumb with display name.
+        // TODO: What to do with breadcrumbs when project changes (new project?)
         $scope.breadcrumbs[0].title = displayName(project);
 
         // Missing namespace indicates that the template should be received from from the 'CachedTemplateService'.
