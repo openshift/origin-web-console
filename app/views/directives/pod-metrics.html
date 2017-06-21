@@ -6,7 +6,7 @@
     <!-- Let the user select the container if we're showing pod metrics. -->
     <div ng-if="pod.spec.containers.length" class="form-group">
       <label for="selectContainer">Container:</label>
-      <div class="select-container">
+      <div class="select-container" ng-class="{ 'multiple-containers' : pod.spec.containers.length > 1 }">
         <span ng-show="pod.spec.containers.length === 1">
           {{pod.spec.containers[0].name}}
         </span>

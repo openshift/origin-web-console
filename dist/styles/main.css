@@ -4389,7 +4389,8 @@ registry-image-body dt:after,registry-image-config dt:after,registry-image-meta 
 .build-trends-responsive .build-trends-container .avg-duration{margin-right:30px}
 .build-trends-responsive .build-trends-container .avg-duration-text{vertical-align:top;font-size:12px}
 .metrics .metrics-options .form-group{margin-bottom:0}
-.metrics .metrics-options .select-container,.metrics .metrics-options .select-range{display:inline-block;vertical-align:middle}
+.metrics .metrics-options .multiple-containers,.metrics .metrics-options .select-range{vertical-align:middle}
+.metrics .metrics-options .select-container,.metrics .metrics-options .select-range{display:inline-block}
 @media (min-width:768px){.metrics .metrics-options .form-group{display:inline-block;vertical-align:middle}
 .metrics .metrics-options .select-container{margin-right:10px}
 }
@@ -5583,9 +5584,10 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .log-title{margin-top:0}
 .log-header{margin-bottom:3px}
 .log-header label{margin-bottom:0}
-.log-header .dash{color:#9c9c9c;margin:0 2px}
+.log-header .dash{color:#9c9c9c;margin:0 0 0 4px}
 .log-header .ui-select-container{min-width:150px;max-width:250px;margin:0 5px}
 .log-header .container-details{display:inline-flex;align-items:center;flex-wrap:wrap}
+.log-header .container-details>label{margin-right:3px}
 .log-header .container-details .container-state{margin-right:5px}
 .log-header .log-actions form{display:inline-block}
 .log-header .log-timestamps{color:#9c9c9c;display:block}
