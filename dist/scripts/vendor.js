@@ -8062,7 +8062,7 @@ delete c[b.id], delete d[a];
 http:80,
 https:443,
 ftp:21
-}, sf = b("$location"), tf = /^\s*[\\/]{2,}/, uf = {
+}, sf = b("$location"), tf = /^\s*[\\\/]{2,}/, uf = {
 $$absUrl:"",
 $$html5:!1,
 $$replace:!1,
@@ -44991,7 +44991,7 @@ imagestream:"="
 },
 templateUrl:"registry-image-widgets/views/imagestream-meta.html"
 };
-} ]).directive("registryImagestreamListing", [ "imagestreamTags", "$location", function(a, b) {
+} ]).directive("registryImagestreamListing", [ "imagestreamTags", "imagestreamTagFromName", "$location", function(a, b, c) {
 return {
 restrict:"E",
 scope:{
@@ -44999,21 +44999,21 @@ imagestream:"=",
 imagestreamFunc:"&imagestreamPath"
 },
 templateUrl:"registry-image-widgets/views/imagestream-listing.html",
-link:function(c, d, e) {
-function f(a, b) {
+link:function(d, e, f) {
+function g(a, b) {
 var c = a.metadata.namespace + "/" + a.metadata.name;
 return b && (c += "/" + b.name), c;
 }
-c.imagestreamTags = a, c.imagestreamPath = c.imagestreamFunc(), c.imagestreamActivate = function(a, d, e) {
+d.imagestreamTags = a, d.imagestreamPath = d.imagestreamFunc(), d.imagestreamTagFromName = b, d.imagestreamActivate = function(a, b, e) {
 var f;
-c.imagestreamExpanded(a, d) ? c.imagestreamToggle(a, d, e) :(f = c.$emit("activate", a, d, e), !f.defaultPrevented && c.imagestreamPath && b.path(c.imagestreamPath(a, d))), e.preventDefault();
+d.imagestreamExpanded(a, b) ? d.imagestreamToggle(a, b, e) :(f = d.$emit("activate", a, b, e), !f.defaultPrevented && d.imagestreamPath && c.path(d.imagestreamPath(a, b))), e.preventDefault();
 };
-var g = {};
-c.imagestreamExpanded = function(a, b) {
-return f(a, b) in g;
-}, c.imagestreamToggle = function(a, b, c) {
-var d = f(a, b);
-d in g ? delete g[d] :g[d] = !0, c.stopPropagation();
+var h = {};
+d.imagestreamExpanded = function(a, b) {
+return g(a, b) in h;
+}, d.imagestreamToggle = function(a, b, c) {
+var d = g(a, b);
+d in h ? delete h[d] :h[d] = !0, c.stopPropagation();
 };
 }
 };
@@ -45071,9 +45071,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<dt ng-if="annotations" translate>Annotations</dt>\n<dd ng-repeat="(name, value) in annotations">{{name}}: {{value}}</dd>\n', g = "registry-image-widgets/views/annotations.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<dt ng-if="annotations" translate>Annotations</dt> <dd ng-repeat="(name, value) in annotations">{{name}}: {{value}}</dd>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/annotations.html", f);
 } ]), a.exports = f;
 }, function(a, b) {
 var c, d = window.angular;
@@ -45082,9 +45082,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<dl class="dl-horizontal left">\n<dt ng-if="labels.name" translate>Name</dt>\n<dd ng-if="labels.name">{{ labels.name }}</dd>\n<dt ng-if="labels.summary" translate>Summary</dt>\n<dd ng-if="labels.summary">{{ labels.summary }}</dd>\n<dt ng-if="labels.description" translate>Description</dt>\n<dd ng-if="labels.description">{{ labels.description }}</dd>\n<dt ng-if="labels.url" translate>Source URL</dt>\n<dd ng-if="labels.url">\n<a href="labels.url"><i class="fa fa-external-link"></i> {{ labels.url }}</a>\n</dd>\n<dt translate>Author</dt>\n<dd ng-if="config.author">{{config.author}}</dd>\n<dd ng-if="!config.author && image.dockerImageMetadata.Author">{{image.dockerImageMetadata.Author}}</dd>\n<dd ng-if="!config.author && !image.dockerImageMetadata.Author"><em translate>Unknown</em></dd>\n<dt ng-if="labels[\'build-date\'] || layers[0].v1Compatibility.created || image.dockerImageMetadata.Created" translate>Built</dt>\n<dd ng-if="labels[\'build-date\']" title="{{labels[\'build-date\']}}">{{ labels[\'build-date\'] | dateRelative}}</dd>\n<dd ng-if="!labels[\'build-date\'] && layers[0].v1Compatibility.created" title="{{layers[0].v1Compatibility.created}}">{{ layers[0].v1Compatibility.created | dateRelative}}</dd>\n<dd ng-if="!labels[\'build-date\'] && !layers[0].v1Compatibility.created && image.dockerImageMetadata.Created" title="{{image.dockerImageMetadata.Created}}">{{image.dockerImageMetadata.Created | dateRelative}}</dd>\n<dt translate>Digest</dt>\n<dd class="indentifier"><tt>{{ image.metadata.name }}</tt></dd>\n<dt ng-if-start="config.Image" translate>Identifier</dt>\n<dd class="indentifier" ng-if-end><tt>{{ config.Image }}</tt></dd>\n</dl>\n<dl class="registry-image-tags" ng-if="names">\n<dt translate>Tags</dt>\n<dd><span class="registry-image-tag" ng-repeat="name in names">{{name}}</span></dd>\n</dl>\n', g = "registry-image-widgets/views/image-body.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<dl class="dl-horizontal left"> <dt ng-if="labels.name" translate>Name</dt> <dd ng-if="labels.name">{{ labels.name }}</dd> <dt ng-if="labels.summary" translate>Summary</dt> <dd ng-if="labels.summary">{{ labels.summary }}</dd> <dt ng-if="labels.description" translate>Description</dt> <dd ng-if="labels.description">{{ labels.description }}</dd> <dt ng-if="labels.url" translate>Source URL</dt> <dd ng-if="labels.url"> <a href="labels.url"><i class="fa fa-external-link"></i> {{ labels.url }}</a> </dd> <dt translate>Author</dt> <dd ng-if="config.author">{{config.author}}</dd> <dd ng-if="!config.author && image.dockerImageMetadata.Author">{{image.dockerImageMetadata.Author}}</dd> <dd ng-if="!config.author && !image.dockerImageMetadata.Author"><em translate>Unknown</em></dd> <dt ng-if="labels[\'build-date\'] || layers[0].v1Compatibility.created || image.dockerImageMetadata.Created" translate>Built</dt> <dd ng-if="labels[\'build-date\']" title="{{labels[\'build-date\']}}">{{ labels[\'build-date\'] | dateRelative}}</dd> <dd ng-if="!labels[\'build-date\'] && layers[0].v1Compatibility.created" title="{{layers[0].v1Compatibility.created}}">{{ layers[0].v1Compatibility.created | dateRelative}}</dd> <dd ng-if="!labels[\'build-date\'] && !layers[0].v1Compatibility.created && image.dockerImageMetadata.Created" title="{{image.dockerImageMetadata.Created}}">{{image.dockerImageMetadata.Created | dateRelative}}</dd> <dt translate>Digest</dt> <dd class="indentifier"><tt>{{ image.metadata.name }}</tt></dd> <dt ng-if-start="config.Image" translate>Identifier</dt> <dd class="indentifier" ng-if-end><tt>{{ config.Image }}</tt></dd> </dl> <dl class="registry-image-tags" ng-if="names"> <dt translate>Tags</dt> <dd><span class="registry-image-tag" ng-repeat="name in names">{{name}}</span></dd> </dl>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/image-body.html", f);
 } ]), a.exports = f;
 }, function(a, b) {
 var c, d = window.angular;
@@ -45093,9 +45093,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<dl class="dl-horizontal">\n<dt translate>Command</dt>\n<dd><code>{{ configCommand(config) }}</code></dd>\n</dl>\n<div class="row">\n<dl class="col-xs-12 col-sm-12 col-md-4 dl-horizontal">\n<dt translate>Run as</dt>\n<dd ng-if="config.User">{{config.User}}</dd>\n<dd ng-if="!config.User"><em translate>Default</em></dd>\n<dt translate>Directory</dt>\n<dd ng-if="config.WorkingDir">{{config.WorkingDir}}</dd>\n<dd ng-if="!config.WorkingDir">/</dd>\n<dt ng-if="config.StopSignal" translate>Stop with</dt>\n<dd ng-if="config.StopSignal">{{config.StopSignal}}</dd>\n<dt translate>Architecture</dt>\n<dd ng-if="config.architecture">{{config.architecture}}</dd>\n<dd ng-if="!config.architecture">{{image.dockerImageMetadata.Architecture}}</dd>\n</dl>\n<dl class="col-xs-12 col-sm-12 col-md-8 dl-horizontal full-width">\n<dt ng-if="config.Env.length" translate>Environment</dt>\n<dd ng-repeat="env in config.Env"><tt>{{env}}</tt></dd>\n</dl>\n</div>\n<div class="row">\n<dl class="col-xs-12 col-sm-12 col-md-4 dl-horizontal">\n<dt translate>Ports</dt>\n<dd ng-repeat="(port, data) in config.ExposedPorts">{{port}}</dd>\n<dd ng-if="!config.ExposedPorts"><em translate>None</em></dd>\n</dl>\n<dl class="col-xs-12 col-sm-12 col-md-8 dl-horizontal full-width">\n<dt ng-if="config.Volumes" translate>Volumes</dt>\n<dd ng-repeat="(volume, data) in config.Volumes">{{volume}}</dd>\n</dl>\n</div>\n', g = "registry-image-widgets/views/image-config.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<dl class="dl-horizontal"> <dt translate>Command</dt> <dd><code>{{ configCommand(config) }}</code></dd> </dl> <div class="row"> <dl class="col-xs-12 col-sm-12 col-md-4 dl-horizontal"> <dt translate>Run as</dt> <dd ng-if="config.User">{{config.User}}</dd> <dd ng-if="!config.User"><em translate>Default</em></dd> <dt translate>Directory</dt> <dd ng-if="config.WorkingDir">{{config.WorkingDir}}</dd> <dd ng-if="!config.WorkingDir">/</dd> <dt ng-if="config.StopSignal" translate>Stop with</dt> <dd ng-if="config.StopSignal">{{config.StopSignal}}</dd> <dt translate>Architecture</dt> <dd ng-if="config.architecture">{{config.architecture}}</dd> <dd ng-if="!config.architecture">{{image.dockerImageMetadata.Architecture}}</dd> </dl> <dl class="col-xs-12 col-sm-12 col-md-8 dl-horizontal full-width"> <dt ng-if="config.Env.length" translate>Environment</dt> <dd ng-repeat="env in config.Env"><tt>{{env}}</tt></dd> </dl> </div> <div class="row"> <dl class="col-xs-12 col-sm-12 col-md-4 dl-horizontal"> <dt translate>Ports</dt> <dd ng-repeat="(port, data) in config.ExposedPorts">{{port}}</dd> <dd ng-if="!config.ExposedPorts"><em translate>None</em></dd> </dl> <dl class="col-xs-12 col-sm-12 col-md-8 dl-horizontal full-width"> <dt ng-if="config.Volumes" translate>Volumes</dt> <dd ng-repeat="(volume, data) in config.Volumes">{{volume}}</dd> </dl> </div>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/image-config.html", f);
 } ]), a.exports = f;
 }, function(a, b) {
 var c, d = window.angular;
@@ -45104,9 +45104,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<ul class="registry-image-layers">\n<li ng-repeat="layer in layers" class="hint-{{ layer.hint }}">\n<span title="{{ layer.size }}">{{ formatSize(layer.size) }}</span>\n<p>{{ layer.label}}</p>\n</li>\n</ul>\n', g = "registry-image-widgets/views/image-layers.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<ul class="registry-image-layers"> <li ng-repeat="layer in layers" class="hint-{{ layer.hint }}"> <span title="{{ layer.size }}">{{ formatSize(layer.size) }}</span> <p>{{ layer.label}}</p> </li> </ul>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/image-layers.html", f);
 } ]), a.exports = f;
 }, function(a, b) {
 var c, d = window.angular;
@@ -45115,9 +45115,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<div>\n<dl class="dl-horizontal left">\n<dt ng-if="labels" translate>Labels</dt>\n<dd ng-repeat="(name, value) in labels" ng-show="name != \'description\' && name != \'name\'">\n<tt>{{name}}={{value}}</tt>\n</dd>\n<dt ng-if="config.OnBuild.length" translate>On Build</dt>\n<dd ng-repeat="line in config.OnBuild"><tt>{{line}}</tt></dd>\n<registry-annotations annotations="image.metadata.annotations"></registry-annotations>\n<dt translate>Docker Version</dt>\n<dd>{{image.dockerImageMetadata.DockerVersion}}</dd>\n</dl>\n</div>\n', g = "registry-image-widgets/views/image-meta.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<div> <dl class="dl-horizontal left"> <dt ng-if="labels" translate>Labels</dt> <dd ng-repeat="(name, value) in labels" ng-show="name != \'description\' && name != \'name\'"> <tt>{{name}}={{value}}</tt> </dd> <dt ng-if="config.OnBuild.length" translate>On Build</dt> <dd ng-repeat="line in config.OnBuild"><tt>{{line}}</tt></dd> <registry-annotations annotations="image.metadata.annotations"></registry-annotations> <dt translate>Docker Version</dt> <dd>{{image.dockerImageMetadata.DockerVersion}}</dd> </dl> </div>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/image-meta.html", f);
 } ]), a.exports = f;
 }, function(a, b) {
 var c, d = window.angular;
@@ -45126,9 +45126,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<div ng-if="names" class="registry-image-pull">\n<p>\n<i class="fa fa-info-circle"></i>\n<span translate>To pull this image:</span>\n</p>\n<code ng-if="!settings.registry.host">$ sudo docker pull <span class="placeholder">registry</span>/{{names[0]}}</code>\n<code ng-if="settings.registry.host">$ sudo docker pull <span>{{settings.registry.host}}</span>/{{names[0]}}</code>\n</div>\n', g = "registry-image-widgets/views/image-pull.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<div ng-if="names" class="registry-image-pull"> <p> <i class="fa fa-info-circle"></i>\n<span translate>To pull this image:</span> </p> <code ng-if="!settings.registry.host">$ sudo docker pull <span class="placeholder">registry</span>/{{names[0]}}</code>\n<code ng-if="settings.registry.host">$ sudo docker pull <span>{{settings.registry.host}}</span>/{{names[0]}}</code> </div>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/image-pull.html", f);
 } ]), a.exports = f;
 }, function(a, b) {
 var c, d = window.angular;
@@ -45137,9 +45137,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<div ng-repeat="statustags in imagestream.status.tags">\n<div ng-repeat="condition in statustags.conditions" ng-if="condition.type == \'ImportSuccess\' && condition.status == \'False\'" class="alert alert-danger">\n<span class="pficon pficon-error-circle-o"></span>\n<span translate>{{ condition.message }}. Timestamp: {{ condition.lastTransitionTime }} Error count: {{ condition.generation }}</span>\n<a translate ng-if="imagestreamModify" ng-click="imagestreamModify(imagestream)" class="alert-link">Edit image stream</a>\n</div>\n</div>\n<dl class="dl-horizontal left">\n<dt translate ng-if="projectSharing">Access Policy</dt>\n<dd ng-if="projectSharing" ng-switch="projectSharing(imagestream.metadata.namespace)">\n<div ng-switch-when="anonymous">\n<a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Images may be pulled by anonymous users</a>\n<span translate ng-if="!projectModify">Images may be pulled by anonymous users</span>\n<i title="Images accessible to anonymous users" class="fa fa-unlock registry-imagestream-lock"></i>\n</div>\n<div ng-switch-when="shared">\n<a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Images may be pulled by any authenticated user or group</a>\n<span translate ng-if="!projectModify">Images may be pulled by any authenticated user or group</span>\n<i title="Images accessible to authenticated users" class="fa fa-lock registry-imagestream-lock"></i>\n</div>\n<div ng-switch-when="private">\n<a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Images may only be pulled by specific users or groups</a>\n<span translate ng-if="!projectModify">Images may only be pulled by specific users or groups</span>\n<i title="Images only accessible to members" class="fa fa-lock registry-imagestream-lock"></i>\n</div>\n<div ng-switch-default>\n<a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Unknown</a>\n<span translate ng-if="!projectModify">Unknown</span>\n<i title="Unknown or invalid image access policy" class="fa fa-lock registry-imagestream-lock"></i>\n</div>\n</dd>\n<dt translate ng-if-start="imagestream.spec.dockerImageRepository">Follows docker repo</dt>\n<dd ng-if-end><tt>{{imagestream.spec.dockerImageRepository}}</tt></dd>\n<dt>Pulling repository</dt>\n<dd><tt>{{imagestream.status.dockerImageRepository}}</tt></dd>\n<dt translate>Image count</dt>\n<dd ng-if="imagestream.status.tags.length">{{imagestream.status.tags.length}}</dd>\n<dd ng-if="!imagestream.status.tags.length">0</dd>\n</dl>\n', g = "registry-image-widgets/views/imagestream-body.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<div ng-repeat="statustags in imagestream.status.tags"> <div ng-repeat="condition in statustags.conditions" ng-if="condition.type == \'ImportSuccess\' && condition.status == \'False\'" class="alert alert-danger"> <span class="pficon pficon-error-circle-o"></span>\n<span translate>{{ condition.message }}. Timestamp: {{ condition.lastTransitionTime }} Error count: {{ condition.generation }}</span>\n<a translate ng-if="imagestreamModify" ng-click="imagestreamModify(imagestream)" class="alert-link">Edit image stream</a> </div> </div> <dl class="dl-horizontal left"> <dt translate ng-if="projectSharing">Access Policy</dt> <dd ng-if="projectSharing" ng-switch="projectSharing(imagestream.metadata.namespace)"> <div ng-switch-when="anonymous"> <a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Images may be pulled by anonymous users</a>\n<span translate ng-if="!projectModify">Images may be pulled by anonymous users</span>\n<i title="Images accessible to anonymous users" class="fa fa-unlock registry-imagestream-lock"></i> </div> <div ng-switch-when="shared"> <a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Images may be pulled by any authenticated user or group</a>\n<span translate ng-if="!projectModify">Images may be pulled by any authenticated user or group</span>\n<i title="Images accessible to authenticated users" class="fa fa-lock registry-imagestream-lock"></i> </div> <div ng-switch-when="private"> <a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Images may only be pulled by specific users or groups</a>\n<span translate ng-if="!projectModify">Images may only be pulled by specific users or groups</span>\n<i title="Images only accessible to members" class="fa fa-lock registry-imagestream-lock"></i> </div> <div ng-switch-default> <a translate ng-if="projectModify" ng-click="projectModify(imagestream.metadata.namespace)">Unknown</a>\n<span translate ng-if="!projectModify">Unknown</span>\n<i title="Unknown or invalid image access policy" class="fa fa-lock registry-imagestream-lock"></i> </div> </dd> <dt translate ng-if-start="imagestream.spec.dockerImageRepository">Follows docker repo</dt> <dd ng-if-end><tt>{{imagestream.spec.dockerImageRepository}}</tt></dd> <dt>Pulling repository</dt> <dd><tt>{{imagestream.status.dockerImageRepository}}</tt></dd> <dt translate>Image count</dt> <dd ng-if="imagestream.status.tags.length">{{imagestream.status.tags.length}}</dd> <dd ng-if="!imagestream.status.tags.length">0</dd> </dl>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/imagestream-body.html", f);
 } ]), a.exports = f;
 }, function(a, b) {
 var c, d = window.angular;
@@ -45148,9 +45148,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<table class="listing-ct">\n<thead>\n<tr>\n<th class="listing-ct-toggle"></th>\n<th translate="yes" width="20%">Tag</th>\n<th translate="yes">Identifier</th>\n<th translate="yes">From</th>\n<th translate="yes">Last Updated</th>\n</tr>\n</thead>\n<tbody ng-repeat-start="(link, stream) in (imagestreams || { \'one\': imagestream }) track by link" ng-if="imagestreams" data-id="{{ stream.metadata.namespace + \'/\' + stream.metadata.name }}" class="active" ng-class="{open: imagestreamExpanded(imagestream)}">\n<tr ng-click="imagestreamActivate(imagestream, null, $event)" class="listing-ct-item imagestream-item">\n<td ng-click="imagestreamToggle(imagestream, null, $event)" class="listing-ct-toggle">\n<i class="fa fa-fw"></i>\n</td>\n<th colspan="4">\n{{ stream.metadata.namespace + \'/\' + stream.metadata.name }}\n<div ng-repeat="statustags in stream.status.tags">\n<span ng-repeat="condition in statustags.conditions" ng-if="condition.type == \'ImportSuccess\' &amp;&amp; condition.status == \'False\'" class="pficon pficon-warning-triangle-o"></span>\n</div>\n</th>\n</tr>\n<tr class="listing-ct-panel" ng-if="imagestreamExpanded(imagestream)">\n<td colspan="4">\n<registry-imagestream-panel></registry-imagestream-panel>\n</td>\n</tr>\n</tbody>\n<tbody ng-repeat="tag in imagestreamTags(stream) | orderBy : \'tag.name\'" data-id="{{ stream.metadata.namespace + \'/\' + stream.metadata.name + \':\' + tag.name }}" ng-class="{open: imagestreamExpanded(stream, tag), last: $last, first: $first}">\n<tr ng-click="imagestreamActivate(stream, tag, $event)" class="listing-ct-item registry-listing">\n<td ng-click="imagestreamToggle(stream, tag, $event)" class="listing-ct-toggle">\n<i class="fa fa-fw"></i>\n</td>\n<td>\n<a class="registry-image-tag" ng-href="{{ imagestreamPath(stream, tag) }}" title="{{tag.name }}">{{ tag.name }}</a>\n</td>\n<td class="image-identifier">\n<div class="row" ng-init="annotations = stream.metadata.annotations">\n<div class="col col-xs-12" ng-if="!tag.status">\n<div ng-if="annotations[\'openshift.io/image.dockerRepositoryCheck\']">\n<span class="pficon pficon-warning-triangle-o" style="margin-right: 5px" ng-attr-title="{{annotations[\'openshift.io/image.dockerRepositoryCheck\']}}"></span>\n<span translate="yes">Unable to resolve</span>\n</div>\n<div ng-if="!annotations[\'openshift.io/image.dockerRepositoryCheck\']">\n<span ng-if="!tag.spec.from" translate="yes">Not yet synced</span>\n<span ng-if="tag.spec.from" translate="yes">Unresolved</span>\n</div>\n</div>\n<div class="col col-xs-12" ng-if="tag.status">\n<span ng-if="tag.status.items.length &amp;&amp; tag.status.items[0].image">\n<tt title="{{tag.status.items[0].image}}">{{tag.status.items[0].image}}</tt>\n</span>\n<span ng-if="!tag.status.items.length"><em translate="yes">none</em></span>\n</div>\n</div>\n</td>\n<td ng-init="name = imagestreamTagFromName(stream, tag.spec.from)">\n<div ng-if="!name"><em>pushed image</em></div>\n<div ng-if="name" title="{{tag.spec.from.name}}">\n<span ng-if="!name[0]">{{tag.spec.from.name}}</span>\n<span ng-if="name[0]">\n<span ng-if="name[0] === stream.metadata.name">{{name.qualified}}</span>\n<span ng-if="name[0] !== stream.metadata.name">\n<a ng-href="imagestreamPath({ metadata: { namespace: tag.spec.from.namespace, name: name[0] }})"><span ng-if="tag.spec.from.namespace &amp;&amp; tag.spec.from.namespace !== imageStream.metadata.namespace">{{tag.spec.from.namespace}}/</span>{{tag.spec.from._imageStreamName}}</a>{{name.delimiter}}{{name[1]}}\n</span>\n</span>\n</div>\n</td>\n<td>\n<div title="{{ tag.items[0].created }}">\n<span ng-if="tag.status.items.length &amp;&amp; tag.status.items[0].image" title="{{ tag.items[0].created }}">\n{{ tag.status.items[0].created | dateRelative }}\n</span>\n</div>\n</td>\n</tr>\n<tr class="listing-ct-panel" ng-if="imagestreamExpanded(stream, tag)" ng-repeat-end="">\n<td colspan="4">\n<registry-image-panel></registry-image-panel>\n</td>\n</tr>\n</tbody>\n<tbody data-ng-rubbish="" ng-if="0" ng-repeat-end="1">\n</tbody>\n<thead class="listing-ct-empty" ng-if="!quiet">\n<tr>\n<td colspan="4" ng-if="!failure && imagestreams" translate="yes">No image streams are present.</td>\n<td colspan="4" ng-if="!failure && !imagestreams" translate="yes">No tags are present.</td>\n<td colspan="4" ng-if="failure">{{failure}}</td>\n</tr>\n</thead>\n</table>\n', g = "registry-image-widgets/views/imagestream-listing.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<table class="listing-ct"> <thead> <tr> <th class="listing-ct-toggle"></th> <th translate="yes" width="20%">Tag</th> <th translate="yes">Identifier</th> <th translate="yes">From</th> <th translate="yes">Last Updated</th> </tr> </thead> <tbody ng-repeat-start="(link, stream) in (imagestreams || { \'one\': imagestream }) track by link" ng-if="imagestreams" data-id="{{ stream.metadata.namespace + \'/\' + stream.metadata.name }}" class="active" ng-class="{open: imagestreamExpanded(imagestream)}"> <tr ng-click="imagestreamActivate(imagestream, null, $event)" class="listing-ct-item imagestream-item"> <td ng-click="imagestreamToggle(imagestream, null, $event)" class="listing-ct-toggle"> <i class="fa fa-fw"></i> </td> <th colspan="4"> {{ stream.metadata.namespace + \'/\' + stream.metadata.name }} <div ng-repeat="statustags in stream.status.tags"> <span ng-repeat="condition in statustags.conditions" ng-if="condition.type == \'ImportSuccess\' &amp;&amp; condition.status == \'False\'" class="pficon pficon-warning-triangle-o"></span> </div> </th> </tr> <tr class="listing-ct-panel" ng-if="imagestreamExpanded(imagestream)"> <td colspan="4"> <registry-imagestream-panel></registry-imagestream-panel> </td> </tr> </tbody> <tbody ng-repeat="tag in imagestreamTags(stream) | orderBy : \'tag.name\'" data-id="{{ stream.metadata.namespace + \'/\' + stream.metadata.name + \':\' + tag.name }}" ng-class="{open: imagestreamExpanded(stream, tag), last: $last, first: $first}"> <tr ng-click="imagestreamActivate(stream, tag, $event)" class="listing-ct-item registry-listing"> <td ng-click="imagestreamToggle(stream, tag, $event)" class="listing-ct-toggle"> <i class="fa fa-fw"></i> </td> <td> <a class="registry-image-tag" ng-href="{{ imagestreamPath(stream, tag) }}" title="{{tag.name }}">{{ tag.name }}</a> </td> <td class="image-identifier"> <div class="row" ng-init="annotations = stream.metadata.annotations"> <div class="col col-xs-12" ng-if="!tag.status"> <div ng-if="annotations[\'openshift.io/image.dockerRepositoryCheck\']"> <span class="pficon pficon-warning-triangle-o" style="margin-right: 5px" ng-attr-title="{{annotations[\'openshift.io/image.dockerRepositoryCheck\']}}"></span>\n<span translate="yes">Unable to resolve</span> </div> <div ng-if="!annotations[\'openshift.io/image.dockerRepositoryCheck\']"> <span ng-if="!tag.spec.from" translate="yes">Not yet synced</span> \n<span ng-if="tag.spec.from" translate="yes">Unresolved</span> </div> </div> <div class="col col-xs-12" ng-if="tag.status"> <span ng-if="tag.status.items.length &amp;&amp; tag.status.items[0].image"> <tt title="{{tag.status.items[0].image}}">{{tag.status.items[0].image}}</tt> </span>\n<span ng-if="!tag.status.items.length"><em translate="yes">none</em></span> </div> </div> </td> <td ng-init="name = imagestreamTagFromName(stream, tag.spec.from)"> <div ng-if="!name || !tag.spec.from"><em>pushed image</em></div> <div ng-if="name" title="{{tag.spec.from.name}}"> <span ng-if="!name[0]">{{tag.spec.from.name}}</span>\n<span ng-if="name[0]"> <span ng-if="name[0] === stream.metadata.name">{{name.qualified}}</span>\n<span ng-if="name[0] !== stream.metadata.name"> <a ng-href="imagestreamPath({ metadata: { namespace: tag.spec.from.namespace, name: name[0] }})"><span ng-if="tag.spec.from.namespace &amp;&amp; tag.spec.from.namespace !== imageStream.metadata.namespace">{{tag.spec.from.namespace}}/</span>{{tag.spec.from._imageStreamName}}</a>{{name.delimiter}}{{name[1]}} </span> </span> </div> </td> <td> <div title="{{ tag.items[0].created }}"> <span ng-if="tag.status.items.length &amp;&amp; tag.status.items[0].image" title="{{ tag.items[0].created }}"> {{ tag.status.items[0].created | dateRelative }} </span> </div> </td> </tr> <tr class="listing-ct-panel" ng-if="imagestreamExpanded(stream, tag)" ng-repeat-end=""> <td colspan="4"> <registry-image-panel></registry-image-panel> </td> </tr> </tbody> <tbody data-ng-rubbish="" ng-if="0" ng-repeat-end="1"> </tbody> <thead class="listing-ct-empty" ng-if="!quiet"> <tr> <td colspan="4" ng-if="!failure && imagestreams" translate="yes">No image streams are present.</td> <td colspan="4" ng-if="!failure && !imagestreams" translate="yes">No tags are present.</td> <td colspan="4" ng-if="failure">{{failure}}</td> </tr> </thead> </table>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/imagestream-listing.html", f);
 } ]), a.exports = f;
 }, function(a, b) {
 var c, d = window.angular;
@@ -45159,9 +45159,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<dl class="dl-horizontal left">\n<registry-annotations annotations="imagestream.metadata.annotations"></registry-annotations>\n</dl>\n', g = "registry-image-widgets/views/imagestream-meta.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<dl class="dl-horizontal left"> <registry-annotations annotations="imagestream.metadata.annotations"></registry-annotations> </dl>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/imagestream-meta.html", f);
 } ]), a.exports = f;
 }, function(a, b) {
 var c, d = window.angular;
@@ -45170,9 +45170,9 @@ c = d.module([ "ng" ]);
 } catch (e) {
 c = d.module("ng", []);
 }
-var f = '<div class="registry-imagestream-push">\n<p>\n<i class="fa fa-info-circle"></i>\n<span translate>To push an image to this image stream:</span>\n</p>\n<code ng-if="settings.registry.host">$ sudo docker tag <em>myimage</em> <span>{{settings.registry.host}}</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}:<em>tag</em>\n$ sudo docker push <span>{{settings.registry.host}}</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}</code>\n<code ng-if="!settings.registry.host">$ sudo docker tag <em>myimage</em> <span class="placeholder">registry</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}:<em>tag</em>\n$ sudo docker push <span class="placeholder">registry</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}</code>\n</div>\n', g = "registry-image-widgets/views/imagestream-push.html", h = d.element(window.document).injector();
-h ? h.get("$templateCache").put(g, f) :c.run([ "$templateCache", function(a) {
-a.put(g, f);
+var f = '<div class="registry-imagestream-push"> <p> <i class="fa fa-info-circle"></i>\n<span translate>To push an image to this image stream:</span> </p> <code ng-if="settings.registry.host">$ sudo docker tag <em>myimage</em> <span>{{settings.registry.host}}</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}:<em>tag</em>\n$ sudo docker push <span>{{settings.registry.host}}</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}</code>\n<code ng-if="!settings.registry.host">$ sudo docker tag <em>myimage</em> <span class="placeholder">registry</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}:<em>tag</em>\n$ sudo docker push <span class="placeholder">registry</span>/{{ imagestream.metadata.namespace }}/{{ imagestream.metadata.name}}</code> </div>';
+c.run([ "$templateCache", function(a) {
+a.put("registry-image-widgets/views/imagestream-push.html", f);
 } ]), a.exports = f;
 }, function(a, b, c) {
 c(4), c(2), c(3), c(5), c(0), c(1), c(6), c(7), c(8), c(10), c(9), c(11), c(12), c(13), c(14), a.exports = c(15);
@@ -59988,7 +59988,7 @@ maxlength:253,
 description:"Name must consist of lower-case letters, numbers, periods, and hyphens. It must start and end with a letter or a number."
 }).constant("IS_IOS", /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream), hawtioPluginLoader.addModule("openshiftCommonUI"), angular.module("openshiftCommonUI").run([ "$templateCache", function(a) {
 "use strict";
-a.put("src/components/binding/bindApplicationForm.html", '<div class="bind-form">\n  <form>\n    <div class="form-group">\n      <label>\n        <h3>Bind a service to <strong>{{ctrl.applicationName}}</strong></h3>\n      </label>\n      <span class="help-block">\n        Binding to a provisioned service will create a secret containing the information necessary for your application to use the service.\n      </span>\n    </div>\n  </form>\n\n  <form name="ctrl.formName">\n    <fieldset>\n      <div class="radio">\n        <label ng-if="ctrl.allowNoBinding">\n          <input type="radio" ng-model="ctrl.serviceToBind" value="">\n          Do not bind at this time.\n        </label>\n        <div ng-if="ctrl.allowNoBinding" class="bind-description">\n          <span class="help-block service-instance-name">\n            You can create the binding later from your project.\n          </span>\n        </div>\n        <div ng-repeat="serviceInstance in ctrl.bindableServiceInstances">\n          <label>\n            <input type="radio" ng-model="ctrl.serviceToBind" value="{{serviceInstance.metadata.name}}">\n            {{ctrl.serviceClasses[serviceInstance.spec.serviceClassName].osbMetadata.displayName || serviceInstance.spec.serviceClassName}}\n          </label>\n          <div class="bind-description">\n            <span class="pficon pficon-info"\n                  ng-if="!(serviceInstance | isServiceInstanceReady)"\n                  data-content="This service is not yet ready. If you bind to it, then the binding will be pending until the service is ready."\n                  data-toggle="popover"\n                  data-trigger="hover">\n            </span>\n            <span class="help-block service-instance-name">\n              {{serviceInstance.metadata.name}}\n            </span>\n          </div>\n        </div>\n        <h4 ng-if="!ctrl.bindableServiceInstances.length">\n          <span class="pficon pficon-info" aria-hidden="true"></span>\n          <span class="help-block service-instance-name">\n            There are no bindable services in this project\n          </span>\n        </h4>\n      </div>\n    </fieldset>\n  </form>\n</div>\n'), 
+a.put("src/components/binding/bindApplicationForm.html", '<div class="bind-form">\n  <form>\n    <div class="form-group">\n      <label>\n        <h3>Bind a service to <strong>{{ctrl.applicationName}}</strong></h3>\n      </label>\n      <span class="help-block">\n        Binding to a provisioned service will create a secret containing the information necessary for your application to use the service.\n      </span>\n    </div>\n  </form>\n\n  <form name="ctrl.formName">\n    <fieldset>\n      <div class="radio">\n        <label ng-if="ctrl.allowNoBinding">\n          <input type="radio" ng-model="ctrl.serviceToBind" ng-value="null">\n          Do not bind at this time.\n        </label>\n        <div ng-if="ctrl.allowNoBinding" class="bind-description">\n          <span class="help-block service-instance-name">\n            You can create the binding later from your project.\n          </span>\n        </div>\n        <div ng-repeat="serviceInstance in ctrl.bindableServiceInstances">\n          <label>\n            <input type="radio" ng-model="ctrl.serviceToBind" ng-value="serviceInstance">\n            {{ctrl.serviceClasses[serviceInstance.spec.serviceClassName].osbMetadata.displayName || serviceInstance.spec.serviceClassName}}\n          </label>\n          <div class="bind-description">\n            <span class="pficon pficon-info"\n                  ng-if="!(serviceInstance | isServiceInstanceReady)"\n                  data-content="This service is not yet ready. If you bind to it, then the binding will be pending until the service is ready."\n                  data-toggle="popover"\n                  data-trigger="hover">\n            </span>\n            <span class="help-block service-instance-name">\n              {{serviceInstance.metadata.name}}\n            </span>\n          </div>\n        </div>\n        <h4 ng-if="!ctrl.bindableServiceInstances.length">\n          <span class="pficon pficon-info" aria-hidden="true"></span>\n          <span class="help-block service-instance-name">\n            There are no bindable services in this project\n          </span>\n        </h4>\n      </div>\n    </fieldset>\n  </form>\n</div>\n'), 
 a.put("src/components/binding/bindResults.html", '<div ng-if="!ctrl.error">\n  <div ng-if="!(ctrl.binding | isBindingReady)" class="bind-status" ng-class="{\'text-center\': !ctrl.progressInline, \'show-progress\': !ctrl.progressInline}">\n    <div class="spinner" ng-class="{\'spinner-sm\': ctrl.progressInline, \'spinner-inline\': ctrl.progressInline, \'spinner-lg\': !ctrl.progressInline}" aria-hidden="true"></div>\n    <h3 class="bind-message">\n      <span class="sr-only">Pending</span>\n      <div class="bind-pending-message" ng-class="{\'progress-inline\': ctrl.progressInline}">The binding was created but is not ready yet.</div>\n    </h3>\n  </div>\n  <div ng-if="(ctrl.binding | isBindingReady)">\n    <div class="bind-status">\n      <span class="pficon pficon-ok" aria-hidden="true"></span>\n      <span class="sr-only">Success</span>\n      <h3 class="bind-message">\n        <strong>{{ctrl.serviceToBind}}</strong>\n        <span>has been bound</span>\n        <span ng-if="ctrl.bindType === \'application\'"> to <strong>{{ctrl.applicationToBind}}</strong> successfully</span>\n      </h3>\n    </div>\n    <div class="sub-title">\n      The binding operation created the secret\n      <a ng-if="ctrl.secretHref && \'secrets\' | canI : \'list\'"\n         ng-href="{{ctrl.secretHref}}">{{ctrl.binding.spec.secretName}}</a>\n      <span ng-if="!ctrl.secretHref || !(\'secrets\' | canI : \'list\')">{{ctrl.binding.spec.secretName}}</span>\n      that you may need to reference in your application.\n      <span ng-if="ctrl.showPodPresets">Its data will be available to your application as environment variables.</span>\n    </div>\n    <div class="alert alert-info bind-info">\n      <span class="pficon pficon-info" aria-hidden="true"></span>\n      <span class="sr-only">Info</span>\n      The binding secret will only be available to new pods. You will need to redeploy your application.\n    </div>\n  </div>\n</div>\n<div ng-if="ctrl.error">\n  <div class="bind-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <span class="sr-only">Error</span>\n    <h3 class="bind-message">\n      <span>Binding Failed</span>\n    </h3>\n  </div>\n  <div class="sub-title">\n    <span ng-if="ctrl.error.data.message">\n      {{ctrl.error.data.message | upperFirst}}\n    </span>\n    <span ng-if="!ctrl.error.data.message">\n      An error occurred creating the binding.\n    </span>\n  </div>\n</div>\n'), 
 a.put("src/components/binding/bindServiceForm.html", '<div class="bind-form">\n  <form>\n    <div class="form-group">\n        <label>\n          <h3>Bind <strong>{{ctrl.serviceClass.osbMetadata.displayName || ctrl.serviceClassName}}</strong> to an existing application</strong></h3>\n        </label>\n        <span class="help-block">Binding to a provisioned service will create a secret containing the information necessary for your application to use the service.</span>\n    </div>\n  </form>\n\n  <form name="ctrl.formName" class="mar-bottom-lg">\n    <fieldset>\n      <div class="radio">\n        <label class="bind-choice" ng-disabled="!ctrl.applications.length">\n          <input type="radio" ng-model="ctrl.bindType" value="application" ng-disabled="!ctrl.applications.length">\n          Bind to an application\n        </label>\n        <div class="application-select">\n          <ui-select ng-model="ctrl.appToBind"\n                     ng-disabled="ctrl.bindType !== \'application\'"\n                     ng-required="ctrl.bindType === \'application\'">\n            <ui-select-match placeholder="{{ctrl.applications.length ? \'Select an application\' : \'There are no applications in this project\'}}">\n              <span>\n                {{$select.selected.metadata.name}}\n                <small class="text-muted">&ndash; {{$select.selected.kind | humanizeKind : true}}</small>\n              </span>\n            </ui-select-match>\n            <ui-select-choices\n              repeat="application in (ctrl.applications) | filter : { metadata: { name: $select.search } } track by (application | uid)"\n              group-by="ctrl.groupByKind">\n              <span ng-bind-html="application.metadata.name | highlight : $select.search"></span>\n            </ui-select-choices>\n          </ui-select>\n        </div>\n        <label class="bind-choice">\n          <input type="radio" ng-model="ctrl.bindType" value="secret-only">\n          Create a secret in my project\n        </label>\n        <div class="help-block bind-description">\n          You can reference this secret later from any application either as environment variables or configuration files mounted as volumes.\n        </div>\n        <label ng-if="ctrl.allowNoBinding" class="bind-choice">\n          <input type="radio" ng-model="ctrl.bindType" value="none">\n          Do not bind at this time\n        </label>\n        <div ng-if="ctrl.allowNoBinding" class="help-block bind-description">\n          You can create the binding later from your project.\n        </div>\n      </div>\n    </fieldset>\n  </form>\n</div>\n'), 
 a.put("src/components/create-project/createProject.html", '<form name="createProjectForm" novalidate>\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="name" class="required">Name</label>\n      <span ng-class="{\'has-error\': (createProjectForm.name.$error.pattern && createProjectForm.name.$touched) || nameTaken}">\n        <input class="form-control input-lg"\n            name="name"\n            id="name"\n            placeholder="my-project"\n            type="text"\n            required\n            take-focus\n            minlength="2"\n            maxlength="63"\n            pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?"\n            aria-describedby="nameHelp"\n            ng-model="name"\n            ng-model-options="{ updateOn: \'default blur\' }"\n            ng-change="nameTaken = false"\n            autocorrect="off"\n            autocapitalize="off"\n            spellcheck="false">\n      </span>\n      <div>\n        <span class="help-block">A unique name for the project.</span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.required && createProjectForm.name.$dirty">\n          Name is required.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.minlength && createProjectForm.name.$touched">\n          Name must have at least two characters.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.pattern && createProjectForm.name.$touched">\n          Project names may only contain lower-case letters, numbers, and dashes.\n          They may not start or end with a dash.\n        </span>\n      </div>\n      <div class="has-error">\n        <span class="help-block" ng-if="nameTaken">\n          This name is already in use. Please choose a different name.\n        </span>\n      </div>\n    </div>\n\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control input-lg"\n          name="displayName"\n          id="displayName"\n          placeholder="My Project"\n          type="text"\n          ng-model="displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n      <textarea class="form-control input-lg"\n          name="description"\n          id="description"\n          placeholder="A short description."\n          ng-model="description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n          class="btn btn-primary btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="createProject()"\n          ng-disabled="createProjectForm.$invalid || nameTaken || disableInputs"\n          value="">\n        Create\n      </button>\n      <button\n          class="btn btn-default btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelCreateProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
@@ -61015,24 +61015,41 @@ return a;
 }
 }
 };
-}), angular.module("openshiftCommonServices").service("BindingService", [ "$filter", "$q", "DataService", "DNS1123_SUBDOMAIN_VALIDATION", function(a, b, c, d) {
-var e = {
+}), angular.module("openshiftCommonServices").service("BindingService", [ "$filter", "$q", "AuthService", "DataService", "DNS1123_SUBDOMAIN_VALIDATION", function(a, b, c, d, e) {
+var f = {
 group:"servicecatalog.k8s.io",
 resource:"bindings"
-}, f = function(b, c) {
-var e = a("generateName"), f = e(_.trunc(b, d.maxlength - 6) + "-"), g = {
+}, g = function(a, b) {
+var c = _.get(a, "spec.serviceClassName");
+return _.get(b, [ c ]);
+}, h = function(a, b) {
+var c = _.get(a, "spec.planName");
+return _.find(b.plans, {
+name:c
+});
+}, i = function(a, d) {
+var e = h(a, d);
+return _.has(e, [ "alphaBindingCreateParameterSchema", "properties", "template.openshift.io/requester-username" ]) ? c.withUser().then(function(a) {
+return {
+"template.openshift.io/requester-username":a.metadata.name
+};
+}) :b.when({});
+}, j = a("generateName"), k = function(a, b, c) {
+var d = a.metadata.name, f = j(_.trunc(d, e.maxlength - 6) + "-"), g = {
 kind:"Binding",
 apiVersion:"servicecatalog.k8s.io/v1alpha1",
 metadata:{
-generateName:b + "-"
+generateName:d + "-"
 },
 spec:{
 instanceRef:{
-name:b
+name:d
 },
 secretName:f
 }
-}, h = _.get(c, "spec.selector");
+};
+_.isEmpty(c) || (g.spec.parameters = c);
+var h = _.get(b, "spec.selector");
 return h && (h.matchLabels || h.matchExpressions || (h = {
 matchLabels:h
 }), g.spec.alphaPodPresetTemplate = {
@@ -61041,22 +61058,21 @@ selector:h
 }), g;
 };
 return {
-bindingResource:e,
-bindService:function(a, b, d) {
-var g = f(b, d);
-return c.create(e, null, g, a);
+bindingResource:f,
+getServiceClassForInstance:g,
+bindService:function(a, b, c) {
+return i(a, c).then(function(c) {
+var e = k(a, b, c), g = {
+namespace:a.metadata.namespace
+};
+return d.create(f, null, e, g);
+});
 },
 isServiceBindable:function(a, b) {
-if (b && a) {
-var c = b[a.spec.serviceClassName];
-if (c) {
-var d = _.find(c.plans, {
-name:a.spec.planName
-});
-return d.bindable !== !1 && (d.bindable === !0 || c.bindable);
-}
-}
-return !!a;
+var c = g(a, b);
+if (!c) return !!a;
+var d = h(a, c), e = _.get(d, "bindable");
+return e === !0 || e !== !1 && c.bindable;
 }
 };
 } ]), angular.module("openshiftCommonServices").factory("Constants", function() {
@@ -64114,11 +64130,11 @@ a.exports = $;
 }, function(a, b) {}, function(a, b) {
 a.exports = '<a href="" class="catalog-search-match">\n  <span class="catalog-search-match-icon" ng-if="match.model.id !== \'viewAll\'">\n    <span ng-if="match.model.imageUrl"><img ng-src="{{match.model.imageUrl}}"></span>\n    <span ng-if="!match.model.imageUrl && match.model.iconClass" ng-class="match.model.iconClass" class="icon"></span>\n  </span>\n  <div class="catalog-search-match-info" ng-if="match.model.id !== \'viewAll\'">\n    <div class="catalog-search-match-label">\n      {{match.label}}\n    </div>\n    <div class="catalog-search-match-description">\n      <span ng-repeat="tag in (match.model.tags || match.model.resource.alphaTags)" class="tag small text-muted">\n        {{tag}}\n      </span>\n    </div>\n  </div>\n  <span ng-if="match.model.id === \'viewAll\'" class="catalog-search-show-all">\n    View All {{match.model.totalNumResults}} Results for Keyword: {{match.model.name}} <span class="fa fa-angle-right"></span>\n  </span>\n</a>\n';
 }, function(a, b) {
-a.exports = '<bind-application-form application-name=\'$ctrl.imageStream.name\'\n                       form-name=\'$ctrl.bindForm\'\n                       allow-no-binding="true"\n                       service-instances="$ctrl.serviceInstances"\n                       service-classes="$ctrl.serviceClasses"\n                       service-to-bind="$ctrl.serviceToBind">\n</bind-application-form>\n';
+a.exports = '<bind-application-form application-name="$ctrl.imageStream.name"\n                       form-name="$ctrl.bindForm"\n                       allow-no-binding="true"\n                       service-instances="$ctrl.serviceInstances"\n                       service-classes="$ctrl.serviceClasses"\n                       service-to-bind="$ctrl.serviceToBind">\n</bind-application-form>\n';
 }, function(a, b) {
 a.exports = '<div class="config-top">\n  <form name="$ctrl.builderForm" class="config-form">\n    <div class="form-group">\n      <label class="control-label" for="version">Version</label>\n      <ui-select ng-model="$ctrl.istag" required search-enabled="false">\n        <ui-select-match>\n          {{$select.selected.name}}\n        </ui-select-match>\n        <ui-select-choices repeat="tag in $ctrl.versions track by tag.name">\n          {{tag.name}}\n          <small ng-repeat="otherTag in $ctrl.referencedBy[tag.name]">\n            <span ng-if="$first"> &mdash; </span>{{otherTag}}<span ng-if="!$last">,</span>\n          </small>\n        </ui-select-choices>\n      </ui-select>\n    </div>\n    <select-project selected-project="$ctrl.selectedProject" name-taken="$ctrl.projectNameTaken"></select-project>\n    <div class="form-group">\n      <label class="control-label required" for="app-name">Application Name</label>\n      <div ng-class="{ \'has-error\': $ctrl.builderForm.name.$touched && $ctrl.builderForm.name.$invalid }">\n        <input\n          class="form-control"\n          type="text"\n          id="app-name"\n          required\n          minlength="2"\n          ng-maxlength="$ctrl.nameMaxLength"\n          ng-pattern="$ctrl.namePattern"\n          ng-model="$ctrl.name"\n          name="name"\n          autocorrect="off"\n          autocapitalize="off"\n          spellcheck="false">\n        <!-- Wait until users leave the field to avoid flashing errors as they type. -->\n        <div ng-if="$ctrl.builderForm.name.$touched">\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.required">\n            <span class="help-block">\n              Application name is required.\n            </span>\n          </div>\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.pattern">\n            <span class="help-block">\n              Application name consists of lower-case letters, numbers, and dashes. It must start with a letter and can\'t end with a <code>-</code>.\n            </span>\n          </div>\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.minlength">\n            <span class="help-block">\n              Application name must be at least 2 characters.\n            </span>\n          </div>\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.maxlength">\n            <span class="help-block">\n              Application name can\'t be more than 24 characters.\n            </span>\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <div class="form-group">\n      <label class="control-label required" for="repository">Git Repository</label>\n      <div ng-class="{ \'has-error\': $ctrl.builderForm.repository.$touched && $ctrl.builderForm.repository.$error.$required }">\n        <input class="form-control"\n          type="text"\n          id="repository"\n          name="repository"\n          required\n          ng-model="$ctrl.repository"\n          autocorrect="off"\n          autocapitalize="off"\n          spellcheck="false">\n        <div ng-if="$ctrl.istag.annotations.sampleRepo" class="help-block">\n          <a href="" ng-click="$ctrl.fillSampleRepo()">Try Sample Repository\n            <i class="fa fa-level-up" aria-hidden="true"></i></a>\n        </div>\n        <div class="has-error" ng-if="$ctrl.builderForm.repository.$touched && $ctrl.builderForm.repository.$error.$required">\n          <span class="help-block">\n            Git repository is required.\n          </span>\n        </div>\n        <div class="has-warning" ng-if="$ctrl.builderForm.repository.$touched && $ctrl.repository && !$ctrl.repositoryPattern.test($ctrl.repository)">\n          <span class="help-block">\n            This might not be a valid Git URL. Check that it is the correct URL to a remote Git repository.\n          </span>\n        </div>\n      </div>\n    </div>\n\n    <!--\n      Only show the link for existing projects. It will be broken for new\n      projects.  Use class `invisible` when the project list is still loading\n      so the dialog doesn\'t resize.\n    -->\n    <div ng-hide="$ctrl.selectedProject && !$ctrl.selectedProject.metadata.uid"\n         ng-class="{ invisible: !$ctrl.selectedProject || !$ctrl.istag }"\n         class="form-group">\n      If you have a private Git repository or need to change application defaults, view\n      <a href="" ng-click="$ctrl.navigateToAdvancedForm()">advanced options</a>.\n    </div>\n  </form>\n</div>\n';
 }, function(a, b) {
-a.exports = '<div ng-if="!$ctrl.success && !$ctrl.error">\n  <div ng-if="!$ctrl.serviceToBind">\n    <h3 class="text-center">\n      <div class="spinner spinner-lg" aria-hidden="true"></div>\n    </h3>\n    <h3 class="text-center">\n      <span>The application is being created</span>\n    </h3>\n  </div>\n  <div ng-if="$ctrl.serviceToBind" class="review-status">\n    <div class="spinner spinner-sm spinner-inline aria-hidden="true"></div>\n    <h3 class="review-message">\n      The application is being created\n    </h3>\n  </div>\n</div>\n<div ng-if="$ctrl.success">\n  <div class="review-status">\n    <span class="pficon pficon-ok" aria-hidden="true"></span>\n    <span class="sr-only">Success</span>\n    <h3 class="review-message">\n    <span>\n      <strong>{{$ctrl.name}}</strong> has been created in <strong>{{$ctrl.selectedProject.metadata.name}}</strong> successfully\n    </span>\n    </h3>\n  </div>\n</div>\n<div ng-if="!$ctrl.error && ($ctrl.bindInProgress || $ctrl.bindComplete)">\n  <bind-results error="$ctrl.bindError"\n                progress-inline="true"\n                binding="$ctrl.binding"\n                service-to-bind="$ctrl.serviceToBind"\n                bind-type="application"\n                application-to-bind="$ctrl.name"\n                show-pod-presets="$ctrl.showPodPresets">\n  </bind-results>\n</div>\n<div ng-if="$ctrl.success">\n  <p ng-if="!$ctrl.serviceToBind || $ctrl.bindComplete">\n    Continue to your project to check the status of your application as it builds and deploys.\n  </p>\n</div>\n<div class="review-failure" ng-if="$ctrl.error">\n  <div class="review-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <span class="sr-only">Error</span>\n    <h3 class="review-message">\n      Order Failed\n    </h3>\n  </div>\n  <div class="sub-title">\n    <span ng-if="$ctrl.error.data.message">\n      {{$ctrl.error.data.message | upperFirst}}\n    </span>\n    <span ng-if="!$ctrl.error.data.message">\n      An error occurred creating the application.\n    </span>\n  </div>\n  <!-- TODO: Improve error message presentation -->\n  <ul ng-if="$ctrl.error.failure.length" class="failure-messages">\n    <li ng-repeat="failure in $ctrl.error.failure">\n      {{failure.data.message}}\n    </li>\n  </ul>\n</div>\n<div class="footer-panel">\n  <a class="btn btn-primary" href="{{$ctrl.selectedProject | projectUrl : $ctrl.baseProjectUrl}}">View Project</a>\n</div>\n';
+a.exports = '<div ng-if="!$ctrl.success && !$ctrl.error">\n  <div ng-if="!$ctrl.serviceToBind">\n    <h3 class="text-center">\n      <div class="spinner spinner-lg" aria-hidden="true"></div>\n    </h3>\n    <h3 class="text-center">\n      <span>The application is being created</span>\n    </h3>\n  </div>\n  <div ng-if="$ctrl.serviceToBind" class="review-status">\n    <div class="spinner spinner-sm spinner-inline" aria-hidden="true"></div>\n    <h3 class="review-message">\n      The application is being created\n    </h3>\n  </div>\n</div>\n<div ng-if="$ctrl.success">\n  <div class="review-status">\n    <span class="pficon pficon-ok" aria-hidden="true"></span>\n    <span class="sr-only">Success</span>\n    <h3 class="review-message">\n    <span>\n      <strong>{{$ctrl.name}}</strong> has been created in <strong>{{$ctrl.selectedProject.metadata.name}}</strong> successfully\n    </span>\n    </h3>\n  </div>\n</div>\n<div ng-if="!$ctrl.error && ($ctrl.bindInProgress || $ctrl.bindComplete)">\n  <bind-results error="$ctrl.bindError"\n                progress-inline="true"\n                binding="$ctrl.binding"\n                service-to-bind="$ctrl.serviceToBind"\n                bind-type="application"\n                application-to-bind="$ctrl.name"\n                show-pod-presets="$ctrl.showPodPresets">\n  </bind-results>\n</div>\n<div ng-if="$ctrl.success">\n  <p ng-if="!$ctrl.serviceToBind || $ctrl.bindComplete">\n    Continue to your project to check the status of your application as it builds and deploys.\n  </p>\n</div>\n<div class="review-failure" ng-if="$ctrl.error">\n  <div class="review-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <h3 class="review-message">\n      Error creating <strong>{{$ctrl.name}}</strong> in\n      <strong>{{$ctrl.selectedProject | displayName}}</strong>\n    </h3>\n  </div>\n  <div class="sub-title">\n    <span ng-if="$ctrl.error.data.message">\n      {{$ctrl.error.data.message | upperFirst}}\n    </span>\n    <span ng-if="!$ctrl.error.data.message">\n      An error occurred creating the application.\n    </span>\n  </div>\n  <!-- TODO: Improve error message presentation -->\n  <ul ng-if="$ctrl.error.failure.length" class="failure-messages">\n    <li ng-repeat="failure in $ctrl.error.failure">\n      {{failure.data.message}}\n    </li>\n  </ul>\n</div>\n<div class="footer-panel">\n  <a class="btn btn-primary" href="{{$ctrl.selectedProject | projectUrl : $ctrl.baseProjectUrl}}">View Project</a>\n</div>\n';
 }, function(a, b) {
 a.exports = '<bind-service-form service-class="$ctrl.serviceClass.resource"\n                   service-class-name="$ctrl.serviceClass.name"\n                   applications="$ctrl.applications"\n                   form-name="$ctrl.forms.bindForm"\n                   allow-no-binding="true"\n                   bind-type="$ctrl.bindType"\n                   app-to-bind="$ctrl.appToBind">\n</bind-service-form>\n';
 }, function(a, b) {
@@ -64126,7 +64142,7 @@ a.exports = '<div class="config-top">\n  <form name="$ctrl.forms.orderConfigureF
 }, function(a, b) {
 a.exports = '<div class="config-top">\n  <div class="select-plans">\n    <h3>Select a Plan</h3>\n    <div ng-repeat="plan in $ctrl.serviceClass.resource.plans" class="radio">\n      <label>\n        <input\n          type="radio"\n          ng-model="$ctrl.planIndex"\n          ng-change="$ctrl.selectPlan(plan)"\n          value="{{$index}}">\n        <span class="plan-name">{{plan.externalMetadata.displayName || plan.name}}</span>\n        <!-- TODO: truncate long text -->\n        <div ng-if="plan.description">{{plan.description}}</div>\n        <!-- TODO: show plan bullets -->\n      </label>\n    </div>\n  </div>\n</div>\n';
 }, function(a, b) {
-a.exports = '<div ng-if="!$ctrl.error">\n  <div ng-if="!$ctrl.orderComplete">\n    <div ng-if="$ctrl.bindType === \'none\'">\n      <h3 class="text-center">\n        <div class="spinner spinner-lg" aria-hidden="true"></div>\n      </h3>\n      <h3 class="text-center">\n        <span>The service is being provisioned</span>\n      </h3>\n    </div>\n    <div ng-if="$ctrl.bindType !== \'none\'" class="review-status">\n      <div class="spinner spinner-sm spinner-inline" aria-hidden="true"></div>\n      <h3 class="review-message">\n        The service is being provisioned\n      </h3>\n    </div>\n  </div>\n</div>\n<div class="review-failure" ng-if="$ctrl.error">\n  <div class="review-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <span class="sr-only">Error</span>\n    <h3 class="review-message">\n      Order Failed\n    </h3>\n  </div>\n  <div class="sub-title">\n    <span ng-if="$ctrl.error.message || $ctrl.error.Message ">\n      {{$ctrl.error.message || $ctrl.error.Message | upperFirst}}\n    </span>\n    <span ng-if="!$ctrl.error.message || $ctrl.error.Message">\n      An error occurred ordering the service.\n    </span>\n  </div>\n</div>\n<div ng-if="$ctrl.orderComplete">\n  <div class="review-status">\n    <span class="pficon pficon-ok" aria-hidden="true"></span>\n    <span class="sr-only">Success</span>\n    <h3 class="review-message">\n      <span>\n        <strong>{{$ctrl.serviceInstanceName}}</strong> has been added to <strong>{{$ctrl.projectDisplayName}}</strong> successfully\n      </span>\n    </h3>\n  </div>\n</div>\n<div ng-if="$ctrl.bindType !== \'none\'">\n  <bind-results error="$ctrl.bindError"\n                progress-inline="true"\n                binding="$ctrl.binding"\n                service-to-bind="$ctrl.serviceInstanceName"\n                bind-type="{{$ctrl.bindType}}"\n                application-to-bind="$ctrl.appToBind.metadata.name"\n                show-pod-presets="$ctrl.showPodPresets">\n  </bind-results>\n</div>\n<div class="alert alert-info" ng-if="$ctrl.orderComplete && $ctrl.bindType === \'none\'">\n  <span class="pficon pficon-info" aria-hidden="true"></span>\n  <span class="sr-only">Info</span>\n  Continue to your project to bind this service to your application. Binding this service creates a secret containing the information necessary for your application to use the service.\n</div>\n<div class="footer-panel">\n  <a class="btn btn-primary" href="{{$ctrl.selectedProject | projectUrl : $ctrl.baseProjectUrl}}">View Project</a>\n</div>\n';
+a.exports = '<div ng-if="!$ctrl.error">\n  <div ng-if="!$ctrl.orderComplete">\n    <div ng-if="$ctrl.bindType === \'none\'">\n      <h3 class="text-center">\n        <div class="spinner spinner-lg" aria-hidden="true"></div>\n      </h3>\n      <h3 class="text-center">\n        <span>The service is being provisioned</span>\n      </h3>\n    </div>\n    <div ng-if="$ctrl.bindType !== \'none\'" class="review-status">\n      <div class="spinner spinner-sm spinner-inline" aria-hidden="true"></div>\n      <h3 class="review-message">\n        The service is being provisioned\n      </h3>\n    </div>\n  </div>\n</div>\n<div class="review-failure" ng-if="$ctrl.error">\n  <div class="review-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <h3 class="review-message">\n      Error provisioning <strong>{{$ctrl.serviceClass.name}}</strong> in\n      <strong>{{$ctrl.projectDisplayName}}</strong>\n    </h3>\n  </div>\n  <div class="sub-title">\n    <span ng-if="$ctrl.error.message">\n      {{$ctrl.error.message}}\n    </span>\n    <span ng-if="!$ctrl.error.message">\n      An error occurred provisioning the service.\n    </span>\n  </div>\n</div>\n<div ng-if="$ctrl.orderComplete">\n  <div class="review-status">\n    <span class="pficon pficon-ok" aria-hidden="true"></span>\n    <span class="sr-only">Success</span>\n    <h3 class="review-message">\n      <span>\n        <strong>{{$ctrl.serviceInstance.metadata.name}}</strong> has been added to <strong>{{$ctrl.projectDisplayName}}</strong> successfully\n      </span>\n    </h3>\n  </div>\n</div>\n<div ng-if="$ctrl.bindType !== \'none\'">\n  <bind-results error="$ctrl.bindError"\n                progress-inline="true"\n                binding="$ctrl.binding"\n                service-to-bind="$ctrl.serviceInstance.metadata.name"\n                bind-type="{{$ctrl.bindType}}"\n                application-to-bind="$ctrl.appToBind.metadata.name"\n                show-pod-presets="$ctrl.showPodPresets">\n  </bind-results>\n</div>\n<div class="alert alert-info" ng-if="$ctrl.orderComplete && $ctrl.bindType === \'none\'">\n  <span class="pficon pficon-info" aria-hidden="true"></span>\n  <span class="sr-only">Info</span>\n  Continue to your project to bind this service to your application. Binding this service creates a secret containing the information necessary for your application to use the service.\n</div>\n<div class="footer-panel">\n  <a class="btn btn-primary" href="{{$ctrl.selectedProject | projectUrl : $ctrl.baseProjectUrl}}">View Project</a>\n</div>\n';
 }, function(a, b) {
 a.exports = '<div  class="schema-form-array {{form.htmlClass}}"\n      sf-field-model="sf-new-array"\n      sf-new-array>\n  <label class="control-label" ng-show="showTitle()">{{ form.title }}</label>\n  <ol class="list-group" sf-field-model ui-sortable="form.sortOptions">\n    <li class="list-group-item {{form.fieldHtmlClass}}"\n        schema-form-array-items\n        sf-field-model="ng-repeat"\n        ng-repeat="item in $$value$$ track by $index">\n      <button ng-hide="form.readonly || form.remove === null"\n              ng-click="deleteFromArray($index)"\n              ng-disabled="form.schema.minItems >= modelArray.length"\n              style="position: absolute; z-index: 20; right: 0; top: 12px; font-size: 20px;"\n              type="button" class="close">\n              <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>\n      </button>\n    </li>\n  </ol>\n  <div class="clearfix" style="padding: 15px;" ng-model="modelArray" schema-validate="form">\n    <div class="help-block"\n         ng-show="(hasError() && errorMessage(schemaError())) || form.description"\n         ng-bind-html="(hasError() && errorMessage(schemaError())) || form.description"></div>\n\n    <button ng-hide="form.readonly || form.add === null"\n            ng-click="appendToArray()"\n            ng-disabled="form.schema.maxItems <= modelArray.length"\n            type="button"\n            class="btn {{ form.style.add || \'btn-default\' }} pull-right">\n      {{ form.add || \'Add\'}}\n    </button>\n  </div>\n</div>\n';
 }, function(a, b) {
@@ -65025,7 +65041,7 @@ allowed:!1,
 hidden:!1,
 prevEnabled:!1,
 onShow:this.showResults
-}, this.ctrl.steps = [ this.configStep, this.bindStep, this.reviewStep ], this.ctrl.versions = this.getVersions(), this.ctrl.istag = e.first(this.ctrl.versions), this.ctrl.nameMaxLength = 24, this.ctrl.namePattern = /^[a-z]([-a-z0-9]*[a-z0-9])?$/, this.ctrl.repositoryPattern = /^[a-z][a-z0-9+.-@]*:(\/\/)?[0-9a-z_-]+/, this.ctrl.wizardDone = !1, this.ctrl.serviceToBind = "", this.ctrl.updating = !1, this.ctrl.serviceInstances = [], this.selectedProjectWatch = this.$scope.$watch(function() {
+}, this.ctrl.steps = [ this.configStep, this.bindStep, this.reviewStep ], this.ctrl.versions = this.getVersions(), this.ctrl.istag = e.first(this.ctrl.versions), this.ctrl.nameMaxLength = 24, this.ctrl.namePattern = /^[a-z]([-a-z0-9]*[a-z0-9])?$/, this.ctrl.repositoryPattern = /^[a-z][a-z0-9+.-@]*:(\/\/)?[0-9a-z_-]+/, this.ctrl.wizardDone = !1, this.ctrl.serviceToBind = null, this.ctrl.updating = !1, this.ctrl.serviceInstances = [], this.selectedProjectWatch = this.$scope.$watch(function() {
 return a.ctrl.selectedProject;
 }, this.onProjectUpdate), this.getServiceClasses();
 }, a.prototype.closePanel = function() {
@@ -65082,7 +65098,7 @@ return d ? -1 :1;
 }), this.ctrl.serviceInstances = a;
 }
 }, a.prototype.updateBindability = function() {
-this.ctrl.wizardDone || (this.bindStep.hidden = e.size(this.ctrl.serviceInstances) < 1, this.ctrl.serviceToBind = "", this.bindStep.hidden ? this.ctrl.nextTitle = "Create" :this.ctrl.nextTitle = "Next >");
+this.ctrl.wizardDone || (this.bindStep.hidden = e.size(this.ctrl.serviceInstances) < 1, this.ctrl.serviceToBind = null, this.bindStep.hidden ? this.ctrl.nextTitle = "Create" :this.ctrl.nextTitle = "Next >");
 }, a.prototype.isNewProject = function() {
 return !e.has(this.ctrl.selectedProject, "metadata.uid");
 }, a.prototype.createApp = function() {
@@ -65130,8 +65146,8 @@ var b = this;
 this.ctrl.bindInProgress = !0, this.ctrl.bindError = !1;
 var c = {
 namespace:e.get(this.ctrl.selectedProject, "metadata.name")
-};
-this.BindingService.bindService(c, this.ctrl.serviceToBind, a).then(function(a) {
+}, d = this.BindingService.getServiceClassForInstance(this.ctrl.serviceToBind, this.ctrl.serviceClasses);
+this.BindingService.bindService(this.ctrl.serviceToBind, a, d).then(function(a) {
 b.ctrl.binding = a, b.ctrl.bindInProgress = !1, b.ctrl.bindComplete = !0, b.ctrl.bindError = null, b.watches.push(b.DataService.watchObject(b.BindingService.bindingResource, e.get(b.ctrl.binding, "metadata.name"), c, function(a) {
 b.ctrl.binding = a;
 }));
@@ -65296,9 +65312,9 @@ resource:"instances"
 namespace:this.ctrl.selectedProject.metadata.name
 };
 this.DataService.create(c, null, b, d).then(function(b) {
-a.ctrl.orderInProgress = !0, a.watchResults(c, b, d), a.ctrl.serviceInstanceName = e.get(b, "metadata.name"), "none" !== a.ctrl.bindType && a.bindService();
+a.ctrl.orderInProgress = !0, a.watchResults(c, b, d), a.ctrl.serviceInstance = b, "none" !== a.ctrl.bindType && a.bindService();
 }, function(b) {
-a.ctrl.error = b;
+a.ctrl.error = e.get(b, "data");
 });
 }, a.prototype.bindService = function() {
 var a = this;
@@ -65306,7 +65322,7 @@ this.ctrl.bindInProgress = !0, this.ctrl.bindError = !1;
 var b = {
 namespace:e.get(this.ctrl.selectedProject, "metadata.name")
 }, c = "application" === this.ctrl.bindType ? this.ctrl.appToBind :void 0;
-this.BindingService.bindService(b, this.ctrl.serviceInstanceName, c).then(function(c) {
+this.BindingService.bindService(this.ctrl.serviceInstance, c, this.ctrl.serviceClass.resource).then(function(c) {
 a.ctrl.binding = c, a.ctrl.bindInProgress = !1, a.ctrl.bindComplete = !0, a.ctrl.bindError = null, a.watches.push(a.DataService.watchObject(a.BindingService.bindingResource, e.get(a.ctrl.binding, "metadata.name"), b, function(b) {
 a.ctrl.binding = b;
 }));
@@ -65524,8 +65540,8 @@ annotations:{
 "new-display-name":""
 }
 }
-};
-a.ctrl.projects = d.sortBy(b.by("metadata.name"), a.$filter("displayName")), a.ctrl.existingProjectNames = d.map(a.ctrl.projects, "metadata.name"), !a.ctrl.selectedProject && d.size(a.ctrl.projects) > 0 && (a.ctrl.selectedProject = a.$filter("mostRecent")(a.ctrl.projects)), a.ctrl.canCreate && (a.ctrl.projects.unshift(c), 1 === d.size(a.ctrl.projects) && (a.ctrl.selectedProject = c));
+}, e = b.by("metadata.name");
+e = d.reject(e, "metadata.deletionTimestamp"), a.ctrl.projects = d.sortBy(e, a.$filter("displayName")), a.ctrl.existingProjectNames = d.map(a.ctrl.projects, "metadata.name"), !a.ctrl.selectedProject && d.size(a.ctrl.projects) > 0 && (a.ctrl.selectedProject = a.$filter("mostRecent")(a.ctrl.projects)), a.ctrl.canCreate && (a.ctrl.projects.unshift(c), 1 === d.size(a.ctrl.projects) && (a.ctrl.selectedProject = c));
 });
 }, a;
 }();

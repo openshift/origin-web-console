@@ -38,7 +38,7 @@
           newestNotReady = instance;
         }
       });
-      ctrl.serviceToBind = _.get(newestReady, 'metadata.name') || _.get(newestNotReady, 'metadata.name');
+      ctrl.serviceToBind = newestReady || newestNotReady;
     };
 
     var sortServiceInstances = function() {
@@ -201,14 +201,15 @@
     };
 
     ctrl.bindService = function() {
-      var svcToBind = ctrl.target.kind === 'Instance' ? ctrl.target : ctrl.serviceInstances[ctrl.serviceToBind];
+      var svcToBind = ctrl.target.kind === 'Instance' ? ctrl.target : ctrl.serviceToBind;
       var application = ctrl.bindType === 'application' ? ctrl.appToBind : undefined;
 
       var context = {
         namespace: _.get(svcToBind, 'metadata.namespace')
       };
 
-      BindingService.bindService(context, _.get(svcToBind, 'metadata.name'), application).then(function(binding){
+      var serviceClass = BindingService.getServiceClassForInstance(svcToBind, ctrl.serviceClasses);
+      BindingService.bindService(svcToBind, application, serviceClass).then(function(binding){
         ctrl.binding = binding;
         ctrl.error = null;
 
