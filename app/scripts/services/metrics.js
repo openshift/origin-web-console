@@ -137,36 +137,60 @@ angular.module("openshiftConsole")
       });
     };
 
-    // Network metrics are collected at the pod level.
-    var podQueryTemplate = _.template("descriptor_name:network/tx_rate|network/rx_rate,type:pod,pod_id:<%= uid %>");
-    var containerQueryTemplate = _.template("descriptor_name:memory/usage|cpu/usage_rate,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>");
+    // Query network metrics. Network metrics are only collected at the pod level.
+    var networkQuery = _.template("descriptor_name:network/tx_rate|network/rx_rate,type:pod,pod_id:<%= uid %>");
+
+    // Query memory and CPU usage for one container
+    var memoryCpuContainerQuery = _.template("descriptor_name:memory/usage|cpu/usage_rate,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>");
+
+    // Query memory, CPU, and network metrics for all containers (e.g., on the overview).
+    var allPodMetrics = _.template("descriptor_name:network/tx_rate|network/rx_rate|memory/usage|cpu/usage_rate,type:pod,pod_id:<%= uid %>");
+
     var getPodMetrics = function(config) {
       return getStatsQueryURL().then(function(url) {
-        var request = {
+        var parameters = {
           bucketDuration: config.bucketDuration,
           start: config.start
         };
 
         if (config.end) {
-          request.end = config.end;
+          parameters.end = config.end;
         }
 
+        var requests = [];
         var promises = [];
         var matchPods = matchValues(_.map(config.pods, 'metadata.uid'));
-        var containerQuery = _.assign({
-          tags: containerQueryTemplate({
-            uid: matchPods,
-            containerName: config.containerName
-          })
-        }, request);
-        promises.push(query(url, containerQuery, config));
+        if (config.containerName) {
+          // If a container name is provided, get only the memory and CPU usage
+          // for that container. Network metrics are always pod level, so we
+          // need to make two requests.
+          requests.push(_.assign({
+            tags: memoryCpuContainerQuery({
+              uid: matchPods,
+              containerName: config.containerName
+            })
+          }, parameters));
 
-        var podQuery = _.assign({
-          tags: podQueryTemplate({
-            uid: matchPods
-          })
-        }, request);
-        promises.push(query(url, podQuery, config));
+          requests.push(_.assign({
+            tags: networkQuery({
+              uid: matchPods
+            })
+          }, parameters));
+        } else {
+          // If no container name is provided, get the memory, CPU, and network
+          // metrics for all containers in the pod.
+          requests.push(_.assign({
+            tags: allPodMetrics({
+              uid: matchPods
+            })
+          }, parameters));
+        }
+
+        _.each(requests, function(request) {
+          var promise = query(url, request, config);
+          promises.push(promise);
+        });
+
         return $q.all(promises).then(function(results) {
           var result = {};
           _.each(results, function(next) {
