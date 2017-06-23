@@ -12348,10 +12348,11 @@ templateUrl:"views/directives/bind-service.html"
 }(), function() {
 function a(a, b, c) {
 var d, e, f = this, g = b("serviceInstanceDisplayName"), h = function() {
-c["delete"]({
+var a = f.selectedBinding.metadata.name;
+f.unboundApps = f.appsForBinding(a), c["delete"]({
 group:"servicecatalog.k8s.io",
 resource:"bindings"
-}, f.selectedBinding.metadata.name, e, {
+}, a, e, {
 propagationPolicy:null
 }).then(_.noop, function(a) {
 f.error = a;

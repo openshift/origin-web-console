@@ -5819,14 +5819,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h3 class=\"mar-top-none\">\n" +
     "Binding for the following has been deleted:\n" +
     "</h3>\n" +
-    "<div ng-if=\"ctrl.appsForBinding(ctrl.selectedBinding.metadata.name) | size\" ng-repeat=\"appForBinding in ctrl.appsForBinding(ctrl.selectedBinding.metadata.name)\">\n" +
+    "<div ng-if=\"ctrl.unboundApps | size\" ng-repeat=\"appForBinding in ctrl.unboundApps track by (appForBinding | uid)\">\n" +
     "{{appForBinding.metadata.name}} <small class=\"text-muted\">&ndash; {{ appForBinding.kind | humanizeKind : true}}</small>\n" +
     "</div>\n" +
-    "<div ng-if=\"!(ctrl.appsForBinding(ctrl.selectedBinding.metadata.name)  | size)\">\n" +
+    "<div ng-if=\"!(ctrl.unboundApps | size)\">\n" +
     "{{ctrl.selectedBinding.spec.secretName}} <small class=\"text-muted\">&ndash; Secret</small>\n" +
     "</div>\n" +
-    "<p class=\"mar-top-lg\">\n" +
-    "<span class=\"pficon pficon-info\"></span> You will need to redeploy your pods for this to take effect.\n" +
+    "\n" +
+    "<p ng-if=\"ctrl.unboundApps | size\" class=\"mar-top-lg\">\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "You will need to redeploy your pods for this to take effect.\n" +
     "</p>\n" +
     "</div>\n" +
     "<div ng-if=\"ctrl.error\">\n" +
