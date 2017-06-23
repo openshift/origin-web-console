@@ -4975,7 +4975,7 @@ var l, m = b("buildConfigForBuild"), n = b("buildStrategy"), o = [], p = functio
 a.updatedBuildConfig = angular.copy(b), a.envVars = n(a.updatedBuildConfig).env || [];
 };
 a.compareTriggers = function(a, b) {
-return "ConfigChange" === a.value ? -1 :"ConfigChange" === b.value ? 1 :"ImageChange" === a.value ? -1 :"ImageChange" === b.value ? 1 :a.value.localeCompare(b.value);
+return _.isNumber(a.value) ? -1 :"ConfigChange" === a.value ? -1 :"ConfigChange" === b.value ? 1 :"ImageChange" === a.value ? -1 :"ImageChange" === b.value ? 1 :a.value.localeCompare(b.value);
 }, a.saveEnvVars = function() {
 a.envVars = _.filter(a.envVars, "name"), n(a.updatedBuildConfig).env = k.compactEntries(angular.copy(a.envVars)), g.update("buildconfigs", c.buildconfig, a.updatedBuildConfig, l).then(function() {
 a.alerts.saveBCEnvVarsSuccess = {
