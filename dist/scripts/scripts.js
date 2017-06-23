@@ -12348,10 +12348,14 @@ templateUrl:"views/directives/bind-service.html"
 }(), function() {
 function a(a, b, c) {
 var d, e, f = this, g = b("serviceInstanceDisplayName"), h = function() {
-c["delete"]({
+f.deletedBinding = _.first(_.filter(f.bindings, {
+metadata:{
+name:f.selectedBinding
+}
+})), f.appsForDeletedBinding = f.appsForBinding(f.selectedBinding), c["delete"]({
 group:"servicecatalog.k8s.io",
 resource:"bindings"
-}, f.selectedBinding.metadata.name, e, {
+}, f.selectedBinding, e, {
 propagationPolicy:null
 }).then(_.noop, function(a) {
 f.error = a;
@@ -12382,7 +12386,7 @@ view:"views/directives/bind-service/delete-binding-result.html",
 onShow:l
 } ], e = {
 namespace:_.get(f.target, "metadata.namespace")
-};
+}, f.selectedBinding = 1 === _.size(f.bindings) ? _.first(f.bindings).metadata.name :null;
 }, f.appsForBinding = function(a) {
 return _.get(f.applicationsByBinding, a);
 }, f.closeWizard = function() {

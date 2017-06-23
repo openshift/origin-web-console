@@ -26,11 +26,13 @@
     var serviceInstanceDisplayName = $filter('serviceInstanceDisplayName');
 
     var unbindService = function() {
+      ctrl.deletedBinding = _.first(_.filter(ctrl.bindings, {metadata: {name: ctrl.selectedBinding}}));
+      ctrl.appsForDeletedBinding = ctrl.appsForBinding(ctrl.selectedBinding);
       DataService.delete({
         group: 'servicecatalog.k8s.io',
         resource: 'bindings'
       },
-      ctrl.selectedBinding.metadata.name,
+      ctrl.selectedBinding,
       context,
       { propagationPolicy: null })
       .then(_.noop, function(err) {
@@ -41,15 +43,9 @@
     var setupValidator = function() {
       var firstStep = _.first(ctrl.steps);
       firstStep.valid = false;
-      // TODO: auto-select if one option is kludgy. will follow-on a fix
-      // if(_.size(ctrl.bindings) === 1) {
-      //   firstStep.valid = true;
-      //   ctrl.selectedBinding = _.first(ctrl.bindings);
-      // } else {
         validityWatcher = $scope.$watch("ctrl.selectedBinding", function(selectedBinding) {
           firstStep.valid = !!selectedBinding;
         });
-      // }
     };
 
     var tearDownValidator = function() {
@@ -89,6 +85,7 @@
       context = {
         namespace: _.get(ctrl.target, 'metadata.namespace')
       };
+      ctrl.selectedBinding = (_.size(ctrl.bindings) === 1) ? _.first(ctrl.bindings).metadata.name : null;
     };
 
     ctrl.appsForBinding = function(bindingName) {

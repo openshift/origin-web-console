@@ -5,12 +5,12 @@
     </h3>
 
     <div
-      ng-if="ctrl.appsForBinding(ctrl.selectedBinding.metadata.name) | size"
-      ng-repeat="appForBinding in ctrl.appsForBinding(ctrl.selectedBinding.metadata.name)">
+      ng-if="ctrl.appsForDeletedBinding | size"
+      ng-repeat="appForBinding in ctrl.appsForDeletedBinding">
       {{appForBinding.metadata.name}} <small class="text-muted">&ndash; {{ appForBinding.kind | humanizeKind : true}}</small>
     </div>
-    <div ng-if="!(ctrl.appsForBinding(ctrl.selectedBinding.metadata.name)  | size)">
-      {{ctrl.selectedBinding.spec.secretName}} <small class="text-muted">&ndash; Secret</small>
+    <div ng-if="!(ctrl.appsForDeletedBinding  | size)">
+      {{ctrl.deletedBinding.spec.secretName}} <small class="text-muted">&ndash; Secret</small>
     </div>
 
     <p class="mar-top-lg">

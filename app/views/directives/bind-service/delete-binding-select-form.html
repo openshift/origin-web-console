@@ -8,7 +8,7 @@
           <input
             type="radio"
             ng-model="ctrl.selectedBinding"
-            ng-value="{{binding}}">
+            value="{{binding.metadata.name}}">
           <div
             ng-if="ctrl.appsForBinding(binding.metadata.name) | size"
             ng-repeat="appForBinding in ctrl.appsForBinding(binding.metadata.name)">
