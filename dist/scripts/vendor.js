@@ -59994,7 +59994,7 @@ a.put("src/components/binding/bindServiceForm.html", '<div class="bind-form">\n 
 a.put("src/components/create-project/createProject.html", '<form name="createProjectForm" novalidate>\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="name" class="required">Name</label>\n      <span ng-class="{\'has-error\': (createProjectForm.name.$error.pattern && createProjectForm.name.$touched) || nameTaken}">\n        <input class="form-control input-lg"\n            name="name"\n            id="name"\n            placeholder="my-project"\n            type="text"\n            required\n            take-focus\n            minlength="2"\n            maxlength="63"\n            pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?"\n            aria-describedby="nameHelp"\n            ng-model="name"\n            ng-model-options="{ updateOn: \'default blur\' }"\n            ng-change="nameTaken = false"\n            autocorrect="off"\n            autocapitalize="off"\n            spellcheck="false">\n      </span>\n      <div>\n        <span class="help-block">A unique name for the project.</span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.required && createProjectForm.name.$dirty">\n          Name is required.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.minlength && createProjectForm.name.$touched">\n          Name must have at least two characters.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.pattern && createProjectForm.name.$touched">\n          Project names may only contain lower-case letters, numbers, and dashes.\n          They may not start or end with a dash.\n        </span>\n      </div>\n      <div class="has-error">\n        <span class="help-block" ng-if="nameTaken">\n          This name is already in use. Please choose a different name.\n        </span>\n      </div>\n    </div>\n\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control input-lg"\n          name="displayName"\n          id="displayName"\n          placeholder="My Project"\n          type="text"\n          ng-model="displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n      <textarea class="form-control input-lg"\n          name="description"\n          id="description"\n          placeholder="A short description."\n          ng-model="description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n          class="btn btn-primary btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="createProject()"\n          ng-disabled="createProjectForm.$invalid || nameTaken || disableInputs"\n          value="">\n        Create\n      </button>\n      <button\n          class="btn btn-default btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelCreateProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
 a.put("src/components/delete-project/delete-project-button.html", '<div class="actions">\n  <!-- Avoid whitespace inside the link -->\n  <a href=""\n     ng-click="$event.stopPropagation(); openDeleteModal()"\n     role="button"\n     class="action-button"\n     ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n     ng-class="{ \'disabled-link\': disableDelete }"\n    ><i class="fa fa-trash-o" aria-hidden="true"\n    ></i><span class="sr-only">Delete Project {{projectName}}</span></a>\n</div>\n'), a.put("src/components/delete-project/delete-project-modal.html", '<div class="delete-resource-modal">\n  <!-- Use a form so that the enter key submits when typing a project name to confirm. -->\n  <form>\n    <div class="modal-body">\n      <h1>Are you sure you want to delete the project\n        \'<strong>{{displayName ? displayName : projectName}}</strong>\'?</h1>\n      <p>\n        This will <strong>delete all resources</strong> associated with\n        the project {{displayName ? displayName : projectName}} and <strong>cannot be\n        undone</strong>.  Make sure this is something you really want to do!\n      </p>\n      <div ng-show="typeNameToConfirm">\n        <p>Type the name of the project to confirm.</p>\n        <p>\n          <label class="sr-only" for="resource-to-delete">project to delete</label>\n          <input\n              ng-model="confirmName"\n              id="resource-to-delete"\n              type="text"\n              class="form-control input-lg"\n              autocorrect="off"\n              autocapitalize="off"\n              spellcheck="false"\n              autofocus>\n        </p>\n      </div>\n    </div>\n    <div class="modal-footer">\n      <button ng-disabled="typeNameToConfirm && confirmName !== projectName && confirmName !== displayName" class="btn btn-lg btn-danger" type="submit" ng-click="delete();">Delete</button>\n      <button class="btn btn-lg btn-default" type="button" ng-click="cancel();">Cancel</button>\n    </div>\n  </form>\n</div>\n'), 
 a.put("src/components/delete-project/delete-project.html", '<a href="javascript:void(0)"\n   ng-click="openDeleteModal()"\n   role="button"\n   ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n   ng-class="{ \'disabled-link\': disableDelete }"\n>{{label || \'Delete\'}}</a>\n'), a.put("src/components/edit-project/editProject.html", '<form name="editProjectForm">\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control input-lg"\n             name="displayName"\n             id="displayName"\n             placeholder="My Project"\n             type="text"\n             ng-model="editableFields.displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n                    <textarea class="form-control input-lg"\n                              name="description"\n                              id="description"\n                              placeholder="A short description."\n                              ng-model="editableFields.description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n              class="btn btn-primary btn-lg"\n              ng-class="{\'dialog-btn\': isDialog}"\n              ng-click="update()"\n              ng-disabled="editProjectForm.$invalid || disableInputs"\n              value="">{{submitButtonLabel}}</button>\n      <button\n          class="btn btn-default btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelEditProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
-a.put("src/components/toast-notifications/toast-notifications.html", '<div class="toast-notifications-list-pf">\n  <div ng-repeat="(notificationID, notification) in notifications track by (notificationID + (notification.message || notification.details))" ng-if="!notification.hidden"\n       ng-mouseenter="setHover(notification, true)" ng-mouseleave="setHover(notification, false)">\n    <div class="toast-pf alert {{notification.type | alertStatus}}" ng-class="{\'alert-dismissable\': !hideCloseButton}">\n      <button ng-if="!hideCloseButton" type="button" class="close" ng-click="close(notification)">\n        <span class="pficon pficon-close" aria-hidden="true"></span>\n        <span class="sr-only">Close</span>\n      </button>\n      <span class="{{notification.type | alertIcon}}" aria-hidden="true"></span>\n      <span class="sr-only">{{notification.type}}</span>\n      <span class="toast-notification-message" ng-if="notification.message">{{notification.message}}</span>\n      <span ng-if="notification.details">\n        <truncate-long-text\n          limit="200"\n          content="notification.details"\n          use-word-boundary="true"\n          expandable="true"\n          hide-collapse="true">\n        </truncate-long-text>\n      </span>\n      <span ng-repeat="link in notification.links">\n        <a ng-if="!link.href" href="" ng-click="onClick(notification, link)" role="button">{{link.label}}</a>\n        <a ng-if="link.href" ng-href="{{link.href}}" ng-attr-target="{{link.target}}">{{link.label}}</a>\n        <span ng-if="!$last" class="toast-action-divider">|</span>\n      </span>\n    </div>\n  </div>\n</div>\n'), 
+a.put("src/components/toast-notifications/toast-notifications.html", '<div class="toast-notifications-list-pf">\n  <div ng-repeat="(notificationID, notification) in notifications track by (notificationID + (notification.message || notification.details))" ng-if="!notification.hidden || notification.isHover"\n       ng-mouseenter="setHover(notification, true)" ng-mouseleave="setHover(notification, false)">\n    <div class="toast-pf alert {{notification.type | alertStatus}}" ng-class="{\'alert-dismissable\': !hideCloseButton}">\n      <button ng-if="!hideCloseButton" type="button" class="close" ng-click="close(notification)">\n        <span class="pficon pficon-close" aria-hidden="true"></span>\n        <span class="sr-only">Close</span>\n      </button>\n      <span class="{{notification.type | alertIcon}}" aria-hidden="true"></span>\n      <span class="sr-only">{{notification.type}}</span>\n      <span class="toast-notification-message" ng-if="notification.message">{{notification.message}}</span>\n      <span ng-if="notification.details">\n        <truncate-long-text\n          limit="200"\n          content="notification.details"\n          use-word-boundary="true"\n          expandable="true"\n          hide-collapse="true">\n        </truncate-long-text>\n      </span>\n      <span ng-repeat="link in notification.links">\n        <a ng-if="!link.href" href="" ng-click="onClick(notification, link)" role="button">{{link.label}}</a>\n        <a ng-if="link.href" ng-href="{{link.href}}" ng-attr-target="{{link.target}}">{{link.label}}</a>\n        <span ng-if="!$last" class="toast-action-divider">|</span>\n      </span>\n    </div>\n  </div>\n</div>\n'), 
 a.put("src/components/truncate-long-text/truncateLongText.html", '<!--\n  Do not remove class `truncated-content` (here or below) even though it\'s not\n  styled directly in origin-web-common.  `truncated-content` is used by\n  origin-web-console in certain contexts.\n-->\n<span ng-if="!truncated" ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n<span ng-if="truncated">\n  <span ng-if="!toggles.expanded">\n    <span ng-attr-title="{{content}}" class="truncation-block">\n      <span ng-bind-html="truncatedContent | highlightKeywords : keywords" class="truncated-content"></span>&hellip;\n    </span>\n    <a ng-if="expandable" href="" ng-click="toggles.expanded = true" class="nowrap">See All</a>\n  </span>\n  <span ng-if="toggles.expanded">\n    <div ng-if="prettifyJson" class="well">\n      <span ng-if="!hideCollapse" class="pull-right" style="margin-top: -10px;"><a href="" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a></span>\n      <span ng-bind-html="content | prettifyJSON | highlightKeywords : keywords" class="pretty-json truncated-content"></span>\n    </div>\n    <span ng-if="!prettifyJson">\n      <span ng-if="!hideCollapse" class="pull-right"><a href="" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a></span>\n      <span ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n    </span>\n  </span>\n</span>\n');
 } ]), angular.module("openshiftCommonUI").component("bindApplicationForm", {
 controllerAs:"ctrl",
@@ -60304,28 +60304,38 @@ c && (c.closest("a", b).length || c.closest("button", b).length) || c.closest(".
 });
 }
 };
-}), angular.module("openshiftCommonUI").directive("toastNotifications", [ "NotificationsService", "$timeout", function(a, b) {
+}), angular.module("openshiftCommonUI").directive("toastNotifications", [ "NotificationsService", "$rootScope", "$timeout", function(a, b, c) {
 return {
 restrict:"E",
 scope:{},
 templateUrl:"src/components/toast-notifications/toast-notifications.html",
-link:function(c) {
-c.notifications = a.getNotifications(), c.close = function(a) {
-a.hidden = !0, _.isFunction(a.onClose) && a.onClose();
-}, c.onClick = function(a, b) {
+link:function(d) {
+d.notifications = [];
+var e = function(a) {
+return a.hidden && !a.isHover;
+}, f = function(a) {
+a.isHover = !1, a.hidden = !0;
+}, g = function() {
+d.notifications = _.reject(d.notifications, e);
+};
+d.close = function(a) {
+f(a), _.isFunction(a.onClose) && a.onClose();
+}, d.onClick = function(a, b) {
 if (_.isFunction(b.onClick)) {
 var c = b.onClick();
-c && (a.hidden = !0);
+c && f(a);
 }
-}, c.setHover = function(a, b) {
-a.isHover = b;
-}, c.$watch("notifications", function() {
-_.each(c.notifications, function(c) {
-a.isAutoDismiss(c) && !c.hidden && (c.timerId ? c.timerId !== -1 || c.isHover || (c.hidden = !0) :c.timerId = b(function() {
-c.timerId = -1, c.isHover || (c.hidden = !0);
-}, a.dismissDelay));
+}, d.setHover = function(a, b) {
+e(a) || (a.isHover = b);
+};
+var h = b.$on("NotificationsService.onNotificationAdded", function(b, e) {
+d.notifications.push(e), a.isAutoDismiss(e) && c(function() {
+e.hidden = !0;
+}, a.dismissDelay), g();
 });
-}, !0);
+d.$on("$destroy", function() {
+h && (h(), h = null);
+});
 }
 };
 } ]), angular.module("openshiftCommonUI").directive("truncateLongText", [ "truncateFilter", function(a) {
@@ -61261,7 +61271,7 @@ m._isImmutable(a) && (l ? l.update(b, "ADDED") :m._immutableData(j, [ b ])), k.r
 }).error(function(b, e, f, g) {
 if (h.errorNotification !== !1) {
 var i = "Failed to get " + a + "/" + c;
-0 !== e && (i += " (" + e + ")"), d.$emit("addNotification", {
+0 !== e && (i += " (" + e + ")"), d.$emit("NotificationsService.addNotification", {
 type:"error",
 message:i
 });
@@ -61473,7 +61483,7 @@ g._listInFlight(f, !1);
 var j = g._listDeferred(f);
 if (delete g._listDeferredMap[f], j.reject(b, c, h, i), _.get(e, "errorNotification", !0)) {
 var k = "Failed to list " + a;
-0 !== c && (k += " (" + c + ")"), d.$emit("addNotification", {
+0 !== c && (k += " (" + c + ")"), d.$emit("NotificationsService.addNotification", {
 type:"error",
 message:k
 });
@@ -61490,7 +61500,7 @@ g._listInFlight(f, !1);
 var j = g._listDeferred(f);
 if (delete g._listDeferredMap[f], j.reject(b, c, h, i), _.get(e, "errorNotification", !0)) {
 var k = "Failed to list " + a;
-0 !== c && (k += " (" + c + ")"), d.$emit("addNotification", {
+0 !== c && (k += " (" + c + ")"), d.$emit("NotificationsService.addNotification", {
 type:"error",
 message:k
 });
@@ -61558,7 +61568,7 @@ if (f !== i) return void h.log("Skipping reopen, eventWS does not match register
 if (this._watchInFlight(g, !1), f.shouldClose) return void h.log("Skipping reopen, eventWS was explicitly closed", f);
 if (e.wasClean) return void h.log("Skipping reopen, clean close", e);
 if (!this._watchCallbacks(g).has()) return void h.log("Skipping reopen, no listeners registered for resource/context", a, b);
-if (this._isTooManyWebsocketRetries(g)) return void (_.get(c, "errorNotification", !0) && d.$emit("addNotification", {
+if (this._isTooManyWebsocketRetries(g)) return void (_.get(c, "errorNotification", !0) && d.$emit("NotificationsService.addNotification", {
 id:"websocket_retry_halted",
 type:"error",
 message:"Server connection interrupted.",
@@ -62130,8 +62140,8 @@ return b ? '<a href="' + a + '" target="' + b + '">' + a + "</a>" :'<a href="' +
 this.dismissDelay = 8e3, this.autoDismissTypes = [ "info", "success" ], this.$get = [ "$rootScope", function(a) {
 var b = [], c = this.dismissDelay, d = this.autoDismissTypes, e = function(a, b) {
 return b ? "hide/notification/" + b + "/" + a :"hide/notification/" + a;
-}, f = function(a) {
-j(a) || l(a) || b.push(a);
+}, f = function(c) {
+j(c) || l(c) || (b.push(c), a.$emit("NotificationsService.onNotificationAdded", c));
 }, g = function(a) {
 a && _.each(b, function(b) {
 b.id === a && (b.hidden = !0);
@@ -62154,7 +62164,7 @@ return !b.hidden && a.id === b.id;
 }, m = function(a) {
 return _.includes(d, a.type);
 };
-return a.$on("addNotification", function(a, b) {
+return a.$on("NotificationsService.addNotification", function(a, b) {
 f(b);
 }), {
 addNotification:f,
@@ -64505,7 +64515,7 @@ placement:"left"
 }, l = {
 landing_page_tour:{
 enabled:!0,
-auto_launch:!0,
+auto_launch:!1,
 steps:k
 }
 };
@@ -64827,7 +64837,7 @@ this.resource = a, this.catalogSrv = b, this.imageUrl = this.getImage(), this.ic
 return a.prototype.getImage = function() {
 return e.get(this.resource, "externalMetadata.imageUrl", "");
 }, a.prototype.getIcon = function() {
-var a = e.get(this.resource, [ "externalMetadata", "console.openshift.io/iconClass" ], "fa fa-cubes");
+var a = e.get(this.resource, [ "externalMetadata", "console.openshift.io/iconClass" ], "fa fa-clone");
 return a = -1 !== a.indexOf("icon-") ? "font-icon " + a :a;
 }, a.prototype.getName = function() {
 return e.get(this.resource, "externalMetadata.displayName", this.resource.metadata.name);
@@ -64874,7 +64884,7 @@ this.resource = a, this.catalogSrv = b, this.imageUrl = this.getImage(), this.ic
 return a.prototype.getImage = function() {
 return "";
 }, a.prototype.getIcon = function() {
-var a = e.get(this.resource, "metadata.annotations.iconClass", "fa fa-cubes");
+var a = e.get(this.resource, "metadata.annotations.iconClass", "fa fa-clone");
 return a = -1 !== a.indexOf("icon-") ? "font-icon " + a :a;
 }, a.prototype.getName = function() {
 return this.catalogSrv.$filter("displayName")(this.resource);
@@ -64928,7 +64938,7 @@ a.exports = '<span ng-if="$ctrl.hasSaasOfferings()" class="saas-offerings-contai
 }, function(a, b) {
 a.exports = '<ng-form>\n  <div class="form-group">\n    <label class="control-label" for="project">Add to Project</label>\n    <ui-select ng-model="$ctrl.selectedProject">\n      <ui-select-match>\n        {{$select.selected | displayName}}\n      </ui-select-match>\n      <ui-select-choices repeat="project in $ctrl.projects | searchProjects : $select.search track by (project | uid)">\n        <span ng-bind-html="project | displayName | highlightKeywords : $select.search"></span>\n        <span ng-if="project | displayName : true" class="small text-muted">\n          <span ng-if="project.metadata.name">&ndash;</span>\n          <span ng-bind-html="project.metadata.name | highlightKeywords : $select.search"></span>\n        </span>\n      </ui-select-choices>\n    </ui-select>\n  </div>\n</ng-form>\n\n<ng-form name="$ctrl.forms.createProjectForm"\n    ng-if="$ctrl.isNewProject()">\n  <div class="form-group">\n    <label for="name" class="control-label required">Project Name</label>\n    <div ng-class="{\'has-error\': ($ctrl.forms.createProjectForm.name.$error.pattern && $ctrl.forms.createProjectForm.name.$touched) || $ctrl.nameTaken}">\n      <input class="form-control"\n          name="name"\n          id="name"\n          placeholder="my-project"\n          type="text"\n          required\n          take-focus\n          minlength="2"\n          maxlength="63"\n          pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?"\n          aria-describedby="nameHelp"\n          ng-model="$ctrl.selectedProject.metadata.name"\n          osc-unique="$ctrl.existingProjectNames"\n          ng-model-options="{ updateOn: \'default blur\' }"\n          ng-change="$ctrl.onNewProjectNameChange()"\n          autocorrect="off"\n          autocapitalize="off"\n          spellcheck="false">\n      <div class="help-block">A unique name for the project.</div>\n      <div class="has-error" ng-if="$ctrl.forms.createProjectForm.name.$error.minlength && $ctrl.forms.createProjectForm.name.$touched">\n        <span id="nameHelp" class="help-block">\n          Name must have at least two characters.\n        </span>\n      </div>\n      <div class="has-error" ng-if="$ctrl.forms.createProjectForm.name.$error.pattern && $ctrl.forms.createProjectForm.name.$touched">\n        <span id="nameHelp" class="help-block">\n          Project names may only contain lower-case letters, numbers, and dashes.\n          They may not start or end with a dash.\n        </span>\n      </div>\n      <div class="has-error" ng-if="$ctrl.nameTaken || $ctrl.forms.createProjectForm.name.$error.oscUnique">\n        <span class="help-block">\n          This name is already in use. Please choose a different name.\n        </span>\n      </div>\n    </div>\n  </div>\n\n  <div class="form-group">\n    <label for="displayName" class="control-label">Project Display Name</label>\n    <input class="form-control"\n      name="displayName"\n      id="displayName"\n      placeholder="My Project"\n      type="text"\n      ng-model="$ctrl.selectedProject.metadata.annotations[\'new-display-name\']">\n  </div>\n\n  <div class="form-group">\n    <label for="description" class="control-label">Project Description</label>\n    <textarea class="form-control"\n      name="description"\n      id="description"\n      placeholder="A short description."\n      ng-model="$ctrl.selectedProject.metadata.annotations[\'openshift.io/description\']"></textarea>\n  </div>\n</ng-form>\n';
 }, function(a, b) {
-a.exports = '<div class="services-view" ng-style="$ctrl.viewStyle">\n  <div ng-if="!$ctrl.loaded" class="spinner-container">\n    <div class="spinner spinner-xl"></div>\n  </div>\n  <div ng-if="$ctrl.loaded" class="services-view-container mobile-{{$ctrl.mobileView}}-view">\n    <h1>Browse Catalog</h1>\n    <ul class="nav nav-tabs nav-tabs-pf services-categories">\n      <li ng-repeat="category in $ctrl.categories"\n          ng-if="category.hasItems"\n          ng-class="{ active: $ctrl.currentFilter === category.id }">\n        <a href="" id="{{\'category-\'+category.id}}" class="services-category-heading" ng-click="$ctrl.selectCategory(category.id)">{{category.label}}</a>\n        <a ng-click="$ctrl.mobileView = \'categories\'" class="services-back-link" href="">Back</a>\n      </li>\n    </ul>\n\n    <!-- Do not show sub-category items for \'All\' or \'Other\' main categories -->\n    <ul class="services-sub-categories"\n        ng-if="$ctrl.currentFilter !== \'other\' && $ctrl.currentFilter !== \'all\'">\n      <li ng-repeat="subCategory in $ctrl.subCategories"\n           ng-if="subCategory.hasItems"\n           ng-attr-id="{{subCategory.id}}"\n           class="services-sub-category"\n           ng-class="{ active: $ctrl.currentSubFilter === subCategory.id }">\n        <a href="" id="{{\'services-sub-category-\'+subCategory.id}}"\n           class="services-sub-category-tab" ng-click="$ctrl.selectSubCategory(subCategory.id)">\n          <div class="services-sub-category-tab-image" ng-if="subCategory.imageUrl">\n            <img ng-src="{{subCategory.imageUrl}}" alt="">\n          </div>\n          <div class="services-sub-category-tab-icon {{subCategory.icon}}" ng-if="subCategory.icon && !subCategory.imageUrl"></div>\n          <div class="services-sub-category-tab-name">{{subCategory.label}}</div>\n        </a>\n       <a ng-click="$ctrl.mobileView = \'subcategories\'" class="services-back-link" href="">Back</a>\n        <div ng-if="$ctrl.currentSubFilter === subCategory.id" class="services-items">\n          <div pf-filter config="$ctrl.filterConfig" class="services-items-filter"></div>\n          <a href="" class="services-item" ng-repeat="item in $ctrl.filteredItems" ng-click="$ctrl.handleClick(item)">\n            <div ng-if="!item.imageUrl" class="services-item-icon">\n              <span class="{{item.iconClass}}"></span>\n            </div>\n            <div ng-if="item.imageUrl" class="services-item-icon">\n              <img ng-src="{{item.imageUrl}}" alt="">\n            </div>\n            <div class="services-item-name" title="{{item.name}}">\n              {{item.name}}\n            </div>\n          </a>\n        </div>\n      </li>\n    </ul>\n\n    <!-- Show catalog item for \'All\' and \'Other\' main categories -->\n    <div ng-if="$ctrl.currentFilter === \'other\' || $ctrl.currentFilter === \'all\'" class="services-no-sub-categories">\n      <div class="services-items">\n        <div ng-if="$ctrl.isEmpty">There are no catalog items.</div>\n        <div ng-if="!$ctrl.isEmpty" pf-filter config="$ctrl.filterConfig" class="services-items-filter"></div>\n        <a href="" class="services-item" ng-repeat="item in $ctrl.filteredItems" ng-click="$ctrl.handleClick(item)">\n          <div ng-if="!item.imageUrl" class="services-item-icon">\n            <span class="{{item.iconClass}}"></span>\n          </div>\n          <div ng-if="item.imageUrl" class="services-item-icon">\n            <img ng-src="{{item.imageUrl}}" alt="">\n          </div>\n          <div class="services-item-name" title="{{item.name}}">\n            {{item.name}}\n          </div>\n        </a>\n      </div>\n    </div>\n  </div>\n</div>\n';
+a.exports = '<div class="services-view" ng-style="$ctrl.viewStyle">\n  <div ng-if="!$ctrl.loaded" class="spinner-container">\n    <div class="spinner spinner-xl"></div>\n  </div>\n  <div ng-if="$ctrl.loaded" class="services-view-container mobile-{{$ctrl.mobileView}}-view">\n    <h1>Browse Catalog</h1>\n    <ul class="nav nav-tabs nav-tabs-pf services-categories">\n      <li ng-repeat="category in $ctrl.categories"\n          ng-if="category.hasItems"\n          ng-class="{ active: $ctrl.currentFilter === category.id }">\n        <a href="" id="{{\'category-\'+category.id}}" class="services-category-heading" ng-click="$ctrl.selectCategory(category.id)">{{category.label}}</a>\n        <a ng-click="$ctrl.mobileView = \'categories\'" class="services-back-link" href="">Back</a>\n      </li>\n    </ul>\n\n    <div class="services-inner-container">\n      <!-- Do not show sub-category items for \'All\' or \'Other\' main categories -->\n      <ul class="services-sub-categories"\n          ng-if="$ctrl.currentFilter !== \'other\' && $ctrl.currentFilter !== \'all\'">\n        <li ng-repeat="subCategory in $ctrl.subCategories track by subCategory.id"\n             ng-if="subCategory.hasItems"\n             ng-attr-id="{{subCategory.id}}"\n             class="services-sub-category"\n             ng-class="{ active: $ctrl.currentSubFilter === subCategory.id }">\n          <a href="" id="{{\'services-sub-category-\'+subCategory.id}}"\n             class="services-sub-category-tab" ng-click="$ctrl.selectSubCategory(subCategory.id)">\n            <div class="services-sub-category-tab-image" ng-if="subCategory.imageUrl">\n              <img ng-src="{{subCategory.imageUrl}}" alt="">\n            </div>\n            <div class="services-sub-category-tab-icon {{subCategory.icon}}" ng-if="subCategory.icon && !subCategory.imageUrl"></div>\n            <div class="services-sub-category-tab-name">{{subCategory.label}}</div>\n          </a>\n         <a ng-click="$ctrl.mobileView = \'subcategories\'" class="services-back-link" href="">Back</a>\n          <div ng-if="$ctrl.currentSubFilter === subCategory.id" class="services-items">\n            <div pf-filter config="$ctrl.filterConfig" class="services-items-filter"></div>\n            <a href="" class="services-item" ng-repeat="item in $ctrl.filteredItems track by item.resource.metadata.uid" ng-click="$ctrl.handleClick(item)">\n              <div ng-if="!item.imageUrl" class="services-item-icon">\n                <span class="{{item.iconClass}}"></span>\n              </div>\n              <div ng-if="item.imageUrl" class="services-item-icon">\n                <img ng-src="{{item.imageUrl}}" alt="">\n              </div>\n              <div class="services-item-name" title="{{item.name}}">\n                {{item.name}}\n              </div>\n            </a>\n          </div>\n        </li>\n      </ul>\n\n      <!-- Show catalog item for \'All\' and \'Other\' main categories -->\n      <div ng-if="$ctrl.currentFilter === \'other\' || $ctrl.currentFilter === \'all\'" class="services-no-sub-categories">\n        <div class="services-items">\n          <div ng-if="$ctrl.isEmpty">There are no catalog items.</div>\n          <div ng-if="!$ctrl.isEmpty" pf-filter config="$ctrl.filterConfig" class="services-items-filter"></div>\n          <a href="" class="services-item" ng-repeat="item in $ctrl.filteredItems track by item.resource.metadata.uid" ng-click="$ctrl.handleClick(item)">\n            <div ng-if="!item.imageUrl" class="services-item-icon">\n              <span class="{{item.iconClass}}"></span>\n            </div>\n            <div ng-if="item.imageUrl" class="services-item-icon">\n              <img ng-src="{{item.imageUrl}}" alt="">\n            </div>\n            <div class="services-item-name" title="{{item.name}}">\n              {{item.name}}\n            </div>\n          </a>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n';
 }, function(a, b, c) {
 "use strict";
 b.__esModule = !0;
@@ -65264,7 +65274,7 @@ type:"ProvisionFailed"
 }
 return a.prototype.$onInit = function() {
 var a = this;
-this.ctrl.iconClass = this.ctrl.serviceClass.iconClass || "fa fa-cubes", this.ctrl.imageUrl = this.ctrl.serviceClass.imageUrl, this.ctrl.serviceName = this.ctrl.serviceClass.name, this.ctrl.description = this.ctrl.serviceClass.description, this.ctrl.longDescription = this.ctrl.serviceClass.longDescription, this.ctrl.plans = e.get(this, "ctrl.serviceClass.resource.plans", []), this.ctrl.applications = [], this.ctrl.parameterData = {}, this.ctrl.forms = {}, this.ctrl.appToBind = null, this.ctrl.configStepValid = !0, this.planStep = {
+this.ctrl.iconClass = this.ctrl.serviceClass.iconClass || "fa fa-clone", this.ctrl.imageUrl = this.ctrl.serviceClass.imageUrl, this.ctrl.serviceName = this.ctrl.serviceClass.name, this.ctrl.description = this.ctrl.serviceClass.description, this.ctrl.longDescription = this.ctrl.serviceClass.longDescription, this.ctrl.plans = e.get(this, "ctrl.serviceClass.resource.plans", []), this.ctrl.applications = [], this.ctrl.parameterData = {}, this.ctrl.forms = {}, this.ctrl.appToBind = null, this.ctrl.configStepValid = !0, this.planStep = {
 id:"plans",
 label:"Plan",
 view:"order-service/order-service-plans.html",
@@ -65297,7 +65307,7 @@ allowed:!1,
 valid:!0,
 prevEnabled:!1,
 onShow:this.showResults
-}, this.ctrl.steps = [ this.planStep, this.configStep, this.bindStep, this.reviewStep ], this.ctrl.nameTaken = !1, this.ctrl.wizardDone = !1, this.selectPlan(e.first(this.ctrl.plans)), this.ctrl.planIndex = 0, this.ctrl.updating = !0, this.selectedProjectWatch = this.$scope.$watch(function() {
+}, this.ctrl.steps = [ this.planStep, this.configStep, this.bindStep, this.reviewStep ], this.ctrl.nameTaken = !1, this.ctrl.wizardDone = !1, this.ctrl.bindType = "none", this.selectPlan(e.first(this.ctrl.plans)), this.ctrl.planIndex = 0, this.ctrl.updating = !0, this.selectedProjectWatch = this.$scope.$watch(function() {
 return a.ctrl.selectedProject;
 }, this.onProjectUpdate), this.AuthService.withUser().then(function(b) {
 a.user = b, a.ctrl.wizardReady = !0;

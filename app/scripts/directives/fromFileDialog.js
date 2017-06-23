@@ -27,7 +27,7 @@
     };
 
     function getIconClass() {
-      var icon = _.get(ctrl, 'template.metadata.annotations.iconClass', 'fa fa-cubes');
+      var icon = _.get(ctrl, 'template.metadata.annotations.iconClass', 'fa fa-clone');
       return (icon.indexOf('icon-') !== -1) ? 'font-icon ' + icon : icon;
     }
 
