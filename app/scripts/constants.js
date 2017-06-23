@@ -11,6 +11,9 @@ if (angular.isUndefined(window.OPENSHIFT_CONSTANTS)) {
 }
 
 angular.extend(window.OPENSHIFT_CONSTANTS, {
+  // Necessary to specify registry URL to be able to provide snippets in the command line page
+  REGISTRY_URL: "registry.starter-us-east-2.openshift.com",
+
   // Maps links to specific topics in external documentation.
   HELP_BASE_URL: "https://docs.openshift.org/latest/",
   HELP: {
@@ -57,6 +60,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     "image-streams":           "architecture/core_concepts/builds_and_image_streams.html#image-streams",
     "storage":                 "architecture/additional_concepts/storage.html",
     "build-hooks":             "dev_guide/builds/build_hooks.html",
+    "managing_images":         "dev_guide/managing_images.html",
     // default should remain last, add new links above
     "default":                 "welcome/index.html"
   },

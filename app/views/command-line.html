@@ -62,6 +62,20 @@
                   </p>
 
                   <p>For other information about the command line tools, check the <a target="_blank" href="{{'cli' | helpLink}}">CLI Reference</a> and <a target="_blank" href="{{'basic_cli_operations' | helpLink}}">Basic CLI Operations</a>.</p>
+
+                  <p>To access the internal registry:
+                    <p>
+                      Login:
+                      <copy-to-clipboard display-wide="true" clipboard-text="'docker login -u `oc whoami` -p `oc whoami -t` ' + registryURL" ng-if="registryURL"></copy-to-clipboard>
+                      <copy-to-clipboard display-wide="true" clipboard-text="'docker login -u `oc whoami` -p `oc whoami -t` <registry_url>'" ng-if="!registryURL"></copy-to-clipboard>
+                    </p>
+                    <p>
+                      Push an image:
+                      <copy-to-clipboard display-wide="true" clipboard-text="'docker push ' + registryURL + '/<project>/<image-name>'" ng-if="registryURL"></copy-to-clipboard>
+                      <copy-to-clipboard display-wide="true" clipboard-text="'docker push <registry_url>/<project>/<image-name>'" ng-if="!registryURL"></copy-to-clipboard>
+                    </p>
+                    <p>For more information about managing images with the internal registry, check out the <a target="_blank" href="{{'managing_images' | helpLink}}">Managing Images</a> documentation.</p>
+                  </p>
                 </div>
               </div>
             </div>

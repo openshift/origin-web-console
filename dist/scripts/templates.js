@@ -4481,6 +4481,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'oc status'\"></copy-to-clipboard>\n" +
     "</p>\n" +
     "<p>For other information about the command line tools, check the <a target=\"_blank\" href=\"{{'cli' | helpLink}}\">CLI Reference</a> and <a target=\"_blank\" href=\"{{'basic_cli_operations' | helpLink}}\">Basic CLI Operations</a>.</p>\n" +
+    "<p>To access the internal registry:\n" +
+    "</p><p>\n" +
+    "Login:\n" +
+    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'docker login -u `oc whoami` -p `oc whoami -t` ' + registryURL\" ng-if=\"registryURL\"></copy-to-clipboard>\n" +
+    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'docker login -u `oc whoami` -p `oc whoami -t` <registry_url>'\" ng-if=\"!registryURL\"></copy-to-clipboard>\n" +
+    "</p>\n" +
+    "<p>\n" +
+    "Push an image:\n" +
+    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'docker push ' + registryURL + '/<project>/<image-name>'\" ng-if=\"registryURL\"></copy-to-clipboard>\n" +
+    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'docker push <registry_url>/<project>/<image-name>'\" ng-if=\"!registryURL\"></copy-to-clipboard>\n" +
+    "</p>\n" +
+    "<p>For more information about managing images with the internal registry, check out the <a target=\"_blank\" href=\"{{'managing_images' | helpLink}}\">Managing Images</a> documentation.</p>\n" +
+    "\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
