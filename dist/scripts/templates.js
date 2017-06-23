@@ -3535,7 +3535,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<pre class=\"clipped\">{{route.spec.tls.destinationCACertificate}}</pre>\n" +
     "</div>\n" +
     "</dl>\n" +
-    "<div ng-if=\"!route.spec.tls\"><em>TLS is not enabled for this route</em></div>\n" +
+    "<p ng-if=\"!route.spec.tls\">\n" +
+    "TLS is not enabled.\n" +
+    "<span ng-if=\"'routes' | canI : 'update'\">\n" +
+    "<a ng-href=\"{{route | editResourceURL}}\" role=\"button\">Edit</a> this route to enable secure network traffic.\n" +
+    "</span>\n" +
+    "</p>\n" +
     "</div>\n" +
     "<annotations annotations=\"route.metadata.annotations\"></annotations>\n" +
     "</div>\n" +
