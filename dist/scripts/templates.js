@@ -6699,7 +6699,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"trigger in triggers\">\n" +
     "<div class=\"trigger-info\">\n" +
     "<span class=\"trigger-url\">\n" +
-    "<copy-to-clipboard is-disabled=\"trigger.disabled\" clipboard-text=\"bcName | webhookURL : trigger.data.type : trigger.data[webhookType].secret : projectName\"></copy-to-clipboard>\n" +
+    "<copy-to-clipboard is-disabled=\"trigger.disabled\" clipboard-text=\"bcName | webhookURL : trigger.data.type : trigger.data[type.toLowerCase()].secret : projectName\"></copy-to-clipboard>\n" +
     "</span>\n" +
     "<span class=\"visible-xs-inline trigger-actions\">\n" +
     "<a href=\"\" ng-if=\"!trigger.disabled\" class=\"action-icon\" ng-click=\"trigger.disabled = true; form.$setDirty()\" role=\"button\">\n" +
