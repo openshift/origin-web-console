@@ -401,48 +401,48 @@ return _.get(Q.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displa
 return _.get(a, "metadata.name", "");
 }))) :void (Q.bindableServiceInstances = null);
 }, ab = [];
-v.get(c.project).then(_.spread(function(b, c) {
-Q.project = a.project = b, Q.context = c;
-var d = function() {
-z.pods && m.fetchReferencedImageStreamImages(z.pods, Q.imagesByDockerReference, Q.imageStreamImageRefByDockerReference, c);
+v.get(c.project).then(_.spread(function(c, d) {
+Q.project = a.project = c, Q.context = d;
+var e = function() {
+z.pods && m.fetchReferencedImageStreamImages(z.pods, Q.imagesByDockerReference, Q.imageStreamImageRefByDockerReference, d);
 };
-ab.push(i.watch("pods", c, function(a) {
-z.pods = a.by("metadata.name"), Ca(), d(), ya(), Ja(z.monopods), pa(z.monopods), za(z.monopods), ia(), p.log("pods (subscribe)", z.pods);
-})), ab.push(i.watch("replicationcontrollers", c, function(a) {
+ab.push(i.watch("pods", d, function(a) {
+z.pods = a.by("metadata.name"), Ca(), e(), ya(), Ja(z.monopods), pa(z.monopods), za(z.monopods), ia(), p.log("pods (subscribe)", z.pods);
+})), ab.push(i.watch("replicationcontrollers", d, function(a) {
 z.replicationControllers = a.by("metadata.name"), Fa(), Ja(z.vanillaReplicationControllers), Ja(z.monopods), pa(z.vanillaReplicationControllers), za(z.vanillaReplicationControllers), $a(), ia(), p.log("replicationcontrollers (subscribe)", z.replicationControllers);
-})), ab.push(i.watch("deploymentconfigs", c, function(a) {
+})), ab.push(i.watch("deploymentconfigs", d, function(a) {
 z.deploymentConfigs = a.by("metadata.name"), Fa(), Ja(z.deploymentConfigs), Ja(z.vanillaReplicationControllers), za(z.deploymentConfigs), wa(), Va(), Wa(), $a(), ia(), p.log("deploymentconfigs (subscribe)", z.deploymentConfigs);
 })), ab.push(i.watch({
 group:"extensions",
 resource:"replicasets"
-}, c, function(a) {
+}, d, function(a) {
 z.replicaSets = a.by("metadata.name"), Ha(), Ja(z.vanillaReplicaSets), Ja(z.monopods), pa(z.vanillaReplicaSets), za(z.vanillaReplicaSets), $a(), ia(), p.log("replicasets (subscribe)", z.replicaSets);
 })), ab.push(i.watch({
 group:"extensions",
 resource:"deployments"
-}, c, function(a) {
+}, d, function(a) {
 D = a.by("metadata.uid"), z.deployments = _.sortBy(D, "metadata.name"), Ha(), Ja(z.deployments), Ja(z.vanillaReplicaSets), za(z.deployments), $a(), ia(), p.log("deployments (subscribe)", z.deploymentsByUID);
-})), ab.push(i.watch("builds", c, function(a) {
+})), ab.push(i.watch("builds", d, function(a) {
 Q.builds = a.by("metadata.name"), Xa(), p.log("builds (subscribe)", Q.builds);
 })), ab.push(i.watch({
 group:"apps",
 resource:"statefulsets"
-}, c, function(a) {
+}, d, function(a) {
 z.statefulSets = a.by("metadata.name"), Ja(z.statefulSets), Ja(z.monopods), pa(z.statefulSets), za(z.statefulSets), $a(), ia(), p.log("statefulsets (subscribe)", z.statefulSets);
 }, {
 poll:A,
 pollInterval:B
-})), ab.push(i.watch("services", c, function(a) {
+})), ab.push(i.watch("services", d, function(a) {
 Q.allServices = a.by("metadata.name"), Ka(), p.log("services (subscribe)", Q.allServices);
 }, {
 poll:A,
 pollInterval:B
-})), ab.push(i.watch("routes", c, function(a) {
+})), ab.push(i.watch("routes", d, function(a) {
 z.routes = a.by("metadata.name"), La(), p.log("routes (subscribe)", z.routes);
 }, {
 poll:A,
 pollInterval:B
-})), ab.push(i.watch("buildConfigs", c, function(a) {
+})), ab.push(i.watch("buildConfigs", d, function(a) {
 z.buildConfigs = a.by("metadata.name"), Pa(), Va(), Xa(), ia(), p.log("buildconfigs (subscribe)", z.buildConfigs);
 }, {
 poll:A,
@@ -451,30 +451,35 @@ pollInterval:B
 group:"autoscaling",
 resource:"horizontalpodautoscalers",
 version:"v1"
-}, c, function(a) {
+}, d, function(a) {
 z.horizontalPodAutoscalers = a.by("metadata.name"), Ma(), p.log("autoscalers (subscribe)", z.horizontalPodAutoscalers);
 }, {
 poll:A,
 pollInterval:B
-})), ab.push(i.watch("imagestreams", c, function(a) {
-E = a.by("metadata.name"), m.buildDockerRefMapForImageStreams(E, Q.imageStreamImageRefByDockerReference), d(), p.log("imagestreams (subscribe)", E);
+})), ab.push(i.watch("imagestreams", d, function(a) {
+E = a.by("metadata.name"), m.buildDockerRefMapForImageStreams(E, Q.imageStreamImageRefByDockerReference), e(), p.log("imagestreams (subscribe)", E);
 }, {
 poll:A,
 pollInterval:B
-})), ab.push(i.watch("resourcequotas", c, function(a) {
+})), ab.push(i.watch("resourcequotas", d, function(a) {
 Q.quotas = a.by("metadata.name"), Ya();
 }, {
 poll:!0,
 pollInterval:B
-})), ab.push(i.watch("appliedclusterresourcequotas", c, function(a) {
+})), ab.push(i.watch("appliedclusterresourcequotas", d, function(a) {
 Q.clusterQuotas = a.by("metadata.name"), Ya();
 }, {
 poll:!0,
 pollInterval:B
-})), C && ab.push(i.watch({
+}));
+var f = b("canI");
+C && f({
+resource:"instances",
+group:"servicecatalog.k8s.io"
+}, "watch") && ab.push(i.watch({
 group:"servicecatalog.k8s.io",
 resource:"instances"
-}, c, function(a) {
+}, d, function(a) {
 Q.serviceInstances = a.by("metadata.name"), _.each(Q.serviceInstances, function(a) {
 var b = x.getServiceInstanceAlerts(a);
 ma(a, b);
@@ -482,25 +487,31 @@ ma(a, b);
 }, {
 poll:A,
 pollInterval:B
-})), C && ab.push(i.watch({
+})), C && f({
+resource:"bindings",
+group:"servicecatalog.k8s.io"
+}, "watch") && ab.push(i.watch({
 group:"servicecatalog.k8s.io",
 resource:"bindings"
-}, c, function(a) {
-Q.bindings = a.by("metadata.name"), z.bindingsByInstanceRef = _.groupBy(Q.bindings, "spec.instanceRef.name"), $a(), Za(c);
+}, d, function(a) {
+Q.bindings = a.by("metadata.name"), z.bindingsByInstanceRef = _.groupBy(Q.bindings, "spec.instanceRef.name"), $a(), Za(d);
 }, {
 poll:A,
 pollInterval:B
-})), i.list("limitranges", c, function(a) {
+})), i.list("limitranges", d, function(a) {
 Q.limitRanges = a.by("metadata.name");
-}), C && i.list({
+}), C && f({
+resource:"instances",
+group:"servicecatalog.k8s.io"
+}, "watch") && i.list({
 group:"servicecatalog.k8s.io",
 resource:"serviceclasses"
-}, c, function(a) {
+}, d, function(a) {
 Q.serviceClasses = a.by("metadata.name"), _a(), ia();
 });
-var e = h.SAMPLE_PIPELINE_TEMPLATE;
-e && i.get("templates", e.name, {
-namespace:e.namespace
+var g = h.SAMPLE_PIPELINE_TEMPLATE;
+g && i.get("templates", g.name, {
+namespace:g.namespace
 }, {
 errorNotification:!1
 }).then(function(b) {
