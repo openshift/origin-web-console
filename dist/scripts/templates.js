@@ -8517,7 +8517,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div ng-if=\"pod.spec.containers.length\" class=\"form-group\">\n" +
     "<label for=\"selectContainer\">Container:</label>\n" +
-    "<div class=\"select-container\">\n" +
+    "<div class=\"select-container\" ng-class=\"{ 'multiple-containers' : pod.spec.containers.length > 1 }\">\n" +
     "<span ng-show=\"pod.spec.containers.length === 1\">\n" +
     "{{pod.spec.containers[0].name}}\n" +
     "</span>\n" +
