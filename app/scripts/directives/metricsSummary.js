@@ -94,7 +94,6 @@
 
       var config = {
         pods: metricsSummary.pods,
-        containerName: _.head(pod.spec.containers).name,
         namespace: pod.metadata.namespace,
         start: '-1mn',
         bucketDuration: '1mn'

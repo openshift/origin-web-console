@@ -2363,33 +2363,38 @@ _.set(b, [ d.descriptor, f ], h);
 };
 return _.each(a.data.counter, c), _.each(a.data.gauge, c), b;
 });
-}, s = _.template("descriptor_name:network/tx_rate|network/rx_rate,type:pod,pod_id:<%= uid %>"), t = _.template("descriptor_name:memory/usage|cpu/usage_rate,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>"), u = function(a) {
+}, s = _.template("descriptor_name:network/tx_rate|network/rx_rate,type:pod,pod_id:<%= uid %>"), t = _.template("descriptor_name:memory/usage|cpu/usage_rate,type:pod_container,pod_id:<%= uid %>,container_name:<%= containerName %>"), u = _.template("descriptor_name:network/tx_rate|network/rx_rate|memory/usage|cpu/usage_rate,type:pod,pod_id:<%= uid %>"), v = function(a) {
 return i().then(function(b) {
 var d = {
 bucketDuration:a.bucketDuration,
 start:a.start
 };
 a.end && (d.end = a.end);
-var e = [], f = h(_.map(a.pods, "metadata.uid")), g = _.assign({
+var e = [], f = [], g = h(_.map(a.pods, "metadata.uid"));
+return a.containerName ? (e.push(_.assign({
 tags:t({
-uid:f,
+uid:g,
 containerName:a.containerName
 })
-}, d);
-e.push(r(b, g, a));
-var i = _.assign({
+}, d)), e.push(_.assign({
 tags:s({
-uid:f
+uid:g
 })
-}, d);
-return e.push(r(b, i, a)), c.all(e).then(function(a) {
+}, d))) :e.push(_.assign({
+tags:u({
+uid:g
+})
+}, d)), _.each(e, function(c) {
+var d = r(b, c, a);
+f.push(d);
+}), c.all(f).then(function(a) {
 var b = {};
 return _.each(a, function(a) {
 _.assign(b, a);
 }), b;
 });
 });
-}, v = function(a) {
+}, w = function(a) {
 var c = a.metadata.namespace, d = a.metadata.uid;
 return f().then(function(a) {
 if (!a) return null;
@@ -2463,8 +2468,8 @@ usage:_.head(g(b.data))
 });
 });
 },
-getPodMetrics:u,
-getCustomMetrics:v
+getPodMetrics:v,
+getCustomMetrics:w
 };
 } ]), angular.module("openshiftConsole").factory("MetricsCharts", [ "$timeout", "ConversionService", function(a, b) {
 var c = function(a, c) {
@@ -11077,11 +11082,10 @@ var a = _.find(b.pods, "metadata.namespace");
 if (a) {
 var c = {
 pods:b.pods,
-containerName:b.options.selectedContainer.name,
 namespace:a.metadata.namespace,
 bucketDuration:n()
 };
-return y ? c.start = y :c.start = l(), c;
+return w || (c.containerName = b.options.selectedContainer.name), y ? c.start = y :c.start = l(), c;
 }
 }
 function p(a) {
@@ -12826,7 +12830,6 @@ var a = _.find(f.pods, "metadata.namespace");
 if (!a) return null;
 var b = {
 pods:f.pods,
-containerName:_.head(a.spec.containers).name,
 namespace:a.metadata.namespace,
 start:"-1mn",
 bucketDuration:"1mn"
