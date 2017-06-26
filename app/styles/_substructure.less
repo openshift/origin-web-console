@@ -11,10 +11,14 @@ html,body {
 }
 .console-os {
   background-color: @body-bg;
+  &.tech-preview .top-header {
+    height: @navbar-os-header-height-mobile + @tech-preview-banner-height;
+  }
   .top-header {
     display: flex;
-    position:relative;
+    position: relative;
     height: @navbar-os-header-height-mobile;
+
   }
   .wrap {
     display: flex;
@@ -106,11 +110,20 @@ html,body {
     /* width: inherit; used if parent is using width: can't use 100% or auto */
   }
   .console-os {
+    &.tech-preview {
+      .top-header {
+        height: @navbar-os-header-height-desktop + @tech-preview-banner-height;
+      }
+      .wrap {
+        margin-top: -(@navbar-os-header-height-desktop + @tech-preview-banner-height); /* top offset height */
+        padding-top: @navbar-os-header-height-desktop + @tech-preview-banner-height; /* top offset height */
+      }
+    }
     .wrap {
       flex-direction: row;
-      margin-top:-@navbar-os-header-height-desktop; /* top offset height */
-      overflow:hidden;
-      padding-top:@navbar-os-header-height-desktop; /* top offset height */
+      margin-top: -@navbar-os-header-height-desktop; /* top offset height */
+      overflow: hidden;
+      padding-top: @navbar-os-header-height-desktop; /* top offset height */
       &.no-sidebar {
         .sidebar-left {
           display: none !important;
