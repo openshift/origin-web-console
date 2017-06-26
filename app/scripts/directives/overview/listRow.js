@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {  
+(function() {
   angular.module('openshiftConsole').component('overviewListRow', {
     controller: [
       '$filter',
@@ -40,6 +40,7 @@
     var canI = $filter('canI');
     var deploymentIsInProgress = $filter('deploymentIsInProgress');
     var isBinaryBuild = $filter('isBinaryBuild');
+    var enableTechPreviewFeature = $filter('enableTechPreviewFeature');
 
     var updateTriggers = function(apiObject) {
       var triggers = _.get(apiObject, 'spec.triggers');
@@ -150,6 +151,8 @@
 
     row.canIDoAny = function() {
       var kind = _.get(row, 'apiObject.kind');
+      var uid = _.get(row, 'apiObject.metadata.uid');
+      var deleteableBindings = _.get(row.state.deleteableBindingsByApplicationUID, uid);
       switch (kind) {
       case 'DeploymentConfig':
         // Deploy is displayed.
@@ -164,6 +167,19 @@
         if (row.current && canI('deploymentconfigs/log', 'get')) {
           return true;
         }
+        // Create Binding is displayed.
+        if (enableTechPreviewFeature('pod_presets') &&
+            !_.isEmpty(row.state.bindableServiceInstances) &&
+            canI({resource: 'bindings', group: 'servicecatalog.k8s.io'}, 'create')) {
+          return true;
+        }
+        // Delete Binding is displayed.
+        if (enableTechPreviewFeature('pod_presets') &&
+            !_.isEmpty(deleteableBindings) &&
+            canI({resource: 'bindings', group: 'servicecatalog.k8s.io'}, 'delete')) {
+          return true;
+        }
+        // Check if one of the start build actions is displayed
         return row.showStartPipelineAction() || row.showStartBuildAction();
 
       case 'Pod':
@@ -187,7 +203,18 @@
         if (canI(row.rgv, 'update')) {
           return true;
         }
-
+        // Create Binding is displayed.
+        if (enableTechPreviewFeature('pod_presets') &&
+            !_.isEmpty(row.state.bindableServiceInstances) &&
+            canI({resource: 'bindings', group: 'servicecatalog.k8s.io'}, 'create')) {
+          return true;
+        }
+        // Delete Binding is displayed.
+        if (enableTechPreviewFeature('pod_presets') &&
+            !_.isEmpty(deleteableBindings) &&
+            canI({resource: 'bindings', group: 'servicecatalog.k8s.io'}, 'delete')) {
+          return true;
+        }
         return false;
       }
     };

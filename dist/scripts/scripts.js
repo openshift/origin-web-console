@@ -12976,26 +12976,26 @@ templateUrl:"views/overview/_builds.html"
 function a(a, b, c, d, e, f, g, h) {
 var i = this;
 _.extend(i, f.ui);
-var j = a("canI"), k = a("deploymentIsInProgress"), l = a("isBinaryBuild"), m = function(a) {
+var j = a("canI"), k = a("deploymentIsInProgress"), l = a("isBinaryBuild"), m = a("enableTechPreviewFeature"), n = function(a) {
 var b = _.get(a, "spec.triggers");
 _.isEmpty(b) || (i.imageChangeTriggers = _.filter(b, function(a) {
 return "ImageChange" === a.type && _.get(a, "imageChangeParams.automatic");
 }));
-}, n = function(a) {
-a && !i.current && "DeploymentConfig" !== a.kind && "Deployment" !== a.kind && (i.current = a);
 }, o = function(a) {
-i.rgv = c.objectToResourceGroupVersion(a), n(a), m(a);
+a && !i.current && "DeploymentConfig" !== a.kind && "Deployment" !== a.kind && (i.current = a);
+}, p = function(a) {
+i.rgv = c.objectToResourceGroupVersion(a), o(a), n(a);
 };
 i.$onChanges = function(a) {
-a.apiObject && o(a.apiObject.currentValue);
+a.apiObject && p(a.apiObject.currentValue);
 };
-var p = [], q = function(a) {
+var q = [], r = function(a) {
 if (!i.state.hpaByResource) return null;
 var b = _.get(a, "kind"), c = _.get(a, "metadata.name");
-return _.get(i.state.hpaByResource, [ b, c ], p);
+return _.get(i.state.hpaByResource, [ b, c ], q);
 };
 i.$doCheck = function() {
-i.notifications = f.getNotifications(i.apiObject, i.state), i.hpa = q(i.apiObject), i.current && _.isEmpty(i.hpa) && (i.hpa = q(i.current));
+i.notifications = f.getNotifications(i.apiObject, i.state), i.hpa = r(i.apiObject), i.current && _.isEmpty(i.hpa) && (i.hpa = r(i.current));
 var a = _.get(i, "apiObject.metadata.uid");
 a && (i.services = _.get(i, [ "state", "servicesByObjectUID", a ]), i.buildConfigs = _.get(i, [ "state", "buildConfigsByObjectUID", a ]), i.bindings = _.get(i, [ "state", "bindingsByApplicationUID", a ]));
 var b, c = _.get(i, "apiObject.kind");
@@ -13011,16 +13011,28 @@ return !!_.isEmpty(i.hpa) && !i.isDeploymentInProgress();
 }, i.isDeploymentInProgress = function() {
 return !(!i.current || !i.previous) || k(i.current);
 }, i.canIDoAny = function() {
-var a = _.get(i, "apiObject.kind");
+var a = _.get(i, "apiObject.kind"), b = _.get(i, "apiObject.metadata.uid"), c = _.get(i.state.deleteableBindingsByApplicationUID, b);
 switch (a) {
 case "DeploymentConfig":
-return !!j("deploymentconfigs/instantiate", "create") || (!!j("deploymentconfigs", "update") || (!(!i.current || !j("deploymentconfigs/log", "get")) || (i.showStartPipelineAction() || i.showStartBuildAction())));
+return !!j("deploymentconfigs/instantiate", "create") || (!!j("deploymentconfigs", "update") || (!(!i.current || !j("deploymentconfigs/log", "get")) || (!(!m("pod_presets") || _.isEmpty(i.state.bindableServiceInstances) || !j({
+resource:"bindings",
+group:"servicecatalog.k8s.io"
+}, "create")) || (!(!m("pod_presets") || _.isEmpty(c) || !j({
+resource:"bindings",
+group:"servicecatalog.k8s.io"
+}, "delete")) || (i.showStartPipelineAction() || i.showStartBuildAction())))));
 
 case "Pod":
 return !!j("pods/log", "get") || !!j("pods", "update");
 
 default:
-return !(!i.firstPod(i.current) || !j("pods/log", "get")) || !!j(i.rgv, "update");
+return !(!i.firstPod(i.current) || !j("pods/log", "get")) || (!!j(i.rgv, "update") || (!(!m("pod_presets") || _.isEmpty(i.state.bindableServiceInstances) || !j({
+resource:"bindings",
+group:"servicecatalog.k8s.io"
+}, "create")) || !(!m("pod_presets") || _.isEmpty(c) || !j({
+resource:"bindings",
+group:"servicecatalog.k8s.io"
+}, "delete"))));
 }
 }, i.showStartBuildAction = function() {
 if (!_.isEmpty(i.pipelines)) return !1;
@@ -13096,29 +13108,40 @@ hidePipelines:"<"
 templateUrl:"views/overview/_list-row.html"
 });
 }(), function() {
-function a(a, b, c, d, e, f) {
-var g = this;
-_.extend(g, e.ui);
-var h = a("getErrorDetails"), i = a("serviceInstanceDisplayName"), j = function() {
-var a = g.apiObject.spec.serviceClassName;
-return _.get(g, [ "state", "serviceClasses", a, "description" ]);
+function a(a, b, c, d, e, f, g) {
+var h = this;
+_.extend(h, e.ui);
+var i = a("getErrorDetails"), j = a("serviceInstanceDisplayName"), k = function() {
+var a = h.apiObject.spec.serviceClassName;
+return _.get(h, [ "state", "serviceClasses", a, "description" ]);
 };
-g.$doCheck = function() {
-g.notifications = e.getNotifications(g.apiObject, g.state), g.displayName = i(g.apiObject, g.serviceClasses), g.description = j();
-}, g.$onChanges = function(a) {
-a.bindings && (g.deleteableBindings = _.reject(g.bindings, "metadata.deletionTimestamp"));
-}, g.getSecretForBinding = function(a) {
-return a && _.get(g, [ "state", "secrets", a.spec.secretName ]);
-}, g.isBindable = d.isServiceBindable(g.apiObject, g.state.serviceClasses), g.closeOverlayPanel = function() {
-_.set(g, "overlay.panelVisible", !1);
-}, g.showOverlayPanel = function(a, b) {
-_.set(g, "overlay.panelVisible", !0), _.set(g, "overlay.panelName", a), _.set(g, "overlay.state", b);
-}, g.deprovision = function() {
+h.$doCheck = function() {
+h.notifications = e.getNotifications(h.apiObject, h.state), h.displayName = j(h.apiObject, h.serviceClasses), h.description = k();
+}, h.$onChanges = function(a) {
+a.bindings && (h.deleteableBindings = _.reject(h.bindings, "metadata.deletionTimestamp"));
+}, h.getSecretForBinding = function(a) {
+return a && _.get(h, [ "state", "secrets", a.spec.secretName ]);
+}, h.isBindable = d.isServiceBindable(h.apiObject, h.state.serviceClasses), h.actionsDropdownVisible = function() {
+return !(!h.isBindable || !g.canI({
+resource:"bindings",
+group:"servicecatalog.k8s.io"
+}, "create")) || (!(_.isEmpty(h.deleteableBindings) || !g.canI({
+resource:"bindings",
+group:"servicecatalog.k8s.io"
+}, "delete")) || !!g.canI({
+resource:"instances",
+group:"servicecatalog.k8s.io"
+}, "delete"));
+}, h.closeOverlayPanel = function() {
+_.set(h, "overlay.panelVisible", !1);
+}, h.showOverlayPanel = function(a, b) {
+_.set(h, "overlay.panelVisible", !0), _.set(h, "overlay.panelName", a), _.set(h, "overlay.state", b);
+}, h.deprovision = function() {
 var a = {
 alerts:{
 deprovision:{
 type:"error",
-message:"Service '" + g.apiObject.spec.serviceClassName + "' will be deleted and no longer available."
+message:"Service '" + h.apiObject.spec.serviceClassName + "' will be deleted and no longer available."
 }
 },
 detailsMarkup:"Delete Service?",
@@ -13139,28 +13162,28 @@ return a;
 f.hideNotification("deprovision-service-error"), c["delete"]({
 group:"servicecatalog.k8s.io",
 resource:"instances"
-}, g.apiObject.metadata.name, {
-namespace:g.apiObject.metadata.namespace
+}, h.apiObject.metadata.name, {
+namespace:h.apiObject.metadata.namespace
 }, {
 propagationPolicy:null
 }).then(function() {
 f.addNotification({
 type:"success",
-message:"Successfully deleted " + g.apiObject.metadata.name + "."
+message:"Successfully deleted " + h.apiObject.metadata.name + "."
 });
 }, function(a) {
 f.addNotification({
 id:"deprovision-service-error",
 type:"error",
-message:"An error occurred while deleting " + g.apiObject.metadata.name + ".",
-details:h(a)
+message:"An error occurred while deleting " + h.apiObject.metadata.name + ".",
+details:i(a)
 });
 });
 });
 };
 }
 angular.module("openshiftConsole").component("serviceInstanceRow", {
-controller:[ "$filter", "$uibModal", "DataService", "BindingService", "ListRowUtils", "NotificationsService", a ],
+controller:[ "$filter", "$uibModal", "DataService", "BindingService", "ListRowUtils", "NotificationsService", "AuthorizationService", a ],
 controllerAs:"row",
 bindings:{
 apiObject:"<",
