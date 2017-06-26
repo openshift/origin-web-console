@@ -23,12 +23,14 @@
             <li ng-if="'deploymentconfigs' | canI : 'update'" role="menuitem">
               <a ng-href="{{row.apiObject | editResourceURL}}">Edit</a>
             </li>
-            <!-- FIXME: Can't enable canI checks on svc cat resources until we have aggregation
-            <li ng-if="(row.state.serviceInstances | hashSize) > 0 && {resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create'" role="menuitem"> -->
-            <li ng-if="('pod_presets' | enableTechPreviewFeature) && row.state.bindableServiceInstances.length" role="menuitem">
+            <li ng-if="('pod_presets' | enableTechPreviewFeature)
+                      && row.state.bindableServiceInstances.length
+                      && ({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create')" role="menuitem">
               <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</a>
             </li>
-            <li ng-if="('pod_presets' | enableTechPreviewFeature) && row.state.deleteableBindingsByApplicationUID[row.apiObject.metadata.uid].length" role="menuitem">
+            <li ng-if="('pod_presets' | enableTechPreviewFeature)
+                      && row.state.deleteableBindingsByApplicationUID[row.apiObject.metadata.uid].length
+                      && ({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'delete')" role="menuitem">
               <a href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})">Delete Binding</a>
             </li>
             <li ng-if="row.current && ('deploymentconfigs/log' | canI : 'get')" role="menuitem">
@@ -60,6 +62,16 @@
           <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
             <li role="menuitem" ng-if="row.rgv | canI : 'update'">
               <a ng-href="{{row.apiObject | editYamlURL}}">Edit YAML</a>
+            </li>
+            <li ng-if="('pod_presets' | enableTechPreviewFeature)
+                      && row.state.bindableServiceInstances.length
+                      && ({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create')" role="menuitem">
+              <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</a>
+            </li>
+            <li ng-if="('pod_presets' | enableTechPreviewFeature)
+                      && row.state.deleteableBindingsByApplicationUID[row.apiObject.metadata.uid].length
+                      && ({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'delete')" role="menuitem">
+              <a href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})">Delete Binding</a>
             </li>
             <li ng-if="(pod = row.firstPod(row.current)) && ('pods/log' | canI : 'get')" role="menuitem">
               <a ng-href="{{pod | navigateResourceURL}}?tab=logs">View Logs</a>
