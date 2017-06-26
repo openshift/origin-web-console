@@ -479,9 +479,7 @@ module.exports = function (grunt) {
             '.htaccess',
             '*.html',
             'images/{,*/}*.{ico,png,jpg,jpeg,gif}',
-            'images/{,*/}*.{webp}',
-            'fonts/*',
-            'styles/fonts/*'
+            'images/{,*/}*.{webp}'
           ]
         }, {
           expand: true,
@@ -496,6 +494,11 @@ module.exports = function (grunt) {
         }, {
           expand: true,
           cwd: 'bower_components/font-awesome',
+          src: 'fonts/*',
+          dest: '<%= yeoman.dist %>/styles'
+        },{
+          expand: true,
+          cwd: 'bower_components/openshift-logos-icon',
           src: 'fonts/*',
           dest: '<%= yeoman.dist %>/styles'
         },
@@ -523,6 +526,11 @@ module.exports = function (grunt) {
         }, {
           expand: true,
           cwd: 'bower_components/font-awesome',
+          src: 'fonts/*',
+          dest: '.tmp/styles'
+        }, {
+          expand: true,
+          cwd: 'bower_components/openshift-logos-icon',
           src: 'fonts/*',
           dest: '.tmp/styles'
         }]
