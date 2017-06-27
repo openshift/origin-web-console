@@ -15,6 +15,7 @@ angular.module('openshiftConsole')
     $scope.loginBaseURL = DataService.openshiftAPIBaseUrl();
     $scope.sessionToken = AuthService.UserStore().getToken();
     $scope.showSessionToken = false;
+    $scope.registryURL = Constants.REGISTRY_URL;
 
     $scope.toggleShowSessionToken = function() {
       $scope.showSessionToken = !$scope.showSessionToken;

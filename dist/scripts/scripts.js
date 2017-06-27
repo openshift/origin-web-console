@@ -523,6 +523,7 @@ i.unwatchAll(ab), $(window).off("resize.overview", R);
 }
 
 angular.isUndefined(window.OPENSHIFT_CONSTANTS) && (window.OPENSHIFT_CONSTANTS = {}), angular.extend(window.OPENSHIFT_CONSTANTS, {
+REGISTRY_URL:"registry.starter-us-east-2.openshift.com",
 HELP_BASE_URL:"https://docs.openshift.org/latest/",
 HELP:{
 cli:"cli_reference/index.html",
@@ -567,6 +568,7 @@ builds:"architecture/core_concepts/builds_and_image_streams.html#builds",
 "image-streams":"architecture/core_concepts/builds_and_image_streams.html#image-streams",
 storage:"architecture/additional_concepts/storage.html",
 "build-hooks":"dev_guide/builds/build_hooks.html",
+managing_images:"dev_guide/managing_images.html",
 "default":"welcome/index.html"
 },
 CLI:{
@@ -8526,7 +8528,7 @@ kubernetes:c.VERSION.kubernetes
 }
 };
 } ]), angular.module("openshiftConsole").controller("CommandLineController", [ "$scope", "DataService", "AuthService", "Constants", function(a, b, c, d) {
-c.withUser(), a.cliDownloadURL = d.CLI, a.cliDownloadURLPresent = a.cliDownloadURL && !_.isEmpty(a.cliDownloadURL), a.loginBaseURL = b.openshiftAPIBaseUrl(), a.sessionToken = c.UserStore().getToken(), a.showSessionToken = !1, a.toggleShowSessionToken = function() {
+c.withUser(), a.cliDownloadURL = d.CLI, a.cliDownloadURLPresent = a.cliDownloadURL && !_.isEmpty(a.cliDownloadURL), a.loginBaseURL = b.openshiftAPIBaseUrl(), a.sessionToken = c.UserStore().getToken(), a.showSessionToken = !1, a.registryURL = d.REGISTRY_URL, a.toggleShowSessionToken = function() {
 a.showSessionToken = !a.showSessionToken;
 };
 } ]), angular.module("openshiftConsole").controller("CreatePersistentVolumeClaimController", [ "$filter", "$routeParams", "$scope", "$window", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "NotificationsService", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k) {
