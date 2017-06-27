@@ -12577,7 +12577,7 @@ templateUrl:"views/directives/process-template.html"
 }(), function() {
 function a(a, b) {
 function c() {
-var a = _.get(j, "template.metadata.annotations.iconClass", "fa fa-cubes");
+var a = _.get(j, "template.metadata.annotations.iconClass", "fa fa-clone");
 return a.indexOf("icon-") !== -1 ? "font-icon " + a :a;
 }
 function d() {
@@ -12669,7 +12669,7 @@ templateUrl:"views/directives/deploy-image-dialog.html"
 }(), function() {
 function a(a, b, c) {
 function d() {
-var a = _.get(e, "template.metadata.annotations.iconClass", "fa fa-cubes");
+var a = _.get(e, "template.metadata.annotations.iconClass", "fa fa-clone");
 return a.indexOf("icon-") !== -1 ? "font-icon " + a :a;
 }
 var e = this;
