@@ -178,7 +178,7 @@ kubernetes-container-terminal{position:relative;display:block}
 kubernetes-container-terminal .terminal{font-family:"Monospace Regular","DejaVu Sans Mono",Menlo,Monaco,Consolas,monospace;font-size:10px;color:#F0F0F0;text-align:left;outline:0;background-color:#000;border:1px solid #000;padding:10px;display:inline-block;line-height:1em}
 @media (min-width:568px){kubernetes-container-terminal .terminal{font-size:12px}
 }
-kubernetes-container-terminal .terminal-cursor{color:#000;background:#f0f0f0}
+kubernetes-container-terminal .terminal-cursor{background:#f0f0f0;color:#000;position:absolute}
 kubernetes-container-terminal .terminal-wrapper{display:inline-block;vertical-align:top}
 kubernetes-container-terminal .terminal-actions{display:inline-block;vertical-align:top;position:absolute;top:10px;right:34px;z-index:1}
 .spinner-white{border-bottom:4px solid rgba(255,255,255,.25)!important;border-left:4px solid rgba(255,255,255,.25)!important;border-right:4px solid rgba(255,255,255,.25)!important;border-top:4px solid rgba(255,255,255,.75)!important}
