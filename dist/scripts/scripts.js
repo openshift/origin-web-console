@@ -396,7 +396,7 @@ return c || a.metadata.name;
 return Q.serviceInstances || Q.serviceClasses ? (Q.bindableServiceInstances = _.filter(Q.serviceInstances, function(a) {
 return w.isServiceBindable(a, Q.serviceClasses);
 }), void (Q.orderedServiceInstances = _.sortByAll(Q.serviceInstances, function(a) {
-return _.get(Q.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || a.spec.serviceClassName;
+return _.get(Q.serviceClasses, [ a.spec.serviceClassName, "externalMetadata", "displayName" ]) || a.spec.serviceClassName;
 }, function(a) {
 return _.get(a, "metadata.name", "");
 }))) :void (Q.bindableServiceInstances = null);
@@ -12268,7 +12268,7 @@ d && (!a || c.metadata.creationTimestamp > a.metadata.creationTimestamp) && (a =
 }), l.serviceToBind = a || b;
 }, o = function() {
 l.serviceClasses && l.serviceInstances && (l.orderedServiceInstances = _.sortByAll(l.serviceInstances, function(a) {
-return _.get(l.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || a.spec.serviceClassName;
+return _.get(l.serviceClasses, [ a.spec.serviceClassName, "externalMetadata", "displayName" ]) || a.spec.serviceClassName;
 }, function(a) {
 return _.get(a, "metadata.name", "");
 }));
@@ -13131,12 +13131,12 @@ var a = h.apiObject.spec.serviceClassName;
 return _.get(h, [ "state", "serviceClasses", a, "description" ]);
 };
 h.$doCheck = function() {
-h.notifications = e.getNotifications(h.apiObject, h.state), h.displayName = j(h.apiObject, h.serviceClasses), h.description = k();
+h.notifications = e.getNotifications(h.apiObject, h.state), h.displayName = j(h.apiObject, h.state.serviceClasses), h.isBindable = d.isServiceBindable(h.apiObject, h.state.serviceClasses), h.description = k();
 }, h.$onChanges = function(a) {
 a.bindings && (h.deleteableBindings = _.reject(h.bindings, "metadata.deletionTimestamp"));
 }, h.getSecretForBinding = function(a) {
 return a && _.get(h, [ "state", "secrets", a.spec.secretName ]);
-}, h.isBindable = d.isServiceBindable(h.apiObject, h.state.serviceClasses), h.actionsDropdownVisible = function() {
+}, h.actionsDropdownVisible = function() {
 return !(!h.isBindable || !g.canI({
 resource:"bindings",
 group:"servicecatalog.k8s.io"

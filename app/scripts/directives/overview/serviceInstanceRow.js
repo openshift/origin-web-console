@@ -41,7 +41,8 @@
 
     row.$doCheck = function() {
       row.notifications = ListRowUtils.getNotifications(row.apiObject, row.state);
-      row.displayName = serviceInstanceDisplayName(row.apiObject, row.serviceClasses);
+      row.displayName = serviceInstanceDisplayName(row.apiObject, row.state.serviceClasses);
+      row.isBindable = BindingService.isServiceBindable(row.apiObject, row.state.serviceClasses);
       row.description = getDescription();
     };
 
@@ -54,8 +55,6 @@
     row.getSecretForBinding = function(binding) {
       return binding && _.get(row, ['state', 'secrets', binding.spec.secretName]);
     };
-
-    row.isBindable = BindingService.isServiceBindable(row.apiObject, row.state.serviceClasses);
 
     row.actionsDropdownVisible = function() {
       // We can create bindings

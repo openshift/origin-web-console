@@ -46,7 +46,7 @@
       if (ctrl.serviceClasses && ctrl.serviceInstances) {
         ctrl.orderedServiceInstances = _.sortByAll(ctrl.serviceInstances,
           function(item) {
-            return _.get(ctrl.serviceClasses, [item.spec.serviceClassName, 'osbMetadata', 'displayName']) || item.spec.serviceClassName;
+            return _.get(ctrl.serviceClasses, [item.spec.serviceClassName, 'externalMetadata', 'displayName']) || item.spec.serviceClassName;
           },
           function(item) {
             return _.get(item, 'metadata.name', '');
