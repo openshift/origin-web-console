@@ -159,6 +159,7 @@
 <overlay-panel single-column="true" show-panel="row.overlay.panelVisible" show-close="true" handle-close="row.closeOverlayPanel">
   <div ng-if="row.overlay.panelName === 'bindService'">
     <bind-service target="row.overlay.state.target"
+                  project="row.state.project"
                   on-close="row.closeOverlayPanel"></bind-service>
   </div>
   <div ng-if="row.overlay.panelName === 'unbindService'">

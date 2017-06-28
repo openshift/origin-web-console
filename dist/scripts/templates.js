@@ -5812,7 +5812,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</bind-application-form>\n" +
     "</div>\n" +
     "<div ng-if=\"ctrl.target.kind === 'Instance'\">\n" +
-    "<bind-service-form selected-project=\"ctrl.project\" service-class=\"ctrl.serviceClass\" service-class-name=\"ctrl.serviceClassName\" form-name=\"ctrl.selectionForm\" applications=\"ctrl.applications\" bind-type=\"ctrl.bindType\" app-to-bind=\"ctrl.appToBind\">\n" +
+    "<bind-service-form selected-project=\"ctrl.project\" service-class=\"ctrl.serviceClass\" service-class-name=\"ctrl.serviceClassName\" form-name=\"ctrl.selectionForm\" applications=\"ctrl.applications\" project-name=\"ctrl.projectDisplayName\" bind-type=\"ctrl.bindType\" app-to-bind=\"ctrl.appToBind\">\n" +
     "</bind-service-form>\n" +
     "</div>"
   );
@@ -12021,7 +12021,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<overlay-panel single-column=\"true\" show-panel=\"row.overlay.panelVisible\" show-close=\"true\" handle-close=\"row.closeOverlayPanel\">\n" +
     "<div ng-if=\"row.overlay.panelName === 'bindService'\">\n" +
-    "<bind-service target=\"row.overlay.state.target\" on-close=\"row.closeOverlayPanel\"></bind-service>\n" +
+    "<bind-service target=\"row.overlay.state.target\" project=\"row.state.project\" on-close=\"row.closeOverlayPanel\"></bind-service>\n" +
     "</div>\n" +
     "<div ng-if=\"row.overlay.panelName === 'unbindService'\">\n" +
     "<unbind-service target=\"row.overlay.state.target\" bindings=\"row.state.deleteableBindingsByApplicationUID[row.overlay.state.target.metadata.uid]\" on-close=\"row.closeOverlayPanel\"></unbind-service>\n" +
@@ -12355,7 +12355,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<overlay-panel single-column=\"true\" show-panel=\"row.overlay.panelVisible\" show-close=\"true\" handle-close=\"row.closeOverlayPanel\">\n" +
     "<div ng-if=\"row.overlay.panelName === 'bindService'\">\n" +
-    "<bind-service target=\"row.overlay.state.target\" on-close=\"row.closeOverlayPanel\"></bind-service>\n" +
+    "<bind-service target=\"row.overlay.state.target\" project=\"row.state.project\" on-close=\"row.closeOverlayPanel\"></bind-service>\n" +
     "</div>\n" +
     "<div ng-if=\"row.overlay.panelName === 'unbindService'\">\n" +
     "<unbind-service target=\"row.overlay.state.target\" bindings=\"row.deleteableBindings\" applications-by-binding=\"row.state.applicationsByBinding\" on-close=\"row.closeOverlayPanel\"></unbind-service>\n" +
