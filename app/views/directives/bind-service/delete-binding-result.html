@@ -5,16 +5,18 @@
     </h3>
 
     <div
-      ng-if="ctrl.appsForBinding(ctrl.selectedBinding.metadata.name) | size"
-      ng-repeat="appForBinding in ctrl.appsForBinding(ctrl.selectedBinding.metadata.name)">
+      ng-if="ctrl.unboundApps | size"
+      ng-repeat="appForBinding in ctrl.unboundApps track by (appForBinding | uid)">
       {{appForBinding.metadata.name}} <small class="text-muted">&ndash; {{ appForBinding.kind | humanizeKind : true}}</small>
     </div>
-    <div ng-if="!(ctrl.appsForBinding(ctrl.selectedBinding.metadata.name)  | size)">
+    <div ng-if="!(ctrl.unboundApps | size)">
       {{ctrl.selectedBinding.spec.secretName}} <small class="text-muted">&ndash; Secret</small>
     </div>
 
-    <p class="mar-top-lg">
-      <span class="pficon pficon-info"></span> You will need to redeploy your pods for this to take effect.
+    <!-- Only show the redeploy pods message if previously bound to an app. -->
+    <p ng-if="ctrl.unboundApps | size" class="mar-top-lg">
+      <span class="pficon pficon-info" aria-hidden="true"></span>
+      You will need to redeploy your pods for this to take effect.
     </p>
   </div>
   <div ng-if="ctrl.error">

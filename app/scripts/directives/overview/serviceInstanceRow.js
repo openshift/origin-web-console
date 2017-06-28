@@ -9,6 +9,7 @@
       'BindingService',
       'ListRowUtils',
       'NotificationsService',
+      'AuthorizationService',
       ServiceInstanceRow
     ],
     controllerAs: 'row',
@@ -25,7 +26,8 @@
                               DataService,
                               BindingService,
                               ListRowUtils,
-                              NotificationsService) {
+                              NotificationsService,
+                              AuthorizationService) {
     var row = this;
     _.extend(row, ListRowUtils.ui);
 
@@ -54,6 +56,22 @@
     };
 
     row.isBindable = BindingService.isServiceBindable(row.apiObject, row.state.serviceClasses);
+
+    row.actionsDropdownVisible = function() {
+      // We can create bindings
+      if (row.isBindable && AuthorizationService.canI({resource: 'bindings', group: 'servicecatalog.k8s.io'}, 'create')) {
+        return true;
+      }
+      // We can delete bindings
+      if (!_.isEmpty(row.deleteableBindings) && AuthorizationService.canI({resource: 'bindings', group: 'servicecatalog.k8s.io'}, 'delete')) {
+        return true;
+      }
+      // We can delete instances
+      if (AuthorizationService.canI({resource: 'instances', group: 'servicecatalog.k8s.io'}, 'delete')) {
+        return true;
+      }
+      return false;
+    };
 
     row.closeOverlayPanel = function() {
       _.set(row, 'overlay.panelVisible', false);

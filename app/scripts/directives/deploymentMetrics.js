@@ -338,10 +338,13 @@ angular.module('openshiftConsole')
           }
           var config = {
             pods: scope.pods,
-            containerName: scope.options.selectedContainer.name,
             namespace: pod.metadata.namespace,
             bucketDuration: getBucketDuration()
           };
+
+          if (!compact) {
+            config.containerName = scope.options.selectedContainer.name;
+          }
 
           // Leave the end time off to use the server's current time as the
           // end time. This prevents an issue where the donut chart shows 0

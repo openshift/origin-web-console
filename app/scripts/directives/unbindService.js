@@ -26,11 +26,16 @@
     var serviceInstanceDisplayName = $filter('serviceInstanceDisplayName');
 
     var unbindService = function() {
+      var bindingName = ctrl.selectedBinding.metadata.name;
+      // Make sure to get the unbound apps now. Otherwise they don't appear on
+      // the result page since deleting the binding will remove them from the
+      // map that is passed in.
+      ctrl.unboundApps = ctrl.appsForBinding(bindingName);
       DataService.delete({
         group: 'servicecatalog.k8s.io',
         resource: 'bindings'
       },
-      ctrl.selectedBinding.metadata.name,
+      bindingName,
       context,
       { propagationPolicy: null })
       .then(_.noop, function(err) {

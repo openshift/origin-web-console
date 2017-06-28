@@ -64,6 +64,11 @@ angular.module('openshiftConsole')
     };
 
     $scope.compareTriggers = function(lhs, rhs) {
+      if (_.isNumber(lhs.value)) {
+        // This method gets called again with array indices when dealing with duplicates of the same trigger type
+        // just let them go in order
+        return -1;
+      }
       if (lhs.value === "ConfigChange") {
         return -1;
       }

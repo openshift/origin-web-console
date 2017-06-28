@@ -295,10 +295,13 @@ registry-imagestream-meta dt:after {
     .form-group {
       margin-bottom: 0;
     }
+    .multiple-containers,
+    .select-range {
+      vertical-align: middle;
+    }
     .select-container,
     .select-range {
       display: inline-block;
-      vertical-align: middle;
     }
     @media (min-width: @screen-sm-min) {
       .form-group {
@@ -500,6 +503,10 @@ label.checkbox {
     display: table;
     margin-top: @grid-gutter-width;
     width: 100%;
+    .wizard-pf-main-form-contents & {
+      border-top: 0;
+      margin-top: 0;
+    }
     > .flow-block {
       display: inline-block;
       &.right {

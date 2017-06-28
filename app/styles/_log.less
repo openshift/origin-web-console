@@ -17,7 +17,7 @@
   }
   .dash {
     .text-muted();
-    margin: 0 2px;
+    margin: 0 0 0 4px;
   }
   .ui-select-container {
     min-width: 150px;
@@ -28,6 +28,9 @@
     display: inline-flex;
     align-items: center;
     flex-wrap: wrap;
+    > label {
+      margin-right: 3px;
+    }
     .container-state {
       margin-right: 5px;
     }
@@ -123,6 +126,9 @@
       @media (min-width: @screen-sm-min) {
         right: @log-scroll-top-offset-right-sm;
         top: (@log-scroll-offset-top + @navbar-os-header-height-desktop);
+        .tech-preview & {
+          top: (@log-scroll-offset-top + @navbar-os-header-height-desktop + @tech-preview-banner-height);
+        }
       }
       @media (min-width: @screen-md-min) {
         right: @log-scroll-top-offset-right-lg;

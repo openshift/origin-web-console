@@ -30,6 +30,9 @@
     top: 0;
     z-index: @zindex-navbar-fixed;
   }
+  .layout-pf-alt-fixed .tech-preview & {
+    top: @tech-preview-banner-height;
+  }
   .navbar-toggle {
     float: none;
     margin: 0;
@@ -351,5 +354,19 @@
         }
       }
     }
+  }
+}
+
+
+.tech-preview-banner {
+  background: @brand-warning;
+  color: @color-pf-white;
+  font-size: 12px;
+  text-align: center;
+  text-transform: uppercase;
+  width: 100%;
+  z-index: @zindex-navbar-fixed;
+  @media (min-width: @screen-sm-min) {
+    position: fixed;
   }
 }

@@ -1349,7 +1349,9 @@ function OverviewController($scope,
       updateQuotaWarnings();
     }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
 
-    if (SERVICE_CATALOG_ENABLED) {
+    var canI = $filter('canI');
+    // The canI check on watch should be temporary until we have a different solution for handling secret parameters
+    if (SERVICE_CATALOG_ENABLED && canI({resource: 'instances', group: 'servicecatalog.k8s.io'}, 'watch')) {
       watches.push(DataService.watch({
         group: 'servicecatalog.k8s.io',
         resource: 'instances'
@@ -1365,7 +1367,7 @@ function OverviewController($scope,
       }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
     }
 
-    if (SERVICE_CATALOG_ENABLED) {
+    if (SERVICE_CATALOG_ENABLED && canI({resource: 'bindings', group: 'servicecatalog.k8s.io'}, 'watch')) {
       watches.push(DataService.watch({
         group: 'servicecatalog.k8s.io',
         resource: 'bindings'
@@ -1383,9 +1385,10 @@ function OverviewController($scope,
       state.limitRanges = response.by("metadata.name");
     });
 
-    if (SERVICE_CATALOG_ENABLED) {
+    if (SERVICE_CATALOG_ENABLED && canI({resource: 'instances', group: 'servicecatalog.k8s.io'}, 'watch')) {
       // TODO: update to behave like ImageStreamResolver
       // - we may not even need to list these... perhaps just fetch the ones we need when needed
+      // If we can't watch instances don't bother getting service classes either
       DataService.list({
         group: 'servicecatalog.k8s.io',
         resource: 'serviceclasses'
