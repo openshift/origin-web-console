@@ -12319,11 +12319,9 @@ l.serviceInstances = a.by("metadata.name"), l.serviceToBind || n(), o();
 });
 };
 l.$onInit = function() {
-l.serviceSelection = {};
-var a = "Instance" === l.target.kind ? "Applications" :"Services";
-l.steps = [ {
+l.serviceSelection = {}, l.projectDisplayName = b("displayName")(l.project), l.steps = [ {
 id:"bindForm",
-label:a,
+label:"Binding",
 view:"views/directives/bind-service/bind-service-form.html",
 valid:!0,
 onShow:q
@@ -12339,6 +12337,8 @@ resource:"serviceclasses"
 }, {}).then(function(a) {
 l.serviceClasses = a.by("metadata.name"), "Instance" === l.target.kind && (l.serviceClass = l.serviceClasses[l.target.spec.serviceClassName], l.serviceClassName = l.target.spec.serviceClassName), o();
 }), "Instance" === l.target.kind ? (l.bindType = "secret-only", l.appToBind = null, l.serviceToBind = l.target.metadata.name, s()) :(l.bindType = "application", l.appToBind = l.target, t());
+}, l.$onChanges = function(a) {
+a.project && !a.project.isFirstChange() && (l.projectDisplayName = b("displayName")(l.project));
 }, l.$onDestroy = function() {
 e && (e(), e = void 0), f && c.unwatch(f);
 }, l.bindService = function() {
@@ -12361,6 +12361,7 @@ controller:[ "$scope", "$filter", "DataService", "BindingService", a ],
 controllerAs:"ctrl",
 bindings:{
 target:"<",
+project:"<",
 onClose:"<"
 },
 templateUrl:"views/directives/bind-service.html"

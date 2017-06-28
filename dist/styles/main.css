@@ -1320,7 +1320,6 @@ button.close{padding:0;cursor:pointer;background:0 0;border:0;-webkit-appearance
 .popover{position:absolute;top:0;left:0;z-index:1060;display:none;max-width:220px;text-align:left;text-align:start;text-shadow:none;background-color:#fff;border:1px solid #bbb;border-radius:1px}
 .carousel-caption,.carousel-control{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.6);text-align:center}
 .progress-description,.text-overflow-pf{white-space:nowrap;text-overflow:ellipsis}
-.delete-resource-modal h1,.word-break{word-break:break-word;overflow-wrap:break-word}
 .popover.top{margin-top:-10px}
 .popover.right{margin-left:10px}
 .popover.bottom{margin-top:10px}
@@ -3867,6 +3866,7 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.left,div.hopscotch-bubble
 .bind-form .help-block.service-instance-name{display:inline-block;margin-top:0}
 .bind-form .radio label[disabled]{cursor:not-allowed}
 .bind-info{margin-bottom:20px;margin-top:30px}
+.bind-service-selection{margin-bottom:5px}
 .bind-status{display:flex;font-size:16px;margin-top:0}
 .bind-status .bind-message{flex:1;line-height:1.4;margin-top:0;padding-left:10px}
 .bind-status .pficon{margin-top:3px}
@@ -3876,7 +3876,7 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.left,div.hopscotch-bubble
 .bind-pending-message{margin-top:15px}
 .bind-pending-message.progress-inline{margin-top:0}
 .delete-resource-modal{background-color:#f1f1f1}
-.delete-resource-modal h1{font-size:21px;font-weight:500;margin-bottom:20px;word-wrap:break-word;min-width:0}
+.delete-resource-modal h1{font-size:21px;font-weight:500;margin-bottom:20px;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .delete-resource-modal p{font-size:16px}
 .delete-resource-modal .help-block{margin-top:0px;margin-bottom:10px}
 .dialog-btn{float:right!important;margin-right:10px}
@@ -3908,11 +3908,13 @@ div.hopscotch-bubble .hopscotch-bubble-number{background:#0088ce;border-radius:1
 div.hopscotch-bubble .hopscotch-nav-button{border-radius:0;font-family:"Open Sans";font-size:12px}
 div.hopscotch-bubble .hopscotch-nav-button.next{background-color:#0088ce;background-image:none;margin-left:5px}
 div.hopscotch-bubble .hopscotch-nav-button.prev{color:#030303}
-.word-break{word-wrap:break-word;min-width:0}
+.word-break{word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .word-break-all{word-break:break-all;word-break:break-word;overflow-wrap:break-word}
 .toast-action-divider{color:#9c9c9c}
 .toast-notification-message{font-weight:700;margin-right:5px}
-.toast-notifications-list-pf{top:28px;z-index:1055}
+.toast-notifications-list-pf{top:28px;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0;z-index:1055}
+@media (max-width:767px){.toast-notifications-list-pf{max-width:calc(100% - 40px)}
+}
 .toast-notifications-list-pf>div.ng-enter{animation:toastSlideIn .2s ease-out}
 .toast-notifications-list-pf>div.ng-leave{animation:toastSlideOut .2s ease-in}
 .toast-notifications-list-pf>div .toast-pf{border-color:#fff;margin-bottom:5px;width:100%}
