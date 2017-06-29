@@ -6415,8 +6415,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"scaling-details\" ng-if=\"showQuotaWarning\">\n" +
     "Scaling may be affected.\n" +
-    "<a ng-if=\"rc.kind !== 'StatefulSet'\" ng-href=\"{{rc | navigateResourceURL}}?tab=events\">Check events</a>\n" +
-    "<a ng-if=\"rc.kind === 'StatefulSet'\" ng-href=\"project/{{rc.metadata.namespace}}/browse/events\">Check events</a>\n" +
+    "<a ng-if=\"rc.kind !== 'StatefulSet'\" ng-href=\"{{rc | navigateResourceURL}}?tab=events\" class=\"check-events\">Check events</a>\n" +
+    "<a ng-if=\"rc.kind === 'StatefulSet'\" ng-href=\"project/{{rc.metadata.namespace}}/browse/events\" class=\"check-events\">Check events</a>\n" +
     "</div>\n" +
     "<div class=\"scaling-details\" ng-if=\"isIdled && (!getDesiredReplicas())\">\n" +
     "<div ng-if=\"(!resuming)\">\n" +

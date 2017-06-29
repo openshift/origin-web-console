@@ -73,8 +73,8 @@
   </div>
   <div class="scaling-details" ng-if="showQuotaWarning">
     Scaling may be affected.
-    <a ng-if="rc.kind !== 'StatefulSet'" ng-href="{{rc | navigateResourceURL}}?tab=events">Check events</a>
-    <a ng-if="rc.kind === 'StatefulSet'" ng-href="project/{{rc.metadata.namespace}}/browse/events">Check events</a>
+    <a ng-if="rc.kind !== 'StatefulSet'" ng-href="{{rc | navigateResourceURL}}?tab=events" class="check-events">Check events</a>
+    <a ng-if="rc.kind === 'StatefulSet'" ng-href="project/{{rc.metadata.namespace}}/browse/events" class="check-events">Check events</a>
   </div>
   <div
     class="scaling-details"
