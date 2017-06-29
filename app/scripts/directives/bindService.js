@@ -181,7 +181,7 @@
       if (ctrl.target.kind === 'Instance') {
         ctrl.bindType = "secret-only";
         ctrl.appToBind = null;
-        ctrl.serviceToBind = ctrl.target.metadata.name;
+        ctrl.serviceToBind = ctrl.target;
         loadApplications();
       }
       else {

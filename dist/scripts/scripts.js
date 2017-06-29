@@ -12336,7 +12336,7 @@ group:"servicecatalog.k8s.io",
 resource:"serviceclasses"
 }, {}).then(function(a) {
 l.serviceClasses = a.by("metadata.name"), "Instance" === l.target.kind && (l.serviceClass = l.serviceClasses[l.target.spec.serviceClassName], l.serviceClassName = l.target.spec.serviceClassName), o();
-}), "Instance" === l.target.kind ? (l.bindType = "secret-only", l.appToBind = null, l.serviceToBind = l.target.metadata.name, s()) :(l.bindType = "application", l.appToBind = l.target, t());
+}), "Instance" === l.target.kind ? (l.bindType = "secret-only", l.appToBind = null, l.serviceToBind = l.target, s()) :(l.bindType = "application", l.appToBind = l.target, t());
 }, l.$onChanges = function(a) {
 a.project && !a.project.isFirstChange() && (l.projectDisplayName = b("displayName")(l.project));
 }, l.$onDestroy = function() {
