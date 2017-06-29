@@ -12,6 +12,7 @@
     controllerAs: 'ctrl',
     bindings: {
       target: '<',
+      project: '<',
       onClose: '<'
     },
     templateUrl: 'views/directives/bind-service.html'
@@ -46,7 +47,7 @@
       if (ctrl.serviceClasses && ctrl.serviceInstances) {
         ctrl.orderedServiceInstances = _.sortByAll(ctrl.serviceInstances,
           function(item) {
-            return _.get(ctrl.serviceClasses, [item.spec.serviceClassName, 'osbMetadata', 'displayName']) || item.spec.serviceClassName;
+            return _.get(ctrl.serviceClasses, [item.spec.serviceClassName, 'externalMetadata', 'displayName']) || item.spec.serviceClassName;
           },
           function(item) {
             return _.get(item, 'metadata.name', '');
@@ -145,12 +146,12 @@
 
     ctrl.$onInit = function() {
       ctrl.serviceSelection = {};
-      var formStepLabel = (ctrl.target.kind === 'Instance') ? 'Applications' : 'Services';
+      ctrl.projectDisplayName = $filter('displayName')(ctrl.project);
 
       ctrl.steps = [
         {
           id: 'bindForm',
-          label: formStepLabel,
+          label: "Binding",
           view: 'views/directives/bind-service/bind-service-form.html',
           valid: true,
           onShow: showBind
@@ -187,6 +188,12 @@
         ctrl.bindType = 'application';
         ctrl.appToBind = ctrl.target;
         loadServiceInstances();
+      }
+    };
+
+    ctrl.$onChanges = function(onChangesObj) {
+      if (onChangesObj.project && !onChangesObj.project.isFirstChange()) {
+        ctrl.projectDisplayName = $filter('displayName')(ctrl.project);
       }
     };
 

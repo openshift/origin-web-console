@@ -1183,7 +1183,7 @@ function OverviewController($scope,
 
     state.orderedServiceInstances = _.sortByAll(state.serviceInstances,
       function(item) {
-        return _.get(state.serviceClasses, [item.spec.serviceClassName, 'osbMetadata', 'displayName']) || item.spec.serviceClassName;
+        return _.get(state.serviceClasses, [item.spec.serviceClassName, 'externalMetadata', 'displayName']) || item.spec.serviceClassName;
       },
       function(item) {
         return _.get(item, 'metadata.name', '');

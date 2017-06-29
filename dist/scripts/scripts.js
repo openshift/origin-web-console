@@ -396,7 +396,7 @@ return c || a.metadata.name;
 return Q.serviceInstances || Q.serviceClasses ? (Q.bindableServiceInstances = _.filter(Q.serviceInstances, function(a) {
 return w.isServiceBindable(a, Q.serviceClasses);
 }), void (Q.orderedServiceInstances = _.sortByAll(Q.serviceInstances, function(a) {
-return _.get(Q.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || a.spec.serviceClassName;
+return _.get(Q.serviceClasses, [ a.spec.serviceClassName, "externalMetadata", "displayName" ]) || a.spec.serviceClassName;
 }, function(a) {
 return _.get(a, "metadata.name", "");
 }))) :void (Q.bindableServiceInstances = null);
@@ -12268,7 +12268,7 @@ d && (!a || c.metadata.creationTimestamp > a.metadata.creationTimestamp) && (a =
 }), l.serviceToBind = a || b;
 }, o = function() {
 l.serviceClasses && l.serviceInstances && (l.orderedServiceInstances = _.sortByAll(l.serviceInstances, function(a) {
-return _.get(l.serviceClasses, [ a.spec.serviceClassName, "osbMetadata", "displayName" ]) || a.spec.serviceClassName;
+return _.get(l.serviceClasses, [ a.spec.serviceClassName, "externalMetadata", "displayName" ]) || a.spec.serviceClassName;
 }, function(a) {
 return _.get(a, "metadata.name", "");
 }));
@@ -12319,11 +12319,9 @@ l.serviceInstances = a.by("metadata.name"), l.serviceToBind || n(), o();
 });
 };
 l.$onInit = function() {
-l.serviceSelection = {};
-var a = "Instance" === l.target.kind ? "Applications" :"Services";
-l.steps = [ {
+l.serviceSelection = {}, l.projectDisplayName = b("displayName")(l.project), l.steps = [ {
 id:"bindForm",
-label:a,
+label:"Binding",
 view:"views/directives/bind-service/bind-service-form.html",
 valid:!0,
 onShow:q
@@ -12339,6 +12337,8 @@ resource:"serviceclasses"
 }, {}).then(function(a) {
 l.serviceClasses = a.by("metadata.name"), "Instance" === l.target.kind && (l.serviceClass = l.serviceClasses[l.target.spec.serviceClassName], l.serviceClassName = l.target.spec.serviceClassName), o();
 }), "Instance" === l.target.kind ? (l.bindType = "secret-only", l.appToBind = null, l.serviceToBind = l.target.metadata.name, s()) :(l.bindType = "application", l.appToBind = l.target, t());
+}, l.$onChanges = function(a) {
+a.project && !a.project.isFirstChange() && (l.projectDisplayName = b("displayName")(l.project));
 }, l.$onDestroy = function() {
 e && (e(), e = void 0), f && c.unwatch(f);
 }, l.bindService = function() {
@@ -12361,6 +12361,7 @@ controller:[ "$scope", "$filter", "DataService", "BindingService", a ],
 controllerAs:"ctrl",
 bindings:{
 target:"<",
+project:"<",
 onClose:"<"
 },
 templateUrl:"views/directives/bind-service.html"
@@ -13131,12 +13132,12 @@ var a = h.apiObject.spec.serviceClassName;
 return _.get(h, [ "state", "serviceClasses", a, "description" ]);
 };
 h.$doCheck = function() {
-h.notifications = e.getNotifications(h.apiObject, h.state), h.displayName = j(h.apiObject, h.serviceClasses), h.description = k();
+h.notifications = e.getNotifications(h.apiObject, h.state), h.displayName = j(h.apiObject, h.state.serviceClasses), h.isBindable = d.isServiceBindable(h.apiObject, h.state.serviceClasses), h.description = k();
 }, h.$onChanges = function(a) {
 a.bindings && (h.deleteableBindings = _.reject(h.bindings, "metadata.deletionTimestamp"));
 }, h.getSecretForBinding = function(a) {
 return a && _.get(h, [ "state", "secrets", a.spec.secretName ]);
-}, h.isBindable = d.isServiceBindable(h.apiObject, h.state.serviceClasses), h.actionsDropdownVisible = function() {
+}, h.actionsDropdownVisible = function() {
 return !(!h.isBindable || !g.canI({
 resource:"bindings",
 group:"servicecatalog.k8s.io"
