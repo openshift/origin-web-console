@@ -10140,7 +10140,34 @@ r.destroy();
 });
 }
 };
-}).directive("shortId", function() {
+}).directive("copyLoginToClipboard", [ "NotificationsService", function(e) {
+return {
+restrict: "E",
+replace: !0,
+scope: {
+clipboardText: "="
+},
+template: '<a href="" data-clipboard-text="">Copy Login Command</a>',
+link: function(t, n) {
+var a = new Clipboard(n.get(0));
+a.on("success", function() {
+e.addNotification({
+id: "copied_to_clipboard_toast_success",
+type: "warning",
+message: "Do not share the API token in your clipboard. A token is a form of a password."
+});
+}), a.on("error", function() {
+e.addNotification({
+id: "copied_to_clipboard_toast_error",
+type: "error",
+message: "Unable to copy."
+});
+}), n.on("$destroy", function() {
+a.destroy();
+});
+}
+};
+} ]).directive("shortId", function() {
 return {
 restrict: "E",
 scope: {
@@ -14812,10 +14839,13 @@ type: "dom",
 node: '<li><a href="about">About</a></li>'
 }), e;
 });
-} ]), angular.module("openshiftConsole").run([ "extensionRegistry", "$rootScope", function(e, t) {
+} ]), angular.module("openshiftConsole").run([ "extensionRegistry", "$rootScope", "DataService", "AuthService", function(e, t, n, a) {
 e.add("nav-user-dropdown", function() {
 var e = "Log out";
 return t.user.fullName && t.user.fullName !== t.user.metadata.name && (e += " (" + t.user.metadata.name + ")"), [ {
+type: "dom",
+node: "<li><copy-login-to-clipboard clipboard-text=\"'oc login " + n.openshiftAPIBaseUrl() + " --token=" + a.UserStore().getToken() + "'\"></copy-login-to-clipboard></li>"
+}, {
 type: "dom",
 node: '<li><a href="logout">' + _.escape(e) + "</a></li>"
 } ];
