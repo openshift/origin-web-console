@@ -4678,8 +4678,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container surface-shaded gutter-top\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<h1>Create Project</h1>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<create-project alerts=\"alerts\" redirect-action=\"onProjectCreated\"></create-project>\n" +
+    "<create-project redirect-action=\"onProjectCreated\"></create-project>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

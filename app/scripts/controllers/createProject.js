@@ -16,7 +16,6 @@ angular.module('openshiftConsole')
                        Constants) {
     var landingPageEnabled = _.get(Constants, 'ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page');
 
-    $scope.alerts = {};
     $scope.onProjectCreated = function(encodedProjectName) {
       if (landingPageEnabled) {
         // If the new experience is enabled, return to project list.
