@@ -5874,7 +5874,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/bind-service/results.html',
-    "<bind-results error=\"ctrl.error\" binding=\"ctrl.binding\" service-to-bind=\"ctrl.serviceToBind\" bind-type=\"{{ctrl.bindType}}\" application-to-bind=\"ctrl.appToBind.metadata.name\" generated-secret-name=\"ctrl.generatedSecretName\" show-pod-presets=\"'pod_presets' | enableTechPreviewFeature\" secret-href=\"ctrl.generatedSecretName | navigateResourceURL : 'Secret' : ctrl.target.metadata.namespace\">\n" +
+    "<bind-results error=\"ctrl.error\" binding=\"ctrl.binding\" service-to-bind=\"ctrl.serviceToBind.metadata.name\" bind-type=\"{{ctrl.bindType}}\" application-to-bind=\"ctrl.appToBind.metadata.name\" generated-secret-name=\"ctrl.generatedSecretName\" show-pod-presets=\"'pod_presets' | enableTechPreviewFeature\" secret-href=\"ctrl.generatedSecretName | navigateResourceURL : 'Secret' : ctrl.target.metadata.namespace\">\n" +
     "</bind-results>"
   );
 
@@ -6415,8 +6415,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"scaling-details\" ng-if=\"showQuotaWarning\">\n" +
     "Scaling may be affected.\n" +
-    "<a ng-if=\"rc.kind !== 'StatefulSet'\" ng-href=\"{{rc | navigateResourceURL}}?tab=events\">Check events</a>\n" +
-    "<a ng-if=\"rc.kind === 'StatefulSet'\" ng-href=\"project/{{rc.metadata.namespace}}/browse/events\">Check events</a>\n" +
+    "<a ng-if=\"rc.kind !== 'StatefulSet'\" ng-href=\"{{rc | navigateResourceURL}}?tab=events\" class=\"check-events\">Check events</a>\n" +
+    "<a ng-if=\"rc.kind === 'StatefulSet'\" ng-href=\"project/{{rc.metadata.namespace}}/browse/events\" class=\"check-events\">Check events</a>\n" +
     "</div>\n" +
     "<div class=\"scaling-details\" ng-if=\"isIdled && (!getDesiredReplicas())\">\n" +
     "<div ng-if=\"(!resuming)\">\n" +
