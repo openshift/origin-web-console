@@ -6266,7 +6266,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"loading || !import\" class=\"empty-state-message text-muted text-center\">\n" +
     "<span class=\"fa fa-cube icon-lg hero-icon\" aria-hidden=\"true\"></span>\n" +
     "<div ng-if=\"!loading\" class=\"h2\">Select an image stream tag or enter an image name.</div>\n" +
-    "<div ng-if=\"loading\" class=\"h2 truncate\">Loading image metadata for {{imageName | stripSHA}}...</div>\n" +
+    "<div ng-if=\"loading\" class=\"h2\">Loading image metadata for <span class=\"word-break\">{{imageName | stripSHA}}</span>...</div>\n" +
     "</div>\n" +
     "<div class=\"row mar-bottom-md\" ng-if-start=\"!loading && import.image\">\n" +
     "<div class=\"col-sm-12 mar-top-lg mar-bottom-lg\">\n" +

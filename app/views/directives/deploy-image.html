@@ -60,7 +60,7 @@
   <div ng-if="loading || !import" class="empty-state-message text-muted text-center">
     <span class="fa fa-cube icon-lg hero-icon" aria-hidden="true"></span>
     <div ng-if="!loading" class="h2">Select an image stream tag or enter an image name.</div>
-    <div ng-if="loading" class="h2 truncate">Loading image metadata for {{imageName | stripSHA}}...</div>
+    <div ng-if="loading" class="h2">Loading image metadata for <span class="word-break">{{imageName | stripSHA}}</span>...</div>
   </div>
   <div class="row mar-bottom-md" ng-if-start="!loading && import.image">
     <div class="col-sm-12 mar-top-lg mar-bottom-lg">
