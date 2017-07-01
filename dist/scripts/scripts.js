@@ -8131,7 +8131,7 @@ a.canCreateProject = !1;
 });
 } ]), angular.module("openshiftConsole").controller("CreateProjectController", [ "$scope", "$location", "$window", "AuthService", "Constants", function(a, b, c, d, e) {
 var f = _.get(e, "ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page");
-a.alerts = {}, a.onProjectCreated = function(a) {
+a.onProjectCreated = function(a) {
 f ? c.history.back() :b.path("project/" + a + "/create");
 }, d.withUser();
 } ]), angular.module("openshiftConsole").controller("EditProjectController", [ "$scope", "$routeParams", "$filter", "$location", "DataService", "ProjectsService", "Navigate", function(a, b, c, d, e, f, g) {

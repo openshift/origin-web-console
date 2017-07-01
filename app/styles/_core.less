@@ -121,7 +121,11 @@
 .empty-state-message {
   margin: 40px auto 60px;
   max-width: 600px;
-  padding: 0 (@grid-gutter-width / 2);
+  padding: 0;
+  @media(min-width: @screen-xs-min) {
+    padding-left: (@grid-gutter-width / 2);
+    padding-right: (@grid-gutter-width / 2);
+  }
   h2, .h2 {
     // Avoid clipped descenders with class truncate or overflow: hidden
     line-height: 1.4;
