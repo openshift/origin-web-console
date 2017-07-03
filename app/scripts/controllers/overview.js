@@ -1050,7 +1050,7 @@ function OverviewController($scope,
 
   var updateQuotaWarnings = function() {
     ResourceAlertsService.setGenericQuotaWarning(state.quotas,
-                                                 state.clusterQuotaData,
+                                                 state.clusterQuotas,
                                                  $routeParams.project,
                                                  state.alerts);
   };
