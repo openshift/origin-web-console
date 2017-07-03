@@ -75,7 +75,9 @@
         <dd ng-if-end>{{build.spec.source.contextDir}}</dd>
         <dt ng-if-start="build.spec.revision.git.commit">Source Commit:</dt>
         <dd ng-if-end>
-          {{build.spec.revision.git.message}}
+          <span class="word-break">
+            {{build.spec.revision.git.message}}
+          </span>
           <osc-git-link
             class="hash"
             uri="build.spec.source.git.uri"
