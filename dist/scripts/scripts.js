@@ -8868,7 +8868,7 @@ b.result.then(function() {
 var a = d.kind, b = d.resourceName, e = d.typeDisplayName || c("humanizeKind")(a), h = e + " '" + (d.displayName ? d.displayName :b) + "'", k = "Project" === d.kind ? {} :{
 namespace:d.projectName
 }, l = {};
-d.options.deleteImmediately && (l.gracePeriodSeconds = 0), "servicecatalog.k8s.io" === d.group && (l.propagationPolicy = null), g["delete"]({
+d.options.deleteImmediately && (l.gracePeriodSeconds = 0, l.propagationPolicy = null), "servicecatalog.k8s.io" === d.group && (l.propagationPolicy = null), g["delete"]({
 resource:f.kindToResource(a),
 group:d.group
 }, b, k, l).then(function() {
