@@ -344,7 +344,7 @@ return g.sortBuilds(a, !0);
 }), Wa();
 }
 }, Ya = function() {
-x.setGenericQuotaWarning(Q.quotas, Q.clusterQuotaData, c.project, Q.alerts);
+x.setGenericQuotaWarning(Q.quotas, Q.clusterQuotas, c.project, Q.alerts);
 };
 z.clearFilter = function() {
 o.clear(), z.filterText = "";
