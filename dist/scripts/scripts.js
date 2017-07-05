@@ -6176,7 +6176,7 @@ a.loaded = !0, a.error = b;
 d.unwatchAll(f);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("CreateConfigMapController", [ "$filter", "$routeParams", "$scope", "$window", "AuthorizationService", "DataService", "Navigate", "NotificationsService", "ProjectsService", function(a, b, c, d, e, f, g, h, i) {
+} ]), angular.module("openshiftConsole").controller("CreateConfigMapController", [ "$filter", "$routeParams", "$scope", "$window", "AuthorizationService", "DataService", "Navigate", "NotificationsService", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j) {
 c.projectName = b.project, c.breadcrumbs = [ {
 title:c.projectName,
 link:"project/" + c.projectName
@@ -6186,14 +6186,14 @@ link:"project/" + c.projectName + "/browse/config-maps"
 }, {
 title:"Create Config Map"
 } ];
-var j = function() {
+var k = function() {
 h.hideNotification("create-config-map-error");
 };
-c.$on("$destroy", j);
-var k = function() {
+c.$on("$destroy", k);
+var l = function() {
 d.history.back();
 };
-c.cancel = k, i.get(b.project).then(_.spread(function(d, i) {
+c.cancel = l, i.get(b.project).then(_.spread(function(d, i) {
 return c.project = d, c.breadcrumbs[0].title = a("displayName")(d), e.canI("configmaps", "create", b.project) ? (c.configMap = {
 apiVersion:"v1",
 kind:"ConfigMap",
@@ -6201,12 +6201,12 @@ metadata:{
 namespace:b.project
 },
 data:{}
-}, void (c.createConfigMap = function() {
-c.createConfigMapForm.$valid && (j(), c.disableInputs = !0, f.create("configmaps", null, c.configMap, i).then(function() {
+}, c.labels = [], void (c.createConfigMap = function() {
+c.createConfigMapForm.$valid && (k(), c.disableInputs = !0, c.configMap.metadata.labels = j.mapEntries(j.compactEntries(c.labels)), f.create("configmaps", null, c.configMap, i).then(function() {
 h.addNotification({
 type:"success",
 message:"Config map " + c.configMap.metadata.name + " successfully created."
-}), k();
+}), l();
 }, function(b) {
 c.disableInputs = !1, h.addNotification({
 id:"create-config-map-error",

@@ -9,15 +9,16 @@
  */
 angular.module('openshiftConsole')
   .controller('CreateConfigMapController',
-              function ($filter,
-                        $routeParams,
-                        $scope,
-                        $window,
-                        AuthorizationService,
-                        DataService,
-                        Navigate,
-                        NotificationsService,
-                        ProjectsService) {
+              function($filter,
+                       $routeParams,
+                       $scope,
+                       $window,
+                       AuthorizationService,
+                       DataService,
+                       Navigate,
+                       NotificationsService,
+                       ProjectsService,
+                       keyValueEditorUtils) {
     $scope.projectName = $routeParams.project;
 
     // TODO: Update BreadcrumbsService to handle create pages.
@@ -65,11 +66,13 @@ angular.module('openshiftConsole')
           },
           data: {}
         };
+        $scope.labels = [];
 
         $scope.createConfigMap = function() {
           if ($scope.createConfigMapForm.$valid) {
             hideErrorNotifications();
             $scope.disableInputs = true;
+            $scope.configMap.metadata.labels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
             DataService.create('configmaps', null, $scope.configMap, context)
               .then(function() { // Success
                 NotificationsService.addNotification({
