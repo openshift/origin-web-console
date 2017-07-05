@@ -39,6 +39,13 @@ angular.module("openshiftConsole")
           $scope.editorErrorAnnotation = _.some(editorAnnotations, { type: 'error' });
         };
 
+        var parseYAML = function() {
+          return jsyaml.safeLoad($scope.editorContent, {
+            // Allow duplicate keys in the YAML for compability with `oc create`
+            json: true
+          });
+        };
+
         // Determine whats the input format (JSON/YAML) and set appropriate view mode
         var updateEditorMode = _.debounce(function(){
           try {
@@ -46,7 +53,7 @@ angular.module("openshiftConsole")
             aceEditorSession.setMode("ace/mode/json");
           } catch (e) {
             try {
-              jsyaml.safeLoad($scope.editorContent);
+              parseYAML();
               aceEditorSession.setMode("ace/mode/yaml");
             } catch (e) {}
           }
@@ -128,7 +135,7 @@ angular.module("openshiftConsole")
             resource = JSON.parse($scope.editorContent);
           } catch (e) {
             try {
-              resource = jsyaml.safeLoad($scope.editorContent);
+              resource = parseYAML();
             } catch (e) {
               $scope.error = e;
               return;

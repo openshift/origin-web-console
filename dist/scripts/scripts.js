@@ -9132,7 +9132,7 @@ controller:"ConfirmReplaceModalController",
 scope:m
 });
 a.result.then(function() {
-j.getLatestQuotaAlerts(m.createResources, m.context).then(F);
+j.getLatestQuotaAlerts(m.createResources, m.context).then(G);
 });
 }
 function r() {
@@ -9144,10 +9144,10 @@ b > 0 && d.push(w()), a > 0 && d.push(v()), c.all(d).then(s);
 }
 function s() {
 var a, c;
-E(), "Template" === m.resourceKind && m.templateOptions.process && !m.errorOccured ? m.isDialog ? m.$emit("fileImportedFromYAMLOrJSON", {
+F(), "Template" === m.resourceKind && m.templateOptions.process && !m.errorOccured ? m.isDialog ? m.$emit("fileImportedFromYAMLOrJSON", {
 project:m.project,
-template:B
-}) :(c = m.templateOptions.add || m.updateResources.length > 0 ? m.project.metadata.name :"", a = h.createFromTemplateURL(B, m.project.metadata.name, {
+template:C
+}) :(c = m.templateOptions.add || m.updateResources.length > 0 ? m.project.metadata.name :"", a = h.createFromTemplateURL(C, m.project.metadata.name, {
 namespace:c
 }), b.url(a)) :m.isDialog ? m.$emit("fileImportedFromYAMLOrJSON", {
 project:m.project
@@ -9204,9 +9204,9 @@ details:a("getErrorDetails")(c)
 }
 function v() {
 var a = {
-started:"Creating resources in project " + G(m.project),
-success:"Creating resources in project " + G(m.project),
-failure:"Failed to create some resources in project " + G(m.project)
+started:"Creating resources in project " + H(m.project),
+success:"Creating resources in project " + H(m.project),
+failure:"Failed to create some resources in project " + H(m.project)
 }, b = {};
 l.add(a, b, m.project.metadata.name, function() {
 var a = c.defer();
@@ -9239,9 +9239,9 @@ hasErrors:d
 }
 function w() {
 var a = {
-started:"Updating resources in project " + G(m.project),
-success:"Updated resources in project " + G(m.project),
-failure:"Failed to update some resources in project " + G(m.project)
+started:"Updating resources in project " + H(m.project),
+success:"Updated resources in project " + H(m.project),
+failure:"Failed to update some resources in project " + H(m.project)
 }, b = {};
 l.add(a, b, m.project.metadata.name, function() {
 var a = c.defer();
@@ -9290,18 +9290,22 @@ var a = x.getAnnotations();
 m.editorErrorAnnotation = _.some(a, {
 type:"error"
 });
-}, A = _.debounce(function() {
+}, A = function() {
+return jsyaml.safeLoad(m.editorContent, {
+json:!0
+});
+}, B = _.debounce(function() {
 try {
 JSON.parse(m.editorContent), x.setMode("ace/mode/json");
 } catch (a) {
 try {
-jsyaml.safeLoad(m.editorContent), x.setMode("ace/mode/yaml");
+A(), x.setMode("ace/mode/yaml");
 } catch (a) {}
 }
 m.$apply(z);
 }, 300);
-m.aceChanged = A;
-var B, C = function(a) {
+m.aceChanged = B;
+var C, D = function(a) {
 var b = d.open({
 animation:!0,
 templateUrl:"views/modals/confirm.html",
@@ -9319,34 +9323,34 @@ cancelButtonText:"Cancel"
 }
 });
 b.result.then(r);
-}, D = {}, E = function() {
-i.hideNotification("from-file-error"), _.each(D, function(a) {
+}, E = {}, F = function() {
+i.hideNotification("from-file-error"), _.each(E, function(a) {
 !a.id || "error" !== a.type && "warning" !== a.type || i.hideNotification(a.id);
 });
-}, F = function(a) {
-E(), D = k.getSecurityAlerts(m.createResources, m.project.metadata.name);
+}, G = function(a) {
+F(), E = k.getSecurityAlerts(m.createResources, m.project.metadata.name);
 var b = a.quotaAlerts || [];
-D = D.concat(b);
-var c = _.filter(D, {
+E = E.concat(b);
+var c = _.filter(E, {
 type:"error"
 });
-c.length ? (_.each(D, function(a) {
+c.length ? (_.each(E, function(a) {
 a.id = _.uniqueId("from-file-alert-"), i.addNotification(a);
-}), m.disableInputs = !1) :D.length ? (C(D), m.disableInputs = !1) :r();
+}), m.disableInputs = !1) :E.length ? (D(E), m.disableInputs = !1) :r();
 };
 m.create = function() {
 delete m.error;
 try {
-B = JSON.parse(m.editorContent);
+C = JSON.parse(m.editorContent);
 } catch (a) {
 try {
-B = jsyaml.safeLoad(m.editorContent);
+C = A();
 } catch (a) {
 return void (m.error = a);
 }
 }
-if (n(B) && (m.resourceKind = B.kind, m.resourceKind.endsWith("List") ? m.isList = !0 :m.isList = !1, o(B))) {
-m.isList ? (m.resourceList = B.items, m.resourceName = "") :(m.resourceList = [ B ], m.resourceName = B.metadata.name, "Template" === m.resourceKind && (m.templateOptions = {
+if (n(C) && (m.resourceKind = C.kind, m.resourceKind.endsWith("List") ? m.isList = !0 :m.isList = !1, o(C))) {
+m.isList ? (m.resourceList = C.items, m.resourceName = "") :(m.resourceList = [ C ], m.resourceName = C.metadata.name, "Template" === m.resourceKind && (m.templateOptions = {
 process:!0,
 add:!1
 })), m.updateResources = [], m.createResources = [];
@@ -9354,14 +9358,14 @@ var b = [];
 m.errorOccured = !1, _.forEach(m.resourceList, function(a) {
 return o(a) ? void b.push(t(a)) :(m.errorOccured = !0, !1);
 }), c.all(b).then(function() {
-m.errorOccured || (1 === m.createResources.length && "Template" === m.resourceList[0].kind ? p() :_.isEmpty(m.updateResources) ? j.getLatestQuotaAlerts(m.createResources, m.context).then(F) :(m.updateTemplate = 1 === m.updateResources.length && "Template" === m.updateResources[0].kind, m.updateTemplate ? p() :q()));
+m.errorOccured || (1 === m.createResources.length && "Template" === m.resourceList[0].kind ? p() :_.isEmpty(m.updateResources) ? j.getLatestQuotaAlerts(m.createResources, m.context).then(G) :(m.updateTemplate = 1 === m.updateResources.length && "Template" === m.updateResources[0].kind, m.updateTemplate ? p() :q()));
 });
 }
 }, m.cancel = function() {
-E(), h.toProjectOverview(m.project.metadata.name);
+F(), h.toProjectOverview(m.project.metadata.name);
 };
-var G = a("displayName");
-m.$on("importFileFromYAMLOrJSON", m.create), m.$on("$destroy", E);
+var H = a("displayName");
+m.$on("importFileFromYAMLOrJSON", m.create), m.$on("$destroy", F);
 } ]
 };
 } ]), angular.module("openshiftConsole").directive("oscFileInput", [ "Logger", function(a) {
