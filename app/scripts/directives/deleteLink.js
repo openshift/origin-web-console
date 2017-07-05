@@ -145,6 +145,7 @@ angular.module("openshiftConsole")
             var deleteOptions = {};
             if (scope.options.deleteImmediately) {
               deleteOptions.gracePeriodSeconds = 0;
+              deleteOptions.propagationPolicy = null;
             }
 
             // TODO - remove once this is resolved https://github.com/kubernetes-incubator/service-catalog/issues/942
