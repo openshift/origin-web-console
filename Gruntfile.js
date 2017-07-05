@@ -157,14 +157,21 @@ module.exports = function (grunt) {
           open: true,
           livereload: false,
           middleware: function (connect) {
+            var rewriteRules = [
+              '^/styles/extensions\.css$ /' + contextRoot + '/extensions/extensions.css [R]',
+              '^/scripts/extensions\.js$ /' + contextRoot + '/extensions/extensions.js [R]',
+              '^/$ /' + contextRoot + '/ [R=302]',
+              '^/' + contextRoot + '(.*)$ $1',
+              '!^/(config.js|(bower_components|scripts|images|styles|views|extensions)(/.*)?)$ /index.html [L]'
+            ];
+
+            // If config.local.js exists, use that instead of config.js.
+            if (grunt.file.exists('app/config.local.js')) {
+              rewriteRules.unshift('^/config.js$ /config.local.js [L]');
+            }
+
             return [
-              modRewrite([
-                '^/styles/extensions\.css$ /' + contextRoot + '/extensions/extensions.css [R]',
-                '^/scripts/extensions\.js$ /' + contextRoot + '/extensions/extensions.js [R]',
-                '^/$ /' + contextRoot + '/ [R=302]',
-                '^/' + contextRoot + '(.*)$ $1',
-                '!^/(config.js|(bower_components|scripts|images|styles|views|extensions)(/.*)?)$ /index.html [L]'
-              ]),
+              modRewrite(rewriteRules),
               serveStatic('dist'),
               connect().use(
                 '/bower_components',
