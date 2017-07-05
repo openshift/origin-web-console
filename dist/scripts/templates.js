@@ -7016,22 +7016,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<parse-error error=\"error\" ng-show=\"error\"></parse-error>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-sm-12 pod-bottom-xl\">\n" +
-    "<form name=\"form\">\n" +
-    "<div class=\"form-group\" id=\"from-file\">\n" +
-    "<osc-file-input model=\"editorContent\" drop-zone-id=\"from-file\" help-text=\"Upload file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-disabled=\"false\"></osc-file-input>\n" +
-    "<div ui-ace=\"{\n" +
-    "          mode: 'yaml',\n" +
-    "          theme: 'eclipse',\n" +
-    "          onLoad: aceLoaded,\n" +
-    "          onChange: aceChanged,\n" +
-    "          rendererOptions: {\n" +
-    "            fadeFoldWidgets: true,\n" +
-    "            showPrintMargin: false\n" +
-    "          }\n" +
-    "        }\" ng-model=\"editorContent\" class=\"editor ace-bordered yaml-mode\" id=\"add-component-editor\" required></div>\n" +
-    "</div>\n" +
+    "<form name=\"form\" id=\"from-file\">\n" +
+    "<ui-ace-yaml resource=\"resource\" ng-required=\"true\" show-file-input=\"true\"></ui-ace-yaml>\n" +
     "<div ng-if=\"!isDialog\" class=\"buttons gutter-bottom\">\n" +
-    "<button type=\"submit\" ng-click=\"create()\" ng-disabled=\"editorErrorAnnotation || !editorContent\" class=\"btn btn-primary btn-lg\">\n" +
+    "<button type=\"submit\" ng-click=\"create()\" ng-disabled=\"form.$invalid\" class=\"btn btn-primary btn-lg\">\n" +
     "Create\n" +
     "</button>\n" +
     "<a class=\"btn btn-default btn-lg\" href=\"\" role=\"button\" ng-click=\"cancel()\">\n" +
@@ -7818,7 +7806,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<textarea class=\"form-control\" rows=\"5\" ng-show=\"showTextArea || !supportsFileUpload\" ng-model=\"model\" ng-required=\"required\" ng-disabled=\"disabled\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" ng-attr-aria-describedby=\"{{helpText ? helpID : undefined}}\">\n" +
     "  </textarea>\n" +
-    "<a href=\"\" ng-show=\"(model || fileName) && !disabled\" ng-click=\"cleanInputValues()\">Clear Value</a>\n" +
+    "<a href=\"\" ng-show=\"(model || fileName) && !disabled && !hideClear\" ng-click=\"cleanInputValues()\">Clear Value</a>\n" +
     "</div>"
   );
 
@@ -8966,6 +8954,39 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/ui-ace-yaml.html',
+    "<ng-form name=\"$ctrl.form\">\n" +
+    "<div class=\"form-group\" id=\"yaml-file\">\n" +
+    "<osc-file-input ng-if=\"$ctrl.showFileInput\" model=\"$ctrl.fileUpload\" drop-zone-id=\"yaml-file\" help-text=\"Upload a file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-disabled=\"false\" hide-clear=\"true\"></osc-file-input>\n" +
+    "<div class=\"edit-yaml-errors\">\n" +
+    "\n" +
+    "<div ng-if=\"firstError = $ctrl.annotations.error[0]\">\n" +
+    "<a href=\"\" ng-click=\"$ctrl.gotoLine(firstError.row)\">\n" +
+    "<span class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></span>\n" +
+    "Error\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "<div ng-if=\"firstWarning = $ctrl.annotations.warning[0]\">\n" +
+    "<a href=\"\" ng-click=\"$ctrl.gotoLine(firstWarning.row)\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "Warning\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ui-ace=\"{\n" +
+    "      mode: 'yaml',\n" +
+    "      theme: 'eclipse',\n" +
+    "      onLoad: $ctrl.aceLoaded,\n" +
+    "      onChange: $ctrl.aceChanged,\n" +
+    "      rendererOptions: {\n" +
+    "        showPrintMargin: false\n" +
+    "      }\n" +
+    "    }\" ng-model=\"$ctrl.model\" class=\"editor ace-bordered yaml-mode\" ng-required=\"$ctrl.ngRequired\" id=\"ace-yaml-editor\"></div>\n" +
+    "</div>\n" +
+    "</ng-form>"
+  );
+
+
   $templateCache.put('views/directives/unbind-service.html',
     "<div class=\"bind-service-wizard unbind-service\">\n" +
     "<div pf-wizard hide-header=\"true\" hide-sidebar=\"true\" hide-back-button=\"true\" step-class=\"bind-service-wizard-step\" wizard-ready=\"ctrl.wizardReady\" next-title=\"ctrl.nextTitle\" on-finish=\"ctrl.closeWizard()\" on-cancel=\"ctrl.closeWizard()\" wizard-done=\"ctrl.wizardComplete\" class=\"pf-wizard-no-back\">\n" +
@@ -10070,34 +10091,28 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container surface-shaded\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-if=\"!resource\" class=\"pad-top-md\">Loading...</div>\n" +
-    "<div ng-if=\"resource\" class=\"pad-top-md\">\n" +
-    "<h1 class=\"truncate\">Edit <span class=\"hidden-xs\">{{resource.kind | humanizeKind : true}}</span> {{resource.metadata.name}}</h1>\n" +
+    "<div ng-if=\"!updated.resource\" class=\"pad-top-md\">Loading...</div>\n" +
+    "<div ng-if=\"updated.resource\" class=\"pad-top-md\">\n" +
+    "<h1 class=\"truncate\">Edit <span class=\"hidden-xs\">{{updated.resource.kind | humanizeKind : true}}</span> {{updated.resource.metadata.name}}</h1>\n" +
     "<parse-error error=\"error\" ng-if=\"error\"></parse-error>\n" +
     "<div ng-if=\"resourceChanged && !resourceDeleted && !updatingNow\" class=\"alert alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Warning:</span>\n" +
-    "{{resource.kind | humanizeKind | upperFirst}} <strong>{{resource.metadata.name}}</strong> has changed since you started editing it. You'll need to copy any changes you've made and edit the {{resource.kind | humanizeKind}} again.\n" +
+    "{{updated.resource.kind | humanizeKind | upperFirst}} <strong>{{updated.resource.metadata.name}}</strong> has changed since you started editing it. You'll need to copy any changes you've made and edit the {{updated.resource.kind | humanizeKind}} again.\n" +
     "</div>\n" +
     "<div ng-if=\"resourceDeleted\" class=\"alert alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Warning:</span>\n" +
-    "{{resource.kind | humanizeKind | upperFirst}} <strong>{{resource.metadata.name}}</strong> has been deleted since you started editing it.\n" +
+    "{{updated.resource.kind | humanizeKind | upperFirst}} <strong>{{updated.resource.metadata.name}}</strong> has been deleted since you started editing it.\n" +
     "</div>\n" +
     "<confirm-on-exit dirty=\"modified\"></confirm-on-exit>\n" +
-    "\n" +
-    "<div ui-ace=\"{\n" +
-    "                mode: 'yaml',\n" +
-    "                theme: 'eclipse',\n" +
-    "                onLoad: aceLoaded,\n" +
-    "                rendererOptions: {\n" +
-    "                  showPrintMargin: false\n" +
-    "                }\n" +
-    "              }\" ng-model=\"editor.model\" class=\"editor ace-bordered yaml-mode\"></div>\n" +
+    "<form name=\"editor.form\">\n" +
+    "<ui-ace-yaml resource=\"updated.resource\" ng-required=\"true\"></ui-ace-yaml>\n" +
     "<div class=\"button-group mar-top-xl\">\n" +
-    "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-click=\"save()\" ng-disabled=\"!modified || resourceChanged || resourceDeleted || updatingNow\">Save</button>\n" +
+    "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-click=\"save()\" ng-disabled=\"editor.form.$pristine || editor.form.$invalid || resourceChanged || resourceDeleted || updatingNow\">Save</button>\n" +
     "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-disabled=\"updatingNow\" ng-click=\"cancel()\">Cancel</button>\n" +
     "</div>\n" +
+    "</form>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

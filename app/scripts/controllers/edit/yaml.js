@@ -51,23 +51,11 @@ angular.module('openshiftConsole')
       $window.history.back();
     };
 
-    var onChange = _.throttle(function() {
-      $scope.$eval(function() {
+    $scope.$watch('resource', function(current, previous) {
+      if (current !== previous) {
         $scope.modified = true;
-      });
-    }, 1000);
-
-    $scope.aceLoaded = function(editor) {
-      var session = editor.getSession();
-      session.setOption('tabSize', 2);
-      session.setOption('useSoftTabs', true);
-
-      // Wait for the editor to initialize before adding the on change handler
-      // so it's not immediately marked as modified.
-      setTimeout(function() {
-        session.on('change', onChange);
-      });
-    };
+      }
+    });
 
     var watches = [];
     ProjectsService
@@ -86,9 +74,10 @@ angular.module('openshiftConsole')
 
         DataService.get(resourceGroupVersion, $scope.name, context, { errorNotification: false }).then(
           function(result) {
+            var original = result;
+
             // Modify a copy of the resource.
-            var resource = angular.copy(result);
-            $scope.resource = resource;
+            _.set($scope, 'updated.resource', angular.copy(result));
 
             // TODO: Update the BreadcrumbsService to handle types without browse pages.
             // $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
@@ -101,29 +90,20 @@ angular.module('openshiftConsole')
               return _.get(resource, 'metadata.resourceVersion');
             };
 
-            _.set($scope, 'editor.model', jsyaml.safeDump(resource, {'sortKeys': true}));
-
             $scope.save = function() {
+              var updated = $scope.updated.resource;
               $scope.modified = false;
-              var updatedResource;
-              try {
-                updatedResource = jsyaml.safeLoad($scope.editor.model);
-              } catch (e) {
-                $scope.error = e;
-                return;
-              }
-
-              if (updatedResource.kind !== resource.kind) {
+              if (updated.kind !== original.kind) {
                 $scope.error = {
-                  message: 'Cannot change resource kind (original: ' + resource.kind + ', modified: ' + (updatedResource.kind || '<unspecified>') + ').'
+                  message: 'Cannot change resource kind (original: ' + original.kind + ', modified: ' + (updated.kind || '<unspecified>') + ').'
                 };
                 return;
               }
 
-              var groupVersion = APIService.objectToResourceGroupVersion(resource);
-              var updatedGroupVersion = APIService.objectToResourceGroupVersion(updatedResource);
+              var groupVersion = APIService.objectToResourceGroupVersion(original);
+              var updatedGroupVersion = APIService.objectToResourceGroupVersion(updated);
               if (!updatedGroupVersion) {
-                $scope.error = { message: APIService.invalidObjectKindOrVersion(updatedResource) };
+                $scope.error = { message: APIService.invalidObjectKindOrVersion(updated) };
                 return;
               }
               if (updatedGroupVersion.group !== groupVersion.group) {
@@ -131,17 +111,17 @@ angular.module('openshiftConsole')
                 return;
               }
               if (!APIService.apiInfo(updatedGroupVersion)) {
-                $scope.error = { message: APIService.unsupportedObjectKindOrVersion(updatedResource) };
+                $scope.error = { message: APIService.unsupportedObjectKindOrVersion(updated) };
                 return;
               }
 
               $scope.updatingNow = true;
-              DataService.update(updatedGroupVersion, $scope.resource.metadata.name, updatedResource, {
-                namespace: $scope.resource.metadata.namespace
+              DataService.update(groupVersion, original.metadata.name, original, {
+                namespace: original.metadata.namespace
               }).then(
                 // success
                 function(response) {
-                  var editedResourceVersion = _.get(updatedResource, 'metadata.resourceVersion');
+                  var editedResourceVersion = _.get(updated, 'metadata.resourceVersion');
                   var newResourceVersion = _.get(response, 'metadata.resourceVersion');
                   if (newResourceVersion === editedResourceVersion) {
                     $scope.alerts['no-changes-applied'] = {
@@ -174,7 +154,7 @@ angular.module('openshiftConsole')
             // Watch for changes to warn the user. If the watch failes, ignore the error since it's only used for this warning.
             // Some resources don't support watch.
             watches.push(DataService.watchObject(resourceGroupVersion, $scope.name, context, function(newValue, action) {
-              $scope.resourceChanged = getVersion(newValue) !== getVersion(resource);
+              $scope.resourceChanged = getVersion(newValue) !== getVersion(original);
               $scope.resourceDeleted = action === "DELETED";
             }, {
               errorNotification: false
