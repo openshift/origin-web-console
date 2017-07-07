@@ -3960,7 +3960,21 @@ message: n.message
 return {
 getPodAlerts: function(e, n) {
 if (_.isEmpty(e)) return {};
-var r = {}, o = c(e);
+var r = {};
+_.some(e, {
+status: {
+phase: "Failed",
+reason: "Evicted"
+}
+}) && (r.pod_evicted = {
+type: "warning",
+message: "Pods have been evicted.",
+links: [ {
+href: a.resourceListURL("pods", n),
+label: "View Pods"
+} ]
+});
+var o = c(e);
 return _.each(o, function(e, o) {
 var i = _.head(e);
 if (i) {
