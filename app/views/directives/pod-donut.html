@@ -2,9 +2,9 @@
 
 <div ng-if="mini" class="donut-mini-text">
   <span ng-if="!idled">
-    {{pods | hashSize}}
-    <span ng-if="(pods | hashSize) === 1">pod</span>
-    <span ng-if="(pods | hashSize) !== 1">pods</span>
+    {{total}}
+    <span ng-if="total === 1">pod</span>
+    <span ng-if="total !== 1">pods</span>
   </span>
   <span ng-if="idled">
     Idle
