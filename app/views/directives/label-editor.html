@@ -5,19 +5,6 @@
   expand="expand"
   can-toggle="canToggle">
 
-  <div ng-if="systemLabels.length">
-    <div class="help-block">
-      The following labels are being added automatically. If you want to override them, you can do so below.
-    </div>
-    <key-value-editor
-      entries="systemLabels"
-      is-readonly
-      cannot-sort
-      cannot-delete
-      cannot-add
-      key-placeholder="Name"></key-value-editor>
-  </div>
-
   <div ng-if="helpText && ((labels | hashSize) !== 0 || $parent.expand)" class="help-block">
     {{helpText}}
   </div>

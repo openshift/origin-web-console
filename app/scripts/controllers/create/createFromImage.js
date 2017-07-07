@@ -116,8 +116,7 @@ angular.module("openshiftConsole")
             include: true,
             portOptions: []
           };
-          scope.userDefinedLabels = [];
-          scope.systemLabels = [appLabel];
+          scope.labelArray = [appLabel];
           scope.annotations = {};
           scope.scaling = {
             replicas: 1,
@@ -276,8 +275,11 @@ angular.module("openshiftConsole")
 
         $scope.$watch('scaling.autoscale', checkCPURequest);
         $scope.$watch('container', checkCPURequest, true);
-        $scope.$watch('name', function(newValue) {
-          appLabel.value = newValue;
+        $scope.$watch('name', function(newValue, oldValue) {
+          // Only change the app label if the user hasn't modified it themselves.
+          if (!appLabel.value || appLabel.value === oldValue) {
+            appLabel.value = newValue;
+          }
         });
 
         initAndValidate($scope);
@@ -384,9 +386,9 @@ angular.module("openshiftConsole")
           hideErrorNotifications();
           $scope.buildConfig.envVars = keyValueEditorUtils.compactEntries($scope.buildConfigEnvVars);
           $scope.deploymentConfig.envVars = keyValueEditorUtils.compactEntries($scope.DCEnvVarsFromUser);
-          var userLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.userDefinedLabels));
-          var systemLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.systemLabels));
-          $scope.labels = _.extend(systemLabels, userLabels);
+
+          // Remove empty values and convert the label array to a map.
+          $scope.labels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labelArray));
 
           var resourceMap = ApplicationGenerator.generate($scope);
           //init tasks

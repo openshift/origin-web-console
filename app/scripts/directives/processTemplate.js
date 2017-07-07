@@ -217,9 +217,7 @@
         context = {
           namespace: ctrl.selectedProject.metadata.name
         };
-        var userLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries(ctrl.labels));
-        var systemLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries(ctrl.systemLabels));
-        ctrl.template.labels = _.extend(systemLabels, userLabels);
+        ctrl.template.labels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries(ctrl.labels));
 
         DataService.create("processedtemplates", null, ctrl.template, context).then(
           function(config) { // success
@@ -289,7 +287,7 @@
         });
       }
 
-      ctrl.systemLabels = _.map(ctrl.template.labels, function(value, key) {
+      ctrl.labels = _.map(ctrl.template.labels, function(value, key) {
         return {
           name: key,
           value: value
@@ -297,7 +295,7 @@
       });
 
       if (shouldAddAppLabel()) {
-        ctrl.systemLabels.push({
+        ctrl.labels.push({
           name: 'app',
           value: ctrl.template.metadata.name
         });
