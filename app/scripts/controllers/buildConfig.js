@@ -7,17 +7,19 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('BuildConfigController', function ($scope,
-                                                 $filter,
-                                                 $routeParams,
-                                                 APIService,
-                                                 BuildsService,
-                                                 ImagesService,
-                                                 DataService,
-                                                 LabelFilter,
-                                                 ModalsService,
-                                                 ProjectsService,
-                                                 keyValueEditorUtils) {
+  .controller('BuildConfigController',
+              function($scope,
+                       $filter,
+                       $routeParams,
+                       APIService,
+                       BuildsService,
+                       ImagesService,
+                       DataService,
+                       LabelFilter,
+                       ModalsService,
+                       NotificationsService,
+                       ProjectsService,
+                       keyValueEditorUtils) {
     $scope.projectName = $routeParams.project;
     $scope.buildConfigName = $routeParams.buildconfig;
     $scope.buildConfig = null;
@@ -85,26 +87,24 @@ angular.module('openshiftConsole')
     };
 
     $scope.saveEnvVars = function() {
+      NotificationsService.hideNotification("save-bc-env-error");
       $scope.envVars = _.filter($scope.envVars, 'name');
       buildStrategy($scope.updatedBuildConfig).env = keyValueEditorUtils.compactEntries(angular.copy($scope.envVars));
       DataService
         .update("buildconfigs", $routeParams.buildconfig, $scope.updatedBuildConfig, requestContext)
-        .then(function success(){
-          // TODO:  de-duplicate success and error messages.
-          // as it stands, multiple messages appear based on how edit
-          // is made.
-          $scope.alerts['saveBCEnvVarsSuccess'] = {
+        .then(function success() {
+          NotificationsService.addNotification({
             type: "success",
-            // TODO:  improve success alert
-            message: $scope.buildConfigName + " was updated."
-          };
+            message: "Environment variables for build config " + $scope.buildConfigName + " were successfully updated."
+          });
           $scope.forms.bcEnvVars.$setPristine();
-        }, function error(e){
-          $scope.alerts['saveBCEnvVarsError'] = {
+        }, function error(e) {
+          NotificationsService.addNotification({
+            id: "save-bc-env-error",
             type: "error",
-            message: $scope.buildConfigName + " was not updated.",
+            message: "An error occurred updating environment variables for build config " + $scope.buildConfigName + ".",
             details: $filter('getErrorDetails')(e)
-          };
+          });
         });
     };
 

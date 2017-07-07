@@ -5005,7 +5005,7 @@ p();
 g.unwatchAll(j);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("BuildConfigController", [ "$scope", "$filter", "$routeParams", "APIService", "BuildsService", "ImagesService", "DataService", "LabelFilter", "ModalsService", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k) {
+} ]), angular.module("openshiftConsole").controller("BuildConfigController", [ "$scope", "$filter", "$routeParams", "APIService", "BuildsService", "ImagesService", "DataService", "LabelFilter", "ModalsService", "NotificationsService", "ProjectsService", "keyValueEditorUtils", function(a, b, c, d, e, f, g, h, i, j, k, l) {
 a.projectName = c.project, a.buildConfigName = c.buildconfig, a.buildConfig = null, a.labelSuggestions = {}, a.alerts = {}, a.breadcrumbs = [], a.forms = {}, a.expand = {
 imageEnv:!1
 }, c.isPipeline ? a.breadcrumbs.push({
@@ -5020,33 +5020,34 @@ title:c.buildconfig
 var b = a.getSession();
 b.setOption("tabSize", 2), b.setOption("useSoftTabs", !0), a.$blockScrolling = 1 / 0;
 };
-var l, m = b("buildConfigForBuild"), n = b("buildStrategy"), o = [], p = function(b) {
-a.updatedBuildConfig = angular.copy(b), a.envVars = n(a.updatedBuildConfig).env || [];
+var m, n = b("buildConfigForBuild"), o = b("buildStrategy"), p = [], q = function(b) {
+a.updatedBuildConfig = angular.copy(b), a.envVars = o(a.updatedBuildConfig).env || [];
 };
 a.compareTriggers = function(a, b) {
 return _.isNumber(a.value) ? -1 :"ConfigChange" === a.value ? -1 :"ConfigChange" === b.value ? 1 :"ImageChange" === a.value ? -1 :"ImageChange" === b.value ? 1 :a.value.localeCompare(b.value);
 }, a.saveEnvVars = function() {
-a.envVars = _.filter(a.envVars, "name"), n(a.updatedBuildConfig).env = k.compactEntries(angular.copy(a.envVars)), g.update("buildconfigs", c.buildconfig, a.updatedBuildConfig, l).then(function() {
-a.alerts.saveBCEnvVarsSuccess = {
+j.hideNotification("save-bc-env-error"), a.envVars = _.filter(a.envVars, "name"), o(a.updatedBuildConfig).env = l.compactEntries(angular.copy(a.envVars)), g.update("buildconfigs", c.buildconfig, a.updatedBuildConfig, m).then(function() {
+j.addNotification({
 type:"success",
-message:a.buildConfigName + " was updated."
-}, a.forms.bcEnvVars.$setPristine();
+message:"Environment variables for build config " + a.buildConfigName + " were successfully updated."
+}), a.forms.bcEnvVars.$setPristine();
 }, function(c) {
-a.alerts.saveBCEnvVarsError = {
+j.addNotification({
+id:"save-bc-env-error",
 type:"error",
-message:a.buildConfigName + " was not updated.",
+message:"An error occurred updating environment variables for build config " + a.buildConfigName + ".",
 details:b("getErrorDetails")(c)
-};
+});
 });
 }, a.clearEnvVarUpdates = function() {
-p(a.buildConfig), a.forms.bcEnvVars.$setPristine();
+q(a.buildConfig), a.forms.bcEnvVars.$setPristine();
 };
-var q, r = function(c, h) {
+var r, s = function(c, h) {
 a.loaded = !0, a.buildConfig = c, a.buildConfigPaused = e.isPaused(a.buildConfig), a.buildConfig.spec.source.images && (a.imageSources = a.buildConfig.spec.source.images, a.imageSourcesPaths = [], a.imageSources.forEach(function(c) {
 a.imageSourcesPaths.push(b("destinationSourcePair")(c.paths));
 }));
-var i = _.get(n(c), "from", {}), j = i.kind + "/" + i.name + "/" + (i.namespace || a.projectName);
-q !== j && (_.includes([ "ImageStreamTag", "ImageStreamImage" ], i.kind) ? (q = j, g.get(d.kindToResource(i.kind), i.name, {
+var i = _.get(o(c), "from", {}), j = i.kind + "/" + i.name + "/" + (i.namespace || a.projectName);
+r !== j && (_.includes([ "ImageStreamTag", "ImageStreamImage" ], i.kind) ? (r = j, g.get(d.kindToResource(i.kind), i.name, {
 namespace:i.namespace || a.projectName
 }, {
 errorNotification:!1
@@ -5054,10 +5055,10 @@ errorNotification:!1
 a.BCEnvVarsFromImage = f.getEnvironment(b);
 }, function() {
 a.BCEnvVarsFromImage = [];
-})) :a.BCEnvVarsFromImage = []), p(c), "DELETED" === h && (a.alerts.deleted = {
+})) :a.BCEnvVarsFromImage = []), q(c), "DELETED" === h && (a.alerts.deleted = {
 type:"warning",
 message:"This build configuration has been deleted."
-}, a.buildConfigDeleted = !0), !a.forms.bcEnvVars || a.forms.bcEnvVars.$pristine ? p(c) :a.alerts.background_update = {
+}, a.buildConfigDeleted = !0), !a.forms.bcEnvVars || a.forms.bcEnvVars.$pristine ? q(c) :a.alerts.background_update = {
 type:"warning",
 message:"This build configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
 links:[ {
@@ -5068,26 +5069,26 @@ return a.clearEnvVarUpdates(), !0;
 } ]
 }, a.paused = e.isPaused(a.buildConfig);
 };
-j.get(c.project).then(_.spread(function(d, f) {
+k.get(c.project).then(_.spread(function(d, f) {
 function j() {
 h.getLabelSelector().isEmpty() || !$.isEmptyObject(a.builds) || $.isEmptyObject(a.unfilteredBuilds) ? delete a.alerts.builds :a.alerts.builds = {
 type:"warning",
 details:"The active filters are hiding all builds."
 };
 }
-a.project = d, l = f, g.get("buildconfigs", c.buildconfig, f, {
+a.project = d, m = f, g.get("buildconfigs", c.buildconfig, f, {
 errorNotification:!1
 }).then(function(a) {
-r(a), o.push(g.watchObject("buildconfigs", c.buildconfig, f, r));
+s(a), p.push(g.watchObject("buildconfigs", c.buildconfig, f, s));
 }, function(c) {
 a.loaded = !0, a.alerts.load = {
 type:"error",
 message:404 === c.status ? "This build configuration can not be found, it may have been deleted." :"The build configuration details could not be loaded.",
 details:404 === c.status ? "Any remaining build history for this build will be shown." :b("getErrorDetails")(c)
 };
-}), o.push(g.watch("builds", f, function(b, d, f) {
+}), p.push(g.watch("builds", f, function(b, d, f) {
 if (a.emptyMessage = "No builds to show", d) {
-var g = m(f);
+var g = n(f);
 if (g === c.buildconfig) {
 var i = f.metadata.name;
 switch (d) {
@@ -5120,7 +5121,7 @@ e.startBuild(a.buildConfig);
 }, a.showJenkinsfileExamples = function() {
 i.showJenkinsfileExamples();
 }, a.$on("$destroy", function() {
-g.unwatchAll(o);
+g.unwatchAll(p);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("BuildController", [ "$scope", "$filter", "$routeParams", "BuildsService", "DataService", "ModalsService", "Navigate", "ProjectsService", function(a, b, c, d, e, f, g, h) {
