@@ -1267,8 +1267,21 @@ pre.clipped {
   }
 }
 
-.tech-preview-header {
-  justify-content: space-between;
+.label-tech-preview {
+  display: inline-block;
+  margin-top: 7px;
+  @media(min-width: @screen-xs-min) {
+    float: right;
+    margin-left: 10px;
+  }
+  + h1 {
+    @media(max-width: @screen-xxs-max) {
+      margin-top: 11px;
+    }
+  }
+  .page-header & {
+    margin-top: 3px;
+  }
 }
 
 // add an option for a single-column display at screen resolutions 0-479px

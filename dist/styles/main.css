@@ -4698,9 +4698,13 @@ pre.clipped.scroll{max-height:150px;overflow:auto;width:100%}
 .environment-variables.table.table-bordered>tbody>tr>td:last-child .env-var-value a{font-family:"Open Sans",Helvetica,Arial,sans-serif}
 .info-popover,.warnings-popover{cursor:help;vertical-align:middle;margin-left:2px}
 .info-popover.pficon-info,.warnings-popover.pficon-info{color:#4d5258}
-.tech-preview-header{justify-content:space-between}
-@media (max-width:479px){.col-xxs-12{width:100%}
+.label-tech-preview{display:inline-block;margin-top:7px}
+@media (min-width:480px){.label-tech-preview{float:right;margin-left:10px}
 }
+@media (max-width:479px){.label-tech-preview+h1{margin-top:11px}
+.col-xxs-12{width:100%}
+}
+.page-header .label-tech-preview{margin-top:3px}
 .icon-row .icon-wrap{text-align:center;width:30px}
 .data-toolbar{padding:5px 0}
 .data-toolbar.other-resources-toolbar .data-toolbar-dropdown{min-width:210px}
