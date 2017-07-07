@@ -8495,9 +8495,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-attr-id=\"{{chartId}}\" class=\"pod-donut\" ng-class=\"{ mini: mini }\"></div>\n" +
     "<div ng-if=\"mini\" class=\"donut-mini-text\">\n" +
     "<span ng-if=\"!idled\">\n" +
-    "{{pods | hashSize}}\n" +
-    "<span ng-if=\"(pods | hashSize) === 1\">pod</span>\n" +
-    "<span ng-if=\"(pods | hashSize) !== 1\">pods</span>\n" +
+    "{{total}}\n" +
+    "<span ng-if=\"total === 1\">pod</span>\n" +
+    "<span ng-if=\"total !== 1\">pods</span>\n" +
     "</span>\n" +
     "<span ng-if=\"idled\">\n" +
     "Idle\n" +
