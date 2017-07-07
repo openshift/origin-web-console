@@ -1972,25 +1972,30 @@ message:"An error occurred while retrying the deployment.",
 details:d("getErrorDetails")(a)
 });
 });
-}, g.prototype.rollbackToDeployment = function(a, e, f, g, i) {
-var j = a.metadata.name, k = h(a, "deploymentConfig"), l = {
+}, g.prototype.rollbackToDeployment = function(e, f, g, i, j) {
+var k = e.metadata.name, l = h(e, "deploymentConfig"), m = {
+apiVersion:"apps.openshift.io/v1",
 kind:"DeploymentConfigRollback",
-apiVersion:"v1",
+name:l,
 spec:{
 from:{
-name:j
+name:k
 },
 includeTemplate:!0,
-includeReplicationMeta:e,
-includeStrategy:f,
-includeTriggers:g
+includeReplicationMeta:f,
+includeStrategy:g,
+includeTriggers:i
 }
 };
-c.create("deploymentconfigrollbacks", null, l, i).then(function(a) {
-c.update("deploymentconfigs", k, a, i).then(function(a) {
+c.create({
+group:"apps.openshift.io",
+resource:"deploymentconfigs/rollback"
+}, l, m, j).then(function(e) {
+var f = a.objectToResourceGroupVersion(e);
+c.update(f, l, e, j).then(function(a) {
 b.addNotification({
 type:"success",
-message:"Deployment #" + a.status.latestVersion + " is rolling back " + k + " to " + j + "."
+message:"Deployment #" + a.status.latestVersion + " is rolling back " + l + " to " + k + "."
 });
 }, function(a) {
 b.addNotification({

@@ -94,8 +94,9 @@ angular.module("openshiftConsole")
       var deploymentConfigName = annotation(deployment, 'deploymentConfig');
       // put together a new rollback request
       var req = {
+        apiVersion: "apps.openshift.io/v1",
         kind: "DeploymentConfigRollback",
-        apiVersion: "v1",
+        name: deploymentConfigName,
         spec: {
           from: {
             name: deploymentName
@@ -107,13 +108,15 @@ angular.module("openshiftConsole")
         }
       };
 
-      // TODO: we need a "rollback" api endpoint so we don't have to do this manually
-
       // create the deployment config rollback
-      DataService.create("deploymentconfigrollbacks", null, req, context).then(
+      DataService.create({
+        group: 'apps.openshift.io',
+        resource: 'deploymentconfigs/rollback'
+      }, deploymentConfigName, req, context).then(
         function(newDeploymentConfig) {
+          var rgv = APIService.objectToResourceGroupVersion(newDeploymentConfig);
           // update the deployment config based on the one returned by the rollback
-          DataService.update("deploymentconfigs", deploymentConfigName, newDeploymentConfig, context).then(
+          DataService.update(rgv, deploymentConfigName, newDeploymentConfig, context).then(
             function(rolledBackDeploymentConfig) {
               NotificationsService.addNotification({
                 type: "success",
@@ -137,8 +140,7 @@ angular.module("openshiftConsole")
             message: "An error occurred while rolling back the deployment.",
             details: $filter('getErrorDetails')(result)
           });
-        }
-      );
+        });
     };
 
     DeploymentsService.prototype.cancelRunningDeployment = function(deployment, context) {
