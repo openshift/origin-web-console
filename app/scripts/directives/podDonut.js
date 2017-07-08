@@ -28,14 +28,16 @@ angular.module('openshiftConsole')
 
         $scope.chartId = _.uniqueId('pods-donut-chart-');
 
-        function updateCenterText() {
-          if ($scope.mini) {
-            return;
-          }
-          var smallText;
+        function updatePodCount() {
           // Don't show failed pods like evicted pods in the donut.
           var pods = _.reject($scope.pods, { status: { phase: 'Failed' } });
           var total = _.size(pods);
+          if ($scope.mini) {
+            $scope.total = total;
+            return;
+          }
+
+          var smallText;
           if (!angular.isNumber($scope.desired) || $scope.desired === total) {
             smallText = (total === 1) ? "pod" : "pods";
           } else {
@@ -68,7 +70,7 @@ angular.module('openshiftConsole')
           legend: {
             show: false
           },
-          onrendered: updateCenterText,
+          onrendered: updatePodCount,
           tooltip: {
             format: {
               value: function(value, ratio, id) {
@@ -196,7 +198,7 @@ angular.module('openshiftConsole')
 
         var debounceUpdate = _.debounce(updateChart, 350, { maxWait: 500 });
         $scope.$watch(countPodPhases, debounceUpdate, true);
-        $scope.$watchGroup(['desired','idled'], updateCenterText);
+        $scope.$watchGroup(['desired','idled'], updatePodCount);
 
         $scope.$on('destroy', function() {
           if (chart) {

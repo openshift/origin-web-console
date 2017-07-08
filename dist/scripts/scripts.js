@@ -11463,14 +11463,14 @@ mini:"=?"
 templateUrl:"views/directives/pod-donut.html",
 link:function(a, f) {
 function h() {
-if (!a.mini) {
-var b, c = _.reject(a.pods, {
+var b = _.reject(a.pods, {
 status:{
 phase:"Failed"
 }
-}), d = _.size(c);
-b = angular.isNumber(a.desired) && a.desired !== d ? "scaling to " + a.desired + "..." :1 === d ? "pod" :"pods", a.idled ? g.updateDonutCenterText(f[0], "Idle") :g.updateDonutCenterText(f[0], d, b);
-}
+}), c = _.size(b);
+if (a.mini) return void (a.total = c);
+var d;
+d = angular.isNumber(a.desired) && a.desired !== c ? "scaling to " + a.desired + "..." :1 === c ? "pod" :"pods", a.idled ? g.updateDonutCenterText(f[0], "Idle") :g.updateDonutCenterText(f[0], c, d);
 }
 function i(b) {
 var c = {
