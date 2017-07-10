@@ -5957,27 +5957,44 @@ a.statefulSets = b.select(a.unfilteredStatefulSets), h();
 c.unwatchAll(g);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("StatefulSetController", [ "$filter", "$scope", "$routeParams", "BreadcrumbsService", "DataService", "EnvironmentService", "MetricsService", "ProjectsService", "PodsService", function(a, b, c, d, e, f, g, h, i) {
+} ]), angular.module("openshiftConsole").controller("StatefulSetController", [ "$filter", "$scope", "$routeParams", "BreadcrumbsService", "DataService", "EnvironmentService", "MetricsService", "NotificationsService", "ProjectsService", "PodsService", function(a, b, c, d, e, f, g, h, i, j) {
 b.projectName = c.project, b.statefulSetName = c.statefulset, b.forms = {}, b.alerts = {}, b.breadcrumbs = d.getBreadcrumbs({
 name:b.statefulSetName,
 kind:"StatefulSet",
 namespace:c.project
 });
-var j, k = function(a) {
-return f.copyAndNormalize(a);
-}, l = [], m = {
+var k, l = [];
+b.resourceGroupVersion = {
 resource:"statefulsets",
 group:"apps",
 version:"v1beta1"
-};
-g.isAvailable().then(function(a) {
+}, g.isAvailable().then(function(a) {
 b.metricsAvailable = a;
-}), h.get(c.project).then(_.spread(function(c, d) {
-j = d, e.get(m, b.statefulSetName, d, {
+});
+var m = !1, n = function(a, c) {
+if (!m) {
+if (!b.forms.dcEnvVars || b.forms.dcEnvVars.$pristine) return void (b.updatedStatefulSet = f.copyAndNormalize(a));
+if (f.isEnvironmentEqual(a, c)) return void (b.updatedStatefulSet = f.mergeEdits(b.updatedStatefulSet, a));
+m = !0, b.alerts["env-conflict"] = {
+type:"warning",
+message:"The environment variables for the stateful set have been updated in the background. Saving your changes may create a conflict or cause loss of data.",
+links:[ {
+label:"Reload Environment Variables",
+onClick:function() {
+return b.clearEnvVarUpdates(), !0;
+}
+} ]
+};
+}
+};
+i.get(c.project).then(_.spread(function(c, d) {
+k = d;
+var g;
+e.get(b.resourceGroupVersion, b.statefulSetName, d, {
 errorNotification:!1
-}).then(function(a) {
+}).then(function(i) {
 angular.extend(b, {
-statefulSet:k(a),
+statefulSet:i,
 project:c,
 projectContext:d,
 loaded:!0,
@@ -5985,26 +6002,44 @@ isScalable:function() {
 return !1;
 },
 scale:function() {}
-}), l.push(e.watchObject(m, b.statefulSetName, d, function(a) {
-angular.extend(b, {
-resourceGroupVersion:m,
-statefulSet:k(a)
+}), n(i), b.saveEnvVars = function() {
+h.hideNotification("save-stateful-set-env-error"), f.compact(b.updatedDeploymentConfig), g = e.update(b.resourceGroupVersion, b.statefulSetName, b.updatedStatefulSet, d), g.then(function() {
+h.addNotification({
+type:"success",
+message:"Environment variables for stateful set " + b.statefulSetName + " were successfully updated."
+}), b.forms.statefulSetEnvVars.$setPristine();
+}, function(c) {
+h.addNotification({
+id:"save-stateful-set-env-error",
+type:"error",
+message:"An error occurred updating environment variables for stateful set " + b.statefulSetName + ".",
+details:a("getErrorDetails")(c)
 });
-})), l.push(e.watch("pods", d, function(c) {
-var d = c.by("metadata.name");
-b.podsForStatefulSet = i.filterForOwner(d, a);
+})["finally"](function() {
+g = null;
+});
+}, b.clearEnvVarUpdates = function() {
+b.updatedDeploymentConfig = f.copyAndNormalize(b.deploymentConfig), b.forms.statefulSetEnvVars.$setPristine(), m = !1;
+}, l.push(e.watchObject(b.resourceGroupVersion, b.statefulSetName, d, function(a) {
+var c = b.statefulSet;
+b.statefulSet = a, g ? g["finally"](function() {
+n(a, c);
+}) :n(a, c);
+})), l.push(e.watch("pods", d, function(a) {
+var c = a.by("metadata.name");
+b.podsForStatefulSet = j.filterForOwner(c, i);
 }));
-var f = 6e4;
+var k = 6e4;
 l.push(e.watch("resourcequotas", d, function(a) {
 b.quotas = a.by("metadata.name");
 }, {
 poll:!0,
-pollInterval:f
+pollInterval:k
 })), l.push(e.watch("appliedclusterresourcequotas", d, function(a) {
 b.clusterQuotas = a.by("metadata.name");
 }, {
 poll:!0,
-pollInterval:f
+pollInterval:k
 }));
 }, function(c) {
 b.loaded = !0, b.alerts.load = {
