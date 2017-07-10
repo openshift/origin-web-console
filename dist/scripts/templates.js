@@ -3947,18 +3947,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab active=\"selectedTab.environment\" ng-if=\"statefulSet\">\n" +
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
     "<div class=\"resource-environment\">\n" +
-    "<ng-form name=\"forms.statefulSetEnvVars\">\n" +
-    "<div ng-repeat=\"container in statefulSet.spec.template.spec.containers\">\n" +
+    "<form name=\"forms.statefulSetEnvVars\">\n" +
+    "<div ng-repeat=\"container in updatedStatefulSet.spec.template.spec.containers\">\n" +
     "<h3>Container {{container.name}} Environment Variables</h3>\n" +
-    "<p>\n" +
-    "Environment variables for stateful sets are readonly.\n" +
-    "<span ng-if=\"!(container.env.length)\">\n" +
-    "There are no environment variables for this container.\n" +
-    "</span>\n" +
-    "</p>\n" +
-    "<key-value-editor entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" is-readonly cannot-add cannot-delete cannot-sort show-header></key-value-editor>\n" +
+    "<key-value-editor ng-if=\"!(resourceGroupVersion | canI : 'update')\" entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" is-readonly cannot-add cannot-delete cannot-sort show-header></key-value-editor>\n" +
+    "<key-value-editor ng-if=\"resourceGroupVersion | canI : 'update'\" entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" value-from-selector-options=\"valueFromObjects\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Environment Variable\" add-row-with-selectors-link=\"Add Environment Variable Using a Config Map or Secret\" show-header></key-value-editor>\n" +
     "</div>\n" +
-    "</ng-form>\n" +
+    "<button class=\"btn btn-default\" ng-if=\"resourceGroupVersion | canI : 'update'\" ng-click=\"saveEnvVars()\" ng-disabled=\"forms.statefulSetEnvVars.$pristine || forms.statefulSetEnvVars.$invalid\">Save</button>\n" +
+    "<a ng-if=\"!forms.statefulSetEnvVars.$pristine\" href=\"\" ng-click=\"clearEnvVarUpdates()\" class=\"mar-left-sm\" style=\"vertical-align: -2px\">Clear Changes</a>\n" +
+    "</form>\n" +
     "</div>\n" +
     "</uib-tab>\n" +
     "<uib-tab ng-if=\"metricsAvailable\" active=\"selectedTab.metrics\">\n" +

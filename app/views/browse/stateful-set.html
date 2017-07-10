@@ -148,16 +148,11 @@
                 <uib-tab active="selectedTab.environment" ng-if="statefulSet">
                   <uib-tab-heading>Environment</uib-tab-heading>
                   <div class="resource-environment">
-                    <ng-form name="forms.statefulSetEnvVars">
-                      <div ng-repeat="container in statefulSet.spec.template.spec.containers">
+                    <form name="forms.statefulSetEnvVars">
+                      <div ng-repeat="container in updatedStatefulSet.spec.template.spec.containers">
                         <h3>Container {{container.name}} Environment Variables</h3>
-                        <p>
-                          Environment variables for stateful sets are readonly.
-                          <span ng-if="!(container.env.length)">
-                            There are no environment variables for this container.
-                          </span>
-                        </p>
                         <key-value-editor
+                          ng-if="!(resourceGroupVersion | canI : 'update')"
                           entries="container.env"
                           key-placeholder="Name"
                           value-placeholder="Value"
@@ -166,8 +161,31 @@
                           cannot-delete
                           cannot-sort
                           show-header></key-value-editor>
+                        <key-value-editor
+                          ng-if="resourceGroupVersion | canI : 'update'"
+                          entries="container.env"
+                          key-placeholder="Name"
+                          value-placeholder="Value"
+                          value-from-selector-options="valueFromObjects"
+                          key-validator="[A-Za-z_][A-Za-z0-9_]*"
+                          key-validator-error="Please enter a valid key"
+                          key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
+                          add-row-link="Add Environment Variable"
+                          add-row-with-selectors-link="Add Environment Variable Using a Config Map or Secret"
+                          show-header></key-value-editor>
                       </div>
-                    </ng-form>
+                      <button
+                        class="btn btn-default"
+                        ng-if="resourceGroupVersion | canI : 'update'"
+                        ng-click="saveEnvVars()"
+                        ng-disabled="forms.statefulSetEnvVars.$pristine || forms.statefulSetEnvVars.$invalid">Save</button>
+                      <a
+                        ng-if="!forms.statefulSetEnvVars.$pristine"
+                        href=""
+                        ng-click="clearEnvVarUpdates()"
+                        class="mar-left-sm"
+                        style="vertical-align: -2px;">Clear Changes</a>
+                    </form>
                   </div>
                 </uib-tab>
 
