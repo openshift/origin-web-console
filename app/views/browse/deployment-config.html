@@ -336,7 +336,7 @@
                   </uib-tab>
                   <uib-tab heading="Environment" active="selectedTab.environment" ng-if="deploymentConfig">
                     <uib-tab-heading>Environment</uib-tab-heading>
-                    <ng-form name="forms.dcEnvVars" class="mar-bottom-xl block">
+                    <form name="forms.dcEnvVars" class="mar-bottom-xl block">
                       <confirm-on-exit
                         ng-if="'deploymentconfigs' | canI : 'update'"
                         dirty="forms.dcEnvVars.$dirty">
@@ -378,7 +378,7 @@
                         ng-click="clearEnvVarUpdates()"
                         class="mar-left-sm"
                         style="vertical-align: -2px;">Clear Changes</a>
-                    </ng-form>
+                    </form>
                   </uib-tab>
                   <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">
                     <uib-tab-heading>Events</uib-tab-heading>

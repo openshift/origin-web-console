@@ -79,7 +79,7 @@
                         <em ng-if="!container.env.length">The container specification has no environment variables set.</em>
                       </div>
                     </div>
-                    <ng-form ng-if="!(replicaSet | hasDeployment) && !(replicaSet | hasDeploymentConfig)" name="forms.envForm">
+                    <form ng-if="!(replicaSet | hasDeployment) && !(replicaSet | hasDeploymentConfig)" name="forms.envForm">
                       <confirm-on-exit dirty="forms.envForm.$dirty"></confirm-on-exit>
                       <div ng-repeat="container in updatedReplicaSet.spec.template.spec.containers">
                         <div ng-if="resource | canI : 'update'">
@@ -119,7 +119,7 @@
                           <em ng-if="!container.env.length">The container specification has no environment variables set.</em>
                         </div>
                       </div>
-                    </ng-form>
+                    </form>
                   </uib-tab>
                   <uib-tab ng-if="metricsAvailable" heading="Metrics" active="selectedTab.metrics">
                     <!-- Use ng-if to remove the metrics directive when the tab is not active so
