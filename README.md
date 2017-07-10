@@ -74,26 +74,7 @@ Then:
 3. Run the integrations tests (your api server must be running) `grunt test-integration`
 4. Rebase and squash changes to a single commit
 
-Note: in order to run the end to end tests you must have [Chrome](http://www.google.com/chrome/) and [chromedriver](https://sites.google.com/a/chromium.org/chromedriver/) installed.  The script below will set this up for you on linux systems.
-
-```
-# Add signing key for Chrome repo
-wget https://dl.google.com/linux/linux_signing_key.pub
-rpm --import linux_signing_key.pub
-
-# Add Chrome yum repo
-yum-config-manager --add-repo=http://dl.google.com/linux/chrome/rpm/stable/x86_64
-
-# Install chrome
-yum install -y google-chrome-stable
-
-# Install chromedriver
-wget https://chromedriver.storage.googleapis.com/2.16/chromedriver_linux64.zip
-unzip chromedriver_linux64.zip
-mv chromedriver /usr/bin/chromedriver
-chown root /usr/bin/chromedriver
-chmod 755 /usr/bin/chromedriver
-```
+Note: in order to run the end to end tests you must have [Firefox](https://www.mozilla.org/en-US/firefox/new/) installed.
 
 #### Production builds
 1. Make sure all dev dependencies are up to date by running `hack/install-deps.sh`
