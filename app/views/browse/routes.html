@@ -43,7 +43,11 @@
                   <tr>
                     <th>{{customNameHeader || 'Name'}}</th>
                     <th>Hostname</th>
-                    <th>Routes To</th>
+                    <!--
+                      Right now only services are supported. If other types are
+                      added, we'll need to change the table header.
+                     -->
+                    <th>Service</th>
                     <th>Target Port</th>
                     <th>TLS Termination</th>
                   </tr>
@@ -62,7 +66,10 @@
                     </td>
                     <td data-title="Hostname">
                       <span ng-if="(route | isWebRoute)">
-                        <a href="{{route | routeWebURL}}" target="_blank">{{route | routeLabel}}</a>
+                        <a href="{{route | routeWebURL}}" target="_blank">
+                          {{route | routeLabel}}
+                          <i class="fa fa-external-link" aria-hidden="true"></i>
+                        </a>
                       </span>
                       <span ng-if="!(route | isWebRoute)">
                         {{route | routeLabel}}
@@ -72,7 +79,11 @@
                         <span class="sr-only">Pending</span>
                       </span>
                     </td>
-                    <td data-title="Routes To">
+                    <!--
+                      Right now only services are supported. If other types are
+                      added, we'll need to change the table header.
+                     -->
+                    <td data-title="Service">
                       <span ng-if="route.spec.to.kind !== 'Service'">{{route.spec.to.kind}}: {{route.spec.to.name}}</span>
                       <span ng-if="route.spec.to.kind === 'Service'"><a ng-href="{{route.spec.to.name | navigateResourceURL : 'Service': route.metadata.namespace}}">{{route.spec.to.name}}</a></span>
                     </td>

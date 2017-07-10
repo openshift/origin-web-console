@@ -32,8 +32,10 @@
         <div ng-repeat="route in networking.routesByService[service.metadata.name] | limitTo : 2 track by (route | uid)" class="overview-routes">
           <h3>
             <span ng-if="route | isWebRoute">
-              <a ng-href="{{route | routeWebURL}}" target="_blank">{{route | routeLabel}}</a>
-              <i class="fa fa-external-link small" aria-hidden="true"></i>
+              <a ng-href="{{route | routeWebURL}}" target="_blank">
+                {{route | routeLabel}}
+                <i class="fa fa-external-link" aria-hidden="true"></i>
+              </a>
             </span>
             <span ng-if="!(route | isWebRoute)">{{route | routeLabel}}</span>
             <route-warnings route="route" services="networking.allServices"></route-warnings>
