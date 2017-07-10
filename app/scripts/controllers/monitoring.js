@@ -266,12 +266,13 @@ angular.module('openshiftConsole')
       }
     };
 
-    $scope.viewPodsForReplicaSet = function(replicaSet) {
-      if (_.isEmpty($scope.podsByOwnerUID[replicaSet.metadata.uid])) {
+    $scope.viewPodsForSet = function(set) {
+      var pods = _.get($scope, ['podsByOwnerUID', set.metadata.uid], []);
+      if (_.isEmpty(pods)) {
         return;
       }
 
-      Navigate.toPodsForDeployment(replicaSet);
+      Navigate.toPodsForDeployment(set, pods);
     };
 
     ProjectsService
