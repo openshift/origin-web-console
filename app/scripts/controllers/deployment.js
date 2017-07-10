@@ -41,7 +41,7 @@ angular.module('openshiftConsole')
     $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
                                                     "Deployment",
                                                     $routeParams.deployment,
-                                                    "extensions");
+                                                    "apps");
 
     var previousEnvConflict = false;
     var updateEnvironment = function(current, previous) {
@@ -108,7 +108,7 @@ angular.module('openshiftConsole')
 
         var saveEnvPromise;
         DataService.get({
-          group: 'extensions',
+          group: 'apps',
           resource: 'deployments'
         }, $routeParams.deployment, context, { errorNotification: false }).then(
           // success
@@ -120,7 +120,7 @@ angular.module('openshiftConsole')
             $scope.saveEnvVars = function() {
               EnvironmentService.compact($scope.updatedDeployment);
               saveEnvPromise = DataService.update({
-                group: 'extensions',
+                group: 'apps',
                 resource: 'deployments'
               }, $routeParams.deployment, $scope.updatedDeployment, context);
               saveEnvPromise.then(function success(){
@@ -151,7 +151,7 @@ angular.module('openshiftConsole')
 
             // If we found the item successfully, watch for changes on it
             watches.push(DataService.watchObject({
-              group: 'extensions',
+              group: 'apps',
               resource: 'deployments'
             }, $routeParams.deployment, context, function(deployment, action) {
               if (action === "DELETED") {

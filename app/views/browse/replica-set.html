@@ -56,7 +56,7 @@
                       value breaks `container.env.length` check for the no env vars message.
                     -->
                     <div ng-if="(replicaSet | hasDeployment) || (replicaSet | hasDeploymentConfig)">
-                      <p ng-if="deployment && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')">
+                      <p ng-if="deployment && ({ group: 'apps', resource: 'deployments' } | canI : 'update')">
                         <span class="pficon pficon-info" aria-hidden="true"></span>
                         Environment variables can be edited on the <a ng-href="{{deployment | navigateResourceURL}}?tab=environment">deployment</a>.
                       </p>
