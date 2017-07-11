@@ -11468,7 +11468,9 @@ status:{
 phase:"Failed"
 }
 }), c = _.size(b);
-if (a.mini) return void (a.total = c);
+if (a.mini) return void a.$evalAsync(function() {
+a.total = c;
+});
 var d;
 d = angular.isNumber(a.desired) && a.desired !== c ? "scaling to " + a.desired + "..." :1 === c ? "pod" :"pods", a.idled ? g.updateDonutCenterText(f[0], "Idle") :g.updateDonutCenterText(f[0], c, d);
 }
