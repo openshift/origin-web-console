@@ -1,5 +1,5 @@
 <overlay-panel show-panel="$ctrl.visible" show-close="true" handle-close="$ctrl.close">
-  <div pf-wizard
+  <pf-wizard
        on-cancel="$ctrl.close()"
        on-finish="$ctrl.close()"
        hide-header="true"
@@ -11,7 +11,7 @@
        step-class="order-service-wizard-step"
        wizard-done="$ctrl.wizardDone"
        class="pf-wizard-no-back">
-    <div pf-wizard-step
+    <pf-wizard-step
          step-title="Image"
          step-id="image"
          step-priority="1"
@@ -28,8 +28,8 @@
           </div>
         </div>
       </div>
-    </div>
-    <div pf-wizard-step
+    </pf-wizard-step>
+    <pf-wizard-step
          step-title="Results"
          step-id="results"
          step-priority="2"
@@ -47,6 +47,6 @@
           </div>
         </div>
       </div>
-    </div> <!-- /pf-wizard-step -->
-  </div> <!-- /pf-wizard -->
+    </pf-wizard-step> <!-- /pf-wizard-step -->
+  </pf-wizard> <!-- /pf-wizard -->
 </overlay-panel>

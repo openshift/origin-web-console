@@ -222,7 +222,7 @@ angular.module('openshiftConsole')
 
         // Sort now to avoid sorting on every digest loop.
         $scope.orderedBuilds = BuildsService.sortBuilds($scope.builds, true);
-        $scope.latestBuild = _.first($scope.orderedBuilds);
+        $scope.latestBuild = _.head($scope.orderedBuilds);
       },
       // params object for filtering
       {
@@ -231,7 +231,7 @@ angular.module('openshiftConsole')
           params: {
             // because build config names can be > 63 chars but label values can't
             // and we can't do a fieldSelector on annotations.  Plus old builds dont have the annotation.
-            labelSelector: $filter('labelName')('buildConfig') + '=' + _.trunc($scope.buildConfigName, {length: 63, omission: ''})
+            labelSelector: $filter('labelName')('buildConfig') + '=' + _.truncate($scope.buildConfigName, {length: 63, omission: ''})
           }
         }
       }));
@@ -253,7 +253,7 @@ angular.module('openshiftConsole')
           $scope.$apply(function() {
             $scope.builds = labelSelector.select($scope.unfilteredBuilds);
             $scope.orderedBuilds = BuildsService.sortBuilds($scope.builds, true);
-            $scope.latestBuild = _.first($scope.orderedBuilds);
+            $scope.latestBuild = _.head($scope.orderedBuilds);
             updateFilterWarning();
           });
         });

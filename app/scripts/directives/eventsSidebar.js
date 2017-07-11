@@ -13,7 +13,7 @@ angular.module('openshiftConsole')
         var watches = [];
         watches.push(DataService.watch("events", $scope.projectContext, function(eventData) {
           var events = eventData.by('metadata.name');
-          $scope.events = _.sortByOrder(events, ['lastTimestamp'], ['desc']);
+          $scope.events = _.orderBy(events, ['lastTimestamp'], ['desc']);
           $scope.warningCount = _.size(_.filter(events, { type: 'Warning' }));
           Logger.log("events (subscribe)", $scope.events);
         }));

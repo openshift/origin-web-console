@@ -20,7 +20,7 @@ angular.module('openshiftConsole')
         $scope.context = context;
 
         DataService.list("secrets", context).then(function(secrets) {
-          $scope.secrets = _.sortByAll(secrets.by("metadata.name"), ["type", "metadata.name"]);
+          $scope.secrets = _.sortBy(secrets.by("metadata.name"), ["type", "metadata.name"]);
           $scope.loaded = true;
         });
     }));

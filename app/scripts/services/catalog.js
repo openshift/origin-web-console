@@ -160,7 +160,7 @@ angular.module("openshiftConsole")
           specTags.push(tag);
         });
 
-        var matchingTags = _.indexBy(specTags, 'name');
+        var matchingTags = _.keyBy(specTags, 'name');
 
         // Find tags that match every keyword. Search image stream name, image
         // stream display name, and tag names, and tag descriptions. If a

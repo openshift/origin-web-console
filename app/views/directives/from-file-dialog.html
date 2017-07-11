@@ -1,5 +1,5 @@
 <overlay-panel show-panel="$ctrl.visible" show-close="true" handle-close="$ctrl.close" ng-if="$ctrl.project">
-  <div pf-wizard
+  <pf-wizard
        on-cancel="$ctrl.close()"
        on-finish="$ctrl.close()"
        hide-header="true"
@@ -9,7 +9,7 @@
        current-step="$ctrl.currentStep"
        wizard-done="$ctrl.wizardDone"
        step-class="order-service-wizard-step">
-    <div pf-wizard-step
+    <pf-wizard-step
          step-title="JSON / YAML"
          step-id="file"
          step-priority="1"
@@ -26,8 +26,8 @@
           </div>
         </div>
       </div>
-    </div>
-    <div pf-wizard-step
+    </pf-wizard-step>
+    <pf-wizard-step
          wz-disabled="{{!$ctrl.template}}"
          step-title="Template Configuration"
          step-id="template"
@@ -68,8 +68,8 @@
           </div>
         </div>
       </div>
-    </div>
-    <div pf-wizard-step
+    </pf-wizard-step>
+    <pf-wizard-step
          step-title="Results"
          step-id="results"
          step-priority="3"
@@ -89,6 +89,6 @@
           </div>
         </div>
       </div>
-    </div> <!-- /pf-wizard-step -->
-  </div> <!-- /pf-wizard -->
+    </pf-wizard-step> <!-- /pf-wizard-step -->
+  </pf-wizard> <!-- /pf-wizard -->
 </overlay-panel>

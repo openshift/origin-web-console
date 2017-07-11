@@ -76,9 +76,9 @@ angular.module('openshiftConsole')
 
     var namespaceWhitelist = window.OPENSHIFT_CONSTANTS.CREATE_FROM_URL_WHITELIST;
     var whiteListedCreateDetailsKeys = ['namespace', 'name', 'imageStream', 'imageTag', 'sourceURI', 'sourceRef', 'contextDir', 'template', 'templateParamsMap'];
-    var createDetails = _.pick($routeParams, function(value, key) {
+    var createDetails = _.pickBy($routeParams, function(value, key) {
       // routeParams without a value (e.g., ?name&) return true, which results in "true" displaying in the UI
-      return _.contains(whiteListedCreateDetailsKeys, key) && _.isString(value);
+      return _.includes(whiteListedCreateDetailsKeys, key) && _.isString(value);
     });
     // if no namespace is specified, set it to 'openshift'
     createDetails.namespace = createDetails.namespace || 'openshift';

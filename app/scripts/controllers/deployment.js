@@ -100,7 +100,8 @@ angular.module('openshiftConsole')
 
               var replicaSets = replicaSetData.by('metadata.name');
               replicaSets = OwnerReferencesService.filterForController(replicaSets, deployment);
-              $scope.inProgressDeployment = _.chain(replicaSets).filter('status.replicas').size() > 1;
+
+              $scope.inProgressDeployment = _.chain(replicaSets).filter('status.replicas').length > 1;
 
               $scope.unfilteredReplicaSetsForDeployment = DeploymentsService.sortByRevision(replicaSets);
               $scope.replicaSetsForDeployment = LabelFilter.getLabelSelector().select($scope.unfilteredReplicaSetsForDeployment);

@@ -267,7 +267,7 @@ function OverviewController($scope,
             _.each(services, function(service) {
               // Only need to get the first route, since they're already sorted by score.
               var routes = _.get(state, ['routesByService', service.metadata.name], []);
-              _.assign(routesForApp, _.indexBy(routes, 'metadata.name'));
+              _.assign(routesForApp, _.keyBy(routes, 'metadata.name'));
             });
           });
         });
@@ -1162,7 +1162,7 @@ function OverviewController($scope,
     overview.bindingsByInstanceRef = _.reduce(overview.bindingsByInstanceRef, function(result, bindingList, key) {
       result[key] = _.sortBy(bindingList, function(binding) {
         var apps =  _.get(state.applicationsByBinding, [binding.metadata.name]);
-        var firstName = _.get(_.first(apps), ['metadata', 'name']);
+        var firstName = _.get(_.head(apps), ['metadata', 'name']);
         return firstName || binding.metadata.name;
       });
       return result;
@@ -1181,7 +1181,7 @@ function OverviewController($scope,
       return BindingService.isServiceBindable(serviceInstance, state.serviceClasses);
     });
 
-    state.orderedServiceInstances = _.sortByAll(state.serviceInstances,
+    state.orderedServiceInstances = _.sortBy(state.serviceInstances,
       function(item) {
         return _.get(state.serviceClasses, [item.spec.serviceClassName, 'externalMetadata', 'displayName']) || item.spec.serviceClassName;
       },

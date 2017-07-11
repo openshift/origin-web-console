@@ -31,7 +31,7 @@ angular.module('openshiftConsole')
 
         watches.push(DataService.watch("builds", context, function(builds) {
           // Filter out pipeline builds, which have a separate page.
-          $scope.builds = _.omit(builds.by("metadata.name"), isPipeline);
+          $scope.builds = _.omitBy(builds.by("metadata.name"), isPipeline);
           $scope.emptyMessage = "No builds to show";
           associateBuildsToBuildConfig();
           LabelFilter.addLabelSuggestionsFromResources($scope.builds, $scope.labelSuggestions);
@@ -41,7 +41,7 @@ angular.module('openshiftConsole')
 
         watches.push(DataService.watch("buildconfigs", context, function(buildConfigs) {
           // Filter out pipeline builds, which have a separate page.
-          $scope.unfilteredBuildConfigs = _.omit(buildConfigs.by("metadata.name"), isPipeline);
+          $scope.unfilteredBuildConfigs = _.omitBy(buildConfigs.by("metadata.name"), isPipeline);
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredBuildConfigs, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
           $scope.buildConfigs = LabelFilter.getLabelSelector().select($scope.unfilteredBuildConfigs);
@@ -93,7 +93,7 @@ angular.module('openshiftConsole')
 
         function associateBuildsToBuildConfig() {
           $scope.latestByConfig = BuildsService.latestBuildByConfig($scope.builds, showBuild);
-          $scope.buildsNoConfig = _.pick($scope.builds, showBuildNoConfigOnly);
+          $scope.buildsNoConfig = _.pickBy($scope.builds, showBuildNoConfigOnly);
           // Make sure there is a key for every build config we know about
           angular.forEach($scope.buildConfigs, function(buildConfig, buildConfigName){
             $scope.latestByConfig[buildConfigName] = $scope.latestByConfig[buildConfigName] || null;
@@ -101,7 +101,7 @@ angular.module('openshiftConsole')
         }
 
         function updateFilterWarning() {
-          var visibleBuilds = _.omit($scope.latestByConfig, _.isNull);
+          var visibleBuilds = _.omitBy($scope.latestByConfig, _.isNull);
           if (!LabelFilter.getLabelSelector().isEmpty() &&
               _.isEmpty($scope.buildConfigs) &&
               _.isEmpty(visibleBuilds)) {

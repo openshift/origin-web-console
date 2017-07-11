@@ -183,7 +183,7 @@ angular.module("openshiftConsole")
     // because we can't filter our watch on the annotation, only on the potentially truncated label
     // Assumes the builds were already pre-filtered based on the label.
     var validatedBuildsForBuildConfig = function(buildConfigName, builds) {
-      return _.pick(builds, function(build){
+      return _.pickBy(builds, function(build){
             var buildCfgAnnotation = annotation(build, 'buildConfig');
             return !buildCfgAnnotation || buildCfgAnnotation === buildConfigName;
           });

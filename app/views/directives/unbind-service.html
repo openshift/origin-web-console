@@ -1,6 +1,5 @@
 <div class="bind-service-wizard unbind-service">
-  <div
-    pf-wizard
+  <pf-wizard
     hide-header="true"
     hide-sidebar="true"
     hide-back-button="true"
@@ -11,8 +10,7 @@
     on-cancel="ctrl.closeWizard()"
     wizard-done="ctrl.wizardComplete"
     class="pf-wizard-no-back">
-    <div
-      pf-wizard-step
+    <pf-wizard-step
       ng-repeat="step in ctrl.steps track by $index"
       step-title="{{step.label}}"
       next-enabled="step.valid"
@@ -24,6 +22,6 @@
           <div ng-include="step.view" class="wizard-pf-main-form-contents"></div>
         </div>
       </div>
-    </div>
-  </div>
+    </pf-wizard-step>
+  </pf-wizard>
 </div>
