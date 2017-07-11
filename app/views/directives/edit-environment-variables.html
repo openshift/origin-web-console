@@ -1,0 +1,46 @@
+<form ng-if="$ctrl.apiObject" name="$ctrl.form" class="mar-bottom-xl">
+  <confirm-on-exit ng-if="$ctrl.canIUpdate && !$ctrl.ngReadonly" dirty="$ctrl.form.$dirty"></confirm-on-exit>
+  <div ng-repeat="container in $ctrl.containers">
+    <h3>Container {{container.name}}</h3>
+    <div ng-if="!$ctrl.canIUpdate || $ctrl.ngReadonly">
+      <span ng-if="!container.env.length">
+        No environment variables set in the {{$ctrl.apiObject.kind | humanizeKind}}
+        template for container {{container.name}}.
+      </span>
+      <key-value-editor
+        ng-if="container.env.length"
+        entries="container.env"
+        key-placeholder="Name"
+        value-placeholder="Value"
+        cannot-add
+        cannot-sort
+        cannot-delete
+        is-readonly
+        show-header>
+      </key-value-editor>
+    </div>
+    <key-value-editor
+      ng-if="$ctrl.canIUpdate && !$ctrl.ngReadonly"
+      entries="container.env"
+      key-placeholder="Name"
+      value-placeholder="Value"
+      value-from-selector-options="$ctrl.valueFromObjects"
+      key-validator="[A-Za-z_][A-Za-z0-9_]*"
+      key-validator-error="Please enter a valid key."
+      key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
+      add-row-link="Add Environment Variable"
+      add-row-with-selectors-link="Add Environment Variable Using a Config Map or Secret"
+      show-header>
+    </key-value-editor>
+  </div>
+  <button
+    class="btn btn-default"
+    ng-if="$ctrl.canIUpdate && !$ctrl.ngReadonly"
+    ng-click="$ctrl.save()"
+    ng-disabled="$ctrl.form.$pristine || $ctrl.form.$invalid">Save</button>
+  <a
+    ng-if="!$ctrl.form.$pristine"
+    href=""
+    ng-click="$ctrl.clearChanges()"
+    class="mar-left-sm clear-env-changes-link">Clear Changes</a>
+</form>

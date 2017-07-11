@@ -4,11 +4,16 @@ angular.module("openshiftConsole")
   .factory("EnvironmentService",
            function($filter,
                     keyValueEditorUtils) {
-    var getContainers = function(set) {
-      return _.get(set, 'spec.template.spec.containers', []);
+    var getContainers = function(apiObject) {
+      if (apiObject.kind === 'Pod') {
+        return _.get(apiObject, 'spec.containers', []);
+      }
+      return _.get(apiObject, 'spec.template.spec.containers', []);
     };
 
     return {
+      getContainers: getContainers,
+
       // Make sure there is an `env` property for each container and add in alt
       // text for any value from entries.
       // Note: This modifies object. It should only be called on a copy.

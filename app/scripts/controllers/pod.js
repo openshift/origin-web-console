@@ -14,7 +14,6 @@ angular.module('openshiftConsole')
                                          $uibModal,
                                          Logger,
                                          DataService,
-                                         EnvironmentService,
                                          FullscreenService,
                                          ImageStreamResolver,
                                          MetricsService,
@@ -219,16 +218,6 @@ angular.module('openshiftConsole')
       });
     };
 
-    var updateEnv = function() {
-      // Copy the containers so we aren't modifying the original pod spec.
-      var containers = angular.copy(_.get($scope, 'pod.spec.containers', []));
-      _.each(containers, function(container) {
-        container.env = container.env || [];
-      });
-
-      $scope.containersEnv = containers;
-    };
-
     var annotation = $filter('annotation');
     var podResolved = function(pod, action) {
       $scope.loaded = true;
@@ -238,7 +227,6 @@ angular.module('openshiftConsole')
       $scope.deploymentVersion = annotation(pod, 'deploymentVersion');
       $scope.logCanRun = !(_.includes(['New', 'Pending', 'Unknown'], pod.status.phase));
       setContainerVars();
-      updateEnv();
 
       // Show owner ref if owned by a replication controller, replica set, or build.
       // Deployment configs are handled specially in the view.

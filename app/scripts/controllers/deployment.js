@@ -13,7 +13,6 @@ angular.module('openshiftConsole')
                         $routeParams,
                         DataService,
                         DeploymentsService,
-                        EnvironmentService,
                         HPAService,
                         ImageStreamResolver,
                         ModalsService,
@@ -42,53 +41,6 @@ angular.module('openshiftConsole')
                                                     "Deployment",
                                                     $routeParams.deployment,
                                                     "apps");
-
-    var previousEnvConflict = false;
-    var updateEnvironment = function(current, previous) {
-      if (previousEnvConflict) {
-        return;
-      }
-
-      if (!$scope.forms.deploymentEnvVars || $scope.forms.deploymentEnvVars.$pristine) {
-        $scope.updatedDeployment = EnvironmentService.copyAndNormalize(current);
-        return;
-      }
-
-      // The env var form has changed and the deployment has been updated. See
-      // if there were any background changes to the environment variables. If
-      // not, merge the environment edits into the updated deployment object.
-      if (EnvironmentService.isEnvironmentEqual(current, previous)) {
-        $scope.updatedDeployment = EnvironmentService.mergeEdits($scope.updatedDeployment, current);
-        return;
-      }
-
-      previousEnvConflict = true;
-      $scope.alerts["env-conflict"] = {
-        type: "warning",
-        message: "The environment variables for the deployment have been updated in the background. Saving your changes may create a conflict or cause loss of data.",
-        links: [
-          {
-            label: 'Reload Environment Variables',
-            onClick: function() {
-              $scope.clearEnvVarUpdates();
-              return true;
-            }
-          }
-        ]
-      };
-    };
-
-    var orderByDisplayName = $filter('orderByDisplayName');
-    var getErrorDetails = $filter('getErrorDetails');
-
-    var displayError = function(errorMessage, errorDetails) {
-      $scope.alerts['from-value-objects'] = {
-        type: "error",
-        message: errorMessage,
-        details: errorDetails
-      };
-    };
-
     var watches = [];
 
     ProjectsService
@@ -106,7 +58,6 @@ angular.module('openshiftConsole')
             });
         };
 
-        var saveEnvPromise;
         DataService.get({
           group: 'apps',
           resource: 'deployments'
@@ -116,38 +67,6 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.deployment = deployment;
             updateHPAWarnings();
-
-            $scope.saveEnvVars = function() {
-              EnvironmentService.compact($scope.updatedDeployment);
-              saveEnvPromise = DataService.update({
-                group: 'apps',
-                resource: 'deployments'
-              }, $routeParams.deployment, $scope.updatedDeployment, context);
-              saveEnvPromise.then(function success(){
-                // TODO:  de-duplicate success and error messages.
-                // as it stands, multiple messages appear based on how edit
-                // is made.
-                $scope.alerts['saveEnvSuccess'] = {
-                  type: "success",
-                  message: $routeParams.deployment + " was updated."
-                };
-                $scope.forms.deploymentEnvVars.$setPristine();
-              }, function error(e){
-                $scope.alerts['saveEnvError'] = {
-                  type: "error",
-                  message: $routeParams.deployment + " was not updated.",
-                  details: $filter('getErrorDetails')(e)
-                };
-              }).finally(function() {
-                saveEnvPromise = null;
-              });
-            };
-
-            $scope.clearEnvVarUpdates = function() {
-              $scope.updatedDeployment = EnvironmentService.copyAndNormalize($scope.deployment);
-              $scope.forms.deploymentEnvVars.$setPristine();
-              previousEnvConflict = false;
-            };
 
             // If we found the item successfully, watch for changes on it
             watches.push(DataService.watchObject({
@@ -161,22 +80,9 @@ angular.module('openshiftConsole')
                 };
               }
 
-              var previous = $scope.deployment;
               $scope.deployment = deployment;
               $scope.updatingPausedState = false;
               updateHPAWarnings();
-
-              updateEnvironment(deployment, previous);
-
-              // Wait for a pending save to complete to avoid a race between the PUT and the watch callbacks.
-              if (saveEnvPromise) {
-                saveEnvPromise.finally(function() {
-                  updateEnvironment(deployment, previous);
-                });
-              } else {
-                updateEnvironment(deployment, previous);
-              }
-
               ImageStreamResolver.fetchReferencedImageStreamImages([deployment.spec.template], $scope.imagesByDockerReference, imageStreamImageRefByDockerReference, context);
             }));
 
@@ -207,32 +113,6 @@ angular.module('openshiftConsole')
         DataService.list("limitranges", context).then(function(response) {
           limitRanges = response.by("metadata.name");
           updateHPAWarnings();
-        });
-
-        var configMapDataOrdered = [];
-        var secretDataOrdered = [];
-        $scope.valueFromObjects = [];
-
-        DataService.list("configmaps", context, null, { errorNotification: false }).then(function(configMapData) {
-          configMapDataOrdered = orderByDisplayName(configMapData.by("metadata.name"));
-          $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
-        }, function(e) {
-          if (e.code === 403) {
-            return;
-          }
-
-          displayError('Could not load config maps', getErrorDetails(e));
-        });
-
-        DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
-          secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
-          $scope.valueFromObjects = secretDataOrdered.concat(configMapDataOrdered);
-        }, function(e) {
-          if (e.code === 403) {
-            return;
-          }
-
-          displayError('Could not load secrets', getErrorDetails(e));
         });
 
         watches.push(DataService.watch("imagestreams", context, function(imageStreamData) {
