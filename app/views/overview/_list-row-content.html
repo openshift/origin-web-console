@@ -35,7 +35,7 @@
     No deployments for <a ng-href="{{row.apiObject | navigateResourceURL}}">{{row.apiObject.metadata.name}}</a>
   </span>
 </div>
-<div ng-if="row.isDeploymentInProgress()" class="list-pf-details">
+<div ng-if="row.isDeploymentInProgress()" class="list-pf-details deployment-in-progress-msg">
   <div ng-if="row.apiObject.kind === 'DeploymentConfig'">
     <span class="mar-right-sm">
       <span class="hidden-xs">
