@@ -5743,18 +5743,21 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .container-terminal-wrapper .terminal-actions .btn,.container-terminal-wrapper .terminal-actions .btn:active{-webkit-box-shadow:none;box-shadow:none}
 .container-terminal-wrapper .terminal-actions .btn:active,.container-terminal-wrapper .terminal-actions .btn:focus,.container-terminal-wrapper .terminal-actions .btn:hover{color:#fff;text-decoration:none}
 .container-terminal-wrapper:-moz-full-screen{background:#000;height:100%;width:100%}
+.container-terminal-wrapper:-moz-full-screen.disconnected .fullscreen-toggle{display:block}
 .container-terminal-wrapper:-moz-full-screen .fullscreen-toggle .exit-fullscreen{display:block}
 .container-terminal-wrapper:-moz-full-screen .fullscreen-toggle .go-fullscreen{display:none}
 .container-terminal-wrapper:-ms-fullscreen{background:#000;height:100%;width:100%}
+.container-terminal-wrapper:-ms-fullscreen.disconnected .fullscreen-toggle{display:block}
 .container-terminal-wrapper:-ms-fullscreen .fullscreen-toggle .exit-fullscreen{display:block}
 .container-terminal-wrapper:-ms-fullscreen .fullscreen-toggle .go-fullscreen{display:none}
 .container-terminal-wrapper:-webkit-full-screen{background:#000;height:100%;width:100%}
+.container-terminal-wrapper:-webkit-full-screen.disconnected .fullscreen-toggle{display:block}
 .container-terminal-wrapper:-webkit-full-screen .fullscreen-toggle .exit-fullscreen{display:block}
 .container-terminal-wrapper:-webkit-full-screen .fullscreen-toggle .go-fullscreen{display:none}
 .container-terminal-wrapper:-fullscreen{background:#000;height:100%;width:100%}
-.container-terminal-wrapper:-fullscreen .fullscreen-toggle .exit-fullscreen{display:block}
+.container-terminal-wrapper:-fullscreen .fullscreen-toggle .exit-fullscreen,.container-terminal-wrapper:-fullscreen.disconnected .fullscreen-toggle{display:block}
 .container-terminal-wrapper:-fullscreen .fullscreen-toggle .go-fullscreen{display:none}
-kubernetes-container-terminal .terminal-actions{top:0;right:30px}
+kubernetes-container-terminal .terminal-actions{top:0;right:47px}
 kubernetes-container-terminal .terminal-actions .spinner{top:5px}
 .key-value-editor.as-sortable-dragging .as-sortable-item-delete,.key-value-editor.as-sortable-dragging .input-group-addon,.key-value-editor.as-sortable-dragging input{opacity:.65}
 .key-value-editor .as-sortable-DISABLED-item-delete:hover,.key-value-editor .as-sortable-item-delete:hover,.key-value-editor .as-sortable-item-handle:hover,.key-value-editor.as-sortable-dragging .as-sortable-item-handle{opacity:1}
