@@ -839,7 +839,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p ng-if=\"targetObject\"><a ng-href=\"{{targetObject | navigateResourceURL}}\">Back to {{kind | humanizeKind}} {{name}}</a></p>\n" +
     "</div>\n" +
     "<div ng-if=\"configMaps.length || secrets.length || ('configmaps' | canI : 'create') || ('secrets' | canI : 'create')\" class=\"mar-top-xl\">\n" +
-    "<h1>Add Config Files</h1>\n" +
+    "<h1>Add Config Files to {{name}}</h1>\n" +
     "<div class=\"help-block\">\n" +
     "Add values from a config map or secret as volume. This will make the data available as files for {{kind | humanizeKind}} {{name}}.\n" +
     "</div>\n" +
@@ -1008,7 +1008,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p ng-if=\"attach.resource\"><a ng-href=\"{{attach.resource | navigateResourceURL}}\">Back to {{kind | humanizeKind}} {{name}}</a></p>\n" +
     "</div>\n" +
     "<div ng-show=\"pvcs && pvcs.length && attach.resource\" class=\"mar-top-xl\">\n" +
-    "<h1>Add Storage</h1>\n" +
+    "<h1>Add Storage to {{name}}</h1>\n" +
     "<div class=\"help-block\">\n" +
     "Add an existing persistent volume claim to the template of {{kind | humanizeKind}} {{name}}.\n" +
     "</div>\n" +
@@ -1514,9 +1514,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"deploymentConfigName\">\n" +
     "<volumes volumes=\"replicaSet.spec.template.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
     "<div ng-if=\"'deploymentconfigs' | canI : 'update'\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}\">Add Storage to {{deploymentConfigName}}</a>\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfigName}}\">Add Storage</a>\n" +
     "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{deploymentConfigName}}\">Add Config Files to {{deploymentConfigName}}</a>\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{deploymentConfigName}}\">Add Config Files</a>\n" +
     "</div>\n" +
     "<div ng-if=\"!replicaSet.spec.template.spec.volumes.length && !('deploymentconfigs' | canI : 'update')\">none</div>\n" +
     "</div>\n" +
