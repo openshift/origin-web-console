@@ -2,37 +2,39 @@
   Loading...
 </div>
 <div ng-if="events" class="events">
-  <div class="data-toolbar">
-    <form role="form" class="search-pf has-button">
-      <div class="form-group filter-controls has-clear">
-        <div class="search-pf-input-group">
-          <label for="events-filter" class="sr-only">Filter</label>
-          <input type="search"
-                 placeholder="Filter by keyword"
-                 class="form-control"
-                 id="events-filter"
-                 ng-model="filter.text"
-                 autocorrect="off"
-                 autocapitalize="none"
-                 spellcheck="false">
-          <button
-              type="button"
-              class="clear"
-              aria-hidden="true"
-              ng-if="filter.text"
-              ng-click="filter.text = ''">
-              <span class="pficon pficon-close"></span>
-          </button>
+  <div class="table-filter-extension">
+    <div class="data-toolbar">
+      <form role="form" class="search-pf has-button">
+        <div class="form-group filter-controls has-clear">
+          <div class="search-pf-input-group">
+            <label for="events-filter" class="sr-only">Filter</label>
+            <input type="search"
+                   placeholder="Filter by keyword"
+                   class="form-control"
+                   id="events-filter"
+                   ng-model="filter.text"
+                   autocorrect="off"
+                   autocapitalize="none"
+                   spellcheck="false">
+            <button
+                type="button"
+                class="clear"
+                aria-hidden="true"
+                ng-if="filter.text"
+                ng-click="filter.text = ''">
+                <span class="pficon pficon-close"></span>
+            </button>
+          </div>
         </div>
+      </form>
+      <div class="vertical-divider"></div>
+      <div class="sort-group">
+        <span class="sort-label">Sort by</span>
+        <pf-sort config="sortConfig" class="sort-controls"></pf-sort>
       </div>
-    </form>
-    <div class="vertical-divider"></div>
-    <div class="sort-group">
-      <span class="sort-label">Sort by</span>
-      <pf-sort config="sortConfig" class="sort-controls"></pf-sort>
     </div>
   </div>
-  <table class="table table-bordered table-condensed table-mobile table-hover table-layout-fixed events-table" ng-class="{ 'table-empty': (filteredEvents | hashSize) === 0 }">
+  <table class="table table-bordered table-condensed table-mobile table-hover table-layout-fixed events-table">
     <thead>
       <tr>
         <th id="time">Time</th>

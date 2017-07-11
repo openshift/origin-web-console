@@ -5422,6 +5422,7 @@ body,html{margin:0;padding:0}
 .data-toolbar .vertical-divider,.table-toolbar .vertical-divider{display:none}
 @media (min-width:768px){.data-toolbar .vertical-divider,.table-toolbar .vertical-divider{border-left:1px solid #bbb;display:inline-block;height:27px;margin:0 7px;vertical-align:middle;width:1px}
 }
+.events .data-toolbar .form-group{margin-bottom:0}
 .events .data-toolbar .search-pf{margin-bottom:10px;width:100%}
 .events .data-toolbar .sort-label{margin-right:4px;vertical-align:-1px}
 .events .data-toolbar .sort-controls{display:inline-block}
