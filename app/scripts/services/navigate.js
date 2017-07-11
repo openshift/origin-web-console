@@ -258,6 +258,11 @@ angular.module("openshiftConsole")
               group: rgv.group
             });
         }
+
+        if (_.get(opts, "tab")) {
+          url.setSearch("tab", opts.tab);
+        }
+
         return url.toString();
       },
 
