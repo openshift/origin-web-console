@@ -8,15 +8,18 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('DeploymentsController', function ($scope,
-                                                 $filter,
-                                                 $routeParams,
-                                                 DataService,
-                                                 DeploymentsService,
-                                                 LabelFilter,
-                                                 Logger,
-                                                 OwnerReferencesService,
-                                                 ProjectsService) {
+  .controller('DeploymentsController',
+    function($scope,
+             $filter,
+             $routeParams,
+             DataService,
+             DeploymentsService,
+             LabelFilter,
+             Logger,
+             Navigate,
+             OwnerReferencesService,
+             PodsService,
+             ProjectsService) {
     $scope.projectName = $routeParams.project;
     $scope.replicationControllers = {};
     $scope.unfilteredDeploymentConfigs = {};
@@ -144,6 +147,11 @@ angular.module('openshiftConsole')
           Logger.log("deployments (subscribe)", $scope.unfilteredDeployments);
         }));
 
+        watches.push(DataService.watch("pods", context, function(podData) {
+          var pods = podData.by('metadata.name');
+          $scope.podsByOwnerUID = PodsService.groupByOwnerUID(pods);
+        }));
+
         function updateFilterWarning() {
           var isFiltering = !LabelFilter.getLabelSelector().isEmpty();
           if (!isFiltering) {
@@ -187,6 +195,15 @@ angular.module('openshiftConsole')
           }
 
           return false;
+        };
+
+        $scope.viewPodsForSet = function(set) {
+          var pods = _.get($scope, ['podsByOwnerUID', set.metadata.uid], []);
+          if (_.isEmpty(pods)) {
+            return;
+          }
+
+          Navigate.toPodsForDeployment(set, pods);
         };
 
         LabelFilter.onActiveFiltersChanged(function(labelSelector) {
