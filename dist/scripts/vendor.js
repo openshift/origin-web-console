@@ -36789,13 +36789,13 @@ if (b) {
 b.$el ? b.$el.empty() :b.$el = this._newNodeEl(b, c).addClass("node-" + this._elementId), b.$el.addClass(b["class"]), b.id && b.$el.attr("id", b.id), b.dataAttr && a.each(b.dataAttr, function(a, c) {
 b.$el.attr("data-" + a, c);
 }), b.$el.attr("data-nodeId", b.nodeId), b.tooltip && b.$el.attr("title", b.tooltip);
-for (var d = 0; d < b.level - 1; d++) b.$el.append(this._template.indent.clone());
+for (var e = 0; e < b.level - 1; e++) b.$el.append(this._template.indent.clone());
 if (b.$el.append(b.nodes || b.lazyLoad ? this._template.icon.expand.clone() :this._template.icon.empty.clone()), this._options.checkboxFirst ? (this._addCheckbox(b), this._addIcon(b), this._addImage(b)) :(this._addIcon(b), this._addImage(b), this._addCheckbox(b)), this._options.wrapNodeText) {
-var e = this._template.text.clone();
-b.$el.append(e), e.append(b.text);
+var g = this._template.text.clone();
+b.$el.append(g), g.append(b.text);
 } else b.$el.append(b.text);
 this._options.showTags && b.tags && a.each(b.tags, a.proxy(function(a, c) {
-b.$el.append(this._template.badge.clone().addClass("string" == typeof b.tagsClass[a] ? b.tagsClass[a] :this._options.tagsClass).append(c));
+b.$el.append(this._template.badge.clone().addClass(("object" == typeof c ? c["class"] :d) || b.tagsClass || this._options.tagsClass).append(("object" == typeof c ? c.text :d) || c));
 }, this)), this._setSelected(b, b.state.selected), this._setChecked(b, b.state.checked), this._setSearchResult(b, b.searchResult), this._setExpanded(b, b.state.expanded), this._setDisabled(b, b.state.disabled), this._setVisible(b, b.state.visible), this._triggerEvent("nodeRendered", b, f.options);
 }
 }, g.prototype._addCheckbox = function(a) {

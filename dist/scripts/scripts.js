@@ -592,8 +592,14 @@ SECURITY_CHECK_WHITELIST:[ {
 resource:"buildconfigs",
 group:""
 }, {
+resource:"buildconfigs",
+group:"build.openshift.io"
+}, {
 resource:"builds",
 group:""
+}, {
+resource:"builds",
+group:"build.openshift.io"
 }, {
 resource:"configmaps",
 group:""
@@ -602,10 +608,16 @@ resource:"daemonsets",
 group:"extensions"
 }, {
 resource:"deployments",
+group:"apps"
+}, {
+resource:"deployments",
 group:"extensions"
 }, {
 resource:"deploymentconfigs",
 group:""
+}, {
+resource:"deploymentconfigs",
+group:"apps.openshift.io"
 }, {
 resource:"endpoints",
 group:""
@@ -622,11 +634,20 @@ group:"extensions"
 resource:"imagestreamimages",
 group:""
 }, {
+resource:"imagestreamimages",
+group:"image.openshift.io"
+}, {
 resource:"imagestreams",
 group:""
 }, {
+resource:"imagestreams",
+group:"image.openshift.io"
+}, {
 resource:"imagestreamtags",
 group:""
+}, {
+resource:"imagestreamtags",
+group:"image.openshift.io"
 }, {
 resource:"ingresses",
 group:"extensions"
@@ -651,6 +672,9 @@ group:""
 }, {
 resource:"routes",
 group:""
+}, {
+resource:"routes",
+group:"route.openshift.io"
 }, {
 resource:"secrets",
 group:""
