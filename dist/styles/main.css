@@ -4878,6 +4878,7 @@ h2+.list-view-pf{margin-top:20px}
 .builds-label{margin-right:5px}
 .mini-donut-link{color:#252525}
 .mini-donut-link:active,.mini-donut-link:focus,.mini-donut-link:hover{color:#0088ce;text-decoration:none}
+.mini-donut-link.disabled-link,.mini-donut-link.disabled-link:active,.mini-donut-link.disabled-link:focus,.mini-donut-link.disabled-link:hover{color:#252525;opacity:1}
 .mini-log{background-color:#fafafa;border:1px solid #d1d1d1;color:#4d5258;font-family:Menlo,Monaco,Consolas,monospace;font-size:11px;margin-bottom:5px;margin-top:5px;padding:5px}
 .mini-log .mini-log-content{line-height:13px;min-height:91px}
 .mini-log .mini-log-content .mini-log-line{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;white-space:pre}
