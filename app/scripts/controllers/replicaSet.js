@@ -22,14 +22,18 @@ angular.module('openshiftConsole')
                         MetricsService,
                         ModalsService,
                         Navigate,
+                        OwnerReferencesService,
                         PodsService,
                         ProjectsService,
                         StorageService,
                         keyValueEditorUtils,
                         kind) {
     var hasDC = false;
+
     var annotation = $filter('annotation');
     var displayKind = $filter('humanizeKind')(kind);
+    var hasDeployment = $filter('hasDeployment');
+
     switch (kind) {
     case 'ReplicaSet':
       $scope.resource = {
@@ -278,37 +282,47 @@ angular.module('openshiftConsole')
           $scope.isActive = DeploymentsService.isActiveReplicaSet($scope.replicaSet, $scope.deployment);
         };
 
-        var hasDeployment = $filter('hasDeployment');
-        var inProgressDeployment = false;
-        var updateDeployment = function() {
-          if (!hasDeployment($scope.replicaSet)) {
-            return;
-          }
-
-          DataService.list({
-            group: 'extensions',
-            resource: 'deployments'
-          }, context).then(function(resp) {
-            var deployments = resp.by('metadata.name');
-            var replicaSetSelector = new LabelSelector($scope.replicaSet.spec.selector);
-            $scope.deployment = _.find(deployments, function(deployment) {
-              var deploymentSelector = new LabelSelector(deployment.spec.selector);
-              return deploymentSelector.covers(replicaSetSelector);
-            });
-            if (!$scope.deployment) {
-              $scope.deploymentMissing = true;
+        var hasInProgressRollout = function(replicaSets) {
+          // See if there is any other replica set owned by the deployment with active pods.
+          return _.some(replicaSets, function(replicaSet) {
+            // Check if the replica set has pods.
+            if (!_.get(replicaSet, 'status.replicas')) {
               return;
             }
 
+            // Check if it's the same replica set we're viewing.
+            if (_.get(replicaSet, 'metadata.uid') === _.get($scope.replicaSet, 'metadata.uid')) {
+              return;
+            }
+
+            // Check if it's owned by same deployment.
+            var controllerReferences = OwnerReferencesService.getControllerReferences(replicaSet);
+            return _.some(controllerReferences, { uid: $scope.deployment.metadata.uid });
+          });
+        };
+
+        var rolloutInProgress = false;
+        var updateDeployment = function() {
+          var controllerRefs = OwnerReferencesService.getControllerReferences($scope.replicaSet);
+          var deploymentRef = _.find(controllerRefs, { kind: 'Deployment' });
+          if (!deploymentRef) {
+            return;
+          }
+
+          DataService.get({
+            group: 'extensions',
+            resource: 'deployments'
+          }, deploymentRef.name, context).then(function(deployment) {
+            $scope.deployment = deployment;
             $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
                                                             "Deployment",
-                                                            $scope.deployment.metadata.name,
+                                                            deployment.metadata.name,
                                                             "extensions");
 
             watches.push(DataService.watchObject({
               group: 'extensions',
               resource: 'deployments'
-            }, $scope.deployment.metadata.name, context, function(deployment, action) {
+            }, deployment.metadata.name, context, function(deployment, action) {
               if (action === "DELETED") {
                 $scope.alerts['deployment-deleted'] = {
                   type: "warning",
@@ -323,6 +337,7 @@ angular.module('openshiftConsole')
                 return;
               }
 
+              $scope.deployment = deployment;
               $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
                 object: $scope.replicaSet,
                 displayName: '#' + DeploymentsService.getRevision($scope.replicaSet),
@@ -341,31 +356,9 @@ angular.module('openshiftConsole')
             watches.push(DataService.watch({
               group: 'extensions',
               resource: 'replicasets'
-            }, context, function(replicaSets) {
-              var deploymentSelector = new LabelSelector($scope.deployment.spec.selector);
-              inProgressDeployment = false;
-
-              // See if there is more than one replica set that matches the
-              // deployment selector with active replicas.
-              var numActive = 0;
-              _.each(replicaSets.by('metadata.name'), function(replicaSet) {
-                if (!replicaSet.status.replicas) {
-                  return;
-                }
-
-                if (!deploymentSelector.covers(new LabelSelector(replicaSet.spec.selector))) {
-                  return;
-                }
-
-                numActive++;
-
-                if (numActive > 1) {
-                  inProgressDeployment = true;
-
-                  // Stop looping.
-                  return false;
-                }
-              });
+            }, context, function(replicaSetData) {
+              var replicaSets = replicaSetData.by('metadata.name');
+              rolloutInProgress = hasInProgressRollout(replicaSets);
             }));
           });
         };
@@ -429,6 +422,10 @@ angular.module('openshiftConsole')
               setLogVars(replicaSet);
               updateHPAWarnings();
               getImageStreamImage();
+
+              if ($scope.deployment) {
+                checkActiveRevision();
+              }
             }));
 
             if ($scope.deploymentConfigName) {
@@ -589,7 +586,7 @@ angular.module('openshiftConsole')
             return false;
           }
 
-          return $scope.isActive && !inProgressDeployment;
+          return $scope.isActive && !rolloutInProgress;
         };
 
         $scope.removeVolume = function(volume) {
