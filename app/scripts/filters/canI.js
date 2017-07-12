@@ -17,6 +17,7 @@ angular
       ],
       'deployments': [
         {group: 'autoscaling', resource: 'horizontalpodautoscalers', verbs: ['create', 'update']},
+        {group: 'apps',        resource: 'deployments',              verbs: ['update']},
         {group: 'extensions',  resource: 'deployments',              verbs: ['create', 'update']}
       ],
       'deploymentConfigs': [
