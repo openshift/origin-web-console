@@ -31,9 +31,11 @@ angular.module('openshiftConsole')
     $scope.expandedDeploymentConfigRow = {};
     $scope.unfilteredReplicaSets = {};
     $scope.unfilteredReplicationControllers = {};
+    $scope.causesByReplicationController = {};
 
     var replicaSets, deploymentsByUID;
     var annotation = $filter('annotation');
+    var deploymentCauses = $filter('deploymentCauses');
 
     var groupReplicaSets = function() {
       if (!replicaSets || !deploymentsByUID) {
@@ -55,6 +57,15 @@ angular.module('openshiftConsole')
         $scope.latestReplicaSetByDeploymentUID[deploymentUID] =
           DeploymentsService.getActiveReplicaSet(replicaSets, deploymentsByUID[deploymentUID]);
       });
+    };
+
+    var updateCauses = function(replicationcontroller) {
+      var causes = deploymentCauses(replicationcontroller);
+      _.set($scope, ['causesByReplicationController', replicationcontroller.metadata.uid], causes);
+    };
+
+    $scope.getCauses = function(replicationController) {
+      return _.get($scope, ['causesByReplicationController', replicationController.metadata.uid]);
     };
 
     var watches = [];
@@ -81,31 +92,14 @@ angular.module('openshiftConsole')
           }
           updateFilterWarning();
 
-          if (!action) {
-            // Loading of the page that will create deploymentConfigDeploymentsInProgress structure, which will associate running deployment to his deploymentConfig.
-            $scope.deploymentConfigDeploymentsInProgress = DeploymentsService.associateRunningDeploymentToDeploymentConfig($scope.replicationControllersByDC);
-          } else if (action === 'ADDED' || (action === 'MODIFIED' && ['New', 'Pending', 'Running'].indexOf($filter('deploymentStatus')(replicationController)) > -1)) {
-            // When new deployment id instantiated/cloned, or in case of a retry, associate him to his deploymentConfig and add him into deploymentConfigDeploymentsInProgress structure.
-            $scope.deploymentConfigDeploymentsInProgress[dcName] = $scope.deploymentConfigDeploymentsInProgress[dcName] || {};
-            $scope.deploymentConfigDeploymentsInProgress[dcName][rcName] = replicationController;
-          } else if (action === 'MODIFIED') {
-            // After the deployment ends remove him from the deploymentConfigDeploymentsInProgress structure.
-            var status = $filter('deploymentStatus')(replicationController);
-            if (status === "Complete" || status === "Failed"){
-              delete $scope.deploymentConfigDeploymentsInProgress[dcName][rcName];
-            }
-          }
-
           // Extract the causes from the encoded deployment config
           if (replicationController) {
             if (action !== "DELETED") {
-              replicationController.causes = $filter('deploymentCauses')(replicationController);
+              updateCauses(replicationController);
             }
           }
           else {
-            angular.forEach($scope.replicationControllers, function(replicationController) {
-              replicationController.causes = $filter('deploymentCauses')(replicationController);
-            });
+            _.each($scope.replicationControllers, updateCauses);
           }
 
           Logger.log("replicationControllers (subscribe)", $scope.replicationControllers);
@@ -186,11 +180,11 @@ angular.module('openshiftConsole')
         }
 
         $scope.showEmptyMessage = function() {
-          if ($filter('hashSize')($scope.replicationControllersByDC) === 0) {
+          if (_.isEmpty($scope.replicationControllersByDC)) {
             return true;
           }
 
-          if ($filter('hashSize')($scope.replicationControllersByDC) === 1 && $scope.replicationControllersByDC['']) {
+          if (_.size($scope.replicationControllersByDC) === 1 && $scope.replicationControllersByDC['']) {
             return true;
           }
 
@@ -208,7 +202,7 @@ angular.module('openshiftConsole')
 
         LabelFilter.onActiveFiltersChanged(function(labelSelector) {
           // trigger a digest loop
-          $scope.$apply(function() {
+          $scope.$evalAsync(function() {
             $scope.deploymentConfigs = labelSelector.select($scope.unfilteredDeploymentConfigs);
             $scope.replicationControllersByDC = DeploymentsService.associateDeploymentsToDeploymentConfig($scope.replicationControllers, $scope.deploymentConfigs, true);
             if ($scope.replicationControllersByDC['']) {

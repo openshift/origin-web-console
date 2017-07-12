@@ -95,18 +95,16 @@
                       <span am-time-ago="replicationController.metadata.creationTimestamp"></span>
                     </td>
                     <td data-title="Trigger">
-                      <span ng-if="!replicationController.causes.length">Unknown</span>
-                      <span ng-if="replicationController.causes.length">
-                        <span ng-repeat="cause in replicationController.causes">
-                          <span ng-switch="cause.type">
-                            <span ng-switch-when="ImageChange">
-                              <span ng-if="cause.imageTrigger.from">
-                                <abbr title="{{cause.imageTrigger.from | imageObjectRef : null : true}}">Image</abbr> change
-                              </span>
+                      <span ng-if="!getCauses(replicationController).length">Unknown</span>
+                      <span ng-repeat="cause in getCauses(replicationController)">
+                        <span ng-switch="cause.type">
+                          <span ng-switch-when="ImageChange">
+                            <span ng-if="cause.imageTrigger.from">
+                              <abbr title="{{cause.imageTrigger.from | imageObjectRef : null : true}}">Image</abbr> change
                             </span>
-                            <span ng-switch-when="ConfigChange">Config change</span>
-                            <span ng-switch-default>{{cause.type}}</span>
                           </span>
+                          <span ng-switch-when="ConfigChange">Config change</span>
+                          <span ng-switch-default>{{cause.type}}</span>
                         </span>
                       </span>
                     </td>
