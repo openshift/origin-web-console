@@ -18,9 +18,12 @@
         data-toggle="tooltip"
         data-placement="left"
         data-container=".middle"
-        title="Copy to clipboard"
+        title="Copy to Clipboard"
         role="button"
-        class="btn btn-default"><i class="fa fa-clipboard"/></a>
+        class="btn btn-default">
+      <i class="fa fa-clipboard" aria-hidden="true"></i>
+      <span class="sr-only">Copy to Clipboard</span>
+    </a>
     <a ng-show="inputText"
         data-clipboard-text="{{clipboardText}}"
         href=""
@@ -28,8 +31,11 @@
         data-toggle="tooltip"
         data-placement="left"
         data-container=".middle"
-        title="Copy to clipboard"
+        title="Copy to Clipboard"
         role="button"
-        class="btn btn-default"><i class="fa fa-clipboard"/></a>
+        class="btn btn-default">
+      <i class="fa fa-clipboard" aria-hidden="true"></i>
+      <span class="sr-only">Copy to Clipboard</span>
+    </a>
   </span>
 </div><!-- /input-group -->
