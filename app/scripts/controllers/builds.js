@@ -71,8 +71,29 @@ angular.module('openshiftConsole')
           return labelSelector.matches(build);
         }
 
+        // Used to determine whether the build should be added to the
+        // buildsNoConfig map based on current filtering state
+        function showBuildNoConfigOnly(build) {
+          // Exclude builds from a build config
+          var buildConfigName = buildConfigForBuild(build);
+          if (buildConfigName) {
+            return false;
+          }
+
+          // If we aren't filtering by labels, show the build
+          var labelSelector = LabelFilter.getLabelSelector();
+          if (labelSelector.isEmpty()) {
+            return true;
+          }
+
+          // Otherwise this build has no build config and so will have its own
+          // row, so see if the current filter matches it
+          return labelSelector.matches(build);
+        }
+
         function associateBuildsToBuildConfig() {
           $scope.latestByConfig = BuildsService.latestBuildByConfig($scope.builds, showBuild);
+          $scope.buildsNoConfig = _.pick($scope.builds, showBuildNoConfigOnly);
           // Make sure there is a key for every build config we know about
           angular.forEach($scope.buildConfigs, function(buildConfig, buildConfigName){
             $scope.latestByConfig[buildConfigName] = $scope.latestByConfig[buildConfigName] || null;
