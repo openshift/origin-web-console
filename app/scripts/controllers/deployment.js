@@ -15,16 +15,21 @@ angular.module('openshiftConsole')
                         DeploymentsService,
                         HPAService,
                         ImageStreamResolver,
+                        LabelFilter,
+                        Logger,
                         ModalsService,
                         Navigate,
                         OwnerReferencesService,
-                        Logger,
                         ProjectsService,
                         StorageService) {
     var imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
 
     $scope.projectName = $routeParams.project;
     $scope.name = $routeParams.deployment;
+    $scope.replicaSetsForDeployment = {};
+    $scope.unfilteredReplicaSetsForDeployment  = {};
+    $scope.labelSuggestions = {};
+    $scope.emptyMessage = "Loading...";
     $scope.forms = {};
     $scope.alerts = {};
     $scope.imagesByDockerReference = {};
@@ -91,10 +96,18 @@ angular.module('openshiftConsole')
               group: 'extensions',
               resource: 'replicasets'
             }, context, function(replicaSetData) {
+              $scope.emptyMessage = "No deployments to show";
+
               var replicaSets = replicaSetData.by('metadata.name');
               replicaSets = OwnerReferencesService.filterForController(replicaSets, deployment);
               $scope.inProgressDeployment = _.chain(replicaSets).filter('status.replicas').size() > 1;
-              $scope.replicaSetsForDeployment = DeploymentsService.sortByRevision(replicaSets);
+
+              $scope.unfilteredReplicaSetsForDeployment = DeploymentsService.sortByRevision(replicaSets);
+              $scope.replicaSetsForDeployment = LabelFilter.getLabelSelector().select($scope.unfilteredReplicaSetsForDeployment);
+
+              updateFilterWarning();
+              LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredReplicaSetsForDeployment, $scope.labelSuggestions);
+              LabelFilter.setLabelSuggestions($scope.labelSuggestions);
             }));
           },
           // failure
@@ -139,6 +152,25 @@ angular.module('openshiftConsole')
           $scope.builds = builds.by("metadata.name");
           Logger.log("builds (subscribe)", $scope.builds);
         }));
+
+        function updateFilterWarning() {
+          if (!LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.replicaSetsForDeployment) && !_.isEmpty($scope.unfilteredReplicaSetsForDeployment)) {
+            $scope.alerts["filter-hiding-all"] = {
+              type: "warning",
+              details: "The active filters are hiding all rollout history."
+            };
+          }
+          else {
+            delete $scope.alerts["filter-hiding-all"];
+          }
+        }
+
+        LabelFilter.onActiveFiltersChanged(function(labelSelector) {
+          $scope.$evalAsync(function() {
+            $scope.replicaSetsForDeployment = labelSelector.select($scope.unfilteredReplicaSetsForDeployment);
+            updateFilterWarning();
+          });
+        });
 
         $scope.scale = function(replicas) {
           var showScalingError = function(result) {
