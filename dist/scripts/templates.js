@@ -7036,7 +7036,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/header/default-header.html',
     "<ng-include ng-if=\"globalTechPreviewIndicator\" src=\"'views/directives/header/_tech-preview-banner.html'\" class=\"tech-preview-banner\"></ng-include>\n" +
     "<nav class=\"navbar navbar-pf-alt\" role=\"navigation\">\n" +
-    "<div row>\n" +
+    "<div row class=\"nav\">\n" +
     "<div class=\"navbar-header\">\n" +
     "\n" +
     "<div row class=\"navbar-flex-btn toggle-menu\">\n" +
@@ -7053,7 +7053,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</div>\n" +
     "\n" +
-    "<navbar-utility class=\"collapse navbar-collapse\"></navbar-utility>\n" +
+    "<navbar-utility class=\"hidden-xs\"></navbar-utility>\n" +
     "<div row extension-point extension-name=\"nav-system-status-mobile\" extension-types=\"dom\" class=\"navbar-flex-btn hide-if-empty\"></div>\n" +
     "</div>\n" +
     "</nav>"

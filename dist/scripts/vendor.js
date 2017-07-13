@@ -36836,6 +36836,10 @@ if (c.color || c.backColor) {
 var d = "";
 c.color && (d += "color:" + c.color + ";"), c.backColor && (d += "background-color:" + c.backColor + ";"), b += ".node-" + this._elementId + '[data-nodeId="' + c.nodeId + '"]{' + d + "}";
 }
+if (c.iconColor) {
+var d = "color:" + c.iconColor + ";";
+b += ".node-" + this._elementId + '[data-nodeId="' + c.nodeId + '"] .node-icon{' + d + "}";
+}
 }, this)), this._css + b;
 }, g.prototype._template = {
 tree:a('<ul class="list-group"></ul>'),
