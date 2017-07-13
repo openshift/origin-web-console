@@ -47,8 +47,13 @@
                   <li ng-if="{ group: 'extensions', resource: 'deployments' } | canI : 'update'">
                     <a ng-href="{{healthCheckURL}}" role="button">Edit Health Checks</a>
                   </li>
-                  <li ng-if="{ group: 'extensions', resource: 'deployments' } | canI : 'update'">
-                    <a ng-href="{{deployment | editYamlURL}}" role="button">Edit YAML</a>
+                  <!--
+                    Edit YAML of `apps` group so that the user can modify the latest API fields.
+                    This can be switched back to use the `editYamlURL` filter when we've migrated
+                    the rest of the web console to use the `apps` group for deployments.
+                  -->
+                  <li ng-if="{ group: 'apps', resource: 'deployments' } | canI : 'update'">
+                    <a ng-href="project/{{projectName}}/edit/yaml?kind=Deployment&group=apps&name={{deployment.metadata.name}}" role="button">Edit YAML</a>
                   </li>
                   <li class="divider" ng-if="{ group: 'extensions', resource: 'deployments' } | canI : 'update'"></li>
                   <li ng-if="{ group: 'extensions', resource: 'deployments' } | canI : 'delete'">

@@ -33,6 +33,13 @@
     color: @link-color;
     text-decoration: none;
   }
+  &.disabled-link,
+  &.disabled-link:active,
+  &.disabled-link:focus,
+  &.disabled-link:hover {
+    color: @gray-darker;
+    opacity: 1;
+  }
 }
 .mini-log {
   background-color: @color-pf-black-100;

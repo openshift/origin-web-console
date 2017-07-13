@@ -33,7 +33,9 @@ angular.module('openshiftConsole')
           var pods = _.reject($scope.pods, { status: { phase: 'Failed' } });
           var total = _.size(pods);
           if ($scope.mini) {
-            $scope.total = total;
+            $scope.$evalAsync(function() {
+              $scope.total = total;
+            });
             return;
           }
 
