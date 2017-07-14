@@ -64151,7 +64151,7 @@ a.exports = '<div ng-if="!$ctrl.success && !$ctrl.error">\n  <div ng-if="!$ctrl.
 }, function(a, b) {
 a.exports = '<bind-service-form service-class="$ctrl.serviceClass.resource"\n                   service-class-name="$ctrl.serviceClass.name"\n                   applications="$ctrl.applications"\n                   form-name="$ctrl.forms.bindForm"\n                   allow-no-binding="true"\n                   project-name="$ctrl.projectDisplayName"\n                   bind-type="$ctrl.bindType"\n                   app-to-bind="$ctrl.appToBind">\n</bind-service-form>\n';
 }, function(a, b) {
-a.exports = '<div class="config-top">\n  <form name="$ctrl.forms.orderConfigureForm" class="config-form">\n    <select-project selected-project="$ctrl.selectedProject" name-taken="$ctrl.nameTaken"></select-project>\n    <catalog-parameters\n      ng-if="$ctrl.parameterSchema"\n      model="$ctrl.parameterData"\n      parameter-schema="$ctrl.parameterSchema">\n    </catalog-parameters>\n  </form>\n  <div ng-if="$ctrl.error" class="has-error">\n    <span class="help-block">{{$ctrl.error}}</span>\n  </div>\n</div>\n';
+a.exports = '<div class="config-top">\n  <form name="$ctrl.forms.orderConfigureForm" class="config-form">\n    <select-project selected-project="$ctrl.selectedProject" name-taken="$ctrl.nameTaken"></select-project>\n    <catalog-parameters\n      ng-if="$ctrl.parameterSchema.properties"\n      model="$ctrl.parameterData"\n      parameter-schema="$ctrl.parameterSchema">\n    </catalog-parameters>\n  </form>\n  <div ng-if="$ctrl.error" class="has-error">\n    <span class="help-block">{{$ctrl.error}}</span>\n  </div>\n</div>\n';
 }, function(a, b) {
 a.exports = '<div class="config-top">\n  <div class="select-plans">\n    <h3>Select a Plan</h3>\n    <div ng-repeat="plan in $ctrl.serviceClass.resource.plans" class="radio">\n      <label>\n        <input\n          type="radio"\n          ng-model="$ctrl.planIndex"\n          ng-change="$ctrl.selectPlan(plan)"\n          value="{{$index}}">\n        <span class="plan-name">{{plan.externalMetadata.displayName || plan.name}}</span>\n        <!-- TODO: truncate long text -->\n        <div ng-if="plan.description">{{plan.description}}</div>\n        <!-- TODO: show plan bullets -->\n      </label>\n    </div>\n  </div>\n</div>\n';
 }, function(a, b) {
@@ -64838,18 +64838,18 @@ function a(a, b) {
 this.resource = a, this.catalogSrv = b, this.imageUrl = this.getImage(), this.iconClass = this.getIcon(), this.name = this.getName(), this.description = this.getDescription(), this.longDescription = this.getLongDescription(), this.tags = this.getTags();
 }
 return a.prototype.getImage = function() {
-return e.get(this.resource, "externalMetadata.imageUrl", "");
+return e.get(this.resource, "externalMetadata.imageUrl") || "";
 }, a.prototype.getIcon = function() {
-var a = e.get(this.resource, [ "externalMetadata", "console.openshift.io/iconClass" ], "fa fa-clone");
+var a = e.get(this.resource, [ "externalMetadata", "console.openshift.io/iconClass" ]) || "fa fa-clone";
 return a = -1 !== a.indexOf("icon-") ? "font-icon " + a :a;
 }, a.prototype.getName = function() {
-return e.get(this.resource, "externalMetadata.displayName", this.resource.metadata.name);
+return e.get(this.resource, "externalMetadata.displayName") || this.resource.metadata.name;
 }, a.prototype.getDescription = function() {
-return e.get(this.resource, "description", "");
+return e.get(this.resource, "description") || "";
 }, a.prototype.getLongDescription = function() {
-return e.get(this.resource, "externalMetadata.longDescription", "");
+return e.get(this.resource, "externalMetadata.longDescription") || "";
 }, a.prototype.getTags = function() {
-return e.get(this.resource, "alphaTags", []);
+return e.get(this.resource, "alphaTags") || [];
 }, a;
 }();
 b.ServiceItem = g;
@@ -65018,15 +65018,18 @@ m.clearValidityWatcher(), m.ctrl.nextTitle = "Create", m.reviewStep.allowed = !0
 }, this.showResults = function() {
 m.clearValidityWatcher(), m.ctrl.nextTitle = "Close", m.ctrl.wizardDone = !0, m.createApp();
 }, this.onProjectUpdate = function() {
-m.isNewProject() ? (m.ctrl.serviceInstances = [], m.updateBindability()) :(m.ctrl.updating = !0, m.ProjectsService.get(m.ctrl.selectedProject.metadata.name).then(e.spread(function(a, b) {
-var c = {
+!m.instancesSupported || m.isNewProject() ? (m.ctrl.serviceInstances = [], m.updateBindability()) :(m.ctrl.updating = !0, m.DataService.list({
 group:"servicecatalog.k8s.io",
 resource:"instances"
-};
-m.watches.push(m.DataService.watch(c, b, function(a) {
+}, {
+namespace:m.ctrl.selectedProject.metadata.name
+}, null, {
+errorNotification:!1
+}).then(function(a) {
 m.ctrl.serviceInstances = e.filter(e.toArray(a.by("metadata.name")), m.isServiceBindable), m.sortServiceInstances(), m.ctrl.updating = !1, m.updateBindability();
+}, function(a) {
+m.Logger.warn("Failed to list instances in namespace " + m.ctrl.selectedProject.metadata.name, a), m.ctrl.updating = !1, m.ctrl.serviceInstances = [], m.updateBindability();
 }));
-})));
 }, this.isServiceBindable = function(a) {
 return m.BindingService.isServiceBindable(a, m.ctrl.serviceClasses);
 }, this.$scope = a, this.$filter = b, this.$location = c, this.$q = d, this.BuilderAppService = f, this.ProjectsService = g, this.DataService = h, this.APIService = i, this.BindingService = j, this.Logger = k, this.ctrl.serviceToBind = null, this.ctrl.showPodPresets = e.get(l, [ "ENABLE_TECH_PREVIEW_FEATURE", "pod_presets" ], !1);
@@ -65060,7 +65063,10 @@ prevEnabled:!1,
 onShow:this.showResults
 }, this.ctrl.steps = [ this.configStep, this.bindStep, this.reviewStep ], this.ctrl.versions = this.getVersions(), this.ctrl.istag = e.first(this.ctrl.versions), this.ctrl.nameMaxLength = 24, this.ctrl.namePattern = /^[a-z]([-a-z0-9]*[a-z0-9])?$/, this.ctrl.repositoryPattern = /^[a-z][a-z0-9+.-@]*:(\/\/)?[0-9a-z_-]+/, this.ctrl.wizardDone = !1, this.ctrl.serviceToBind = null, this.ctrl.updating = !1, this.ctrl.serviceInstances = [], this.selectedProjectWatch = this.$scope.$watch(function() {
 return a.ctrl.selectedProject;
-}, this.onProjectUpdate), this.getServiceClasses();
+}, this.onProjectUpdate), this.getServiceClasses(), this.instancesSupported = !!this.APIService.apiInfo({
+group:"servicecatalog.k8s.io",
+resource:"instances"
+});
 }, a.prototype.closePanel = function() {
 d.isFunction(this.ctrl.handleClose) && this.ctrl.handleClose();
 }, a.prototype.$onDestroy = function() {
@@ -65594,7 +65600,7 @@ return a.resizeExpansion(!1);
 maxWait:250
 }), d.element(window).bind("resize", this.debounceResize), f(window).on("resize.services", this.debounceResize), this.removeFilterListener = this.$rootScope.$on("filter-catalog-items", function(b, c) {
 var e = d.copy(a.keywordFilterField);
-e.value = c.searchText, a.ctrl.currentFilter = a.ctrl.currentSubFilter = "all", a.filterChange([ e ]);
+e.value = c.searchText, a.ctrl.currentFilter = a.ctrl.currentSubFilter = "all", a.ctrl.mobileView = "subcategories", a.filterChange([ e ]);
 }), this.ctrl.filterConfig = {
 fields:[ this.keywordFilterField ],
 resultsCount:0,
