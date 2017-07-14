@@ -93,7 +93,7 @@
                                     name="strategyTimeout"
                                     ng-model="strategyData[strategyParamsPropertyName].timeoutSeconds"
                                     placeholder="600"
-                                    ng-pattern="/^\d+$/"
+                                    pattern="\d*"
                                     min="0"
                                     select-on-focus
                                     class="form-control"
@@ -128,7 +128,7 @@
                                         placeholder="1"
                                         name="updatePeriod"
                                         ng-model="strategyData[strategyParamsPropertyName].updatePeriodSeconds"
-                                        ng-pattern="/^\d+$/"
+                                        pattern="\d*"
                                         min="0"
                                         select-on-focus
                                         class="form-control"
@@ -160,7 +160,7 @@
                                         placeholder="1"
                                         name="interval"
                                         ng-model="strategyData[strategyParamsPropertyName].intervalSeconds"
-                                        ng-pattern="/^\d+$/"
+                                        pattern="\d*"
                                         min="0"
                                         select-on-focus
                                         class="form-control"
