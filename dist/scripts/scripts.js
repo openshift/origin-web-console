@@ -10336,7 +10336,7 @@ $(this).hide(), $(".reveal-contents", b).show();
 });
 }
 };
-}).directive("copyToClipboard", [ "IS_IOS", function(a) {
+}).directive("copyToClipboard", function() {
 return {
 restrict:"E",
 scope:{
@@ -10350,22 +10350,21 @@ templateUrl:"views/directives/_copy-to-clipboard.html",
 controller:[ "$scope", function(a) {
 a.id = _.uniqueId("clipboardJs");
 } ],
-link:function(b, c) {
-if (a) return void (b.hidden = !0);
-var d = $("a", c), e = d.get(0);
-b.inputText && (e = d.get(1));
-var f = new Clipboard(e);
-f.on("success", function(a) {
-$(a.trigger).attr("title", "Copied!").tooltip("fixTitle").tooltip("show").attr("title", "Copy to clipboard").tooltip("fixTitle"), a.clearSelection();
-}), f.on("error", function(a) {
+link:function(a, b) {
+var c = $("a", b), d = c.get(0);
+a.inputText && (d = c.get(1));
+var e = new Clipboard(d);
+e.on("success", function(a) {
+$(a.trigger).attr("title", "Copied!").tooltip("fixTitle").tooltip("show").attr("title", "Copy to Clipboard").tooltip("fixTitle"), a.clearSelection();
+}), e.on("error", function(a) {
 var b = /Mac/i.test(navigator.userAgent) ? "Press ⌘C to copy" :"Press Ctrl-C to copy";
-$(a.trigger).attr("title", b).tooltip("fixTitle").tooltip("show").attr("title", "Copy to clipboard").tooltip("fixTitle");
-}), c.on("$destroy", function() {
-f.destroy();
+$(a.trigger).attr("title", b).tooltip("fixTitle").tooltip("show").attr("title", "Copy to Clipboard").tooltip("fixTitle");
+}), b.on("$destroy", function() {
+e.destroy();
 });
 }
 };
-} ]).directive("shortId", function() {
+}).directive("shortId", function() {
 return {
 restrict:"E",
 scope:{

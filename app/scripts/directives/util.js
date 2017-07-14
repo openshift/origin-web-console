@@ -57,7 +57,7 @@ angular.module('openshiftConsole')
       }
     };
   })
-  .directive('copyToClipboard', function(IS_IOS) {
+  .directive('copyToClipboard', function() {
     return {
       restrict: 'E',
       scope: {
@@ -72,11 +72,6 @@ angular.module('openshiftConsole')
         $scope.id = _.uniqueId('clipboardJs');
       },
       link: function($scope, element) {
-        if (IS_IOS) {
-          $scope.hidden = true;
-          return;
-        }
-
         var nodeElem = $('a', element);
         var node = nodeElem.get(0);
         if ($scope.inputText) {
@@ -89,7 +84,7 @@ angular.module('openshiftConsole')
             .attr('title', 'Copied!')
             .tooltip('fixTitle')
             .tooltip('show')
-            .attr('title', 'Copy to clipboard')
+            .attr('title', 'Copy to Clipboard')
             .tooltip('fixTitle');
           e.clearSelection();
         });
@@ -99,7 +94,7 @@ angular.module('openshiftConsole')
             .attr('title', fallbackMsg)
             .tooltip('fixTitle')
             .tooltip('show')
-            .attr('title', 'Copy to clipboard')
+            .attr('title', 'Copy to Clipboard')
             .tooltip('fixTitle');
         });
         element.on('$destroy', function() {
