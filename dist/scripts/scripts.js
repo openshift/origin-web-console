@@ -4926,12 +4926,18 @@ if (c.isEmpty()) return !0;
 var d = j(a) || "";
 return d && b.unfilteredBuildConfigs[d] ? !!b.buildConfigs[d] :c.matches(a);
 }
-function l() {
-b.latestByConfig = h.latestBuildByConfig(b.builds, i), angular.forEach(b.buildConfigs, function(a, c) {
+function l(a) {
+var b = j(a);
+if (b) return !1;
+var c = e.getLabelSelector();
+return !!c.isEmpty() || c.matches(a);
+}
+function m() {
+b.latestByConfig = h.latestBuildByConfig(b.builds, i), b.buildsNoConfig = _.pick(b.builds, l), angular.forEach(b.buildConfigs, function(a, c) {
 b.latestByConfig[c] = b.latestByConfig[c] || null;
 });
 }
-function m() {
+function n() {
 var a = _.omit(b.latestByConfig, _.isNull);
 !e.getLabelSelector().isEmpty() && _.isEmpty(b.buildConfigs) && _.isEmpty(a) ? b.alerts.builds = {
 type:"warning",
@@ -4939,14 +4945,14 @@ details:"The active filters are hiding all builds."
 } :delete b.alerts.builds;
 }
 b.project = a;
-var n = d("isJenkinsPipelineStrategy");
+var o = d("isJenkinsPipelineStrategy");
 k.push(c.watch("builds", g, function(a) {
-b.builds = _.omit(a.by("metadata.name"), n), b.emptyMessage = "No builds to show", l(), e.addLabelSuggestionsFromResources(b.builds, b.labelSuggestions), f.log("builds (subscribe)", b.builds);
+b.builds = _.omit(a.by("metadata.name"), o), b.emptyMessage = "No builds to show", m(), e.addLabelSuggestionsFromResources(b.builds, b.labelSuggestions), f.log("builds (subscribe)", b.builds);
 })), k.push(c.watch("buildconfigs", g, function(a) {
-b.unfilteredBuildConfigs = _.omit(a.by("metadata.name"), n), e.addLabelSuggestionsFromResources(b.unfilteredBuildConfigs, b.labelSuggestions), e.setLabelSuggestions(b.labelSuggestions), b.buildConfigs = e.getLabelSelector().select(b.unfilteredBuildConfigs), l(), m(), f.log("buildconfigs (subscribe)", b.buildConfigs);
+b.unfilteredBuildConfigs = _.omit(a.by("metadata.name"), o), e.addLabelSuggestionsFromResources(b.unfilteredBuildConfigs, b.labelSuggestions), e.setLabelSuggestions(b.labelSuggestions), b.buildConfigs = e.getLabelSelector().select(b.unfilteredBuildConfigs), m(), n(), f.log("buildconfigs (subscribe)", b.buildConfigs);
 })), e.onActiveFiltersChanged(function(a) {
 b.$apply(function() {
-b.buildConfigs = a.select(b.unfilteredBuildConfigs), l(), m();
+b.buildConfigs = a.select(b.unfilteredBuildConfigs), m(), n();
 });
 }), b.$on("$destroy", function() {
 c.unwatchAll(k);
