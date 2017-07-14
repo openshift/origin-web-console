@@ -4107,11 +4107,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<th ng-class=\"{'hidden-sm' : (latestByConfig | hashSize)}\">Source</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
-    "<tbody ng-if=\"!(latestByConfig | hashSize)\">\n" +
+    "<tbody ng-if=\"!(latestByConfig | hashSize) && !(buildsNoConfig | hashSize)\">\n" +
     "<tr><td colspan=\"7\"><em>{{emptyMessage}}</em></td></tr>\n" +
     "</tbody>\n" +
-    "<tbody ng-if=\"(latestByConfig | hashSize)\">\n" +
-    "<tr ng-repeat=\"(buildConfigName, latestBuild) in latestByConfig\">\n" +
+    "<tbody ng-if=\"(latestByConfig | hashSize) || (buildsNoConfig | hashSize)\">\n" +
+    "<tr ng-repeat=\"(buildConfigName, latestBuild) in latestByConfig\" ng-if=\"buildConfigName !== ''\">\n" +
     "\n" +
     "<td ng-if-start=\"!latestBuild\" data-title=\"Name\">\n" +
     "<a href=\"{{buildConfigs[buildConfigName] | navigateResourceURL}}\">{{buildConfigName}}</a>\n" +
@@ -4141,7 +4141,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td ng-if-start=\"latestBuild && (buildConfigs[buildConfigName] || !unfilteredBuildConfigs[buildConfigName])\" data-title=\"Name\">\n" +
     "<a ng-if=\"buildConfigName\" href=\"{{latestBuild | configURLForResource}}\">{{buildConfigName}}</a>\n" +
     "<span ng-if=\"buildConfigs && buildConfigName && !buildConfigs[buildConfigName]\" class=\"pficon pficon-warning-triangle-o\" data-toggle=\"tooltip\" title=\"This build config no longer exists\" style=\"cursor: help\"></span>\n" +
-    "<span ng-if=\"buildConfigName == ''\"><em>none</em></span>\n" +
     "</td>\n" +
     "<td data-title=\"Last Build\">\n" +
     "\n" +
@@ -4149,9 +4148,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{latestBuild | navigateResourceURL}}\">#{{latestBuild | annotation : 'buildNumber'}}</a>\n" +
     "</span>\n" +
     "<span ng-if=\"!(latestBuild | annotation : 'buildNumber') && buildConfigName\">\n" +
-    "<a ng-href=\"{{latestBuild | navigateResourceURL}}\">{{latestBuild.metadata.name}}</a>\n" +
-    "</span>\n" +
-    "<span ng-if=\"buildConfigName == ''\">\n" +
     "<a ng-href=\"{{latestBuild | navigateResourceURL}}\">{{latestBuild.metadata.name}}</a>\n" +
     "</span>\n" +
     "</td>\n" +
@@ -4172,6 +4168,47 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Type\">{{latestBuild.spec.strategy.type | startCase}}</td>\n" +
     "<td ng-if-end data-title=\"Source\" class=\"hidden-sm\">\n" +
+    "<span ng-if=\"latestBuild.spec.source\">\n" +
+    "<span ng-switch=\"latestBuild.spec.source.type\">\n" +
+    "<span ng-switch-when=\"None\">\n" +
+    "<i>none</i>\n" +
+    "</span>\n" +
+    "<span ng-switch-when=\"Git\">\n" +
+    "<osc-git-link uri=\"latestBuild.spec.source.git.uri\" ref=\"latestBuild.spec.source.git.ref\" context-dir=\"latestBuild.spec.source.contextDir\">{{latestBuild.spec.source.git.uri}}</osc-git-link>\n" +
+    "</span>\n" +
+    "<span ng-switch-default>\n" +
+    "{{latestBuild.spec.source.type}}\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "\n" +
+    "<tr ng-repeat=\"latestBuild in buildsNoConfig track by (latestBuild | uid)\">\n" +
+    "<td data-title=\"Name\">\n" +
+    "<em>none</em>\n" +
+    "</td>\n" +
+    "<td data-title=\"Last Build\">\n" +
+    "\n" +
+    "<a ng-href=\"{{latestBuild | navigateResourceURL}}\">{{latestBuild.metadata.name}}</a>\n" +
+    "</td>\n" +
+    "<td data-title=\"Status\">\n" +
+    "<div row class=\"status\">\n" +
+    "\n" +
+    "<status-icon status=\"latestBuild.status.phase\" disable-animation></status-icon>\n" +
+    "<span ng-if=\"!latestBuild.status.reason || latestBuild.status.phase === 'Cancelled'\">{{latestBuild.status.phase}}</span>\n" +
+    "<span ng-if=\"latestBuild.status.reason && latestBuild.status.phase !== 'Cancelled'\">{{latestBuild.status.reason | sentenceCase}}</span>\n" +
+    "</div>\n" +
+    "</td>\n" +
+    "<td data-title=\"Duration\">\n" +
+    "<duration-until-now ng-if=\"latestBuild.status.startTimestamp && !latestBuild.status.completionTimestamp\" timestamp=\"latestBuild.status.startTimestamp\" time-only></duration-until-now>\n" +
+    "<span ng-if=\"latestBuild.status.startTimestamp && latestBuild.status.completionTimestamp\">{{latestBuild.status.startTimestamp | duration : latestBuild.status.completionTimestamp}}</span>\n" +
+    "</td>\n" +
+    "<td data-title=\"Created\">\n" +
+    "<span am-time-ago=\"latestBuild.metadata.creationTimestamp\"></span>\n" +
+    "</td>\n" +
+    "<td data-title=\"Type\">{{latestBuild.spec.strategy.type | startCase}}</td>\n" +
+    "<td data-title=\"Source\" class=\"hidden-sm\">\n" +
     "<span ng-if=\"latestBuild.spec.source\">\n" +
     "<span ng-switch=\"latestBuild.spec.source.type\">\n" +
     "<span ng-switch-when=\"None\">\n" +
