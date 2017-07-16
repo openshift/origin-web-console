@@ -44,7 +44,10 @@
           ng-pattern="validation.key"
           ng-value
           ng-required="!allowEmptyKeys && entry.value"
-          ng-attr-key-value-editor-focus="{{grabFocus && $last}}">
+          ng-attr-key-value-editor-focus="{{grabFocus && $last}}"
+          autocorrect="off"
+          autocapitalize="none"
+          spellcheck="false">
 
         <!-- name/key help block -->
         <span
@@ -93,7 +96,10 @@
             ng-model="entry.value"
             ng-readonly="isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonly"
             ng-pattern="validation.val"
-            ng-required="!allowEmptyKeys && entry.value">
+            ng-required="!allowEmptyKeys && entry.value"
+            autocorrect="off"
+            autocapitalize="none"
+            spellcheck="false">
         </div>
 
         <div ng-if="entry.valueFrom">
