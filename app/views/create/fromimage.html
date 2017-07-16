@@ -50,7 +50,7 @@
                                       ng-blur="shouldValidateName = form.appname.$dirty"
                                       class="form-control"
                                       autocorrect="off"
-                                      autocapitalize="off"
+                                      autocapitalize="none"
                                       spellcheck="false">
                               </div>
                               <div class="help-block">Identifies the resources created for this application.</div>
@@ -90,7 +90,7 @@
                                     aria-describedby="from_source_help"
                                     ng-model="buildConfig.sourceUrl"
                                     autocorrect="off"
-                                    autocapitalize="off"
+                                    autocapitalize="none"
                                     spellcheck="false">
                                 </div>
                                 <div ng-if="!(sourceURIinParams) && image.metadata.annotations.sampleRepo" class="help-block">
@@ -120,7 +120,7 @@
                                     type="text"
                                     placeholder="master"
                                     autocorrect="off"
-                                    autocapitalize="off"
+                                    autocapitalize="none"
                                     spellcheck="false"
                                     class="form-control">
                                 </div>
@@ -139,7 +139,7 @@
                                 type="text"
                                 placeholder="/"
                                 autocorrect="off"
-                                autocapitalize="off"
+                                autocapitalize="none"
                                 spellcheck="false"
                                 class="form-control">
                             </div>
