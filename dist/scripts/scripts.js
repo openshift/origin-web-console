@@ -10464,6 +10464,7 @@ keyHelp: "=?",
 valueHelp: "=",
 action: "&?",
 actionIcon: "=?",
+actionTitle: "@",
 showAction: "=?"
 },
 templateUrl: "views/directives/action-chip.html"
