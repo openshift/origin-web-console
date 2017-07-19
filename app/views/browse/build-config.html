@@ -175,8 +175,12 @@
                       <build-trends-chart builds="builds"></build-trends-chart>
                     </div>
                     <div ng-if="loaded && (unfilteredBuilds | hashSize) > 0" class="mar-bottom-xl">
-                      <div class="table-filter-wrapper">
-                        <project-filter></project-filter>
+                      <div class="table-filter-extension">
+                        <div class="data-toolbar">
+                          <div class="data-toolbar-filter">
+                            <project-filter></project-filter>
+                          </div>
+                        </div>
                       </div>
                       <table ng-if="!(buildConfig | isJenkinsPipelineStrategy)" class="table table-bordered table-hover table-mobile">
                         <thead>
