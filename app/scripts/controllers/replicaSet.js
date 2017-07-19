@@ -310,17 +310,17 @@ angular.module('openshiftConsole')
           }
 
           DataService.get({
-            group: 'extensions',
+            group: 'apps',
             resource: 'deployments'
           }, deploymentRef.name, context).then(function(deployment) {
             $scope.deployment = deployment;
             $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
                                                             "Deployment",
                                                             deployment.metadata.name,
-                                                            "extensions");
+                                                            "apps");
 
             watches.push(DataService.watchObject({
-              group: 'extensions',
+              group: 'apps',
               resource: 'deployments'
             }, deployment.metadata.name, context, function(deployment, action) {
               if (action === "DELETED") {

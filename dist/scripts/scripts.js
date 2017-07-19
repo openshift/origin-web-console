@@ -418,7 +418,7 @@ resource:"replicasets"
 }, d, function(a) {
 z.replicaSets = a.by("metadata.name"), Ha(), Ja(z.vanillaReplicaSets), Ja(z.monopods), pa(z.vanillaReplicaSets), za(z.vanillaReplicaSets), $a(), ia(), p.log("replicasets (subscribe)", z.replicaSets);
 })), ab.push(i.watch({
-group:"extensions",
+group:"apps",
 resource:"deployments"
 }, d, function(a) {
 D = a.by("metadata.uid"), z.deployments = _.sortBy(D, "metadata.name"), Ha(), Ja(z.deployments), Ja(z.vanillaReplicaSets), za(z.deployments), $a(), ia(), p.log("deployments (subscribe)", z.deploymentsByUID);
@@ -5352,7 +5352,7 @@ j = b.by("metadata.name"), m(), g.log("replicasets (subscribe)", a.replicaSets);
 })), n.push(d.watch("deploymentconfigs", h, function(b) {
 a.unfilteredDeploymentConfigs = b.by("metadata.name"), f.addLabelSuggestionsFromResources(a.unfilteredDeploymentConfigs, a.labelSuggestions), f.setLabelSuggestions(a.labelSuggestions), a.deploymentConfigs = f.getLabelSelector().select(a.unfilteredDeploymentConfigs), a.emptyMessage = "No deployment configurations to show", a.replicationControllersByDC = e.associateDeploymentsToDeploymentConfig(a.replicationControllers, a.deploymentConfigs, !0), a.replicationControllersByDC[""] && (a.unfilteredReplicationControllers = a.replicationControllersByDC[""], a.replicationControllersByDC[""] = f.getLabelSelector().select(a.replicationControllersByDC[""])), i(), g.log("deploymentconfigs (subscribe)", a.deploymentConfigs);
 })), n.push(d.watch({
-group:"extensions",
+group:"apps",
 resource:"deployments"
 }, h, function(b) {
 k = a.unfilteredDeployments = b.by("metadata.uid"), f.addLabelSuggestionsFromResources(a.unfilteredDeployments, a.labelSuggestions), f.setLabelSuggestions(a.labelSuggestions), a.deployments = f.getLabelSelector().select(a.unfilteredDeployments), m(), g.log("deployments (subscribe)", a.unfilteredDeployments);
@@ -5373,7 +5373,7 @@ title:"Deployments",
 link:"project/" + c.project + "/browse/deployments"
 }, {
 title:c.deployment
-} ], a.healthCheckURL = j.healthCheckURL(c.project, "Deployment", c.deployment, "extensions");
+} ], a.healthCheckURL = j.healthCheckURL(c.project, "Deployment", c.deployment, "apps");
 var p = !1, q = function(b, c) {
 if (!p) {
 if (!a.forms.deploymentEnvVars || a.forms.deploymentEnvVars.$pristine) return void (a.updatedDeployment = f.copyAndNormalize(b));
@@ -5404,14 +5404,14 @@ a.hpaWarnings = b;
 });
 };
 d.get({
-group:"extensions",
+group:"apps",
 resource:"deployments"
 }, c.deployment, m, {
 errorNotification:!1
 }).then(function(g) {
 a.loaded = !0, a.deployment = g, x(), a.saveEnvVars = function() {
 f.compact(a.updatedDeployment), v = d.update({
-group:"extensions",
+group:"apps",
 resource:"deployments"
 }, c.deployment, a.updatedDeployment, m), v.then(function() {
 a.alerts.saveEnvSuccess = {
@@ -5430,7 +5430,7 @@ v = null;
 }, a.clearEnvVarUpdates = function() {
 a.updatedDeployment = f.copyAndNormalize(a.deployment), a.forms.deploymentEnvVars.$setPristine(), p = !1;
 }, u.push(d.watchObject({
-group:"extensions",
+group:"apps",
 resource:"deployments"
 }, c.deployment, m, function(b, c) {
 "DELETED" === c && (a.alerts.deleted = {
@@ -5824,11 +5824,11 @@ var b = o.getControllerReferences(a.replicaSet), d = _.find(b, {
 kind:"Deployment"
 });
 d && f.get({
-group:"extensions",
+group:"apps",
 resource:"deployments"
 }, d.name, l).then(function(b) {
-a.deployment = b, a.healthCheckURL = n.healthCheckURL(c.project, "Deployment", b.metadata.name, "extensions"), z.push(f.watchObject({
-group:"extensions",
+a.deployment = b, a.healthCheckURL = n.healthCheckURL(c.project, "Deployment", b.metadata.name, "apps"), z.push(f.watchObject({
+group:"apps",
 resource:"deployments"
 }, b.metadata.name, l, function(b, d) {
 return "DELETED" === d ? (a.alerts["deployment-deleted"] = {
@@ -12332,7 +12332,7 @@ g = _.toArray(a.by("metadata.name")), p();
 }), c.list("replicationcontrollers", a).then(function(a) {
 i = _.reject(a.by("metadata.name"), b("hasDeploymentConfig")), p();
 }), c.list({
-group:"extensions",
+group:"apps",
 resource:"deployments"
 }, a).then(function(a) {
 h = _.toArray(a.by("metadata.name")), p();
@@ -14474,7 +14474,7 @@ return a(d) ? "read-only" :_.get(d, "persistentVolumeClaim.readOnly") ? "read-on
 return function(b) {
 if (!b) return !1;
 var c = a.objectToResourceGroupVersion(b);
-return "deploymentconfigs" === c.resource && !c.group || "deployments" === c.resource && "extensions" === c.group;
+return "deploymentconfigs" === c.resource && !c.group || "deployments" === c.resource && ("apps" === c.group || "extensions" === c.group);
 };
 } ]).filter("hasAlternateBackends", function() {
 return function(a) {
@@ -14518,11 +14518,7 @@ verbs:[ "create", "update" ]
 }, {
 group:"apps",
 resource:"deployments",
-verbs:[ "update" ]
-}, {
-group:"extensions",
-resource:"deployments",
-verbs:[ "create", "update" ]
+verbs:[ "update", "delete" ]
 } ],
 deploymentConfigs:[ {
 group:"autoscaling",

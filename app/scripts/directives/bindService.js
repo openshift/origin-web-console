@@ -105,7 +105,7 @@
         sortApplications();
       });
       DataService.list({
-        group: 'extensions',
+        group: 'apps',
         resource: 'deployments'
       }, context).then(function(deploymentData) {
         deployments = _.toArray(deploymentData.by('metadata.name'));
