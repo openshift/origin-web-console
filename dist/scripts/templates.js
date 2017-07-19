@@ -5986,7 +5986,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/build-status.html',
     "<status-icon status=\"build.status.phase\" disable-animation></status-icon>\n" +
-    "<span ng-if=\"!build.status.reason || build.status.phase === 'Cancelled'\">{{build.status.phase}}</span><span ng-if=\"build.status.reason && build.status.phase !== 'Cancelled'\">{{build.status.reason | sentenceCase}}</span><span ng-switch=\"build.status.phase\" class=\"hide-ng-leave\" ng-if=\"build.status.startTimestamp\"><span ng-switch-when=\"Complete\">, ran for {{build.status.startTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span><span ng-switch-when=\"Failed\">, ran for {{build.status.startTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span><span ng-switch-when=\"Cancelled\"> after {{build.status.startTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}</span><span ng-switch-when=\"Running\"> for <time-only-duration-until-now timestamp=\"build.status.startTimestamp\" time-only></time-only-duration-until-now></span><span ng-switch-when=\"New\"></span><span ng-switch-when=\"Pending\"></span><span ng-switch-default>, ran for {{build.status.startTimestamp | duration : build.status.completionTimestamp}}</span>\n" +
+    "<span ng-if=\"!build.status.reason || build.status.phase === 'Cancelled'\">{{build.status.phase}}</span>\n" +
+    "<span ng-if=\"build.status.reason && build.status.phase !== 'Cancelled'\">{{build.status.reason | sentenceCase}}</span>\n" +
+    "<span ng-if=\"build.status.startTimestamp\" class=\"small text-muted\">\n" +
+    "&ndash;\n" +
+    "<span ng-if=\"build.status.completionTimestamp\">\n" +
+    "{{build.status.startTimestamp | timeOnlyDurationFromTimestamps : build.status.completionTimestamp}}\n" +
+    "</span>\n" +
+    "<span ng-if=\"!build.status.completionTimestamp\">\n" +
+    "<time-only-duration-until-now timestamp=\"build.status.startTimestamp\" time-only></time-only-duration-until-now>\n" +
+    "</span>\n" +
     "</span>"
   );
 
@@ -10921,6 +10930,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-group-item-text\">\n" +
     "<status-icon status=\"pod | podStatus\" disable-animation></status-icon>\n" +
     "{{pod | podStatus | sentenceCase}}\n" +
+    "<small ng-if=\"(pod | podStatus) === 'Running'\" class=\"text-muted\">\n" +
+    "&ndash; {{pod | numContainersReady}}/{{pod.spec.containers.length}} ready\n" +
+    "</small>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"list-view-pf-additional-info\">\n" +
@@ -10984,8 +10996,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<small>created <span am-time-ago=\"replicationController.metadata.creationTimestamp\"></span></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
-    "<status-icon status=\"replicationController | deploymentStatus\" disable-animation></status-icon>\n" +
-    "{{replicationController | deploymentStatus | sentenceCase}}<span ng-if=\"(replicationController | deploymentStatus) === 'Active'\">, {{replicationController.status.replicas}} replica<span ng-if=\"replicationController.status.replicas !== 1\">s</span></span>\n" +
+    "<a href=\"\" ng-click=\"viewPodsForSet(replicationController)\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(podsByOwnerUID[replicationController.metadata.uid] | size) }\">\n" +
+    "<pod-donut pods=\"podsByOwnerUID[replicationController.metadata.uid]\" mini=\"true\"></pod-donut>\n" +
+    "</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"list-view-pf-additional-info\">\n" +
@@ -11025,7 +11038,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<small>created <span am-time-ago=\"replicaSet.metadata.creationTimestamp\"></span></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
-    "{{replicaSet.status.replicas}} replica<span ng-if=\"replicaSet.status.replicas !== 1\">s</span>\n" +
+    "<a href=\"\" ng-click=\"viewPodsForSet(replicaSet)\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(podsByOwnerUID[replicaSet.metadata.uid] | size) }\">\n" +
+    "<pod-donut pods=\"podsByOwnerUID[replicaSet.metadata.uid]\" mini=\"true\"></pod-donut>\n" +
+    "</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"list-view-pf-additional-info\">\n" +
@@ -11081,9 +11096,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<small>created <span am-time-ago=\"set.metadata.creationTimestamp\"></span></small>\n" +
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
-    "<status-icon status=\"set | deploymentStatus\" disable-animation></status-icon>\n" +
-    "{{set | deploymentStatus | sentenceCase}},\n" +
-    "<span ng-if=\"(podsByOwnerUID[set.metadata.uid] | hashSize) !== set.spec.replicas\">{{podsByOwnerUID[set.metadata.uid] | hashSize}}/</span>{{set.spec.replicas}} replica<span ng-if=\"set.spec.replicas != 1\">s</span>\n" +
+    "<a href=\"\" ng-click=\"viewPodsForSet(set)\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(podsByOwnerUID[set.metadata.uid] | size) }\">\n" +
+    "<pod-donut pods=\"podsByOwnerUID[set.metadata.uid]\" mini=\"true\"></pod-donut>\n" +
+    "</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"list-view-pf-additional-info\">\n" +

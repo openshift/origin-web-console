@@ -96,6 +96,10 @@
                             <div class="list-group-item-text">
                               <status-icon status="pod | podStatus" disable-animation></status-icon>
                               {{pod | podStatus | sentenceCase}}
+                              <small ng-if="(pod | podStatus) === 'Running'" class="text-muted">
+                                &ndash;
+                                {{pod | numContainersReady}}/{{pod.spec.containers.length}} ready
+                              </small>
                             </div>
                           </div>
                           <div class="list-view-pf-additional-info">
@@ -177,8 +181,12 @@
                               <small>created <span am-time-ago="replicationController.metadata.creationTimestamp"></span></small>
                             </div>
                             <div class="list-group-item-text">
-                              <status-icon status="replicationController | deploymentStatus" disable-animation></status-icon>
-                              {{replicationController | deploymentStatus | sentenceCase}}<span ng-if="(replicationController | deploymentStatus) === 'Active'">, {{replicationController.status.replicas}} replica<span ng-if="replicationController.status.replicas !== 1">s</span></span>
+                              <a href=""
+                                 ng-click="viewPodsForSet(replicationController)"
+                                 class="mini-donut-link"
+                                 ng-class="{ 'disabled-link': !(podsByOwnerUID[replicationController.metadata.uid] | size) }">
+                                <pod-donut pods="podsByOwnerUID[replicationController.metadata.uid]" mini="true"></pod-donut>
+                              </a>
                             </div>
                           </div>
                           <div class="list-view-pf-additional-info">
@@ -235,7 +243,12 @@
                               <small>created <span am-time-ago="replicaSet.metadata.creationTimestamp"></span></small>
                             </div>
                             <div class="list-group-item-text">
-                              {{replicaSet.status.replicas}} replica<span ng-if="replicaSet.status.replicas !== 1">s</span>
+                              <a href=""
+                                 ng-click="viewPodsForSet(replicaSet)"
+                                 class="mini-donut-link"
+                                 ng-class="{ 'disabled-link': !(podsByOwnerUID[replicaSet.metadata.uid] | size) }">
+                                <pod-donut pods="podsByOwnerUID[replicaSet.metadata.uid]" mini="true"></pod-donut>
+                              </a>
                             </div>
                           </div>
                           <div class="list-view-pf-additional-info">
@@ -301,9 +314,12 @@
                               <small>created <span am-time-ago="set.metadata.creationTimestamp"></span></small>
                             </div>
                             <div class="list-group-item-text">
-                              <status-icon status="set | deploymentStatus" disable-animation></status-icon>
-                              {{set | deploymentStatus | sentenceCase}},
-                              <span ng-if="(podsByOwnerUID[set.metadata.uid] | hashSize) !== set.spec.replicas">{{podsByOwnerUID[set.metadata.uid] | hashSize}}/</span>{{set.spec.replicas}} replica<span ng-if="set.spec.replicas != 1">s</span>
+                              <a href=""
+                                 ng-click="viewPodsForSet(set)"
+                                 class="mini-donut-link"
+                                 ng-class="{ 'disabled-link': !(podsByOwnerUID[set.metadata.uid] | size) }">
+                                <pod-donut pods="podsByOwnerUID[set.metadata.uid]" mini="true"></pod-donut>
+                              </a>
                             </div>
                           </div>
                           <div class="list-view-pf-additional-info">

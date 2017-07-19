@@ -4636,8 +4636,9 @@ case "StatefulSet":
 g = !c.expanded.statefulSets[e.metadata.name], c.expanded.statefulSets[e.metadata.name] = g, h = g ? "event.resource.highlight" :"event.resource.clear-highlight", n.$emit(h, e);
 }
 }
-}, c.viewPodsForReplicaSet = function(a) {
-_.isEmpty(c.podsByOwnerUID[a.metadata.uid]) || k.toPodsForDeployment(a);
+}, c.viewPodsForSet = function(a) {
+var b = _.get(c, [ "podsByOwnerUID", a.metadata.uid ], []);
+_.isEmpty(b) || k.toPodsForDeployment(a, b);
 }, m.get(a.project).then(_.spread(function(a, d) {
 c.project = a, c.projectContext = d, f.watch("pods", d, function(a) {
 c.podsByName = a.by("metadata.name"), c.pods = u(c.podsByName, !0), c.podsByOwnerUID = l.groupByOwnerUID(c.pods), c.podsLoaded = !0, _.each(c.pods, y), C(), i.log("pods", c.pods);
