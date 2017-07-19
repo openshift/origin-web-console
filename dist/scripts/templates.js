@@ -1218,7 +1218,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd ng-if-end>{{build.spec.source.contextDir}}</dd>\n" +
     "<dt ng-if-start=\"build.spec.revision.git.commit\">Source Commit:</dt>\n" +
     "<dd ng-if-end>\n" +
+    "<span class=\"word-break\">\n" +
     "{{build.spec.revision.git.message}}\n" +
+    "</span>\n" +
     "<osc-git-link class=\"hash\" uri=\"build.spec.source.git.uri\" ref=\"build.spec.revision.git.commit\">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>\n" +
     "<span ng-if=\"build.spec.revision.git.author\">\n" +
     "authored by {{build.spec.revision.git.author.name}}\n" +
