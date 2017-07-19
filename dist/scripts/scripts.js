@@ -4994,8 +4994,7 @@ c.buildsLoaded = !0, i = a.by("metadata.name"), p();
 }));
 var q = !1;
 j.push(g.watch("buildconfigs", h, function(a) {
-if (c.buildConfigsLoaded = !0, c.buildConfigs = _.pick(a.by("metadata.name"), m), _.isEmpty(c.buildConfigs) && !q) {
-q = !0;
+if (c.buildConfigsLoaded = !0, c.buildConfigs = _.pick(a.by("metadata.name"), m), _.isEmpty(c.buildConfigs) && !q && (q = !0, d.SAMPLE_PIPELINE_TEMPLATE)) {
 var b = d.SAMPLE_PIPELINE_TEMPLATE.name, f = d.SAMPLE_PIPELINE_TEMPLATE.namespace;
 g.get("templates", b, {
 namespace:f
