@@ -3408,7 +3408,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"ingress in route.status.ingress\" ng-init=\"admittedCondition = (ingress | routeIngressCondition : 'Admitted')\" class=\"route-status\">\n" +
     "<div class=\"h3\">\n" +
     "<span ng-if=\"(route | isWebRoute)\">\n" +
-    "<a ng-href=\"{{route | routeWebURL : ingress.host}}\" target=\"_blank\">{{route | routeLabel : ingress.host : true}}</a>\n" +
+    "<a ng-href=\"{{route | routeWebURL : ingress.host}}\" target=\"_blank\">\n" +
+    "{{route | routeLabel : ingress.host : true}}\n" +
+    "<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "</a>\n" +
     "</span>\n" +
     "<span ng-if=\"!(route | isWebRoute)\">\n" +
     "{{route | routeLabel : ingress.host}}\n" +
@@ -3610,7 +3613,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tr>\n" +
     "<th>{{customNameHeader || 'Name'}}</th>\n" +
     "<th>Hostname</th>\n" +
-    "<th>Routes To</th>\n" +
+    "\n" +
+    "<th>Service</th>\n" +
     "<th>Target Port</th>\n" +
     "<th>TLS Termination</th>\n" +
     "</tr>\n" +
@@ -3627,7 +3631,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Hostname\">\n" +
     "<span ng-if=\"(route | isWebRoute)\">\n" +
-    "<a href=\"{{route | routeWebURL}}\" target=\"_blank\">{{route | routeLabel}}</a>\n" +
+    "<a href=\"{{route | routeWebURL}}\" target=\"_blank\">\n" +
+    "{{route | routeLabel}}\n" +
+    "<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "</a>\n" +
     "</span>\n" +
     "<span ng-if=\"!(route | isWebRoute)\">\n" +
     "{{route | routeLabel}}\n" +
@@ -3637,7 +3644,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"sr-only\">Pending</span>\n" +
     "</span>\n" +
     "</td>\n" +
-    "<td data-title=\"Routes To\">\n" +
+    "\n" +
+    "<td data-title=\"Service\">\n" +
     "<span ng-if=\"route.spec.to.kind !== 'Service'\">{{route.spec.to.kind}}: {{route.spec.to.name}}</span>\n" +
     "<span ng-if=\"route.spec.to.kind === 'Service'\"><a ng-href=\"{{route.spec.to.name | navigateResourceURL : 'Service': route.metadata.namespace}}\">{{route.spec.to.name}}</a></span>\n" +
     "</td>\n" +
@@ -8932,7 +8940,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Hostname\">\n" +
     "<span ng-if=\"(routes[routeName] | isWebRoute)\" class=\"word-break\">\n" +
-    "<a href=\"{{routes[routeName] | routeWebURL}}\" target=\"_blank\">{{routes[routeName] | routeLabel}}</a>\n" +
+    "<a href=\"{{routes[routeName] | routeWebURL}}\" target=\"_blank\">\n" +
+    "{{routes[routeName] | routeLabel}}\n" +
+    "<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "</a>\n" +
     "</span>\n" +
     "<span ng-if=\"!(routes[routeName] | isWebRoute)\" class=\"word-break\">\n" +
     "{{routes[routeName] | routeLabel}}\n" +
@@ -11459,8 +11470,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"route = overview.bestRouteByApp[app]\" class=\"pull-right\">\n" +
     "<h3 class=\"overview-route\">\n" +
     "<span ng-if=\"route | isWebRoute\">\n" +
-    "<a ng-href=\"{{route | routeWebURL}}\" target=\"_blank\">{{route | routeLabel}}</a>\n" +
-    "<i class=\"fa fa-external-link small\" aria-hidden=\"true\"></i>\n" +
+    "<a ng-href=\"{{route | routeWebURL}}\" target=\"_blank\">\n" +
+    "{{route | routeLabel}}\n" +
+    "<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "</a>\n" +
     "</span>\n" +
     "<span ng-if=\"!(route | isWebRoute)\">{{route | routeLabel}}</span>\n" +
     "</h3>\n" +
@@ -12155,8 +12168,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"route in networking.routesByService[service.metadata.name] | limitTo : 2 track by (route | uid)\" class=\"overview-routes\">\n" +
     "<h3>\n" +
     "<span ng-if=\"route | isWebRoute\">\n" +
-    "<a ng-href=\"{{route | routeWebURL}}\" target=\"_blank\">{{route | routeLabel}}</a>\n" +
-    "<i class=\"fa fa-external-link small\" aria-hidden=\"true\"></i>\n" +
+    "<a ng-href=\"{{route | routeWebURL}}\" target=\"_blank\">\n" +
+    "{{route | routeLabel}}\n" +
+    "<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "</a>\n" +
     "</span>\n" +
     "<span ng-if=\"!(route | isWebRoute)\">{{route | routeLabel}}</span>\n" +
     "<route-warnings route=\"route\" services=\"networking.allServices\"></route-warnings>\n" +

@@ -64,7 +64,10 @@
                 <div ng-repeat="ingress in route.status.ingress" ng-init="admittedCondition = (ingress | routeIngressCondition : 'Admitted')" class="route-status">
                   <div class="h3">
                     <span ng-if="(route | isWebRoute)">
-                      <a ng-href="{{route | routeWebURL : ingress.host}}" target="_blank">{{route | routeLabel : ingress.host : true}}</a>
+                      <a ng-href="{{route | routeWebURL : ingress.host}}" target="_blank">
+                        {{route | routeLabel : ingress.host : true}}
+                        <i class="fa fa-external-link" aria-hidden="true"></i>
+                      </a>
                     </span>
                     <span ng-if="!(route | isWebRoute)">
                       {{route | routeLabel : ingress.host}}

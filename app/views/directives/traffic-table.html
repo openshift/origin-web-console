@@ -38,7 +38,10 @@
       </td>
       <td data-title="Hostname">
         <span ng-if="(routes[routeName] | isWebRoute)" class="word-break">
-          <a href="{{routes[routeName] | routeWebURL}}" target="_blank">{{routes[routeName] | routeLabel}}</a>
+          <a href="{{routes[routeName] | routeWebURL}}" target="_blank">
+            {{routes[routeName] | routeLabel}}
+            <i class="fa fa-external-link" aria-hidden="true"></i>
+          </a>
         </span>
         <span ng-if="!(routes[routeName] | isWebRoute)" class="word-break">
           {{routes[routeName] | routeLabel}}
