@@ -5254,7 +5254,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tr>\n" +
     "<th>Name</th>\n" +
     "<th>Last Version</th>\n" +
-    "<th>Status</th>\n" +
+    "<th>Pods</th>\n" +
     "<th>Created</th>\n" +
     "<th>Trigger</th>\n" +
     "</tr>\n" +
@@ -5278,7 +5278,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td class=\"hidden-xs\">&nbsp;</td>\n" +
     "</tr>\n" +
     "\n" +
-    "<tr ng-repeat=\"replicationController in replicationControllersForDC | orderObjectsByDate : true | limitTo : 1\" ng-if=\"dcName\">\n" +
+    "<tr ng-repeat=\"replicationController in replicationControllersForDC | orderObjectsByDate : true | limitTo : 1 track by (replicationController | uid)\" ng-if=\"dcName\">\n" +
     "<td data-title=\"Name\">\n" +
     "<a ng-href=\"{{replicationController | configURLForResource}}\">{{dcName}}</a>\n" +
     "\n" +
@@ -5293,13 +5293,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{replicationController | navigateResourceURL}}\">{{replicationController.metadata.name}}</a>\n" +
     "</span>\n" +
     "</td>\n" +
-    "<td data-title=\"Status\">\n" +
+    "<td data-title=\"Pods\">\n" +
     "<div row class=\"status\">\n" +
-    "<status-icon status=\"replicationController | deploymentStatus\" disable-animation></status-icon>\n" +
-    "<span flex>\n" +
-    "{{replicationController | deploymentStatus}}<span ng-if=\"(replicationController | deploymentStatus) == 'Active' || (replicationController | deploymentStatus) == 'Running'\">,\n" +
-    "<span ng-if=\"replicationController.spec.replicas !== replicationController.status.replicas\">{{replicationController.status.replicas}}/</span>{{replicationController.spec.replicas}} replica<span ng-if=\"replicationController.spec.replicas != 1\">s</span></span>\n" +
-    "</span>\n" +
+    "<a href=\"\" ng-click=\"viewPodsForSet(replicationController)\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(podsByOwnerUID[replicationController.metadata.uid] | size) }\">\n" +
+    "<pod-donut pods=\"podsByOwnerUID[replicationController.metadata.uid]\" mini=\"true\"></pod-donut>\n" +
+    "</a>\n" +
     "</div>\n" +
     "\n" +
     "</td>\n" +
@@ -5330,9 +5328,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h3>Deployments</h3>\n" +
     "<table class=\"table table-bordered table-hover table-mobile table-layout-fixed\">\n" +
     "<colgroup>\n" +
-    "<col class=\"col-sm-4\">\n" +
+    "<col class=\"col-sm-3\">\n" +
     "<col class=\"col-sm-2\">\n" +
-    "<col class=\"col-sm-2\">\n" +
+    "<col class=\"col-sm-3\">\n" +
     "<col class=\"col-sm-2\">\n" +
     "<col class=\"col-sm-2\">\n" +
     "</colgroup>\n" +
@@ -5340,13 +5338,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tr>\n" +
     "<th>Name</th>\n" +
     "<th>Last Version</th>\n" +
-    "<th>Replicas</th>\n" +
+    "<th>Pods</th>\n" +
     "<th>Created</th>\n" +
     "<th>Strategy</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
     "<tbody>\n" +
-    "<tr ng-repeat=\"deployment in deployments | orderObjectsByDate : true\">\n" +
+    "<tr ng-repeat=\"deployment in deployments | orderObjectsByDate : true track by (deployment | uid)\">\n" +
     "<td data-title=\"Name\">\n" +
     "<a ng-href=\"{{deployment | navigateResourceURL}}\">{{deployment.metadata.name}}</a>\n" +
     "</td>\n" +
@@ -5358,8 +5356,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{deployment | lastDeploymentRevision}}\n" +
     "</span>\n" +
     "</td>\n" +
-    "<td data-title=\"Replicas\">\n" +
-    "<span ng-if=\"!(deployment.status.replicas | isNil) && deployment.status.replicas !== deployment.spec.replicas\">{{deployment.status.replicas}}/</span>{{deployment.spec.replicas}} replica<span ng-if=\"deployment.spec.replicas != 1\">s</span>\n" +
+    "<td data-title=\"Pods\">\n" +
+    "<span ng-if=\"latest = latestReplicaSetByDeploymentUID[deployment.metadata.uid]\">\n" +
+    "<a href=\"\" ng-click=\"viewPodsForSet(latest)\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(podsByOwnerUID[latest.metadata.uid] | size) }\">\n" +
+    "<pod-donut pods=\"podsByOwnerUID[latest.metadata.uid]\" mini=\"true\"></pod-donut>\n" +
+    "</a>\n" +
+    "</span>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
     "<span am-time-ago=\"deployment.metadata.creationTimestamp\"></span>\n" +
@@ -5371,7 +5373,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tbody>\n" +
     "</table>\n" +
     "</div>\n" +
-    "<div ng-if=\"replicaSets | hashSize\" id=\"replica-sets\">\n" +
+    "<div ng-if=\"replicaSets | size\" id=\"replica-sets\">\n" +
     "<h3>Replica Sets</h3>\n" +
     "<table class=\"table table-bordered table-hover table-mobile table-layout-fixed\">\n" +
     "<colgroup>\n" +
@@ -5380,17 +5382,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
-    "<th>Replicas</th>\n" +
+    "<th>Pods</th>\n" +
     "<th>Created</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
     "<tbody>\n" +
-    "<tr ng-repeat=\"replicaSet in replicaSets | orderObjectsByDate : true\">\n" +
+    "<tr ng-repeat=\"replicaSet in replicaSets | orderObjectsByDate : true track by (replicaSet | uid)\">\n" +
     "<td data-title=\"Name\">\n" +
     "<a ng-href=\"{{replicaSet | navigateResourceURL}}\">{{replicaSet.metadata.name}}</a>\n" +
     "</td>\n" +
     "<td data-title=\"Replicas\">\n" +
-    "<span ng-if=\"replicaSet.status.replicas !== replicaSet.spec.replicas\">{{replicaSet.status.replicas}}/</span>{{replicaSet.spec.replicas}} replica<span ng-if=\"replicaSet.spec.replicas != 1\">s</span>\n" +
+    "<a href=\"\" ng-click=\"viewPodsForSet(replicaSet)\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(podsByOwnerUID[replicaSet.metadata.uid] | size) }\">\n" +
+    "<pod-donut pods=\"podsByOwnerUID[replicaSet.metadata.uid]\" mini=\"true\"></pod-donut>\n" +
+    "</a>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
     "<span am-time-ago=\"replicaSet.metadata.creationTimestamp\"></span>\n" +
@@ -5408,22 +5412,24 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
-    "<th>Replicas</th>\n" +
+    "<th>Pods</th>\n" +
     "<th>Created</th>\n" +
     "</tr>\n" +
     "</thead>\n" +
     "<tbody ng-if=\"(replicationControllersByDC[''] | hashSize) === 0\"><tr><td colspan=\"3\"><em>No replication controllers to show</em></td></tr></tbody>\n" +
     "<tbody ng-if=\"(replicationControllersByDC[''] | hashSize) > 0\">\n" +
     "\n" +
-    "<tr ng-repeat=\"deployment in replicationControllersByDC[''] | orderObjectsByDate : true\">\n" +
+    "<tr ng-repeat=\"replicationController in replicationControllersByDC[''] | orderObjectsByDate : true track by (replicationController | uid)\">\n" +
     "<td data-title=\"Name\">\n" +
-    "<a ng-href=\"{{deployment | navigateResourceURL}}\">{{deployment.metadata.name}}</a>\n" +
+    "<a ng-href=\"{{replicationController | navigateResourceURL}}\">{{replicationController.metadata.name}}</a>\n" +
     "</td>\n" +
-    "<td data-title=\"Replicas\">\n" +
-    "<span ng-if=\"deployment.status.replicas !== deployment.spec.replicas\">{{deployment.status.replicas}}/</span>{{deployment.spec.replicas}} replica<span ng-if=\"deployment.spec.replicas != 1\">s</span>\n" +
+    "<td data-title=\"Pods\">\n" +
+    "<a href=\"\" ng-click=\"viewPodsForSet(replicationController)\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(podsByOwnerUID[replicationController.metadata.uid] | size) }\">\n" +
+    "<pod-donut pods=\"podsByOwnerUID[replicationController.metadata.uid]\" mini=\"true\"></pod-donut>\n" +
+    "</a>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
-    "<span am-time-ago=\"deployment.metadata.creationTimestamp\"></span>\n" +
+    "<span am-time-ago=\"replicationController.metadata.creationTimestamp\"></span>\n" +
     "</td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
