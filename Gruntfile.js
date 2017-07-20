@@ -612,7 +612,7 @@ module.exports = function (grunt) {
         // grunt test --browsers=Chrome,Firefox,Safari (be sure karma-<browser_name>-launcher is installed)
         browsers: grunt.option('browsers') ?
                     grunt.option('browsers').split(',') :
-                    ['Firefox']
+                    ['PhantomJS']
       }
     },
 
