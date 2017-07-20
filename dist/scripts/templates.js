@@ -4529,9 +4529,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"help-block\">\n" +
     "Config maps hold key-value pairs that can be used in pods to read application configuration.\n" +
     "</div>\n" +
-    "<form name=\"createConfigMapForm\" class=\"mar-top-xl\">\n" +
+    "<form name=\"createConfigMapForm\" class=\"mar-top-xl osc-form\">\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
     "<edit-config-map model=\"configMap\" show-name-input=\"true\"></edit-config-map>\n" +
+    "<label-editor labels=\"labels\" expand=\"true\" can-toggle=\"false\" help-text=\"Labels for this config map.\">\n" +
+    "</label-editor>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"createConfigMap()\" ng-disabled=\"createConfigMapForm.$invalid || disableInputs\" value=\"\">Create</button>\n" +
     "<a class=\"btn btn-default btn-lg\" href=\"\" ng-click=\"cancel()\" role=\"button\">Cancel</a>\n" +
@@ -6598,8 +6600,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" ng-click=\"addItem()\">Add Item</a>\n" +
     "</span>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</ng-form>"

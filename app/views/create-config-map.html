@@ -18,9 +18,15 @@
                     Config maps hold key-value pairs that can be used in pods to read application
                     configuration.
                   </div>
-                  <form name="createConfigMapForm" class="mar-top-xl">
+                  <form name="createConfigMapForm" class="mar-top-xl osc-form">
                     <fieldset ng-disabled="disableInputs">
                       <edit-config-map model="configMap" show-name-input="true"></edit-config-map>
+                      <label-editor
+                        labels="labels"
+                        expand="true"
+                        can-toggle="false"
+                        help-text="Labels for this config map.">
+                      </label-editor>
                       <div class="button-group gutter-top gutter-bottom">
                         <button type="submit"
                             class="btn btn-primary btn-lg"
