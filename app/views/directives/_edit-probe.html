@@ -68,7 +68,7 @@
           type="number"
           name="initialDelaySeconds"
           ng-model="probe.initialDelaySeconds"
-          ng-pattern="/^\d+$/"
+          pattern="\d*"
           min="0"
           select-on-focus
           ng-attr-id="{{id}}-initial-delay"
@@ -99,7 +99,7 @@
           type="number"
           name="timeoutSeconds"
           ng-model="probe.timeoutSeconds"
-          ng-pattern="/^\d+$/"
+          pattern="\d*"
           min="1"
           placeholder="1"
           select-on-focus

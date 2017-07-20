@@ -327,7 +327,9 @@
                                   </span>
                                 </div>
                               </div>
-                              <div class="form-group" ng-if="!scaling.autoscale">
+                              <div ng-if="!scaling.autoscale"
+                                   class="form-group"
+                                   ng-class="{ 'has-error': form.replicas.$dirty && form.replicas.$invalid }">
                                 <label class="number">Replicas</label>
                                 <input type="number"
                                        class="form-control"
@@ -336,7 +338,8 @@
                                        ng-model="scaling.replicas"
                                        ng-required="!scaling.autoscale"
                                        ng-disabled="scaling.autoscale"
-                                       ng-pattern="/^\d+$/"
+                                       pattern="\d*"
+                                       select-on-focus
                                        aria-describedby="replicas-help">
                                 <div id="replicas-help">
                                   <span class="help-block">The number of instances of your image.</span>

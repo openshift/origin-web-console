@@ -11,14 +11,14 @@
   </a>
 </span>
 <span ng-show="!disableScaling && model.editing">
-  <form name="form.scaling" ng-submit="scale()" class="form-inline">
+  <form name="form.scaling" ng-submit="scale()" class="form-inline" novalidate>
     <span ng-class="{'has-error': form.scaling.$invalid}">
       <input type="number"
              name="desired"
              ng-model="model.desired"
              ng-required="true"
              min="0"
-             ng-pattern="/^\-?\d+$/"
+             pattern="\d*"
              focus-when="{{model.editing}}"
              select-on-focus
              class="input-number">

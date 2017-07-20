@@ -46,7 +46,8 @@
              min="1"
              name="minReplicas"
              ng-model="autoscaling.minReplicas"
-             ng-pattern="/^\d+$/"
+             pattern="\d*"
+             select-on-focus
              aria-describedby="min-replicas-help">
     </span>
     <div id="min-replicas-help" class="help-block">
@@ -74,7 +75,8 @@
              required
              min="{{autoscaling.minReplicas || 1}}"
              ng-model="autoscaling.maxReplicas"
-             ng-pattern="/^\d+$/"
+             pattern="\d*"
+             select-on-focus
              aria-describedby="max-replicas-help">
     </span>
     <div id="max-replicas-help" class="help-block">
@@ -110,7 +112,8 @@
              min="1"
              name="targetCPU"
              ng-model="targetCPUInput.percent"
-             ng-pattern="/^\d+$/"
+             pattern="\d*"
+             select-on-focus
              aria-describedby="target-cpu-help">
       <span class="input-group-addon">%</span>
     </div>
