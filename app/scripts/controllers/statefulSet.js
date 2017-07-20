@@ -8,7 +8,6 @@ angular
                        $routeParams,
                        BreadcrumbsService,
                        DataService,
-                       EnvironmentService,
                        MetricsService,
                        ProjectsService,
                        PodsService) {
@@ -23,16 +22,10 @@ angular
       namespace: $routeParams.project
     });
 
-    var updateEnvVars = function(statefulSet) {
-      // Return a copy so that we don't alter the original object, which is
-      // cached by DataService. Normalizing would otherwise modify the original.
-      return EnvironmentService.copyAndNormalize(statefulSet);
-    };
-
     var watches = [];
     var projectContext;
 
-    var resourceGroupVersion = {
+    var resourceGroupVersion = $scope.resourceGroupVersion = {
       resource: 'statefulsets',
       group: 'apps',
       version: 'v1beta1'
@@ -52,9 +45,9 @@ angular
           .then(function(statefulSet) {
 
             angular.extend($scope, {
-              statefulSet: updateEnvVars(statefulSet),
               project: project,
               projectContext: context,
+              statefulSet: statefulSet,
               loaded: true,
               // TODO: support scaling(?). currently no scale subresource.
               isScalable: function() {
@@ -64,10 +57,7 @@ angular
             });
 
             watches.push(DataService.watchObject(resourceGroupVersion, $scope.statefulSetName, context, function(statefulSet) {
-              angular.extend($scope, {
-                resourceGroupVersion: resourceGroupVersion,
-                statefulSet: updateEnvVars(statefulSet)
-              });
+              $scope.statefulSet = statefulSet;
             }));
 
             watches.push(DataService.watch('pods', context, function(podData) {

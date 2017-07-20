@@ -15,7 +15,6 @@ angular.module('openshiftConsole')
                         BreadcrumbsService,
                         DataService,
                         DeploymentsService,
-                        EnvironmentService,
                         HPAService,
                         ImageStreamResolver,
                         Logger,
@@ -83,88 +82,7 @@ angular.module('openshiftConsole')
       $scope.logCanRun = !(_.includes(['New', 'Pending'], deploymentStatus(replicaSet)));
     };
 
-    var previousEnvConflict = false;
-    var updateEnvironment = function(current, previous) {
-      if (previousEnvConflict) {
-        return;
-      }
-
-      if (!$scope.forms.envForm || $scope.forms.envForm.$pristine) {
-        $scope.updatedReplicaSet = EnvironmentService.copyAndNormalize(current);
-        return;
-      }
-
-      // The env var form has changed and the replica set has been updated. See
-      // if there were any background changes to the environment variables. If
-      // not, merge the environment edits into the updated replica set object.
-      if (EnvironmentService.isEnvironmentEqual(current, previous)) {
-        $scope.updatedReplicaSet = EnvironmentService.mergeEdits($scope.updatedReplicaSet, current);
-        return;
-      }
-
-      previousEnvConflict = true;
-      $scope.alerts["env-conflict"] = {
-        type: "warning",
-        message: "The environment variables for the " +
-          $filter('humanizeKind')($scope.replicaSet.kind) +
-            " have been updated in the background. Saving your changes may create a conflict or cause loss of data.",
-        links: [
-          {
-            label: 'Reload Environment Variables',
-            onClick: function() {
-              $scope.clearEnvVarUpdates();
-              return true;
-            }
-          }
-        ]
-      };
-    };
-
-    var saveEnvPromise;
-    $scope.saveEnvVars = function() {
-      EnvironmentService.compact($scope.updatedReplicaSet);
-      saveEnvPromise = DataService.update($scope.resource,
-                                          $routeParams.replicaSet,
-                                          $scope.updatedReplicaSet,
-                                          $scope.projectContext);
-      saveEnvPromise.then(function success() {
-        $scope.alerts['saveEnvSuccess'] = {
-          type: "success",
-          // TODO:  improve success alert
-          message: $scope.replicaSet.metadata.name + " was updated."
-        };
-        $scope.forms.envForm.$setPristine();
-      }, function failure(e) {
-        $scope.alerts['saveEnvError'] = {
-          type: "error",
-          message: $scope.replicaSet.metadata.name + " was not updated.",
-          details: $filter('getErrorDetails')(e)
-        };
-      });
-    };
-
-    $scope.clearEnvVarUpdates = function() {
-      $scope.updatedReplicaSet = EnvironmentService.copyAndNormalize($scope.replicaSet);
-      $scope.forms.envForm.$setPristine();
-      previousEnvConflict = false;
-    };
-
     var limitWatches = $filter('isIE')() || $filter('isEdge')();
-
-    var orderByDisplayName = $filter('orderByDisplayName');
-    var getErrorDetails = $filter('getErrorDetails');
-
-    var displayError = function(errorMessage, errorDetails) {
-      $scope.alerts['from-value-objects'] = {
-        type: "error",
-        message: errorMessage,
-        details: errorDetails
-      };
-    };
-
-    var configMapDataOrdered = [];
-    var secretDataOrdered = [];
-    $scope.valueFromObjects = [];
 
     ProjectsService
       .get($routeParams.project)
@@ -174,29 +92,6 @@ angular.module('openshiftConsole')
         // projectPromise rather than just a namespace, so we have to pass the
         // context into the log-viewer directive.
         $scope.projectContext = context;
-
-
-        DataService.list("configmaps", context, null, { errorNotification: false }).then(function(resp) {
-          configMapDataOrdered = orderByDisplayName(resp.by("metadata.name"));
-          $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
-        }, function(e) {
-          if (e.code === 403) {
-            return;
-          }
-
-          displayError('Could not load config maps', getErrorDetails(e));
-        });
-
-        DataService.list("secrets", context, null, { errorNotification: false }).then(function(resp) {
-          secretDataOrdered = orderByDisplayName(resp.by("metadata.name"));
-          $scope.valueFromObjects = secretDataOrdered.concat(configMapDataOrdered);
-        }, function(e) {
-          if (e.code === 403) {
-            return;
-          }
-
-          displayError('Could not load secrets', getErrorDetails(e));
-        });
 
         var allHPA = {};
         var updateHPA = function() {
@@ -407,18 +302,7 @@ angular.module('openshiftConsole')
                 };
               }
 
-              var previous = $scope.replicaSet;
               $scope.replicaSet = replicaSet;
-
-              // Wait for a pending save to complete to avoid a race between the PUT and the watch callbacks.
-              if (saveEnvPromise) {
-                saveEnvPromise.finally(function() {
-                  updateEnvironment(replicaSet, previous);
-                });
-              } else {
-                updateEnvironment(replicaSet, previous);
-              }
-
               setLogVars(replicaSet);
               updateHPAWarnings();
               getImageStreamImage();
