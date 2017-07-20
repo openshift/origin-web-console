@@ -347,7 +347,6 @@ module.exports = function (grunt) {
                     beautify: {
                       beautify: true,
                       indent_level: 0, // Don't waste characters indenting
-                      space_colon: false, // Don't waste characters
                       width: 1000
                     },
                   };
