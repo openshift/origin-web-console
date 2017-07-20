@@ -33,7 +33,7 @@
                   </div>
 
                   <div ng-if="configMaps.length || secrets.length || ('configmaps' | canI : 'create') || ('secrets' | canI : 'create')" class="mar-top-xl">
-                    <h1>Add Config Files</h1>
+                    <h1>Add Config Files to {{name}}</h1>
                     <div class="help-block">
                       Add values from a config map or secret as volume. This will make the data available as files for {{kind | humanizeKind}} {{name}}.
                     </div>
