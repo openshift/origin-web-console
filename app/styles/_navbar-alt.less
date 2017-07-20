@@ -9,12 +9,13 @@
   // Use initial logo dimensions; or set a width and/or height (eg - background-size: auto 36px)
   // Max logo dimensions width 230px / height 36px
   background-size: initial;
-  height: @navbar-os-header-height-mobile - 1; // 1px border-bottom on navbar-os-mobile
+  height: @navbar-os-header-mobile - 1; // 1px border-bottom on navbar-os-mobile
   width: 230px;
 }
 
-.navbar-pf-alt {
-  background: @navbar-os-bg-color;
+.navbar-pf-vertical {
+  background: #383f47;
+  // background: @navbar-os-bg-color;
   border-bottom: 1px solid @sidebar-os-border-color;
   border-left: 1px solid transparent;
   border-right: 1px solid transparent;
@@ -28,7 +29,7 @@
     z-index: @zindex-navbar-fixed;
   }
   .layout-pf-alt-fixed .tech-preview & {
-    top: @tech-preview-banner-height;
+    // top: @tech-preview-banner-height;
   }
   .navbar-toggle {
     float: none;
@@ -107,19 +108,19 @@
     float: left;
     &:hover, &:focus {
       .icon-bar {
-        background: @navbar-pf-alt-navbar-toggle-icon-bar-hover-bg;
+        background: @navbar-pf-vertical-navbar-toggle-icon-bar-hover-bg;
       }
     }
     + .navbar-brand {
       margin-left: 0;
     }
     .icon-bar {
-      background: @navbar-pf-alt-color;
+      background: @navbar-pf-vertical-color;
     }
   }
   .nav .nav-item-iconic {
     // utiltity links
-    color: @navbar-pf-alt-color;
+    color: @navbar-pf-vertical-color;
     cursor: pointer;
     line-height: normal;
     max-height: none;
@@ -127,10 +128,10 @@
     padding-bottom: @navbar-padding-vertical;
     &:hover, &:focus {
       background-color: transparent;
-      color: @navbar-pf-alt-active-color;
+      color: @navbar-pf-vertical-active-color;
       text-decoration: none;
       .caret, .fa, .glyphicon, .pf-icon {
-        color: @navbar-pf-alt-active-color;
+        color: @navbar-pf-vertical-active-color;
       }
     }
     .add-to-project,
@@ -150,7 +151,7 @@
       float: left;
     }
     .caret, .fa, .pf-icon {
-      color: @navbar-pf-alt-color;
+      color: @navbar-pf-vertical-color;
       font-size: @font-size-base + 3;
       width: auto;
     }
@@ -172,7 +173,7 @@
       background: transparent;
 
       .caret, .fa, .pf-icon {
-        color: @navbar-pf-alt-active-color;
+        color: @navbar-pf-vertical-active-color;
       }
     }
   }
@@ -180,9 +181,9 @@
 
 @media (min-width: @screen-sm-min) {
   #header-logo {
-    height: @navbar-os-header-height-desktop;
+    height: @navbar-os-header-desktop;
   }
-  .navbar-pf-alt .nav {
+  .navbar-pf-vertical .nav {
     .dropdown .nav-item-iconic {
       padding-right: 20px;
     }
@@ -199,7 +200,7 @@
 }
 
 // System status
-.navbar-pf-alt {
+.navbar-pf-vertical {
   .system-status .status-issue {
     display: none;
     font-weight: 300;
@@ -250,7 +251,7 @@
 }
 
 @media (max-width: @screen-xs-max) {
-  .layout-pf-alt-fixed .navbar-pf-alt {
+  .layout-pf-alt-fixed .navbar-pf-vertical {
     position: absolute;
     .navbar-brand:after {
         content: '';
@@ -279,7 +280,7 @@
       }
     }
   }
-  .navbar-pf-alt .nav-item-iconic {
+  .navbar-pf-vertical .nav-item-iconic {
     align-items: center;
     flex: 1 1 auto;
     justify-content: center;
@@ -310,9 +311,9 @@
 }
 
 @media (min-width: @screen-sm-min) {
-  .navbar-pf-alt {
+  .navbar-pf-vertical {
     .navbar-header {
-      height: 60px;
+      // height: 60px;
       width: (@sidebar-left-width-md - @navbar-header-offset);
       .navbar-brand {
         padding: 0;
@@ -322,18 +323,18 @@
       }
     }
   }
-  .navbar-flex-btn.toggle-menu {
-      display: none;
-  }
+  // .navbar-flex-btn.toggle-menu {
+  //     display: none;
+  // }
 }
 
 @media (min-width: @screen-lg-min) {
-  .navbar-pf-alt .navbar-header {
+  .navbar-pf-vertical .navbar-header {
     width: (@sidebar-left-width-md - @navbar-header-offset);
   }
 }
 @media (min-width: @screen-xl-min) {
-  .navbar-pf-alt {
+  .navbar-pf-vertical {
     .navbar-header {
       width: (@sidebar-left-width-lg - @navbar-header-offset);
       .navbar-home {
@@ -363,5 +364,65 @@
   z-index: @zindex-navbar-fixed;
   @media (min-width: @screen-sm-min) {
     position: fixed;
+  }
+}
+
+
+// hacks to make it work
+.wrap-NOTUSED {
+  display: none;
+}
+.console-os.tech-preview .top-header {
+  height: 100px !important;
+}
+.nav-pf-vertical {
+  top: 98px;
+  z-index: 1020; // why does this work. Default it is 1030, but project-bar can have 9999 and still be behind.
+}
+.navbar-pf-vertical {
+  min-height: 50px;
+  border-top: none;
+  background-color: #292E34;
+}
+.project-bar .bootstrap-select.btn-group .btn {
+  background: #383f47 !important;
+}
+// .layout-pf.layout-pf-fixed body {
+//     padding-top: 0;
+// }
+.layout-pf-alt-fixed .navbar-pf-vertical {
+  top: 58px;
+}
+.navbar-pf-vertical .navbar-header {
+  height: 40px;
+}
+.navbar-pf-vertical .nav .nav-item-iconic {
+    padding: 11px 10px 11px;
+}
+.navbar-flex-btn .add-to-project-btn:before {
+  width: 0;
+}
+.navbar-flex-btn {
+  justify-content: flex-end;
+  flex: 1 1 auto;
+  .add-to-project-btn {
+    float: none;
+    width: 140px;
+    &:before {
+      width: 0;
+    }
+  }
+}
+.project-bar {
+  float: none;
+  .bootstrap-select.btn-group .btn:after {
+    display: none !important;
+  }
+  .btn.dropdown-toggle.btn-default {
+    border: 0;
+  }
+  .form-group {
+    width: auto !important;
+    min-width: inherit !important;
   }
 }

@@ -68,6 +68,9 @@ angular.module('openshiftConsole')
       restrict: 'EA',
       templateUrl: 'views/directives/header/project-header.html',
       link: function($scope, $elem) {
+        setTimeout(function(){
+          $().setupVerticalNavigation(true);
+        });
         $scope.closeOrderingPanel = function() {
           _.set($scope, 'ordering.panelName', "");
         };

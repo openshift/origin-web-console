@@ -7,7 +7,7 @@
 // Patternfly overrides
 @dropdown-divider-margin: 4px 0;
 @list-view-hover-bg: #fafafa;
-@navbar-pf-alt-navbar-brand-padding: 20px 0;
+@navbar-pf-vertical-navbar-brand-padding: 20px 0;
 @navbar-pf-bg-color: @navbar-os-bg-color;
 @sidebar-pf-bg: @body-bg;
 @table-cell-padding-bottom: 8px;
@@ -53,8 +53,9 @@
 @middle-content-container-padding: floor((@grid-gutter-width / 2)); // 20px bootstrap default
 @middle-content-container-padding-lg: (@middle-content-container-padding + 10px);
 @navbar-header-offset: 2px;
-@navbar-os-header-height-desktop: 60px;
-@navbar-os-header-height-mobile: 46px;
+@navbar-header-right-margin: 10px;
+@navbar-os-header-desktop: 58px;
+@navbar-os-header-mobile: 38px;
 @navbar-os-bg-color: #1c2127;
 @navbar-os-label-filter-bg: @navbar-os-project-menu-bg;
 @navbar-os-project-bg: @navbar-os-bg-color;
@@ -67,7 +68,11 @@
 @navbar-os-project-menu-color: @sidebar-os-color;
 @navbar-os-project-menu-hover-bg: @sidebar-os-active-bg;
 @navbar-project-label-color: @sidebar-os-color;
+@navbar-vertical-height-short: 38px;
+@navbar-vertical-height-tall: 58px;
 @panel-light: @body-bg;
+@project-bar-height-mobile: 28px;
+@project-bar-height-desktop: 40px;
 @scroll-shadows-bg-color: rgba(255, 255, 255, 1);
 @scroll-shadows-bg-color-transparent: rgba(255, 255, 255, 0);
 @sidebar-os-bg: #30363d;
@@ -81,9 +86,7 @@
 @sidebar-os-dropdown-link-hover-bg: lighten(@sidebar-os-hover-bg, 4%);
 @sidebar-os-hover-bg: #3f4750;
 @sidebar-os-icon-color: rgba(200,200,200, .8);
-@sidebar-os-padding-x: 20px;
 @sidebar-os-padding-x-secondary: 37px;
-@sidebar-os-padding-y: 15px;
 @sidebar-os-active: @console-bright-blue;
 @sidebar-left-mobile: 250px;
 @sidebar-left-width-lg: 210px;
@@ -105,7 +108,7 @@
 @scrollbar-width: 15px;
 @status-bg-color: #E6ECF1;
 @status-border-color: #BFCEDB;
-@tech-preview-banner-height: 20px;
+@tech-preview-banner-height: 60px;
 @tileHeadingIconFontSize: 33px;
 @tooltip-bg: #111;
 

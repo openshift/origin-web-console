@@ -1,0 +1,78 @@
+//
+//  Navigation Bar for use with vertical navigation
+//  -----------------------------------------------
+
+.navbar-pf-vertical {
+  background-color: @navbar-os-bg-color;
+  border-top: none;
+  min-height: initial;
+  @media(min-width: @screen-xs-max) {
+    padding-left: 20px;
+  }
+  .dropdown-menu:after {
+    border:6px solid transparent;
+    border-bottom-color:#fff;
+    border-top-width:0;
+    content:"";
+    display:block;
+    height:0;
+    position:absolute;
+    right:10px;
+    top:-6px;
+    vertical-align:middle;
+    width:0;
+  }
+  .navbar-brand {
+    padding: 8px 0;
+    @media(min-width: @screen-sm-min) {
+      padding: 17px 4px;
+    }
+    .navbar-brand-name {
+      display: inline-block;
+      @media(max-width: @screen-xs-min) {
+        margin-right: 0;
+        max-width: 163px;
+      }
+    }
+  }
+  .navbar-toggle {
+    margin: 3px 5px;
+    .icon-bar {
+      width: 20px;
+    }
+    @media(min-width: @screen-sm-min) {
+      margin: 13px 15px;
+      .icon-bar {
+        width: 22px;
+      }
+    }
+  }
+  .navbar-iconic {
+    margin-right: @navbar-header-right-margin;
+    .nav-item-iconic {
+      padding-right: 22px;
+      &.system-status {
+        &:before {
+          background: @navbar-os-project-menu-border-inset;
+          content: '';
+          display: block;
+          height: 100%;
+          left: 0px;
+          position: absolute;
+          top: 0;
+          width: 1px;
+        }
+        &:hover {
+          background: transparent;
+          text-decoration: none;
+        }
+      }
+      .username {
+        display: inline-block;
+        font-weight: 300;
+        max-width: 200px; // enable truncation
+        padding-right: 2px;
+      }
+    }
+  }
+}
