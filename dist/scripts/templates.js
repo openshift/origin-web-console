@@ -6221,7 +6221,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div pf-wizard on-cancel=\"$ctrl.close()\" on-finish=\"$ctrl.close()\" hide-header=\"true\" hide-back-button=\"true\" hide-sidebar=\"true\" next-title=\"$ctrl.nextButtonTitle\" next-callback=\"$ctrl.nextCallback\" current-step=\"$ctrl.currentStep\" step-class=\"order-service-wizard-step\" wizard-done=\"$ctrl.wizardDone\" class=\"pf-wizard-no-back\">\n" +
     "<div pf-wizard-step step-title=\"Image\" step-id=\"image\" step-priority=\"1\" substeps=\"false\" ok-to-nav-away=\"true\" allow-click-nav=\"false\" next-enabled=\"!$ctrl.deployForm.$invalid\">\n" +
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
-    "<div class=\"order-service-config-single-column\">\n" +
+    "<div class=\"order-service-config order-service-config-single-column\">\n" +
     "<div class=\"wizard-pf-main-form-contents\">\n" +
     "<form name=\"$ctrl.deployForm\">\n" +
     "<deploy-image is-dialog=\"true\" project=\"$ctrl.project\" context=\"$ctrl.context\"></deploy-image>\n" +
@@ -6232,7 +6232,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div pf-wizard-step step-title=\"Results\" step-id=\"results\" step-priority=\"2\" substeps=\"false\" ok-to-nav-away=\"true\" allow-click-nav=\"false\">\n" +
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
-    "<div class=\"order-service-config-single-column\">\n" +
+    "<div class=\"order-service-config order-service-config-single-column\">\n" +
     "<div class=\"wizard-pf-main-form-contents\">\n" +
     "<next-steps project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\" on-continue=\"$ctrl.close\">\n" +
     "</next-steps>\n" +
@@ -6950,7 +6950,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div pf-wizard on-cancel=\"$ctrl.close()\" on-finish=\"$ctrl.close()\" hide-header=\"true\" hide-sidebar=\"true\" next-title=\"$ctrl.nextButtonTitle\" next-callback=\"$ctrl.nextCallback\" current-step=\"$ctrl.currentStep\" wizard-done=\"$ctrl.wizardDone\" step-class=\"order-service-wizard-step\">\n" +
     "<div pf-wizard-step step-title=\"JSON / YAML\" step-id=\"file\" step-priority=\"1\" substeps=\"false\" ok-to-nav-away=\"true\" allow-click-nav=\"false\" next-enabled=\"!$ctrl.importForm.$invalid\">\n" +
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
-    "<div class=\"order-service-config-single-column\">\n" +
+    "<div class=\"order-service-config order-service-config-single-column\">\n" +
     "<div class=\"wizard-pf-main-form-contents\">\n" +
     "<form name=\"$ctrl.importForm\">\n" +
     "<from-file is-dialog=\"true\" project=\"$ctrl.project\" context=\"$ctrl.context\"></from-file>\n" +
@@ -6995,7 +6995,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div pf-wizard-step step-title=\"Results\" step-id=\"results\" step-priority=\"3\" substeps=\"false\" ok-to-nav-away=\"true\" allow-click-nav=\"false\" prev-enabled=\"false\">\n" +
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
-    "<div class=\"order-service-config-single-column\">\n" +
+    "<div class=\"order-service-config order-service-config-single-column\">\n" +
     "<div class=\"wizard-pf-main-form-contents\">\n" +
     "\n" +
     "<next-steps ng-if=\"$ctrl.currentStep === 'Results'\" project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\" on-continue=\"$ctrl.close\">\n" +

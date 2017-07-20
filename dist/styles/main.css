@@ -4874,11 +4874,10 @@ h2+.list-view-pf{margin-top:20px}
 .navbar-pf-alt .navbar-header .navbar-home .pficon{display:inline-block;width:25px;margin-right:10px}
 .navbar-pf-alt .navbar-header .navbar-home .visible-xlg-inline-block{margin-left:3px}
 }
+.order-service-config-single-column,.overview .data-toolbar-filter .name-filter form,.overview .data-toolbar-filter .name-filter input{width:100%}
 .tech-preview-banner{background:#ec7a08;color:#fff;font-size:12px;text-align:center;text-transform:uppercase;width:100%;z-index:1030}
 .wizard-pf-main .deploy-image .empty-state-message{margin:30px auto}
 .wizard-pf-main #from-file .editor{height:285px}
-@media (min-width:768px){.order-service-config-single-column{margin-bottom:-20px;margin-top:-20px;overflow-y:auto}
-}
 .build-count .builds,.build-count .pipelines{display:block}
 .build-count .icon-count{display:inline-block;margin-right:5px}
 .build-count .running-stage{font-size:84%;color:#9c9c9c}
@@ -4905,7 +4904,6 @@ h2+.list-view-pf{margin-top:20px}
 .overview .data-toolbar-filter{display:flex}
 .overview .data-toolbar-filter .label-filter,.overview .data-toolbar-filter .name-filter{flex-grow:1}
 .overview .data-toolbar-filter .label-filter,.overview .data-toolbar-filter .name-filter input{border-left:0}
-.overview .data-toolbar-filter .name-filter form,.overview .data-toolbar-filter .name-filter input{width:100%}
 .overview .data-toolbar-filter .name-filter input{padding-left:5px}
 .overview .data-toolbar-filter .ui-select-container{width:100px}
 .overview .data-toolbar-filter .label-filter-add.btn,.overview .data-toolbar-filter .ui-select-container .ui-select-match .btn{box-shadow:none;-webkit-box-shadow:none}
