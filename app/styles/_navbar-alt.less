@@ -9,7 +9,7 @@
   // Use initial logo dimensions; or set a width and/or height (eg - background-size: auto 36px)
   // Max logo dimensions width 230px / height 36px
   background-size: initial;
-  height: @navbar-os-header-height-mobile;
+  height: @navbar-os-header-height-mobile - 1; // 1px border-bottom on navbar-os-mobile
   width: 230px;
 }
 
@@ -274,10 +274,8 @@
       color: lighten(@navbar-os-project-menu-color, 20%);
       cursor: pointer;
       display: flex;
-      font-size: 18px;
       &:hover, &:active, &:focus {
-        background-color: @sidebar-os-active-bg;
-        color: @navbar-os-project-menu-color;
+        text-decoration: none;
       }
     }
   }
