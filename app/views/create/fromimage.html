@@ -401,8 +401,7 @@
                             <!-- /limits -->
 
                             <label-editor
-                                labels="userDefinedLabels"
-                                system-labels="systemLabels"
+                                labels="labelArray"
                                 expand="true"
                                 can-toggle="false"
                                 help-text="Each label is applied to each created resource.">
@@ -415,7 +414,6 @@
                             for source, routes, builds, and deployments.
                           </div>
                           <div class="buttons gutter-bottom" ng-class="{'gutter-top': !alerts.length}">
-                            <!-- unable to use form.valid.  need to fix validators in labels and key values directive -->
                             <button type="submit"
                                 class="btn btn-primary btn-lg"
                                 ng-disabled="form.$invalid || nameTaken || cpuProblems.length || memoryProblems.length || disableInputs"

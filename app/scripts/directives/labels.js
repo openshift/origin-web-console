@@ -54,7 +54,6 @@ angular.module('openshiftConsole')
       restrict: 'E',
       scope: {
         labels: "=",
-        systemLabels: "=",
         expand: "=?",
         canToggle: "=?",
         // Optional help text to show with the label controls

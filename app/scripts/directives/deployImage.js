@@ -32,8 +32,7 @@ angular.module("openshiftConsole")
 
         $scope.app = {};
         $scope.env = [];
-        $scope.labels = [];
-        $scope.systemLabels = [{
+        $scope.labels = [{
           name: 'app',
           value: ''
         }];
@@ -122,8 +121,7 @@ angular.module("openshiftConsole")
         };
 
         function getResources() {
-          var userLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
-          var systemLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.systemLabels));
+          var labels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
 
           return ImagesService.getResources({
             name: $scope.app.name,
@@ -133,7 +131,7 @@ angular.module("openshiftConsole")
             ports: $scope.ports,
             volumes: $scope.volumes,
             env: keyValueEditorUtils.compactEntries($scope.env),
-            labels: _.extend(systemLabels, userLabels),
+            labels: labels,
             pullSecrets: $scope.pullSecrets
           });
         }
@@ -170,12 +168,13 @@ angular.module("openshiftConsole")
               });
           };
 
-          $scope.$watch('app.name', function() {
+          $scope.$watch('app.name', function(name, previous) {
             $scope.nameTaken = false;
-            _.set(
-              _.find($scope.systemLabels, { name: 'app' }),
-              'value',
-              $scope.app.name);
+
+            var appLabel = _.find($scope.labels, { name: 'app' });
+            if (appLabel && (!appLabel.value || appLabel.value === previous)) {
+              appLabel.value = name;
+            }
           });
 
           $scope.$watch('mode', function(newMode, oldMode) {
