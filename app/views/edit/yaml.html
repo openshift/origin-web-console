@@ -11,48 +11,42 @@
           <div class="container surface-shaded">
             <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
             <alerts alerts="alerts"></alerts>
-            <div ng-if="!resource" class="pad-top-md">Loading...</div>
-            <div ng-if="resource" class="pad-top-md">
-              <h1 class="truncate">Edit <span class="hidden-xs">{{resource.kind | humanizeKind : true}}</span> {{resource.metadata.name}}</h1>
+            <div ng-if="!updated.resource" class="pad-top-md">Loading...</div>
+            <div ng-if="updated.resource" class="pad-top-md">
+              <h1 class="truncate">Edit <span class="hidden-xs">{{updated.resource.kind | humanizeKind : true}}</span> {{updated.resource.metadata.name}}</h1>
               <parse-error error="error" ng-if="error"></parse-error>
 
               <div ng-if="resourceChanged && !resourceDeleted && !updatingNow" class="alert alert-warning">
                 <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
                 <span class="sr-only">Warning:</span>
-                {{resource.kind | humanizeKind | upperFirst}} <strong>{{resource.metadata.name}}</strong> has
+                {{updated.resource.kind | humanizeKind | upperFirst}} <strong>{{updated.resource.metadata.name}}</strong> has
                 changed since you started editing it. You'll need to copy any changes you've made and edit the
-                {{resource.kind | humanizeKind}} again.
+                {{updated.resource.kind | humanizeKind}} again.
               </div>
 
               <div ng-if="resourceDeleted" class="alert alert-warning">
                 <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
                 <span class="sr-only">Warning:</span>
-                {{resource.kind | humanizeKind | upperFirst}} <strong>{{resource.metadata.name}}</strong> has
+                {{updated.resource.kind | humanizeKind | upperFirst}} <strong>{{updated.resource.metadata.name}}</strong> has
                 been deleted since you started editing it.
               </div>
 
               <confirm-on-exit dirty="modified"></confirm-on-exit>
 
-              <!-- Editor -->
-              <div ui-ace="{
-                mode: 'yaml',
-                theme: 'eclipse',
-                onLoad: aceLoaded,
-                rendererOptions: {
-                  showPrintMargin: false
-                }
-              }" ng-model="editor.model" class="editor ace-bordered yaml-mode"></div>
+              <form name="editor.form">
+                <ui-ace-yaml resource="updated.resource" ng-required="true"></ui-ace-yaml>
 
-              <div class="button-group mar-top-xl">
-                <button class="btn btn-lg btn-primary"
-                        type="button"
-                        ng-click="save()"
-                        ng-disabled="!modified || resourceChanged || resourceDeleted || updatingNow">Save</button>
-                <button class="btn btn-lg btn-default"
-                        type="button"
-                        ng-disabled="updatingNow"
-                        ng-click="cancel()">Cancel</button>
-              </div>
+                <div class="button-group mar-top-xl">
+                  <button class="btn btn-lg btn-primary"
+                          type="button"
+                          ng-click="save()"
+                          ng-disabled="editor.form.$pristine || editor.form.$invalid || resourceChanged || resourceDeleted || updatingNow">Save</button>
+                  <button class="btn btn-lg btn-default"
+                          type="button"
+                          ng-disabled="updatingNow"
+                          ng-click="cancel()">Cancel</button>
+                </div>
+              </form>
             </div>
           </div>
         </div><!-- /middle-content -->

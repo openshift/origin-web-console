@@ -9,6 +9,8 @@ angular.module('openshiftConsole')
         required: "=",
         disabled: "=ngDisabled",
         showTextArea: '=',
+        // Hide the clear value link.
+        hideClear: '=?',
         helpText: "@?",
         dropZoneId: "@?"
       },

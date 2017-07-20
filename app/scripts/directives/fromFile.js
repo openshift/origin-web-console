@@ -34,29 +34,6 @@ angular.module("openshiftConsole")
           editor.$blockScrolling = Infinity;
         };
 
-        var checkErrorAnnotations = function() {
-          var editorAnnotations = aceEditorSession.getAnnotations();
-          $scope.editorErrorAnnotation = _.some(editorAnnotations, { type: 'error' });
-        };
-
-        // Determine whats the input format (JSON/YAML) and set appropriate view mode
-        var updateEditorMode = _.debounce(function(){
-          try {
-            JSON.parse($scope.editorContent);
-            aceEditorSession.setMode("ace/mode/json");
-          } catch (e) {
-            try {
-              jsyaml.safeLoad($scope.editorContent);
-              aceEditorSession.setMode("ace/mode/yaml");
-            } catch (e) {}
-          }
-          $scope.$apply(checkErrorAnnotations);
-        }, 300);
-
-        // Check if the editor isn't empty to disable the 'Add' button. Also check in what format the input is in (JSON/YAML) and change
-        // the editor accordingly.
-        $scope.aceChanged = updateEditorMode;
-
         var launchConfirmationDialog = function(alerts) {
           var modalInstance = $uibModal.open({
             animation: true,
@@ -113,8 +90,6 @@ angular.module("openshiftConsole")
           }
         };
 
-        var resource;
-
         $scope.create = function() {
           delete $scope.error;
 
@@ -124,33 +99,23 @@ angular.module("openshiftConsole")
           // is JSON related the printed reason will be "Reason: Unable to parse", in case of YAML related
           // reason the true reason will be printed, since YAML parser throws an error object with needed
           // data.
-          try {
-            resource = JSON.parse($scope.editorContent);
-          } catch (e) {
-            try {
-              resource = jsyaml.safeLoad($scope.editorContent);
-            } catch (e) {
-              $scope.error = e;
-              return;
-            }
-          }
 
-          if (!isKindValid(resource)) {
+          if (!isKindValid($scope.resource)) {
             return;
           }
 
-          $scope.resourceKind = resource.kind;
+          $scope.resourceKind = $scope.resource.kind;
           $scope.resourceKind.endsWith("List") ? $scope.isList = true : $scope.isList = false;
 
-          if (!isMetadataValid(resource)) {
+          if (!isMetadataValid($scope.resource)) {
             return;
           }
           if ($scope.isList) {
-            $scope.resourceList = resource.items;
+            $scope.resourceList = $scope.resource.items;
             $scope.resourceName = '';
           } else {
-            $scope.resourceList = [resource];
-            $scope.resourceName = resource.metadata.name;
+            $scope.resourceList = [$scope.resource];
+            $scope.resourceName = $scope.resource.metadata.name;
             if ($scope.resourceKind === "Template") {
               $scope.templateOptions = {
                 process: true,
@@ -293,12 +258,12 @@ angular.module("openshiftConsole")
             if ($scope.isDialog) {
               $scope.$emit('fileImportedFromYAMLOrJSON', {
                 project: $scope.project,
-                template: resource
+                template: $scope.resource
               });
             }
             else {
               namespace = ($scope.templateOptions.add || $scope.updateResources.length > 0) ? $scope.project.metadata.name : "";
-              path = Navigate.createFromTemplateURL(resource, $scope.project.metadata.name, {namespace: namespace});
+              path = Navigate.createFromTemplateURL($scope.resource, $scope.project.metadata.name, {namespace: namespace});
               $location.url(path);
             }
           }

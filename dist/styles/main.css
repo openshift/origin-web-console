@@ -955,6 +955,7 @@ select[multiple].input-group-sm>.form-control,select[multiple].input-group-sm>.i
 .embed-responsive,.modal,.modal-open,.progress{overflow:hidden}
 @media (max-device-width:480px) and (orientation:landscape){.navbar-fixed-bottom .navbar-collapse,.navbar-fixed-top .navbar-collapse{max-height:200px}
 }
+.membership .ui-select-bootstrap>.ui-select-choices,.typeahead-long{max-height:300px}
 .container-fluid>.navbar-collapse,.container-fluid>.navbar-header,.container>.navbar-collapse,.container>.navbar-header{margin-right:-20px;margin-left:-20px}
 .navbar-static-top{z-index:1000;border-width:0 0 1px}
 .navbar-fixed-bottom,.navbar-fixed-top{position:fixed;right:0;left:0;z-index:1030}
@@ -2351,7 +2352,7 @@ td>.progress:first-child:last-child{margin-bottom:0;margin-top:3px}
 .form-inline .combobox-container .input-group-addon,.form-search .combobox-container .input-group-addon{width:auto}
 }
 .combobox-container:not(.combobox-selected) .glyphicon-remove,.combobox-selected .caret{display:none}
-.typeahead-long{max-height:300px;overflow-y:auto}
+.typeahead-long{overflow-y:auto}
 .control-group.error .combobox-container .add-on{color:#B94A48;border-color:#B94A48}
 .control-group.error .combobox-container .caret{border-top-color:#B94A48}
 .control-group.warning .combobox-container .add-on{color:#C09853;border-color:#C09853}
@@ -4290,7 +4291,7 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .btn-remove{color:#333;display:inline-block;font-size:15px;line-height:1;opacity:.65;padding:5px 7px;vertical-align:middle}
 .btn-remove:focus,.btn-remove:hover{color:inherit;opacity:1;text-decoration:none}
 .static-form-value-large{font-family:inherit;font-weight:500;line-height:1.1;color:inherit;margin-bottom:10.5px;font-size:16px;margin-top:3px}
-.edit-yaml .editor,.environment-variables.table.table-bordered>tbody>tr>td:last-child .env-var-value,.hash,.osc-file-input textarea,.template-message .resource-description{font-family:Menlo,Monaco,Consolas,monospace}
+.environment-variables.table.table-bordered>tbody>tr>td:last-child .env-var-value,.hash,.osc-file-input textarea,.template-message .resource-description{font-family:Menlo,Monaco,Consolas,monospace}
 .static-form-value-large .small,.static-form-value-large small{font-weight:400;line-height:1;color:#9c9c9c;font-size:65%}
 .breadcrumb strong,.pod-template-block .pod-template .pod-template-key,.weight-slider-values .service-name{font-weight:600}
 .clear-env-changes-link{vertical-align:-2px}
@@ -4299,7 +4300,6 @@ copy-to-clipboard .input-group.limit-width{max-width:300px}
 .jenkinsfile-examples .copy-to-clipboard{margin-top:3px}
 .copy-to-clipboard-multiline{display:block;overflow-x:auto}
 .copy-to-clipboard-multiline a{box-shadow:none;position:absolute;right:0;top:0}
-.card-pf,.tile{box-shadow:0 3px 1px -2px rgba(0,0,0,.15),0 2px 2px 0 rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.09)}
 .collapsing,.wizard-pf-footer.wizard-pf-position-override{position:relative}
 .copy-to-clipboard-multiline pre{background-color:#fff;word-break:normal;word-wrap:normal}
 .input-group-addon.wildcard-prefix{padding-left:10px}
@@ -4316,6 +4316,7 @@ copy-to-clipboard .input-group.limit-width{max-width:300px}
 .osc-file-input textarea{margin:5px 0}
 .health-checks-form .pause-rollouts-checkbox,.set-limits-form .pause-rollouts-checkbox{margin-top:21px}
 .checkbox-inline,.checkbox-inline+.checkbox-inline,.radio-inline,.radio-inline+.radio-inline{margin-left:0;margin-right:10px}
+.card-pf{box-shadow:0 3px 1px -2px rgba(0,0,0,.15),0 2px 2px 0 rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.09)}
 .card-pf .image-icon{font-size:28px;line-height:1;margin-right:15px;opacity:.38}
 .card-pf-badge{color:#999;font-size:11px;text-transform:uppercase}
 .card-pf-body{margin-bottom:0}
@@ -4636,12 +4637,6 @@ a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;te
 .modal-resource-action h1{font-size:21px;font-weight:500;margin-bottom:20px;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .modal-resource-action p{font-size:15px}
 .modal-resource-action .help-block{margin-top:0px;margin-bottom:10px}
-.ace_editor.dockerfile-mode .ace_constant.ace_numeric,.editor.yaml-mode .ace_constant.ace_numeric{color:inherit}
-.edit-yaml h1{line-height:1.3}
-.edit-yaml .editor{line-height:1.5;width:100%;min-height:140px;height:50vh}
-.edit-yaml .editor .ace_gutter{color:#8b8d8f}
-@media (min-height:700px){.edit-yaml .editor{height:60vh}
-}
 .debug-pod-action{margin-top:5px}
 .modal-debug-terminal .modal-header{padding:0 18px 5px}
 .modal-debug-terminal .modal-header h2{margin-bottom:5px}
@@ -4652,9 +4647,6 @@ a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;te
 .modal-debug-terminal .modal-footer{padding-top:0}
 .jenkinsfile-examples-modal .jenkinsfile-examples p:last-child{margin-bottom:0;padding-bottom:0}
 .jenkinsfile-examples-modal .modal-footer{margin-top:0;padding-top:0}
-.ace-inline{height:300px}
-.ace-inline-small{height:200px}
-#from-file .editor{height:350px}
 .edit-form .with-divider{border-top:1px solid rgba(0,0,0,.15);padding-top:21px;padding-bottom:10px;margin-top:10px}
 .edit-form .labels .form-group{width:44%}
 .edit-form .labels .form-group .form-control{width:100%}
@@ -4692,8 +4684,6 @@ pre.clipped.scroll{max-height:150px;overflow:auto;width:100%}
 @media (max-width:768px){.k8s-label,.k8s-label .label-pair{width:100%}
 .k8s-label .label{display:block;min-width:50px}
 }
-.ace-bordered{border:1px solid #8b8d8f}
-.ace-bordered.ace-read-only{border-color:#d1d1d1;background-color:#fafafa}
 .action-divider{color:#9c9c9c}
 .surface-shaded .table{background-color:transparent}
 .environment-variables.table.table-bordered>tbody>tr>td:first-child{font-weight:700;padding-right:10px;vertical-align:top}
@@ -5332,7 +5322,7 @@ dl.secret-data pre{margin-bottom:0}
 .events-sidebar .events-sidebar-collapse a{text-decoration:none}
 .events-sidebar .sidebar-header.right-header{align-items:center;display:flex;justify-content:space-between;margin-top:17.5px}
 .events-sidebar .sidebar-header.right-header h2{font-family:inherit;font-weight:500;line-height:1.1;color:inherit;margin-top:10.5px;margin-bottom:10.5px;font-size:14px;display:inline-block}
-.config-map-table .key,.config-map-table .truncated-content,.log-view{font-family:Menlo,Monaco,Consolas,monospace}
+.config-map-table .key,.config-map-table .truncated-content,.edit-yaml .editor,.log-view{font-family:Menlo,Monaco,Consolas,monospace}
 .events-sidebar .sidebar-header.right-header h2 .small,.events-sidebar .sidebar-header.right-header h2 small{font-weight:400;line-height:1;color:#9c9c9c;font-size:75%}
 .events-sidebar .sidebar-header.right-header .warning-count{white-space:nowrap;margin-left:2px}
 .events-sidebar .sidebar-header.right-header .warning-count .pficon{vertical-align:-1px}
@@ -5475,7 +5465,7 @@ body,html{margin:0;padding:0}
 td[role=presentation].arrow:after{content:"\2193"}
 @media (min-width:768px){td[role=presentation].arrow:after{content:"\2192"}
 }
-.tile{background:#fff;padding:20px;margin-bottom:20px;word-wrap:break-word;overflow-x:hidden}
+.tile{background:#fff;padding:20px;box-shadow:0 3px 1px -2px rgba(0,0,0,.15),0 2px 2px 0 rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.09);margin-bottom:20px;word-wrap:break-word;overflow-x:hidden}
 .tile h1,.tile h2,.tile h3{margin:10.5px 0px}
 .tile-click:hover .image-icon{opacity:.75}
 .tile-click .image-icon{font-size:48px;line-height:1;margin-bottom:15px;opacity:.38}
@@ -5549,12 +5539,12 @@ a.subtle-link:active,a.subtle-link:focus,a.subtle-link:hover{color:#00659c;borde
 .mar-auto-sm{margin:0 auto}
 .pad-sm{padding:5px 7.5px}
 .mar-sm{margin:5px 7.5px}
+.key-value-editor .key-value-editor-header,.mar-bottom-sm{margin-bottom:5px}
 .pad-top-sm{padding-top:5px}
 .mar-top-sm{margin-top:5px}
 .pad-right-sm{padding-right:5px}
 .mar-right-sm{margin-right:5px}
 .pad-bottom-sm{padding-bottom:5px}
-.mar-bottom-sm{margin-bottom:5px}
 .pad-left-sm{padding-left:5px}
 .mar-left-sm{margin-left:5px}
 .mar-auto-md{margin:0 auto}
@@ -5777,7 +5767,6 @@ kubernetes-container-terminal .terminal-actions .spinner{top:5px}
 @media (min-width:992px){.key-value-editor .key-value-editor-input .ui-select{float:left;width:50%}
 .key-value-editor .key-value-editor-input .ui-select+.ui-select{padding-top:0;padding-left:5px}
 }
-.key-value-editor .key-value-editor-header{margin-bottom:5px}
 .membership h1 .learn-more-inline{white-space:nowrap;margin-right:10px;margin-left:0px;display:inline-block}
 .membership .content-pane .col-heading .col-add-role h3,.membership .content-pane .form-new-role .col-roles{display:none}
 .membership .content-pane{width:100%}
@@ -5797,7 +5786,6 @@ kubernetes-container-terminal .terminal-actions .spinner{top:5px}
 .membership .content-pane .select-role small{color:#999;display:inline-block;line-height:1.4;white-space:pre-line}
 .membership .content-pane .select-role .active small{color:#c0e0f0}
 .membership .content-pane .col-add-role,.membership .content-pane .col-heading,.membership .content-pane .col-name,.membership .content-pane .col-roles,.membership .content-pane .item-row,.membership .content-pane [flex-collapse-fix],.membership .content-pane [flex]{flex-shrink:0;flex-basis:auto}
-.membership .ui-select-bootstrap>.ui-select-choices{max-height:300px}
 @media (min-width:480px){.membership .content-pane .col-heading .col-add-role h3,.membership .content-pane .form-new-role .col-roles{display:block}
 .membership .content-pane .col-add-role{padding:0;min-width:245px}
 .membership .content-pane .col-heading,.membership .content-pane .item-row{border-bottom:none;margin-bottom:none}
@@ -5832,3 +5820,15 @@ kubernetes-container-terminal .terminal-actions .spinner{top:5px}
 .pf-wizard-no-back .wizard-pf-footer .btn-cancel{margin-right:0}
 .wizard-pf-steps-indicator .wizard-pf-step-number{font-size:12px}
 .build-triggers .copy-to-clipboard{margin-bottom:10px}
+.ace-bordered{border:1px solid #8b8d8f}
+.ace-bordered.ace-read-only{border-color:#d1d1d1;background-color:#fafafa}
+.ace-inline{height:300px}
+.ace-inline-small{height:200px}
+.ace_editor.dockerfile-mode .ace_constant.ace_numeric,.editor.yaml-mode .ace_constant.ace_numeric{color:inherit}
+.edit-yaml h1{line-height:1.3}
+.edit-yaml .editor{line-height:1.5;width:100%;min-height:140px;height:50vh}
+.edit-yaml .editor .ace_gutter{color:#8b8d8f}
+@media (min-height:700px){.edit-yaml .editor{height:60vh}
+}
+.edit-yaml-errors{font-size:84%;height:2em;text-align:right}
+#from-file .editor{height:350px}
