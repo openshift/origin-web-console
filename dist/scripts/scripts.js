@@ -4323,7 +4323,7 @@ var n = $(".container-terminal-wrapper").get(0);
 if (n) {
 var r = n.getBoundingClientRect();
 if (0 !== r.left || 0 !== r.top || 0 !== r.width || 0 !== r.height) {
-var o = v.width(), i = v.height(), s = o - r.left - 40, c = i - r.top - 50;
+var o = v.width(), i = v.height(), s = o - r.left - 54, c = i - r.top - 36;
 e.terminalCols = Math.max(_.floor(s / h.width), 80), e.terminalRows = Math.max(_.floor(c / h.height), 24);
 } else a(function() {
 y(t + 1);

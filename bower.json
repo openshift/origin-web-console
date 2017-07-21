@@ -28,7 +28,7 @@
     "selectize": "0.12.1",
     "c3": "0.4.11",
     "kubernetes-label-selector": "1.4.4",
-    "kubernetes-container-terminal": "1.0.3",
+    "kubernetes-container-terminal": "2.0.1",
     "registry-image-widgets": "0.0.11",
     "layout.attrs": "2.1.1",
     "kubernetes-object-describer": "1.0.4",
