@@ -13375,7 +13375,7 @@ labels:_.extend(b, a),
 pullSecrets:c.pullSecrets
 });
 }
-c.forms = {}, c.mode = "istag", c.istag = {}, c.app = {}, c.env = [], c.labels = [], c.systemLabels = [ {
+c.mode = "istag", c.istag = {}, c.app = {}, c.env = [], c.labels = [], c.systemLabels = [ {
 name:"app",
 value:""
 } ], c.pullSecrets = [ {
