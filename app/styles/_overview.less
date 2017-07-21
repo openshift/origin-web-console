@@ -523,9 +523,14 @@
       display: flex;
       flex: 1 1 auto;
       justify-content: center;
-      @media (min-width: @screen-sm-min) {
-        &.animation-in-progress .overview-deployment-donut .latest-donut {
-          justify-content: flex-end;
+      &.animation-in-progress .overview-deployment-donut {
+        @media (min-width: @screen-xs-min) {
+          max-width: 450px;
+        }
+        @media (min-width: @screen-sm-min) {
+          .latest-donut {
+            justify-content: flex-end;
+          }
         }
       }
       .overview-deployment-donut {
@@ -534,7 +539,6 @@
           flex: 1 1 auto;
           // prevents resize jump; set height since the donut isn't displayed exactly when expanded-section is rendered
           min-height: 150px;
-          max-width: 450px;
         }
         &.ng-enter {
           animation: deploymentSlideIn 750ms ease forwards;
