@@ -24,6 +24,8 @@ angular.module("openshiftConsole")
       },
       templateUrl: 'views/directives/deploy-image.html',
       link: function($scope) {
+        $scope.forms = {};
+
         // Pick from an image stream tag or Docker image name.
         $scope.mode = "istag"; // "istag" or "dockerImage"
 
