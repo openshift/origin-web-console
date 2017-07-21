@@ -4997,7 +4997,8 @@ h2+.list-view-pf{margin-top:20px}
 .overview .row-expanded-top .overview-animation-block{display:flex;flex:1 1 auto;justify-content:center}
 @media (min-width:768px){.overview .row-expanded-top .overview-animation-block.animation-in-progress .overview-deployment-donut .latest-donut{justify-content:flex-end}
 }
-@media (min-width:480px){.overview .row-expanded-top .overview-animation-block .overview-deployment-donut{display:flex;flex:1 1 auto;min-height:150px;max-width:450px}
+@media (min-width:480px){.overview .row-expanded-top .overview-animation-block.animation-in-progress .overview-deployment-donut{max-width:450px}
+.overview .row-expanded-top .overview-animation-block .overview-deployment-donut{display:flex;flex:1 1 auto;min-height:150px}
 }
 .overview .row-expanded-top .overview-animation-block .overview-deployment-donut.ng-enter{animation:deploymentSlideIn 750ms ease forwards}
 .overview .row-expanded-top .overview-animation-block .overview-deployment-donut.stacked-template .overview-pod-template{min-width:100%}
