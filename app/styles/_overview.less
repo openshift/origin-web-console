@@ -23,7 +23,11 @@
   }
 }
 .builds-label {
+  display: inline-block;
   margin-right: 5px;
+  @media (max-width: @screen-sm-max) {
+    margin-top: 5px;
+  }
 }
 .mini-donut-link {
   color: @gray-darker;
@@ -61,7 +65,10 @@
 }
 .notification-icon-count {
   display: inline-block;
-  margin: 0 5px 0 0;
+  margin: 5px 5px 0 0;
+  @media (min-width: @screen-md-min) {
+    margin-top: 0;
+  }
   [data-toggle="tooltip"] {
     cursor: help;
   }
@@ -233,6 +240,12 @@
     .fade-in();
     @media (min-width: @screen-sm-min) {
       justify-content: flex-end;
+    }
+    @media(max-width: @screen-xs-max) {
+      &.deployment-in-progress-msg {
+        margin-top: 5px;
+        width: 100%;
+      }
     }
   }
   .list-pf-expansion.in {
@@ -434,11 +447,9 @@
       }
     }
   }
-  .status-icons {
-    margin-top: 5px;
-    @media (min-width: @screen-md-min) {
+  @media (min-width: @screen-md-min) {
+    .status-icons {
       margin-right: 15px;
-      margin-top: 0;
       width: 40%;
     }
   }

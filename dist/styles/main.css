@@ -4867,18 +4867,21 @@ h2+.list-view-pf{margin-top:20px}
 .order-service-config-single-column,.overview .data-toolbar-filter .name-filter form,.overview .data-toolbar-filter .name-filter input{width:100%}
 .tech-preview-banner{background:#ec7a08;color:#fff;font-size:12px;text-align:center;text-transform:uppercase;width:100%;z-index:1030}
 .wizard-pf-main .deploy-image .empty-state-message{margin:30px auto}
+.build-count .icon-count,.builds-label{margin-right:5px;display:inline-block}
 .wizard-pf-main #from-file .editor{height:285px}
 .build-count .builds,.build-count .pipelines{display:block}
-.build-count .icon-count{display:inline-block;margin-right:5px}
 .build-count .running-stage{font-size:84%;color:#9c9c9c}
-.builds-label{margin-right:5px}
+@media (max-width:991px){.builds-label{margin-top:5px}
+}
 .mini-donut-link{color:#252525}
 .mini-donut-link:active,.mini-donut-link:focus,.mini-donut-link:hover{color:#0088ce;text-decoration:none}
 .mini-donut-link.disabled-link,.mini-donut-link.disabled-link:active,.mini-donut-link.disabled-link:focus,.mini-donut-link.disabled-link:hover{color:#252525;opacity:1}
 .mini-log{background-color:#fafafa;border:1px solid #d1d1d1;color:#4d5258;font-family:Menlo,Monaco,Consolas,monospace;font-size:11px;margin-bottom:5px;margin-top:5px;padding:5px}
 .mini-log .mini-log-content{line-height:13px;min-height:91px}
 .mini-log .mini-log-content .mini-log-line{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;white-space:pre}
-.notification-icon-count{display:inline-block;margin:0 5px 0 0}
+.notification-icon-count{display:inline-block;margin:5px 5px 0 0}
+@media (min-width:992px){.notification-icon-count{margin-top:0}
+}
 .overview .empty-state{margin-top:20px}
 .overview .app-heading{display:flex;justify-content:space-between}
 @media (max-width:991px){.overview .app-heading{flex-direction:column;justify-content:flex-start}
@@ -4921,6 +4924,8 @@ h2+.list-view-pf{margin-top:20px}
 .overview .list-pf-actions{min-width:19px}
 .overview .list-pf-details.ng-enter,.overview .list-pf-details.ng-hide-remove{animation:.3s appear cubic-bezier(.55,.055,.675,.19)}
 @media (min-width:768px){.overview .list-pf-details{justify-content:flex-end}
+}
+@media (max-width:767px){.overview .list-pf-details.deployment-in-progress-msg{margin-top:5px;width:100%}
 }
 .overview .list-pf-expansion.in .deployment-donut>div[row]{justify-content:center}
 .overview .list-pf-expansion.in .empty-state-message{margin-bottom:30px;margin-top:20px;max-width:none;padding:0;text-align:center}
@@ -4972,8 +4977,7 @@ h2+.list-view-pf{margin-top:20px}
 }
 .overview .provisioned-service .list-pf-details .bindings{margin-bottom:0;margin-top:-4px}
 .overview .provisioned-service .list-pf-details .small{color:#9c9c9c;font-size:10px}
-.overview .status-icons{margin-top:5px}
-@media (min-width:992px){.overview .status-icons{margin-right:15px;margin-top:0;width:40%}
+@media (min-width:992px){.overview .status-icons{margin-right:15px;width:40%}
 }
 .overview :not(.tab-pane)>overview-pipelines>.expanded-section{margin-bottom:30px}
 .overview .service-binding h3 small{display:block}
