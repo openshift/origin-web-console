@@ -109,10 +109,10 @@
 
   <div class="row" ng-if-end>
     <div class="col-sm-12">
-      <form name="form" class="osc-form">
+      <ng-form name="forms.deployImage" class="osc-form">
         <div class="form-group">
          <label for="name" class="required">Name</label>
-         <div ng-class="{'has-error': form.name.$invalid || nameTaken}">
+         <div ng-class="{'has-error': (forms.deployImage.name.$invalid && forms.deployImage.name.$touched) || nameTaken}">
            <input type="text"
                   required
                   select-on-focus
@@ -128,19 +128,19 @@
                   spellcheck="false">
           </div>
           <div class="help-block">Identifies the resources created for this image.</div>
-          <div class="has-error" ng-show="form.name.$invalid">
-            <div class="help-block" ng-show="form.name.$error.required">
+          <div class="has-error" ng-show="forms.deployImage.name.$invalid && forms.deployImage.name.$touched">
+            <div class="help-block" ng-show="forms.deployImage.name.$error.required">
               A name is required.
             </div>
-            <div class="help-block" ng-show="form.name.$error.pattern">
+            <div class="help-block" ng-show="forms.deployImage.name.$error.pattern">
               Name must be an alphanumeric (a-z, 0-9) string with a maximum length
               of 24 characters where the first character is a letter (a-z). The '-'
               character is allowed anywhere except the first or last character.
             </div>
-            <div class="help-block" ng-show="form.name.$error.minlength">
+            <div class="help-block" ng-show="forms.deployImage.name.$error.minlength">
               Name must have at least 2 characters.
             </div>
-            <div class="help-block" ng-show="form.name.$error.maxlength">
+            <div class="help-block" ng-show="forms.deployImage.name.$error.maxlength">
               Name can't have more than 24 characters.
             </div>
           </div>
@@ -189,10 +189,10 @@
               class="btn btn-primary btn-lg"
               ng-click="create()"
               value=""
-              ng-disabled="form.$invalid || nameTaken || disableInputs">Create</button>
+              ng-disabled="forms.deployImage.$invalid || nameTaken || disableInputs">Create</button>
           <a class="btn btn-default btn-lg" href="#" back>Cancel</a>
         </div>
-      </form>
+      </ng-form>
     </div>
   </div>
 
