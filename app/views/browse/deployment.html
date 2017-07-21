@@ -87,40 +87,48 @@
               <uib-tabset>
                 <uib-tab active="selectedTab.history">
                   <uib-tab-heading>History</uib-tab-heading>
-                  <div ng-if="replicaSetsForDeployment | hashSize">
-                    <table class="table table-bordered table-hover table-mobile table-layout-fixed">
-                      <colgroup>
-                        <col class="col-sm-2">
-                        <col class="col-sm-4">
-                        <col class="col-sm-3">
-                        <col class="col-sm-3">
-                      </colgroup>
-                      <thead>
-                        <tr>
-                          <th>Version</th>
-                          <th>Name</th>
-                          <th>Replicas</th>
-                          <th>Created</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr ng-repeat="replicaSet in replicaSetsForDeployment">
-                          <td data-title="Version">
-                            #{{replicaSet | annotation : 'deployment.kubernetes.io/revision'}}
-                          </td>
-                          <td data-title="Name">
-                            <a ng-href="{{replicaSet | navigateResourceURL}}">{{replicaSet.metadata.name}}</a>
-                          </td>
-                          <td data-title="Replicas">
-                            <span ng-if="replicaSet.status.replicas !== replicaSet.spec.replicas">{{replicaSet.status.replicas}}/</span>{{replicaSet.spec.replicas}} replica<span ng-if="replicaSet.spec.replicas != 1">s</span>
-                          </td>
-                          <td data-title="Created">
-                            <span am-time-ago="replicaSet.metadata.creationTimestamp"></span>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                  <div class="table-filter-extension">
+                    <div class="data-toolbar">
+                      <div class="data-toolbar-filter">
+                        <project-filter></project-filter>
+                      </div>
+                    </div>
                   </div>
+                  <table class="table table-bordered table-hover table-mobile table-layout-fixed">
+                    <colgroup>
+                      <col class="col-sm-2">
+                      <col class="col-sm-4">
+                      <col class="col-sm-3">
+                      <col class="col-sm-3">
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>Version</th>
+                        <th>Name</th>
+                        <th>Replicas</th>
+                        <th>Created</th>
+                      </tr>
+                    </thead>
+                    <tbody ng-if="(replicaSetsForDeployment | size) == 0">
+                      <tr><td colspan="4"><em>{{emptyMessage}}</em></td></tr>
+                    </tbody>
+                    <tbody ng-if="(replicaSetsForDeployment | size) > 0">
+                      <tr ng-repeat="replicaSet in replicaSetsForDeployment">
+                        <td data-title="Version">
+                          #{{replicaSet | annotation : 'deployment.kubernetes.io/revision'}}
+                        </td>
+                        <td data-title="Name">
+                          <a ng-href="{{replicaSet | navigateResourceURL}}">{{replicaSet.metadata.name}}</a>
+                        </td>
+                        <td data-title="Replicas">
+                          <span ng-if="replicaSet.status.replicas !== replicaSet.spec.replicas">{{replicaSet.status.replicas}}/</span>{{replicaSet.spec.replicas}} replica<span ng-if="replicaSet.spec.replicas != 1">s</span>
+                        </td>
+                        <td data-title="Created">
+                          <span am-time-ago="replicaSet.metadata.creationTimestamp"></span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </uib-tab>
                 <uib-tab active="selectedTab.configuration">
                   <uib-tab-heading>Configuration</uib-tab-heading>
