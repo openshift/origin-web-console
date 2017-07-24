@@ -5,6 +5,8 @@ cache:
   directories:
   - node_modules
   - bower_components
+# Use Ubuntu Precise, otherwise test-headless.sh fails.
+dist: precise
 before_script:
   - make build
 script:
