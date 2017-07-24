@@ -9,7 +9,6 @@
     ],
     controllerAs: '$ctrl',
     bindings: {
-      visible: '<',
       project: '<', //handle create project optionally
       context: '<',
       onDialogClosed: '&'
@@ -31,6 +30,7 @@
 
     $scope.$on('deployImageNewAppCreated', function(event, message) {
       ctrl.selectedProject = message.project;
+      ctrl.deployImageNewAppCreated = true;
       ctrl.currentStep = "Results";
     });
 

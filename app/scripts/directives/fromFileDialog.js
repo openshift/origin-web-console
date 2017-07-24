@@ -10,7 +10,6 @@
     ],
     controllerAs: '$ctrl',
     bindings: {
-      visible: '<',
       project: '<', //handle create project optionally
       context: '<',
       onDialogClosed: '&'

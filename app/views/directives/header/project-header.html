@@ -48,5 +48,7 @@
   </div> <!-- /navbar-project-menu -->
   <navbar-utility class="hidden-xs"></navbar-utility>
 </nav>
-<deploy-image-dialog visible="ordering.panelName === 'deployImage'" project="project" context="context" on-dialog-closed="closeOrderingPanel"></deploy-image-dialog>
-<from-file-dialog visible="ordering.panelName === 'fromFile'" project="project" context="context" on-dialog-closed="closeOrderingPanel"></from-file-dialog>
+<overlay-panel show-panel="ordering.panelName" show-close="true" handle-close="closeOrderingPanel">
+  <deploy-image-dialog ng-if="ordering.panelName === 'deployImage'" project="project" context="context" on-dialog-closed="closeOrderingPanel"></deploy-image-dialog>
+  <from-file-dialog ng-if="ordering.panelName === 'fromFile'" project="project" context="context" on-dialog-closed="closeOrderingPanel"></from-file-dialog>
+</overlay-panel>
