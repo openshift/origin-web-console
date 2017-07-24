@@ -83,11 +83,11 @@ angular.module('openshiftConsole')
 
           if ($scope.route) {
             data.columns.push(getData($scope.route.spec.to));
-            data.names[$scope.route.spec.to.name] = _.trunc($scope.route.spec.to.name, { length: 30 });
+            data.names[$scope.route.spec.to.name] = _.truncate($scope.route.spec.to.name, { length: 30 });
             $scope.totalWeight = $scope.route.spec.to.weight;
             _.each($scope.route.spec.alternateBackends, function(routeTarget) {
               data.columns.push(getData(routeTarget));
-              data.names[routeTarget.name] = _.trunc(routeTarget.name, { length: 30 });
+              data.names[routeTarget.name] = _.truncate(routeTarget.name, { length: 30 });
               $scope.totalWeight += routeTarget.weight;
             });
           }

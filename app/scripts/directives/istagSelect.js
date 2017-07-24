@@ -51,7 +51,7 @@ angular.module("openshiftConsole")
           $scope.isByNamespace[ns] = {};
           $scope.isNamesByNamespace[ns] = [];
 
-          if (!_.contains($scope.namespaces, ns)) {
+          if (!_.includes($scope.namespaces, ns)) {
             $scope.namespaces.push(ns);
             $scope.isNamesByNamespace[ns] = $scope.isNamesByNamespace[ns].concat($scope.istag.imageStream);
             $scope.isByNamespace[ns][$scope.istag.imageStream] = {status: {tags: [{tag: $scope.istag.tagObject.tag}]}};
@@ -65,7 +65,7 @@ angular.module("openshiftConsole")
             $scope.isNamesByNamespace[ns] = _.keys(imageStreams).sort();
 
             //  Image stream is missing
-            if (!_.contains($scope.isNamesByNamespace[ns], $scope.istag.imageStream)) {
+            if (!_.includes($scope.isNamesByNamespace[ns], $scope.istag.imageStream)) {
               $scope.isNamesByNamespace[ns] = $scope.isNamesByNamespace[ns].concat($scope.istag.imageStream);
               $scope.isByNamespace[ns][$scope.istag.imageStream] = {
                 status: {

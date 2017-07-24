@@ -361,7 +361,7 @@ angular.module("openshiftConsole")
         }
       };
       if (_.get(input, 'buildConfig.secrets.gitSecret[0].name')) {
-        bc.spec.source.sourceSecret = _.first(input.buildConfig.secrets.gitSecret);
+        bc.spec.source.sourceSecret = _.head(input.buildConfig.secrets.gitSecret);
       }
 
       // Add contextDir only if specified.

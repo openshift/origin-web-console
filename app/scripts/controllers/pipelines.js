@@ -105,8 +105,8 @@ angular.module('openshiftConsole')
         watches.push(DataService.watch("buildconfigs", context, function(buildConfigData) {
           $scope.buildConfigsLoaded = true;
           // Filter on the client until the server supports fieldSelector on spec.strategy.type.
-          // Use _.pick instead of _.filter to keep $scope.buildConfigs a map
-          $scope.buildConfigs = _.pick(buildConfigData.by("metadata.name"), isPipeline);
+          // Use _.pickBy instead of _.filter to keep $scope.buildConfigs a map
+          $scope.buildConfigs = _.pickBy(buildConfigData.by("metadata.name"), isPipeline);
           if (_.isEmpty($scope.buildConfigs) && !checkedForSampleTemplate) {
             checkedForSampleTemplate = true;
             if (Constants.SAMPLE_PIPELINE_TEMPLATE) {

@@ -472,7 +472,7 @@ angular.module('openshiftConsole')
           kind: optionsModel.type,
           name: _.last(namespaceAndName)
         };
-        imageObject.namespace = (_.size(namespaceAndName) !== 1) ? _.first(namespaceAndName) : $scope.buildConfig.metadata.namespace;
+        imageObject.namespace = (_.size(namespaceAndName) !== 1) ? _.head(namespaceAndName) : $scope.buildConfig.metadata.namespace;
         break;
       }
       return imageObject;

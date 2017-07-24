@@ -4,7 +4,9 @@
     extension-name="nav-system-status"
     extension-types="dom"></li>
 
-  <li ng-if="launcherApps.length > 0" pf-application-launcher items="launcherApps" is-list="true"></li>
+  <li ng-if="launcherApps.length > 0">
+    <pf-application-launcher items="launcherApps" is-list="true"></pf-application-launcher>
+  </li>
 
   <li uib-dropdown>
     <a uib-dropdown-toggle class="nav-item-iconic" id="help-dropdown" href="">
@@ -12,8 +14,8 @@
       <span class="sr-only">Help</span>
       <span class="caret" aria-hidden="true"></span>
     </a>
-    <ul
-      class="uib-dropdown-menu" aria-labelledby="help-dropdown"
+    <ul uib-dropdown-menu
+      aria-labelledby="help-dropdown"
       extension-point
       extension-name="nav-help-dropdown"
       extension-types="dom html"><!-- extension points generated here --></ul>
@@ -25,8 +27,7 @@
       <span class="username truncate">{{user.fullName || user.metadata.name}}</span> <span class="caret" aria-hidden="true"></span>
     </a>
 
-    <ul
-      class="uib-dropdown-menu"
+    <ul uib-dropdown-menu
       aria-labelledby="user-dropdown"
       extension-point
       extension-name="nav-user-dropdown"

@@ -43,7 +43,7 @@ angular.module('openshiftConsole')
             $scope.sortConfig.isAscending = !(defaultIsReversed[currentID]);
           }
           var order = $scope.sortConfig.isAscending ? 'asc' : 'desc';
-          sortedEvents = _.sortByOrder($scope.events, [sortID], [order]);
+          sortedEvents = _.orderBy($scope.events, [sortID], [order]);
         };
 
         var filterExpressions = [];

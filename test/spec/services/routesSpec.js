@@ -75,7 +75,7 @@ describe("RoutesService", function(){
         protocol: "TCP",
         name: "8081-tcp"
       });
-      var warnings = RoutesService.getRouteWarnings(route, _.indexBy([ service ], 'metadata.name'));
+      var warnings = RoutesService.getRouteWarnings(route, _.keyBy([ service ], 'metadata.name'));
       expect(warnings).toEqual(['Route has no target port, but service "frontend" has multiple ports. ' +
         'The route will round robin traffic across all exposed ports on the service.']);
     });
@@ -85,7 +85,7 @@ describe("RoutesService", function(){
       route.spec.port = {
         targetPort: "http"
       };
-      var warnings = RoutesService.getRouteWarnings(route, _.indexBy([ serviceTemplate ], 'metadata.name'));
+      var warnings = RoutesService.getRouteWarnings(route, _.keyBy([ serviceTemplate ], 'metadata.name'));
       expect(warnings).toEqual(['Route target port is set to "http", but service "frontend" has no port with that name.']);
     });
 
@@ -94,7 +94,7 @@ describe("RoutesService", function(){
       route.spec.port = {
         targetPort: 80
       };
-      var warnings = RoutesService.getRouteWarnings(route, _.indexBy([ serviceTemplate ], 'metadata.name'));
+      var warnings = RoutesService.getRouteWarnings(route, _.keyBy([ serviceTemplate ], 'metadata.name'));
       expect(warnings).toEqual(['Route target port is set to "80", but service "frontend" does not expose that port.']);
     });
 
@@ -104,7 +104,7 @@ describe("RoutesService", function(){
         certificate: "dummy-cert",
         key: "dummy-key"
       };
-      var warnings = RoutesService.getRouteWarnings(route, _.indexBy([ serviceTemplate ], 'metadata.name'));
+      var warnings = RoutesService.getRouteWarnings(route, _.keyBy([ serviceTemplate ], 'metadata.name'));
       expect(warnings).toEqual(['Route has a TLS configuration, but no TLS termination type is specified. TLS will not be enabled until a termination type is set.']);
     });
 
@@ -114,7 +114,7 @@ describe("RoutesService", function(){
       route.spec.tls = {
         termination: 'passthrough'
       };
-      var warnings = RoutesService.getRouteWarnings(route, _.indexBy([ serviceTemplate ], 'metadata.name'));
+      var warnings = RoutesService.getRouteWarnings(route, _.keyBy([ serviceTemplate ], 'metadata.name'));
       expect(warnings).toEqual(['Route path "/test" will be ignored since the route uses passthrough termination.']);
     });
 
@@ -132,7 +132,7 @@ describe("RoutesService", function(){
           message: "route bar already exposes www.example.com and is older"
         }]
       }];
-      var warnings = RoutesService.getRouteWarnings(route, _.indexBy([ serviceTemplate ], 'metadata.name'));
+      var warnings = RoutesService.getRouteWarnings(route, _.keyBy([ serviceTemplate ], 'metadata.name'));
       expect(warnings).toEqual(["Requested host www.example.com was rejected by the router. Reason: route bar already exposes www.example.com and is older."]);
     });
 
@@ -150,7 +150,7 @@ describe("RoutesService", function(){
         }],
         wildcardPolicy: 'None'
       }];
-      var warnings = RoutesService.getRouteWarnings(route, _.indexBy([ serviceTemplate ], 'metadata.name'));
+      var warnings = RoutesService.getRouteWarnings(route, _.keyBy([ serviceTemplate ], 'metadata.name'));
       expect(warnings).toEqual(['Router "foo" does not support wildcard subdomains. Your route will only be available at host www.example.com.']);
     });
 
@@ -169,7 +169,7 @@ describe("RoutesService", function(){
         protocol: "TCP",
         name: "8081-tcp"
       });
-      var warnings = RoutesService.getRouteWarnings(route, _.indexBy([ serviceTemplate ], 'metadata.name'));
+      var warnings = RoutesService.getRouteWarnings(route, _.keyBy([ serviceTemplate ], 'metadata.name'));
       expect(warnings.length).toEqual(0);
     });
 
@@ -190,7 +190,7 @@ describe("RoutesService", function(){
         name: "8081-tcp"
       });
 
-      var warnings = RoutesService.getRouteWarnings(route, _.indexBy([ service ], 'metadata.name'));
+      var warnings = RoutesService.getRouteWarnings(route, _.keyBy([ service ], 'metadata.name'));
       expect(warnings.length).toEqual(2);
     });
 
@@ -200,7 +200,7 @@ describe("RoutesService", function(){
         name: 'missing',
         kind: 'Service'
       }];
-      var warnings = RoutesService.getRouteWarnings(route, _.indexBy([ serviceTemplate ], 'metadata.name'));
+      var warnings = RoutesService.getRouteWarnings(route, _.keyBy([ serviceTemplate ], 'metadata.name'));
       expect(warnings).toEqual(['Routes to service "missing", but service does not exist.']);
     });
 
@@ -216,7 +216,7 @@ describe("RoutesService", function(){
         name: 'alternate',
         kind: 'Service'
       }];
-      var warnings = RoutesService.getRouteWarnings(route, _.indexBy([ serviceTemplate, alternate ], 'metadata.name'));
+      var warnings = RoutesService.getRouteWarnings(route, _.keyBy([ serviceTemplate, alternate ], 'metadata.name'));
       expect(warnings).toEqual(['Route target port is set to "8080-tcp", but service "alternate" has no port with that name.']);
     });
   });

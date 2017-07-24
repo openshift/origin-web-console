@@ -45,7 +45,7 @@
     var sortServiceInstances = function() {
       // wait till both service instances and service classes are available so that the sort is stable and items dont jump around
       if (ctrl.serviceClasses && ctrl.serviceInstances) {
-        ctrl.orderedServiceInstances = _.sortByAll(ctrl.serviceInstances,
+        ctrl.orderedServiceInstances = _.sortBy(ctrl.serviceInstances,
           function(item) {
             return _.get(ctrl.serviceClasses, [item.spec.serviceClassName, 'externalMetadata', 'displayName']) || item.spec.serviceClassName;
           },
@@ -65,7 +65,7 @@
                             .concat(replicationControllers)
                             .concat(replicaSets)
                             .concat(statefulSets);
-        ctrl.applications = _.sortByAll(apiObjects, ['metadata.name', 'kind']);
+        ctrl.applications = _.sortBy(apiObjects, ['metadata.name', 'kind']);
         ctrl.bindType = ctrl.applications.length ? "application" : "secret-only";
       }
     };

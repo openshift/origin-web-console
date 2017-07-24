@@ -121,7 +121,7 @@ angular.module("openshiftConsole")
 
         scope.servicesByName;
         if (scope.services) {
-          scope.servicesByName = _.indexBy(scope.services, 'metadata.name');
+          scope.servicesByName = _.keyBy(scope.services, 'metadata.name');
         } else {
           scope.servicesByName = {};
         }
@@ -324,7 +324,7 @@ angular.module("openshiftConsole")
 
           // If there is no selected item, select the first item in services.
           if (!selected) {
-            _.set(scope, 'model.name', _.first(scope.optionNames));
+            _.set(scope, 'model.name', _.head(scope.optionNames));
           }
         });
       }

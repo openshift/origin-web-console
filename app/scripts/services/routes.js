@@ -126,7 +126,7 @@ angular.module("openshiftConsole")
     };
 
     var sortRoutesByScore = function(routes) {
-      return _.sortByOrder(routes, [ scoreRoute ], [ 'desc' ]);
+      return _.orderBy(routes, [ scoreRoute ], [ 'desc' ]);
     };
 
     // Gets the preferred route to display between two routes
