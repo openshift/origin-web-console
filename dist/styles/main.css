@@ -3869,6 +3869,7 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.left,div.hopscotch-bubble
 100%{opacity:0;transform:translateX(150px)}
 }
 .bind-form .application-select{margin-top:10px;padding-left:20px}
+.bind-form .application-select .ui-select-bootstrap>.ui-select-choices{max-height:100px}
 .bind-form .bind-description{padding-left:20px}
 .bind-form .bind-choice{margin-top:10px}
 .bind-form .bind-choice:first-of-type{margin-top:0}
@@ -3894,7 +3895,8 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.left,div.hopscotch-bubble
 .truncation-collapse-link{margin-left:10px;white-space:nowrap}
 .pretty-json{font-family:Menlo,Monaco,Consolas,monospace;white-space:pre-wrap}
 label.required:before{content:'*';position:absolute;left:10px}
-@media (min-width:768px){.form-horizontal label.required:before{position:relative;left:-3px}
+@media (min-width:768px){.bind-form .application-select .ui-select-bootstrap>.ui-select-choices{max-height:170px}
+.form-horizontal label.required:before{position:relative;left:-3px}
 }
 .guided-tour-backdrop{z-index:1052}
 div.hopscotch-bubble{border-color:#bbb;border-width:1px;box-shadow:1px 1px 3px rgba(0,0,0,.3)}
@@ -4003,8 +4005,6 @@ div.hopscotch-bubble .hopscotch-nav-button.prev{color:#030303}
 }
 @media (min-width:1600px){.landing-side-bar{width:475px}
 }
-.landing-side-bar .tooltip>.tooltip-arrow{border-top-color:#fff}
-.landing-side-bar .tooltip>.tooltip-inner{background-color:#fff;color:#292e34}
 .order-service-details{flex:0 1 auto;padding:0 20px}
 .order-service-details .order-service-details-top{align-items:center;display:flex}
 .order-service-details .order-service-details-top .service-icon{margin-right:15px}
@@ -4212,7 +4212,7 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .services-view .services-item-icon{align-items:center;display:flex;font-size:48px;height:92px;justify-content:center;position:relative}
 .services-view .services-item-icon img{max-height:50px;max-width:50px}
 .services-view .services-item-name{flex:1 1 0%;font-size:14px;font-weight:600;display:-webkit-box;line-height:1.4em;max-height:4.2em;overflow:hidden;padding:0!important;-webkit-box-orient:vertical;-webkit-line-clamp:3;position:relative;word-wrap:break-word}
-.services-view .services-items{align-content:flex-start;background-color:#fff;display:flex;flex:1 1 auto;flex-wrap:wrap;padding-bottom:30px;z-index:9}
+.services-view .services-items{align-content:flex-start;background-color:#fff;display:flex;flex:1 1 auto;flex-wrap:wrap;padding-bottom:30px;width:100%;z-index:9}
 .services-view .services-items-filter{flex:1 1 100%;margin:20px 20px 10px}
 .services-view .services-items-filter .filter-pf pf-filter-fields,.services-view .services-items-filter .filter-pf pf-filter-results{display:inline-block}
 .services-view .services-items-filter .filter-pf .filter-fields button{display:none}
