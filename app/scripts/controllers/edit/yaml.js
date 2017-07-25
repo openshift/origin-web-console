@@ -116,7 +116,7 @@ angular.module('openshiftConsole')
               }
 
               $scope.updatingNow = true;
-              DataService.update(groupVersion, original.metadata.name, original, {
+              DataService.update(groupVersion, original.metadata.name, updated, {
                 namespace: original.metadata.namespace
               }).then(
                 // success
