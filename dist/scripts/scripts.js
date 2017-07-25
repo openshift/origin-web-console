@@ -7322,7 +7322,7 @@ e.save = function() {
 var n = e.updated.resource;
 if (e.modified = !1, n.kind === i.kind) {
 var r = o.objectToResourceGroupVersion(i), s = o.objectToResourceGroupVersion(n);
-s ? s.group === r.group ? o.apiInfo(s) ? (e.updatingNow = !0, c.update(r, i.metadata.name, i, {
+s ? s.group === r.group ? o.apiInfo(s) ? (e.updatingNow = !0, c.update(r, i.metadata.name, n, {
 namespace: i.metadata.namespace
 }).then(function(t) {
 var r = _.get(n, "metadata.resourceVersion");
