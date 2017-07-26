@@ -8853,6 +8853,8 @@ sortType: "alpha"
 });
 }), i.push(n.watch("events", e.projectContext, function(n) {
 t = n.by("metadata.name"), v(), o.log("events (subscribe)", e.filteredEvents);
+}, {
+skipDigest: !0
 })), e.$on("$destroy", function() {
 n.unwatchAll(i);
 });
