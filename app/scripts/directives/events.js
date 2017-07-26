@@ -157,7 +157,7 @@ angular.module('openshiftConsole')
           allEvents = events.by("metadata.name");
           debounceUpdate();
           Logger.log("events (subscribe)", $scope.filteredEvents);
-        }));
+        }, { skipDigest: true }));
 
         $scope.$on('$destroy', function(){
           DataService.unwatchAll(watches);
