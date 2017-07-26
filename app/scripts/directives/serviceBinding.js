@@ -1,7 +1,7 @@
 'use strict';
 
 (function() {
-  angular.module('openshiftConsole').component('overviewServiceBinding', {
+  angular.module('openshiftConsole').component('serviceBinding', {
     controller: [
       ServiceBinding
     ],
@@ -9,10 +9,11 @@
     bindings: {
       namespace: '<',
       binding: '<',
+      refApiObject: '<?',
       serviceClasses: '<',
       serviceInstances: '<'
     },
-    templateUrl: 'views/overview/_service-binding.html'
+    templateUrl: 'views/directives/_service-binding.html'
   });
 
   function ServiceBinding() {

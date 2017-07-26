@@ -220,6 +220,10 @@ angular.module("openshiftConsole")
               .segmentCoded(name.substring(0, ind))
               .segmentCoded(name.substring(ind + 1));
             break;
+          case "ServiceInstance":
+            url.segment("service-instances")
+              .segmentCoded(name);
+            break;
           case "StatefulSet":
             url.segment("stateful-sets")
               .segmentCoded(name);
@@ -316,6 +320,7 @@ angular.module("openshiftConsole")
           'routes': 'routes',
           'secrets': 'secrets',
           'services': 'services',
+          'serviceinstances': 'service-instances',
           'persistentvolumeclaims': 'storage',
           'statefulsets' : 'stateful-sets'
         };

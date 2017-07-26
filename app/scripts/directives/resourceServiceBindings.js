@@ -27,7 +27,7 @@ function ResourceServiceBindings($filter, DataService, BindingService, CatalogSe
   ctrl.bindableServiceInstances = [];
   ctrl.serviceClasses = [];
   ctrl.serviceInstances = [];
-  ctrl.showBindings = CatalogService.SERVICE_CATALOG_ENABLED && enableTechPreviewFeature('pod_presets');
+  ctrl.showBindings = CatalogService.SERVICE_CATALOG_ENABLED && (_.get(ctrl, 'apiObject.kind') === 'ServiceInstance' || enableTechPreviewFeature('pod_presets'));
 
   var limitWatches = $filter('isIE')() || $filter('isEdge')();
   var DEFAULT_POLL_INTERVAL = 60 * 1000; // milliseconds

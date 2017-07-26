@@ -6,7 +6,7 @@
     <div class="list-pf-content">
       <div class="list-pf-name">
         <h3>
-          <span ng-bind-html="row.displayName | highlightKeywords : row.state.filterKeywords"></span>
+          <a ng-href="{{row.apiObject | navigateResourceURL}}" ng-bind-html="row.displayName | highlightKeywords : row.state.filterKeywords"></a>
           <div ng-bind-html="row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords" class="list-row-longname"></div>
         </h3>
         <div class="status-icons">

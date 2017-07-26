@@ -272,6 +272,16 @@ angular
         controller: 'ServiceController',
         reloadOnSearch: false
       })
+      .when('/project/:project/browse/service-instances', {
+        templateUrl: 'views/service-instances.html',
+        controller: 'ServiceInstancesController',
+        reloadOnSearch: false
+      })
+      .when('/project/:project/browse/service-instances/:instance', {
+        templateUrl: 'views/browse/service-instance.html',
+        controller: 'ServiceInstanceController',
+        reloadOnSearch: false
+      })
       .when('/project/:project/browse/storage', {
         templateUrl: 'views/storage.html',
         controller: 'StorageController',

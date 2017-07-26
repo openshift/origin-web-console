@@ -1,12 +1,13 @@
 <div class="mar-bottom-xl" ng-if="$ctrl.showBindings">
-  <h3>Service Bindings</h3>
-  <overview-service-binding
+  <h3>Bindings</h3>
+  <service-binding
     ng-repeat="binding in $ctrl.bindings track by (binding | uid)"
     namespace="$ctrl.projectContext.projectName"
     binding="binding"
+    ref-api-object="$ctrl.apiObject"
     service-classes="$ctrl.serviceClasses"
     service-instances="$ctrl.serviceInstances">
-  </overview-service-binding>
+  </service-binding>
   <div ng-if="($ctrl.bindableServiceInstances | size) && ({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create')">
     <a href="" ng-click="$ctrl.createBinding()" role="button">
       <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>
