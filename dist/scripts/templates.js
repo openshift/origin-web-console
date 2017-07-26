@@ -6867,6 +6867,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Loading...\n" +
     "</div>\n" +
     "<div ng-if=\"events\" class=\"events\">\n" +
+    "<div class=\"table-filter-extension\">\n" +
     "<div class=\"data-toolbar\">\n" +
     "<form role=\"form\" class=\"search-pf has-button\">\n" +
     "<div class=\"form-group filter-controls has-clear\">\n" +
@@ -6885,7 +6886,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<pf-sort config=\"sortConfig\" class=\"sort-controls\"></pf-sort>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<table class=\"table table-bordered table-condensed table-mobile table-hover table-layout-fixed events-table\" ng-class=\"{ 'table-empty': (filteredEvents | hashSize) === 0 }\">\n" +
+    "</div>\n" +
+    "<table class=\"table table-bordered table-condensed table-mobile table-hover table-layout-fixed events-table\">\n" +
     "<thead>\n" +
     "<tr>\n" +
     "<th id=\"time\">Time</th>\n" +
