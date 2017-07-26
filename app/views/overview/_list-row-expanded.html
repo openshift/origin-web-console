@@ -17,6 +17,8 @@
             builds="row.state.builds"
             class="hide-ng-leave">
           </pod-template>
+
+          <init-containers-summary api-object="row.apiObject"></init-containers-summary>
         </div><!-- /overview-pod-template -->
 
       <div class="overview-animation-block" ng-class="{
@@ -119,6 +121,8 @@
               pod-template="row.current | podTemplate"
               images-by-docker-reference="row.state.imagesByDockerReference"
               builds="row.state.builds"></pod-template>
+
+            <init-containers-summary api-object="row.apiObject"></init-containers-summary>
           </uib-tab>
           <uib-tab ng-if="row.current && row.state.showMetrics && row.state.breakpoint === 'xxs'" active="row.selectedTab.metrics">
             <uib-tab-heading>Metrics</uib-tab-heading>

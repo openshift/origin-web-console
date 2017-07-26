@@ -356,6 +356,12 @@ angular.module('openshiftConsole')
       return Navigate.resourceURL(resource, kind, namespace, null, {apiVersion: apiVersion});
     };
   })
+  // Resource must be the resource object itself, it can NOT be a name.
+  .filter('navigateToTabURL', function (Navigate) {
+    return function(resource, tab) {
+      return Navigate.resourceURL(resource, null, null, null, {tab: tab});
+    };
+  })
   .filter('configURLForResource', function(Navigate) {
     return function(resource, /* optional */ action) {
       return Navigate.configURLForResource(resource, action);

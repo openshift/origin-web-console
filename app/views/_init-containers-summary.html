@@ -1,0 +1,7 @@
+<span ng-if="$ctrl.podTemplate.spec.initContainers.length" class="text-muted small">
+  <ng-pluralize class="mar-right-sm"
+                count="$ctrl.podTemplate.spec.initContainers.length"
+                when="{'1': '&nbsp;{} init container','other': '&nbsp;{} init containers'}">
+  </ng-pluralize>
+  <a ng-href="{{$ctrl.apiObject | navigateToTabURL:$ctrl.tab}}">View Details</a>
+</span>
