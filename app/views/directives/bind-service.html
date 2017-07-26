@@ -2,14 +2,12 @@
   <pf-wizard
        hide-header="true"
        hide-sidebar="true"
-       hide-back-button="true"
        step-class="bind-service-wizard-step"
        wizard-ready="ctrl.wizardReady"
        next-title="ctrl.nextTitle"
        on-finish="ctrl.closeWizard()"
        on-cancel="ctrl.closeWizard()"
-       wizard-done="ctrl.wizardComplete"
-       class="pf-wizard-no-back">
+       wizard-done="ctrl.wizardComplete">
     <pf-wizard-step ng-repeat="step in ctrl.steps track by $index"
        step-title="{{step.label}}"
        next-enabled="step.valid"

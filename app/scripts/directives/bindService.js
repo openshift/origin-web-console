@@ -23,7 +23,11 @@
                        DataService,
                        BindingService) {
     var ctrl = this;
-    var validityWatcher;
+    var bindFormStep;
+    var bindParametersStep;
+    var resultsStep;
+    var selectionValidityWatcher;
+    var parametersValidityWatcher;
     var bindingWatch;
     var statusCondition = $filter('statusCondition');
     var enableTechPreviewFeature = $filter('enableTechPreviewFeature');
@@ -70,18 +74,31 @@
     };
 
     var showBind = function() {
+      ctrl.nextTitle = bindParametersStep.hidden ? 'Bind' : 'Next >';
+      if (ctrl.podPresets && !selectionValidityWatcher) {
+        selectionValidityWatcher = $scope.$watch("ctrl.selectionForm.$valid", function(isValid) {
+          bindFormStep.valid = isValid;
+        });
+      }
+    };
+
+    var showParameters = function() {
       ctrl.nextTitle = 'Bind';
-      if (ctrl.podPresets) {
-        validityWatcher = $scope.$watch("ctrl.selectionForm.$valid", function(isValid) {
-          ctrl.steps[0].valid = isValid;
+      if (!parametersValidityWatcher) {
+        parametersValidityWatcher = $scope.$watch("ctrl.parametersForm.$valid", function(isValid) {
+          bindParametersStep.valid = isValid;
         });
       }
     };
 
     var showResults = function() {
-      if (validityWatcher) {
-        validityWatcher();
-        validityWatcher = undefined;
+      if (selectionValidityWatcher) {
+        selectionValidityWatcher();
+        selectionValidityWatcher = undefined;
+      }
+      if (parametersValidityWatcher) {
+        parametersValidityWatcher();
+        parametersValidityWatcher = undefined;
       }
       ctrl.nextTitle = "Close";
       ctrl.wizardComplete = true;
@@ -141,27 +158,57 @@
       });
     };
 
+    bindFormStep = {
+      id: 'bindForm',
+      label: 'Binding',
+      view: 'views/directives/bind-service/bind-service-form.html',
+      valid: true,
+      onShow: showBind
+    };
+
+    bindParametersStep = {
+      id: 'bindParameters',
+      label: 'Parameters',
+      view: 'views/directives/bind-service/bind-parameters.html',
+      hidden: true,
+      onShow: showParameters
+    };
+
+    resultsStep = {
+      id: 'results',
+      label: 'Results',
+      view: 'views/directives/bind-service/results.html',
+      valid: true,
+      onShow: showResults
+    };
+
+    var updateInstance = function() {
+      if (!ctrl.serviceClasses) {
+        return;
+      }
+
+      var instance = ctrl.target.kind === 'Instance' ? ctrl.target : ctrl.serviceToBind;
+      if (!instance) {
+        return;
+      }
+
+      ctrl.serviceClass = ctrl.serviceClasses[instance.spec.serviceClassName];
+      ctrl.serviceClassName = instance.spec.serviceClassName;
+      ctrl.plan = BindingService.getPlanForInstance(instance, ctrl.serviceClass);
+      ctrl.parameterSchema = _.get(ctrl.plan, 'alphaBindingCreateParameterSchema');
+      bindParametersStep.hidden = !_.has(ctrl.parameterSchema, 'properties');
+      ctrl.nextTitle = bindParametersStep.hidden ? 'Bind' : 'Next >';
+    };
+
+    $scope.$watch("ctrl.serviceToBind", updateInstance);
+
     ctrl.$onInit = function() {
       ctrl.serviceSelection = {};
       ctrl.projectDisplayName = $filter('displayName')(ctrl.project);
       ctrl.podPresets = enableTechPreviewFeature('pod_presets');
+      ctrl.parameterData = {};
 
-      ctrl.steps = [
-        {
-          id: 'bindForm',
-          label: "Binding",
-          view: 'views/directives/bind-service/bind-service-form.html',
-          valid: true,
-          onShow: showBind
-        },
-        {
-          label: 'Results',
-          id: 'results',
-          view: 'views/directives/bind-service/results.html',
-          valid: true,
-          onShow: showResults
-        }
-      ];
+      ctrl.steps = [ bindFormStep, bindParametersStep, resultsStep ];
 
       // We will want ServiceClasses either way for display purposes
       DataService.list({
@@ -169,10 +216,7 @@
         resource: 'serviceclasses'
       }, {}).then(function(serviceClasses) {
         ctrl.serviceClasses = serviceClasses.by('metadata.name');
-        if (ctrl.target.kind === 'Instance') {
-          ctrl.serviceClass = ctrl.serviceClasses[ctrl.target.spec.serviceClassName];
-          ctrl.serviceClassName = ctrl.target.spec.serviceClassName;
-        }
+        updateInstance();
         sortServiceInstances();
       });
 
@@ -198,9 +242,13 @@
     };
 
     ctrl.$onDestroy = function() {
-      if (validityWatcher) {
-        validityWatcher();
-        validityWatcher = undefined;
+      if (selectionValidityWatcher) {
+        selectionValidityWatcher();
+        selectionValidityWatcher = undefined;
+      }
+      if (parametersValidityWatcher) {
+        parametersValidityWatcher();
+        parametersValidityWatcher = undefined;
       }
       if (bindingWatch) {
         DataService.unwatch(bindingWatch);
@@ -216,7 +264,7 @@
       };
 
       var serviceClass = BindingService.getServiceClassForInstance(svcToBind, ctrl.serviceClasses);
-      BindingService.bindService(svcToBind, application, serviceClass).then(function(binding){
+      BindingService.bindService(svcToBind, application, serviceClass, ctrl.parameterData).then(function(binding){
         ctrl.binding = binding;
         ctrl.error = null;
 
