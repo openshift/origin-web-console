@@ -881,7 +881,8 @@ label: "Uncategorized",
 description: ""
 } ]
 } ],
-SAAS_OFFERINGS: []
+SAAS_OFFERINGS: [],
+APP_LAUNCHER_NAVIGATION: []
 }), angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.navigation", "patternfly.sort", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64", "openshiftCommonServices", "openshiftCommonUI", "webCatalog" ]).config([ "$routeProvider", function(e) {
 var t, n = {
 templateUrl: "views/projects.html",

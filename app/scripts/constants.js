@@ -446,8 +446,22 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     }
   ],
   SAAS_OFFERINGS: [
-    // empty by default
-    // EXAMPLE
-    // {id: 1, title:  'Microservices Application', icon: 'fa fa-cubes',  url: 'https://www.example.com/', description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.'}
+    // Example application link to add to the top of the landing page.
+    // {
+    //   id: 1,
+    //   title: 'Microservices Application',
+    //   icon: 'fa fa-cubes',
+    //   url: 'https://www.example.com/',
+    //   description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.'
+    // }
+  ],
+  APP_LAUNCHER_NAVIGATION: [
+    // Example application link to show in the masthead application launcher beside the help and user menus.
+    // {
+    //   title: 'Dashboard',
+    //   iconClass: 'fa fa-dashboard',
+    //   href: 'http://example.com/',
+    //   tooltip: 'Open Dashboard'
+    // }
   ]
 });
