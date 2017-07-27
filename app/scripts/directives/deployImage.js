@@ -24,8 +24,6 @@ angular.module("openshiftConsole")
       },
       templateUrl: 'views/directives/deploy-image.html',
       link: function($scope) {
-        $scope.forms = {};
-
         // Pick from an image stream tag or Docker image name.
         $scope.mode = "istag"; // "istag" or "dockerImage"
 
@@ -154,7 +152,7 @@ angular.module("openshiftConsole")
                   return;
                 }
 
-                $scope.forms.imageSelection.imageName.$setValidity("imageLoaded", true);
+                $scope.imageSelection.imageName.$setValidity("imageLoaded", true);
 
                 var image = $scope.import.image;
                 if (image) {
@@ -189,11 +187,17 @@ angular.module("openshiftConsole")
             $scope.istag = {};
 
             if (newMode === 'dockerImage') {
-              $scope.forms.imageSelection.imageName.$setValidity("imageLoaded", false);
+              $scope.imageSelection.imageName.$setValidity("imageLoaded", false);
             }
             else {
               // reset this to true so it doesn't block form submission
-              $scope.forms.imageSelection.imageName.$setValidity("imageLoaded", true);
+              $scope.imageSelection.imageName.$setValidity("imageLoaded", true);
+            }
+          });
+
+          $scope.$watch('imageName', function() {
+            if ($scope.mode === 'dockerImage') {
+              $scope.imageSelection.imageName.$setValidity("imageLoaded", false);
             }
           });
 

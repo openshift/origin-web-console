@@ -13375,7 +13375,7 @@ labels:_.extend(b, a),
 pullSecrets:c.pullSecrets
 });
 }
-c.forms = {}, c.mode = "istag", c.istag = {}, c.app = {}, c.env = [], c.labels = [], c.systemLabels = [ {
+c.mode = "istag", c.istag = {}, c.app = {}, c.env = [], c.labels = [], c.systemLabels = [ {
 name:"app",
 value:""
 } ], c.pullSecrets = [ {
@@ -13426,7 +13426,7 @@ return a = w(a), a = v(a), a = y(a);
 c.findImage = function() {
 c.loading = !0, g.findImage(c.imageName, c.context).then(function(a) {
 if (c["import"] = a, c.loading = !1, "Success" !== _.get(a, "result.status")) return void (c["import"].error = _.get(a, "result.message", "An error occurred finding the image."));
-c.forms.imageSelection.imageName.$setValidity("imageLoaded", !0);
+c.imageSelection.imageName.$setValidity("imageLoaded", !0);
 var b = c["import"].image;
 b && (c.app.name = z(), c.runsAsRoot = g.runsAsRoot(b), c.ports = e.parsePorts(b), c.volumes = g.getVolumes(b), c.createImageStream = !0);
 }, function(b) {
@@ -13437,7 +13437,9 @@ c.nameTaken = !1, _.set(_.find(c.systemLabels, {
 name:"app"
 }), "value", c.app.name);
 }), c.$watch("mode", function(a, b) {
-a !== b && (delete c["import"], c.istag = {}, "dockerImage" === a ? c.forms.imageSelection.imageName.$setValidity("imageLoaded", !1) :c.forms.imageSelection.imageName.$setValidity("imageLoaded", !0));
+a !== b && (delete c["import"], c.istag = {}, "dockerImage" === a ? c.imageSelection.imageName.$setValidity("imageLoaded", !1) :c.imageSelection.imageName.$setValidity("imageLoaded", !0));
+}), c.$watch("imageName", function() {
+"dockerImage" === c.mode && c.imageSelection.imageName.$setValidity("imageLoaded", !1);
 }), c.$watch("istag", function(b, d) {
 if (b !== d) {
 if (!b.namespace || !b.imageStream || !b.tagObject) return void delete c["import"];

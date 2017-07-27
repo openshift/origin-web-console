@@ -6268,7 +6268,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>\n" +
     "Deploy an existing image from an image stream tag or docker pull spec.\n" +
     "</p>\n" +
-    "<ng-form name=\"forms.imageSelection\">\n" +
+    "<ng-form name=\"imageSelection\">\n" +
     "<fieldset ng-disabled=\"loading\">\n" +
     "<div class=\"radio\">\n" +
     "<label>\n" +
@@ -6355,24 +6355,24 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"row\" ng-if-end>\n" +
     "<div class=\"col-sm-12\">\n" +
-    "<ng-form name=\"forms.deployImage\" class=\"osc-form\">\n" +
+    "<ng-form name=\"deployImage\" class=\"osc-form\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"name\" class=\"required\">Name</label>\n" +
-    "<div ng-class=\"{'has-error': (forms.deployImage.name.$invalid && forms.deployImage.name.$touched) || nameTaken}\">\n" +
+    "<div ng-class=\"{'has-error': (deployImage.name.$invalid && deployImage.name.$touched) || nameTaken}\">\n" +
     "<input type=\"text\" required select-on-focus minlength=\"2\" maxlength=\"24\" pattern=\"[a-z]([-a-z0-9]*[a-z0-9])?\" ng-model=\"app.name\" id=\"name\" name=\"name\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "</div>\n" +
     "<div class=\"help-block\">Identifies the resources created for this image.</div>\n" +
-    "<div class=\"has-error\" ng-show=\"forms.deployImage.name.$invalid && forms.deployImage.name.$touched\">\n" +
-    "<div class=\"help-block\" ng-show=\"forms.deployImage.name.$error.required\">\n" +
+    "<div class=\"has-error\" ng-show=\"deployImage.name.$invalid && deployImage.name.$touched\">\n" +
+    "<div class=\"help-block\" ng-show=\"deployImage.name.$error.required\">\n" +
     "A name is required.\n" +
     "</div>\n" +
-    "<div class=\"help-block\" ng-show=\"forms.deployImage.name.$error.pattern\">\n" +
+    "<div class=\"help-block\" ng-show=\"deployImage.name.$error.pattern\">\n" +
     "Name must be an alphanumeric (a-z, 0-9) string with a maximum length of 24 characters where the first character is a letter (a-z). The '-' character is allowed anywhere except the first or last character.\n" +
     "</div>\n" +
-    "<div class=\"help-block\" ng-show=\"forms.deployImage.name.$error.minlength\">\n" +
+    "<div class=\"help-block\" ng-show=\"deployImage.name.$error.minlength\">\n" +
     "Name must have at least 2 characters.\n" +
     "</div>\n" +
-    "<div class=\"help-block\" ng-show=\"forms.deployImage.name.$error.maxlength\">\n" +
+    "<div class=\"help-block\" ng-show=\"deployImage.name.$error.maxlength\">\n" +
     "Name can't have more than 24 characters.\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6389,7 +6389,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</label-editor>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!isDialog\" class=\"button-group gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
-    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"create()\" value=\"\" ng-disabled=\"forms.deployImage.$invalid || nameTaken || disableInputs\">Create</button>\n" +
+    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"create()\" value=\"\" ng-disabled=\"deployImage.$invalid || nameTaken || disableInputs\">Create</button>\n" +
     "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
     "</div>\n" +
     "</ng-form>\n" +
