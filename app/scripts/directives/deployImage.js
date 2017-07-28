@@ -23,9 +23,11 @@ angular.module("openshiftConsole")
         isDialog: '='
       },
       templateUrl: 'views/directives/deploy-image.html',
-      link: function($scope) {
+      controller: function($scope) {
+        // Must be initialized the controller. The link function is too late.
         $scope.forms = {};
-
+      },
+      link: function($scope) {
         // Pick from an image stream tag or Docker image name.
         $scope.mode = "istag"; // "istag" or "dockerImage"
 
@@ -193,6 +195,12 @@ angular.module("openshiftConsole")
             else {
               // reset this to true so it doesn't block form submission
               $scope.forms.imageSelection.imageName.$setValidity("imageLoaded", true);
+            }
+          });
+
+          $scope.$watch('imageName', function() {
+            if ($scope.mode === 'dockerImage') {
+              $scope.forms.imageSelection.imageName.$setValidity("imageLoaded", false);
             }
           });
 

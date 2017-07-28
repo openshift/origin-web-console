@@ -13048,6 +13048,9 @@ context: "=",
 isDialog: "="
 },
 templateUrl: "views/directives/deploy-image.html",
+controller: [ "$scope", function(e) {
+e.forms = {};
+} ],
 link: function(n) {
 function l() {
 var e = p.mapEntries(p.compactEntries(n.labels));
@@ -13063,7 +13066,7 @@ labels: e,
 pullSecrets: n.pullSecrets
 });
 }
-n.forms = {}, n.mode = "istag", n.istag = {}, n.app = {}, n.env = [], n.labels = [ {
+n.mode = "istag", n.istag = {}, n.app = {}, n.env = [], n.labels = [ {
 name: "app",
 value: ""
 } ], n.pullSecrets = [ {
@@ -13129,6 +13132,8 @@ name: "app"
 !a || a.value && a.value !== t || (a.value = e);
 }), n.$watch("mode", function(e, t) {
 e !== t && (delete n.import, n.istag = {}, "dockerImage" === e ? n.forms.imageSelection.imageName.$setValidity("imageLoaded", !1) : n.forms.imageSelection.imageName.$setValidity("imageLoaded", !0));
+}), n.$watch("imageName", function() {
+"dockerImage" === n.mode && n.forms.imageSelection.imageName.$setValidity("imageLoaded", !1);
 }), n.$watch("istag", function(t, a) {
 if (t !== a) if (t.namespace && t.imageStream && t.tagObject) {
 var s, c = _.get(t, "tagObject.items[0].image");
