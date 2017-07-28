@@ -12387,9 +12387,9 @@ n.selectedProject = t.project, n.currentStep = "Results";
 }), n.close = function() {
 var e = n.onDialogClosed();
 return _.isFunction(e) && e(), n.wizardDone = !1, !0;
-}, e.$on("wizard:stepChanged", function(e, t) {
-"results" === t.step.stepId ? (n.nextButtonTitle = "Close", n.wizardDone = !0) : n.nextButtonTitle = "Deploy";
-}), n.nextCallback = function(e) {
+}, n.stepChanged = function(e) {
+"results" === e.stepId ? (n.nextButtonTitle = "Close", n.wizardDone = !0) : n.nextButtonTitle = "Deploy";
+}, n.nextCallback = function(e) {
 return "image" === e.stepId ? (n.deployImage(), !1) : ("results" === e.stepId && n.close(), !0);
 };
 } ],
@@ -12426,9 +12426,9 @@ r.selectedProject = t.project, r.currentStep = "Results";
 r.template = null;
 var e = r.onDialogClosed();
 return _.isFunction(e) && e(), r.wizardDone = !1, !0;
-}, e.$on("wizard:stepChanged", function(e, t) {
-"results" === t.step.stepId ? (r.nextButtonTitle = "Close", r.wizardDone = !0) : r.nextButtonTitle = "Create";
-}), r.currentStep = "JSON / YAML", r.nextCallback = function(e) {
+}, r.stepChanged = function(e) {
+"results" === e.stepId ? (r.nextButtonTitle = "Close", r.wizardDone = !0) : r.nextButtonTitle = "Create";
+}, r.currentStep = "JSON / YAML", r.nextCallback = function(e) {
 return "file" === e.stepId ? (r.importFile(), !1) : "template" === e.stepId ? (r.instantiateTemplate(), !1) : "results" !== e.stepId || (r.close(), !1);
 };
 } ],

@@ -8,6 +8,7 @@
        next-callback="$ctrl.nextCallback"
        current-step="$ctrl.currentStep"
        wizard-done="$ctrl.wizardDone"
+       on-step-changed="$ctrl.stepChanged(step)"
        step-class="order-service-wizard-step">
     <pf-wizard-step
          step-title="JSON / YAML"
