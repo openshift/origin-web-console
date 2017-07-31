@@ -13557,7 +13557,7 @@ details: f(t)
 c = null;
 });
 }, l.clearChanges = function() {
-l.updatedObject = a.copyAndNormalize(l.apiObject), l.form.$setPristine(), u = !1;
+l.updatedObject = a.copyAndNormalize(l.apiObject), l.containers = a.getContainers(l.updatedObject), l.form.$setPristine(), u = !1;
 };
 } ],
 controllerAs: "$ctrl",
