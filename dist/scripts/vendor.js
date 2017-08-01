@@ -57431,7 +57431,7 @@ g && 1 === g.readyState && g.send("0" + n(e));
 });
 var v = function() {
 var e = a.cols || 80;
-m.charMeasure.width && (document.getElementsByClassName("xterm-viewport")[0].style.width = m.charMeasure.width * e + 17 + "px");
+m.charMeasure.width && (s[0].getElementsByClassName("xterm-viewport")[0].style.width = m.charMeasure.width * e + 17 + "px");
 };
 m.charMeasure.on("charsizechanged", v);
 var b = function() {
