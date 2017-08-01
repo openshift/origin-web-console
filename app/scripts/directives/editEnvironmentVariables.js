@@ -148,6 +148,7 @@
 
     ctrl.clearChanges = function() {
       ctrl.updatedObject = EnvironmentService.copyAndNormalize(ctrl.apiObject);
+      ctrl.containers = EnvironmentService.getContainers(ctrl.updatedObject);
       ctrl.form.$setPristine();
       previousEnvConflict = false;
     };
