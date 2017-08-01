@@ -5485,8 +5485,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"pipeline-actions\" ng-if=\"stage | pipelineStagePendingInput\">\n" +
     "<a ng-href=\"{{build | jenkinsInputURL}}\" target=\"_blank\">Input Required</a>\n" +
     "</div>\n" +
-    "<div class=\"pipeline-time\" ng-class=\"stage.status\" ng-if=\"stage.durationMillis && !(stage | pipelineStagePendingInput)\">{{stage.durationMillis | timeOnlyDuration}}</div>\n" +
     "<div class=\"pipeline-time\" ng-class=\"stage.status\" ng-if=\"!stage.durationMillis && !(stage | pipelineStagePendingInput)\">not started</div>\n" +
+    "<div class=\"pipeline-time\" ng-class=\"stage.status\" ng-if=\"stage.startTimeMillis && !(stage | pipelineStagePendingInput) && !(stage | pipelineStageComplete)\"><time-only-duration-until-now timestamp=\"stage.startTimeMillis\"></time-only-duration-until-now></div>\n" +
+    "<div class=\"pipeline-time\" ng-class=\"stage.status\" ng-if=\"stage.durationMillis && (stage | pipelineStageComplete)\">{{stage.durationMillis | timeOnlyDuration}}</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
