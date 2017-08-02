@@ -76,8 +76,7 @@
     },
     "angular-patternfly": {
       "main": [
-        "dist/styles/angular-patternfly.css",
-        "dist/angular-patternfly.js"
+        "dist/styles/angular-patternfly.css"
       ]
     },
     "uri.js": {

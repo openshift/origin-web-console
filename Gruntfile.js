@@ -319,6 +319,7 @@ module.exports = function (grunt) {
           html: {
             steps: {
               js: ['concat', 'uglifyjs'],
+              angularpatternfly: ['concat'],
               css: ['cssmin']
             },
             post: {
@@ -363,7 +364,15 @@ module.exports = function (grunt) {
       html: ['<%= yeoman.dist %>/{,*/}*.html'],
       css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
       options: {
-        assetsDirs: ['<%= yeoman.dist %>','<%= yeoman.dist %>/images']
+        assetsDirs: ['<%= yeoman.dist %>','<%= yeoman.dist %>/images'],
+        blockReplacements: {
+          // Handle angular-patternfly specially to avoid minifying it, which
+          // breaks dependency injection for Angular 1.5 components, even with
+          // ngAnnotate. Use the minified JS as-is.
+          angularpatternfly: function(block) {
+            return '<script src="' + block.dest + '"></script>';
+          }
+        },
       }
     },
 
