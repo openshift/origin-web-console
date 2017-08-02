@@ -25,9 +25,13 @@
                         <h1>My Projects</h1>
                         <div class="projects-options">
                           <div class="projects-add" ng-if="canCreate">
-                            <a href="create-project" class="btn btn-md btn-primary">
-                              Create Project
-                            </a>
+                            <button ng-click="createProject()" class="btn btn-md btn-primary">
+                              <span class="fa fa-plus" aria-hidden="true"></span>
+                              <span class="icon-button-text">Create Project</span>
+                            </button>
+                            <origin-modal-popup shown="newProjectPanelShown" modal-title="Create Project" on-close="closeNewProjectPanel">
+                              <create-project is-dialog="true" redirect-action="onNewProject" on-cancel="closeNewProjectPanel"></create-project>
+                            </origin-modal-popup>
                           </div>
                           <div class="projects-search">
                             <form role="form" class="search-pf has-button">
@@ -101,7 +105,7 @@
                                 </a>
                               </li>
                               <li role="menuitem">
-                                <a ng-href="project/{{project.metadata.name}}/edit?then=./">
+                                <a href="" ng-click="editProject(project)">
                                   Edit Project
                                 </a>
                               </li>
@@ -120,6 +124,11 @@
                             </ul>
                           </div>
                         </div>
+                        <origin-modal-popup shown="editProjectPanelShown && editingProject === project"
+                                            ng-class="{'with-description': (project | description | size)}"
+                                            modal-title="Edit Project" on-close="closeEditProjectPanel">
+                          <edit-project project="project" is-dialog="true" redirect-action="onEditProject" on-cancel="closeEditProjectPanel"></edit-project>
+                        </origin-modal-popup>
                       </div>
                     </div>
                     <p class="projects-instructions" ng-if="canCreate === false" ng-include="'views/_cannot-create-project.html'"></p>

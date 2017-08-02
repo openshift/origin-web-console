@@ -109,6 +109,35 @@ angular.module('openshiftConsole')
       onSortChange: update
     };
 
+    $scope.newProjectPanelShown = false;
+
+    $scope.createProject = function() {
+      $scope.newProjectPanelShown = true;
+    };
+
+    $scope.closeNewProjectPanel = function() {
+      $scope.newProjectPanelShown = false;
+    };
+
+    $scope.onNewProject = function() {
+      $scope.newProjectPanelShown = false;
+    };
+
+    $scope.editProjectPanelShown = false;
+
+    $scope.editProject = function(project) {
+      $scope.editingProject = project;
+      $scope.editProjectPanelShown = true;
+    };
+
+    $scope.closeEditProjectPanel = function() {
+      $scope.editProjectPanelShown = false;
+    };
+
+    $scope.onEditProject = function() {
+      $scope.editProjectPanelShown = false;
+    };
+
     $scope.$watch('search.text', _.debounce(function(searchText) {
       $scope.keywords = filterKeywords = KeywordService.generateKeywords(searchText);
       $scope.$apply(filterProjects);

@@ -87,10 +87,17 @@
     justify-content: flex-end;
     margin: -27px 0 0 0;
     @media (min-width: 660px) {
+      display: block;
       margin-bottom: 20px;
       margin-left: 40px;
       margin-top: 0;
       order: 2;
+    }
+
+    .origin-modal-popup {
+      @media (min-width: @screen-sm-min) {
+        width: 370px;
+      }
     }
   }
   .projects-options {
@@ -156,5 +163,35 @@
   margin-bottom: 20px;
   .project-info:hover {
     background-color: @table-bg-hover;
+  }
+
+  .origin-modal-popup {
+    @media (min-width: @screen-sm-min) {
+      margin-left: -10px;
+      margin-top: -25px;
+      width: 370px;
+    }
+
+    &.position-above {
+      @media (min-width: @screen-sm-min) {
+        margin-top: 20px;
+      }
+    }
+  }
+
+  .with-description {
+    .origin-modal-popup {
+      @media (min-width: @screen-sm-min) {
+        margin-top: -45px;
+      }
+      @media (min-width: @screen-md-min) {
+        margin-top: -25px;
+      }
+      &.position-above {
+        @media (min-width: @screen-sm-min) {
+          margin-top: 20px;
+        }
+      }
+    }
   }
 }
