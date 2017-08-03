@@ -225,8 +225,14 @@ registry-imagestream-listing {
   .registry-image-tag {
     max-width: 115px;
   }
-  table {
-    width: 100%;
+  table td.image-identifier div.col {
+    max-width: none;
+    @media(max-width: @screen-xxs-max) {
+      .word-break();
+    }
+  }
+  tr.listing-ct-item td:last-child {
+    text-align: left;
   }
 }
 
