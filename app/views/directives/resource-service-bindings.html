@@ -1,12 +1,11 @@
-<div class="expanded-section">
-  <div class="section-title hidden-xs">Service Bindings</div>
+<div class="mar-bottom-xl" ng-if="$ctrl.showBindings">
+  <h3>Service Bindings</h3>
   <overview-service-binding
     ng-repeat="binding in $ctrl.bindings track by (binding | uid)"
-    namespace="$ctrl.namespace"
+    namespace="$ctrl.projectContext.projectName"
     binding="binding"
     service-classes="$ctrl.serviceClasses"
-    service-instances="$ctrl.serviceInstances"
-    secrets="$ctrl.secrets">
+    service-instances="$ctrl.serviceInstances">
   </overview-service-binding>
   <div ng-if="($ctrl.bindableServiceInstances | size) && ({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create')">
     <a href="" ng-click="$ctrl.createBinding()" role="button">
@@ -20,4 +19,12 @@
       <a href="./">Browse Catalog</a>
     </div>
   </div>
+  <div ng-if="!($ctrl.bindings | size) && ($ctrl.bindableServiceInstances | size) && !({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create')">
+    <span>There are no service bindings.</span>
+  </div>
 </div>
+<overlay-panel single-column="true" show-panel="$ctrl.overlayPanelVisible" show-close="true" handle-close="$ctrl.closeOverlayPanel">
+  <bind-service target="$ctrl.apiObject"
+                project="$ctrl.project"
+                on-close="$ctrl.closeOverlayPanel"></bind-service>
+</overlay-panel>

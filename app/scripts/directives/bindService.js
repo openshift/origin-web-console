@@ -45,14 +45,12 @@
     var sortServiceInstances = function() {
       // wait till both service instances and service classes are available so that the sort is stable and items dont jump around
       if (ctrl.serviceClasses && ctrl.serviceInstances) {
-        ctrl.orderedServiceInstances = _.sortBy(ctrl.serviceInstances,
-          function(item) {
-            return _.get(ctrl.serviceClasses, [item.spec.serviceClassName, 'externalMetadata', 'displayName']) || item.spec.serviceClassName;
-          },
-          function(item) {
-            return _.get(item, 'metadata.name', '');
-          }
-        );
+        ctrl.serviceInstances = BindingService.filterBindableServiceInstances(ctrl.serviceInstances, ctrl.serviceClasses);
+        ctrl.orderedServiceInstances = BindingService.sortServiceInstances(ctrl.serviceInstances, ctrl.serviceClasses);
+
+        if (!ctrl.serviceToBind) {
+          preselectService();
+        }
       }
     };
 
@@ -137,9 +135,6 @@
         resource: 'instances'
       }, context).then(function(instances) {
         ctrl.serviceInstances = instances.by('metadata.name');
-        if (!ctrl.serviceToBind) {
-          preselectService();
-        }
         sortServiceInstances();
       });
     };
