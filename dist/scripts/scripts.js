@@ -8031,16 +8031,16 @@ a.history.back();
 };
 n.cancel = m, l.get(t.project).then(_.spread(function(a, l) {
 if (n.project = a, n.breadcrumbs[0].title = e("displayName")(a), o.canI("routes", "create", t.project)) {
-var p = e("orderByDisplayName");
+var p, g = e("orderByDisplayName");
 n.routing.to = {
 kind: "Service",
 name: n.serviceName,
 weight: 1
 }, i.list("services", l).then(function(e) {
-n.services = p(e.by("metadata.name"));
+p = e.by("metadata.name"), n.services = g(p);
 }), n.copyServiceLabels = function() {
-var e = _.get(n, "routing.to.service.metadata.labels", {}), t = u.mapEntries(u.compactEntries(n.labels)), a = _.assign(t, e);
-n.labels = _.map(a, function(e, t) {
+var e = _.get(n, "routing.to.name"), t = _.get(p, [ e, "metadata", "labels" ], {}), a = u.mapEntries(u.compactEntries(n.labels)), r = _.assign(a, t);
+n.labels = _.map(r, function(e, t) {
 return {
 name: t,
 value: e
