@@ -11,6 +11,7 @@
       'Navigate',
       'NotificationsService',
       'ProcessedTemplateService',
+      'ProjectsService',
       'QuotaService',
       'SecurityCheckService',
       'TaskList',
@@ -35,6 +36,7 @@
                           Navigate,
                           NotificationsService,
                           ProcessedTemplateService,
+                          ProjectsService,
                           QuotaService,
                           SecurityCheckService,
                           TaskList,
@@ -198,16 +200,7 @@
       var newProjName = ctrl.selectedProject.metadata.name;
       var newProjDisplayName = ctrl.selectedProject.metadata.annotations['new-display-name'];
       var newProjDesc = $filter('description')(ctrl.selectedProject);
-      var projReqObj = {
-        apiVersion: "v1",
-        kind: "ProjectRequest",
-        metadata: {
-          name: newProjName
-        },
-        displayName: newProjDisplayName,
-        description: newProjDesc
-      };
-      return DataService.create('projectrequests', null, projReqObj, $scope);
+      return ProjectsService.create(newProjName, newProjDisplayName, newProjDesc);
     };
 
     ctrl.createFromTemplate = function() {
