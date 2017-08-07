@@ -25552,7 +25552,7 @@ function c(e, t, n, i, r, o, a) {
 return {
 create: function(s) {
 function l() {
-f && f.$destroy(), u.ngDestroy(), d.html(c), f = h.$new(), n(d.contents())(f);
+f ? f.$destroy() : u.ngDestroy(), d.html(c), f = h.$new(), n(d.contents())(f);
 }
 var c, u, d, h, f, p, g = Object.create(r);
 return g.name = "DTNGRenderer", g.options = s, g.render = function(e, n, r) {
@@ -47985,7 +47985,7 @@ var r = e.data(this, "treeview");
 }(jQuery, window, document), function(e) {
 "use strict";
 var t = {
-version: "3.26.0"
+version: "3.26.1"
 };
 t.pfBreakpoints = {
 tablet: 768,
@@ -48763,85 +48763,89 @@ n(l, c);
 }(jQuery), function(e) {
 "use strict";
 e.fn.setupVerticalNavigation = function(t) {
-var n = e(".nav-pf-vertical"), i = e(".container-pf-nav-pf-vertical"), r = e(".navbar-toggle"), o = !1, a = !1, s = function() {
+var n = e(".nav-pf-vertical"), i = e(".container-pf-nav-pf-vertical"), r = e(".navbar-toggle"), o = !0, a = !1, s = !1, l = function() {
 return i.hasClass("hidden-nav");
-}, l = function(t) {
+}, c = function(t) {
 setTimeout(function() {
 e(window).trigger("resize");
 }, t);
-}, c = function() {
-!s() && a || (n.addClass("secondary-visible-pf"), i.addClass("secondary-visible-pf")), a || l(100);
 }, u = function() {
+!l() && s || (n.addClass("secondary-visible-pf"), i.addClass("secondary-visible-pf")), s || c(100);
+}, d = function() {
 n.removeClass("secondary-visible-pf"), i.removeClass("secondary-visible-pf"), n.find(".secondary-nav-item-pf.is-hover").length <= 1 && n.removeClass("hover-secondary-nav-pf"), n.find(".mobile-nav-item-pf").each(function(t, n) {
 e(n).removeClass("mobile-nav-item-pf");
 });
-}, d = function() {
+}, h = function() {
 n.removeClass("tertiary-visible-pf"), i.removeClass("tertiary-visible-pf"), n.find(".tertiary-nav-item-pf.is-hover").length <= 1 && n.removeClass("hover-tertiary-nav-pf"), n.find(".mobile-nav-item-pf").each(function(t, n) {
 e(n).removeClass("mobile-nav-item-pf");
 });
-}, h = function(t) {
+}, f = function(t) {
 e(".nav-pf-vertical .list-group-item.active").removeClass("active"), t.addClass("active").parents(".list-group-item").addClass("active");
-}, f = function() {
-s() ? (n.removeClass("show-mobile-nav"), u(), n.find(".mobile-nav-item-pf").each(function(t, n) {
+}, p = function() {
+l() ? (n.removeClass("show-mobile-nav"), d(), n.find(".mobile-nav-item-pf").each(function(t, n) {
 e(n).removeClass("mobile-nav-item-pf");
-})) : c();
-}, p = function(t, r) {
+})) : u();
+}, g = function(t, r) {
 t ? (r.addClass("collapsed"), n.addClass("collapsed-secondary-nav-pf"), i.addClass("collapsed-secondary-nav-pf")) : (r ? r.removeClass("collapsed") : n.find('[data-toggle="collapse-secondary-nav"]').each(function(t, n) {
 e(n).removeClass("collapsed");
 }), n.removeClass("collapsed-secondary-nav-pf"), i.removeClass("collapsed-secondary-nav-pf"));
-}, g = function(t, r) {
-t ? (r.addClass("collapsed"), n.addClass("collapsed-tertiary-nav-pf"), i.addClass("collapsed-tertiary-nav-pf"), p(!1)) : (r ? r.removeClass("collapsed") : n.find('[data-toggle="collapse-tertiary-nav"]').each(function(t, n) {
+}, m = function(t, r) {
+t ? (r.addClass("collapsed"), n.addClass("collapsed-tertiary-nav-pf"), i.addClass("collapsed-tertiary-nav-pf"), g(!1)) : (r ? r.removeClass("collapsed") : n.find('[data-toggle="collapse-tertiary-nav"]').each(function(t, n) {
 e(n).removeClass("collapsed");
 }), n.removeClass("collapsed-tertiary-nav-pf"), i.removeClass("collapsed-tertiary-nav-pf"));
-}, m = function(t, i) {
+}, v = function(t, i) {
 e(document).find(".list-group-item.mobile-nav-item-pf").each(function(t, n) {
 e(n).removeClass("mobile-nav-item-pf");
 }), e(document).find(".list-group-item.mobile-secondary-item-pf").each(function(t, n) {
 e(n).removeClass("mobile-secondary-item-pf");
 }), t ? (t.addClass("mobile-nav-item-pf"), i ? (i.addClass("mobile-secondary-item-pf"), n.removeClass("show-mobile-secondary"), n.addClass("show-mobile-tertiary")) : (n.addClass("show-mobile-secondary"), n.removeClass("show-mobile-tertiary"))) : (n.removeClass("show-mobile-secondary"), n.removeClass("show-mobile-tertiary"));
-}, v = function() {
-var t, r = e(window).width();
-r < e.pfBreakpoints.tablet ? n.hasClass("hidden") || (n.addClass("hidden"), n.removeClass("collapsed"), i.removeClass("collapsed-nav"), i.addClass("hidden-nav"), p(!1), g(!1), o = !1) : n.hasClass("hidden") && (n.removeClass("hidden show-mobile-nav"), i.removeClass("hidden-nav")), r < e.pfBreakpoints.desktop ? (a || (n.addClass("collapsed"), i.addClass("collapsed-nav")), r >= e.pfBreakpoints.tablet && u(), a = !0) : (t = a && n.find(".secondary-nav-item-pf.active").length > 0, a = !1, t && c()), o ? (n.addClass("collapsed"), i.addClass("collapsed-nav")) : (n.removeClass("collapsed"), i.removeClass("collapsed-nav"));
 }, b = function() {
-n.addClass("collapsed"), i.addClass("collapsed-nav"), a && u(), o = !0;
+n.hasClass("hidden") || (n.addClass("hidden"), n.removeClass("collapsed"), i.removeClass("collapsed-nav"), i.addClass("hidden-nav"), g(!1), m(!1), a = !1);
 }, y = function() {
-e("html").addClass("transitions");
+n.removeClass("hidden show-mobile-nav"), i.removeClass("hidden-nav");
 }, w = function() {
-n.removeClass("collapsed"), i.removeClass("collapsed-nav"), o = !1, a || l(100);
+var t, r = e(window).width();
+o && (r < e.pfBreakpoints.tablet && !a ? b() : n.hasClass("hidden") && y(), r < e.pfBreakpoints.desktop ? (s || (n.addClass("collapsed"), i.addClass("collapsed-nav")), r >= e.pfBreakpoints.tablet && d(), s = !0) : (t = s && n.find(".secondary-nav-item-pf.active").length > 0, s = !1, t && u()), a ? (n.addClass("collapsed"), i.addClass("collapsed-nav")) : (n.removeClass("collapsed"), i.removeClass("collapsed-nav")));
 }, x = function() {
-r.on("click", function(e) {
-y(), s() ? n.hasClass("show-mobile-nav") ? n.removeClass("show-mobile-nav") : (m(), n.addClass("show-mobile-nav")) : n.hasClass("collapsed") ? (window.localStorage.setItem("patternfly-navigation-primary", "expanded"), w()) : (window.localStorage.setItem("patternfly-navigation-primary", "collapsed"), b());
-});
+n.addClass("collapsed"), i.addClass("collapsed-nav"), s && d(), a = !0;
 }, _ = function() {
+e("html").addClass("transitions");
+}, C = function() {
+n.removeClass("collapsed"), i.removeClass("collapsed-nav"), a = !1, s || c(100);
+}, S = function() {
+r.on("click", function(e) {
+_(), l() ? n.hasClass("show-mobile-nav") ? n.removeClass("show-mobile-nav") : (v(), n.addClass("show-mobile-nav")) : n.hasClass("collapsed") ? (window.localStorage.setItem("patternfly-navigation-primary", "expanded"), C()) : (window.localStorage.setItem("patternfly-navigation-primary", "collapsed"), x());
+});
+}, $ = function() {
 n.addClass("force-hide-secondary-nav-pf"), setTimeout(function() {
 n.removeClass("force-hide-secondary-nav-pf");
 }, 500);
-}, C = function(t) {
+}, A = function(t) {
 e(document).find(".nav-pf-vertical .list-group-item").each(function(i, r) {
-var o, a = e(r), l = a.closest('[class*="nav-pf-"]');
-l.hasClass("nav-pf-vertical") ? o = function(i) {
-var r, o, l = e(this);
-l.hasClass("secondary-nav-item-pf") ? s() ? m(l) : t && (o = r = a.find(".nav-pf-secondary-nav > .list-group > .list-group-item").eq(0), r.hasClass("tertiary-nav-item-pf") && (o = r.find(".nav-pf-tertiary-nav > .list-group > .list-group-item").eq(0)), h(o), i.stopImmediatePropagation()) : (u(), s() && (m(), n.removeClass("show-mobile-nav")), t && (h(l), i.stopImmediatePropagation()));
-} : l.hasClass("nav-pf-secondary-nav") ? o = function(i) {
-var r, o, l = e(this);
-l.hasClass("tertiary-nav-item-pf") ? s() ? (o = a.parents(".list-group-item"), m(l, o), i.stopImmediatePropagation()) : t && (r = a.find(".nav-pf-tertiary-nav > .list-group > .list-group-item").eq(0), h(r), i.stopImmediatePropagation()) : (s() && (m(), n.removeClass("show-mobile-nav")), f(), t && (h(a), u(), i.stopImmediatePropagation()));
-} : l.hasClass("nav-pf-tertiary-nav") && (o = function(e) {
-s() && (m(), n.removeClass("show-mobile-nav")), f(), t && (h(a), d(), u(), e.stopImmediatePropagation());
+var o, a = e(r), s = a.closest('[class*="nav-pf-"]');
+s.hasClass("nav-pf-vertical") ? o = function(i) {
+var r, o, s = e(this);
+s.hasClass("secondary-nav-item-pf") ? l() ? v(s) : t && (o = r = a.find(".nav-pf-secondary-nav > .list-group > .list-group-item").eq(0), r.hasClass("tertiary-nav-item-pf") && (o = r.find(".nav-pf-tertiary-nav > .list-group > .list-group-item").eq(0)), f(o), i.stopImmediatePropagation()) : (d(), l() && (v(), n.removeClass("show-mobile-nav")), t && (f(s), i.stopImmediatePropagation()));
+} : s.hasClass("nav-pf-secondary-nav") ? o = function(i) {
+var r, o, s = e(this);
+s.hasClass("tertiary-nav-item-pf") ? l() ? (o = a.parents(".list-group-item"), v(s, o), i.stopImmediatePropagation()) : t && (r = a.find(".nav-pf-tertiary-nav > .list-group > .list-group-item").eq(0), f(r), i.stopImmediatePropagation()) : (l() && (v(), n.removeClass("show-mobile-nav")), p(), t && (f(a), d(), i.stopImmediatePropagation()));
+} : s.hasClass("nav-pf-tertiary-nav") && (o = function(e) {
+l() && (v(), n.removeClass("show-mobile-nav")), p(), t && (f(a), h(), d(), e.stopImmediatePropagation());
 }), a.on("click.pf.secondarynav.data-api", o);
 }), e(document).find(".secondary-nav-item-pf").each(function(i, r) {
 var o = e(r);
 o.on("click.pf.secondarynav.data-api", '[data-toggle="collapse-secondary-nav"]', function(i) {
 var r = e(this);
-s() ? (m(), i.stopImmediatePropagation()) : r.hasClass("collapsed") ? (window.localStorage.setItem("patternfly-navigation-secondary", "expanded"), window.localStorage.setItem("patternfly-navigation-tertiary", "expanded"), p(!1, r), _()) : (window.localStorage.setItem("patternfly-navigation-secondary", "collapsed"), p(!0, r)), n.removeClass("hover-secondary-nav-pf"), t && i.stopImmediatePropagation();
+l() ? (v(), i.stopImmediatePropagation()) : r.hasClass("collapsed") ? (window.localStorage.setItem("patternfly-navigation-secondary", "expanded"), window.localStorage.setItem("patternfly-navigation-tertiary", "expanded"), g(!1, r), $()) : (window.localStorage.setItem("patternfly-navigation-secondary", "collapsed"), g(!0, r)), n.removeClass("hover-secondary-nav-pf"), t && i.stopImmediatePropagation();
 }), o.find(".tertiary-nav-item-pf").each(function(i, r) {
 e(r).on("click.pf.tertiarynav.data-api", '[data-toggle="collapse-tertiary-nav"]', function(i) {
 var r = e(this);
-s() ? (m(o), i.stopImmediatePropagation()) : r.hasClass("collapsed") ? (window.localStorage.setItem("patternfly-navigation-secondary", "expanded"), window.localStorage.setItem("patternfly-navigation-tertiary", "expanded"), g(!1, r), _()) : (window.localStorage.setItem("patternfly-navigation-tertiary", "collapsed"), g(!0, r)), n.removeClass("hover-secondary-nav-pf"), n.removeClass("hover-tertiary-nav-pf"), t && i.stopImmediatePropagation();
+l() ? (v(o), i.stopImmediatePropagation()) : r.hasClass("collapsed") ? (window.localStorage.setItem("patternfly-navigation-secondary", "expanded"), window.localStorage.setItem("patternfly-navigation-tertiary", "expanded"), m(!1, r), $()) : (window.localStorage.setItem("patternfly-navigation-tertiary", "collapsed"), m(!0, r)), n.removeClass("hover-secondary-nav-pf"), n.removeClass("hover-tertiary-nav-pf"), t && i.stopImmediatePropagation();
 });
 });
 }), e(document).on("mouseenter.pf.tertiarynav.data-api", ".secondary-nav-item-pf", function(t) {
 var i = e(this);
-s() || (void 0 !== i[0].navUnHoverTimeout ? (clearTimeout(i[0].navUnHoverTimeout), i[0].navUnHoverTimeout = void 0) : void 0 === i[0].navHoverTimeout && (i[0].navHoverTimeout = setTimeout(function() {
+l() || (void 0 !== i[0].navUnHoverTimeout ? (clearTimeout(i[0].navUnHoverTimeout), i[0].navUnHoverTimeout = void 0) : void 0 === i[0].navHoverTimeout && (i[0].navHoverTimeout = setTimeout(function() {
 n.addClass("hover-secondary-nav-pf"), i.addClass("is-hover"), i[0].navHoverTimeout = void 0;
 }, 500)));
 }), e(document).on("mouseleave.pf.tertiarynav.data-api", ".secondary-nav-item-pf", function(t) {
@@ -48851,7 +48855,7 @@ n.find(".secondary-nav-item-pf.is-hover").length <= 1 && n.removeClass("hover-se
 }, 700));
 }), e(document).on("mouseover.pf.tertiarynav.data-api", ".tertiary-nav-item-pf", function(t) {
 var i = e(this);
-s() || (void 0 !== i[0].navUnHoverTimeout ? (clearTimeout(i[0].navUnHoverTimeout), i[0].navUnHoverTimeout = void 0) : void 0 === i[0].navHoverTimeout && (i[0].navHoverTimeout = setTimeout(function() {
+l() || (void 0 !== i[0].navUnHoverTimeout ? (clearTimeout(i[0].navUnHoverTimeout), i[0].navUnHoverTimeout = void 0) : void 0 === i[0].navHoverTimeout && (i[0].navHoverTimeout = setTimeout(function() {
 n.addClass("hover-tertiary-nav-pf"), i.addClass("is-hover"), i[0].navHoverTimeout = void 0;
 }, 500)));
 }), e(document).on("mouseout.pf.tertiarynav.data-api", ".tertiary-nav-item-pf", function(t) {
@@ -48860,9 +48864,9 @@ void 0 !== i[0].navHoverTimeout ? (clearTimeout(i[0].navHoverTimeout), i[0].navH
 n.find(".tertiary-nav-item-pf.is-hover").length <= 1 && n.removeClass("hover-tertiary-nav-pf"), i.removeClass("is-hover"), i[0].navUnHoverTimeout = void 0;
 }, 700));
 });
-}, S = function() {
-s() || ("collapsed" === window.localStorage.getItem("patternfly-navigation-primary") && b(), e(".nav-pf-vertical.nav-pf-vertical-collapsible-menus").length > 0 && ("collapsed" === window.localStorage.getItem("patternfly-navigation-secondary") && p(!0, e(".secondary-nav-item-pf.active [data-toggle=collapse-secondary-nav]")), "collapsed" === window.localStorage.getItem("patternfly-navigation-tertiary") && g(!0, e(".tertiary-nav-item-pf.active [data-toggle=collapse-tertiary-nav]"))));
-}, $ = function() {
+}, k = function() {
+l() || ("collapsed" === window.localStorage.getItem("patternfly-navigation-primary") && x(), e(".nav-pf-vertical.nav-pf-vertical-collapsible-menus").length > 0 && ("collapsed" === window.localStorage.getItem("patternfly-navigation-secondary") && g(!0, e(".secondary-nav-item-pf.active [data-toggle=collapse-secondary-nav]")), "collapsed" === window.localStorage.getItem("patternfly-navigation-tertiary") && m(!0, e(".tertiary-nav-item-pf.active [data-toggle=collapse-tertiary-nav]"))));
+}, T = function() {
 var t = {
 container: "body",
 placement: "bottom",
@@ -48875,19 +48879,29 @@ template: '<div class="nav-pf-vertical-tooltip tooltip" role="tooltip"><div clas
 e('.nav-pf-vertical [data-toggle="tooltip"]').tooltip(t), e(".nav-pf-vertical").on("show.bs.tooltip", function(t) {
 return e(this).hasClass("collapsed");
 });
+}, D = {
+hideMenu: function() {
+o = !1, b();
+},
+showMenu: function() {
+o = !0, y();
+},
+isVisible: function() {
+return o;
+}
 };
-e(window).on("resize", function() {
-v(), y();
+return e.fn.setupVerticalNavigation.self || (e.fn.setupVerticalNavigation.self = D, e(window).on("resize", function() {
+w(), _();
 }), function(e) {
-n.addClass("hide-nav-pf"), i.addClass("hide-nav-pf"), v(), x(), C(e), $(), S(), n.removeClass("hide-nav-pf"), i.removeClass("hide-nav-pf"), l(250);
-}(t);
+n.addClass("hide-nav-pf"), i.addClass("hide-nav-pf"), w(), S(), A(e), T(), k(), n.removeClass("hide-nav-pf"), i.removeClass("hide-nav-pf"), c(250);
+}(t)), e.fn.setupVerticalNavigation.self;
 };
 }(jQuery), angular.module("patternfly.canvas", [ "dragging", "ngDragDrop", "ui.bootstrap" ]), angular.module("patternfly.card", [ "ui.bootstrap" ]), angular.module("patternfly.charts", [ "patternfly.utils", "ui.bootstrap", "ngSanitize" ]), angular.module("patternfly.filters", [ "ui.bootstrap" ]), angular.module("patternfly.form", []), angular.module("patternfly.modals", [ "ui.bootstrap.modal", "ui.bootstrap.tpls" ]), angular.module("patternfly.navigation", [ "ui.bootstrap" ]), angular.module("patternfly.notification", [ "patternfly.utils", "ui.bootstrap" ]), angular.module("patternfly.pagination", [ "ui.bootstrap" ]).filter("startFrom", function() {
 "use strict";
 return function(e, t) {
 return t = parseInt(t, 10), e.slice(t);
 };
-}), angular.module("patternfly", [ "patternfly.autofocus", "patternfly.card", "patternfly.filters", "patternfly.form", "patternfly.modals", "patternfly.navigation", "patternfly.notification", "patternfly.pagination", "patternfly.select", "patternfly.sort", "patternfly.toolbars", "patternfly.utils", "patternfly.validation", "patternfly.views", "patternfly.wizard" ]), angular.module("patternfly.select", [ "ui.bootstrap" ]), angular.module("patternfly.sort", [ "ui.bootstrap" ]), angular.module("patternfly.table", [ "datatables", "patternfly.utils", "patternfly.filters", "patternfly.sort" ]), angular.module("patternfly.toolbars", [ "patternfly.utils", "patternfly.filters", "patternfly.sort", "patternfly.views" ]), angular.module("patternfly.utils", [ "ui.bootstrap" ]), angular.module("patternfly.views", [ "patternfly.utils", "patternfly.filters", "patternfly.sort", "patternfly.charts", "dndLists" ]), angular.module("patternfly.wizard", [ "ui.bootstrap.modal", "ui.bootstrap.tpls", "patternfly.form" ]), 
+}), angular.module("patternfly", [ "patternfly.autofocus", "patternfly.card", "patternfly.filters", "patternfly.form", "patternfly.modals", "patternfly.navigation", "patternfly.notification", "patternfly.pagination", "patternfly.select", "patternfly.sort", "patternfly.toolbars", "patternfly.utils", "patternfly.validation", "patternfly.views", "patternfly.wizard" ]), angular.module("patternfly.select", [ "ui.bootstrap" ]), angular.module("patternfly.sort", [ "ui.bootstrap" ]), angular.module("patternfly.table", [ "datatables", "patternfly.pagination", "patternfly.utils", "patternfly.filters", "patternfly.sort" ]), angular.module("patternfly.toolbars", [ "patternfly.utils", "patternfly.filters", "patternfly.sort", "patternfly.views" ]), angular.module("patternfly.utils", [ "ui.bootstrap" ]), angular.module("patternfly.views", [ "patternfly.utils", "patternfly.filters", "patternfly.sort", "patternfly.charts", "dndLists" ]), angular.module("patternfly.wizard", [ "ui.bootstrap.modal", "ui.bootstrap.tpls", "patternfly.form" ]), 
 angular.module("patternfly.autofocus", []).directive("pfFocused", [ "$timeout", function(e) {
 "use strict";
 return {
@@ -50313,11 +50327,47 @@ i.updateAll();
 angular.equals(i.chartData, t) && angular.equals(i.config, n) || i.updateAll();
 };
 } ]
+}), angular.module("patternfly.filters").component("pfFilterPanel", {
+bindings: {
+config: "="
+},
+transclude: !0,
+templateUrl: "filters/filter-panel/filter-panel.html",
+controller: function() {
+"use strict";
+}
+}), angular.module("patternfly.filters").component("pfFilterPanelResults", {
+bindings: {
+config: "="
+},
+templateUrl: "filters/filter-panel/filter-panel-results.html",
+controller: function() {
+"use strict";
+function e() {
+i.config.appliedFilters || (i.config.appliedFilters = []), void 0 === i.config.resultsCount && (i.config.resultsCount = 0);
+}
+function t(e, t) {
+var n = e.id, r = _.pull(e.values, t)[0];
+0 === e.values.length && _.pull(i.config.appliedFilters, e), i.config.onFilterChange && i.config.onFilterChange(i.config.appliedFilters, n, r);
+}
+function n() {
+i.config.appliedFilters = [], i.config.onFilterChange && i.config.onFilterChange(i.config.appliedFilters);
+}
+var i = this;
+i.$onInit = function() {
+angular.extend(i, {
+clearFilter: t,
+clearAllFilters: n
+});
+}, i.$onChanges = function() {
+e();
+};
+}
 }), angular.module("patternfly.filters").component("pfFilter", {
 bindings: {
 config: "="
 },
-templateUrl: "filters/filter.html",
+templateUrl: "filters/simple-filter/filter.html",
 controller: function() {
 "use strict";
 function e(e) {
@@ -50352,7 +50402,7 @@ bindings: {
 config: "=",
 addFilterFn: "<"
 },
-templateUrl: "filters/filter-fields.html",
+templateUrl: "filters/simple-filter/filter-fields.html",
 controller: function() {
 "use strict";
 function e(e) {
@@ -50387,7 +50437,7 @@ angular.equals(o.config, r) || i();
 bindings: {
 config: "="
 },
-templateUrl: "filters/filter-results.html",
+templateUrl: "filters/simple-filter/filter-results.html",
 controller: function() {
 "use strict";
 function e() {
@@ -50784,11 +50834,15 @@ title: e.noNotificationsText || i.noNotificationsText || "There are no notificat
 }), angular.forEach(i.notificationGroups, function(t) {
 t.open && (e ? t.open = !1 : e = !0);
 });
+}, o = function() {
+t(function() {
+angular.element(e).triggerHandler("resize");
+}, 100);
 };
 i.toggleCollapse = function(e) {
 e.open ? e.open = !1 : (angular.forEach(i.notificationGroups, function(e) {
 e.open = !1;
-}), e.open = !0);
+}), e.open = !0, o());
 }, i.toggleExpandDrawer = function() {
 i.drawerExpanded = !i.drawerExpanded;
 }, i.$onInit = function() {
@@ -50796,10 +50850,8 @@ i.allowExpand && !angular.isUndefined(i.drawerExpanded) || (i.drawerExpanded = !
 icon: "pficon-info",
 title: i.noNotificationsText || "There are no notifications to display."
 }, r();
-}, i.$onChanges = function(n) {
-n.notificationGroups && r(), n.drawerHidden && t(function() {
-angular.element(e).triggerHandler("resize");
-}, 100);
+}, i.$onChanges = function(e) {
+e.notificationGroups && (r(), o()), !i.drawerHidden && (e.drawerHidden || e.showMarkAllRead || e.showClearAll || e.actionButtonTitle || e.titleInclude || e.headingInclude || e.subheadingInclude || e.notificationBodyInclude || e.notificationFooterInclude) && o();
 }, i.$postLink = function() {
 i.groupHeight && n.find(".panel-group").css("height", i.groupHeight), i.groupClass && n.find(".panel-group").addClass(i.groupClass);
 }, i.hasNotifications = function(e) {
@@ -50948,41 +51000,55 @@ e.menuActions && t.updateShowClose();
 transclude: !0,
 templateUrl: "pagination/pagination.html",
 bindings: {
-pageNumber: "=",
+pageNumber: "=?",
 numTotalItems: "<",
 pageSizeIncrements: "<?",
-pageSize: "=?"
+pageSize: "=?",
+updatePageSize: "&",
+updatePageNumber: "&"
 },
 controller: [ "$scope", "$log", function(e, t) {
 "use strict";
-function n() {
-return Math.ceil(r.numTotalItems / r.pageSize);
+function n(e) {
+o.pageNumber = e, o.updatePageNumber && o.updatePageNumber({
+$event: {
+pageNumber: o.pageNumber
+}
+});
 }
 function i() {
-return r.pageNumber === r.lastPageNumber;
+return Math.ceil(o.numTotalItems / o.pageSize);
 }
-var r = this, o = [ 5, 10, 20, 40, 80, 100 ];
-r.$onInit = function() {
-angular.isUndefined(r.pageSizeIncrements) && (r.pageSizeIncrements = o), angular.isUndefined(r.pageSize) && (r.pageSize = r.pageSizeIncrements[0]), r.lastPageNumber = n();
-}, r.$onChanges = function(e) {
-e.numTotalItems && !e.numTotalItems.isFirstChange() && (r.lastPageNumber = n());
-}, r.onPageSizeChange = function(e) {
-r.pageSize = e, r.lastPageNumber = n(), r.gotoFirstPage();
-}, r.onPageNumberChange = function() {
-r.pageNumber = parseInt(r.pageNumber, 10), r.pageNumber > r.lastPageNumber ? r.pageNumber = r.lastPageNumber : (r.pageNumber < 1 || isNaN(r.pageNumber)) && (r.pageNumber = 1);
-}, r.gotoFirstPage = function() {
-1 !== r.pageNumber && (r.pageNumber = 1);
-}, r.gotoPreviousPage = function() {
-1 !== r.pageNumber && r.pageNumber--;
-}, r.gotoNextPage = function() {
-r.pageNumber < r.lastPageNumber && r.pageNumber++;
-}, r.gotoLastPage = function() {
-r.pageNumber < r.lastPageNumber && (r.pageNumber = r.lastPageNumber);
-}, r.getStartIndex = function() {
-return r.pageSize * (r.pageNumber - 1) + 1;
-}, r.getEndIndex = function() {
-var e = Math.floor(r.numTotalItems / r.pageSize), t = r.numTotalItems - e * r.pageSize, n = i() ? t : r.pageSize;
-return r.getStartIndex() + n - 1;
+function r() {
+return o.pageNumber === o.lastPageNumber;
+}
+var o = this, a = [ 5, 10, 20, 40, 80, 100 ];
+o.$onInit = function() {
+angular.isUndefined(o.pageNumber) && (o.pageNumber = 1), angular.isUndefined(o.pageSizeIncrements) && (o.pageSizeIncrements = a), angular.isUndefined(o.pageSize) && (o.pageSize = o.pageSizeIncrements[0]), o.lastPageNumber = i();
+}, o.$onChanges = function(e) {
+e.numTotalItems && !e.numTotalItems.isFirstChange() && (o.lastPageNumber = i(), o.gotoFirstPage());
+}, o.onPageSizeChange = function(e) {
+o.pageSize = e, o.lastPageNumber = i(), o.gotoFirstPage(), o.updatePageSize && o.updatePageSize({
+$event: {
+pageSize: e
+}
+});
+}, o.onPageNumberChange = function() {
+var e = parseInt(o.pageNumber, 10);
+n(e > o.lastPageNumber ? o.lastPageNumber : e < 1 || isNaN(o.pageNumber) ? 1 : e);
+}, o.gotoFirstPage = function() {
+1 !== o.pageNumber && n(1);
+}, o.gotoPreviousPage = function() {
+1 !== o.pageNumber && n(o.pageNumber - 1);
+}, o.gotoNextPage = function() {
+o.pageNumber < o.lastPageNumber && n(o.pageNumber + 1);
+}, o.gotoLastPage = function() {
+o.pageNumber < o.lastPageNumber && n(o.lastPageNumber);
+}, o.getStartIndex = function() {
+return o.numTotalItems ? o.pageSize * (o.pageNumber - 1) + 1 : 0;
+}, o.getEndIndex = function() {
+var e = Math.floor(o.numTotalItems / o.pageSize), t = o.numTotalItems - e * o.pageSize || o.pageSize, n = r() ? t : o.pageSize;
+return o.numTotalItems ? o.getStartIndex() + n - 1 : 0;
 };
 } ]
 }), angular.module("patternfly.select").component("pfSelect", {
@@ -51053,6 +51119,7 @@ columns: "<?",
 items: "<",
 actionButtons: "<?",
 menuActions: "<?",
+pageConfig: "=?",
 emptyStateConfig: "=?",
 emptyStateActionButtons: "=?"
 },
@@ -51068,7 +51135,7 @@ v.menuActions && v.menuActions.length > 0 && v.dtColumnDefs.push(t.newColumnDef(
 }
 function l() {
 var e, t = v.dtInstance;
-t && t.dataTable && (e = t.dataTable, v.tableId = e[0].id, e.on("draw.dt", function() {
+t && t.dataTable && (e = t.dataTable, angular.isDefined(v.pageConfig) && angular.isDefined(v.pageConfig.pageNumber) && e.fnPageChange(v.pageConfig.pageNumber - 1), v.tableId = e[0].id, e.off("draw.dt"), e.on("draw.dt", function() {
 v.debug && r.debug("--\x3e redraw"), d();
 }));
 }
@@ -51117,7 +51184,8 @@ selectionMatchProp: "uuid",
 onCheckBoxChange: null,
 showCheckboxes: !0
 }, v.$onInit = function() {
-v.debug && r.debug("$onInit"), angular.isDefined(v.colummns) && angular.isUndefined(v.columns) && (v.columns = v.colummns), angular.isUndefined(v.dtOptions) ? v.dtOptions = {} : angular.isDefined(v.dtOptions.paginationType) && (v.dtOptions.paging = !0), angular.isUndefined(v.config) && (v.config = {}), v.updateConfigOptions(), s();
+v.debug && r.debug("$onInit"), angular.isDefined(v.colummns) && angular.isUndefined(v.columns) && (v.columns = v.colummns), angular.isUndefined(v.dtOptions) ? v.dtOptions = {} : (angular.isDefined(v.dtOptions.paginationType) && (v.dtOptions.paging = !0, angular.isUndefined(v.pageConfig) && (v.pageConfig = {}), angular.isUndefined(v.pageConfig.pageNumber) && (v.pageConfig.pageNumber = 1)), angular.isDefined(v.dtOptions.displayLength) && (v.dtOptions.paging = !0, angular.isUndefined(v.pageConfig) && (v.pageConfig = {}), angular.isUndefined(v.pageConfig.pageSize) && (v.pageConfig.pageSize = v.dtOptions.displayLength)), angular.isDefined(v.dtOptions.dom) && -1 !== v.dtOptions.dom.indexOf("p") && (v.dtOptions.dom = v.dtOptions.dom.replace(/p/gi, ""))), angular.isDefined(v.pageConfig) && (v.dtOptions.paging = !0, v.pageConfig.numTotalItems = v.items.length, angular.isUndefined(v.pageConfig.pageSize) && (v.pageConfig.pageSize = 10), v.dtOptions.displayLength = v.pageConfig.pageSize, angular.isUndefined(v.pageConfig.pageNumber) && (v.pageConfig.pageNumber = 1)), 
+angular.isUndefined(v.config) && (v.config = {}), v.updateConfigOptions(), s();
 }, v.updateConfigOptions = function() {
 var e = "";
 if (v.debug && r.debug("  updateConfigOptions"), angular.isDefined(v.dtOptions) && angular.isDefined(v.dtOptions.displayLength) && (v.dtOptions.displayLength = Number(v.dtOptions.displayLength)), g = angular.copy(v.dtOptions), m = angular.copy(v.items), _.defaults(v.dtOptions, v.defaultDtOptions), _.defaults(v.config, v.defaultConfig), !c()) throw angular.forEach(v.columns, function(t) {
@@ -51127,8 +51195,12 @@ if (v.debug && r.debug("  updateConfigOptions"), angular.isDefined(v.dtOptions) 
 v.debug && r.debug("--\x3e dtInstanceCallback"), v.dtInstance = e, l(), d();
 }, v.$onChanges = function(e) {
 v.debug && r.debug("$onChanges"), e.config && !e.config.isFirstChange() && (v.debug && r.debug("...updateConfigOptions"), v.updateConfigOptions()), e.items && e.items.currentValue && (v.config.itemsAvailable = e.items.currentValue.length > 0);
+}, v.updatePageSize = function(e) {
+v.pageConfig.pageSize = e.pageSize, v.dtOptions.displayLength = v.pageConfig.pageSize, v.pageConfig.pageNumber = 1;
+}, v.updatePageNumber = function(e) {
+v.dtInstance && (v.pageConfig.pageNumber = e.pageNumber, v.dtInstance && v.dtInstance.dataTable && v.dtInstance.dataTable.fnPageChange(v.pageConfig.pageNumber - 1));
 }, v.$doCheck = function() {
-v.debug && r.debug("$doCheck"), angular.equals(v.dtOptions, g) || (v.debug && r.debug("  dtOptions !== prevDtOptions"), v.updateConfigOptions()), angular.equals(v.items, m) || (v.debug && r.debug("  items !== prevItems"), m = angular.copy(v.items), d());
+v.debug && r.debug("$doCheck"), angular.equals(v.dtOptions, g) || (v.debug && r.debug("  dtOptions !== prevDtOptions"), v.updateConfigOptions()), angular.equals(v.items, m) || (v.debug && r.debug("  items !== prevItems"), v.items && (v.config.itemsAvailable = v.items.length > 0), angular.isDefined(v.pageConfig) && angular.isDefined(v.pageConfig.numTotalItems) && (v.pageConfig.numTotalItems = v.items.length), m = angular.copy(v.items));
 }, v.$postLink = function() {
 v.debug && r.debug(" $postLink");
 }, v.$onDestroy = function() {
@@ -51137,7 +51209,7 @@ v.debug && r.debug(" $onDestroy"), v.dtInstance = {};
 var e, t = f();
 angular.forEach(t, function(t) {
 (e = u(t)).selected !== v.selectAll && (e.selected = v.selectAll, v.config && v.config.onCheckBoxChange && v.config.onCheckBoxChange(e));
-});
+}), d();
 }, v.toggleOne = function(e) {
 v.config && v.config.onCheckBoxChange && v.config.onCheckBoxChange(e);
 }, v.handleButtonAction = function(e, t) {
@@ -51243,27 +51315,32 @@ groupHeight: "@",
 groupClass: "@"
 },
 link: function(n, i, r) {
-var o = function(e, t) {
-var i, r, o, a, s, l, c = e[0].querySelectorAll(".panel-collapse");
+var o = function(e) {
+var t = e.offsetHeight;
+return t += parseInt(getComputedStyle(e).marginTop), t += parseInt(getComputedStyle(e).marginBottom);
+}, a = function(e, t) {
+var i, r, a, s, l, c = e[0].querySelectorAll(".panel-collapse");
 angular.forEach(c, function(e) {
-i = angular.element(e), r = i, s = 0, angular.isDefined(n.scrollSelector) && 1 === (l = angular.element(i[0].querySelector(n.scrollSelector))).length && (r = angular.element(l[0]), o = i.children(), angular.forEach(o, function(e) {
-(a = angular.element(e))[0] !== r[0] && (s += a[0].offsetHeight, s += parseInt(getComputedStyle(a[0]).marginTop), s += parseInt(getComputedStyle(a[0]).marginBottom));
-})), angular.element(r).css("max-height", t - s + "px"), angular.element(r).css("overflow-y", "auto");
+i = angular.element(e), r = i, s = 0, angular.isDefined(n.scrollSelector) && (l = angular.element(i[0].querySelector(n.scrollSelector))).length && (r = angular.element(l[0]), a = i.children(), angular.forEach(a, function(e) {
+e !== r[0] && (s += o(e));
+})), angular.element(r).css("max-height", Math.max(t - s, 25) + "px"), angular.element(r).css("overflow-y", "auto");
 });
-}, a = function() {
-var e, n, r, a, s, l = "hidden", c = angular.element(i[0].querySelector(".panel-group")), u = angular.element(c).children();
+}, s = function() {
+var e, n, r, s, l = "hidden", c = angular.element(i[0].querySelector(".panel-group")), u = angular.element(c).children();
 e = c[0].clientHeight, (n = c[0].querySelectorAll(".collapse.in")) && n.length > 0 && angular.element(n).removeClass("in"), r = 0, angular.forEach(u, function(e) {
-s = angular.element(e), r += s.prop("offsetHeight"), r += parseInt(getComputedStyle(s[0]).marginTop), r += parseInt(getComputedStyle(s[0]).marginBottom);
-}), (a = e - r) < 25 && (a = 25, l = "auto"), n && n.length > 0 && angular.element(n).addClass("in"), angular.element(c).css("overflow-y", l), t(function() {
-o(c, a);
+r += o(e);
+}), (s = e - r) < 25 && (s = 25, l = "auto"), n && n.length > 0 && angular.element(n).addClass("in"), angular.element(c).css("overflow-y", l), t(function() {
+a(c, s);
 });
-};
+}, l = _.debounce(s, 150, {
+maxWait: 250
+});
 n.groupHeight && angular.element(i[0].querySelector(".panel-group")).css("height", n.groupHeight), n.groupClass && angular.element(i[0].querySelector(".panel-group")).addClass(n.groupClass), t(function() {
-a();
+s();
 }, 100), i.on("resize", function() {
-a();
+l();
 }), angular.element(e).on("resize", function() {
-a();
+l();
 });
 }
 };
@@ -51564,29 +51641,77 @@ iconClass: "fa fa-sitemap"
 });
 }(), function() {
 "use strict";
-function e(e) {
-angular.module("patternfly.wizard").component(e, {
+var e = function(t) {
+var n;
+return t && (n = angular.isDefined(t.wizard) ? t.wizard : e(t.$parent)), n;
+}, t = function(e, t, n, i) {
+t.on("click", function(t) {
+t.preventDefault(), e.$apply(function() {
+e.wizard[n](i);
+});
+});
+};
+angular.module("patternfly.wizard").component("pfWizNext", {
 bindings: {
 callback: "=?"
 },
-controller: function(t, n) {
-var i = this, r = function(e) {
-var t;
-return e && (t = angular.isDefined(e.wizard) ? e.wizard : r(e.$parent)), t;
+controller: [ "$element", "$scope", function(n, i) {
+var r = this;
+r.$onInit = function() {
+i.wizard = e(i);
+}, r.$postLink = function() {
+t(i, n, "next", r.callback);
 };
-i.$onInit = function() {
-n.wizard = r(n);
-}, i.$postLink = function() {
-t.on("click", function(t) {
-t.preventDefault(), n.$apply(function() {
-n.wizard[e.replace("pfWiz", "").toLowerCase()](i.callback);
-});
-});
+} ]
+}), angular.module("patternfly.wizard").component("pfWizPrevious", {
+bindings: {
+callback: "=?"
+},
+controller: [ "$element", "$scope", function(n, i) {
+var r = this;
+r.$onInit = function() {
+i.wizard = e(i);
+}, r.$postLink = function() {
+t(i, n, "previous", r.callback);
 };
-}
+} ]
+}), angular.module("patternfly.wizard").component("pfWizFinish", {
+bindings: {
+callback: "=?"
+},
+controller: [ "$element", "$scope", function(n, i) {
+var r = this;
+r.$onInit = function() {
+i.wizard = e(i);
+}, r.$postLink = function() {
+t(i, n, "finish", r.callback);
+};
+} ]
+}), angular.module("patternfly.wizard").component("pfWizCancel", {
+bindings: {
+callback: "=?"
+},
+controller: [ "$element", "$scope", function(n, i) {
+var r = this;
+r.$onInit = function() {
+i.wizard = e(i);
+}, r.$postLink = function() {
+t(i, n, "cancel", r.callback);
+};
+} ]
+}), angular.module("patternfly.wizard").component("pfWizReset", {
+bindings: {
+callback: "=?"
+},
+controller: [ "$element", "$scope", function(n, i) {
+var r = this;
+r.$onInit = function() {
+i.wizard = e(i);
+}, r.$postLink = function() {
+t(i, n, "reset", r.callback);
+};
+} ]
 });
-}
-e("pfWizNext"), e("pfWizPrevious"), e("pfWizFinish"), e("pfWizCancel"), e("pfWizReset");
 }(), angular.module("patternfly.wizard").component("pfWizardReviewPage", {
 bindings: {
 shown: "<",
@@ -51894,8 +52019,9 @@ e.put("charts/utilization-bar/utilization-bar-chart.html", '<div class=utilizati
 e.put("charts/utilization-trend/utilization-trend-chart.html", '<div class=utilization-trend-chart-pf ng-class="{\'data-unavailable-pf\': $ctrl.chartData.dataAvailable === false}"><h3>{{$ctrl.config.title}}</h3><div class=current-values><h1 class="available-count pull-left">{{$ctrl.currentValue}}</h1><div class="available-text pull-left"><div><span>{{$ctrl.currentText}}</span></div><div><span>of {{$ctrl.chartData.total}} {{$ctrl.config.units}}</span></div></div></div><div class=donut-chart-pf><pf-donut-pct-chart ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.donutConfig data=$ctrl.chartData center-label=$ctrl.centerLabel></pf-donut-pct-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=231></pf-empty-chart></div><div ng-if="$ctrl.chartData.dataAvailable !== false" class=sparkline-chart><pf-sparkline-chart config=$ctrl.sparklineConfig chart-data=$ctrl.chartData chart-height=$ctrl.sparklineChartHeight show-x-axis=$ctrl.showSparklineXAxis show-y-axis=$ctrl.showSparklineYAxis></pf-sparkline-chart></div><span class="pull-left legend-text">{{$ctrl.legendLeftText}}</span> <span class="pull-right legend-text">{{$ctrl.legendRightText}}</span></div>');
 } ]), angular.module("patternfly.filters").run([ "$templateCache", function(e) {
 "use strict";
-e.put("filters/filter-fields.html", '<div class="filter-pf filter-fields"><div class="input-group form-group"><div uib-dropdown class=input-group-btn><button uib-dropdown-toggle type=button class="btn btn-default filter-fields" uib-tooltip="Filter by" tooltip-placement=top tooltip-append-to-body=true>{{$ctrl.currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat="item in $ctrl.config.fields"><a class=filter-field role=menuitem tabindex=-1 ng-click=$ctrl.selectField(item)>{{item.title}}</a></li></ul></div><div ng-if="$ctrl.currentField.filterType !== \'select\'"><input class=form-control type={{$ctrl.currentField.filterType}} ng-model=$ctrl.currentValue placeholder={{$ctrl.currentField.placeholder}} ng-keypress="$ctrl.onValueKeyPress($event)"></div><div ng-if="$ctrl.currentField.filterType === \'select\'"><div class="btn-group bootstrap-select form-control filter-select" uib-dropdown><button type=button uib-dropdown-toggle class="btn btn-default dropdown-toggle"><span class="filter-option pull-left">{{$ctrl.currentValue || $ctrl.currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.placeholder}}</a></li><li ng-repeat="filterValue in $ctrl.currentField.filterValues" ng-class="{\'selected\': filterValue === $ctrl.currentValue}"><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue(filterValue)>{{filterValue}}</a></li></ul></div></div></div></div>'), 
-e.put("filters/filter-results.html", '<div class=filter-pf><div class="row toolbar-pf-results"><div class=col-sm-12><h5>{{$ctrl.config.resultsCount}} Results</h5><p ng-if="$ctrl.config.appliedFilters.length > 0">Active filters:</p><ul class=list-inline><li ng-repeat="filter in $ctrl.config.appliedFilters"><span class="active-filter label label-info">{{filter.title}}: {{filter.value}} <a><span class="pficon pficon-close" ng-click=$ctrl.clearFilter(filter)></span></a></span></li></ul><p><a class=clear-filters ng-click=$ctrl.clearAllFilters() ng-if="$ctrl.config.appliedFilters.length > 0">Clear All Filters</a></p><div ng-if="$ctrl.config.selectedCount !== undefined && $ctrl.config.totalCount !== undefined" class=pf-table-view-selected-label><strong>{{$ctrl.config.selectedCount}}</strong> of <strong>{{$ctrl.config.totalCount}}</strong> selected</div></div>\x3c!-- /col --\x3e</div>\x3c!-- /row --\x3e</div>'), e.put("filters/filter.html", "<div class=filter-pf><pf-filter-fields config=$ctrl.config add-filter-fn=$ctrl.addFilter></pf-filter-fields><pf-filter-results config=$ctrl.config></pf-filter-results></div>");
+e.put("filters/filter-panel/filter-panel-results.html", '<span class=filter-pf><span class=toolbar-pf-results><h5>{{$ctrl.config.resultsCount}} <span ng-if=$ctrl.config.appliedFilters.length>of {{$ctrl.config.totalCount}}</span> {{$ctrl.config.resultsLabel === undefined ? "Results" : $ctrl.config.resultsLabel}}</h5><p ng-if=$ctrl.config.appliedFilters.length>Active filters:</p><ul class=list-inline><li ng-repeat="filter in $ctrl.config.appliedFilters"><span ng-if="filter.values.length === 1" class="active-filter label label-info single-label"><span class=pf-filter-label-category>{{filter.title}}:</span> {{filter.values[0]}} <a><span ng-click="$ctrl.clearFilter(filter, filter.values[0])" class="pficon pficon-close"></span></a></span> <span ng-if="filter.values.length > 1" class="active-filter label pf-filter-label-category">{{filter.title}}:<ul class="list-inline category-values"><li ng-repeat="value in filter.values"><span class="active-filter label label-info">{{value}} <a><span ng-click="$ctrl.clearFilter(filter, value)" class="pficon pficon-close"></span></a></span></li></ul></span></li></ul><p><a class=clear-filters ng-click=$ctrl.clearAllFilters() ng-if="$ctrl.config.appliedFilters.length > 0">Clear All Filters</a></p></span></span>'), 
+e.put("filters/filter-panel/filter-panel.html", '<div class=filter-pf><span class="dropdown primary-action" uib-dropdown><button class="btn btn-default dropdown-toggle" uib-dropdown-toggle type=button>Filter <span class=caret></span></button><div ng-transclude class=dropdown-menu ng-click=$event.stopPropagation()></div></span><pf-filter-panel-results config=$ctrl.config></pf-filter-panel-results></div>'), e.put("filters/simple-filter/filter-fields.html", '<div class="filter-pf filter-fields"><div class="input-group form-group"><div uib-dropdown class=input-group-btn><button uib-dropdown-toggle type=button class="btn btn-default filter-fields" uib-tooltip="Filter by" tooltip-placement=top tooltip-append-to-body=true>{{$ctrl.currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat="item in $ctrl.config.fields"><a class=filter-field role=menuitem tabindex=-1 ng-click=$ctrl.selectField(item)>{{item.title}}</a></li></ul></div><div ng-if="$ctrl.currentField.filterType !== \'select\'"><input class=form-control type={{$ctrl.currentField.filterType}} ng-model=$ctrl.currentValue placeholder={{$ctrl.currentField.placeholder}} ng-keypress="$ctrl.onValueKeyPress($event)"></div><div ng-if="$ctrl.currentField.filterType === \'select\'"><div class="btn-group bootstrap-select form-control filter-select" uib-dropdown><button type=button uib-dropdown-toggle class="btn btn-default dropdown-toggle"><span class="filter-option pull-left">{{$ctrl.currentValue || $ctrl.currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.placeholder}}</a></li><li ng-repeat="filterValue in $ctrl.currentField.filterValues" ng-class="{\'selected\': filterValue === $ctrl.currentValue}"><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue(filterValue)>{{filterValue}}</a></li></ul></div></div></div></div>'), 
+e.put("filters/simple-filter/filter-results.html", '<div class=filter-pf><div class="row toolbar-pf-results"><div class=col-sm-12><h5>{{$ctrl.config.resultsCount}} Results</h5><p ng-if="$ctrl.config.appliedFilters.length > 0">Active filters:</p><ul class=list-inline><li ng-repeat="filter in $ctrl.config.appliedFilters"><span class="active-filter label label-info">{{filter.title}}: {{filter.value}} <a><span class="pficon pficon-close" ng-click=$ctrl.clearFilter(filter)></span></a></span></li></ul><p><a class=clear-filters ng-click=$ctrl.clearAllFilters() ng-if="$ctrl.config.appliedFilters.length > 0">Clear All Filters</a></p><div ng-if="$ctrl.config.selectedCount !== undefined && $ctrl.config.totalCount !== undefined" class=pf-table-view-selected-label><strong>{{$ctrl.config.selectedCount}}</strong> of <strong>{{$ctrl.config.totalCount}}</strong> selected</div></div>\x3c!-- /col --\x3e</div>\x3c!-- /row --\x3e</div>'), e.put("filters/simple-filter/filter.html", "<div class=filter-pf><pf-filter-fields config=$ctrl.config add-filter-fn=$ctrl.addFilter></pf-filter-fields><pf-filter-results config=$ctrl.config></pf-filter-results></div>");
 } ]), angular.module("patternfly.form").run([ "$templateCache", function(e) {
 "use strict";
 e.put("form/form-buttons/form-buttons.html", '<div class=form-group><div class={{$ctrl.pfButtonContainerClass}}><div class="control-group buttons"><button class="btn btn-default" type=button ng-click=$ctrl.pfHandleCancel() ng-disabled=$ctrl.pfWorking translate>Cancel</button> <button class="btn btn-primary" ng-click="$ctrl.pfHandleSave(); $ctrl.pfWorking = true" ng-disabled="$ctrl.isInvalid() || $ctrl.pfWorking"><i class="icon-spinner icon-spin" ng-show=$ctrl.pfWorking></i> <span ng-show=$ctrl.pfWorking translate>Saving...</span> <span ng-hide=$ctrl.pfWorking translate>Save</span></button></div></div></div>'), e.put("form/form-group/form-group.html", '<div class=form-group ng-class="{ \'has-error\' : $ctrl.hasErrors() }"><label for="{{ $ctrl.pfField }}" class="control-label {{ $ctrl.pfLabelClass }}">{{ $ctrl.pfLabel }}</label><div class="{{ $ctrl.pfInputClass }}"><span ng-transclude></span> <span class=help-block ng-show=$ctrl.error.messages><ul><li ng-repeat="message in $ctrl.error.messages">{{ message }}</li></ul></span></div></div>');
@@ -51908,7 +52034,7 @@ e.put("navigation/application-launcher.html", '<div><div class="applauncher-pf d
 e.put("navigation/vertical-navigation.html", "<div><nav class=\"navbar navbar-pf-vertical\"><div class=navbar-header><button type=button class=navbar-toggle ng-click=$ctrl.handleNavBarToggleClick()><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button> <span class=navbar-brand><img class=navbar-brand-icon ng-if=$ctrl.brandSrc ng-src={{$ctrl.brandSrc}} alt=\"{{$ctrl.brandAlt}}\"> <span class=navbar-brand-txt ng-if=!$ctrl.brandSrc>{{$ctrl.brandAlt}}</span></span></div><nav class=\"collapse navbar-collapse\" ng-transclude></nav><div class=nav-pf-vertical ng-class=\"{'nav-pf-persistent-secondary': $ctrl.persistentSecondary,\n                    'nav-pf-vertical-collapsible-menus': $ctrl.pinnableMenus,\n                    'hidden-icons-pf': $ctrl.hiddenIcons,\n                    'nav-pf-vertical-with-badges': $ctrl.showBadges,\n                    'secondary-visible-pf': $ctrl.activeSecondary,\n                    'show-mobile-secondary': $ctrl.showMobileSecondary,\n                    'show-mobile-tertiary': $ctrl.showMobileTertiary,\n                    'hover-secondary-nav-pf': $ctrl.hoverSecondaryNav,\n                    'hover-tertiary-nav-pf': $ctrl.hoverTertiaryNav,\n                    'collapsed-secondary-nav-pf': $ctrl.collapsedSecondaryNav,\n                    'collapsed-tertiary-nav-pf': $ctrl.collapsedTertiaryNav,\n                    'hidden': $ctrl.inMobileState,\n                    'collapsed': $ctrl.navCollapsed,\n                    'force-hide-secondary-nav-pf': $ctrl.forceHidden,\n                    'show-mobile-nav': $ctrl.showMobileNav}\"><ul class=list-group><li ng-repeat=\"item in $ctrl.items\" class=list-group-item ng-class=\"{'secondary-nav-item-pf': item.children && item.children.length > 0,\n                       'active': item.isActive,\n                       'is-hover': item.isHover,\n                       'mobile-nav-item-pf': item.isMobileItem && $ctrl.showMobileSecondary,\n" + '                       \'mobile-secondary-item-pf\': item.isMobileItem && $ctrl.showMobileTertiary}" ng-mouseenter=$ctrl.handlePrimaryHover(item) ng-mouseleave=$ctrl.handlePrimaryUnHover(item)><a ng-click="$ctrl.handlePrimaryClick(item, $event)"><span class={{item.iconClass}} ng-if=item.iconClass ng-class="{hidden: $ctrl.hiddenIcons}" uib-tooltip={{item.title}} tooltip-append-to-body=true tooltip-enable={{$ctrl.navCollapsed}} tooltip-placement=bottom tooltip-class=nav-pf-vertical-tooltip></span> <span class=list-group-item-value>{{item.title}}</span><div ng-if="$ctrl.showBadges && item.badges" class=badge-container-pf><div class="badge {{badge.badgeClass}}" ng-repeat="badge in item.badges" uib-tooltip={{badge.tooltip}} tooltip-append-to-body=true tooltip-placement=right><span ng-if="badge.count && badge.iconClass" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a><div ng-if="item.children && item.children.length > 0" class=nav-pf-secondary-nav><div class=nav-item-pf-header><a class=secondary-collapse-toggle-pf ng-click="$ctrl.collapseSecondaryNav(item, $event)" ng-class="{\'collapsed\': item.secondaryCollapsed}"></a> <span>{{item.title}}</span></div><ul class=list-group><li ng-repeat="secondaryItem in item.children" class=list-group-item ng-class="{\'tertiary-nav-item-pf\': secondaryItem.children && secondaryItem.children.length > 0,\n                             \'active\': secondaryItem.isActive,\n                             \'is-hover\': secondaryItem.isHover,\n                             \'mobile-nav-item-pf\': secondaryItem.isMobileItem}" ng-mouseenter=$ctrl.handleSecondaryHover(secondaryItem) ng-mouseleave=$ctrl.handleSecondaryUnHover(secondaryItem)><a ng-click="$ctrl.handleSecondaryClick(item, secondaryItem, $event)"><span class=list-group-item-value>{{secondaryItem.title}}</span><div ng-if="showBadges && secondaryItem.badges" class=badge-container-pf><div class="badge {{badge.badgeClass}}" ng-repeat="badge in secondaryItem.badges" uib-tooltip={{badge.tooltip}} tooltip-append-to-body=true tooltip-placement=right><span ng-if="badge.count && badge.iconClass" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a><div ng-if="secondaryItem.children && secondaryItem.children.length > 0" class=nav-pf-tertiary-nav><div class=nav-item-pf-header><a class=tertiary-collapse-toggle-pf ng-click="$ctrl.collapseTertiaryNav(secondaryItem, $event)" ng-class="{\'collapsed\': secondaryItem.tertiaryCollapsed}"></a> <span>{{secondaryItem.title}}</span></div><ul class=list-group><li ng-repeat="tertiaryItem in secondaryItem.children" class=list-group-item ng-class="{\'active\': tertiaryItem.isActive}"><a ng-click="$ctrl.handleTertiaryClick(item, secondaryItem, tertiaryItem, $event)"><span class=list-group-item-value>{{tertiaryItem.title}}</span><div ng-if="$ctrl.showBadges && tertiaryItem.badges" class=badge-container-pf><div class="badge {{badge.badgeClass}}" ng-repeat="badge in tertiaryItem.badges" uib-tooltip={{badge.tooltip}} tooltip-append-to-body=true tooltip-placement=right><span ng-if="badge.count && badge.iconClass" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a></li></ul></div></li></ul></div></li></ul></div></nav></div>');
 } ]), angular.module("patternfly.notification").run([ "$templateCache", function(e) {
 "use strict";
-e.put("notification/inline-notification.html", '<div class="alert alert-{{$ctrl.pfNotificationType}}" ng-class="{\'alert-dismissable\': $ctrl.pfNotificationPersistent === true}"><button ng-show=$ctrl.pfNotificationPersistent ng-click=$ctrl.pfNotificationRemove() type=button class=close data-dismiss=alert aria-hidden=true><span class="pficon pficon-close"></span></button> <span class="pficon pficon-ok" ng-show="$ctrl.pfNotificationType === \'success\'"></span> <span class="pficon pficon-info" ng-show="$ctrl.pfNotificationType === \'info\'"></span> <span class="pficon pficon-error-circle-o" ng-show="$ctrl.pfNotificationType === \'danger\'"></span> <span class="pficon pficon-warning-triangle-o" ng-show="$ctrl.pfNotificationType === \'warning\'"></span> <strong>{{$ctrl.pfNotificationHeader}}</strong> {{$ctrl.pfNotificationMessage}}</div>'), e.put("notification/notification-drawer.html", '<div class=drawer-pf ng-class="{\'hide\': $ctrl.drawerHidden, \'drawer-pf-expanded\': $ctrl.drawerExpanded}"><div ng-if=$ctrl.drawerTitle class=drawer-pf-title><a ng-if=$ctrl.allowExpand class="drawer-pf-toggle-expand fa fa-angle-double-left" ng-click=$ctrl.toggleExpandDrawer()></a> <a ng-if=$ctrl.onClose class="drawer-pf-close pficon pficon-close" ng-click=$ctrl.onClose()></a><h3 class=text-center>{{$ctrl.drawerTitle}}</h3></div><div ng-if=$ctrl.titleInclude class=drawer-pf-title ng-include src=$ctrl.titleInclude></div><div ng-if=!$ctrl.notificationGroups class=apf-blank-notification-groups><pf-empty-state config=$ctrl.emptyStateConfig></pf-empty-state></div><div ng-if=$ctrl.notificationGroups pf-fixed-accordion scroll-selector=.panel-body><div class=panel-group><div class="panel panel-default" ng-repeat="notificationGroup in $ctrl.notificationGroups track by $index"><div class=panel-heading><h4 class=panel-title><a ng-if=!$ctrl.singleGroup ng-click=$ctrl.toggleCollapse(notificationGroup) ng-class="{collapsed: !notificationGroup.open}" ng-include src=$ctrl.headingInclude></a> <span ng-if=$ctrl.singleGroup ng-include src=$ctrl.headingInclude></span></h4><span class=panel-counter ng-include src=$ctrl.subheadingInclude></span></div><div class="panel-collapse collapse" ng-class="{in: notificationGroup.open || $ctrl.notificationGroups.length === 1}"><div ng-if=$ctrl.hasNotifications(notificationGroup)><div class=panel-body><div class=drawer-pf-notification ng-class="{unread: notification.unread, \'expanded-notification\': $ctrl.drawerExpanded}" ng-repeat="notification in notificationGroup.notifications" ng-include src=$ctrl.notificationBodyInclude></div><div ng-if=notificationGroup.isLoading class="drawer-pf-loading text-center"><span class="spinner spinner-xs spinner-inline"></span> Loading More</div></div><div class=drawer-pf-action><span class=drawer-pf-action-link ng-if="$ctrl.showMarkAllRead && $ctrl.hasUnread(notificationGroup)"><button class="btn btn-link" ng-click=$ctrl.onMarkAllRead(notificationGroup)>Mark All Read</button></span> <span class=drawer-pf-action-link><button class="btn btn-link" ng-if=$ctrl.showClearAll ng-click=$ctrl.onClearAll(notificationGroup)><span class="pficon pficon-close"></span> Clear All</button></span></div><div class=drawer-pf-action ng-if=$ctrl.actionButtonTitle><a class="btn btn-link btn-block" ng-click=$ctrl.actionButtonCallback(notificationGroup)>{{$ctrl.actionButtonTitle}}</a></div></div><div ng-if=!$ctrl.hasNotifications(notificationGroup)><div class=panel-body><pf-empty-state config=notificationGroup.emptyStateConfig></pf-empty-state></div></div><div ng-if=$ctrl.notificationFooterInclude ng-include src=$ctrl.notificationFooterInclude></div></div></div></div></div></div>'), 
+e.put("notification/inline-notification.html", '<div class="alert alert-{{$ctrl.pfNotificationType}}" ng-class="{\'alert-dismissable\': $ctrl.pfNotificationPersistent === true}"><button ng-show=$ctrl.pfNotificationPersistent ng-click=$ctrl.pfNotificationRemove() type=button class=close data-dismiss=alert aria-hidden=true><span class="pficon pficon-close"></span></button> <span class="pficon pficon-ok" ng-show="$ctrl.pfNotificationType === \'success\'"></span> <span class="pficon pficon-info" ng-show="$ctrl.pfNotificationType === \'info\'"></span> <span class="pficon pficon-error-circle-o" ng-show="$ctrl.pfNotificationType === \'danger\'"></span> <span class="pficon pficon-warning-triangle-o" ng-show="$ctrl.pfNotificationType === \'warning\'"></span> <strong>{{$ctrl.pfNotificationHeader}}</strong> {{$ctrl.pfNotificationMessage}}</div>'), e.put("notification/notification-drawer.html", '<div class=drawer-pf ng-class="{\'hide\': $ctrl.drawerHidden, \'drawer-pf-expanded\': $ctrl.drawerExpanded}"><div ng-if=$ctrl.drawerTitle class=drawer-pf-title><a ng-if=$ctrl.allowExpand class="drawer-pf-toggle-expand fa fa-angle-double-left" ng-click=$ctrl.toggleExpandDrawer()></a> <a ng-if=$ctrl.onClose class="drawer-pf-close pficon pficon-close" ng-click=$ctrl.onClose()></a><h3 class=text-center>{{$ctrl.drawerTitle}}</h3></div><div ng-if=$ctrl.titleInclude class=drawer-pf-title ng-include src=$ctrl.titleInclude></div><div ng-if=!$ctrl.notificationGroups class=apf-blank-notification-groups><pf-empty-state config=$ctrl.emptyStateConfig></pf-empty-state></div><div ng-if=$ctrl.notificationGroups pf-fixed-accordion scroll-selector=.panel-body><div class=panel-group><div class="panel panel-default" ng-repeat="notificationGroup in $ctrl.notificationGroups track by $index"><div class=panel-heading><h4 class=panel-title><a ng-if=!$ctrl.singleGroup ng-click=$ctrl.toggleCollapse(notificationGroup) ng-class="{collapsed: !notificationGroup.open}" ng-include src=$ctrl.headingInclude></a> <span ng-if=$ctrl.singleGroup ng-include src=$ctrl.headingInclude></span></h4><span class=panel-counter ng-include src=$ctrl.subheadingInclude></span></div><div class="panel-collapse collapse" ng-class="{in: notificationGroup.open || $ctrl.notificationGroups.length === 1}"><div ng-if=$ctrl.hasNotifications(notificationGroup) class=panel-body><div class=drawer-pf-notification ng-class="{unread: notification.unread, \'expanded-notification\': $ctrl.drawerExpanded}" ng-repeat="notification in notificationGroup.notifications" ng-include src=$ctrl.notificationBodyInclude></div><div ng-if=notificationGroup.isLoading class="drawer-pf-loading text-center"><span class="spinner spinner-xs spinner-inline"></span> Loading More</div></div><div ng-if="($ctrl.showClearAll || $ctrl.showMarkAllRead) && $ctrl.hasNotifications(notificationGroup)" class=drawer-pf-action><span class=drawer-pf-action-link ng-if="$ctrl.showMarkAllRead && $ctrl.hasUnread(notificationGroup)"><button class="btn btn-link" ng-click=$ctrl.onMarkAllRead(notificationGroup)>Mark All Read</button></span> <span class=drawer-pf-action-link><button class="btn btn-link" ng-if=$ctrl.showClearAll ng-click=$ctrl.onClearAll(notificationGroup)><span class="pficon pficon-close"></span> Clear All</button></span></div><div ng-if="$ctrl.actionButtonTitle && $ctrl.hasNotifications(notificationGroup)" class=drawer-pf-action><a class="btn btn-link btn-block" ng-click=$ctrl.actionButtonCallback(notificationGroup)>{{$ctrl.actionButtonTitle}}</a></div><div ng-if=!$ctrl.hasNotifications(notificationGroup)><div class=panel-body><pf-empty-state config=notificationGroup.emptyStateConfig></pf-empty-state></div></div><div ng-if=$ctrl.notificationFooterInclude ng-include src=$ctrl.notificationFooterInclude></div></div></div></div></div></div>'), 
 e.put("notification/notification-list.html", '<div data-ng-show="$ctrl.notifications.data.length > 0"><div ng-repeat="notification in $ctrl.notifications.data"><pf-inline-notification pf-notification-type=notification.type pf-notification-header=notification.header pf-notification-message=notification.message pf-notification-persistent=notification.isPersistent pf-notification-index=$index></pf-inline-notification></div></div>'), e.put("notification/toast-notification-list.html", '<div class=toast-notifications-list-pf data-ng-show="$ctrl.notifications.length > 0"><div ng-repeat="notification in $ctrl.notifications"><pf-toast-notification notification-type={{notification.type}} header={{notification.header}} message={{notification.message}} show-close="{{($ctrl.showClose || notification.isPersistent === true) && !(notification.menuActions && notification.menuActions.length > 0)}}" close-callback=$ctrl.handleClose action-title={{notification.actionTitle}} action-callback=notification.actionCallback menu-actions=notification.menuActions update-viewing=$ctrl.handleViewingChange data=notification></pf-toast-notification></div></div>'), 
 e.put("notification/toast-notification.html", '<div class="toast-pf alert alert-{{$ctrl.notificationType}}" ng-class="{\'alert-dismissable\': $ctrl.showCloseButton}" ng-mouseenter=$ctrl.handleEnter() ng-mouseleave=$ctrl.handleLeave()><div uib-dropdown class="pull-right dropdown-kebab-pf" ng-if="$ctrl.menuActions && $ctrl.menuActions.length > 0"><button uib-dropdown-toggle class="btn btn-link" type=button id=dropdownKebabRight><span class="fa fa-ellipsis-v"></span></button><ul uib-dropdown-menu class=dropdown-menu-right aria-labelledby=dropdownKebabRight><li ng-repeat="menuAction in $ctrl.menuActions" role="{{menuAction.isSeparator === true ? \'separator\' : \'menuitem\'}}" ng-class="{\'divider\': menuAction.isSeparator === true, \'disabled\': menuAction.isDisabled === true}"><a ng-if="menuAction.isSeparator !== true" class=secondary-action title={{menuAction.title}} ng-click=$ctrl.handleMenuAction(menuAction)>{{menuAction.name}}</a></li></ul></div><button ng-if=$ctrl.showCloseButton type=button class=close aria-hidden=true ng-click=$ctrl.handleClose()><span class="pficon pficon-close"></span></button><div class="pull-right toast-pf-action" ng-if=$ctrl.actionTitle><a ng-click=$ctrl.handleAction()>{{$ctrl.actionTitle}}</a></div><span class="pficon pficon-ok" ng-if="$ctrl.notificationType === \'success\'"></span> <span class="pficon pficon-info" ng-if="$ctrl.notificationType === \'info\'"></span> <span class="pficon pficon-error-circle-o" ng-if="$ctrl.notificationType === \'danger\'"></span> <span class="pficon pficon-warning-triangle-o" ng-if="$ctrl.notificationType === \'warning\'"></span> <span ng-if=$ctrl.header><strong>{{$ctrl.header}}</strong> {{$ctrl.message}}</span> <span ng-if=!$ctrl.header>{{$ctrl.message}}</span></div>');
 } ]), angular.module("patternfly.pagination").run([ "$templateCache", function(e) {
@@ -51922,7 +52048,7 @@ e.put("select/select.html", '<div uib-dropdown class=btn-group><button uib-dropd
 e.put("sort/sort.html", '<div class=sort-pf><div uib-dropdown class=btn-group><button uib-dropdown-toggle type=button class="btn btn-default">{{$ctrl.config.currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat="item in $ctrl.config.fields" ng-class="{\'selected\': item === $ctrl.config.currentField}"><a href=javascript:void(0); class=sort-field role=menuitem tabindex=-1 ng-click=$ctrl.selectField(item)>{{item.title}}</a></li></ul></div><button class="btn btn-link" type=button ng-click=$ctrl.changeDirection()><span class=sort-direction ng-class=$ctrl.getSortIconClass()></span></button></div>');
 } ]), angular.module("patternfly.table").run([ "$templateCache", function(e) {
 "use strict";
-e.put("table/tableview/table-view.html", '<div class=container-fluid><table ng-if="$ctrl.config.itemsAvailable !== false" datatable=ng dt-options=$ctrl.dtOptions dt-column-defs=$ctrl.dtColumnDefs dt-instance=$ctrl.dtInstanceCallback class="table-view-container table table-striped table-bordered table-hover dataTable"><thead><tr role=row><th class=table-view-pf-select ng-if=$ctrl.config.showCheckboxes><input type=checkbox value=$ctrl.selectAll ng-model=$ctrl.selectAll ng-change="$ctrl.toggleAll()"></th><th ng-repeat="col in $ctrl.columns">{{col.header}}</th><th ng-if=$ctrl.areActions() colspan={{$ctrl.calcActionsColspan()}}>Actions</th></tr></thead><tbody><tr role=row ng-repeat="item in $ctrl.items track by $index"><td class=table-view-pf-select ng-if=$ctrl.config.showCheckboxes><input type=checkbox value=item.selected ng-model=item.selected ng-change="$ctrl.toggleOne(item)"></td><td ng-repeat="col in $ctrl.columns" ng-init="key = col.itemField; value = item[key]"><span ng-if=!$ctrl.hasHTMLTemplate(key)>{{value}}</span> <span ng-if=$ctrl.hasHTMLTemplate(key) ng-include=$ctrl.getHTMLTemplate(key)></span></td><td ng-if="$ctrl.actionButtons && $ctrl.actionButtons.length > 0" class=table-view-pf-actions ng-repeat="actionButton in $ctrl.actionButtons"><div class=table-view-pf-btn><button class="btn btn-default" title={{actionButton.title}} ng-click="$ctrl.handleButtonAction(actionButton, item)"><span ng-if=!actionButton.include>{{actionButton.name}}</span></button></div></td><td ng-if="$ctrl.menuActions && $ctrl.menuActions.length > 0" class="table-view-pf-actions list-group-item-header"><div uib-dropdown class="{{$ctrl.dropdownClass}} dropdown-kebab-pf" id=kebab_{{$index}} ng-if="$ctrl.menuActions && $ctrl.menuActions.length > 0"><button uib-dropdown-toggle class="btn btn-default dropdown-toggle" type=button id=dropdownKebabRight_{{$index}} ng-click="$ctrl.setupActions(item, $event)"><span class="fa fa-ellipsis-v"></span></button><ul uib-dropdown-menu class="dropdown-menu dropdown-menu-right {{$index}}" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat="menuAction in $ctrl.menuActions" ng-if="menuAction.isVisible !== false" role="{{menuAction.isSeparator === true ? \'separator\' : \'menuitem\'}}" ng-class="{\'divider\': (menuAction.isSeparator === true), \'disabled\': (menuAction.isDisabled === true)}"><a ng-if="menuAction.isSeparator !== true" title={{menuAction.title}} ng-click="$ctrl.handleMenuAction(menuAction, item)">{{menuAction.name}}</a></li></ul></div></td></tr></tbody></table><pf-empty-state ng-if="$ctrl.config.itemsAvailable === false" config=$ctrl.emptyStateConfig action-buttons=$ctrl.emptyStateActionButtons></pf-empty-state></div>');
+e.put("table/tableview/table-view.html", '<div class=container-fluid><table ng-if="$ctrl.config.itemsAvailable !== false" datatable=ng dt-options=$ctrl.dtOptions dt-column-defs=$ctrl.dtColumnDefs dt-instance=$ctrl.dtInstanceCallback class="table-view-container table table-striped table-bordered table-hover dataTable"><thead><tr role=row><th class=table-view-pf-select ng-if=$ctrl.config.showCheckboxes><input type=checkbox value=$ctrl.selectAll ng-model=$ctrl.selectAll ng-change="$ctrl.toggleAll()"></th><th ng-repeat="col in $ctrl.columns">{{col.header}}</th><th ng-if=$ctrl.areActions() colspan={{$ctrl.calcActionsColspan()}}>Actions</th></tr></thead><tbody><tr role=row ng-repeat="item in $ctrl.items track by $index"><td class=table-view-pf-select ng-if=$ctrl.config.showCheckboxes><input type=checkbox value=item.selected ng-model=item.selected ng-change="$ctrl.toggleOne(item)"></td><td ng-repeat="col in $ctrl.columns" ng-init="key = col.itemField; value = item[key]"><span ng-if=!$ctrl.hasHTMLTemplate(key)>{{value}}</span> <span ng-if=$ctrl.hasHTMLTemplate(key) ng-include=$ctrl.getHTMLTemplate(key)></span></td><td ng-if="$ctrl.actionButtons && $ctrl.actionButtons.length > 0" class=table-view-pf-actions ng-repeat="actionButton in $ctrl.actionButtons"><div class=table-view-pf-btn><button class="btn btn-default" title={{actionButton.title}} ng-click="$ctrl.handleButtonAction(actionButton, item)"><span ng-if=!actionButton.include>{{actionButton.name}}</span></button></div></td><td ng-if="$ctrl.menuActions && $ctrl.menuActions.length > 0" class="table-view-pf-actions list-group-item-header"><div uib-dropdown class="{{$ctrl.dropdownClass}} dropdown-kebab-pf" id=kebab_{{$index}} ng-if="$ctrl.menuActions && $ctrl.menuActions.length > 0"><button uib-dropdown-toggle class="btn btn-default dropdown-toggle" type=button id=dropdownKebabRight_{{$index}} ng-click="$ctrl.setupActions(item, $event)"><span class="fa fa-ellipsis-v"></span></button><ul uib-dropdown-menu class="dropdown-menu dropdown-menu-right {{$index}}" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat="menuAction in $ctrl.menuActions" ng-if="menuAction.isVisible !== false" role="{{menuAction.isSeparator === true ? \'separator\' : \'menuitem\'}}" ng-class="{\'divider\': (menuAction.isSeparator === true), \'disabled\': (menuAction.isDisabled === true)}"><a ng-if="menuAction.isSeparator !== true" title={{menuAction.title}} ng-click="$ctrl.handleMenuAction(menuAction, item)">{{menuAction.name}}</a></li></ul></div></td></tr></tbody></table><pf-pagination ng-if="$ctrl.dtOptions.paging && $ctrl.config.itemsAvailable === true" page-size=$ctrl.pageConfig.pageSize page-number=$ctrl.pageConfig.pageNumber num-total-items=$ctrl.pageConfig.numTotalItems page-size-increments=$ctrl.pageConfig.pageSizeIncrements update-page-size=$ctrl.updatePageSize($event) update-page-number=$ctrl.updatePageNumber($event)></pf-pagination><pf-empty-state ng-if="$ctrl.config.itemsAvailable === false" config=$ctrl.emptyStateConfig action-buttons=$ctrl.emptyStateActionButtons></pf-empty-state></div>');
 } ]), angular.module("patternfly.toolbars").run([ "$templateCache", function(e) {
 "use strict";
 e.put("toolbars/toolbar.html", '<div class=container-fluid><div class="row toolbar-pf" ng-class="{\'table-view-pf-toolbar\': $ctrl.isTableViewSelected()}"><div class=col-sm-12><form class=toolbar-pf-actions ng-class="{\'no-filter\': !$ctrl.config.filterConfig}"><div class="form-group toolbar-apf-filter"><pf-filter-fields config=$ctrl.config.filterConfig ng-if=$ctrl.config.filterConfig add-filter-fn=$ctrl.addFilter></pf-filter-fields></div><div class=form-group><pf-sort config=$ctrl.config.sortConfig ng-if="$ctrl.config.sortConfig && $ctrl.config.sortConfig.show"></pf-sort></div><div class="form-group toolbar-actions" ng-if="$ctrl.config.actionsConfig &&\n                   (($ctrl.config.actionsConfig.primaryActions && $ctrl.config.actionsConfig.primaryActions.length > 0) ||\n                    ($ctrl.config.actionsConfig.moreActions && $ctrl.config.actionsConfig.moreActions.length > 0) ||\n                    $ctrl.config.actionsConfig.actionsInclude)"><button class="btn btn-default primary-action" type=button ng-repeat="action in $ctrl.config.actionsConfig.primaryActions" title={{action.title}} ng-click=$ctrl.handleAction(action) ng-disabled="action.isDisabled === true">{{action.name}}</button><div ng-if=$ctrl.config.actionsConfig.actionsInclude pf-transclude class=toolbar-pf-include-actions ng-tranclude=actions></div><div uib-dropdown class=dropdown-kebab-pf ng-if="$ctrl.config.actionsConfig.moreActions && $ctrl.config.actionsConfig.moreActions.length > 0"><button uib-dropdown-toggle class="btn btn-link" type=button><span class="fa fa-ellipsis-v"></span></button><ul uib-dropdown-menu aria-labelledby=dropdownKebab><li ng-repeat="action in $ctrl.config.actionsConfig.moreActions" role="{{action.isSeparator === true ? \'separator\' : \'menuitem\'}}" ng-class="{\'divider\': action.isSeparator === true, \'disabled\': action.isDisabled === true}"><a ng-if="action.isSeparator !== true" class=secondary-action title={{action.title}} ng-click=$ctrl.handleAction(action)>{{action.name}}</a></li></ul></div></div><div class=toolbar-pf-action-right><div class="form-group toolbar-pf-view-selector" ng-if="$ctrl.config.viewsConfig && $ctrl.config.viewsConfig.views"><button ng-repeat="view in $ctrl.config.viewsConfig.viewsList" class="btn btn-link" ng-class="{\'active\': $ctrl.isViewSelected(view.id), \'disabled\': $ctrl.checkViewDisabled(view)}" title={{view.title}} ng-click=$ctrl.viewSelected(view.id)><i class={{view.iconClass}}></i></button></div></div></form><pf-filter-results config=$ctrl.config.filterConfig ng-if=$ctrl.config.filterConfig></pf-filter-results></div></div></div>');
@@ -72401,7 +72527,7 @@ e.put("src/components/binding/bindServiceForm.html", '<div class="bind-form">\n 
 e.put("src/components/create-project/createProject.html", '<form name="createProjectForm" novalidate>\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="name" class="required">Name</label>\n      <span ng-class="{\'has-error\': (createProjectForm.name.$error.pattern && createProjectForm.name.$touched) || nameTaken}">\n        <input class="form-control input-lg"\n            name="name"\n            id="name"\n            placeholder="my-project"\n            type="text"\n            required\n            take-focus\n            minlength="2"\n            maxlength="63"\n            pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?"\n            aria-describedby="nameHelp"\n            ng-model="name"\n            ng-model-options="{ updateOn: \'default blur\' }"\n            ng-change="nameTaken = false"\n            autocorrect="off"\n            autocapitalize="off"\n            spellcheck="false">\n      </span>\n      <div>\n        <span class="help-block">A unique name for the project.</span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.required && createProjectForm.name.$dirty">\n          Name is required.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.minlength && createProjectForm.name.$touched">\n          Name must have at least two characters.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.pattern && createProjectForm.name.$touched">\n          Project names may only contain lower-case letters, numbers, and dashes.\n          They may not start or end with a dash.\n        </span>\n      </div>\n      <div class="has-error">\n        <span class="help-block" ng-if="nameTaken">\n          This name is already in use. Please choose a different name.\n        </span>\n      </div>\n    </div>\n\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control input-lg"\n          name="displayName"\n          id="displayName"\n          placeholder="My Project"\n          type="text"\n          ng-model="displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n      <textarea class="form-control input-lg"\n          name="description"\n          id="description"\n          placeholder="A short description."\n          ng-model="description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n          class="btn btn-primary btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="createProject()"\n          ng-disabled="createProjectForm.$invalid || nameTaken || disableInputs"\n          value="">\n        Create\n      </button>\n      <button\n          class="btn btn-default btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelCreateProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
 e.put("src/components/delete-project/delete-project-button.html", '<div class="actions">\n  \x3c!-- Avoid whitespace inside the link --\x3e\n  <a href=""\n     ng-click="$event.stopPropagation(); openDeleteModal()"\n     role="button"\n     class="action-button"\n     ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n     ng-class="{ \'disabled-link\': disableDelete }"\n    ><i class="fa fa-trash-o" aria-hidden="true"\n    ></i><span class="sr-only">Delete Project {{projectName}}</span></a>\n</div>\n'), e.put("src/components/delete-project/delete-project-modal.html", '<div class="delete-resource-modal">\n  \x3c!-- Use a form so that the enter key submits when typing a project name to confirm. --\x3e\n  <form>\n    <div class="modal-body">\n      <h1>Are you sure you want to delete the project\n        \'<strong>{{displayName ? displayName : projectName}}</strong>\'?</h1>\n      <p>\n        This will <strong>delete all resources</strong> associated with\n        the project {{displayName ? displayName : projectName}} and <strong>cannot be\n        undone</strong>.  Make sure this is something you really want to do!\n      </p>\n      <div ng-show="typeNameToConfirm">\n        <p>Type the name of the project to confirm.</p>\n        <p>\n          <label class="sr-only" for="resource-to-delete">project to delete</label>\n          <input\n              ng-model="confirmName"\n              id="resource-to-delete"\n              type="text"\n              class="form-control input-lg"\n              autocorrect="off"\n              autocapitalize="off"\n              spellcheck="false"\n              autofocus>\n        </p>\n      </div>\n    </div>\n    <div class="modal-footer">\n      <button ng-disabled="typeNameToConfirm && confirmName !== projectName && confirmName !== displayName" class="btn btn-lg btn-danger" type="submit" ng-click="delete();">Delete</button>\n      <button class="btn btn-lg btn-default" type="button" ng-click="cancel();">Cancel</button>\n    </div>\n  </form>\n</div>\n'), 
 e.put("src/components/delete-project/delete-project.html", '<a href="javascript:void(0)"\n   ng-click="openDeleteModal()"\n   role="button"\n   ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n   ng-class="{ \'disabled-link\': disableDelete }"\n>{{label || \'Delete\'}}</a>\n'), e.put("src/components/edit-project/editProject.html", '<form name="editProjectForm">\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control input-lg"\n             name="displayName"\n             id="displayName"\n             placeholder="My Project"\n             type="text"\n             ng-model="editableFields.displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n                    <textarea class="form-control input-lg"\n                              name="description"\n                              id="description"\n                              placeholder="A short description."\n                              ng-model="editableFields.description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n              class="btn btn-primary btn-lg"\n              ng-class="{\'dialog-btn\': isDialog}"\n              ng-click="update()"\n              ng-disabled="editProjectForm.$invalid || disableInputs"\n              value="">{{submitButtonLabel}}</button>\n      <button\n          class="btn btn-default btn-lg"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelEditProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
-e.put("src/components/toast-notifications/toast-notifications.html", '<div class="toast-notifications-list-pf">\n  <div ng-repeat="(notificationID, notification) in notifications track by (notificationID + (notification.message || notification.details))" ng-if="!notification.hidden || notification.isHover"\n       ng-mouseenter="setHover(notification, true)" ng-mouseleave="setHover(notification, false)">\n    <div class="toast-pf alert {{notification.type | alertStatus}}" ng-class="{\'alert-dismissable\': !hideCloseButton}">\n      <button ng-if="!hideCloseButton" type="button" class="close" ng-click="close(notification)">\n        <span class="pficon pficon-close" aria-hidden="true"></span>\n        <span class="sr-only">Close</span>\n      </button>\n      <span class="{{notification.type | alertIcon}}" aria-hidden="true"></span>\n      <span class="sr-only">{{notification.type}}</span>\n      <span class="toast-notification-message" ng-if="notification.message">{{notification.message}}</span>\n      <div ng-if="notification.details" class="toast-notification-details">\n        <truncate-long-text\n          limit="200"\n          content="notification.details"\n          use-word-boundary="true"\n          expandable="true"\n          hide-collapse="true">\n        </truncate-long-text>\n      </div>\n      <span ng-repeat="link in notification.links">\n        <a ng-if="!link.href" href="" ng-click="onClick(notification, link)" role="button">{{link.label}}</a>\n        <a ng-if="link.href" ng-href="{{link.href}}" ng-attr-target="{{link.target}}">{{link.label}}</a>\n        <span ng-if="!$last" class="toast-action-divider">|</span>\n      </span>\n    </div>\n  </div>\n</div>\n'), 
+e.put("src/components/origin-modal-popup/origin-modal-popup.html", '<div class="origin-modal-popup tile-click-prevent" ng-if="$ctrl.shown" ng-style="$ctrl.positionStyle"\n     ng-class="{\'position-above\': $ctrl.showAbove, \'position-left\': $ctrl.showLeft}">\n  <h4 class="origin-modal-popup-title">\n    {{$ctrl.modalTitle}}\n  </h4>\n  <div ng-transclude></div>\n  <a href="" class="origin-modal-popup-close" ng-click="$ctrl.onClose()">\n    <span class="pficon pficon-close"></span>\n  </a>\n</div>\n'), e.put("src/components/toast-notifications/toast-notifications.html", '<div class="toast-notifications-list-pf">\n  <div ng-repeat="(notificationID, notification) in notifications track by (notificationID + (notification.message || notification.details))" ng-if="!notification.hidden || notification.isHover"\n       ng-mouseenter="setHover(notification, true)" ng-mouseleave="setHover(notification, false)">\n    <div class="toast-pf alert {{notification.type | alertStatus}}" ng-class="{\'alert-dismissable\': !hideCloseButton}">\n      <button ng-if="!hideCloseButton" type="button" class="close" ng-click="close(notification)">\n        <span class="pficon pficon-close" aria-hidden="true"></span>\n        <span class="sr-only">Close</span>\n      </button>\n      <span class="{{notification.type | alertIcon}}" aria-hidden="true"></span>\n      <span class="sr-only">{{notification.type}}</span>\n      <span class="toast-notification-message" ng-if="notification.message">{{notification.message}}</span>\n      <div ng-if="notification.details" class="toast-notification-details">\n        <truncate-long-text\n          limit="200"\n          content="notification.details"\n          use-word-boundary="true"\n          expandable="true"\n          hide-collapse="true">\n        </truncate-long-text>\n      </div>\n      <span ng-repeat="link in notification.links">\n        <a ng-if="!link.href" href="" ng-click="onClick(notification, link)" role="button">{{link.label}}</a>\n        <a ng-if="link.href" ng-href="{{link.href}}" ng-attr-target="{{link.target}}">{{link.label}}</a>\n        <span ng-if="!$last" class="toast-action-divider">|</span>\n      </span>\n    </div>\n  </div>\n</div>\n'), 
 e.put("src/components/truncate-long-text/truncateLongText.html", '\x3c!--\n  Do not remove class `truncated-content` (here or below) even though it\'s not\n  styled directly in origin-web-common.  `truncated-content` is used by\n  origin-web-console in certain contexts.\n--\x3e\n<span ng-if="!truncated" ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n<span ng-if="truncated">\n  <span ng-if="!toggles.expanded">\n    <span ng-attr-title="{{content}}" class="truncation-block">\n      <span ng-bind-html="truncatedContent | highlightKeywords : keywords" class="truncated-content"></span>&hellip;\n    </span>\n    <a ng-if="expandable" href="" ng-click="toggles.expanded = true" class="nowrap">See All</a>\n  </span>\n  <span ng-if="toggles.expanded">\n    <div ng-if="prettifyJson" class="well">\n      <span ng-if="!hideCollapse" class="pull-right" style="margin-top: -10px;"><a href="" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a></span>\n      <span ng-bind-html="content | prettifyJSON | highlightKeywords : keywords" class="pretty-json truncated-content"></span>\n    </div>\n    <span ng-if="!prettifyJson">\n      <span ng-if="!hideCollapse" class="pull-right"><a href="" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a></span>\n      <span ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n    </span>\n  </span>\n</span>\n');
 } ]), angular.module("openshiftCommonUI").component("bindApplicationForm", {
 controllerAs: "ctrl",
@@ -72473,29 +72599,21 @@ onCancel: "&?",
 isDialog: "@"
 },
 templateUrl: "src/components/create-project/createProject.html",
-controller: [ "$scope", "$filter", "$location", "DataService", "NotificationsService", "displayNameFilter", function(t, n, i, r, o, a) {
+controller: [ "$scope", "$location", "ProjectsService", "NotificationsService", "displayNameFilter", function(t, n, i, r, o) {
 t.submitButtonLabel || (t.submitButtonLabel = "Create"), t.isDialog = "true" === t.isDialog;
 t.createProject = function() {
-t.disableInputs = !0, t.createProjectForm.$valid && r.create("projectrequests", null, {
-apiVersion: "v1",
-kind: "ProjectRequest",
-metadata: {
-name: t.name
-},
-displayName: t.displayName,
-description: t.description
-}, t).then(function(e) {
-var n = t.redirectAction();
-n ? n(encodeURIComponent(e.metadata.name)) : i.path("project/" + encodeURIComponent(e.metadata.name) + "/create"), o.addNotification({
+t.disableInputs = !0, t.createProjectForm.$valid && i.create(t.name, t.displayName, t.description).then(function(e) {
+var i = t.redirectAction();
+i ? i(encodeURIComponent(e.metadata.name)) : n.path("project/" + encodeURIComponent(e.metadata.name) + "/create"), r.addNotification({
 type: "success",
-message: "Project '" + a(e) + "' was successfully created."
+message: "Project '" + o(e) + "' was successfully created."
 });
 }, function(e) {
 t.disableInputs = !1;
 var n = e.data || {};
 if ("AlreadyExists" === n.reason) t.nameTaken = !0; else {
 var i = n.message || "An error occurred creating the project.";
-o.addNotification({
+r.addNotification({
 id: "create-project-error",
 type: "error",
 message: i
@@ -72508,7 +72626,7 @@ var n = t.onCancel();
 n && n();
 } else e.history.back();
 }, t.$on("$destroy", function() {
-o.hideNotification("create-project-error");
+r.hideNotification("create-project-error");
 });
 } ]
 };
@@ -72629,7 +72747,53 @@ n ? n() : e.history.back();
 };
 } ]
 };
-} ]), angular.module("openshiftCommonUI").directive("oscUnique", function() {
+} ]), angular.module("openshiftCommonUI").component("originModalPopup", {
+transclude: !0,
+bindings: {
+modalTitle: "@",
+shown: "<",
+position: "@",
+referenceElement: "<?",
+onClose: "<"
+},
+templateUrl: "src/components/origin-modal-popup/origin-modal-popup.html",
+controller: [ "$scope", "HTMLService", "$element", "$window", function(e, t, n, i) {
+function r() {
+var e = d.referenceElement || n[0].parentNode;
+if (e && t.isWindowAboveBreakpoint(t.WINDOW_SIZE_SM)) {
+var r, o, a = d.position && d.position.indexOf("top") > -1, s = d.position && d.position.indexOf("left") > -1, l = e.getBoundingClientRect(), c = i.innerHeight, u = n[0].children[0], h = _.get(u, "offsetHeight", 0), f = _.get(u, "offsetWidth", 0);
+l.top < h ? a = !1 : l.bottom + h > c && (a = !0), r = a ? l.top - h + "px" : l.bottom + "px", o = s ? l.left + "px" : l.right - f + "px", d.showAbove = a, d.showLeft = s, d.positionStyle = {
+left: o,
+top: r
+};
+} else d.positionStyle = {};
+}
+function o() {
+var e = d.referenceElement ? d.referenceElement.parentNode : n[0].parentNode;
+$(e).append('<div class="origin-modal-popup-backdrop modal-backdrop fade in tile-click-prevent"></div>');
+}
+function a() {
+$(".origin-modal-popup-backdrop").remove();
+}
+function s() {
+e.$evalAsync(r);
+}
+function l() {
+o(), u = _.debounce(s, 50, {
+maxWait: 250
+}), angular.element(i).on("resize", u);
+}
+function c() {
+a(), angular.element(i).off("resize", u);
+}
+var u, d = this;
+d.$onChanges = function(e) {
+e.shown && (d.shown ? l() : c()), (e.shown || e.referenceElement) && d.shown && r();
+}, d.$onDestroy = function() {
+d.shown && c();
+};
+} ]
+}), angular.module("openshiftCommonUI").directive("oscUnique", function() {
 return {
 restrict: "A",
 scope: {
@@ -72702,7 +72866,7 @@ restrict: "AC",
 link: function(e, t) {
 $(t).click(function(e) {
 var n = $(e.target);
-n && (n.closest("a", t).length || n.closest("button", t).length) || n.closest(".tile-click-prevent", t).length || $("a.tile-target", t).trigger("click");
+n && (n.closest("a", t).length || n.closest("button", t).length) || n.closest(".tile-click-prevent", t).length || angular.element($("a.tile-target", t))[0].click();
 });
 }
 };
@@ -73020,15 +73184,15 @@ return -1 !== n && (!t || n !== e.length - 1);
 };
 }), angular.module("openshiftCommonUI").filter("truncate", function() {
 return function(e, t, n, i) {
-if (!e) return e;
+if ("string" != typeof e) return e;
 var r = e;
 if (t && (r = r.substring(0, t)), i) {
 var o = e.split("\n", i).join("\n").length;
 r = r.substring(0, o);
 }
 if (!1 !== n) {
-var a = Math.max(4, t - 10), s = r.lastIndexOf(/\s/, a);
--1 !== s && (r = r.substring(0, s));
+var a = Math.max(4, t - 10), s = r.lastIndexOf(" ");
+s >= a && -1 !== s && (r = r.substring(0, s));
 }
 return r;
 };
@@ -73451,6 +73615,18 @@ matchLabels: s
 name: o,
 selector: s
 }), a;
+}, d = function(e, t) {
+var n = a(e, t);
+if (_.get(e, "metadata.deletionTimestamp")) return !1;
+if (!n) return !!e;
+var i = s(e, n), r = _.get(i, "bindable");
+return !0 === r || !1 !== r && n.bindable;
+}, h = function(e) {
+var t = {};
+return _.each(e, function(e) {
+var n = _.get(e, "spec.alphaPodPresetTemplate.selector");
+n && (t[e.metadata.name] = new LabelSelector(n));
+}), t;
 };
 return {
 bindingResource: o,
@@ -73463,11 +73639,25 @@ namespace: e.metadata.namespace
 return i.create(o, null, r, a);
 });
 },
-isServiceBindable: function(e, t) {
-var n = a(e, t);
-if (!n) return !!e;
-var i = s(e, n), r = _.get(i, "bindable");
-return !0 === r || !1 !== r && n.bindable;
+isServiceBindable: d,
+getPodPresetSelectorsForBindings: h,
+getBindingsForResource: function(e, t) {
+var n = h(e), i = new LabelSelector(_.get(t, "spec.selector")), r = [];
+return _.each(n, function(t, n) {
+t.covers(i) && r.push(e[n]);
+}), r;
+},
+filterBindableServiceInstances: function(e, t) {
+return e || t ? _.filter(e, function(e) {
+return d(e, t);
+}) : null;
+},
+sortServiceInstances: function(e, t) {
+return e || t ? _.sortBy(e, function(e) {
+return _.get(t, [ e.spec.serviceClassName, "externalMetadata", "displayName" ]) || e.spec.serviceClassName;
+}, function(e) {
+return _.get(e, "metadata.name", "");
+}) : null;
 }
 };
 } ]), angular.module("openshiftCommonServices").factory("Constants", function() {
@@ -74209,8 +74399,8 @@ e ? (t.log("LocalStorageUserStore.setToken", e, n), localStorage[i] = e, o(i, n)
 }
 };
 } ];
-}), angular.module("openshiftCommonServices").factory("ProjectsService", [ "$location", "$q", "AuthService", "DataService", "annotationNameFilter", "AuthorizationService", function(e, t, n, i, r, o) {
-var a = function(e) {
+}), angular.module("openshiftCommonServices").factory("ProjectsService", [ "$location", "$q", "AuthService", "DataService", "annotationNameFilter", "AuthorizationService", "RecentlyViewedProjectsService", function(e, t, n, i, r, o, a) {
+var s = function(e) {
 var t = [ r("description"), r("displayName") ];
 return _.each(t, function(t) {
 e.metadata.annotations[t] || delete e.metadata.annotations[t];
@@ -74228,7 +74418,7 @@ return i.get("projects", r, n, {
 errorNotification: !1
 }).then(function(e) {
 return o.getProjectRules(r).then(function() {
-return n.project = e, n.projectPromise.resolve(e), [ e, n ];
+return n.project = e, n.projectPromise.resolve(e), a.addProjectUID(e.metadata.uid), [ e, n ];
 });
 }, function(i) {
 n.projectPromise.reject(i);
@@ -74241,16 +74431,56 @@ error_description: r
 });
 },
 update: function(e, t) {
-return i.update("projects", e, a(t), {
+return i.update("projects", e, s(t), {
 projectName: e
 }, {
 errorNotification: !1
+});
+},
+create: function(e, t, n) {
+var r = {
+apiVersion: "v1",
+kind: "ProjectRequest",
+metadata: {
+name: e
+},
+displayName: t,
+description: n
+};
+return i.create("projectrequests", null, r, {}).then(function(e) {
+return a.addProjectUID(e.metadata.uid), e;
 });
 },
 canCreate: function() {
 return i.get("projectrequests", null, {}, {
 errorNotification: !1
 });
+}
+};
+} ]), angular.module("openshiftCommonServices").service("RecentlyViewedProjectsService", [ "$filter", function(e) {
+var t = function() {
+var e = localStorage.getItem("openshift/recently-viewed-project-uids");
+return e ? JSON.parse(e) : [];
+}, n = function(e) {
+localStorage.setItem("openshift/recently-viewed-project-uids", JSON.stringify(e));
+};
+return {
+getProjectUIDs: t,
+addProjectUID: function(e) {
+var i = t();
+i.unshift(e), i = _.uniq(i), i = _.take(i, 5), n(i);
+},
+orderByMostRecentlyViewed: function(n) {
+var i = [], r = t();
+return _.each(r, function(e) {
+var t = _.remove(n, function(t) {
+return t.metadata.uid === e;
+})[0];
+void 0 !== t && i.push(t);
+}), n = e("orderObjectsByDate")(n, !0), i.concat(n);
+},
+clear: function() {
+localStorage.removeItem("openshift/recently-viewed-project-uids");
 }
 };
 } ]), angular.module("openshiftCommonServices").provider("RedirectLoginService", function() {
@@ -77296,7 +77526,7 @@ e.exports = '<div class="order-service">\n  <pf-wizard\n       hide-header="true
 }, function(e, t) {
 e.exports = '<div class="catalogs-overlay-modal" role="dialog">\n  <div ng-if="$ctrl.shown" class="modal-backdrop fade in"></div>\n  <div ng-if="$ctrl.shown" class="catalogs-overlay-panel-wrapper">\n    <div class="catalogs-overlay-panel-grow-height">\n      <div class="catalogs-overlay-panel" ng-class="{\'catalogs-overlay-panel-single-column\' : $ctrl.singleColumn}">\n        <a ng-if="$ctrl.showClose" ng-click="$ctrl.closePanel()">\n          <span class="catalogs-overlay-panel-close pficon pficon-close"></span>\n        </a>\n        <div class="catalogs-overlay-panel-body" ng-transclude>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n';
 }, function(e, t) {
-e.exports = '<div ng-if="$ctrl.loading" class="catalog-projects-spinner-container">\n  <div class="spinner spinner-inverse spinner-xl"></div>\n</div>\n<div class="catalog-projects-summary-panel" ng-show="!$ctrl.loading">\n  <button ng-if="$ctrl.canCreate" class="create-button btn btn-primary" ng-click="$ctrl.openNewProjectPanel()">\n    <span class="fa fa-plus"></span>\n    <span class="create-button-text">Create Project</span>\n  </button>\n  <h2 class="summary-title secondary" ng-if="!$ctrl.projects || !$ctrl.projects.length">Getting Started</h2>\n  <h2 class="summary-title secondary" ng-if="$ctrl.projects && $ctrl.projects.length">\n    <a href="{{$ctrl.projectsUrl}}">My Projects</a>\n  </h2>\n  <div ng-if="!$ctrl.canCreate">\n    <span ng-if="!$ctrl.newProjectMessage">\n      A cluster admin can create a project for you by running the command:\n      <div class="code-block">\n        <code class="projects-instructions-link">oc adm <span class="command-arg">new-project</span> &lt;projectname&gt; <span class="command-arg">--admin={{$ctrl.user.metadata.name || \'&lt;YourUsername&gt;\'}}</span></code>\n      </div>\n    </span>\n    <span ng-if="$ctrl.newProjectMessage" ng-bind-html="$ctrl.newProjectMessage | linky : \'_blank\'"></span>\n  </div>\n  <div class="catalog-modal catalog-modal-create-project" ng-if="$ctrl.showNewProjectPanel">\n    <h4 class="catalog-modal-title">\n      Create Project\n    </h4>\n    <create-project alerts="$ctrl.alerts" is-dialog="true" redirect-action="$ctrl.onNewProject" on-cancel="$ctrl.closeNewProjectPanel"></create-project>\n    <a href="" class="catalog-modal-close" ng-click="$ctrl.closeNewProjectPanel()">\n      <span class="pficon pficon-close"></span>\n    </a>\n  </div>\n  <div ng-if="$ctrl.projects && $ctrl.projects.length" class="catalog-project-summary-list">\n    <div class="projects-count">\n      <strong>{{$ctrl.projects.length}}</strong>\n      of\n      <strong>{{$ctrl.totalProjects}}</strong>\n      Projects\n      <a href="{{$ctrl.projectsUrl}}" class="projects-view-all">View All</a>\n    </div>\n    <div id="catalog-projects-summary-list">\n      <div ng-repeat="project in $ctrl.projects track by (project | uid)" class="project-tile tile-click">\n        <div class="dropdown  dropdown-kebab-pf" uib-dropdown="">\n          <button class="btn btn-link uib-dropdown-toggle" type="button" id="dropdownKebab" aria-haspopup="true" aria-expanded="true" uib-dropdown-toggle>\n            <span class="fa fa-ellipsis-v"></span>\n          </button>\n          <ul class="uib-dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebab">\n            <li><a href="" ng-click="$ctrl.onViewMemebership(project)">View Membership</a></li>\n            <li><a href="" ng-click="$ctrl.editProject(project)">Edit Project</a></li>\n            <li>\n              <delete-project\n                  label="Delete Project"\n                  project-name="{{project.metadata.name}}"\n                  display-name="{{(project | displayName)}}"\n                  type-name-to-confirm="true"\n                  stay-on-current-page="true"\n                  alerts="$ctrl.alerts">\n              </delete-project>\n            </li>\n          </ul>\n        </div>\n        <h3 class="project-tile-header">\n          <a href="{{project | projectUrl : $ctrl.baseProjectUrl}}" class="project-title tile-target">{{project | displayName}}</a>\n          <span ng-if="project.status.phase != \'Active\'"\n            data-toggle="popover"\n            data-trigger="hover"\n            data-content="This project has been marked for deletion."\n            class="pficon pficon-warning-triangle-o"></span>\n        </h3>\n        <p class="project-date">\n          <span ng-if="project | displayName : true"><span ng-bind-html="project.metadata.name"></span> &ndash;</span>\n          created\n          <span ng-if="project | annotation : \'openshift.io/requester\'">by <span ng-bind-html="project | annotation : \'openshift.io/requester\'"></span></span>\n          <span am-time-ago="project.metadata.creationTimestamp"></span>\n        </p>\n        <div class="project-description" ng-if="project | description">\n          <truncate-long-text content="project | description" use-word-boundary="true" limit="120"></truncate-long-text>\n        </div>\n        <div class="catalog-modal catalog-modal-edit-project tile-click-prevent" ng-if="$ctrl.showEditProjectPanel && $ctrl.edittingProject === project">\n          <h4 class="catalog-modal-title">\n            Edit Project\n          </h4>\n          <edit-project project="$ctrl.edittingProject" is-dialog="true" alerts="$ctrl.alerts" redirect-action="$ctrl.onEditProject" on-cancel="$ctrl.closeEditProjectPanel"></edit-project>\n          <a href="" class="catalog-modal-close" ng-click="$ctrl.closeEditProjectPanel()">\n            <span class="pficon pficon-close"></span>\n          </a>\n        </div>\n      </div>\n    </div>\n  </div>\n  <div ng-if="$ctrl.showGetStarted">\n    <div class="getting-started-panel">\n      <h2 class="secondary" ng-if="$ctrl.projects && $ctrl.projects.length > 0">Getting Started</h2>\n      <button ng-if="$ctrl.startTour()" class="getting-started-button btn btn-default hidden-xs" ng-class="{\'with-projects\': $ctrl.projects && $ctrl.projects.length}" ng-click="$ctrl.handleGettingStartedClick()">\n        <span class="fa fa-info-circle fa-2"></span>\n        <span class="getting-started-button-text">Take Home Page Tour</span>\n      </button>\n    </div>\n    <div class="resources-panel">\n      <ul>\n        <li ng-repeat="resource in $ctrl.resourceLinks">\n          <a href="{{resource.href}}" target="_blank" title="{{resource.href}}">{{resource.title}}</a>\n        </li>\n      </ul>\n    </div>\n  </div>\n  <div ng-if="$ctrl.recentlyViewedItems.length">\n    <h2 class="secondary">Recently Viewed</h2>\n    <div class="services-view">\n      <a href="" class="services-item" ng-repeat="item in $ctrl.recentlyViewedItems track by (item.resource | uid)"\n           ng-click="$ctrl.orderService(item)">\n        <div ng-if="!item.imageUrl" class="services-item-icon">\n          <span class="{{item.iconClass}}"></span>\n        </div>\n        <div ng-if="item.imageUrl" class="services-item-icon services-item-img">\n          <img ng-src="{{item.imageUrl}}">\n        </div>\n        <div class="services-item-name" title="{{item.name}}" aria-hidden="true">{{item.name}}</div>\n      </a>\n    </div>\n  </div>\n</div>\n';
+e.exports = '<div ng-if="$ctrl.loading" class="catalog-projects-spinner-container">\n  <div class="spinner spinner-inverse spinner-xl"></div>\n</div>\n<div class="catalog-projects-summary-panel" ng-show="!$ctrl.loading">\n  <button ng-if="$ctrl.canCreate" class="create-button btn btn-primary" ng-click="$ctrl.openNewProjectPanel($event)">\n    <span class="fa fa-plus"></span>\n    <span class="create-button-text">Create Project</span>\n  </button>\n  <origin-modal-popup class="catalog-create-project" modal-title="Create Project" shown="$ctrl.newProjectPanelShown" on-close="$ctrl.closeNewProjectPanel" reference-element="$ctrl.modalPopupElement">\n    <create-project alerts="$ctrl.alerts" is-dialog="true" redirect-action="$ctrl.onNewProject" on-cancel="$ctrl.closeNewProjectPanel"></create-project>\n  </origin-modal-popup>\n  <h2 class="summary-title secondary" ng-if="!$ctrl.projects || !$ctrl.projects.length">Getting Started</h2>\n  <h2 class="summary-title secondary" ng-if="$ctrl.projects && $ctrl.projects.length">\n    <a href="{{$ctrl.projectsUrl}}">My Projects</a>\n  </h2>\n  <div ng-if="!$ctrl.canCreate">\n    <span ng-if="!$ctrl.newProjectMessage">\n      A cluster admin can create a project for you by running the command:\n      <div class="code-block">\n        <code class="projects-instructions-link">oc adm <span class="command-arg">new-project</span> &lt;projectname&gt; <span class="command-arg">--admin={{$ctrl.user.metadata.name || \'&lt;YourUsername&gt;\'}}</span></code>\n      </div>\n    </span>\n    <span ng-if="$ctrl.newProjectMessage" ng-bind-html="$ctrl.newProjectMessage | linky : \'_blank\'"></span>\n  </div>\n  <div ng-if="$ctrl.projects && $ctrl.projects.length" class="catalog-project-summary-list">\n    <div class="projects-count">\n      <strong>{{$ctrl.projects.length}}</strong>\n      of\n      <strong>{{$ctrl.totalProjects}}</strong>\n      Projects\n      <a href="{{$ctrl.projectsUrl}}" class="projects-view-all">View All</a>\n    </div>\n    <div id="catalog-projects-summary-list">\n      <div ng-repeat="project in $ctrl.projects track by (project | uid)" class="project-tile tile-click">\n        <div class="dropdown  dropdown-kebab-pf" uib-dropdown="">\n          <button class="btn btn-link uib-dropdown-toggle" type="button" id="dropdownKebab" aria-haspopup="true" aria-expanded="true" uib-dropdown-toggle>\n            <span class="fa fa-ellipsis-v"></span>\n          </button>\n          <ul class="uib-dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebab">\n            <li><a href="" ng-click="$ctrl.onViewMemebership(project)">View Membership</a></li>\n            <li><a href="" ng-click="$ctrl.editProject(project)">Edit Project</a></li>\n            <li>\n              <delete-project\n                  label="Delete Project"\n                  project-name="{{project.metadata.name}}"\n                  display-name="{{(project | displayName)}}"\n                  type-name-to-confirm="true"\n                  stay-on-current-page="true"\n                  alerts="$ctrl.alerts">\n              </delete-project>\n            </li>\n          </ul>\n        </div>\n        <h3 class="project-tile-header">\n          <a href="{{project | projectUrl : $ctrl.baseProjectUrl}}" class="project-title tile-target">{{project | displayName}}</a>\n          <span ng-if="project.status.phase != \'Active\'"\n            data-toggle="popover"\n            data-trigger="hover"\n            data-content="This project has been marked for deletion."\n            class="pficon pficon-warning-triangle-o"></span>\n        </h3>\n        <p class="project-date">\n          <span ng-if="project | displayName : true"><span ng-bind-html="project.metadata.name"></span> &ndash;</span>\n          created\n          <span ng-if="project | annotation : \'openshift.io/requester\'">by <span ng-bind-html="project | annotation : \'openshift.io/requester\'"></span></span>\n          <span am-time-ago="project.metadata.creationTimestamp"></span>\n        </p>\n        <div class="project-description" ng-if="project | description">\n          <truncate-long-text content="project | description" use-word-boundary="true" limit="120"></truncate-long-text>\n        </div>\n        <origin-modal-popup class="catalog-edit-project" modal-title="Edit Project" shown="$ctrl.editProjectPanelShown && $ctrl.edittingProject === project" on-close="$ctrl.closeEditProjectPanel">\n          <edit-project project="$ctrl.edittingProject" is-dialog="true" alerts="$ctrl.alerts" redirect-action="$ctrl.onEditProject" on-cancel="$ctrl.closeEditProjectPanel"></edit-project>\n        </origin-modal-popup>\n      </div>\n    </div>\n  </div>\n  <div ng-if="$ctrl.showGetStarted">\n    <div class="getting-started-panel">\n      <h2 class="secondary" ng-if="$ctrl.projects && $ctrl.projects.length > 0">Getting Started</h2>\n      <button ng-if="$ctrl.startTour()" class="getting-started-button btn btn-default hidden-xs" ng-class="{\'with-projects\': $ctrl.projects && $ctrl.projects.length}" ng-click="$ctrl.handleGettingStartedClick()">\n        <span class="fa fa-info-circle fa-2"></span>\n        <span class="getting-started-button-text">Take Home Page Tour</span>\n      </button>\n    </div>\n    <div class="resources-panel">\n      <ul>\n        <li ng-repeat="resource in $ctrl.resourceLinks">\n          <a href="{{resource.href}}" target="_blank" title="{{resource.href}}">{{resource.title}}</a>\n        </li>\n      </ul>\n    </div>\n  </div>\n  <div ng-if="$ctrl.recentlyViewedItems.length">\n    <h2 class="secondary">Recently Viewed</h2>\n    <div class="services-view">\n      <a href="" class="services-item" ng-repeat="item in $ctrl.recentlyViewedItems track by (item.resource | uid)"\n           ng-click="$ctrl.orderService(item)">\n        <div ng-if="!item.imageUrl" class="services-item-icon">\n          <span class="{{item.iconClass}}"></span>\n        </div>\n        <div ng-if="item.imageUrl" class="services-item-icon services-item-img">\n          <img ng-src="{{item.imageUrl}}">\n        </div>\n        <div class="services-item-name" title="{{item.name}}" aria-hidden="true">{{item.name}}</div>\n      </a>\n    </div>\n  </div>\n</div>\n';
 }, function(e, t) {
 e.exports = '<span ng-if="$ctrl.hasSaasOfferings()" class="saas-offerings-container">\n  <h1 ng-if="$ctrl.saasTitle">{{$ctrl.saasTitle}}</h1>\n  <div class="saas-list" ng-class="{\'expanded\': $ctrl.sassListExpanded, \'items-overflow\': $ctrl.itemsOverflow}" items="$ctrl.saasOfferings">\n    <div class="card" ng-repeat="item in $ctrl.saasOfferings">\n      <a ng-href="{{item.url}}" target="_blank" class="card-content">\n        <div class="card-icon">\n          <img ng-if="item.image" ng-src="{{item.image}}" alt="">\n          <span ng-if="!item.image" class="icon {{item.icon}}" aria-hidden="true"></span>\n        </div>\n        <div class="card-title">{{item.title}}</div>\n        <truncate-long-text\n                class="card-description hidden-xs"\n                content="item.description"\n                limit="120"\n                use-word-boundary="true">\n        </truncate-long-text>\n      </a>\n    </div>\n  </div>\n  <div ng-if="$ctrl.itemsOverflow" class="sass-list-expander-container">\n    <a href="" class="sass-list-expander" ng-class="{\'expanded\': $ctrl.sassListExpanded}" ng-click="$ctrl.toggleListExpand()">\n      Show <span class="more">More</span><span class="less">Less</span>\n    </a>\n  </div>\n</span>\n';
 }, function(e, t) {
@@ -77506,16 +77736,8 @@ e.ctrl.error = t;
 });
 }, e.prototype.createProjectIfNecessary = function() {
 if (!this.isNewProject()) return this.$q.when(this.ctrl.selectedProject);
-var e = {
-apiVersion: "v1",
-kind: "ProjectRequest",
-metadata: {
-name: this.ctrl.selectedProject.metadata.name
-},
-displayName: this.ctrl.selectedProject.metadata.annotations["new-display-name"],
-description: this.$filter("description")(this.ctrl.selectedProject)
-};
-return this.DataService.create("projectrequests", null, e, this.$scope);
+var e = this.ctrl.selectedProject.metadata.name, t = this.ctrl.selectedProject.metadata.annotations["new-display-name"], n = this.$filter("description")(this.ctrl.selectedProject);
+return this.ProjectsService.create(e, t, n);
 }, e.prototype.createAPIObjects = function(e) {
 var t = this;
 this.DataService.batch(e, {
@@ -77596,17 +77818,9 @@ c.bindStep.valid = e, c.reviewStep.allowed = c.bindStep.valid;
 c.clearValidityWatcher(), c.ctrl.configPageShown = !1, c.ctrl.nextTitle = "Close", c.ctrl.wizardDone = !0, c.provisionService();
 }, this.provisionService = function() {
 if (c.ctrl.inProgress = !0, c.ctrl.orderComplete = !1, c.ctrl.error = !1, c.isNewProject()) {
-var e = {
-apiVersion: "v1",
-kind: "ProjectRequest",
-metadata: {
-name: c.ctrl.selectedProject.metadata.name
-},
-displayName: c.ctrl.selectedProject.metadata.annotations["new-display-name"],
-description: c.$filter("description")(c.ctrl.selectedProject)
-};
-c.DataService.create("projectrequests", null, e, c.$scope).then(function(e) {
-c.ctrl.selectedProject = e, c.ctrl.projectDisplayName = c.$filter("displayName")(c.ctrl.selectedProject), c.createService();
+var e = c.ctrl.selectedProject.metadata.name, t = c.ctrl.selectedProject.metadata.annotations["new-display-name"], n = c.$filter("description")(c.ctrl.selectedProject);
+c.ProjectsService.create(e, t, n).then(function(e) {
+c.ctrl.selectedProject = e, c.ctrl.projectDisplayName = c.$filter("displayName")(e), c.createService();
 }, function(e) {
 c.ctrl.error = e.data;
 });
@@ -77777,32 +77991,32 @@ t.OverlayPanelController = o;
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
-var i = n(1), r = n(2), o = n(0), a = function() {
-function e(e, t, n, r, a, s, l, c, u, d, h) {
-var f = this;
-this.ctrl = this, this.showNewProjectPanel = !1, this.showEditProjectPanel = !1, this.alerts = [], this.projects = [], this.watches = [], this.maxDisplayProjects = 5, this.init = function() {
-f.watches.push(f.DataService.watch("projects", f.$scope, f.onProjectsUpdate)), f.ctrl.resourceLinks = o.clone(f.Constants.CATALOG_HELP_RESOURCES.links), o.forEach(f.ctrl.resourceLinks, function(e) {
-i.isDefined(e.help) && (e.href = f.Constants.HELP_BASE_URL + (e.help ? f.Constants.HELP[e.help] : ""));
-}), f.$rootScope.$on("recently-viewed-updated", function() {
-f.ctrl.recentlyViewedItems = f.getRecentlyViewedItems();
+var i = n(1), r = n(0), o = function() {
+function e(e, t, n, o, a, s, l, c, u) {
+var d = this;
+this.ctrl = this, this.newProjectPanelShown = !1, this.editProjectPanelShown = !1, this.alerts = [], this.projects = [], this.watches = [], this.maxDisplayProjects = 5, this.init = function() {
+d.watches.push(d.DataService.watch("projects", d.$scope, d.onProjectsUpdate)), d.ctrl.resourceLinks = r.clone(d.Constants.CATALOG_HELP_RESOURCES.links), r.forEach(d.ctrl.resourceLinks, function(e) {
+i.isDefined(e.help) && (e.href = d.Constants.HELP_BASE_URL + (e.help ? d.Constants.HELP[e.help] : ""));
+}), d.$rootScope.$on("recently-viewed-updated", function() {
+d.ctrl.recentlyViewedItems = d.getRecentlyViewedItems();
 });
 }, this.onProjectsUpdate = function(e) {
-var t = o.toArray(e.by("metadata.creationTimestamp")), n = f.$filter("orderObjectsByDate");
-f.ctrl.projects = n(t, !0), f.ctrl.totalProjects = f.ctrl.projects.length, f.ctrl.projects = o.take(f.ctrl.projects, f.maxDisplayProjects), f.ctrl.loading = !1, f.ctrl.showGetStarted = !f.ctrl.projects || f.ctrl.projects.length < 2;
+var t = r.toArray(e.by("metadata.creationTimestamp"));
+d.ctrl.projects = d.RecentlyViewedProjectsService.orderByMostRecentlyViewed(t), d.ctrl.totalProjects = d.ctrl.projects.length, d.ctrl.projects = r.take(d.ctrl.projects, d.maxDisplayProjects), d.ctrl.loading = !1, d.ctrl.showGetStarted = !d.ctrl.projects || d.ctrl.projects.length < 2;
 }, this.closeNewProjectPanel = function() {
-f.ctrl.showNewProjectPanel = !1, f.hideModalBackdrop();
+d.ctrl.newProjectPanelShown = !1;
 }, this.onNewProject = function(e) {
-f.ctrl.showNewProjectPanel = !1, f.hideModalBackdrop();
+d.ctrl.newProjectPanelShown = !1;
 }, this.onViewMemebership = function(e) {
-var t = f.ctrl.viewEditMembership();
+var t = d.ctrl.viewEditMembership();
 t && t(e);
 }, this.editProject = function(e) {
-f.ctrl.edittingProject = e, f.ctrl.showEditProjectPanel = !0, f.showModalBackdrop();
+d.ctrl.edittingProject = e, d.ctrl.editProjectPanelShown = !0;
 }, this.closeEditProjectPanel = function() {
-f.ctrl.showEditProjectPanel = !1, f.hideModalBackdrop();
+d.ctrl.editProjectPanelShown = !1;
 }, this.onEditProject = function(e) {
-f.ctrl.showEditProjectPanel = !1, f.hideModalBackdrop();
-}, this.$element = e, this.$filter = t, this.$rootScope = n, this.$scope = r, this.AuthService = a, this.Catalog = s, this.Constants = l, this.DataService = c, this.Logger = u, this.ProjectsService = d, this.RecentlyViewed = h;
+d.ctrl.editProjectPanelShown = !1;
+}, this.$rootScope = e, this.$scope = t, this.AuthService = n, this.Constants = o, this.DataService = a, this.Logger = s, this.ProjectsService = l, this.RecentlyViewedProjectsService = c, this.RecentlyViewedItems = u;
 }
 return e.prototype.$onInit = function() {
 var e = this;
@@ -77818,18 +78032,18 @@ var i = "Failed to determine create project permission";
 return 0 !== t.status && (i += " (" + t.status + ")"), void e.Logger.warn(i);
 }
 if (n.details) {
-var r = [];
-o.forEach(n.details.causes || [], function(e) {
-e.message && r.push(e.message);
-}), r.length > 0 && (e.ctrl.newProjectMessage = r.join("\n"));
+var o = [];
+r.forEach(n.details.causes || [], function(e) {
+e.message && o.push(e.message);
+}), o.length > 0 && (e.ctrl.newProjectMessage = o.join("\n"));
 }
 }).finally(function() {
 e.init();
 });
 }, e.prototype.$onChanges = function(e) {
-e.catalogItems && this.ctrl.catalogItems && (this.allItems = o.keyBy(this.ctrl.catalogItems, "resource.metadata.uid"), this.ctrl.recentlyViewedItems = this.getRecentlyViewedItems());
-}, e.prototype.openNewProjectPanel = function() {
-this.ctrl.showNewProjectPanel = !0, this.showModalBackdrop();
+e.catalogItems && this.ctrl.catalogItems && (this.allItems = r.keyBy(this.ctrl.catalogItems, "resource.metadata.uid"), this.ctrl.recentlyViewedItems = this.getRecentlyViewedItems());
+}, e.prototype.openNewProjectPanel = function(e) {
+this.ctrl.newProjectPanelShown = !0, this.ctrl.modalPopupElement = e.currentTarget;
 }, e.prototype.handleGettingStartedClick = function() {
 var e = this.ctrl.startTour();
 e && e();
@@ -77841,23 +78055,19 @@ this.$scope.$emit("open-overlay-panel", e);
 }, e.prototype.showAllProjects = function() {
 var e = this.ctrl.showProjects();
 e && e();
-}, e.prototype.showModalBackdrop = function() {
-this.$element.append('<div class="catalog-projects-summary-modal-backrop modal-backdrop fade in"></div>');
-}, e.prototype.hideModalBackdrop = function() {
-r(".catalog-projects-summary-modal-backrop").remove();
 }, e.prototype.getRecentlyViewedItems = function() {
 var e = this;
 if (this.allItems) {
-var t = this.RecentlyViewed.getItems(), n = o.map(t, function(t) {
+var t = this.RecentlyViewedItems.getItems(), n = r.map(t, function(t) {
 return e.allItems[t];
 });
-return n = o.reject(n, function(e) {
+return n = r.reject(n, function(e) {
 return !e;
 });
 }
 }, e;
 }();
-a.$inject = [ "$element", "$filter", "$rootScope", "$scope", "AuthService", "Catalog", "Constants", "DataService", "Logger", "ProjectsService", "RecentlyViewedServiceItems" ], t.ProjectsSummaryController = a;
+o.$inject = [ "$rootScope", "$scope", "AuthService", "Constants", "DataService", "Logger", "ProjectsService", "RecentlyViewedProjectsService", "RecentlyViewedServiceItems" ], t.ProjectsSummaryController = o;
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;

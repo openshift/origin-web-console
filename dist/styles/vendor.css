@@ -1,6 +1,6 @@
 /*!
- * angular-datatables - v0.5.6
- * https://github.com/l-lin/angular-datatables
+ * angularjs-datatables - v0.5.7
+ * https://github.com/dtaylor113/angularjs-datatables
  * License: MIT
  */
 .dataTables_length select:focus,table.dataTable th:active{outline:0}
@@ -19,8 +19,8 @@ div.DTTT .btn,ul.DTTT_dropdown.dropdown-menu a{color:#333!important}
 .dataTables_wrapper .dataTables_paginate .paginate_button{padding:.3em .8em}
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover{padding:.3em .8em;background:#D6D6D6;border:1px solid transparent}
 /*!
- * angular-datatables - v0.5.6
- * https://github.com/l-lin/angular-datatables
+ * angularjs-datatables - v0.5.7
+ * https://github.com/dtaylor113/angularjs-datatables
  * License: MIT
  */
 div.dataTables_length label{font-weight:400;float:left;text-align:left}
@@ -159,6 +159,24 @@ pf-topology{display:block;user-select:none}
 .filter-select .btn-default{background-color:#fff;background-image:none;color:#8b8d8f;font-size:12px;font-style:italic;font-weight:400}
 .canvas-in-connection-mode,.read-only,table.dataTable thead .sorting,table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc{background-image:none!important}
 .input-group .input-group-btn .dropdown-menu>.selected>a{background-color:#0088ce!important;border-color:#0076b7!important;color:#fff!important}
+pf-filter-panel .dropdown>.dropdown-menu,pf-filter-panel .input-group-btn>.dropdown-menu{margin-top:5px}
+pf-filter-panel input:-moz-placeholder{font-style:italic;padding-left:10px}
+pf-filter-panel input::-moz-placeholder{font-style:italic;padding-left:10px}
+pf-filter-panel input:-ms-input-placeholder{font-style:italic;padding-left:10px}
+pf-filter-panel input::-webkit-input-placeholder{font-style:italic;padding-left:10px}
+pf-filter-panel .filter-panel-container{padding:10px}
+pf-filter-panel .filter-panel-container .keyword-filter{margin-bottom:10px}
+pf-filter-panel .filter-panel-container ul{list-style-type:none;padding-left:16px}
+pf-filter-panel .filter-panel-container .category{font-size:15px;font-weight:400}
+pf-filter-panel .filter-panel-container .category .category-option-label{font-size:12px;vertical-align:text-bottom}
+pf-filter-panel .list-inline>li{padding-right:0}
+pf-filter-panel .toolbar-pf-results{border-top:none;margin-left:10px;vertical-align:middle}
+pf-filter-panel .toolbar-pf-results .single-label{padding:6px}
+pf-filter-panel .toolbar-pf-results .single-label .pf-filter-label-category{background-color:#00659c;font-weight:700;padding-right:2px;padding-left:0}
+pf-filter-panel .toolbar-pf-results .single-label .pficon-close{padding-right:6px}
+pf-filter-panel .toolbar-pf-results p{padding-right:10px;padding-left:10px}
+.pf-filter-label-category{background-color:#39a5dc;font-weight:700;padding:6px}
+.pf-filter-label-category .category-values{padding-left:4px}
 .sort-pf .btn-link{color:#252525;font-size:16px;line-height:1;margin-left:10px;padding:4px 0}
 .sort-pf .btn-link:hover{color:#0088ce}
 .list-group-item-header.list-group-item-not-selectable{cursor:inherit}
@@ -167,6 +185,7 @@ pf-topology{display:block;user-select:none}
 table.dataTable.no-footer{border-bottom:none}
 .dataTables_wrapper{border:none;margin:0px;padding:0px}
 table.dataTable{margin:0}
+table.dataTable tbody tr.selected span a{color:#fff}
 table.dataTable tbody td,table.dataTable tbody th{padding:2px 10px 3px}
 .table-view-pf-select{width:13px}
 .wizard-pf-footer .tooltip-wrapper{border:none;box-shadow:none;display:inline-block;margin-left:5px;padding:0;text-align:center}
