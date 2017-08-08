@@ -1412,7 +1412,7 @@ function OverviewController($scope,
 
     $scope.$on('$destroy', function() {
       DataService.unwatchAll(watches);
-      $(window).off('resize.overview', onResize);
+      $(window).off('.overview');
     });
   }));
 }
