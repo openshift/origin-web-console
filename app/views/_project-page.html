@@ -1,8 +1,7 @@
 <div ng-class="{'show-sidebar-right': renderOptions.showEventsSidebar}" class="wrap-NOTUSED">
-  <div class="sidebar-left-NOTUSED collapse-NOTUSED navbar-collapse-NOTUSED navbar-collapse-1-NOTUSED nav-pf-vertical nav-pf-vertical-with-sub-menus">
-    <sidebar></sidebar>
-  </div>
-  <div id="container-main" class="container-fluid container-pf-nav-pf-vertical">
+  <sidebar></sidebar>
+  <div id="container-main" class="container-fluid container-pf-nav-pf-vertical"
+       ng-class="{ 'collapsed-nav': nav.collapsed }">
     <div ng-transclude class="transclude-div">
 
     </div>
