@@ -3,51 +3,39 @@
 //  -----------------------------------------------
 
 .nav-pf-vertical {
-  background-color: @sidebar-os-bg;
+  background-color: @nav-pf-vertical-bg-color;
   top: (@project-bar-height-mobile + @navbar-os-header-mobile - 1px); // subtract for 1px border
   z-index: 990;
   @media(min-width: @screen-sm-min) {
     top: (@project-bar-height-desktop + @navbar-os-header-desktop);
   }
-
-
-  &.collapsed {
-    .list-group-item.secondary-nav-item-pf,
-    .list-group-item.secondary-nav-item-pf.active,
-    .list-group-item.secondary-nav-item-pf:hover {
-      > a {
-        width: @nav-pf-vertical-collapsed-width;
-        &:after {
-          right: 10px;
-        }
-      }
-    }
-  }
-  &.navbar-collapse {
-    padding: 0;
-  }
   .list-group-item {
+    border-color: @nav-pf-vertical-border-color;
+    &:after {
+      background: @nav-pf-vertical-border-inset-color;
+      content: '';
+      display: block;
+      height: 1px;
+      position: absolute;
+      top: 0px;
+      width: 100%;
+    }
     &:first-child {
       border-top: inherit;
     }
-    &.open:hover > a {
-      background: @sidebar-os-hover-bg;
-    }
-    &.active > a:before {
-      top: -1px;
+    &.active:hover {
+      border-top-color: @nav-pf-vertical-border-inset-color;
     }
     &.active > a,
     &:hover > a {
-      background-color: transparent;
-      font-weight: inherit;
-    }
-    &.active:hover {
-      border-top-color: @sidebar-os-border-inset-color;
+      background-color: @nav-pf-vertical-secondary-bg-color;
+      font-weight: 300;
     }
     > a,
     > a:focus {
       font-size: @font-size-base;
       font-weight: 300;
+      text-decoration: none;
       @media(max-width: @screen-xs-max) {
         height: auto;
         padding: 10px 15px;
@@ -56,25 +44,48 @@
 
       // remove margin from icon that causes shifting when toggled
       .fa, .pficon {
+        font-size: (@font-size-base + 2);
         margin-right: 0;
+        @media(min-width: @screen-sm-min) {
+          font-size: (@font-size-base + 5);
+        }
       }
-      // add margin between icon and text
+      // add margin between icon and text and align verticaly
       .list-group-item-value {
+        line-height: 26px;
         margin-left: 10px;
+      }
+    }
+  }
+  .nav-pf-secondary-nav {
+    background: @nav-pf-vertical-secondary-bg-color;
+    border-left: 1px solid @nav-pf-vertical-border-color;
+    border-right: 1px solid @nav-pf-vertical-border-color;
+    top: (@project-bar-height-mobile + @navbar-os-header-mobile - 1px); // subtract for 1px border
+    @media(min-width: @screen-sm-min) {
+      top: (@project-bar-height-desktop + @navbar-os-header-desktop);
+    }
+    .list-group-item {
+      &:after {
+        display: none;
+      }
+      &.active > a {
+        background: @nav-pf-vertical-secondary-active-bg-color;
+        &:hover {
+          background: @nav-pf-vertical-secondary-active-bg-color;
+        }
+      }
+      > a {
+        background: transparent;
+        &:hover {
+          text-decoration: none;
+          background: @nav-pf-vertical-secondary-hover-color;
+        }
       }
     }
   }
 
   .list-group-item.secondary-nav-item-pf {
-    &.active,
-    &:hover {
-      > a {
-        width: @nav-pf-vertical-width;
-        &:after {
-          right: 20px;
-        }
-      }
-    }
     // right arrow adjustments
     > a:after {
       font-size: 14px;
@@ -82,166 +93,12 @@
       padding: 0;
       line-height: inherit;
     }
-    &.open:after {
-      background: @sidebar-os-hover-bg;
-      bottom: 0;
-      content: '';
-      display: block;
-      position: absolute;
-      right: -1px;
-      top: -1px;
-      width: 1px;
-    }
   }
-
-
-  ul.nav-sidenav-primary > li {
-    background: @sidebar-os-bg;
-    border-bottom: 1px solid @sidebar-os-border-color;
-    border-top: 1px solid @sidebar-os-border-inset-color;
-    font-weight: 300;
-    margin-bottom: 0;
-    &.active {
-      &,
-      &:focus,
-      &:hover,
-      &.open {
-        &,
-       .dropdown-menu {
-          background-color: @sidebar-os-active-bg;
-        }
-        .nav-sidenav-secondary > li a {
-          &:focus,
-          &:hover {
-            background: @sidebar-os-dropdown-link-active-hover-bg;
-          }
-        }
-      }
-      // > a {
-      //   color: @sidebar-os-active-color;
-      //   &:after {
-      //     background-color: @sidebar-os-active;
-      //     bottom: 0;
-      //     content: '';
-      //     display: block;
-      //     left: 0;
-      //     position: absolute;
-      //     top: -1px;
-      //     width: 3px;
-      //   }
-      //   .fa, .pficon {
-      //     color: @sidebar-os-active;
-      //   }
-      // }
-    }
-    &:first-child {
-      border-top: 1px solid @sidebar-os-border-inset-color;
-    }
-    &:focus,
-    &:hover,
-    &.open {
-      background-color: @sidebar-os-hover-bg;
-      > a {
-        background-color: transparent;
-        color: @sidebar-os-active-color;
-        .fa, .pficon {
-          color: @sidebar-os-active;
-        }
-      }
-      .dropdown-menu {
-        background-color: @sidebar-os-hover-bg;
-      }
-    }
-    > a,
-    > a:focus {
-      color: @sidebar-os-color;
-      background-color: inherit;
-      &.dropdown-toggle:focus {
-        outline: thin dotted;
-      }
-      .fa, .pficon {
-        color: @sidebar-os-icon-color;
-        font-size: (@font-size-base + 3);
-        line-height: 22px;
-      }
-    }
-    .dropdown-menu {
-      background-color: @sidebar-os-hover-bg;
-    }
-    .nav-sidenav-secondary > li {
-      &.active a {
-        &,
-        &:hover {
-          background: @sidebar-os-dropdown-link-active-bg !important;
-          color: @sidebar-os-active-color;
-        }
-      }
-      a {
-        color: @sidebar-os-color;
-        padding-left: @sidebar-os-padding-x-secondary;
-        &:focus,
-        &:hover {
-          background: @sidebar-os-dropdown-link-hover-bg;
-          color: @sidebar-os-active-color;
-        }
-      }
-    }
+  .nav-item-pf-header {
+    font-size: (@font-size-base + 1);
   }
-}
-
-
-@media (min-width: @screen-sm-min) {
-  .nav-pf-vertical {
-    // Sidebar hover menu
-    .hover-nav.dropdown-menu {
-      border: 0;
-      border-radius: 0;
-      .box-shadow(2px 2px 2px rgba(0, 0, 0, 0.125));
-      left: 100%;
-      margin: 0 0 0 1px;
-      min-width: 230px;
-      position: absolute;
-      padding: 10px;
-      top: -2px;
-      z-index: @zindex-dropdown + 1;
-    }
-    ul.nav-sidenav-primary {
-      border-bottom: 1px solid @sidebar-os-border-inset-color;
-      > li {
-        position: relative;
-        &.open {
-        //   > a:before {
-        //     // connect tab and hover-nav
-        //     background-color: @sidebar-os-hover-bg;
-        //     bottom: 0;
-        //     content: '';
-        //     display: block;
-        //     right: -1px;
-        //     position: absolute;
-        //     top: -1px;
-        //     width: 2px;
-        //   }
-        //   &.active > a:before {
-        //     background-color: @sidebar-os-active-bg;
-        //   }
-        }
-        > a,
-        > a:focus {
-          .fa, .pficon {
-            display: block;
-            font-size: 20px;
-            margin-right: 0;
-            padding-bottom: 5px;
-          }
-          span {
-            display: block;
-            margin: 0;
-          }
-        }
-        .hover-nav ul.nav-sidenav-secondary li a {
-          padding-left: 15px;
-        }
-      }
-    }
+  .nav-pf-secondary-nav .list-group-item > a {
+    padding: 4px 0 2px 0;
+    margin-left: 20px;
   }
 }

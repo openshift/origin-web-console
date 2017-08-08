@@ -7,6 +7,13 @@
 // Patternfly overrides
 @dropdown-divider-margin: 4px 0;
 @list-view-hover-bg: #fafafa;
+@nav-pf-vertical-active-bg-color: @project-bar-bg;
+@nav-pf-vertical-bg-color: #30363d;
+@nav-pf-vertical-border-color: @project-bar-border-color;
+@nav-pf-vertical-border-inset-color: @project-bar-border-inset-color;
+@nav-pf-vertical-secondary-bg-color: @nav-pf-vertical-active-bg-color;
+@nav-pf-vertical-secondary-hover-color: lighten(@nav-pf-vertical-secondary-bg-color, 8%);
+@nav-pf-vertical-secondary-active-bg-color: @nav-pf-vertical-secondary-hover-color;
 @navbar-pf-vertical-navbar-brand-padding: 20px 0;
 @navbar-pf-bg-color: @navbar-os-bg-color;
 @sidebar-pf-bg: @body-bg;
@@ -71,20 +78,24 @@
 @navbar-vertical-height-short: 38px;
 @navbar-vertical-height-tall: 58px;
 @panel-light: @body-bg;
+@project-bar-bg: #383f47;
+@project-bar-border-color: #151515;
+@project-bar-border-inset-color: rgba(255,255,255,.04);
 @project-bar-height-mobile: 28px;
 @project-bar-height-desktop: 40px;
+@project-bar-select-bg: darken(@project-bar-bg, 8%);
 @scroll-shadows-bg-color: rgba(255, 255, 255, 1);
 @scroll-shadows-bg-color-transparent: rgba(255, 255, 255, 0);
 @sidebar-os-bg: #30363d;
 @sidebar-os-color: #dbdada;
 @sidebar-os-active-bg: #383f47;
 @sidebar-os-active-color: lighten(@sidebar-os-color, 13%);
-@sidebar-os-border-color: #050505; // #1a1d21
+@sidebar-os-border-color: #050505;
 @sidebar-os-border-inset-color: rgba(255,255,255,.04);
-@sidebar-os-dropdown-link-active-bg: lighten(@sidebar-os-active-bg, 5%);
-@sidebar-os-dropdown-link-active-hover-bg: lighten(@sidebar-os-active-bg, 9%);
-@sidebar-os-dropdown-link-hover-bg: lighten(@sidebar-os-hover-bg, 4%);
-@sidebar-os-hover-bg: #3f4750;
+@sidebar-os-dropdown-link-active-bg: lighten(@sidebar-os-active-bg, 5%); // #434c55
+@sidebar-os-dropdown-link-active-hover-bg: lighten(@sidebar-os-active-bg, 9%); // #4c5661
+@sidebar-os-dropdown-link-hover-bg: lighten(@sidebar-os-hover-bg, 8%);
+@sidebar-os-hover-bg: #3f4750; // primary hover
 @sidebar-os-icon-color: rgba(200,200,200, .8);
 @sidebar-os-padding-x-secondary: 37px;
 @sidebar-os-active: @console-bright-blue;
