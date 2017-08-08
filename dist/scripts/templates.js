@@ -7264,10 +7264,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"key-value-editor-entry\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\" ng-repeat=\"entry in entries\" as-sortable-item>\n" +
     "\n" +
-    "<div class=\"form-group key-value-editor-input\" ng-class=\"{ 'has-error' :  (forms.keyValueEditor[uniqueForKey(unique, $index)].$invalid) }\">\n" +
+    "<div class=\"form-group key-value-editor-input\" ng-class=\"{ 'has-error' :  (forms.keyValueEditor[uniqueForKey(unique, $index)].$invalid && forms.keyValueEditor[uniqueForKey(unique, $index)].$touched) }\">\n" +
     "<label for=\"uniqueForKey(unique, $index)\" class=\"sr-only\">{{keyPlaceholder}}</label>\n" +
     "<input type=\"text\" class=\"form-control\" ng-class=\"{ '{{setFocusKeyClass}}' : $last  }\" id=\"{{uniqueForKey(unique, $index)}}\" name=\"{{uniqueForKey(unique, $index)}}\" ng-attr-placeholder=\"{{ (!isReadonlyAny) && keyPlaceholder || ''}}\" ng-minlength=\"{{keyMinlength}}\" maxlength=\"{{keyMaxlength}}\" ng-model=\"entry.name\" ng-readonly=\"isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonlyKey || entry.isReadonly\" ng-pattern=\"validation.key\" ng-value ng-required=\"!allowEmptyKeys && entry.value\" ng-attr-key-value-editor-focus=\"{{grabFocus && $last}}\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
     "\n" +
+    "<span ng-show=\"(forms.keyValueEditor[uniqueForKey(unique, $index)].$touched)\">\n" +
     "<span class=\"help-block key-validation-error\" ng-show=\"(forms.keyValueEditor[uniqueForKey(unique, $index)].$error.pattern)\">\n" +
     "<span class=\"validation-text\">{{ entry.keyValidatorError || keyValidatorError }}</span>\n" +
     "<span ng-if=\"entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip\" class=\"help action-inline\">\n" +
@@ -7282,9 +7283,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"help-block key-validation-error\" ng-show=\"(forms.keyValueEditor[uniqueForKey(unique, $index)].$error.required)\">\n" +
     "<span class=\"validation-text\">{{keyRequiredError}}</span>\n" +
     "</span>\n" +
+    "</span>\n" +
     "</div>\n" +
     "\n" +
-    "<div class=\"form-group key-value-editor-input\" ng-class=\"forms.keyValueEditor[uniqueForValue(unique, $index)].$invalid ? 'has-error' : ''\">\n" +
+    "<div class=\"form-group key-value-editor-input\" ng-class=\"{ 'has-error': (forms.keyValueEditor[uniqueForValue(unique, $index)].$invalid && forms.keyValueEditor[uniqueForValue(unique, $index)].$touched) }\">\n" +
     "<label for=\"uniqueForValue(unique, $index)\" class=\"sr-only\">{{valuePlaceholder}}</label>\n" +
     "<div ng-if=\"(!entry.valueFrom)\">\n" +
     "<input type=\"text\" class=\"form-control\" ng-class=\"{ '{{setFocusValClass}}' : $last  }\" id=\"{{uniqueForValue(unique, $index)}}\" name=\"{{uniqueForValue(unique, $index)}}\" ng-attr-placeholder=\"{{ (!isReadonlyAny) && valuePlaceholder || ''}}\" ng-minlength=\"{{valueMinlength}}\" maxlength=\"{{valueMaxlength}}\" ng-model=\"entry.value\" ng-readonly=\"isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonly\" ng-pattern=\"validation.val\" ng-required=\"!allowEmptyKeys && entry.value\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
@@ -7348,6 +7350,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "\n" +
+    "<span ng-show=\"(forms.keyValueEditor[uniqueForValue(unique, $index)].$touched)\">\n" +
     "<span class=\"help-block value-validation-error\" ng-show=\"(forms.keyValueEditor[uniqueForValue(unique, $index)].$error.pattern)\">\n" +
     "<span class=\"validation-text\">{{ entry.valueValidatorError || valueValidatorError}}</span>\n" +
     "<span ng-if=\"entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip\" class=\"help action-inline\">\n" +
@@ -7358,6 +7361,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "<span class=\"help-block value-min-length\" ng-show=\"(forms.keyValueEditor[uniqueForValue(unique, $index)].$error.minlength)\">\n" +
     "<span class=\"validation-text\">Minimum character count is {{valueMinlength}}</span>\n" +
+    "</span>\n" +
     "</span>\n" +
     "</div>\n" +
     "<div class=\"key-value-editor-buttons\">\n" +
