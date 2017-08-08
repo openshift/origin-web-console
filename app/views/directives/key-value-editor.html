@@ -26,7 +26,7 @@
       <!-- The name/key block -->
       <div
         class="form-group key-value-editor-input"
-        ng-class="{ 'has-error' :  (forms.keyValueEditor[uniqueForKey(unique, $index)].$invalid) }">
+        ng-class="{ 'has-error' :  (forms.keyValueEditor[uniqueForKey(unique, $index)].$invalid && forms.keyValueEditor[uniqueForKey(unique, $index)].$touched) }">
 
         <label for="uniqueForKey(unique, $index)" class="sr-only">{{keyPlaceholder}}</label>
 
@@ -50,36 +50,38 @@
           spellcheck="false">
 
         <!-- name/key help block -->
-        <span
-          class="help-block key-validation-error"
-          ng-show="(forms.keyValueEditor[uniqueForKey(unique, $index)].$error.pattern)">
-          <span class="validation-text">{{ entry.keyValidatorError || keyValidatorError }}</span>
-          <span ng-if="entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip" class="help action-inline">
-            <a
-              aria-hidden="true"
-              data-toggle="tooltip"
-              data-placement="top"
-              data-original-title="{{entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip}}">
-              <i class="{{entry.keyValidatorErrorTooltipIcon || keyValidatorErrorTooltipIcon}}"></i>
-            </a>
+        <span ng-show="(forms.keyValueEditor[uniqueForKey(unique, $index)].$touched)">
+          <span
+            class="help-block key-validation-error"
+            ng-show="(forms.keyValueEditor[uniqueForKey(unique, $index)].$error.pattern)">
+            <span class="validation-text">{{ entry.keyValidatorError || keyValidatorError }}</span>
+            <span ng-if="entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip" class="help action-inline">
+              <a
+                aria-hidden="true"
+                data-toggle="tooltip"
+                data-placement="top"
+                data-original-title="{{entry.keyValidatorErrorTooltip || keyValidatorErrorTooltip}}">
+                <i class="{{entry.keyValidatorErrorTooltipIcon || keyValidatorErrorTooltipIcon}}"></i>
+              </a>
+            </span>
           </span>
-        </span>
-        <span
-          class="help-block key-min-length"
-          ng-show="(forms.keyValueEditor[uniqueForKey(unique, $index)].$error.minlength)">
-          <span class="validation-text">Minimum character count is {{keyMinlength}}</span>
-        </span>
-        <span
-          class="help-block key-validation-error"
-          ng-show="(forms.keyValueEditor[uniqueForKey(unique, $index)].$error.required)">
-          <span class="validation-text">{{keyRequiredError}}</span>
+          <span
+            class="help-block key-min-length"
+            ng-show="(forms.keyValueEditor[uniqueForKey(unique, $index)].$error.minlength)">
+            <span class="validation-text">Minimum character count is {{keyMinlength}}</span>
+          </span>
+          <span
+            class="help-block key-validation-error"
+            ng-show="(forms.keyValueEditor[uniqueForKey(unique, $index)].$error.required)">
+            <span class="validation-text">{{keyRequiredError}}</span>
+          </span>
         </span>
       </div>
 
       <!-- the value block -->
       <div
         class="form-group key-value-editor-input"
-        ng-class="forms.keyValueEditor[uniqueForValue(unique, $index)].$invalid ? 'has-error' : ''">
+        ng-class="{ 'has-error': (forms.keyValueEditor[uniqueForValue(unique, $index)].$invalid && forms.keyValueEditor[uniqueForValue(unique, $index)].$touched) }">
 
         <label for="uniqueForValue(unique, $index)" class="sr-only">{{valuePlaceholder}}</label>
 
@@ -176,24 +178,26 @@
         </div>
 
         <!-- value help block -->
-        <span
-          class="help-block value-validation-error"
-          ng-show="(forms.keyValueEditor[uniqueForValue(unique, $index)].$error.pattern)">
-          <span class="validation-text">{{ entry.valueValidatorError || valueValidatorError}}</span>
-          <span ng-if="entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip" class="help action-inline">
-            <a
-              aria-hidden="true"
-              data-toggle="tooltip"
-              data-placement="top"
-              data-original-title="{{entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip}}">
-              <i class="{{entry.valueValidatorErrorTooltipIcon || valueValidatorErrorTooltipIcon}}"></i>
-            </a>
+        <span ng-show="(forms.keyValueEditor[uniqueForValue(unique, $index)].$touched)">
+          <span
+            class="help-block value-validation-error"
+            ng-show="(forms.keyValueEditor[uniqueForValue(unique, $index)].$error.pattern)">
+            <span class="validation-text">{{ entry.valueValidatorError || valueValidatorError}}</span>
+            <span ng-if="entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip" class="help action-inline">
+              <a
+                aria-hidden="true"
+                data-toggle="tooltip"
+                data-placement="top"
+                data-original-title="{{entry.valueValidatorErrorTooltip || valueValidatorErrorTooltip}}">
+                <i class="{{entry.valueValidatorErrorTooltipIcon || valueValidatorErrorTooltipIcon}}"></i>
+              </a>
+            </span>
           </span>
-        </span>
-        <span
-          class="help-block value-min-length"
-          ng-show="(forms.keyValueEditor[uniqueForValue(unique, $index)].$error.minlength)">
-          <span class="validation-text">Minimum character count is {{valueMinlength}}</span>
+          <span
+            class="help-block value-min-length"
+            ng-show="(forms.keyValueEditor[uniqueForValue(unique, $index)].$error.minlength)">
+            <span class="validation-text">Minimum character count is {{valueMinlength}}</span>
+          </span>
         </span>
       </div>
 
