@@ -4232,6 +4232,18 @@ sortType: "alpha"
 } ],
 isAscending: !0,
 onSortChange: b
+}, e.newProjectPanelShown = !1, e.createProject = function() {
+e.newProjectPanelShown = !0;
+}, e.closeNewProjectPanel = function() {
+e.newProjectPanelShown = !1;
+}, e.onNewProject = function() {
+e.newProjectPanelShown = !1;
+}, e.editProjectPanelShown = !1, e.editProject = function(t) {
+e.editingProject = t, e.editProjectPanelShown = !0;
+}, e.closeEditProjectPanel = function() {
+e.editProjectPanelShown = !1;
+}, e.onEditProject = function() {
+e.editProjectPanelShown = !1;
 }, e.$watch("search.text", _.debounce(function(t) {
 e.keywords = p = s.generateKeywords(t), e.$apply(h);
 }, 50, {

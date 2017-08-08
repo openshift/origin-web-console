@@ -12675,9 +12675,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h1>My Projects</h1>\n" +
     "<div class=\"projects-options\">\n" +
     "<div class=\"projects-add\" ng-if=\"canCreate\">\n" +
-    "<a href=\"create-project\" class=\"btn btn-md btn-primary\">\n" +
-    "Create Project\n" +
-    "</a>\n" +
+    "<button ng-click=\"createProject()\" class=\"btn btn-md btn-primary\">\n" +
+    "<span class=\"fa fa-plus\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"icon-button-text\">Create Project</span>\n" +
+    "</button>\n" +
+    "<origin-modal-popup shown=\"newProjectPanelShown\" modal-title=\"Create Project\" on-close=\"closeNewProjectPanel\">\n" +
+    "<create-project is-dialog=\"true\" redirect-action=\"onNewProject\" on-cancel=\"closeNewProjectPanel\"></create-project>\n" +
+    "</origin-modal-popup>\n" +
     "</div>\n" +
     "<div class=\"projects-search\">\n" +
     "<form role=\"form\" class=\"search-pf has-button\">\n" +
@@ -12738,7 +12742,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</li>\n" +
     "<li role=\"menuitem\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/edit?then=./\">\n" +
+    "<a href=\"\" ng-click=\"editProject(project)\">\n" +
     "Edit Project\n" +
     "</a>\n" +
     "</li>\n" +
@@ -12749,6 +12753,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ul>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<origin-modal-popup shown=\"editProjectPanelShown && editingProject === project\" ng-class=\"{'with-description': (project | description | size)}\" modal-title=\"Edit Project\" on-close=\"closeEditProjectPanel\">\n" +
+    "<edit-project project=\"project\" is-dialog=\"true\" redirect-action=\"onEditProject\" on-cancel=\"closeEditProjectPanel\"></edit-project>\n" +
+    "</origin-modal-popup>\n" +
     "</div>\n" +
     "</div>\n" +
     "<p class=\"projects-instructions\" ng-if=\"canCreate === false\" ng-include=\"'views/_cannot-create-project.html'\"></p>\n" +
