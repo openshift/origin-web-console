@@ -2,6 +2,13 @@
 //  Vertical nav (Sidebar left)
 //  -----------------------------------------------
 
+@media(max-width: @screen-xs-max) {
+  .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical {
+    // Remove left margin for mobile nav. The menu opens over the content.
+    margin-left: 0;
+  }
+}
+
 .nav-pf-vertical {
   background-color: @nav-pf-vertical-bg-color;
   top: (@project-bar-height-mobile + @navbar-os-header-mobile - 1px); // subtract for 1px border

@@ -1,23 +1,47 @@
+<div class="sidebar-left-NOTUSED collapse-NOTUSED navbar-collapse-NOTUSED navbar-collapse-1-NOTUSED nav-pf-vertical nav-pf-vertical-with-sub-menus"
+  ng-class="{
+    collapsed: nav.collapsed,
+    hidden: !nav.showMobileNav && isMobile,
+    'hover-secondary-nav-pf': sidebar.secondaryOpen && !isMobile,
+    'show-mobile-nav': nav.showMobileNav && isMobile,
+    'show-mobile-secondary': nav.showMobileNav && sidebar.showMobileSecondary && isMobile
+  }">
 <ul class="list-group nav-NOTUSED nav-sidenav-primary">
   <li
     ng-repeat="primaryItem in navItems"
-    ng-class="{ active: primaryItem === activePrimary, 'secondary-nav-item-pf': !primaryItem.href }"
+    ng-class="{
+      active: primaryItem === activePrimary,
+      'is-hover': primaryItem.isHover,
+      'secondary-nav-item-pf': primaryItem.secondaryNavSections.length
+    }"
     ng-if="show(primaryItem)"
+    ng-mouseenter="onMouseEnter(primaryItem);"
+    ng-mouseleave="onMouseLeave(primaryItem);"
     class="list-group-item">
     <a ng-if="primaryItem.href" ng-href="{{navURL(primaryItem.href)}}">
       <span class="{{primaryItem.iconClass}}"></span> <span class="list-group-item-value">{{primaryItem.label}}</span>
     </a>
-    <a ng-if="!primaryItem.href" href="" data-target="???">
+    <a
+      ng-if="!primaryItem.href"
+      href=""
+      ng-click="primaryItem.mobileSecondary = isMobile; sidebar.showMobileSecondary = isMobile">
       <span class="{{primaryItem.iconClass}}"></span> <span class="list-group-item-value">{{primaryItem.label}}</span>
     </a>
 
     <!-- mobile secondary nav -->
     <div
       ng-if="primaryItem.secondaryNavSections.length"
-      class="secondary-nav-item-pf">
-      <div id="???-secondary" class="nav-pf-secondary-nav">
+      class="secondary-nav-item-pf"
+      ng-class="{
+        'mobile-nav-item-pf': primaryItem.mobileSecondary
+      }">
+      <div class="nav-pf-secondary-nav">
         <div class="nav-item-pf-header">
-          <a class="secondary-collapse-toggle-pf" data-toggle="collapse-secondary-nav"></a>
+          <a
+            href=""
+            class="secondary-collapse-toggle-pf"
+            ng-click="collapseMobileSecondary(primaryItem, $event)"
+            role="button"><span class="sr-only">Back</span></a>
           <span>{{primaryItem.label}}</span>
         </div>
         <ul class="nav nav-sidenav-secondary-NOTUSED list-group">
@@ -32,7 +56,7 @@
             ng-class="{ active: secondaryItem === activeSecondary }"
             ng-if="show(secondaryItem)"
             class="list-group-item">
-            <a ng-href="{{navURL(secondaryItem.href)}}">
+            <a ng-href="{{navURL(secondaryItem.href)}}" ng-click="primaryItem.mobileSecondary = false; nav.showMobileNav = false;">
               <span class="list-group-item-value">{{secondaryItem.label}}</span>
             </a>
           </li>
@@ -45,3 +69,4 @@
 </ul>
 <!-- Group utility links into single nav -->
 <navbar-utility-mobile></navbar-utility-mobile>
+</div>

@@ -1,20 +1,31 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('sidebar', function($location, $filter, Constants) {
+  .directive('sidebar',
+    function(
+      $location,
+      $filter,
+      $timeout,
+      $rootScope,
+      Constants,
+      HTMLService) {
     var canI = $filter('canI');
     var itemMatchesPath = function(item, path) {
       return (item.href === path) || _.some(item.prefixes, function(prefix) {
-            return _.startsWith(path, prefix);
-          });
+        return _.startsWith(path, prefix);
+      });
     };
     return {
       restrict: 'E',
       templateUrl: 'views/_sidebar.html',
       controller: function($scope) {
         var path = $location.path().replace("/project/" + $scope.projectName, "");
-        $scope.activeSecondary;
+        var hoverDelay = 300;
+        var hideDelay = hoverDelay + 200;
+
         $scope.navItems = Constants.PROJECT_NAVIGATION;
+        $scope.sidebar = {};
+
         $scope.activePrimary = _.find($scope.navItems, function(primaryItem) {
           if (itemMatchesPath(primaryItem, path)) {
             $scope.activeSecondary = null;
@@ -55,10 +66,85 @@ angular.module('openshiftConsole')
 
           return userCan;
         };
+
+        $scope.onMouseEnter = function(primaryItem) {
+          if (_.isEmpty(primaryItem.secondaryNavSections)) {
+            return;
+          }
+
+          if (primaryItem.mouseLeaveTimeout) {
+            $timeout.cancel(primaryItem.mouseLeaveTimeout);
+            primaryItem.mouseLeaveTimeout = null;
+          }
+
+          primaryItem.mouseEnterTimeout = $timeout(function() {
+            primaryItem.isHover = true;
+            primaryItem.mouseEnterTimeout = null;
+            $scope.sidebar.secondaryOpen = true;
+          }, hoverDelay);
+        };
+
+        $scope.onMouseLeave = function(primaryItem) {
+          if (_.isEmpty(primaryItem.secondaryNavSections)) {
+            return;
+          }
+
+          if (primaryItem.mouseEnterTimeout) {
+            $timeout.cancel(primaryItem.mouseEnterTimeout);
+            primaryItem.mouseEnterTimeout = null;
+          }
+
+          primaryItem.mouseLeaveTimeout = $timeout(function() {
+            primaryItem.isHover = false;
+            primaryItem.mouseLeaveTimeout = null;
+            $scope.sidebar.secondaryOpen = _.some($scope.navItems, function(primaryItem) {
+              return primaryItem.isHover && !_.isEmpty(primaryItem.secondaryNavSections);
+            });
+          }, hideDelay);
+        };
+
+        $scope.collapseMobileSecondary = function(primaryItem, event) {
+          primaryItem.mobileSecondary = false;
+          event.stopPropagation();
+        };
+
+        var checkMobile = function() {
+          return HTMLService.isWindowBelowBreakpoint(HTMLService.WINDOW_SIZE_SM);
+        };
+
+        $scope.isMobile = checkMobile();
+
+        var onResize = _.throttle(function() {
+          var isMobile = checkMobile();
+          if (isMobile !== $scope.isMobile) {
+            $scope.$evalAsync(function() {
+              $scope.isMobile = isMobile;
+              if (!isMobile) {
+                _.set($rootScope, 'nav.showMobileNav', false);
+                _.each($scope.navItems, function(primaryItem) {
+                  primaryItem.mobileSecondary = false;
+                });
+              }
+            });
+          }
+        }, 50);
+        $(window).on('resize.verticalnav', onResize);
+
+        $scope.$on('$destroy', function() {
+          $(window).off('.verticalnav');
+        });
       }
     };
   })
-  .directive('projectHeader', function($timeout, $location, $filter, DataService, projectOverviewURLFilter, Constants) {
+  .directive('projectHeader',
+    function(
+      $filter,
+      $location,
+      $rootScope,
+      $timeout,
+      Constants,
+      DataService,
+      projectOverviewURLFilter) {
 
     // cache these to eliminate flicker
     var projects = {};
@@ -68,9 +154,16 @@ angular.module('openshiftConsole')
       restrict: 'EA',
       templateUrl: 'views/directives/header/project-header.html',
       link: function($scope, $elem) {
-        setTimeout(function(){
-          $().setupVerticalNavigation(true);
-        });
+        $scope.toggleNav = function() {
+          var collapsed = _.get($rootScope, 'nav.collapsed');
+          _.set($rootScope, 'nav.collapsed', !collapsed);
+        };
+
+        $scope.toggleMobileNav = function() {
+          var showMobileNav = _.get($rootScope, 'nav.showMobileNav');
+          _.set($rootScope, 'nav.showMobileNav', !showMobileNav);
+        };
+
         $scope.closeOrderingPanel = function() {
           _.set($scope, 'ordering.panelName', "");
         };
