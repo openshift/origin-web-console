@@ -67,7 +67,7 @@ angular.module("openshiftConsole")
         };
 
         var showAlert = function(alert) {
-          if (scope.stayOnCurrentPage) {
+          if (scope.stayOnCurrentPage && scope.alerts) {
             scope.alerts[alert.name] = alert.data;
           } else {
             NotificationsService.addNotification(alert.data);
@@ -177,11 +177,14 @@ angular.module("openshiftConsole")
             })
             .catch(function(err) {
               // called if failure to delete
-              scope.alerts[resourceName] = {
-                type: "error",
-                message: formattedResource + "\'" + " could not be deleted.",
-                details: $filter('getErrorDetails')(err)
-              };
+              showAlert({
+                name: resourceName,
+                data: {
+                  type: "error",
+                  message: _.capitalize(formattedResource) + "\'" + " could not be deleted.",
+                  details: $filter('getErrorDetails')(err)
+                }
+              });
               Logger.error(formattedResource + " could not be deleted.", err);
             });
           });

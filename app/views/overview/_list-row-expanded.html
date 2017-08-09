@@ -175,14 +175,14 @@
               hide-log="row.state.limitWatches">
             </overview-builds>
           </uib-tab>
-          <uib-tab ng-if="row.bindings | size" active="row.selectedTab.bindings">
+          <uib-tab ng-if="row.showBindings && (row.bindings | size)" active="row.selectedTab.bindings">
             <uib-tab-heading>Bindings</uib-tab-heading>
             <overview-service-bindings
+              namespace="row.apiObject.metadata.namespace"
               bindings="row.bindings"
               bindable-service-instances="row.state.bindableServiceInstances"
               service-classes="row.state.serviceClasses"
               service-instances="row.state.serviceInstances"
-              secrets="row.state.secrets"
               create-binding="row.showOverlayPanel('bindService', {target: row.apiObject})">
             </overview-service-bindings>
           </uib-tab>
@@ -213,11 +213,12 @@
       </overview-builds>
 
       <overview-service-bindings
+        ng-if="row.showBindings && (row.bindings | size)"
+        namespace="row.apiObject.metadata.namespace"
         bindings="row.bindings"
         bindable-service-instances="row.state.bindableServiceInstances"
         service-classes="row.state.serviceClasses"
         service-instances="row.state.serviceInstances"
-        secrets="row.state.secrets"
         create-binding="row.showOverlayPanel('bindService', {target: row.apiObject})">
       </overview-service-bindings>
     </div>
