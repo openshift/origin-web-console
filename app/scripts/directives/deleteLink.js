@@ -139,7 +139,7 @@ angular.module("openshiftConsole")
             var kind = scope.kind;
             var resourceName = scope.resourceName;
             var typeDisplayName = scope.typeDisplayName || $filter('humanizeKind')(kind);
-            var formattedResource = typeDisplayName + ' ' + "\'"  + (scope.displayName ? scope.displayName : resourceName) + "\'";
+            var formattedResource = _.capitalize(typeDisplayName) + ' ' + "\'"  + (scope.displayName ? scope.displayName : resourceName) + "\'";
             var context = (scope.kind === 'Project') ? {} : {namespace: scope.projectName};
 
             var deleteOptions = {};
@@ -161,7 +161,7 @@ angular.module("openshiftConsole")
             .then(function() {
               NotificationsService.addNotification({
                   type: "success",
-                  message: _.capitalize(formattedResource) + " was marked for deletion."
+                  message: formattedResource + " was marked for deletion."
               });
 
               if (scope.success) {
@@ -179,7 +179,7 @@ angular.module("openshiftConsole")
               // called if failure to delete
               scope.alerts[resourceName] = {
                 type: "error",
-                message: _.capitalize(formattedResource) + "\'" + " could not be deleted.",
+                message: formattedResource + "\'" + " could not be deleted.",
                 details: $filter('getErrorDetails')(err)
               };
               Logger.error(formattedResource + " could not be deleted.", err);

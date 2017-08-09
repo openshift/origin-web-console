@@ -8709,23 +8709,23 @@ templateUrl: "views/modals/delete-resource.html",
 controller: "DeleteModalController",
 scope: a
 }).result.then(function() {
-var e = a.kind, t = a.resourceName, r = (a.typeDisplayName || n("humanizeKind")(e)) + " '" + (a.displayName ? a.displayName : t) + "'", s = "Project" === a.kind ? {} : {
+var e = a.kind, t = a.resourceName, r = a.typeDisplayName || n("humanizeKind")(e), s = _.capitalize(r) + " '" + (a.displayName ? a.displayName : t) + "'", u = "Project" === a.kind ? {} : {
 namespace: a.projectName
-}, u = {};
-a.options.deleteImmediately && (u.gracePeriodSeconds = 0, u.propagationPolicy = null), "servicecatalog.k8s.io" === a.group && (u.propagationPolicy = null), i.delete({
+}, d = {};
+a.options.deleteImmediately && (d.gracePeriodSeconds = 0, d.propagationPolicy = null), "servicecatalog.k8s.io" === a.group && (d.propagationPolicy = null), i.delete({
 resource: o.kindToResource(e),
 group: a.group
-}, t, s, u).then(function() {
+}, t, u, d).then(function() {
 c.addNotification({
 type: "success",
-message: _.capitalize(r) + " was marked for deletion."
+message: s + " was marked for deletion."
 }), a.success && a.success(), a.options.deleteHPAs && _.each(a.hpaList, m), p();
 }).catch(function(e) {
 a.alerts[t] = {
 type: "error",
-message: _.capitalize(r) + "' could not be deleted.",
+message: s + "' could not be deleted.",
 details: n("getErrorDetails")(e)
-}, l.error(r + " could not be deleted.", e);
+}, l.error(s + " could not be deleted.", e);
 });
 });
 };
