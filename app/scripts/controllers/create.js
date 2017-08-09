@@ -50,7 +50,8 @@ angular.module('openshiftConsole')
             $scope.openshiftImageStreams = resp.by("metadata.name");
           });
 
-        DataService.list("templates", {namespace: "openshift"}).then(function(resp) {
+        // Request only the template metadata. Otherwise the response contains all of the object definitions, which can be megabytes of data.
+        DataService.list("templates", {namespace: "openshift"}, null, {partialObjectMetadataList: true}).then(function(resp) {
             $scope.openshiftTemplates = resp.by("metadata.name");
           });
 
@@ -64,7 +65,7 @@ angular.module('openshiftConsole')
               $scope.projectImageStreams = resp.by("metadata.name");
             });
 
-          DataService.list("templates", context).then(function(resp) {
+          DataService.list("templates", context, null, {partialObjectMetadataList: true}).then(function(resp) {
               $scope.projectTemplates = resp.by("metadata.name");
             });
         }
