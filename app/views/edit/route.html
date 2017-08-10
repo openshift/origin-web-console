@@ -3,40 +3,35 @@
     <navbar-utility-mobile></navbar-utility-mobile>
   </div>
   <div class="middle surface-shaded">
-    <!-- Middle section -->
-    <div class="middle-section">
-      <div class="middle-container">
-        <div class="middle-content">
-          <div class="container surface-shaded">
-            <div class="col-md-10 col-md-offset-1">
-              <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
-              <alerts alerts="alerts"></alerts>
-              <h1>Edit Route {{routeName}}</h1>
-              <div ng-if="loading">
-                Loading...
-              </div>
-              <form name="form" novalidate>
-                <fieldset ng-disabled="disableInputs" ng-if="!loading">
-                  <osc-routing
-                      model="routing"
-                      services="services"
-                      show-name-input="false"
-                      host-read-only="true">
-                  </osc-routing>
-                  <div class="button-group gutter-top gutter-bottom">
-                    <button type="submit"
-                        class="btn btn-primary btn-lg"
-                        ng-click="updateRoute()"
-                        ng-disabled="form.$invalid || disableInputs"
-                        value="">Save</button>
-                    <button class="btn btn-default btn-lg" ng-click="cancel()">Cancel</button>
-                  </div>
-                </fieldset>
-              </form>
-            </div>
+    <div class="middle-content">
+      <div class="container surface-shaded">
+        <div class="col-md-10 col-md-offset-1">
+          <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+          <alerts alerts="alerts"></alerts>
+          <h1>Edit Route {{routeName}}</h1>
+          <div ng-if="loading">
+            Loading...
           </div>
-        </div><!-- /middle-content -->
-      </div><!-- /middle-container -->
-    </div><!-- /middle-section -->
+          <form name="form" novalidate>
+            <fieldset ng-disabled="disableInputs" ng-if="!loading">
+              <osc-routing
+                  model="routing"
+                  services="services"
+                  show-name-input="false"
+                  host-read-only="true">
+              </osc-routing>
+              <div class="button-group gutter-top gutter-bottom">
+                <button type="submit"
+                    class="btn btn-primary btn-lg"
+                    ng-click="updateRoute()"
+                    ng-disabled="form.$invalid || disableInputs"
+                    value="">Save</button>
+                <button class="btn btn-default btn-lg" ng-click="cancel()">Cancel</button>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div><!-- /middle-content -->
   </div><!-- /middle -->
 </div><!-- /wrap -->

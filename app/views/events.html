@@ -1,25 +1,20 @@
 <project-page>
-  <!-- Middle section -->
-  <div class="middle-section">
-    <div class="middle-container">
-      <div class="middle-header">
-        <div class="container-fluid">
-          <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
-          <div class="page-header page-header-bleed-right page-header-bleed-left">
-            <h1>Events</h1>
-          </div>
+  <div class="middle-header">
+    <div class="container-fluid">
+      <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+      <div class="page-header page-header-bleed-right page-header-bleed-left">
+        <h1>Events</h1>
+      </div>
+    </div>
+  </div><!-- /middle-header-->
+  <div class="middle-content">
+    <div class="container-fluid">
+      <alerts alerts="alerts"></alerts>
+      <div class="row">
+        <div class="col-md-12" ng-if="projectContext">
+          <events project-context="projectContext" ng-if="projectContext"></events>
         </div>
-      </div><!-- /middle-header-->
-      <div class="middle-content">
-        <div class="container-fluid">
-          <alerts alerts="alerts"></alerts>
-          <div class="row">
-            <div class="col-md-12" ng-if="projectContext">
-              <events project-context="projectContext" ng-if="projectContext"></events>
-            </div>
-          </div>
-        </div>
-      </div><!-- /middle-content -->
-    </div><!-- /middle-container -->
-  </div><!-- /middle-section -->
+      </div>
+    </div>
+  </div><!-- /middle-content -->
 </project-page>

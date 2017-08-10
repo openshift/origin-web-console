@@ -3,52 +3,47 @@
     <navbar-utility-mobile></navbar-utility-mobile>
   </div>
   <div class="middle surface-shaded">
-    <!-- Middle section -->
-    <div class="middle-section">
-      <div class="middle-container">
-        <div class="middle-content">
-          <div class="container surface-shaded">
-            <div class="row">
-              <div class="col-md-10 col-md-offset-1">
-                <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
-                <div class="mar-top-xl">
-                  <h1>Create Route</h1>
-                  <div class="help-block">
-                    Routing is a way to make your application publicly visible.
-                  </div>
-                  <form name="createRouteForm" class="mar-top-xl osc-form" novalidate>
-                    <div ng-if="!services">Loading...</div>
-                    <div ng-if="services">
-                      <fieldset ng-disabled="disableInputs">
-                        <osc-routing
-                            model="routing"
-                            services="services"
-                            show-name-input="true">
-                        </osc-routing>
-                        <label-editor
-                            labels="labels"
-                            expand="true"
-                            can-toggle="false"
-                            help-text="Labels for this route.">
-                        </label-editor>
-                        <a href="" ng-click="copyServiceLabels()">Copy Service Labels</a>
-                        <div class="button-group gutter-top gutter-bottom">
-                          <button type="submit"
-                              class="btn btn-primary btn-lg"
-                              ng-click="createRoute()"
-                              ng-disabled="createRouteForm.$invalid || disableInputs || !createRoute"
-                              value="">Create</button>
-                          <a class="btn btn-default btn-lg" href="" ng-click="cancel()">Cancel</a>
-                        </div>
-                      </fieldset>
+    <div class="middle-content">
+      <div class="container surface-shaded">
+        <div class="row">
+          <div class="col-md-10 col-md-offset-1">
+            <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+            <div class="mar-top-xl">
+              <h1>Create Route</h1>
+              <div class="help-block">
+                Routing is a way to make your application publicly visible.
+              </div>
+              <form name="createRouteForm" class="mar-top-xl osc-form" novalidate>
+                <div ng-if="!services">Loading...</div>
+                <div ng-if="services">
+                  <fieldset ng-disabled="disableInputs">
+                    <osc-routing
+                        model="routing"
+                        services="services"
+                        show-name-input="true">
+                    </osc-routing>
+                    <label-editor
+                        labels="labels"
+                        expand="true"
+                        can-toggle="false"
+                        help-text="Labels for this route.">
+                    </label-editor>
+                    <a href="" ng-click="copyServiceLabels()">Copy Service Labels</a>
+                    <div class="button-group gutter-top gutter-bottom">
+                      <button type="submit"
+                          class="btn btn-primary btn-lg"
+                          ng-click="createRoute()"
+                          ng-disabled="createRouteForm.$invalid || disableInputs || !createRoute"
+                          value="">Create</button>
+                      <a class="btn btn-default btn-lg" href="" ng-click="cancel()">Cancel</a>
                     </div>
-                  </form>
+                  </fieldset>
                 </div>
-              </div><!-- /col -->
-            </div><!-- /row -->
-          </div><!-- /container -->
-        </div><!-- /middle-content -->
-      </div><!-- /middle-container -->
-    </div><!-- /middle-section -->
+              </form>
+            </div>
+          </div><!-- /col -->
+        </div><!-- /row -->
+      </div><!-- /container -->
+    </div><!-- /middle-content -->
   </div><!-- /middle -->
 </div><!-- /wrap -->

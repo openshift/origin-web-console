@@ -33,16 +33,28 @@ html,body {
 
   }
   .chromeless {
-    // prevent chromeless log-viewer from having margin or padding
+    // Prevent chromeless log-viewer from having margin or padding
     .middle-content,
     .middle-header {
       margin:0 !important;
       padding:0 !important;
     }
   }
+  // Make container extend full height
   .wrap {
-    height: calc(100vh ~"-" (@navbar-vertical-height-tall + @project-bar-height-desktop));
+    height: 100%;
+    .middle-content {
+      > .container,
+      > .container-fluid {
+        height: 100%;
+        min-height: calc(100vh ~"-" (@navbar-vertical-height-tall + @project-bar-height-desktop));
+      }
+    }
   }
+  // .console-os .no-sidebar .middle-content > .container {
+  //   height: 100%;
+  //   min-height: calc(100vh ~"-" (@navbar-vertical-height-tall + @project-bar-height-desktop));
+  // }
   // .wrap {
   //   display: flex;
   //   flex-direction: column;

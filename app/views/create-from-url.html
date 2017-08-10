@@ -3,25 +3,39 @@
     <navbar-utility-mobile></navbar-utility-mobile>
   </div>
   <div class="middle surface-shaded">
-    <!-- Middle section -->
-    <div class="middle-section">
-      <div class="middle-container">
-        <div class="middle-content">
-          <div class="container surface-shaded gutter-top">
-            <div class="row">
-              <div class="col-md-12">
-                <div ng-if="!loaded">Loading...</div>
-                <div ng-if="loaded">
-                  <alerts alerts="alerts" hide-close-button="true"></alerts>
-                  <osc-image-summary resource="resource"></osc-image-summary>
-                  <p ng-if="validationPassed && createDetails.sourceURI">Source code from <a href="{{createDetails.sourceURI}}">{{createDetails.sourceURI}}</a> will be built and deployed unless otherwise specified in the next step.</p>
-                  <div ng-if="validationPassed">
-                    <div ng-if="noProjects && canCreateProject">
-                      <h2>Create a New Project</h2>
-                      <create-project alerts="alerts" redirect-action="createWithProject"></create-project>
-                    </div>
-                    <div ng-if="!noProjects && !canCreateProject">
-                      <h2>Choose a Project</h2>
+    <div class="middle-content">
+      <div class="container surface-shaded gutter-top">
+        <div class="row">
+          <div class="col-md-12">
+            <div ng-if="!loaded">Loading...</div>
+            <div ng-if="loaded">
+              <alerts alerts="alerts" hide-close-button="true"></alerts>
+              <osc-image-summary resource="resource"></osc-image-summary>
+              <p ng-if="validationPassed && createDetails.sourceURI">Source code from <a href="{{createDetails.sourceURI}}">{{createDetails.sourceURI}}</a> will be built and deployed unless otherwise specified in the next step.</p>
+              <div ng-if="validationPassed">
+                <div ng-if="noProjects && canCreateProject">
+                  <h2>Create a New Project</h2>
+                  <create-project alerts="alerts" redirect-action="createWithProject"></create-project>
+                </div>
+                <div ng-if="!noProjects && !canCreateProject">
+                  <h2>Choose a Project</h2>
+                  <ui-select ng-model="selected.project">
+                    <ui-select-match placeholder="Project name">
+                      {{$select.selected | displayName}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="project in projects | searchProjects : $select.search">
+                      <span ng-bind-html="project | displayName | highlightKeywords : $select.search"></span>
+                      <span ng-if="project | displayName : true" class="small text-muted">
+                        &ndash;
+                        <span ng-bind-html="project.metadata.name | highlightKeywords : $select.search"></span>
+                      </span>
+                    </ui-select-choices>
+                  </ui-select>
+                </div>
+                <div ng-if="!noProjects && canCreateProject">
+                  <uib-tabset>
+                    <uib-tab>
+                      <uib-tab-heading>Choose Existing Project</uib-tab-heading>
                       <ui-select ng-model="selected.project">
                         <ui-select-match placeholder="Project name">
                           {{$select.selected | displayName}}
@@ -34,50 +48,31 @@
                           </span>
                         </ui-select-choices>
                       </ui-select>
-                    </div>
-                    <div ng-if="!noProjects && canCreateProject">
-                      <uib-tabset>
-                        <uib-tab>
-                          <uib-tab-heading>Choose Existing Project</uib-tab-heading>
-                          <ui-select ng-model="selected.project">
-                            <ui-select-match placeholder="Project name">
-                              {{$select.selected | displayName}}
-                            </ui-select-match>
-                            <ui-select-choices repeat="project in projects | searchProjects : $select.search">
-                              <span ng-bind-html="project | displayName | highlightKeywords : $select.search"></span>
-                              <span ng-if="project | displayName : true" class="small text-muted">
-                                &ndash;
-                                <span ng-bind-html="project.metadata.name | highlightKeywords : $select.search"></span>
-                              </span>
-                            </ui-select-choices>
-                          </ui-select>
-                          <div class="button-group mar-bottom-lg mar-top-lg">
-                            <button
-                            type="submit"
-                            class="btn btn-primary btn-lg"
-                            ng-click="createWithProject()"
-                            ng-disabled="!(selected.project)"
-                            value="">Next</button>
-                            <a class="btn btn-default btn-lg" href="#" back>Cancel</a>
-                          </div>
-                        </uib-tab>
-                        <uib-tab>
-                          <uib-tab-heading>Create a New Project</uib-tab-heading>
-                          <create-project alerts="alerts" redirect-action="createWithProject"></create-project>
-                        </uib-tab>
-                      </uib-tabset>
-                    </div>
-                    <p ng-if="!canCreateProject" class="mar-top-md">
-                      <span ng-if="noProjects">A project is required in order to complete the installation.</span>
-                      <ng-include src="'views/_cannot-create-project.html'"></ng-include>
-                    </p>
-                  </div>
+                      <div class="button-group mar-bottom-lg mar-top-lg">
+                        <button
+                        type="submit"
+                        class="btn btn-primary btn-lg"
+                        ng-click="createWithProject()"
+                        ng-disabled="!(selected.project)"
+                        value="">Next</button>
+                        <a class="btn btn-default btn-lg" href="#" back>Cancel</a>
+                      </div>
+                    </uib-tab>
+                    <uib-tab>
+                      <uib-tab-heading>Create a New Project</uib-tab-heading>
+                      <create-project alerts="alerts" redirect-action="createWithProject"></create-project>
+                    </uib-tab>
+                  </uib-tabset>
                 </div>
+                <p ng-if="!canCreateProject" class="mar-top-md">
+                  <span ng-if="noProjects">A project is required in order to complete the installation.</span>
+                  <ng-include src="'views/_cannot-create-project.html'"></ng-include>
+                </p>
               </div>
             </div>
           </div>
-        </div><!-- /middle-content -->
-      </div><!-- /middle-container -->
-    </div><!-- /middle-section -->
+        </div>
+      </div>
+    </div><!-- /middle-content -->
   </div><!-- /middle -->
 </div><!-- /wrap -->
