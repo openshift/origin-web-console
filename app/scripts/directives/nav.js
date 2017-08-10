@@ -119,7 +119,9 @@ angular.module('openshiftConsole')
           if (isMobile !== $scope.isMobile) {
             $scope.$evalAsync(function() {
               $scope.isMobile = isMobile;
-              if (!isMobile) {
+              if (isMobile) {
+                _.set($rootScope, 'nav.collapsed', false);
+              } else {
                 _.set($rootScope, 'nav.showMobileNav', false);
                 _.each($scope.navItems, function(primaryItem) {
                   primaryItem.mobileSecondary = false;
