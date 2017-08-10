@@ -15,8 +15,8 @@
       'secondary-nav-item-pf': primaryItem.secondaryNavSections.length
     }"
     ng-if="show(primaryItem)"
-    ng-mouseenter="onMouseEnter(primaryItem);"
-    ng-mouseleave="onMouseLeave(primaryItem);"
+    ng-mouseenter="onMouseEnter(primaryItem)"
+    ng-mouseleave="onMouseLeave(primaryItem)"
     class="list-group-item">
     <a ng-if="primaryItem.href" ng-href="{{navURL(primaryItem.href)}}">
       <span class="{{primaryItem.iconClass}}"></span> <span class="list-group-item-value">{{primaryItem.label}}</span>
