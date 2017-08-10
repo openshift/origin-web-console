@@ -1,14 +1,11 @@
-<div ng-class="{'show-sidebar-right': renderOptions.showEventsSidebar}" class="wrap-NOTUSED">
+<div ng-class="{'show-sidebar-right': renderOptions.showEventsSidebar}" class="wrap">
   <sidebar></sidebar>
-  <div id="container-main" class="container-fluid container-pf-nav-pf-vertical"
+  <div ng-transclude id="container-main" class="container-fluid container-pf-nav-pf-vertical"
        ng-class="{ 'collapsed-nav': nav.collapsed }">
-    <div ng-transclude class="transclude-div">
-
-    </div>
   </div>
   <div ng-if="renderOptions.showEventsSidebar && !renderOptions.collapseEventsSidebar" class="sidebar-right sidebar-pf sidebar-pf-right">
     <div class="right-section">
       <events-sidebar ng-if="projectContext" project-context="projectContext" collapsed="renderOptions.collapseEventsSidebar"></events-sidebar>
-    </div><!-- /right-section -->
+    </div>
   </div>
 </div>

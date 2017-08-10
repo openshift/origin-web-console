@@ -32,38 +32,41 @@ html,body {
     height: @navbar-os-header-mobile;
 
   }
+  .chromeless {
+    // prevent chromeless log-viewer from having margin or padding
+    .middle-content,
+    .middle-header {
+      margin:0 !important;
+      padding:0 !important;
+    }
+  }
   .wrap {
-    display: flex;
-    flex-direction: column;
-    height:100vh;
-    margin-top:-@navbar-os-header-mobile; /* top offset height */
-    padding-top:@navbar-os-header-mobile; /* top offset height */
-    position:relative;
-    width:100%;
-    .backface-visibility(hidden);
-    &.no-sidebar {
-      .surface-shaded;
-        h1 {
-          margin: 10px 0 20px;
-        }
-      .middle {
-        padding-top: 30px;
-      }
-    }
-    &.chromeless {
-      // prevent chromeless log-viewer from having margin or padding
-      .middle-content,
-      .middle-header {
-        margin:0 !important;
-        padding:0 !important;
-      }
-    }
+    height: calc(100vh ~"-" (@navbar-vertical-height-tall + @project-bar-height-desktop));
   }
-  .sidebar-left,.middle,.sidebar-right {
-    flex: 0 0 auto;
-    width: 100%;
-    position: relative;
-  }
+  // .wrap {
+  //   display: flex;
+  //   flex-direction: column;
+  //   height:100vh;
+  //   margin-top:-@navbar-os-header-mobile; /* top offset height */
+  //   padding-top:@navbar-os-header-mobile; /* top offset height */
+  //   position:relative;
+  //   width:100%;
+  //   .backface-visibility(hidden);
+  //   &.no-sidebar {
+  //     .surface-shaded;
+  //       h1 {
+  //         margin: 10px 0 20px;
+  //       }
+  //     .middle {
+  //       padding-top: 30px;
+  //     }
+  //   }
+  // }
+  // .sidebar-left,.middle,.sidebar-right {
+  //   flex: 0 0 auto;
+  //   width: 100%;
+  //   position: relative;
+  // }
   .sidebar-left {
     background: @sidebar-os-bg;
     padding: 0;
@@ -110,6 +113,7 @@ html,body {
 .header-toolbar {
   background-color: @panel-light;
   border-bottom: 1px solid @page-header-border-color;
+  margin-bottom: @grid-gutter-width / 2;
 }
 .surface-shaded {
   background-color: @panel-shaded;
@@ -132,58 +136,59 @@ html,body {
         padding-top: @navbar-os-header-desktop + @tech-preview-banner-height; /* top offset height */
       }
     }
-    .wrap {
-      flex-direction: row;
-      margin-top: -@navbar-os-header-desktop; /* top offset height */
-      overflow: hidden;
-      padding-top: @navbar-os-header-desktop; /* top offset height */
-      &.no-sidebar {
-        .sidebar-left {
-          display: none !important;
-        }
-      }
-      &.show-sidebar-right {
-        .sidebar-right {
-          display: block;
-          .dl-horizontal {
-            margin: 0 0 @line-height-computed;
-            dt {
-              text-align: left;
-            }
-            dd {
-              .word-break();
-            }
-          }
-          .sidebar-help {
-            color: @gray-light;
-          }
-        }
-      }
-    }
+    // .wrap {
+    //   flex-direction: row;
+    //   margin-top: -@navbar-os-header-desktop; /* top offset height */
+    //   overflow: hidden;
+    //   padding-top: @navbar-os-header-desktop; /* top offset height */
+    // }
     .top-header {
       height: @navbar-os-header-desktop; /* top offset height */
     }
     .sidebar-left,.middle,.sidebar-right {
+      height: 100%;
       -webkit-overflow-scrolling:touch;
     }
-    .sidebar-left {
-      flex: 0 0 @sidebar-left-width-md;
-      overflow-y: visible;
-    }
-    .middle{
-      flex: 1 1 0%;
-      position: relative;
-      // make scrollable
-      overflow-x: hidden;
-      overflow-y: auto;
-      &.landing-page {
-        -webkit-overflow-scrolling: auto;  // resolves iOS bug where .landing-search-area and .landing-side-bar disappear
+    // .sidebar-left {
+    //   flex: 0 0 @sidebar-left-width-md;
+    //   overflow-y: visible;
+    // }
+    // .middle{
+    //   flex: 1 1 0%;
+    //   position: relative;
+    //   // make scrollable
+    //   overflow-x: hidden;
+    //   overflow-y: auto;
+    //   &.landing-page {
+    //     -webkit-overflow-scrolling: auto;  // resolves iOS bug where .landing-search-area and .landing-side-bar disappear
+    //   }
+    // }
+    .show-sidebar-right {
+      .sidebar-right {
+        display: block;
+        .dl-horizontal {
+          margin: 0 0 @line-height-computed;
+          dt {
+            text-align: left;
+          }
+          dd {
+            .word-break();
+          }
+        }
+        .sidebar-help {
+          color: @gray-light;
+        }
       }
     }
     .sidebar-right {
       border-left: 1px solid #dadada;
       flex: 0 0 @sidebar-right-width-sm;
       position: relative;
+    }
+    .no-sidebar {
+      .sidebar-left {
+        display: none !important;
+      }
     }
   }
   // scrollable panels within sections
@@ -247,71 +252,56 @@ html,body {
 }
 
 
-@media (min-width: @screen-md-min) {
-  .console-os {
-    .middle .container-fluid {
-      // At wide view increase the space between middle container and sidebar-left/right, by setting its padding to 30px instead of the bootstrap 20px default
-      padding-left: @middle-content-container-padding-lg;
-      padding-right: @middle-content-container-padding-lg;
-    }
-    .sidebar-right {
-      flex: 0 0 @sidebar-right-width-md;
-      .right-section {
-        width: @sidebar-right-width-md;
-      }
-    }
-  }
-}
+// @media (min-width: @screen-md-min) {
+//   .console-os {
+//     .middle .container-fluid {
+//       // At wide view increase the space between middle container and sidebar-left/right, by setting its padding to 30px instead of the bootstrap 20px default
+//       padding-left: @middle-content-container-padding-lg;
+//       padding-right: @middle-content-container-padding-lg;
+//     }
+//     .sidebar-right {
+//       flex: 0 0 @sidebar-right-width-md;
+//       .right-section {
+//         width: @sidebar-right-width-md;
+//       }
+//     }
+//   }
+// }
 
-@media (min-width: @screen-lg-min) {
-  .console-os {
-    .sidebar-left {
-      flex: 0 0 @sidebar-left-width-md;
-      .navbar-sidebar {
-        width: @sidebar-left-width-md;
-      }
-    }
-    .wrap.show-sidebar-right {
-      .sidebar-right {
-        flex: 0 0 @sidebar-right-width-lg;
-        .right-section {
-          width: @sidebar-right-width-lg;
-        }
-      }
-    }
-  }
-}
+// @media (min-width: @screen-lg-min) {
+//   .console-os {
+//     .sidebar-left {
+//       flex: 0 0 @sidebar-left-width-md;
+//       .navbar-sidebar {
+//         width: @sidebar-left-width-md;
+//       }
+//     }
+//     .wrap.show-sidebar-right {
+//       .sidebar-right {
+//         flex: 0 0 @sidebar-right-width-lg;
+//         .right-section {
+//           width: @sidebar-right-width-lg;
+//         }
+//       }
+//     }
+//   }
+// }
 
-@media (min-width: @screen-xl-min) {
-  .console-os {
-    .sidebar-left {
-      flex: 0 0 @sidebar-left-width-lg;
-      .navbar-sidebar {
-        width: @sidebar-left-width-lg;
-      }
-    }
-    .wrap.show-sidebar-right {
-      .sidebar-right {
-        flex: 0 0 @sidebar-right-width-xlg;
-        .right-section {
-          width: @sidebar-right-width-xlg;
-        }
-      }
-    }
-  }
-}
-
-
-
-
-
-
-
-
-.transclude-div {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-}
+// @media (min-width: @screen-xl-min) {
+//   .console-os {
+//     .sidebar-left {
+//       flex: 0 0 @sidebar-left-width-lg;
+//       .navbar-sidebar {
+//         width: @sidebar-left-width-lg;
+//       }
+//     }
+//     .wrap.show-sidebar-right {
+//       .sidebar-right {
+//         flex: 0 0 @sidebar-right-width-xlg;
+//         .right-section {
+//           width: @sidebar-right-width-xlg;
+//         }
+//       }
+//     }
+//   }
+// }
