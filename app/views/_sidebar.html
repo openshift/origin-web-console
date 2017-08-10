@@ -1,6 +1,6 @@
 <div class="sidebar-left-NOTUSED collapse-NOTUSED navbar-collapse-NOTUSED navbar-collapse-1-NOTUSED nav-pf-vertical nav-pf-vertical-with-sub-menus"
   ng-class="{
-    collapsed: nav.collapsed,
+    collapsed: nav.collapsed && !isMobile,
     hidden: !nav.showMobileNav && isMobile,
     'hover-secondary-nav-pf': sidebar.secondaryOpen && !isMobile,
     'show-mobile-nav': nav.showMobileNav && isMobile,
@@ -33,7 +33,7 @@
       ng-if="primaryItem.secondaryNavSections.length"
       class="secondary-nav-item-pf"
       ng-class="{
-        'mobile-nav-item-pf': primaryItem.mobileSecondary
+        'mobile-nav-item-pf': primaryItem.mobileSecondary && isMobile
       }">
       <div class="nav-pf-secondary-nav">
         <div class="nav-item-pf-header">
