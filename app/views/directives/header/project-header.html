@@ -13,7 +13,7 @@
   <navbar-utility class="hidden-xs"></navbar-utility>
 </nav>
 
-<div class="project-bar">
+<div ng-show="projectName" class="project-bar">
   <div class="toggle-menu">
     <button type="button" class="navbar-toggle project-action-btn" ng-click="toggleNav()">
       <span class="sr-only">Toggle navigation</span>
@@ -27,7 +27,7 @@
     <select class="selectpicker form-control" data-selected-text-format="count>3" id="boostrapSelect" title=""></select>
   </div>
   <!-- create buttons show at mobile -->
-  <div class="dropdown navbar-flex-btn" ng-if="project.metadata.name | canIAddToProject" uib-dropdown>
+  <div class="dropdown navbar-flex-btn" ng-show="canIAddToProject" uib-dropdown>
     <a class="dropdown-toggle add-to-project-btn" href="" ng-disabled="project.status.phase != 'Active'" title="Add to Project" uib-dropdown-toggle>
       <i class="fa fa-plus visible-xs-inline-block" aria-hidden="true" title="Add to Project"></i><span class="hidden-xs add-to-project">Add to Project</span><span class="hidden-xs caret" aria-hidden="true" title="Add to Project"></span>
     </a>

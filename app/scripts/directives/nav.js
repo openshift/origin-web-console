@@ -143,7 +143,9 @@ angular.module('openshiftConsole')
       $filter,
       $location,
       $rootScope,
+      $routeParams,
       $timeout,
+      AuthorizationService,
       Constants,
       DataService,
       projectOverviewURLFilter) {
@@ -178,32 +180,9 @@ angular.module('openshiftConsole')
         var options = [];
 
         var updateOptions = function() {
-          var project = $scope.project || {};
-          $scope.context = {
-            namespace: $scope.projectName
-          };
           var name = $scope.projectName;
-          var isRealProject = project.metadata && project.metadata.name;
-
-          // If we don't have a name or a real project, nothing to do yet.
-          if (!name && !isRealProject) {
-            return;
-          }
-
           if (!name) {
-            name = project.metadata.name;
-          }
-
-          if (!isRealProject) {
-            project = {
-              metadata: {
-                name: name
-              }
-            };
-          }
-
-          if(!projects[name]) {
-            projects[name] = project;
+            return;
           }
 
           sortedProjects = $filter('orderByDisplayName')(projects);
@@ -224,9 +203,42 @@ angular.module('openshiftConsole')
 
         DataService.list("projects", $scope, function(items) {
           projects = items.by("metadata.name");
+          $scope.project = projects[ $routeParams.project ];
           updateOptions();
         });
 
+        $scope.$on('$routeChangeSuccess', function() {
+          var projectName = $routeParams.project;
+          if ($scope.projectName === projectName) {
+            // The project hasn't changed.
+            return;
+          }
+
+          // Check if the user can add to project after switching projects.
+          if (projectName) {
+            // Assume false until the request completes.
+            $scope.canIAddToProject = false;
+            // Make sure we have project rules before we check canIAddToProject or we get the wrong value.
+            // FIXME: We are not requesting this twice, here and in ProjectService
+            // FIXME: AuthorizationService should not cache the wrong value before the rules load
+            AuthorizationService.getProjectRules(projectName).then(function() {
+              // Make sure the user hasn't switched projects while the request was still in flight.
+              if ($scope.projectName !== projectName) {
+                return;
+              }
+
+              $scope.canIAddToProject = AuthorizationService.canIAddToProject(projectName);
+            });
+          }
+
+          // TODO: relist projects? Probably better not to for cluster admins
+          // that might have hundreds of projects. But we would want to update
+          // the dropdown at least when the user navigates to the project list,
+          // and we have an updated list.
+          $scope.projectName = projectName;
+          $scope.project = _.get(projects, [ projectName ]);
+          updateOptions();
+        });
         updateOptions();
 
         select
