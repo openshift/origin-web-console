@@ -3,70 +3,65 @@
     <navbar-utility-mobile></navbar-utility-mobile>
   </div>
   <div class="middle surface-shaded">
-    <!-- Middle section -->
-    <div class="middle-section">
-      <div class="middle-container">
-        <div class="middle-content">
-          <div class="container surface-shaded gutter-top">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="command-line">
-                  <h1 id="cli">Command Line Tools</h1>
-                  <p>
-                    With the OpenShift command line interface (CLI), you can create applications and manage OpenShift projects from a terminal.
-                    <span ng-if="cliDownloadURLPresent">
-                      You can download the <code>oc</code> client tool using the links below. For more information about downloading and installing it, please refer to the <a target="_blank" href="{{'get_started_cli' | helpLink}}">Get Started with the CLI</a> documentation.
-                    </span>
-                    <span ng-if="!cliDownloadURLPresent">
-                      Refer to the <a target="_blank" href="{{'get_started_cli' | helpLink}}">Get Started with the CLI</a> documentation for instructions about downloading and installing the <code>oc</code> client tool.
-                    </span>
-                    <div ng-if="cliDownloadURLPresent">
-                      <label class="cli-download-label">Download <code>oc</code>:</label>
-                      <div ng-repeat="(key, value) in cliDownloadURL">
-                        <!--
-                           Use target="_self" so that the Angular router doesn't rewrite the link when the download is served using an extension.
-                           See https://docs.angularjs.org/guide/$location#html-link-rewriting
-                        -->
-                        <a ng-href="{{value}}" class="cli-download-link" target="_self">
-                          {{key}}
-                          <i class="fa fa-external-link"></i>
-                        </a>
-                      </div>
-                    </div>
-                  </p>
-                  <p>
-                    After downloading and installing it, you can start by logging in. You are currently logged into this console as <strong>{{user.metadata.name}}</strong>. If you want to log into the CLI using the same session token:
-                    <copy-to-clipboard display-wide="true" clipboard-text="'oc login ' + loginBaseURL + ' --token=' + sessionToken" input-text="'oc login ' + loginBaseURL + ' --token=<hidden>'"></copy-to-clipboard>
-                    <pre class="code prettyprint ng-binding" ng-if="!sessionToken">
-                      oc login {{loginBaseURL}}
-                    </pre>
-                  </p>
-
-                  <div class="alert alert-warning">
-                    <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-                    <strong>A token is a form of a password.</strong>
-                    Do not share your API token. To reveal your token, press the copy to clipboard button and then paste the clipboard contents.
+    <div class="middle-content">
+      <div class="container gutter-top">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="command-line">
+              <h1 id="cli">Command Line Tools</h1>
+              <p>
+                With the OpenShift command line interface (CLI), you can create applications and manage OpenShift projects from a terminal.
+                <span ng-if="cliDownloadURLPresent">
+                  You can download the <code>oc</code> client tool using the links below. For more information about downloading and installing it, please refer to the <a target="_blank" href="{{'get_started_cli' | helpLink}}">Get Started with the CLI</a> documentation.
+                </span>
+                <span ng-if="!cliDownloadURLPresent">
+                  Refer to the <a target="_blank" href="{{'get_started_cli' | helpLink}}">Get Started with the CLI</a> documentation for instructions about downloading and installing the <code>oc</code> client tool.
+                </span>
+                <div ng-if="cliDownloadURLPresent">
+                  <label class="cli-download-label">Download <code>oc</code>:</label>
+                  <div ng-repeat="(key, value) in cliDownloadURL">
+                    <!--
+                       Use target="_self" so that the Angular router doesn't rewrite the link when the download is served using an extension.
+                       See https://docs.angularjs.org/guide/$location#html-link-rewriting
+                    -->
+                    <a ng-href="{{value}}" class="cli-download-link" target="_self">
+                      {{key}}
+                      <i class="fa fa-external-link"></i>
+                    </a>
                   </div>
-
-                  <p>After you login to your account you will get a list of projects that you can switch between:
-                    <copy-to-clipboard display-wide="true" clipboard-text="'oc project <project-name>'"></copy-to-clipboard>
-                  </p>
-
-                  <p>If you do not have any existing projects, you can create one:
-                    <copy-to-clipboard display-wide="true" clipboard-text="'oc new-project <project-name>'"></copy-to-clipboard>
-                  </p>
-
-                  <p>To show a high level overview of the current project:
-                    <copy-to-clipboard display-wide="true" clipboard-text="'oc status'"></copy-to-clipboard>
-                  </p>
-
-                  <p>For other information about the command line tools, check the <a target="_blank" href="{{'cli' | helpLink}}">CLI Reference</a> and <a target="_blank" href="{{'basic_cli_operations' | helpLink}}">Basic CLI Operations</a>.</p>
                 </div>
+              </p>
+              <p>
+                After downloading and installing it, you can start by logging in. You are currently logged into this console as <strong>{{user.metadata.name}}</strong>. If you want to log into the CLI using the same session token:
+                <copy-to-clipboard display-wide="true" clipboard-text="'oc login ' + loginBaseURL + ' --token=' + sessionToken" input-text="'oc login ' + loginBaseURL + ' --token=<hidden>'"></copy-to-clipboard>
+                <pre class="code prettyprint ng-binding" ng-if="!sessionToken">
+                  oc login {{loginBaseURL}}
+                </pre>
+              </p>
+
+              <div class="alert alert-warning">
+                <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
+                <strong>A token is a form of a password.</strong>
+                Do not share your API token. To reveal your token, press the copy to clipboard button and then paste the clipboard contents.
               </div>
+
+              <p>After you login to your account you will get a list of projects that you can switch between:
+                <copy-to-clipboard display-wide="true" clipboard-text="'oc project <project-name>'"></copy-to-clipboard>
+              </p>
+
+              <p>If you do not have any existing projects, you can create one:
+                <copy-to-clipboard display-wide="true" clipboard-text="'oc new-project <project-name>'"></copy-to-clipboard>
+              </p>
+
+              <p>To show a high level overview of the current project:
+                <copy-to-clipboard display-wide="true" clipboard-text="'oc status'"></copy-to-clipboard>
+              </p>
+
+              <p>For other information about the command line tools, check the <a target="_blank" href="{{'cli' | helpLink}}">CLI Reference</a> and <a target="_blank" href="{{'basic_cli_operations' | helpLink}}">Basic CLI Operations</a>.</p>
             </div>
           </div>
-        </div><!-- /middle-content -->
-      </div><!-- /middle-container -->
-    </div><!-- /middle-section -->
+        </div>
+      </div>
+    </div><!-- /middle-content -->
   </div><!-- /middle -->
 </div><!-- /wrap -->

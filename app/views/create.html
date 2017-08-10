@@ -3,45 +3,40 @@
     <navbar-utility-mobile></navbar-utility-mobile>
   </div>
   <div class="add-to-project middle surface-shaded">
-    <!-- Middle section -->
-    <div class="middle-section">
-      <div class="middle-container">
-        <div class="middle-content" persist-tab-state>
-          <div class="container surface-shaded">
-            <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
-            <alerts alerts="alerts"></alerts>
-            <div class="row">
-              <div class="col-md-12">
-                <uib-tabset class="mar-top-none" ng-if="project">
-                  <uib-tab active="selectedTab.fromCatalog">
-                    <uib-tab-heading>Browse Catalog</uib-tab-heading>
-                    <catalog
-                        project-name="projectName"
-                        project-image-streams="projectImageStreams"
-                        openshift-image-streams="openshiftImageStreams"
-                        project-templates="projectTemplates"
-                        openshift-templates="openshiftTemplates">
-                    </catalog>
-                  </uib-tab>
+    <div class="middle-content" persist-tab-state>
+      <div class="container surface-shaded">
+        <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+        <alerts alerts="alerts"></alerts>
+        <div class="row">
+          <div class="col-md-12">
+            <uib-tabset class="mar-top-none" ng-if="project">
+              <uib-tab active="selectedTab.fromCatalog">
+                <uib-tab-heading>Browse Catalog</uib-tab-heading>
+                <catalog
+                    project-name="projectName"
+                    project-image-streams="projectImageStreams"
+                    openshift-image-streams="openshiftImageStreams"
+                    project-templates="projectTemplates"
+                    openshift-templates="openshiftTemplates">
+                </catalog>
+              </uib-tab>
 
-                  <uib-tab active="selectedTab.deployImage">
-                    <uib-tab-heading>Deploy Image</uib-tab-heading>
-                    <form><!-- wrapping form element is necessary for the enter key to trigger the submit button -->
-                      <deploy-image project="project" context="context"></deploy-image>
-                    </form>
-                  </uib-tab>
+              <uib-tab active="selectedTab.deployImage">
+                <uib-tab-heading>Deploy Image</uib-tab-heading>
+                <form><!-- wrapping form element is necessary for the enter key to trigger the submit button -->
+                  <deploy-image project="project" context="context"></deploy-image>
+                </form>
+              </uib-tab>
 
-                  <uib-tab active="selectedTab.fromFile">
-                    <uib-tab-heading>Import YAML / JSON</uib-tab-heading>
-                    <from-file project="project" context="context" ></from-file>
-                  </uib-tab>
+              <uib-tab active="selectedTab.fromFile">
+                <uib-tab-heading>Import YAML / JSON</uib-tab-heading>
+                <from-file project="project" context="context" ></from-file>
+              </uib-tab>
 
-                </uib-tabset>
-              </div>
-            </div>
+            </uib-tabset>
           </div>
-        </div><!-- /middle-content -->
-      </div><!-- /middle-container -->
-    </div><!-- /middle-section -->
+        </div>
+      </div>
+    </div><!-- /middle-content -->
   </div><!-- /middle -->
 </div><!-- /wrap -->

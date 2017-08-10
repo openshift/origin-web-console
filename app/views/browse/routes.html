@@ -1,115 +1,109 @@
 <project-page>
-
-  <!-- Middle section -->
-  <div class="middle-section">
-    <div class="middle-container">
-      <div class="middle-header header-toolbar">
-        <div class="container-fluid">
-          <div class="page-header page-header-bleed-right page-header-bleed-left">
-            <div class="pull-right" ng-if="project && ('routes' | canI : 'create')">
-              <a ng-href="project/{{project.metadata.name}}/create-route" class="btn btn-default">Create Route</a>
-            </div>
-            <h1>
-              Routes
-              <span class="page-header-link">
-                <a ng-href="{{'routes' | helpLink}}" target="_blank">
-                  Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
-                </a>
-              </span>
-            </h1>
-          </div>
-          <div ng-if="!renderOptions.showGetStarted" class="data-toolbar">
-            <div class="data-toolbar-filter">
-              <project-filter></project-filter>
-            </div>
-          </div>
+  <div class="middle-header header-toolbar">
+    <div class="container-fluid">
+      <div class="page-header page-header-bleed-right page-header-bleed-left">
+        <div class="pull-right" ng-if="project && ('routes' | canI : 'create')">
+          <a ng-href="project/{{project.metadata.name}}/create-route" class="btn btn-default">Create Route</a>
         </div>
-      </div><!-- /middle-header-->
-      <div class="middle-content">
-        <div class="container-fluid">
-          <alerts alerts="alerts"></alerts>
-          <div class="row">
-            <div class="col-md-12">
-              <table class="table table-bordered table-hover table-mobile table-layout-fixed">
-                <colgroup>
-                  <col class="col-sm-3">
-                  <col class="col-sm-3">
-                  <col class="col-sm-2">
-                  <col class="col-sm-2">
-                  <col class="col-sm-2">
-                </colgroup>
-                <thead>
-                  <tr>
-                    <th>{{customNameHeader || 'Name'}}</th>
-                    <th>Hostname</th>
-                    <!--
-                      Right now only services are supported. If other types are
-                      added, we'll need to change the table header.
-                     -->
-                    <th>Service</th>
-                    <th>Target Port</th>
-                    <th>TLS Termination</th>
-                  </tr>
-                </thead>
-                <tbody ng-if="(routes | hashSize) == 0">
-                  <tr><td colspan="5"><em>{{emptyMessage}}</em></td></tr>
-                </tbody>
-                <tbody ng-if="(routes | hashSize) > 0">
-                  <tr ng-repeat="route in routes | orderObjectsByDate : true">
-                    <td data-title="{{ customNameHeader || 'Name' }}">
-                      <a href="{{route | navigateResourceURL}}">{{route.metadata.name}}</a>
-                      <route-warnings ng-if="route.spec.to.kind !== 'Service' || services"
-                                      route="route"
-                                      services="services">
-                      </route-warnings>
-                    </td>
-                    <td data-title="Hostname">
-                      <span ng-if="(route | isWebRoute)">
-                        <a href="{{route | routeWebURL}}" target="_blank">
-                          {{route | routeLabel}}
-                          <i class="fa fa-external-link" aria-hidden="true"></i>
-                        </a>
-                      </span>
-                      <span ng-if="!(route | isWebRoute)">
-                        {{route | routeLabel}}
-                      </span>
-                      <span ng-if="!route.status.ingress" data-toggle="popover" data-trigger="hover" data-content="The route is not accepting traffic yet because it has not been admitted by a router." style="cursor: help; padding-left: 5px;">
-                        <status-icon status="'Pending'"></status-icon>
-                        <span class="sr-only">Pending</span>
-                      </span>
-                    </td>
-                    <!--
-                      Right now only services are supported. If other types are
-                      added, we'll need to change the table header.
-                     -->
-                    <td data-title="Service">
-                      <span ng-if="route.spec.to.kind !== 'Service'">{{route.spec.to.kind}}: {{route.spec.to.name}}</span>
-                      <span ng-if="route.spec.to.kind === 'Service'"><a ng-href="{{route.spec.to.name | navigateResourceURL : 'Service': route.metadata.namespace}}">{{route.spec.to.name}}</a></span>
-                    </td>
-                    <!-- Add non-breaking space to empty cells. Otherwise, table-mobile layout is broken. -->
-                    <td data-title="Target Port">
-                      <span ng-if="route.spec.port.targetPort">
-                        <span ng-if="route.spec.to.kind !== 'Service'">{{route.spec.port.targetPort}}</span>
-                        <!-- Show the short display port in the table, but the long in the title attr. -->
-                        <span ng-if="route.spec.to.kind === 'Service'"
-                              ng-attr-title="{{route | routeTargetPortMapping : services[route.spec.to.name]}}">
-                          {{route.spec.port.targetPort}}
-                        </span>
-                      </span>
-                      <span ng-if="!route.spec.port.targetPort">&nbsp;</span>
-                    </td>
-                    <!-- Use shorter Termination title for table-mobile to avoid overlapping text. -->
-                    <td data-title="Termination">
-                      {{route.spec.tls.termination | humanizeTLSTermination}}
-                      <span ng-if="!route.spec.tls.termination">&nbsp;</span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div><!-- /col-* -->
-          </div>
+        <h1>
+          Routes
+          <span class="page-header-link">
+            <a ng-href="{{'routes' | helpLink}}" target="_blank">
+              Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
+            </a>
+          </span>
+        </h1>
+      </div>
+      <div ng-if="!renderOptions.showGetStarted" class="data-toolbar">
+        <div class="data-toolbar-filter">
+          <project-filter></project-filter>
         </div>
-      </div><!-- /middle-content -->
-    </div><!-- /middle-container -->
-  </div><!-- /middle-section -->
+      </div>
+    </div>
+  </div><!-- /middle-header-->
+  <div class="middle-content">
+    <div class="container-fluid">
+      <alerts alerts="alerts"></alerts>
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table table-bordered table-hover table-mobile table-layout-fixed">
+            <colgroup>
+              <col class="col-sm-3">
+              <col class="col-sm-3">
+              <col class="col-sm-2">
+              <col class="col-sm-2">
+              <col class="col-sm-2">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>{{customNameHeader || 'Name'}}</th>
+                <th>Hostname</th>
+                <!--
+                  Right now only services are supported. If other types are
+                  added, we'll need to change the table header.
+                 -->
+                <th>Service</th>
+                <th>Target Port</th>
+                <th>TLS Termination</th>
+              </tr>
+            </thead>
+            <tbody ng-if="(routes | hashSize) == 0">
+              <tr><td colspan="5"><em>{{emptyMessage}}</em></td></tr>
+            </tbody>
+            <tbody ng-if="(routes | hashSize) > 0">
+              <tr ng-repeat="route in routes | orderObjectsByDate : true">
+                <td data-title="{{ customNameHeader || 'Name' }}">
+                  <a href="{{route | navigateResourceURL}}">{{route.metadata.name}}</a>
+                  <route-warnings ng-if="route.spec.to.kind !== 'Service' || services"
+                                  route="route"
+                                  services="services">
+                  </route-warnings>
+                </td>
+                <td data-title="Hostname">
+                  <span ng-if="(route | isWebRoute)">
+                    <a href="{{route | routeWebURL}}" target="_blank">
+                      {{route | routeLabel}}
+                      <i class="fa fa-external-link" aria-hidden="true"></i>
+                    </a>
+                  </span>
+                  <span ng-if="!(route | isWebRoute)">
+                    {{route | routeLabel}}
+                  </span>
+                  <span ng-if="!route.status.ingress" data-toggle="popover" data-trigger="hover" data-content="The route is not accepting traffic yet because it has not been admitted by a router." style="cursor: help; padding-left: 5px;">
+                    <status-icon status="'Pending'"></status-icon>
+                    <span class="sr-only">Pending</span>
+                  </span>
+                </td>
+                <!--
+                  Right now only services are supported. If other types are
+                  added, we'll need to change the table header.
+                 -->
+                <td data-title="Service">
+                  <span ng-if="route.spec.to.kind !== 'Service'">{{route.spec.to.kind}}: {{route.spec.to.name}}</span>
+                  <span ng-if="route.spec.to.kind === 'Service'"><a ng-href="{{route.spec.to.name | navigateResourceURL : 'Service': route.metadata.namespace}}">{{route.spec.to.name}}</a></span>
+                </td>
+                <!-- Add non-breaking space to empty cells. Otherwise, table-mobile layout is broken. -->
+                <td data-title="Target Port">
+                  <span ng-if="route.spec.port.targetPort">
+                    <span ng-if="route.spec.to.kind !== 'Service'">{{route.spec.port.targetPort}}</span>
+                    <!-- Show the short display port in the table, but the long in the title attr. -->
+                    <span ng-if="route.spec.to.kind === 'Service'"
+                          ng-attr-title="{{route | routeTargetPortMapping : services[route.spec.to.name]}}">
+                      {{route.spec.port.targetPort}}
+                    </span>
+                  </span>
+                  <span ng-if="!route.spec.port.targetPort">&nbsp;</span>
+                </td>
+                <!-- Use shorter Termination title for table-mobile to avoid overlapping text. -->
+                <td data-title="Termination">
+                  {{route.spec.tls.termination | humanizeTLSTermination}}
+                  <span ng-if="!route.spec.tls.termination">&nbsp;</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div><!-- /col-* -->
+      </div>
+    </div>
+  </div><!-- /middle-content -->
 </project-page>

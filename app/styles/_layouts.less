@@ -22,6 +22,10 @@ html,body {
   }
 }
 
+.layout-pf-alt-fixed .tech-preview & {
+  // top: @tech-preview-banner-height;
+}
+
 .console-os {
   background-color: @body-bg;
   &.tech-preview .top-header {
@@ -33,16 +37,17 @@ html,body {
 
   }
   .chromeless {
-    // prevent chromeless log-viewer from having margin or padding
+    // Prevent chromeless log-viewer from having margin or padding
     .middle-content,
     .middle-header {
       margin:0 !important;
       padding:0 !important;
     }
   }
-  .wrap {
-    height: calc(100vh ~"-" (@navbar-vertical-height-tall + @project-bar-height-desktop));
-  }
+  // .console-os .no-sidebar .middle-content > .container {
+  //   height: 100%;
+  //   min-height: calc(100vh ~"-" (@navbar-vertical-height-tall + @project-bar-height-desktop));
+  // }
   // .wrap {
   //   display: flex;
   //   flex-direction: column;
@@ -52,15 +57,6 @@ html,body {
   //   position:relative;
   //   width:100%;
   //   .backface-visibility(hidden);
-  //   &.no-sidebar {
-  //     .surface-shaded;
-  //       h1 {
-  //         margin: 10px 0 20px;
-  //       }
-  //     .middle {
-  //       padding-top: 30px;
-  //     }
-  //   }
   // }
   // .sidebar-left,.middle,.sidebar-right {
   //   flex: 0 0 auto;
@@ -81,33 +77,28 @@ html,body {
     background-color: @panel-light;
     display: none;
   }
-  // .middle {
-  //   height: 100%; // full height at mobile
-  //   .middle-section {
-  //     position: absolute;
-  //     top: 0;
-  //     left: 0;
-  //     height: 100%;
-  //     width: 100%;
-  //     .middle-container {
-  //       display: flex;
-  //       flex-direction: column;
-  //       height: 100%;
-  //       .middle-header {
-  //         flex: 0 0 auto;
-  //         margin-bottom: @grid-gutter-width / 2;
-  //       }
-  //       .middle-content {
-  //         flex: 1 1 auto;
-  //         position: relative;
-  //         width: 100%;
-  //       }
-  //     }
-  //   }
-  // }
   .no-sidebar .middle-content > .container {
     // reduce 20px to account for tile bottom margin
     padding-bottom: (@middle-content-bottom-margin - 20px);
+  }
+  // Makes container extend full height for pages with bg color
+  .wrap {
+    height: 100%;
+    .middle-content {
+      > .container {
+        height: 100%;
+        min-height: calc(100vh ~"-" (@navbar-vertical-height-tall + @project-bar-height-desktop));
+      }
+    }
+    &.no-sidebar {
+      .surface-shaded;
+      h1 {
+        margin: 10px 0 20px;
+      }
+      .middle {
+        padding-top: 30px;
+      }
+    }
   }
 }
 .header-toolbar {
@@ -136,12 +127,6 @@ html,body {
         padding-top: @navbar-os-header-desktop + @tech-preview-banner-height; /* top offset height */
       }
     }
-    // .wrap {
-    //   flex-direction: row;
-    //   margin-top: -@navbar-os-header-desktop; /* top offset height */
-    //   overflow: hidden;
-    //   padding-top: @navbar-os-header-desktop; /* top offset height */
-    // }
     .top-header {
       height: @navbar-os-header-desktop; /* top offset height */
     }
@@ -149,20 +134,6 @@ html,body {
       height: 100%;
       -webkit-overflow-scrolling:touch;
     }
-    // .sidebar-left {
-    //   flex: 0 0 @sidebar-left-width-md;
-    //   overflow-y: visible;
-    // }
-    // .middle{
-    //   flex: 1 1 0%;
-    //   position: relative;
-    //   // make scrollable
-    //   overflow-x: hidden;
-    //   overflow-y: auto;
-    //   &.landing-page {
-    //     -webkit-overflow-scrolling: auto;  // resolves iOS bug where .landing-search-area and .landing-side-bar disappear
-    //   }
-    // }
     .show-sidebar-right {
       .sidebar-right {
         display: block;
@@ -191,32 +162,6 @@ html,body {
       }
     }
   }
-  // scrollable panels within sections
-  // ---------------------------------
-  // .middle-section {
-  //   .middle-container {
-  //     align-items: flex-start;
-  //     bottom: 0;
-  //     display: flex;
-  //     flex-direction: column;
-  //     flex-wrap: nowrap;
-  //     height: 100%;
-  //     justify-content: flex-start;
-  //     left: 0;
-  //     position: absolute;
-  //     right: 0;
-  //     top: 0;
-  //     .middle-header {
-  //       flex: 0 0 auto;
-  //       width: 100%;
-  //     }
-  //     .middle-content {
-  //       flex: 1 1 auto;
-  //       position: relative;
-  //       width: 100%;
-  //     }
-  //   }
-  // }
   .right-section {
     position: absolute;
     top: 0;
@@ -250,58 +195,3 @@ html,body {
     }
   }
 }
-
-
-// @media (min-width: @screen-md-min) {
-//   .console-os {
-//     .middle .container-fluid {
-//       // At wide view increase the space between middle container and sidebar-left/right, by setting its padding to 30px instead of the bootstrap 20px default
-//       padding-left: @middle-content-container-padding-lg;
-//       padding-right: @middle-content-container-padding-lg;
-//     }
-//     .sidebar-right {
-//       flex: 0 0 @sidebar-right-width-md;
-//       .right-section {
-//         width: @sidebar-right-width-md;
-//       }
-//     }
-//   }
-// }
-
-// @media (min-width: @screen-lg-min) {
-//   .console-os {
-//     .sidebar-left {
-//       flex: 0 0 @sidebar-left-width-md;
-//       .navbar-sidebar {
-//         width: @sidebar-left-width-md;
-//       }
-//     }
-//     .wrap.show-sidebar-right {
-//       .sidebar-right {
-//         flex: 0 0 @sidebar-right-width-lg;
-//         .right-section {
-//           width: @sidebar-right-width-lg;
-//         }
-//       }
-//     }
-//   }
-// }
-
-// @media (min-width: @screen-xl-min) {
-//   .console-os {
-//     .sidebar-left {
-//       flex: 0 0 @sidebar-left-width-lg;
-//       .navbar-sidebar {
-//         width: @sidebar-left-width-lg;
-//       }
-//     }
-//     .wrap.show-sidebar-right {
-//       .sidebar-right {
-//         flex: 0 0 @sidebar-right-width-xlg;
-//         .right-section {
-//           width: @sidebar-right-width-xlg;
-//         }
-//       }
-//     }
-//   }
-// }
