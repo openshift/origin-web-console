@@ -214,8 +214,9 @@ angular.module('openshiftConsole')
             return;
           }
 
-          // Check if the user can add to project after switching projects.
           if (projectName) {
+            $('body').addClass('has-project-bar');
+            // Check if the user can add to project after switching projects.
             // Assume false until the request completes.
             $scope.canIAddToProject = false;
             // Make sure we have project rules before we check canIAddToProject or we get the wrong value.
@@ -229,6 +230,8 @@ angular.module('openshiftConsole')
 
               $scope.canIAddToProject = AuthorizationService.canIAddToProject(projectName);
             });
+          } else {
+            $('body').removeClass('has-project-bar');
           }
 
           // TODO: relist projects? Probably better not to for cluster admins
