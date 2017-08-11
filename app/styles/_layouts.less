@@ -5,37 +5,40 @@ html,body {
   margin:0;
   padding:0;
 }
-
 .layout-pf.layout-pf-fixed body {
+  padding-top: @navbar-os-header-mobile;
+  @media(min-width: @screen-sm-min) {
+    padding-top: @navbar-os-header-desktop;
+  }
   &.has-project-bar {
-    padding-top: (@navbar-vertical-height-short + @project-bar-height-mobile);
-    @media(min-width: @screen-xs-max) {
-      padding-top: (@navbar-vertical-height-tall + @project-bar-height-desktop); // offset of .nav-pf-vertical - border-top
+    padding-top: (@navbar-os-header-mobile + @project-bar-height-mobile);
+    @media(min-width: @screen-sm-min) {
+      padding-top: (@navbar-os-header-desktop + @project-bar-height-desktop);
     }
   }
 }
-
 .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical {
   padding-left: 0;
   padding-right: 0;
   position: relative;
+  @media(max-width: @screen-xs-max) {
+    // Remove left margin for mobile nav. The menu opens over the content.
+    margin-left: 0;
+  }
   &.collapsed {
     margin-left: 75px;
   }
+  .middle-header {
+    margin-bottom: @grid-gutter-width / 2;
+  }
 }
-
 .layout-pf-fixed .tech-preview & {
   // top: @tech-preview-banner-height;
 }
-
 .console-os {
   background-color: @body-bg;
   &.tech-preview .top-header {
     height: @navbar-os-header-mobile + @tech-preview-banner-height;
-  }
-  .top-header {
-    position: relative;
-    height: @navbar-os-header-mobile;
   }
   .chromeless {
     // Prevent chromeless log-viewer from having margin or padding
@@ -45,23 +48,9 @@ html,body {
       padding:0 !important;
     }
   }
-  .sidebar-left {
-    background: @sidebar-os-bg;
-    padding: 0;
-    position:relative;
-    @media (max-width: @screen-xs-max) {
-      border-top: 0;
-      padding-left: 0;
-      padding-right: 0;
-    }
-  }
-  .sidebar-right {
-    background-color: @panel-light;
-    display: none;
-  }
-  .no-sidebar .middle-content > .container {
-    // reduce 20px to account for tile bottom margin
-    padding-bottom: (@middle-content-bottom-margin - 20px);
+  .top-header {
+    position: relative;
+    height: @navbar-os-header-mobile;
   }
   .wrap {
     height: 100%;
@@ -69,16 +58,25 @@ html,body {
     .middle-content {
       > .container {
         height: 100%;
-        min-height: calc(100vh ~"-" (@navbar-vertical-height-tall + @project-bar-height-desktop));
+        min-height: calc(100vh ~"-" @navbar-os-header-mobile);
+        @media(min-width: @screen-sm-min) {
+          min-height: calc(100vh ~"-" @navbar-os-header-desktop);
+        }
       }
     }
     &.no-sidebar {
-      .surface-shaded;
+      // .surface-shaded;
       h1 {
         margin: 10px 0 20px;
       }
-      .middle {
-        padding-top: 30px;
+      .nav-pf-vertical {
+        top: @navbar-os-header-mobile;
+        .nav-vertical-primary {
+          display: none;
+        }
+        @media(min-width: @screen-sm-min) {
+          display: none;
+        }
       }
     }
   }
@@ -86,19 +84,12 @@ html,body {
 .header-toolbar {
   background-color: @panel-light;
   border-bottom: 1px solid @page-header-border-color;
-  margin-bottom: @grid-gutter-width / 2;
 }
 .surface-shaded {
   background-color: @panel-shaded;
 }
 
 @media (min-width: @screen-sm-min) {
-  .layout-pf-alt-fixed .nav-pf-vertical-alt {
-    position: fixed;
-    bottom:0;
-    overflow: visible;
-    /* width: inherit; used if parent is using width: can't use 100% or auto */
-  }
   .console-os {
     &.tech-preview {
       .top-header {
@@ -111,69 +102,6 @@ html,body {
     }
     .top-header {
       height: @navbar-os-header-desktop; /* top offset height */
-    }
-    .sidebar-left,.middle,.sidebar-right {
-      height: 100%;
-      -webkit-overflow-scrolling:touch;
-    }
-    .show-sidebar-right {
-      .sidebar-right {
-        display: block;
-        .dl-horizontal {
-          margin: 0 0 @line-height-computed;
-          dt {
-            text-align: left;
-          }
-          dd {
-            .word-break();
-          }
-        }
-        .sidebar-help {
-          color: @gray-light;
-        }
-      }
-    }
-    .sidebar-right {
-      border-left: 1px solid #dadada;
-      flex: 0 0 @sidebar-right-width-sm;
-      position: relative;
-    }
-    .no-sidebar {
-      .sidebar-left {
-        display: none !important;
-      }
-    }
-  }
-  .right-section {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: @sidebar-right-width-sm;
-    height: 100%;
-    .right-container {
-      align-items: flex-start;
-      bottom: 0;
-      display: flex;
-      flex-direction: column;
-      flex-wrap: nowrap;
-      justify-content: flex-start;
-      height: 100%;
-      left: 0;
-      overflow: hidden;
-      position: absolute;
-      right: 0;
-      top: 0;
-      .right-header  {
-        flex: 0 0 auto;
-        width: 100%;
-      }
-      .right-content {
-        flex: 1 1 auto;
-        position: relative;
-        overflow-x: hidden;
-        overflow-y: auto;
-        width: 100%;
-      }
     }
   }
 }

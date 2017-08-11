@@ -2,16 +2,9 @@
 //  Vertical nav (Sidebar left)
 //  -----------------------------------------------
 
-@media(max-width: @screen-xs-max) {
-  .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical {
-    // Remove left margin for mobile nav. The menu opens over the content.
-    margin-left: 0;
-  }
-}
-
 .nav-pf-vertical {
   background-color: @nav-pf-vertical-bg-color;
-  top: (@project-bar-height-mobile + @navbar-os-header-mobile - 1px); // subtract for 1px border
+  top: (@project-bar-height-mobile + @navbar-os-header-mobile);
   z-index: 990;
   @media(min-width: @screen-sm-min) {
     top: (@project-bar-height-desktop + @navbar-os-header-desktop);
@@ -27,16 +20,24 @@
       top: 0px;
       width: 100%;
     }
-    &:first-child {
-      border-top: inherit;
-    }
-    &.active:hover {
-      border-top-color: @nav-pf-vertical-border-inset-color;
-    }
     &.active > a,
+    &:focus > a,
     &:hover > a {
       background-color: @nav-pf-vertical-secondary-bg-color;
       font-weight: 300;
+    }
+    &:focus > a,
+    &:hover > a {
+      .pficon,
+      .fa {
+        color: @sidebar-os-icon-hover-color;
+      }
+    }
+    &.active > a {
+      .pficon,
+      .fa {
+        color: @nav-pf-vertical-active-icon-color;
+      }
     }
     > a,
     > a:focus {
@@ -46,9 +47,7 @@
       @media(max-width: @screen-xs-max) {
         height: auto;
         padding: 10px 15px;
-
       }
-
       // remove margin from icon that causes shifting when toggled
       .fa, .pficon {
         font-size: (@font-size-base + 2);
@@ -57,10 +56,9 @@
           font-size: (@font-size-base + 5);
         }
       }
-      // add margin between icon and text and align verticaly
       .list-group-item-value {
-        line-height: 26px;
         margin-left: 10px;
+        text-decoration: none !important;
       }
     }
   }
@@ -68,7 +66,7 @@
     .list-group-item.secondary-nav-item-pf:hover,
     .list-group-item.secondary-nav-item-pf.active {
       > a:after {
-        right: 12px !important; // prevent arrow moving onHover
+        right: 12px !important; // prevent arrow moving onHover due to pf rules
       }
     }
     .nav-pf-secondary-nav {
@@ -77,10 +75,11 @@
   }
   .nav-pf-secondary-nav {
     background: @nav-pf-vertical-secondary-bg-color;
-    border-left: 1px solid @nav-pf-vertical-border-color;
+    border-left: 0;
     border-right: 1px solid @nav-pf-vertical-border-color;
     top: (@project-bar-height-mobile + @navbar-os-header-mobile - 1); // adjust for 1px border
     @media(min-width: @screen-sm-min) {
+      border-left: 1px solid @nav-pf-vertical-border-color;
       top: (@project-bar-height-desktop + @navbar-os-header-desktop);
     }
     .list-group-item {
@@ -103,7 +102,10 @@
     }
   }
   .list-group-item.secondary-nav-item-pf {
-    // right arrow adjustments
+    &:hover > a:after {
+      color: @sidebar-os-icon-hover-color;
+    }
+    // right arrow alignment
     > a:after {
       font-size: 14px;
       top: initial;

@@ -4,23 +4,11 @@
 
 .navbar-pf-vertical {
   background-color: @navbar-os-bg-color;
+  border-bottom: 1px solid @project-bar-border-color;
   border-top: none;
   min-height: initial;
   @media(min-width: @screen-xs-max) {
     padding-left: 20px;
-  }
-  .dropdown-menu:after {
-    border:6px solid transparent;
-    border-bottom-color:#fff;
-    border-top-width:0;
-    content:"";
-    display:block;
-    height:0;
-    position:absolute;
-    right:10px;
-    top:-6px;
-    vertical-align:middle;
-    width:0;
   }
   .navbar-brand {
     padding: 8px 0;
