@@ -7,9 +7,11 @@ html,body {
 }
 
 .layout-pf.layout-pf-fixed body {
-  padding-top: (@navbar-vertical-height-short + @project-bar-height-mobile);
-  @media(min-width: @screen-xs-max) {
-    padding-top: (@navbar-vertical-height-tall + @project-bar-height-desktop); // offset of .nav-pf-vertical - border-top
+  &.has-project-bar {
+    padding-top: (@navbar-vertical-height-short + @project-bar-height-mobile);
+    @media(min-width: @screen-xs-max) {
+      padding-top: (@navbar-vertical-height-tall + @project-bar-height-desktop); // offset of .nav-pf-vertical - border-top
+    }
   }
 }
 
@@ -22,7 +24,7 @@ html,body {
   }
 }
 
-.layout-pf-alt-fixed .tech-preview & {
+.layout-pf-fixed .tech-preview & {
   // top: @tech-preview-banner-height;
 }
 
@@ -34,7 +36,6 @@ html,body {
   .top-header {
     position: relative;
     height: @navbar-os-header-mobile;
-
   }
   .chromeless {
     // Prevent chromeless log-viewer from having margin or padding
@@ -44,25 +45,6 @@ html,body {
       padding:0 !important;
     }
   }
-  // .console-os .no-sidebar .middle-content > .container {
-  //   height: 100%;
-  //   min-height: calc(100vh ~"-" (@navbar-vertical-height-tall + @project-bar-height-desktop));
-  // }
-  // .wrap {
-  //   display: flex;
-  //   flex-direction: column;
-  //   height:100vh;
-  //   margin-top:-@navbar-os-header-mobile; /* top offset height */
-  //   padding-top:@navbar-os-header-mobile; /* top offset height */
-  //   position:relative;
-  //   width:100%;
-  //   .backface-visibility(hidden);
-  // }
-  // .sidebar-left,.middle,.sidebar-right {
-  //   flex: 0 0 auto;
-  //   width: 100%;
-  //   position: relative;
-  // }
   .sidebar-left {
     background: @sidebar-os-bg;
     padding: 0;
@@ -81,9 +63,9 @@ html,body {
     // reduce 20px to account for tile bottom margin
     padding-bottom: (@middle-content-bottom-margin - 20px);
   }
-  // Makes container extend full height for pages with bg color
   .wrap {
     height: 100%;
+    // Makes container extend full height for pages with bg color
     .middle-content {
       > .container {
         height: 100%;
