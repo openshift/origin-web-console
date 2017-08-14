@@ -1,15 +1,15 @@
 <ul class="nav navbar-nav navbar-right navbar-iconic">
-  <li>
-    <notification-counter></notification-counter>
-  </li>
   <li
     extension-point
     extension-name="nav-system-status"
     extension-types="dom"></li>
 
+  <notification-counter ng-hide="chromeless"></notification-counter>
+
   <li ng-if="launcherApps.length > 0">
     <pf-application-launcher items="launcherApps" is-list="true"></pf-application-launcher>
   </li>
+
 
   <li uib-dropdown>
     <a uib-dropdown-toggle class="nav-item-iconic" id="help-dropdown" href="">
@@ -25,7 +25,7 @@
   </li>
   <li uib-dropdown ng-cloak ng-if="user">
     <a href="" uib-dropdown-toggle id="user-dropdown" class="nav-item-iconic">
-      <span class="pf-icon pficon-user" aria-hidden="true"></span>
+      <span class="fa pf-icon pficon-user" aria-hidden="true"></span>
       <span class="username truncate">{{user.fullName || user.metadata.name}}</span> <span class="caret" aria-hidden="true"></span>
     </a>
 

@@ -36,10 +36,6 @@ angular.module("openshiftConsole")
 
     $scope.breadcrumbs = [
       {
-        title: $scope.projectName,
-        link: "project/" + $scope.projectName
-      },
-      {
         title: "Add to Project",
         link: "project/" + $scope.projectName + "/create"
       },
@@ -56,8 +52,6 @@ angular.module("openshiftConsole")
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
-        // Update project breadcrumb with display name.
-        $scope.breadcrumbs[0].title = $filter('displayName')(project);
         watches.push(DataService.watch("buildconfigs", context, function(buildconfigs) {
           $scope.buildConfigs = buildconfigs.by("metadata.name");
           $scope.createdBuildConfig = $scope.buildConfigs[$routeParams.name];

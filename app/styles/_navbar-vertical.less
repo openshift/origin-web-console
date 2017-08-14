@@ -1,0 +1,116 @@
+//
+//  Navigation Bar for use with vertical navigation
+//  -----------------------------------------------
+
+#header-logo {
+  background-image: url('@{image-path}/logo-origin-thin.svg');
+  background-position: left center;
+  background-repeat: no-repeat;
+  // Max logo dimensions width 196px / height 40px
+  height: @navbar-os-header-height-mobile - 1; // 1px border-bottom on navbar-os-mobile
+  width: 196px;
+  @media(min-width: @screen-sm-min) {
+    // Max logo dimensions width 230px / height 40px
+    width: 230px;
+  }
+}
+
+.navbar-pf-vertical {
+  background-color: @navbar-os-bg-color;
+  border-bottom: 1px solid @project-bar-border-color;
+  border-top: none;
+  min-height: 0;
+  @media(min-width: @screen-xs-max) {
+    padding-left: 20px;
+  }
+  .dropdown-menu:after {
+    border: 6px solid transparent;
+    border-bottom-color: #fff;
+    border-top-width: 0;
+    content: "";
+    display: block;
+    height: 0;
+    position: absolute;
+    right: 9px;
+    top: -6px;
+    vertical-align: middle;
+    width: 0;
+  }
+  .layout-pf-fixed .tech-preview & {
+    top: @tech-preview-banner-height;
+  }
+  .navbar-brand {
+    padding: 0;
+    @media(min-width: @screen-sm-min) {
+      padding-bottom: 10px;
+      padding-top: 10px;
+    }
+  }
+  .navbar-header {
+    float: left;
+  }
+  .navbar-iconic {
+    display: flex;
+    float: right;
+    margin: 0;
+    @media(min-width: @screen-sm-min) {
+      margin-right: @navbar-header-right-margin;
+    }
+    .badge {
+      margin: 0 !important;
+      position: absolute;
+      top: 9px;
+      right: 13px;
+      @media(min-width: @screen-sm-min) {
+        top: 20px;
+      }
+    }
+
+    .drawer-pf-trigger {
+      display: inline-block; // workaround for Safari bug
+      a {
+        display: block;
+      }
+    }
+    .dropdown .nav-item-iconic {
+      padding-right: 20px;
+    }
+    > li {
+      display: none;
+      @media(min-width: @screen-sm-min) {
+        display: inline-block; // workaround for Safari bug
+      }
+    }
+    .nav-item-iconic {
+      line-height: normal; // align text and icon
+      padding-right: 15px;
+      @media(max-width: @screen-xs-max) {
+        padding: 10px 15px 10px 5px;
+      }
+      .username {
+        display: inline-block;
+        font-weight: 300;
+        max-width: 170px; // enable truncation
+        padding-right: 2px;
+        vertical-align: top; // align text and icon
+      }
+    }
+  }
+  .navbar-toggle {
+    margin: 4px 5px;
+    .icon-bar {
+      width: 20px;
+    }
+    @media(min-width: @screen-sm-min) {
+      margin: 13px 15px;
+      .icon-bar {
+        width: 22px;
+      }
+    }
+  }
+}
+
+.navbar-toggle:focus {
+  color: @navbar-pf-vertical-navbar-toggle-icon-bar-hover-bg; // for Firefox outline
+  .tab-focus();
+}

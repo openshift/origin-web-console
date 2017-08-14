@@ -1,131 +1,124 @@
-<project-header class="top-header"></project-header>
-<project-page>
-
-<!-- Middle section -->
-<div class="middle-section">
-  <div class="middle-container">
-    <div class="middle-header">
-      <div class="container-fluid">
-        <div class="page-header page-header-bleed-right page-header-bleed-left">
-          <h1>
-            Pipelines
-            <span class="page-header-link">
-              <a ng-href="{{'pipeline-builds' | helpLink}}" target="_blank">
-                Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
-              </a>
-            </span>
-          </h1>
-        </div>
+<div class="middle">
+  <div class="middle-header">
+    <div class="container-fluid">
+      <div class="page-header page-header-bleed-right page-header-bleed-left">
+        <h1>
+          Pipelines
+          <span class="page-header-link">
+            <a ng-href="{{'pipeline-builds' | helpLink}}" target="_blank">
+              Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
+            </a>
+          </span>
+        </h1>
       </div>
     </div>
-    <div class="middle-content pipelines-page">
-      <div class="container-fluid">
-        <alerts alerts="alerts"></alerts>
-        <div class="row">
-          <div class="col-md-12">
-            <div ng-if="!(buildConfigs | hashSize)" class="mar-top-lg">
-              <div ng-if="!buildConfigsLoaded">
-                Loading...
-              </div>
-              <div ng-if="buildConfigsLoaded" class="empty-state-message text-center">
-                <h2>No pipelines.</h2>
-                <div ng-if="project.metadata.name | canIAddToProject">
-                  <p>
-                    No pipelines have been added to project {{projectName}}.
-                    <br>
-                    Learn more about
-                    <a ng-href="{{ 'pipeline-builds' | helpLink}}" target="_blank">Pipeline Builds</a>
-                    and the
-                    <a ng-href="{{ 'pipeline-plugin' | helpLink}}" target="_blank">OpenShift Pipeline Plugin</a>.
-                  </p>
-                  <p ng-if="(project.metadata.name | canIAddToProject) && createSampleURL">
-                    <a ng-href="{{createSampleURL}}" class="btn btn-lg btn-primary">
-                      Create Sample Pipeline
-                    </a>
-                  </p>
-                </div>
-                <div ng-if="!(project.metadata.name | canIAddToProject)">
-                  <ng-include src="'views/_request-access.html'"></ng-include>
-                </div>
-              </div>
+  </div>
+  <div class="middle-content pipelines-page">
+    <div class="container-fluid">
+      <alerts alerts="alerts"></alerts>
+      <div class="row">
+        <div class="col-md-12">
+          <div ng-if="!(buildConfigs | hashSize)" class="mar-top-lg">
+            <div ng-if="!buildConfigsLoaded">
+              Loading...
             </div>
-            <div ng-repeat="(buildConfigName, buildConfig) in buildConfigs"
-                 ng-if="!buildConfig || (buildConfig | isJenkinsPipelineStrategy)"
-                 class="animate-repeat">
-              <div ng-if="buildConfig">
-                <div class="pull-right">
-                  <button
-                      class="btn btn-default"
-                      ng-if="'buildconfigs/instantiate' | canI : 'create'"
-                      ng-click="startBuild(buildConfig)">
-                    Start Pipeline
-                  </button>
-                </div>
-                <h2 class="mar-top-none">
-                  <a ng-href="{{buildConfig | navigateResourceURL}}">{{buildConfigName}}</a>
-                  <small>created <span am-time-ago="buildConfig.metadata.creationTimestamp"></span></small>
-                </h2>
-                <div ng-if="buildConfig.spec.source.git.uri">
-                  Source Repository:
-                  <span class="word-break" ng-if="buildConfigs[buildConfigName].spec.source.type == 'Git'" ><osc-git-link
-                        uri="buildConfigs[buildConfigName].spec.source.git.uri"
-                        ref="buildConfigs[buildConfigName].spec.source.git.ref"
-                        context-dir="buildConfigs[buildConfigName].spec.source.contextDir">{{buildConfigs[buildConfigName].spec.source.git.uri}}</osc-git-link></span>
-                </div>
-              </div>
-              <!-- Handle missing build configs -->
-              <div ng-if="!buildConfig">
-                <h2>{{buildConfigName}}</h2>
-                <!-- Only show the alert once the build configs have loaded to avoid flicker if builds load first. -->
-                <div ng-if="buildConfigsLoaded" class="alert alert-warning">
-                  <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-                  <span class="sr-only">Warning:</span>
-                  Build config <strong>{{buildConfigName}}</strong> no longer exists.
-                </div>
-              </div>
-              <div ng-if="buildsLoaded && !(interestingBuildsByConfig[buildConfigName] | hashSize)">
-                <p class="mar-bottom-xxl">
-                  No pipeline builds have run for {{buildConfigName}}.
-                  <span ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile">
-                    View the <a ng-href="{{(buildConfig | navigateResourceURL) + '?tab=configuration'}}">Jenkinsfile</a> to see what stages will run.
-                  </span>
-                  <span ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath">
-                    View the file <code>{{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</code> in the
-                    <a ng-if="buildConfig | jenkinsfileLink" ng-href="buildConfig | jenkinsfileLink">source repository</a>
-                    <span ng-if="!(buildConfig | jenkinsfileLink)">source repository</span>
-                    to see what stages will run.
-                  </span>
+            <div ng-if="buildConfigsLoaded" class="empty-state-message text-center">
+              <h2>No pipelines.</h2>
+              <div ng-if="project.metadata.name | canIAddToProject">
+                <p>
+                  No pipelines have been added to project {{projectName}}.
+                  <br>
+                  Learn more about
+                  <a ng-href="{{ 'pipeline-builds' | helpLink}}" target="_blank">Pipeline Builds</a>
+                  and the
+                  <a ng-href="{{ 'pipeline-plugin' | helpLink}}" target="_blank">OpenShift Pipeline Plugin</a>.
+                </p>
+                <p ng-if="(project.metadata.name | canIAddToProject) && createSampleURL">
+                  <a ng-href="{{createSampleURL}}" class="btn btn-lg btn-primary">
+                    Create Sample Pipeline
+                  </a>
                 </p>
               </div>
-              <div ng-if="interestingBuildsByConfig[buildConfigName] | hashSize">
-                <div ng-if="!(statsByConfig[buildConfigName].avgDuration | isNil)" class="hidden-xs pull-right text-muted">
-                  Average Duration:
-                  {{statsByConfig[buildConfigName].avgDuration | timeOnlyDuration}}
-                </div>
-                <h4>
-                  Recent Runs
-                  <small ng-if="!(statsByConfig[buildConfigName].avgDuration | isNil)" class="visible-xs-block mar-top-xs text-muted">
-                    Average Duration:
-                    {{statsByConfig[buildConfigName].avgDuration | timeOnlyDuration}}
-                  </small>
-                </h4>
-                <div ng-repeat="build in (interestingBuildsByConfig[buildConfigName] | orderObjectsByDate : true) track by (build | uid)"
-                     class="animate-repeat">
-                  <build-pipeline build="build"></build-pipeline>
-                </div>
-                <div ng-if="buildConfig" class="mar-top-sm mar-bottom-xl">
-                  <a ng-href="{{buildConfigs[buildConfigName] | navigateResourceURL}}">View Pipeline Runs</a>
-                  <span ng-if="'buildconfigs' | canI : 'update'">
-                    <span class="action-divider">|</span>
-                    <a ng-href="{{buildConfig | editResourceURL}}" role="button">Edit Pipeline</a>
-                  </span>
-                </div>
+              <div ng-if="!(project.metadata.name | canIAddToProject)">
+                <ng-include src="'views/_request-access.html'"></ng-include>
               </div>
             </div>
-          </div><!-- /col-* -->
-        </div>
+          </div>
+          <div ng-repeat="(buildConfigName, buildConfig) in buildConfigs"
+               ng-if="!buildConfig || (buildConfig | isJenkinsPipelineStrategy)"
+               class="animate-repeat">
+            <div ng-if="buildConfig">
+              <div class="pull-right">
+                <button
+                    class="btn btn-default"
+                    ng-if="'buildconfigs/instantiate' | canI : 'create'"
+                    ng-click="startBuild(buildConfig)">
+                  Start Pipeline
+                </button>
+              </div>
+              <h2 class="mar-top-none">
+                <a ng-href="{{buildConfig | navigateResourceURL}}">{{buildConfigName}}</a>
+                <small>created <span am-time-ago="buildConfig.metadata.creationTimestamp"></span></small>
+              </h2>
+              <div ng-if="buildConfig.spec.source.git.uri">
+                Source Repository:
+                <span class="word-break" ng-if="buildConfigs[buildConfigName].spec.source.type == 'Git'" ><osc-git-link
+                      uri="buildConfigs[buildConfigName].spec.source.git.uri"
+                      ref="buildConfigs[buildConfigName].spec.source.git.ref"
+                      context-dir="buildConfigs[buildConfigName].spec.source.contextDir">{{buildConfigs[buildConfigName].spec.source.git.uri}}</osc-git-link></span>
+              </div>
+            </div>
+            <!-- Handle missing build configs -->
+            <div ng-if="!buildConfig">
+              <h2>{{buildConfigName}}</h2>
+              <!-- Only show the alert once the build configs have loaded to avoid flicker if builds load first. -->
+              <div ng-if="buildConfigsLoaded" class="alert alert-warning">
+                <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
+                <span class="sr-only">Warning:</span>
+                Build config <strong>{{buildConfigName}}</strong> no longer exists.
+              </div>
+            </div>
+            <div ng-if="buildsLoaded && !(interestingBuildsByConfig[buildConfigName] | hashSize)">
+              <p class="mar-bottom-xxl">
+                No pipeline builds have run for {{buildConfigName}}.
+                <span ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile">
+                  View the <a ng-href="{{(buildConfig | navigateResourceURL) + '?tab=configuration'}}">Jenkinsfile</a> to see what stages will run.
+                </span>
+                <span ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath">
+                  View the file <code>{{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</code> in the
+                  <a ng-if="buildConfig | jenkinsfileLink" ng-href="buildConfig | jenkinsfileLink">source repository</a>
+                  <span ng-if="!(buildConfig | jenkinsfileLink)">source repository</span>
+                  to see what stages will run.
+                </span>
+              </p>
+            </div>
+            <div ng-if="interestingBuildsByConfig[buildConfigName] | hashSize">
+              <div ng-if="!(statsByConfig[buildConfigName].avgDuration | isNil)" class="hidden-xs pull-right text-muted">
+                Average Duration:
+                {{statsByConfig[buildConfigName].avgDuration | timeOnlyDuration}}
+              </div>
+              <h4>
+                Recent Runs
+                <small ng-if="!(statsByConfig[buildConfigName].avgDuration | isNil)" class="visible-xs-block mar-top-xs text-muted">
+                  Average Duration:
+                  {{statsByConfig[buildConfigName].avgDuration | timeOnlyDuration}}
+                </small>
+              </h4>
+              <div ng-repeat="build in (interestingBuildsByConfig[buildConfigName] | orderObjectsByDate : true) track by (build | uid)"
+                   class="animate-repeat">
+                <build-pipeline build="build"></build-pipeline>
+              </div>
+              <div ng-if="buildConfig" class="mar-top-sm mar-bottom-xl">
+                <a ng-href="{{buildConfigs[buildConfigName] | navigateResourceURL}}">View Pipeline Runs</a>
+                <span ng-if="'buildconfigs' | canI : 'update'">
+                  <span class="action-divider">|</span>
+                  <a ng-href="{{buildConfig | editResourceURL}}" role="button">Edit Pipeline</a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div><!-- /col-* -->
       </div>
-    </div><!-- /middle-content -->
-  </div><!-- /middle-container -->
-</div><!-- /middle-section -->
-</project-page>
+    </div>
+  </div><!-- /middle-content -->
+</div>

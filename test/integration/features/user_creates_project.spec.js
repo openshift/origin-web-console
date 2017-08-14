@@ -7,15 +7,15 @@ const projectHelpers = require('../helpers/project.js');
 let goToAddToProjectPage = (projectName) => {
   let uri = 'project/' + projectName + '/create';
   h.goToPage(uri);
-  expect(element(by.cssContainingText('.middle-container h1', "Create Using Your Code")).isPresent()).toBe(true);
-  expect(element(by.cssContainingText('.middle-container h1', "Create Using a Template")).isPresent()).toBe(true);
+  expect(element(by.cssContainingText('.middle h1', "Create Using Your Code")).isPresent()).toBe(true);
+  expect(element(by.cssContainingText('.middle h1', "Create Using a Template")).isPresent()).toBe(true);
   expect(element(by.model('from_source_url')).isPresent()).toBe(true);
   expect(element(by.cssContainingText('.catalog h3 > a', "ruby-helloworld-sample")).isPresent()).toBe(true);
 };
 
 let goToCreateProjectPage = () => {
   h.goToPage('create-project');
-  expect(element(by.cssContainingText('.middle-container h1', "Create Project")).isPresent()).toBe(true);
+  expect(element(by.cssContainingText('.middle h1', "Create Project")).isPresent()).toBe(true);
   expect(element(by.model('name')).isPresent()).toBe(true);
   expect(element(by.model('displayName')).isPresent()).toBe(true);
   expect(element(by.model('description')).isPresent()).toBe(true);
@@ -41,7 +41,7 @@ let requestCreateFromTemplate = (projectName, templateName) => {
 let attachBuilderImageToSource = (projectName, builderImageName) => {
   let uri = 'project/' + projectName + '/catalog/images';
   h.waitForUri(uri);
-  expect(element(by.cssContainingText('.middle-container h1', "Select a builder image")).isPresent()).toBe(true);
+  expect(element(by.cssContainingText('.middle h1', "Select a builder image")).isPresent()).toBe(true);
   let builderImageLink = element(by.cssContainingText('h3 > a', builderImageName));
   expect(builderImageLink.isPresent()).toBe(true);
   builderImageLink.click();
@@ -50,7 +50,7 @@ let attachBuilderImageToSource = (projectName, builderImageName) => {
 let createFromSource = (projectName, builderImageName, appName) => {
   let uri = 'project/' + projectName + '/create/fromimage';
   h.waitForUri(uri);
-  expect(element(by.css('.middle-container .osc-form h1')).getText()).toEqual(builderImageName);
+  expect(element(by.css('.middle .osc-form h1')).getText()).toEqual(builderImageName);
   expect(element(by.cssContainingText('h2', "Name")).isPresent()).toBe(true);
   expect(element(by.cssContainingText('h2', "Routing")).isPresent()).toBe(true);
   expect(element(by.cssContainingText('h2', "Deployment Configuration")).isPresent()).toBe(true);
@@ -66,7 +66,7 @@ let createFromSource = (projectName, builderImageName, appName) => {
 let createFromTemplate = (projectName, templateName, parameterNames, labelNames) => {
   let uri = 'project/' + projectName + '/create/fromtemplate';
   h.waitForUri(uri);
-  expect(element(by.css('.middle-container .osc-form h1')).getText()).toEqual(templateName);
+  expect(element(by.css('.middle .osc-form h1')).getText()).toEqual(templateName);
   expect(element(by.cssContainingText('h2', "Images")).isPresent()).toBe(true);
   expect(element(by.cssContainingText('h2', "Parameters")).isPresent()).toBe(true);
   expect(element(by.cssContainingText('h2', "Labels")).isPresent()).toBe(true);
@@ -93,7 +93,7 @@ let checkServiceCreated = (projectName, serviceName) => {
 let checkProjectSettings = (projectName, displayName, description) => {
   let uri = 'project/' + projectName + '/edit';
   h.goToPage(uri);
-  expect(element(by.css('.middle-container h1')).getText()).toEqual("Edit Project " + projectName);
+  expect(element(by.css('.middle h1')).getText()).toEqual("Edit Project " + projectName);
   expect(element(by.css('#displayName')).getAttribute('value')).toEqual(displayName);
   expect(element(by.css('#description')).getAttribute('value')).toEqual(description);
 };
@@ -127,43 +127,43 @@ describe('', () => {
         it('should successfully create a new project', () => {
           goToCreateProjectPage();
           projectHelpers.createProject(project, 'project/' + project['name'] + '/create');
-          h.waitForPresence('.breadcrumb li a', project['displayName']);
+          h.waitForPresence('.project-bar option[selected]', project['displayName']);
           checkProjectSettings(project['name'], project['displayName'], project['description']);
         });
 
         it('should browse builds', () => {
           h.goToPage('project/' + project['name'] + '/browse/builds');
-          h.waitForPresence('.middle-container h1', 'Builds');
+          h.waitForPresence('.middle h1', 'Builds');
           // TODO: validate presented strategies, images, repos
         });
 
         it('should browse deployments', () => {
           h.goToPage('project/' + project['name'] + '/browse/deployments');
-          h.waitForPresence(".middle-container h1", "Deployments");
+          h.waitForPresence(".middle h1", "Deployments");
           // TODO: validate presented deployments
         });
 
         it('should browse events', () => {
           h.goToPage('project/' + project['name'] + '/browse/events');
-          h.waitForPresence(".middle-container h1", "Events");
+          h.waitForPresence(".middle h1", "Events");
           // TODO: validate presented events
         });
 
         it('should browse image streams', () => {
           h.goToPage('project/' + project['name'] + '/browse/images');
-          h.waitForPresence(".middle-container h1", "Image Streams");
+          h.waitForPresence(".middle h1", "Image Streams");
           // TODO: validate presented images
         });
 
         it('should browse pods', () => {
           h.goToPage('project/' + project['name'] + '/browse/pods');
-          h.waitForPresence(".middle-container h1", "Pods");
+          h.waitForPresence(".middle h1", "Pods");
           // TODO: validate presented pods, containers, correlated images, builds, source
         });
 
         it('should browse services', () => {
           h.goToPage('project/' + project['name'] + '/browse/services');
-          h.waitForPresence(".middle-container h1", "Services");
+          h.waitForPresence(".middle h1", "Services");
           // TODO: validate presented ports, routes, selectors
         });
 

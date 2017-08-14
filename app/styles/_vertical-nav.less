@@ -1,0 +1,158 @@
+//
+//  Vertical nav (Sidebar left)
+//  -----------------------------------------------
+
+.nav-pf-vertical {
+  background-color: @nav-pf-vertical-bg-color;
+  top: @navbar-os-header-height-mobile;
+  transition: width .1s ease-in-out, left .1s ease-in-out;
+  z-index: 990;
+  @media(min-width: @screen-sm-min) {
+    top: @navbar-os-header-height-desktop;
+  }
+  .has-project-bar & {
+    top: (@navbar-os-header-height-mobile + @project-bar-height-mobile);
+    @media(min-width: @screen-sm-min) {
+      top: (@navbar-os-header-height-desktop + @project-bar-height-desktop);
+    }
+  }
+  .list-group-item {
+    border-color: @nav-pf-vertical-border-color;
+    &:after {
+      background: @nav-pf-vertical-border-inset-color;
+      content: '';
+      display: block;
+      height: 1px;
+      position: absolute;
+      top: 0px;
+      width: 100%;
+    }
+    &.active > a,
+    &:focus > a,
+    &:hover > a {
+      background-color: @nav-pf-vertical-secondary-bg-color;
+      font-weight: 300;
+    }
+    &:focus > a,
+    &:hover > a {
+      .pficon,
+      .fa {
+        color: @sidebar-os-icon-hover-color;
+      }
+    }
+    &.active > a {
+      .pficon,
+      .fa {
+        color: @nav-pf-vertical-active-icon-color;
+      }
+    }
+    > a,
+    > a:focus {
+      font-size: @font-size-base;
+      font-weight: 300;
+      text-decoration: none;
+      @media(max-width: @screen-xs-max) {
+        height: auto;
+        padding: 10px 15px;
+      }
+      .fa, .pficon {
+        font-size: (@font-size-base + 2);
+        @media(min-width: @screen-sm-min) {
+          font-size: (@font-size-base + 5);
+        }
+      }
+      .list-group-item-value {
+        line-height: inherit;
+        text-decoration: none !important;
+      }
+    }
+    // padding aligns arrow vertically
+    &.secondary-nav-item-pf > a:after {
+      padding: 16px 0;
+      @media(max-width: @screen-xs-max) {
+        padding: 8px 0;
+      }
+    }
+  }
+  &.collapsed {
+    .list-group-item.secondary-nav-item-pf:hover,
+    .list-group-item.secondary-nav-item-pf.active {
+      > a:after {
+        right: 12px !important; // prevent arrow moving onHover due to pf rules
+      }
+    }
+    .nav-pf-secondary-nav {
+      left: (@nav-pf-vertical-collapsed-width - 1); // adjust for 1px border
+    }
+  }
+  &.hide-mobile-nav {
+    left: -(@nav-pf-vertical-width + 2); // width + box-shadow
+  }
+  &.show-mobile-nav {
+    box-shadow: 2px 0 3px rgba(3,3,3,.15);
+    left: 0;
+  }
+  .list-group-item.secondary-nav-item-pf {
+    &:hover > a:after {
+      color: @sidebar-os-icon-hover-color;
+    }
+    // right arrow alignment
+    > a:after {
+      font-size: 14px;
+    }
+  }
+  .nav-pf-secondary-nav {
+    background: @nav-pf-vertical-secondary-bg-color;
+    border-left: 0;
+    border-right: 1px solid @nav-pf-vertical-border-color;
+    top:(@project-bar-height-mobile + @navbar-os-header-height-mobile);
+    width: @nav-pf-vertical-width + 1; // adjust for 1px border
+    @media(min-width: @screen-sm-min) {
+      border-left: 1px solid @nav-pf-vertical-border-color; // inset border between primary and secondary
+      top: (@project-bar-height-desktop + @navbar-os-header-height-desktop);
+    }
+    .list-group-item {
+      &:after {
+        display: none;
+      }
+      &.active > a {
+        background: @nav-pf-vertical-secondary-active-bg-color;
+        &:hover {
+          background: @nav-pf-vertical-secondary-active-bg-color;
+        }
+      }
+      > a {
+        background: transparent;
+        &:hover {
+          text-decoration: none;
+          background: @nav-pf-vertical-secondary-hover-color;
+        }
+      }
+    }
+    .tech-preview & {
+      top: (@navbar-os-header-height-mobile + @project-bar-height-mobile + @tech-preview-banner-height);
+      @media(min-width: @screen-sm-min) {
+        top: (@navbar-os-header-height-desktop + @project-bar-height-desktop + @tech-preview-banner-height);
+      }
+    }
+  }
+  .nav-item-pf-header {
+    font-size: (@font-size-base + 1);
+  }
+  .nav-pf-secondary-nav .list-group-item > a {
+    padding: 4px 0 2px 0;
+    margin-left: 20px;
+  }
+  .tech-preview & {
+    top: (@navbar-os-header-height-mobile + @tech-preview-banner-height);
+    @media(min-width: @screen-sm-min) {
+      top: (@navbar-os-header-height-desktop + @tech-preview-banner-height);
+    }
+  }
+  .tech-preview.has-project-bar & {
+    top: (@navbar-os-header-height-mobile + @project-bar-height-mobile + @tech-preview-banner-height);
+    @media(min-width: @screen-sm-min) {
+      top: (@navbar-os-header-height-desktop + @project-bar-height-desktop + @tech-preview-banner-height);
+    }
+  }
+}

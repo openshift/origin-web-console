@@ -44,8 +44,7 @@ angular.module('openshiftConsole')
       name: $routeParams.name,
       kind: $routeParams.kind,
       namespace: $routeParams.project,
-      subpage: 'Edit Health Checks',
-      includeProject: true
+      subpage: 'Edit Health Checks'
     });
 
     // Map of removed probes so that removing and adding back a probe remembers what was previously set.
@@ -94,8 +93,7 @@ angular.module('openshiftConsole')
             $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
               object: object,
               project: project,
-              subpage: 'Edit Health Checks',
-              includeProject: true
+              subpage: 'Edit Health Checks'
             });
 
             $scope.containers = _.get(object, 'spec.template.spec.containers');

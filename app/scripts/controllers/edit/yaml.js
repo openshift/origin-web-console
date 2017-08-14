@@ -30,9 +30,6 @@ angular.module('openshiftConsole')
     $scope.name = $routeParams.name;
     $scope.resourceURL = Navigate.resourceURL($scope.name, $routeParams.kind, $routeParams.project);
     $scope.breadcrumbs = [{
-      title: $routeParams.project,
-      link: "project/" + $routeParams.project
-    }, {
       title: $routeParams.name,
       // If returnURL is unspecified, the breadcrumbs directive defaults to back.
       link: $routeParams.returnURL

@@ -1,72 +1,65 @@
-<project-header class="top-header"></project-header>
-<project-page>
-
-  <!-- Middle section -->
-  <div class="middle-section">
-    <div class="middle-container">
-      <div class="middle-header header-toolbar">
-        <div class="container-fluid">
-          <div class="page-header page-header-bleed-right page-header-bleed-left">
-            <div class="pull-right" ng-if="project && ('configmaps' | canI : 'create')">
-              <a ng-href="project/{{project.metadata.name}}/create-config-map" class="btn btn-default">Create Config Map</a>
-            </div>
-            <h1>
-              Config Maps
-              <span class="page-header-link">
-                <a ng-href="{{'config-maps' | helpLink}}" target="_blank">
-                  Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
-                </a>
-              </span>
-            </h1>
-          </div>
-          <div ng-if="!renderOptions.showGetStarted" class="data-toolbar">
-            <div class="data-toolbar-filter">
-              <project-filter></project-filter>
-            </div>
-          </div>
+<div class="middle">
+  <div class="middle-header header-toolbar">
+    <div class="container-fluid">
+      <div class="page-header page-header-bleed-right page-header-bleed-left">
+        <div class="pull-right" ng-if="project && ('configmaps' | canI : 'create')">
+          <a ng-href="project/{{project.metadata.name}}/create-config-map" class="btn btn-default">Create Config Map</a>
         </div>
-      </div><!-- /middle-header-->
-      <div class="middle-content">
-        <div class="container-fluid">
-          <alerts alerts="alerts"></alerts>
-          <div class="row">
-            <div class="col-md-12">
-              <div ng-if="!loaded">Loading...</div>
-              <div ng-if="loaded">
-                <table class="table table-bordered table-hover table-mobile table-layout-fixed">
-                  <colgroup>
-                    <col class="col-sm-5">
-                  </colgroup>
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Created</th>
-                      <th>Labels</th>
-                    </tr>
-                  </thead>
-                  <tbody ng-if="(configMaps | hashSize) == 0">
-                    <tr><td colspan="3"><em>No config maps to show</em></td></tr>
-                  </tbody>
-                  <tbody ng-if="(configMaps | hashSize) > 0">
-                    <tr ng-repeat="configMap in configMaps">
-                      <td data-title="Name">
-                        <a href="{{configMap | navigateResourceURL}}">{{configMap.metadata.name}}</a>
-                      </td>
-                      <td data-title="Created">
-                        <span am-time-ago="configMap.metadata.creationTimestamp"></span>
-                      </td>
-                      <td data-title="Labels">
-                        <em ng-if="(configMap.metadata.labels | hashSize) === 0">none</em>
-                        <labels labels="configMap.metadata.labels" clickable="true" kind="Config Map" project-name="{{configMap.metadata.namespace}}" limit="3" filter-current-page="true"></labels>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div><!-- /col-* -->
-          </div>
+        <h1>
+          Config Maps
+          <span class="page-header-link">
+            <a ng-href="{{'config-maps' | helpLink}}" target="_blank">
+              Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
+            </a>
+          </span>
+        </h1>
+      </div>
+      <div ng-if="!renderOptions.showGetStarted" class="data-toolbar">
+        <div class="data-toolbar-filter">
+          <project-filter></project-filter>
         </div>
-      </div><!-- /middle-content -->
-    </div><!-- /middle-container -->
-  </div><!-- /middle-section -->
-</project-page>
+      </div>
+    </div>
+  </div><!-- /middle-header-->
+  <div class="middle-content">
+    <div class="container-fluid">
+      <alerts alerts="alerts"></alerts>
+      <div class="row">
+        <div class="col-md-12">
+          <div ng-if="!loaded">Loading...</div>
+          <div ng-if="loaded">
+            <table class="table table-bordered table-hover table-mobile table-layout-fixed">
+              <colgroup>
+                <col class="col-sm-5">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Created</th>
+                  <th>Labels</th>
+                </tr>
+              </thead>
+              <tbody ng-if="(configMaps | hashSize) == 0">
+                <tr><td colspan="3"><em>No config maps to show</em></td></tr>
+              </tbody>
+              <tbody ng-if="(configMaps | hashSize) > 0">
+                <tr ng-repeat="configMap in configMaps">
+                  <td data-title="Name">
+                    <a href="{{configMap | navigateResourceURL}}">{{configMap.metadata.name}}</a>
+                  </td>
+                  <td data-title="Created">
+                    <span am-time-ago="configMap.metadata.creationTimestamp"></span>
+                  </td>
+                  <td data-title="Labels">
+                    <em ng-if="(configMap.metadata.labels | hashSize) === 0">none</em>
+                    <labels labels="configMap.metadata.labels" clickable="true" kind="Config Map" project-name="{{configMap.metadata.namespace}}" limit="3" filter-current-page="true"></labels>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div><!-- /col-* -->
+      </div>
+    </div>
+  </div><!-- /middle-content -->
+</div>

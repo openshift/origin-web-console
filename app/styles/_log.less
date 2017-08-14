@@ -122,21 +122,28 @@
     top: @log-scroll-offset-top;
     &.affix {
       position: fixed;
-      right: @log-scroll-top-offset-right-xs;
+      right: @log-scroll-top-offset-right;
+      top: (@log-scroll-offset-top + @navbar-os-header-height-mobile + @project-bar-height-mobile);
       @media (min-width: @screen-sm-min) {
-        right: @log-scroll-top-offset-right-sm;
-        top: (@log-scroll-offset-top + @navbar-os-header-height-desktop);
-        .tech-preview & {
-          top: (@log-scroll-offset-top + @navbar-os-header-height-desktop + @tech-preview-banner-height);
-        }
-      }
-      @media (min-width: @screen-md-min) {
-        right: @log-scroll-top-offset-right-lg;
+        top: (@log-scroll-offset-top + @navbar-os-header-height-desktop + @project-bar-height-desktop);
       }
       .chromeless & {
         right: @log-scroll-offset-right;
+        top: (@log-scroll-offset-top + @navbar-os-header-height-mobile);
         @media (min-width: @screen-sm-min) {
-          right: (@log-scroll-offset-right + @scrollbar-width);
+          top: (@log-scroll-offset-top + @navbar-os-header-height-desktop);
+        }
+      }
+      .tech-preview & {
+        top: (@log-scroll-offset-top + @navbar-os-header-height-mobile + @project-bar-height-mobile + @tech-preview-banner-height);
+        @media (min-width: @screen-sm-min) {
+          top: (@log-scroll-offset-top + @navbar-os-header-height-desktop + @project-bar-height-desktop + @tech-preview-banner-height);
+        }
+      }
+      .tech-preview .chromeless & {
+        top: (@log-scroll-offset-top + @navbar-os-header-height-mobile + @tech-preview-banner-height);
+        @media (min-width: @screen-sm-min) {
+          top: (@log-scroll-offset-top + @navbar-os-header-height-desktop + @tech-preview-banner-height);
         }
       }
     }

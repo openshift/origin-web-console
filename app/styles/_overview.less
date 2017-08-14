@@ -75,10 +75,6 @@
 }
 
 .overview {
-  .empty-state {
-    // prevent alerts from displaying to close to top-header
-    margin-top: @grid-gutter-width / 2;
-  }
   .app-heading {
     display: flex;
     justify-content: space-between;
@@ -182,6 +178,10 @@
         }
       }
     }
+  }
+  .empty-state {
+    // prevent alerts from displaying too close to top-header
+    padding-top: @grid-gutter-width / 2;
   }
   .expanded-section {
     margin-top: 20px;
@@ -457,8 +457,9 @@
     margin-bottom: 30px;
   }
   .toolbar-container {
-    margin-top: 10px;
-    margin-bottom: 5px;
+    padding-bottom: 13px;
+    padding-top: 13px;
+    .surface-shaded();
   }
   .triggers {
     margin-bottom: 20px;

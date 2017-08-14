@@ -34,10 +34,6 @@ angular.module('openshiftConsole')
 
     $scope.breadcrumbs = [
       {
-        title: $scope.projectName,
-        link: "project/" + $scope.projectName
-      },
-      {
          title: "Routes",
          link: "project/" + $scope.projectName + "/browse/routes"
       },
@@ -60,8 +56,6 @@ angular.module('openshiftConsole')
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
-        // Update project breadcrumb with display name.
-        $scope.breadcrumbs[0].title = $filter('displayName')(project);
 
         if (!AuthorizationService.canI('routes', 'create', $routeParams.project)) {
           Navigate.toErrorPage('You do not have authority to create routes in project ' + $routeParams.project + '.', 'access_denied');

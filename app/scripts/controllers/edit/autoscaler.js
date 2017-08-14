@@ -211,15 +211,13 @@ angular.module('openshiftConsole')
               kind: $scope.targetKind,
               namespace: $routeParams.project,
               project: project,
-              subpage: 'Autoscale',
-              includeProject: true
+              subpage: 'Autoscale'
             });
           } else {
             $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
               object: resource,
               project: project,
-              subpage: 'Autoscale',
-              includeProject: true
+              subpage: 'Autoscale'
             });
 
             // Create a new HPA.

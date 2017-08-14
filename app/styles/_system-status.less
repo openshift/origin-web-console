@@ -1,0 +1,30 @@
+//
+//  System status extension point
+//  -----------------------------------------------
+
+// Always show system-status if it exists
+[extension-name="nav-system-status"] {
+  display: inline-block !important;
+}
+
+.nav-item-iconic.system-status {
+  @media(max-width: 350px) {
+    padding-right: 5px !important;
+  }
+}
+
+.status-issue {
+  display: none;
+  font-weight: 300;
+  max-width: 100px;
+  padding: 0 0 0 5px;
+  position: relative;
+  top: -2px;
+  // 900px is the minimum required to display the status-issue description
+  // under the following conditions:
+  //   * #header-logo with width of 320px (OCP);
+  //   * a username that exceeds the max width
+  @media(min-width: 900px) {
+    display: inline;
+  }
+}

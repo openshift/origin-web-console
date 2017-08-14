@@ -216,10 +216,16 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
               label: "Deployments",
               href: "/browse/deployments",
               prefixes: [
+                "/add-config-volume",
+                "/attach-pvc",
                 "/browse/deployment/",
                 "/browse/dc/",
                 "/browse/rs/",
-                "/browse/rc/"
+                "/browse/rc/",
+                "/edit/autoscaler",
+                "/edit/dc/",
+                "/edit/health-checks",
+                "/set-limits"
               ]
             },
             {
@@ -247,7 +253,9 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
               label: "Routes",
               href: "/browse/routes",
               prefixes: [
-                "/browse/routes/"
+                "/browse/routes/",
+                "/create-route",
+                "/edit/routes/"
               ]
             }
           ]
@@ -265,14 +273,16 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
               href: "/browse/builds",
               prefixes: [
                 "/browse/builds/",
-                "/browse/builds-noconfig/"
+                "/browse/builds-noconfig/",
+                "/edit/builds/"
               ]
             },
             {
               label: "Pipelines",
               href: "/browse/pipelines",
               prefixes: [
-                "/browse/pipelines/"
+                "/browse/pipelines/",
+                "/edit/pipelines/"
               ]
             },
             {
@@ -309,14 +319,17 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
               label: "Config Maps",
               href: "/browse/config-maps",
               prefixes: [
-                "/browse/config-maps/"
+                "/browse/config-maps/",
+                "/create-config-map",
+                "/edit/config-maps/"
               ]
             },
             {
               label: "Secrets",
               href: "/browse/secrets",
               prefixes: [
-                "/browse/secrets/"
+                "/browse/secrets/",
+                "/create-secret"
               ],
               canI: {
                 resource: 'secrets',
@@ -336,7 +349,8 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
       iconClass: "pficon pficon-container-node",
       href: "/browse/storage",
       prefixes: [
-        "/browse/storage/"
+        "/browse/storage/",
+        "/create-pvc"
       ]
     },
     {

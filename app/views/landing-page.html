@@ -1,36 +1,25 @@
-<default-header class="top-header"></default-header>
-<div class="wrap no-sidebar">
-  <div class="sidebar-left collapse navbar-collapse navbar-collapse-2">
-    <navbar-utility-mobile></navbar-utility-mobile>
-  </div>
-  <div class="middle landing-page">
-    <!-- Middle section -->
-    <div class="middle-section">
-      <div class="middle-container">
-        <div class="middle-content">
-          <overlay-panel show-panel="ordering.panelName" show-close="true" handle-close="closeOrderingPanel">
-            <process-template-dialog ng-if="template" template="template" on-dialog-closed="closeOrderingPanel"></process-template-dialog>
-            <deploy-image-dialog ng-if="ordering.panelName === 'deployImage'" on-dialog-closed="closeOrderingPanel"></deploy-image-dialog>
-            <from-file-dialog ng-if="ordering.panelName === 'fromFile'" on-dialog-closed="closeOrderingPanel"></from-file-dialog>
-          </overlay-panel>
-          <landing-page base-project-url="project" on-template-selected="templateSelected">
-            <landingsearch>
-              <catalog-search catalog-items="catalogItems" base-project-url="project"></catalog-search>
-            </landingsearch>
-            <landingheader>
-              <div class="build-applications-view">
-                <saas-list saas-offerings="saasOfferings"></saas-list>
-              </div>
-            </landingheader>
-            <landingbody>
-              <services-view catalog-items="catalogItems" base-project-url="project" on-deploy-image-selected="deployImageSelected" on-from-file-selected="fromFileSelected"></services-view>
-            </landingbody>
-            <landingside>
-              <projects-summary base-project-url="project" projects-url="projects" start-tour="startGuidedTour" view-edit-membership="viewMembership" catalog-items="catalogItems"></projects-summary>
-            </landingside>
-          </landing-page>
-        </div><!-- /middle-content -->
-      </div><!-- /middle-container -->
-    </div><!-- /middle-section -->
-  </div><!-- /middle -->
-</div><!-- /wrap -->
+<div class="middle landing-page">
+  <div class="middle-content">
+    <overlay-panel show-panel="ordering.panelName" show-close="true" handle-close="closeOrderingPanel">
+      <process-template-dialog ng-if="template" template="template" on-dialog-closed="closeOrderingPanel"></process-template-dialog>
+      <deploy-image-dialog ng-if="ordering.panelName === 'deployImage'" on-dialog-closed="closeOrderingPanel"></deploy-image-dialog>
+      <from-file-dialog ng-if="ordering.panelName === 'fromFile'" on-dialog-closed="closeOrderingPanel"></from-file-dialog>
+    </overlay-panel>
+    <landing-page base-project-url="project" on-template-selected="templateSelected">
+      <landingsearch>
+        <catalog-search catalog-items="catalogItems" base-project-url="project"></catalog-search>
+      </landingsearch>
+      <landingheader>
+        <div class="build-applications-view">
+          <saas-list saas-offerings="saasOfferings"></saas-list>
+        </div>
+      </landingheader>
+      <landingbody>
+        <services-view catalog-items="catalogItems" base-project-url="project" on-deploy-image-selected="deployImageSelected" on-from-file-selected="fromFileSelected"></services-view>
+      </landingbody>
+      <landingside>
+        <projects-summary base-project-url="project" projects-url="projects" start-tour="startGuidedTour" view-edit-membership="viewMembership" catalog-items="catalogItems"></projects-summary>
+      </landingside>
+    </landing-page>
+  </div><!-- /middle-content -->
+</div><!-- /middle -->

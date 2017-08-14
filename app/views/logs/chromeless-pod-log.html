@@ -1,31 +1,18 @@
-<default-header class="top-header"></default-header>
-<div class="sidebar-left collapse navbar-collapse navbar-collapse-2">
-  <navbar-utility-mobile></navbar-utility-mobile>
-</div>
-<div class="wrap chromeless">
-  <!-- id="container-main" required for follow log (see logLinks.js) -->
-  <div id="container-main" class="middle">
-    <div class="middle-section">
-      <div class="middle-container">
-        <div class="middle-header">
-          <div class="container-fluid">
-            <alerts alerts="alerts"></alerts>
-          </div>
-        </div>
-        <div class="middle-content">
-          <log-viewer
-            ng-if="pod"
-            object="pod"
-            context="projectContext"
-            options="logOptions"
-            status="pod.status.phase"
-            time-start="pod.status.startTime | date : 'medium'"
-            chromeless="true"
-            run="logCanRun"
-            flex>
-          </log-viewer>
-        </div>
-      </div>
-    </div>
+<div class="chromeless">
+  <div class="container-fluid">
+    <alerts alerts="alerts"></alerts>
+  </div>
+  <div class="middle-content">
+    <log-viewer
+      ng-if="pod"
+      object="pod"
+      context="projectContext"
+      options="logOptions"
+      status="pod.status.phase"
+      time-start="pod.status.startTime | date : 'medium'"
+      chromeless="true"
+      run="logCanRun"
+      flex>
+    </log-viewer>
   </div>
 </div>
