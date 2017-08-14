@@ -55146,6 +55146,94 @@ return r;
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
+});
+var i = e("./utils/CircularList"), r = function() {
+function e(e) {
+this._terminal = e, this.clear();
+}
+return Object.defineProperty(e.prototype, "lines", {
+get: function() {
+return this._lines;
+},
+enumerable: !0,
+configurable: !0
+}), e.prototype.fillViewportRows = function() {
+if (0 === this._lines.length) for (var e = this._terminal.rows; e--; ) this.lines.push(this._terminal.blankLine());
+}, e.prototype.clear = function() {
+this.ydisp = 0, this.ybase = 0, this.y = 0, this.x = 0, this.scrollBottom = 0, this.scrollTop = 0, this.tabs = {}, this._lines = new i.CircularList(this._terminal.scrollback), this.scrollBottom = this._terminal.rows - 1;
+}, e.prototype.resize = function(e, t) {
+if (0 !== this._lines.length) {
+if (this._terminal.cols < e) for (var n = [ this._terminal.defAttr, " ", 1 ], i = 0; i < this._lines.length; i++) for (void 0 === this._lines.get(i) && this._lines.set(i, this._terminal.blankLine(void 0, void 0, e)); this._lines.get(i).length < e; ) this._lines.get(i).push(n);
+var r = 0;
+if (this._terminal.rows < t) for (o = this._terminal.rows; o < t; o++) this._lines.length < t + this.ybase && (this.ybase > 0 && this._lines.length <= this.ybase + this.y + r + 1 ? (this.ybase--, r++, this.ydisp > 0 && this.ydisp--) : this._lines.push(this._terminal.blankLine(void 0, void 0, e))); else for (var o = this._terminal.rows; o > t; o--) this._lines.length > t + this.ybase && (this._lines.length > this.ybase + this.y + 1 ? this._lines.pop() : (this.ybase++, this.ydisp++));
+this.y >= t && (this.y = t - 1), r && (this.y += r), this.x >= e && (this.x = e - 1), this.scrollTop = 0, this.scrollBottom = t - 1;
+}
+}, e;
+}();
+n.Buffer = r;
+}, {
+"./utils/CircularList": 18
+} ],
+2: [ function(e, t, n) {
+"use strict";
+var i = this && this.__extends || function() {
+var e = Object.setPrototypeOf || {
+__proto__: []
+} instanceof Array && function(e, t) {
+e.__proto__ = t;
+} || function(e, t) {
+for (var n in t) t.hasOwnProperty(n) && (e[n] = t[n]);
+};
+return function(t, n) {
+function i() {
+this.constructor = t;
+}
+e(t, n), t.prototype = null === n ? Object.create(n) : (i.prototype = n.prototype, new i());
+};
+}();
+Object.defineProperty(n, "__esModule", {
+value: !0
+});
+var r = e("./Buffer"), o = function(e) {
+function t(t) {
+var n = e.call(this) || this;
+return n._terminal = t, n._normal = new r.Buffer(n._terminal), n._normal.fillViewportRows(), n._alt = new r.Buffer(n._terminal), n._activeBuffer = n._normal, n;
+}
+return i(t, e), Object.defineProperty(t.prototype, "alt", {
+get: function() {
+return this._alt;
+},
+enumerable: !0,
+configurable: !0
+}), Object.defineProperty(t.prototype, "active", {
+get: function() {
+return this._activeBuffer;
+},
+enumerable: !0,
+configurable: !0
+}), Object.defineProperty(t.prototype, "normal", {
+get: function() {
+return this._normal;
+},
+enumerable: !0,
+configurable: !0
+}), t.prototype.activateNormalBuffer = function() {
+this._alt.clear(), this._activeBuffer = this._normal, this.emit("activate", this._normal);
+}, t.prototype.activateAltBuffer = function() {
+this._alt.fillViewportRows(), this._activeBuffer = this._alt, this.emit("activate", this._alt);
+}, t.prototype.resize = function(e, t) {
+this._normal.resize(e, t), this._alt.resize(e, t);
+}, t;
+}(e("./EventEmitter").EventEmitter);
+n.BufferSet = o;
+}, {
+"./Buffer": 1,
+"./EventEmitter": 6
+} ],
+3: [ function(e, t, n) {
+"use strict";
+Object.defineProperty(n, "__esModule", {
+value: !0
 }), n.CHARSETS = {}, n.DEFAULT_CHARSET = n.CHARSETS.B, n.CHARSETS[0] = {
 "`": "◆",
 a: "▒",
@@ -55287,7 +55375,7 @@ _: "è",
 "~": "û"
 };
 }, {} ],
-2: [ function(e, t, n) {
+4: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -55362,7 +55450,7 @@ this.textarea.style.left = "", this.textarea.style.top = "";
 }();
 n.CompositionHelper = i;
 }, {} ],
-3: [ function(e, t, n) {
+5: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -55371,7 +55459,7 @@ value: !0
 e.NUL = "\0", e.SOH = "", e.STX = "", e.ETX = "", e.EOT = "", e.ENQ = "", e.ACK = "", e.BEL = "", e.BS = "\b", e.HT = "\t", e.LF = "\n", e.VT = "\v", e.FF = "\f", e.CR = "\r", e.SO = "", e.SI = "", e.DLE = "", e.DC1 = "", e.DC2 = "", e.DC3 = "", e.DC4 = "", e.NAK = "", e.SYN = "", e.ETB = "", e.CAN = "", e.EM = "", e.SUB = "", e.ESC = "", e.FS = "", e.GS = "", e.RS = "", e.US = "", e.SP = " ", e.DEL = "";
 }(n.C0 || (n.C0 = {}));
 }, {} ],
-4: [ function(e, t, n) {
+6: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -55401,7 +55489,7 @@ return this._events[e] || [];
 }();
 n.EventEmitter = i;
 }, {} ],
-5: [ function(e, t, n) {
+7: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -55412,13 +55500,13 @@ this._terminal = e;
 }
 return e.prototype.addChar = function(e, t) {
 if (e >= " ") {
-var n = a(t);
+var i = n.wcwidth(t);
 this._terminal.charset && this._terminal.charset[e] && (e = this._terminal.charset[e]);
-var i = this._terminal.y + this._terminal.ybase;
-if (!n && this._terminal.x) return void (this._terminal.lines.get(i)[this._terminal.x - 1] && (this._terminal.lines.get(i)[this._terminal.x - 1][2] ? this._terminal.lines.get(i)[this._terminal.x - 1][1] += e : this._terminal.lines.get(i)[this._terminal.x - 2] && (this._terminal.lines.get(i)[this._terminal.x - 2][1] += e), this._terminal.updateRange(this._terminal.y)));
-if (this._terminal.x + n - 1 >= this._terminal.cols) if (this._terminal.wraparoundMode) this._terminal.x = 0, ++this._terminal.y > this._terminal.scrollBottom && (this._terminal.y--, this._terminal.scroll(!0)); else if (2 === n) return;
-if (i = this._terminal.y + this._terminal.ybase, this._terminal.insertMode) for (var r = 0; r < n; ++r) 0 === this._terminal.lines.get(this._terminal.y + this._terminal.ybase).pop()[2] && this._terminal.lines.get(i)[this._terminal.cols - 2] && 2 === this._terminal.lines.get(i)[this._terminal.cols - 2][2] && (this._terminal.lines.get(i)[this._terminal.cols - 2] = [ this._terminal.curAttr, " ", 1 ]), this._terminal.lines.get(i).splice(this._terminal.x, 0, [ this._terminal.curAttr, " ", 1 ]);
-this._terminal.lines.get(i)[this._terminal.x] = [ this._terminal.curAttr, e, n ], this._terminal.x++, this._terminal.updateRange(this._terminal.y), 2 === n && (this._terminal.lines.get(i)[this._terminal.x] = [ this._terminal.curAttr, "", 0 ], this._terminal.x++);
+var r = this._terminal.buffer.y + this._terminal.buffer.ybase;
+if (!i && this._terminal.buffer.x) return void (this._terminal.buffer.lines.get(r)[this._terminal.buffer.x - 1] && (this._terminal.buffer.lines.get(r)[this._terminal.buffer.x - 1][2] ? this._terminal.buffer.lines.get(r)[this._terminal.buffer.x - 1][1] += e : this._terminal.buffer.lines.get(r)[this._terminal.buffer.x - 2] && (this._terminal.buffer.lines.get(r)[this._terminal.buffer.x - 2][1] += e), this._terminal.updateRange(this._terminal.buffer.y)));
+if (this._terminal.buffer.x + i - 1 >= this._terminal.cols) if (this._terminal.wraparoundMode) this._terminal.buffer.x = 0, ++this._terminal.buffer.y > this._terminal.buffer.scrollBottom ? (this._terminal.buffer.y--, this._terminal.scroll(!0)) : this._terminal.buffer.lines.get(this._terminal.buffer.y).isWrapped = !0; else if (2 === i) return;
+if (r = this._terminal.buffer.y + this._terminal.buffer.ybase, this._terminal.insertMode) for (var o = 0; o < i; ++o) 0 === this._terminal.buffer.lines.get(this._terminal.buffer.y + this._terminal.buffer.ybase).pop()[2] && this._terminal.buffer.lines.get(r)[this._terminal.cols - 2] && 2 === this._terminal.buffer.lines.get(r)[this._terminal.cols - 2][2] && (this._terminal.buffer.lines.get(r)[this._terminal.cols - 2] = [ this._terminal.curAttr, " ", 1 ]), this._terminal.buffer.lines.get(r).splice(this._terminal.buffer.x, 0, [ this._terminal.curAttr, " ", 1 ]);
+this._terminal.buffer.lines.get(r)[this._terminal.buffer.x] = [ this._terminal.curAttr, e, i ], this._terminal.buffer.x++, this._terminal.updateRange(this._terminal.buffer.y), 2 === i && (this._terminal.buffer.lines.get(r)[this._terminal.buffer.x] = [ this._terminal.curAttr, "", 0 ], this._terminal.buffer.x++);
 }
 }, e.prototype.bell = function() {
 var e = this;
@@ -55426,55 +55514,55 @@ this._terminal.visualBell && (this._terminal.element.style.borderColor = "white"
 return e._terminal.element.style.borderColor = "";
 }, 10), this._terminal.popOnBell && this._terminal.focus());
 }, e.prototype.lineFeed = function() {
-this._terminal.convertEol && (this._terminal.x = 0), ++this._terminal.y > this._terminal.scrollBottom && (this._terminal.y--, this._terminal.scroll()), this._terminal.x >= this._terminal.cols && this._terminal.x--;
+this._terminal.convertEol && (this._terminal.buffer.x = 0), ++this._terminal.buffer.y > this._terminal.buffer.scrollBottom && (this._terminal.buffer.y--, this._terminal.scroll()), this._terminal.buffer.x >= this._terminal.cols && this._terminal.buffer.x--, this._terminal.emit("lineFeed");
 }, e.prototype.carriageReturn = function() {
-this._terminal.x = 0;
+this._terminal.buffer.x = 0;
 }, e.prototype.backspace = function() {
-this._terminal.x > 0 && this._terminal.x--;
+this._terminal.buffer.x > 0 && this._terminal.buffer.x--;
 }, e.prototype.tab = function() {
-this._terminal.x = this._terminal.nextStop();
+this._terminal.buffer.x = this._terminal.nextStop();
 }, e.prototype.shiftOut = function() {
 this._terminal.setgLevel(1);
 }, e.prototype.shiftIn = function() {
 this._terminal.setgLevel(0);
 }, e.prototype.insertChars = function(e) {
 var t, n, i, r;
-for ((t = e[0]) < 1 && (t = 1), n = this._terminal.y + this._terminal.ybase, i = this._terminal.x, r = [ this._terminal.eraseAttr(), " ", 1 ]; t-- && i < this._terminal.cols; ) this._terminal.lines.get(n).splice(i++, 0, r), this._terminal.lines.get(n).pop();
+for ((t = e[0]) < 1 && (t = 1), n = this._terminal.buffer.y + this._terminal.buffer.ybase, i = this._terminal.buffer.x, r = [ this._terminal.eraseAttr(), " ", 1 ]; t-- && i < this._terminal.cols; ) this._terminal.buffer.lines.get(n).splice(i++, 0, r), this._terminal.buffer.lines.get(n).pop();
 }, e.prototype.cursorUp = function(e) {
 var t = e[0];
-t < 1 && (t = 1), this._terminal.y -= t, this._terminal.y < 0 && (this._terminal.y = 0);
+t < 1 && (t = 1), this._terminal.buffer.y -= t, this._terminal.buffer.y < 0 && (this._terminal.buffer.y = 0);
 }, e.prototype.cursorDown = function(e) {
 var t = e[0];
-t < 1 && (t = 1), this._terminal.y += t, this._terminal.y >= this._terminal.rows && (this._terminal.y = this._terminal.rows - 1), this._terminal.x >= this._terminal.cols && this._terminal.x--;
+t < 1 && (t = 1), this._terminal.buffer.y += t, this._terminal.buffer.y >= this._terminal.rows && (this._terminal.buffer.y = this._terminal.rows - 1), this._terminal.buffer.x >= this._terminal.cols && this._terminal.buffer.x--;
 }, e.prototype.cursorForward = function(e) {
 var t = e[0];
-t < 1 && (t = 1), this._terminal.x += t, this._terminal.x >= this._terminal.cols && (this._terminal.x = this._terminal.cols - 1);
+t < 1 && (t = 1), this._terminal.buffer.x += t, this._terminal.buffer.x >= this._terminal.cols && (this._terminal.buffer.x = this._terminal.cols - 1);
 }, e.prototype.cursorBackward = function(e) {
 var t = e[0];
-t < 1 && (t = 1), this._terminal.x >= this._terminal.cols && this._terminal.x--, this._terminal.x -= t, this._terminal.x < 0 && (this._terminal.x = 0);
+t < 1 && (t = 1), this._terminal.buffer.x >= this._terminal.cols && this._terminal.buffer.x--, this._terminal.buffer.x -= t, this._terminal.buffer.x < 0 && (this._terminal.buffer.x = 0);
 }, e.prototype.cursorNextLine = function(e) {
 var t = e[0];
-t < 1 && (t = 1), this._terminal.y += t, this._terminal.y >= this._terminal.rows && (this._terminal.y = this._terminal.rows - 1), this._terminal.x = 0;
+t < 1 && (t = 1), this._terminal.buffer.y += t, this._terminal.buffer.y >= this._terminal.rows && (this._terminal.buffer.y = this._terminal.rows - 1), this._terminal.buffer.x = 0;
 }, e.prototype.cursorPrecedingLine = function(e) {
 var t = e[0];
-t < 1 && (t = 1), this._terminal.y -= t, this._terminal.y < 0 && (this._terminal.y = 0), this._terminal.x = 0;
+t < 1 && (t = 1), this._terminal.buffer.y -= t, this._terminal.buffer.y < 0 && (this._terminal.buffer.y = 0), this._terminal.buffer.x = 0;
 }, e.prototype.cursorCharAbsolute = function(e) {
 var t = e[0];
-t < 1 && (t = 1), this._terminal.x = t - 1;
+t < 1 && (t = 1), this._terminal.buffer.x = t - 1;
 }, e.prototype.cursorPosition = function(e) {
 var t, n;
-t = e[0] - 1, n = e.length >= 2 ? e[1] - 1 : 0, t < 0 ? t = 0 : t >= this._terminal.rows && (t = this._terminal.rows - 1), n < 0 ? n = 0 : n >= this._terminal.cols && (n = this._terminal.cols - 1), this._terminal.x = n, this._terminal.y = t;
+t = e[0] - 1, n = e.length >= 2 ? e[1] - 1 : 0, t < 0 ? t = 0 : t >= this._terminal.rows && (t = this._terminal.rows - 1), n < 0 ? n = 0 : n >= this._terminal.cols && (n = this._terminal.cols - 1), this._terminal.buffer.x = n, this._terminal.buffer.y = t;
 }, e.prototype.cursorForwardTab = function(e) {
-for (var t = e[0] || 1; t--; ) this._terminal.x = this._terminal.nextStop();
+for (var t = e[0] || 1; t--; ) this._terminal.buffer.x = this._terminal.nextStop();
 }, e.prototype.eraseInDisplay = function(e) {
 var t;
 switch (e[0]) {
 case 0:
-for (this._terminal.eraseRight(this._terminal.x, this._terminal.y), t = this._terminal.y + 1; t < this._terminal.rows; t++) this._terminal.eraseLine(t);
+for (this._terminal.eraseRight(this._terminal.buffer.x, this._terminal.buffer.y), t = this._terminal.buffer.y + 1; t < this._terminal.rows; t++) this._terminal.eraseLine(t);
 break;
 
 case 1:
-for (this._terminal.eraseLeft(this._terminal.x, this._terminal.y), t = this._terminal.y; t--; ) this._terminal.eraseLine(t);
+for (this._terminal.eraseLeft(this._terminal.buffer.x, this._terminal.buffer.y), t = this._terminal.buffer.y; t--; ) this._terminal.eraseLine(t);
 break;
 
 case 2:
@@ -55482,65 +55570,65 @@ for (t = this._terminal.rows; t--; ) this._terminal.eraseLine(t);
 break;
 
 case 3:
-var n = this._terminal.lines.length - this._terminal.rows;
-n > 0 && (this._terminal.lines.trimStart(n), this._terminal.ybase = Math.max(this._terminal.ybase - n, 0), this._terminal.ydisp = Math.max(this._terminal.ydisp - n, 0));
+var n = this._terminal.buffer.lines.length - this._terminal.rows;
+n > 0 && (this._terminal.buffer.lines.trimStart(n), this._terminal.buffer.ybase = Math.max(this._terminal.buffer.ybase - n, 0), this._terminal.buffer.ydisp = Math.max(this._terminal.buffer.ydisp - n, 0), this._terminal.emit("scroll", 0));
 }
 }, e.prototype.eraseInLine = function(e) {
 switch (e[0]) {
 case 0:
-this._terminal.eraseRight(this._terminal.x, this._terminal.y);
+this._terminal.eraseRight(this._terminal.buffer.x, this._terminal.buffer.y);
 break;
 
 case 1:
-this._terminal.eraseLeft(this._terminal.x, this._terminal.y);
+this._terminal.eraseLeft(this._terminal.buffer.x, this._terminal.buffer.y);
 break;
 
 case 2:
-this._terminal.eraseLine(this._terminal.y);
+this._terminal.eraseLine(this._terminal.buffer.y);
 }
 }, e.prototype.insertLines = function(e) {
 var t, n, i;
-for ((t = e[0]) < 1 && (t = 1), n = this._terminal.y + this._terminal.ybase, i = this._terminal.rows - 1 - this._terminal.scrollBottom, i = this._terminal.rows - 1 + this._terminal.ybase - i + 1; t--; ) this._terminal.lines.length === this._terminal.lines.maxLength && (this._terminal.lines.trimStart(1), this._terminal.ybase--, this._terminal.ydisp--, n--, i--), this._terminal.lines.splice(n, 0, this._terminal.blankLine(!0)), this._terminal.lines.splice(i, 1);
-this._terminal.updateRange(this._terminal.y), this._terminal.updateRange(this._terminal.scrollBottom);
+for ((t = e[0]) < 1 && (t = 1), n = this._terminal.buffer.y + this._terminal.buffer.ybase, i = this._terminal.rows - 1 - this._terminal.buffer.scrollBottom, i = this._terminal.rows - 1 + this._terminal.buffer.ybase - i + 1; t--; ) this._terminal.buffer.lines.length === this._terminal.buffer.lines.maxLength && (this._terminal.buffer.lines.trimStart(1), this._terminal.buffer.ybase--, this._terminal.buffer.ydisp--, n--, i--), this._terminal.buffer.lines.splice(n, 0, this._terminal.blankLine(!0)), this._terminal.buffer.lines.splice(i, 1);
+this._terminal.updateRange(this._terminal.buffer.y), this._terminal.updateRange(this._terminal.buffer.scrollBottom);
 }, e.prototype.deleteLines = function(e) {
 var t, n, i;
-for ((t = e[0]) < 1 && (t = 1), n = this._terminal.y + this._terminal.ybase, i = this._terminal.rows - 1 - this._terminal.scrollBottom, i = this._terminal.rows - 1 + this._terminal.ybase - i; t--; ) this._terminal.lines.length === this._terminal.lines.maxLength && (this._terminal.lines.trimStart(1), this._terminal.ybase -= 1, this._terminal.ydisp -= 1), this._terminal.lines.splice(i + 1, 0, this._terminal.blankLine(!0)), this._terminal.lines.splice(n, 1);
-this._terminal.updateRange(this._terminal.y), this._terminal.updateRange(this._terminal.scrollBottom);
+for ((t = e[0]) < 1 && (t = 1), n = this._terminal.buffer.y + this._terminal.buffer.ybase, i = this._terminal.rows - 1 - this._terminal.buffer.scrollBottom, i = this._terminal.rows - 1 + this._terminal.buffer.ybase - i; t--; ) this._terminal.buffer.lines.length === this._terminal.buffer.lines.maxLength && (this._terminal.buffer.lines.trimStart(1), this._terminal.buffer.ybase -= 1, this._terminal.buffer.ydisp -= 1), this._terminal.buffer.lines.splice(i + 1, 0, this._terminal.blankLine(!0)), this._terminal.buffer.lines.splice(n, 1);
+this._terminal.updateRange(this._terminal.buffer.y), this._terminal.updateRange(this._terminal.buffer.scrollBottom);
 }, e.prototype.deleteChars = function(e) {
 var t, n, i;
-for ((t = e[0]) < 1 && (t = 1), n = this._terminal.y + this._terminal.ybase, i = [ this._terminal.eraseAttr(), " ", 1 ]; t--; ) this._terminal.lines.get(n).splice(this._terminal.x, 1), this._terminal.lines.get(n).push(i);
+for ((t = e[0]) < 1 && (t = 1), n = this._terminal.buffer.y + this._terminal.buffer.ybase, i = [ this._terminal.eraseAttr(), " ", 1 ]; t--; ) this._terminal.buffer.lines.get(n).splice(this._terminal.buffer.x, 1), this._terminal.buffer.lines.get(n).push(i);
 }, e.prototype.scrollUp = function(e) {
-for (var t = e[0] || 1; t--; ) this._terminal.lines.splice(this._terminal.ybase + this._terminal.scrollTop, 1), this._terminal.lines.splice(this._terminal.ybase + this._terminal.scrollBottom, 0, this._terminal.blankLine());
-this._terminal.updateRange(this._terminal.scrollTop), this._terminal.updateRange(this._terminal.scrollBottom);
+for (var t = e[0] || 1; t--; ) this._terminal.buffer.lines.splice(this._terminal.buffer.ybase + this._terminal.buffer.scrollTop, 1), this._terminal.buffer.lines.splice(this._terminal.buffer.ybase + this._terminal.buffer.scrollBottom, 0, this._terminal.blankLine());
+this._terminal.updateRange(this._terminal.buffer.scrollTop), this._terminal.updateRange(this._terminal.buffer.scrollBottom);
 }, e.prototype.scrollDown = function(e) {
-for (var t = e[0] || 1; t--; ) this._terminal.lines.splice(this._terminal.ybase + this._terminal.scrollBottom, 1), this._terminal.lines.splice(this._terminal.ybase + this._terminal.scrollTop, 0, this._terminal.blankLine());
-this._terminal.updateRange(this._terminal.scrollTop), this._terminal.updateRange(this._terminal.scrollBottom);
+for (var t = e[0] || 1; t--; ) this._terminal.buffer.lines.splice(this._terminal.buffer.ybase + this._terminal.buffer.scrollBottom, 1), this._terminal.buffer.lines.splice(this._terminal.buffer.ybase + this._terminal.buffer.scrollTop, 0, this._terminal.blankLine());
+this._terminal.updateRange(this._terminal.buffer.scrollTop), this._terminal.updateRange(this._terminal.buffer.scrollBottom);
 }, e.prototype.eraseChars = function(e) {
 var t, n, i, r;
-for ((t = e[0]) < 1 && (t = 1), n = this._terminal.y + this._terminal.ybase, i = this._terminal.x, r = [ this._terminal.eraseAttr(), " ", 1 ]; t-- && i < this._terminal.cols; ) this._terminal.lines.get(n)[i++] = r;
+for ((t = e[0]) < 1 && (t = 1), n = this._terminal.buffer.y + this._terminal.buffer.ybase, i = this._terminal.buffer.x, r = [ this._terminal.eraseAttr(), " ", 1 ]; t-- && i < this._terminal.cols; ) this._terminal.buffer.lines.get(n)[i++] = r;
 }, e.prototype.cursorBackwardTab = function(e) {
-for (var t = e[0] || 1; t--; ) this._terminal.x = this._terminal.prevStop();
+for (var t = e[0] || 1; t--; ) this._terminal.buffer.x = this._terminal.prevStop();
 }, e.prototype.charPosAbsolute = function(e) {
 var t = e[0];
-t < 1 && (t = 1), this._terminal.x = t - 1, this._terminal.x >= this._terminal.cols && (this._terminal.x = this._terminal.cols - 1);
+t < 1 && (t = 1), this._terminal.buffer.x = t - 1, this._terminal.buffer.x >= this._terminal.cols && (this._terminal.buffer.x = this._terminal.cols - 1);
 }, e.prototype.HPositionRelative = function(e) {
 var t = e[0];
-t < 1 && (t = 1), this._terminal.x += t, this._terminal.x >= this._terminal.cols && (this._terminal.x = this._terminal.cols - 1);
+t < 1 && (t = 1), this._terminal.buffer.x += t, this._terminal.buffer.x >= this._terminal.cols && (this._terminal.buffer.x = this._terminal.cols - 1);
 }, e.prototype.repeatPrecedingCharacter = function(e) {
-for (var t = e[0] || 1, n = this._terminal.lines.get(this._terminal.ybase + this._terminal.y), i = n[this._terminal.x - 1] || [ this._terminal.defAttr, " ", 1 ]; t--; ) n[this._terminal.x++] = i;
+for (var t = e[0] || 1, n = this._terminal.buffer.lines.get(this._terminal.buffer.ybase + this._terminal.buffer.y), i = n[this._terminal.buffer.x - 1] || [ this._terminal.defAttr, " ", 1 ]; t--; ) n[this._terminal.buffer.x++] = i;
 }, e.prototype.sendDeviceAttributes = function(e) {
 e[0] > 0 || (this._terminal.prefix ? ">" === this._terminal.prefix && (this._terminal.is("xterm") ? this._terminal.send(i.C0.ESC + "[>0;276;0c") : this._terminal.is("rxvt-unicode") ? this._terminal.send(i.C0.ESC + "[>85;95;0c") : this._terminal.is("linux") ? this._terminal.send(e[0] + "c") : this._terminal.is("screen") && this._terminal.send(i.C0.ESC + "[>83;40003;0c")) : this._terminal.is("xterm") || this._terminal.is("rxvt-unicode") || this._terminal.is("screen") ? this._terminal.send(i.C0.ESC + "[?1;2c") : this._terminal.is("linux") && this._terminal.send(i.C0.ESC + "[?6c"));
 }, e.prototype.linePosAbsolute = function(e) {
 var t = e[0];
-t < 1 && (t = 1), this._terminal.y = t - 1, this._terminal.y >= this._terminal.rows && (this._terminal.y = this._terminal.rows - 1);
+t < 1 && (t = 1), this._terminal.buffer.y = t - 1, this._terminal.buffer.y >= this._terminal.rows && (this._terminal.buffer.y = this._terminal.rows - 1);
 }, e.prototype.VPositionRelative = function(e) {
 var t = e[0];
-t < 1 && (t = 1), this._terminal.y += t, this._terminal.y >= this._terminal.rows && (this._terminal.y = this._terminal.rows - 1), this._terminal.x >= this._terminal.cols && this._terminal.x--;
+t < 1 && (t = 1), this._terminal.buffer.y += t, this._terminal.buffer.y >= this._terminal.rows && (this._terminal.buffer.y = this._terminal.rows - 1), this._terminal.buffer.x >= this._terminal.cols && this._terminal.buffer.x--;
 }, e.prototype.HVPosition = function(e) {
-e[0] < 1 && (e[0] = 1), e[1] < 1 && (e[1] = 1), this._terminal.y = e[0] - 1, this._terminal.y >= this._terminal.rows && (this._terminal.y = this._terminal.rows - 1), this._terminal.x = e[1] - 1, this._terminal.x >= this._terminal.cols && (this._terminal.x = this._terminal.cols - 1);
+e[0] < 1 && (e[0] = 1), e[1] < 1 && (e[1] = 1), this._terminal.buffer.y = e[0] - 1, this._terminal.buffer.y >= this._terminal.rows && (this._terminal.buffer.y = this._terminal.rows - 1), this._terminal.buffer.x = e[1] - 1, this._terminal.buffer.x >= this._terminal.cols && (this._terminal.buffer.x = this._terminal.cols - 1);
 }, e.prototype.tabClear = function(e) {
 var t = e[0];
-t <= 0 ? delete this._terminal.tabs[this._terminal.x] : 3 === t && (this._terminal.tabs = {});
+t <= 0 ? delete this._terminal.buffer.tabs[this._terminal.buffer.x] : 3 === t && (this._terminal.buffer.tabs = {});
 }, e.prototype.setMode = function(e) {
 if (e.length > 1) for (var t = 0; t < e.length; t++) this.setMode([ e[t] ]); else if (this._terminal.prefix) {
 if ("?" === this._terminal.prefix) switch (e[0]) {
@@ -55601,19 +55689,7 @@ break;
 case 1049:
 case 47:
 case 1047:
-if (!this._terminal.normal) {
-var n = {
-lines: this._terminal.lines,
-ybase: this._terminal.ybase,
-ydisp: this._terminal.ydisp,
-x: this._terminal.x,
-y: this._terminal.y,
-scrollTop: this._terminal.scrollTop,
-scrollBottom: this._terminal.scrollBottom,
-tabs: this._terminal.tabs
-};
-this._terminal.reset(), this._terminal.viewport.syncScrollArea(), this._terminal.normal = n, this._terminal.showCursor();
-}
+this._terminal.buffers.activateAltBuffer(), this._terminal.viewport.syncScrollArea(), this._terminal.showCursor();
 }
 } else switch (e[0]) {
 case 4:
@@ -55675,7 +55751,7 @@ break;
 case 1049:
 case 47:
 case 1047:
-this._terminal.normal && (this._terminal.lines = this._terminal.normal.lines, this._terminal.ybase = this._terminal.normal.ybase, this._terminal.ydisp = this._terminal.normal.ydisp, this._terminal.x = this._terminal.normal.x, this._terminal.y = this._terminal.normal.y, this._terminal.scrollTop = this._terminal.normal.scrollTop, this._terminal.scrollBottom = this._terminal.normal.scrollBottom, this._terminal.tabs = this._terminal.normal.tabs, this._terminal.normal = null, this._terminal.selectionManager.setBuffer(this._terminal.lines), this._terminal.refresh(0, this._terminal.rows - 1), this._terminal.viewport.syncScrollArea(), this._terminal.showCursor());
+this._terminal.buffers.activateNormalBuffer(), this._terminal.selectionManager.setBuffer(this._terminal.buffer.lines), this._terminal.refresh(0, this._terminal.rows - 1), this._terminal.viewport.syncScrollArea(), this._terminal.showCursor();
 }
 } else switch (e[0]) {
 case 4:
@@ -55691,7 +55767,7 @@ this._terminal.curAttr = r << 18 | o << 9 | a;
 if (this._terminal.prefix) {
 if ("?" === this._terminal.prefix) switch (e[0]) {
 case 6:
-this._terminal.send(i.C0.ESC + "[?" + (this._terminal.y + 1) + ";" + (this._terminal.x + 1) + "R");
+this._terminal.send(i.C0.ESC + "[?" + (this._terminal.buffer.y + 1) + ";" + (this._terminal.buffer.x + 1) + "R");
 }
 } else switch (e[0]) {
 case 5:
@@ -55699,10 +55775,10 @@ this._terminal.send(i.C0.ESC + "[0n");
 break;
 
 case 6:
-this._terminal.send(i.C0.ESC + "[" + (this._terminal.y + 1) + ";" + (this._terminal.x + 1) + "R");
+this._terminal.send(i.C0.ESC + "[" + (this._terminal.buffer.y + 1) + ";" + (this._terminal.buffer.x + 1) + "R");
 }
 }, e.prototype.softReset = function(e) {
-this._terminal.cursorHidden = !1, this._terminal.insertMode = !1, this._terminal.originMode = !1, this._terminal.wraparoundMode = !0, this._terminal.applicationKeypad = !1, this._terminal.viewport.syncScrollArea(), this._terminal.applicationCursor = !1, this._terminal.scrollTop = 0, this._terminal.scrollBottom = this._terminal.rows - 1, this._terminal.curAttr = this._terminal.defAttr, this._terminal.x = this._terminal.y = 0, this._terminal.charset = null, this._terminal.glevel = 0, this._terminal.charsets = [ null ];
+this._terminal.cursorHidden = !1, this._terminal.insertMode = !1, this._terminal.originMode = !1, this._terminal.wraparoundMode = !0, this._terminal.applicationKeypad = !1, this._terminal.viewport.syncScrollArea(), this._terminal.applicationCursor = !1, this._terminal.buffer.scrollTop = 0, this._terminal.buffer.scrollBottom = this._terminal.rows - 1, this._terminal.curAttr = this._terminal.defAttr, this._terminal.buffer.x = this._terminal.buffer.y = 0, this._terminal.charset = null, this._terminal.glevel = 0, this._terminal.charsets = [ null ];
 }, e.prototype.setCursorStyle = function(e) {
 var t = e[0] < 1 ? 1 : e[0];
 switch (t) {
@@ -55723,40 +55799,56 @@ this._terminal.setOption("cursorStyle", "bar");
 var n = t % 2 == 1;
 this._terminal.setOption("cursorBlink", n);
 }, e.prototype.setScrollRegion = function(e) {
-this._terminal.prefix || (this._terminal.scrollTop = (e[0] || 1) - 1, this._terminal.scrollBottom = (e[1] && e[1] <= this._terminal.rows ? e[1] : this._terminal.rows) - 1, this._terminal.x = 0, this._terminal.y = 0);
+this._terminal.prefix || (this._terminal.buffer.scrollTop = (e[0] || 1) - 1, this._terminal.buffer.scrollBottom = (e[1] && e[1] <= this._terminal.rows ? e[1] : this._terminal.rows) - 1, this._terminal.buffer.x = 0, this._terminal.buffer.y = 0);
 }, e.prototype.saveCursor = function(e) {
-this._terminal.savedX = this._terminal.x, this._terminal.savedY = this._terminal.y;
+this._terminal.buffer.savedX = this._terminal.buffer.x, this._terminal.buffer.savedY = this._terminal.buffer.y;
 }, e.prototype.restoreCursor = function(e) {
-this._terminal.x = this._terminal.savedX || 0, this._terminal.y = this._terminal.savedY || 0;
+this._terminal.buffer.x = this._terminal.buffer.savedX || 0, this._terminal.buffer.y = this._terminal.buffer.savedY || 0;
 }, e;
 }();
-n.InputHandler = o;
-var a = function(e) {
-function t(e) {
-var t, n = 0, r = i.length - 1;
-if (e < i[0][0] || e > i[r][1]) return !1;
-for (;r >= n; ) if (t = Math.floor((n + r) / 2), e > i[t][1]) n = t + 1; else {
-if (!(e < i[t][0])) return !0;
-r = t - 1;
+n.InputHandler = o, n.wcwidth = function(e) {
+function t(e, t) {
+var n, i = 0, r = t.length - 1;
+if (e < t[0][0] || e > t[r][1]) return !1;
+for (;r >= i; ) if (n = i + r >> 1, e > t[n][1]) i = n + 1; else {
+if (!(e < t[n][0])) return !0;
+r = n - 1;
 }
 return !1;
 }
-function n(e) {
-return e >= 4352 && (e <= 4447 || 9001 === e || 9002 === e || e >= 11904 && e <= 42191 && 12351 !== e || e >= 44032 && e <= 55203 || e >= 63744 && e <= 64255 || e >= 65040 && e <= 65049 || e >= 65072 && e <= 65135 || e >= 65280 && e <= 65376 || e >= 65504 && e <= 65510 || e >= 131072 && e <= 196605 || e >= 196608 && e <= 262141);
+function n(n) {
+return 0 === n ? e.nul : n < 32 || n >= 127 && n < 160 ? e.control : t(n, a) ? 0 : i(n) ? 2 : 1;
 }
-var i = [ [ 768, 879 ], [ 1155, 1158 ], [ 1160, 1161 ], [ 1425, 1469 ], [ 1471, 1471 ], [ 1473, 1474 ], [ 1476, 1477 ], [ 1479, 1479 ], [ 1536, 1539 ], [ 1552, 1557 ], [ 1611, 1630 ], [ 1648, 1648 ], [ 1750, 1764 ], [ 1767, 1768 ], [ 1770, 1773 ], [ 1807, 1807 ], [ 1809, 1809 ], [ 1840, 1866 ], [ 1958, 1968 ], [ 2027, 2035 ], [ 2305, 2306 ], [ 2364, 2364 ], [ 2369, 2376 ], [ 2381, 2381 ], [ 2385, 2388 ], [ 2402, 2403 ], [ 2433, 2433 ], [ 2492, 2492 ], [ 2497, 2500 ], [ 2509, 2509 ], [ 2530, 2531 ], [ 2561, 2562 ], [ 2620, 2620 ], [ 2625, 2626 ], [ 2631, 2632 ], [ 2635, 2637 ], [ 2672, 2673 ], [ 2689, 2690 ], [ 2748, 2748 ], [ 2753, 2757 ], [ 2759, 2760 ], [ 2765, 2765 ], [ 2786, 2787 ], [ 2817, 2817 ], [ 2876, 2876 ], [ 2879, 2879 ], [ 2881, 2883 ], [ 2893, 2893 ], [ 2902, 2902 ], [ 2946, 2946 ], [ 3008, 3008 ], [ 3021, 3021 ], [ 3134, 3136 ], [ 3142, 3144 ], [ 3146, 3149 ], [ 3157, 3158 ], [ 3260, 3260 ], [ 3263, 3263 ], [ 3270, 3270 ], [ 3276, 3277 ], [ 3298, 3299 ], [ 3393, 3395 ], [ 3405, 3405 ], [ 3530, 3530 ], [ 3538, 3540 ], [ 3542, 3542 ], [ 3633, 3633 ], [ 3636, 3642 ], [ 3655, 3662 ], [ 3761, 3761 ], [ 3764, 3769 ], [ 3771, 3772 ], [ 3784, 3789 ], [ 3864, 3865 ], [ 3893, 3893 ], [ 3895, 3895 ], [ 3897, 3897 ], [ 3953, 3966 ], [ 3968, 3972 ], [ 3974, 3975 ], [ 3984, 3991 ], [ 3993, 4028 ], [ 4038, 4038 ], [ 4141, 4144 ], [ 4146, 4146 ], [ 4150, 4151 ], [ 4153, 4153 ], [ 4184, 4185 ], [ 4448, 4607 ], [ 4959, 4959 ], [ 5906, 5908 ], [ 5938, 5940 ], [ 5970, 5971 ], [ 6002, 6003 ], [ 6068, 6069 ], [ 6071, 6077 ], [ 6086, 6086 ], [ 6089, 6099 ], [ 6109, 6109 ], [ 6155, 6157 ], [ 6313, 6313 ], [ 6432, 6434 ], [ 6439, 6440 ], [ 6450, 6450 ], [ 6457, 6459 ], [ 6679, 6680 ], [ 6912, 6915 ], [ 6964, 6964 ], [ 6966, 6970 ], [ 6972, 6972 ], [ 6978, 6978 ], [ 7019, 7027 ], [ 7616, 7626 ], [ 7678, 7679 ], [ 8203, 8207 ], [ 8234, 8238 ], [ 8288, 8291 ], [ 8298, 8303 ], [ 8400, 8431 ], [ 12330, 12335 ], [ 12441, 12442 ], [ 43014, 43014 ], [ 43019, 43019 ], [ 43045, 43046 ], [ 64286, 64286 ], [ 65024, 65039 ], [ 65056, 65059 ], [ 65279, 65279 ], [ 65529, 65531 ], [ 68097, 68099 ], [ 68101, 68102 ], [ 68108, 68111 ], [ 68152, 68154 ], [ 68159, 68159 ], [ 119143, 119145 ], [ 119155, 119170 ], [ 119173, 119179 ], [ 119210, 119213 ], [ 119362, 119364 ], [ 917505, 917505 ], [ 917536, 917631 ], [ 917760, 917999 ] ];
-return function(i) {
-return 0 === i ? e.nul : i < 32 || i >= 127 && i < 160 ? e.control : t(i) ? 0 : n(i) ? 2 : 1;
+function i(e) {
+return e >= 4352 && (e <= 4447 || 9001 === e || 9002 === e || e >= 11904 && e <= 42191 && 12351 !== e || e >= 44032 && e <= 55203 || e >= 63744 && e <= 64255 || e >= 65040 && e <= 65049 || e >= 65072 && e <= 65135 || e >= 65280 && e <= 65376 || e >= 65504 && e <= 65510);
+}
+function r(e) {
+return t(e, s) ? 0 : e >= 131072 && e <= 196605 || e >= 196608 && e <= 262141 ? 2 : 1;
+}
+function o() {
+c = "undefined" == typeof Uint32Array ? new Array(4096) : new Uint32Array(4096);
+for (var e = 0; e < 4096; ++e) {
+for (var t = 0, i = 16; i--; ) t = t << 2 | n(16 * e + i);
+c[e] = t;
+}
+return c;
+}
+var a = [ [ 768, 879 ], [ 1155, 1158 ], [ 1160, 1161 ], [ 1425, 1469 ], [ 1471, 1471 ], [ 1473, 1474 ], [ 1476, 1477 ], [ 1479, 1479 ], [ 1536, 1539 ], [ 1552, 1557 ], [ 1611, 1630 ], [ 1648, 1648 ], [ 1750, 1764 ], [ 1767, 1768 ], [ 1770, 1773 ], [ 1807, 1807 ], [ 1809, 1809 ], [ 1840, 1866 ], [ 1958, 1968 ], [ 2027, 2035 ], [ 2305, 2306 ], [ 2364, 2364 ], [ 2369, 2376 ], [ 2381, 2381 ], [ 2385, 2388 ], [ 2402, 2403 ], [ 2433, 2433 ], [ 2492, 2492 ], [ 2497, 2500 ], [ 2509, 2509 ], [ 2530, 2531 ], [ 2561, 2562 ], [ 2620, 2620 ], [ 2625, 2626 ], [ 2631, 2632 ], [ 2635, 2637 ], [ 2672, 2673 ], [ 2689, 2690 ], [ 2748, 2748 ], [ 2753, 2757 ], [ 2759, 2760 ], [ 2765, 2765 ], [ 2786, 2787 ], [ 2817, 2817 ], [ 2876, 2876 ], [ 2879, 2879 ], [ 2881, 2883 ], [ 2893, 2893 ], [ 2902, 2902 ], [ 2946, 2946 ], [ 3008, 3008 ], [ 3021, 3021 ], [ 3134, 3136 ], [ 3142, 3144 ], [ 3146, 3149 ], [ 3157, 3158 ], [ 3260, 3260 ], [ 3263, 3263 ], [ 3270, 3270 ], [ 3276, 3277 ], [ 3298, 3299 ], [ 3393, 3395 ], [ 3405, 3405 ], [ 3530, 3530 ], [ 3538, 3540 ], [ 3542, 3542 ], [ 3633, 3633 ], [ 3636, 3642 ], [ 3655, 3662 ], [ 3761, 3761 ], [ 3764, 3769 ], [ 3771, 3772 ], [ 3784, 3789 ], [ 3864, 3865 ], [ 3893, 3893 ], [ 3895, 3895 ], [ 3897, 3897 ], [ 3953, 3966 ], [ 3968, 3972 ], [ 3974, 3975 ], [ 3984, 3991 ], [ 3993, 4028 ], [ 4038, 4038 ], [ 4141, 4144 ], [ 4146, 4146 ], [ 4150, 4151 ], [ 4153, 4153 ], [ 4184, 4185 ], [ 4448, 4607 ], [ 4959, 4959 ], [ 5906, 5908 ], [ 5938, 5940 ], [ 5970, 5971 ], [ 6002, 6003 ], [ 6068, 6069 ], [ 6071, 6077 ], [ 6086, 6086 ], [ 6089, 6099 ], [ 6109, 6109 ], [ 6155, 6157 ], [ 6313, 6313 ], [ 6432, 6434 ], [ 6439, 6440 ], [ 6450, 6450 ], [ 6457, 6459 ], [ 6679, 6680 ], [ 6912, 6915 ], [ 6964, 6964 ], [ 6966, 6970 ], [ 6972, 6972 ], [ 6978, 6978 ], [ 7019, 7027 ], [ 7616, 7626 ], [ 7678, 7679 ], [ 8203, 8207 ], [ 8234, 8238 ], [ 8288, 8291 ], [ 8298, 8303 ], [ 8400, 8431 ], [ 12330, 12335 ], [ 12441, 12442 ], [ 43014, 43014 ], [ 43019, 43019 ], [ 43045, 43046 ], [ 64286, 64286 ], [ 65024, 65039 ], [ 65056, 65059 ], [ 65279, 65279 ], [ 65529, 65531 ] ], s = [ [ 68097, 68099 ], [ 68101, 68102 ], [ 68108, 68111 ], [ 68152, 68154 ], [ 68159, 68159 ], [ 119143, 119145 ], [ 119155, 119170 ], [ 119173, 119179 ], [ 119210, 119213 ], [ 119362, 119364 ], [ 917505, 917505 ], [ 917536, 917631 ], [ 917760, 917999 ] ], l = 0 | e.control, c = null;
+return function(e) {
+if ((e |= 0) < 32) return 0 | l;
+if (e < 127) return 1;
+var t = c || o();
+return e < 65536 ? t[e >> 4] >> ((15 & e) << 1) & 3 : r(e);
 };
 }({
 nul: 0,
 control: 0
 });
 }, {
-"./Charsets": 1,
-"./EscapeSequences": 3
+"./Charsets": 3,
+"./EscapeSequences": 5
 } ],
-6: [ function(e, t, n) {
+8: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -55865,7 +55957,7 @@ return this._replaceNode(e, u, t, h), 1;
 }();
 o.TIME_BEFORE_LINKIFY = 200, n.Linkifier = o;
 }, {} ],
-7: [ function(e, t, n) {
+9: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -55902,7 +55994,7 @@ e.setState(c.IGNORE);
 }, a.c = function(e, t) {
 t.reset();
 }, a.E = function(e, t) {
-t.x = 0, t.index(), e.setState(c.NORMAL);
+t.buffer.x = 0, t.index(), e.setState(c.NORMAL);
 }, a.D = function(e, t) {
 t.index(), e.setState(c.NORMAL);
 }, a.M = function(e, t) {
@@ -56041,7 +56133,7 @@ this._inputHandler = e, this._terminal = t, this._state = c.NORMAL;
 }
 return e.prototype.parse = function(e) {
 var t, n, u, d, h = e.length;
-for (this._position = 0, this._terminal.surrogate_high && (e = this._terminal.surrogate_high + e, this._terminal.surrogate_high = ""); this._position < h; this._position++) {
+for (this._terminal.debug && this._terminal.log("data: " + e), this._position = 0, this._terminal.surrogate_high && (e = this._terminal.surrogate_high + e, this._terminal.surrogate_high = ""); this._position < h; this._position++) {
 if (n = e[this._position], 55296 <= (u = e.charCodeAt(this._position)) && u <= 56319) {
 if (d = e.charCodeAt(this._position + 1), isNaN(d)) {
 this._terminal.surrogate_high = n;
@@ -56171,7 +56263,7 @@ break;
 this.finalizeParam(), this._state = c.CSI;
 
 case c.CSI:
-n in l ? l[n](this._inputHandler, this._terminal.params, this._terminal.prefix, this._terminal.postfix, this) : this._terminal.error("Unknown CSI code: %s.", n), this._state = c.NORMAL, this._terminal.prefix = "", this._terminal.postfix = "";
+n in l ? (this._terminal.debug && this._terminal.log("CSI " + (this._terminal.prefix ? this._terminal.prefix : "") + " " + (this._terminal.params ? this._terminal.params.join(";") : "") + " " + (this._terminal.postfix ? this._terminal.postfix : "") + " " + n), l[n](this._inputHandler, this._terminal.params, this._terminal.prefix, this._terminal.postfix, this)) : this._terminal.error("Unknown CSI code: %s.", n), this._state = c.NORMAL, this._terminal.prefix = "", this._terminal.postfix = "";
 break;
 
 case c.DCS:
@@ -56193,7 +56285,7 @@ f = '61"p';
 break;
 
 case "r":
-f = this._terminal.scrollTop + 1 + ";" + (this._terminal.scrollBottom + 1) + "r";
+f = this._terminal.buffer.scrollTop + 1 + ";" + (this._terminal.buffer.scrollBottom + 1) + "r";
 break;
 
 case "m":
@@ -56243,10 +56335,10 @@ this._position++;
 }();
 n.Parser = u;
 }, {
-"./Charsets": 1,
-"./EscapeSequences": 3
+"./Charsets": 3,
+"./EscapeSequences": 5
 } ],
-8: [ function(e, t, n) {
+10: [ function(e, t, n) {
 "use strict";
 function i(e) {
 var t = e.ownerDocument.createElement("span");
@@ -56287,22 +56379,23 @@ var n;
 t - e >= this._terminal.rows / 2 && (n = this._terminal.element.parentNode) && this._terminal.element.removeChild(this._terminal.rowContainer);
 var i = this._terminal.cols, o = e;
 for (t >= this._terminal.rows && (this._terminal.log("`end` is too large. Most likely a bad CSR."), t = this._terminal.rows - 1); o <= t; o++) {
-var s = o + this._terminal.ydisp, l = this._terminal.lines.get(s), c = void 0;
-c = this._terminal.y === o - (this._terminal.ybase - this._terminal.ydisp) && this._terminal.cursorState && !this._terminal.cursorHidden ? this._terminal.x : -1;
+var s = o + this._terminal.buffer.ydisp, l = this._terminal.buffer.lines.get(s), c = void 0;
+c = this._terminal.buffer.y === o - (this._terminal.buffer.ybase - this._terminal.buffer.ydisp) && this._terminal.cursorState && !this._terminal.cursorHidden ? this._terminal.buffer.x : -1;
 for (var u = this._terminal.defAttr, d = document.createDocumentFragment(), h = "", f = void 0; this._terminal.children[o].children.length; ) {
 var p = this._terminal.children[o].children[0];
 this._terminal.children[o].removeChild(p), this._spanElementObjectPool.release(p);
 }
 for (var g = 0; g < i; g++) {
-var m = l[g][0], v = l[g][1], b = l[g][2];
+var m = l[g][0], v = l[g][1], b = l[g][2], y = g === c;
 if (b) {
-if (g === c && (m = -1), m !== u && (u !== this._terminal.defAttr && (h && (f.innerHTML = h, h = ""), d.appendChild(f), f = null), m !== this._terminal.defAttr)) if (h && !f && (f = this._spanElementObjectPool.acquire()), f && (h && (f.innerHTML = h, h = ""), d.appendChild(f)), f = this._spanElementObjectPool.acquire(), -1 === m) f.classList.add("reverse-video"), f.classList.add("terminal-cursor"); else {
-var y = 511 & m, w = m >> 9 & 511, x = m >> 18;
-if (x & r.BOLD && (a || f.classList.add("xterm-bold"), w < 8 && (w += 8)), x & r.UNDERLINE && f.classList.add("xterm-underline"), x & r.BLINK && f.classList.add("xterm-blink"), x & r.INVERSE) {
-var _ = y;
-y = w, w = _, 1 & x && w < 8 && (w += 8);
+if ((m !== u || y) && (u === this._terminal.defAttr || y || (h && (f.innerHTML = h, h = ""), d.appendChild(f), f = null), m !== this._terminal.defAttr || y)) {
+h && !f && (f = this._spanElementObjectPool.acquire()), f && (h && (f.innerHTML = h, h = ""), d.appendChild(f)), f = this._spanElementObjectPool.acquire();
+var w = 511 & m, x = m >> 9 & 511, _ = m >> 18;
+if (y && (f.classList.add("reverse-video"), f.classList.add("terminal-cursor")), _ & r.BOLD && (a || f.classList.add("xterm-bold"), x < 8 && (x += 8)), _ & r.UNDERLINE && f.classList.add("xterm-underline"), _ & r.BLINK && f.classList.add("xterm-blink"), _ & r.INVERSE) {
+var C = w;
+w = x, x = C, 1 & _ && x < 8 && (x += 8);
 }
-x & r.INVISIBLE && f.classList.add("xterm-hidden"), x & r.INVERSE && (257 === y && (y = 15), 256 === w && (w = 0)), y < 256 && f.classList.add("xterm-bg-color-" + y), w < 256 && f.classList.add("xterm-color-" + w);
+_ & r.INVISIBLE && !y && f.classList.add("xterm-hidden"), _ & r.INVERSE && (257 === w && (w = 15), 256 === x && (x = 0)), w < 256 && f.classList.add("xterm-bg-color-" + w), x < 256 && f.classList.add("xterm-color-" + x);
 }
 if (2 === b) h += '<span class="xterm-wide-char">' + v + "</span>"; else if (v.charCodeAt(0) > 255) h += '<span class="xterm-normal-char">' + v + "</span>"; else switch (v) {
 case "&":
@@ -56320,7 +56413,7 @@ break;
 default:
 h += v <= " " ? "&nbsp;" : v;
 }
-u = m;
+u = y ? -1 : m;
 }
 }
 h && !f && (f = this._spanElementObjectPool.acquire()), f && (h && (f.innerHTML = h, h = ""), d.appendChild(f), f = null), this._terminal.children[o].appendChild(d);
@@ -56333,7 +56426,7 @@ end: t
 }, e.prototype.refreshSelection = function(e, t) {
 for (;this._terminal.selectionContainer.children.length; ) this._terminal.selectionContainer.removeChild(this._terminal.selectionContainer.children[0]);
 if (e && t) {
-var n = e[1] - this._terminal.ydisp, i = t[1] - this._terminal.ydisp, r = Math.max(n, 0), o = Math.min(i, this._terminal.rows - 1);
+var n = e[1] - this._terminal.buffer.ydisp, i = t[1] - this._terminal.buffer.ydisp, r = Math.max(n, 0), o = Math.min(i, this._terminal.rows - 1);
 if (!(r >= this._terminal.rows || o < 0)) {
 var a = document.createDocumentFragment(), s = n === r ? e[0] : 0, l = r === o ? t[0] : this._terminal.cols;
 a.appendChild(this._createSelectionElement(r, s, l));
@@ -56353,9 +56446,9 @@ return r.style.height = i * this._terminal.charMeasure.height + "px", r.style.to
 }();
 n.Renderer = s;
 }, {
-"./utils/DomElementObjectPool": 16
+"./utils/DomElementObjectPool": 19
 } ],
-9: [ function(e, t, n) {
+11: [ function(e, t, n) {
 "use strict";
 var i = this && this.__extends || function() {
 var e = Object.setPrototypeOf || {
@@ -56375,33 +56468,45 @@ e(t, n), t.prototype = null === n ? Object.create(n) : (i.prototype = n.prototyp
 Object.defineProperty(n, "__esModule", {
 value: !0
 });
-var r, o = e("./utils/Mouse"), a = e("./utils/Browser"), s = e("./EventEmitter"), l = e("./SelectionModel"), c = String.fromCharCode(160), u = new RegExp(c, "g");
+var r, o = e("./utils/Mouse"), a = e("./utils/Browser"), s = e("./EventEmitter"), l = e("./SelectionModel"), c = e("./utils/BufferLine"), u = String.fromCharCode(160), d = new RegExp(u, "g");
 !function(e) {
 e[e.NORMAL = 0] = "NORMAL", e[e.WORD = 1] = "WORD", e[e.LINE = 2] = "LINE";
 }(r || (r = {}));
-var d = function(e) {
+var h = function(e) {
 function t(t, n, i, o) {
 var a = e.call(this) || this;
-return a._terminal = t, a._buffer = n, a._rowContainer = i, a._charMeasure = o, a._initListeners(), a.enable(), a._model = new l.SelectionModel(t), a._lastMouseDownTime = 0, a._activeSelectionMode = r.NORMAL, a;
+return a._terminal = t, a._buffer = n, a._rowContainer = i, a._charMeasure = o, a._enabled = !0, a._initListeners(), a.enable(), a._model = new l.SelectionModel(t), a._activeSelectionMode = r.NORMAL, a;
 }
 return i(t, e), t.prototype._initListeners = function() {
 var e = this;
-this._bufferTrimListener = function(t) {
-return e._onTrim(t);
-}, this._mouseMoveListener = function(t) {
+this._mouseMoveListener = function(t) {
 return e._onMouseMove(t);
-}, this._mouseDownListener = function(t) {
-return e._onMouseDown(t);
 }, this._mouseUpListener = function(t) {
 return e._onMouseUp(t);
-};
+}, this._rowContainer.addEventListener("mousedown", function(t) {
+return e._onMouseDown(t);
+}), this._buffer.on("trim", function(t) {
+return e._onTrim(t);
+});
 }, t.prototype.disable = function() {
-this.clearSelection(), this._buffer.off("trim", this._bufferTrimListener), this._rowContainer.removeEventListener("mousedown", this._mouseDownListener);
+this.clearSelection(), this._enabled = !1;
 }, t.prototype.enable = function() {
-this._buffer.on("trim", this._bufferTrimListener), this._rowContainer.addEventListener("mousedown", this._mouseDownListener);
+this._enabled = !0;
 }, t.prototype.setBuffer = function(e) {
 this._buffer = e, this.clearSelection();
-}, Object.defineProperty(t.prototype, "hasSelection", {
+}, Object.defineProperty(t.prototype, "selectionStart", {
+get: function() {
+return this._model.finalSelectionStart;
+},
+enumerable: !0,
+configurable: !0
+}), Object.defineProperty(t.prototype, "selectionEnd", {
+get: function() {
+return this._model.finalSelectionEnd;
+},
+enumerable: !0,
+configurable: !0
+}), Object.defineProperty(t.prototype, "hasSelection", {
 get: function() {
 var e = this._model.finalSelectionStart, t = this._model.finalSelectionEnd;
 return !(!e || !t) && (e[0] !== t[0] || e[1] !== t[1]);
@@ -56413,35 +56518,23 @@ get: function() {
 var e = this._model.finalSelectionStart, t = this._model.finalSelectionEnd;
 if (!e || !t) return "";
 var n = e[1] === t[1] ? t[0] : null, i = [];
-i.push(this._translateBufferLineToString(this._buffer.get(e[1]), !0, e[0], n));
+i.push(c.translateBufferLineToString(this._buffer.get(e[1]), !0, e[0], n));
 for (var r = e[1] + 1; r <= t[1] - 1; r++) {
-var o = this._buffer.get(r), s = this._translateBufferLineToString(o, !0);
+var o = this._buffer.get(r), s = c.translateBufferLineToString(o, !0);
 o.isWrapped ? i[i.length - 1] += s : i.push(s);
 }
 if (e[1] !== t[1]) {
-var o = this._buffer.get(t[1]), s = this._translateBufferLineToString(o, !0, 0, t[0]);
+var o = this._buffer.get(t[1]), s = c.translateBufferLineToString(o, !0, 0, t[0]);
 o.isWrapped ? i[i.length - 1] += s : i.push(s);
 }
 return i.map(function(e) {
-return e.replace(u, " ");
+return e.replace(d, " ");
 }).join(a.isMSWindows ? "\r\n" : "\n");
 },
 enumerable: !0,
 configurable: !0
 }), t.prototype.clearSelection = function() {
 this._model.clearSelection(), this._removeMouseDownListeners(), this.refresh();
-}, t.prototype._translateBufferLineToString = function(e, t, n, i) {
-void 0 === n && (n = 0), void 0 === i && (i = null);
-for (var r = "", o = n, a = i, s = 0; s < e.length; s++) {
-var l = e[s];
-r += l[1], 0 === l[2] && (n >= s && o--, i >= s && a--);
-}
-var c = a || e.length;
-if (t) {
-var u = r.search(/\s+$/);
-if (-1 !== u && (c = Math.min(c, u)), c <= o) return "";
-}
-return r.substring(o, c);
 }, t.prototype.refresh = function(e) {
 var t = this;
 this._refreshAnimationFrame || (this._refreshAnimationFrame = window.requestAnimationFrame(function() {
@@ -56458,12 +56551,18 @@ this._model.isSelectAllActive = !0, this.refresh();
 this._model.onTrim(e) && this.refresh();
 }, t.prototype._getMouseBufferCoords = function(e) {
 var t = o.getCoords(e, this._rowContainer, this._charMeasure, this._terminal.cols, this._terminal.rows, !0);
-return t[0]--, t[1]--, t[1] += this._terminal.ydisp, t;
+return t ? (t[0]--, t[1]--, t[1] += this._terminal.buffer.ydisp, t) : null;
 }, t.prototype._getMouseEventScrollAmount = function(e) {
 var t = o.getCoordsRelativeToElement(e, this._rowContainer)[1], n = this._terminal.rows * this._charMeasure.height;
 return t >= 0 && t <= n ? 0 : (t > n && (t -= n), t = Math.min(Math.max(t, -50), 50), (t /= 50) / Math.abs(t) + Math.round(14 * t));
 }, t.prototype._onMouseDown = function(e) {
-0 === e.button && (e.preventDefault(), this._dragScrollAmount = 0, this._setMouseClickCount(e), e.shiftKey ? this._onShiftClick(e) : 1 === this._clickCount ? this._onSingleClick(e) : 2 === this._clickCount ? this._onDoubleClick(e) : 3 === this._clickCount && this._onTripleClick(e), this._addMouseDownListeners(), this.refresh(!0));
+if (2 === e.button && this.hasSelection) e.stopPropagation(); else if (0 === e.button) {
+if (!this._enabled) {
+if (!(a.isMac && e.altKey)) return;
+e.stopPropagation();
+}
+e.preventDefault(), this._dragScrollAmount = 0, this._enabled && e.shiftKey ? this._onIncrementalClick(e) : 1 === e.detail ? this._onSingleClick(e) : 2 === e.detail ? this._onDoubleClick(e) : 3 === e.detail && this._onTripleClick(e), this._addMouseDownListeners(), this.refresh(!0);
+}
 }, t.prototype._addMouseDownListeners = function() {
 var e = this;
 this._rowContainer.ownerDocument.addEventListener("mousemove", this._mouseMoveListener), this._rowContainer.ownerDocument.addEventListener("mouseup", this._mouseUpListener), this._dragScrollIntervalTimer = setInterval(function() {
@@ -56471,44 +56570,49 @@ return e._dragScroll();
 }, 50);
 }, t.prototype._removeMouseDownListeners = function() {
 this._rowContainer.ownerDocument.removeEventListener("mousemove", this._mouseMoveListener), this._rowContainer.ownerDocument.removeEventListener("mouseup", this._mouseUpListener), clearInterval(this._dragScrollIntervalTimer), this._dragScrollIntervalTimer = null;
-}, t.prototype._onShiftClick = function(e) {
+}, t.prototype._onIncrementalClick = function(e) {
 this._model.selectionStart && (this._model.selectionEnd = this._getMouseBufferCoords(e));
 }, t.prototype._onSingleClick = function(e) {
-this._model.selectionStartLength = 0, this._model.isSelectAllActive = !1, this._activeSelectionMode = r.NORMAL, this._model.selectionStart = this._getMouseBufferCoords(e), this._model.selectionStart && (this._model.selectionEnd = null, 0 === this._buffer.get(this._model.selectionStart[1])[this._model.selectionStart[0]][2] && this._model.selectionStart[0]++);
+if (this._model.selectionStartLength = 0, this._model.isSelectAllActive = !1, this._activeSelectionMode = r.NORMAL, this._model.selectionStart = this._getMouseBufferCoords(e), this._model.selectionStart) {
+this._model.selectionEnd = null;
+var t = this._buffer.get(this._model.selectionStart[1]);
+t && 0 === t[this._model.selectionStart[0]][2] && this._model.selectionStart[0]++;
+}
 }, t.prototype._onDoubleClick = function(e) {
 var t = this._getMouseBufferCoords(e);
 t && (this._activeSelectionMode = r.WORD, this._selectWordAt(t));
 }, t.prototype._onTripleClick = function(e) {
 var t = this._getMouseBufferCoords(e);
 t && (this._activeSelectionMode = r.LINE, this._selectLineAt(t[1]));
-}, t.prototype._setMouseClickCount = function(e) {
-var t = new Date().getTime();
-(t - this._lastMouseDownTime > 400 || this._distanceFromLastMousePosition(e) > 10) && (this._clickCount = 0), this._lastMouseDownTime = t, this._lastMousePosition = [ e.pageX, e.pageY ], this._clickCount++;
-}, t.prototype._distanceFromLastMousePosition = function(e) {
-return Math.max(Math.abs(this._lastMousePosition[0] - e.pageX), Math.abs(this._lastMousePosition[1] - e.pageY));
 }, t.prototype._onMouseMove = function(e) {
 var t = this._model.selectionEnd ? [ this._model.selectionEnd[0], this._model.selectionEnd[1] ] : null;
-if (this._model.selectionEnd = this._getMouseBufferCoords(e), this._activeSelectionMode === r.LINE ? this._model.selectionEnd[1] < this._model.selectionStart[1] ? this._model.selectionEnd[0] = 0 : this._model.selectionEnd[0] = this._terminal.cols : this._activeSelectionMode === r.WORD && this._selectToWordAt(this._model.selectionEnd), this._dragScrollAmount = this._getMouseEventScrollAmount(e), this._dragScrollAmount > 0 ? this._model.selectionEnd[0] = this._terminal.cols - 1 : this._dragScrollAmount < 0 && (this._model.selectionEnd[0] = 0), this._model.selectionEnd[1] < this._buffer.length) {
+if (this._model.selectionEnd = this._getMouseBufferCoords(e), this._model.selectionEnd) {
+if (this._activeSelectionMode === r.LINE ? this._model.selectionEnd[1] < this._model.selectionStart[1] ? this._model.selectionEnd[0] = 0 : this._model.selectionEnd[0] = this._terminal.cols : this._activeSelectionMode === r.WORD && this._selectToWordAt(this._model.selectionEnd), this._dragScrollAmount = this._getMouseEventScrollAmount(e), this._dragScrollAmount > 0 ? this._model.selectionEnd[0] = this._terminal.cols - 1 : this._dragScrollAmount < 0 && (this._model.selectionEnd[0] = 0), this._model.selectionEnd[1] < this._buffer.length) {
 var n = this._buffer.get(this._model.selectionEnd[1])[this._model.selectionEnd[0]];
 n && 0 === n[2] && this._model.selectionEnd[0]++;
 }
 t && t[0] === this._model.selectionEnd[0] && t[1] === this._model.selectionEnd[1] || this.refresh(!0);
+} else this.refresh(!0);
 }, t.prototype._dragScroll = function() {
-this._dragScrollAmount && (this._terminal.scrollDisp(this._dragScrollAmount, !1), this._dragScrollAmount > 0 ? this._model.selectionEnd = [ this._terminal.cols - 1, this._terminal.ydisp + this._terminal.rows ] : this._model.selectionEnd = [ 0, this._terminal.ydisp ], this.refresh());
+this._dragScrollAmount && (this._terminal.scrollDisp(this._dragScrollAmount, !1), this._dragScrollAmount > 0 ? this._model.selectionEnd = [ this._terminal.cols - 1, this._terminal.buffer.ydisp + this._terminal.rows ] : this._model.selectionEnd = [ 0, this._terminal.buffer.ydisp ], this.refresh());
 }, t.prototype._onMouseUp = function(e) {
 this._removeMouseDownListeners();
 }, t.prototype._convertViewportColToCharacterIndex = function(e, t) {
 for (var n = t[0], i = 0; t[0] >= i; i++) 0 === e[i][2] && n--;
 return n;
+}, t.prototype.setSelection = function(e, t, n) {
+this._model.clearSelection(), this._removeMouseDownListeners(), this._model.selectionStart = [ e, t ], this._model.selectionStartLength = n, this.refresh();
 }, t.prototype._getWordAt = function(e) {
-var t = this._buffer.get(e[1]), n = this._translateBufferLineToString(t, !1), i = this._convertViewportColToCharacterIndex(t, e), r = i, o = e[0] - r, a = 0, s = 0;
+var t = this._buffer.get(e[1]);
+if (!t) return null;
+var n = c.translateBufferLineToString(t, !1), i = this._convertViewportColToCharacterIndex(t, e), r = i, o = e[0] - r, a = 0, s = 0;
 if (" " === n.charAt(r)) {
 for (;r > 0 && " " === n.charAt(r - 1); ) r--;
 for (;i < n.length && " " === n.charAt(i + 1); ) i++;
 } else {
-var l = e[0], c = e[0];
-for (0 === t[l][2] && (a++, l--), 2 === t[c][2] && (s++, c++); r > 0 && !this._isCharWordSeparator(n.charAt(r - 1)); ) 0 === t[l - 1][2] && (a++, l--), r--, l--;
-for (;i + 1 < n.length && !this._isCharWordSeparator(n.charAt(i + 1)); ) 2 === t[c + 1][2] && (s++, c++), i++, c++;
+var l = e[0], u = e[0];
+for (0 === t[l][2] && (a++, l--), 2 === t[u][2] && (s++, u++); r > 0 && !this._isCharWordSeparator(n.charAt(r - 1)); ) 0 === t[l - 1][2] && (a++, l--), r--, l--;
+for (;i + 1 < n.length && !this._isCharWordSeparator(n.charAt(i + 1)); ) 2 === t[u + 1][2] && (s++, u++), i++, u++;
 }
 return {
 start: r + o - a,
@@ -56516,24 +56620,25 @@ length: Math.min(i - r + a + s + 1, this._terminal.cols)
 };
 }, t.prototype._selectWordAt = function(e) {
 var t = this._getWordAt(e);
-this._model.selectionStart = [ t.start, e[1] ], this._model.selectionStartLength = t.length;
+t && (this._model.selectionStart = [ t.start, e[1] ], this._model.selectionStartLength = t.length);
 }, t.prototype._selectToWordAt = function(e) {
 var t = this._getWordAt(e);
-this._model.selectionEnd = [ this._model.areSelectionValuesReversed() ? t.start : t.start + t.length, e[1] ];
+t && (this._model.selectionEnd = [ this._model.areSelectionValuesReversed() ? t.start : t.start + t.length, e[1] ]);
 }, t.prototype._isCharWordSeparator = function(e) {
 return " ()[]{}'\"".indexOf(e) >= 0;
 }, t.prototype._selectLineAt = function(e) {
 this._model.selectionStart = [ 0, e ], this._model.selectionStartLength = this._terminal.cols;
 }, t;
 }(s.EventEmitter);
-n.SelectionManager = d;
+n.SelectionManager = h;
 }, {
-"./EventEmitter": 4,
-"./SelectionModel": 10,
-"./utils/Browser": 13,
-"./utils/Mouse": 18
+"./EventEmitter": 6,
+"./SelectionModel": 12,
+"./utils/Browser": 15,
+"./utils/BufferLine": 16,
+"./utils/Mouse": 21
 } ],
-10: [ function(e, t, n) {
+12: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -56552,7 +56657,7 @@ enumerable: !0,
 configurable: !0
 }), Object.defineProperty(e.prototype, "finalSelectionEnd", {
 get: function() {
-return this.isSelectAllActive ? [ this._terminal.cols, this._terminal.ybase + this._terminal.rows - 1 ] : this.selectionStart ? !this.selectionEnd || this.areSelectionValuesReversed() ? [ this.selectionStart[0] + this.selectionStartLength, this.selectionStart[1] ] : this.selectionStartLength && this.selectionEnd[1] === this.selectionStart[1] ? [ Math.max(this.selectionStart[0] + this.selectionStartLength, this.selectionEnd[0]), this.selectionEnd[1] ] : this.selectionEnd : null;
+return this.isSelectAllActive ? [ this._terminal.cols, this._terminal.buffer.ybase + this._terminal.rows - 1 ] : this.selectionStart ? !this.selectionEnd || this.areSelectionValuesReversed() ? [ this.selectionStart[0] + this.selectionStartLength, this.selectionStart[1] ] : this.selectionStartLength && this.selectionEnd[1] === this.selectionStart[1] ? [ Math.max(this.selectionStart[0] + this.selectionStartLength, this.selectionEnd[0]), this.selectionEnd[1] ] : this.selectionEnd : null;
 },
 enumerable: !0,
 configurable: !0
@@ -56565,7 +56670,7 @@ return this.selectionStart && (this.selectionStart[1] -= e), this.selectionEnd &
 }();
 n.SelectionModel = i;
 }, {} ],
-11: [ function(e, t, n) {
+13: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -56585,11 +56690,11 @@ var t = this.lastRecordedViewportHeight !== this.terminal.rows;
 (e || t) && (this.lastRecordedViewportHeight = this.terminal.rows, this.viewportElement.style.height = this.charMeasure.height * this.terminal.rows + "px", this.terminal.selectionContainer.style.height = this.viewportElement.style.height), this.scrollArea.style.height = this.charMeasure.height * this.lastRecordedBufferLength + "px";
 }
 }, e.prototype.syncScrollArea = function() {
-this.lastRecordedBufferLength !== this.terminal.lines.length ? (this.lastRecordedBufferLength = this.terminal.lines.length, this.refresh()) : this.lastRecordedViewportHeight !== this.terminal.rows ? this.refresh() : this.charMeasure.height !== this.currentRowHeight && this.refresh();
-var e = this.terminal.ydisp * this.currentRowHeight;
+this.lastRecordedBufferLength !== this.terminal.buffer.lines.length ? (this.lastRecordedBufferLength = this.terminal.buffer.lines.length, this.refresh()) : this.lastRecordedViewportHeight !== this.terminal.rows ? this.refresh() : this.charMeasure.height !== this.currentRowHeight && this.refresh();
+var e = this.terminal.buffer.ydisp * this.currentRowHeight;
 this.viewportElement.scrollTop !== e && (this.viewportElement.scrollTop = e);
 }, e.prototype.onScroll = function(e) {
-var t = Math.round(this.viewportElement.scrollTop / this.currentRowHeight) - this.terminal.ydisp;
+var t = Math.round(this.viewportElement.scrollTop / this.currentRowHeight) - this.terminal.buffer.ydisp;
 this.terminal.scrollDisp(t, !0);
 }, e.prototype.onWheel = function(e) {
 if (0 !== e.deltaY) {
@@ -56605,7 +56710,7 @@ this.lastTouchY = e.touches[0].pageY, 0 !== t && (this.viewportElement.scrollTop
 }();
 n.Viewport = i;
 }, {} ],
-12: [ function(e, t, n) {
+14: [ function(e, t, n) {
 "use strict";
 function i(e, t) {
 return t ? e.replace(/\r?\n/g, "\r") : e;
@@ -56629,7 +56734,7 @@ t.browser.isMSIE ? window.clipboardData && n(window.clipboardData.getData("Text"
 r(e, t), t.value = n.selectionText, t.select();
 };
 }, {} ],
-13: [ function(e, t, n) {
+15: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -56637,9 +56742,29 @@ value: !0
 var i = e("./Generic"), r = "undefined" == typeof navigator, o = r ? "node" : navigator.userAgent, a = r ? "node" : navigator.platform;
 n.isFirefox = !!~o.indexOf("Firefox"), n.isMSIE = !!~o.indexOf("MSIE") || !!~o.indexOf("Trident"), n.isMac = i.contains([ "Macintosh", "MacIntel", "MacPPC", "Mac68K" ], a), n.isIpad = "iPad" === a, n.isIphone = "iPhone" === a, n.isMSWindows = i.contains([ "Windows", "Win16", "Win32", "WinCE" ], a), n.isLinux = a.indexOf("Linux") >= 0;
 }, {
-"./Generic": 17
+"./Generic": 20
 } ],
-14: [ function(e, t, n) {
+16: [ function(e, t, n) {
+"use strict";
+Object.defineProperty(n, "__esModule", {
+value: !0
+});
+var i = 1, r = 2;
+n.translateBufferLineToString = function(e, t, n, o) {
+void 0 === n && (n = 0), void 0 === o && (o = null);
+for (var a = "", s = n, l = o, c = 0; c < e.length; c++) {
+var u = e[c];
+a += u[i], 0 === u[r] && (n >= c && s--, o >= c && l--);
+}
+var d = l || e.length;
+if (t) {
+var h = a.search(/\s+$/);
+if (-1 !== h && (d = Math.min(d, h)), d <= s) return "";
+}
+return a.substring(s, d);
+};
+}, {} ],
+17: [ function(e, t, n) {
 "use strict";
 var i = this && this.__extends || function() {
 var e = Object.setPrototypeOf || {
@@ -56688,9 +56813,9 @@ var e = this._measureElement.getBoundingClientRect();
 }(e("../EventEmitter.js").EventEmitter);
 n.CharMeasure = r;
 }, {
-"../EventEmitter.js": 4
+"../EventEmitter.js": 6
 } ],
-15: [ function(e, t, n) {
+18: [ function(e, t, n) {
 "use strict";
 var i = this && this.__extends || function() {
 var e = Object.setPrototypeOf || {
@@ -56784,9 +56909,9 @@ return (this._startIndex + e) % this.maxLength;
 }(e("../EventEmitter").EventEmitter);
 n.CircularList = r;
 }, {
-"../EventEmitter": 4
+"../EventEmitter": 6
 } ],
-16: [ function(e, t, n) {
+19: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -56810,7 +56935,7 @@ e.className = "", e.innerHTML = "";
 }();
 i.OBJECT_ID_ATTRIBUTE = "data-obj-id", i._objectCount = 0, n.DomElementObjectPool = i;
 }, {} ],
-17: [ function(e, t, n) {
+20: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -56818,7 +56943,7 @@ value: !0
 return e.indexOf(t) >= 0;
 };
 }, {} ],
-18: [ function(e, t, n) {
+21: [ function(e, t, n) {
 "use strict";
 function i(e, t) {
 if (null == e.pageX) return null;
@@ -56826,8 +56951,9 @@ for (var n = e.pageX, i = e.pageY; t && t !== self.document.documentElement; ) n
 return [ n, i ];
 }
 function r(e, t, n, r, o, a) {
+if (!n.width || !n.height) return null;
 var s = i(e, t);
-return s[0] = Math.ceil((s[0] + (a ? n.width / 2 : 0)) / n.width), s[1] = Math.ceil(s[1] / n.height), s[0] = Math.min(Math.max(s[0], 1), r + 1), s[1] = Math.min(Math.max(s[1], 1), o + 1), s;
+return s ? (s[0] = Math.ceil((s[0] + (a ? n.width / 2 : 0)) / n.width), s[1] = Math.ceil(s[1] / n.height), s[0] = Math.min(Math.max(s[0], 1), r + 1), s[1] = Math.min(Math.max(s[1], 1), o + 1), s) : null;
 }
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -56839,21 +56965,21 @@ y: l
 };
 };
 }, {} ],
-19: [ function(e, t, n) {
+22: [ function(e, t, n) {
 "use strict";
 function i(e) {
 var t = this;
 if (!(this instanceof i)) return new i(arguments[0], arguments[1], arguments[2]);
-t.browser = _, t.cancel = i.cancel, d.EventEmitter.call(this), "number" == typeof e && (e = {
+t.browser = _, t.cancel = i.cancel, h.EventEmitter.call(this), "number" == typeof e && (e = {
 cols: arguments[0],
 rows: arguments[1],
 handler: arguments[2]
 }), e = e || {}, Object.keys(i.defaults).forEach(function(n) {
 null == e[n] && (e[n] = i.options[n], i[n] !== i.defaults[n] && (e[n] = i[n])), t[n] = e[n];
-}), 8 === e.colors.length ? e.colors = e.colors.concat(i._colors.slice(8)) : 16 === e.colors.length ? e.colors = e.colors.concat(i._colors.slice(16)) : 10 === e.colors.length ? e.colors = e.colors.slice(0, -2).concat(i._colors.slice(8, -2), e.colors.slice(-2)) : 18 === e.colors.length && (e.colors = e.colors.concat(i._colors.slice(16, -2), e.colors.slice(-2))), this.colors = e.colors, this.options = e, this.parent = e.body || e.parent || (S ? S.getElementsByTagName("body")[0] : null), this.cols = e.cols || e.geometry[0], this.rows = e.rows || e.geometry[1], this.geometry = [ this.cols, this.rows ], e.handler && this.on("data", e.handler), this.ybase = 0, this.ydisp = 0, this.x = 0, this.y = 0, this.cursorState = 0, this.cursorHidden = !1, this.convertEol, this.queue = "", this.scrollTop = 0, this.scrollBottom = this.rows - 1, this.customKeyEventHandler = null, this.cursorBlinkInterval = null, this.applicationKeypad = !1, this.applicationCursor = !1, this.originMode = !1, this.insertMode = !1, 
-this.wraparoundMode = !0, this.normal = null, this.charset = null, this.gcharset = null, this.glevel = 0, this.charsets = [ null ], this.decLocator, this.x10Mouse, this.vt200Mouse, this.vt300Mouse, this.normalMouse, this.mouseEvents, this.sendFocus, this.utfMouse, this.sgrMouse, this.urxvtMouse, this.element, this.children, this.refreshStart, this.refreshEnd, this.savedX, this.savedY, this.savedCols, this.readable = !0, this.writable = !0, this.defAttr = 131840, this.curAttr = this.defAttr, this.params = [], this.currentParam = 0, this.prefix = "", this.postfix = "", this.inputHandler = new m.InputHandler(this), this.parser = new v.Parser(this.inputHandler, this), this.renderer = this.renderer || null, this.selectionManager = this.selectionManager || null, this.linkifier = this.linkifier || new y.Linkifier(), this.writeBuffer = [], this.writeInProgress = !1, this.xoffSentToCatchUp = !1, this.writeStopped = !1, this.surrogate_high = "", this.lines = new p.CircularList(this.scrollback);
-for (var n = this.rows; n--; ) this.lines.push(this.blankLine());
-this.selectionManager && this.selectionManager.setBuffer(this.lines), this.tabs, this.setupStops(), this.userScrolling = !1;
+}), 8 === e.colors.length ? e.colors = e.colors.concat(i._colors.slice(8)) : 16 === e.colors.length ? e.colors = e.colors.concat(i._colors.slice(16)) : 10 === e.colors.length ? e.colors = e.colors.slice(0, -2).concat(i._colors.slice(8, -2), e.colors.slice(-2)) : 18 === e.colors.length && (e.colors = e.colors.concat(i._colors.slice(16, -2), e.colors.slice(-2))), this.colors = e.colors, this.options = e, this.parent = e.body || e.parent || ($ ? $.getElementsByTagName("body")[0] : null), this.cols = e.cols || e.geometry[0], this.rows = e.rows || e.geometry[1], this.geometry = [ this.cols, this.rows ], e.handler && this.on("data", e.handler), this.cursorState = 0, this.cursorHidden = !1, this.convertEol, this.queue = "", this.customKeyEventHandler = null, this.cursorBlinkInterval = null, this.applicationKeypad = !1, this.applicationCursor = !1, this.originMode = !1, this.insertMode = !1, this.wraparoundMode = !0, this.charset = null, this.gcharset = null, this.glevel = 0, this.charsets = [ null ], 
+this.decLocator, this.x10Mouse, this.vt200Mouse, this.vt300Mouse, this.normalMouse, this.mouseEvents, this.sendFocus, this.utfMouse, this.sgrMouse, this.urxvtMouse, this.element, this.children, this.refreshStart, this.refreshEnd, this.savedX, this.savedY, this.savedCols, this.readable = !0, this.writable = !0, this.defAttr = 131840, this.curAttr = this.defAttr, this.params = [], this.currentParam = 0, this.prefix = "", this.postfix = "", this.inputHandler = new m.InputHandler(this), this.parser = new v.Parser(this.inputHandler, this), this.renderer = this.renderer || null, this.selectionManager = this.selectionManager || null, this.linkifier = this.linkifier || new y.Linkifier(), this.writeBuffer = [], this.writeInProgress = !1, this.xoffSentToCatchUp = !1, this.writeStopped = !1, this.surrogate_high = "", this.buffers = new u.BufferSet(this), this.buffer = this.buffers.active, this.buffers.on("activate", function(e) {
+this._terminal.buffer = e;
+}), this.selectionManager && this.selectionManager.setBuffer(this.buffer.lines), this.setupStops(), this.userScrolling = !1;
 }
 function r(e, t, n, i) {
 Array.isArray(e) || (e = [ e ]), e.forEach(function(e) {
@@ -56891,8 +57017,8 @@ return 16 === e.keyCode || 17 === e.keyCode || 18 === e.keyCode;
 Object.defineProperty(n, "__esModule", {
 value: !0
 });
-var u = e("./CompositionHelper"), d = e("./EventEmitter"), h = e("./Viewport"), f = e("./handlers/Clipboard"), p = e("./utils/CircularList"), g = e("./EscapeSequences"), m = e("./InputHandler"), v = e("./Parser"), b = e("./Renderer"), y = e("./Linkifier"), w = e("./SelectionManager"), x = e("./utils/CharMeasure"), _ = e("./utils/Browser"), C = e("./utils/Mouse"), S = "undefined" != typeof window ? window.document : null;
-a(i, d.EventEmitter), i.prototype.eraseAttr = function() {
+var u = e("./BufferSet"), d = e("./CompositionHelper"), h = e("./EventEmitter"), f = e("./Viewport"), p = e("./handlers/Clipboard"), g = e("./EscapeSequences"), m = e("./InputHandler"), v = e("./Parser"), b = e("./Renderer"), y = e("./Linkifier"), w = e("./SelectionManager"), x = e("./utils/CharMeasure"), _ = e("./utils/Browser"), C = e("./utils/Mouse"), S = e("./utils/BufferLine"), $ = "undefined" != typeof window ? window.document : null;
+a(i, h.EventEmitter), i.prototype.eraseAttr = function() {
 return -512 & this.defAttr | 511 & this.curAttr;
 }, i.tangoColors = [ "#2e3436", "#cc0000", "#4e9a06", "#c4a000", "#3465a4", "#75507b", "#06989a", "#d3d7cf", "#555753", "#ef2929", "#8ae234", "#fce94f", "#729fcf", "#ad7fa8", "#34e2e2", "#eeeeec" ], i.colors = function() {
 function e(e, n, i) {
@@ -56937,7 +57063,7 @@ return n;
 i[e] = i.defaults[e], i.options[e] = i.defaults[e];
 }), i.prototype.focus = function() {
 return this.textarea.focus();
-}, i.prototype.getOption = function(e, t) {
+}, i.prototype.getOption = function(e) {
 if (!(e in i.defaults)) throw new Error('No option with key "' + e + '"');
 return void 0 !== this.options[e] ? this.options[e] : this[e];
 }, i.prototype.setOption = function(e, t) {
@@ -56949,11 +57075,11 @@ var n = "Setting the scrollback value less than the number of rows ";
 return n += "(" + this.rows + ") is not allowed.", console.warn(n), !1;
 }
 if (this.options[e] !== t) {
-if (this.lines.length > t) {
-var r = this.lines.length - t, o = this.ydisp - r < 0;
-this.lines.trimStart(r), this.ybase = Math.max(this.ybase - r, 0), this.ydisp = Math.max(this.ydisp - r, 0), o && this.refresh(0, this.rows - 1);
+if (this.buffer.lines.length > t) {
+var r = this.buffer.lines.length - t, o = this.buffer.ydisp - r < 0;
+this.buffer.lines.trimStart(r), this.buffer.ybase = Math.max(this.buffer.ybase - r, 0), this.buffer.ydisp = Math.max(this.buffer.ydisp - r, 0), o && this.refresh(0, this.rows - 1);
 }
-this.lines.maxLength = t, this.viewport.syncScrollArea();
+this.buffer.lines.maxLength = t, this.viewport.syncScrollArea();
 }
 }
 switch (this[e] = t, this.options[e] = t, e) {
@@ -56962,7 +57088,7 @@ this.setCursorBlinking(t);
 break;
 
 case "cursorStyle":
-this.element.classList.toggle("xterm-cursor-style-underline", "underline" === t), this.element.classList.toggle("xterm-cursor-style-bar", "bar" === t);
+this.element.classList.toggle("xterm-cursor-style-block", "block" === t), this.element.classList.toggle("xterm-cursor-style-underline", "underline" === t), this.element.classList.toggle("xterm-cursor-style-bar", "bar" === t);
 break;
 
 case "tabStopWidth":
@@ -56989,30 +57115,30 @@ terminal: e
 return this.textarea.blur();
 }, i.bindBlur = function(e) {
 r(e.textarea, "blur", function(t) {
-e.refresh(e.y, e.y), e.sendFocus && e.send(g.C0.ESC + "[O"), e.element.classList.remove("focus"), e.clearCursorBlinkingInterval.apply(e), i.focus = null, e.emit("blur", {
+e.refresh(e.buffer.y, e.buffer.y), e.sendFocus && e.send(g.C0.ESC + "[O"), e.element.classList.remove("focus"), e.clearCursorBlinkingInterval.apply(e), i.focus = null, e.emit("blur", {
 terminal: e
 });
 });
 }, i.prototype.initGlobal = function() {
 var e = this, t = this;
 i.bindKeys(this), i.bindFocus(this), i.bindBlur(this), r(this.element, "copy", function(n) {
-e.mouseEvents || f.copyHandler(n, t, e.selectionManager);
+t.hasSelection() && p.copyHandler(n, t, e.selectionManager);
 });
 var n = function(e) {
-return f.pasteHandler(e, t);
+return p.pasteHandler(e, t);
 };
 r(this.textarea, "paste", n), r(this.element, "paste", n), t.browser.isFirefox ? r(this.element, "mousedown", function(t) {
-2 == t.button && f.rightClickHandler(t, e.textarea, e.selectionManager);
+2 == t.button && p.rightClickHandler(t, e.textarea, e.selectionManager);
 }) : r(this.element, "contextmenu", function(t) {
-f.rightClickHandler(t, e.textarea, e.selectionManager);
+p.rightClickHandler(t, e.textarea, e.selectionManager);
 }), t.browser.isLinux && r(this.element, "auxclick", function(t) {
-1 === t.button && f.moveTextAreaUnderMouseCursor(t, e.textarea, e.selectionManager);
+1 === t.button && p.moveTextAreaUnderMouseCursor(t, e.textarea, e.selectionManager);
 });
 }, i.bindKeys = function(e) {
 r(e.element, "keydown", function(t) {
-S.activeElement == this && e.keyDown(t);
+$.activeElement == this && e.keyDown(t);
 }, !0), r(e.element, "keypress", function(t) {
-S.activeElement == this && e.keyPress(t);
+$.activeElement == this && e.keyPress(t);
 }, !0), r(e.element, "keyup", function(t) {
 c(t) || e.focus(e);
 }, !0), r(e.textarea, "keydown", function(t) {
@@ -57023,12 +57149,12 @@ e.keyPress(t), this.value = "";
 e.queueLinkification(t.start, t.end);
 });
 }, i.prototype.insertRow = function(e) {
-return "object" != typeof e && (e = S.createElement("div")), this.rowContainer.appendChild(e), this.children.push(e), e;
+return "object" != typeof e && (e = $.createElement("div")), this.rowContainer.appendChild(e), this.children.push(e), e;
 }, i.prototype.open = function(e, t) {
-var n = this, i = this, o = 0;
+var n = this, i = this, r = 0;
 if (this.parent = e || this.parent, !this.parent) throw new Error("Terminal requires a parent element.");
-for (this.context = this.parent.ownerDocument.defaultView, this.document = this.parent.ownerDocument, this.body = this.document.getElementsByTagName("body")[0], this.element = this.document.createElement("div"), this.element.classList.add("terminal"), this.element.classList.add("xterm"), this.element.classList.add("xterm-theme-" + this.theme), this.setCursorBlinking(this.options.cursorBlink), this.element.setAttribute("tabindex", 0), this.viewportElement = S.createElement("div"), this.viewportElement.classList.add("xterm-viewport"), this.element.appendChild(this.viewportElement), this.viewportScrollArea = S.createElement("div"), this.viewportScrollArea.classList.add("xterm-scroll-area"), this.viewportElement.appendChild(this.viewportScrollArea), this.selectionContainer = S.createElement("div"), this.selectionContainer.classList.add("xterm-selection"), this.element.appendChild(this.selectionContainer), this.rowContainer = S.createElement("div"), this.rowContainer.classList.add("xterm-rows"), 
-this.element.appendChild(this.rowContainer), this.children = [], this.linkifier.attachToDom(S, this.children), this.helperContainer = S.createElement("div"), this.helperContainer.classList.add("xterm-helpers"), this.element.appendChild(this.helperContainer), this.textarea = S.createElement("textarea"), this.textarea.classList.add("xterm-helper-textarea"), this.textarea.setAttribute("autocorrect", "off"), this.textarea.setAttribute("autocapitalize", "off"), this.textarea.setAttribute("spellcheck", "false"), this.textarea.tabIndex = 0, this.textarea.addEventListener("focus", function() {
+for (this.context = this.parent.ownerDocument.defaultView, this.document = this.parent.ownerDocument, this.body = this.document.getElementsByTagName("body")[0], this.element = this.document.createElement("div"), this.element.classList.add("terminal"), this.element.classList.add("xterm"), this.element.classList.add("xterm-theme-" + this.theme), this.element.classList.add("xterm-cursor-style-" + this.options.cursorStyle), this.setCursorBlinking(this.options.cursorBlink), this.element.setAttribute("tabindex", 0), this.viewportElement = $.createElement("div"), this.viewportElement.classList.add("xterm-viewport"), this.element.appendChild(this.viewportElement), this.viewportScrollArea = $.createElement("div"), this.viewportScrollArea.classList.add("xterm-scroll-area"), this.viewportElement.appendChild(this.viewportScrollArea), this.selectionContainer = $.createElement("div"), this.selectionContainer.classList.add("xterm-selection"), this.element.appendChild(this.selectionContainer), this.rowContainer = $.createElement("div"), 
+this.rowContainer.classList.add("xterm-rows"), this.element.appendChild(this.rowContainer), this.children = [], this.linkifier.attachToDom($, this.children), this.helperContainer = $.createElement("div"), this.helperContainer.classList.add("xterm-helpers"), this.element.appendChild(this.helperContainer), this.textarea = $.createElement("textarea"), this.textarea.classList.add("xterm-helper-textarea"), this.textarea.setAttribute("autocorrect", "off"), this.textarea.setAttribute("autocapitalize", "off"), this.textarea.setAttribute("spellcheck", "false"), this.textarea.tabIndex = 0, this.textarea.addEventListener("focus", function() {
 i.emit("focus", {
 terminal: i
 });
@@ -57036,10 +57162,10 @@ terminal: i
 i.emit("blur", {
 terminal: i
 });
-}), this.helperContainer.appendChild(this.textarea), this.compositionView = S.createElement("div"), this.compositionView.classList.add("composition-view"), this.compositionHelper = new u.CompositionHelper(this.textarea, this.compositionView, this), this.helperContainer.appendChild(this.compositionView), this.charSizeStyleElement = S.createElement("style"), this.helperContainer.appendChild(this.charSizeStyleElement); o < this.rows; o++) this.insertRow();
-if (this.parent.appendChild(this.element), this.charMeasure = new x.CharMeasure(S, this.helperContainer), this.charMeasure.on("charsizechanged", function() {
+}), this.helperContainer.appendChild(this.textarea), this.compositionView = $.createElement("div"), this.compositionView.classList.add("composition-view"), this.compositionHelper = new d.CompositionHelper(this.textarea, this.compositionView, this), this.helperContainer.appendChild(this.compositionView), this.charSizeStyleElement = $.createElement("style"), this.helperContainer.appendChild(this.charSizeStyleElement); r < this.rows; r++) this.insertRow();
+if (this.parent.appendChild(this.element), this.charMeasure = new x.CharMeasure($, this.helperContainer), this.charMeasure.on("charsizechanged", function() {
 i.updateCharSizeStyles();
-}), this.charMeasure.measure(), this.viewport = new h.Viewport(this, this.viewportElement, this.viewportScrollArea, this.charMeasure), this.renderer = new b.Renderer(this), this.selectionManager = new w.SelectionManager(this, this.lines, this.rowContainer, this.charMeasure), this.selectionManager.on("refresh", function(e) {
+}), this.charMeasure.measure(), this.viewport = new f.Viewport(this, this.viewportElement, this.viewportScrollArea, this.charMeasure), this.renderer = new b.Renderer(this), this.selectionManager = new w.SelectionManager(this, this.buffer.lines, this.rowContainer, this.charMeasure), this.selectionManager.on("refresh", function(e) {
 n.renderer.refreshSelection(e.start, e.end);
 }), this.selectionManager.on("newselection", function(e) {
 n.textarea.value = e, n.textarea.focus(), n.textarea.select();
@@ -57048,13 +57174,10 @@ return n.selectionManager.refresh();
 }), this.viewportElement.addEventListener("scroll", function() {
 return n.selectionManager.refresh();
 }), this.refresh(0, this.rows - 1), this.initGlobal(), void 0 === t) {
-var a = "You did not pass the `focus` argument in `Terminal.prototype.open()`.\n";
-a += "The `focus` argument now defaults to `true` but starting with xterm.js 3.0 ", a += "it will default to `false`.", console.warn(a), t = !0;
+var o = "You did not pass the `focus` argument in `Terminal.prototype.open()`.\n";
+o += "The `focus` argument now defaults to `true` but starting with xterm.js 3.0 ", o += "it will default to `false`.", console.warn(o), t = !0;
 }
-t && this.focus(), r(this.element, "click", function() {
-var e = S.getSelection(), t = e.isCollapsed;
-("boolean" == typeof t ? !t : "Range" == e.type) || i.focus();
-}), this.bindMouse(), this.emit("open");
+t && this.focus(), this.bindMouse(), this.emit("open");
 }, i.loadAddon = function(i, r) {
 return "object" == typeof n && "object" == typeof t ? e("./addons/" + i + "/" + i) : (console.error("Cannot load a module without a CommonJS or RequireJS environment."), !1);
 }, i.prototype.updateCharSizeStyles = function() {
@@ -57118,7 +57241,7 @@ return n = e.shiftKey ? 4 : 0, i = e.metaKey ? 8 : 0, r = e.ctrlKey ? 16 : 0, o 
 }
 var s = this.element, l = this, c = 32;
 r(s, "mousedown", function(n) {
-if (l.mouseEvents) return e(n), l.focus(), l.vt200Mouse ? (n.overrideType = "mouseup", e(n), l.cancel(n)) : (l.normalMouse && r(l.document, "mousemove", t), l.x10Mouse || r(l.document, "mouseup", function n(i) {
+if (n.preventDefault(), l.focus(), l.mouseEvents) return e(n), l.vt200Mouse ? (n.overrideType = "mouseup", e(n), l.cancel(n)) : (l.normalMouse && r(l.document, "mousemove", t), l.x10Mouse || r(l.document, "mouseup", function n(i) {
 return e(i), l.normalMouse && o(l.document, "mousemove", t), o(l.document, "mouseup", n), l.cancel(i);
 }), l.cancel(n));
 }), r(s, "wheel", function(t) {
@@ -57137,22 +57260,23 @@ this.renderer && this.renderer.queueRefresh(e, t);
 }, i.prototype.queueLinkification = function(e, t) {
 if (this.linkifier) for (var n = e; n <= t; n++) this.linkifier.linkifyRow(n);
 }, i.prototype.showCursor = function() {
-this.cursorState || (this.cursorState = 1, this.refresh(this.y, this.y));
+this.cursorState || (this.cursorState = 1, this.refresh(this.buffer.y, this.buffer.y));
 }, i.prototype.scroll = function(e) {
 var t;
-this.lines.length === this.lines.maxLength && (this.lines.trimStart(1), this.ybase--, 0 !== this.ydisp && this.ydisp--), this.ybase++, this.userScrolling || (this.ydisp = this.ybase), t = this.ybase + this.rows - 1, (t -= this.rows - 1 - this.scrollBottom) === this.lines.length ? this.lines.push(this.blankLine(void 0, e)) : this.lines.splice(t, 0, this.blankLine(void 0, e)), 0 !== this.scrollTop && (0 !== this.ybase && (this.ybase--, this.userScrolling || (this.ydisp = this.ybase)), this.lines.splice(this.ybase + this.scrollTop, 1)), this.updateRange(this.scrollTop), this.updateRange(this.scrollBottom), this.emit("scroll", this.ydisp);
+this.buffer.lines.length === this.buffer.lines.maxLength && (this.buffer.lines.trimStart(1), this.buffer.ybase--, 0 !== this.buffer.ydisp && this.buffer.ydisp--), this.buffer.ybase++, this.userScrolling || (this.buffer.ydisp = this.buffer.ybase), t = this.buffer.ybase + this.rows - 1, (t -= this.rows - 1 - this.buffer.scrollBottom) === this.buffer.lines.length ? this.buffer.lines.push(this.blankLine(void 0, e)) : this.buffer.lines.splice(t, 0, this.blankLine(void 0, e)), 0 !== this.buffer.scrollTop && (0 !== this.buffer.ybase && (this.buffer.ybase--, this.userScrolling || (this.buffer.ydisp = this.buffer.ybase)), this.buffer.lines.splice(this.buffer.ybase + this.buffer.scrollTop, 1)), this.updateRange(this.buffer.scrollTop), this.updateRange(this.buffer.scrollBottom), this.emit("scroll", this.buffer.ydisp);
 }, i.prototype.scrollDisp = function(e, t) {
 if (e < 0) {
-if (0 === this.ydisp) return;
+if (0 === this.buffer.ydisp) return;
 this.userScrolling = !0;
-} else e + this.ydisp >= this.ybase && (this.userScrolling = !1);
-this.ydisp += e, this.ydisp > this.ybase ? this.ydisp = this.ybase : this.ydisp < 0 && (this.ydisp = 0), t || this.emit("scroll", this.ydisp), this.refresh(0, this.rows - 1);
+} else e + this.buffer.ydisp >= this.buffer.ybase && (this.userScrolling = !1);
+var n = this.buffer.ydisp;
+this.buffer.ydisp = Math.max(Math.min(this.buffer.ydisp + e, this.buffer.ybase), 0), n !== this.buffer.ydisp && (t || this.emit("scroll", this.buffer.ydisp), this.refresh(0, this.rows - 1));
 }, i.prototype.scrollPages = function(e) {
 this.scrollDisp(e * (this.rows - 1));
 }, i.prototype.scrollToTop = function() {
-this.scrollDisp(-this.ydisp);
+this.scrollDisp(-this.buffer.ydisp);
 }, i.prototype.scrollToBottom = function() {
-this.scrollDisp(this.ybase - this.ydisp);
+this.scrollDisp(this.buffer.ybase - this.buffer.ydisp);
 }, i.prototype.write = function(e) {
 if (this.writeBuffer.push(e), this.options.useFlowControl && !this.xoffSentToCatchUp && this.writeBuffer.length >= 5 && (this.send(g.C0.DC3), this.xoffSentToCatchUp = !0), !this.writeInProgress && this.writeBuffer.length > 0) {
 this.writeInProgress = !0;
@@ -57165,9 +57289,9 @@ t.innerWrite();
 for (var e = this.writeBuffer.splice(0, 300); e.length > 0; ) {
 var t = e.shift();
 t.length;
-this.xoffSentToCatchUp && 0 === e.length && 0 === this.writeBuffer.length && (this.send(g.C0.DC1), this.xoffSentToCatchUp = !1), this.refreshStart = this.y, this.refreshEnd = this.y;
+this.xoffSentToCatchUp && 0 === e.length && 0 === this.writeBuffer.length && (this.send(g.C0.DC1), this.xoffSentToCatchUp = !1), this.refreshStart = this.buffer.y, this.refreshEnd = this.buffer.y;
 var n = this.parser.parse(t);
-this.parser.setState(n), this.updateRange(this.y), this.refresh(this.refreshStart, this.refreshEnd);
+this.parser.setState(n), this.updateRange(this.buffer.y), this.refresh(this.refreshStart, this.refreshEnd);
 }
 if (this.writeBuffer.length > 0) {
 var i = this;
@@ -57195,16 +57319,16 @@ return this.refresh(0, this.rows - 1), i;
 }, i.prototype.deregisterLinkMatcher = function(e) {
 this.linkifier && this.linkifier.deregisterLinkMatcher(e) && this.refresh(0, this.rows - 1);
 }, i.prototype.hasSelection = function() {
-return this.selectionManager.hasSelection;
+return !!this.selectionManager && this.selectionManager.hasSelection;
 }, i.prototype.getSelection = function() {
-return this.selectionManager.selectionText;
+return this.selectionManager ? this.selectionManager.selectionText : "";
 }, i.prototype.clearSelection = function() {
-this.selectionManager.clearSelection();
+this.selectionManager && this.selectionManager.clearSelection();
 }, i.prototype.selectAll = function() {
-this.selectionManager.selectAll();
+this.selectionManager && this.selectionManager.selectAll();
 }, i.prototype.keyDown = function(e) {
 if (this.customKeyEventHandler && !1 === this.customKeyEventHandler(e)) return !1;
-if (this.restartCursorBlinking(), !this.compositionHelper.keydown.bind(this.compositionHelper)(e)) return this.ybase !== this.ydisp && this.scrollToBottom(), !1;
+if (this.restartCursorBlinking(), !this.compositionHelper.keydown.bind(this.compositionHelper)(e)) return this.buffer.ybase !== this.buffer.ydisp && this.scrollToBottom(), !1;
 var t = this.evaluateKeyEscapeSequence(e);
 return t.key === g.C0.DC3 ? this.writeStopped = !0 : t.key === g.C0.DC1 && (this.writeStopped = !1), t.scrollDisp ? (this.scrollDisp(t.scrollDisp), this.cancel(e, !0)) : !!s(this, e) || (t.cancel && this.cancel(e, !0), !t.key || (this.emit("keydown", e), this.emit("key", t.key, e), this.showCursor(), this.handler(t.key), this.cancel(e, !0)));
 }, i.prototype.evaluateKeyEscapeSequence = function(e) {
@@ -57367,97 +57491,95 @@ this.context.console.error.apply(this.context.console, e);
 }, i.prototype.resize = function(e, t) {
 if (!isNaN(e) && !isNaN(t)) {
 t > this.getOption("scrollback") && this.setOption("scrollback", t);
-var n, i, r, o, a;
+var n;
 if (e !== this.cols || t !== this.rows) {
-if (e < 1 && (e = 1), t < 1 && (t = 1), (r = this.cols) < e) for (o = [ this.defAttr, " ", 1 ], i = this.lines.length; i--; ) for (;this.lines.get(i).length < e; ) this.lines.get(i).push(o);
-if (this.cols = e, this.setupStops(this.cols), r = this.rows, a = 0, r < t) for (n = this.element; r++ < t; ) this.lines.length < t + this.ybase && (this.ybase > 0 && this.lines.length <= this.ybase + this.y + a + 1 ? (this.ybase--, a++, this.ydisp > 0 && this.ydisp--) : this.lines.push(this.blankLine())), this.children.length < t && this.insertRow(); else for (;r-- > t; ) if (this.lines.length > t + this.ybase && (this.lines.length > this.ybase + this.y + 1 ? this.lines.pop() : (this.ybase++, this.ydisp++)), this.children.length > t) {
-if (!(n = this.children.shift())) continue;
-n.parentNode.removeChild(n);
-}
-this.rows = t, this.y >= t && (this.y = t - 1), a && (this.y += a), this.x >= e && (this.x = e - 1), this.scrollTop = 0, this.scrollBottom = t - 1, this.charMeasure.measure(), this.refresh(0, this.rows - 1), this.normal = null, this.geometry = [ this.cols, this.rows ], this.emit("resize", {
+for (e < 1 && (e = 1), t < 1 && (t = 1), this.buffers.resize(e, t); this.children.length < t; ) this.insertRow();
+for (;this.children.length > t; ) (n = this.children.shift()) && n.parentNode.removeChild(n);
+this.cols = e, this.rows = t, this.setupStops(this.cols), this.charMeasure.measure(), this.refresh(0, this.rows - 1), this.geometry = [ this.cols, this.rows ], this.emit("resize", {
 terminal: this,
 cols: e,
 rows: t
 });
-}
+} else this.charMeasure.width && this.charMeasure.height || this.charMeasure.measure();
 }
 }, i.prototype.updateRange = function(e) {
 e < this.refreshStart && (this.refreshStart = e), e > this.refreshEnd && (this.refreshEnd = e);
 }, i.prototype.maxRange = function() {
 this.refreshStart = 0, this.refreshEnd = this.rows - 1;
 }, i.prototype.setupStops = function(e) {
-for (null != e ? this.tabs[e] || (e = this.prevStop(e)) : (this.tabs = {}, e = 0); e < this.cols; e += this.getOption("tabStopWidth")) this.tabs[e] = !0;
+for (null != e ? this.buffer.tabs[e] || (e = this.prevStop(e)) : (this.buffer.tabs = {}, e = 0); e < this.cols; e += this.getOption("tabStopWidth")) this.buffer.tabs[e] = !0;
 }, i.prototype.prevStop = function(e) {
-for (null == e && (e = this.x); !this.tabs[--e] && e > 0; ) ;
+for (null == e && (e = this.buffer.x); !this.buffer.tabs[--e] && e > 0; ) ;
 return e >= this.cols ? this.cols - 1 : e < 0 ? 0 : e;
 }, i.prototype.nextStop = function(e) {
-for (null == e && (e = this.x); !this.tabs[++e] && e < this.cols; ) ;
+for (null == e && (e = this.buffer.x); !this.buffer.tabs[++e] && e < this.cols; ) ;
 return e >= this.cols ? this.cols - 1 : e < 0 ? 0 : e;
 }, i.prototype.eraseRight = function(e, t) {
-var n = this.lines.get(this.ybase + t);
+var n = this.buffer.lines.get(this.buffer.ybase + t);
 if (n) {
 for (var i = [ this.eraseAttr(), " ", 1 ]; e < this.cols; e++) n[e] = i;
 this.updateRange(t);
 }
 }, i.prototype.eraseLeft = function(e, t) {
-var n = this.lines.get(this.ybase + t);
+var n = this.buffer.lines.get(this.buffer.ybase + t);
 if (n) {
 var i = [ this.eraseAttr(), " ", 1 ];
 for (e++; e--; ) n[e] = i;
 this.updateRange(t);
 }
 }, i.prototype.clear = function() {
-if (0 !== this.ybase || 0 !== this.y) {
-this.lines.set(0, this.lines.get(this.ybase + this.y)), this.lines.length = 1, this.ydisp = 0, this.ybase = 0, this.y = 0;
-for (var e = 1; e < this.rows; e++) this.lines.push(this.blankLine());
-this.refresh(0, this.rows - 1), this.emit("scroll", this.ydisp);
+if (0 !== this.buffer.ybase || 0 !== this.buffer.y) {
+this.buffer.lines.set(0, this.buffer.lines.get(this.buffer.ybase + this.buffer.y)), this.buffer.lines.length = 1, this.buffer.ydisp = 0, this.buffer.ybase = 0, this.buffer.y = 0;
+for (var e = 1; e < this.rows; e++) this.buffer.lines.push(this.blankLine());
+this.refresh(0, this.rows - 1), this.emit("scroll", this.buffer.ydisp);
 }
 }, i.prototype.eraseLine = function(e) {
 this.eraseRight(0, e);
-}, i.prototype.blankLine = function(e, t) {
-var n = [ e ? this.eraseAttr() : this.defAttr, " ", 1 ], i = [], r = 0;
-for (t && (i.isWrapped = t); r < this.cols; r++) i[r] = n;
-return i;
+}, i.prototype.blankLine = function(e, t, n) {
+var i = [ e ? this.eraseAttr() : this.defAttr, " ", 1 ], r = [], o = 0;
+for (t && (r.isWrapped = t), n = n || this.cols; o < n; o++) r[o] = i;
+return r;
 }, i.prototype.ch = function(e) {
 return e ? [ this.eraseAttr(), " ", 1 ] : [ this.defAttr, " ", 1 ];
 }, i.prototype.is = function(e) {
 return 0 === (this.termName + "").indexOf(e);
 }, i.prototype.handler = function(e) {
-this.options.disableStdin || (this.ybase !== this.ydisp && this.scrollToBottom(), this.emit("data", e));
+this.options.disableStdin || (this.selectionManager && this.selectionManager.hasSelection && this.selectionManager.clearSelection(), this.buffer.ybase !== this.buffer.ydisp && this.scrollToBottom(), this.emit("data", e));
 }, i.prototype.handleTitle = function(e) {
 this.emit("title", e);
 }, i.prototype.index = function() {
-++this.y > this.scrollBottom && (this.y--, this.scroll()), this.x >= this.cols && this.x--;
+++this.buffer.y > this.buffer.scrollBottom && (this.buffer.y--, this.scroll()), this.buffer.x >= this.cols && this.buffer.x--;
 }, i.prototype.reverseIndex = function() {
-this.y === this.scrollTop ? (this.lines.shiftElements(this.y + this.ybase, this.rows - 1, 1), this.lines.set(this.y + this.ybase, this.blankLine(!0)), this.updateRange(this.scrollTop), this.updateRange(this.scrollBottom)) : this.y--;
+this.buffer.y === this.buffer.scrollTop ? (this.buffer.lines.shiftElements(this.buffer.y + this.buffer.ybase, this.rows - 1, 1), this.buffer.lines.set(this.buffer.y + this.buffer.ybase, this.blankLine(!0)), this.updateRange(this.buffer.scrollTop), this.updateRange(this.buffer.scrollBottom)) : this.buffer.y--;
 }, i.prototype.reset = function() {
 this.options.rows = this.rows, this.options.cols = this.cols;
-var e = this.customKeyEventHandler, t = this.cursorBlinkInterval;
-i.call(this, this.options), this.customKeyEventHandler = e, this.cursorBlinkInterval = t, this.refresh(0, this.rows - 1), this.viewport.syncScrollArea();
+var e = this.customKeyEventHandler, t = this.cursorBlinkInterval, n = this.inputHandler;
+i.call(this, this.options), this.customKeyEventHandler = e, this.cursorBlinkInterval = t, this.inputHandler = n, this.refresh(0, this.rows - 1), this.viewport.syncScrollArea();
 }, i.prototype.tabSet = function() {
-this.tabs[this.x] = !0;
+this.buffer.tabs[this.buffer.x] = !0;
 }, i.prototype.matchColor = l, l._cache = {}, l.distance = function(e, t, n, i, r, o) {
 return Math.pow(30 * (e - i), 2) + Math.pow(59 * (t - r), 2) + Math.pow(11 * (n - o), 2);
-}, i.EventEmitter = d.EventEmitter, i.inherits = a, i.on = r, i.off = o, i.cancel = function(e, t) {
+}, i.translateBufferLineToString = S.translateBufferLineToString, i.EventEmitter = h.EventEmitter, i.inherits = a, i.on = r, i.off = o, i.cancel = function(e, t) {
 if (this.cancelEvents || t) return e.preventDefault(), e.stopPropagation(), !1;
 }, t.exports = i;
 }, {
-"./CompositionHelper": 2,
-"./EscapeSequences": 3,
-"./EventEmitter": 4,
-"./InputHandler": 5,
-"./Linkifier": 6,
-"./Parser": 7,
-"./Renderer": 8,
-"./SelectionManager": 9,
-"./Viewport": 11,
-"./handlers/Clipboard": 12,
-"./utils/Browser": 13,
-"./utils/CharMeasure": 14,
-"./utils/CircularList": 15,
-"./utils/Mouse": 18
+"./BufferSet": 2,
+"./CompositionHelper": 4,
+"./EscapeSequences": 5,
+"./EventEmitter": 6,
+"./InputHandler": 7,
+"./Linkifier": 8,
+"./Parser": 9,
+"./Renderer": 10,
+"./SelectionManager": 11,
+"./Viewport": 13,
+"./handlers/Clipboard": 14,
+"./utils/Browser": 15,
+"./utils/BufferLine": 16,
+"./utils/CharMeasure": 17,
+"./utils/Mouse": 21
 } ]
-}, {}, [ 19 ])(19);
+}, {}, [ 22 ])(22);
 }), function(e, t) {
 "function" == typeof define && define.amd ? define([ "angular", "term" ], t) : t(e.angular, e.Terminal);
 }(this, function(e, t) {
