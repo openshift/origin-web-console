@@ -12439,7 +12439,7 @@ return _.isFunction(e) && e(), n.wizardDone = !1, !0;
 }, n.stepChanged = function(e) {
 "results" === e.stepId ? (n.nextButtonTitle = "Close", n.wizardDone = !0) : n.nextButtonTitle = "Deploy";
 }, n.nextCallback = function(e) {
-return "image" === e.stepId ? (n.deployImage(), !1) : ("results" === e.stepId && n.close(), !0);
+return "image" === e.stepId ? (n.deployImage(), !1) : "results" !== e.stepId || (n.close(), !1);
 };
 } ],
 controllerAs: "$ctrl",
