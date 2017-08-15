@@ -4759,7 +4759,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</osc-routing>\n" +
     "<label-editor labels=\"labels\" expand=\"true\" can-toggle=\"false\" help-text=\"Labels for this route.\">\n" +
     "</label-editor>\n" +
-    "<a href=\"\" ng-click=\"copyServiceLabels()\">Copy Service Labels</a>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"createRoute()\" ng-disabled=\"createRouteForm.$invalid || disableInputs || !createRoute\" value=\"\">Create</button>\n" +
     "<a class=\"btn btn-default btn-lg\" href=\"\" ng-click=\"cancel()\">Cancel</a>\n" +
