@@ -7,12 +7,14 @@ angular.module('openshiftConsole')
                        AuthService,
                        Catalog,
                        Constants,
+                       DataService,
                        Navigate,
                        NotificationsService,
                        RecentlyViewedServiceItems,
                        GuidedTourService,
                        HTMLService,
                        $timeout,
+                       $q,
                        $routeParams,
                        $location) {
     var tourConfig = _.get(Constants, 'GUIDED_TOURS.landing_page_tour');
@@ -46,8 +48,23 @@ angular.module('openshiftConsole')
       }
     };
 
-    $scope.templateSelected = function(template) {
-      $scope.template = template;
+    var isPartialObject = function(apiObject) {
+      return apiObject.kind === 'PartialObjectMetadata';
+    };
+
+    var loadCompleteTemplate = function(template) {
+      if (isPartialObject(template)) {
+        return DataService.get("templates", template.metadata.name, { namespace: template.metadata.namespace });
+      }
+
+      return $q.when(template);
+    };
+
+    $scope.templateSelected = function(selectedTemplate) {
+      // `selectedTemplate` might be a parial object (metadata only). If necessary, load the complete template object.
+      loadCompleteTemplate(selectedTemplate).then(function(template) {
+        $scope.template = template;
+      });
     };
 
     $scope.templateDialogClosed = function() {
