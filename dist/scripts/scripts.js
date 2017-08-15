@@ -8084,17 +8084,23 @@ n.routing.to = {
 kind: "Service",
 name: n.serviceName,
 weight: 1
-}, i.list("services", l).then(function(e) {
-p = e.by("metadata.name"), n.services = g(p);
-}), n.copyServiceLabels = function() {
-var e = _.get(n, "routing.to.name"), t = _.get(p, [ e, "metadata", "labels" ], {}), a = u.mapEntries(u.compactEntries(n.labels)), r = _.assign(a, t);
-n.labels = _.map(r, function(e, t) {
+};
+var f, h = function() {
+var e = f, t = _.get(n, "routing.to.name");
+f = _.get(p, [ t, "metadata", "labels" ], {});
+var a = u.mapEntries(u.compactEntries(n.labels)), r = _.assign(a, f);
+e && (r = _.omitBy(r, function(t, n) {
+return e[n] && !f[n];
+})), n.labels = _.map(r, function(e, t) {
 return {
 name: t,
 value: e
 };
 });
-}, n.createRoute = function() {
+};
+i.list("services", l).then(function(e) {
+p = e.by("metadata.name"), n.services = g(p), n.$watch("routing.to.name", h);
+}), n.createRoute = function() {
 if (n.createRouteForm.$valid) {
 d(), n.disableInputs = !0;
 var t = n.routing.to.name, a = u.mapEntries(u.compactEntries(n.labels)), o = r.createRoute(n.routing, t, a), s = _.get(n, "routing.alternateServices", []);
