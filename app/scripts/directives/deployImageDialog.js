@@ -59,6 +59,7 @@
       }
       else if (step.stepId === 'results') {
         ctrl.close();
+        return false;
       }
       return true;
     };
