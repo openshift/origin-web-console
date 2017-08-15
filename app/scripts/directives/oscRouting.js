@@ -30,7 +30,8 @@ angular.module("openshiftConsole")
    *   An expression that will disable the form (default: false)
    */
   .directive("oscRouting",
-             function(Constants,
+             function($filter,
+                      Constants,
                       DNS1123_SUBDOMAIN_VALIDATION) {
     return {
       require: '^form',
@@ -40,7 +41,7 @@ angular.module("openshiftConsole")
         services: "=",
         showNameInput: "=",
         routingDisabled: "=",
-        hostReadOnly: "="
+        existingRoute: "="
       },
       templateUrl: 'views/directives/osc-routing.html',
       link: function(scope, element, attrs, formCtl) {
@@ -51,10 +52,40 @@ angular.module("openshiftConsole")
           alternateServices: false
         };
 
+        var customHostResource = {
+          group: 'route.openshift.io',
+          resource: 'routes/custom-host'
+        };
+        scope.canICreateCustomHosts = $filter('canI')(customHostResource, 'create');
+        scope.canIUpdateCustomHosts = $filter('canI')(customHostResource, 'update');
+
+        var canISetCustomHost = function() {
+          if (scope.existingRoute) {
+            return scope.canIUpdateCustomHosts;
+          }
+
+          return scope.canICreateCustomHosts;
+        };
+
+        scope.isHostnameReadOnly = function() {
+          return !canISetCustomHost();
+        };
+
         scope.disableWildcards = Constants.DISABLE_WILDCARD_ROUTES;
-        scope.disableCertificateInputs = function() {
+
+        // Certificate updates also require custom host.
+        scope.areCertificateInputsReadOnly = function() {
+          return !canISetCustomHost();
+        };
+
+        scope.areCertificateInputsDisabled = function() {
           var termination = _.get(scope, 'route.tls.termination');
           return !termination || termination === 'passthrough';
+        };
+
+        scope.isDestinationCACertInputDisabled = function() {
+          // This input only applies to reencrypt routes.
+          return _.get(scope, 'route.tls.termination') !== 'reencrypt';
         };
 
         scope.insecureTrafficOptions = [

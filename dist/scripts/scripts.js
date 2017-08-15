@@ -9224,6 +9224,7 @@ scope: {
 model: "=",
 required: "=",
 disabled: "=ngDisabled",
+readonly: "=ngReadonly",
 showTextArea: "=",
 hideClear: "=?",
 helpText: "@?",
@@ -9347,7 +9348,7 @@ tag: "="
 },
 templateUrl: "views/directives/osc-image-summary.html"
 };
-}), angular.module("openshiftConsole").directive("oscRouting", [ "Constants", "DNS1123_SUBDOMAIN_VALIDATION", function(e, t) {
+}), angular.module("openshiftConsole").directive("oscRouting", [ "$filter", "Constants", "DNS1123_SUBDOMAIN_VALIDATION", function(e, t, n) {
 return {
 require: "^form",
 restrict: "E",
@@ -9356,17 +9357,32 @@ route: "=model",
 services: "=",
 showNameInput: "=",
 routingDisabled: "=",
-hostReadOnly: "="
+existingRoute: "="
 },
 templateUrl: "views/directives/osc-routing.html",
-link: function(n, a, r, o) {
-n.form = o, n.controls = {}, n.options = {
+link: function(a, r, o, i) {
+a.form = i, a.controls = {}, a.options = {
 secureRoute: !1,
 alternateServices: !1
-}, n.disableWildcards = e.DISABLE_WILDCARD_ROUTES, n.disableCertificateInputs = function() {
-var e = _.get(n, "route.tls.termination");
+};
+var s = {
+group: "route.openshift.io",
+resource: "routes/custom-host"
+};
+a.canICreateCustomHosts = e("canI")(s, "create"), a.canIUpdateCustomHosts = e("canI")(s, "update");
+var c = function() {
+return a.existingRoute ? a.canIUpdateCustomHosts : a.canICreateCustomHosts;
+};
+a.isHostnameReadOnly = function() {
+return !c();
+}, a.disableWildcards = t.DISABLE_WILDCARD_ROUTES, a.areCertificateInputsReadOnly = function() {
+return !c();
+}, a.areCertificateInputsDisabled = function() {
+var e = _.get(a, "route.tls.termination");
 return !e || "passthrough" === e;
-}, n.insecureTrafficOptions = [ {
+}, a.isDestinationCACertInputDisabled = function() {
+return "reencrypt" !== _.get(a, "route.tls.termination");
+}, a.insecureTrafficOptions = [ {
 value: "",
 label: "None"
 }, {
@@ -9375,73 +9391,73 @@ label: "Allow"
 }, {
 value: "Redirect",
 label: "Redirect"
-} ], _.has(n, "route.tls.insecureEdgeTerminationPolicy") || _.set(n, "route.tls.insecureEdgeTerminationPolicy", "");
-n.$watchGroup([ "route.tls.termination", "route.tls.insecureEdgeTerminationPolicy" ], function() {
-var e = "passthrough" !== _.get(n, "route.tls.termination") || "Allow" !== _.get(n, "route.tls.insecureEdgeTerminationPolicy");
-n.routeForm.insecureTraffic.$setValidity("passthrough", e);
-}), n.nameValidation = t, n.disableWildcards ? n.hostnamePattern = t.pattern : n.hostnamePattern = /^(\*(\.[a-z0-9]([-a-z0-9]*[a-z0-9]))+|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$/, n.hostnameMaxLength = t.maxlength;
-var i = function(e) {
+} ], _.has(a, "route.tls.insecureEdgeTerminationPolicy") || _.set(a, "route.tls.insecureEdgeTerminationPolicy", "");
+a.$watchGroup([ "route.tls.termination", "route.tls.insecureEdgeTerminationPolicy" ], function() {
+var e = "passthrough" !== _.get(a, "route.tls.termination") || "Allow" !== _.get(a, "route.tls.insecureEdgeTerminationPolicy");
+a.routeForm.insecureTraffic.$setValidity("passthrough", e);
+}), a.nameValidation = n, a.disableWildcards ? a.hostnamePattern = n.pattern : a.hostnamePattern = /^(\*(\.[a-z0-9]([-a-z0-9]*[a-z0-9]))+|[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)$/, a.hostnameMaxLength = n.maxlength;
+var l = function(e) {
 if (e) {
 var t = _.get(e, "spec.ports", []);
-n.unnamedServicePort = 1 === t.length && !t[0].name, t.length && !n.unnamedServicePort ? n.route.portOptions = _.map(t, function(e) {
+a.unnamedServicePort = 1 === t.length && !t[0].name, t.length && !a.unnamedServicePort ? a.route.portOptions = _.map(t, function(e) {
 return {
 port: e.name,
 label: e.port + " → " + e.targetPort + " (" + e.protocol + ")"
 };
-}) : n.route.portOptions = [];
+}) : a.route.portOptions = [];
 }
 };
-n.services && !n.route.service && (n.route.service = _.find(n.services)), n.servicesByName, n.services ? n.servicesByName = _.keyBy(n.services, "metadata.name") : n.servicesByName = {}, n.$watch("route.to.name", function(e, t) {
-i(n.servicesByName[e]), e === t && n.route.targetPort || (n.route.targetPort = _.get(n, "route.portOptions[0].port")), n.services && (n.alternateServiceOptions = _.reject(n.services, function(t) {
+a.services && !a.route.service && (a.route.service = _.find(a.services)), a.servicesByName, a.services ? a.servicesByName = _.keyBy(a.services, "metadata.name") : a.servicesByName = {}, a.$watch("route.to.name", function(e, t) {
+l(a.servicesByName[e]), e === t && a.route.targetPort || (a.route.targetPort = _.get(a, "route.portOptions[0].port")), a.services && (a.alternateServiceOptions = _.reject(a.services, function(t) {
 return e === t.metadata.name;
 }));
-}), n.$watch("route.alternateServices", function(e) {
-n.duplicateServices = _(e).map("name").filter(function(e, t, n) {
+}), a.$watch("route.alternateServices", function(e) {
+a.duplicateServices = _(e).map("name").filter(function(e, t, n) {
 return _.includes(n, e, t + 1);
-}).value(), o.$setValidity("duplicateServices", !n.duplicateServices.length), n.options.alternateServices = !_.isEmpty(e);
+}).value(), i.$setValidity("duplicateServices", !a.duplicateServices.length), a.options.alternateServices = !_.isEmpty(e);
 }, !0);
-var s = function() {
-return !!n.route.tls && ((!n.route.tls.termination || "passthrough" === n.route.tls.termination) && (n.route.tls.certificate || n.route.tls.key || n.route.tls.caCertificate || n.route.tls.destinationCACertificate));
+var u = function() {
+return !!a.route.tls && ((!a.route.tls.termination || "passthrough" === a.route.tls.termination) && (a.route.tls.certificate || a.route.tls.key || a.route.tls.caCertificate || a.route.tls.destinationCACertificate));
 };
-n.$watch("route.tls.termination", function() {
-n.options.secureRoute = !!_.get(n, "route.tls.termination"), n.showCertificatesNotUsedWarning = s();
+a.$watch("route.tls.termination", function() {
+a.options.secureRoute = !!_.get(a, "route.tls.termination"), a.showCertificatesNotUsedWarning = u();
 });
-var c;
-n.$watch("options.secureRoute", function(e, t) {
+var d;
+a.$watch("options.secureRoute", function(e, t) {
 if (e !== t) {
-var a = _.get(n, "route.tls.termination");
-!n.securetRoute && a && (c = a, delete n.route.tls.termination), n.options.secureRoute && !a && _.set(n, "route.tls.termination", c || "edge");
+var n = _.get(a, "route.tls.termination");
+!a.securetRoute && n && (d = n, delete a.route.tls.termination), a.options.secureRoute && !n && _.set(a, "route.tls.termination", d || "edge");
 }
-}), n.$watch("options.alternateServices", function(e, t) {
-e !== t && (e || (n.route.alternateServices = []), e && _.isEmpty(n.route.alternateServices) && n.addAlternateService());
-}), n.addAlternateService = function() {
-n.route.alternateServices = n.route.alternateServices || [];
-var e = _.find(n.services, function(e) {
-return e.metadata.name !== n.route.to.service && !_.some(n.route.alternateServices, {
+}), a.$watch("options.alternateServices", function(e, t) {
+e !== t && (e || (a.route.alternateServices = []), e && _.isEmpty(a.route.alternateServices) && a.addAlternateService());
+}), a.addAlternateService = function() {
+a.route.alternateServices = a.route.alternateServices || [];
+var e = _.find(a.services, function(e) {
+return e.metadata.name !== a.route.to.service && !_.some(a.route.alternateServices, {
 service: e.metadata.name
 });
 });
-_.has(n, "route.to.weight") || _.set(n, "route.to.weight", 1), n.route.alternateServices.push({
+_.has(a, "route.to.weight") || _.set(a, "route.to.weight", 1), a.route.alternateServices.push({
 service: e.metadata.name,
 weight: 1
 });
-}, n.weightAsPercentage = function(e, t) {
+}, a.weightAsPercentage = function(e, t) {
 e = e || 0;
-var a = _.get(n, "route.to.weight", 0);
-if (_.each(n.route.alternateServices, function(e) {
-a += _.get(e, "weight", 0);
-}), !a) return "";
-var r = e / a * 100;
+var n = _.get(a, "route.to.weight", 0);
+if (_.each(a.route.alternateServices, function(e) {
+n += _.get(e, "weight", 0);
+}), !n) return "";
+var r = e / n * 100;
 return t ? d3.round(r, 1) + "%" : r;
 };
-var l = !1;
-n.$watch("route.alternateServices.length", function(e) {
-if (0 === e && _.has(n, "route.to.weight") && delete n.route.to.weight, 1 === e) {
-if (0 === n.route.to.weight && 0 === n.route.alternateServices[0].weight) return void (n.controls.hideSlider = !0);
-l = !0, n.controls.rangeSlider = n.weightAsPercentage(n.route.to.weight);
+var m = !1;
+a.$watch("route.alternateServices.length", function(e) {
+if (0 === e && _.has(a, "route.to.weight") && delete a.route.to.weight, 1 === e) {
+if (0 === a.route.to.weight && 0 === a.route.alternateServices[0].weight) return void (a.controls.hideSlider = !0);
+m = !0, a.controls.rangeSlider = a.weightAsPercentage(a.route.to.weight);
 }
-}), n.$watch("controls.rangeSlider", function(e, t) {
-l ? l = !1 : e !== t && (e = parseInt(e, 10), _.set(n, "route.to.weight", e), _.set(n, "route.alternateServices[0].weight", 100 - e));
+}), a.$watch("controls.rangeSlider", function(e, t) {
+m ? m = !1 : e !== t && (e = parseInt(e, 10), _.set(a, "route.to.weight", e), _.set(a, "route.alternateServices[0].weight", 100 - e));
 });
 }
 };

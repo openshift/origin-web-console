@@ -8,6 +8,7 @@ angular.module('openshiftConsole')
         model: "=",
         required: "=",
         disabled: "=ngDisabled",
+        readonly: "=ngReadonly",
         showTextArea: '=',
         // Hide the clear value link.
         hideClear: '=?',
