@@ -1,53 +1,51 @@
-<overlay-panel show-panel="$ctrl.visible" show-close="true" handle-close="$ctrl.close">
-  <pf-wizard
-       on-cancel="$ctrl.close()"
-       on-finish="$ctrl.close()"
-       hide-header="true"
-       hide-back-button="true"
-       hide-sidebar="true"
-       next-title="$ctrl.nextButtonTitle"
-       next-callback="$ctrl.nextCallback"
-       current-step="$ctrl.currentStep"
-       on-step-changed="$ctrl.stepChanged(step)"
-       step-class="order-service-wizard-step"
-       wizard-done="$ctrl.wizardDone"
-       class="pf-wizard-no-back">
-    <pf-wizard-step
-         step-title="Image"
-         step-id="image"
-         step-priority="1"
-         substeps="false"
-         ok-to-nav-away="true"
-         allow-click-nav="false"
-         next-enabled="!$ctrl.deployForm.$invalid">
-      <div class="wizard-pf-main-inner-shadow-covers">
-        <div class="order-service-config order-service-config-single-column">
-          <div class="wizard-pf-main-form-contents">
-            <form name="$ctrl.deployForm">
-              <deploy-image is-dialog="true" project="$ctrl.project" context="$ctrl.context"></deploy-image>
-            </form>
-          </div>
+<pf-wizard
+     on-cancel="$ctrl.close()"
+     on-finish="$ctrl.close()"
+     hide-header="true"
+     hide-back-button="true"
+     hide-sidebar="true"
+     next-title="$ctrl.nextButtonTitle"
+     next-callback="$ctrl.nextCallback"
+     current-step="$ctrl.currentStep"
+     on-step-changed="$ctrl.stepChanged(step)"
+     step-class="order-service-wizard-step"
+     wizard-done="$ctrl.wizardDone"
+     class="pf-wizard-no-back">
+  <pf-wizard-step
+       step-title="Image"
+       step-id="image"
+       step-priority="1"
+       substeps="false"
+       ok-to-nav-away="true"
+       allow-click-nav="false"
+       next-enabled="$ctrl.deployForm.$valid || $ctrl.deployImageNewAppCreated">
+    <div class="wizard-pf-main-inner-shadow-covers">
+      <div class="order-service-config order-service-config-single-column">
+        <div class="wizard-pf-main-form-contents">
+          <form name="$ctrl.deployForm">
+            <deploy-image is-dialog="true" project="$ctrl.project" context="$ctrl.context"></deploy-image>
+          </form>
         </div>
       </div>
-    </pf-wizard-step>
-    <pf-wizard-step
-         step-title="Results"
-         step-id="results"
-         step-priority="2"
-         substeps="false"
-         ok-to-nav-away="true"
-         allow-click-nav="false">
-      <div class="wizard-pf-main-inner-shadow-covers">
-        <div class="order-service-config order-service-config-single-column">
-          <div class="wizard-pf-main-form-contents">
-            <next-steps project="$ctrl.selectedProject"
-                        project-name="$ctrl.selectedProject.metadata.name"
-                        login-base-url="$ctrl.loginBaseUrl"
-                        on-continue="$ctrl.close">
-            </next-steps>
-          </div>
+    </div>
+  </pf-wizard-step>
+  <pf-wizard-step
+       step-title="Results"
+       step-id="results"
+       step-priority="2"
+       substeps="false"
+       ok-to-nav-away="true"
+       allow-click-nav="false">
+    <div class="wizard-pf-main-inner-shadow-covers">
+      <div class="order-service-config order-service-config-single-column">
+        <div class="wizard-pf-main-form-contents">
+          <next-steps project="$ctrl.selectedProject"
+                      project-name="$ctrl.selectedProject.metadata.name"
+                      login-base-url="$ctrl.loginBaseUrl"
+                      on-continue="$ctrl.close">
+          </next-steps>
         </div>
       </div>
-    </pf-wizard-step> <!-- /pf-wizard-step -->
-  </pf-wizard> <!-- /pf-wizard -->
-</overlay-panel>
+    </div>
+  </pf-wizard-step>
+</pf-wizard>
