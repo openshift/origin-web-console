@@ -12456,7 +12456,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"section-title\" ng-if=\"row.isBindable || row.bindings\">\n" +
-    "Application Bindings\n" +
+    "Bindings\n" +
     "</div>\n" +
     "<div class=\"row overview-bindings\" ng-repeat=\"(name, binding) in row.bindings\">\n" +
     "<div class=\"col-sm-5 col-md-6\">\n" +
