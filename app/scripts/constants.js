@@ -84,7 +84,8 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
 
   // This blacklist hides certain kinds from the "Other Resources" page because they are unpersisted, disallowed for most end users, or not supported by openshift but exist in kubernetes
   AVAILABLE_KINDS_BLACKLIST: [],
-
+  // Currently disables watch on events used by the drawer
+  DISABLE_GLOBAL_EVENT_WATCH: false,
   ENABLE_TECH_PREVIEW_FEATURE: {
     // Enable the new landing page and service catalog experience
     service_catalog_landing_page: false,
@@ -139,6 +140,59 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     {resource: 'services', group: ''},
     {resource: 'statefulsets', group: 'apps'}
   ],
+  // TODO:
+  // This map can drive both the drawer & toast messages by
+  // updating it to the following format:
+  // { drawer: true, toast: true  }
+  // or perhaps this, where an event may apply to multiple resources
+  // (though reuse of events is not super common, this could be overkill):
+  // Failed: {
+  //   resources: [{ group: 'apps', resource: 'deployments' }],
+  //   drawer: true,
+  //   toast: true
+  // }
+  // TODO: Also consider an API_OBJECTS_TO_IGNORE
+  // map that can blacklist some, for example, if FailedCreate
+  // applies to many but we don't want to see all.
+   EVENTS_TO_SHOW: {
+    // CRUD events that apply to more than one api object
+    FailedCreate: true,
+    FailedDelete: true,
+    FailedUpdate: true,
+    // Build
+    BuildStarted: true,
+    BuildCompleted: true,
+    BuildFailed: true,
+    BuildCancelled: true,
+    // BuildConfig
+    //
+    // Deployment
+    Failed: true,
+    ScalingReplicaSet: true,
+    DeploymentCancelled: true,
+    // DeploymentConfig
+    DeploymentCreated: true,
+    DeploymentCreationFailed: true,
+    // Pod
+    FailedSync: true,
+    BackOff: true,
+    Unhealthy: true,
+    // Image/Pod
+    Pulling: true,
+    Pulled: true,
+    // SuccessfulDelete: true,
+    // Cron
+    //
+    // PodAutoscaler
+    SuccessfulRescale: true,
+    FailedRescale: true,
+    // Service
+    LoadBalancerUpdateFailed: true,
+    // PVC
+    VolumeDeleted: true,
+    FailedBinding: true,
+    ProvisioningFailed: true
+  },
 
   // href's will be prefixed with /project/{{projectName}} unless they are absolute URLs
   PROJECT_NAVIGATION: [

@@ -1,0 +1,29 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-6">
+      <strong>{{notificationGroup.heading}}</strong>
+    </div>
+    <div class="col-xs-6 text-right small">
+      <a
+        title="All Events"
+        ng-href="project/{{$ctrl.customScope.projectName}}/browse/events"
+        ng-click="$ctrl.customScope.close()">
+        View All Events
+      </a>
+    </div>
+  </div>
+  <div class="row mar-top-md">
+    <div class="col-xs-6">
+      <em>{{notificationGroup.totalUnread}} Unread</em>
+    </div>
+    <div class="col-xs-6 text-right small">
+      <span ng-repeat="count in notificationGroup.counts | orderBy: 'type'">
+        <span
+          class="pficon"
+          ng-class="$ctrl.customScope.getStatusForCount(count.type)"
+          aria-hidden="true">
+        </span> {{count.value}} <span class="sr-only">{{count.type}}</span>
+      </span>
+    </div>
+  </div>
+</div>
