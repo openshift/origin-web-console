@@ -5804,7 +5804,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-if=\"value && valueHelp\" href=\"\" class=\"item value truncate\" data-toggle=\"popover\" data-trigger=\"focus\" data-content=\"{{valueHelp}}\">\n" +
     "{{value}}\n" +
     "</a>\n" +
-    "<a href=\"\" class=\"item action\" ng-if=\"showAction\" ng-click=\"action()\" ng-attr-title=\"actionTitle\">\n" +
+    "<a href=\"\" class=\"item action\" ng-if=\"showAction\" ng-click=\"action()\" ng-attr-title=\"{{actionTitle}}\">\n" +
     "<i ng-class=\"icon || 'pficon pficon-close'\"></i>\n" +
     "</a>\n" +
     "</span>"
@@ -10499,7 +10499,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"action-set\" flex row tablet=\"column\" mobile=\"column\">\n" +
     "<div class=\"col-roles\" row tablet=\"column\" flex wrap axis=\"start\">\n" +
-    "<action-chip ng-repeat=\"role in subject.roles\" key=\"role.metadata.name\" key-help=\"roleHelp(role)\" show-action=\"mode.edit\" action=\"confirmRemove(subject.name, subjectKind.name, role.metadata.name)\" action-title=\"remove role {{role}} from {{subject.name}}\"></action-chip>\n" +
+    "<action-chip ng-repeat=\"role in subject.roles\" key=\"role.metadata.name\" key-help=\"roleHelp(role)\" show-action=\"mode.edit\" action=\"confirmRemove(subject.name, subjectKind.name, role.metadata.name)\" action-title=\"Remove role {{role.metadata.name}} from {{subject.name}}\"></action-chip>\n" +
     "</div>\n" +
     "<div ng-if=\"mode.edit\" class=\"col-add-role\">\n" +
     "<div row>\n" +
