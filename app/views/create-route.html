@@ -17,7 +17,7 @@
                   <div class="help-block">
                     Routing is a way to make your application publicly visible.
                   </div>
-                  <form name="createRouteForm" class="mar-top-xl osc-form">
+                  <form name="createRouteForm" class="mar-top-xl osc-form" novalidate>
                     <div ng-if="!services">Loading...</div>
                     <div ng-if="services">
                       <fieldset ng-disabled="disableInputs">
@@ -32,7 +32,6 @@
                             can-toggle="false"
                             help-text="Labels for this route.">
                         </label-editor>
-                        <a href="" ng-click="copyServiceLabels()">Copy Service Labels</a>
                         <div class="button-group gutter-top gutter-bottom">
                           <button type="submit"
                               class="btn btn-primary btn-lg"

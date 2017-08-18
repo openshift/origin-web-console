@@ -2,9 +2,18 @@
 
 angular.module("openshiftConsole")
   .factory("CatalogService", function($filter,
+                                      APIService,
                                       Constants,
                                       KeywordService) {
     var getTags = $filter('tags');
+
+    // Enable service catalog features if the new experience is enabled and the
+    // servicecatalog.k8s.io resources are available.
+    var SERVICE_CATALOG_ENABLED =
+      _.get(Constants, 'ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page') &&
+      APIService.apiInfo({ group: 'servicecatalog.k8s.io', resource: 'serviceclasses' }) &&
+      APIService.apiInfo({ group: 'servicecatalog.k8s.io', resource: 'instances' }) &&
+      APIService.apiInfo({ group: 'servicecatalog.k8s.io', resource: 'bindings' });
 
     var categoryItemByID = {};
     _.each(Constants.CATALOG_CATEGORIES, function(category) {
@@ -160,7 +169,7 @@ angular.module("openshiftConsole")
           specTags.push(tag);
         });
 
-        var matchingTags = _.indexBy(specTags, 'name');
+        var matchingTags = _.keyBy(specTags, 'name');
 
         // Find tags that match every keyword. Search image stream name, image
         // stream display name, and tag names, and tag descriptions. If a
@@ -239,6 +248,7 @@ angular.module("openshiftConsole")
     };
 
     return {
+      SERVICE_CATALOG_ENABLED: SERVICE_CATALOG_ENABLED,
       getCategoryItem: getCategoryItem,
       categorizeImageStreams: categorizeImageStreams,
       categorizeTemplates: categorizeTemplates,

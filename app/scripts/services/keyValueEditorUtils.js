@@ -70,7 +70,7 @@
             entry.valueAlt = 'Set to the field ' + entry.valueFrom.fieldRef.fieldPath + ' in current object';
           } else {
             entry.isReadonlyValue = true;
-            entry.valueAlt = 'Set to a reference on a ' + _.first(_.keys(entry.valueFrom));
+            entry.valueAlt = 'Set to a reference on a ' + _.head(_.keys(entry.valueFrom));
           }
         };
 
@@ -164,7 +164,7 @@
         var setFocusOn = function(selector, value) {
           // $timeout just delays enough to ensure event/$digest resolution
           $timeout(function() {
-            var element = _.first($window.document.querySelectorAll(selector));
+            var element = _.head($window.document.querySelectorAll(selector));
             if(element) {
               element.focus();
               // if setting value, this will set the cursor at the end of the text in the value

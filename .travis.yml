@@ -1,12 +1,8 @@
 language: node_js
 node_js:
   - "4"
-cache:
-  directories:
-  - node_modules
-  - bower_components
 before_script:
   - make build
 script:
-  - hack/test-headless.sh test
+  - grunt test --browsers=PhantomJS
   - hack/verify-dist.sh

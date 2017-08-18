@@ -58,17 +58,7 @@
                   </uib-tab>
                   <uib-tab heading="Environment" active="selectedTab.environment">
                     <uib-tab-heading>Environment</uib-tab-heading>
-                    <div ng-repeat="container in containersEnv">
-                      <h3>Container {{container.name}} Environment Variables</h3>
-                      <key-value-editor
-                        entries="container.env"
-                        is-readonly
-                        cannot-add
-                        cannot-sort
-                        cannot-delete
-                        ng-if="container.env.length"></key-value-editor>
-                      <em ng-if="!container.env.length">The container specification has no environment variables set.</em>
-                    </div>
+                    <edit-environment-variables api-object="pod" ng-readonly="true"></edit-environment-variables>
                   </uib-tab>
                   <uib-tab ng-if="metricsAvailable" heading="Metrics" active="selectedTab.metrics">
                     <!-- Use ng-if to remove the metrics directive when the tab is not active so

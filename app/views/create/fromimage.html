@@ -50,7 +50,7 @@
                                       ng-blur="shouldValidateName = form.appname.$dirty"
                                       class="form-control"
                                       autocorrect="off"
-                                      autocapitalize="off"
+                                      autocapitalize="none"
                                       spellcheck="false">
                               </div>
                               <div class="help-block">Identifies the resources created for this application.</div>
@@ -90,7 +90,7 @@
                                     aria-describedby="from_source_help"
                                     ng-model="buildConfig.sourceUrl"
                                     autocorrect="off"
-                                    autocapitalize="off"
+                                    autocapitalize="none"
                                     spellcheck="false">
                                 </div>
                                 <div ng-if="!(sourceURIinParams) && image.metadata.annotations.sampleRepo" class="help-block">
@@ -120,7 +120,7 @@
                                     type="text"
                                     placeholder="master"
                                     autocorrect="off"
-                                    autocapitalize="off"
+                                    autocapitalize="none"
                                     spellcheck="false"
                                     class="form-control">
                                 </div>
@@ -139,7 +139,7 @@
                                 type="text"
                                 placeholder="/"
                                 autocorrect="off"
-                                autocapitalize="off"
+                                autocapitalize="none"
                                 spellcheck="false"
                                 class="form-control">
                             </div>
@@ -327,7 +327,9 @@
                                   </span>
                                 </div>
                               </div>
-                              <div class="form-group" ng-if="!scaling.autoscale">
+                              <div ng-if="!scaling.autoscale"
+                                   class="form-group"
+                                   ng-class="{ 'has-error': form.replicas.$dirty && form.replicas.$invalid }">
                                 <label class="number">Replicas</label>
                                 <input type="number"
                                        class="form-control"
@@ -336,7 +338,8 @@
                                        ng-model="scaling.replicas"
                                        ng-required="!scaling.autoscale"
                                        ng-disabled="scaling.autoscale"
-                                       ng-pattern="/^\d+$/"
+                                       pattern="\d*"
+                                       select-on-focus
                                        aria-describedby="replicas-help">
                                 <div id="replicas-help">
                                   <span class="help-block">The number of instances of your image.</span>
@@ -398,8 +401,7 @@
                             <!-- /limits -->
 
                             <label-editor
-                                labels="userDefinedLabels"
-                                system-labels="systemLabels"
+                                labels="labelArray"
                                 expand="true"
                                 can-toggle="false"
                                 help-text="Each label is applied to each created resource.">
@@ -412,7 +414,6 @@
                             for source, routes, builds, and deployments.
                           </div>
                           <div class="buttons gutter-bottom" ng-class="{'gutter-top': !alerts.length}">
-                            <!-- unable to use form.valid.  need to fix validators in labels and key values directive -->
                             <button type="submit"
                                 class="btn btn-primary btn-lg"
                                 ng-disabled="form.$invalid || nameTaken || cpuProblems.length || memoryProblems.length || disableInputs"

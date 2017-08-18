@@ -17,9 +17,6 @@
 }
 
 .list-pf-content {
-  // Make block element to override bug introduced in PF v3.23.1 where list-pf-content was changed to display: flex
-  // TODO: remove if reverted in PF
-  display: block;
   .alert:first-child {
     margin-top: 0;
   }
@@ -29,6 +26,7 @@
   .list-pf-chevron + & {
     align-items: center;
     display: flex;
+    flex-grow: 1;
     .list-pf-details,
     .list-pf-name {
       flex-grow: 1;

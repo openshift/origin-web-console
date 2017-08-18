@@ -10,11 +10,12 @@
         readonly
         ng-show="supportsFileUpload"
         ng-disabled="disabled"
+        ng-readonly="readonly"
         ng-attr-aria-describedby="{{helpText ? helpID : undefined}}">
     <span class="input-group-btn">
-      <span class="btn btn-default btn-file" ng-show="supportsFileUpload" ng-attr-disabled="{{ disabled || undefined }}">
+      <span class="btn btn-default btn-file" ng-show="supportsFileUpload" ng-attr-disabled="{{ (disabled || readonly) || undefined }}">
         Browse&hellip;
-        <input type="file" ng-disabled="disabled" class="form-control">
+        <input type="file" ng-disabled="disabled || readonly" class="form-control">
       </span>
     </span>
   </div>
@@ -30,11 +31,12 @@
       ng-model="model"
       ng-required="required"
       ng-disabled="disabled"
+      ng-readonly="readonly"
       autocorrect="off"
-      autocapitalize="off"
+      autocapitalize="none"
       spellcheck="false"
       ng-attr-aria-describedby="{{helpText ? helpID : undefined}}">
   </textarea>
 
-  <a href="" ng-show="(model || fileName) && !disabled" ng-click="cleanInputValues()">Clear Value</a>
+  <a href="" ng-show="(model || fileName) && !disabled && !readonly && !hideClear" ng-click="cleanInputValues()">Clear Value</a>
 </div>

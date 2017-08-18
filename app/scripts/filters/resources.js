@@ -23,10 +23,10 @@ angular.module('openshiftConsole')
       var lastUpdatedMoment = moment(lastUpdated);
       angular.forEach(imageStream.status.tags, function(tag) {
         if (!_.isEmpty(tag.items)) {
-          var tagUpdatedMoment = moment(_.first(tag.items).created);
+          var tagUpdatedMoment = moment(_.head(tag.items).created);
           if (tagUpdatedMoment.isAfter(lastUpdatedMoment)) {
             lastUpdatedMoment = tagUpdatedMoment;
-            lastUpdated = _.first(tag.items).created;
+            lastUpdated = _.head(tag.items).created;
           }
         }
       });
@@ -1246,7 +1246,7 @@ angular.module('openshiftConsole')
           Logger.error("Unable to parse previous scale annotation as a number.");
         }
       }
-      return previousScale || _.get(_.first(hpa), 'spec.minReplicas') || 1;
+      return previousScale || _.get(_.head(hpa), 'spec.minReplicas') || 1;
     };
   })
   .filter('lastDeploymentRevision', function(annotationFilter) {
@@ -1303,7 +1303,7 @@ angular.module('openshiftConsole')
         return true;
       }
 
-      if (rgv.resource === 'deployments' && rgv.group === 'extensions') {
+      if (rgv.resource === 'deployments' && (rgv.group === 'apps' || rgv.group === 'extensions')) {
         return true;
       }
 

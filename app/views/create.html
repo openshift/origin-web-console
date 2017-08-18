@@ -28,13 +28,13 @@
                   <uib-tab active="selectedTab.deployImage">
                     <uib-tab-heading>Deploy Image</uib-tab-heading>
                     <form><!-- wrapping form element is necessary for the enter key to trigger the submit button -->
-                      <deploy-image project="project" context="context"></deploy-image>
+                      <deploy-image ng-if="project" project="project"></deploy-image>
                     </form>
                   </uib-tab>
 
                   <uib-tab active="selectedTab.fromFile">
                     <uib-tab-heading>Import YAML / JSON</uib-tab-heading>
-                    <from-file project="project" context="context" ></from-file>
+                    <from-file ng-if="project" project="project"></from-file>
                   </uib-tab>
 
                 </uib-tabset>

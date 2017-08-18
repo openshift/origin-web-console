@@ -10,7 +10,6 @@
     ],
     controllerAs: '$ctrl',
     bindings: {
-      visible: '<',
       project: '<', //handle create project optionally
       context: '<',
       onDialogClosed: '&'
@@ -65,14 +64,14 @@
       return true;
     };
 
-    $scope.$on("wizard:stepChanged", function (e, parameters) {
-      if (parameters.step.stepId === 'results') {
+    ctrl.stepChanged = function(step) {
+      if (step.stepId === 'results') {
         ctrl.nextButtonTitle = "Close";
         ctrl.wizardDone = true;
       } else {
         ctrl.nextButtonTitle = "Create";
       }
-    });
+    };
 
     ctrl.currentStep = "JSON / YAML";
 

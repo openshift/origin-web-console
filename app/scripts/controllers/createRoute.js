@@ -68,6 +68,7 @@ angular.module('openshiftConsole')
           return;
         }
 
+        var servicesByName;
         var orderByDisplayName = $filter('orderByDisplayName');
 
         $scope.routing.to = {
@@ -75,14 +76,25 @@ angular.module('openshiftConsole')
           name: $scope.serviceName,
           weight: 1
         };
-        DataService.list("services", context).then(function(services) {
-          $scope.services = orderByDisplayName(services.by("metadata.name"));
-        });
 
-        $scope.copyServiceLabels = function() {
-          var serviceLabels = _.get($scope, 'routing.to.service.metadata.labels', {});
+        var serviceLabels;
+        var copyServiceLabels = function() {
+          var previousServiceLabels = serviceLabels;
+          var serviceName = _.get($scope, 'routing.to.name');
+          serviceLabels = _.get(servicesByName, [serviceName, 'metadata', 'labels'], {});
           var existing = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
+
           var updated = _.assign(existing, serviceLabels);
+
+          // Remove any labels added for the previous service. Do this last to
+          // try to preserve the order of the labels. This prevents the `app`
+          // label from moving to the bottom of the list.
+          if (previousServiceLabels) {
+            updated = _.omitBy(updated, function(value, name) {
+              return previousServiceLabels[name] && !serviceLabels[name];
+            });
+          }
+
           $scope.labels = _.map(updated, function(value, key) {
             return {
               name: key,
@@ -90,6 +102,13 @@ angular.module('openshiftConsole')
             };
           });
         };
+
+        DataService.list("services", context).then(function(serviceData) {
+          servicesByName = serviceData.by("metadata.name");
+          $scope.services = orderByDisplayName(servicesByName);
+          // Wait until the services load before trying to copy service labels.
+          $scope.$watch('routing.to.name', copyServiceLabels);
+        });
 
         $scope.createRoute = function() {
           if ($scope.createRouteForm.$valid) {

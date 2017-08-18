@@ -3,7 +3,11 @@
   background: #000;
   height: 100%;
   width: 100%;
+  &.disconnected .fullscreen-toggle {
+    display: block;
+  }
   .fullscreen-toggle {
+    right: 55px;
     .exit-fullscreen {
       display: block;
     }
@@ -42,7 +46,7 @@
     display: none;
     line-height: 1;
     position: absolute;
-    right: 5px;
+    right: 25px;
     top: 0;
     z-index: 1;
     a {
@@ -82,7 +86,7 @@ kubernetes-container-terminal {
   }
   .terminal-actions {
     top: 0;
-    right: 30px;
+    right: 47px;
     .spinner {
       top: 5px;
     }

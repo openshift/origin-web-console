@@ -113,7 +113,7 @@ angular.module("openshiftConsole")
     };
 
     var query = function(url, data, config) {
-      var podsByUID = _.indexBy(config.pods, 'metadata.uid');
+      var podsByUID = _.keyBy(config.pods, 'metadata.uid');
       return $http.post(url, data, {
         auth: {},
         headers: {

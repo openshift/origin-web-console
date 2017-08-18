@@ -43,7 +43,7 @@ angular.module('openshiftConsole')
             $scope.sortConfig.isAscending = !(defaultIsReversed[currentID]);
           }
           var order = $scope.sortConfig.isAscending ? 'asc' : 'desc';
-          sortedEvents = _.sortByOrder($scope.events, [sortID], [order]);
+          sortedEvents = _.orderBy($scope.events, [sortID], [order]);
         };
 
         var filterExpressions = [];
@@ -157,7 +157,7 @@ angular.module('openshiftConsole')
           allEvents = events.by("metadata.name");
           debounceUpdate();
           Logger.log("events (subscribe)", $scope.filteredEvents);
-        }));
+        }, { skipDigest: true }));
 
         $scope.$on('$destroy', function(){
           DataService.unwatchAll(watches);

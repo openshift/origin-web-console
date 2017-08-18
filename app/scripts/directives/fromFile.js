@@ -12,11 +12,11 @@ angular.module("openshiftConsole")
                                   NotificationsService,
                                   QuotaService,
                                   SecurityCheckService,
-                                  TaskList) {
+                                  TaskList,
+                                  ProjectsService) {
     return {
       restrict: "E",
       scope: {
-        context: '=',
         project: '=',
         isDialog: '='
       },
@@ -24,7 +24,12 @@ angular.module("openshiftConsole")
       controller: function($scope) {
         var aceEditorSession;
         var humanizeKind = $filter('humanizeKind');
+        var getErrorDetails = $filter('getErrorDetails');
         TaskList.clear();
+
+        $scope.input = {
+          selectedProject: $scope.project
+        };
 
         $scope.aceLoaded = function(editor) {
           aceEditorSession = editor.getSession();
@@ -33,29 +38,6 @@ angular.module("openshiftConsole")
           editor.setDragDelay = 0;
           editor.$blockScrolling = Infinity;
         };
-
-        var checkErrorAnnotations = function() {
-          var editorAnnotations = aceEditorSession.getAnnotations();
-          $scope.editorErrorAnnotation = _.some(editorAnnotations, { type: 'error' });
-        };
-
-        // Determine whats the input format (JSON/YAML) and set appropriate view mode
-        var updateEditorMode = _.debounce(function(){
-          try {
-            JSON.parse($scope.editorContent);
-            aceEditorSession.setMode("ace/mode/json");
-          } catch (e) {
-            try {
-              jsyaml.safeLoad($scope.editorContent);
-              aceEditorSession.setMode("ace/mode/yaml");
-            } catch (e) {}
-          }
-          $scope.$apply(checkErrorAnnotations);
-        }, 300);
-
-        // Check if the editor isn't empty to disable the 'Add' button. Also check in what format the input is in (JSON/YAML) and change
-        // the editor accordingly.
-        $scope.aceChanged = updateEditorMode;
 
         var launchConfirmationDialog = function(alerts) {
           var modalInstance = $uibModal.open({
@@ -91,7 +73,7 @@ angular.module("openshiftConsole")
         var showWarningsOrCreate = function(result){
           // Hide any previous notifications when form is resubmitted.
           hideErrorNotifications();
-          alerts = SecurityCheckService.getSecurityAlerts($scope.createResources, $scope.project.metadata.name);
+          alerts = SecurityCheckService.getSecurityAlerts($scope.createResources, $scope.input.selectedProject.metadata.name);
 
           // Now that all checks are completed, show any Alerts if we need to
           var quotaAlerts = result.quotaAlerts || [];
@@ -113,7 +95,16 @@ angular.module("openshiftConsole")
           }
         };
 
-        var resource;
+        var createProjectIfNecessary = function() {
+          if (_.has($scope.input.selectedProject, 'metadata.uid')) {
+            return $q.when($scope.input.selectedProject);
+          }
+
+          var newProjName = $scope.input.selectedProject.metadata.name;
+          var newProjDisplayName = $scope.input.selectedProject.metadata.annotations['new-display-name'];
+          var newProjDesc = $filter('description')($scope.input.selectedProject);
+          return ProjectsService.create(newProjName, newProjDisplayName, newProjDesc);
+        };
 
         $scope.create = function() {
           delete $scope.error;
@@ -124,33 +115,23 @@ angular.module("openshiftConsole")
           // is JSON related the printed reason will be "Reason: Unable to parse", in case of YAML related
           // reason the true reason will be printed, since YAML parser throws an error object with needed
           // data.
-          try {
-            resource = JSON.parse($scope.editorContent);
-          } catch (e) {
-            try {
-              resource = jsyaml.safeLoad($scope.editorContent);
-            } catch (e) {
-              $scope.error = e;
-              return;
-            }
-          }
 
-          if (!isKindValid(resource)) {
+          if (!isKindValid($scope.resource)) {
             return;
           }
 
-          $scope.resourceKind = resource.kind;
+          $scope.resourceKind = $scope.resource.kind;
           $scope.resourceKind.endsWith("List") ? $scope.isList = true : $scope.isList = false;
 
-          if (!isMetadataValid(resource)) {
+          if (!isMetadataValid($scope.resource)) {
             return;
           }
           if ($scope.isList) {
-            $scope.resourceList = resource.items;
+            $scope.resourceList = $scope.resource.items;
             $scope.resourceName = '';
           } else {
-            $scope.resourceList = [resource];
-            $scope.resourceName = resource.metadata.name;
+            $scope.resourceList = [$scope.resource];
+            $scope.resourceName = $scope.resource.metadata.name;
             if ($scope.resourceKind === "Template") {
               $scope.templateOptions = {
                 process: true,
@@ -163,39 +144,50 @@ angular.module("openshiftConsole")
           $scope.createResources = [];
 
           var resourceCheckPromises = [];
-          $scope.errorOccured = false;
+          $scope.errorOccurred = false;
           _.forEach($scope.resourceList, function(item) {
             if (!isMetadataValid(item)) {
-              $scope.errorOccured = true;
+              $scope.errorOccurred = true;
               return false;
             }
             resourceCheckPromises.push(checkIfExists(item));
           });
 
-          $q.all(resourceCheckPromises).then(function() {
-            if ($scope.errorOccured) {
-              return;
-            }
-            // If resource is Template and it doesn't exist in the project
-            if ($scope.createResources.length === 1 && $scope.resourceList[0].kind === "Template") {
-              openTemplateProcessModal();
-            // Else if any resources already exist
-            } else if (!_.isEmpty($scope.updateResources)) {
-              $scope.updateTemplate = $scope.updateResources.length === 1 && $scope.updateResources[0].kind === "Template";
-              if ($scope.updateTemplate) {
-                openTemplateProcessModal();
-              } else {
-                confirmReplace();
+          createProjectIfNecessary().then(function(project) {
+            $scope.input.selectedProject = project;
+            $q.all(resourceCheckPromises).then(function() {
+              if ($scope.errorOccurred) {
+                return;
               }
-            } else {
-              QuotaService.getLatestQuotaAlerts($scope.createResources, $scope.context).then(showWarningsOrCreate);
-            }
+              // If resource is Template and it doesn't exist in the project
+              if ($scope.createResources.length === 1 && $scope.resourceList[0].kind === "Template") {
+                openTemplateProcessModal();
+                // Else if any resources already exist
+              } else if (!_.isEmpty($scope.updateResources)) {
+                $scope.updateTemplate = $scope.updateResources.length === 1 && $scope.updateResources[0].kind === "Template";
+                if ($scope.updateTemplate) {
+                  openTemplateProcessModal();
+                } else {
+                  confirmReplace();
+                }
+              } else {
+                QuotaService.getLatestQuotaAlerts($scope.createResources, {namespace: $scope.input.selectedProject.metadata.name}).then(showWarningsOrCreate);
+              }
+            });
+          }, function(e) {
+            NotificationsService.addNotification({
+              id: "import-create-project-error",
+              type: "error",
+              message: "An error occurred creating project",
+              details: getErrorDetails(e)
+            });
           });
+
         };
 
         $scope.cancel = function() {
           hideErrorNotifications();
-          Navigate.toProjectOverview($scope.project.metadata.name);
+          Navigate.toProjectOverview($scope.input.selectedProject.metadata.name);
         };
 
         // Takes item that will be inspect kind field.
@@ -226,7 +218,7 @@ angular.module("openshiftConsole")
             };
             return false;
           }
-          if (item.metadata.namespace && item.metadata.namespace !== $scope.project.metadata.name) {
+          if (item.metadata.namespace && item.metadata.namespace !== $scope.input.selectedProject.metadata.name) {
             $scope.error = {
               message: item.kind + " " + item.metadata.name + " can't be created in project " + item.metadata.namespace + ". Can't create resource in different projects."
             };
@@ -260,7 +252,7 @@ angular.module("openshiftConsole")
             scope: $scope
           });
           modalInstance.result.then(function() {
-            QuotaService.getLatestQuotaAlerts($scope.createResources, $scope.context).then(showWarningsOrCreate);
+            QuotaService.getLatestQuotaAlerts($scope.createResources, {namespace: $scope.input.selectedProject.metadata.name}).then(showWarningsOrCreate);
           });
         }
 
@@ -289,26 +281,26 @@ angular.module("openshiftConsole")
           var path, namespace;
 
           hideErrorNotifications();
-          if ($scope.resourceKind === "Template" && $scope.templateOptions.process && !$scope.errorOccured) {
+          if ($scope.resourceKind === "Template" && $scope.templateOptions.process && !$scope.errorOccurred) {
             if ($scope.isDialog) {
               $scope.$emit('fileImportedFromYAMLOrJSON', {
-                project: $scope.project,
-                template: resource
+                project: $scope.input.selectedProject,
+                template: $scope.resource
               });
             }
             else {
-              namespace = ($scope.templateOptions.add || $scope.updateResources.length > 0) ? $scope.project.metadata.name : "";
-              path = Navigate.createFromTemplateURL(resource, $scope.project.metadata.name, {namespace: namespace});
+              namespace = ($scope.templateOptions.add || $scope.updateResources.length > 0) ? $scope.input.selectedProject.metadata.name : "";
+              path = Navigate.createFromTemplateURL($scope.resource, $scope.input.selectedProject.metadata.name, {namespace: namespace});
               $location.url(path);
             }
           }
           else if ($scope.isDialog) {
             $scope.$emit('fileImportedFromYAMLOrJSON', {
-              project: $scope.project
+              project: $scope.input.selectedProject
             });
           }
           else {
-            path = Navigate.projectOverviewURL($scope.project.metadata.name);
+            path = Navigate.projectOverviewURL($scope.input.selectedProject.metadata.name);
             $location.url(path);
           }
         }
@@ -318,18 +310,18 @@ angular.module("openshiftConsole")
           // check for invalid and unsupported object kind and version
           var resourceGroupVersion = APIService.objectToResourceGroupVersion(item);
           if (!resourceGroupVersion) {
-            $scope.errorOccured = true;
+            $scope.errorOccurred = true;
             $scope.error = { message: APIService.invalidObjectKindOrVersion(item) };
             return;
           }
           if (!APIService.apiInfo(resourceGroupVersion)) {
-            $scope.errorOccured = true;
+            $scope.errorOccurred = true;
             $scope.error = { message: APIService.unsupportedObjectKindOrVersion(item) };
             return;
           }
 
           // Check if the resource already exists. If it does, replace it spec with the new one.
-          return DataService.get(resourceGroupVersion, item.metadata.name, $scope.context, {errorNotification: false}).then(
+          return DataService.get(resourceGroupVersion, item.metadata.name, {namespace: $scope.input.selectedProject.metadata.name}, {errorNotification: false}).then(
             // resource does exist
             function(resource) {
               // All fields, except 'metadata' will be copied from the submitted file.
@@ -355,7 +347,7 @@ angular.module("openshiftConsole")
           var resource;
           if (!_.isEmpty($scope.createResources)) {
             resource = _.head($scope.createResources);
-            DataService.create(APIService.kindToResource(resource.kind), null, resource, {namespace: $scope.project.metadata.name}).then(
+            DataService.create(APIService.kindToResource(resource.kind), null, resource, {namespace: $scope.input.selectedProject.metadata.name}).then(
               // create resource success
               function() {
                 var kind = humanizeKind(resource.kind);
@@ -376,7 +368,7 @@ angular.module("openshiftConsole")
               });
           } else {
             resource = _.head($scope.updateResources);
-            DataService.update(APIService.kindToResource(resource.kind), resource.metadata.name, resource, {namespace: $scope.project.metadata.name}).then(
+            DataService.update(APIService.kindToResource(resource.kind), resource.metadata.name, resource, {namespace: $scope.input.selectedProject.metadata.name}).then(
               // update resource success
               function() {
                 var kind = humanizeKind(resource.kind);
@@ -401,21 +393,21 @@ angular.module("openshiftConsole")
         var displayName = $filter('displayName');
         function createResourceList(){
           var titles = {
-            started: "Creating resources in project " + displayName($scope.project),
-            success: "Creating resources in project " + displayName($scope.project),
-            failure: "Failed to create some resources in project " + displayName($scope.project)
+            started: "Creating resources in project " + displayName($scope.input.selectedProject),
+            success: "Creating resources in project " + displayName($scope.input.selectedProject),
+            failure: "Failed to create some resources in project " + displayName($scope.input.selectedProject)
           };
           var helpLinks = {};
-          TaskList.add(titles, helpLinks, $scope.project.metadata.name, function() {
+          TaskList.add(titles, helpLinks, $scope.input.selectedProject.metadata.name, function() {
             var d = $q.defer();
 
-            DataService.batch($scope.createResources, $scope.context, "create").then(
+            DataService.batch($scope.createResources, {namespace: $scope.input.selectedProject.metadata.name}, "create").then(
               function(result) {
                 var alerts = [];
                 var hasErrors = false;
                 if (result.failure.length > 0) {
                   hasErrors = true;
-                  $scope.errorOccured = true;
+                  $scope.errorOccurred = true;
                   result.failure.forEach(
                     function(failure) {
                       alerts.push({
@@ -452,21 +444,21 @@ angular.module("openshiftConsole")
 
         function updateResourceList(){
           var titles = {
-            started: "Updating resources in project " + displayName($scope.project),
-            success: "Updated resources in project " + displayName($scope.project),
-            failure: "Failed to update some resources in project " + displayName($scope.project)
+            started: "Updating resources in project " + displayName($scope.input.selectedProject),
+            success: "Updated resources in project " + displayName($scope.input.selectedProject),
+            failure: "Failed to update some resources in project " + displayName($scope.input.selectedProject)
           };
           var helpLinks = {};
-          TaskList.add(titles, helpLinks, $scope.project.metadata.name, function() {
+          TaskList.add(titles, helpLinks, $scope.input.selectedProject.metadata.name, function() {
             var d = $q.defer();
 
-            DataService.batch($scope.updateResources, $scope.context, "update").then(
+            DataService.batch($scope.updateResources, {namespace: $scope.input.selectedProject.metadata.name}, "update").then(
               function(result) {
                 var alerts = [];
                 var hasErrors = false;
                 if (result.failure.length > 0) {
                   hasErrors = true;
-                  $scope.errorOccured = true;
+                  $scope.errorOccurred = true;
                   result.failure.forEach(
                     function(failure) {
                       alerts.push({

@@ -1,0 +1,44 @@
+<ng-form name="$ctrl.form">
+  <div class="form-group" id="yaml-file">
+    <osc-file-input
+      ng-if="$ctrl.showFileInput"
+      model="$ctrl.fileUpload"
+      drop-zone-id="yaml-file"
+      help-text="Upload a file by dragging & dropping, selecting it, or pasting from the clipboard."
+      ng-disabled="false"
+      hide-clear="true"></osc-file-input>
+
+    <div class="edit-yaml-errors">
+      <!--
+        Since the YAML parser quits after the first error, don't give a count.
+        Just show an indicator and link to the first problem line.
+      -->
+      <div ng-if="firstError = $ctrl.annotations.error[0]">
+        <a href="" ng-click="$ctrl.gotoLine(firstError.row)">
+          <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
+          Error
+        </a>
+      </div>
+      <div ng-if="firstWarning = $ctrl.annotations.warning[0]">
+        <a href="" ng-click="$ctrl.gotoLine(firstWarning.row)">
+          <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
+          Warning
+        </a>
+      </div>
+    </div>
+
+    <div ui-ace="{
+      mode: 'yaml',
+      theme: 'eclipse',
+      onLoad: $ctrl.aceLoaded,
+      onChange: $ctrl.aceChanged,
+      rendererOptions: {
+        showPrintMargin: false
+      }
+    }"
+    ng-model="$ctrl.model"
+    class="editor ace-bordered yaml-mode"
+    ng-required="$ctrl.ngRequired"
+    id="ace-yaml-editor"></div>
+  </div>
+</ng-form>

@@ -23,7 +23,11 @@
   }
 }
 .builds-label {
+  display: inline-block;
   margin-right: 5px;
+  @media (max-width: @screen-sm-max) {
+    margin-top: 5px;
+  }
 }
 .mini-donut-link {
   color: @gray-darker;
@@ -61,7 +65,10 @@
 }
 .notification-icon-count {
   display: inline-block;
-  margin: 0 5px 0 0;
+  margin: 5px 5px 0 0;
+  @media (min-width: @screen-md-min) {
+    margin-top: 0;
+  }
   [data-toggle="tooltip"] {
     cursor: help;
   }
@@ -233,6 +240,12 @@
     .fade-in();
     @media (min-width: @screen-sm-min) {
       justify-content: flex-end;
+    }
+    @media(max-width: @screen-xs-max) {
+      &.deployment-in-progress-msg {
+        margin-top: 5px;
+        width: 100%;
+      }
     }
   }
   .list-pf-expansion.in {
@@ -434,19 +447,14 @@
       }
     }
   }
-  .status-icons {
-    margin-top: 5px;
-    @media (min-width: @screen-md-min) {
+  @media (min-width: @screen-md-min) {
+    .status-icons {
       margin-right: 15px;
-      margin-top: 0;
       width: 40%;
     }
   }
   :not(.tab-pane) > overview-pipelines > .expanded-section {
     margin-bottom: 30px;
-  }
-  .service-binding h3 small {
-    display: block;
   }
   .toolbar-container {
     margin-top: 10px;
@@ -512,9 +520,14 @@
       display: flex;
       flex: 1 1 auto;
       justify-content: center;
-      @media (min-width: @screen-sm-min) {
-        &.animation-in-progress .overview-deployment-donut .latest-donut {
-          justify-content: flex-end;
+      &.animation-in-progress .overview-deployment-donut {
+        @media (min-width: @screen-xs-min) {
+          max-width: 450px;
+        }
+        @media (min-width: @screen-sm-min) {
+          .latest-donut {
+            justify-content: flex-end;
+          }
         }
       }
       .overview-deployment-donut {
@@ -523,7 +536,6 @@
           flex: 1 1 auto;
           // prevents resize jump; set height since the donut isn't displayed exactly when expanded-section is rendered
           min-height: 150px;
-          max-width: 450px;
         }
         &.ng-enter {
           animation: deploymentSlideIn 750ms ease forwards;

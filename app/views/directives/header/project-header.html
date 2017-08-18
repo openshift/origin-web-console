@@ -30,7 +30,7 @@
       <a row class="nav-item-iconic dropdown-toggle add-to-project-btn" href="" ng-disabled="project.status.phase != 'Active'" title="Add to Project" uib-dropdown-toggle>
         <i class="fa fa-plus visible-xs-inline-block" aria-hidden="true" title="Add to Project"></i><span class="hidden-xs add-to-project">Add to Project</span><span class="hidden-xs caret" aria-hidden="true" title="Add to Project"></span>
       </a>
-      <ul role="menu" class="uib-dropdown-menu dropdown-menu dropdown-menu-right">
+      <ul role="menu" uib-dropdown-menu class="dropdown-menu dropdown-menu-right">
         <li ng-if-start="!catalogLandingPageEnabled" role="menuitem"><a ng-href="project/{{projectName}}/create?tab=fromCatalog">Browse Catalog</a></li>
         <li role="menuitem"><a ng-href="project/{{projectName}}/create?tab=deployImage">Deploy Image</a></li>
         <li ng-if-end role="menuitem"><a ng-href="project/{{projectName}}/create?tab=fromFile">Import YAML / JSON</a></li>
@@ -48,5 +48,7 @@
   </div> <!-- /navbar-project-menu -->
   <navbar-utility class="hidden-xs"></navbar-utility>
 </nav>
-<deploy-image-dialog visible="ordering.panelName === 'deployImage'" project="project" context="context" on-dialog-closed="closeOrderingPanel"></deploy-image-dialog>
-<from-file-dialog visible="ordering.panelName === 'fromFile'" project="project" context="context" on-dialog-closed="closeOrderingPanel"></from-file-dialog>
+<overlay-panel show-panel="ordering.panelName" show-close="true" handle-close="closeOrderingPanel">
+  <deploy-image-dialog ng-if="ordering.panelName === 'deployImage'" project="project" context="context" on-dialog-closed="closeOrderingPanel"></deploy-image-dialog>
+  <from-file-dialog ng-if="ordering.panelName === 'fromFile'" project="project" context="context" on-dialog-closed="closeOrderingPanel"></from-file-dialog>
+</overlay-panel>

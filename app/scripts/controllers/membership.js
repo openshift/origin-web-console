@@ -368,7 +368,7 @@ angular
               // the UID
               allRoles = MembershipService
                           .mapRolesForUI(
-                            _.first(resp).by('metadata.name'),
+                            _.head(resp).by('metadata.name'),
                             _.last(resp).by('metadata.name'));
               var sortedRoles = MembershipService.sortRoles(allRoles);
               var filteredRoles = MembershipService.filterRoles(allRoles);

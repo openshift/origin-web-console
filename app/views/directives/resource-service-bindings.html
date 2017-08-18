@@ -1,0 +1,30 @@
+<div class="mar-bottom-xl" ng-if="$ctrl.showBindings">
+  <h3>Service Bindings</h3>
+  <overview-service-binding
+    ng-repeat="binding in $ctrl.bindings track by (binding | uid)"
+    namespace="$ctrl.projectContext.projectName"
+    binding="binding"
+    service-classes="$ctrl.serviceClasses"
+    service-instances="$ctrl.serviceInstances">
+  </overview-service-binding>
+  <div ng-if="($ctrl.bindableServiceInstances | size) && ({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create')">
+    <a href="" ng-click="$ctrl.createBinding()" role="button">
+      <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>
+      Create Binding
+    </a>
+  </div>
+  <div ng-if="!($ctrl.bindableServiceInstances | size)">
+    <span>You must have a bindable service in your namespace in order to create bindings.</span>
+    <div>
+      <a href="./">Browse Catalog</a>
+    </div>
+  </div>
+  <div ng-if="!($ctrl.bindings | size) && ($ctrl.bindableServiceInstances | size) && !({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create')">
+    <span>There are no service bindings.</span>
+  </div>
+</div>
+<overlay-panel single-column="true" show-panel="$ctrl.overlayPanelVisible" show-close="true" handle-close="$ctrl.closeOverlayPanel">
+  <bind-service target="$ctrl.apiObject"
+                project="$ctrl.project"
+                on-close="$ctrl.closeOverlayPanel"></bind-service>
+</overlay-panel>

@@ -5,12 +5,8 @@
 
       <div class="middle-header">
         <div class="container-fluid">
-          <div row mobile="column" class="tech-preview-header">
-            <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
-            <span class="pad-top-md">
-              <span class="label label-warning">Technology Preview</span>
-            </span>
-          </div>
+          <span class="label label-warning label-tech-preview">Technology Preview</span>
+          <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
           <alerts alerts="alerts"></alerts>
           <div>
             <h1>
@@ -139,6 +135,12 @@
                       <pods-table
                         pods="podsForStatefulSet"></pods-table>
 
+                      <resource-service-bindings
+                        project="project"
+                        project-context="projectContext"
+                        api-object="statefulSet">
+                      </resource-service-bindings>
+
                       <annotations
                         annotations="statefulSet.metadata.annotations"></annotations>
                       </div>
@@ -148,26 +150,7 @@
                 <uib-tab active="selectedTab.environment" ng-if="statefulSet">
                   <uib-tab-heading>Environment</uib-tab-heading>
                   <div class="resource-environment">
-                    <ng-form name="forms.statefulSetEnvVars">
-                      <div ng-repeat="container in statefulSet.spec.template.spec.containers">
-                        <h3>Container {{container.name}} Environment Variables</h3>
-                        <p>
-                          Environment variables for stateful sets are readonly.
-                          <span ng-if="!(container.env.length)">
-                            There are no environment variables for this container.
-                          </span>
-                        </p>
-                        <key-value-editor
-                          entries="container.env"
-                          key-placeholder="Name"
-                          value-placeholder="Value"
-                          is-readonly
-                          cannot-add
-                          cannot-delete
-                          cannot-sort
-                          show-header></key-value-editor>
-                      </div>
-                    </ng-form>
+                    <edit-environment-variables api-object="statefulSet"></edit-environment-variables>
                   </div>
                 </uib-tab>
 

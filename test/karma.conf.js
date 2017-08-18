@@ -120,6 +120,7 @@ module.exports = function(config) {
     plugins: [
       'karma-firefox-launcher',
       'karma-chrome-launcher',
+      'karma-phantomjs-launcher',
       'karma-ng-html2js-preprocessor',
       'karma-jasmine',
       'karma-coverage'

@@ -72,7 +72,7 @@
           take-focus
           select-on-focus
           autocorrect="off"
-          autocapitalize="off"
+          autocapitalize="none"
           spellcheck="false"
           aria-describedby="claim-name-help">
       </span>
@@ -146,6 +146,8 @@
                    ng-model="claim.amount"
                    required
                    min="0"
+                   pattern="\d*"
+                   select-on-focus
                    class="form-control"
                    aria-describedby="claim-capacity-help">
           </div>

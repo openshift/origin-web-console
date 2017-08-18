@@ -54,7 +54,7 @@ angular.module('openshiftConsole')
       var rgv = APIService.kindToResourceGroupVersion(kind);
       var apiInfo = APIService.apiInfo(rgv);
       return apiInfo && apiInfo.verbs ?
-              _.contains(apiInfo.verbs, 'list') :
+              _.includes(apiInfo.verbs, 'list') :
               // if we don't have apiInfo, default to show the item
               // this can happen if the api server is not current
               true;

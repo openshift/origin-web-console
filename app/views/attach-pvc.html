@@ -36,7 +36,7 @@
                 </div>
 
                 <div ng-show="pvcs && pvcs.length && attach.resource" class="mar-top-xl">
-                  <h1>Add Storage</h1>
+                  <h1>Add Storage to {{name}}</h1>
                   <div class="help-block">
                     Add an existing persistent volume claim to the template of {{kind | humanizeKind}} {{name}}.
                   </div>
@@ -94,7 +94,7 @@
                             osc-unique="existingMountPaths"
                             placeholder="example: /data"
                             autocorrect="off"
-                            autocapitalize="off"
+                            autocapitalize="none"
                             spellcheck="false"
                             aria-describedby="mount-path-help">
                         <div>
@@ -123,7 +123,7 @@
                             placeholder="example: application/resources"
                             ng-pattern="RELATIVE_PATH_PATTERN"
                             autocorrect="off"
-                            autocapitalize="off"
+                            autocapitalize="none"
                             spellcheck="false"
                             aria-describedby="sub-path-help">
                         <div id="sub-path-help" class="help-block">
@@ -156,7 +156,7 @@
                             maxlength="63"
                             placeholder="(generated if empty)"
                             autocorrect="off"
-                            autocapitalize="off"
+                            autocapitalize="none"
                             spellcheck="false"
                             aria-describedby="volume-name-help">
                         <div>

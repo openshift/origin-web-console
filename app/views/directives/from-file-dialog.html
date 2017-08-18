@@ -1,94 +1,93 @@
-<overlay-panel show-panel="$ctrl.visible" show-close="true" handle-close="$ctrl.close" ng-if="$ctrl.project">
-  <div pf-wizard
-       on-cancel="$ctrl.close()"
-       on-finish="$ctrl.close()"
-       hide-header="true"
-       hide-sidebar="true"
-       next-title="$ctrl.nextButtonTitle"
-       next-callback="$ctrl.nextCallback"
-       current-step="$ctrl.currentStep"
-       wizard-done="$ctrl.wizardDone"
-       step-class="order-service-wizard-step">
-    <div pf-wizard-step
-         step-title="JSON / YAML"
-         step-id="file"
-         step-priority="1"
-         substeps="false"
-         ok-to-nav-away="true"
-         allow-click-nav="false"
-         next-enabled="!$ctrl.importForm.$invalid">
-      <div class="wizard-pf-main-inner-shadow-covers">
-        <div class="order-service-config-single-column">
-          <div class="wizard-pf-main-form-contents">
-            <form name="$ctrl.importForm">
-              <from-file is-dialog="true" project="$ctrl.project" context="$ctrl.context"></from-file>
+<pf-wizard
+     on-cancel="$ctrl.close()"
+     on-finish="$ctrl.close()"
+     hide-header="true"
+     hide-sidebar="true"
+     next-title="$ctrl.nextButtonTitle"
+     next-callback="$ctrl.nextCallback"
+     current-step="$ctrl.currentStep"
+     wizard-done="$ctrl.wizardDone"
+     on-step-changed="$ctrl.stepChanged(step)"
+     step-class="order-service-wizard-step">
+  <pf-wizard-step
+       step-title="JSON / YAML"
+       step-id="file"
+       step-priority="1"
+       substeps="false"
+       ok-to-nav-away="true"
+       allow-click-nav="false"
+       next-enabled="!$ctrl.importForm.$invalid">
+    <div class="wizard-pf-main-inner-shadow-covers">
+      <div class="order-service-config order-service-config-single-column">
+        <div class="wizard-pf-main-form-contents">
+          <form name="$ctrl.importForm">
+            <from-file is-dialog="true" project="$ctrl.project"></from-file>
+          </form>
+        </div>
+      </div>
+    </div>
+  </pf-wizard-step>
+  <pf-wizard-step
+       wz-disabled="{{!$ctrl.template}}"
+       step-title="Template Configuration"
+       step-id="template"
+       step-priority="2"
+       substeps="false"
+       ok-to-nav-away="true"
+       allow-click-nav="false"
+       next-enabled="!$ctrl.templateForm.$invalid">
+    <div class="wizard-pf-main-inner-shadow-covers" ng-if="$ctrl.template">
+      <div class="order-service-details">
+        <div class="order-service-details-top">
+          <div class="service-icon">
+            <span class="icon {{$ctrl.iconClass}}"></span>
+          </div>
+          <div class="service-title-area">
+            <div class="service-title">
+              {{$ctrl.template | displayName}}
+            </div>
+            <div class="order-service-tags">
+              <span ng-repeat="tag in $ctrl.template.metadata.annotations.tags.split(',')" class="tag">
+                {{tag}}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="order-service-description-block">
+          <p ng-bind-html="$ctrl.template | description | linky : '_blank'" class="description"></p>
+        </div>
+      </div>
+      <div class="order-service-config">
+        <div class="wizard-pf-main-form-contents">
+          <div class="osc-form">
+            <alerts alerts="$ctrl.alerts"></alerts>
+            <form name="$ctrl.templateForm">
+              <process-template project="$ctrl.project" template="$ctrl.template" alerts="$ctrl.alerts" is-dialog="true"></process-template>
             </form>
           </div>
         </div>
       </div>
     </div>
-    <div pf-wizard-step
-         wz-disabled="{{!$ctrl.template}}"
-         step-title="Template Configuration"
-         step-id="template"
-         step-priority="2"
-         substeps="false"
-         ok-to-nav-away="true"
-         allow-click-nav="false"
-         next-enabled="!$ctrl.templateForm.$invalid">
-      <div class="wizard-pf-main-inner-shadow-covers" ng-if="$ctrl.template">
-        <div class="order-service-details">
-          <div class="order-service-details-top">
-            <div class="service-icon">
-              <span class="icon {{$ctrl.iconClass}}"></span>
-            </div>
-            <div class="service-title-area">
-              <div class="service-title">
-                {{$ctrl.template | displayName}}
-              </div>
-              <div class="order-service-tags">
-                <span ng-repeat="tag in $ctrl.template.metadata.annotations.tags.split(',')" class="tag">
-                  {{tag}}
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="order-service-description-block">
-            <p ng-bind-html="$ctrl.template | description | linky : '_blank'" class="description"></p>
-          </div>
-        </div>
-        <div class="order-service-config">
-          <div class="wizard-pf-main-form-contents">
-            <div class="osc-form">
-              <alerts alerts="$ctrl.alerts"></alerts>
-              <form name="$ctrl.templateForm">
-                <process-template project="$ctrl.project" template="$ctrl.template" alerts="$ctrl.alerts" is-dialog="true"></process-template>
-              </form>
-            </div>
-          </div>
+  </pf-wizard-step>
+  <pf-wizard-step
+       step-title="Results"
+       step-id="results"
+       step-priority="3"
+       substeps="false"
+       ok-to-nav-away="true"
+       allow-click-nav="false"
+       prev-enabled="false">
+    <div class="wizard-pf-main-inner-shadow-covers">
+      <div class="order-service-config order-service-config-single-column">
+        <div class="wizard-pf-main-form-contents">
+          <!-- We don't want the directive to render until the results step is shown, this makes sure processed template info gets pulled from cache correctly -->
+          <next-steps ng-if="$ctrl.currentStep === 'Results'" project="$ctrl.selectedProject"
+                      project-name="$ctrl.selectedProject.metadata.name"
+                      login-base-url="$ctrl.loginBaseUrl"
+                      on-continue="$ctrl.close">
+          </next-steps>
         </div>
       </div>
     </div>
-    <div pf-wizard-step
-         step-title="Results"
-         step-id="results"
-         step-priority="3"
-         substeps="false"
-         ok-to-nav-away="true"
-         allow-click-nav="false"
-         prev-enabled="false">
-      <div class="wizard-pf-main-inner-shadow-covers">
-        <div class="order-service-config-single-column">
-          <div class="wizard-pf-main-form-contents">
-            <!-- We don't want the directive to render until the results step is shown, this makes sure processed template info gets pulled from cache correctly -->
-            <next-steps ng-if="$ctrl.currentStep === 'Results'" project="$ctrl.selectedProject"
-                        project-name="$ctrl.selectedProject.metadata.name"
-                        login-base-url="$ctrl.loginBaseUrl"
-                        on-continue="$ctrl.close">
-            </next-steps>
-          </div>
-        </div>
-      </div>
-    </div> <!-- /pf-wizard-step -->
-  </div> <!-- /pf-wizard -->
-</overlay-panel>
+  </pf-wizard-step>
+</pf-wizard>

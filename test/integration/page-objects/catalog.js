@@ -46,12 +46,12 @@ class CatalogPage extends Page {
   }
   setImportValue(str) {
     return browser.executeScript((value) => {
-      window.ace.edit('add-component-editor').setValue(value);
+      window.ace.edit('ace-yaml-editor').setValue(value);
     }, str);
   }
   getImportValue() {
     return browser.executeScript(() => {
-      return window.ace.edit('add-component-editor').getValue();
+      return window.ace.edit('ace-yaml-editor').getValue();
     });
   }
   submitTemplate() {

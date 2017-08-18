@@ -131,6 +131,10 @@ angular.module("openshiftConsole")
         resources.push(imageStream);
       }
 
+      var dcLabels = _.assign({
+        deploymentconfig: config.name
+      }, config.labels);
+
       var deploymentConfig = {
         kind: "DeploymentConfig",
         apiVersion: "v1",
@@ -164,15 +168,10 @@ angular.module("openshiftConsole")
           }],
           replicas: 1,
           test: false,
-          selector: {
-            app: config.name,
-            deploymentconfig: config.name
-          },
+          selector: dcLabels,
           template: {
             metadata: {
-              labels: _.assign({
-                deploymentconfig: config.name
-              }, config.labels),
+              labels: dcLabels,
               annotations: annotations
             },
             spec: {
@@ -190,9 +189,6 @@ angular.module("openshiftConsole")
         },
         status: {}
       };
-      if(_.first(config.pullSecrets).name){
-        deploymentConfig.spec.template.spec.imagePullSecrets = config.pullSecrets;
-      }
 
       resources.push(deploymentConfig);
 

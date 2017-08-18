@@ -19,11 +19,18 @@ angular.module("openshiftConsole")
       restrict: 'E',
       scope: {
         project: '=',
-        context: '=',
         isDialog: '='
       },
       templateUrl: 'views/directives/deploy-image.html',
+      controller: function($scope) {
+        // Must be initialized the controller. The link function is too late.
+        $scope.forms = {};
+      },
       link: function($scope) {
+        $scope.input = {
+          selectedProject: $scope.project
+        };
+
         // Pick from an image stream tag or Docker image name.
         $scope.mode = "istag"; // "istag" or "dockerImage"
 
@@ -32,12 +39,10 @@ angular.module("openshiftConsole")
 
         $scope.app = {};
         $scope.env = [];
-        $scope.labels = [];
-        $scope.systemLabels = [{
+        $scope.labels = [{
           name: 'app',
           value: ''
         }];
-        $scope.pullSecrets = [{name: ''}];
 
         var orderByDisplayName = $filter('orderByDisplayName');
         var getErrorDetails = $filter('getErrorDetails');
@@ -53,48 +58,18 @@ angular.module("openshiftConsole")
           });
         };
 
-        var configMapDataOrdered = [];
-        var secretDataOrdered = [];
-        var context = {namespace: $scope.project.metadata.name};
-        $scope.valueFromObjects = [];
+        $scope.valueFromNamespace = {};
 
-        DataService.list("configmaps", context, null, { errorNotification: false }).then(function(configMapData) {
-          configMapDataOrdered = orderByDisplayName(configMapData.by("metadata.name"));
-          $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
-        }, function(e) {
-          if (e.code === 403) {
-           return;
+        var createProjectIfNecessary = function() {
+          if (_.has($scope.input.selectedProject, 'metadata.uid')) {
+            return $q.when($scope.input.selectedProject);
           }
 
-          NotificationsService.addAlert({
-            id: "deploy-image-list-config-maps-error",
-            type: "error",
-            message: "Could not load config maps.",
-            details: getErrorDetails(e)
-          });
-        });
-
-        DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
-          secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
-          $scope.valueFromObjects = secretDataOrdered.concat(configMapDataOrdered);
-          var secretsByType = SecretsService.groupSecretsByType(secretData);
-          var secretNamesByType =_.mapValues(secretsByType, function(secretData) {return _.map(secretData, 'metadata.name');});
-          // Add empty option to the image/source secrets
-          $scope.secretsByType = _.each(secretNamesByType, function(secretsArray) {
-            secretsArray.unshift("");
-          });
-        }, function(e) {
-          if (e.code === 403) {
-            return;
-          }
-
-          NotificationsService.addAlert({
-            id: "deploy-image-list-secrets-error",
-            type: "error",
-            message: "Could not load secrets.",
-            details: getErrorDetails(e)
-          });
-        });
+          var newProjName = $scope.input.selectedProject.metadata.name;
+          var newProjDisplayName = $scope.input.selectedProject.metadata.annotations['new-display-name'];
+          var newProjDesc = $filter('description')($scope.input.selectedProject);
+          return ProjectsService.create(newProjName, newProjDisplayName, newProjDesc);
+        };
 
         var stripTag = $filter('stripTag');
         var stripSHA = $filter('stripSHA');
@@ -122,8 +97,7 @@ angular.module("openshiftConsole")
         };
 
         function getResources() {
-          var userLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
-          var systemLabels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.systemLabels));
+          var labels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
 
           return ImagesService.getResources({
             name: $scope.app.name,
@@ -133,14 +107,13 @@ angular.module("openshiftConsole")
             ports: $scope.ports,
             volumes: $scope.volumes,
             env: keyValueEditorUtils.compactEntries($scope.env),
-            labels: _.extend(systemLabels, userLabels),
-            pullSecrets: $scope.pullSecrets
+            labels: labels
           });
         }
 
         $scope.findImage = function() {
           $scope.loading = true;
-          ImagesService.findImage($scope.imageName, $scope.context)
+          ImagesService.findImage($scope.imageName, {namespace: $scope.input.selectedProject.metadata.name})
             .then(
               // success
               function(response) {
@@ -170,12 +143,13 @@ angular.module("openshiftConsole")
               });
           };
 
-          $scope.$watch('app.name', function() {
+          $scope.$watch('app.name', function(name, previous) {
             $scope.nameTaken = false;
-            _.set(
-              _.find($scope.systemLabels, { name: 'app' }),
-              'value',
-              $scope.app.name);
+
+            var appLabel = _.find($scope.labels, { name: 'app' });
+            if (appLabel && (!appLabel.value || appLabel.value === previous)) {
+              appLabel.value = name;
+            }
           });
 
           $scope.$watch('mode', function(newMode, oldMode) {
@@ -192,6 +166,12 @@ angular.module("openshiftConsole")
             else {
               // reset this to true so it doesn't block form submission
               $scope.forms.imageSelection.imageName.$setValidity("imageLoaded", true);
+            }
+          });
+
+          $scope.$watch('imageName', function() {
+            if ($scope.mode === 'dockerImage') {
+              $scope.forms.imageSelection.imageName.$setValidity("imageLoaded", false);
             }
           });
 
@@ -233,18 +213,68 @@ angular.module("openshiftConsole")
             });
           }, true);
 
+          $scope.$watch('input.selectedProject', function(project){
+            // clear any existing valueFrom env to avoid invalid data
+            $scope.env = _.reject($scope.env, 'valueFrom');
+
+            // if the project doesn't have metadata.uid, that means project creation is occurring
+            if (!(_.get(project, 'metadata.uid'))) {
+              // image search requires a project, so ensure $scope.mode is set to 'istag'
+              $scope.mode = "istag";
+              return;
+            }
+            if ($scope.valueFromNamespace[project.metadata.name]) {
+              // if we already have the data, return early
+              return;
+            }
+            var configMapDataOrdered = [];
+            var secretDataOrdered = [];
+
+            DataService.list("configmaps", {namespace: $scope.input.selectedProject.metadata.name}, null, { errorNotification: false }).then(function(configMapData) {
+              configMapDataOrdered = orderByDisplayName(configMapData.by("metadata.name"));
+              $scope.valueFromNamespace[project.metadata.name] = configMapDataOrdered.concat(secretDataOrdered);
+            }, function(e) {
+              if (e.code === 403) {
+               return;
+              }
+
+              NotificationsService.addNotification({
+                id: "deploy-image-list-config-maps-error",
+                type: "error",
+                message: "Could not load config maps.",
+                details: getErrorDetails(e)
+              });
+            });
+
+            DataService.list("secrets", {namespace: $scope.input.selectedProject.metadata.name}, null, { errorNotification: false }).then(function(secretData) {
+              secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
+              $scope.valueFromNamespace[project.metadata.name] = secretDataOrdered.concat(configMapDataOrdered);
+            }, function(e) {
+              if (e.code === 403) {
+                return;
+              }
+
+              NotificationsService.addNotification({
+                id: "deploy-image-list-secrets-error",
+                type: "error",
+                message: "Could not load secrets.",
+                details: getErrorDetails(e)
+              });
+            });
+          });
+
           var displayName = $filter('displayName');
           var generatedResources;
           var createResources = function() {
             var titles = {
-              started: "Deploying image " + $scope.app.name + " to project " + displayName($scope.project),
-              success: "Deployed image " + $scope.app.name + " to project " + displayName($scope.project),
-              failure: "Failed to deploy image " + $scope.app.name + " to project " + displayName($scope.project)
+              started: "Deploying image " + $scope.app.name + " to project " + displayName($scope.input.selectedProject),
+              success: "Deployed image " + $scope.app.name + " to project " + displayName($scope.input.selectedProject),
+              failure: "Failed to deploy image " + $scope.app.name + " to project " + displayName($scope.input.selectedProject)
             };
             TaskList.clear();
-            TaskList.add(titles, {}, $scope.project.metadata.name, function() {
+            TaskList.add(titles, {}, $scope.input.selectedProject.metadata.name, function() {
               var d = $q.defer();
-              DataService.batch(generatedResources, $scope.context).then(function(result) {
+              DataService.batch(generatedResources, {namespace: $scope.input.selectedProject.metadata.name}).then(function(result) {
                 var alerts, hasErrors = !_.isEmpty(result.failure);
                 if (hasErrors) {
                   // Show failure alerts.
@@ -277,11 +307,11 @@ angular.module("openshiftConsole")
 
             if ($scope.isDialog) {
               $scope.$emit('deployImageNewAppCreated', {
-                project: $scope.project,
+                project: $scope.input.selectedProject,
                 appName: $scope.app.name
               });
             } else {
-              Navigate.toNextSteps($scope.app.name, $scope.project.metadata.name);
+              Navigate.toNextSteps($scope.app.name, $scope.input.selectedProject.metadata.name);
             }
           };
 
@@ -329,17 +359,28 @@ angular.module("openshiftConsole")
           $scope.create = function() {
             $scope.disableInputs = true;
             hideErrorNotifications();
-            generatedResources = getResources();
+            createProjectIfNecessary().then(function(project) {
+              $scope.input.selectedProject = project;
+              generatedResources = getResources();
 
-            var nameTakenPromise = ApplicationGenerator.ifResourcesDontExist(generatedResources, $scope.project.metadata.name);
-            var checkQuotaPromise = QuotaService.getLatestQuotaAlerts(generatedResources, $scope.context);
-            // Don't want to wait for the name checks to finish before making the calls to quota
-            // so kick off the requests above and then chain the promises here
-            var setNameTaken = function(result) {
-              $scope.nameTaken = result.nameTaken;
-              return checkQuotaPromise;
-            };
-            nameTakenPromise.then(setNameTaken, setNameTaken).then(showWarningsOrCreate, showWarningsOrCreate);
+              var nameTakenPromise = ApplicationGenerator.ifResourcesDontExist(generatedResources, $scope.input.selectedProject.metadata.name);
+              var checkQuotaPromise = QuotaService.getLatestQuotaAlerts(generatedResources, {namespace: $scope.input.selectedProject.metadata.name});
+              // Don't want to wait for the name checks to finish before making the calls to quota
+              // so kick off the requests above and then chain the promises here
+              var setNameTaken = function(result) {
+                $scope.nameTaken = result.nameTaken;
+                return checkQuotaPromise;
+              };
+              nameTakenPromise.then(setNameTaken, setNameTaken).then(showWarningsOrCreate, showWarningsOrCreate);
+            }, function(e) {
+              NotificationsService.addNotification({
+                id: "deploy-image-create-project-error",
+                type: "error",
+                message: "An error occurred creating project",
+                details: getErrorDetails(e)
+              });
+              $scope.disableInputs = false;
+            });
           };
 
           // When the deploy-image component is displayed in a dialog, the create

@@ -16,13 +16,13 @@
               <div ng-if="loading">
                 Loading...
               </div>
-              <form name="form">
+              <form name="form" novalidate>
                 <fieldset ng-disabled="disableInputs" ng-if="!loading">
                   <osc-routing
                       model="routing"
                       services="services"
                       show-name-input="false"
-                      host-read-only="true">
+                      existing-route="true">
                   </osc-routing>
                   <div class="button-group gutter-top gutter-bottom">
                     <button type="submit"

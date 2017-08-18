@@ -1,4 +1,5 @@
 <div class="deploy-image">
+  <select-project ng-if="!project" selected-project="input.selectedProject" name-taken="projectNameTaken"></select-project>
   <p>
     Deploy an existing image from an image stream tag or docker pull spec.
   </p>
@@ -12,48 +13,54 @@
       </div>
       <fieldset>
         <istag-select model="istag" select-required="mode === 'istag'" select-disabled="mode !== 'istag'" include-shared-namespace="true"></istag-select>
-        <div ng-if="mode == 'istag' && istag.namespace && istag.namespace !== 'openshift' && istag.namespace !== project.metadata.name" class="alert alert-warning">
+        <div ng-if="mode == 'istag' && istag.namespace && istag.namespace !== 'openshift' && istag.namespace !== input.selectedProject.metadata.name" class="alert alert-warning">
           <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
           Service account <strong>default</strong> will need image pull authority to deploy images
           from <strong>{{istag.namespace}}</strong>. You can grant authority with the command:
 
           <p>
-            <code>oc policy add-role-to-user system:image-puller system:serviceaccount:{{project.metadata.name}}:default -n {{istag.namespace}}</code>
+            <code>oc policy add-role-to-user system:image-puller system:serviceaccount:{{input.selectedProject.metadata.name}}:default -n {{istag.namespace}}</code>
           </p>
         </div>
       </fieldset>
-      <div class="radio">
+      <!-- disable this radio option when creating a project as image search requires a namespace -->
+      <div class="radio" ng-class="{disabled : !input.selectedProject.metadata.uid}">
         <label>
-          <input type="radio" ng-model="mode" value="dockerImage">
+          <input type="radio" ng-model="mode" value="dockerImage" ng-disabled="!input.selectedProject.metadata.uid">
           Image Name
         </label>
       </div>
-      <div class="form-group">
-        <label for="imageName" class="sr-only">Image name or pull spec</label>
-        <div class="input-group">
-          <input type="search"
-                 id="imageName"
-                 name="imageName"
-                 ng-model="imageName"
-                 ng-required="mode === 'dockerImage'"
-                 select-on-focus
-                 ng-disabled="mode !== 'dockerImage'"
-                 placeholder="Image name or pull spec"
-                 class="form-control"
-                 autocorrect="off"
-                 autocapitalize="off"
-                 spellcheck="false">
-          <span class="input-group-btn">
-            <button class="btn btn-default"
-                    type="submit"
-                    ng-disabled="!imageName"
-                    ng-click="findImage()">
-              <i class="fa fa-search" aria-hidden="true"></i>
-              <span class="sr-only">Find</span>
-            </button>
-          </span>
+      <fieldset ng-disabled="!input.selectedProject.metadata.uid">
+        <div class="form-group">
+          <label for="imageName" class="sr-only">Image name or pull spec</label>
+          <div class="input-group">
+            <input type="search"
+                   id="imageName"
+                   name="imageName"
+                   ng-model="imageName"
+                   ng-required="mode === 'dockerImage'"
+                   select-on-focus
+                   ng-disabled="mode !== 'dockerImage'"
+                   placeholder="Image name or pull spec"
+                   class="form-control"
+                   autocorrect="off"
+                   autocapitalize="none"
+                   spellcheck="false">
+            <span class="input-group-btn">
+              <button class="btn btn-default"
+                      type="submit"
+                      ng-disabled="!imageName"
+                      ng-click="findImage()">
+                <i class="fa fa-search" aria-hidden="true"></i>
+                <span class="sr-only">Find</span>
+              </button>
+            </span>
+          </div>
+          <div ng-if="!input.selectedProject.metadata.uid" class="help-block">
+            Image search is only available for existing projects.
+          </div>
         </div>
-      </div>
+      </fieldset>
     </fieldset>
   </ng-form>
 
@@ -109,10 +116,10 @@
 
   <div class="row" ng-if-end>
     <div class="col-sm-12">
-      <form name="form" class="osc-form">
+      <ng-form name="forms.deployImage" class="osc-form">
         <div class="form-group">
          <label for="name" class="required">Name</label>
-         <div ng-class="{'has-error': form.name.$invalid || nameTaken}">
+         <div ng-class="{'has-error': (forms.deployImage.name.$invalid && forms.deployImage.name.$touched) || nameTaken}">
            <input type="text"
                   required
                   select-on-focus
@@ -124,23 +131,23 @@
                   name="name"
                   class="form-control"
                   autocorrect="off"
-                  autocapitalize="off"
+                  autocapitalize="none"
                   spellcheck="false">
           </div>
           <div class="help-block">Identifies the resources created for this image.</div>
-          <div class="has-error" ng-show="form.name.$invalid">
-            <div class="help-block" ng-show="form.name.$error.required">
+          <div class="has-error" ng-show="forms.deployImage.name.$invalid && forms.deployImage.name.$touched">
+            <div class="help-block" ng-show="forms.deployImage.name.$error.required">
               A name is required.
             </div>
-            <div class="help-block" ng-show="form.name.$error.pattern">
+            <div class="help-block" ng-show="forms.deployImage.name.$error.pattern">
               Name must be an alphanumeric (a-z, 0-9) string with a maximum length
               of 24 characters where the first character is a letter (a-z). The '-'
               character is allowed anywhere except the first or last character.
             </div>
-            <div class="help-block" ng-show="form.name.$error.minlength">
+            <div class="help-block" ng-show="forms.deployImage.name.$error.minlength">
               Name must have at least 2 characters.
             </div>
-            <div class="help-block" ng-show="form.name.$error.maxlength">
+            <div class="help-block" ng-show="forms.deployImage.name.$error.maxlength">
               Name can't have more than 24 characters.
             </div>
           </div>
@@ -148,15 +155,6 @@
             <span class="help-block">This name is already in use within the project. Please choose a different name.</span>
           </div>
         </div>
-        <osc-secrets model="pullSecrets"
-                    namespace="project.metadata.name"
-                    display-type="pull"
-                    type="image"
-                    secrets-by-type="secretsByType"
-                    service-account-to-link="default"
-                    alerts="alerts"
-                    allow-multiple-secrets="true">
-        </osc-secrets>
         <osc-form-section
             header="Environment Variables"
             about-title="Environment Variables"
@@ -170,14 +168,13 @@
             key-validator="[A-Za-z_][A-Za-z0-9_]*"
             key-validator-error="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
             value-placeholder="Value"
-            value-from-selector-options="valueFromObjects"
+            value-from-selector-options="input.selectedProject.metadata.uid && valueFromNamespace[input.selectedProject.metadata.name]"
             add-row-link="Add Environment Variable"
             add-row-with-selectors-link="Add Environment Variable Using a Config Map or Secret"></key-value-editor>
         </osc-form-section>
 
         <label-editor
             labels="labels"
-            system-labels="systemLabels"
             expand="true"
             can-toggle="false"
             help-text="Each label is applied to each created resource.">
@@ -189,10 +186,10 @@
               class="btn btn-primary btn-lg"
               ng-click="create()"
               value=""
-              ng-disabled="form.$invalid || nameTaken || disableInputs">Create</button>
+              ng-disabled="forms.deployImage.$invalid || nameTaken || disableInputs">Create</button>
           <a class="btn btn-default btn-lg" href="#" back>Cancel</a>
         </div>
-      </form>
+      </ng-form>
     </div>
   </div>
 

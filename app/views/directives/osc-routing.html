@@ -17,7 +17,7 @@
             placeholder="my-route"
             select-on-focus
             autocorrect="off"
-            autocapitalize="off"
+            autocapitalize="none"
             spellcheck="false"
             aria-describedby="route-name-help">
       </span>
@@ -48,10 +48,10 @@
             ng-model="route.host"
             ng-pattern="hostnamePattern"
             ng-maxlength="hostnameMaxLength"
-            ng-readonly="hostReadOnly"
+            ng-readonly="isHostnameReadOnly()"
             placeholder="www.example.com"
             autocorrect="off"
-            autocapitalize="off"
+            autocapitalize="none"
             spellcheck="false"
             aria-describedby="route-host-help">
       </span>
@@ -66,7 +66,7 @@
               You can use <var>*.example.com</var> with routers that support wildcard subdomains.
             </span>
           </p>
-          <p>The hostname can't be changed after the route is created.</p>
+          <p ng-if="(existingRoute || canICreateCustomHosts) && !canIUpdateCustomHosts">The hostname can't be changed after the route is created.</p>
         </span>
       </div>
       <div class="has-error" ng-show="routeForm.host.$error.pattern && routeForm.host.$touched && !routingDisabled">
@@ -97,7 +97,7 @@
             ng-disabled="route.tls.termination === 'passthrough'"
             placeholder="/"
             autocorrect="off"
-            autocapitalize="off"
+            autocapitalize="none"
             spellcheck="false"
             aria-describedby="route-path-help">
       </span>
@@ -302,7 +302,8 @@
               drop-zone-id="certificate-file"
               show-text-area="true"
               help-text="The PEM format certificate. Upload file by dragging & dropping, selecting it, or pasting from the clipbard."
-              ng-disabled="disableCertificateInputs()">
+              ng-readonly="areCertificateInputsReadOnly()"
+              ng-disabled="areCertificateInputsDisabled()">
             </osc-file-input>
           </div>
           <div class="form-group" id="private-key-file">
@@ -312,7 +313,8 @@
               drop-zone-id="private-key-file"
               show-text-area="true"
               help-text="The PEM format key. Upload file by dragging & dropping, selecting it, or pasting from the clipboard."
-              ng-disabled="disableCertificateInputs()">
+              ng-readonly="areCertificateInputsReadOnly()"
+              ng-disabled="areCertificateInputsDisabled()">
           </osc-file-input>
           </div>
           <div class="form-group" id="ca-certificate-file">
@@ -322,7 +324,8 @@
               drop-zone-id="ca-certificate-file"
               show-text-area="true"
               help-text="The PEM format CA certificate. Upload file by dragging & dropping, selecting it, or pasting from the clipboard."
-              ng-disabled="disableCertificateInputs()">
+              ng-readonly="areCertificateInputsReadOnly()"
+              ng-disabled="areCertificateInputsDisabled()">
             </osc-file-input>
           </div>
           <div class="form-group" id="dest-ca-certificate-file">
@@ -332,7 +335,8 @@
                 show-text-area="true"
                 drop-zone-id="dest-ca-certificate-file"
                 help-text="The PEM format CA certificate to validate the endpoint certificate for re-encrypt termination. Upload file by dragging & dropping, selecting it, or pasting from the clipboard."
-                ng-disabled="route.tls.termination !== 'reencrypt'">
+                ng-readonly="areCertificateInputsReadOnly()"
+                ng-disabled="isDestinationCACertInputDisabled()">
             </osc-file-input>
             <!-- Show a warning if the value won't be used, but only if we're
                  not already showing the generic certificate warning above. -->

@@ -65,7 +65,7 @@
                           ng-model="overview.filterText"
                           placeholder="Filter by name"
                           autocorrect="off"
-                          autocapitalize="off"
+                          autocapitalize="none"
                           spellcheck="false"
                           ng-disabled="overview.disableFilter">
                         <button
@@ -124,8 +124,10 @@
                   <div ng-if="route = overview.bestRouteByApp[app]" class="pull-right">
                     <h3 class="overview-route">
                       <span ng-if="route | isWebRoute">
-                        <a ng-href="{{route | routeWebURL}}" target="_blank">{{route | routeLabel}}</a>
-                        <i class="fa fa-external-link small" aria-hidden="true"></i>
+                        <a ng-href="{{route | routeWebURL}}" target="_blank">
+                          {{route | routeLabel}}
+                          <i class="fa fa-external-link" aria-hidden="true"></i>
+                        </a>
                       </span>
                       <span ng-if="!(route | isWebRoute)">{{route | routeLabel}}</span>
                     </h3>

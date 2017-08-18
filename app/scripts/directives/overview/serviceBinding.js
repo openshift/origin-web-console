@@ -7,10 +7,10 @@
     ],
     controllerAs: '$ctrl',
     bindings: {
+      namespace: '<',
       binding: '<',
       serviceClasses: '<',
-      serviceInstances: '<',
-      secrets: '<'
+      serviceInstances: '<'
     },
     templateUrl: 'views/overview/_service-binding.html'
   });

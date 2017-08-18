@@ -8,6 +8,7 @@ angular.module('openshiftConsole').controller('OverviewController', [
   'APIService',
   'AppsService',
   'BuildsService',
+  'CatalogService',
   'Constants',
   'DataService',
   'DeploymentsService',
@@ -19,7 +20,6 @@ angular.module('openshiftConsole').controller('OverviewController', [
   'Logger',
   'MetricsService',
   'Navigate',
-  'NotificationsService',
   'OwnerReferencesService',
   'PodsService',
   'ProjectsService',
@@ -36,6 +36,7 @@ function OverviewController($scope,
                             APIService,
                             AppsService,
                             BuildsService,
+                            CatalogService,
                             Constants,
                             DataService,
                             DeploymentsService,
@@ -47,7 +48,6 @@ function OverviewController($scope,
                             Logger,
                             MetricsService,
                             Navigate,
-                            NotificationsService,
                             OwnerReferencesService,
                             PodsService,
                             ProjectsService,
@@ -57,14 +57,6 @@ function OverviewController($scope,
   var overview = this;
   var limitWatches = $filter('isIE')() || $filter('isEdge')();
   var DEFAULT_POLL_INTERVAL = 60 * 1000; // milliseconds
-
-  // Enable service catalog features if the new experience is enabled and the
-  // servicecatalog.k8s.io resources are available.
-  var SERVICE_CATALOG_ENABLED =
-    _.get(Constants, 'ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page') &&
-    APIService.apiInfo({ group: 'servicecatalog.k8s.io', resource: 'serviceclasses' }) &&
-    APIService.apiInfo({ group: 'servicecatalog.k8s.io', resource: 'instances' }) &&
-    APIService.apiInfo({ group: 'servicecatalog.k8s.io', resource: 'bindings' });
 
   $scope.projectName = $routeParams.project;
 
@@ -267,7 +259,7 @@ function OverviewController($scope,
             _.each(services, function(service) {
               // Only need to get the first route, since they're already sorted by score.
               var routes = _.get(state, ['routesByService', service.metadata.name], []);
-              _.assign(routesForApp, _.indexBy(routes, 'metadata.name'));
+              _.assign(routesForApp, _.keyBy(routes, 'metadata.name'));
             });
           });
         });
@@ -1089,12 +1081,6 @@ function OverviewController($scope,
 
   overview.startBuild = BuildsService.startBuild;
 
-  var refreshSecrets = _.debounce(function(context) {
-    DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
-      state.secrets = secretData.by("metadata.name");
-    });
-  }, 300);
-
   var groupBindings = function() {
     // Build two maps:
     // - Bindings by the UID of the target object
@@ -1123,13 +1109,7 @@ function OverviewController($scope,
     }
 
     // Build a map of pod preset selectors by binding name.
-    var podPresetSelectors = {};
-    _.each(state.bindings, function(binding) {
-      var podPresetSelector = _.get(binding, 'spec.alphaPodPresetTemplate.selector');
-      if (podPresetSelector) {
-        podPresetSelectors[binding.metadata.name] = new LabelSelector(podPresetSelector);
-      }
-    });
+    var podPresetSelectors = BindingService.getPodPresetSelectorsForBindings(state.bindings);
 
     _.each(objectsByKind, function(collection) {
       _.each(collection, function(apiObject) {
@@ -1162,33 +1142,16 @@ function OverviewController($scope,
     overview.bindingsByInstanceRef = _.reduce(overview.bindingsByInstanceRef, function(result, bindingList, key) {
       result[key] = _.sortBy(bindingList, function(binding) {
         var apps =  _.get(state.applicationsByBinding, [binding.metadata.name]);
-        var firstName = _.get(_.first(apps), ['metadata', 'name']);
+        var firstName = _.get(_.head(apps), ['metadata', 'name']);
         return firstName || binding.metadata.name;
       });
       return result;
     }, {});
   };
 
-  // TODO: code duplicated from directives/bindService.js
-  // extract & share
   var sortServiceInstances = function() {
-    if(!state.serviceInstances && !state.serviceClasses) {
-      state.bindableServiceInstances = null;
-      return;
-    }
-
-    state.bindableServiceInstances = _.filter(state.serviceInstances, function(serviceInstance) {
-      return BindingService.isServiceBindable(serviceInstance, state.serviceClasses);
-    });
-
-    state.orderedServiceInstances = _.sortByAll(state.serviceInstances,
-      function(item) {
-        return _.get(state.serviceClasses, [item.spec.serviceClassName, 'externalMetadata', 'displayName']) || item.spec.serviceClassName;
-      },
-      function(item) {
-        return _.get(item, 'metadata.name', '');
-      }
-    );
+    state.bindableServiceInstances = BindingService.filterBindableServiceInstances(state.serviceInstances, state.serviceClasses);
+    state.orderedServiceInstances = BindingService.sortServiceInstances(state.serviceInstances, state.serviceClasses);
   };
 
   var watches = [];
@@ -1265,7 +1228,7 @@ function OverviewController($scope,
     }));
 
     watches.push(DataService.watch({
-      group: "extensions",
+      group: "apps",
       resource: "deployments"
     }, context, function(deploymentData) {
       deploymentsByUID = deploymentData.by('metadata.uid');
@@ -1351,7 +1314,7 @@ function OverviewController($scope,
 
     var canI = $filter('canI');
     // The canI check on watch should be temporary until we have a different solution for handling secret parameters
-    if (SERVICE_CATALOG_ENABLED && canI({resource: 'instances', group: 'servicecatalog.k8s.io'}, 'watch')) {
+    if (CatalogService.SERVICE_CATALOG_ENABLED && canI({resource: 'instances', group: 'servicecatalog.k8s.io'}, 'watch')) {
       watches.push(DataService.watch({
         group: 'servicecatalog.k8s.io',
         resource: 'instances'
@@ -1367,7 +1330,7 @@ function OverviewController($scope,
       }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
     }
 
-    if (SERVICE_CATALOG_ENABLED && canI({resource: 'bindings', group: 'servicecatalog.k8s.io'}, 'watch')) {
+    if (CatalogService.SERVICE_CATALOG_ENABLED && canI({resource: 'bindings', group: 'servicecatalog.k8s.io'}, 'watch')) {
       watches.push(DataService.watch({
         group: 'servicecatalog.k8s.io',
         resource: 'bindings'
@@ -1375,7 +1338,6 @@ function OverviewController($scope,
         state.bindings = bindings.by('metadata.name');
         overview.bindingsByInstanceRef = _.groupBy(state.bindings, 'spec.instanceRef.name');
         groupBindings();
-        refreshSecrets(context);
       }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
     }
 
@@ -1385,7 +1347,7 @@ function OverviewController($scope,
       state.limitRanges = response.by("metadata.name");
     });
 
-    if (SERVICE_CATALOG_ENABLED && canI({resource: 'instances', group: 'servicecatalog.k8s.io'}, 'watch')) {
+    if (CatalogService.SERVICE_CATALOG_ENABLED && canI({resource: 'instances', group: 'servicecatalog.k8s.io'}, 'watch')) {
       // TODO: update to behave like ImageStreamResolver
       // - we may not even need to list these... perhaps just fetch the ones we need when needed
       // If we can't watch instances don't bother getting service classes either

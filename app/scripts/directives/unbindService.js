@@ -44,12 +44,12 @@
     };
 
     var setupValidator = function() {
-      var firstStep = _.first(ctrl.steps);
+      var firstStep = _.head(ctrl.steps);
       firstStep.valid = false;
       // TODO: auto-select if one option is kludgy. will follow-on a fix
       // if(_.size(ctrl.bindings) === 1) {
       //   firstStep.valid = true;
-      //   ctrl.selectedBinding = _.first(ctrl.bindings);
+      //   ctrl.selectedBinding = _.head(ctrl.bindings);
       // } else {
         validityWatcher = $scope.$watch("ctrl.selectedBinding", function(selectedBinding) {
           firstStep.valid = !!selectedBinding;

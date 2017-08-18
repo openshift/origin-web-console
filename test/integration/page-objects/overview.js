@@ -14,7 +14,7 @@ class OverviewPage extends Page {
     let button = element(by.cssContainingText('.add-to-project-btn', 'Add to Project'));
     h.waitForElem(button);
     button.click();
-    let menuItem = element(by.cssContainingText('.uib-dropdown-menu a', 'Browse Catalog'));
+    let menuItem = element(by.cssContainingText('.dropdown-menu a', 'Browse Catalog'));
     h.waitForElem(menuItem);
     menuItem.click();
     // lazy load to avoid future circular dependencies
