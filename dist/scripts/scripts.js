@@ -8352,7 +8352,7 @@ var v = e("humanizeKind"), S = v(o.kind), w = v(n.kind);
 c.update(f, t.metadata.name, a.targetObject, r).then(function() {
 u.addNotification({
 type: "success",
-message: "Succesfully added " + S + " " + o.metadata.name + " to " + w + " " + n.name + "."
+message: "Successfully added " + S + " " + o.metadata.name + " to " + w + " " + n.name + "."
 }), y();
 }, function(e) {
 a.disableInputs = !1, b("An error occurred attaching the " + S + " to the " + w + ".", d(e));
