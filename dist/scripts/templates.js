@@ -5921,7 +5921,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/bind-service/results.html',
-    "<bind-results error=\"ctrl.error\" binding=\"ctrl.binding\" service-to-bind=\"ctrl.serviceToBind.metadata.name\" bind-type=\"{{ctrl.bindType}}\" application-to-bind=\"ctrl.appToBind.metadata.name\" generated-secret-name=\"ctrl.generatedSecretName\" show-pod-presets=\"'pod_presets' | enableTechPreviewFeature\" secret-href=\"ctrl.generatedSecretName | navigateResourceURL : 'Secret' : ctrl.target.metadata.namespace\">\n" +
+    "<bind-results error=\"ctrl.error\" binding=\"ctrl.binding\" service-to-bind=\"ctrl.serviceToBind.metadata.name\" bind-type=\"{{ctrl.bindType}}\" application-to-bind=\"ctrl.appToBind.metadata.name\" show-pod-presets=\"'pod_presets' | enableTechPreviewFeature\" secret-href=\"ctrl.binding.spec.secretName | navigateResourceURL : 'Secret' : ctrl.target.metadata.namespace\">\n" +
     "</bind-results>"
   );
 
