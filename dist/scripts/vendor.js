@@ -52335,7 +52335,7 @@ return e.charAt(0).toLowerCase() + e.substr(1);
 };
 }), function(e, t) {
 "use strict";
-"object" == typeof exports ? module.exports = t(require("./punycode"), require("./IPv6"), require("./SecondLevelDomains")) : "function" == typeof define && define.amd ? define([ "./punycode", "./IPv6", "./SecondLevelDomains" ], t) : e.URI = t(e.punycode, e.IPv6, e.SecondLevelDomains, e);
+"object" == typeof module && module.exports ? module.exports = t(require("./punycode"), require("./IPv6"), require("./SecondLevelDomains")) : "function" == typeof define && define.amd ? define([ "./punycode", "./IPv6", "./SecondLevelDomains" ], t) : e.URI = t(e.punycode, e.IPv6, e.SecondLevelDomains, e);
 }(this, function(e, t, n, i) {
 "use strict";
 function r(e, t) {
@@ -52345,65 +52345,69 @@ if (void 0 === e) {
 if (n) throw new TypeError("undefined is not a valid argument for URI");
 e = "undefined" != typeof location ? location.href + "" : "";
 }
+if (null === e && n) throw new TypeError("null is not a valid argument for URI");
 return this.href(e), void 0 !== t ? this.absoluteTo(t) : this;
 }
 function o(e) {
-return e.replace(/([.*+?^=!:${}()|[\]\/\\])/g, "\\$1");
+return /^[0-9]+$/.test(e);
 }
 function a(e) {
-return void 0 === e ? "Undefined" : String(Object.prototype.toString.call(e)).slice(8, -1);
+return e.replace(/([.*+?^=!:${}()|[\]\/\\])/g, "\\$1");
 }
 function s(e) {
-return "Array" === a(e);
+return void 0 === e ? "Undefined" : String(Object.prototype.toString.call(e)).slice(8, -1);
 }
-function l(e, t) {
+function l(e) {
+return "Array" === s(e);
+}
+function c(e, t) {
 var n, i, r = {};
-if ("RegExp" === a(t)) r = null; else if (s(t)) for (n = 0, i = t.length; n < i; n++) r[t[n]] = !0; else r[t] = !0;
+if ("RegExp" === s(t)) r = null; else if (l(t)) for (n = 0, i = t.length; n < i; n++) r[t[n]] = !0; else r[t] = !0;
 for (n = 0, i = e.length; n < i; n++) (r && void 0 !== r[e[n]] || !r && t.test(e[n])) && (e.splice(n, 1), i--, n--);
 return e;
 }
-function c(e, t) {
+function u(e, t) {
 var n, i;
-if (s(t)) {
-for (n = 0, i = t.length; n < i; n++) if (!c(e, t[n])) return !1;
+if (l(t)) {
+for (n = 0, i = t.length; n < i; n++) if (!u(e, t[n])) return !1;
 return !0;
 }
-var r = a(t);
+var r = s(t);
 for (n = 0, i = e.length; n < i; n++) if ("RegExp" === r) {
 if ("string" == typeof e[n] && e[n].match(t)) return !0;
 } else if (e[n] === t) return !0;
 return !1;
 }
-function u(e, t) {
-if (!s(e) || !s(t)) return !1;
+function d(e, t) {
+if (!l(e) || !l(t)) return !1;
 if (e.length !== t.length) return !1;
 e.sort(), t.sort();
 for (var n = 0, i = e.length; n < i; n++) if (e[n] !== t[n]) return !1;
 return !0;
 }
-function d(e) {
+function h(e) {
 var t = /^\/+|\/+$/g;
 return e.replace(t, "");
 }
-function h(e) {
+function f(e) {
 return escape(e);
 }
-function f(e) {
-return encodeURIComponent(e).replace(/[!'()*]/g, h).replace(/\*/g, "%2A");
-}
 function p(e) {
+return encodeURIComponent(e).replace(/[!'()*]/g, f).replace(/\*/g, "%2A");
+}
+function g(e) {
 return function(t, n) {
 return void 0 === t ? this._parts[e] || "" : (this._parts[e] = t || null, this.build(!n), this);
 };
 }
-function g(e, t) {
+function m(e, t) {
 return function(n, i) {
 return void 0 === n ? this._parts[e] || "" : (null !== n && (n += "").charAt(0) === t && (n = n.substring(1)), this._parts[e] = n, this.build(!i), this);
 };
 }
-var m = i && i.URI;
-r.version = "1.18.0";
-var v = r.prototype, b = Object.prototype.hasOwnProperty;
+var v = i && i.URI;
+r.version = "1.18.12";
+var b = r.prototype, y = Object.prototype.hasOwnProperty;
 r._parts = function() {
 return {
 protocol: null,
@@ -52418,11 +52422,12 @@ fragment: null,
 duplicateQueryParameters: r.duplicateQueryParameters,
 escapeQuerySpace: r.escapeQuerySpace
 };
-}, r.duplicateQueryParameters = !1, r.escapeQuerySpace = !0, r.protocol_expression = /^[a-z][a-z0-9.+-]*$/i, r.idn_expression = /[^a-z0-9\.-]/i, r.punycode_expression = /(xn--)/i, r.ip4_expression = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/, r.ip6_expression = /^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/, 
+}, r.duplicateQueryParameters = !1, r.escapeQuerySpace = !0, r.protocol_expression = /^[a-z][a-z0-9.+-]*$/i, r.idn_expression = /[^a-z0-9\._-]/i, r.punycode_expression = /(xn--)/i, r.ip4_expression = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/, r.ip6_expression = /^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/, 
 r.find_uri_expression = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/gi, r.findUri = {
 start: /\b(?:([a-z][a-z0-9.+-]*:\/\/)|www\.)/gi,
 end: /[\s\r\n]|$/,
-trim: /[`!()\[\]{};:'".,<>?«»“”„‘’]+$/
+trim: /[`!()\[\]{};:'".,<>?«»“”„‘’]+$/,
+parens: /(\([^\)]*\)|\[[^\]]*\]|\{[^}]*\}|<[^>]*>)/g
 }, r.defaultPorts = {
 http: "80",
 https: "443",
@@ -52430,7 +52435,7 @@ ftp: "21",
 gopher: "70",
 ws: "80",
 wss: "443"
-}, r.invalid_hostname_characters = /[^a-zA-Z0-9\.-]/, r.domAttributes = {
+}, r.hostProtocols = [ "http", "https" ], r.invalid_hostname_characters = /[^a-zA-Z0-9\.\-:_]/, r.domAttributes = {
 a: "href",
 blockquote: "cite",
 link: "href",
@@ -52451,10 +52456,10 @@ if (e && e.nodeName) {
 var t = e.nodeName.toLowerCase();
 if ("input" !== t || "image" === e.type) return r.domAttributes[t];
 }
-}, r.encode = f, r.decode = decodeURIComponent, r.iso8859 = function() {
+}, r.encode = p, r.decode = decodeURIComponent, r.iso8859 = function() {
 r.encode = escape, r.decode = unescape;
 }, r.unicode = function() {
-r.encode = f, r.decode = decodeURIComponent;
+r.encode = p, r.decode = decodeURIComponent;
 }, r.characters = {
 pathname: {
 encode: {
@@ -52542,10 +52547,10 @@ return r.decode(t ? e.replace(/\+/g, "%20") : e);
 return e;
 }
 };
-var y, w = {
+var w, x = {
 encode: "encode",
 decode: "decode"
-}, x = function(e, t) {
+}, _ = function(e, t) {
 return function(n) {
 try {
 return r[t](n + "").replace(r.characters[e][t].expression, function(n) {
@@ -52556,8 +52561,8 @@ return n;
 }
 };
 };
-for (y in w) r[y + "PathSegment"] = x("pathname", w[y]), r[y + "UrnPathSegment"] = x("urnpath", w[y]);
-var _ = function(e, t, n) {
+for (w in x) r[w + "PathSegment"] = _("pathname", x[w]), r[w + "UrnPathSegment"] = _("urnpath", x[w]);
+var C = function(e, t, n) {
 return function(i) {
 var o;
 o = n ? function(e) {
@@ -52567,16 +52572,16 @@ for (var a = (i + "").split(e), s = 0, l = a.length; s < l; s++) a[s] = o(a[s]);
 return a.join(e);
 };
 };
-r.decodePath = _("/", "decodePathSegment"), r.decodeUrnPath = _(":", "decodeUrnPathSegment"), r.recodePath = _("/", "encodePathSegment", "decode"), r.recodeUrnPath = _(":", "encodeUrnPathSegment", "decode"), r.encodeReserved = x("reserved", "encode"), r.parse = function(e, t) {
+r.decodePath = C("/", "decodePathSegment"), r.decodeUrnPath = C(":", "decodeUrnPathSegment"), r.recodePath = C("/", "encodePathSegment", "decode"), r.recodeUrnPath = C(":", "encodeUrnPathSegment", "decode"), r.encodeReserved = _("reserved", "encode"), r.parse = function(e, t) {
 var n;
 return t || (t = {}), (n = e.indexOf("#")) > -1 && (t.fragment = e.substring(n + 1) || null, e = e.substring(0, n)), (n = e.indexOf("?")) > -1 && (t.query = e.substring(n + 1) || null, e = e.substring(0, n)), "//" === e.substring(0, 2) ? (t.protocol = null, e = e.substring(2), e = r.parseAuthority(e, t)) : (n = e.indexOf(":")) > -1 && (t.protocol = e.substring(0, n) || null, t.protocol && !t.protocol.match(r.protocol_expression) ? t.protocol = void 0 : "//" === e.substring(n + 1, n + 3) ? (e = e.substring(n + 3), e = r.parseAuthority(e, t)) : (e = e.substring(n + 1), t.urn = !0)), t.path = e, t;
 }, r.parseHost = function(e, t) {
-var n, i, r = (e = e.replace(/\\/g, "/")).indexOf("/");
-if (-1 === r && (r = e.length), "[" === e.charAt(0)) n = e.indexOf("]"), t.hostname = e.substring(1, n) || null, t.port = e.substring(n + 2, r) || null, "/" === t.port && (t.port = null); else {
-var o = e.indexOf(":"), a = e.indexOf("/"), s = e.indexOf(":", o + 1);
--1 !== s && (-1 === a || s < a) ? (t.hostname = e.substring(0, r) || null, t.port = null) : (i = e.substring(0, r).split(":"), t.hostname = i[0] || null, t.port = i[1] || null);
+var n, i, o = (e = e.replace(/\\/g, "/")).indexOf("/");
+if (-1 === o && (o = e.length), "[" === e.charAt(0)) n = e.indexOf("]"), t.hostname = e.substring(1, n) || null, t.port = e.substring(n + 2, o) || null, "/" === t.port && (t.port = null); else {
+var a = e.indexOf(":"), s = e.indexOf("/"), l = e.indexOf(":", a + 1);
+-1 !== l && (-1 === s || l < s) ? (t.hostname = e.substring(0, o) || null, t.port = null) : (i = e.substring(0, o).split(":"), t.hostname = i[0] || null, t.port = i[1] || null);
 }
-return t.hostname && "/" !== e.substring(r).charAt(0) && (r++, e = "/" + e), e.substring(r) || "/";
+return t.hostname && "/" !== e.substring(o).charAt(0) && (o++, e = "/" + e), r.ensureValidHostname(t.hostname, t.protocol), t.port && r.ensureValidPort(t.port), e.substring(o) || "/";
 }, r.parseAuthority = function(e, t) {
 return e = r.parseUserinfo(e, t), r.parseHost(e, t);
 }, r.parseUserinfo = function(e, t) {
@@ -52585,7 +52590,7 @@ return o > -1 && (-1 === i || o < i) ? (n = e.substring(0, o).split(":"), t.user
 }, r.parseQuery = function(e, t) {
 if (!e) return {};
 if (!(e = e.replace(/&+/g, "&").replace(/^\?*&*|&+$/g, ""))) return {};
-for (var n, i, o, a = {}, s = e.split("&"), l = s.length, c = 0; c < l; c++) n = s[c].split("="), i = r.decodeQuery(n.shift(), t), o = n.length ? r.decodeQuery(n.join("="), t) : null, b.call(a, i) ? ("string" != typeof a[i] && null !== a[i] || (a[i] = [ a[i] ]), a[i].push(o)) : a[i] = o;
+for (var n, i, o, a = {}, s = e.split("&"), l = s.length, c = 0; c < l; c++) n = s[c].split("="), i = r.decodeQuery(n.shift(), t), o = n.length ? r.decodeQuery(n.join("="), t) : null, y.call(a, i) ? ("string" != typeof a[i] && null !== a[i] || (a[i] = [ a[i] ]), a[i].push(o)) : a[i] = o;
 return a;
 }, r.build = function(e) {
 var t = "";
@@ -52599,60 +52604,60 @@ return r.buildUserinfo(e) + r.buildHost(e);
 var t = "";
 return e.username && (t += r.encode(e.username)), e.password && (t += ":" + r.encode(e.password)), t && (t += "@"), t;
 }, r.buildQuery = function(e, t, n) {
-var i, o, a, l, c = "";
-for (o in e) if (b.call(e, o) && o) if (s(e[o])) for (i = {}, a = 0, l = e[o].length; a < l; a++) void 0 !== e[o][a] && void 0 === i[e[o][a] + ""] && (c += "&" + r.buildQueryParameter(o, e[o][a], n), !0 !== t && (i[e[o][a] + ""] = !0)); else void 0 !== e[o] && (c += "&" + r.buildQueryParameter(o, e[o], n));
+var i, o, a, s, c = "";
+for (o in e) if (y.call(e, o) && o) if (l(e[o])) for (i = {}, a = 0, s = e[o].length; a < s; a++) void 0 !== e[o][a] && void 0 === i[e[o][a] + ""] && (c += "&" + r.buildQueryParameter(o, e[o][a], n), !0 !== t && (i[e[o][a] + ""] = !0)); else void 0 !== e[o] && (c += "&" + r.buildQueryParameter(o, e[o], n));
 return c.substring(1);
 }, r.buildQueryParameter = function(e, t, n) {
 return r.encodeQuery(e, n) + (null !== t ? "=" + r.encodeQuery(t, n) : "");
 }, r.addQuery = function(e, t, n) {
-if ("object" == typeof t) for (var i in t) b.call(t, i) && r.addQuery(e, i, t[i]); else {
+if ("object" == typeof t) for (var i in t) y.call(t, i) && r.addQuery(e, i, t[i]); else {
 if ("string" != typeof t) throw new TypeError("URI.addQuery() accepts an object, string as the name parameter");
 if (void 0 === e[t]) return void (e[t] = n);
-"string" == typeof e[t] && (e[t] = [ e[t] ]), s(n) || (n = [ n ]), e[t] = (e[t] || []).concat(n);
+"string" == typeof e[t] && (e[t] = [ e[t] ]), l(n) || (n = [ n ]), e[t] = (e[t] || []).concat(n);
 }
 }, r.removeQuery = function(e, t, n) {
-var i, o, c;
-if (s(t)) for (i = 0, o = t.length; i < o; i++) e[t[i]] = void 0; else if ("RegExp" === a(t)) for (c in e) t.test(c) && (e[c] = void 0); else if ("object" == typeof t) for (c in t) b.call(t, c) && r.removeQuery(e, c, t[c]); else {
+var i, o, a;
+if (l(t)) for (i = 0, o = t.length; i < o; i++) e[t[i]] = void 0; else if ("RegExp" === s(t)) for (a in e) t.test(a) && (e[a] = void 0); else if ("object" == typeof t) for (a in t) y.call(t, a) && r.removeQuery(e, a, t[a]); else {
 if ("string" != typeof t) throw new TypeError("URI.removeQuery() accepts an object, string, RegExp as the first parameter");
-void 0 !== n ? "RegExp" === a(n) ? !s(e[t]) && n.test(e[t]) ? e[t] = void 0 : e[t] = l(e[t], n) : e[t] !== String(n) || s(n) && 1 !== n.length ? s(e[t]) && (e[t] = l(e[t], n)) : e[t] = void 0 : e[t] = void 0;
+void 0 !== n ? "RegExp" === s(n) ? !l(e[t]) && n.test(e[t]) ? e[t] = void 0 : e[t] = c(e[t], n) : e[t] !== String(n) || l(n) && 1 !== n.length ? l(e[t]) && (e[t] = c(e[t], n)) : e[t] = void 0 : e[t] = void 0;
 }
 }, r.hasQuery = function(e, t, n, i) {
-switch (a(t)) {
+switch (s(t)) {
 case "String":
 break;
 
 case "RegExp":
-for (var o in e) if (b.call(e, o) && t.test(o) && (void 0 === n || r.hasQuery(e, o, n))) return !0;
+for (var o in e) if (y.call(e, o) && t.test(o) && (void 0 === n || r.hasQuery(e, o, n))) return !0;
 return !1;
 
 case "Object":
-for (var l in t) if (b.call(t, l) && !r.hasQuery(e, l, t[l])) return !1;
+for (var a in t) if (y.call(t, a) && !r.hasQuery(e, a, t[a])) return !1;
 return !0;
 
 default:
 throw new TypeError("URI.hasQuery() accepts a string, regular expression or object as the name parameter");
 }
-switch (a(n)) {
+switch (s(n)) {
 case "Undefined":
 return t in e;
 
 case "Boolean":
-return n === Boolean(s(e[t]) ? e[t].length : e[t]);
+return n === Boolean(l(e[t]) ? e[t].length : e[t]);
 
 case "Function":
 return !!n(e[t], t, e);
 
 case "Array":
-return !!s(e[t]) && (i ? c : u)(e[t], n);
+return !!l(e[t]) && (i ? u : d)(e[t], n);
 
 case "RegExp":
-return s(e[t]) ? !!i && c(e[t], n) : Boolean(e[t] && e[t].match(n));
+return l(e[t]) ? !!i && u(e[t], n) : Boolean(e[t] && e[t].match(n));
 
 case "Number":
 n = String(n);
 
 case "String":
-return s(e[t]) ? !!i && c(e[t], n) : e[t] === n;
+return l(e[t]) ? !!i && u(e[t], n) : e[t] === n;
 
 default:
 throw new TypeError("URI.hasQuery() accepts undefined, boolean, string, number, RegExp, Function as the value parameter");
@@ -52675,26 +52680,38 @@ break;
 return n < 1 ? e.charAt(0) === t.charAt(0) && "/" === e.charAt(0) ? "/" : "" : ("/" === e.charAt(n) && "/" === t.charAt(n) || (n = e.substring(0, n).lastIndexOf("/")), e.substring(0, n + 1));
 }, r.withinString = function(e, t, n) {
 n || (n = {});
-var i = n.start || r.findUri.start, o = n.end || r.findUri.end, a = n.trim || r.findUri.trim, s = /[a-z0-9-]=["']?$/i;
+var i = n.start || r.findUri.start, o = n.end || r.findUri.end, a = n.trim || r.findUri.trim, s = n.parens || r.findUri.parens, l = /[a-z0-9-]=["']?$/i;
 for (i.lastIndex = 0; ;) {
-var l = i.exec(e);
-if (!l) break;
-var c = l.index;
+var c = i.exec(e);
+if (!c) break;
+var u = c.index;
 if (n.ignoreHtml) {
-var u = e.slice(Math.max(c - 3, 0), c);
-if (u && s.test(u)) continue;
+var d = e.slice(Math.max(u - 3, 0), u);
+if (d && l.test(d)) continue;
 }
-var d = c + e.slice(c).search(o), h = e.slice(c, d).replace(a, "");
-if (!n.ignore || !n.ignore.test(h)) {
-var f = t(h, c, d = c + h.length, e);
-e = e.slice(0, c) + f + e.slice(d), i.lastIndex = c + f.length;
+for (var h = u + e.slice(u).search(o), f = e.slice(u, h), p = -1; ;) {
+var g = s.exec(f);
+if (!g) break;
+var m = g.index + g[0].length;
+p = Math.max(p, m);
+}
+if (!((f = p > -1 ? f.slice(0, p) + f.slice(p).replace(a, "") : f.replace(a, "")).length <= c[0].length || n.ignore && n.ignore.test(f))) {
+var v = t(f, u, h = u + f.length, e);
+void 0 !== v ? (v = String(v), e = e.slice(0, u) + v + e.slice(h), i.lastIndex = u + v.length) : i.lastIndex = h;
 }
 }
 return i.lastIndex = 0, e;
-}, r.ensureValidHostname = function(t) {
-if (t.match(r.invalid_hostname_characters)) {
-if (!e) throw new TypeError('Hostname "' + t + '" contains characters other than [A-Z0-9.-] and Punycode.js is not available');
-if (e.toASCII(t).match(r.invalid_hostname_characters)) throw new TypeError('Hostname "' + t + '" contains characters other than [A-Z0-9.-]');
+}, r.ensureValidHostname = function(t, n) {
+var i = !!t, o = !1;
+if (!!n && (o = u(r.hostProtocols, n)), o && !i) throw new TypeError("Hostname cannot be empty, if protocol is " + n);
+if (t && t.match(r.invalid_hostname_characters)) {
+if (!e) throw new TypeError('Hostname "' + t + '" contains characters other than [A-Z0-9.-:_] and Punycode.js is not available');
+if (e.toASCII(t).match(r.invalid_hostname_characters)) throw new TypeError('Hostname "' + t + '" contains characters other than [A-Z0-9.-:_]');
+}
+}, r.ensureValidPort = function(e) {
+if (e) {
+var t = Number(e);
+if (!(o(t) && t > 0 && t < 65536)) throw new TypeError('Port "' + e + '" is not a valid port');
 }
 }, r.noConflict = function(e) {
 if (e) {
@@ -52703,26 +52720,26 @@ URI: this.noConflict()
 };
 return i.URITemplate && "function" == typeof i.URITemplate.noConflict && (t.URITemplate = i.URITemplate.noConflict()), i.IPv6 && "function" == typeof i.IPv6.noConflict && (t.IPv6 = i.IPv6.noConflict()), i.SecondLevelDomains && "function" == typeof i.SecondLevelDomains.noConflict && (t.SecondLevelDomains = i.SecondLevelDomains.noConflict()), t;
 }
-return i.URI === this && (i.URI = m), this;
-}, v.build = function(e) {
+return i.URI === this && (i.URI = v), this;
+}, b.build = function(e) {
 return !0 === e ? this._deferred_build = !0 : (void 0 === e || this._deferred_build) && (this._string = r.build(this._parts), this._deferred_build = !1), this;
-}, v.clone = function() {
+}, b.clone = function() {
 return new r(this);
-}, v.valueOf = v.toString = function() {
+}, b.valueOf = b.toString = function() {
 return this.build(!1)._string;
-}, v.protocol = p("protocol"), v.username = p("username"), v.password = p("password"), v.hostname = p("hostname"), v.port = p("port"), v.query = g("query", "?"), v.fragment = g("fragment", "#"), v.search = function(e, t) {
+}, b.protocol = g("protocol"), b.username = g("username"), b.password = g("password"), b.hostname = g("hostname"), b.port = g("port"), b.query = m("query", "?"), b.fragment = m("fragment", "#"), b.search = function(e, t) {
 var n = this.query(e, t);
 return "string" == typeof n && n.length ? "?" + n : n;
-}, v.hash = function(e, t) {
+}, b.hash = function(e, t) {
 var n = this.fragment(e, t);
 return "string" == typeof n && n.length ? "#" + n : n;
-}, v.pathname = function(e, t) {
+}, b.pathname = function(e, t) {
 if (void 0 === e || !0 === e) {
 var n = this._parts.path || (this._parts.hostname ? "/" : "");
 return e ? (this._parts.urn ? r.decodeUrnPath : r.decodePath)(n) : n;
 }
 return this._parts.urn ? this._parts.path = e ? r.recodeUrnPath(e) : "" : this._parts.path = e ? r.recodePath(e) : "/", this.build(!t), this;
-}, v.path = v.pathname, v.href = function(e, t) {
+}, b.path = b.pathname, b.href = function(e, t) {
 var n;
 if (void 0 === e) return this.toString();
 this._string = "", this._parts = r._parts();
@@ -52730,10 +52747,10 @@ var i = e instanceof r, o = "object" == typeof e && (e.hostname || e.path || e.p
 if (e.nodeName && (e = e[r.getDomAttribute(e)] || "", o = !1), !i && o && void 0 !== e.pathname && (e = e.toString()), "string" == typeof e || e instanceof String) this._parts = r.parse(String(e), this._parts); else {
 if (!i && !o) throw new TypeError("invalid input");
 var a = i ? e._parts : e;
-for (n in a) b.call(this._parts, n) && (this._parts[n] = a[n]);
+for (n in a) y.call(this._parts, n) && (this._parts[n] = a[n]);
 }
 return this.build(!t), this;
-}, v.is = function(e) {
+}, b.is = function(e) {
 var t = !1, i = !1, o = !1, a = !1, s = !1, l = !1, c = !1, u = !this._parts.urn;
 switch (this._parts.hostname && (u = !1, i = r.ip4_expression.test(this._parts.hostname), o = r.ip6_expression.test(this._parts.hostname), s = (a = !(t = i || o)) && n && n.has(this._parts.hostname), l = a && r.idn_expression.test(this._parts.hostname), c = a && r.punycode_expression.test(this._parts.hostname)), e.toLowerCase()) {
 case "relative":
@@ -52776,23 +52793,21 @@ return c;
 }
 return null;
 };
-var C = v.protocol, S = v.port, $ = v.hostname;
-v.protocol = function(e, t) {
+var S = b.protocol, $ = b.port, A = b.hostname;
+b.protocol = function(e, t) {
 if (void 0 !== e && e && !(e = e.replace(/:(\/\/)?$/, "")).match(r.protocol_expression)) throw new TypeError('Protocol "' + e + "\" contains characters other than [A-Z0-9.+-] or doesn't start with [A-Z]");
-return C.call(this, e, t);
-}, v.scheme = v.protocol, v.port = function(e, t) {
-if (this._parts.urn) return void 0 === e ? "" : this;
-if (void 0 !== e && (0 === e && (e = null), e && (":" === (e += "").charAt(0) && (e = e.substring(1)), e.match(/[^0-9]/)))) throw new TypeError('Port "' + e + '" contains characters other than [0-9]');
 return S.call(this, e, t);
-}, v.hostname = function(e, t) {
+}, b.scheme = b.protocol, b.port = function(e, t) {
+return this._parts.urn ? void 0 === e ? "" : this : (void 0 !== e && (0 === e && (e = null), e && (":" === (e += "").charAt(0) && (e = e.substring(1)), r.ensureValidPort(e))), $.call(this, e, t));
+}, b.hostname = function(e, t) {
 if (this._parts.urn) return void 0 === e ? "" : this;
 if (void 0 !== e) {
 var n = {};
 if ("/" !== r.parseHost(e, n)) throw new TypeError('Hostname "' + e + '" contains characters other than [A-Z0-9.-]');
-e = n.hostname;
+e = n.hostname, r.ensureValidHostname(e, this._parts.protocol);
 }
-return $.call(this, e, t);
-}, v.origin = function(e, t) {
+return A.call(this, e, t);
+}, b.origin = function(e, t) {
 if (this._parts.urn) return void 0 === e ? "" : this;
 if (void 0 === e) {
 var n = this.protocol();
@@ -52800,36 +52815,37 @@ return this.authority() ? (n ? n + "://" : "") + this.authority() : "";
 }
 var i = r(e);
 return this.protocol(i.protocol()).authority(i.authority()).build(!t), this;
-}, v.host = function(e, t) {
+}, b.host = function(e, t) {
 if (this._parts.urn) return void 0 === e ? "" : this;
 if (void 0 === e) return this._parts.hostname ? r.buildHost(this._parts) : "";
 if ("/" !== r.parseHost(e, this._parts)) throw new TypeError('Hostname "' + e + '" contains characters other than [A-Z0-9.-]');
 return this.build(!t), this;
-}, v.authority = function(e, t) {
+}, b.authority = function(e, t) {
 if (this._parts.urn) return void 0 === e ? "" : this;
 if (void 0 === e) return this._parts.hostname ? r.buildAuthority(this._parts) : "";
 if ("/" !== r.parseAuthority(e, this._parts)) throw new TypeError('Hostname "' + e + '" contains characters other than [A-Z0-9.-]');
 return this.build(!t), this;
-}, v.userinfo = function(e, t) {
+}, b.userinfo = function(e, t) {
 if (this._parts.urn) return void 0 === e ? "" : this;
 if (void 0 === e) {
 var n = r.buildUserinfo(this._parts);
 return n ? n.substring(0, n.length - 1) : n;
 }
 return "@" !== e[e.length - 1] && (e += "@"), r.parseUserinfo(e, this._parts), this.build(!t), this;
-}, v.resource = function(e, t) {
+}, b.resource = function(e, t) {
 var n;
 return void 0 === e ? this.path() + this.search() + this.hash() : (n = r.parse(e), this._parts.path = n.path, this._parts.query = n.query, this._parts.fragment = n.fragment, this.build(!t), this);
-}, v.subdomain = function(e, t) {
+}, b.subdomain = function(e, t) {
 if (this._parts.urn) return void 0 === e ? "" : this;
 if (void 0 === e) {
 if (!this._parts.hostname || this.is("IP")) return "";
 var n = this._parts.hostname.length - this.domain().length - 1;
 return this._parts.hostname.substring(0, n) || "";
 }
-var i = this._parts.hostname.length - this.domain().length, a = this._parts.hostname.substring(0, i), s = new RegExp("^" + o(a));
-return e && "." !== e.charAt(e.length - 1) && (e += "."), e && r.ensureValidHostname(e), this._parts.hostname = this._parts.hostname.replace(s, e), this.build(!t), this;
-}, v.domain = function(e, t) {
+var i = this._parts.hostname.length - this.domain().length, o = this._parts.hostname.substring(0, i), s = new RegExp("^" + a(o));
+if (e && "." !== e.charAt(e.length - 1) && (e += "."), -1 !== e.indexOf(":")) throw new TypeError("Domains cannot contain colons");
+return e && r.ensureValidHostname(e, this._parts.protocol), this._parts.hostname = this._parts.hostname.replace(s, e), this.build(!t), this;
+}, b.domain = function(e, t) {
 if (this._parts.urn) return void 0 === e ? "" : this;
 if ("boolean" == typeof e && (t = e, e = void 0), void 0 === e) {
 if (!this._parts.hostname || this.is("IP")) return "";
@@ -52839,29 +52855,30 @@ var i = this._parts.hostname.length - this.tld(t).length - 1;
 return i = this._parts.hostname.lastIndexOf(".", i - 1) + 1, this._parts.hostname.substring(i) || "";
 }
 if (!e) throw new TypeError("cannot set domain empty");
-if (r.ensureValidHostname(e), !this._parts.hostname || this.is("IP")) this._parts.hostname = e; else {
-var a = new RegExp(o(this.domain()) + "$");
-this._parts.hostname = this._parts.hostname.replace(a, e);
+if (-1 !== e.indexOf(":")) throw new TypeError("Domains cannot contain colons");
+if (r.ensureValidHostname(e, this._parts.protocol), !this._parts.hostname || this.is("IP")) this._parts.hostname = e; else {
+var o = new RegExp(a(this.domain()) + "$");
+this._parts.hostname = this._parts.hostname.replace(o, e);
 }
 return this.build(!t), this;
-}, v.tld = function(e, t) {
+}, b.tld = function(e, t) {
 if (this._parts.urn) return void 0 === e ? "" : this;
 if ("boolean" == typeof e && (t = e, e = void 0), void 0 === e) {
 if (!this._parts.hostname || this.is("IP")) return "";
 var i = this._parts.hostname.lastIndexOf("."), r = this._parts.hostname.substring(i + 1);
 return !0 !== t && n && n.list[r.toLowerCase()] ? n.get(this._parts.hostname) || r : r;
 }
-var a;
+var o;
 if (!e) throw new TypeError("cannot set TLD empty");
 if (e.match(/[^a-zA-Z0-9-]/)) {
 if (!n || !n.is(e)) throw new TypeError('TLD "' + e + '" contains characters other than [A-Z0-9]');
-a = new RegExp(o(this.tld()) + "$"), this._parts.hostname = this._parts.hostname.replace(a, e);
+o = new RegExp(a(this.tld()) + "$"), this._parts.hostname = this._parts.hostname.replace(o, e);
 } else {
 if (!this._parts.hostname || this.is("IP")) throw new ReferenceError("cannot set TLD on non-domain host");
-a = new RegExp(o(this.tld()) + "$"), this._parts.hostname = this._parts.hostname.replace(a, e);
+o = new RegExp(a(this.tld()) + "$"), this._parts.hostname = this._parts.hostname.replace(o, e);
 }
 return this.build(!t), this;
-}, v.directory = function(e, t) {
+}, b.directory = function(e, t) {
 if (this._parts.urn) return void 0 === e ? "" : this;
 if (void 0 === e || !0 === e) {
 if (!this._parts.path && !this._parts.hostname) return "";
@@ -52869,84 +52886,84 @@ if ("/" === this._parts.path) return "/";
 var n = this._parts.path.length - this.filename().length - 1, i = this._parts.path.substring(0, n) || (this._parts.hostname ? "/" : "");
 return e ? r.decodePath(i) : i;
 }
-var a = this._parts.path.length - this.filename().length, s = this._parts.path.substring(0, a), l = new RegExp("^" + o(s));
+var o = this._parts.path.length - this.filename().length, s = this._parts.path.substring(0, o), l = new RegExp("^" + a(s));
 return this.is("relative") || (e || (e = "/"), "/" !== e.charAt(0) && (e = "/" + e)), e && "/" !== e.charAt(e.length - 1) && (e += "/"), e = r.recodePath(e), this._parts.path = this._parts.path.replace(l, e), this.build(!t), this;
-}, v.filename = function(e, t) {
+}, b.filename = function(e, t) {
 if (this._parts.urn) return void 0 === e ? "" : this;
-if (void 0 === e || !0 === e) {
+if ("string" != typeof e) {
 if (!this._parts.path || "/" === this._parts.path) return "";
 var n = this._parts.path.lastIndexOf("/"), i = this._parts.path.substring(n + 1);
 return e ? r.decodePathSegment(i) : i;
 }
-var a = !1;
-"/" === e.charAt(0) && (e = e.substring(1)), e.match(/\.?\//) && (a = !0);
-var s = new RegExp(o(this.filename()) + "$");
-return e = r.recodePath(e), this._parts.path = this._parts.path.replace(s, e), a ? this.normalizePath(t) : this.build(!t), this;
-}, v.suffix = function(e, t) {
+var o = !1;
+"/" === e.charAt(0) && (e = e.substring(1)), e.match(/\.?\//) && (o = !0);
+var s = new RegExp(a(this.filename()) + "$");
+return e = r.recodePath(e), this._parts.path = this._parts.path.replace(s, e), o ? this.normalizePath(t) : this.build(!t), this;
+}, b.suffix = function(e, t) {
 if (this._parts.urn) return void 0 === e ? "" : this;
 if (void 0 === e || !0 === e) {
 if (!this._parts.path || "/" === this._parts.path) return "";
-var n, i, a = this.filename(), s = a.lastIndexOf(".");
-return -1 === s ? "" : (n = a.substring(s + 1), i = /^[a-z0-9%]+$/i.test(n) ? n : "", e ? r.decodePathSegment(i) : i);
+var n, i, o = this.filename(), s = o.lastIndexOf(".");
+return -1 === s ? "" : (n = o.substring(s + 1), i = /^[a-z0-9%]+$/i.test(n) ? n : "", e ? r.decodePathSegment(i) : i);
 }
 "." === e.charAt(0) && (e = e.substring(1));
 var l, c = this.suffix();
-if (c) l = e ? new RegExp(o(c) + "$") : new RegExp(o("." + c) + "$"); else {
+if (c) l = e ? new RegExp(a(c) + "$") : new RegExp(a("." + c) + "$"); else {
 if (!e) return this;
 this._parts.path += "." + r.recodePath(e);
 }
 return l && (e = r.recodePath(e), this._parts.path = this._parts.path.replace(l, e)), this.build(!t), this;
-}, v.segment = function(e, t, n) {
+}, b.segment = function(e, t, n) {
 var i = this._parts.urn ? ":" : "/", r = this.path(), o = "/" === r.substring(0, 1), a = r.split(i);
 if (void 0 !== e && "number" != typeof e && (n = t, t = e, e = void 0), void 0 !== e && "number" != typeof e) throw new Error('Bad segment "' + e + '", must be 0-based integer');
 if (o && a.shift(), e < 0 && (e = Math.max(a.length + e, 0)), void 0 === t) return void 0 === e ? a : a[e];
-if (null === e || void 0 === a[e]) if (s(t)) {
+if (null === e || void 0 === a[e]) if (l(t)) {
 a = [];
-for (var l = 0, c = t.length; l < c; l++) (t[l].length || a.length && a[a.length - 1].length) && (a.length && !a[a.length - 1].length && a.pop(), a.push(d(t[l])));
-} else (t || "string" == typeof t) && (t = d(t), "" === a[a.length - 1] ? a[a.length - 1] = t : a.push(t)); else t ? a[e] = d(t) : a.splice(e, 1);
+for (var s = 0, c = t.length; s < c; s++) (t[s].length || a.length && a[a.length - 1].length) && (a.length && !a[a.length - 1].length && a.pop(), a.push(h(t[s])));
+} else (t || "string" == typeof t) && (t = h(t), "" === a[a.length - 1] ? a[a.length - 1] = t : a.push(t)); else t ? a[e] = h(t) : a.splice(e, 1);
 return o && a.unshift(""), this.path(a.join(i), n);
-}, v.segmentCoded = function(e, t, n) {
+}, b.segmentCoded = function(e, t, n) {
 var i, o, a;
 if ("number" != typeof e && (n = t, t = e, e = void 0), void 0 === t) {
-if (i = this.segment(e, t, n), s(i)) for (o = 0, a = i.length; o < a; o++) i[o] = r.decode(i[o]); else i = void 0 !== i ? r.decode(i) : void 0;
+if (i = this.segment(e, t, n), l(i)) for (o = 0, a = i.length; o < a; o++) i[o] = r.decode(i[o]); else i = void 0 !== i ? r.decode(i) : void 0;
 return i;
 }
-if (s(t)) for (o = 0, a = t.length; o < a; o++) t[o] = r.encode(t[o]); else t = "string" == typeof t || t instanceof String ? r.encode(t) : t;
+if (l(t)) for (o = 0, a = t.length; o < a; o++) t[o] = r.encode(t[o]); else t = "string" == typeof t || t instanceof String ? r.encode(t) : t;
 return this.segment(e, t, n);
 };
-var A = v.query;
-return v.query = function(e, t) {
+var k = b.query;
+return b.query = function(e, t) {
 if (!0 === e) return r.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
 if ("function" == typeof e) {
 var n = r.parseQuery(this._parts.query, this._parts.escapeQuerySpace), i = e.call(this, n);
 return this._parts.query = r.buildQuery(i || n, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace), this.build(!t), this;
 }
-return void 0 !== e && "string" != typeof e ? (this._parts.query = r.buildQuery(e, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace), this.build(!t), this) : A.call(this, e, t);
-}, v.setQuery = function(e, t, n) {
+return void 0 !== e && "string" != typeof e ? (this._parts.query = r.buildQuery(e, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace), this.build(!t), this) : k.call(this, e, t);
+}, b.setQuery = function(e, t, n) {
 var i = r.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
 if ("string" == typeof e || e instanceof String) i[e] = void 0 !== t ? t : null; else {
 if ("object" != typeof e) throw new TypeError("URI.addQuery() accepts an object, string as the name parameter");
-for (var o in e) b.call(e, o) && (i[o] = e[o]);
+for (var o in e) y.call(e, o) && (i[o] = e[o]);
 }
 return this._parts.query = r.buildQuery(i, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace), "string" != typeof e && (n = t), this.build(!n), this;
-}, v.addQuery = function(e, t, n) {
+}, b.addQuery = function(e, t, n) {
 var i = r.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
 return r.addQuery(i, e, void 0 === t ? null : t), this._parts.query = r.buildQuery(i, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace), "string" != typeof e && (n = t), this.build(!n), this;
-}, v.removeQuery = function(e, t, n) {
+}, b.removeQuery = function(e, t, n) {
 var i = r.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
 return r.removeQuery(i, e, t), this._parts.query = r.buildQuery(i, this._parts.duplicateQueryParameters, this._parts.escapeQuerySpace), "string" != typeof e && (n = t), this.build(!n), this;
-}, v.hasQuery = function(e, t, n) {
+}, b.hasQuery = function(e, t, n) {
 var i = r.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
 return r.hasQuery(i, e, t, n);
-}, v.setSearch = v.setQuery, v.addSearch = v.addQuery, v.removeSearch = v.removeQuery, v.hasSearch = v.hasQuery, v.normalize = function() {
+}, b.setSearch = b.setQuery, b.addSearch = b.addQuery, b.removeSearch = b.removeQuery, b.hasSearch = b.hasQuery, b.normalize = function() {
 return this._parts.urn ? this.normalizeProtocol(!1).normalizePath(!1).normalizeQuery(!1).normalizeFragment(!1).build() : this.normalizeProtocol(!1).normalizeHostname(!1).normalizePort(!1).normalizePath(!1).normalizeQuery(!1).normalizeFragment(!1).build();
-}, v.normalizeProtocol = function(e) {
+}, b.normalizeProtocol = function(e) {
 return "string" == typeof this._parts.protocol && (this._parts.protocol = this._parts.protocol.toLowerCase(), this.build(!e)), this;
-}, v.normalizeHostname = function(n) {
+}, b.normalizeHostname = function(n) {
 return this._parts.hostname && (this.is("IDN") && e ? this._parts.hostname = e.toASCII(this._parts.hostname) : this.is("IPv6") && t && (this._parts.hostname = t.best(this._parts.hostname)), this._parts.hostname = this._parts.hostname.toLowerCase(), this.build(!n)), this;
-}, v.normalizePort = function(e) {
+}, b.normalizePort = function(e) {
 return "string" == typeof this._parts.protocol && this._parts.port === r.defaultPorts[this._parts.protocol] && (this._parts.port = null, this.build(!e)), this;
-}, v.normalizePath = function(e) {
+}, b.normalizePath = function(e) {
 var t = this._parts.path;
 if (!t) return this;
 if (this._parts.urn) return this._parts.path = r.recodeUrnPath(this._parts.path), this.build(!e), this;
@@ -52957,11 +52974,11 @@ if (-1 === (i = t.search(/\/\.\.(\/|$)/))) break;
 0 !== i ? (-1 === (o = t.substring(0, i).lastIndexOf("/")) && (o = i), t = t.substring(0, o) + t.substring(i + 3)) : t = t.substring(3);
 }
 return n && this.is("relative") && (t = a + t.substring(1)), this._parts.path = t, this.build(!e), this;
-}, v.normalizePathname = v.normalizePath, v.normalizeQuery = function(e) {
+}, b.normalizePathname = b.normalizePath, b.normalizeQuery = function(e) {
 return "string" == typeof this._parts.query && (this._parts.query.length ? this.query(r.parseQuery(this._parts.query, this._parts.escapeQuerySpace)) : this._parts.query = null, this.build(!e)), this;
-}, v.normalizeFragment = function(e) {
+}, b.normalizeFragment = function(e) {
 return this._parts.fragment || (this._parts.fragment = null, this.build(!e)), this;
-}, v.normalizeSearch = v.normalizeQuery, v.normalizeHash = v.normalizeFragment, v.iso8859 = function() {
+}, b.normalizeSearch = b.normalizeQuery, b.normalizeHash = b.normalizeFragment, b.iso8859 = function() {
 var e = r.encode, t = r.decode;
 r.encode = escape, r.decode = decodeURIComponent;
 try {
@@ -52970,16 +52987,16 @@ this.normalize();
 r.encode = e, r.decode = t;
 }
 return this;
-}, v.unicode = function() {
+}, b.unicode = function() {
 var e = r.encode, t = r.decode;
-r.encode = f, r.decode = unescape;
+r.encode = p, r.decode = unescape;
 try {
 this.normalize();
 } finally {
 r.encode = e, r.decode = t;
 }
 return this;
-}, v.readable = function() {
+}, b.readable = function() {
 var t = this.clone();
 t.username("").password("").normalize();
 var n = "";
@@ -52991,13 +53008,14 @@ i += "&" + r.decodeQuery(l[0], this._parts.escapeQuerySpace).replace(/&/g, "%26"
 n += "?" + i.substring(1);
 }
 return n += r.decodeQuery(t.hash(), !0);
-}, v.absoluteTo = function(e) {
+}, b.absoluteTo = function(e) {
 var t, n, i, o = this.clone(), a = [ "protocol", "username", "password", "hostname", "port" ];
 if (this._parts.urn) throw new Error("URNs do not have any generally defined hierarchical components");
-if (e instanceof r || (e = new r(e)), o._parts.protocol || (o._parts.protocol = e._parts.protocol), this._parts.hostname) return o;
+if (e instanceof r || (e = new r(e)), o._parts.protocol) return o;
+if (o._parts.protocol = e._parts.protocol, this._parts.hostname) return o;
 for (n = 0; i = a[n]; n++) o._parts[i] = e._parts[i];
-return o._parts.path ? ".." === o._parts.path.substring(-2) && (o._parts.path += "/") : (o._parts.path = e._parts.path, o._parts.query || (o._parts.query = e._parts.query)), "/" !== o.path().charAt(0) && (t = (t = e.directory()) || (0 === e.path().indexOf("/") ? "/" : ""), o._parts.path = (t ? t + "/" : "") + o._parts.path, o.normalizePath()), o.build(), o;
-}, v.relativeTo = function(e) {
+return o._parts.path ? (".." === o._parts.path.substring(-2) && (o._parts.path += "/"), "/" !== o.path().charAt(0) && (t = (t = e.directory()) || (0 === e.path().indexOf("/") ? "/" : ""), o._parts.path = (t ? t + "/" : "") + o._parts.path, o.normalizePath())) : (o._parts.path = e._parts.path, o._parts.query || (o._parts.query = e._parts.query)), o.build(), o;
+}, b.relativeTo = function(e) {
 var t, n, i, o, a, s = this.clone().normalize();
 if (s._parts.urn) throw new Error("URNs do not have any generally defined hierarchical components");
 if (e = new r(e).normalize(), t = s._parts, n = e._parts, o = s.path(), a = e.path(), "/" !== o.charAt(0)) throw new Error("URI is already relative");
@@ -53009,28 +53027,28 @@ if (t.hostname = null, t.port = null, o === a) return t.path = "", s.build();
 if (!(i = r.commonPath(o, a))) return s.build();
 var l = n.path.substring(i.length).replace(/[^\/]*$/, "").replace(/.*?\//g, "../");
 return t.path = l + t.path.substring(i.length) || "./", s.build();
-}, v.equals = function(e) {
-var t, n, i, o = this.clone(), a = new r(e), l = {}, c = {}, d = {};
+}, b.equals = function(e) {
+var t, n, i, o = this.clone(), a = new r(e), s = {}, c = {}, u = {};
 if (o.normalize(), a.normalize(), o.toString() === a.toString()) return !0;
 if (t = o.query(), n = a.query(), o.query(""), a.query(""), o.toString() !== a.toString()) return !1;
 if (t.length !== n.length) return !1;
-l = r.parseQuery(t, this._parts.escapeQuerySpace), c = r.parseQuery(n, this._parts.escapeQuerySpace);
-for (i in l) if (b.call(l, i)) {
-if (s(l[i])) {
-if (!u(l[i], c[i])) return !1;
-} else if (l[i] !== c[i]) return !1;
-d[i] = !0;
+s = r.parseQuery(t, this._parts.escapeQuerySpace), c = r.parseQuery(n, this._parts.escapeQuerySpace);
+for (i in s) if (y.call(s, i)) {
+if (l(s[i])) {
+if (!d(s[i], c[i])) return !1;
+} else if (s[i] !== c[i]) return !1;
+u[i] = !0;
 }
-for (i in c) if (b.call(c, i) && !d[i]) return !1;
+for (i in c) if (y.call(c, i) && !u[i]) return !1;
 return !0;
-}, v.duplicateQueryParameters = function(e) {
+}, b.duplicateQueryParameters = function(e) {
 return this._parts.duplicateQueryParameters = !!e, this;
-}, v.escapeQuerySpace = function(e) {
+}, b.escapeQuerySpace = function(e) {
 return this._parts.escapeQuerySpace = !!e, this;
 }, r;
 }), function(e, t) {
 "use strict";
-"object" == typeof exports ? module.exports = t(require("./URI")) : "function" == typeof define && define.amd ? define([ "./URI" ], t) : e.URITemplate = t(e.URI, e);
+"object" == typeof module && module.exports ? module.exports = t(require("./URI")) : "function" == typeof define && define.amd ? define([ "./URI" ], t) : e.URITemplate = t(e.URI, e);
 }(this, function(e, t) {
 "use strict";
 function n(e) {
@@ -53097,13 +53115,16 @@ empty_name_separator: !0,
 encode: "encode"
 }
 };
-return n._cache = {}, n.EXPRESSION_PATTERN = /\{([^a-zA-Z0-9%_]?)([^\}]+)(\}|$)/g, n.VARIABLE_PATTERN = /^([^*:.](?:\.?[^*:.])*)((\*)|:(\d+))?$/, n.VARIABLE_NAME_PATTERN = /[^a-zA-Z0-9%_.]/, n.LITERAL_PATTERN = /[<>{}'"`^| \\]/, n.expand = function(e, t) {
-var i, r, o, a = s[e.operator], l = a.named ? "Named" : "Unnamed", c = e.variables, u = [];
-for (o = 0; r = c[o]; o++) if ((i = t.get(r.name)).val.length) {
-if (i.type > 1 && r.maxlength) throw new Error('Invalid expression: Prefix modifier not applicable to variable "' + r.name + '"');
-u.push(n["expand" + l](i, a, r.explode, r.explode && a.separator || ",", r.maxlength, r.name));
-} else i.type && u.push("");
-return u.length ? a.prefix + u.join(a.separator) : "";
+return n._cache = {}, n.EXPRESSION_PATTERN = /\{([^a-zA-Z0-9%_]?)([^\}]+)(\}|$)/g, n.VARIABLE_PATTERN = /^([^*:.](?:\.?[^*:.])*)((\*)|:(\d+))?$/, n.VARIABLE_NAME_PATTERN = /[^a-zA-Z0-9%_.]/, n.LITERAL_PATTERN = /[<>{}"`^| \\]/, n.expand = function(e, t, i) {
+var r, o, a, l = s[e.operator], c = l.named ? "Named" : "Unnamed", u = e.variables, d = [];
+for (a = 0; o = u[a]; a++) {
+if (0 === (r = t.get(o.name)).type && i && i.strict) throw new Error('Missing expansion value for variable "' + o.name + '"');
+if (r.val.length) {
+if (r.type > 1 && o.maxlength) throw new Error('Invalid expression: Prefix modifier not applicable to variable "' + o.name + '"');
+d.push(n["expand" + c](r, l, o.explode, o.explode && l.separator || ",", o.maxlength, o.name));
+} else r.type && d.push("");
+}
+return d.length ? l.prefix + d.join(l.separator) : "";
 }, n.expandNamed = function(t, n, i, r, o, a) {
 var s, l, c, u = "", d = n.encode, h = n.empty_name_separator, f = !t[d].length, p = 2 === t.type ? "" : e[d](a);
 for (l = 0, c = t.val.length; l < c; l++) o ? (s = e[d](t.val[l][1].substring(0, o)), 2 === t.type && (p = e[d](t.val[l][0].substring(0, o)))) : f ? (s = e[d](t.val[l][1]), 2 === t.type ? (p = e[d](t.val[l][0]), t[d].push([ p, s ])) : t[d].push([ void 0, s ])) : (s = t[d][l][1], 2 === t.type && (p = t[d][l][0])), u && (u += r), i ? u += p + (h || s ? "=" : "") + s : (l || (u += e[d](a) + (h || s ? "=" : "")), 2 === t.type && (u += p + ","), u += s);
@@ -53114,11 +53135,11 @@ for (s = 0, l = t.val.length; s < l; s++) o ? a = e[u](t.val[s][1].substring(0, 
 return c;
 }, n.noConflict = function() {
 return t.URITemplate === n && (t.URITemplate = r), n;
-}, a.expand = function(e) {
-var t = "";
+}, a.expand = function(e, t) {
+var r = "";
 this.parts && this.parts.length || this.parse(), e instanceof i || (e = new i(e));
-for (var r = 0, o = this.parts.length; r < o; r++) t += "string" == typeof this.parts[r] ? this.parts[r] : n.expand(this.parts[r], e);
-return t;
+for (var o = 0, a = this.parts.length; o < a; o++) r += "string" == typeof this.parts[o] ? this.parts[o] : n.expand(this.parts[o], e, t);
+return r;
 }, a.parse = function() {
 var e, t, i, r = this.expression, o = n.EXPRESSION_PATTERN, a = n.VARIABLE_PATTERN, l = n.VARIABLE_NAME_PATTERN, c = n.LITERAL_PATTERN, u = [], d = 0, h = function(e) {
 if (e.match(c)) throw new Error('Invalid Literal "' + e + '"');
@@ -53171,7 +53192,7 @@ return new e(r);
 }, n;
 }), function(e, t) {
 "use strict";
-"object" == typeof exports ? module.exports = t(require("jquery", "./URI")) : "function" == typeof define && define.amd ? define([ "jquery", "./URI" ], t) : t(e.jQuery, e.URI);
+"object" == typeof module && module.exports ? module.exports = t(require("jquery"), require("./URI")) : "function" == typeof define && define.amd ? define([ "jquery", "./URI" ], t) : t(e.jQuery, e.URI);
 }(this, function(e, t) {
 "use strict";
 function n(e) {
@@ -53255,7 +53276,7 @@ return o(e, n[3]);
 }, e.expr[":"].uri = c, e;
 }), function(e, t) {
 "use strict";
-"object" == typeof exports ? module.exports = t(require("./URI")) : "function" == typeof define && define.amd ? define([ "./URI" ], t) : t(e.URI);
+"object" == typeof module && module.exports ? module.exports = t(require("./URI")) : "function" == typeof define && define.amd ? define([ "./URI" ], t) : t(e.URI);
 }(this, function(e) {
 "use strict";
 var t = e.prototype, n = t.fragment, i = t.build;
@@ -72647,7 +72668,7 @@ e.put("src/components/binding/bindApplicationForm.html", '<div class="bind-form"
 e.put("src/components/binding/bindResults.html", '<div ng-if="!ctrl.error">\n  <div ng-if="!(ctrl.binding | isBindingReady)" class="bind-status" ng-class="{\'text-center\': !ctrl.progressInline, \'show-progress\': !ctrl.progressInline}">\n    <div class="spinner" ng-class="{\'spinner-sm\': ctrl.progressInline, \'spinner-inline\': ctrl.progressInline, \'spinner-lg\': !ctrl.progressInline}" aria-hidden="true"></div>\n    <h3 class="bind-message">\n      <span class="sr-only">Pending</span>\n      <div class="bind-pending-message" ng-class="{\'progress-inline\': ctrl.progressInline}">The binding was created but is not ready yet.</div>\n    </h3>\n  </div>\n  <div ng-if="(ctrl.binding | isBindingReady)">\n    <div class="bind-status">\n      <span class="pficon pficon-ok" aria-hidden="true"></span>\n      <span class="sr-only">Success</span>\n      <h3 class="bind-message">\n        <strong>{{ctrl.serviceToBind}}</strong>\n        <span>has been bound</span>\n        <span ng-if="ctrl.bindType === \'application\'"> to <strong>{{ctrl.applicationToBind}}</strong> successfully</span>\n      </h3>\n    </div>\n    <div class="sub-title">\n      The binding operation created the secret\n      <a ng-if="ctrl.secretHref && \'secrets\' | canI : \'list\'"\n         ng-href="{{ctrl.secretHref}}">{{ctrl.binding.spec.secretName}}</a>\n      <span ng-if="!ctrl.secretHref || !(\'secrets\' | canI : \'list\')">{{ctrl.binding.spec.secretName}}</span>\n      that you may need to reference in your application.\n      <span ng-if="ctrl.showPodPresets">Its data will be available to your application as environment variables.</span>\n    </div>\n    <div class="alert alert-info bind-info">\n      <span class="pficon pficon-info" aria-hidden="true"></span>\n      <span class="sr-only">Info</span>\n      The binding secret will only be available to new pods. You will need to redeploy your application.\n    </div>\n  </div>\n</div>\n<div ng-if="ctrl.error">\n  <div class="bind-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <span class="sr-only">Error</span>\n    <h3 class="bind-message">\n      <span>Binding Failed</span>\n    </h3>\n  </div>\n  <div class="sub-title">\n    <span ng-if="ctrl.error.data.message">\n      {{ctrl.error.data.message | upperFirst}}\n    </span>\n    <span ng-if="!ctrl.error.data.message">\n      An error occurred creating the binding.\n    </span>\n  </div>\n</div>\n'), 
 e.put("src/components/binding/bindServiceForm.html", '<div class="bind-form">\n  <form>\n    <div class="form-group">\n        <label>\n          <h3>Create a binding for <strong>{{ctrl.serviceClass.externalMetadata.displayName || ctrl.serviceClassName}}</strong></h3>\n        </label>\n        <span class="help-block">Bindings create a secret containing the necessary information for an application to use this service.</span>\n    </div>\n  </form>\n\n  <form name="ctrl.formName" class="mar-bottom-lg">\n    <fieldset>\n      <div class="radio">\n        <label class="bind-choice" ng-disabled="!ctrl.applications.length">\n          <input type="radio" ng-model="ctrl.bindType" value="application" ng-disabled="!ctrl.applications.length">\n          Create a secret and inject it into an application\n        </label>\n        <div class="application-select">\n          <ui-select ng-model="ctrl.appToBind"\n                     ng-disabled="ctrl.bindType !== \'application\'"\n                     ng-required="ctrl.bindType === \'application\'">\n            <ui-select-match placeholder="{{ctrl.applications.length ? \'Select an application\' : \'There are no applications in this project\'}}">\n              <span>\n                {{$select.selected.metadata.name}}\n                <small class="text-muted">&ndash; {{$select.selected.kind | humanizeKind : true}}</small>\n              </span>\n            </ui-select-match>\n            <ui-select-choices\n              repeat="application in (ctrl.applications) | filter : { metadata: { name: $select.search } } track by (application | uid)"\n              group-by="ctrl.groupByKind">\n              <span ng-bind-html="application.metadata.name | highlight : $select.search"></span>\n            </ui-select-choices>\n          </ui-select>\n        </div>\n        <label class="bind-choice">\n          <input type="radio" ng-model="ctrl.bindType" value="secret-only">\n          Create a secret in <strong>{{ctrl.projectName}}</strong> to be used later\n        </label>\n        <div class="help-block bind-description">\n          Secrets can be referenced later from an application.\n        </div>\n        <label ng-if="ctrl.allowNoBinding" class="bind-choice">\n          <input type="radio" ng-model="ctrl.bindType" value="none">\n          Do not bind at this time\n        </label>\n        <div ng-if="ctrl.allowNoBinding" class="help-block bind-description">\n          Bindings can be created later from within a project.\n        </div>\n      </div>\n    </fieldset>\n  </form>\n</div>\n'), 
 e.put("src/components/create-project/createProject.html", '<form name="createProjectForm" novalidate>\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="name" class="required">Name</label>\n      <span ng-class="{\'has-error\': (createProjectForm.name.$error.pattern && createProjectForm.name.$touched) || nameTaken}">\n        <input class="form-control"\n            name="name"\n            id="name"\n            placeholder="my-project"\n            type="text"\n            required\n            take-focus\n            minlength="2"\n            maxlength="63"\n            pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?"\n            aria-describedby="nameHelp"\n            ng-model="name"\n            ng-model-options="{ updateOn: \'default blur\' }"\n            ng-change="nameTaken = false"\n            autocorrect="off"\n            autocapitalize="off"\n            spellcheck="false">\n      </span>\n      <div>\n        <span class="help-block">A unique name for the project.</span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.required && createProjectForm.name.$dirty">\n          Name is required.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.minlength && createProjectForm.name.$touched">\n          Name must have at least two characters.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.pattern && createProjectForm.name.$touched">\n          Project names may only contain lower-case letters, numbers, and dashes.\n          They may not start or end with a dash.\n        </span>\n      </div>\n      <div class="has-error">\n        <span class="help-block" ng-if="nameTaken">\n          This name is already in use. Please choose a different name.\n        </span>\n      </div>\n    </div>\n\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control"\n          name="displayName"\n          id="displayName"\n          placeholder="My Project"\n          type="text"\n          ng-model="displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n      <textarea class="form-control"\n          name="description"\n          id="description"\n          placeholder="A short description."\n          ng-model="description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n          class="btn btn-primary"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="createProject()"\n          ng-disabled="createProjectForm.$invalid || nameTaken || disableInputs"\n          value="">\n        Create\n      </button>\n      <button\n          class="btn btn-default"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelCreateProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
-e.put("src/components/delete-project/delete-project-button.html", '<div class="actions">\n  \x3c!-- Avoid whitespace inside the link --\x3e\n  <a href=""\n     ng-click="$event.stopPropagation(); openDeleteModal()"\n     role="button"\n     class="action-button"\n     ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n     ng-class="{ \'disabled-link\': disableDelete }"\n    ><i class="fa fa-trash-o" aria-hidden="true"\n    ></i><span class="sr-only">Delete Project {{projectName}}</span></a>\n</div>\n'), e.put("src/components/delete-project/delete-project-modal.html", '<div class="delete-resource-modal">\n  \x3c!-- Use a form so that the enter key submits when typing a project name to confirm. --\x3e\n  <form>\n    <div class="modal-body">\n      <h1>Are you sure you want to delete the project\n        \'<strong>{{displayName ? displayName : projectName}}</strong>\'?</h1>\n      <p>\n        This will <strong>delete all resources</strong> associated with\n        the project {{displayName ? displayName : projectName}} and <strong>cannot be\n        undone</strong>.  Make sure this is something you really want to do!\n      </p>\n      <div ng-show="typeNameToConfirm">\n        <p>Type the name of the project to confirm.</p>\n        <p>\n          <label class="sr-only" for="resource-to-delete">project to delete</label>\n          <input\n              ng-model="confirmName"\n              id="resource-to-delete"\n              type="text"\n              class="form-control input-lg"\n              autocorrect="off"\n              autocapitalize="off"\n              spellcheck="false"\n              autofocus>\n        </p>\n      </div>\n    </div>\n    <div class="modal-footer">\n      <button ng-disabled="typeNameToConfirm && confirmName !== projectName && confirmName !== displayName" class="btn btn-lg btn-danger" type="submit" ng-click="delete();">Delete</button>\n      <button class="btn btn-lg btn-default" type="button" ng-click="cancel();">Cancel</button>\n    </div>\n  </form>\n</div>\n'), 
+e.put("src/components/delete-project/delete-project-button.html", '<div class="actions">\n  \x3c!-- Avoid whitespace inside the link --\x3e\n  <a href=""\n     ng-click="$event.stopPropagation(); openDeleteModal()"\n     role="button"\n     class="action-button"\n     ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n     ng-class="{ \'disabled-link\': disableDelete }"\n    ><i class="fa fa-trash-o" aria-hidden="true"\n    ></i><span class="sr-only">Delete Project {{projectName}}</span></a>\n</div>\n'), e.put("src/components/delete-project/delete-project-modal.html", '<div class="delete-resource-modal">\n  \x3c!-- Use a form so that the enter key submits when typing a project name to confirm. --\x3e\n  <form>\n    <div class="modal-body">\n      <h1>Are you sure you want to delete the project \'<strong>{{project | displayName}}</strong>\'?</h1>\n      <p>\n        This will <strong>delete all resources</strong> associated with\n        the project {{project | displayName}} and <strong>cannot be\n        undone</strong>.  Make sure this is something you really want to do!\n      </p>\n      <div ng-show="typeNameToConfirm">\n        <p>Type the name of the project to confirm.</p>\n        <p>\n          <label class="sr-only" for="resource-to-delete">project to delete</label>\n          <input\n              ng-model="confirmName"\n              id="resource-to-delete"\n              type="text"\n              class="form-control input-lg"\n              autocorrect="off"\n              autocapitalize="off"\n              spellcheck="false"\n              autofocus>\n        </p>\n      </div>\n    </div>\n    <div class="modal-footer">\n      <button ng-disabled="typeNameToConfirm && confirmName !== project.metadata.name && confirmName !== (project | displayName : false)" class="btn btn-lg btn-danger" type="submit" ng-click="delete()">Delete</button>\n      <button class="btn btn-lg btn-default" type="button" ng-click="cancel()">Cancel</button>\n    </div>\n  </form>\n</div>\n'), 
 e.put("src/components/delete-project/delete-project.html", '<a href="javascript:void(0)"\n   ng-click="openDeleteModal()"\n   role="button"\n   ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n   ng-class="{ \'disabled-link\': disableDelete }"\n>{{label || \'Delete\'}}</a>\n'), e.put("src/components/edit-project/editProject.html", '<form name="editProjectForm">\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control"\n             name="displayName"\n             id="displayName"\n             placeholder="My Project"\n             type="text"\n             ng-model="editableFields.displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n                    <textarea class="form-control"\n                              name="description"\n                              id="description"\n                              placeholder="A short description."\n                              ng-model="editableFields.description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n              class="btn btn-primary"\n              ng-class="{\'dialog-btn\': isDialog}"\n              ng-click="update()"\n              ng-disabled="editProjectForm.$invalid || disableInputs"\n              value="">{{submitButtonLabel}}</button>\n      <button\n          class="btn btn-default"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelEditProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
 e.put("src/components/origin-modal-popup/origin-modal-popup.html", '<div class="origin-modal-popup tile-click-prevent" ng-if="$ctrl.shown" ng-style="$ctrl.positionStyle"\n     ng-class="{\'position-above\': $ctrl.showAbove, \'position-left\': $ctrl.showLeft}">\n  <h4 class="origin-modal-popup-title">\n    {{$ctrl.modalTitle}}\n  </h4>\n  <div ng-transclude></div>\n  <a href="" class="origin-modal-popup-close" ng-click="$ctrl.onClose()">\n    <span class="pficon pficon-close"></span>\n  </a>\n</div>\n'), e.put("src/components/toast-notifications/toast-notifications.html", '<div class="toast-notifications-list-pf">\n  <div ng-repeat="(notificationID, notification) in notifications track by (notificationID + (notification.message || notification.details))" ng-if="!notification.hidden || notification.isHover"\n       ng-mouseenter="setHover(notification, true)" ng-mouseleave="setHover(notification, false)">\n    <div class="toast-pf alert {{notification.type | alertStatus}}" ng-class="{\'alert-dismissable\': !hideCloseButton}">\n      <button ng-if="!hideCloseButton" type="button" class="close" ng-click="close(notification)">\n        <span class="pficon pficon-close" aria-hidden="true"></span>\n        <span class="sr-only">Close</span>\n      </button>\n      <span class="{{notification.type | alertIcon}}" aria-hidden="true"></span>\n      <span class="sr-only">{{notification.type}}</span>\n      <span class="toast-notification-message" ng-if="notification.message">{{notification.message}}</span>\n      <div ng-if="notification.details" class="toast-notification-details">\n        <truncate-long-text\n          limit="200"\n          content="notification.details"\n          use-word-boundary="true"\n          expandable="true"\n          hide-collapse="true">\n        </truncate-long-text>\n      </div>\n      <span ng-repeat="link in notification.links">\n        <a ng-if="!link.href" href="" ng-click="onClick(notification, link)" role="button">{{link.label}}</a>\n        <a ng-if="link.href" ng-href="{{link.href}}" ng-attr-target="{{link.target}}">{{link.label}}</a>\n        <span ng-if="!$last" class="toast-action-divider">|</span>\n      </span>\n    </div>\n  </div>\n</div>\n'), 
 e.put("src/components/truncate-long-text/truncateLongText.html", '\x3c!--\n  Do not remove class `truncated-content` (here or below) even though it\'s not\n  styled directly in origin-web-common.  `truncated-content` is used by\n  origin-web-console in certain contexts.\n--\x3e\n<span ng-if="!truncated" ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n<span ng-if="truncated">\n  <span ng-if="!toggles.expanded">\n    <span ng-attr-title="{{content}}" class="truncation-block">\n      <span ng-bind-html="truncatedContent | highlightKeywords : keywords" class="truncated-content"></span>&hellip;\n    </span>\n    <a ng-if="expandable" href="" ng-click="toggles.expanded = true" class="nowrap">See All</a>\n  </span>\n  <span ng-if="toggles.expanded">\n    <div ng-if="prettifyJson" class="well">\n      <span ng-if="!hideCollapse" class="pull-right" style="margin-top: -10px;"><a href="" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a></span>\n      <span ng-bind-html="content | prettifyJSON | highlightKeywords : keywords" class="pretty-json truncated-content"></span>\n    </div>\n    <span ng-if="!prettifyJson">\n      <span ng-if="!hideCollapse" class="pull-right"><a href="" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a></span>\n      <span ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n    </span>\n  </span>\n</span>\n');
@@ -72754,12 +72775,11 @@ r.hideNotification("create-project-error");
 });
 } ]
 };
-} ]), angular.module("openshiftCommonUI").directive("deleteProject", [ "$uibModal", "$location", "$filter", "$q", "hashSizeFilter", "APIService", "DataService", "NotificationsService", "Logger", function(e, t, n, i, r, o, a, s, l) {
+} ]), angular.module("openshiftCommonUI").directive("deleteProject", [ "$uibModal", "$location", "$filter", "$q", "hashSizeFilter", "APIService", "NotificationsService", "ProjectsService", "Logger", function(e, t, n, i, r, o, a, s, l) {
 return {
 restrict: "E",
 scope: {
-projectName: "@",
-displayName: "@",
+project: "=",
 disableDelete: "=?",
 typeNameToConfirm: "=?",
 label: "@?",
@@ -72772,8 +72792,8 @@ templateUrl: function(e, t) {
 return angular.isDefined(t.buttonOnly) ? "src/components/delete-project/delete-project-button.html" : "src/components/delete-project/delete-project.html";
 },
 replace: !0,
-link: function(i, r, c) {
-var u = function() {
+link: function(i, r, o) {
+var c = n("displayName"), u = function() {
 if (!i.stayOnCurrentPage) if (i.redirectUrl) t.url(i.redirectUrl); else if ("/" !== t.path()) {
 var e = URI("/");
 t.url(e);
@@ -72786,20 +72806,18 @@ templateUrl: "src/components/delete-project/delete-project-modal.html",
 controller: "DeleteProjectModalController",
 scope: i
 }).result.then(function() {
-var e = i.projectName, t = "Project '" + (i.displayName || e) + "'", r = {};
-a.delete({
-resource: o.kindToResource("Project")
-}, e, r).then(function() {
-s.addNotification({
+var e = "Project '" + c(i.project) + "'";
+s.delete(i.project).then(function() {
+a.addNotification({
 type: "success",
-message: t + " was marked for deletion."
+message: e + " was marked for deletion."
 }), i.success && i.success(), u();
-}).catch(function(e) {
-s.addNotification({
+}).catch(function(t) {
+a.addNotification({
 type: "error",
-message: t + " could not be deleted.",
-details: n("getErrorDetails")(e)
-}), l.error(t + " could not be deleted.", e);
+message: e + " could not be deleted.",
+details: n("getErrorDetails")(t)
+}), l.error(e + " could not be deleted.", t);
 });
 });
 };
@@ -72822,7 +72840,7 @@ onCancel: "&",
 isDialog: "@"
 },
 templateUrl: "src/components/edit-project/editProject.html",
-controller: [ "$scope", "$filter", "$location", "DataService", "NotificationsService", "annotationNameFilter", "displayNameFilter", "Logger", function(t, n, i, r, o, a, s, l) {
+controller: [ "$scope", "$filter", "$location", "Logger", "NotificationsService", "ProjectsService", "annotationNameFilter", "displayNameFilter", function(t, n, i, r, o, a, s, l) {
 t.submitButtonLabel || (t.submitButtonLabel = "Save"), t.isDialog = "true" === t.isDialog;
 var c = n("annotation"), u = n("annotationName"), d = function(e) {
 return {
@@ -72833,28 +72851,24 @@ displayName: c(e, "displayName")
 var n = angular.copy(e);
 return n.metadata.annotations[u("description")] = t.description, n.metadata.annotations[u("displayName")] = t.displayName, n;
 }, f = function(e) {
-var t = [ a("description"), a("displayName") ];
+var t = [ s("description"), s("displayName") ];
 return _.each(t, function(t) {
 e.metadata.annotations[t] || delete e.metadata.annotations[t];
 }), e;
 };
 t.editableFields = d(t.project), t.update = function() {
-t.disableInputs = !0, t.editProjectForm.$valid && r.update("projects", t.project.metadata.name, f(h(t.project, t.editableFields)), {
-projectName: t.project.name
-}, {
-errorNotification: !1
-}).then(function(e) {
+t.disableInputs = !0, t.editProjectForm.$valid && a.update(t.project.metadata.name, f(h(t.project, t.editableFields))).then(function(e) {
 var n = t.redirectAction();
 n && n(encodeURIComponent(t.project.metadata.name)), o.addNotification({
 type: "success",
-message: "Project '" + s(e) + "' was successfully updated."
+message: "Project '" + l(e) + "' was successfully updated."
 });
 }, function(e) {
 t.disableInputs = !1, t.editableFields = d(t.project), o.addNotification({
 type: "error",
-message: "An error occurred while updating project '" + s(t.project) + "'.",
+message: "An error occurred while updating project '" + l(t.project) + "'.",
 details: n("getErrorDetails")(e)
-}), l.error("Project '" + s(t.project) + "' could not be updated.", e);
+}), r.error("Project '" + l(t.project) + "' could not be updated.", e);
 });
 }, t.cancelEditProject = function() {
 var n = t.onCancel();
@@ -74520,46 +74534,67 @@ e ? (t.log("LocalStorageUserStore.setToken", e, n), localStorage[i] = e, o(i, n)
 }
 };
 } ];
-}), angular.module("openshiftCommonServices").factory("ProjectsService", [ "$location", "$q", "AuthService", "DataService", "annotationNameFilter", "AuthorizationService", "RecentlyViewedProjectsService", function(e, t, n, i, r, o, a) {
-var s = function(e) {
-var t = [ r("description"), r("displayName") ];
+}), angular.module("openshiftCommonServices").factory("ProjectsService", [ "$location", "$q", "$rootScope", "AuthService", "AuthorizationService", "DataService", "Logger", "RecentlyViewedProjectsService", "annotationNameFilter", function(e, t, n, i, r, o, a, s, l) {
+var c, u = !1, d = function() {
+a.debug("ProjectsService: clearing project cache"), c = null, u = !1;
+};
+i.onUserChanged(d), i.onLogout(d);
+var h = function(e) {
+var t = [ l("description"), l("displayName") ];
 return _.each(t, function(t) {
 e.metadata.annotations[t] || delete e.metadata.annotations[t];
 }), e;
 };
 return {
-get: function(r) {
-return n.withUser().then(function() {
-var n = {
+get: function(n) {
+return i.withUser().then(function() {
+var i = {
 projectPromise: $.Deferred(),
-projectName: r,
+projectName: n,
 project: void 0
 };
-return i.get("projects", r, n, {
+return o.get("projects", n, i, {
 errorNotification: !1
 }).then(function(e) {
-return o.getProjectRules(r).then(function() {
-return n.project = e, n.projectPromise.resolve(e), a.addProjectUID(e.metadata.uid), [ e, n ];
+return r.getProjectRules(n).then(function() {
+return i.project = e, i.projectPromise.resolve(e), s.addProjectUID(e.metadata.uid), c && c.update(e, "MODIFIED"), [ e, i ];
 });
-}, function(i) {
-n.projectPromise.reject(i);
+}, function(n) {
+i.projectPromise.reject(n);
 var r = "The project could not be loaded.", o = "error";
-return 403 === i.status ? (r = "The project " + n.projectName + " does not exist or you are not authorized to view it.", o = "access_denied") : 404 === i.status && (r = "The project " + n.projectName + " does not exist.", o = "not_found"), e.url(URI("error").query({
+return 403 === n.status ? (r = "The project " + i.projectName + " does not exist or you are not authorized to view it.", o = "access_denied") : 404 === n.status && (r = "The project " + i.projectName + " does not exist.", o = "not_found"), e.url(URI("error").query({
 error: o,
 error_description: r
 }).toString()), t.reject();
 });
 });
 },
+list: function(e) {
+return c && !e ? (a.debug("ProjectsService: returning cached project data"), t.when(c)) : (a.debug("ProjectsService: listing projects, force refresh", e), o.list("projects", {}).then(function(e) {
+return c = e, e;
+}, function(e) {
+c = {}, u = !0;
+}));
+},
+isProjectListIncomplete: function() {
+return u;
+},
+watch: function(e, t) {
+return o.watch("projects", e, function(e) {
+c = e, t(e);
+});
+},
 update: function(e, t) {
-return i.update("projects", e, s(t), {
+return o.update("projects", e, h(t), {
 projectName: e
 }, {
 errorNotification: !1
+}).then(function(e) {
+return c && c.update(e, "MODIFIED"), e;
 });
 },
 create: function(e, t, n) {
-var r = {
+var i = {
 apiVersion: "v1",
 kind: "ProjectRequest",
 metadata: {
@@ -74568,13 +74603,18 @@ name: e
 displayName: t,
 description: n
 };
-return i.create("projectrequests", null, r, {}).then(function(e) {
-return a.addProjectUID(e.metadata.uid), e;
+return o.create("projectrequests", null, i, {}).then(function(e) {
+return s.addProjectUID(e.metadata.uid), c && c.update(e, "ADDED"), e;
 });
 },
 canCreate: function() {
-return i.get("projectrequests", null, {}, {
+return o.get("projectrequests", null, {}, {
 errorNotification: !1
+});
+},
+delete: function(e) {
+return o.delete("projects", e.metadata.name, {}).then(function(t) {
+return c && c.update(e, "DELETED"), t;
 });
 }
 };
@@ -76860,7 +76900,7 @@ e.exports = '<a href="" class="catalog-search-match" ng-class="{\'no-matches\': 
 }, function(e, t) {
 e.exports = '<bind-application-form application-name="$ctrl.name"\n                       form-name="$ctrl.bindForm"\n                       allow-no-binding="true"\n                       service-instances="$ctrl.serviceInstances"\n                       service-classes="$ctrl.serviceClasses"\n                       service-to-bind="$ctrl.serviceToBind">\n</bind-application-form>\n';
 }, function(e, t) {
-e.exports = '<div class="config-top">\n  <form name="$ctrl.builderForm" class="config-form">\n    <div class="form-group">\n      <label class="control-label" for="version">Version</label>\n      <ui-select ng-model="$ctrl.istag" required search-enabled="false">\n        <ui-select-match>\n          {{$select.selected.name}}\n        </ui-select-match>\n        <ui-select-choices repeat="tag in $ctrl.versions track by tag.name">\n          {{tag.name}}\n          <small ng-repeat="otherTag in $ctrl.referencedBy[tag.name]">\n            <span ng-if="$first"> &mdash; </span>{{otherTag}}<span ng-if="!$last">,</span>\n          </small>\n        </ui-select-choices>\n      </ui-select>\n    </div>\n    <select-project selected-project="$ctrl.selectedProject" name-taken="$ctrl.projectNameTaken"></select-project>\n    <div class="form-group">\n      <label class="control-label required" for="app-name">Application Name</label>\n      <div ng-class="{ \'has-error\': $ctrl.builderForm.name.$touched && $ctrl.builderForm.name.$invalid }">\n        <input\n          class="form-control"\n          type="text"\n          id="app-name"\n          required\n          minlength="2"\n          ng-maxlength="$ctrl.nameMaxLength"\n          ng-pattern="$ctrl.namePattern"\n          ng-model="$ctrl.name"\n          name="name"\n          autocorrect="off"\n          autocapitalize="off"\n          spellcheck="false">\n        \x3c!-- Wait until users leave the field to avoid flashing errors as they type. --\x3e\n        <div ng-if="$ctrl.builderForm.name.$touched">\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.required">\n            <span class="help-block">\n              Application name is required.\n            </span>\n          </div>\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.pattern">\n            <span class="help-block">\n              Application name consists of lower-case letters, numbers, and dashes. It must start with a letter and can\'t end with a <code>-</code>.\n            </span>\n          </div>\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.minlength">\n            <span class="help-block">\n              Application name must be at least 2 characters.\n            </span>\n          </div>\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.maxlength">\n            <span class="help-block">\n              Application name can\'t be more than 24 characters.\n            </span>\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <div class="form-group">\n      <label class="control-label required" for="repository">Git Repository</label>\n      <div ng-class="{ \'has-error\': $ctrl.builderForm.repository.$touched && $ctrl.builderForm.repository.$error.$required }">\n        <input class="form-control"\n          type="text"\n          id="repository"\n          name="repository"\n          required\n          ng-model="$ctrl.repository"\n          autocorrect="off"\n          autocapitalize="off"\n          spellcheck="false">\n        <div ng-if="$ctrl.istag.annotations.sampleRepo" class="help-block">\n          <a href="" ng-click="$ctrl.fillSampleRepo()">Try Sample Repository\n            <i class="fa fa-level-up" aria-hidden="true"></i></a>\n        </div>\n        <div class="has-error" ng-if="$ctrl.builderForm.repository.$touched && $ctrl.builderForm.repository.$error.$required">\n          <span class="help-block">\n            Git repository is required.\n          </span>\n        </div>\n        <div class="has-warning" ng-if="$ctrl.builderForm.repository.$touched && $ctrl.repository && !$ctrl.repositoryPattern.test($ctrl.repository)">\n          <span class="help-block">\n            This might not be a valid Git URL. Check that it is the correct URL to a remote Git repository.\n          </span>\n        </div>\n      </div>\n    </div>\n\n    \x3c!--\n      Only show the link for existing projects. It will be broken for new\n      projects.  Use class `invisible` when the project list is still loading\n      so the dialog doesn\'t resize.\n    --\x3e\n    <div ng-hide="$ctrl.selectedProject && !$ctrl.selectedProject.metadata.uid"\n         ng-class="{ invisible: !$ctrl.selectedProject || !$ctrl.istag }"\n         class="form-group">\n      If you have a private Git repository or need to change application defaults, view\n      <a href="" ng-click="$ctrl.navigateToAdvancedForm()">advanced options</a>.\n    </div>\n  </form>\n</div>\n';
+e.exports = '<div class="config-top">\n  <form name="$ctrl.builderForm" class="config-form">\n    <div class="form-group">\n      <label class="control-label" for="version">Version</label>\n      <ui-select ng-model="$ctrl.istag" required search-enabled="false">\n        <ui-select-match>\n          {{$select.selected.name}}\n        </ui-select-match>\n        <ui-select-choices repeat="tag in $ctrl.versions track by tag.name">\n          {{tag.name}}\n          <small ng-repeat="otherTag in $ctrl.referencedBy[tag.name]">\n            <span ng-if="$first"> &mdash; </span>{{otherTag}}<span ng-if="!$last">,</span>\n          </small>\n        </ui-select-choices>\n      </ui-select>\n    </div>\n    <select-project selected-project="$ctrl.selectedProject" name-taken="$ctrl.projectNameTaken"></select-project>\n    <div class="form-group">\n      <label class="control-label required" for="app-name">Application Name</label>\n      <div ng-class="{ \'has-error\': $ctrl.builderForm.name.$touched && $ctrl.builderForm.name.$invalid }">\n        <input\n          class="form-control"\n          type="text"\n          id="app-name"\n          required\n          minlength="2"\n          ng-maxlength="$ctrl.nameMaxLength"\n          ng-pattern="$ctrl.namePattern"\n          ng-model="$ctrl.name"\n          name="name"\n          autocorrect="off"\n          autocapitalize="none"\n          spellcheck="false">\n        \x3c!-- Wait until users leave the field to avoid flashing errors as they type. --\x3e\n        <div ng-if="$ctrl.builderForm.name.$touched">\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.required">\n            <span class="help-block">\n              Application name is required.\n            </span>\n          </div>\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.pattern">\n            <span class="help-block">\n              Application name consists of lower-case letters, numbers, and dashes. It must start with a letter and can\'t end with a <code>-</code>.\n            </span>\n          </div>\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.minlength">\n            <span class="help-block">\n              Application name must be at least 2 characters.\n            </span>\n          </div>\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.maxlength">\n            <span class="help-block">\n              Application name can\'t be more than 24 characters.\n            </span>\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <div class="form-group">\n      <label class="control-label required" for="repository">Git Repository</label>\n      <div ng-class="{ \'has-error\': $ctrl.builderForm.repository.$touched && $ctrl.builderForm.repository.$error.$required }">\n        <input class="form-control"\n          type="text"\n          id="repository"\n          name="repository"\n          required\n          ng-model="$ctrl.repository"\n          autocorrect="off"\n          autocapitalize="off"\n          spellcheck="false">\n        <div ng-if="$ctrl.istag.annotations.sampleRepo" class="help-block">\n          <a href="" ng-click="$ctrl.fillSampleRepo()">Try Sample Repository\n            <i class="fa fa-level-up" aria-hidden="true"></i></a>\n        </div>\n        <div class="has-error" ng-if="$ctrl.builderForm.repository.$touched && $ctrl.builderForm.repository.$error.$required">\n          <span class="help-block">\n            Git repository is required.\n          </span>\n        </div>\n        <div class="has-warning" ng-if="$ctrl.builderForm.repository.$touched && $ctrl.repository && !$ctrl.repositoryPattern.test($ctrl.repository)">\n          <span class="help-block">\n            This might not be a valid Git URL. Check that it is the correct URL to a remote Git repository.\n          </span>\n        </div>\n      </div>\n    </div>\n\n    \x3c!--\n      Only show the link for existing projects. It will be broken for new\n      projects.  Use class `invisible` when the project list is still loading\n      so the dialog doesn\'t resize.\n    --\x3e\n    <div ng-hide="$ctrl.selectedProject && !$ctrl.selectedProject.metadata.uid"\n         ng-class="{ invisible: !$ctrl.selectedProject || !$ctrl.istag }"\n         class="form-group">\n      If you have a private Git repository or need to change application defaults, view\n      <a href="" ng-click="$ctrl.navigateToAdvancedForm()">advanced options</a>.\n    </div>\n  </form>\n</div>\n';
 }, function(e, t) {
 e.exports = '<div ng-if="!$ctrl.success && !$ctrl.error">\n  <div ng-if="!$ctrl.serviceToBind">\n    <h3 class="text-center">\n      <div class="spinner spinner-lg" aria-hidden="true"></div>\n    </h3>\n    <h3 class="text-center">\n      <span>The application is being created</span>\n    </h3>\n  </div>\n  <div ng-if="$ctrl.serviceToBind" class="review-status">\n    <div class="spinner spinner-sm spinner-inline" aria-hidden="true"></div>\n    <h3 class="review-message">\n      The application is being created\n    </h3>\n  </div>\n</div>\n<div ng-if="$ctrl.success">\n  <div class="review-status">\n    <span class="pficon pficon-ok" aria-hidden="true"></span>\n    <span class="sr-only">Success</span>\n    <h3 class="review-message">\n    <span>\n      <strong>{{$ctrl.name}}</strong> has been created in <strong>{{$ctrl.selectedProject.metadata.name}}</strong> successfully\n    </span>\n    </h3>\n  </div>\n</div>\n<div ng-if="!$ctrl.error && ($ctrl.bindInProgress || $ctrl.bindComplete)">\n  <bind-results error="$ctrl.bindError"\n                progress-inline="true"\n                binding="$ctrl.binding"\n                service-to-bind="$ctrl.serviceToBind.metadata.name"\n                bind-type="application"\n                application-to-bind="$ctrl.name"\n                show-pod-presets="$ctrl.showPodPresets">\n  </bind-results>\n</div>\n<div ng-if="$ctrl.success">\n  <p ng-if="!$ctrl.serviceToBind || $ctrl.bindComplete">\n    Continue to your project to check the status of your application as it builds and deploys.\n  </p>\n</div>\n<div class="review-failure" ng-if="$ctrl.error">\n  <div class="review-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <h3 class="review-message">\n      Error creating <strong>{{$ctrl.name}}</strong> in\n      <strong>{{$ctrl.selectedProject | displayName}}</strong>\n    </h3>\n  </div>\n  <div class="sub-title">\n    <span ng-if="$ctrl.error.data.message">\n      {{$ctrl.error.data.message | upperFirst}}\n    </span>\n    <span ng-if="!$ctrl.error.data.message">\n      An error occurred creating the application.\n    </span>\n  </div>\n  \x3c!-- TODO: Improve error message presentation --\x3e\n  <ul ng-if="$ctrl.error.failure.length" class="failure-messages">\n    <li ng-repeat="failure in $ctrl.error.failure">\n      {{failure.data.message}}\n    </li>\n  </ul>\n</div>\n<div class="footer-panel">\n  <a class="btn btn-primary" href="{{$ctrl.selectedProject | projectUrl : $ctrl.baseProjectUrl}}">View Project</a>\n</div>\n';
 }, function(e, t) {
@@ -76998,7 +77038,9 @@ var i = n(50);
 t.selectProject = {
 bindings: {
 selectedProject: "=",
-nameTaken: "<"
+nameTaken: "<",
+onProjectSelected: "<",
+availableProjects: "<"
 },
 controller: i.SelectProjectController,
 template: n(40)
@@ -77243,10 +77285,12 @@ i.set(window, "OPENSHIFT_CONSTANTS.GUIDED_TOURS", l);
 }).call(t, n(2));
 }, function(e, t, n) {
 "use strict";
-t.__esModule = !0, t.projectUrlFilter = function() {
+t.__esModule = !0;
+var i = n(0);
+t.projectUrlFilter = function() {
 return function(e, t) {
-var n = t || "project/", i = e && e.metadata ? e.metadata.name : "";
-return n.endsWith("/") || (n += "/"), n + i;
+var n, r = t || "project/";
+return n = i.isString(e) ? e : i.get(e, "metadata.name", ""), r.endsWith("/") || (r += "/"), r + n;
 };
 };
 }, function(e, t, n) {
@@ -77651,11 +77695,11 @@ e.exports = '<div class="order-service">\n  <pf-wizard\n       hide-header="true
 }, function(e, t) {
 e.exports = '<div class="catalogs-overlay-modal" role="dialog">\n  <div ng-if="$ctrl.shown" class="modal-backdrop fade in"></div>\n  <div ng-if="$ctrl.shown" class="catalogs-overlay-panel-wrapper">\n    <div class="catalogs-overlay-panel-grow-height">\n      <div class="catalogs-overlay-panel" ng-class="{\'catalogs-overlay-panel-single-column\' : $ctrl.singleColumn}">\n        <a ng-if="$ctrl.showClose" ng-click="$ctrl.closePanel()">\n          <span class="catalogs-overlay-panel-close pficon pficon-close"></span>\n        </a>\n        <div class="catalogs-overlay-panel-body" ng-transclude>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n';
 }, function(e, t) {
-e.exports = '<div ng-if="$ctrl.loading" class="catalog-projects-spinner-container">\n  <div class="spinner spinner-inverse spinner-xl"></div>\n</div>\n<div class="catalog-projects-summary-panel" ng-show="!$ctrl.loading">\n  <button ng-if="$ctrl.canCreate" class="create-button btn btn-primary" ng-click="$ctrl.openNewProjectPanel($event)">\n    <span class="fa fa-plus"></span>\n    <span class="create-button-text">Create Project</span>\n  </button>\n  <origin-modal-popup class="catalog-create-project" modal-title="Create Project" shown="$ctrl.newProjectPanelShown" on-close="$ctrl.closeNewProjectPanel" reference-element="$ctrl.modalPopupElement">\n    <create-project alerts="$ctrl.alerts" is-dialog="true" redirect-action="$ctrl.onNewProject" on-cancel="$ctrl.closeNewProjectPanel"></create-project>\n  </origin-modal-popup>\n  <h2 class="summary-title secondary" ng-if="!$ctrl.projects || !$ctrl.projects.length">Getting Started</h2>\n  <h2 class="summary-title secondary" ng-if="$ctrl.projects && $ctrl.projects.length">\n    <a href="{{$ctrl.projectsUrl}}">My Projects</a>\n  </h2>\n  <div ng-if="!$ctrl.canCreate">\n    <span ng-if="!$ctrl.newProjectMessage">\n      A cluster admin can create a project for you by running the command:\n      <div class="code-block">\n        <code class="projects-instructions-link">oc adm <span class="command-arg">new-project</span> &lt;projectname&gt; <span class="command-arg">--admin={{$ctrl.user.metadata.name || \'&lt;YourUsername&gt;\'}}</span></code>\n      </div>\n    </span>\n    <span ng-if="$ctrl.newProjectMessage" ng-bind-html="$ctrl.newProjectMessage | linky : \'_blank\'"></span>\n  </div>\n  <div ng-if="$ctrl.projects && $ctrl.projects.length" class="catalog-project-summary-list">\n    <div class="projects-count">\n      <strong>{{$ctrl.projects.length}}</strong>\n      of\n      <strong>{{$ctrl.totalProjects}}</strong>\n      Projects\n      <a href="{{$ctrl.projectsUrl}}" class="projects-view-all">View All</a>\n    </div>\n    <div id="catalog-projects-summary-list">\n      <div ng-repeat="project in $ctrl.projects track by (project | uid)" class="project-tile tile-click">\n        <div class="dropdown  dropdown-kebab-pf" uib-dropdown="">\n          <button class="btn btn-link uib-dropdown-toggle" type="button" id="dropdownKebab" aria-haspopup="true" aria-expanded="true" uib-dropdown-toggle>\n            <span class="fa fa-ellipsis-v"></span>\n          </button>\n          <ul class="uib-dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebab">\n            <li><a href="" ng-click="$ctrl.onViewMemebership(project)">View Membership</a></li>\n            <li><a href="" ng-click="$ctrl.editProject(project)">Edit Project</a></li>\n            <li>\n              <delete-project\n                  label="Delete Project"\n                  project-name="{{project.metadata.name}}"\n                  display-name="{{(project | displayName)}}"\n                  type-name-to-confirm="true"\n                  stay-on-current-page="true"\n                  alerts="$ctrl.alerts">\n              </delete-project>\n            </li>\n          </ul>\n        </div>\n        <h3 class="project-tile-header">\n          <a href="{{project | projectUrl : $ctrl.baseProjectUrl}}" class="project-title tile-target">{{project | displayName}}</a>\n          <span ng-if="project.status.phase != \'Active\'"\n            data-toggle="popover"\n            data-trigger="hover"\n            data-content="This project has been marked for deletion."\n            class="pficon pficon-warning-triangle-o"></span>\n        </h3>\n        <p class="project-date">\n          <span ng-if="project | displayName : true"><span ng-bind-html="project.metadata.name"></span> &ndash;</span>\n          created\n          <span ng-if="project | annotation : \'openshift.io/requester\'">by <span ng-bind-html="project | annotation : \'openshift.io/requester\'"></span></span>\n          <span am-time-ago="project.metadata.creationTimestamp"></span>\n        </p>\n        <div class="project-description" ng-if="project | description">\n          <truncate-long-text content="project | description" use-word-boundary="true" limit="120"></truncate-long-text>\n        </div>\n        <origin-modal-popup class="catalog-edit-project" modal-title="Edit Project" shown="$ctrl.editProjectPanelShown && $ctrl.edittingProject === project" on-close="$ctrl.closeEditProjectPanel">\n          <edit-project project="$ctrl.edittingProject" is-dialog="true" alerts="$ctrl.alerts" redirect-action="$ctrl.onEditProject" on-cancel="$ctrl.closeEditProjectPanel"></edit-project>\n        </origin-modal-popup>\n      </div>\n    </div>\n  </div>\n  <div ng-if="$ctrl.showGetStarted">\n    <div class="getting-started-panel">\n      <h2 class="secondary" ng-if="$ctrl.projects && $ctrl.projects.length > 0">Getting Started</h2>\n      <button ng-if="$ctrl.startTour()" class="getting-started-button btn btn-default hidden-xs" ng-class="{\'with-projects\': $ctrl.projects && $ctrl.projects.length}" ng-click="$ctrl.handleGettingStartedClick()">\n        <span class="fa fa-info-circle fa-2"></span>\n        <span class="getting-started-button-text">Take Home Page Tour</span>\n      </button>\n    </div>\n    <div class="resources-panel">\n      <ul>\n        <li ng-repeat="resource in $ctrl.resourceLinks">\n          <a href="{{resource.href}}" target="_blank" title="{{resource.href}}">{{resource.title}}</a>\n        </li>\n      </ul>\n    </div>\n  </div>\n  <div ng-if="$ctrl.recentlyViewedItems.length">\n    <h2 class="secondary">Recently Viewed</h2>\n    <div class="services-view">\n      <a href="" class="services-item" ng-repeat="item in $ctrl.recentlyViewedItems track by (item.resource | uid)"\n           ng-click="$ctrl.orderService(item)">\n        <div ng-if="!item.imageUrl" class="services-item-icon">\n          <span class="{{item.iconClass}}"></span>\n        </div>\n        <div ng-if="item.imageUrl" class="services-item-icon services-item-img">\n          <img ng-src="{{item.imageUrl}}">\n        </div>\n        <div class="services-item-name" title="{{item.name}}" aria-hidden="true">{{item.name}}</div>\n      </a>\n    </div>\n  </div>\n</div>\n';
+e.exports = '<div ng-if="$ctrl.loading" class="catalog-projects-spinner-container">\n  <div class="spinner spinner-inverse spinner-xl"></div>\n</div>\n<div class="catalog-projects-summary-panel" ng-show="!$ctrl.loading">\n  <button ng-if="$ctrl.canCreate" class="create-button btn btn-primary" ng-click="$ctrl.openNewProjectPanel($event)">\n    <span class="fa fa-plus"></span>\n    <span class="create-button-text">Create Project</span>\n  </button>\n  <origin-modal-popup class="catalog-create-project" modal-title="Create Project" shown="$ctrl.newProjectPanelShown" on-close="$ctrl.closeNewProjectPanel" reference-element="$ctrl.modalPopupElement">\n    <create-project is-dialog="true" redirect-action="$ctrl.onNewProject" on-cancel="$ctrl.closeNewProjectPanel"></create-project>\n  </origin-modal-popup>\n  <h2 class="summary-title secondary" ng-if="!$ctrl.projects || !$ctrl.projects.length">Getting Started</h2>\n  <h2 class="summary-title secondary" ng-if="$ctrl.projects && $ctrl.projects.length">\n    <a href="{{$ctrl.projectsUrl}}">My Projects</a>\n  </h2>\n  <div ng-if="!$ctrl.canCreate">\n    <span ng-if="!$ctrl.newProjectMessage">\n      A cluster admin can create a project for you by running the command:\n      <div class="code-block">\n        <code class="projects-instructions-link">oc adm <span class="command-arg">new-project</span> &lt;projectname&gt; <span class="command-arg">--admin={{$ctrl.user.metadata.name || \'&lt;YourUsername&gt;\'}}</span></code>\n      </div>\n    </span>\n    <span ng-if="$ctrl.newProjectMessage" ng-bind-html="$ctrl.newProjectMessage | linky : \'_blank\'"></span>\n  </div>\n  <div ng-if="$ctrl.isProjectListIncomplete">\n    <p class="text-muted">\n      The complete list of your projects could not be loaded. Type a project name to go to that project.\n    </p>\n    <form>\n      <div class="form-group">\n        <label for="typed-project-name">Project Name</label>\n        <div class="input-group">\n          <input\n            class="form-control"\n            type="text"\n            id="typed-project-name"\n            required\n            minlength="2"\n            ng-model="$ctrl.typedProjectName"\n            autocorrect="off"\n            autocapitalize="none"\n            spellcheck="false">\n          <span class="input-group-btn">\n            <button class="btn btn-default go-to-project-button"\n                    type="submit"\n                    ng-disabled="!$ctrl.typedProjectName"\n                    ng-click="$ctrl.goToProject($ctrl.typedProjectName)">\n              <i class="fa fa-arrow-right" aria-hidden="true"></i>\n              <span class="sr-only">Go to Project</span>\n            </button>\n          </span>\n        </div>\n      </div>\n    </form>\n  </div>\n  <div ng-if="$ctrl.projects && $ctrl.projects.length" class="catalog-project-summary-list">\n    <div class="projects-count">\n      <strong>{{$ctrl.projects.length}}</strong>\n      of\n      <strong>{{$ctrl.totalProjects}}</strong>\n      Projects\n      <a href="{{$ctrl.projectsUrl}}" class="projects-view-all">View All</a>\n    </div>\n    <div id="catalog-projects-summary-list">\n      <div ng-repeat="project in $ctrl.projects track by (project | uid)" class="project-tile tile-click">\n        <div class="dropdown  dropdown-kebab-pf" uib-dropdown="">\n          <button class="btn btn-link uib-dropdown-toggle" type="button" id="dropdownKebab" aria-haspopup="true" aria-expanded="true" uib-dropdown-toggle>\n            <span class="fa fa-ellipsis-v"></span>\n          </button>\n          <ul class="uib-dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebab">\n            <li><a href="" ng-click="$ctrl.onViewMemebership(project)">View Membership</a></li>\n            <li><a href="" ng-click="$ctrl.editProject(project)">Edit Project</a></li>\n            <li>\n              <delete-project\n                  label="Delete Project"\n                  project="project"\n                  type-name-to-confirm="true"\n                  stay-on-current-page="true"\n                  success="$ctrl.onDeleteProject">\n              </delete-project>\n            </li>\n          </ul>\n        </div>\n        <h3 class="project-tile-header">\n          <a href="{{project | projectUrl : $ctrl.baseProjectUrl}}" class="project-title tile-target">{{project | displayName}}</a>\n          <span ng-if="project.status.phase != \'Active\'"\n            data-toggle="popover"\n            data-trigger="hover"\n            data-content="This project has been marked for deletion."\n            class="pficon pficon-warning-triangle-o"></span>\n        </h3>\n        <p class="project-date">\n          <span ng-if="project | displayName : true"><span ng-bind-html="project.metadata.name"></span> &ndash;</span>\n          created\n          <span ng-if="project | annotation : \'openshift.io/requester\'">by <span ng-bind-html="project | annotation : \'openshift.io/requester\'"></span></span>\n          <span am-time-ago="project.metadata.creationTimestamp"></span>\n        </p>\n        <div class="project-description" ng-if="project | description">\n          <truncate-long-text content="project | description" use-word-boundary="true" limit="120"></truncate-long-text>\n        </div>\n        <origin-modal-popup class="catalog-edit-project" modal-title="Edit Project" shown="$ctrl.editProjectPanelShown && $ctrl.edittingProject === project" on-close="$ctrl.closeEditProjectPanel">\n          <edit-project project="$ctrl.edittingProject" is-dialog="true" redirect-action="$ctrl.onEditProject" on-cancel="$ctrl.closeEditProjectPanel"></edit-project>\n        </origin-modal-popup>\n      </div>\n    </div>\n  </div>\n  <div ng-if="$ctrl.showGetStarted">\n    <div class="getting-started-panel">\n      <h2 class="secondary" ng-if="$ctrl.projects && $ctrl.projects.length > 0">Getting Started</h2>\n      <button ng-if="$ctrl.startTour()" class="getting-started-button btn btn-default hidden-xs" ng-class="{\'with-projects\': $ctrl.projects && $ctrl.projects.length}" ng-click="$ctrl.handleGettingStartedClick()">\n        <span class="fa fa-info-circle fa-2"></span>\n        <span class="getting-started-button-text">Take Home Page Tour</span>\n      </button>\n    </div>\n    <div class="resources-panel">\n      <ul>\n        <li ng-repeat="resource in $ctrl.resourceLinks">\n          <a href="{{resource.href}}" target="_blank" title="{{resource.href}}">{{resource.title}}</a>\n        </li>\n      </ul>\n    </div>\n  </div>\n  <div ng-if="$ctrl.recentlyViewedItems.length">\n    <h2 class="secondary">Recently Viewed</h2>\n    <div class="services-view">\n      <a href="" class="services-item" ng-repeat="item in $ctrl.recentlyViewedItems track by (item.resource | uid)"\n           ng-click="$ctrl.orderService(item)">\n        <div ng-if="!item.imageUrl" class="services-item-icon">\n          <span class="{{item.iconClass}}"></span>\n        </div>\n        <div ng-if="item.imageUrl" class="services-item-icon services-item-img">\n          <img ng-src="{{item.imageUrl}}">\n        </div>\n        <div class="services-item-name" title="{{item.name}}" aria-hidden="true">{{item.name}}</div>\n      </a>\n    </div>\n  </div>\n</div>\n';
 }, function(e, t) {
 e.exports = '<span ng-if="$ctrl.hasSaasOfferings()" class="saas-offerings-container">\n  <h1 ng-if="$ctrl.saasTitle">{{$ctrl.saasTitle}}</h1>\n  <div class="saas-list" ng-class="{\'expanded\': $ctrl.sassListExpanded, \'items-overflow\': $ctrl.itemsOverflow}" items="$ctrl.saasOfferings">\n    <div class="card" ng-repeat="item in $ctrl.saasOfferings">\n      <a ng-href="{{item.url}}" target="_blank" class="card-content">\n        <div class="card-icon">\n          <img ng-if="item.image" ng-src="{{item.image}}" alt="">\n          <span ng-if="!item.image" class="icon {{item.icon}}" aria-hidden="true"></span>\n        </div>\n        <div class="card-title">{{item.title}}</div>\n        <truncate-long-text\n                class="card-description hidden-xs"\n                content="item.description"\n                limit="120"\n                use-word-boundary="true">\n        </truncate-long-text>\n      </a>\n    </div>\n  </div>\n  <div ng-if="$ctrl.itemsOverflow" class="sass-list-expander-container">\n    <a href="" class="sass-list-expander" ng-class="{\'expanded\': $ctrl.sassListExpanded}" ng-click="$ctrl.toggleListExpand()">\n      Show <span class="more">More</span><span class="less">Less</span>\n    </a>\n  </div>\n</span>\n';
 }, function(e, t) {
-e.exports = '<ng-form name="$ctrl.forms.selectProjectForm">\n  <div class="form-group" ng-class="{\'has-error\' : $ctrl.forms.selectProjectForm.selectProject.$error.cannotAddToProject }">\n    <label class="control-label" for="project">Add to Project</label>\n    <ui-select\n        name="selectProject"\n        ng-model="$ctrl.selectedProject"\n        ng-change="$ctrl.onSelectProjectChange()"\n        search-enabled="$ctrl.searchEnabled">\n      <ui-select-match>\n        {{$select.selected | displayName}}\n      </ui-select-match>\n      <ui-select-choices repeat="project in $ctrl.projects | searchProjects : $select.search track by (project | uid)">\n        <span ng-bind-html="project | displayName | highlightKeywords : $select.search"></span>\n        <span ng-if="project | displayName : true" class="small text-muted">\n          <span ng-if="project.metadata.name">&ndash;</span>\n          <span ng-bind-html="project.metadata.name | highlightKeywords : $select.search"></span>\n        </span>\n      </ui-select-choices>\n    </ui-select>\n    <div ng-if="$ctrl.forms.selectProjectForm.selectProject.$error.cannotAddToProject">\n        <span class="help-block">\n          You are not authorized to add to this project\n        </span>\n    </div>\n  </div>\n</ng-form>\n\n<ng-form name="$ctrl.forms.createProjectForm"\n    ng-if="$ctrl.isNewProject()">\n  <div class="form-group">\n    <label for="name" class="control-label required">Project Name</label>\n    <div ng-class="{\'has-error\': ($ctrl.forms.createProjectForm.name.$error.pattern && $ctrl.forms.createProjectForm.name.$touched) || $ctrl.nameTaken}">\n      <input class="form-control"\n          name="name"\n          id="name"\n          placeholder="my-project"\n          type="text"\n          required\n          take-focus\n          minlength="2"\n          maxlength="63"\n          pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?"\n          aria-describedby="nameHelp"\n          ng-model="$ctrl.selectedProject.metadata.name"\n          osc-unique="$ctrl.existingProjectNames"\n          ng-model-options="{ updateOn: \'default blur\' }"\n          ng-change="$ctrl.onNewProjectNameChange()"\n          autocorrect="off"\n          autocapitalize="off"\n          spellcheck="false">\n      <div class="help-block">A unique name for the project.</div>\n      <div class="has-error" ng-if="$ctrl.forms.createProjectForm.name.$error.minlength && $ctrl.forms.createProjectForm.name.$touched">\n        <span id="nameHelp" class="help-block">\n          Name must have at least two characters.\n        </span>\n      </div>\n      <div class="has-error" ng-if="$ctrl.forms.createProjectForm.name.$error.pattern && $ctrl.forms.createProjectForm.name.$touched">\n        <span id="nameHelp" class="help-block">\n          Project names may only contain lower-case letters, numbers, and dashes.\n          They may not start or end with a dash.\n        </span>\n      </div>\n      <div class="has-error" ng-if="$ctrl.nameTaken || $ctrl.forms.createProjectForm.name.$error.oscUnique">\n        <span class="help-block">\n          This name is already in use. Please choose a different name.\n        </span>\n      </div>\n    </div>\n  </div>\n\n  <div class="form-group">\n    <label for="displayName" class="control-label">Project Display Name</label>\n    <input class="form-control"\n      name="displayName"\n      id="displayName"\n      placeholder="My Project"\n      type="text"\n      ng-model="$ctrl.selectedProject.metadata.annotations[\'new-display-name\']">\n  </div>\n\n  <div class="form-group">\n    <label for="description" class="control-label">Project Description</label>\n    <textarea class="form-control"\n      name="description"\n      id="description"\n      placeholder="A short description."\n      ng-model="$ctrl.selectedProject.metadata.annotations[\'openshift.io/description\']"></textarea>\n  </div>\n</ng-form>\n';
+e.exports = '<ng-form name="$ctrl.forms.selectProjectForm">\n  <div class="form-group" ng-class="{\'has-error\' : $ctrl.forms.selectProjectForm.selectProject.$error.cannotAddToProject ||\n                                                   ($ctrl.forms.selectProjectForm.selectProject.$touched &&\n                                                    $ctrl.forms.selectProjectForm.selectProject.$invalid)}">\n    <label class="control-label required">Add to Project</label>\n    <ui-select\n        name="selectProject"\n        ng-model="$ctrl.selectedProject"\n        ng-change="$ctrl.onSelectProjectChange()"\n        ng-required="true"\n        search-enabled="$ctrl.searchEnabled">\n      <ui-select-match>\n        {{$select.selected | displayName}}\n      </ui-select-match>\n      <ui-select-choices repeat="project in $ctrl.projects | searchProjects : $select.search track by (project | uid)">\n        <span ng-bind-html="project | displayName | highlightKeywords : $select.search"></span>\n        <span ng-if="project | displayName : true" class="small text-muted">\n          <span ng-if="project.metadata.name">&ndash;</span>\n          <span ng-bind-html="project.metadata.name | highlightKeywords : $select.search"></span>\n        </span>\n      </ui-select-choices>\n    </ui-select>\n    <div ng-if="$ctrl.forms.selectProjectForm.selectProject.$error.cannotAddToProject">\n        <span class="help-block">\n          You are not authorized to add to this project\n        </span>\n    </div>\n    <div class="has-error" ng-if="$ctrl.forms.selectProjectForm.selectProject.$error.required &&\n                                  $ctrl.forms.selectProjectForm.selectProject.$touched">\n        <span class="help-block">\n          Please select or create a project\n        </span>\n    </div>\n  </div>\n</ng-form>\n\n<ng-form name="$ctrl.forms.createProjectForm"\n    ng-if="$ctrl.isNewProject()">\n  <div class="form-group">\n    <label for="name" class="control-label required">Project Name</label>\n    <div ng-class="{\'has-error\': ($ctrl.forms.createProjectForm.name.$error.pattern && $ctrl.forms.createProjectForm.name.$touched) || $ctrl.nameTaken}">\n      <input class="form-control"\n          name="name"\n          id="name"\n          placeholder="my-project"\n          type="text"\n          required\n          take-focus\n          minlength="2"\n          maxlength="63"\n          pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?"\n          aria-describedby="nameHelp"\n          ng-model="$ctrl.selectedProject.metadata.name"\n          osc-unique="$ctrl.existingProjectNames"\n          ng-model-options="{ updateOn: \'default blur\' }"\n          ng-change="$ctrl.onNewProjectNameChange()"\n          autocorrect="off"\n          autocapitalize="off"\n          spellcheck="false">\n      <div class="help-block">A unique name for the project.</div>\n      <div class="has-error" ng-if="$ctrl.forms.createProjectForm.name.$error.minlength && $ctrl.forms.createProjectForm.name.$touched">\n        <span id="nameHelp" class="help-block">\n          Name must have at least two characters.\n        </span>\n      </div>\n      <div class="has-error" ng-if="$ctrl.forms.createProjectForm.name.$error.pattern && $ctrl.forms.createProjectForm.name.$touched">\n        <span id="nameHelp" class="help-block">\n          Project names may only contain lower-case letters, numbers, and dashes.\n          They may not start or end with a dash.\n        </span>\n      </div>\n      <div class="has-error" ng-if="$ctrl.nameTaken || $ctrl.forms.createProjectForm.name.$error.oscUnique">\n        <span class="help-block">\n          This name is already in use. Please choose a different name.\n        </span>\n      </div>\n    </div>\n  </div>\n\n  <div class="form-group">\n    <label for="displayName" class="control-label">Project Display Name</label>\n    <input class="form-control"\n      name="displayName"\n      id="displayName"\n      placeholder="My Project"\n      type="text"\n      ng-model="$ctrl.selectedProject.metadata.annotations[\'new-display-name\']">\n  </div>\n\n  <div class="form-group">\n    <label for="description" class="control-label">Project Description</label>\n    <textarea class="form-control"\n      name="description"\n      id="description"\n      placeholder="A short description."\n      ng-model="$ctrl.selectedProject.metadata.annotations[\'openshift.io/description\']"></textarea>\n  </div>\n</ng-form>\n';
 }, function(e, t) {
 e.exports = '<div class="services-view" ng-style="$ctrl.viewStyle">\n  <div ng-if="!$ctrl.loaded" class="spinner-container">\n    <div class="spinner spinner-xl"></div>\n  </div>\n  <div ng-if="$ctrl.loaded" class="services-view-container mobile-{{$ctrl.mobileView}}-view">\n    <div class="add-methods">\n      <h1>Browse Catalog</h1>\n      <div ng-if="$ctrl.onDeployImageSelected || $ctrl.onFromFileSelected">\n        <ul class="add-other hidden-md hidden-lg">\n          <li uib-dropdown="" class="dropdown">\n            <a uib-dropdown-toggle="" class="dropdown-toggle" id="add-methods-dropdown" href="" aria-haspopup="true" aria-expanded="false">\n              Custom Add\n              <span class="caret" aria-hidden="true"></span>\n            </a>\n            <ul class="uib-dropdown-menu dropdown-menu pull-right" aria-labelledby="add-methods-dropdown">\n              \x3c!-- note these are duplicated below --\x3e\n              <li ng-if="$ctrl.onDeployImageSelected">\n                <a href="" ng-click="$ctrl.onDeployImageSelected()">Deploy Image</a>\n              </li>\n              <li ng-if="$ctrl.onFromFileSelected">\n                <a href="" ng-click="$ctrl.onFromFileSelected()">Import YAML / JSON</a>\n              </li>\n            </ul>\n          </li>\n        </ul>\n        <ul class="add-other hidden-xs hidden-sm">\n          \x3c!-- note these are duplicated above --\x3e\n          <li ng-if="$ctrl.onDeployImageSelected">\n            <a href="" ng-click="$ctrl.onDeployImageSelected()">Deploy Image</a>\n          </li>\n          <li ng-if="$ctrl.onFromFileSelected">\n            <a href="" ng-click="$ctrl.onFromFileSelected()">Import YAML / JSON</a>\n          </li>\n        </ul>\n      </div>\n    </div>\n    <ul class="nav nav-tabs nav-tabs-pf services-categories">\n      <li ng-repeat="category in $ctrl.categories"\n          ng-if="category.hasItems"\n          ng-class="{ active: $ctrl.currentFilter === category.id }">\n        <a href="" id="{{\'category-\'+category.id}}" class="services-category-heading" ng-click="$ctrl.selectCategory(category.id)">{{category.label}}</a>\n        <a ng-click="$ctrl.mobileView = \'categories\'" class="services-back-link" href="">Back</a>\n      </li>\n    </ul>\n\n    <div class="services-inner-container">\n      \x3c!-- Do not show sub-category items for \'All\' or \'Other\' main categories --\x3e\n      <ul class="services-sub-categories"\n          ng-if="$ctrl.currentFilter !== \'other\' && $ctrl.currentFilter !== \'all\'">\n        <li ng-repeat="subCategory in $ctrl.subCategories track by subCategory.id"\n             ng-if="subCategory.hasItems"\n             ng-attr-id="{{subCategory.id}}"\n             class="services-sub-category"\n             ng-class="{ active: $ctrl.currentSubFilter === subCategory.id }">\n          <a href="" id="{{\'services-sub-category-\'+subCategory.id}}"\n             class="services-sub-category-tab" ng-click="$ctrl.selectSubCategory(subCategory.id)">\n            <div class="services-sub-category-tab-image" ng-if="subCategory.imageUrl">\n              <img ng-src="{{subCategory.imageUrl}}" alt="">\n            </div>\n            <div class="services-sub-category-tab-icon {{subCategory.icon}}" ng-if="subCategory.icon && !subCategory.imageUrl"></div>\n            <div class="services-sub-category-tab-name">{{subCategory.label}}</div>\n          </a>\n         <a ng-click="$ctrl.mobileView = \'subcategories\'" class="services-back-link" href="">Back</a>\n          <div ng-if="$ctrl.currentSubFilter === subCategory.id" class="services-items">\n            <pf-filter config="$ctrl.filterConfig" class="services-items-filter"></pf-filter>\n            <a href="" class="services-item" ng-repeat="item in $ctrl.filteredItems track by item.resource.metadata.uid" ng-click="$ctrl.serviceViewItemClicked(item)">\n              <div ng-if="!item.imageUrl" class="services-item-icon">\n                <span class="{{item.iconClass}}"></span>\n              </div>\n              <div ng-if="item.imageUrl" class="services-item-icon">\n                <img ng-src="{{item.imageUrl}}" alt="">\n              </div>\n              <div class="services-item-name" title="{{item.name}}">\n                {{item.name}}\n              </div>\n            </a>\n          </div>\n        </li>\n      </ul>\n\n      \x3c!-- Show catalog item for \'All\' and \'Other\' main categories --\x3e\n      <div ng-if="$ctrl.currentFilter === \'other\' || $ctrl.currentFilter === \'all\'" class="services-no-sub-categories">\n        <div class="services-items">\n          <div ng-if="$ctrl.isEmpty">There are no catalog items.</div>\n          <pf-filter ng-if="!$ctrl.isEmpty" config="$ctrl.filterConfig" class="services-items-filter"></pf-filter>\n          <a href="" class="services-item" ng-repeat="item in $ctrl.filteredItems track by item.resource.metadata.uid" ng-click="$ctrl.serviceViewItemClicked(item)">\n            <div ng-if="!item.imageUrl" class="services-item-icon">\n              <span class="{{item.iconClass}}"></span>\n            </div>\n            <div ng-if="item.imageUrl" class="services-item-icon">\n              <img ng-src="{{item.imageUrl}}" alt="">\n            </div>\n            <div class="services-item-name" title="{{item.name}}">\n              {{item.name}}\n            </div>\n          </a>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n';
 }, function(e, t, n) {
@@ -77979,7 +78023,7 @@ var n = r.get(e, "status.conditions"), i = r.find(n, {
 type: "Ready"
 });
 c.ctrl.orderComplete = i && "True" === i.status, c.ctrl.error = r.find(n, {
-type: "ProvisionFailed"
+type: "Failed"
 });
 }));
 }, this.$scope = e, this.$filter = t, this.AuthService = n, this.ProjectsService = i, this.DataService = o, this.BindingService = a, this.Logger = s, this.hasDeploymentFilter = t("hasDeployment"), this.hasDeploymentConfigFilter = t("hasDeploymentConfig"), this.sendRequesterUsername = !1, this.ctrl.showPodPresets = r.get(l, [ "ENABLE_TECH_PREVIEW_FEATURE", "pod_presets" ], !1);
@@ -78117,31 +78161,40 @@ t.OverlayPanelController = o;
 "use strict";
 t.__esModule = !0;
 var i = n(1), r = n(0), o = function() {
-function e(e, t, n, o, a, s, l, c, u) {
-var d = this;
-this.ctrl = this, this.newProjectPanelShown = !1, this.editProjectPanelShown = !1, this.alerts = [], this.projects = [], this.watches = [], this.maxDisplayProjects = 5, this.init = function() {
-d.watches.push(d.DataService.watch("projects", d.$scope, d.onProjectsUpdate)), d.ctrl.resourceLinks = r.clone(d.Constants.CATALOG_HELP_RESOURCES.links), r.forEach(d.ctrl.resourceLinks, function(e) {
-i.isDefined(e.help) && (e.href = d.Constants.HELP_BASE_URL + (e.help ? d.Constants.HELP[e.help] : ""));
-}), d.$rootScope.$on("recently-viewed-updated", function() {
-d.ctrl.recentlyViewedItems = d.getRecentlyViewedItems();
+function e(t, n, o, a, s, l, c, u, d, h, f) {
+var p = this;
+this.ctrl = this, this.newProjectPanelShown = !1, this.editProjectPanelShown = !1, this.projects = [], this.watches = [], this.maxDisplayProjects = 5, this.watchingProjects = !1, this.init = function() {
+p.ProjectsService.list().then(function(t) {
+p.onProjectsUpdate(t), p.ctrl.isProjectListIncomplete = p.ProjectsService.isProjectListIncomplete(), !p.ctrl.isProjectListIncomplete && r.size(p.projects) <= e.MAX_PROJETS_TO_WATCH && (p.watches.push(p.ProjectsService.watch(p.$scope, p.onProjectsUpdate)), p.watchingProjects = !0);
+}, function() {
+p.ctrl.isProjectListIncomplete = !0;
+}), p.ctrl.resourceLinks = r.clone(p.Constants.CATALOG_HELP_RESOURCES.links), r.forEach(p.ctrl.resourceLinks, function(e) {
+i.isDefined(e.help) && (e.href = p.Constants.HELP_BASE_URL + (e.help ? p.Constants.HELP[e.help] : ""));
+}), p.$rootScope.$on("recently-viewed-updated", function() {
+p.ctrl.recentlyViewedItems = p.getRecentlyViewedItems();
 });
 }, this.onProjectsUpdate = function(e) {
 var t = r.toArray(e.by("metadata.creationTimestamp"));
-d.ctrl.projects = d.RecentlyViewedProjectsService.orderByMostRecentlyViewed(t), d.ctrl.totalProjects = d.ctrl.projects.length, d.ctrl.projects = r.take(d.ctrl.projects, d.maxDisplayProjects), d.ctrl.loading = !1, d.ctrl.showGetStarted = !d.ctrl.projects || d.ctrl.projects.length < 2;
+p.ctrl.projects = p.RecentlyViewedProjectsService.orderByMostRecentlyViewed(t), p.ctrl.totalProjects = p.ctrl.projects.length, p.ctrl.projects = r.take(p.ctrl.projects, p.maxDisplayProjects), p.ctrl.loading = !1, p.ctrl.showGetStarted = !p.ctrl.projects || p.ctrl.projects.length < 2;
+}, this.goToProject = function(e) {
+var t = p.$filter("projectUrl")(e, p.ctrl.baseProjectUrl);
+p.$window.location.href = t;
 }, this.closeNewProjectPanel = function() {
-d.ctrl.newProjectPanelShown = !1;
+p.ctrl.newProjectPanelShown = !1;
 }, this.onNewProject = function(e) {
-d.ctrl.newProjectPanelShown = !1;
+p.ctrl.newProjectPanelShown = !1, p.watchingProjects || p.ProjectsService.list().then(p.onProjectsUpdate);
 }, this.onViewMemebership = function(e) {
-var t = d.ctrl.viewEditMembership();
+var t = p.ctrl.viewEditMembership();
 t && t(e);
 }, this.editProject = function(e) {
-d.ctrl.edittingProject = e, d.ctrl.editProjectPanelShown = !0;
+p.ctrl.edittingProject = e, p.ctrl.editProjectPanelShown = !0;
 }, this.closeEditProjectPanel = function() {
-d.ctrl.editProjectPanelShown = !1;
+p.ctrl.editProjectPanelShown = !1;
 }, this.onEditProject = function(e) {
-d.ctrl.editProjectPanelShown = !1;
-}, this.$rootScope = e, this.$scope = t, this.AuthService = n, this.Constants = o, this.DataService = a, this.Logger = s, this.ProjectsService = l, this.RecentlyViewedProjectsService = c, this.RecentlyViewedItems = u;
+p.ctrl.editProjectPanelShown = !1, p.watchingProjects || p.ProjectsService.list().then(p.onProjectsUpdate);
+}, this.onDeleteProject = function() {
+p.watchingProjects || p.ProjectsService.list().then(p.onProjectsUpdate);
+}, this.$filter = t, this.$rootScope = n, this.$scope = o, this.$window = a, this.AuthService = s, this.Constants = l, this.DataService = c, this.Logger = u, this.ProjectsService = d, this.RecentlyViewedProjectsService = h, this.RecentlyViewedItems = f;
 }
 return e.prototype.$onInit = function() {
 var e = this;
@@ -78165,6 +78218,8 @@ e.message && o.push(e.message);
 }).finally(function() {
 e.init();
 });
+}, e.prototype.$onDestroy = function() {
+this.DataService.unwatchAll(this.watches);
 }, e.prototype.$onChanges = function(e) {
 e.catalogItems && this.ctrl.catalogItems && (this.allItems = r.keyBy(this.ctrl.catalogItems, "resource.metadata.uid"), this.ctrl.recentlyViewedItems = this.getRecentlyViewedItems());
 }, e.prototype.openNewProjectPanel = function(e) {
@@ -78192,7 +78247,7 @@ return !e;
 }
 }, e;
 }();
-o.$inject = [ "$rootScope", "$scope", "AuthService", "Constants", "DataService", "Logger", "ProjectsService", "RecentlyViewedProjectsService", "RecentlyViewedServiceItems" ], t.ProjectsSummaryController = o;
+o.$inject = [ "$filter", "$rootScope", "$scope", "$window", "AuthService", "Constants", "DataService", "Logger", "ProjectsService", "RecentlyViewedProjectsService", "RecentlyViewedServiceItems" ], o.MAX_PROJETS_TO_WATCH = 250, t.ProjectsSummaryController = o;
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
@@ -78226,9 +78281,9 @@ o.$inject = [ "$scope", "$window", "$element", "BREAKPOINTS" ], t.SaasListContro
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
-var i = n(0), r = function() {
-function e(e, t, n, i, r, o, a) {
-this.ctrl = this, this.$scope = e, this.$filter = t, this.DataService = n, this.AuthService = o, this.AuthorizationService = a, this.ProjectsService = i, this.Logger = r;
+var i = n(1), r = n(0), o = function() {
+function e(e, t, n, i, r, o) {
+this.ctrl = this, this.$scope = e, this.$filter = t, this.AuthService = r, this.AuthorizationService = o, this.ProjectsService = n, this.Logger = i;
 }
 return e.prototype.$onInit = function() {
 var e = this;
@@ -78243,31 +78298,33 @@ var n = "Failed to determine create project permission";
 e.listProjects();
 });
 }, e.prototype.$onChanges = function(e) {
-e.nameTaken && !e.nameTaken.isFirstChange() && this.ctrl.forms.createProjectForm.name.$setValidity("nameTaken", !this.ctrl.nameTaken);
+e.nameTaken && !e.nameTaken.isFirstChange() && this.ctrl.forms.createProjectForm.name.$setValidity("nameTaken", !this.ctrl.nameTaken), e.availableProjects && !e.availableProjects.isFirstChange() && this.filterProjects(this.ctrl.availableProjects);
 }, e.prototype.onSelectProjectChange = function() {
-this.canIAddToProject();
+this.canIAddToProject(), i.isFunction(this.ctrl.onProjectSelected) && this.ctrl.onProjectSelected(this.ctrl.selectedProject);
 }, e.prototype.onNewProjectNameChange = function() {
 this.ctrl.nameTaken = !1, this.ctrl.forms.createProjectForm.name.$setValidity("nameTaken", !this.ctrl.nameTaken);
 }, e.prototype.isNewProject = function() {
-return this.ctrl.projects && this.ctrl.selectedProject && !i.has(this.ctrl.selectedProject, "metadata.uid");
+return this.ctrl.projects && this.ctrl.selectedProject && !r.has(this.ctrl.selectedProject, "metadata.uid");
 }, e.prototype.canIAddToProject = function() {
 return this.ctrl.forms.selectProjectForm.selectProject.$setValidity("cannotAddToProject", !0);
-}, e.prototype.listProjects = function() {
-var e = this;
-this.DataService.list("projects", this.$scope).then(function(t) {
-var n = {
+}, e.prototype.filterProjects = function(e) {
+var t = {
 metadata: {
 annotations: {
 "openshift.io/display-name": "Create Project",
 "new-display-name": ""
 }
 }
-}, r = t.by("metadata.name"), o = i.reject(r, "metadata.deletionTimestamp");
-e.ctrl.projects = i.sortBy(o, e.$filter("displayName")), e.ctrl.searchEnabled = !i.isEmpty(o), e.ctrl.existingProjectNames = i.map(r, "metadata.name"), !e.ctrl.selectedProject && i.size(e.ctrl.projects) > 0 && (e.ctrl.selectedProject = e.$filter("mostRecent")(e.ctrl.projects)), e.ctrl.canCreate && (e.ctrl.projects.unshift(n), 1 === i.size(e.ctrl.projects) && (e.ctrl.selectedProject = n)), e.canIAddToProject();
+}, n = r.reject(e, "metadata.deletionTimestamp");
+this.ctrl.projects = r.sortBy(n, this.$filter("displayName")), this.ctrl.searchEnabled = !r.isEmpty(n), this.ctrl.existingProjectNames = r.map(e, "metadata.name"), !this.ctrl.selectedProject && r.size(this.ctrl.projects) > 0 && 1 === r.size(this.ctrl.projects) && (this.ctrl.selectedProject = this.ctrl.projects[0], this.onSelectProjectChange()), this.ctrl.canCreate && (this.ctrl.projects.unshift(t), 1 === r.size(this.ctrl.projects) && (this.ctrl.selectedProject = t, this.onSelectProjectChange())), this.canIAddToProject();
+}, e.prototype.listProjects = function() {
+var e = this;
+this.ctrl.availableProjects ? this.filterProjects(this.ctrl.availableProjects) : this.ProjectsService.list().then(function(t) {
+e.filterProjects(t.by("metadata.name"));
 });
 }, e;
 }();
-r.$inject = [ "$scope", "$filter", "DataService", "ProjectsService", "Logger", "AuthService", "AuthorizationService" ], t.SelectProjectController = r;
+o.$inject = [ "$scope", "$filter", "ProjectsService", "Logger", "AuthService", "AuthorizationService" ], t.SelectProjectController = o;
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;

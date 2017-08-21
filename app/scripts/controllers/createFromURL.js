@@ -156,8 +156,7 @@ angular.module('openshiftConsole')
     $scope.projects = {};
     $scope.canCreateProject = undefined;
 
-    DataService
-      .list("projects", $scope)
+    ProjectsService.list()
       .then(function(items) {
         $scope.loaded = true;
         $scope.projects = $filter('orderByDisplayName')(items.by("metadata.name"));
