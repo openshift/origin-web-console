@@ -248,7 +248,7 @@ angular.module('openshiftConsole')
             function() {
               NotificationsService.addNotification({
                 type: "success",
-                message: "Succesfully added " + sourceKind + " " + source.metadata.name + " to " + targetKind + " " + $routeParams.name + "."
+                message: "Successfully added " + sourceKind + " " + source.metadata.name + " to " + targetKind + " " + $routeParams.name + "."
               });
 
               navigateBack();
