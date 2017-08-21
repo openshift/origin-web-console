@@ -3,7 +3,6 @@
               service-to-bind="ctrl.serviceToBind.metadata.name"
               bind-type="{{ctrl.bindType}}"
               application-to-bind="ctrl.appToBind.metadata.name"
-              generated-secret-name="ctrl.generatedSecretName"
               show-pod-presets="'pod_presets' | enableTechPreviewFeature"
-              secret-href="ctrl.generatedSecretName | navigateResourceURL : 'Secret' : ctrl.target.metadata.namespace">
+              secret-href="ctrl.binding.spec.secretName | navigateResourceURL : 'Secret' : ctrl.target.metadata.namespace">
 </bind-results>
