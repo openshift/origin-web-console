@@ -12493,8 +12493,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<notification-icon ng-if=\"!row.expanded\" alerts=\"row.notifications\"></notification-icon>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"list-pf-details\">\n" +
-    "<div ng-if=\"!row.expanded\">\n" +
+    "<div class=\"list-pf-details\" ng-if=\"!row.expanded\" ng-switch=\"row.instanceStatus\">\n" +
+    "<span ng-switch-when=\"failed\" dynamic-content=\"{{row.instanceError.message}}\" data-toggle=\"tooltip\" data-trigger=\"hover\">\n" +
+    "<span class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></span>\n" +
+    "<span>Error</span>\n" +
+    "</span>\n" +
+    "<span ng-switch-when=\"deleted\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "<span>Marked for Deletion</span>\n" +
+    "</span>\n" +
+    "<span ng-switch-when=\"pending\">\n" +
+    "<span class=\"spinner spinner-xs spinner-inline\" aria-hidden=\"true\"></span>\n" +
+    "<span>Pending</span>\n" +
+    "</span>\n" +
+    "<div ng-switch-default>\n" +
     "<div class=\"hidden-xs hidden-sm\">\n" +
     "<span ng-if=\"!row.bindings.length\n" +
     "                        && row.isBindable\n" +
@@ -12520,15 +12532,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"hidden-xs\" ng-if=\"!row.expanded && row.apiObject.status.dashboardURL\">\n" +
+    "<div class=\"hidden-xs\" ng-if=\"(!row.instanceStatus || row.instanceStatus === 'ready') && row.apiObject.status.dashboardURL\">\n" +
     "<a ng-href=\"{{row.apiObject.status.dashboardURL}}\" target=\"_blank\">\n" +
     "Console\n" +
     "</a> <i class=\"fa fa-external-link small\" aria-hidden=\"true\"></i>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"list-pf-actions\" ng-if=\"row.actionsDropdownVisible()\">\n" +
-    "<div uib-dropdown>\n" +
+    "<div class=\"list-pf-actions\">\n" +
+    "<div uib-dropdown ng-if=\"row.actionsDropdownVisible()\">\n" +
     "<a href=\"\" uib-dropdown-toggle class=\"actions-dropdown-kebab\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu dropdown-menu-right\" uib-dropdown-menu role=\"menu\">\n" +
     "<li role=\"menuitem\" ng-if=\"row.isBindable && ({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create')\">\n" +
@@ -12551,6 +12563,37 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"expanded-section\">\n" +
     "<alerts alerts=\"row.notifications\"></alerts>\n" +
     "\n" +
+    "<div ng-switch=\"row.instanceStatus\">\n" +
+    "<div ng-switch-when=\"deleted\" class=\"row\">\n" +
+    "<div class=\"col-sm-12\">\n" +
+    "<div class=\"alert word-break alert-warning\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">warning</span>\n" +
+    "<span class=\"strong\">The service was marked for deletion</span>\n" +
+    "<span class=\"strong\" am-time-ago=\"row.apiObject.metadata.deletionTimestamp\"></span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-switch-when=\"failed\" class=\"row\">\n" +
+    "<div class=\"col-sm-12\">\n" +
+    "<div class=\"alert word-break alert-danger\">\n" +
+    "<span class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">error</span>\n" +
+    "<span class=\"strong\">{{row.instanceError.message}}</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-switch-when=\"pending\" class=\"row\">\n" +
+    "<div class=\"col-sm-12\">\n" +
+    "<div class=\"alert word-break alert-info\">\n" +
+    "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">info</span>\n" +
+    "<span>The service is not yeat ready.</span>\n" +
+    "<span>{{row.pendingMessage}}</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-switch-default>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-sm-12\" ng-if=\"row.description\">\n" +
     "<p class=\"pre-wrap\" ng-bind-html=\"row.description | linky\"></p>\n" +
@@ -12603,6 +12646,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\" ng-if=\"!row.bindings.length && (!row.isBindable || !({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create'))\">\n" +
     "<div class=\"col-sm-12\">\n" +
     "<em>No bindings</em>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
