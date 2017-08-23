@@ -118,13 +118,6 @@
     width: 100%;
   }
 
-  .key-value-editor-input,
-  .key-value-editor-header {
-    float: left;
-    padding-right: 5px;
-    width: 50%;
-  }
-
   .key-value-editor-input .ui-select {
     @media(min-width: @screen-md-min) {
       float: left;
@@ -138,8 +131,19 @@
       }
     }
   }
+}
 
-  .key-value-editor-header {
-    margin-bottom: 5px;
-  }
+.key-value-editor .key-value-editor-input,
+.key-value-editor-header {
+  float: left;
+  padding-right: 5px;
+  width: 50%;
+}
+
+.key-value-editor-entry-header {
+  padding-right: (@as-sortable-item-button-width * 2);
+}
+
+.key-value-editor-header {
+  margin-bottom: 5px;
 }
