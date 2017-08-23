@@ -7279,7 +7279,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"key-value-editor-entry\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\" ng-repeat=\"entry in entries\" as-sortable-item>\n" +
+    "<div class=\"key-value-editor-entry\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\" ng-repeat=\"entry in entries track by $index\" as-sortable-item>\n" +
     "\n" +
     "<div class=\"form-group key-value-editor-input\" ng-class=\"{ 'has-error' :  (forms.keyValueEditor[uniqueForKey(unique, $index)].$invalid && forms.keyValueEditor[uniqueForKey(unique, $index)].$touched) }\">\n" +
     "<label for=\"uniqueForKey(unique, $index)\" class=\"sr-only\">{{keyPlaceholder}}</label>\n" +
