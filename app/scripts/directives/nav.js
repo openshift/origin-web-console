@@ -58,16 +58,21 @@ angular.module('openshiftConsole')
       }
     };
   })
-  .directive('projectHeader', function($timeout, $location, $filter, DataService, projectOverviewURLFilter, Constants) {
+  .directive('projectHeader', function($timeout, $location, $filter, ProjectsService, projectOverviewURLFilter, Constants) {
 
     // cache these to eliminate flicker
     var projects = {};
     var sortedProjects = [];
 
+    var displayName = $filter('displayName');
+    var uniqueDisplayName = $filter('uniqueDisplayName');
+
     return {
       restrict: 'EA',
       templateUrl: 'views/directives/header/project-header.html',
       link: function($scope, $elem) {
+        var MAX_PROJETS_TO_DISPLAY = 100;
+
         $scope.closeOrderingPanel = function() {
           _.set($scope, 'ordering.panelName', "");
         };
@@ -108,23 +113,40 @@ angular.module('openshiftConsole')
             projects[name] = project;
           }
 
-          sortedProjects = $filter('orderByDisplayName')(projects);
-          options = _.map(sortedProjects, function(item) {
-            return $('<option>')
-                      .attr("value", item.metadata.name)
-                      .attr("selected", item.metadata.name === name)
-                      .text($filter("uniqueDisplayName")(item, sortedProjects));
-          });
+          var makeOption = function(project, skipUniqueCheck) {
+            var option = $('<option>').attr("value", project.metadata.name).attr("selected", project.metadata.name === name);
+            if (skipUniqueCheck) {
+              option.text(displayName(project));
+            } else {
+              // FIXME: This is pretty inefficient, but probably OK if
+              // MAX_PROJETS_TO_DISPLAY is not too large.
+              option.text(uniqueDisplayName(project, sortedProjects));
+            }
+
+            return option;
+          };
+
+          // Only show all projects in the dropdown if less than a max number.
+          // Otherwise it's not usable and might impact performance.
+          if (_.size(projects) <= MAX_PROJETS_TO_DISPLAY) {
+            sortedProjects = $filter('orderByDisplayName')(projects);
+            options = _.map(sortedProjects, function(project) {
+              return makeOption(project, false);
+            });
+          } else {
+            // Show the current project and a "View all Projects" link.
+            options = [ makeOption(projects[name], true) ];
+          }
 
           select.empty();
           select.append(options);
           select.append($('<option data-divider="true"></option>'));
-          select.append($('<option value="">View all projects</option>'));
+          select.append($('<option value="">View all Projects</option>'));
           select.selectpicker('refresh');
         };
 
 
-        DataService.list("projects", $scope, function(items) {
+        ProjectsService.list().then(function(items) {
           projects = items.by("metadata.name");
           updateOptions();
         });
