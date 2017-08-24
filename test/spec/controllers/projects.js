@@ -20,10 +20,6 @@ describe('Controller: ProjectsController', function () {
       this.join = function() {return "";};
       this.$get = function() {return new Mocked();};
     });
-
-    $provide.factory("HawtioNav", function(){
-      return {add: function() {}};
-    });
   }));
 
   // Make sure a base location exists in the generated test html
@@ -51,26 +47,33 @@ describe('Controller: ProjectsController', function () {
     scope = $rootScope.$new();
     timeout = $timeout;
 
+    // TODO return mocked project data
+    var projectData = {
+      by: function(){
+        return {};
+      }
+    };
+
     ProjectsController = $controller('ProjectsController', {
       $scope: scope,
       $route: {},
       DataService: {
-        watch: function(type, context, callback, opts) {
-          // TODO return mocked project data
-          callback({by: function(){return {};}});
-        },
-        get: function(type, name, context, opts) {
-          var deferred = $q.defer();
-          deferred.resolve({});
-          return deferred.promise;
-        },
         unwatchAll: function(watches) {}
       },
       ProjectsService: {
+        list: function() {
+          return $q.when(projectData);
+        },
+        isProjectListIncomplete: function() {
+          return false;
+        },
+        watch: function(context, callback) {
+          $timeout(function() {
+            callback(projectData);
+          });
+        },
         canCreate: function() {
-          var deferred = $q.defer();
-          deferred.resolve({});
-          return deferred.promise;
+          return $q.when({});
         }
       }
     });

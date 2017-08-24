@@ -19,7 +19,7 @@ angular.module("openshiftConsole")
    * selectDisabled:
    *   An expression that will disable the form (default: false)
    */
-  .directive("istagSelect", function(DataService) {
+  .directive("istagSelect", function(DataService, ProjectsService) {
     return {
       require: '^form',
       restrict: 'E',
@@ -81,7 +81,7 @@ angular.module("openshiftConsole")
           });
         };
 
-        DataService.list("projects", {}, function(projectData) {
+        ProjectsService.list().then(function(projectData) {
           $scope.namespaces = _.keys(projectData.by('metadata.name'));
 
           if ($scope.includeSharedNamespace) {

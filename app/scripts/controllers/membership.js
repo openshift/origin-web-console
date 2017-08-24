@@ -243,8 +243,7 @@ angular
           $scope.user = resp;
         });
 
-      DataService
-        .list('projects', {})
+      ProjectsService.list()
         .then(function(resp) {
           var projects = _.keys(resp.by('metadata.name')).sort();
           angular.extend($scope, {
