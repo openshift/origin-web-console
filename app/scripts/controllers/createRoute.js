@@ -68,6 +68,7 @@ angular.module('openshiftConsole')
           return;
         }
 
+        var servicesByName;
         var orderByDisplayName = $filter('orderByDisplayName');
 
         $scope.routing.to = {
@@ -75,12 +76,14 @@ angular.module('openshiftConsole')
           name: $scope.serviceName,
           weight: 1
         };
-        DataService.list("services", context).then(function(services) {
-          $scope.services = orderByDisplayName(services.by("metadata.name"));
+        DataService.list("services", context).then(function(serviceData) {
+          servicesByName = serviceData.by("metadata.name");
+          $scope.services = orderByDisplayName(servicesByName);
         });
 
         $scope.copyServiceLabels = function() {
-          var serviceLabels = _.get($scope, 'routing.to.service.metadata.labels', {});
+          var serviceName = _.get($scope, 'routing.to.name');
+          var serviceLabels = _.get(servicesByName, [serviceName, 'metadata', 'labels'], {});
           var existing = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
           var updated = _.assign(existing, serviceLabels);
           $scope.labels = _.map(updated, function(value, key) {

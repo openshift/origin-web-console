@@ -8229,16 +8229,16 @@ d.history.back();
 };
 c.cancel = m, j.get(b.project).then(_.spread(function(d, j) {
 if (c.project = d, c.breadcrumbs[0].title = a("displayName")(d), !f.canI("routes", "create", b.project)) return void h.toErrorPage("You do not have authority to create routes in project " + b.project + ".", "access_denied");
-var n = a("orderByDisplayName");
+var n, o = a("orderByDisplayName");
 c.routing.to = {
 kind:"Service",
 name:c.serviceName,
 weight:1
 }, g.list("services", j).then(function(a) {
-c.services = n(a.by("metadata.name"));
+n = a.by("metadata.name"), c.services = o(n);
 }), c.copyServiceLabels = function() {
-var a = _.get(c, "routing.to.service.metadata.labels", {}), b = k.mapEntries(k.compactEntries(c.labels)), d = _.assign(b, a);
-c.labels = _.map(d, function(a, b) {
+var a = _.get(c, "routing.to.name"), b = _.get(n, [ a, "metadata", "labels" ], {}), d = k.mapEntries(k.compactEntries(c.labels)), e = _.assign(d, b);
+c.labels = _.map(e, function(a, b) {
 return {
 name:b,
 value:a
