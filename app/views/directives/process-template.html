@@ -1,7 +1,7 @@
 <fieldset ng-disabled="disableInputs">
   <ng-form name="$ctrl.templateForm">
     <template-options is-dialog="$ctrl.isDialog" parameters="$ctrl.template.parameters" expand="true" can-toggle="false">
-      <select-project ng-if="!$ctrl.project" selected-project="$ctrl.selectedProject" name-taken="$ctrl.projectNameTaken"></select-project>
+      <select-project ng-if="!$ctrl.project" on-project-selected="$ctrl.onProjectSelected" available-projects="$ctrl.availableProjects" selected-project="$ctrl.selectedProject" name-taken="$ctrl.projectNameTaken"></select-project>
     </template-options>
     <label-editor
         labels="$ctrl.labels"

@@ -2,7 +2,7 @@
   <pf-wizard
        hide-header="true"
        hide-sidebar="true"
-       hide-back-button="true"
+       hide-back-button="!$ctrl.useProjectTemplate"
        step-class="order-service-wizard-step"
        wizard-ready="$ctrl.wizardReady"
        next-title="$ctrl.nextTitle"
@@ -11,7 +11,7 @@
        on-cancel="$ctrl.close()"
        wizard-done="$ctrl.wizardDone"
        current-step="$ctrl.currentStep"
-       class="pf-wizard-no-back">
+       ng-class="{'pf-wizard-no-back': !$ctrl.useProjectTemplate}">
     <pf-wizard-step ng-repeat="step in $ctrl.steps track by step.id"
          step-title="{{step.label}}"
          wz-disabled="{{step.hidden}}"
@@ -22,7 +22,7 @@
          step-id="{{step.id}}"
          step-priority="{{$index}}">
       <div class="wizard-pf-main-inner-shadow-covers">
-        <div class="order-service-details">
+        <div class="order-service-details" ng-if="!$ctrl.selectStep.selected">
           <div class="order-service-details-top">
             <div class="service-icon">
               <span class="icon {{$ctrl.iconClass}}"></span>
@@ -42,7 +42,7 @@
             <p ng-bind-html="$ctrl.template | description | linky : '_blank'" class="description"></p>
           </div>
         </div>
-        <div class="order-service-config">
+        <div class="order-service-config" ng-class="{'order-service-config-single-column': $ctrl.selectStep.selected}">
           <div ng-if="step.selected" ng-include="step.view" class="wizard-pf-main-form-contents"></div>
         </div>
       </div>
