@@ -72913,7 +72913,7 @@ maxWait: 250
 }), angular.element(i).on("resize", u);
 }
 function c() {
-a(), angular.element(i).off("resize", u);
+a(), u && (angular.element(i).off("resize", u), u = null);
 }
 var u, d = this;
 d.$onChanges = function(e) {
@@ -74337,6 +74337,8 @@ return new URI({
 protocol: e,
 hostname: t
 }).toString();
+}, f.prototype.createData = function(e) {
+return new d(e);
 };
 var x = {
 imagestreamimages: !0
@@ -74573,7 +74575,7 @@ list: function(e) {
 return c && !e ? (a.debug("ProjectsService: returning cached project data"), t.when(c)) : (a.debug("ProjectsService: listing projects, force refresh", e), o.list("projects", {}).then(function(e) {
 return c = e, e;
 }, function(e) {
-c = {}, u = !0;
+return c = o.createData([]), u = !0, t.reject();
 }));
 },
 isProjectListIncomplete: function() {
