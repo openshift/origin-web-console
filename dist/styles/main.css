@@ -5607,12 +5607,12 @@ a.subtle-link:active,a.subtle-link:focus,a.subtle-link:hover{color:#00659c;borde
 .mar-auto-sm{margin:0 auto}
 .pad-sm{padding:5px 7.5px}
 .mar-sm{margin:5px 7.5px}
-.key-value-editor .key-value-editor-header,.mar-bottom-sm{margin-bottom:5px}
 .pad-top-sm{padding-top:5px}
 .mar-top-sm{margin-top:5px}
 .pad-right-sm{padding-right:5px}
 .mar-right-sm{margin-right:5px}
 .pad-bottom-sm{padding-bottom:5px}
+.mar-bottom-sm{margin-bottom:5px}
 .pad-left-sm{padding-left:5px}
 .mar-left-sm{margin-left:5px}
 .mar-auto-md{margin:0 auto}
@@ -5846,11 +5846,13 @@ kubernetes-container-terminal .terminal-actions .spinner{top:5px}
 .key-value-editor .faux-input-group{border-collapse:separate;display:table;position:relative}
 .key-value-editor .key-value-editor-buttons{position:absolute;right:0;top:0;width:52px}
 .key-value-editor .key-value-editor-entry{display:table;padding-right:52px;position:relative;table-layout:fixed;width:100%}
-.key-value-editor .key-value-editor-header,.key-value-editor .key-value-editor-input{float:left;padding-right:5px;width:50%}
 .key-value-editor .key-value-editor-input .ui-select+.ui-select{padding-top:5px}
 @media (min-width:992px){.key-value-editor .key-value-editor-input .ui-select{float:left;width:50%}
 .key-value-editor .key-value-editor-input .ui-select+.ui-select{padding-top:0;padding-left:5px}
 }
+.key-value-editor .key-value-editor-input,.key-value-editor-header{float:left;padding-right:5px;width:50%}
+.key-value-editor-entry-header{padding-right:52px}
+.key-value-editor-header{margin-bottom:5px}
 .membership h1 .learn-more-inline{white-space:nowrap;margin-right:10px;margin-left:0px;display:inline-block}
 .membership .content-pane .col-heading .col-add-role h3,.membership .content-pane .form-new-role .col-roles{display:none}
 .membership .content-pane{width:100%}

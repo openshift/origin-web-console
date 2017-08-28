@@ -7272,8 +7272,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/key-value-editor.html',
     "<ng-form name=\"forms.keyValueEditor\" novalidate ng-if=\"entries\">\n" +
-    "<div class=\"key-value-editor\" ng-model=\"entries\" as-sortable=\"dragControlListeners\">\n" +
-    "<div ng-if=\"showHeader\" class=\"key-value-editor-entry\">\n" +
+    "<div ng-if=\"showHeader\" class=\"key-value-editor-entry key-value-editor-entry-header\">\n" +
     "<div class=\"form-group key-value-editor-header key-header\">\n" +
     "<div class=\"input-group\">\n" +
     "<span class=\"help-block\">{{keyPlaceholder}}</span>\n" +
@@ -7285,6 +7284,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div ng-model=\"entries\" class=\"key-value-editor\" as-sortable=\"dragControlListeners\">\n" +
     "<div class=\"key-value-editor-entry\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\" ng-repeat=\"entry in entries\" as-sortable-item>\n" +
     "\n" +
     "<div class=\"form-group key-value-editor-input\" ng-class=\"{ 'has-error' :  (forms.keyValueEditor[uniqueForKey(unique, $index)].$invalid && forms.keyValueEditor[uniqueForKey(unique, $index)].$touched) }\">\n" +
@@ -7347,7 +7347,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!isValueFromReadonly(entry)\">\n" +
-    "<div class=\"ui-select\">\n" +
+    "<div class=\"ui-select key-value-editor-select\">\n" +
     "<ui-select ng-model=\"entry.selectedValueFrom\" ng-required=\"true\" on-select=\"valueFromObjectSelected(entry, $select.selected)\">\n" +
     "<ui-select-match placeholder=\"Select a resource\">\n" +
     "<span>\n" +
@@ -7360,7 +7360,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
-    "<div class=\"ui-select\">\n" +
+    "<div class=\"ui-select key-value-editor-select\">\n" +
     "<ui-select ng-model=\"entry.selectedValueFromKey\" ng-required=\"true\" on-select=\"valueFromKeySelected(entry, $select.selected)\">\n" +
     "<ui-select-match placeholder=\"Select key\">\n" +
     "{{$select.selected}}\n" +

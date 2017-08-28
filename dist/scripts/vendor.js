@@ -69288,7 +69288,6 @@ angular.element(r[0].body).unbind("keydown", H);
 }), B = function(e) {
 return "function" == typeof a.sortableScope.options.placeholder ? angular.element(a.sortableScope.options.placeholder(e)) : "string" == typeof a.sortableScope.options.placeholder ? angular.element(a.sortableScope.options.placeholder) : angular.element(r[0].createElement(e.element.prop("tagName")));
 }, x = function(e) {
-e.preventDefault();
 var t, i = function() {
 angular.element(r).unbind("mousemove", o), angular.element(r).unbind("touchmove", o), s.unbind("mouseup", i), s.unbind("touchend", i), s.unbind("touchcancel", i);
 }, o = function(r) {
@@ -69315,7 +69314,7 @@ var s, l, c, f, m;
 if ((!M || !n.isTouchInvalid(o)) && N && p) {
 if (o.preventDefault(), s = n.eventObj(o), a.callbacks.dragMove !== angular.noop && a.sortableScope.$apply(function() {
 a.callbacks.dragMove(v, y, s);
-}), l = s.pageX - r[0].documentElement.scrollLeft, c = s.pageY - (i.pageYOffset || r[0].documentElement.scrollTop), m = angular.element(r[0].elementFromPoint(l, c)), p.addClass(t.hiddenClass), p.removeClass(t.hiddenClass), n.movePosition(s, p, v, y, w, _), p.addClass(t.dragging), !(f = h(m)) || !f.type) return;
+}), l = s.pageX - r[0].documentElement.scrollLeft, c = s.pageY - (i.pageYOffset || r[0].documentElement.scrollTop), p.addClass(t.hiddenClass), m = angular.element(r[0].elementFromPoint(l, c)), p.removeClass(t.hiddenClass), n.movePosition(s, p, v, y, w, _), p.addClass(t.dragging), !(f = h(m)) || !f.type) return;
 if ("handle" === f.type && (f = f.itemScope), "item" !== f.type && "sortable" !== f.type) return;
 if ("item" === f.type && f.accept(a, f.sortableScope, f)) {
 m = f.element;
