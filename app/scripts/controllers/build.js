@@ -63,7 +63,7 @@ angular.module('openshiftConsole')
     var watches = [];
 
     var setLogVars = function(build) {
-      $scope.logCanRun = !(_.includes(['New', 'Pending', 'Error'], build.status.phase));
+      $scope.logCanRun = !(_.includes(['New', 'Pending', 'Error'], _.get(build, 'status.phase')));
     };
 
     var updateCanBuild = function() {

@@ -5208,7 +5208,7 @@ link: "project/" + n.project + "/browse/builds/" + n.buildconfig
 title: n.build
 });
 var c, l = t("annotation"), u = [], d = function(t) {
-e.logCanRun = !_.includes([ "New", "Pending", "Error" ], t.status.phase);
+e.logCanRun = !_.includes([ "New", "Pending", "Error" ], _.get(t, "status.phase"));
 }, m = function() {
 e.buildConfig ? e.canBuild = a.canBuild(e.buildConfig) : e.canBuild = !1;
 };
