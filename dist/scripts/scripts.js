@@ -5189,7 +5189,7 @@ c.showJenkinsfileExamples();
 i.unwatchAll(f);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("BuildController", [ "$scope", "$filter", "$routeParams", "BuildsService", "DataService", "ModalsService", "Navigate", "ProjectsService", function(e, t, n, a, r, o, i, s) {
+} ]), angular.module("openshiftConsole").controller("BuildController", [ "$scope", "$filter", "$routeParams", "APIService", "BuildsService", "DataService", "ModalsService", "Navigate", "ProjectsService", function(e, t, n, a, r, o, i, s, c) {
 e.projectName = n.project, e.build = null, e.buildConfig = null, e.buildConfigName = n.buildconfig, e.builds = {}, e.alerts = {}, e.showSecret = !1, e.renderOptions = {
 hideFilterWidget: !0
 }, e.breadcrumbs = [], n.isPipeline ? (e.breadcrumbs.push({
@@ -5207,38 +5207,38 @@ link: "project/" + n.project + "/browse/builds/" + n.buildconfig
 })), e.breadcrumbs.push({
 title: n.build
 });
-var c, l = t("annotation"), u = [], d = function(t) {
+var l, u = t("annotation"), d = [], m = function(t) {
 e.logCanRun = !_.includes([ "New", "Pending", "Error" ], t.status.phase);
-}, m = function() {
-e.buildConfig ? e.canBuild = a.canBuild(e.buildConfig) : e.canBuild = !1;
+}, p = function() {
+e.buildConfig ? e.canBuild = r.canBuild(e.buildConfig) : e.canBuild = !1;
 };
-s.get(n.project).then(_.spread(function(i, s) {
-e.project = i, e.projectContext = s, e.logOptions = {};
-var p = function() {
-e.eventObjects = c ? [ e.build, c ] : [ e.build ];
-}, g = function(t, n) {
-e.loaded = !0, e.build = t, d(t), p();
-var a = l(t, "buildNumber");
-a && (e.breadcrumbs[2].title = "#" + a), "DELETED" === n && (e.alerts.deleted = {
+c.get(n.project).then(_.spread(function(s, c) {
+e.project = s, e.projectContext = c, e.logOptions = {};
+var g = function() {
+e.eventObjects = l ? [ e.build, l ] : [ e.build ];
+}, f = function(t, n) {
+e.loaded = !0, e.build = t, m(t), g();
+var r = u(t, "buildNumber");
+r && (e.breadcrumbs[2].title = "#" + r), "DELETED" === n && (e.alerts.deleted = {
 type: "warning",
 message: "This build has been deleted."
 });
-var o;
-c || (o = l(t, "buildPod")) && r.get("pods", o, s, {
+var i;
+l || (i = u(t, "buildPod")) && o.get(a.getPreferredVersion("pods"), i, c, {
 errorNotification: !1
 }).then(function(e) {
-c = e, p();
+l = e, g();
 });
-}, f = function(t, n) {
+}, h = function(t, n) {
 "DELETED" === n && (e.alerts.deleted = {
 type: "warning",
 message: "Build configuration " + e.buildConfigName + " has been deleted."
-}, e.buildConfigDeleted = !0), e.buildConfig = t, e.buildConfigPaused = a.isPaused(e.buildConfig), m();
+}, e.buildConfigDeleted = !0), e.buildConfig = t, e.buildConfigPaused = r.isPaused(e.buildConfig), p();
 };
-r.get("builds", n.build, s, {
+o.get(a.getPreferredVersion(a.getPreferredVersion("builds")), n.build, c, {
 errorNotification: !1
 }).then(function(e) {
-g(e), u.push(r.watchObject("builds", n.build, s, g)), u.push(r.watchObject("buildconfigs", n.buildconfig, s, f));
+f(e), d.push(o.watchObject(a.getPreferredVersion("builds"), n.build, c, f)), d.push(o.watchObject(a.getPreferredVersion("buildconfigs"), n.buildconfig, c, h));
 }, function(n) {
 e.loaded = !0, e.alerts.load = {
 type: "error",
@@ -5248,13 +5248,13 @@ details: t("getErrorDetails")(n)
 }), e.toggleSecret = function() {
 e.showSecret = !0;
 }, e.cancelBuild = function() {
-a.cancelBuild(e.build, e.buildConfigName);
+r.cancelBuild(e.build, e.buildConfigName);
 }, e.cloneBuild = function() {
-e.build && e.canBuild && a.cloneBuild(e.build, e.buildConfigName);
+e.build && e.canBuild && r.cloneBuild(e.build, e.buildConfigName);
 }, e.showJenkinsfileExamples = function() {
-o.showJenkinsfileExamples();
+i.showJenkinsfileExamples();
 }, e.$on("$destroy", function() {
-r.unwatchAll(u);
+o.unwatchAll(d);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("ImageController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", "ImageStreamsService", "imageLayers", function(e, t, n, a, r, o, i) {

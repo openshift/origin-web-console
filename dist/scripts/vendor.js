@@ -73054,7 +73054,19 @@ n ? (t.truncatedContent = e(n, t.limit, t.useWordBoundary, t.newlineLimit), t.tr
 });
 }
 };
-} ]), angular.module("openshiftCommonUI").filter("alertStatus", function() {
+} ]), angular.module("openshiftCommonServices").constant("apiPreferredVersions", {
+builds: "builds",
+buildconfigs: "buildconfigs",
+deployments: {
+group: "apps",
+resource: "deployments"
+},
+pods: "pods",
+replicasets: {
+group: "extensions",
+resource: "replicasets"
+}
+}), angular.module("openshiftCommonUI").filter("alertStatus", function() {
 return function(e) {
 var t;
 switch (e) {
@@ -73374,25 +73386,25 @@ var e = (this.resource || "").split("/");
 return e.shift(), e;
 }, ResourceGroupVersion.prototype.equals = function(e, t, n) {
 return this.resource === e && (1 === arguments.length || this.group === t && (2 === arguments.length || this.version === n));
-}, angular.module("openshiftCommonServices").factory("APIService", [ "API_CFG", "APIS_CFG", "AuthService", "Constants", "Logger", "$q", "$http", "$filter", "$window", function(e, t, n, i, r, o, a, s, l) {
-function c(e) {
+}, angular.module("openshiftCommonServices").factory("APIService", [ "API_CFG", "APIS_CFG", "apiPreferredVersions", "AuthService", "Constants", "Logger", "$q", "$http", "$filter", "$window", function(e, t, n, i, r, o, a, s, l, c) {
+function u(e) {
 if (!e) return e;
 var t = e.indexOf("/");
 return -1 === t ? e.toLowerCase() : e.substring(0, t).toLowerCase() + e.substring(t);
 }
-function u(e, t) {
+function d(e, t) {
 if (!e) return "";
 var n = e;
-return t && (n = s("humanizeKind")(n)), "endpoints" === (n = String(n).toLowerCase()) || "securitycontextconstraints" === n || ("s" === n[n.length - 1] ? n += "es" : "y" === n[n.length - 1] ? n = n.substring(0, n.length - 1) + "ies" : n += "s"), n;
+return t && (n = l("humanizeKind")(n)), "endpoints" === (n = String(n).toLowerCase()) || "securitycontextconstraints" === n || ("s" === n[n.length - 1] ? n += "es" : "y" === n[n.length - 1] ? n = n.substring(0, n.length - 1) + "ies" : n += "s"), n;
 }
-var d = {
+var h = {
 "": "v1",
 extensions: "v1beta1"
-}, h = function(e) {
+}, f = function(e) {
 if (e instanceof ResourceGroupVersion) return e;
 var n, i, r;
-return angular.isString(e) ? (n = c(e), r = d[i = ""]) : e && e.resource && (n = c(e.resource), i = e.group || "", r = e.version || d[i] || _.get(t, [ "groups", i, "preferredVersion" ])), new ResourceGroupVersion(n, i, r);
-}, f = function(e) {
+return angular.isString(e) ? (n = u(e), r = h[i = ""]) : e && e.resource && (n = u(e.resource), i = e.group || "", r = e.version || h[i] || _.get(t, [ "groups", i, "preferredVersion" ])), new ResourceGroupVersion(n, i, r);
+}, p = function(e) {
 if (e) {
 var t = e.split("/");
 return 1 === t.length ? "v1" === t[0] ? {
@@ -73404,10 +73416,10 @@ version: ""
 } : 2 === t.length ? {
 group: t[0],
 version: t[1]
-} : void r.warn('Invalid apiVersion "' + e + '"');
+} : void o.warn('Invalid apiVersion "' + e + '"');
 }
-}, p = function(n) {
-var r = [], o = _.map(i.AVAILABLE_KINDS_BLACKLIST, function(e) {
+}, g = function(n) {
+var i = [], o = _.map(r.AVAILABLE_KINDS_BLACKLIST, function(e) {
 return _.isString(e) ? {
 kind: e,
 group: ""
@@ -73422,67 +73434,67 @@ if (_.includes(e.name, "/") || _.find(o, {
 kind: e.kind,
 group: ""
 })) return;
-r.push({
+i.push({
 kind: e.kind,
 group: ""
 });
 }
 });
 }), _.each(t.groups, function(e) {
-var t = d[e.name] || e.preferredVersion;
+var t = h[e.name] || e.preferredVersion;
 _.each(e.versions[t].resources, function(t) {
 _.includes(t.name, "/") || _.find(o, {
 kind: t.kind,
 group: e.name
-}) || "extensions" === e.name && "HorizontalPodAutoscaler" === t.kind || (t.namespaced || n) && r.push({
+}) || "extensions" === e.name && "HorizontalPodAutoscaler" === t.kind || (t.namespaced || n) && i.push({
 kind: t.kind,
 group: e.name
 });
 });
-}), _.uniqBy(r, function(e) {
+}), _.uniqBy(i, function(e) {
 return e.group + "/" + e.kind;
 });
-}, g = p(!1), m = p(!0);
+}, m = g(!1), v = g(!0);
 return {
-toResourceGroupVersion: h,
-parseGroupVersion: f,
+toResourceGroupVersion: f,
+parseGroupVersion: p,
 objectToResourceGroupVersion: function(e) {
 if (e && e.kind && e.apiVersion) {
-var t = u(e.kind);
+var t = d(e.kind);
 if (t) {
-var n = f(e.apiVersion);
+var n = p(e.apiVersion);
 if (n) return new ResourceGroupVersion(t, n.group, n.version);
 }
 }
 },
 deriveTargetResource: function(e, t) {
 if (e && t) {
-var n = u(t.kind), i = f(t.apiVersion), r = h(e);
+var n = d(t.kind), i = p(t.apiVersion), r = f(e);
 if (n && i && r) return angular.isString(e) ? (r.equals(n) && (r.group = i.group, r.version = i.version), r) : (r.equals(n, i.group) && (r.version = i.version), r);
 }
 },
-kindToResource: u,
+kindToResource: d,
 kindToResourceGroupVersion: function(e) {
-return h({
-resource: u(e.kind),
+return f({
+resource: d(e.kind),
 group: e.group
 });
 },
-apiInfo: function(i) {
+apiInfo: function(n) {
 if (t.API_DISCOVERY_ERRORS) return _.every(t.API_DISCOVERY_ERRORS, function(e) {
 return 0 === _.get(e, "data.status");
-}) && !n.isLoggedIn() ? void n.withUser() : void (l.location.href = URI("error").query({
+}) && !i.isLoggedIn() ? void i.withUser() : void (c.location.href = URI("error").query({
 error_description: "Unable to load details about the server. If the problem continues, please contact your system administrator.",
 error: "API_DISCOVERY"
 }).toString());
-var r, o = (i = h(i)).primaryResource();
-if (i.group) {
-if (!(r = _.get(t, [ "groups", i.group, "versions", i.version, "resources", o ]))) return;
-var a = _.get(t, [ "groups", i.group, "hostPrefix" ]) || t;
+var r, o = (n = f(n)).primaryResource();
+if (n.group) {
+if (!(r = _.get(t, [ "groups", n.group, "versions", n.version, "resources", o ]))) return;
+var a = _.get(t, [ "groups", n.group, "hostPrefix" ]) || t;
 return {
-resource: i.resource,
-group: i.group,
-version: i.version,
+resource: n.resource,
+group: n.group,
+version: n.version,
 protocol: a.protocol,
 hostPort: a.hostPort,
 prefix: a.prefix,
@@ -73491,9 +73503,9 @@ verbs: r.verbs
 };
 }
 var s;
-for (var c in e) if (s = e[c], r = _.get(s, [ "resources", i.version, o ])) return {
-resource: i.resource,
-version: i.version,
+for (var l in e) if (s = e[l], r = _.get(s, [ "resources", n.version, o ])) return {
+resource: n.resource,
+version: n.version,
 hostPort: s.hostPort,
 prefix: s.prefix,
 namespaced: r.namespaced,
@@ -73509,7 +73521,10 @@ var t = "<none>", n = "<none>";
 return e && e.kind && (t = e.kind), e && e.apiVersion && (n = e.apiVersion), "The API version " + n + " for kind " + t + " is not supported by this server";
 },
 availableKinds: function(e) {
-return e ? m : g;
+return e ? v : m;
+},
+getPreferredVersion: function(e) {
+return console.log(e, n[e]), n[e] || new Error(e + ' must be manually deduplicated, please create your own {resource:"", group:"", version: "" object.}');
 }
 };
 } ]), angular.module("openshiftCommonServices").provider("AuthService", function() {
@@ -74640,14 +74655,19 @@ var t = _.remove(n, function(t) {
 return t.metadata.uid === e;
 })[0];
 void 0 !== t && i.push(t);
-}), n = e("orderObjectsByDate")(n, !0), i.concat(n);
+}), n = _.sortBy(n, function(t) {
+return e("displayName")(t).toLowerCase();
+}), i.concat(n);
 },
 clear: function() {
 localStorage.removeItem("openshift/recently-viewed-project-uids");
+},
+isRecentlyViewed: function(e) {
+return _.includes(t(), e);
 }
 };
 } ]), angular.module("openshiftCommonServices").provider("RedirectLoginService", function() {
-var e = "", t = "", n = "", i = "";
+var e = "", t = "", n = "", i = "", r = "";
 this.OAuthClientID = function(t) {
 return t && (e = t), e;
 }, this.OAuthAuthorizeURI = function(e) {
@@ -74656,115 +74676,117 @@ return e && (t = e), t;
 return e && (n = e), n;
 }, this.OAuthRedirectURI = function(e) {
 return e && (i = e), i;
-}, this.$get = [ "$injector", "$location", "$q", "Logger", "base64", function(r, o, a, s, l) {
-var c = s.get("auth"), u = function(e) {
+}, this.OAuthScope = function(e) {
+return e && (r = e), r;
+}, this.$get = [ "$injector", "$location", "$q", "Logger", "base64", function(o, a, s, l, c) {
+var u = l.get("auth"), d = function(e) {
 var t;
 if (window.crypto && window.Uint32Array) try {
 var n = new Uint32Array(e);
 window.crypto.getRandomValues(n), t = [];
 for (var i = 0; i < e; i++) t.push(n[i]);
 } catch (e) {
-c.debug("RedirectLoginService.getRandomInts: ", e), t = null;
+u.debug("RedirectLoginService.getRandomInts: ", e), t = null;
 }
 if (!t) {
 t = [];
 for (var r = 0; r < e; r++) t.push(Math.floor(4294967296 * Math.random()));
 }
 return t;
-}, d = "RedirectLoginService.nonce", h = function(e) {
-var t = String(new Date().getTime()) + "-" + u(8).join("");
+}, h = "RedirectLoginService.nonce", f = function(e) {
+var t = String(new Date().getTime()) + "-" + d(8).join("");
 try {
-window.localStorage[d] = t;
+window.localStorage[h] = t;
 } catch (e) {
-c.log("RedirectLoginService.makeState, localStorage error: ", e);
+u.log("RedirectLoginService.makeState, localStorage error: ", e);
 }
-return l.urlencode(JSON.stringify({
+return c.urlencode(JSON.stringify({
 then: e,
 nonce: t
 }));
-}, f = function(e) {
+}, p = function(e) {
 var t = {
 then: null,
 verified: !1
 }, n = "";
 try {
-n = window.localStorage[d], window.localStorage.removeItem(d);
+n = window.localStorage[h], window.localStorage.removeItem(h);
 } catch (e) {
-c.log("RedirectLoginService.parseState, localStorage error: ", e);
+u.log("RedirectLoginService.parseState, localStorage error: ", e);
 }
 try {
-var i = e ? JSON.parse(l.urldecode(e)) : {};
+var i = e ? JSON.parse(c.urldecode(e)) : {};
 i && i.nonce && n && i.nonce === n && (t.verified = !0, t.then = i.then);
 } catch (e) {
-c.error("RedirectLoginService.parseState, state error: ", e);
+u.error("RedirectLoginService.parseState, state error: ", e);
 }
-return c.error("RedirectLoginService.parseState", t), t;
+return u.error("RedirectLoginService.parseState", t), t;
 };
 return {
 login: function() {
-if ("" === e) return a.reject({
+if ("" === e) return s.reject({
 error: "invalid_request",
 error_description: "RedirectLoginServiceProvider.OAuthClientID() not set"
 });
-if ("" === t) return a.reject({
+if ("" === t) return s.reject({
 error: "invalid_request",
 error_description: "RedirectLoginServiceProvider.OAuthAuthorizeURI() not set"
 });
-if ("" === i) return a.reject({
+if ("" === i) return s.reject({
 error: "invalid_request",
 error_description: "RedirectLoginServiceProvider.OAuthRedirectURI not set"
 });
-var r = new URI(o.url()).fragment(""), s = {
+var o = new URI(a.url()).fragment(""), l = {
 client_id: e,
 response_type: "token",
-state: h(r.toString()),
+state: f(o.toString()),
 redirect_uri: i
 };
-n && (s.response_type = "code");
-var l = a.defer(), u = new URI(t);
-return u.query(s), c.log("RedirectLoginService.login(), redirecting", u.toString()), window.location.href = u.toString(), l.promise;
+r && (l.scope = r), n && (l.response_type = "code");
+var c = s.defer(), d = new URI(t);
+return d.query(l), u.log("RedirectLoginService.login(), redirecting", d.toString()), window.location.href = d.toString(), c.promise;
 },
 finish: function() {
-var t = r.get("$http"), s = function(e, t) {
-return e.error ? (c.log("RedirectLoginService.finish(), error", e.error, e.error_description, e.error_uri), a.reject({
+var t = o.get("$http"), l = function(e, t) {
+return e.error ? (u.log("RedirectLoginService.finish(), error", e.error, e.error_description, e.error_uri), s.reject({
 error: e.error,
 error_description: e.error_description,
 error_uri: e.error_uri
-})) : e.access_token ? a.when({
+})) : e.access_token ? s.when({
 token: e.access_token,
 ttl: e.expires_in,
 then: t.then,
 verified: t.verified
-}) : a.reject({
+}) : s.reject({
 error: "invalid_request",
 error_description: "No API token returned"
 });
-}, l = new URI(o.url()), u = l.query(!0), d = new URI("?" + l.fragment()).query(!0);
-if (c.log("RedirectLoginService.finish()", u, d), u.error) return s(u, f(u.state));
-if (d.error) return s(d, f(d.state));
-if (d.access_token) return s(d, f(d.state));
-if (n && u.code) {
-var h = f(u.state);
-if (!h.verified) return a.reject({
+}, c = new URI(a.url()), d = c.query(!0), h = new URI("?" + c.fragment()).query(!0);
+if (u.log("RedirectLoginService.finish()", d, h), d.error) return l(d, p(d.state));
+if (h.error) return l(h, p(h.state));
+if (h.access_token) return l(h, p(h.state));
+if (n && d.code) {
+var f = p(d.state);
+if (!f.verified) return s.reject({
 error: "invalid_request",
 error_description: "Client state could not be verified"
 });
-var p = [ "grant_type=authorization_code", "code=" + encodeURIComponent(u.code), "redirect_uri=" + encodeURIComponent(i), "client_id=" + encodeURIComponent(e) ].join("&");
-return t({
+var g = [ "grant_type=authorization_code", "code=" + encodeURIComponent(d.code), "redirect_uri=" + encodeURIComponent(i), "client_id=" + encodeURIComponent(e) ].join("&");
+return r && (g += "&scope=" + encodeURIComponent(r)), t({
 method: "POST",
 url: n,
 headers: {
 Authorization: "Basic " + window.btoa(e + ":"),
 "Content-Type": "application/x-www-form-urlencoded"
 },
-data: p
+data: g
 }).then(function(e) {
-return s(e.data, h);
+return l(e.data, f);
 }, function(e) {
-return c.log("RedirectLoginService.finish(), error getting access token", e), s(e.data, h);
+return u.log("RedirectLoginService.finish(), error getting access token", e), l(e.data, f);
 });
 }
-return a.reject({
+return s.reject({
 error: "invalid_request",
 error_description: "No API token returned"
 });

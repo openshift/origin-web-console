@@ -10,6 +10,7 @@ angular.module('openshiftConsole')
   .controller('BuildController', function ($scope,
                                            $filter,
                                            $routeParams,
+                                           APIService,
                                            BuildsService,
                                            DataService,
                                            ModalsService,
@@ -116,7 +117,7 @@ angular.module('openshiftConsole')
             buildPodName = annotation(build, 'buildPod');
             if (buildPodName) {
               // Don't show an error if we can't get the build pod. Often it will have been deleted.
-              DataService.get("pods", buildPodName, context, { errorNotification: false }).then(function(response) {
+              DataService.get(APIService.getPreferredVersion('pods'), buildPodName, context, { errorNotification: false }).then(function(response) {
                 buildPod = response;
                 updateEventObjects();
               });
@@ -147,11 +148,11 @@ angular.module('openshiftConsole')
         };
 
         DataService
-          .get("builds", $routeParams.build, context, { errorNotification: false })
+          .get(APIService.getPreferredVersion(APIService.getPreferredVersion('builds')), $routeParams.build, context, { errorNotification: false })
           .then(function(build) {
             buildResolved(build);
-            watches.push(DataService.watchObject("builds", $routeParams.build, context, buildResolved));
-            watches.push(DataService.watchObject("buildconfigs", $routeParams.buildconfig, context, buildConfigResolved));
+            watches.push(DataService.watchObject(APIService.getPreferredVersion('builds'), $routeParams.build, context, buildResolved));
+            watches.push(DataService.watchObject(APIService.getPreferredVersion('buildconfigs'), $routeParams.buildconfig, context, buildConfigResolved));
           }, buildRejected);
 
         $scope.toggleSecret = function() {
