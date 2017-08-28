@@ -22,6 +22,7 @@ angular
     'patternfly.charts',
     'patternfly.navigation',
     'patternfly.sort',
+    'patternfly.notification',
     'openshiftConsoleTemplates',
     'ui.ace',
     'extension-registry',
