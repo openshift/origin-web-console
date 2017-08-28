@@ -4050,9 +4050,9 @@ var g = _.filter(c, function(c) {
 var e = f[c.metadata.uid];
 return d.matchTemplate ? e.matches(a(b)) :d.matchSelector ? e.covers(new LabelSelector(b.spec.selector)) :e.matches(b);
 });
-g.length || _.set(e, [ "", b.metadata.name ], b), _.each(g, function(a) {
+g.length || (e[""] = e[""] || {}, e[""][b.metadata.name] = b), _.each(g, function(a) {
 var c = _.get(a, d.key || "metadata.name", "");
-_.set(e, [ c, b.metadata.name ], b);
+e[c] = e[c] || {}, e[c][b.metadata.name] = b;
 });
 }
 }), e;

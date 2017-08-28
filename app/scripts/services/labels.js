@@ -52,12 +52,14 @@ angular.module("openshiftConsole")
 
           // Use an empty key if no owners match.
           if (!matchingOwners.length) {
-            _.set(objectsByOwner, ['', object.metadata.name], object);
+            objectsByOwner[''] = objectsByOwner[''] || {};
+            objectsByOwner[''][object.metadata.name] = object;
           }
 
           _.each(matchingOwners, function(owner) {
             var key = _.get(owner, opts.key || 'metadata.name', '');
-            _.set(objectsByOwner, [key, object.metadata.name], object);
+            objectsByOwner[key] = objectsByOwner[key] || {};
+            objectsByOwner[key][object.metadata.name] = object;
           });
         });
 
