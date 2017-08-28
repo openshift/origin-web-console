@@ -62,7 +62,13 @@
     "node": ">=0.10.0"
   },
   "scripts": {
+    "clean-deps": "hack/clean-deps.sh",
+    "install-deps": "hack/install-deps.sh",
     "test": "grunt test",
+    "build": "grunt build",
+    "serve": "grunt serve",
+    "start": "grunt serve",
+    "test-integration": "grunt test-integration",
     "postinstall": "node test/upgrade-selenium.js && node_modules/protractor/bin/webdriver-manager update"
   }
 }
