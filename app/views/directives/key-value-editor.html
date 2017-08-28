@@ -20,7 +20,7 @@
       class="key-value-editor-entry"
       ng-class-odd="'odd'"
       ng-class-even="'even'"
-      ng-repeat="entry in entries"
+      ng-repeat="entry in entries track by $index"
       as-sortable-item>
 
       <!-- The name/key block -->
