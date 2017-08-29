@@ -1274,10 +1274,11 @@ loadJSON: function(t, n) {
 return JSON.parse(e[t].getItem("openshift/" + n) || "{}");
 }
 };
-} ]), angular.module("openshiftConsole").factory("APIDiscovery", [ "LOGGING_URL", "METRICS_URL", "$q", function(e, t, n) {
+} ]), angular.module("openshiftConsole").factory("APIDiscovery", [ "LOGGING_URL", "METRICS_URL", "$q", "$filter", function(e, t, n, a) {
 return {
-getLoggingURL: function() {
-return n.when(e);
+getLoggingURL: function(t) {
+var r = e, o = a("annotation")(t, "loggingUIHostname");
+return o && (r = "https://" + o), n.when(r);
 },
 getMetricsURL: function() {
 return n.when(t);
@@ -11338,7 +11339,7 @@ autoScrollActive: !1
 });
 });
 };
-if (s.getLoggingURL().then(function(a) {
+if (s.getLoggingURL(t.context.project).then(function(a) {
 var r = _.get(t.context, "project.metadata.name"), i = _.get(t.options, "container");
 r && i && C && a && (angular.extend(t, {
 kibanaAuthUrl: e.trustAsResourceUrl(URI(a).segment("auth").segment("token").normalizePathname().toString()),
