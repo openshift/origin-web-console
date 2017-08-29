@@ -1016,10 +1016,13 @@ div.listing-ct-head{overflow:visible}
 .listing-ct-head .btn-group,.listing-ct-head button:not(.dropdown-toggle){margin-left:.3em}
 table.listing-ct>caption a{font-size:16px}
 tbody tr.listing-ct-noexpand{cursor:default}
+.nav-tabs-pf>li:first-child a{margin-left:0px!important;padding-left:15px!important}
+.nav-tabs-pf>li a:before{right:0px!important}
+.nav-tabs-pf>li.active a:before,.nav-tabs-pf>li>a:active:before,.nav-tabs-pf>li>a:focus:before,.nav-tabs-pf>li>a:hover:before{height:3px;left:0px}
 dl.registry-image-tags dt{line-height:30px}
 dl.registry-image-tags .registry-image-tag{padding:2px 5px;line-height:30px}
 .registry-image-tag{border:1px solid #ccc;border-radius:2px;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;background-color:#fff}
-a.registry-image-tag{max-width:76px;height:22px;display:block;text-align:center;padding:0 2px;margin-left:2px}
+a.registry-image-tag{max-width:76px;height:22px;display:inline;text-align:center;padding:0 5px;margin-left:2px;font-weight:400;-webkit-border-radius:3;-moz-border-radius:3;border-radius:3px}
 @media (max-width:768px){a.registry-image-tag{max-width:50px}
 }
 registry-imagestream-body a[ng-click]{cursor:pointer}
@@ -1028,16 +1031,23 @@ registry-image-pull code,registry-imagestream-push code{display:block;white-spac
 registry-image-pull code em,registry-image-pull code span.placeholder,registry-imagestream-push code em,registry-imagestream-push code span.placeholder{font-weight:700;font-style:normal;color:#888}
 registry-image-pull .fa-info-circle,registry-imagestream-push .fa-info-circle{font-size:15px;color:#888;padding:0px 5px}
 .registry-imagestream-lock{color:#deaa87;font-size:1.5em;vertical-align:middle}
-registry-imagestream-listing table{max-width:2000px;min-width:85%}
-registry-imagestream-listing table tbody:hover{background-color:#d4edfa}
-registry-imagestream-listing table td.image-identifier{max-width:0;width:50%}
-registry-imagestream-listing table td.image-identifier div.col{max-width:250px;text-overflow:ellipsis;overflow:hidden}
-registry-imagestream-listing table td.image-identifier div.col tt{color:inherit}
-registry-imagestream-listing table tbody.open .listing-ct-panel .listing-ct-body,registry-imagestream-listing table tbody.open tr.listing-ct-panel td div.listing-ct-head{border-right:1px solid #ccc}
-registry-imagestream-listing table thead th{border-top:none}
-registry-imagestream-listing table tr.listing-ct-item td{padding-bottom:10px}
-registry-imagestream-listing table tr.registry-listing-imagestream-item{border-top:1px solid #eee}
-registry-imagestream-listing table tr.registry-listing-imagestream-item td,registry-imagestream-listing table tr.registry-listing-imagestream-item th{border-bottom:2px solid #ccc;font-size:14px;padding-bottom:5px}
+registry-image-listing table.listing-ct,registry-imagestream-listing table.listing-ct{max-width:2000px;min-width:85%}
+registry-image-listing table.listing-ct tbody:hover,registry-imagestream-listing table.listing-ct tbody:hover{background-color:#d4edfa}
+registry-image-listing table.listing-ct td.image-identifier,registry-imagestream-listing table.listing-ct td.image-identifier{max-width:0}
+registry-image-listing table.listing-ct td.image-identifier div.col,registry-imagestream-listing table.listing-ct td.image-identifier div.col{max-width:250px;text-overflow:ellipsis;overflow:hidden}
+registry-image-listing table.listing-ct td.image-identifier div.col tt,registry-imagestream-listing table.listing-ct td.image-identifier div.col tt{color:inherit}
+registry-image-listing table.listing-ct tbody.open .listing-ct-panel .listing-ct-body,registry-image-listing table.listing-ct tbody.open tr.listing-ct-panel td div.listing-ct-head,registry-imagestream-listing table.listing-ct tbody.open .listing-ct-panel .listing-ct-body,registry-imagestream-listing table.listing-ct tbody.open tr.listing-ct-panel td div.listing-ct-head{border-right:1px solid #ccc}
+registry-image-listing table.listing-ct thead th,registry-imagestream-listing table.listing-ct thead th{border-top:none}
+registry-image-listing table.listing-ct tr.listing-ct-item td,registry-imagestream-listing table.listing-ct tr.listing-ct-item td{padding-bottom:10px}
+registry-image-listing table.listing-ct tr.registry-listing-imagestream-item,registry-imagestream-listing table.listing-ct tr.registry-listing-imagestream-item{border-top:1px solid #eee}
+registry-image-listing table.listing-ct tr.registry-listing-imagestream-item td,registry-image-listing table.listing-ct tr.registry-listing-imagestream-item th,registry-imagestream-listing table.listing-ct tr.registry-listing-imagestream-item td,registry-imagestream-listing table.listing-ct tr.registry-listing-imagestream-item th{border-bottom:2px solid #ccc;font-size:14px;padding-bottom:5px}
+registry-image-listing table.listing-ct .inline-tabs,registry-imagestream-listing table.listing-ct .inline-tabs{width:100%;max-height:400px;overflow:auto}
+registry-image-listing table.listing-ct .inline-tabs table,registry-imagestream-listing table.listing-ct .inline-tabs table{margin-top:0;width:100%}
+registry-image-listing table.listing-ct .inline-tabs tr.listing-ct-item,registry-imagestream-listing table.listing-ct .inline-tabs tr.listing-ct-item{background-color:unset;border-bottom:1px solid #eee;border-top:none;border-right:none;border-left:none}
+registry-image-listing table.listing-ct tbody,registry-imagestream-listing table.listing-ct tbody{border-right:1px solid #eee;border-left:1px solid #eee}
+registry-image-listing table.listing-ct tbody tr.listing-ct-item td,registry-image-listing table.listing-ct tbody tr.listing-ct-item th,registry-imagestream-listing table.listing-ct tbody tr.listing-ct-item td,registry-imagestream-listing table.listing-ct tbody tr.listing-ct-item th{border:none}
+registry-image-listing table.listing-ct registry-image-listing .listing-ct-toggle,registry-imagestream-listing table.listing-ct registry-image-listing .listing-ct-toggle{display:none}
+registry-image-listing a.registry-image-tag{display:block}
 registry-image-layers{border:1px solid #d1d1d1;display:block;overflow-y:auto;max-height:200px}
 ul.registry-image-layers{list-style:none;background-image:-webkit-linear-gradient(top,#fff 12px,#d3d3d3 15px);background-image:-moz-linear-gradient(top,#fff 12px,#d3d3d3 15px);background-image:-o-linear-gradient(top,#fff 12px,#d3d3d3 15px);background-image:linear-gradient(top,#fff 12px,#d3d3d3 15px);background-size:2px 100%;background-repeat:no-repeat;margin:8px 10px 15px 15px;padding-left:0px;font-size:13px}
 ul.registry-image-layers li{clear:both}

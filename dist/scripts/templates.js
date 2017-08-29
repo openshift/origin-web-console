@@ -3002,8 +3002,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</registry-imagestream-body>\n" +
     "<registry-imagestream-meta imagestream=\"imageStream\">\n" +
     "</registry-imagestream-meta>\n" +
-    "<registry-imagestream-listing imagestream=\"imageStream\" imagestream-path=\"imagestreamPath\">\n" +
-    "</registry-imagestream-listing>\n" +
+    "<registry-image-listing imagestream=\"imageStream\" imagestream-path=\"imagestreamPath\">\n" +
+    "</registry-image-listing>\n" +
     "<registry-imagestream-push settings=\"settings\" imagestream=\"imageStream\">\n" +
     "</registry-imagestream-push>\n" +
     "</div>\n" +

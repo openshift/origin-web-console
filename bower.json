@@ -29,7 +29,7 @@
     "c3": "0.4.11",
     "kubernetes-label-selector": "2.0.0",
     "kubernetes-container-terminal": "2.1.0",
-    "registry-image-widgets": "0.0.11",
+    "registry-image-widgets": "https://github.com/cockpit-project/registry-image-widgets.git#0.0.13",
     "layout.attrs": "2.1.1",
     "kubernetes-object-describer": "1.0.4",
     "bootstrap-hover-dropdown": "2.1.3",
