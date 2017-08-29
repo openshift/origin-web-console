@@ -50,7 +50,10 @@
         </div>
       </div>
       <div ng-if="!(networking.routesByService[service.metadata.name] | size)">
-        <a ng-if="'routes' | canI : 'create'" ng-href="project/{{service.metadata.namespace}}/create-route?service={{service.metadata.name}}">Create Route</a>
+        <a ng-if="'routes' | canI : 'create'" ng-href="project/{{service.metadata.namespace}}/create-route?service={{service.metadata.name}}">
+          <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>
+          Create Route
+        </a>
         <span ng-if="!('routes' | canI : 'create')" class="text-muted">No Routes</span>
       </div>
     </div>

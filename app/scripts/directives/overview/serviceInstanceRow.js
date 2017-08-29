@@ -39,10 +39,31 @@
       return _.get(row, ['state','serviceClasses', serviceClassName, 'description']);
     };
 
+    var updateInstanceStatus = function() {
+      var conditions = _.get(row.apiObject, 'status.conditions');
+      var readyCondition = _.find(conditions, {type: 'Ready'});
+
+      row.instanceError = _.find(conditions, {type: 'Failed', status: 'True'});
+
+      if (_.get(row.apiObject, 'metadata.deletionTimestamp')) {
+        row.instanceStatus = 'deleted';
+      } else if (row.instanceError) {
+        row.instanceStatus = 'failed';
+      } else if (readyCondition && readyCondition.status === 'True') {
+        row.instanceStatus = 'ready';
+      } else {
+        row.instanceStatus = 'pending';
+        row.pendingMessage = _.get(readyCondition, 'message') || 'The instance is being provisioned asynchronously.';
+      }
+    };
+
     row.$doCheck = function() {
+      updateInstanceStatus();
+
       row.notifications = ListRowUtils.getNotifications(row.apiObject, row.state);
       row.displayName = serviceInstanceDisplayName(row.apiObject, row.state.serviceClasses);
-      row.isBindable = BindingService.isServiceBindable(row.apiObject, row.state.serviceClasses);
+      row.isBindable = !row.instanceError &&
+                       BindingService.isServiceBindable(row.apiObject, row.state.serviceClasses);
       row.description = getDescription();
     };
 
@@ -57,6 +78,11 @@
     };
 
     row.actionsDropdownVisible = function() {
+      // no actions on those marked for deletion
+      if (_.get(row.apiObject, 'metadata.deletionTimestamp')) {
+        return false;
+      }
+
       // We can create bindings
       if (row.isBindable && AuthorizationService.canI({resource: 'bindings', group: 'servicecatalog.k8s.io'}, 'create')) {
         return true;
