@@ -181,6 +181,15 @@ pf-filter-panel .toolbar-pf-results .single-label .pficon-close{padding-right:6p
 pf-filter-panel .toolbar-pf-results p{padding-right:10px;padding-left:10px}
 .pf-filter-label-category{background-color:#39a5dc;font-weight:700;padding:6px}
 .pf-filter-label-category .category-values{padding-left:4px}
+.filter-pf.inline-filter-pf{flex:1 1 100%;margin:15px 15px 7px 0}
+.filter-pf.inline-filter-pf pf-filter-fields,.filter-pf.inline-filter-pf pf-filter-results{display:inline-block}
+.filter-pf.inline-filter-pf .form-group{margin-bottom:0;margin-right:15px}
+.filter-pf.inline-filter-pf .toolbar-pf-results{border-top:none;margin:0}
+.filter-pf.inline-filter-pf .toolbar-pf-results .col-sm-12{float:left;padding:0}
+.filter-pf.inline-filter-pf .toolbar-pf-results h5,.filter-pf.inline-filter-pf .toolbar-pf-results p,.filter-pf.inline-filter-pf .toolbar-pf-results ul{line-height:1.43;padding-bottom:6px;padding-top:6px}
+.filter-pf.inline-filter-pf .toolbar-pf-results .list-inline{margin-bottom:-5px;padding-right:5px}
+.filter-pf.inline-filter-pf .toolbar-pf-results .list-inline>li{margin-bottom:5px}
+.filter-pf .toolbar-pf-results .list-inline{margin-left:0}
 .sort-pf .btn-link{color:#252525;font-size:16px;line-height:1;margin-left:10px;padding:4px 0}
 .sort-pf .btn-link:hover{color:#0088ce}
 .list-group-item-header.list-group-item-not-selectable{cursor:inherit}

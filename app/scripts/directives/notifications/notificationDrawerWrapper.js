@@ -49,7 +49,6 @@
       // var clientGeneratedNotifications = [];
 
       var eventsWatcher;
-      var eventsByNameData = {};
       var eventsMap = {};
 
       // TODO:
@@ -159,6 +158,7 @@
             ensureProjectGroupExists(filtered, event.metadata.namespace);
             filtered[event.metadata.namespace].notifications.push({
               unread:  !EventsService.isRead(event),
+              uid: event.metadata.uid,
               event: event,
               actions: null
             });
@@ -198,8 +198,7 @@
       // TODO: follow-on PR to decide which of these events to toast,
       // via config in constants.js
       var eventWatchCallback = function(eventData) {
-        eventsByNameData = eventData.by('metadata.name');
-        eventsMap = formatAndFilterEvents(eventsByNameData);
+        eventsMap = formatAndFilterEvents(eventData.by('metadata.uid'));
         // TODO: Update to an intermediate map, so that we can then combine both
         // events + notifications into the final notificationGroups output
         notificationGroups = sortNotificationGroups(eventsMap);
