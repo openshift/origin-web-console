@@ -154,44 +154,49 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
   // TODO: Also consider an API_OBJECTS_TO_IGNORE
   // map that can blacklist some, for example, if FailedCreate
   // applies to many but we don't want to see all.
-   EVENTS_TO_SHOW: {
-    // CRUD events that apply to more than one api object
+  EVENTS_TO_SHOW: {
+    // General events that apply to more than one api object
     FailedCreate: true,
     FailedDelete: true,
     FailedUpdate: true,
     // Build
-    BuildStarted: true,
+    BuildCancelled: true,
     BuildCompleted: true,
     BuildFailed: true,
-    BuildCancelled: true,
+    BuildStarted: true,
     // BuildConfig
-    //
+    BuildConfigInstantiateFailed: true,
     // Deployment
+    DeploymentCancelled: true,
     Failed: true,
     ScalingReplicaSet: true,
-    DeploymentCancelled: true,
     // DeploymentConfig
     DeploymentCreated: true,
     DeploymentCreationFailed: true,
-    // Pod
-    FailedSync: true,
-    BackOff: true,
-    Unhealthy: true,
-    // Image/Pod
-    Pulling: true,
-    Pulled: true,
-    // SuccessfulDelete: true,
-    // Cron
-    //
-    // PodAutoscaler
-    SuccessfulRescale: true,
+    // HorizontalPodAutoscaler
     FailedRescale: true,
+    SuccessfulRescale: true,
+    // Pod
+    BackOff: true,
+    FailedSync: true,
+    Unhealthy: true,
+    // PVC
+    FailedBinding: true,
+    ProvisioningFailed: true,
+    VolumeDeleted: true,
     // Service
     LoadBalancerUpdateFailed: true,
-    // PVC
-    VolumeDeleted: true,
-    FailedBinding: true,
-    ProvisioningFailed: true
+    // Service Catalog
+    Deprovisioning: true,
+    ErrorAsyncOperationInProgress: true,
+    ErrorCallingProvision: true,
+    ErrorInjectingBindResult: true,
+    ProvisionedSuccessfully: true,
+    Provisioning: true,
+    ReferencesNonexistentInstance: true,
+    ReferencesNonexistentServiceClass: true,
+    ReferencesNonexistentServicePlan: true,
+    UnbindCallFailed: true
   },
 
   // href's will be prefixed with /project/{{projectName}} unless they are absolute URLs
