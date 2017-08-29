@@ -85,6 +85,8 @@ pf-c3-chart{display:block}
 .utilization-trend-chart-pf .sparkline-chart{float:left;margin-left:-5px;margin-right:-5px;width:100%}
 .utilization-trend-chart-pf .legend-text{color:inherit;display:block;font-size:12px;font-weight:400;margin-left:0}
 .utilization-trend-chart-pf.data-unavailable-pf .current-values{color:transparent}
+.trend-card-compact-pf .col-sm-2:not(.col-sm-push-10){padding-right:0}
+.trend-card-compact-pf .col-sm-10:not(.col-sm-pull-2){padding-left:0}
 .trend-flat-details{display:table;margin-top:5px}
 @media (min-width:768px){.trend-flat-details{margin-top:25px}
 }
@@ -155,10 +157,12 @@ pf-topology{display:block;user-select:none}
 .toolbar-pf-include-actions{display:inline-block;margin:0 5px}
 .dropdown-kebab-pf.invisible{opacity:0;pointer-events:none}
 .toolbar-pf-actions.no-filter{margin-left:-30px;margin-bottom:10px}
+.filter-pf .input-group .input-group-btn .dropdown-menu>.selected>a{background-color:#0088ce!important;border-color:#0076b7!important;color:#fff!important}
+.filter-pf .category-select{display:flex}
+.filter-pf .category-select-value{border-left-width:0!important}
 .filter-pf.filter-fields .form-group{padding-left:0;width:275px}
 .filter-select .btn-default{background-color:#fff;background-image:none;color:#8b8d8f;font-size:12px;font-style:italic;font-weight:400}
 .canvas-in-connection-mode,.read-only,table.dataTable thead .sorting,table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc{background-image:none!important}
-.input-group .input-group-btn .dropdown-menu>.selected>a{background-color:#0088ce!important;border-color:#0076b7!important;color:#fff!important}
 pf-filter-panel .dropdown>.dropdown-menu,pf-filter-panel .input-group-btn>.dropdown-menu{margin-top:5px}
 pf-filter-panel input:-moz-placeholder{font-style:italic;padding-left:10px}
 pf-filter-panel input::-moz-placeholder{font-style:italic;padding-left:10px}

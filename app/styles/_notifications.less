@@ -1,0 +1,67 @@
+// fixes positioning that doesn't quite work w/core patternfly styles
+.navbar-pf-alt .nav .nav-item-iconic .badge {
+  font-size: 9px;
+  margin: -15px 0 0 -12px;
+  min-width: 10px;
+  min-height: 10px;
+}
+
+notification-drawer-wrapper {
+  .drawer-pf {
+    height: calc(~"100vh - 80px"); //to create a 20px offset bottom
+    top: @navbar-os-header-height-desktop - 10;
+    z-index: @zindex-navbar-fixed + 1; // was 1050
+    .tech-preview & {
+      top: @navbar-os-header-height-desktop + @tech-preview-banner-height - 10;
+    }
+  }
+  // the whole block is clickable, need to set pointer on all of these
+  // for the correct visual
+  .drawer-pf-notification,
+  .drawer-pf-notification-info,
+  .drawer-pf-notification-message {
+    cursor: pointer;
+  }
+  .drawer-pf-notification {
+    padding: 0px;
+  }
+  .drawer-pf-notification.ng-leave {
+    transition:0.25s linear all;
+    opacity:1;
+  }
+  .drawer-pf-notification.ng-leave.ng-leave-active {
+    opacity:0;
+  }
+  .drawer-pf-notification-inner {
+    padding:15px;
+    .pficon-close {
+      color: #000;
+    }
+  }
+  .expanded-notification {
+    .drawer-pf-notification-message {
+      max-width: 35%; // keeps flex in check in case of a really long message
+    }
+  }
+}
+
+.panel-heading {
+  .panel-title {
+    // TODO: hack to eliminate side-to-side wobble
+    // There is a hard-coded <h4> that wraps the header:
+    //   - https://github.com/patternfly/angular-patternfly/issues/539
+    // I'm putting quite a bit of markup inside the header,
+    // need to tinker to eliminate this rule.
+    overflow:hidden;
+    .container-fluid {
+      margin-left: 0;
+      margin-right: 0;
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+  .small {
+    .small();
+    color: #000000;
+  }
+}

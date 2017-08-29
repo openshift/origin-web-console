@@ -1,8 +1,8 @@
 <div class="right-container events-sidebar" ng-hide="sidebarCollapsed">
   <div class="sidebar-header right-header">
-    <div>      
+    <div>
       <h2>
-        <span class="events-sidebar-collapse"><a href="" class="fa fa-arrow-circle-o-right" title="Collapse event sidebar" ng-click="collapseSidebar()"><span class="sr-only">Collapse event sidebar</span></a></span>        
+        <span class="events-sidebar-collapse"><a href="" class="fa fa-arrow-circle-o-right" title="Collapse event sidebar" ng-click="collapseSidebar()"><span class="sr-only">Collapse event sidebar</span></a></span>
         Events
         <small ng-if="warningCount" class="warning-count">
           <span class="pficon pficon-warning-triangle-o"></span>
@@ -37,8 +37,16 @@
             <div class="event-reason">
               {{event.reason | sentenceCase}}
             </div>
-            <div class="event-object">
-              {{event.involvedObject.kind | kindToResource | abbreviateResource}}/{{event.involvedObject.name}}
+            <div
+              class="event-object"
+              ng-init="resourceURL = (event | navigateEventInvolvedObjectURL)">
+              <a
+                ng-if="resourceURL"
+                ng-attr-title="Navigate to {{event.involvedObject.name}}"
+                href="{{resourceURL}}">
+                {{event.involvedObject.kind | kindToResource | abbreviateResource}}/{{event.involvedObject.name}}
+              </a>
+              <span ng-if="!(resourceURL)">{{event.involvedObject.kind | kindToResource | abbreviateResource}}/{{event.involvedObject.name}}</span>
             </div>
           </div>
           <div class="detail-group">

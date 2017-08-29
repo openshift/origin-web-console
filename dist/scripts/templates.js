@@ -6853,8 +6853,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"event-reason\">\n" +
     "{{event.reason | sentenceCase}}\n" +
     "</div>\n" +
-    "<div class=\"event-object\">\n" +
+    "<div class=\"event-object\" ng-init=\"resourceURL = (event | navigateEventInvolvedObjectURL)\">\n" +
+    "<a ng-if=\"resourceURL\" ng-attr-title=\"Navigate to {{event.involvedObject.name}}\" href=\"{{resourceURL}}\">\n" +
     "{{event.involvedObject.kind | kindToResource | abbreviateResource}}/{{event.involvedObject.name}}\n" +
+    "</a>\n" +
+    "<span ng-if=\"!(resourceURL)\">{{event.involvedObject.kind | kindToResource | abbreviateResource}}/{{event.involvedObject.name}}</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"detail-group\">\n" +
@@ -6946,7 +6949,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"hidden-xs-block visible-sm-block visible-md-block hidden-lg-block\">\n" +
     "<span ng-bind-html=\"event.involvedObject.kind | humanizeKind : true | highlightKeywords : filterExpressions\"></span>\n" +
     "</div>\n" +
-    "<span ng-init=\"resourceURL = (event.involvedObject.name | navigateResourceURL : event.involvedObject.kind : event.metadata.namespace : event.involvedObject.apiVersion)\">\n" +
+    "<span ng-init=\"resourceURL = (event | navigateEventInvolvedObjectURL)\">\n" +
     "<a ng-href=\"{{resourceURL}}\" ng-if=\"resourceURL\"><span ng-bind-html=\"event.involvedObject.name | highlightKeywords : filterExpressions\"></span></a>\n" +
     "<span ng-if=\"!resourceURL\" ng-bind-html=\"event.involvedObject.name | highlightKeywords : filterExpressions\"></span>\n" +
     "</span>\n" +
@@ -7075,6 +7078,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/header/_navbar-utility.html',
     "<ul class=\"nav navbar-nav navbar-right navbar-iconic\">\n" +
+    "<li>\n" +
+    "<notification-counter></notification-counter>\n" +
+    "</li>\n" +
     "<li extension-point extension-name=\"nav-system-status\" extension-types=\"dom\"></li>\n" +
     "<li ng-if=\"launcherApps.length > 0\">\n" +
     "<pf-application-launcher items=\"launcherApps\" is-list=\"true\"></pf-application-launcher>\n" +
@@ -7266,8 +7272,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/key-value-editor.html',
     "<ng-form name=\"forms.keyValueEditor\" novalidate ng-if=\"entries\">\n" +
-    "<div class=\"key-value-editor\" ng-model=\"entries\" as-sortable=\"dragControlListeners\">\n" +
-    "<div ng-if=\"showHeader\" class=\"key-value-editor-entry\">\n" +
+    "<div ng-if=\"showHeader\" class=\"key-value-editor-entry key-value-editor-entry-header\">\n" +
     "<div class=\"form-group key-value-editor-header key-header\">\n" +
     "<div class=\"input-group\">\n" +
     "<span class=\"help-block\">{{keyPlaceholder}}</span>\n" +
@@ -7279,6 +7284,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div ng-model=\"entries\" class=\"key-value-editor\" as-sortable=\"dragControlListeners\">\n" +
     "<div class=\"key-value-editor-entry\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\" ng-repeat=\"entry in entries\" as-sortable-item>\n" +
     "\n" +
     "<div class=\"form-group key-value-editor-input\" ng-class=\"{ 'has-error' :  (forms.keyValueEditor[uniqueForKey(unique, $index)].$invalid && forms.keyValueEditor[uniqueForKey(unique, $index)].$touched) }\">\n" +
@@ -7341,7 +7347,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!isValueFromReadonly(entry)\">\n" +
-    "<div class=\"ui-select\">\n" +
+    "<div class=\"ui-select key-value-editor-select\">\n" +
     "<ui-select ng-model=\"entry.selectedValueFrom\" ng-required=\"true\" on-select=\"valueFromObjectSelected(entry, $select.selected)\">\n" +
     "<ui-select-match placeholder=\"Select a resource\">\n" +
     "<span>\n" +
@@ -7354,7 +7360,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
-    "<div class=\"ui-select\">\n" +
+    "<div class=\"ui-select key-value-editor-select\">\n" +
     "<ui-select ng-model=\"entry.selectedValueFromKey\" ng-required=\"true\" on-select=\"valueFromKeySelected(entry, $select.selected)\">\n" +
     "<ui-select-match placeholder=\"Select key\">\n" +
     "{{$select.selected}}\n" +
@@ -7706,6 +7712,93 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<key-value-editor ng-if=\"$ctrl.showParamsTable\" entries=\"$ctrl.parameters.all\" key-placeholder=\"Name\" value-placeholder=\"Value\" cannot-add cannot-delete cannot-sort show-header is-readonly></key-value-editor>\n" +
     "</div>"
+  );
+
+
+  $templateCache.put('views/directives/notifications/header.html',
+    "<div class=\"container-fluid\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-xs-6\">\n" +
+    "<strong>{{notificationGroup.heading}}</strong>\n" +
+    "</div>\n" +
+    "<div class=\"col-xs-6 text-right small\">\n" +
+    "<a title=\"All Events\" ng-href=\"project/{{$ctrl.customScope.projectName}}/browse/events\" ng-click=\"$ctrl.customScope.close()\">\n" +
+    "View All Events\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"row mar-top-md\">\n" +
+    "<div class=\"col-xs-12\">\n" +
+    "<em>{{notificationGroup.totalUnread}} Unread</em>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/directives/notifications/notification-body.html',
+    "<div class=\"drawer-pf-notification-inner\" tabindex=\"0\" ng-click=\"$ctrl.customScope.markRead(notification)\">\n" +
+    "<a class=\"pull-right\" tabindex=\"0\" ng-click=\"$ctrl.customScope.clear(notification, $index, notificationGroup)\">\n" +
+    "<span class=\"sr-only\">Clear notification</span>\n" +
+    "<span ng-if=\"notification.event\" aria-hidden=\"true\" class=\"pull-left pficon pficon-close\"></span>\n" +
+    "</a>\n" +
+    "<div uib-dropdown class=\"dropdown pull-right dropdown-kebab-pf\" ng-if=\"notification.actions.length\">\n" +
+    "<button uib-dropdown-toggle class=\"btn btn-link dropdown-toggle\" type=\"button\" id=\"dropdownKebabRight-{{$id}}\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"true\">\n" +
+    "<span class=\"fa fa-ellipsis-v\"></span>\n" +
+    "</button>\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"dropdownKebabRight\">\n" +
+    "<li ng-repeat=\"action in notification.actions\" role=\"{{action.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}\">\n" +
+    "<a ng-if=\"!action.isSeparator\" href=\"\" class=\"secondary-action\" title=\"{{action.title}}\" ng-click=\"$ctrl.customScope.handleAction(notification, action)\">\n" +
+    "{{action.name}}\n" +
+    "</a>\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
+    "<span ng-if=\"notification.event\" aria-hidden=\"true\" class=\"pull-left\" ng-class=\"$ctrl.customScope.getNotficationStatusIconClass(notification.event)\"></span>\n" +
+    "<span class=\"sr-only\">{{notification.event.type}}</span>\n" +
+    "<div class=\"drawer-pf-notification-content\">\n" +
+    "<div class=\"drawer-pf-notification-message\" ng-attr-title=\"{{notification.event.message}}\">\n" +
+    "<div>\n" +
+    "<span>\n" +
+    "{{notification.event.reason | humanize}} &mdash; {{notification.event.involvedObject.kind | humanize}}\n" +
+    "</span>\n" +
+    "<span ng-init=\"eventObjUrl = (notification.event | navigateEventInvolvedObjectURL)\">\n" +
+    "<a ng-if=\"eventObjUrl\" ng-attr-title=\"Navigate to {{notification.event.involvedObject.name}}\" href=\"{{eventObjUrl}}\" ng-click=\"$ctrl.customScope.close()\">\n" +
+    "{{notification.event.involvedObject.name}}\n" +
+    "</a>\n" +
+    "<span ng-if=\"!(eventObjUrl)\">{{notification.event.involvedObject.name}}</span>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"notification.event.count > 1\" class=\"text-muted small\">\n" +
+    "{{notification.event.count}} times in the last\n" +
+    "<duration-until-now timestamp=\"notification.event.firstTimestamp\" omit-single=\"true\" precision=\"1\"></duration-until-now>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<span ng-if=\"$ctrl.drawerExpanded\" class=\"drawer-pf-notification-message text-muted small word-break\">\n" +
+    "{{notification.event.message}}\n" +
+    "</span>\n" +
+    "<div class=\"drawer-pf-notification-info\">\n" +
+    "<span class=\"date\">{{notification.event.lastTimestamp | date:'shortDate'}}</span>\n" +
+    "<span class=\"time\">{{notification.event.lastTimestamp | date:'mediumTime'}}</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/directives/notifications/notification-counter.html',
+    "<li class=\"drawer-pf-trigger\" ng-if=\"!$ctrl.hide\">\n" +
+    "<a href=\"\" class=\"nav-item-iconic\" ng-click=\"$ctrl.onClick()\">\n" +
+    "<span class=\"fa fa-bell\" title=\"Notifications\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-if=\"$ctrl.showUnreadNotificationsIndicator\" class=\"badge\"> </span>\n" +
+    "<span class=\"sr-only\">Notifications</span>\n" +
+    "</a>\n" +
+    "</li>"
+  );
+
+
+  $templateCache.put('views/directives/notifications/notification-drawer-wrapper.html',
+    "<pf-notification-drawer drawer-hidden=\"$ctrl.drawerHidden\" allow-expand=\"$ctrl.allowExpand\" drawer-expanded=\"$ctrl.drawerExpanded\" drawer-title=\"{{$ctrl.drawerTitle}}\" show-clear-all=\"$ctrl.showClearAll\" show-mark-all-read=\"$ctrl.showMarkAllRead\" notification-groups=\"$ctrl.notificationGroups\" heading-include=\"{{$ctrl.headingInclude}}\" notification-body-include=\"{{$ctrl.notificationBodyInclude}}\" on-close=\"$ctrl.onClose\" on-mark-all-read=\"$ctrl.onMarkAllRead\" on-clear-all=\"$ctrl.onClearAll\" custom-scope=\"$ctrl.customScope\"></pf-notification-drawer>"
   );
 
 

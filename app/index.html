@@ -42,6 +42,8 @@
     <!-- Add your site or application content here -->
 
     <toast-notifications></toast-notifications>
+    <notification-drawer-wrapper></notification-drawer-wrapper>
+
     <div ng-view>
       <!-- Include default simple nav and shaded background as a placeholder until API discovery finishes -->
       <nav class="navbar navbar-pf-alt top-header" role="navigation">
@@ -190,6 +192,7 @@
 
         <script src="scripts/constants.js"></script>
         <script src="scripts/app.js"></script>
+        <script src="scripts/services/browserStore.js"></script>
         <script src="scripts/services/discovery.js"></script>
         <script src="scripts/services/applicationGenerator.js"></script>
         <script src="scripts/services/navigate.js"></script>
@@ -233,6 +236,7 @@
         <script src="scripts/services/listRowUtils.js"></script>
         <script src="scripts/services/ownerReferences.js"></script>
         <script src="scripts/controllers/landingPage.js"></script>
+        <script src="scripts/services/events.js"></script>
         <script src="scripts/controllers/projects.js"></script>
         <script src="scripts/controllers/pods.js"></script>
         <script src="scripts/controllers/pod.js"></script>
@@ -391,6 +395,8 @@
         <script src="scripts/directives/affix.js"></script>
         <script src="scripts/directives/editEnvironmentVariables.js"></script>
         <script src="scripts/directives/initContainersSummary.js"></script>
+        <script src="scripts/directives/notifications/notificationCounter.js"></script>
+        <script src="scripts/directives/notifications/notificationDrawerWrapper.js"></script>
         <script src="scripts/filters/date.js"></script>
         <script src="scripts/filters/resources.js"></script>
         <script src="scripts/filters/canI.js"></script>

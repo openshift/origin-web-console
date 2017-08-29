@@ -76,7 +76,7 @@
           <div class="hidden-xs-block visible-sm-block visible-md-block hidden-lg-block">
             <span ng-bind-html="event.involvedObject.kind | humanizeKind : true | highlightKeywords : filterExpressions"></span>
           </div>
-          <span ng-init="resourceURL = (event.involvedObject.name | navigateResourceURL : event.involvedObject.kind : event.metadata.namespace : event.involvedObject.apiVersion)">
+          <span ng-init="resourceURL = (event | navigateEventInvolvedObjectURL)">
             <a
               ng-href="{{resourceURL}}"
               ng-if="resourceURL"><span ng-bind-html="event.involvedObject.name | highlightKeywords : filterExpressions"></span></a>
