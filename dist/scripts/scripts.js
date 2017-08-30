@@ -1203,10 +1203,11 @@ return h ? b(e, null) || d :a(e, null, f, g) || d;
 a && $("body").addClass("ios");
 } ]).run([ "$rootScope", function(a) {
 _.get(window, "OPENSHIFT_CONSTANTS.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page") && (a.globalTechPreviewIndicator = !0, $("body").addClass("tech-preview"));
-} ]), hawtioPluginLoader.addModule("openshiftConsole"), angular.module("openshiftConsole").factory("APIDiscovery", [ "LOGGING_URL", "METRICS_URL", "$q", function(a, b, c) {
+} ]), hawtioPluginLoader.addModule("openshiftConsole"), angular.module("openshiftConsole").factory("APIDiscovery", [ "LOGGING_URL", "METRICS_URL", "$q", "$filter", function(a, b, c, d) {
 return {
-getLoggingURL:function() {
-return c.when(a);
+getLoggingURL:function(b) {
+var e = a, f = d("annotation")(b, "openshift.io/logging.ui.hostname");
+return f && (e = "https://" + f), c.when(e);
 },
 getMetricsURL:function() {
 return c.when(b);
@@ -11403,7 +11404,7 @@ autoScrollActive:!1
 });
 });
 };
-return h.getLoggingURL().then(function(d) {
+return h.getLoggingURL(b.context.project).then(function(d) {
 var e = _.get(b.context, "project.metadata.name"), g = _.get(b.options, "container");
 e && g && u && d && (angular.extend(b, {
 kibanaAuthUrl:a.trustAsResourceUrl(URI(d).segment("auth").segment("token").normalizePathname().toString()),
