@@ -5,8 +5,11 @@
 notification-drawer-wrapper {
   .drawer-pf {
     height: calc(100vh ~"-" (@navbar-os-header-height-mobile + @project-bar-height-mobile));
+    opacity: 1;
     position: fixed;
+    right: 0;
     top: (@navbar-os-header-height-mobile + @project-bar-height-mobile);
+    transition: top 150ms ease-in-out, opacity 150ms;
     z-index: @zindex-navbar-fixed - 2; // two less than navbar, one less than project-bar
     @media(max-width: 350px) {
       left: 0;
@@ -21,6 +24,14 @@ notification-drawer-wrapper {
       @media(min-width: @screen-sm-min) {
         left: 270px;
       }
+    }
+    &.hide {
+      opacity: 0;
+      top: 38px;
+    }
+    &.hide-add,
+    &.hide-remove {
+      display: block !important;
     }
     .tech-preview & {
       height: calc(100vh ~"-" (@navbar-os-header-height-mobile + @project-bar-height-mobile + @tech-preview-banner-height));
@@ -48,34 +59,69 @@ notification-drawer-wrapper {
       }
     }
   }
+  .drawer-pf-notification-info {
+    font-size: @font-size-small;
+  }
   .drawer-pf-notification-inner {
     padding: 15px;
     .pficon-close {
-      color: @color-pf-black;
+      color: @color-pf-black-400;
+      &:hover,&:focus,&:active {
+        color: @color-pf-black-700;
+      }
     }
   }
-  .expanded-notification .drawer-pf-notification-message {
-    max-width: 35%; // keeps flex in check in case of a really long message
+  .drawer-pf-title h3 {
+    font-size: @font-size-base - 1;
+  }
+  .expanded-notification {
+    .drawer-pf-notification-info {
+      .text-muted;
+    }
+    .drawer-pf-notification-message-expanded {
+      font-size: @font-size-base - 1;
+      padding: 10px 10px 10px 42px;
+      .text-muted;
+    }
+    &.unread {
+      .drawer-pf-notification-info {
+        color: inherit;
+      }
+      .drawer-pf-notification-message-expanded {
+        color: inherit;
+        font-weight: normal;
+        .word-break();
+      }
+    }
   }
 }
 
 .panel-heading {
   .panel-title {
+    color: @color-pf-black-700;
+    font-size: @font-size-h4;
+    font-weight: bold;
+    line-height: normal;
     // TODO: hack to eliminate side-to-side wobble
     // There is a hard-coded <h4> that wraps the header:
     //   - https://github.com/patternfly/angular-patternfly/issues/539
     // I'm putting quite a bit of markup inside the header,
     // need to tinker to eliminate this rule.
-    overflow: hidden;
+    overflow:hidden;
     .container-fluid {
       margin-left: 0;
       margin-right: 0;
       padding-left: 0;
       padding-right: 0;
     }
-  }
-  .small {
-    .small();
-    color: @color-pf-black;
+    .panel-counter {
+      font-size: @font-size-small;
+      font-weight: normal;
+      padding: 0;
+      a {
+        display: inline-block;
+        font-style: normal;
+      }
+    }
   }
 }
