@@ -11,24 +11,22 @@
           <div class="container surface-shaded">
             <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
             <alerts alerts="alerts"></alerts>
-            <div ng-if="!resource" class="pad-top-md">Loading...</div>
+            <div ng-if="!resource" class="pad-top-md" translate>Loading...</div>
             <div ng-if="resource" class="pad-top-md">
-              <h1 class="truncate">Edit <span class="hidden-xs">{{resource.kind | humanizeKind : true}}</span> {{resource.metadata.name}}</h1>
+              <h1 class="truncate"><translate>Edit</translate> <span class="hidden-xs">{{resource.kind | humanizeKind : true}}</span> {{resource.metadata.name}}</h1>
               <parse-error error="error" ng-if="error"></parse-error>
 
               <div ng-if="resourceChanged && !resourceDeleted && !updatingNow" class="alert alert-warning">
                 <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-                <span class="sr-only">Warning:</span>
-                {{resource.kind | humanizeKind | upperFirst}} <strong>{{resource.metadata.name}}</strong> has
-                changed since you started editing it. You'll need to copy any changes you've made and edit the
-                {{resource.kind | humanizeKind}} again.
+                <span class="sr-only" translate>Warning:</span>
+                <translate>{{resource.kind | humanizeKind | upperFirst}} <strong>{{resource.metadata.name}}</strong> has changed since you started editing it.</translate>
+                <translate>You'll need to copy any changes you've made and edit the {{resource.kind | humanizeKind}} again.</translate>
               </div>
 
               <div ng-if="resourceDeleted" class="alert alert-warning">
                 <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-                <span class="sr-only">Warning:</span>
-                {{resource.kind | humanizeKind | upperFirst}} <strong>{{resource.metadata.name}}</strong> has
-                been deleted since you started editing it.
+                <span class="sr-only" translate>Warning:</span>
+                <translate>{{resource.kind | humanizeKind | upperFirst}} <strong>{{resource.metadata.name}}</strong> has been deleted since you started editing it.</translate>
               </div>
 
               <confirm-on-exit dirty="modified"></confirm-on-exit>
@@ -47,11 +45,11 @@
                 <button class="btn btn-lg btn-primary"
                         type="button"
                         ng-click="save()"
-                        ng-disabled="!modified || resourceChanged || resourceDeleted || updatingNow">Save</button>
+                        ng-disabled="!modified || resourceChanged || resourceDeleted || updatingNow" translate>Save</button>
                 <button class="btn btn-lg btn-default"
                         type="button"
                         ng-disabled="updatingNow"
-                        ng-click="cancel()">Cancel</button>
+                        ng-click="cancel()" translate>Cancel</button>
               </div>
             </div>
           </div>

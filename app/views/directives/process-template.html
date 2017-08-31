@@ -8,11 +8,11 @@
         system-labels="$ctrl.systemLabels"
         expand="true"
         can-toggle="false"
-        help-text="Each label is applied to each created resource.">
+        help-text="{{'Each label is applied to each created resource.'|translate}}">
     </label-editor>
     <div ng-if="!$ctrl.isDialog" class="buttons gutter-top-bottom">
-      <button class="btn btn-primary btn-lg" ng-click="$ctrl.createFromTemplate()" ng-disabled="$ctrl.templateForm.$invalid || $ctrl.disableInputs">Create</button>
-      <a class="btn btn-default btn-lg" href="" ng-click="$ctrl.cancel()" role="button">Cancel</a>
+      <button class="btn btn-primary btn-lg" ng-click="$ctrl.createFromTemplate()" ng-disabled="$ctrl.templateForm.$invalid || $ctrl.disableInputs" translate>Create</button>
+      <a class="btn btn-default btn-lg" href="" ng-click="$ctrl.cancel()" role="button" translate>Cancel</a>
     </div>
   </ng-form>
 </fieldset>

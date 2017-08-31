@@ -6,6 +6,10 @@
 
 // NOTE: Update extensions/examples/online-extensions.js if you add a new help link to this map.
 
+var gettext = function(s) {
+  return s;
+};
+
 if (angular.isUndefined(window.OPENSHIFT_CONSTANTS)) {
   window.OPENSHIFT_CONSTANTS = {};
 }
@@ -143,18 +147,18 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
   // href's will be prefixed with /project/{{projectName}} unless they are absolute URLs
   PROJECT_NAVIGATION: [
     {
-      label: "Overview",
+      label: gettext("Overview"),
       iconClass: "fa fa-dashboard",
       href: "/overview"
     },
     {
-      label: "Applications",
+      label: gettext("Applications"),
       iconClass: "fa fa-cubes",
       secondaryNavSections: [
         {
           items: [
             {
-              label: "Deployments",
+              label: gettext("Deployments"),
               href: "/browse/deployments",
               prefixes: [
                 "/browse/deployment/",
@@ -164,28 +168,28 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
               ]
             },
             {
-              label: "Stateful Sets",
+              label: gettext("Stateful Sets"),
               href: "/browse/stateful-sets",
               prefixes: [
                 "/browse/stateful-sets/"
               ]
             },
             {
-              label: "Pods",
+              label: gettext("Pods"),
               href: "/browse/pods",
               prefixes: [
                 "/browse/pods/"
               ]
             },
             {
-              label: "Services",
+              label: gettext("Services"),
               href: "/browse/services",
               prefixes: [
                 "/browse/services/"
               ]
             },
             {
-              label: "Routes",
+              label: gettext("Routes"),
               href: "/browse/routes",
               prefixes: [
                 "/browse/routes/"
@@ -196,13 +200,13 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
       ]
     },
     {
-      label: "Builds",
+      label: gettext("Builds"),
       iconClass: "pficon pficon-build",
       secondaryNavSections: [
         {
           items: [
             {
-              label: "Builds",
+              label: gettext("Builds"),
               href: "/browse/builds",
               prefixes: [
                 "/browse/builds/",
@@ -210,14 +214,14 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
               ]
             },
             {
-              label: "Pipelines",
+              label: gettext("Pipelines"),
               href: "/browse/pipelines",
               prefixes: [
                 "/browse/pipelines/"
               ]
             },
             {
-              label: "Images",
+              label: gettext("Images"),
               href: "/browse/images",
               prefixes: [
                 "/browse/images/"
@@ -228,17 +232,17 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
       ]
     },
     {
-      label: "Resources",
+      label: gettext("Resources"),
       iconClass: "fa fa-files-o",
       secondaryNavSections: [
         {
           items: [
             {
-              label: "Quota",
+              label: gettext("Quota"),
               href: "/quota"
             },
             {
-              label: "Membership",
+              label: gettext("Membership"),
               href: "/membership",
               // supports: {resource: '', verb: '', group: '' }
               canI: {
@@ -247,14 +251,14 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
               }
             },
             {
-              label: "Config Maps",
+              label: gettext("Config Maps"),
               href: "/browse/config-maps",
               prefixes: [
                 "/browse/config-maps/"
               ]
             },
             {
-              label: "Secrets",
+              label: gettext("Secrets"),
               href: "/browse/secrets",
               prefixes: [
                 "/browse/secrets/"
@@ -265,7 +269,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
               }
             },
             {
-              label: "Other Resources",
+              label: gettext("Other Resources"),
               href: "/browse/other"
             }
           ]
@@ -273,7 +277,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
       ]
     },
     {
-      label: "Storage",
+      label: gettext("Storage"),
       iconClass: "pficon pficon-container-node",
       href: "/browse/storage",
       prefixes: [
@@ -281,7 +285,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
       ]
     },
     {
-      label: "Monitoring",
+      label: gettext("Monitoring"),
       iconClass: "pficon pficon-screen",
       href: "/monitoring",
       prefixes: [
@@ -311,51 +315,51 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
   CATALOG_CATEGORIES: [
     {
       id: 'languages',
-      label: "Languages",
+      label: gettext("Languages"),
       iconClassDefault: "fa fa-code",
       items: [
         {
           id: "java",
-          label: "Java",
+          label: gettext("Java"),
           iconClass: "font-icon icon-openjdk",
           subcategories: [{
             id: 'java-subcategories',
             items: [
               {
                 id: "amq",
-                label: "Red Hat JBoss A-MQ"
+                label: gettext("Red Hat JBoss A-MQ")
               },
               {
                 id: "processserver",
-                label: "Red Hat JBoss BPM Suite"
+                label: gettext("Red Hat JBoss BPM Suite")
               },
               {
                 id: "decisionserver",
-                label: "Red Hat JBoss BRMS"
+                label: gettext("Red Hat JBoss BRMS")
               },
               {
                 id: "datagrid",
-                label: "Red Hat JBoss Data Grid"
+                label: gettext("Red Hat JBoss Data Grid")
               },
               {
                 id: "eap",
-                label: "Red Hat JBoss EAP"
+                label: gettext("Red Hat JBoss EAP")
               },
               {
                 id: "jboss-fuse",
-                label: "Red Hat JBoss Fuse"
+                label: gettext("Red Hat JBoss Fuse")
               },
               {
                 id: "tomcat",
-                label: "Red Hat JBoss Web Server (Tomcat)"
+                label: gettext("Red Hat JBoss Web Server (Tomcat)")
               },
               {
                 id: "sso",
-                label: "Red Hat Single Sign-On"
+                label: gettext("Red Hat Single Sign-On")
               },
               {
                 id: "wildfly",
-                label: "WildFly"
+                label: gettext("WildFly")
               }
             ]
           }]
@@ -363,83 +367,83 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
         {
           id: "javascript",
           categoryAliases: ["nodejs","js"],
-          label: "JavaScript",
+          label: gettext("JavaScript"),
           iconClass: "font-icon icon-js"
         },
         {
           id: "dotnet",
-          label: ".NET",
+          label: gettext(".NET"),
           iconClass: "font-icon icon-dotnet"
         },
         {
           id: "perl",
-          label: "Perl",
+          label: gettext("Perl"),
           iconClass: "font-icon icon-perl"
         },
         {
           id: "php",
-          label: "PHP",
+          label: gettext("PHP"),
           iconClass: "font-icon icon-php"
         },
         {
           id: "python",
-          label: "Python",
+          label: gettext("Python"),
           iconClass: "font-icon icon-python"
         },
         {
           id: "ruby",
-          label: "Ruby",
+          label: gettext("Ruby"),
           iconClass: "font-icon icon-ruby"
         },
         {
           id: "Golang",
           categoryAliases: ["go"],
-          label: "Go",
+          label: gettext("Go"),
           iconClass: "font-icon icon-go-gopher"
         }
       ]
     },
     {
       id: 'technologies',
-      label: "Technologies",
+      label: gettext("Technologies"),
       items: [
         {
           id: "business-process-services",
           categoryAliases: ["decisionserver","processserver"],
-          label: "Business Process Services",
-          description: "Model, automate, and orchestrate business processes across applications, services, and data."
+          label: gettext("Business Process Services"),
+          description: gettext("Model, automate, and orchestrate business processes across applications, services, and data.")
         },
         {
           id: "ci-cd",
           categoryAliases:["jenkins"],
-          label: "Continuous Integration & Deployment",
-          description: "Automate the build, test, and deployment of your application with each new code revision."
+          label: gettext("Continuous Integration & Deployment"),
+          description: gettext("Automate the build, test, and deployment of your application with each new code revision.")
         },
         {
           id: "datastore",
           categoryAliases: ["database","datagrid"],
-          label: "Data Stores",
-          description: "Store and manage collections of data."
+          label: gettext("Data Stores"),
+          description: gettext("Store and manage collections of data.")
         },
         {
           id: "messaging",
-          label: "Messaging",
-          description: "Facilitate communication between applications and distributed processes with a messaging server."
+          label: gettext("Messaging"),
+          description: gettext("Facilitate communication between applications and distributed processes with a messaging server.")
         },
         {
           id: "integration",
-          label: "Integration",
-          description: "Connect with other applications and data to enhance functionality without duplication."
+          label: gettext("Integration"),
+          description: gettext("Connect with other applications and data to enhance functionality without duplication.")
         },
         {
           id: "single-sign-on",
           categoryAliases: ["sso"],
-          label: "Single Sign-On",
-          description: "A centralized authentication server for users to log in, log out, register, and manage user accounts for applications and RESTful web services."
+          label: gettext("Single Sign-On"),
+          description: gettext("A centralized authentication server for users to log in, log out, register, and manage user accounts for applications and RESTful web services.")
         },
         {
           id: "",
-          label: "Uncategorized",
+          label: gettext("Uncategorized"),
           description: ""
         }
       ]

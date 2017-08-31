@@ -8,14 +8,14 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('BuildsController', function ($routeParams, $scope, DataService, $filter, LabelFilter, Logger, $location, BuildsService, ProjectsService) {
+  .controller('BuildsController', function ($routeParams, $scope, DataService, $filter, LabelFilter, Logger, $location, BuildsService, ProjectsService, gettext) {
     $scope.projectName = $routeParams.project;
     $scope.builds = {};
     $scope.unfilteredBuildConfigs = {};
     $scope.buildConfigs = undefined;
     $scope.labelSuggestions = {};
     $scope.alerts = $scope.alerts || {};
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettext("Loading...");
     $scope.latestByConfig = {};
 
     var buildConfigForBuild = $filter('buildConfigForBuild');
@@ -32,7 +32,7 @@ angular.module('openshiftConsole')
         watches.push(DataService.watch("builds", context, function(builds) {
           // Filter out pipeline builds, which have a separate page.
           $scope.builds = _.omit(builds.by("metadata.name"), isPipeline);
-          $scope.emptyMessage = "No builds to show";
+          $scope.emptyMessage = gettext("No builds to show");
           associateBuildsToBuildConfig();
           LabelFilter.addLabelSuggestionsFromResources($scope.builds, $scope.labelSuggestions);
 

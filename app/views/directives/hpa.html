@@ -22,26 +22,26 @@
   <dd ng-if-end>
     <a ng-href="{{hpa.spec.scaleTargetRef.name | navigateResourceURL : hpa.spec.scaleTargetRef.kind : hpa.metadata.namespace}}">{{hpa.spec.scaleTargetRef.name}}</a>
   </dd>
-  <dt>Min Pods:</dt>
+  <dt translate>Min Pods:</dt>
   <dd>{{hpa.spec.minReplicas || 1}}</dd>
-  <dt>Max Pods:</dt>
+  <dt translate>Max Pods:</dt>
   <dd>{{hpa.spec.maxReplicas}}</dd>
   <dt ng-if-start="hpa.spec.targetCPUUtilizationPercentage">
       CPU
-      <span ng-if="'cpu' | isRequestCalculated : project">Limit</span>
-      <span ng-if="!('cpu' | isRequestCalculated : project)">Request</span>
-      Target:
+      <span ng-if="'cpu' | isRequestCalculated : project" translate>Limit</span>
+      <span ng-if="!('cpu' | isRequestCalculated : project)" translate>Request</span>
+      <translate>Target</translate>:
   </dt>
   <dd ng-if-end>{{hpa.spec.targetCPUUtilizationPercentage | hpaCPUPercent : project}}%</dd>
-  <dt>
+  <dt translate>
     Current Usage:
   </dt>
   <dd ng-if="hpa.status.currentCPUUtilizationPercentage | isNil">
-    <em>Not available</em>
+    <em translate>Not available</em>
   </dd>
   <dd ng-if="!(hpa.status.currentCPUUtilizationPercentage | isNil)">
     {{hpa.status.currentCPUUtilizationPercentage | hpaCPUPercent : project}}%
   </dd>
-  <dt ng-if-start="hpa.status.lastScaleTime">Last Scaled:</dt>
+  <dt ng-if-start="hpa.status.lastScaleTime" translate>Last Scaled:</dt>
   <dd ng-if-end><span am-time-ago="hpa.status.lastScaleTime"></span></dd>
 </dl>

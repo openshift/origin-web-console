@@ -8,20 +8,20 @@
         <div class="container-fluid">
           <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
           <alerts alerts="alerts"></alerts>
-          <div ng-if="!loaded">Loading...</div>
+          <div ng-if="!loaded" translate>Loading...</div>
           <div ng-if="pvc">
             <h1 class="contains-actions">
               <div class="pull-right dropdown" ng-hide="!('persistentVolumeClaims' | canIDoAny)">
                 <button type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
-                  Actions
+                  <translate>Actions</translate>
                   <span class="caret" aria-hidden="true"></span>
                 </button>
                 <a href=""
                    class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
-                   data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
+                   data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only" translate>Actions</span></a>
                 <ul class="dropdown-menu dropdown-menu-right actions action-button">
                   <li ng-if="!pvc.spec.volumeName">
-                    <a ng-href="{{pvc | editYamlURL}}" role="button">Edit YAML</a>
+                    <a ng-href="{{pvc | editYamlURL}}" role="button" translate>Edit YAML</a>
                   </li>
                   <li>
                     <delete-link
@@ -36,10 +36,10 @@
               </div>
               {{pvc.metadata.name}}
               <small class="meta" ng-if="!pvc.spec.volumeName">
-                  <span ng-if="pvc.spec.resources.requests['storage']">
+                  <span ng-if="pvc.spec.resources.requests['storage']" translate>
                     waiting for {{pvc.spec.resources.requests['storage'] | usageWithUnits: 'storage'}} allocation,
                   </span>
-                  <span ng-if="!pvc.spec.resources.requests['storage']">waiting for allocation,</span>
+                  <span ng-if="!pvc.spec.resources.requests['storage']" translate>waiting for allocation,</span>
               </small>
               <small class="meta">created <span am-time-ago="pvc.metadata.creationTimestamp"></span></small>
             </h1>
@@ -53,36 +53,36 @@
             <div class="col-md-12">
               <uib-tabset>
                 <uib-tab heading="Details" active="selectedTab.details">
-                  <uib-tab-heading>Details</uib-tab-heading>
+                  <uib-tab-heading translate>Details</uib-tab-heading>
                     <div class="resource-details">
                     <dl class="dl-horizontal left">
-                      <dt>Status:</dt>
+                      <dt translate>Status:</dt>
                       <dd>
                         <status-icon status="pvc.status.phase" disable-animation></status-icon>
                         {{pvc.status.phase}}
-                        <span ng-if="pvc.spec.volumeName">to volume <strong>{{pvc.spec.volumeName}}</strong></span>
+                        <span ng-if="pvc.spec.volumeName" translate>to volume <strong>{{pvc.spec.volumeName}}</strong></span>
                       </dd>
-                      <dt ng-if="pvc.spec.volumeName">Capacity:</dt>
+                      <dt ng-if="pvc.spec.volumeName" translate>Capacity:</dt>
                       <dd ng-if="pvc.spec.volumeName">
-                        <span ng-if="pvc.status.capacity['storage']">
+                        <span ng-if="pvc.status.capacity['storage']" translate>
                           allocated {{pvc.status.capacity['storage'] | usageWithUnits: 'storage'}}
                         </span>
-                        <span ng-if="!pvc.status.capacity['storage']">allocated unknown size</span>
+                        <span ng-if="!pvc.status.capacity['storage']" translate>allocated unknown size</span>
                       </dd>
-                      <dt>Requested Capacity:</dt>
+                      <dt translate>Requested Capacity:</dt>
                       <dd>
                         <span ng-if="pvc.spec.resources.requests['storage']">
                           {{pvc.spec.resources.requests['storage'] | usageWithUnits: 'storage'}}
                         </span>
-                        <span ng-if="!pvc.spec.resources.requests['storage']"><em>none</em></span>
+                        <span ng-if="!pvc.spec.resources.requests['storage']"><em translate>none</em></span>
                       </dd>
-                      <dt>Access Modes:</dt>
+                      <dt translate>Access Modes:</dt>
                       <dd>{{pvc.spec.accessModes | accessModes:'long' | join}}</dd>
                     </dl>
                   </div>
                 </uib-tab>
                 <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">
-                  <uib-tab-heading>Events</uib-tab-heading>
+                  <uib-tab-heading translate>Events</uib-tab-heading>
                   <events api-objects="[ pvc ] " project-context="projectContext" ng-if="selectedTab.events"></events>
                 </uib-tab>
               </uib-tabset>

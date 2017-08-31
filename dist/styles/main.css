@@ -3805,7 +3805,7 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.left,div.hopscotch-bubble
 .icon-jboss:before{content:"\f114"}
 .icon-github:before{content:"\f101"}
 .icon-git:before{content:"\f102"}
-.icon-openjdk:before{content:"\f103"}
+.icon-openjdk:before,.icon-rh-openjdk:before{content:"\f103"}
 .icon-rails:before{content:"\f104"}
 .icon-php:before{content:"\f105"}
 .icon-ruby:before{content:"\f106"}
@@ -3853,6 +3853,16 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.left,div.hopscotch-bubble
 .icon-dotnet:before{content:"\f140"}
 .icon-casadra:before,.icon-cassandra:before{content:"\f139"}
 .icon-apache:before{content:"\f138"}
+.icon-3scale:before{content:"\e900"}
+.icon-amq:before{content:"\e901"}
+.icon-datagrid:before{content:"\e902"}
+.icon-datavirt:before{content:"\e903"}
+.icon-decisionserver:before{content:"\e904"}
+.icon-eap:before{content:"\e905"}
+.icon-processserver:before{content:"\e906"}
+.icon-rh-integration:before{content:"\e907"}
+.icon-rh-tomcat:before{content:"\e908"}
+.icon-sso:before{content:"\e909"}
 @keyframes toastSlideIn{0%{opacity:0;transform:translateX(150px)}
 100%{opacity:1;transform:translateX(0)}
 }

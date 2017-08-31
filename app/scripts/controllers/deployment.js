@@ -21,7 +21,8 @@ angular.module('openshiftConsole')
                         OwnerReferencesService,
                         Logger,
                         ProjectsService,
-                        StorageService) {
+                        StorageService,
+                        gettext) {
     var imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
 
     $scope.projectName = $routeParams.project;
@@ -31,7 +32,7 @@ angular.module('openshiftConsole')
     $scope.imagesByDockerReference = {};
     $scope.breadcrumbs = [
       {
-        title: "Deployments",
+        title: gettext("Deployments"),
         link: "project/" + $routeParams.project + "/browse/deployments"
       },
       {
@@ -65,7 +66,7 @@ angular.module('openshiftConsole')
       previousEnvConflict = true;
       $scope.alerts["env-conflict"] = {
         type: "warning",
-        message: "The environment variables for the deployment have been updated in the background. Saving your changes may create a conflict or cause loss of data.",
+        message: gettext("The environment variables for the deployment have been updated in the background. Saving your changes may create a conflict or cause loss of data."),
         links: [
           {
             label: 'Reload Environment Variables',

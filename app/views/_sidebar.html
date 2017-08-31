@@ -1,17 +1,17 @@
 <nav class="navbar navbar-sidebar">
     <ul class="nav nav-sidenav-primary">
       <li ng-if="'service_catalog_landing_page' | enableTechPreviewFeature" class="visible-xs-block">
-        <a href="./"><span class="pficon pficon-home" aria-hidden="true"></span> Home</a>
+        <a href="./"><span class="pficon pficon-home" aria-hidden="true"></span> <translate>Home</translate></a>
       </li>
       <li
         ng-repeat="primaryItem in navItems"
         ng-class="{ active: primaryItem === activePrimary }"
         ng-if="show(primaryItem)">
         <a ng-if="primaryItem.href" ng-href="{{navURL(primaryItem.href)}}">
-          <span class="{{primaryItem.iconClass}}"></span> {{primaryItem.label}}
+          <span class="{{primaryItem.iconClass}}"></span> {{primaryItem.label|translate}}
         </a>
         <a ng-if="!primaryItem.href" href="" data-toggle="dropdown" class="dropdown-toggle">
-          <span class="{{primaryItem.iconClass}}"></span> {{primaryItem.label}} <span class="fa fa-angle-right"></span>
+          <span class="{{primaryItem.iconClass}}"></span> {{primaryItem.label|translate}} <span class="fa fa-angle-right"></span>
         </a>
         <div
           ng-if="primaryItem.secondaryNavSections.length"
@@ -27,7 +27,7 @@
               ng-repeat="secondaryItem in secondarySection.items"
               ng-class="{ active: secondaryItem === activeSecondary }"
               ng-if="show(secondaryItem)">
-              <a ng-href="{{navURL(secondaryItem.href)}}">{{secondaryItem.label}}</a>
+              <a ng-href="{{navURL(secondaryItem.href)}}">{{secondaryItem.label|translate}}</a>
             </li>
             <li ng-repeat-end style="display:none;"></li>
           </ul>
@@ -46,7 +46,7 @@
               ng-repeat="secondaryItem in secondarySection.items"
               ng-class="{ active: secondaryItem === activeSecondary }"
               ng-if="show(secondaryItem)">
-              <a ng-href="{{navURL(secondaryItem.href)}}">{{secondaryItem.label}}</a>
+              <a ng-href="{{navURL(secondaryItem.href)}}">{{secondaryItem.label|translate}}</a>
             </li>
             <li ng-repeat-end style="display:none;"></li>
           </ul>

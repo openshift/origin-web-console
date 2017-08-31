@@ -8,7 +8,7 @@
             <span ng-bind-html="imageStream | displayName | highlightKeywords : keywords"></span>
           </h2>
         </div>
-        <p class="card-pf-badge">Builds source code</p>
+        <p class="card-pf-badge" translate>Builds source code</p>
         <p>
           <truncate-long-text
             class="project-description"
@@ -18,15 +18,15 @@
             use-word-boundary="true"></truncate-long-text>
         </p>
         <p ng-if="imageStream | imageStreamTagAnnotation : 'provider' : is.tag.tag">
-          Provider: {{imageStream | imageStreamTagAnnotation : 'provider' : is.tag.tag}}
+          <translate>Provider:</translate> {{imageStream | imageStreamTagAnnotation : 'provider' : is.tag.tag}}
         </p>
         <!-- Only show the namespace if it's not in the shared openshift namespace -->
         <p ng-if="imageStream.metadata.namespace !== 'openshift'">
-          Namespace: {{imageStream.metadata.namespace}}
+          <translate>Namespace:</translate> {{imageStream.metadata.namespace}}
         </p>
       </div>
       <p class="card-pf-version">
-        Version
+        <translate>Version</translate>
         <ui-select ng-model="is.tag" search-enabled="false">
           <ui-select-match>
             <span>
@@ -46,7 +46,7 @@
       </p>
     </div>
     <div class="card-pf-footer clearfix">
-      <a class="btn btn-default pull-right" ng-href="{{imageStream | createFromImageURL : is.tag.tag : project}}">
+      <a class="btn btn-default pull-right" ng-href="{{imageStream | createFromImageURL : is.tag.tag : project}}" translate>
         Select
       </a>
     </div>

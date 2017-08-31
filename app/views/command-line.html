@@ -12,17 +12,17 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="command-line">
-                  <h1 id="cli">Command Line Tools</h1>
+                  <h1 id="cli" translate>Command Line Tools</h1>
                   <p>
-                    With the OpenShift command line interface (CLI), you can create applications and manage OpenShift projects from a terminal.
-                    <span ng-if="cliDownloadURLPresent">
+                    <translate>With the OpenShift command line interface (CLI), you can create applications and manage OpenShift projects from a terminal.</translate>
+                    <span ng-if="cliDownloadURLPresent" translate>
                       You can download the <code>oc</code> client tool using the links below. For more information about downloading and installing it, please refer to the <a target="_blank" href="{{'get_started_cli' | helpLink}}">Get Started with the CLI</a> documentation.
                     </span>
-                    <span ng-if="!cliDownloadURLPresent">
+                    <span ng-if="!cliDownloadURLPresent" translate>
                       Refer to the <a target="_blank" href="{{'get_started_cli' | helpLink}}">Get Started with the CLI</a> documentation for instructions about downloading and installing the <code>oc</code> client tool.
                     </span>
                     <div ng-if="cliDownloadURLPresent">
-                      <label class="cli-download-label">Download <code>oc</code>:</label>
+                      <label class="cli-download-label" translate>Download <code>oc</code>:</label>
                       <div ng-repeat="(key, value) in cliDownloadURL">
                         <!--
                            Use target="_self" so that the Angular router doesn't rewrite the link when the download is served using an extension.
@@ -45,23 +45,23 @@
 
                   <div class="alert alert-warning">
                     <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-                    <strong>A token is a form of a password.</strong>
-                    Do not share your API token. To reveal your token, press the copy to clipboard button and then paste the clipboard contents.
+                    <strong translate>A token is a form of a password.</strong>
+                    <translate>Do not share your API token. To reveal your token, press the copy to clipboard button and then paste the clipboard contents.</translate>
                   </div>
 
-                  <p>After you login to your account you will get a list of projects that you can switch between:
+                  <p><translate>After you login to your account you will get a list of projects that you can switch between:</translate>
                     <copy-to-clipboard display-wide="true" clipboard-text="'oc project <project-name>'"></copy-to-clipboard>
                   </p>
 
-                  <p>If you do not have any existing projects, you can create one:
+                  <p><translate>If you do not have any existing projects, you can create one:</translate>
                     <copy-to-clipboard display-wide="true" clipboard-text="'oc new-project <project-name>'"></copy-to-clipboard>
                   </p>
 
-                  <p>To show a high level overview of the current project:
+                  <p><translate>To show a high level overview of the current project:</translate>
                     <copy-to-clipboard display-wide="true" clipboard-text="'oc status'"></copy-to-clipboard>
                   </p>
 
-                  <p>For other information about the command line tools, check the <a target="_blank" href="{{'cli' | helpLink}}">CLI Reference</a> and <a target="_blank" href="{{'basic_cli_operations' | helpLink}}">Basic CLI Operations</a>.</p>
+                  <p translate>For other information about the command line tools, check the <a target="_blank" href="{{'cli' | helpLink}}">CLI Reference</a> and <a target="_blank" href="{{'basic_cli_operations' | helpLink}}">Basic CLI Operations</a>.</p>
                 </div>
               </div>
             </div>

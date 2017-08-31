@@ -619,9 +619,9 @@ angular.module("openshiftConsole")
             "value": "squid"
           }
         ]
-      }
+      };
 
-      return importSquid
+      return importSquid;
     };
 
     return {

@@ -18,7 +18,8 @@ angular.module('openshiftConsole')
                        DataService,
                        Navigate,
                        NotificationsService,
-                       ProjectsService) {
+                       ProjectsService,
+                       gettext) {
     var name = $routeParams.template;
 
     // If the namespace is not defined, that indicates that the processed Template should be obtained from the 'CachedTemplateService'
@@ -40,11 +41,11 @@ angular.module('openshiftConsole')
         link: "project/" + $routeParams.project
       },
       {
-        title: "Add to Project",
+        title: gettext("Add to Project"),
         link: "project/" + $routeParams.project + "/create"
       },
       {
-        title: "Catalog",
+        title: gettext("Catalog"),
         link: "project/" + $routeParams.project + "/create?tab=fromCatalog"
       },
       {

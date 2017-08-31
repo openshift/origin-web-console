@@ -16,6 +16,8 @@ angular.module('openshiftConsole')
     'ModalsService',
     'logLinks',
     'BREAKPOINTS',
+    'gettext',
+    'gettextCatalog',
     function($sce,
              $timeout,
              $window,
@@ -28,7 +30,9 @@ angular.module('openshiftConsole')
              HTMLService,
              ModalsService,
              logLinks,
-             BREAKPOINTS) {
+             BREAKPOINTS,
+             gettext,
+             gettextCatalog) {
       // cache the jQuery win, but not clobber angular's $window
       var $win = $(window);
 
@@ -399,7 +403,7 @@ angular.module('openshiftConsole')
                       //   because we dont have enough information to give the user something better.
                       if((lastLineNumber === 0) && (!$scope.emptyStateMessage)) {
                         $scope.state = 'empty';
-                        $scope.emptyStateMessage = 'The logs are no longer available or could not be loaded.';
+                        $scope.emptyStateMessage = gettextCatalog.getString(gettext('The logs are no longer available or could not be loaded.'));
                       }
                     });
                   });
@@ -414,7 +418,7 @@ angular.module('openshiftConsole')
                       // if logs err before we get anything, will show an empty state message
                       if(lastLineNumber === 0) {
                         $scope.state = 'empty';
-                        $scope.emptyStateMessage = 'The logs are no longer available or could not be loaded.';
+                        $scope.emptyStateMessage = gettextCatalog.getString(gettext('The logs are no longer available or could not be loaded.'));
                       } else {
                         // if logs were running but something went wrong, will
                         // show what we have & give option to retry

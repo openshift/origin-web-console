@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .filter('duration', function() {
+  .filter('duration', function(gettext, gettextCatalog) {
     return function(timestampLhs, timestampRhs, omitSingle, precision) {
       if (!timestampLhs) {
         return timestampLhs;
@@ -43,12 +43,12 @@ angular.module('openshiftConsole')
         humanizedDuration.push(count + ' ' + pluralText);
       }
 
-      add(years, "year", "years");
-      add(months, "month", "months");
-      add(days, "day", "days");
-      add(hours, "hour", "hours");
-      add(minutes, "minute", "minutes");
-      add(seconds, "second", "seconds");
+      add(years, gettextCatalog.getString(gettext("year")), gettextCatalog.getString(gettext("years")));
+      add(months, gettextCatalog.getString(gettext("month")), gettextCatalog.getString(gettext("months")));
+      add(days, gettextCatalog.getString(gettext("day")), gettextCatalog.getString(gettext("days")));
+      add(hours, gettextCatalog.getString(gettext("hour")), gettextCatalog.getString(gettext("hours")));
+      add(minutes, gettextCatalog.getString(gettext("minute")), gettextCatalog.getString(gettext("minutes")));
+      add(seconds, gettextCatalog.getString(gettext("second")), gettextCatalog.getString(gettext("seconds")));
 
       // If precision is 1, we're showing rough values. Don't show values less
       // than a minute.

@@ -7,27 +7,27 @@
         <div class="container-fluid">
           <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
           <alerts alerts="alerts"></alerts>
-          <div ng-if="!loaded" class="mar-top-xl">Loading...</div>
+          <div ng-if="!loaded" class="mar-top-xl" translate>Loading...</div>
           <div ng-if="loaded && error" class="empty-state-message text-center">
-            <h2>The config map could not be loaded.</h2>
+            <h2 translate>The config map could not be loaded.</h2>
             <p>{{error | getErrorDetails}}</p>
           </div>
           <div ng-if="loaded && !error">
             <h1 class="contains-actions">
               <div class="pull-right dropdown" ng-if="'configmaps' | canIDoAny">
                 <button type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
-                  Actions
+                  <translate>Actions</translate>
                   <span class="caret"></span>
                 </button>
                 <a href=""
                    class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
-                   data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
+                   data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only" translate>Actions</span></a>
                 <ul class="dropdown-menu dropdown-menu-right actions action-button">
                   <li ng-if="'configmaps' | canI : 'update'">
-                    <a ng-href="{{configMap | editResourceURL}}" role="button">Edit</a>
+                    <a ng-href="{{configMap | editResourceURL}}" role="button" translate>Edit</a>
                   </li>
                   <li ng-if="'configmaps' | canI : 'update'">
-                    <a ng-href="{{configMap | editYamlURL}}" role="button">Edit YAML</a>
+                    <a ng-href="{{configMap | editYamlURL}}" role="button" translate>Edit YAML</a>
                   </li>
                   <li ng-if="'configmaps' | canI : 'delete'">
                     <delete-link
@@ -40,7 +40,7 @@
                 </ul>
               </div>
               {{configMap.metadata.name}}
-              <small class="meta">created <span am-time-ago="configMap.metadata.creationTimestamp"></span></small>
+              <small class="meta"><translate>created</translate> <span am-time-ago="configMap.metadata.creationTimestamp"></span></small>
             </h1>
             <labels labels="configMap.metadata.labels" clickable="true" kind="config-maps" title-kind="config maps" project-name="{{configMap.metadata.namespace}}" limit="3"></labels>
           </div>
@@ -51,7 +51,7 @@
           <div ng-if="configMap" class="row">
             <div class="col-sm-12">
               <div ng-if="!(configMap.data | hashSize)" class="empty-state-message text-center">
-                <h2>The config map has no items.</h2>
+                <h2 translate>The config map has no items.</h2>
               </div>
               <div ng-if="configMap.data | hashSize" class="table-responsive scroll-shadows-horizontal">
                 <table class="table table-bordered table-bordered-columns config-map-table key-value-table">

@@ -1,7 +1,7 @@
 <osc-form-section
   header="Labels"
   about-title="Labels"
-  about="Labels are used to organize, group, or select objects and resources, such as pods."
+  about="{{'Labels are used to organize, group, or select objects and resources, such as pods.'|translate}}"
   expand="expand"
   can-toggle="canToggle">
 
@@ -25,24 +25,21 @@
   <div ng-show="expand" ng-class="{ 'gutter-top': !helpText }">
     <key-value-editor
       entries="labels"
-      key-placeholder="Name"
+      key-placeholder="{{'Name'|translate}}"
       key-maxlength="63"
       key-validator-regex="validator.key"
-      value-placeholder="Value"
+      value-placeholder="{{'Value'|translate}}"
       value-maxlength="63"
       value-validator-regex="validator.value"
-      key-validator-error-tooltip="A valid object label has the form [domain/]name where a name is an alphanumeric (a-z, and 0-9) string,
-                                   with a maximum length of 63 characters, with the '-' character allowed anywhere except the first or last
-                                   character. A domain is a sequence of names separated by the '.' character with a maximum length of 253 characters."
-      value-validator-error-tooltip="A valid label value is an alphanumeric (a-z, and 0-9) string, with a maximum length of 63 characters, with the '-'
-                                     character allowed anywhere except the first or last character."
-      add-row-link="Add Label"></key-value-editor>
+      key-validator-error-tooltip="{{'A valid object label has the form [domain/]name where a name is an alphanumeric (a-z, and 0-9) string, with a maximum length of 63 characters, with the \'-\' character allowed anywhere except the first or last character. A domain is a sequence of names separated by the \'.\' character with a maximum length of 253 characters.'|translate}}"
+      value-validator-error-tooltip="{{'A valid label value is an alphanumeric (a-z, and 0-9) string, with a maximum length of 63 characters, with the \'-\' character allowed anywhere except the first or last character.'|translate}}"
+      add-row-link="{{'Add Label'|translate}}"></key-value-editor>
   </div>
 
   <div ng-hide="expand">
     <key-value-editor
       entries="labels"
-      key-placeholder="Labels"
+      key-placeholder="{{'Labels'|translate}}"
       cannot-sort
       cannot-delete
       cannot-add

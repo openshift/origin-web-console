@@ -1,37 +1,34 @@
 <div>
   <div class="modal-body">
     <h2>
-      Compute Resources
+      <translate>Compute Resources</translate>
       <span class="page-header-link">
-        <a href="{{'compute_resources' | helpLink}}" target="_blank">Learn More <i class="fa fa-external-link" aria-hidden="true"></i></a>
+        <a href="{{'compute_resources' | helpLink}}" target="_blank"><translate>Learn More</translate> <i class="fa fa-external-link" aria-hidden="true"></i></a>
       </span>
     </h2>
-    <div>
-      Each container running on a node uses compute resources like CPU and memory. You can specify
-      how much CPU and memory a container needs to improve scheduling and performance.
+    <div translate>
+      Each container running on a node uses compute resources like CPU and memory. You can specify how much CPU and memory a container needs to improve scheduling and performance.
     </div>
 
-    <h3>CPU</h3>
+    <h3 translate>CPU</h3>
 
-    <p>
-      CPU is often measured in units called <var>millicores</var>. Each millicore is
-      equivalent to <sup>1</sup>&frasl;<sub>1000</sub> of a CPU&nbsp;core.
+    <p translate>
+      CPU is often measured in units called <var>millicores</var>. Each millicore is equivalent to <sup>1</sup>&frasl;<sub>1000</sub> of a CPU&nbsp;core.
     </p>
 
-<pre>
+<pre translate>
 1000 millcores  =  1 core
 </pre>
 
-    <h3>Memory and Storage</h3>
+    <h3 translate>Memory and Storage</h3>
 
-    <p>
-      Memory and storage are measured in binary units like <var>KiB</var>, <var>MiB</var>, <var>GiB</var>, and <var>TiB</var> or
-      decimal units like <var>kB</var>, <var>MB</var>, <var>GB</var>, and&nbsp;<var>TB</var>.
+    <p translate>
+      Memory and storage are measured in binary units like <var>KiB</var>, <var>MiB</var>, <var>GiB</var>, and <var>TiB</var> or decimal units like <var>kB</var>, <var>MB</var>, <var>GB</var>, and&nbsp;<var>TB</var>.
     </p>
 
     <div class="row">
       <div class="col-sm-6">
-        <h4>Binary Units</h4>
+        <h4 translate>Binary Units</h4>
 <pre>
 1024 bytes  =  1 KiB
 1024 KiB    =  1 MiB
@@ -40,7 +37,7 @@
 </pre>
       </div>
       <div class="col-sm-6">
-        <h4>Decimal Units</h4>
+        <h4 translate>Decimal Units</h4>
 <pre>
 1000 bytes  =  1 kB
 1000 kB     =  1 MB
@@ -52,6 +49,6 @@
 
   </div>
   <div class="modal-footer">
-    <button class="btn btn-lg btn-default" type="button" ng-click="ok()">OK</button>
+    <button class="btn btn-lg btn-default" type="button" ng-click="ok()" translate>OK</button>
   </div>
 </div>

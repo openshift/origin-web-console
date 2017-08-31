@@ -24,7 +24,8 @@ angular.module("openshiftConsole")
                        SecretsService,
                        TaskList,
                        failureObjectNameFilter,
-                       keyValueEditorUtils) {
+                       keyValueEditorUtils,
+                       gettext) {
     var displayNameFilter = $filter('displayName');
     var humanize = $filter('humanize');
 
@@ -50,11 +51,11 @@ angular.module("openshiftConsole")
         link: "project/" + $scope.projectName
       },
       {
-        title: "Add to Project",
+        title: gettext("Add to Project"),
         link: "project/" + $scope.projectName + "/create"
       },
       {
-        title: "Catalog",
+        title: gettext("Catalog"),
         link: "project/" + $scope.projectName + "/create?tab=fromCatalog"
       },
       {

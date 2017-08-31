@@ -11,6 +11,7 @@ angular.module("openshiftConsole")
       },
       templateUrl: 'views/directives/open-shift.html',
       link: function ($scope) {
+        var namespace = $routeParams.project;
         $scope.octopuses = [];
         $scope.app = {
           APP_NAME: '应用组名称',
@@ -25,21 +26,13 @@ angular.module("openshiftConsole")
         };
         var form = {};
 
-        var ctrl = this;
         var protocol = $window.location.protocol === "http:" ? "http" : "https";
         var hostPortApi = $window.OPENSHIFT_CONFIG.api.k8s.hostPort + $window.OPENSHIFT_CONFIG.api.k8s.prefix;
-        var hostPortOapi = $window.OPENSHIFT_CONFIG.api.openshift.hostPort + $window.OPENSHIFT_CONFIG.api.openshift.prefix;
-        var namespace = $routeParams.project
-        var bearer = 'Bearer'
-        var storage = bearer + ' ' + localStorage.getItem('LocalStorageUserStore.token')
-        var humanize = $filter('humanize');
+        var bearer = 'Bearer';
+        var storage = bearer + ' ' + localStorage.getItem('LocalStorageUserStore.token');
         var generatedResources = [];
 
-        function backend($resource) {
-          return {getOpenShift: getOpenShift}
-        }
-
-        function getOpenShift(data) {
+        function getOpenShift() {
           return $resource(protocol + '://' + hostPortApi + '/v1/namespaces/:namespace/services', {
             namespace: namespace
           }, {
@@ -50,16 +43,16 @@ angular.module("openshiftConsole")
 
         function openshiftList() {
           getOpenShift().get(function (data) {
-            var nameArry = []
-            $scope.inOpenShift = data
-            data.items.forEach(function (element, index) {
-              nameArry.push(element.metadata.name)
-            })
-            $scope.octopuses = nameArry.sort()
-          })
+            var nameArry = [];
+            $scope.inOpenShift = data;
+            data.items.forEach(function (element) {
+              nameArry.push(element.metadata.name);
+            });
+            $scope.octopuses = nameArry.sort();
+          });
         }
 
-        openshiftList()
+        openshiftList();
         var displayName = $filter('displayName');
         var humanizeKind = $filter('humanizeKind');
         var createResources = function () {
@@ -117,7 +110,7 @@ angular.module("openshiftConsole")
         };
 
         $scope.create = function () {
-          hideErrorNotifications()
+          hideErrorNotifications();
           form = {
             APP_NAME: $scope.app.APP_NAME,
             OCTOPUS_API_NAME: $scope.app.OCTOPUS_API_NAME,
@@ -128,16 +121,16 @@ angular.module("openshiftConsole")
             SECRET_KEY: $scope.app.SECRET_KEY,
             SPRING_DATASOURCE_JDBC: $scope.app.SPRING_DATASOURCE_JDBC,
             OCTOPUS_CONSOLE_NAME: $scope.app.OCTOPUS_CONSOLE_NAME
-          }
-          var getServiceV1Data = OctopusService.findServiceV1(form)
-          var getDeploymentConfigv1Data = OctopusService.findDeploymentConfigV1(form)
-          var getServiceV2Data = OctopusService.findServiceV2(form)
-          var getDeploymentConfigv2Data = OctopusService.findDeploymentConfigV2(form)
+          };
+          var getServiceV1Data = OctopusService.findServiceV1(form);
+          var getDeploymentConfigv1Data = OctopusService.findDeploymentConfigV1(form);
+          var getServiceV2Data = OctopusService.findServiceV2(form);
+          var getDeploymentConfigv2Data = OctopusService.findDeploymentConfigV2(form);
 
           generatedResources = [getServiceV1Data, getDeploymentConfigv1Data, getServiceV2Data, getDeploymentConfigv2Data];
 
           createResources();
-        }
+        };
       }
-    }
-  })
+    };
+  });

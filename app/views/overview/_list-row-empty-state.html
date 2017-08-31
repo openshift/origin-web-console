@@ -1,28 +1,28 @@
-<h2>No deployments.</h2>
+<h2 translate>No deployments.</h2>
 <div ng-if="row.imageChangeTriggers.length">
-  A new deployment will start automatically when
+  <translate>A new deployment will start automatically when</translate>
   <span ng-if="row.imageChangeTriggers.length === 1">
-    an image is pushed to
+    <translate>an image is pushed to</translate>
     <a ng-href="{{row.urlForImageChangeTrigger(row.imageChangeTriggers[0])}}">
       {{row.imageChangeTriggers[0].imageChangeParams.from | imageObjectRef : row.apiObject.metadata.namespace}}</a>.
   </span>
-  <span ng-if="row.imageChangeParams.length > 1">
+  <span ng-if="row.imageChangeParams.length > 1" translate>
     one of the images referenced by this deployment config changes.
   </span>
 </div>
 <div ng-if="!row.imageChangeTriggers.length">
   <p>
-    No deployments for {{row.apiObject.kind | humanizeKind}}
+    <translate>No deployments for</translate> {{row.apiObject.kind | humanizeKind}}
     <a ng-href="{{row.apiObject | navigateResourceURL}}">{{row.apiObject.metadata.name}}</a>.
   </p>
   <div ng-if="row.apiObject.kind === 'DeploymentConfig'">
     <div ng-if="pipeline = row.pipelines[0]">
       <p>
-        This deployment config is part of the pipeline
+        <translate>This deployment config is part of the pipeline</translate>
         <a ng-href="{{pipeline | navigateResourceURL}}">{{pipeline.metadata.name}}</a>.
       </p>
       <div ng-if="row.showStartPipelineAction()">
-        <button class="btn btn-primary" ng-click="row.startBuild(pipeline)">
+        <button class="btn btn-primary" ng-click="row.startBuild(pipeline)" translate>
           Start Pipeline
         </button>
       </div>
@@ -30,7 +30,7 @@
     <div ng-if="!row.pipelines.length">
       <button ng-if="'deploymentconfigs/instantiate' | canI : 'create'"
               class="btn btn-primary"
-              ng-click="row.startDeployment()">
+              ng-click="row.startDeployment()" translate>
         Start Deployment
       </button>
     </div>

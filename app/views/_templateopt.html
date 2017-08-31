@@ -3,11 +3,11 @@
     ng-form="paramForm">
   <div ng-if="!isDialog && parameters.length" class="flow">
     <div class="flow-block">
-      <h2>Parameters</h2>
+      <h2 translate>Parameters</h2>
     </div>
     <div ng-show="canToggle" class="flow-block right">
-      <a class="action action-inline" href="" ng-click="expand = false" ng-show="expand"><i class="pficon pficon-remove"></i> Collapse</a>
-      <a class="action action-inline" href="" ng-click="expand = true" ng-hide="expand"><i class="pficon pficon-edit"></i> Edit Parameters</a>
+      <a class="action action-inline" href="" ng-click="expand = false" ng-show="expand"><i class="pficon pficon-remove"></i> <translate>Collapse</translate></a>
+      <a class="action action-inline" href="" ng-click="expand = true" ng-hide="expand"><i class="pficon pficon-edit"></i> <translate>Edit Parameters</translate></a>
     </div>
   </div>
   <div ng-transclude></div>
@@ -46,13 +46,13 @@
          class="resize-input action-button"
          data-toggle="tooltip"
          data-trigger="hover"
-         dynamic-content="{{expandedParameter ? 'Collapse to a single line input. This may strip any new lines you have entered.' : 'Expand to enter multiple lines of content. This is required if you need to include newline characters.'}}"
+         dynamic-content="{{expandedParameter ? singleText : multiText|translate}}"
         ><i class="fa"
             ng-class="{'fa-expand': !expandedParemeter, 'fa-compress': expandedParameter}"
             aria-hidden="true"
             role="presentation"
-         /><span class="sr-only" ng-if="expandedParameter">Collapse to a single line input</span
-          ><span class="sr-only" ng-if="!expandedParameter">Expand to enter multiline input</span></a>
+         /><span class="sr-only" ng-if="expandedParameter" translate>Collapse to a single line input</span
+          ><span class="sr-only" ng-if="!expandedParameter" translate>Expand to enter multiline input</span></a>
       <textarea
           ng-if="expandedParameter"
           ng-attr-id="{{paramID}}"
@@ -73,10 +73,10 @@
         <div class="help-block">{{parameter.displayName || parameter.name}} is required.</div>
       </div>
       <div ng-show="isOnlyWhitespace(parameter.value)" class="has-warning help-block">
-        The current value is "{{parameter.value}}", which is not empty.
-        <span ng-if="parameter.generate">This will prevent a value from being generated.</span>
-        If this isn't what you want,
-          <a href="" ng-click="parameter.value=''; cleared = true; focus(paramID)">clear the value</a>.
+        <translate>The current value is "{{parameter.value}}", which is not empty.</translate>
+        <span ng-if="parameter.generate" translate>This will prevent a value from being generated.</span>
+        <translate>If this isn't what you want,</translate>
+          <a href="" ng-click="parameter.value=''; cleared = true; focus(paramID)" translate>clear the value</a>.
       </div>
     </div>
   </div>

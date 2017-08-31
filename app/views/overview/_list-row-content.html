@@ -1,7 +1,7 @@
 <div class="list-pf-name">
   <h3>
     <div class="component-label">
-      <span ng-if="row.apiObject.kind === 'DeploymentConfig'">
+      <span ng-if="row.apiObject.kind === 'DeploymentConfig'" translate>
         Deployment
       </span>
       <span ng-if="row.apiObject.kind !== 'DeploymentConfig'">
@@ -31,7 +31,7 @@
   </div>
 </div>
 <div ng-if="row.apiObject.kind === 'DeploymentConfig' && !row.current && !row.expanded" class="list-pf-details hidden-xs hidden-sm">
-  <span>
+  <span translate>
     No deployments for <a ng-href="{{row.apiObject | navigateResourceURL}}">{{row.apiObject.metadata.name}}</a>
   </span>
 </div>
@@ -39,18 +39,17 @@
   <div ng-if="row.apiObject.kind === 'DeploymentConfig'">
     <span class="mar-right-sm">
       <span class="hidden-xs">
-        {{row.apiObject.spec.strategy.type}} deployment is
-        {{row.current | deploymentStatus | lowercase}}&thinsp;<ellipsis-pulser color="dark" size="sm" display="inline" msg=""></ellipsis-pulser>
+        <translate>{{row.apiObject.spec.strategy.type}} deployment is {{row.current | deploymentStatus | lowercase}}</translate>&thinsp;<ellipsis-pulser color="dark" size="sm" display="inline" msg=""></ellipsis-pulser>
       </span>
       <!-- Don't show the strategy at phone resolutions to save space. -->
       <span class="hidden visible-xs-inline nowrap">
         <ellipsis-pulser color="dark" size="sm" display="inline" msg="Deploying"></ellipsis-pulser>
       </span>
     </span>
-    <a ng-href="project/{{row.apiObject.metadata.namespace}}/browse/events">View Events</a>
+    <a ng-href="project/{{row.apiObject.metadata.namespace}}/browse/events" translate>View Events</a>
     <span ng-if="'replicationcontrollers' | canI : 'update'">
       <span class="action-divider">|</span>
-      <a href="" ng-click="row.cancelDeployment()" role="button">Cancel</a>
+      <a href="" ng-click="row.cancelDeployment()" role="button" translate>Cancel</a>
     </span>
   </div>
   <div ng-if="row.apiObject.kind === 'Deployment'">

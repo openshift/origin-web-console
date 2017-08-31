@@ -14,15 +14,17 @@ angular.module('openshiftConsole')
                                            $scope,
                                            DataService,
                                            ProjectsService,
-                                           Logger) {
+                                           Logger,
+                                           gettext,
+                                           gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.limitRanges = {};
     $scope.limitsByType = {};
     $scope.labelSuggestions = {};
     $scope.alerts = $scope.alerts || {};
-    $scope.quotaHelp = "Limits resource usage within this project.";
-    $scope.emptyMessageLimitRanges = "Loading...";
-    $scope.limitRangeHelp = "Defines minimum and maximum constraints for runtime resources such as memory and CPU.";
+    $scope.quotaHelp = gettextCatalog.getString(gettext("Limits resource usage within this project."));
+    $scope.emptyMessageLimitRanges = gettext("Loading...");
+    $scope.limitRangeHelp = gettextCatalog.getString(gettext("Defines minimum and maximum constraints for runtime resources such as memory and CPU."));
     $scope.renderOptions = $scope.renderOptions || {};
     $scope.renderOptions.hideFilterWidget = true;
 
@@ -122,7 +124,7 @@ angular.module('openshiftConsole')
 
         DataService.list("limitranges", context).then(function(resp) {
           $scope.limitRanges = _.sortBy(resp.by("metadata.name"), "metadata.name");
-          $scope.emptyMessageLimitRanges = "There are no limit ranges set on this project.";
+          $scope.emptyMessageLimitRanges = gettext("There are no limit ranges set on this project.");
           // Convert to a sane format for a view to a build a table with rows per resource type
           angular.forEach($scope.limitRanges, function(limitRange){
             var name = limitRange.metadata.name;

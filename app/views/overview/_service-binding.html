@@ -10,11 +10,11 @@
   </div>
   <div class="col-sm-7 col-md-6 overview-bindings">
     <span ng-if="!($ctrl.binding | isBindingReady)">
-      <status-icon status="'Pending'"></status-icon> Pending
+      <status-icon status="'Pending'"></status-icon> <translate>Pending</translate>
     </span>
     <a
       ng-if="($ctrl.binding | isBindingReady) && ('secrets' | canI : 'get')"
-      ng-href="{{$ctrl.secrets[$ctrl.binding.spec.secretName] | navigateResourceURL}}">
+      ng-href="{{$ctrl.secrets[$ctrl.binding.spec.secretName] | navigateResourceURL}}" translate>
       View Secret
     </a>
   </div>

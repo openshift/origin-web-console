@@ -1,6 +1,6 @@
 <div>
   <div ng-if="!ctrl.error">
-    <h3 class="mar-top-none">
+    <h3 class="mar-top-none" translate>
       Binding for the following has been deleted:
     </h3>
 
@@ -10,22 +10,22 @@
       {{appForBinding.metadata.name}} <small class="text-muted">&ndash; {{ appForBinding.kind | humanizeKind : true}}</small>
     </div>
     <div ng-if="!(ctrl.unboundApps | size)">
-      {{ctrl.selectedBinding.spec.secretName}} <small class="text-muted">&ndash; Secret</small>
+      {{ctrl.selectedBinding.spec.secretName}} <small class="text-muted">&ndash; <translate>Secret</translate></small>
     </div>
 
     <!-- Only show the redeploy pods message if previously bound to an app. -->
     <p ng-if="ctrl.unboundApps | size" class="mar-top-lg">
       <span class="pficon pficon-info" aria-hidden="true"></span>
-      You will need to redeploy your pods for this to take effect.
+      <translate>You will need to redeploy your pods for this to take effect.</translate>
     </p>
   </div>
   <div ng-if="ctrl.error">
-    <div class="title">Deletion of Binding Failed <span class="fa fa-times text-danger"></span></div>
+    <div class="title"><translate>Deletion of Binding Failed</translate> <span class="fa fa-times text-danger"></span></div>
     <div class="sub-title">
       <span ng-if="ctrl.error.data.message">
         {{ctrl.error.data.message | upperFirst}}
       </span>
-      <span ng-if="!ctrl.error.data.message">
+      <span ng-if="!ctrl.error.data.message" translate>
         An error occurred deleting the binding.
       </span>
     </div>

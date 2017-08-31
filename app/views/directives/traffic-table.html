@@ -2,17 +2,17 @@
 <table class="table table-bordered table-hover table-mobile">
   <thead>
     <tr>
-      <th>{{customNameHeader || 'Route'}}<span ng-if="showNodePorts"> / Node Port</span></th>
+      <th>{{customNameHeader || 'Route'}}<span ng-if="showNodePorts" translate> / Node Port</span></th>
       <th role="presentation"></th>
-      <th>Service Port</th>
+      <th translate>Service Port</th>
       <th role="presentation"></th>
-      <th>Target Port</th>
-      <th>Hostname</th>
-      <th>TLS Termination</th>
+      <th translate>Target Port</th>
+      <th translate>Hostname</th>
+      <th translate>TLS Termination</th>
     </tr>
   </thead>
   <tbody ng-if="(portsByRoute | hashSize) == 0">
-    <tr><td colspan="7"><em>No routes or ports to show</em></td></tr>
+    <tr><td colspan="7"><em translate>No routes or ports to show</em></td></tr>
   </tbody>
   <tbody ng-if="(portsByRoute | hashSize) > 0">
     <tr ng-repeat-start="(routeName,ports) in portsByRoute" style="display: none;"></tr>
@@ -43,9 +43,9 @@
         <span ng-if="!(routes[routeName] | isWebRoute)" class="word-break">
           {{routes[routeName] | routeLabel}}
         </span>
-        <span ng-if="!routes[routeName].status.ingress" data-toggle="popover" data-trigger="hover" data-content="The route is not accepting traffic yet because it has not been admitted by a router." style="cursor: help; padding-left: 5px;">
+        <span ng-if="!routes[routeName].status.ingress" data-toggle="popover" data-trigger="hover" data-content="{{'The route is not accepting traffic yet because it has not been admitted by a router.'|translate}}" style="cursor: help; padding-left: 5px;">
           <status-icon status="'Pending'"></status-icon>
-          <span class="sr-only">Pending</span>
+          <span class="sr-only" translate>Pending</span>
         </span>
       </td>
       <!-- Use shorter Termination title for table-mobile to avoid overlapping text. -->
@@ -69,9 +69,9 @@
       <td data-title="Target Port">
         {{port.targetPort}}
       </td>
-      <td data-title="Hostname"><span class="text-muted">none</span></td>
+      <td data-title="Hostname"><span class="text-muted" translate>none</span></td>
       <td data-title="Termination">
-        <span class="text-muted">none</span>
+        <span class="text-muted" translate>none</span>
       </td>
     </tr>
   </tbody>

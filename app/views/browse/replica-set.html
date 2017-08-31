@@ -8,7 +8,7 @@
           <div class="container-fluid">
             <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
             <alerts alerts="alerts"></alerts>
-            <div ng-if="!loaded" class="mar-top-md">Loading...</div>
+            <div ng-if="!loaded" class="mar-top-md" translate>Loading...</div>
             <div ng-if="replicaSet">
               <h1 class="contains-actions">
                 <!-- Actions -->
@@ -28,8 +28,8 @@
                   title="The deployment's deployment config is missing."
                   aria-hidden="true">
                 </span>
-                <span ng-if="deploymentConfigMissing" class="sr-only">Warning: The deployment's deployment config is missing.</span>
-                <small class="meta">created <span am-time-ago="replicaSet.metadata.creationTimestamp"></span></small>
+                <span ng-if="deploymentConfigMissing" class="sr-only" translate>Warning: The deployment's deployment config is missing.</span>
+                <small class="meta"><translate>created</translate> <span am-time-ago="replicaSet.metadata.creationTimestamp"></span></small>
               </h1>
               <labels ng-if="deploymentConfigName" labels="replicaSet.metadata.labels" clickable="true" kind="deployments" title-kind="deployments for deployment config {{deploymentConfigName}}" project-name="{{replicaSet.metadata.namespace}}" limit="3" navigate-url="{{replicaSet | configURLForResource}}"></labels>
               <labels ng-if="!deploymentConfigName" labels="replicaSet.metadata.labels" clickable="true" kind="deployments" project-name="{{replicaSet.metadata.namespace}}" limit="3"></labels>
@@ -42,13 +42,13 @@
               <div class="col-md-12">
                 <uib-tabset>
                   <uib-tab active="selectedTab.details">
-                    <uib-tab-heading>Details</uib-tab-heading>
+                    <uib-tab-heading translate>Details</uib-tab-heading>
                     <div class="resource-details">
                       <ng-include src=" 'views/browse/_replica-set-details.html' "></ng-include>
                     </div>
                   </uib-tab>
                   <uib-tab heading="Environment" active="selectedTab.environment">
-                    <uib-tab-heading>Environment</uib-tab-heading>
+                    <uib-tab-heading translate>Environment</uib-tab-heading>
                     <!--
                       Use the `hasDeployment` filter rather than checking for the `deployment` scope
                       var. This prevents the editor from displaying briefly before the deployment has
@@ -131,7 +131,7 @@
                     </deployment-metrics>
                   </uib-tab>
                   <uib-tab ng-if="deploymentConfigName && logOptions.version && ('deploymentconfigs/log' | canI : 'get')" active="selectedTab.logs">
-                    <uib-tab-heading>Logs</uib-tab-heading>
+                    <uib-tab-heading translate>Logs</uib-tab-heading>
                     <log-viewer
                       ng-if="selectedTab.logs"
                       follow-affix-top="390"
@@ -142,14 +142,14 @@
                       run="logCanRun">
 
                       <span ng-if="replicaSet | deploymentStatus">
-                        <label>Status:</label>
+                        <label translate>Status:</label>
                         <status-icon status="replicaSet | deploymentStatus"></status-icon>
                         {{replicaSet | deploymentStatus}}
                       </span>
                     </log-viewer>
                   </uib-tab>
                   <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">
-                    <uib-tab-heading>Events</uib-tab-heading>
+                    <uib-tab-heading translate>Events</uib-tab-heading>
                     <events api-objects="[ replicaSet ]" project-context="projectContext" ng-if="selectedTab.events"></events>
                   </uib-tab>
                 </uib-tabset>

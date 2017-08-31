@@ -12,8 +12,8 @@
             <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
             <div class="row">
               <div class="col-md-12">
-                <h1>{{category.label}}</h1>
-                <div ng-if="category.description" class="help-block mar-bottom-lg">{{category.description}}</div>
+                <h1>{{category.label|translate}}</h1>
+                <div ng-if="category.description" class="help-block mar-bottom-lg">{{category.description|translate}}</div>
 
                 <!-- If a category has subcategories, display it as a catalog. -->
                 <div ng-if="category.subcategories">

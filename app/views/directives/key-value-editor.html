@@ -108,7 +108,7 @@
               class="faux-form-control readonly">
               <span ng-switch="entry.refType">
                 <span ng-switch-when="configMapKeyRef">
-                  Set to the key {{entry.valueFrom.configMapKeyRef.key}} in config map
+                  <translate>Set to the key {{entry.valueFrom.configMapKeyRef.key}} in config map</translate>
                   <span
                     ng-if="!('configmaps' | canI : 'get')">
                     {{entry.valueFrom.configMapKeyRef.name}}
@@ -120,7 +120,7 @@
                   </a>
                 </span>
                 <span ng-switch-when="secretKeyRef">
-                  Set to the key {{entry.valueFrom.secretKeyRef.key}} in secret
+                  <translate>Set to the key {{entry.valueFrom.secretKeyRef.key}} in secret</translate>
                   <span
                     ng-if="!('secrets' | canI : 'get')">
                     {{entry.valueFrom.secretKeyRef.name}}
@@ -143,7 +143,7 @@
           <div ng-if="!isValueFromReadonly(entry)">
             <div class="ui-select">
               <ui-select ng-model="entry.selectedValueFrom" ng-required="true" on-select="valueFromObjectSelected(entry, $select.selected)">
-                <ui-select-match placeholder="Select a resource">
+                <ui-select-match placeholder="{{'Select a resource'|translate}}">
                   <span>
                     {{$select.selected.metadata.name}}
                     <small class="text-muted">&ndash; {{$select.selected.kind | humanizeKind : true}}</small>
@@ -158,7 +158,7 @@
             </div>
             <div class="ui-select">
               <ui-select ng-model="entry.selectedValueFromKey" ng-required="true" on-select="valueFromKeySelected(entry, $select.selected)">
-                <ui-select-match placeholder="Select key">
+                <ui-select-match placeholder="{{'Select key'|translate}}">
                   {{$select.selected}}
                 </ui-select-match>
                 <ui-select-choices repeat="key in entry.selectedValueFrom.data | keys">

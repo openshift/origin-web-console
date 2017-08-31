@@ -42,30 +42,6 @@
     var processedResources;
     ctrl.appParams = {};
 
-    function getHelpLinks(template) {
-      var helpLinkName = /^helplink\.(.*)\.title$/;
-      var helpLinkURL = /^helplink\.(.*)\.url$/;
-      var helpLinks = {};
-      for (var attr in template.annotations) {
-        var match = attr.match(helpLinkName);
-        var link;
-        if (match) {
-          link = helpLinks[match[1]] || {};
-          link.title = template.annotations[attr];
-          helpLinks[match[1]] = link;
-        }
-        else {
-          match = attr.match(helpLinkURL);
-          if (match) {
-            link = helpLinks[match[1]] || {};
-            link.url = template.annotations[attr];
-            helpLinks[match[1]] = link;
-          }
-        }
-      }
-      return helpLinks;
-    }
-
     function getTemplateParams(params) {
       angular.forEach(params, function(param) {
         if(param.name !== 'K8S_NAMESPACE') {
@@ -85,7 +61,7 @@
     ctrl.$onInit = function () {
       ctrl.labels = [];
       // Make a copy of the template to avoid modifying the original if it's cached.
-      ctrl.template = SquidService.squidTemplate()
+      ctrl.template = SquidService.squidTemplate();
       ctrl.templateDisplayName = displayName(ctrl.template);
       ctrl.selectedProject = ctrl.project;
       getTemplateParams(ctrl.template.parameters);
@@ -97,7 +73,6 @@
         success: "Created " + ctrl.templateDisplayName + " in project " + displayName(ctrl.selectedProject),
         failure: "Failed to create " + ctrl.templateDisplayName + " in project " + displayName(ctrl.selectedProject)
       };
-      var helpLinks = getHelpLinks(ctrl.template);
       TaskList.clear();
       TaskList.add(titles, ctrl.template, ctrl.selectedProject.metadata.name, function () {
         var d = $q.defer();
@@ -156,7 +131,7 @@
       });
     };
 
-    var showWarningsOrCreate = function (result) {
+    var showWarningsOrCreate = function () {
       // Hide any previous notifications when form is resubmitted.
       hideNotificationErrors();
       createResources();
@@ -169,7 +144,6 @@
       };
       DataService.create("processedtemplates", null, ctrl.template, context).then(
         function (config) { // success
-          console.log('config', config)
           // Cache template parameters and message so they can be displayed in the nexSteps page
           ProcessedTemplateService.setTemplateData(config.parameters, ctrl.template.parameters, config.message);
           processedResources = config.objects;

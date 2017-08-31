@@ -32,7 +32,8 @@ angular
     'ab-base64',
     'openshiftCommonServices',
     'openshiftCommonUI',
-    'webCatalog'
+    'webCatalog',
+    'gettext'
   ])
   .config(function ($routeProvider) {
     var landingPageRoute;
@@ -503,6 +504,16 @@ angular
     if (_.get(window, 'OPENSHIFT_CONSTANTS.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page')) {
       $rootScope.globalTechPreviewIndicator = true;
       $('body').addClass('tech-preview');
+    }
+  })
+  .run(function($window, gettextCatalog, amMoment){
+    gettextCatalog.debug = false;
+    var lang = $window.OPENSHIFT_LANG;
+    if (lang !== 'en') {
+      gettextCatalog.loadRemote('languages/' + lang + '.json');
+      gettextCatalog.setCurrentLanguage(lang);
+
+      amMoment.changeLocale(lang.toLowerCase());
     }
   });
 

@@ -10,7 +10,7 @@
           <span ng-if="build.status.message && build.status.phase !== 'Cancelled'">{{build.status.message}}</span>
           <span ng-if="build | jenkinsLogURL">
             <span class="text-muted">&ndash;</span>
-            <a ng-href="{{build | jenkinsLogURL}}" target="_blank">View Log</a>
+            <a ng-href="{{build | jenkinsLogURL}}" target="_blank" translate>View Log</a>
           </span>
         </dd>
         <dt>Started:</dt>
@@ -19,9 +19,9 @@
             <span am-time-ago="build.status.startTimestamp"></span>
             <span><span class="text-muted">&ndash;</span> {{build.status.startTimestamp | date : 'medium'}}</span>
           </span>
-          <span ng-if="!build.status.startTimestamp"><em>not started</em></span>
+          <span ng-if="!build.status.startTimestamp"><em translate>not started</em></span>
         </dd>
-        <dt>Duration:</dt>
+        <dt translate>Duration:</dt>
         <dd>
           <span ng-switch="build.status.phase" class="hide-ng-leave">
             <span ng-switch-when="Complete">{{(build.status.startTimestamp || build.metadata.creationTimestamp) | duration : build.status.completionTimestamp}}</span>
@@ -36,18 +36,18 @@
           </span>
         </dd>
         <div ng-if='build.spec.triggeredBy.length'>
-          <dt>Triggered By:</dt>
+          <dt translate>Triggered By:</dt>
           <dd>
             <div ng-repeat="trigger in build.spec.triggeredBy">
               <div ng-switch="trigger.message">
-                <span ng-switch-when="Manually triggered">Manual build</span>
+                <span ng-switch-when="Manually triggered" translate>Manual build</span>
                 <span ng-switch-when="GitHub WebHook">
                   <ng-include src=" 'views/_webhook-trigger-cause.html' "></ng-include>
                 </span>
                 <span ng-switch-when="Generic WebHook">
                   <ng-include src=" 'views/_webhook-trigger-cause.html' "></ng-include>
                 </span>
-                <span ng-switch-when="Image change">
+                <span ng-switch-when="Image change" translate>
                   {{trigger.message}} for {{trigger.imageChangeBuild.fromRef.name}}
                 </span>
                 <span ng-switch-default ng-bind-html="trigger.message | linkify : '_blank'"></span>
@@ -56,35 +56,35 @@
           </dd>
         </div>
       </dl>
-      <h3>Configuration <span class="small" ng-if="buildConfigName">created from <a href="{{build | configURLForResource}}">{{buildConfigName}}</a></span></h3>
+      <h3>Configuration <span class="small" ng-if="buildConfigName" translate>created from <a href="{{build | configURLForResource}}">{{buildConfigName}}</a></span></h3>
       <dl class="dl-horizontal left">
-        <dt>Build Strategy:</dt>
+        <dt translate>Build Strategy:</dt>
         <dd>{{build.spec.strategy.type | startCase}}</dd>
-        <dt ng-if-start="(build | buildStrategy).from">Builder Image:</dt>
-        <dd ng-if-end class="truncate">{{(build | buildStrategy).from | imageObjectRef : build.metadata.namespace}}<span ng-if="!(build | buildStrategy).from"><em>none</em></span></dd>
-        <dt>Source Type:</dt>
+        <dt ng-if-start="(build | buildStrategy).from" translate>Builder Image:</dt>
+        <dd ng-if-end class="truncate">{{(build | buildStrategy).from | imageObjectRef : build.metadata.namespace}}<span ng-if="!(build | buildStrategy).from"><em translate>none</em></span></dd>
+        <dt translate>Source Type:</dt>
         <dd>{{build.spec.source.type}}</dd>
         <dt ng-if-start="build.spec.source.git.uri">Source Repo:</dt>
         <dd ng-if-end><span class="word-break"><osc-git-link
                     uri="build.spec.source.git.uri"
                     ref="build.spec.source.git.ref"
                     context-dir="build.spec.source.contextDir">{{build.spec.source.git.uri}}</osc-git-link></span></dd>
-        <dt ng-if-start="build.spec.source.git.ref">Source Ref:</dt>
+        <dt ng-if-start="build.spec.source.git.ref" translate>Source Ref:</dt>
         <dd ng-if-end>{{build.spec.source.git.ref}}</dd>
-        <dt ng-if-start="build.spec.source.contextDir">Source Context Dir:</dt>
+        <dt ng-if-start="build.spec.source.contextDir" translate>Source Context Dir:</dt>
         <dd ng-if-end>{{build.spec.source.contextDir}}</dd>
-        <dt ng-if-start="build.spec.revision.git.commit">Source Commit:</dt>
+        <dt ng-if-start="build.spec.revision.git.commit" translate>Source Commit:</dt>
         <dd ng-if-end>
           {{build.spec.revision.git.message}}
           <osc-git-link
             class="hash"
             uri="build.spec.source.git.uri"
             ref="build.spec.revision.git.commit">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>
-          <span ng-if="build.spec.revision.git.author">
+          <span ng-if="build.spec.revision.git.author" translate>
             authored by {{build.spec.revision.git.author.name}}
           </span>
         </dd>
-        <dt ng-if-start="outputTo = build.spec.output.to">Output Image:</dt>
+        <dt ng-if-start="outputTo = build.spec.output.to" translate>Output Image:</dt>
         <dd ng-if-end>
           <a ng-if="outputTo.kind === 'ImageStreamTag' && (!outputTo.namespace || build.metadata.namespace === outputTo.namespace)"
               ng-href="{{outputTo.name | navigateResourceURL : 'ImageStreamTag' : build.metadata.namespace}}">
@@ -94,9 +94,9 @@
             {{outputTo | imageObjectRef : build.metadata.namespace}}
           </span>
         </dd>
-        <dt ng-if-start="build.spec.output.pushSecret.name">Push Secret:</dt>
+        <dt ng-if-start="build.spec.output.pushSecret.name" translate>Push Secret:</dt>
         <dd ng-if-end>{{build.spec.output.pushSecret.name}}</dd>
-        <dt ng-if-start="build.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath">
+        <dt ng-if-start="build.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath" translate>
           Jenkinsfile Path:
         </dt>
         <dd>
@@ -108,12 +108,12 @@
           </span>
         </dd>
         <div ng-if-end class="small">
-          <a href="" ng-click="showJenkinsfileExamples()">What's a Jenkinsfile?</a>
+          <a href="" ng-click="showJenkinsfileExamples()" translate>What's a Jenkinsfile?</a>
         </div>
         <div ng-if-start="build.spec.strategy.jenkinsPipelineStrategy.jenkinsfile" class="small pull-right mar-top-sm">
-          <a href="" ng-click="showJenkinsfileExamples()">What's a Jenkinsfile?</a>
+          <a href="" ng-click="showJenkinsfileExamples()" translate>What's a Jenkinsfile?</a>
         </div>
-        <dt>
+        <dt translate>
           Jenkinsfile:
         </dt>
         <dd></dd>
@@ -132,7 +132,7 @@
         }" readonly ng-model="build.spec.strategy.jenkinsPipelineStrategy.jenkinsfile" class="ace-bordered ace-inline ace-read-only"></div>
       </dl>
       <div ng-if="build | hasPostCommitHook">
-        <h3>Post-Commit Hooks</h3>
+        <h3 translate>Post-Commit Hooks</h3>
         <build-hooks build="build"></build-hooks>
       </div>
     </div>

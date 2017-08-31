@@ -8,7 +8,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('ImagesController', function ($routeParams, $scope, DataService, ProjectsService, $filter, LabelFilter, Logger) {
+  .controller('ImagesController', function ($routeParams, $scope, DataService, ProjectsService, $filter, LabelFilter, Logger, gettext) {
     $scope.projectName = $routeParams.project;
     $scope.imageStreams = {};
     $scope.unfilteredImageStreams = {};
@@ -16,7 +16,7 @@ angular.module('openshiftConsole')
     $scope.builds = {};
     $scope.labelSuggestions = {};
     $scope.alerts = $scope.alerts || {};
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettext("Loading...");
 
     var watches = [];
 
@@ -29,7 +29,7 @@ angular.module('openshiftConsole')
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredImageStreams, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
           $scope.imageStreams = LabelFilter.getLabelSelector().select($scope.unfilteredImageStreams);
-          $scope.emptyMessage = "No image streams to show";
+          $scope.emptyMessage = gettext("No image streams to show");
           updateMissingStatusTags();
           updateFilterWarning();
           Logger.log("image streams (subscribe)", $scope.imageStreams);

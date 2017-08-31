@@ -10,13 +10,13 @@
           <span class="task-links">
             <span>
               <a href="" ng-click="expanded = !expanded" role="button">
-                <span ng-hide="expanded">Show Details</span>
-                <span ng-show="expanded">Hide Details</span>
+                <span ng-hide="expanded" translate>Show Details</span>
+                <span ng-show="expanded" translate>Hide Details</span>
               </a>
             </span>
             <span ng-show="task.status=='completed'">
               <span class="action-divider" aria-hidden="true">|</span>
-              <a href="" ng-click="delete(task)" role="button">
+              <a href="" ng-click="delete(task)" role="button" translate>
                 Dismiss
               </a>
             </span>

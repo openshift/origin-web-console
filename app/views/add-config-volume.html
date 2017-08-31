@@ -13,36 +13,35 @@
             <div class="row">
               <div class="col-md-10 col-md-offset-1">
                 <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
-                <div ng-if="!error && (!targetObject || !configMaps || !secrets)">Loading...</div>
+                <div ng-if="!error && (!targetObject || !configMaps || !secrets)" translate>Loading...</div>
 
                 <div ng-if="error" class="empty-state-message text-center">
-                  <h2>The {{kind | humanizeKind}} could not be loaded.</h2>
+                  <h2 translate>The {{kind | humanizeKind}} could not be loaded.</h2>
                   <p>{{error | getErrorDetails}}</p>
                 </div>
 
                 <div ng-if="targetObject && configMaps && secrets">
                   <div ng-if="!configMaps.length && !secrets.length && !('configmaps' | canI : 'create') && !('secrets' | canI : 'create')" class="empty-state-message empty-state-full-page">
-                    <h2 class="text-center">No config maps or secrets.</h2>
+                    <h2 class="text-center" translate>No config maps or secrets.</h2>
 
-                    <p class="gutter-top">
-                      There are no config maps or secrets in project {{project | displayName}} to use
-                      as a volume for this {{kind | humanizeKind}}.
+                    <p class="gutter-top" translate>
+                      There are no config maps or secrets in project {{project | displayName}} to use as a volume for this {{kind | humanizeKind}}.
                     </p>
 
-                    <p ng-if="targetObject"><a ng-href="{{targetObject | navigateResourceURL}}">Back to {{kind | humanizeKind}} {{name}}</a></p>
+                    <p ng-if="targetObject"><a ng-href="{{targetObject | navigateResourceURL}}" translate>Back to {{kind | humanizeKind}} {{name}}</a></p>
                   </div>
 
                   <div ng-if="configMaps.length || secrets.length || ('configmaps' | canI : 'create') || ('secrets' | canI : 'create')" class="mar-top-xl">
-                    <h1>Add Config Files</h1>
-                    <div class="help-block">
+                    <h1 translate>Add Config Files</h1>
+                    <div class="help-block" translate>
                       Add values from a config map or secret as volume. This will make the data available as files for {{kind | humanizeKind}} {{name}}.
                     </div>
                     <form name="forms.addConfigVolumeForm" class="mar-top-lg">
                       <fieldset ng-disabled="disableInputs">
                         <div class="form-group">
-                          <label class="required">Source</label>
+                          <label class="required" translate>Source</label>
                           <ui-select ng-model="attach.source" ng-required="true">
-                            <ui-select-match placeholder="Select config map or secret">
+                            <ui-select-match placeholder="{{'Select config map or secret'|translate}}">
                               <span>
                                 {{$select.selected.metadata.name}}
                                 <small class="text-muted">&ndash; {{$select.selected.kind | humanizeKind : true}}</small>
@@ -56,20 +55,20 @@
                           </ui-select>
                           <div ng-if="('configmaps' | canI : 'create') || ('secrets' | canI : 'create')" class="mar-top-md">
                             <span ng-if="'configmaps' | canI : 'create'">
-                              <a ng-href="project/{{project.metadata.name}}/create-config-map">Create Config Map</a>
+                              <a ng-href="project/{{project.metadata.name}}/create-config-map" translate>Create Config Map</a>
                             </span>
                             <span ng-if="'secrets' | canI : 'create'">
                               <span ng-if="'configmaps' | canI : 'create'" class="action-divider" aria-hidden="true">|</span>
-                              <a ng-href="project/{{project.metadata.name}}/create-secret">Create Secret</a>
+                              <a ng-href="project/{{project.metadata.name}}/create-secret" translate>Create Secret</a>
                             </span>
                           </div>
-                          <div class="help-block">
+                          <div class="help-block" translate>
                             Pick the config source. Its data will be mounted as a volume in the container.
                           </div>
                         </div>
 
                         <div class="form-group">
-                          <label for="mount-path" class="required">Mount Path</label>
+                          <label for="mount-path" class="required" translate>Mount Path</label>
                           <input
                               id="mount-path"
                               class="form-control"
@@ -85,7 +84,7 @@
                               spellcheck="false"
                               aria-describedby="mount-path-help">
                           <div>
-                            <span id="mount-path-help" class="help-block">
+                            <span id="mount-path-help" class="help-block" translate>
                               Mount path for the volume.
                               <span ng-if="!attach.pickKeys">
                                 A file will be created in this directory for each key from the config
@@ -94,12 +93,12 @@
                             </span>
                           </div>
                           <div class="has-error" ng-show="forms.addConfigVolumeForm.mountPath.$error.pattern && forms.addConfigVolumeForm.mountPath.$touched">
-                            <span class="help-block">
+                            <span class="help-block" translate>
                               Mount path must be a valid path to a directory starting with <code>/</code>.
                             </span>
                           </div>
                           <div class="has-error" ng-show="forms.addConfigVolumeForm.mountPath.$error.oscUnique">
-                            <span class="help-block">
+                            <span class="help-block" translate>
                               The mount path is already used. Please choose another mount path.
                             </span>
                           </div>
@@ -113,28 +112,28 @@
                                   type="checkbox"
                                   ng-model="attach.pickKeys"
                                   ng-disabled="!attach.source"
-                                  aria-describedby="select-keys-help">
+                                  aria-describedby="select-keys-help" translate>
                               Select specific keys and paths
                             </label>
-                            <div id="select-keys-help" class="help-block">
+                            <div id="select-keys-help" class="help-block" translate>
                               Add only certain keys or use paths that are different than the key names.
                             </div>
                           </div>
                         </div>
 
                         <div ng-if="attach.pickKeys && attach.source" class="mar-bottom-md">
-                          <h3>Keys and Paths</h3>
+                          <h3 translate>Keys and Paths</h3>
                           <div class="help-block mar-bottom-md">
-                            Select the keys to use and the file paths where each key will be exposed.
-                            The file paths are relative to the mount path.
-                            The contents of each file will be the value of the key.
+                            <translate>Select the keys to use and the file paths where each key will be exposed.</translate>
+                            <translate>The file paths are relative to the mount path.</translate>
+                            <translate>The contents of each file will be the value of the key.</translate>
                           </div>
                           <div ng-repeat="item in attach.items">
                             <div class="row">
                               <div class="form-group col-md-6">
                                 <label class="required">Key</label>
                                 <ui-select ng-model="item.key" ng-required="true">
-                                  <ui-select-match placeholder="Pick a key">
+                                  <ui-select-match placeholder="{{'Pick a key'|translate}}">
                                     {{$select.selected}}
                                   </ui-select-match>
                                   <ui-select-choices repeat="key in attach.source.data | keys | filter : $select.search">
@@ -143,7 +142,7 @@
                                 </ui-select>
                               </div>
                               <div class="form-group col-md-6">
-                                <label ng-attr-for="path-{{$id}}" class="required">Path</label>
+                                <label ng-attr-for="path-{{$id}}" class="required" translate>Path</label>
                                 <input
                                     ng-attr-id="path-{{$id}}"
                                     class="form-control"
@@ -159,43 +158,40 @@
                                     autocapitalize="off"
                                     spellcheck="false">
                                 <div class="has-error" ng-show="forms.addConfigVolumeForm['path-' + $id].$error.pattern">
-                                  <span class="help-block">
-                                    Path must be a relative path. It cannot start with <code>/</code> or
-                                    contain <code>..</code> path elements.
+                                  <span class="help-block" translate>
+                                    Path must be a relative path. It cannot start with <code>/</code> or contain <code>..</code> path elements.
                                   </span>
                                 </div>
                                 <div class="has-error" ng-show="forms.addConfigVolumeForm['path-' + $id].$error.oscUnique">
-                                  <span class="help-block">
+                                  <span class="help-block" translate>
                                     Paths must be unique.
                                   </span>
                                 </div>
                               </div>
                             </div>
                             <div class="mar-bottom-md">
-                              <a ng-hide="attach.items.length === 1" href="" ng-click="removeItem($index)">Remove Item</a>
+                              <a ng-hide="attach.items.length === 1" href="" ng-click="removeItem($index)" translate>Remove Item</a>
                               <span ng-if="$last">
                                 <span ng-hide="attach.items.length === 1" class="action-divider" aria-hidden="true">|</span>
-                                <a href="" ng-click="addItem()">Add Item</a>
+                                <a href="" ng-click="addItem()" translate>Add Item</a>
                               </span>
                             </div>
                           </div>
                         </div>
 
                         <div ng-if="targetObject.spec.template.spec.containers.length > 1">
-                          <h3 ng-class="{ hidden: attach.allContainers && !attach.pickKeys }">Containers</h3>
-                          <div ng-if="attach.allContainers">
-                            The volume will be mounted into all containers. You can
-                            <a href="" ng-click="attach.allContainers = false">select specific containers</a>
-                            instead.
+                          <h3 ng-class="{ hidden: attach.allContainers && !attach.pickKeys }" translate>Containers</h3>
+                          <div ng-if="attach.allContainers" translate>
+                            The volume will be mounted into all containers. You can <a href="" ng-click="attach.allContainers = false">select specific containers</a> instead.
                           </div>
 
                           <div ng-if="!attach.allContainers" class="form-group">
-                            <label class="sr-only required">Containers</label>
+                            <label class="sr-only required" translate>Containers</label>
                             <select-containers
                                 ng-model="attach.containers"
                                 pod-template="targetObject.spec.template"
                                 ng-required="true"
-                                help-text="Add the volume to the selected containers.">
+                                help-text="{{'Add the volume to the selected containers.'|translate}}">
                             </select-containers>
                           </div>
                         </div>
@@ -204,11 +200,11 @@
                           <button type="submit"
                               class="btn btn-primary btn-lg"
                               ng-click="addVolume()"
-                              ng-disabled="forms.addConfigVolumeForm.$invalid || disableInputs">Add</button>
+                              ng-disabled="forms.addConfigVolumeForm.$invalid || disableInputs" translate>Add</button>
                           <a class="btn btn-default btn-lg"
                               role="button"
                               href=""
-                              ng-click="cancel()">Cancel</a>
+                              ng-click="cancel()" translate>Cancel</a>
                         </div>
                       </fieldset>
                     </form>

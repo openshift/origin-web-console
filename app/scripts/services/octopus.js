@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("OctopusService", function ($filter, ApplicationGenerator, DataService) {
+  .factory("OctopusService", function () {
     // maps an env object: { key: 'val', key2: 'val2'}
     // to an array: [{},{},{}]
 
@@ -30,9 +30,9 @@ angular.module("openshiftConsole")
             name: data.OCTOPUS_CONSOLE_NAME
           }
         }
-      }
-      return importService
-    }
+      };
+      return importService;
+    };
     var findDeploymentConfigV1 = function (data) {
       var impostDeploymentConfig = {
         apiVersion: "v1",
@@ -106,9 +106,9 @@ angular.module("openshiftConsole")
             }
           ]
         }
-      }
-      return impostDeploymentConfig
-    }
+      };
+      return impostDeploymentConfig;
+    };
 
     var findServiceV2 = function (data) {
       var importServiceV2 = {
@@ -135,9 +135,9 @@ angular.module("openshiftConsole")
             name: data.OCTOPUS_API_NAME
           }
         }
-      }
-      return importServiceV2
-    }
+      };
+      return importServiceV2;
+    };
 
     var findDeploymentConfigV2 = function (data) {
       var impostDeploymentConfigV2 = {
@@ -238,9 +238,9 @@ angular.module("openshiftConsole")
             }
           ]
         }
-      }
-      return impostDeploymentConfigV2
-    }
+      };
+      return impostDeploymentConfigV2;
+    };
 
     return {
       findServiceV1: findServiceV1,
@@ -248,4 +248,4 @@ angular.module("openshiftConsole")
       findServiceV2: findServiceV2,
       findDeploymentConfigV2: findDeploymentConfigV2
     };
-  })
+  });

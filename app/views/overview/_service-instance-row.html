@@ -19,9 +19,9 @@
             <span ng-if="!row.bindings.length
                         && row.isBindable
                         && ({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create')">
-              <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</a>
+              <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})" translate>Create Binding</a>
             </span>
-            <span ng-if="row.bindings.length" class="component-label">Bindings</span>
+            <span ng-if="row.bindings.length" class="component-label" translate>Bindings</span>
             <p ng-if="firstBinding = row.bindings[0]" class="bindings">
               <span ng-if="application = row.state.applicationsByBinding[firstBinding.metadata.name][0]">
                 {{application.metadata.name}}
@@ -30,11 +30,11 @@
                 {{firstBinding.spec.secretName}}
               </span>
               <span ng-if="row.bindings.length > 1">
-                and
+                <translate>and</translate>
                 <a
                   ng-if="row.bindings.length > 1"
                   ng-click="row.toggleExpand($event, true)">
-                  {{row.bindings.length -1}} other<span ng-if="row.bindings.length > 2">s</span></a>
+                  <translate>{{row.bindings.length -1}} other<span ng-if="row.bindings.length > 2">s</span></translate></a>
               </span>
             </p>
           </div>
@@ -52,16 +52,16 @@
       <div uib-dropdown>
         <a href=""
         uib-dropdown-toggle
-        class="actions-dropdown-kebab"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
+        class="actions-dropdown-kebab"><i class="fa fa-ellipsis-v"></i><span class="sr-only" translate>Actions</span></a>
         <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
           <li role="menuitem" ng-if="row.isBindable && ({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create')">
-            <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</a>
+            <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})" translate>Create Binding</a>
           </li>
           <li role="menuitem" ng-if="row.deleteableBindings.length && ({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'delete')">
-            <a href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})">Delete Binding</a>
+            <a href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})" translate>Delete Binding</a>
           </li>
           <li role="menuitem">
-            <a href="" ng-click="row.deprovision()" role="button" ng-if="{resource: 'instances', group: 'servicecatalog.k8s.io'} | canI : 'delete'">Delete</a>
+            <a href="" ng-click="row.deprovision()" role="button" ng-if="{resource: 'instances', group: 'servicecatalog.k8s.io'} | canI : 'delete'" translate>Delete</a>
           </li>
         </ul>
       </div>

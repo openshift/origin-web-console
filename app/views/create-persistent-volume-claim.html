@@ -13,10 +13,10 @@
               <div class="col-md-10 col-md-offset-1">
                 <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
                 <div class="mar-top-xl">
-                  <h1>Create Storage</h1>
+                  <h1 translate>Create Storage</h1>
                   <div class="help-block">
-                    Create a request for an administrator-defined storage asset by specifying size and permissions for a best fit.
-                    <a href="{{'persistent_volumes' | helpLink}}" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
+                    <translate>Create a request for an administrator-defined storage asset by specifying size and permissions for a best fit.</translate>
+                    <a href="{{'persistent_volumes' | helpLink}}" target="_blank"><span class="learn-more-inline" translate>Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
                   </div>
                   <form name="createPersistentVolumeClaimForm" class="mar-top-lg">
                     <fieldset ng-disabled="disableInputs">
@@ -27,7 +27,7 @@
                                 ng-click="createPersistentVolumeClaim()"
                                 ng-disabled="createPersistentVolumeClaimForm.$invalid || disableInputs"
                                 value="">Create</button>
-                        <a class="btn btn-default btn-lg" href="" ng-click="cancel()" role="button">Cancel</a>
+                        <a class="btn btn-default btn-lg" href="" ng-click="cancel()" role="button" translate>Cancel</a>
                       </div>
                     </fieldset>
                   </form>

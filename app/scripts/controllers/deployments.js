@@ -16,7 +16,8 @@ angular.module('openshiftConsole')
                                                  LabelFilter,
                                                  Logger,
                                                  OwnerReferencesService,
-                                                 ProjectsService) {
+                                                 ProjectsService,
+                                                 gettext) {
     $scope.projectName = $routeParams.project;
     $scope.replicationControllers = {};
     $scope.unfilteredDeploymentConfigs = {};
@@ -24,7 +25,7 @@ angular.module('openshiftConsole')
     $scope.replicationControllersByDC = {};
     $scope.labelSuggestions = {};
     $scope.alerts = $scope.alerts || {};
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettext("Loading...");
     $scope.expandedDeploymentConfigRow = {};
     $scope.unfilteredReplicaSets = {};
     $scope.unfilteredReplicationControllers = {};
@@ -122,7 +123,7 @@ angular.module('openshiftConsole')
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredDeploymentConfigs, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
           $scope.deploymentConfigs = LabelFilter.getLabelSelector().select($scope.unfilteredDeploymentConfigs);
-          $scope.emptyMessage = "No deployment configurations to show";
+          $scope.emptyMessage = gettext("No deployment configurations to show");
           $scope.replicationControllersByDC = DeploymentsService.associateDeploymentsToDeploymentConfig($scope.replicationControllers, $scope.deploymentConfigs, true);
           if ($scope.replicationControllersByDC['']) {
             $scope.unfilteredReplicationControllers = $scope.replicationControllersByDC[''];

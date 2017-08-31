@@ -8,13 +8,13 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('RoutesController', function ($routeParams, $scope, DataService, $filter, LabelFilter, ProjectsService) {
+  .controller('RoutesController', function ($routeParams, $scope, DataService, $filter, LabelFilter, ProjectsService, gettext) {
     $scope.projectName = $routeParams.project;
     $scope.unfilteredRoutes = {};
     $scope.routes = {};
     $scope.labelSuggestions = {};
     $scope.alerts = $scope.alerts || {};
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettext("Loading...");
 
     var watches = [];
 
@@ -27,7 +27,7 @@ angular.module('openshiftConsole')
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredRoutes, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
           $scope.routes = LabelFilter.getLabelSelector().select($scope.unfilteredRoutes);
-          $scope.emptyMessage = "No routes to show";
+          $scope.emptyMessage = gettext("No routes to show");
           updateFilterWarning();
         }));
 

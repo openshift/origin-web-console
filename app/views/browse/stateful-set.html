@@ -8,7 +8,7 @@
           <div row mobile="column" class="tech-preview-header">
             <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
             <span class="pad-top-md">
-              <span class="label label-warning">Technology Preview</span>
+              <span class="label label-warning" translate>Technology Preview</span>
             </span>
           </div>
           <alerts alerts="alerts"></alerts>
@@ -23,18 +23,18 @@
                   type="button"
                   class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs"
                   data-toggle="dropdown">
-                  Actions
+                  <translate>Actions</translate>
                   <span class="caret" aria-hidden="true"></span>
                 </button>
                 <a
                   href=""
                   class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                   data-toggle="dropdown">
-                  <i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span>
+                  <i class="fa fa-ellipsis-v"></i><span class="sr-only" translate>Actions</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right actions action-button">
                   <li ng-if="resourceGroupVersion | canI : 'update'">
-                    <a ng-href="{{statefulSet | editYamlURL}}" role="button">Edit YAML</a>
+                    <a ng-href="{{statefulSet | editYamlURL}}" role="button" translate>Edit YAML</a>
                   </li>
                   <li ng-if="resourceGroupVersion | canI : 'delete'">
                     <delete-link
@@ -61,13 +61,13 @@
 
       <div class="middle-content" persist-tab-state>
         <div class="container-fluid">
-         <div ng-if="!loaded">Loading...</div>
+         <div ng-if="!loaded" translate>Loading...</div>
 
           <div class="row" ng-if="loaded && statefulSet">
             <div class="col-md-12">
               <uib-tabset>
                 <uib-tab active="selectedTab.details">
-                  <uib-tab-heading>Details</uib-tab-heading>
+                  <uib-tab-heading translate>Details</uib-tab-heading>
 
                   <div class="row" style="max-width: 650px;">
 
@@ -86,12 +86,12 @@
 
                     <div class="col-sm-8 col-sm-pull-4">
                       <dl class="dl-horizontal left">
-                        <dt>Status:</dt>
+                        <dt translate>Status:</dt>
                         <dd>
                           <status-icon status="statefulSet | deploymentStatus"></status-icon>
                           {{statefulSet | deploymentStatus}}
                         </dd>
-                        <dt>Replicas:</dt>
+                        <dt translate>Replicas:</dt>
                         <dd>
                           <!-- TODO: swap back in 1.6
                           <replicas
@@ -126,8 +126,8 @@
 
                   <div class="row">
                     <div class="col-md-12">
-                      <h3>Volumes</h3>
-                      <p ng-if="!statefulSet.spec.template.spec.volumes.length">
+                      <h3 translate>Volumes</h3>
+                      <p ng-if="!statefulSet.spec.template.spec.volumes.length" translate>
                         none
                       </p>
                       <volumes
@@ -135,7 +135,7 @@
                           namespace="project.metadata.name">
                       </volumes>
 
-                      <h3>Pods</h3>
+                      <h3 translate>Pods</h3>
                       <pods-table
                         pods="podsForStatefulSet"></pods-table>
 
@@ -146,7 +146,7 @@
                 </uib-tab>
 
                 <uib-tab active="selectedTab.environment" ng-if="statefulSet">
-                  <uib-tab-heading>Environment</uib-tab-heading>
+                  <uib-tab-heading translate>Environment</uib-tab-heading>
                   <div class="resource-environment">
                     <ng-form name="forms.statefulSetEnvVars">
                       <div ng-repeat="container in statefulSet.spec.template.spec.containers">
@@ -172,7 +172,7 @@
                 </uib-tab>
 
                 <uib-tab ng-if="metricsAvailable" active="selectedTab.metrics">
-                  <uib-tab-heading>Metrics</uib-tab-heading>
+                  <uib-tab-heading translate>Metrics</uib-tab-heading>
                   <div class="resource-metrics">
                     <deployment-metrics
                       ng-if="selectedTab.metrics && podsForStatefulSet"
@@ -184,7 +184,7 @@
                 </uib-tab>
 
                 <uib-tab active="selectedTab.events">
-                  <uib-tab-heading>Events</uib-tab-heading>
+                  <uib-tab-heading translate>Events</uib-tab-heading>
                   <div class="resource-events">
                     <events api-objects="[ statefulSet ]" project-context="projectContext" ng-if="selectedTab.events"></events>
                   </div>

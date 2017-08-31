@@ -8,10 +8,10 @@
         <div class="container-fluid">
           <div class="page-header page-header-bleed-right page-header-bleed-left">
             <h1>
-              Pods
+              <translate>Pods</translate>
               <span class="page-header-link">
                 <a ng-href="{{'pods' | helpLink}}" target="_blank">
-                  Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
+                  <translate>Learn More</translate> <i class="fa fa-external-link" aria-hidden="true"></i>
                 </a>
               </span>
             </h1>
@@ -28,7 +28,7 @@
           <alerts alerts="alerts"></alerts>
           <div class="row">
             <div class="col-md-12">
-              <pods-table pods="pods" empty-message="emptyMessage"></pods-table>
+              <pods-table pods="pods" empty-message="emptyMessage|translate"></pods-table>
             </div><!-- /col-* -->
           </div>
         </div>

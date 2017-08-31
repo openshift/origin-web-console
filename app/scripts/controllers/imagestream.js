@@ -7,7 +7,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('ImageStreamController', function ($scope, $routeParams, DataService, ProjectsService, $filter, ImageStreamsService, Navigate) {
+  .controller('ImageStreamController', function ($scope, $routeParams, DataService, ProjectsService, $filter, ImageStreamsService, Navigate, gettext) {
     $scope.projectName = $routeParams.project;
     $scope.imageStream = null;
     $scope.tags = [];
@@ -24,7 +24,7 @@ angular.module('openshiftConsole')
         title: $routeParams.imagestream
       }
     ];
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettext("Loading...");
 
     var watches = [];
 
@@ -37,7 +37,7 @@ angular.module('openshiftConsole')
           function(imageStream) {
             $scope.loaded = true;
             $scope.imageStream = imageStream;
-            $scope.emptyMessage = "No tags to show";
+            $scope.emptyMessage = gettext("No tags to show");
 
             // If we found the item successfully, watch for changes on it
             watches.push(DataService.watchObject("imagestreams", $routeParams.imagestream, context, function(imageStream, action) {

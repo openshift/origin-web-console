@@ -1,12 +1,12 @@
 <div ng-repeat="(serverName, data) in secretData" class="image-source-item">
   <h3>{{serverName}}</h3>
-  <dt>username</dt>
+  <dt translate>username</dt>
   <dd class="word-break">{{data.username}}</dd>
-  <dt>password</dt>
+  <dt translate>password</dt>
   <dd ng-if="view.showSecret">
     <copy-to-clipboard clipboard-text="data.password" display-wide="true"></copy-to-clipboard>
   </dd>
   <dd ng-if="!view.showSecret">*****</dd>
-  <dt>email</dt>
+  <dt translate>email</dt>
   <dd class="word-break">{{data.email}}</dd>
 </div>

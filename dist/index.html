@@ -1,59 +1,392 @@
 <!doctype html>
 <html class="no-js layout-pf-alt layout-pf-alt-fixed">
-<head>
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE"/>
-<meta charset="utf-8">
-<base href="/">
-<title>OpenShift Web Console</title>
-<meta name="description" content="">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="icon" type="image/png" href="images/favicon.png"/>
-<link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
-<link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/apple-touch-icon-precomposed.png">
-<meta name="application-name" content="OpenShift">
-<meta name="msapplication-TileColor" content="#000000">
-<meta name="msapplication-TileImage" content="images/mstile-144x144.png">
-<link rel="stylesheet" href="styles/vendor.css">
-<link rel="stylesheet" href="styles/main.css">
-<link rel="stylesheet" type="text/css" href="styles/extensions.css">
-<style type="text/css"></style>
-</head>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+    <meta charset="utf-8">
+    <base href="/">
+    <title>Dataman OS</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="images/favicon.png" />
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/apple-touch-icon-precomposed.png">
+    <meta name="application-name" content="OpenShift">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-TileImage" content="images/mstile-144x144.png">
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/angular-patternfly/dist/styles/angular-patternfly.css" />
+    <link rel="stylesheet" href="bower_components/kubernetes-label-selector/labelFilter.css" />
+    <link rel="stylesheet" href="bower_components/kubernetes-container-terminal/dist/container-terminal.css" />
+    <link rel="stylesheet" href="bower_components/registry-image-widgets/dist/image-widgets.css" />
+    <link rel="stylesheet" href="bower_components/layout.attrs/dist/layout.attrs.css" />
+    <link rel="stylesheet" href="bower_components/ng-sortable/dist/ng-sortable.css" />
+    <link rel="stylesheet" href="bower_components/ui-select/dist/select.css" />
+    <link rel="stylesheet" href="bower_components/hopscotch/dist/css/hopscotch.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" type="text/css" href="styles/main.css">
+    <!-- endbuild -->
+    <link rel="stylesheet" type="text/css" href="styles/extensions.css">
+    <style type="text/css">
+
+
+    </style>
+  </head>
 <body class="console-os">
-<toast-notifications></toast-notifications>
-<div ng-view>
-<nav class="navbar navbar-pf-alt top-header" role="navigation">
-<div row>
-<div class="navbar-header">
-<a class="navbar-brand" id="openshift-logo" href="./">
-<div id="header-logo"></div>
-</a>
-</div>
-</div>
-</nav>
-<div class="wrap no-sidebar">
-<div class="middle surface-shaded">
-<div class="middle-section">
-<div class="empty-state-message">
-<h2 class="text-center" id="temporary-loading-message" style="display: none">Loading...</h2>
-<script>document.getElementById('temporary-loading-message').style.display = "";</script>
-</div>
-<noscript>
-<div class="attention-message">
-<h1>JavaScript Required</h1>
-<p>The OpenShift web console requires JavaScript to provide a rich interactive experience. Please enable JavaScript to continue. If you do not wish to enable JavaScript or are unable to do so, you may use the command-line tools to manage your projects and applications instead.</p>
-</div>
-</noscript>
-</div>
-</div>
-</div>
-</div>
-<script src="config.js"></script>
-<!--[if lt IE 9]>
-    <script src="scripts/oldieshim.js"></script>
+    <!-- Add your site or application content here -->
+
+    <toast-notifications></toast-notifications>
+    <div ng-view>
+      <!-- Include default simple nav and shaded background as a placeholder until API discovery finishes -->
+      <nav class="navbar navbar-pf-alt top-header" role="navigation">
+        <div row>
+          <div class="navbar-header">
+            <a class="navbar-brand" id="openshift-logo" href="./">
+              <div id="header-logo"></div>
+            </a>
+          </div>
+        </div>
+      </nav>
+      <div class="wrap no-sidebar">
+        <div class="middle surface-shaded">
+          <div class="middle-section">
+            <div class="empty-state-message">
+              <h2 class="text-center" id="temporary-loading-message" style="display: none;" translate>Loading...</h2>
+              <!-- So that we don't get the Loading... message AND the noscript message -->
+              <script>
+                document.getElementById('temporary-loading-message').style.display = "";
+              </script>
+            </div>
+            <noscript>
+              <div class="attention-message">
+                <h1 translate>JavaScript Required</h1>
+                <p><translate>The OpenShift web console requires JavaScript to provide a rich interactive experience.</translate>
+                  <translate>Please enable JavaScript to continue. If you do not wish to enable JavaScript or are unable to do so,</translate>
+                  <translate>you may use the command-line tools to manage your projects and applications instead.</translate></p>
+              </div>
+            </noscript>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="config.js"></script>
+
+    <!-- build:js(.) scripts/oldieshim.js -->
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.js"></script>
     <![endif]-->
-<script src="scripts/vendor.js"></script>
-<script src="scripts/templates.js"></script>
-<script src="scripts/scripts.js"></script>
-<script src="scripts/extensions.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:js(.) scripts/vendor.js -->
+    <script src="bower_components/es5-dom-shim/__COMPILE/a.js"></script>
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/json3/lib/json3.js"></script>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js"></script>
+    <script src="bower_components/lodash/lodash.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+    <script src="bower_components/bootstrap-switch/dist/js/bootstrap-switch.js"></script>
+    <script src="bower_components/bootstrap-touchspin/src/jquery.bootstrap-touchspin.js"></script>
+    <script src="bower_components/d3/d3.js"></script>
+    <script src="bower_components/c3/c3.js"></script>
+    <script src="bower_components/datatables/media/js/jquery.dataTables.js"></script>
+    <script src="bower_components/datatables-colreorder/js/dataTables.colReorder.js"></script>
+    <script src="bower_components/datatables-colvis/js/dataTables.colVis.js"></script>
+    <script src="bower_components/matchHeight/dist/jquery.matchHeight.js"></script>
+    <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/patternfly-bootstrap-combobox/js/bootstrap-combobox.js"></script>
+    <script src="bower_components/patternfly-bootstrap-treeview/dist/bootstrap-treeview.js"></script>
+    <script src="bower_components/patternfly/dist/js/patternfly.js"></script>
+    <script src="bower_components/angular-patternfly/dist/angular-patternfly.js"></script>
+    <script src="bower_components/angular-gettext/dist/angular-gettext.js"></script>
+    <script src="bower_components/uri.js/src/URI.js"></script>
+    <script src="bower_components/uri.js/src/URITemplate.js"></script>
+    <script src="bower_components/uri.js/src/jquery.URI.js"></script>
+    <script src="bower_components/uri.js/src/URI.fragmentURI.js"></script>
+    <script src="bower_components/js-logger/src/logger.js"></script>
+    <script src="bower_components/hawtio-core/dist/hawtio-core.js"></script>
+    <script src="bower_components/hawtio-extension-service/dist/hawtio-extension-service.js"></script>
+    <script src="bower_components/sifter/sifter.js"></script>
+    <script src="bower_components/microplugin/src/microplugin.js"></script>
+    <script src="bower_components/selectize/dist/js/selectize.js"></script>
+    <script src="bower_components/kubernetes-label-selector/labelSelector.js"></script>
+    <script src="bower_components/kubernetes-label-selector/labelFilter.js"></script>
+    <script src="bower_components/term.js/src/term.js"></script>
+    <script src="bower_components/kubernetes-container-terminal/dist/container-terminal.js"></script>
+    <script src="bower_components/registry-image-widgets/dist/image-widgets.js"></script>
+    <script src="bower_components/kubernetes-object-describer/dist/object-describer.js"></script>
+    <script src="bower_components/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/ext-searchbox.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/mode-dockerfile.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/mode-groovy.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/mode-yaml.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/theme-dreamweaver.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/theme-eclipse.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/mode-sh.js"></script>
+    <script src="bower_components/angular-ui-ace/ui-ace.js"></script>
+    <script src="bower_components/clipboard/dist/clipboard.js"></script>
+    <script src="bower_components/ansi_up/ansi_up.js"></script>
+    <script src="bower_components/angular-extension-registry/dist/angular-extension-registry.min.js"></script>
+    <script src="bower_components/angular-extension-registry/dist/compiled-templates.js"></script>
+    <script src="bower_components/ng-sortable/dist/ng-sortable.js"></script>
+    <script src="bower_components/ui-select/dist/select.js"></script>
+    <script src="bower_components/angular-inview/angular-inview.js"></script>
+    <script src="bower_components/js-yaml/dist/js-yaml.js"></script>
+    <script src="bower_components/angular-moment/angular-moment.js"></script>
+    <script src="bower_components/angular-utf8-base64/angular-utf8-base64.js"></script>
+    <script src="bower_components/file-saver/FileSaver.js"></script>
+    <script src="bower_components/hopscotch/dist/js/hopscotch.js"></script>
+    <script src="bower_components/origin-web-common/dist/origin-web-common.js"></script>
+    <script src="bower_components/tv4/tv4.js"></script>
+    <script src="bower_components/objectpath/lib/ObjectPath.js"></script>
+    <script src="bower_components/angular-schema-form/dist/schema-form.js"></script>
+    <script src="bower_components/angular-schema-form/dist/bootstrap-decorator.js"></script>
+    <script src="bower_components/angular-schema-form-bootstrap/bootstrap-decorator.min.js"></script>
+    <script src="bower_components/origin-web-catalog/dist/vendor-bundle.js"></script>
+    <script src="bower_components/origin-web-catalog/dist/origin-web-catalogs.js"></script>
+    <!-- endbower -->
+    <script src="bower_components/moment/locale/zh-cn.js"></script>
+    <!-- endbuild -->
+
+    <!-- This needs to be loaded before scripts.js -->
+    <script src="scripts/templates.js"></script>
+
+        <!-- build:js({.tmp,app}) scripts/scripts.js -->
+
+        <script src="scripts/constants.js"></script>
+        <script src="scripts/app.js"></script>
+        <script src="scripts/services/discovery.js"></script>
+        <script src="scripts/services/applicationGenerator.js"></script>
+        <script src="scripts/services/navigate.js"></script>
+        <script src="scripts/services/nameGenerator.js"></script>
+        <script src="scripts/services/tasks.js"></script>
+        <script src="scripts/services/imageStreamResolver.js"></script>
+        <script src="scripts/services/containerWebSocket.js"></script>
+        <script src="scripts/services/util.js"></script>
+        <script src="scripts/services/builds.js"></script>
+        <script src="scripts/services/deployments.js"></script>
+        <script src="scripts/services/imagestreams.js"></script>
+        <script src="scripts/services/membership/membership.js"></script>
+        <script src="scripts/services/membership/roles.js"></script>
+        <script src="scripts/services/membership/roleBindings.js"></script>
+        <script src="scripts/services/metrics.js"></script>
+        <script src="scripts/services/metricsCharts.js"></script>
+        <script src="scripts/services/storage.js"></script>
+        <script src="scripts/services/limits.js"></script>
+        <script src="scripts/services/routes.js"></script>
+        <script src="scripts/services/charts.js"></script>
+        <script src="scripts/services/hpa.js"></script>
+        <script src="scripts/services/pods.js"></script>
+        <script src="scripts/services/templates.js"></script>
+        <script src="scripts/services/secrets.js"></script>
+        <script src="scripts/services/services.js"></script>
+        <script src="scripts/services/images.js"></script>
+        <script src="scripts/services/octopus.js"></script>
+        <script src="scripts/services/squid.js"></script>
+        <script src="scripts/services/convert.js"></script>
+        <script src="scripts/services/breadcrumbs.js"></script>
+        <script src="scripts/services/quota.js"></script>
+        <script src="scripts/services/securityCheck.js"></script>
+        <script src="scripts/services/labels.js"></script>
+        <script src="scripts/services/catalog.js"></script>
+        <script src="scripts/services/modals.js"></script>
+        <script src="scripts/services/cliHelp.js"></script>
+        <script src="scripts/services/environment.js"></script>
+        <script src="scripts/services/keyValueEditorProvider.js"></script>
+        <script src="scripts/services/keyValueEditorUtils.js"></script>
+        <script src="scripts/services/fullscreen.js"></script>
+        <script src="scripts/services/apps.js"></script>
+        <script src="scripts/services/resourceAlerts.js"></script>
+        <script src="scripts/services/listRowUtils.js"></script>
+        <script src="scripts/services/ownerReferences.js"></script>
+        <script src="scripts/controllers/landingPage.js"></script>
+        <script src="scripts/controllers/projects.js"></script>
+        <script src="scripts/controllers/pods.js"></script>
+        <script src="scripts/controllers/pod.js"></script>
+        <script src="scripts/controllers/overview.js"></script>
+        <script src="scripts/controllers/quota.js"></script>
+        <script src="scripts/controllers/monitoring.js"></script>
+        <script src="scripts/controllers/membership.js"></script>
+        <script src="scripts/controllers/builds.js"></script>
+        <script src="scripts/controllers/pipelines.js"></script>
+        <script src="scripts/controllers/buildConfig.js"></script>
+        <script src="scripts/controllers/build.js"></script>
+        <script src="scripts/controllers/image.js"></script>
+        <script src="scripts/controllers/images.js"></script>
+        <script src="scripts/controllers/imagestream.js"></script>
+        <script src="scripts/controllers/deployments.js"></script>
+        <script src="scripts/controllers/deployment.js"></script>
+        <script src="scripts/controllers/deploymentConfig.js"></script>
+        <script src="scripts/controllers/replicaSet.js"></script>
+        <script src="scripts/controllers/statefulSets.js"></script>
+        <script src="scripts/controllers/statefulSet.js"></script>
+        <script src="scripts/controllers/services.js"></script>
+        <script src="scripts/controllers/service.js"></script>
+        <script src="scripts/controllers/secrets.js"></script>
+        <script src="scripts/controllers/secret.js"></script>
+        <script src="scripts/controllers/createSecret.js"></script>
+        <script src="scripts/controllers/configMaps.js"></script>
+        <script src="scripts/controllers/configMap.js"></script>
+        <script src="scripts/controllers/createConfigMap.js"></script>
+        <script src="scripts/controllers/routes.js"></script>
+        <script src="scripts/controllers/route.js"></script>
+        <script src="scripts/controllers/storage.js"></script>
+        <script src="scripts/controllers/otherResources.js"></script>
+        <script src="scripts/controllers/persistentVolumeClaim.js"></script>
+        <script src="scripts/controllers/setLimits.js"></script>
+        <script src="scripts/controllers/edit/buildConfig.js"></script>
+        <script src="scripts/controllers/edit/configMap.js"></script>
+        <script src="scripts/controllers/edit/deploymentConfig.js"></script>
+        <script src="scripts/controllers/edit/autoscaler.js"></script>
+        <script src="scripts/controllers/edit/healthChecks.js"></script>
+        <script src="scripts/controllers/edit/route.js"></script>
+        <script src="scripts/controllers/edit/yaml.js"></script>
+        <script src="scripts/controllers/create/browseCategory.js"></script>
+        <script src="scripts/controllers/create/createFromImage.js"></script>
+        <script src="scripts/controllers/create/nextSteps.js"></script>
+        <script src="scripts/controllers/newfromtemplate.js"></script>
+        <script src="scripts/controllers/labels.js"></script>
+        <script src="scripts/controllers/tasks.js"></script>
+        <script src="scripts/controllers/events.js"></script>
+        <script src="scripts/controllers/util/oauth.js"></script>
+        <script src="scripts/controllers/util/error.js"></script>
+        <script src="scripts/controllers/util/logout.js"></script>
+        <script src="scripts/controllers/create.js"></script>
+        <script src="scripts/controllers/createFromURL.js"></script>
+        <script src="scripts/controllers/createProject.js"></script>
+        <script src="scripts/controllers/edit/project.js"></script>
+        <script src="scripts/controllers/createRoute.js"></script>
+        <script src="scripts/controllers/attachPVC.js"></script>
+        <script src="scripts/controllers/addConfigVolume.js"></script>
+        <script src="scripts/controllers/modals/createSecretModal.js"></script>
+        <script src="scripts/controllers/modals/confirmModal.js"></script>
+        <script src="scripts/controllers/modals/confirmScale.js"></script>
+        <script src="scripts/controllers/modals/confirmSaveLog.js"></script>
+        <script src="scripts/controllers/modals/deleteModal.js"></script>
+        <script src="scripts/controllers/modals/debugTerminal.js"></script>
+        <script src="scripts/controllers/modals/confirmReplaceModal.js"></script>
+        <script src="scripts/controllers/modals/processOrSaveTemplateModal.js"></script>
+        <script src="scripts/controllers/modals/linkService.js"></script>
+        <script src="scripts/controllers/modals/jenkinsfileExamplesModal.js"></script>
+        <script src="scripts/controllers/modals/aboutComputeUnitsModal.js"></script>
+        <script src="scripts/controllers/about.js"></script>
+        <script src="scripts/controllers/commandLine.js"></script>
+        <script src="scripts/controllers/createPersistentVolumeClaim.js"></script>
+        <script src="scripts/directives/buildClose.js"></script>
+        <script src="scripts/directives/createSecret.js"></script>
+        <script src="scripts/directives/date.js"></script>
+        <script src="scripts/directives/deleteLink.js"></script>
+        <script src="scripts/directives/editWebhookTriggers.js"></script>
+        <script src="scripts/directives/editConfigMap.js"></script>
+        <script src="scripts/directives/events.js"></script>
+        <script src="scripts/directives/eventsSidebar.js"></script>
+        <script src="scripts/directives/eventsBadge.js"></script>
+        <script src="scripts/directives/fromFile.js"></script>
+        <script src="scripts/directives/oscFileInput.js"></script>
+        <script src="scripts/directives/oscFormSection.js"></script>
+        <script src="scripts/directives/oscGitLink.js"></script>
+        <script src="scripts/directives/oscImageSummary.js"></script>
+        <script src="scripts/directives/oscRouting.js"></script>
+        <script src="scripts/directives/oscPersistentVolumeClaim.js"></script>
+        <script src="scripts/directives/oscAutoscaling.js"></script>
+        <script src="scripts/directives/oscSecrets.js"></script>
+        <script src="scripts/directives/oscSourceSecrets.js"></script>
+        <script src="scripts/directives/replicas.js"></script>
+        <script src="scripts/directives/resources.js"></script>
+        <script src="scripts/directives/nav.js"></script>
+        <script src="scripts/directives/alerts.js"></script>
+        <script src="scripts/directives/parseError.js"></script>
+        <script src="scripts/directives/popups.js"></script>
+        <script src="scripts/directives/util.js"></script>
+        <script src="scripts/directives/labels.js"></script>
+        <script src="scripts/directives/lifecycleHook.js"></script>
+        <script src="scripts/directives/actionChip.js"></script>
+        <script src="scripts/directives/templateopt.js"></script>
+        <script src="scripts/directives/tasks.js"></script>
+        <script src="scripts/directives/catalog.js"></script>
+        <script src="scripts/directives/catalog/categoryContent.js"></script>
+        <script src="scripts/directives/catalog/catalogImage.js"></script>
+        <script src="scripts/directives/catalog/catalogTemplate.js"></script>
+        <script src="scripts/directives/podMetrics.js"></script>
+        <script src="scripts/directives/deploymentMetrics.js"></script>
+        <script src="scripts/directives/logViewer.js"></script>
+        <script src="scripts/directives/statusIcon.js"></script>
+        <script src="scripts/directives/ellipsisPulser.js"></script>
+        <script src="scripts/directives/podDonut.js"></script>
+        <script src="scripts/directives/routeServicePie.js"></script>
+        <script src="scripts/directives/deploymentDonut.js"></script>
+        <script src="scripts/directives/quotaUsageChart.js"></script>
+        <script src="scripts/directives/buildTrendsChart.js"></script>
+        <script src="scripts/directives/editRequestLimit.js"></script>
+        <script src="scripts/directives/editProbe.js"></script>
+        <script src="scripts/directives/editCommand.js"></script>
+        <script src="scripts/directives/buildPipeline.js"></script>
+        <script src="scripts/directives/buildStatus.js"></script>
+        <script src="scripts/directives/routeServiceBarChart.js"></script>
+        <script src="scripts/directives/bindService.js"></script>
+        <script src="scripts/directives/unbindService.js"></script>
+        <script src="scripts/directives/processTemplate.js"></script>
+        <script src="scripts/directives/processTemplateDialog.js"></script>
+        <script src="scripts/directives/deployImageDialog.js"></script>
+        <script src="scripts/directives/fromFileDialog.js"></script>
+        <script src="scripts/directives/create/nextSteps.js"></script>
+        <script src="scripts/directives/imageNames.js"></script>
+
+        <!-- New Overview -->
+        <script src="scripts/directives/buildCounts.js"></script>
+        <script src="scripts/directives/metricsSummary.js"></script>
+        <script src="scripts/directives/miniLog.js"></script>
+        <script src="scripts/directives/notificationIcon.js"></script>
+        <script src="scripts/directives/overview/builds.js"></script>
+        <script src="scripts/directives/overview/listRow.js"></script>
+        <script src="scripts/directives/overview/serviceInstanceRow.js"></script>
+        <script src="scripts/directives/overview/networking.js"></script>
+        <script src="scripts/directives/overview/pipelines.js"></script>
+        <script src="scripts/directives/overview/serviceBindings.js"></script>
+        <script src="scripts/directives/overview/serviceBinding.js"></script>
+
+        <script src="scripts/directives/istagSelect.js"></script>
+        <script src="scripts/directives/deployImage.js"></script>
+        <script src="scripts/directives/openShift.js"></script>
+        <script src="scripts/directives/squid-form.js"></script>
+        <script src="scripts/directives/selector.js"></script>
+        <script src="scripts/directives/selectContainers.js"></script>
+        <script src="scripts/directives/buildHooks.js"></script>
+        <script src="scripts/directives/pauseRolloutsCheckbox.js"></script>
+        <script src="scripts/directives/keyValueEditor.js"></script>
+        <script src="scripts/directives/confirmOnExit.js"></script>
+        <script src="scripts/filters/date.js"></script>
+        <script src="scripts/filters/resources.js"></script>
+        <script src="scripts/filters/canI.js"></script>
+        <script src="scripts/filters/util.js"></script>
+        <script src="scripts/directives/affix.js"></script>
+        <script src="scripts/services/logLinks.js"></script>
+
+        <!-- add bundled extensions here -->
+        <script src="scripts/extensions/javalink/javaLink.js"></script>
+        <script src="scripts/extensions/nav/helpDropdown.js"></script>
+        <script src="scripts/extensions/nav/userDropdown.js"></script>
+        <script src="scripts/extensions/nav/dropdownMobile.js"></script>
+        <!-- endbuild -->
+
+    <!-- Load any extensions last. -->
+    <script src="scripts/extensions.js"></script>
+
 </body>
 </html>

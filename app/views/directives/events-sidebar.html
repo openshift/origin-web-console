@@ -1,28 +1,28 @@
 <div class="right-container events-sidebar" ng-hide="sidebarCollapsed">
   <div class="sidebar-header right-header">
-    <div>      
+    <div>
       <h2>
-        <span class="events-sidebar-collapse"><a href="" class="fa fa-arrow-circle-o-right" title="Collapse event sidebar" ng-click="collapseSidebar()"><span class="sr-only">Collapse event sidebar</span></a></span>        
-        Events
+        <span class="events-sidebar-collapse"><a href="" class="fa fa-arrow-circle-o-right" title="Collapse event sidebar" ng-click="collapseSidebar()"><span class="sr-only" translate>Collapse event sidebar</span></a></span>
+        <translate>Events</translate>
         <small ng-if="warningCount" class="warning-count">
           <span class="pficon pficon-warning-triangle-o"></span>
           {{warningCount}}
           <span class="hidden-xs hidden-sm">
-            <span ng-if="warningCount === 1">warning</span>
-            <span ng-if="warningCount > 1">warnings</span>
+            <span ng-if="warningCount === 1" translate>warning</span>
+            <span ng-if="warningCount > 1" translate>warnings</span>
           </span>
         </small>
       </h2>
     </div>
     <div ng-if="events | hashSize" class="event-details-link">
-      <a ng-href="project/{{projectContext.projectName}}/browse/events">View Details</a>
+      <a ng-href="project/{{projectContext.projectName}}/browse/events" translate>View Details</a>
     </div>
   </div>
   <div class="right-content">
     <ellipsis-pulser color="dark" size="sm" msg="Loading" ng-if="!events" class="events"></ellipsis-pulser>
     <div ng-if="events" class="events">
       <div ng-if="!(events | hashSize)" class="mar-left-xl">
-        <em>No events.</em>
+        <em translate>No events.</em>
       </div>
       <div ng-repeat="event in events track by (event | uid)" class="event animate-repeat" ng-class="{'highlight': highlightedEvents[event.involvedObject.kind + '/' + event.involvedObject.name]}">
         <span class="sr-only">{{event.type}}</span>
@@ -50,7 +50,7 @@
             </div>
           </div>
           <div ng-if="event.count > 1" class="text-muted small">
-            {{event.count}} times in the last
+            <translate>{{event.count}} times in the last</translate>
             <duration-until-now timestamp="event.firstTimestamp" omit-single="true" precision="1"></duration-until-now>
           </div>
           <div>

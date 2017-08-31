@@ -33,7 +33,7 @@
               alerts="row.state.alerts"
               class="overview-metrics">
             </deployment-metrics>
-            <h4 class="h5">Usage <small>Last 15 Minutes</small></h4>
+            <h4 class="h5" translate>Usage <small>Last 15 Minutes</small></h4>
           </div>
           <div ng-if="row.apiObject.kind !== 'Pod'">
             <deployment-metrics
@@ -42,7 +42,7 @@
               profile="compact"
               alerts="row.state.alerts">
             </deployment-metrics>
-            <h4 class="h5">Average Usage <small>Last 15 Minutes</small></h4>
+            <h4 class="h5" translate>Average Usage <small>Last 15 Minutes</small></h4>
           </div>
         </div><!-- /overview-metrics -->
 
@@ -104,7 +104,7 @@
         <!-- Only show the tabset if any of the tabs are visible. -->
         <uib-tabset ng-if="row.current || (row.services | size) || row.recentPipelines.length || row.buildConfigs.length" class="list-row-tabset">
           <uib-tab active="row.selectedTab.networking" ng-if="row.services | size">
-            <uib-tab-heading>Networking</uib-tab-heading>
+            <uib-tab-heading translate>Networking</uib-tab-heading>
             <overview-networking
               row-services="row.services"
               all-services="row.state.allServices"
@@ -112,7 +112,7 @@
             </overview-networking>
           </uib-tab>
           <uib-tab ng-if="row.current" active="row.selectedTab.containers">
-            <uib-tab-heading>Containers</uib-tab-heading>
+            <uib-tab-heading translate>Containers</uib-tab-heading>
             <!-- TODO: markup semantics suggest div.component-label in <pod-template> should be an h4,
                        but only here on the overview -->
             <pod-template
@@ -121,7 +121,7 @@
               builds="row.state.builds"></pod-template>
           </uib-tab>
           <uib-tab ng-if="row.current && row.state.showMetrics && row.state.breakpoint === 'xxs'" active="row.selectedTab.metrics">
-            <uib-tab-heading>Metrics</uib-tab-heading>
+            <uib-tab-heading translate>Metrics</uib-tab-heading>
             <!-- Use ng-if to avoid requesting metrics when the tab is not active. -->
             <div ng-if="row.selectedTab.metrics">
               <div ng-if="row.apiObject.kind === 'Pod'">
@@ -132,7 +132,7 @@
                   alerts="row.state.alerts"
                   class="overview-metrics">
                 </deployment-metrics>
-                <h4 class="h5">Usage <small>Last 15 Minutes</small></h4>
+                <h4 class="h5" translate>Usage <small>Last 15 Minutes</small></h4>
               </div>
               <div ng-if="row.apiObject.kind !== 'Pod'">
                 <deployment-metrics
@@ -142,13 +142,13 @@
                   alerts="row.state.alerts"
                   class="overview-metrics">
                 </deployment-metrics>
-                <h4 class="h5">Average Usage <small>Last 15 Minutes</small></h4>
+                <h4 class="h5" translate>Average Usage <small>Last 15 Minutes</small></h4>
               </div>
             </div>
           </uib-tab>
           <uib-tab ng-if="!row.hidePipelines && row.recentPipelines.length" active="row.selectedTab.pipelines">
             <uib-tab-heading>
-              Pipelines
+              <translate>Pipelines</translate>
               <span class="build-count">
                 <build-counts builds="row.recentPipelines"></build-counts>
               </span>
@@ -159,7 +159,7 @@
           </uib-tab>
           <uib-tab ng-if="row.buildConfigs.length" active="row.selectedTab.builds">
             <uib-tab-heading>
-              Builds
+              <translate>Builds</translate>
               <span class="build-count">
                 <build-counts builds="row.recentBuilds"></build-counts>
               </span>
@@ -172,7 +172,7 @@
             </overview-builds>
           </uib-tab>
           <uib-tab ng-if="row.bindings | size" active="row.selectedTab.bindings">
-            <uib-tab-heading>Bindings</uib-tab-heading>
+            <uib-tab-heading translate>Bindings</uib-tab-heading>
             <overview-service-bindings
               bindings="row.bindings"
               bindable-service-instances="row.state.bindableServiceInstances"

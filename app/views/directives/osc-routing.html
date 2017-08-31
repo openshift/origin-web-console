@@ -3,7 +3,7 @@
 
     <!-- Name -->
     <div ng-show="showNameInput" class="form-group">
-      <label for="route-name" class="required">Name</label>
+      <label for="route-name" class="required" translate>Name</label>
       <span ng-class="{ 'has-error': routeForm.name.$invalid && routeForm.name.$touched && !routingDisabled }">
         <input
             id="route-name"
@@ -22,7 +22,7 @@
             aria-describedby="route-name-help">
       </span>
       <div>
-        <span id="route-name-help" class="help-block">A unique name for the route within the project.</span>
+        <span id="route-name-help" class="help-block" translate>A unique name for the route within the project.</span>
       </div>
       <div class="has-error" ng-show="routeForm.name.$error.pattern && routeForm.name.$touched && !routingDisabled">
         <span class="help-block">
@@ -30,7 +30,7 @@
         </span>
       </div>
       <div class="has-error" ng-show="routeForm.name.$error.maxlength && routeForm.name.$touched && !routingDisabled">
-        <span class="help-block">
+        <span class="help-block" translate>
           Can't be longer than {{nameValidation.maxlength}} characters.
         </span>
       </div>
@@ -38,7 +38,7 @@
 
     <!-- Host -->
     <div class="form-group">
-      <label for="host">Hostname</label>
+      <label for="host" translate>Hostname</label>
       <span ng-class="{ 'has-error': routeForm.host.$invalid && routeForm.host.$touched && !routingDisabled }">
         <input
             id="host"
@@ -58,26 +58,25 @@
       <div>
         <span id="route-host-help" class="help-block">
           <p>
-            Public hostname for the route.
-            <span ng-if="!hostReadOnly">
+            <translate>Public hostname for the route.</translate>
+            <span ng-if="!hostReadOnly" translate>
               If not specified, a hostname is generated.
             </span>
-            <span ng-if="!disableWildcards">
+            <span ng-if="!disableWildcards" translate>
               You can use <var>*.example.com</var> with routers that support wildcard subdomains.
             </span>
           </p>
-          <p>The hostname can't be changed after the route is created.</p>
+          <p translate>The hostname can't be changed after the route is created.</p>
         </span>
       </div>
       <div class="has-error" ng-show="routeForm.host.$error.pattern && routeForm.host.$touched && !routingDisabled">
         <span class="help-block">
-          Hostname must consist of lower-case letters, numbers, periods, and
-          hyphens. It must start and end with a letter or number.
-          <span ng-if="!disableWildcards">Wildcard subdomains may start with <var>*.</var></span>
+          <translate>Hostname must consist of lower-case letters, numbers, periods, and hyphens. It must start and end with a letter or number.</translate>
+          <span ng-if="!disableWildcards" translate>Wildcard subdomains may start with <var>*.</var></span>
         </span>
       </div>
       <div class="has-error" ng-show="routeForm.host.$error.maxlength && routeForm.host.$touched && !routingDisabled">
-        <span class="help-block">
+        <span class="help-block" translate>
           Can't be longer than {{hostnameMaxLength}} characters.
         </span>
       </div>
@@ -102,17 +101,17 @@
             aria-describedby="route-path-help">
       </span>
       <div>
-        <span id="route-path-help" class="help-block">
+        <span id="route-path-help" class="help-block" translate>
           Path that the router watches to route traffic to the service.
         </span>
       </div>
       <div class="has-error" ng-show="routeForm.path.$error.pattern && routeForm.path.$touched && !routingDisabled">
-        <span class="help-block">
+        <span class="help-block" translate>
           Path must start with <code>/</code>
         </span>
       </div>
       <div class="has-warning" ng-show="route.path && route.tls.termination === 'passthrough'">
-        <span class="help-block">
+        <span class="help-block" translate>
           Path value will not be used. Paths cannot be set for passthrough TLS.
         </span>
       </div>
@@ -130,7 +129,7 @@
 
     <!-- Target Port -->
     <div ng-if="route.portOptions.length" class="form-group">
-      <label for="routeTargetPort">Target Port</label>
+      <label for="routeTargetPort" translate>Target Port</label>
       <ui-select ng-if="route.portOptions.length" ng-model="route.targetPort" input-id="routeTargetPort" search-enabled="false" aria-describedby="target-port-help">
         <ui-select-match>{{$select.selected.label}}</ui-select-match>
         <ui-select-choices repeat="portOption.port as portOption in route.portOptions">
@@ -138,7 +137,7 @@
         </ui-select-choices>
       </ui-select>
       <div>
-        <span id="target-port-help" class="help-block">
+        <span id="target-port-help" class="help-block" translate>
           Target port for traffic.
         </span>
       </div>
@@ -151,12 +150,11 @@
       <div class="form-group">
         <div class="checkbox">
           <label>
-            <input type="checkbox" ng-model="options.alternateServices" aria-describedby="secure-route-help">
+            <input type="checkbox" ng-model="options.alternateServices" aria-describedby="secure-route-help" translate>
             Split traffic across multiple services
           </label>
-          <div class="help-block">
-            Routes can direct traffic to multiple services for A/B testing. Each service has a weight
-            controlling how much traffic it gets.
+          <div class="help-block" translate>
+            Routes can direct traffic to multiple services for A/B testing. Each service has a weight controlling how much traffic it gets.
           </div>
         </div>
       </div>
@@ -168,14 +166,14 @@
                              is-alternate="true"
                              show-weight="route.alternateServices.length > 1 || controls.hideSlider">
         </osc-routing-service>
-        <a href="" ng-click="route.alternateServices.splice($index, 1)">Remove Service</a>
+        <a href="" ng-click="route.alternateServices.splice($index, 1)" translate>Remove Service</a>
         <span ng-if="$last && route.alternateServices.length < alternateServiceOptions.length">
           <span class="action-divider">|</span>
-          <a href="" ng-click="addAlternateService()">Add Another Service</a>
+          <a href="" ng-click="addAlternateService()" translate>Add Another Service</a>
         </span>
       </div>
       <div ng-repeat="duplicate in duplicateServices" class="has-error mar-bottom-lg">
-        <span class="help-block">
+        <span class="help-block" translate>
           Service {{duplicate.metadata.name}} cannot be added twice.
         </span>
       </div>
@@ -196,7 +194,7 @@
             <span class="weight-percentage visible-xs-inline">{{weightAsPercentage(route.alternateServices[0].weight, true)}}</span>
           </div>
         </div>
-        <label class="sr-only" for="weight-slider">Service {{route.to.service.metadata.name}} Weight</label>
+        <label class="sr-only" for="weight-slider" translate>Service {{route.to.service.metadata.name}} Weight</label>
         <input
             id="weight-slider"
             type="range"
@@ -214,20 +212,19 @@
           <option>75</option>
           <option>100</option>
         </datalist>
-        <div class="help-block" id="weight-slider-help">
-          Percentage of traffic sent to each service. Drag the slider to adjust the values or
-          <a href="" ng-click="controls.hideSlider = true">edit weights as integers</a>.
+        <div class="help-block" id="weight-slider-help" translate>
+          Percentage of traffic sent to each service. Drag the slider to adjust the values or <a href="" ng-click="controls.hideSlider = true">edit weights as integers</a>.
         </div>
       </div>
     </div>
 
-    <h3>Security</h3>
+    <h3 translate>Security</h3>
     <div class="checkbox">
       <label>
         <input type="checkbox" ng-model="options.secureRoute" aria-describedby="secure-route-help">
-        Secure route
+        <translate>Secure route</translate>
       </label>
-      <div class="help-block" id="secure-route-help">
+      <div class="help-block" id="secure-route-help" translate>
         Routes can be secured using several TLS termination types for serving certificates.
       </div>
     </div>
@@ -243,13 +240,13 @@
           </ui-select-choices>
         </ui-select>
         <div class="learn-more-block help-block">
-          <a href="{{'route-types' | helpLink}}" target="_blank">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
+          <a href="{{'route-types' | helpLink}}" target="_blank"><translate>Learn More</translate>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
         </div>
       </div>
 
       <!-- Insecure Edge Termination Policy -->
       <div class="form-group">
-        <label for="insecureTraffic">Insecure Traffic</label>
+        <label for="insecureTraffic" translate>Insecure Traffic</label>
         <!-- Since we can't give the ui-select field a name, create a hidden input for Angular form validation. -->
         <input type="hidden" name="insecureTraffic">
         <ui-select ng-model="route.tls.insecureEdgeTerminationPolicy"
@@ -265,30 +262,29 @@
           </ui-select-choices>
         </ui-select>
         <div>
-          <span id="route-insecure-policy-help" class="help-block">
+          <span id="route-insecure-policy-help" class="help-block" translate>
             Policy for traffic on insecure schemes like HTTP.
           </span>
         </div>
         <div ng-if="routeForm.insecureTraffic.$error.passthrough" class="has-warning">
-          <span class="help-block">
+          <span class="help-block" translate>
             Passthrough routes can't use the insecure traffic policy <var>Allow</var>.
           </span>
         </div>
       </div>
 
       <!-- Key and Certificates -->
-      <h3>Certificates</h3>
-      <div class="help-block">
-        TLS certificates for edge and re-encrypt termination. If not specified, the router's default
-        certificate is used.
+      <h3 translate>Certificates</h3>
+      <div class="help-block" translate>
+        TLS certificates for edge and re-encrypt termination. If not specified, the router's default certificate is used.
       </div>
       <div ng-if="showCertificatesNotUsedWarning" class="has-warning">
         <span class="help-block">
-          The certificate or key you've set will not be used.
-          <span ng-if="!route.tls.termination">
+          <translate>The certificate or key you've set will not be used.</translate>
+          <span ng-if="!route.tls.termination" translate>
             The route is unsecured.
           </span>
-          <span ng-if="route.tls.termination === 'passthrough'">
+          <span ng-if="route.tls.termination === 'passthrough'" translate>
             Custom certificates cannot be used with passthrough termination.
           </span>
         </span>
@@ -296,50 +292,50 @@
       <fieldset class="mar-top-md">
         <div>
           <div class="form-group" id="certificate-file">
-            <label>Certificate</label>
+            <label translate>Certificate</label>
             <osc-file-input
               model="route.tls.certificate"
               drop-zone-id="certificate-file"
               show-text-area="true"
-              help-text="The PEM format certificate. Upload file by dragging & dropping, selecting it, or pasting from the clipbard."
+              help-text="{{'The PEM format certificate. Upload file by dragging & dropping, selecting it, or pasting from the clipbard.'|translate}}"
               ng-disabled="disableCertificateInputs()">
             </osc-file-input>
           </div>
           <div class="form-group" id="private-key-file">
-            <label>Private Key</label>
+            <label translate>Private Key</label>
             <osc-file-input
               model="route.tls.key"
               drop-zone-id="private-key-file"
               show-text-area="true"
-              help-text="The PEM format key. Upload file by dragging & dropping, selecting it, or pasting from the clipboard."
+              help-text="{{'The PEM format key. Upload file by dragging & dropping, selecting it, or pasting from the clipboard.'|translate}}"
               ng-disabled="disableCertificateInputs()">
           </osc-file-input>
           </div>
           <div class="form-group" id="ca-certificate-file">
-            <label>CA Certificate</label>
+            <label translate>CA Certificate</label>
             <osc-file-input
               model="route.tls.caCertificate"
               drop-zone-id="ca-certificate-file"
               show-text-area="true"
-              help-text="The PEM format CA certificate. Upload file by dragging & dropping, selecting it, or pasting from the clipboard."
+              help-text="{{'The PEM format CA certificate. Upload file by dragging & dropping, selecting it, or pasting from the clipboard.'|translate}}"
               ng-disabled="disableCertificateInputs()">
             </osc-file-input>
           </div>
           <div class="form-group" id="dest-ca-certificate-file">
-            <label>Destination CA Certificate</label>
+            <label translate>Destination CA Certificate</label>
             <osc-file-input
                 model="route.tls.destinationCACertificate"
                 show-text-area="true"
                 drop-zone-id="dest-ca-certificate-file"
-                help-text="The PEM format CA certificate to validate the endpoint certificate for re-encrypt termination. Upload file by dragging & dropping, selecting it, or pasting from the clipboard."
+                help-text="{{'The PEM format CA certificate to validate the endpoint certificate for re-encrypt termination. Upload file by dragging & dropping, selecting it, or pasting from the clipboard.'|translate}}"
                 ng-disabled="route.tls.termination !== 'reencrypt'">
             </osc-file-input>
             <!-- Show a warning if the value won't be used, but only if we're
                  not already showing the generic certificate warning above. -->
             <div ng-if="route.tls.destinationCACertificate && route.tls.termination !== 'reencrypt' && !showCertificatesNotUsedWarning" class="has-warning">
               <span class="help-block">
-                The destination CA certificate will be removed from the route.
-                Destination CA certificates are only used for re-encrypt termination.
+                <translate>The destination CA certificate will be removed from the route.</translate>
+                <translate>Destination CA certificates are only used for re-encrypt termination.</translate>
               </span>
             </div>
           </div>

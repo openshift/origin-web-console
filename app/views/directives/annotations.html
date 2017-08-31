@@ -1,6 +1,6 @@
 <p ng-class="{'mar-bottom-xl': !expandAnnotations}">
-  <a href="" ng-click="toggleAnnotations()" ng-if="!expandAnnotations">Show Annotations</a>
-  <a href="" ng-click="toggleAnnotations()" ng-if="expandAnnotations">Hide Annotations</a>
+  <a href="" ng-click="toggleAnnotations()" ng-if="!expandAnnotations" translate>Show Annotations</a>
+  <a href="" ng-click="toggleAnnotations()" ng-if="expandAnnotations" translate>Hide Annotations</a>
 </p>
 <div ng-if="expandAnnotations">
   <div ng-if="annotations" class="table-responsive scroll-shadows-horizontal">
@@ -20,7 +20,7 @@
       </tbody>
     </table>
   </div>
-  <p ng-if="!annotations" class="mar-bottom-xl">
+  <p ng-if="!annotations" class="mar-bottom-xl" translate>
     There are no annotations on this resource.
   </p>
 </div>

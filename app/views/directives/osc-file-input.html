@@ -1,6 +1,6 @@
 <div class="osc-file-input">
   <div ng-attr-id="{{dropMessageID}}" class="drag-and-drop-zone">
-    <p>Drop file here</p>
+    <p translate>Drop file here</p>
   </div>
   <div class="input-group">
     <input
@@ -13,7 +13,7 @@
         ng-attr-aria-describedby="{{helpText ? helpID : undefined}}">
     <span class="input-group-btn">
       <span class="btn btn-default btn-file" ng-show="supportsFileUpload" ng-attr-disabled="{{ disabled || undefined }}">
-        Browse&hellip;
+        <translate>Browse&hellip;</translate>
         <input type="file" ng-disabled="disabled" class="form-control">
       </span>
     </span>
@@ -22,7 +22,7 @@
     <span ng-attr-id="{{helpID}}" class="help-block">{{::helpText}}</span>
   </div>
   <div class="has-error" ng-show="uploadError">
-    <span class="help-block">There was an error reading the file. Please copy the file content into the text area.</span>
+    <span class="help-block" translate>There was an error reading the file. Please copy the file content into the text area.</span>
   </div>
   <textarea class="form-control"
       rows="5"
@@ -36,5 +36,5 @@
       ng-attr-aria-describedby="{{helpText ? helpID : undefined}}">
   </textarea>
 
-  <a href="" ng-show="(model || fileName) && !disabled" ng-click="cleanInputValues()">Clear Value</a>
+  <a href="" ng-show="(model || fileName) && !disabled" ng-click="cleanInputValues()" translate>Clear Value</a>
 </div>

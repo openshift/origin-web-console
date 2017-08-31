@@ -12,7 +12,7 @@
 <span ng-if="trigger.genericWebHook && !trigger.genericWebHook.revision">
   no revision information,
 </span>
-<a href="" ng-if="!showSecret" ng-click="toggleSecret()">Show Obfuscated Secret</a>
+<a href="" ng-if="!showSecret" ng-click="toggleSecret()" translate>Show Obfuscated Secret</a>
 <span ng-if="showSecret">
   {{trigger.githubWebHook.secret || trigger.genericWebHook.secret}}
 </span>

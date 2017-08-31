@@ -1,6 +1,6 @@
 <p>
-  Create or replace resources from their YAML or JSON definitions. If adding a template, you'll have
-  the option to process the template.
+  <translate>Create or replace resources from their YAML or JSON definitions.</translate>
+  <translate>If adding a template, you'll have the option to process the template.</translate>
 </p>
 <parse-error error="error" ng-show="error"></parse-error>
 <div class="row">
@@ -29,13 +29,13 @@
           type="submit"
           ng-click="create()"
           ng-disabled="editorErrorAnnotation || !editorContent"
-          class="btn btn-primary btn-lg">
+          class="btn btn-primary btn-lg" translate>
           Create
         </button>
         <a class="btn btn-default btn-lg"
           href=""
           role="button"
-          ng-click="cancel()">
+          ng-click="cancel()" translate>
           Cancel
         </a>
       </div>

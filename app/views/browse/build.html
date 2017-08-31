@@ -8,7 +8,7 @@
           <div class="container-fluid">
             <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
             <alerts alerts="alerts"></alerts>
-            <div ng-if="!loaded" class="mar-top-xl">Loading...</div>
+            <div ng-if="!loaded" class="mar-top-xl" translate>Loading...</div>
             <div ng-if="build">
               <h1 class="contains-actions">
                 <div class="pull-right dropdown" ng-hide="!('builds' | canIDoAny)">
@@ -19,23 +19,23 @@
                   <button class="btn btn-default hidden-xs"
                           ng-click="cloneBuild()"
                           ng-hide="build.metadata.deletionTimestamp || (build | isIncompleteBuild) || !('builds/clone' | canI : 'create') || (build | isBinaryBuild)"
-                          ng-disabled="!canBuild">Rebuild</button>
+                          ng-disabled="!canBuild" translate>Rebuild</button>
 
                   <!-- Secondary Actions -->
                   <button type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
-                    Actions
+                    <translate>Actions</translate>
                     <span class="caret" aria-hidden="true"></span>
                   </button>
                   <a href=""
                      class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
-                     data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
+                     data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only" translate>Actions</span></a>
                   <ul class="dropdown-menu dropdown-menu-right actions action-button">
                     <li ng-if="'buildconfigs' | canI : 'update'">
                       <a ng-href="{{buildConfig | editResourceURL}}" role="button">
-                        <span ng-if="!(buildConfig | isJenkinsPipelineStrategy)">
+                        <span ng-if="!(buildConfig | isJenkinsPipelineStrategy)" translate>
                           Edit Configuration
                         </span>
-                        <span ng-if="buildConfig | isJenkinsPipelineStrategy">
+                        <span ng-if="buildConfig | isJenkinsPipelineStrategy" translate>
                           Edit Pipeline
                         </span>
                       </a>
@@ -45,7 +45,7 @@
                         class="visible-xs-inline">
                       <a href=""
                          role="button"
-                         ng-click="cancelBuild()">Cancel Build</a>
+                         ng-click="cancelBuild()" translate>Cancel Build</a>
                     </li>
                     <li class="visible-xs-inline"
                         ng-class="{ disabled: !canBuild }"
@@ -54,10 +54,10 @@
                          role="button"
                          ng-click="cloneBuild()"
                          ng-attr-aria-disabled="{{canBuild ? undefined : 'true'}}"
-                         ng-class="{ 'disabled-link': !canBuild }">Rebuild</a>
+                         ng-class="{ 'disabled-link': !canBuild }" translate>Rebuild</a>
                     </li>
                     <li ng-if="('builds' | canI : 'update')">
-                      <a ng-href="{{build | editYamlURL}}" role="button">Edit YAML</a>
+                      <a ng-href="{{build | editYamlURL}}" role="button" translate>Edit YAML</a>
                     </li>
                     <li ng-if="('builds' | canI : 'delete')">
                       <delete-link
@@ -91,33 +91,33 @@
 
                   <uib-tabset>
                     <uib-tab active="selectedTab.details">
-                      <uib-tab-heading>Details</uib-tab-heading>
+                      <uib-tab-heading translate>Details</uib-tab-heading>
                       <build-pipeline build="build" ng-if="build | isJenkinsPipelineStrategy"></build-pipeline>
                       <ng-include src=" 'views/browse/_build-details.html' "></ng-include>
                     </uib-tab>
 
                     <uib-tab heading="Environment" active="selectedTab.environment" ng-if="!(build | isJenkinsPipelineStrategy)">
                       <uib-tab-heading>Environment</uib-tab-heading>
-                      <h3>Environment Variables</h3>
+                      <h3 translate>Environment Variables</h3>
                       <p ng-if="'buildconfigs' | canI : 'update'">
                         <span class="pficon pficon-info" aria-hidden="true"></span>
-                        Environment variables can be edited on the <a ng-href="{{build | configURLForResource}}?tab=environment">build configuration</a>.
+                        <translate>Environment variables can be edited on the <a ng-href="{{build | configURLForResource}}?tab=environment">build configuration</a>.</translate>
                       </p>
                       <key-value-editor
                         entries="(build | buildStrategy).env"
-                        key-placeholder="Name"
-                        value-placeholder="Value"
+                        key-placeholder="{{'Name'|translate}}"
+                        value-placeholder="{{'Value'|translate}}"
                         cannot-add
                         cannot-delete
                         cannot-sort
                         is-readonly
                         show-header
                         class="mar-bottom-xl block"></key-value-editor>
-                      <p ng-if="!(build | buildStrategy).env"><em>The build strategy had no environment variables defined.</em></p>
+                      <p ng-if="!(build | buildStrategy).env"><em translate>The build strategy had no environment variables defined.</em></p>
                     </uib-tab>
 
                     <uib-tab active="selectedTab.logs" ng-if="!(build | isJenkinsPipelineStrategy) && ('builds/log' | canI : 'get')">
-                      <uib-tab-heading>Logs</uib-tab-heading>
+                      <uib-tab-heading translate>Logs</uib-tab-heading>
                       <log-viewer
                         ng-if="selectedTab.logs"
                         follow-affix-top="390"
@@ -141,7 +141,7 @@
                       </log-viewer>
                     </uib-tab>
                     <uib-tab active="selectedTab.events" ng-if="('events' | canI : 'watch')">
-                      <uib-tab-heading>Events</uib-tab-heading>
+                      <uib-tab-heading translate>Events</uib-tab-heading>
                       <events api-objects="eventObjects" project-context="projectContext" ng-if="selectedTab.events"></events>
                     </uib-tab>
                   </uib-tabset>

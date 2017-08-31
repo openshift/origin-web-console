@@ -26,6 +26,7 @@ angular.module('openshiftConsole').controller('OverviewController', [
   'BindingService',
   'ResourceAlertsService',
   'RoutesService',
+  'gettext',
   OverviewController
 ]);
 
@@ -53,7 +54,8 @@ function OverviewController($scope,
                             ProjectsService,
                             BindingService,
                             ResourceAlertsService,
-                            RoutesService) {
+                            RoutesService,
+                            gettext) {
   var overview = this;
   var limitWatches = $filter('isIE')() || $filter('isEdge')();
   var DEFAULT_POLL_INTERVAL = 60 * 1000; // milliseconds
@@ -148,13 +150,13 @@ function OverviewController($scope,
 
   overview.viewByOptions = [{
     id: 'app',
-    label: 'Application'
+    label: gettext('Application')
   }, {
     id: 'resource',
-    label: 'Resource Type'
+    label: gettext('Resource Type')
   }, {
     id: 'pipeline',
-    label: 'Pipeline'
+    label: gettext('Pipeline')
   }];
 
   var getName = function(apiObject) {
