@@ -7,7 +7,7 @@
   <h4>
     {{volume.name}}
     <span ng-if="canRemove" class="header-actions">
-      <a href="" ng-click="removeFn({volume: volume})">Remove</a>
+      <a href="" ng-click="removeFn({volume: volume})" translate>Remove</a>
     </span>
   </h4>
   <dl class="dl-horizontal left">
@@ -15,7 +15,7 @@
       <dt>Type:</dt>
       <dd>
         secret
-        <span class="small text-muted">(populated by a secret when the pod is created)</span>
+        <span class="small text-muted" translate>(populated by a secret when the pod is created)</span>
       </dd>
       <dt>Secret:</dt>
       <dd>
@@ -32,59 +32,59 @@
       </div>
     </div>
     <div ng-if="volume.persistentVolumeClaim">
-      <dt>Type:</dt>
+      <dt translate>Type:</dt>
       <dd>
-        persistent volume claim
-        <span class="small text-muted">(reference to a persistent volume claim)</span>
+        <translate>persistent volume claim</translate>
+        <span class="small text-muted" translate>(reference to a persistent volume claim)</span>
       </dd>
-      <dt>Claim name:</dt>
+      <dt translate>Claim name:</dt>
       <dd><a ng-href="{{volume.persistentVolumeClaim.claimName | navigateResourceURL : 'PersistentVolumeClaim' : namespace}}">{{volume.persistentVolumeClaim.claimName}}</a></dd>
-      <dt>Mode:</dt>
+      <dt translate>Mode:</dt>
       <dd>
-        <span ng-if="volume.persistentVolumeClaim.readOnly">read-only</span>
-        <span ng-if="!volume.persistentVolumeClaim.readOnly">read-write</span>
+        <span ng-if="volume.persistentVolumeClaim.readOnly" translate>read-only</span>
+        <span ng-if="!volume.persistentVolumeClaim.readOnly" translate>read-write</span>
       </dd>
     </div>
     <div ng-if="volume.hostPath">
-      <dt>Type:</dt>
+      <dt translate>Type:</dt>
       <dd>
-        host path
-        <span class="small text-muted">(bare host directory volume)</span>
+        <translate>host path</translate>
+        <span class="small text-muted" translate>(bare host directory volume)</span>
        </dd>
-      <dt>Path:</dt>
+      <dt translate>Path:</dt>
       <dd>{{volume.hostPath.path}}</dd>
     </div>
     <div ng-if="volume.emptyDir">
-      <dt>Type:</dt>
+      <dt translate>Type:</dt>
       <dd>
-        empty dir
-       <span class="small text-muted">(temporary directory destroyed with the pod)</span>
+        <translate>empty dir</translate>
+       <span class="small text-muted" translate>(temporary directory destroyed with the pod)</span>
        </dd>
-      <dt>Medium:</dt>
+      <dt translate>Medium:</dt>
       <dd>
-        <span ng-if="!volume.emptyDir.medium">node's default</span>
+        <span ng-if="!volume.emptyDir.medium" translate>node's default</span>
         <span ng-if="volume.emptyDir.medium">{{volume.emptyDir.medium}}</span>
       </dd>
     </div>
     <div ng-if="volume.gitRepo">
-      <dt>Type:</dt>
+      <dt translate>Type:</dt>
       <dd>
-        git repo
-       <span class="small text-muted">(pulled from git when the pod is created)</span>
+        <translate>git repo</translate>
+       <span class="small text-muted" translate>(pulled from git when the pod is created)</span>
       </dd>
-      <dt>Repository:</dt>
+      <dt translate>Repository:</dt>
       <dd>{{volume.gitRepo.repository}}</dd>
-      <dt ng-if-start="volume.gitRepo.revision">Revision:</dt>
+      <dt ng-if-start="volume.gitRepo.revision" translate>Revision:</dt>
       <dd ng-if-end>{{volume.gitRepo.revision}}</dd>
     </div>
     <div ng-if="volume.downwardAPI">
-      <dt>Type:</dt>
+      <dt translate>Type:</dt>
       <dd>
-        downward API
-        <span class="small text-muted">(populated with information about the pod)</span>
+        <translate>downward API</translate>
+        <span class="small text-muted" translate>(populated with information about the pod)</span>
        </dd>
       <div ng-repeat="item in volume.downwardAPI.items">
-        <dt>Volume File:</dt>
+        <dt translate>Volume File:</dt>
         <dd>{{item.fieldRef.fieldPath}}&#8201;&#8594;&#8201;{{item.path}}</dd>
       </div>
     </div>

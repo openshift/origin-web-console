@@ -10,14 +10,14 @@
 <!-- Prompt to add health checks if missing. -->
 <div ng-if="detailed && addHealthCheckUrl && !(podTemplate | hasHealthChecks)" class="alert alert-info">
   <span class="pficon pficon-info" aria-hidden="true"></span>
-  <span ng-if="podTemplate.spec.containers.length === 1">Container {{podTemplate.spec.containers[0].name}} does not have health checks</span>
-  <span ng-if="podTemplate.spec.containers.length > 1">Not all containers have health checks</span>
-  to ensure your application is running correctly.
-  <a ng-href="{{addHealthCheckUrl}}" class="nowrap">Add Health Checks</a>
+  <span ng-if="podTemplate.spec.containers.length === 1" translate>Container {{podTemplate.spec.containers[0].name}} does not have health checks</span>
+  <span ng-if="podTemplate.spec.containers.length > 1" translate>Not all containers have health checks</span>
+  <translate>to ensure your application is running correctly.</translate>
+  <a ng-href="{{addHealthCheckUrl}}" class="nowrap" translate>Add Health Checks</a>
 </div>
 
 <div ng-if="detailed && podTemplate.spec.initContainers.length">
-  <h4>Init Containers</h4>
+  <h4 translate>Init Containers</h4>
 
   <div class="pod-template-container">
     <div class="pod-template-block" ng-repeat="container in podTemplate.spec.initContainers">
@@ -34,7 +34,7 @@
 </div>
 
 <div>
-  <h4 ng-if="detailed">Containers</h4>
+  <h4 ng-if="detailed" translate>Containers</h4>
 
   <div class="pod-template-container">
     <div class="pod-template-block" ng-repeat="container in podTemplate.spec.containers">

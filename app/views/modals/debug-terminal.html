@@ -1,6 +1,6 @@
 <div class="modal-debug-terminal">
   <div class="modal-header">
-    <h2>Debug Container {{container.name}}</h2>
+    <h2 translate>Debug Container {{container.name}}</h2>
     <small class="text-muted">
       {{debugPod.metadata.name}} &mdash;
       <status-icon status="debugPod | podStatus"></status-icon>
@@ -10,30 +10,30 @@
   <div class="modal-body">
     <div ng-if="!containerState.running" class="empty-state-message text-center">
       <!-- Waiting for debug container to start. -->
-      <h2 ng-if="debugPod.status.phase !== 'Failed'" class="text-muted">
+      <h2 ng-if="debugPod.status.phase !== 'Failed'" class="text-muted" translate>
         Waiting for container {{container.name}} to start...
       </h2>
       <!-- Debug container failed. -->
       <div ng-if="debugPod.status.phase === 'Failed'">
         <h2>
           <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
-          Could not start container {{container.name}}.
+          <translate>Could not start container {{container.name}}.</translate>
         </h2>
         <p>
-          An error occurred starting the debug pod.
+          <translate>An error occurred starting the debug pod.</translate>
           <span ng-if="containerState.terminated.message">{{containerState.terminated.message}}</span>
-          <span ng-if="containerState.terminated.exitCode" class="text-muted">Exit code: {{containerState.terminated.exitCode}}</span>
+          <span ng-if="containerState.terminated.exitCode" class="text-muted"><translate>Exit code:</translate> {{containerState.terminated.exitCode}}</span>
         </p>
       </div>
     </div>
     <!-- Debug container running. -->
     <div ng-if="containerState.running">
       <div class="help-block">
-        This temporary pod has a modified entrypoint command to debug a failing container. The pod
-        will be available for one hour and will be deleted when the terminal window is closed.
+        <translate>This temporary pod has a modified entrypoint command to debug a failing container.</translate>
+        <translate>The pod will be available for one hour and will be deleted when the terminal window is closed.</translate>
       </div>
       <div ng-if="container | entrypoint : image" class="original-cmd-msg">
-        <label>Original Command:</label>
+        <label translate>Original Command:</label>
         <code>
           <truncate-long-text
               content="container | entrypoint : image"
@@ -55,6 +55,6 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-lg btn-primary" type="button" ng-click="close()">Close</button>
+    <button class="btn btn-lg btn-primary" type="button" ng-click="close()" translate>Close</button>
   </div>
 </div>

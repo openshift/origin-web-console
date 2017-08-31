@@ -14,17 +14,17 @@
       </span>
       <span class="visible-xs-inline trigger-actions">
         <a href="" ng-if="!trigger.disabled" class="action-icon" ng-click="trigger.disabled = true; form.$setDirty()" role="button">
-          <span class="pficon pficon-close" aria-hidden="true" title="Remove"></span>
-          <span class="sr-only">Remove</span>
+          <span class="pficon pficon-close" aria-hidden="true" title="{{'Remove'|translate}}"></span>
+          <span class="sr-only" translate>Remove</span>
         </a>
         <a href="" ng-if="trigger.disabled" class="action-icon" ng-click="trigger.disabled = false" role="button">
-          <span class="fa fa-repeat" aria-hidden="true" title="Undo"></span>
-          <span class="sr-only">Undo</span>
+          <span class="fa fa-repeat" aria-hidden="true" title="{{'Undo'|translate}}"></span>
+          <span class="sr-only" translate>Undo</span>
         </a>
       </span>
       <span class="hidden-xs trigger-actions">
-        <a href="" role="button" ng-if="!trigger.disabled" ng-click="trigger.disabled = true; form.$setDirty()">Remove</a>
-        <a href="" role="button" ng-if="trigger.disabled" ng-click="trigger.disabled = false">Undo</a>
+        <a href="" role="button" ng-if="!trigger.disabled" ng-click="trigger.disabled = true; form.$setDirty()" translate>Remove</a>
+        <a href="" role="button" ng-if="trigger.disabled" ng-click="trigger.disabled = false" translate>Undo</a>
       </span>
     </div>
   </div>

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('events', function($routeParams, $filter, DataService, KeywordService, ProjectsService, Logger) {
+  .directive('events', function($routeParams, $filter, DataService, KeywordService, ProjectsService, Logger, gettext, gettextCatalog) {
     return {
       restrict: 'E',
       scope: {
@@ -116,23 +116,23 @@ angular.module('openshiftConsole')
           $scope.sortConfig = {
             fields: [{
               id: 'lastTimestamp',
-              title: 'Time',
+              title: gettextCatalog.getString(gettext('Time')),
               sortType: 'alpha'
             }, {
               id: 'type',
-              title: 'Severity',
+              title: gettextCatalog.getString(gettext('Severity')),
               sortType: 'alpha'
             }, {
               id: 'reason',
-              title: 'Reason',
+              title: gettextCatalog.getString(gettext('Reason')),
               sortType: 'alpha'
             }, {
               id: 'message',
-              title: 'Message',
+              title: gettextCatalog.getString(gettext('Message')),
               sortType: 'alpha'
             }, {
               id: 'count',
-              title: 'Count',
+              title: gettextCatalog.getString(gettext('Count')),
               sortType: 'numeric'
             }],
             isAscending: true,
@@ -143,11 +143,11 @@ angular.module('openshiftConsole')
           if (showKindAndName) {
             $scope.sortConfig.fields.splice(1, 0, {
               id: 'involvedObject.name',
-              title: 'Name',
+              title: gettextCatalog.getString(gettext('Name')),
               sortType: 'alpha'
             }, {
               id: 'involvedObject.kind',
-              title: 'Kind',
+              title: gettextCatalog.getString(gettext('Kind')),
               sortType: 'alpha'
             });
           }

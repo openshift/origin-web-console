@@ -11,9 +11,9 @@
           <div class="container surface-shaded">
             <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
             <alerts alerts="alerts"></alerts>
-            <div ng-if="!loaded">Loading...</div>
+            <div ng-if="!loaded" translate>Loading...</div>
             <div ng-if="loaded">
-              <h1>
+              <h1 translate>
                 Edit Deployment Config {{deploymentConfig.metadata.name}}
               </h1>
               <fieldset ng-disabled="disableInputs">
@@ -21,11 +21,11 @@
                   <div class="row">
                     <div class="col-lg-12">
                       <div class="section">
-                        <h3>Deployment Strategy</h3>
+                        <h3 translate>Deployment Strategy</h3>
                         <dl class="dl-horizontal left">
                           {{strategyParamsName}}
                           <div class="form-group strategy-name">
-                            <label class="picker-label">Strategy Type</label>
+                            <label class="picker-label" translate>Strategy Type</label>
                             <ui-select ng-model="strategyData.type" search-enabled="false" ng-change="strategyChanged()">
                               <ui-select-match>{{$select.selected}}</ui-select-match>
                               <ui-select-choices repeat="strategyType in deploymentConfigStrategyTypes">
@@ -35,16 +35,16 @@
                             <div>
                               <span ng-switch="strategyData.type">
                                 <span class="help-block" ng-switch-when="Recreate">
-                                  The recreate strategy has basic rollout behavior and supports lifecycle hooks for injecting code into the deployment process.
-                                  <a ng-href="{{'recreate_strategy' | helpLink}}" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
+                                  <translate>The recreate strategy has basic rollout behavior and supports lifecycle hooks for injecting code into the deployment process.</translate>
+                                  <a ng-href="{{'recreate_strategy' | helpLink}}" target="_blank"><span class="learn-more-inline"><translate>Learn More</translate>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
                                 </span>
                                 <span class="help-block" ng-switch-when="Rolling">
-                                  The rolling strategy will wait for pods to pass their readiness check, scale down old components and then scale up.
-                                  <a ng-href="{{'rolling_strategy' | helpLink}}" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
+                                  <translate>The rolling strategy will wait for pods to pass their readiness check, scale down old components and then scale up.</translate>
+                                  <a ng-href="{{'rolling_strategy' | helpLink}}" target="_blank"><span class="learn-more-inline"><translate>Learn More</translate>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
                                 </span>
                                 <span class="help-block" ng-switch-when="Custom">
-                                  The custom strategy allows you to specify container image that will provide your own deployment behavior.
-                                  <a ng-href="{{'custom_strategy' | helpLink}}" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
+                                  <translate>The custom strategy allows you to specify container image that will provide your own deployment behavior.</translate>
+                                  <a ng-href="{{'custom_strategy' | helpLink}}" target="_blank"><span class="learn-more-inline"><translate>Learn More</translate>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a>
                                 </span>
                               </span>
                             </div>
@@ -52,7 +52,7 @@
 
                           <div ng-if="strategyData.type === 'Custom'" >
                             <div class="form-group">
-                              <label for="imageName" class="required">Image Name</label>
+                              <label for="imageName" class="required" translate>Image Name</label>
                               <div>
                                 <input class="form-control"
                                   id="imageName"
@@ -65,19 +65,19 @@
                                   aria-describedby="image-name-help"
                                   required>
                               </div>
-                              <div class="help-block" id="image-name-help">An image that can carry out the deployment.</div>
+                              <div class="help-block" id="image-name-help" translate>An image that can carry out the deployment.</div>
                             </div>
 
                             <div class="form-group">
-                              <label>Command</label>
+                              <label translate>Command</label>
                               <edit-command args="strategyData.customParams.command"></edit-command>
                             </div>
                             <div class="form-group">
-                              <label>Environment Variables</label>
+                              <label translate>Environment Variables</label>
                               <key-value-editor
                                 entries="strategyData.customParams.environment"
                                 key-validator="[a-zA-Z_][a-zA-Z0-9_]*"
-                                key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
+                                key-validator-error-tooltip="{{'A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.'|translate}}"
                                 value-from-selector-options="valueFromObjects"
                                 add-row-link="Add Environment Variable"
                                 add-row-with-selectors-link="Add Environment Variable Using a Config Map or Secret"></key-value-editor>
@@ -100,17 +100,17 @@
                                     aria-describedby="strategyTimeout">
                                 <span class="input-group-addon">seconds</span>
                               </span>
-                              <div class="help-block" ng-attr-id="strategyTimeout">
+                              <div class="help-block" ng-attr-id="strategyTimeout" translate>
                                 How long to wait for a pod to scale up before giving up.
                               </div>
                               <div ng-if="form.strategyTimeout.$invalid && form.strategyTimeout.$touched" class="has-error">
-                                <div ng-if="form.strategyTimeout.$error.number" class="help-block">
+                                <div ng-if="form.strategyTimeout.$error.number" class="help-block" translate>
                                   Must be a number.
                                 </div>
-                                <div ng-if="form.strategyTimeout.$error.min" class="help-block">
+                                <div ng-if="form.strategyTimeout.$error.min" class="help-block" translate>
                                   Timeout can't be negative.
                                 </div>
-                                <span ng-if="form.strategyTimeout.$error.pattern && !form.strategyTimeout.$error.min" class="help-block">
+                                <span ng-if="form.strategyTimeout.$error.pattern && !form.strategyTimeout.$error.min" class="help-block" translate>
                                   Must be a whole number.
                                 </span>
                               </div>
@@ -120,7 +120,7 @@
                               <!-- Use ng-show instead of ng-if so the form is still marked invalid if a hidden field has errors. -->
                               <div ng-show="view.advancedStrategyOptions">
                                 <div class="form-group">
-                                  <label for="updatePeriod">Update Period</label>
+                                  <label for="updatePeriod" translate>Update Period</label>
                                   <span class="input-group"
                                      ng-class="{ 'has-error': form.updatePeriod.$invalid && form.updatePeriod.$touched }">
                                     <input id="updatePeriod"
@@ -133,26 +133,26 @@
                                         select-on-focus
                                         class="form-control"
                                         aria-describedby="updatePeriod">
-                                    <span class="input-group-addon">seconds</span>
+                                    <span class="input-group-addon" translate>seconds</span>
                                   </span>
-                                  <div class="help-block" id="updatePeriod">
+                                  <div class="help-block" id="updatePeriod" translate>
                                     Time to wait between retrying to run individual pod.
                                   </div>
                                   <div ng-if="form.updatePeriod.$invalid && form.updatePeriod.$touched" class="has-error">
-                                    <div ng-if="form.updatePeriod.$error.number" class="help-block">
+                                    <div ng-if="form.updatePeriod.$error.number" class="help-block" translate>
                                       Must be a number.
                                     </div>
-                                    <div ng-if="form.updatePeriod.$error.min" class="help-block">
+                                    <div ng-if="form.updatePeriod.$error.min" class="help-block" translate>
                                       Update period can't be negative.
                                     </div>
-                                    <span ng-if="form.updatePeriod.$error.pattern && !form.updatePeriod.$error.min" class="help-block">
+                                    <span ng-if="form.updatePeriod.$error.pattern && !form.updatePeriod.$error.min" class="help-block" translate>
                                       Must be a whole number.
                                     </span>
                                   </div>
                                 </div>
 
                                 <div class="form-group">
-                                  <label for="interval">Interval</label>
+                                  <label for="interval" translate>Interval</label>
                                   <span class="input-group"
                                      ng-class="{ 'has-error': form.interval.$invalid && form.interval.$touched }">
                                     <input id="interval"
@@ -165,19 +165,19 @@
                                         select-on-focus
                                         class="form-control"
                                         aria-describedby="interval">
-                                    <span class="input-group-addon">seconds</span>
+                                    <span class="input-group-addon" translate>seconds</span>
                                   </span>
-                                  <div class="help-block" ng-attr-id="interval">
+                                  <div class="help-block" ng-attr-id="interval" translate>
                                     Time to wait between polling deployment status after running a pod.
                                   </div>
                                   <div ng-if="form.interval.$invalid && form.interval.$touched" class="has-error">
-                                    <div ng-if="form.interval.$error.number" class="help-block">
+                                    <div ng-if="form.interval.$error.number" class="help-block" translate>
                                       Must be a number.
                                     </div>
-                                    <div ng-if="form.interval.$error.min" class="help-block">
+                                    <div ng-if="form.interval.$error.min" class="help-block" translate>
                                       Interval can't be negative.
                                     </div>
-                                    <span ng-if="form.interval.$error.pattern && !form.interval.$error.min" class="help-block">
+                                    <span ng-if="form.interval.$error.pattern && !form.interval.$error.min" class="help-block" translate>
                                       Must be a whole number.
                                     </span>
                                   </div>
@@ -185,7 +185,7 @@
                               </div>
 
                               <div class="form-group">
-                                <label for="maxUnavailable">Maximum Number of Unavailable Pods</label>
+                                <label for="maxUnavailable" translate>Maximum Number of Unavailable Pods</label>
                                 <div ng-class="{ 'has-error': form.maxUnavailable.$invalid && form.maxUnavailable.$touched }">
                                   <input id="maxUnavailable"
                                       type="text"
@@ -197,18 +197,18 @@
                                       class="form-control"
                                       aria-describedby="max-unavailable-help">
                                 </div>
-                                <div class="help-block">
+                                <div class="help-block" translate>
                                   The maximum number of pods that can be unavailable during the rolling deployment. This can be either a percentage (10%) or a whole number (1).
                                 </div>
                                 <div ng-if="form.maxUnavailable.$invalid && form.maxUnavailable.$touched && form.maxUnavailable.$error.pattern" class="has-error">
-                                  <span class="help-block">
+                                  <span class="help-block" translate>
                                     Must be a non-negative whole number or percentage.
                                   </span>
                                 </div>
                               </div>
 
                               <div class="form-group">
-                                <label for="maxSurge">Maximum Number of Surge Pods</label>
+                                <label for="maxSurge" translate>Maximum Number of Surge Pods</label>
                                 <div ng-class="{ 'has-error': form.maxSurge.$invalid && form.maxSurge.$touched }">
                                   <input id="maxSurge"
                                       type="text"
@@ -220,11 +220,11 @@
                                       class="form-control"
                                       aria-describedby="maxSurge">
                                 </div>
-                                <div class="help-block">
+                                <div class="help-block" translate>
                                   The maximum number of pods that can be scheduled above the original number of pods while the rolling deployment is in progress. This can be either a percentage (10%) or a whole number (1).
                                 </div>
                                 <div ng-if="form.maxSurge.$invalid && form.maxSurge.$touched && form.maxSurge.$error.pattern" class="has-error">
-                                  <span class="help-block">
+                                  <span class="help-block" translate>
                                     Must be a non-negative whole number or percentage.
                                   </span>
                                 </div>
@@ -236,7 +236,7 @@
                               <div class="lifecycle-hooks">
                                 <div class="lifecycle-hook" id="pre-lifecycle-hook">
 
-                                  <h3>Pre Lifecycle Hook</h3>
+                                  <h3 translate>Pre Lifecycle Hook</h3>
                                   <edit-lifecycle-hook model='strategyData[strategyParamsPropertyName].pre'
                                                     type='pre'
                                                     available-volumes='volumeNames'
@@ -248,7 +248,7 @@
                                 </div>
 
                                 <div ng-if="strategyData.type !== 'Rolling'" class="lifecycle-hook" id="mid-lifecycle-hook" >
-                                  <h3>Mid Lifecycle Hook</h3>
+                                  <h3 translate>Mid Lifecycle Hook</h3>
                                   <edit-lifecycle-hook model='strategyData[strategyParamsPropertyName].mid'
                                                     type='mid'
                                                     available-volumes='volumeNames'
@@ -260,7 +260,7 @@
                                 </div>
 
                                 <div class="lifecycle-hook" id="post-lifecycle-hook" >
-                                  <h3>Post Lifecycle Hook</h3>
+                                  <h3 translate>Post Lifecycle Hook</h3>
                                   <edit-lifecycle-hook model='strategyData[strategyParamsPropertyName].post'
                                                     type='post'
                                                     available-volumes='volumeNames'
@@ -274,41 +274,41 @@
                             </div>
                           </div>
                           <div class="mar-top-lg" ng-if="strategyData.type !== 'Custom'">
-                            <div ng-if="!view.advancedStrategyOptions">To set additional parameters or edit lifecycle hooks, view <a href="" ng-click="view.advancedStrategyOptions = true">advanced strategy options.</a></div>
-                            <a ng-if="view.advancedStrategyOptions" href="" ng-click="view.advancedStrategyOptions = false">Hide Advanced Strategy Options</a>
+                            <div ng-if="!view.advancedStrategyOptions" translate>To set additional parameters or edit lifecycle hooks, view <a href="" ng-click="view.advancedStrategyOptions = true">advanced strategy options.</a></div>
+                            <a ng-if="view.advancedStrategyOptions" href="" ng-click="view.advancedStrategyOptions = false" translate>Hide Advanced Strategy Options</a>
                           </div>
                         </dl>
                       </div>
 
 
                       <div class="section">
-                        <h3 class="with-divider">Images</h3>
+                        <h3 class="with-divider" translate>Images</h3>
                         <dl class="dl-horizontal left">
 
                           <div ng-repeat="(containerName, containerConfig) in containerConfigByName">
                             <div class="container-name">
-                              <h4>Container {{containerName}}</h4>
+                              <h4 translate>Container {{containerName}}</h4>
                             </div>
                             <div class="checkbox form-group">
                               <label>
                                 <input type="checkbox" ng-model="containerConfig.hasDeploymentTrigger">
-                                Deploy images from an image stream tag
+                                <translate>Deploy images from an image stream tag</translate>
                               </label>
                             </div>
                             <div ng-if="containerConfig.hasDeploymentTrigger">
-                              <label class="required">Image Stream Tag</label>
+                              <label class="required" translate>Image Stream Tag</label>
                               <istag-select model="containerConfig.triggerData.istag" select-required="true" select-disabled="disableInputs" include-shared-namespace="true"></istag-select>
 
                               <div class="checkbox form-group">
                                 <label>
                                   <input type="checkbox" ng-model="containerConfig.triggerData.automatic">
-                                  Automatically start a new deployment when the image changes
+                                  <translate>Automatically start a new deployment when the image changes</translate>
                                 </label>
                               </div>
                             </div>
 
                             <div ng-if="!containerConfig.hasDeploymentTrigger" class="form-group">
-                              <label for="imageName" class="required">Image Name</label>
+                              <label for="imageName" class="required" translate>Image Name</label>
                               <input class="form-control"
                                 id="imageName"
                                 name="imageName"
@@ -324,7 +324,7 @@
                           <div class="checkbox form-group">
                             <label>
                               <input type="checkbox" ng-model="triggers.hasConfigTrigger">
-                              Automatically start a new deployment when the deployment configuration changes
+                              <translate>Automatically start a new deployment when the deployment configuration changes</translate>
                             </label>
                           </div>
 
@@ -344,26 +344,26 @@
                           </div>
 
                           <div class="mar-top-lg">
-                            <div ng-if="!view.advancedImageOptions">To set secrets for pulling your images from private image registries, view <a href="" ng-click="view.advancedImageOptions = true">advanced image options.</a></div>
-                            <a ng-if="view.advancedImageOptions" href="" ng-click="view.advancedImageOptions = false">Hide Advanced Image Options</a>
+                            <div ng-if="!view.advancedImageOptions" translate>To set secrets for pulling your images from private image registries, view <a href="" ng-click="view.advancedImageOptions = true">advanced image options.</a></div>
+                            <a ng-if="view.advancedImageOptions" href="" ng-click="view.advancedImageOptions = false" translate>Hide Advanced Image Options</a>
                           </div>
                         </dl>
                       </div>
 
 
                       <div class="section">
-                        <h3 class="with-divider">Environment Variables</h3>
+                        <h3 class="with-divider" translate>Environment Variables</h3>
 
                         <div ng-repeat="(containerName, containerConfig) in containerConfigByName">
                           <div class="container-name">
-                            <h4>Container {{containerName}}</h4>
+                            <h4 translate>Container {{containerName}}</h4>
                           </div>
                           <key-value-editor
                             ng-if="containerConfig"
                             entries="containerConfig.env"
                             value-from-selector-options="valueFromObjects"
                             key-validator="[a-zA-Z_][a-zA-Z0-9_]*"
-                            key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
+                            key-validator-error-tooltip="{{'A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.'|translate}}"
                             add-row-link="Add Environment Variable"
                             add-row-with-selectors-link="Add Environment Variable Using a Config Map or Secret"></key-value-editor>
                         </div>
@@ -375,10 +375,10 @@
                       </pause-rollouts-checkbox>
 
                       <div class="buttons gutter-top-bottom">
-                        <button ng-click="save()" class="btn btn-primary btn-lg" ng-disabled="form.$invalid || form.$pristine || disableInputs">
+                        <button ng-click="save()" class="btn btn-primary btn-lg" ng-disabled="form.$invalid || form.$pristine || disableInputs" translate>
                           Save
                         </button>
-                        <button ng-click="cancel()" class="btn btn-default btn-lg">Cancel</button>
+                        <button ng-click="cancel()" class="btn btn-default btn-lg" translate>Cancel</button>
                       </div>
                     </div>
                   </div>

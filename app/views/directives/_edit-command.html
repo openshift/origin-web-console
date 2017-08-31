@@ -25,8 +25,8 @@
         <span as-sortable-item-handle class="input-group-addon action-button drag-handle">
           <i class="fa fa-bars" aria-hidden="true"></i>
         </span>
-        <a href="" ng-click="removeArg($index)" class="input-group-addon action-button remove-arg" title="Remove Item">
-          <span class="sr-only">Remove Item</span>
+        <a href="" ng-click="removeArg($index)" class="input-group-addon action-button remove-arg" title="{{'Remove Item'|translate}}">
+          <span class="sr-only" translate>Remove Item</span>
           <i class="pficon pficon-close" aria-hidden="true"></i>
         </a>
       </span>
@@ -35,7 +35,7 @@
   <div class="form-group">
     <label class="sr-only" ng-attr-for="{{id}}-add-arg">
       <span ng-if="placeholder">{{placeholder}}</span>
-      <span ng-if="!placeholder">Add argument</span>
+      <span ng-if="!placeholder" translate>Add argument</span>
     </label>
     <!-- Single-line entry -->
     <span ng-show="!multiline" class="input-group">
@@ -58,7 +58,7 @@
            ng-click="addArg()"
            ng-disabled="!nextArg"
            ng-attr-aria-disabled="!nextArg"
-           role="button">Add</a>
+           role="button" translate>Add</a>
       </span>
     </span>
     <!-- Multiline entry -->
@@ -79,27 +79,26 @@
            ng-click="addArg()"
            ng-disabled="!nextArg"
            ng-attr-aria-disabled="!nextArg"
-           role="button">Add</a>
+           role="button" translate>Add</a>
       </div>
     </span>
     <div class="help-block">
       <span ng-if="description">{{description}}</span>
-      <span ng-if="!description">
-        Enter the command to run inside the container. The command is considered successful if its
-        exit code is 0. Drag and drop to reorder arguments.
+      <span ng-if="!description" translate>
+        Enter the command to run inside the container. The command is considered successful if its exit code is 0. Drag and drop to reorder arguments.
       </span>
     </div>
   </div>
   <div class="mar-top-sm mar-bottom-md">
-    <a href="" ng-click="multiline = !multiline">Switch to {{multiline ? 'Single-line' : 'Multiline'}} Editor</a>
+    <a href="" ng-click="multiline = !multiline" translate>Switch to {{multiline ? 'Single-line' : 'Multiline'}} Editor</a>
     <span ng-show="input.args.length">
       <span class="action-divider">|</span>
-      <a href="" ng-click="clear()" role="button">Clear {{ (type || 'Command') | upperFirst }}</a>
+      <a href="" ng-click="clear()" role="button" translate>Clear {{ (type || 'Command') | upperFirst }}</a>
     </span>
   </div>
   <!-- Add a hidden input to help with form validation. -->
   <input type="hidden" name="command" ng-model="input.args" ng-required="isRequired">
   <div ng-if="form.command.$dirty && form.command.$error.required" class="has-error">
-    <span class="help-block">A command is required.</span>
+    <span class="help-block" translate>A command is required.</span>
   </div>
 </ng-form>

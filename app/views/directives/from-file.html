@@ -1,7 +1,6 @@
 <select-project ng-if="!project" selected-project="input.selectedProject" name-taken="projectNameTaken"></select-project>
-<p>
-  Create or replace resources from their YAML or JSON definitions. If adding a template, you'll have
-  the option to process the template.
+<p translate>
+  Create or replace resources from their YAML or JSON definitions. If adding a template, you'll have the option to process the template.
 </p>
 <parse-error error="error" ng-show="error"></parse-error>
 <div class="row">
@@ -13,13 +12,13 @@
           type="submit"
           ng-click="create()"
           ng-disabled="form.$invalid"
-          class="btn btn-primary btn-lg">
+          class="btn btn-primary btn-lg" translate>
           Create
         </button>
         <a class="btn btn-default btn-lg"
           href=""
           role="button"
-          ng-click="cancel()">
+          ng-click="cancel()" translate>
           Cancel
         </a>
       </div>

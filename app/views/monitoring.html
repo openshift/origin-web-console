@@ -9,13 +9,13 @@
           <div class="container-fluid">
             <div class="page-header page-header-bleed-right page-header-bleed-left">
               <h1>
-                Monitoring
+                <translate>Monitoring</translate>
                 <events-badge project-context="projectContext" ng-if="projectContext" class="pull-right" sidebar-collapsed="renderOptions.collapseEventsSidebar"></events-badge>
               </h1>
             </div>
             <div class="data-toolbar">
-              <ui-select class="data-toolbar-dropdown" ng-model="kindSelector.selected" theme="bootstrap" search-enabled="true" ng-disabled="kindSelector.disabled" title="Choose a resource">
-                <ui-select-match placeholder="Choose a resource">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>
+              <ui-select class="data-toolbar-dropdown" ng-model="kindSelector.selected" theme="bootstrap" search-enabled="true" ng-disabled="kindSelector.disabled" title="{{'Choose a resource'|translate}}">
+                <ui-select-match placeholder="{{'Choose a resource'|translate}}">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>
                 <ui-select-choices repeat="kind in kinds | filter : {kind: $select.search} : matchKind">
                   <div ng-bind-html="(kind.label ? kind.label : (kind.kind | humanizeKind : true)) | highlight: $select.search"></div>
                 </ui-select-choices>
@@ -25,9 +25,9 @@
                 <form role="form" class="search-pf has-button">
                   <div class="form-group filter-controls has-clear">
                     <div class="search-pf-input-group">
-                      <label for="name-filter" class="sr-only">Filter by name</label>
+                      <label for="name-filter" class="sr-only" translate>Filter by name</label>
                       <input type="search"
-                          placeholder="Filter by name"
+                          placeholder="{{'Filter by name'|translate}}"
                           class="form-control"
                           id="name-filter"
                           ng-model="filters.text"
@@ -48,7 +48,7 @@
               </div>
               <div class="checkbox nowrap">
                 <label>
-                  <input type="checkbox" ng-model="filters.hideOlderResources">Hide older resources
+                  <input type="checkbox" ng-model="filters.hideOlderResources"><translate>Hide older resources</translate>
                 </label>
               </div>
             </div>
@@ -67,8 +67,8 @@
                       <div class="list-view-pf-main-info">
                         <ellipsis-pulser color="dark" size="sm" msg="Loading pods" ng-if="!podsLoaded"></ellipsis-pulser>
                         <em>
-                          <div ng-if="(pods | hashSize) > 0">The current filters are hiding all pods.</div>
-                          <span ng-if="podsLoaded && (pods | hashSize) === 0">There are no pods in this project.</span>
+                          <div ng-if="(pods | hashSize) > 0" translate>The current filters are hiding all pods.</div>
+                          <span ng-if="podsLoaded && (pods | hashSize) === 0" translate>There are no pods in this project.</span>
                         </em>
                       </div>
                     </div>
@@ -91,14 +91,14 @@
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
                               <a ng-href="{{pod | navigateResourceURL}}"><span ng-bind-html="pod.metadata.name | highlightKeywords : filterKeywords"></span></a>
-                              <small>created <span am-time-ago="pod.metadata.creationTimestamp"></span></small>
+                              <small><translate>created</translate> <span am-time-ago="pod.metadata.creationTimestamp"></span></small>
                             </div>
                             <div class="list-group-item-text">
                               <status-icon status="pod | podStatus" disable-animation></status-icon>
                               {{pod | podStatus | sentenceCase}}
                               <small ng-if="(pod | podStatus) === 'Running'" class="text-muted">
                                 &ndash;
-                                {{pod | numContainersReady}}/{{pod.spec.containers.length}} ready
+                                {{pod | numContainersReady}}/{{pod.spec.containers.length}} <translate>ready</translate>
                               </small>
                             </div>
                           </div>
@@ -124,7 +124,7 @@
                         ng-class="{'log-viewer-select': pod.spec.containers.length > 1}">
 
                         <span class="container-details">
-                          <label for="selectLogContainer">Container:</label>
+                          <label for="selectLogContainer" translate>Container:</label>
 
                           <span ng-if="pod.spec.containers.length === 1">
                             {{pod.spec.containers[0].name}}
@@ -148,14 +148,14 @@
                 </div>
 
                 <div ng-if="kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'ReplicationControllers'">
-                  <h2>Deployments</h2>
+                  <h2 translate>Deployments</h2>
                   <div class="list-view-pf">
                     <div class="list-group-item" ng-if="!(filteredReplicationControllers | hashSize) && !(filteredReplicaSets | hashSize)">
                       <div class="list-view-pf-main-info">
                         <ellipsis-pulser color="dark" size="sm" msg="Loading deployments" ng-if="!replicationControllersLoaded"></ellipsis-pulser>
                         <em>
-                          <div ng-if="(replicationControllers | hashSize) > 0 || (replicaSets | hashSize) > 0">The current filters are hiding all deployments.</div>
-                          <span ng-if="replicationControllersLoaded && !(replicationControllers | hashSize) && replicaSetsLoaded && !(replicaSets | hashSize)">There are no deployments in this project.</span>
+                          <div ng-if="(replicationControllers | hashSize) > 0 || (replicaSets | hashSize) > 0" translate>The current filters are hiding all deployments.</div>
+                          <span ng-if="replicationControllersLoaded && !(replicationControllers | hashSize) && replicaSetsLoaded && !(replicaSets | hashSize)" translate>There are no deployments in this project.</span>
                         </em>
                       </div>
                     </div>
@@ -178,7 +178,7 @@
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
                               <a ng-href="{{replicationController | navigateResourceURL}}"><span ng-bind-html="replicationController.metadata.name | highlightKeywords : filterKeywords"></span></a>
-                              <small>created <span am-time-ago="replicationController.metadata.creationTimestamp"></span></small>
+                              <small><translate>created</translate> <span am-time-ago="replicationController.metadata.creationTimestamp"></span></small>
                             </div>
                             <div class="list-group-item-text">
                               <a href=""
@@ -240,7 +240,7 @@
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
                               <a ng-href="{{replicaSet | navigateResourceURL}}"><span ng-bind-html="replicaSet.metadata.name | highlightKeywords : filterKeywords"></span></a>
-                              <small>created <span am-time-ago="replicaSet.metadata.creationTimestamp"></span></small>
+                              <small><translate>created</translate> <span am-time-ago="replicaSet.metadata.creationTimestamp"></span></small>
                             </div>
                             <div class="list-group-item-text">
                               <a href=""
@@ -264,10 +264,9 @@
                       </div>
                     </div>
                     <div ng-repeat-end ng-if="expanded.replicaSets[replicaSet.metadata.name]" class="list-group-expanded-section" ng-class="{'expanded': expanded.replicaSets[replicaSet.metadata.name]}">
-                      Logs are not available for replica sets.
-                      <span ng-if="podsByOwnerUID[replicaSet.metadata.uid] | hashSize">
-                        To see application logs, view the logs for one of the replica set's
-                        <a href="" ng-click="viewPodsForReplicaSet(replicaSet)">pods</a>.
+                      <translate>Logs are not available for replica sets.</translate>
+                      <span ng-if="podsByOwnerUID[replicaSet.metadata.uid] | hashSize" translate>
+                        To see application logs, view the logs for one of the replica set's <a href="" ng-click="viewPodsForReplicaSet(replicaSet)">pods</a>.
                       </span>
                       <div class="mar-top-lg" ng-if="metricsAvailable">
                         <deployment-metrics
@@ -281,14 +280,14 @@
                 </div>
 
                 <div ng-if="kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'StatefulSets'">
-                  <h2>Stateful Sets</h2>
+                  <h2 translate>Stateful Sets</h2>
                   <div class="list-view-pf">
                     <div class="list-group-item" ng-if="!(filteredStatefulSets | hashSize)">
                       <div class="list-view-pf-main-info">
                         <ellipsis-pulser color="dark" size="sm" msg="Loading stateful sets" ng-if="!statefulSetsLoaded"></ellipsis-pulser>
                         <em>
-                          <div ng-if="(statefulSets | hashSize) > 0">The current filters are hiding all stateful sets.</div>
-                          <span ng-if="statefulSetsLoaded && (statefulSets | hashSize) === 0">There are no stateful sets in this project.</span>
+                          <div ng-if="(statefulSets | hashSize) > 0" translate>The current filters are hiding all stateful sets.</div>
+                          <span ng-if="statefulSetsLoaded && (statefulSets | hashSize) === 0" translate>There are no stateful sets in this project.</span>
                         </em>
                       </div>
                     </div>
@@ -311,7 +310,7 @@
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
                               <a ng-href="{{set | navigateResourceURL}}"><span ng-bind-html="set.metadata.name | highlightKeywords : filterKeywords"></span></a>
-                              <small>created <span am-time-ago="set.metadata.creationTimestamp"></span></small>
+                              <small><translate>created</translate> <span am-time-ago="set.metadata.creationTimestamp"></span></small>
                             </div>
                             <div class="list-group-item-text">
                               <a href=""
@@ -332,10 +331,9 @@
                       </div>
                     </div>
                     <div ng-repeat-end ng-if="expanded.statefulSets[set.metadata.name]" class="list-group-expanded-section" ng-class="{'expanded': expanded.statefulSets[set.metadata.name]}">
-                      Logs are not available for stateful sets.
-                      <span ng-if="podsByOwnerUID[set.metadata.uid] | hashSize">
-                        To see application logs, view the logs for one of the stateful sets's
-                        <a href="" ng-click="viewPodsForReplicaSet(set)">pods</a>.
+                      <translate>Logs are not available for stateful sets.</translate>
+                      <span ng-if="podsByOwnerUID[set.metadata.uid] | hashSize" translate>
+                        To see application logs, view the logs for one of the stateful sets's <a href="" ng-click="viewPodsForReplicaSet(set)">pods</a>.
                       </span>
                       <div class="mar-top-lg" ng-if="metricsAvailable">
                         <deployment-metrics
@@ -350,14 +348,14 @@
 
 
                 <div ng-if="kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'Builds'">
-                  <h2>Builds</h2>
+                  <h2 translate>Builds</h2>
                   <div class="list-view-pf">
                     <div class="list-group-item" ng-if="!(filteredBuilds | hashSize)">
                       <div class="list-view-pf-main-info">
                         <ellipsis-pulser color="dark" size="sm" msg="Loading builds" ng-if="!buildsLoaded"></ellipsis-pulser>
                         <em>
-                          <div ng-if="(builds | hashSize) > 0">The current filters are hiding all builds.</div>
-                          <span ng-if="buildsLoaded && (builds | hashSize) === 0">There are no builds in this project.</span>
+                          <div ng-if="(builds | hashSize) > 0" translate>The current filters are hiding all builds.</div>
+                          <span ng-if="buildsLoaded && (builds | hashSize) === 0" translate>There are no builds in this project.</span>
                         </em>
                       </div>
                     </div>
@@ -380,7 +378,7 @@
                           <div class="list-view-pf-description">
                             <div class="list-group-item-heading">
                               <a ng-href="{{build | navigateResourceURL}}"><span ng-bind-html="build.metadata.name | highlightKeywords : filterKeywords"></span></a>
-                              <small>created <span am-time-ago="build.metadata.creationTimestamp"></span></small>
+                              <small><translate>created</translate> <span am-time-ago="build.metadata.creationTimestamp"></span></small>
                             </div>
                             <div class="list-group-item-text">
                               <build-status build="build"></build-status>
@@ -397,7 +395,7 @@
                                     uri="build.spec.source.git.uri"
                                     ref="build.spec.revision.git.commit">{{build.spec.revision.git.commit | limitTo:7}}</osc-git-link>
                                   <span ng-if="detailed && build.spec.revision.git.author">
-                                    authored by {{build.spec.revision.git.author.name}}
+                                    <translate>authored by</translate> {{build.spec.revision.git.author.name}}
                                   </span>
                                 </span>
                                 <span ng-if="!build.spec.revision.git.commit && build.spec.source.git.uri">
@@ -425,9 +423,9 @@
                         full-log-url="(build | navigateResourceURL) + '?view=chromeless'">
 
                         <div ng-if="build.status.startTimestamp && !logEmpty.builds[build.metadata.name]" class="log-timestamps" style="margin-left: 0;">
-                          Log from {{build.status.startTimestamp  | date : 'medium'}}
+                          <translate>Log from</translate> {{build.status.startTimestamp  | date : 'medium'}}
                           <span ng-if="build.status.completionTimestamp">
-                            to {{build.status.completionTimestamp  | date : 'medium'}}
+                            <translate>to</translate> {{build.status.completionTimestamp  | date : 'medium'}}
                           </span>
                         </div>
 

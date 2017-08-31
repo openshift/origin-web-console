@@ -8,24 +8,24 @@
         <div class="container-fluid">
           <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
           <alerts alerts="alerts"></alerts>
-          <div ng-if="!loaded" class="mar-top-xl">Loading...</div>
+          <div ng-if="!loaded" class="mar-top-xl" translate>Loading...</div>
           <div ng-if="service">
             <h1 class="contains-actions">
               <div class="pull-right dropdown" ng-hide="!('services' | canIDoAny)">
                 <button type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
-                  Actions
+                  <translate>Actions</translate>
                   <span class="caret"></span>
                 </button>
                 <a href=""
                    class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
-                   data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
+                   data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only" translate>Actions</span></a>
                 <ul class="dropdown-menu dropdown-menu-right actions action-button">
                   <li ng-if="'routes' | canI : 'create'">
                     <a ng-href="project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}"
-                       role="button">Create Route</a>
+                       role="button" translate>Create Route</a>
                   </li>
                   <li ng-if="'services' | canI : 'update'">
-                    <a ng-href="{{service | editYamlURL}}" role="button">Edit YAML</a>
+                    <a ng-href="{{service | editYamlURL}}" role="button" translate>Edit YAML</a>
                   </li>
                   <li ng-if="'services' | canI : 'delete'">
                     <delete-link
@@ -38,7 +38,7 @@
                 </ul>
               </div>
               {{service.metadata.name}}
-              <small class="meta">created <span am-time-ago="service.metadata.creationTimestamp"></span></small>
+              <small class="meta"><translate>created</translate> <span am-time-ago="service.metadata.creationTimestamp"></span></small>
             </h1>
             <labels labels="service.metadata.labels" clickable="true" kind="services" project-name="{{service.metadata.namespace}}" limit="3"></labels>
           </div>
@@ -50,55 +50,55 @@
             <div class="col-md-12">
               <uib-tabset>
                 <uib-tab active="selectedTab.details">
-                  <uib-tab-heading>Details</uib-tab-heading>
+                  <uib-tab-heading translate>Details</uib-tab-heading>
                   <div class="resource-details">
                     <dl class="dl-horizontal left">
-                      <dt>Selectors:</dt>
+                      <dt translate>Selectors:</dt>
                       <dd>
-                        <span ng-if="!service.spec.selector"><em>none</em></span>
+                        <span ng-if="!service.spec.selector"><em translate>none</em></span>
                         <span ng-repeat="(selectorLabel, selectorValue) in service.spec.selector"> {{selectorLabel}}={{selectorValue}}<span ng-show="!$last">, </span></span>
                       </dd>
-                      <dt>Type:</dt>
+                      <dt translate>Type:</dt>
                       <dd>{{service.spec.type}}</dd>
-                      <dt>IP:</dt>
+                      <dt translate>IP:</dt>
                       <dd>{{service.spec.clusterIP}}</dd>
-                      <dt>Hostname:</dt>
+                      <dt translate>Hostname:</dt>
                       <dd>
                         {{service.metadata.name}}.{{service.metadata.namespace}}.svc
-                        <span data-toggle="popover" data-trigger="hover" data-content="{{'This address is only resolvable from within the cluster.'}}" style="cursor: help; padding-left: 5px;">
+                        <span data-toggle="popover" data-trigger="hover" data-content="{{'This address is only resolvable from within the cluster.'|translate}}" style="cursor: help; padding-left: 5px;">
                           <span class="pficon pficon-info" aria-hidden="true" data-toggle="tooltip" style="cursor: help;"></span>
                         </span>
                       </dd>
-                      <dt ng-if-start="service.spec.externalName">External Hostname:</dt>
+                      <dt ng-if-start="service.spec.externalName" translate>External Hostname:</dt>
                       <dd ng-if-end>{{service.spec.externalName}}</dd>
-                      <dt>Session affinity:</dt>
+                      <dt translate>Session affinity:</dt>
                       <dd>{{service.spec.sessionAffinity}}</dd>
-                      <dt ng-if-start="service.status.loadBalancer.ingress.length">Ingress Points:</dt>
+                      <dt ng-if-start="service.status.loadBalancer.ingress.length" translate>Ingress Points:</dt>
                       <dd ng-if-end>
                         <span ng-repeat="ingress in service.status.loadBalancer.ingress"
                           >{{ingress.ip}}<span ng-if="!$last">, </span></span>
                       </dd>
-                      <dt ng-if-start="service.spec.externalIPs.length">External IPs:</dt>
+                      <dt ng-if-start="service.spec.externalIPs.length" translate>External IPs:</dt>
                       <dd ng-if-end>
                         <span ng-repeat="externalIP in service.spec.externalIPs"
                           >{{externalIP}}<span ng-if="!$last">, </span></span>
                       </dd>
-                      <dt ng-if-start="(routesForService | hashSize) == 0">Routes:</dt>
+                      <dt ng-if-start="(routesForService | hashSize) == 0" translate>Routes:</dt>
                       <dd ng-if-end>
                         <span>
-                          <a ng-href="project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}"  ng-if="'routes' | canI : 'create'">Create route</a>
-                          <span ng-if="!('routes' | canI : 'create')"><em>None</em></span>
+                          <a ng-href="project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}"  ng-if="'routes' | canI : 'create'" translate>Create route</a>
+                          <span ng-if="!('routes' | canI : 'create')"><em translate>None</em></span>
                         </span>
                       </dd>
                     </dl>
-                    <h3>Traffic</h3>
+                    <h3 translate>Traffic</h3>
                     <div>
                       <traffic-table ports-by-route="portsByRoute" routes="routesForService" services="services" show-node-ports="showNodePorts" custom-name-header="'Route'"></traffic-table>
                     </div>
-                    <p>
+                    <p translate>
                       Learn more about <a ng-href="{{'route-types' | helpLink}}" target="_blank">routes</a> and <a ng-href="{{'services' | helpLink}}" target="_blank">services</a>.
                     </p>
-                    <h3>Pods</h3>
+                    <h3 translate>Pods</h3>
                     <div>
                       <pods-table pods="podsForService" active-pods="podsWithEndpoints" custom-name-header="'Pod'" pod-failure-reasons="podFailureReasons"></pods-table>
                     </div>
@@ -106,7 +106,7 @@
                   </div>
                 </uib-tab>
                 <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">
-                  <uib-tab-heading>Events</uib-tab-heading>
+                  <uib-tab-heading translate>Events</uib-tab-heading>
                   <events api-objects="[ service ]" project-context="projectContext" ng-if="selectedTab.events"></events>
                 </uib-tab>
               </uib-tabset>

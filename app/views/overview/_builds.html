@@ -1,5 +1,5 @@
 <div ng-if="overviewBuilds.buildConfigs.length" class="expanded-section">
-  <div class="section-title hidden-xs">Builds</div>
+  <div class="section-title hidden-xs" translate>Builds</div>
   <div ng-repeat="buildConfig in overviewBuilds.buildConfigs track by (buildConfig | uid)" class="row">
     <div class="col-sm-5 col-md-6">
       <h3 class="mar-top-xs">
@@ -7,12 +7,12 @@
       </h3>
     </div>
     <div class="col-sm-7 col-md-6 overview-builds-msg">
-      <div ng-if="!(overviewBuilds.recentBuildsByBuildConfig[buildConfig.metadata.name] | hashSize)">
+      <div ng-if="!(overviewBuilds.recentBuildsByBuildConfig[buildConfig.metadata.name] | hashSize)" translate>
         No builds.
       </div>
       <div ng-repeat="build in overviewBuilds.recentBuildsByBuildConfig[buildConfig.metadata.name] track by (build | uid)" class="mar-bottom-sm animate-repeat">
         <span ng-if="overviewBuilds.showLogs(build)" class="small pull-right view-full-log">
-          <a ng-if="!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL)" ng-href="{{build | buildLogURL}}">View Full Log</a>
+          <a ng-if="!!['New', 'Pending'].indexOf(build.status.phase) && (build | buildLogURL)" ng-href="{{build | buildLogURL}}" translate>View Full Log</a>
         </span>
         <span ng-switch="build.status.phase" class="hide-ng-leave">
           <span ng-switch-when="Failed" class="status-icon">
@@ -23,18 +23,18 @@
           </span>
         </span>
         <span class="h5">
-          Build
+          <translate>Build</translate>
           <a ng-href="{{build | navigateResourceURL}}"><span
               ng-if="build | annotation : 'buildNumber'">#{{build | annotation : 'buildNumber'}}</span><span
               ng-if="!(build | annotation : 'buildNumber')">{{build.metadata.name}}</span></a>
           <span ng-switch="build.status.phase" class="hide-ng-leave">
-            <span ng-switch-when="Failed">failed</span>
-            <span ng-switch-when="Error">encountered an error</span>
-            <span ng-switch-when="Cancelled">was cancelled</span>
-            <span ng-switch-default>is {{build.status.phase | lowercase}}</span>
+            <span ng-switch-when="Failed" translate>failed</span>
+            <span ng-switch-when="Error" translate>encountered an error</span>
+            <span ng-switch-when="Cancelled" translate>was cancelled</span>
+            <span ng-switch-default><translate>is</translate> {{build.status.phase | lowercase}}</span>
           </span>
           <ellipsis-pulser ng-if="build | isIncompleteBuild" color="dark" size="sm" display="inline" msg=""></ellipsis-pulser>
-          <small class="text-muted mar-left-md">created <span am-time-ago="build.metadata.creationTimestamp"></span></small>
+          <small class="text-muted mar-left-md"><translate>created</translate> <span am-time-ago="build.metadata.creationTimestamp"></span></small>
         </span>
         <div ng-if="overviewBuilds.showLogs(build)" class="animate-if">
           <mini-log api-object="build" context="overviewBuilds.context"></mini-log>

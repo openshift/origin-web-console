@@ -8,23 +8,23 @@
         <div class="container-fluid">
           <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
           <alerts alerts="alerts"></alerts>
-          <div ng-if="!loaded" class="mar-top-xl">Loading...</div>
+          <div ng-if="!loaded" class="mar-top-xl" translate>Loading...</div>
           <div ng-if="route">
             <h1 class="contains-actions">
               <div class="pull-right dropdown" ng-hide="!('routes' | canIDoAny)">
                 <button type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
-                  Actions
+                  <translate>Actions</translate>
                   <span class="caret" aria-hidden="true"></span>
                 </button>
                 <a href=""
                    class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
-                   data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
+                   data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only" translate>Actions</span></a>
                 <ul class="dropdown-menu dropdown-menu-right actions action-button">
                   <li ng-if="'routes' | canI : 'update'">
-                    <a ng-href="{{route | editResourceURL}}" role="button">Edit</a>
+                    <a ng-href="{{route | editResourceURL}}" role="button" translate>Edit</a>
                   </li>
                   <li ng-if="'routes' | canI : 'update'">
-                    <a ng-href="{{route | editYamlURL}}" role="button">Edit YAML</a>
+                    <a ng-href="{{route | editYamlURL}}" role="button" translate>Edit YAML</a>
                   </li>
                   <li ng-if="'routes' | canI : 'delete'">
                     <delete-link
@@ -41,7 +41,7 @@
                               route="route"
                               services="services">
               </route-warnings>
-              <small class="meta">created <span am-time-ago="route.metadata.creationTimestamp"></span></small>
+              <small class="meta"><translate>created</translate> <span am-time-ago="route.metadata.creationTimestamp"></span></small>
             </h1>
             <labels labels="route.metadata.labels" clickable="true" kind="routes" project-name="{{route.metadata.namespace}}" limit="3"></labels>
           </div>
@@ -58,7 +58,7 @@
                   </span>
                   <div class="meta">
                     <status-icon status="'Pending'"></status-icon>
-                    The route is not accepting traffic yet because it has not been admitted by a router.
+                    <translate>The route is not accepting traffic yet because it has not been admitted by a router.</translate>
                   </div>
                 </div>
                 <div ng-repeat="ingress in route.status.ingress" ng-init="admittedCondition = (ingress | routeIngressCondition : 'Admitted')" class="route-status">
@@ -74,31 +74,30 @@
                     </span>
                   </div>
                   <div class="meta">
-                    <span ng-if="!admittedCondition">Admission status unknown for router '{{ingress.routerName}}'</span>
+                    <span ng-if="!admittedCondition" translate>Admission status unknown for router '{{ingress.routerName}}'</span>
                     <span ng-if="admittedCondition.status === 'True'">
                       <status-icon status="'Succeeded'"></status-icon>
-                      Exposed on router '{{ingress.routerName}}' <span am-time-ago="admittedCondition.lastTransitionTime"></span>
+                      <translate>Exposed on router '{{ingress.routerName}}'</translate> <span am-time-ago="admittedCondition.lastTransitionTime"></span>
                     </span>
                     <span ng-if="admittedCondition.status === 'False'">
                       <status-icon status="'Error'"></status-icon>
-                      Rejected by router '{{ingress.routerName}}' <span am-time-ago="admittedCondition.lastTransitionTime"></span>
+                      <translate>Rejected by router '{{ingress.routerName}}'</translate> <span am-time-ago="admittedCondition.lastTransitionTime"></span>
                     </span>
                   </div>
                   <div ng-if="showRouterHostnameAlert(ingress, admittedCondition)" class="mar-top-lg">
                     <div class="alert alert-info">
                       <span class="pficon pficon-info" aria-hidden="true"></span>
-                      <span class="mar-right-sm">
-                        The DNS admin should set up a CNAME from the route's hostname, {{ingress.host}},
-                        to the router's canonical hostname, {{ingress.routerCanonicalHostname}}.
+                      <span class="mar-right-sm" translate>
+                        The DNS admin should set up a CNAME from the route's hostname, {{ingress.host}}, to the router's canonical hostname, {{ingress.routerCanonicalHostname}}.
                       </span>
-                      <a href="" ng-click="hideRouterHostnameAlert(ingress)" role="button" class="nowrap">Don't Show Me Again</a>
+                      <a href="" ng-click="hideRouterHostnameAlert(ingress)" role="button" class="nowrap" translate>Don't Show Me Again</a>
                     </div>
                   </div>
                 </div>
 
-                <h4 class="mar-top-xl">Details</h4>
+                <h4 class="mar-top-xl" translate>Details</h4>
                 <dl class="dl-horizontal left">
-                  <dt ng-if-start="route.spec.wildcardPolicy && route.spec.wildcardPolicy !== 'None' && route.spec.wildcardPolicy !== 'Subdomain'">Wildcard Policy:</dt>
+                  <dt ng-if-start="route.spec.wildcardPolicy && route.spec.wildcardPolicy !== 'None' && route.spec.wildcardPolicy !== 'Subdomain'" translate>Wildcard Policy:</dt>
                   <dd ng-if-end>{{route.spec.wildcardPolicy}}</dd>
                   <dt>Path:</dt>
                   <dd>
@@ -109,21 +108,21 @@
                   <dd>
                     <a ng-href="{{route.spec.to.name | navigateResourceURL : route.spec.to.kind : route.metadata.namespace}}">{{route.spec.to.name}}</a>
                   </dd>
-                  <dt>Target Port:</dt>
+                  <dt translate>Target Port:</dt>
                   <dd>
                     <span ng-if="route.spec.port.targetPort">
                       {{route.spec.port.targetPort}}
                     </span>
                     <span ng-if="!route.spec.port.targetPort"><em>any</em></span>
                   </dd>
-                  <div ng-if="route.spec.port.targetPort && route.spec.to.kind === 'Service' && (route | routeTargetPortMapping : services[route.spec.to.name])" class="help-block">
+                  <div ng-if="route.spec.port.targetPort && route.spec.to.kind === 'Service' && (route | routeTargetPortMapping : services[route.spec.to.name])" class="help-block" translate>
                     This target port will route to {{route | routeTargetPortMapping : services[route.spec.to.name]}}.
                   </div>
                 </dl>
                 <div ng-if="route.spec.alternateBackends.length" class="row">
                   <div class="col-sm-12 mar-bottom-lg">
-                    <h4>Traffic</h4>
-                    <div class="help-block">
+                    <h4 translate>Traffic</h4>
+                    <div class="help-block" translate>
                       This route splits traffic across multiple services.
                     </div>
                   </div>
@@ -134,8 +133,8 @@
                     <table class="table table-bordered">
                       <thead>
                         <tr>
-                          <th>Service</th>
-                          <th>Weight</th>
+                          <th translate>Service</th>
+                          <th translate>Weight</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -160,57 +159,57 @@
                   </div>
                 </div>
                 <div style="margin-bottom: 10px;">
-                  <h4>TLS Settings</h4>
+                  <h4 translate>TLS Settings</h4>
                   <dl class="dl-horizontal left" ng-if="route.spec.tls">
-                    <dt>Termination Type:</dt>
+                    <dt translate>Termination Type:</dt>
                     <dd>{{route.spec.tls.termination | humanizeTLSTermination}}</dd>
-                    <dt>Insecure Traffic:</dt>
+                    <dt translate>Insecure Traffic:</dt>
                     <dd>{{route.spec.tls.insecureEdgeTerminationPolicy || 'None'}}</dd>
-                    <dt>Certificate:</dt>
+                    <dt translate>Certificate:</dt>
                     <dd>
                       <span ng-show="route.spec.tls.certificate && !reveal.certificate">
-                        <a href="" ng-click="reveal.certificate = true">Show</a>
+                        <a href="" ng-click="reveal.certificate = true" translate>Show</a>
                       </span>
-                      <span ng-if="!route.spec.tls.certificate"><em>none</em></span>
+                      <span ng-if="!route.spec.tls.certificate"><em translate>none</em></span>
                     </dd>
                     <div ng-if="reveal.certificate">
                       <pre class="clipped">{{route.spec.tls.certificate}}</pre>
                     </div>
-                    <dt>Key:</dt>
+                    <dt translate>Key:</dt>
                     <dd>
                       <span ng-if="route.spec.tls.key && !reveal.key">
-                        <a href="" ng-click="reveal.key = true">Show</a>
+                        <a href="" ng-click="reveal.key = true" translate>Show</a>
                       </span>
-                      <span ng-if="!route.spec.tls.key"><em>none</em></span>
+                      <span ng-if="!route.spec.tls.key"><em translate>none</em></span>
                     </dd>
                     <div ng-if="reveal.key">
                       <pre class="clipped">{{route.spec.tls.key}}</pre>
                     </div>
-                    <dt>CA Certificate:</dt>
+                    <dt translate>CA Certificate:</dt>
                     <dd>
                       <span ng-show="route.spec.tls.caCertificate && !reveal.caCertificate">
-                        <a href="" ng-click="reveal.caCertificate = true">Show</a>
+                        <a href="" ng-click="reveal.caCertificate = true" translate>Show</a>
                       </span>
-                      <span ng-if="!route.spec.tls.caCertificate"><em>none</em></span>
+                      <span ng-if="!route.spec.tls.caCertificate"><em translate>none</em></span>
                     </dd>
                     <div ng-if="reveal.caCertificate">
                       <pre class="clipped">{{route.spec.tls.caCertificate}}</pre>
                     </div>
-                    <dt>Destination CA Cert:</dt>
+                    <dt translate>Destination CA Cert:</dt>
                     <dd>
                       <span ng-show="route.spec.tls.destinationCACertificate && !reveal.destinationCACertificate">
-                        <a href="" ng-click="reveal.destinationCACertificate = true">Show</a>
+                        <a href="" ng-click="reveal.destinationCACertificate = true" translate>Show</a>
                       </span>
-                      <span ng-if="!route.spec.tls.destinationCACertificate"><em>none</em></span>
+                      <span ng-if="!route.spec.tls.destinationCACertificate"><em translate>none</em></span>
                     </dd>
                     <div ng-if="reveal.destinationCACertificate">
                       <pre class="clipped">{{route.spec.tls.destinationCACertificate}}</pre>
                     </div>
                   </dl>
                   <p ng-if="!route.spec.tls">
-                    TLS is not enabled.
+                    <translate>TLS is not enabled.</translate>
                     <span ng-if="'routes' | canI : 'update'">
-                      <a ng-href="{{route | editResourceURL}}" role="button">Edit</a> this route to enable secure network traffic.
+                      <translate><a ng-href="{{route | editResourceURL}}" role="button">Edit</a> this route to enable secure network traffic.</translate>
                     </span>
                   </p>
                 </div>

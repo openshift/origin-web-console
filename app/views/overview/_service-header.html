@@ -1,7 +1,7 @@
 <div row class="service-title" ng-if="service">
   <div class="service-name truncate">
     <span class="pficon pficon-service" aria-hidden="true" title="Service"></span>
-    <span class="sr-only">Service</span>
+    <span class="sr-only" translate>Service</span>
     <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>
     <!-- Put the linking button next to the service name if we show traffic percent to the right. -->
     <span ng-if="!isAlternate && alternateServices.length && !isChild && ('services' | canI : 'update')"

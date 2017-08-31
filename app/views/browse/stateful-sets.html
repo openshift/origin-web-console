@@ -7,9 +7,9 @@
         <div class="container-fluid">
           <div
             class="page-header page-header-bleed-right page-header-bleed-left">
-            <span class="label label-warning label-tech-preview">Technology Preview</span>
+            <span class="label label-warning label-tech-preview" translate>Technology Preview</span>
             <h1>
-              Stateful Sets
+              <translate>Stateful Sets</translate>
               <!-- TODO: docs are in progress
               <span class="page-header-link">
                 <a ng-href="{{'stateful-sets' | helpLink}}" target="_blank">
@@ -30,7 +30,7 @@
       <div class="middle-content" persist-tab-state>
         <div class="container-fluid">
           <alerts alerts="alerts"></alerts>
-          <div ng-if="!loaded">Loading...</div>
+          <div ng-if="!loaded" translate>Loading...</div>
           <div class="row" ng-if="loaded">
             <div class="col-md-12">
               <table class="table table-bordered table-hover table-mobile table-layout-fixed">
@@ -39,14 +39,14 @@
                 </colgroup>
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Replicas</th>
-                    <th>Created</th>
+                    <th translate>Name</th>
+                    <th translate>Replicas</th>
+                    <th translate>Created</th>
                   </tr>
                 </thead>
                 <tbody ng-if="(statefulSets | hashSize) == 0">
                   <tr>
-                    <td colspan="3"><em>No stateful sets to show</em></td>
+                    <td colspan="3"><em translate>No stateful sets to show</em></td>
                   </tr>
                 </tbody>
                 <tbody ng-repeat="(statefulSetName, statefulSet) in statefulSets">
@@ -55,7 +55,7 @@
                       <a ng-href="{{statefulSet | navigateResourceURL}}">{{statefulSet.metadata.name}}</a>
                     </td>
                     <td data-title="Replicas">
-                      <span ng-if="(podsByOwnerUID[statefulSet.metadata.uid] | hashSize) !== statefulSet.spec.replicas">{{podsByOwnerUID[statefulSet.metadata.uid] | hashSize}}/</span>{{statefulSet.spec.replicas}} replica<span ng-if="statefulSet.spec.replicas != 1">s</span>
+                      <span ng-if="(podsByOwnerUID[statefulSet.metadata.uid] | hashSize) !== statefulSet.spec.replicas">{{podsByOwnerUID[statefulSet.metadata.uid] | hashSize}}/</span><translate>{{statefulSet.spec.replicas}} replica<span ng-if="statefulSet.spec.replicas != 1">s</span></translate>
                       <!-- TODO: swap back in 1.6 when the replicas count for StatefulSets is fixed
                       <span ng-if="statefulSet.status.replicas !== statefulSet.spec.replicas">{{statefulSet.status.replicas}}/</span>{{statefulSet.spec.replicas}} replica<span ng-if="statefulSet.spec.replicas != 1">s</span>
                       -->

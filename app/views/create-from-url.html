@@ -11,20 +11,20 @@
           <div class="container surface-shaded gutter-top">
             <div class="row">
               <div class="col-md-12">
-                <div ng-if="!loaded">Loading...</div>
+                <div ng-if="!loaded" translate>Loading...</div>
                 <div ng-if="loaded">
                   <alerts alerts="alerts" hide-close-button="true"></alerts>
                   <osc-image-summary resource="resource"></osc-image-summary>
-                  <p ng-if="validationPassed && createDetails.sourceURI">Source code from <a href="{{createDetails.sourceURI}}">{{createDetails.sourceURI}}</a> will be built and deployed unless otherwise specified in the next step.</p>
+                  <p ng-if="validationPassed && createDetails.sourceURI" translate>Source code from <a href="{{createDetails.sourceURI}}">{{createDetails.sourceURI}}</a> will be built and deployed unless otherwise specified in the next step.</p>
                   <div ng-if="validationPassed">
                     <div ng-if="noProjects && canCreateProject">
-                      <h2>Create a New Project</h2>
+                      <h2 translate>Create a New Project</h2>
                       <create-project alerts="alerts" redirect-action="createWithProject"></create-project>
                     </div>
                     <div ng-if="!noProjects && !canCreateProject">
-                      <h2>Choose a Project</h2>
+                      <h2 translate>Choose a Project</h2>
                       <ui-select ng-model="selected.project">
-                        <ui-select-match placeholder="Project name">
+                        <ui-select-match placeholder="{{'Project name'|translate}}">
                           {{$select.selected | displayName}}
                         </ui-select-match>
                         <ui-select-choices repeat="project in projects | searchProjects : $select.search">
@@ -39,7 +39,7 @@
                     <div ng-if="!noProjects && canCreateProject">
                       <uib-tabset>
                         <uib-tab>
-                          <uib-tab-heading>Choose Existing Project</uib-tab-heading>
+                          <uib-tab-heading translate>Choose Existing Project</uib-tab-heading>
                           <ui-select ng-model="selected.project">
                             <ui-select-match placeholder="Project name">
                               {{$select.selected | displayName}}
@@ -59,17 +59,17 @@
                             ng-click="createWithProject()"
                             ng-disabled="!(selected.project)"
                             value="">Next</button>
-                            <a class="btn btn-default btn-lg" href="#" back>Cancel</a>
+                            <a class="btn btn-default btn-lg" href="#" back translate>Cancel</a>
                           </div>
                         </uib-tab>
                         <uib-tab>
-                          <uib-tab-heading>Create a New Project</uib-tab-heading>
+                          <uib-tab-heading translate>Create a New Project</uib-tab-heading>
                           <create-project alerts="alerts" redirect-action="createWithProject"></create-project>
                         </uib-tab>
                       </uib-tabset>
                     </div>
                     <p ng-if="!canCreateProject" class="mar-top-md">
-                      <span ng-if="noProjects">A project is required in order to complete the installation.</span>
+                      <span ng-if="noProjects" translate>A project is required in order to complete the installation.</span>
                       <ng-include src="'views/_cannot-create-project.html'"></ng-include>
                     </p>
                   </div>

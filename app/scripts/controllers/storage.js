@@ -8,14 +8,14 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('StorageController', function ($routeParams, $scope, AlertMessageService, DataService, ProjectsService, QuotaService, $filter, LabelFilter, Logger) {
+  .controller('StorageController', function ($routeParams, $scope, AlertMessageService, DataService, ProjectsService, QuotaService, $filter, LabelFilter, Logger, gettext) {
     $scope.projectName = $routeParams.project;
     $scope.pvcs = {};
     $scope.unfilteredPVCs = {};
     $scope.labelSuggestions = {};
     $scope.alerts = $scope.alerts || {};
     $scope.outOfClaims = false;
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettext("Loading...");
 
     var setOutOfClaimsWarning = function() {
       var isHidden = AlertMessageService.isAlertPermanentlyHidden("storage-quota-limit-reached", $scope.projectName);
@@ -59,7 +59,7 @@ angular.module('openshiftConsole')
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredPVCs, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
           $scope.pvcs = LabelFilter.getLabelSelector().select($scope.unfilteredPVCs);
-          $scope.emptyMessage = "No persistent volume claims to show";
+          $scope.emptyMessage = gettext("No persistent volume claims to show");
           updateFilterWarning();
           Logger.log("pvcs (subscribe)", $scope.unfilteredPVCs);
         }));

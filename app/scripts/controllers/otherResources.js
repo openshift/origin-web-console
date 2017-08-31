@@ -11,11 +11,12 @@ angular.module('openshiftConsole')
     $filter,
     LabelFilter,
     Logger,
-    APIService) {
+    APIService,
+    gettext) {
     $scope.projectName = $routeParams.project;
     $scope.labelSuggestions = {};
     $scope.alerts = $scope.alerts || {};
-    $scope.emptyMessage = "Select a resource from the list above ...";
+    $scope.emptyMessage = gettext("Select a resource from the list above ...");
     $scope.kindSelector = {disabled: true};
     $scope.kinds = _.filter(APIService.availableKinds(), function(kind) {
       switch (kind.kind) {
@@ -157,7 +158,7 @@ angular.module('openshiftConsole')
         LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredResources, $scope.labelSuggestions);
         LabelFilter.setLabelSuggestions($scope.labelSuggestions);
         $scope.resources = LabelFilter.getLabelSelector().select($scope.unfilteredResources);
-        $scope.emptyMessage = "No " + APIService.kindToResource(selected.kind, true) + " to show";
+        $scope.emptyMessage = gettext("No ") + APIService.kindToResource(selected.kind, true) + gettext(" to show");
         updateFilterWarning();
       });
     }

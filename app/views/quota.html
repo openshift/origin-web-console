@@ -10,23 +10,23 @@
             <div class="row">
               <div class="col-md-12">
                 <h1>
-                  <span ng-if="clusterQuotas.length">Cluster </span>Quota
+                  <span ng-if="clusterQuotas.length" translate>Cluster </span><translate>Quota</translate>
                   <span class="page-header-link">
                     <a ng-href="{{'quota' | helpLink}}" target="_blank">
-                      Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
+                      <translate>Learn More</translate> <i class="fa fa-external-link" aria-hidden="true"></i>
                     </a>
                   </span>
                 </h1>
                 <div ng-if="!quotas.length && !clusterQuotas.length" class="mar-top-xl">
                   <div class="help-block">{{quotaHelp}}</div>
-                  <p><em ng-if="!quotas && !clusterQuotas">Loading...</em><em ng-if="quotas || clusterQuotas">There are no resource quotas set on this project.</em></p>
+                  <p><em ng-if="!quotas && !clusterQuotas" translate>Loading...</em><em ng-if="quotas || clusterQuotas" translate>There are no resource quotas set on this project.</em></p>
                 </div>
 
                 <div ng-repeat="quota in clusterQuotas | orderBy: 'metadata.name'" class="gutter-bottom">
                   <h2 ng-if="clusterQuotas.length">{{quota.metadata.name}}</h2>
-                  <div ng-if="$first" class="help-block">Limits resource usage across a set of projects.</div>
+                  <div ng-if="$first" class="help-block" translate>Limits resource usage across a set of projects.</div>
                   <dl ng-if="quota.spec.quota.scopes.length">
-                    <dt>Scopes:</dt>
+                    <dt translate>Scopes:</dt>
                     <dd>
                       <div ng-repeat="scope in quota.spec.quota.scopes">
                         {{scope | startCase}}
@@ -37,27 +37,27 @@
                   <div>
                     <div row wrap style="justify-content: center;">
                       <div ng-if="quota.status.total.hard.cpu" class="mar-lg">
-                        <h3 class="text-center">CPU <small>Request</small></h3>
+                        <h3 class="text-center" translate>CPU <small>Request</small></h3>
                         <quota-usage-chart height="240" used="namespaceUsageByClusterQuota[quota.metadata.name].used.cpu" total="quota.status.total.hard.cpu" cross-project-used="quota.status.total.used.cpu" type="cpu" class="quota-chart"></quota-usage-chart>
                       </div>
                       <div ng-if="quota.status.total.hard.memory" class="mar-lg">
-                        <h3 class="text-center">Memory <small>Request</small></h3>
+                        <h3 class="text-center" translate>Memory <small>Request</small></h3>
                         <quota-usage-chart height="240" used="namespaceUsageByClusterQuota[quota.metadata.name].used.memory" cross-project-used="quota.status.total.used.memory" total="quota.status.total.hard.memory" type="memory" class="quota-chart"></quota-usage-chart>
                       </div>
                       <div ng-if="quota.status.total.hard['requests.cpu']" class="mar-lg">
-                        <h3 class="text-center">CPU <small>Request</small></h3>
+                        <h3 class="text-center" translate>CPU <small>Request</small></h3>
                         <quota-usage-chart height="240" used="namespaceUsageByClusterQuota[quota.metadata.name].used['requests.cpu']" cross-project-used="quota.status.total.used['requests.cpu']" total="quota.status.total.hard['requests.cpu']" type="cpu" class="quota-chart"></quota-usage-chart>
                       </div>
                       <div ng-if="quota.status.total.hard['requests.memory']" class="mar-lg">
-                        <h3 class="text-center">Memory <small>Request</small></h3>
+                        <h3 class="text-center" translate>Memory <small>Request</small></h3>
                         <quota-usage-chart height="240" used="namespaceUsageByClusterQuota[quota.metadata.name].used['requests.memory']" cross-project-used="quota.status.total.used['requests.memory']" total="quota.status.total.hard['requests.memory']" type="memory" class="quota-chart"></quota-usage-chart>
                       </div>
                       <div ng-if="quota.status.total.hard['limits.cpu']" class="mar-lg">
-                        <h3 class="text-center">CPU <small>Limit</small></h3>
+                        <h3 class="text-center" translate>CPU <small>Limit</small></h3>
                         <quota-usage-chart height="240" used="namespaceUsageByClusterQuota[quota.metadata.name].used['limits.cpu']" cross-project-used="quota.status.total.used['limits.cpu']" total="quota.status.total.hard['limits.cpu']" type="cpu" class="quota-chart"></quota-usage-chart>
                       </div>
                       <div ng-if="quota.status.total.hard['limits.memory']" class="mar-lg">
-                        <h3 class="text-center">Memory <small>Limit</small></h3>
+                        <h3 class="text-center" translate>Memory <small>Limit</small></h3>
                         <quota-usage-chart height="240" used="namespaceUsageByClusterQuota[quota.metadata.name].used['limits.memory']" cross-project-used="quota.status.total.used['limits.memory']" total="quota.status.total.hard['limits.memory']" type="memory" class="quota-chart"></quota-usage-chart>
                       </div>
                     </div>
@@ -66,16 +66,16 @@
                   <div class="table-responsive">
                     <table class="table table-bordered">
                       <thead>
-                        <th>Resource Type</th>
-                        <th>Used (This Project)</th>
-                        <th>Used (All Projects)</th>
-                        <th>Max</th>
+                        <th translate>Resource Type</th>
+                        <th translate>Used (This Project)</th>
+                        <th translate>Used (All Projects)</th>
+                        <th translate>Max</th>
                       </thead>
                       <tbody>
                         <tr ng-if='!quota.status.total.used' class="danger">
                           <td colspan="5">
-                            <span data-toggle="tooltip" title="Missing quota status" class="pficon pficon-error-circle-o" style="cursor: help;"></span>
-                            Status has not been reported on this quota usage record.  Any resources limited by this quota record can not be allocated.
+                            <span data-toggle="tooltip" title="{{'Missing quota status'|translate}}" class="pficon pficon-error-circle-o" style="cursor: help;"></span>
+                            <translate>Status has not been reported on this quota usage record.  Any resources limited by this quota record can not be allocated.</translate>
                           </td>
                         </tr>
                         <!-- Don't show quotas for type `resourcequotas`. They are frequently at limit,
@@ -92,7 +92,7 @@
                             <span ng-if="isAtLimit(quota, resourceType)" data-toggle="tooltip" title="Quota limit reached." class="pficon pficon-warning-triangle-o warnings-popover"></span>
                             <span ng-if="(quota.status.total.hard[resourceType] || quota.spec.quota.hard[resourceType]) === '0'"
                                   data-toggle="tooltip"
-                                  title="You are not allowed to create resources of this type."
+                                  title="{{'You are not allowed to create resources of this type.'|translate}}"
                                   class="pficon pficon-info warnings-popover"></span>
                           </td>
                           <td>
@@ -113,12 +113,12 @@
                   </div>
                 </div>
 
-                <h1 ng-if="clusterQuotas.length && quotas.length">Project Quota</h1>
+                <h1 ng-if="clusterQuotas.length && quotas.length" translate>Project Quota</h1>
                 <div ng-repeat="quota in quotas | orderBy: 'metadata.name'" class="gutter-bottom">
                   <h2 ng-if="quotas.length">{{quota.metadata.name}}</h2>
                   <div ng-if="$first" class="help-block mar-bottom-md">{{quotaHelp}}</div>
                   <dl ng-if="quota.spec.scopes.length">
-                    <dt>Scopes:</dt>
+                    <dt translate>Scopes:</dt>
                     <dd>
                       <div ng-repeat="scope in quota.spec.scopes">
                         {{scope | startCase}}
@@ -129,27 +129,27 @@
                   <div>
                     <div row wrap style="justify-content: center;">
                       <div column ng-if="quota.status.hard.cpu" class="mar-lg">
-                        <h3 class="text-center">CPU <small>Request</small></h3>
+                        <h3 class="text-center" translate>CPU <small>Request</small></h3>
                         <quota-usage-chart used="quota.status.used.cpu" total="quota.status.hard.cpu" type="cpu" class="quota-chart"></quota-usage-chart>
                       </div>
                       <div column ng-if="quota.status.hard.memory" class="mar-lg">
-                        <h3 class="text-center">Memory <small>Request</small></h3>
+                        <h3 class="text-center" translate>Memory <small>Request</small></h3>
                         <quota-usage-chart used="quota.status.used.memory" total="quota.status.hard.memory" type="memory" class="quota-chart"></quota-usage-chart>
                       </div>
                       <div column ng-if="quota.status.hard['requests.cpu']" class="mar-lg">
-                        <h3 class="text-center">CPU <small>Request</small></h3>
+                        <h3 class="text-center" translate>CPU <small>Request</small></h3>
                         <quota-usage-chart used="quota.status.used['requests.cpu']" total="quota.status.hard['requests.cpu']" type="cpu" class="quota-chart"></quota-usage-chart>
                       </div>
                       <div column ng-if="quota.status.hard['requests.memory']" class="mar-lg">
-                        <h3 class="text-center">Memory <small>Request</small></h3>
+                        <h3 class="text-center" translate>Memory <small>Request</small></h3>
                         <quota-usage-chart used="quota.status.used['requests.memory']" total="quota.status.hard['requests.memory']" type="memory" class="quota-chart"></quota-usage-chart>
                       </div>
                       <div ng-if="quota.status.hard['limits.cpu']" class="mar-lg">
-                        <h3 class="text-center">CPU <small>Limit</small></h3>
+                        <h3 class="text-center" translate>CPU <small>Limit</small></h3>
                         <quota-usage-chart used="quota.status.used['limits.cpu']" total="quota.status.hard['limits.cpu']" type="cpu" class="quota-chart"></quota-usage-chart>
                       </div>
                       <div ng-if="quota.status.hard['limits.memory']" class="mar-lg">
-                        <h3 class="text-center">Memory <small>Limit</small></h3>
+                        <h3 class="text-center" translate>Memory <small>Limit</small></h3>
                         <quota-usage-chart used="quota.status.used['limits.memory']" total="quota.status.hard['limits.memory']" type="memory" class="quota-chart"></quota-usage-chart>
                       </div>
                     </div>
@@ -158,15 +158,15 @@
                   <div class="table-responsive">
                     <table class="table table-bordered">
                       <thead>
-                        <th>Resource Type</th>
-                        <th>Used</th>
-                        <th>Max</th>
+                        <th translate>Resource Type</th>
+                        <th translate>Used</th>
+                        <th translate>Max</th>
                       </thead>
                       <tbody>
                         <tr ng-if='!quota.status.used' class="danger">
                           <td colspan="5">
-                            <span data-toggle="tooltip" title="Missing quota status" class="pficon pficon-error-circle-o" style="cursor: help;"></span>
-                            Status has not been reported on this quota usage record.  Any resources limited by this quota record can not be allocated.
+                            <span data-toggle="tooltip" title="{{'Missing quota status'|translate}}" class="pficon pficon-error-circle-o" style="cursor: help;"></span>
+                            <translate>Status has not been reported on this quota usage record.  Any resources limited by this quota record can not be allocated.</translate>
                           </td>
                         </tr>
                         <!-- Don't show quotas for type `resourcequotas`. They are frequently at limit,
@@ -183,7 +183,7 @@
                             <span ng-if="isAtLimit(quota, resourceType)" data-toggle="tooltip" title="Quota limit reached." class="pficon pficon-warning-triangle-o warnings-popover"></span>
                             <span ng-if="(quota.status.hard[resourceType] || quota.spec.hard[resourceType]) === '0'"
                                   data-toggle="tooltip"
-                                  title="You are not allowed to create resources of this type."
+                                  title="{{'You are not allowed to create resources of this type.'|translate}}"
                                   class="pficon pficon-info warnings-popover"></span>
                           </td>
                           <td>
@@ -201,10 +201,10 @@
                 </div>
 
                 <div class="limit-ranges-section">
-                  <h1>Limit Range</h1>
+                  <h1 translate>Limit Range</h1>
                   <div ng-if="!limitRanges.length">
                     <div class="help-block">{{limitRangeHelp}}</div>
-                    <p><em>{{emptyMessageLimitRanges}}</em></p>
+                    <p><em>{{emptyMessageLimitRanges|translate}}</em></p>
                   </div>
 
                   <div ng-repeat="limitRange in limitRanges">
@@ -213,38 +213,38 @@
                     <div class="table-responsive">
                       <table class="table table-bordered">
                         <thead>
-                          <th>Resource Type</th>
+                          <th translate>Resource Type</th>
                           <th>
                             <span class="nowrap">
-                              Min
-                              <i class="small pficon pficon-help" data-toggle="tooltip" title="The minimum amount of this compute resource that can be requested."></i>
+                              <translate>Min</translate>
+                              <i class="small pficon pficon-help" data-toggle="tooltip" title="{{'The minimum amount of this compute resource that can be requested.'|translate}}"></i>
                             </span>
                           </th>
                           <th>
                             <span class="nowrap">
-                              Max
-                              <i class="small pficon pficon-help" data-toggle="tooltip" title="The maximum amount of this compute resource that can be requested.  The limit must also be below the maximum value."></i>
+                              <translate>Max</translate>
+                              <i class="small pficon pficon-help" data-toggle="tooltip" title="{{'The maximum amount of this compute resource that can be requested.  The limit must also be below the maximum value.'|translate}}"></i>
                             </span>
                           </th>
                           <th>
-                            Default
+                            <translate>Default</translate>
                             <span class="nowrap">
-                              Request
-                              <i class="small pficon pficon-help" data-toggle="tooltip" title="A container will default to request this amount of a compute resource if no request is specified. The system will guarantee the requested amount of compute resource when scheduling a container for execution. If a quota is enabled for this compute resource, the quota usage is incremented by the requested value."></i>
+                              <translate>Request</translate>
+                              <i class="small pficon pficon-help" data-toggle="tooltip" title="{{'A container will default to request this amount of a compute resource if no request is specified. The system will guarantee the requested amount of compute resource when scheduling a container for execution. If a quota is enabled for this compute resource, the quota usage is incremented by the requested value.'|translate}}"></i>
                             </span>
                           </th>
                           <th>
-                            Default
+                            <translate>Default</translate>
                             <span class="nowrap">
-                              Limit
-                              <i class="small pficon pficon-help" data-toggle="tooltip" title="The default limit defines the maximum amount of compute resource the container may have access to during execution if no limit is specified. If no request is made for the compute resource on the container or via a Default Request value, the container will default to request the limit."></i>
+                              <translate>Limit</translate>
+                              <i class="small pficon pficon-help" data-toggle="tooltip" title="{{'The default limit defines the maximum amount of compute resource the container may have access to during execution if no limit is specified. If no request is made for the compute resource on the container or via a Default Request value, the container will default to request the limit.'|translate}}"></i>
                             </span>
                           </th>
                           <th>
-                            Max Limit/Request
+                            <translate>Max Limit/Request</translate>
                             <span class="nowrap">
-                              Ratio
-                              <i class="small pficon pficon-help" data-toggle="tooltip" title="If specified, the compute resource must have a request and limit that are both non-zero, where limit divided by request is less than or equal to the specified amount; this represents the max burst for the compute resource during execution."></i>
+                              <translate>Ratio</translate>
+                              <i class="small pficon pficon-help" data-toggle="tooltip" title="{{'If specified, the compute resource must have a request and limit that are both non-zero, where limit divided by request is less than or equal to the specified amount; this represents the max burst for the compute resource during execution.'|translate}}"></i>
                             </span>
                           </th>
                         </thead>

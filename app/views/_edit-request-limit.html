@@ -1,13 +1,13 @@
 <ng-form name="form" ng-if="!requestCalculated || !limitCalculated">
   <h3>
     {{type | computeResourceLabel : true}}
-    <small ng-if="limits.min && limits.max">
+    <small ng-if="limits.min && limits.max" translate>
       {{limits.min | usageWithUnits : type}} min to {{limits.max | usageWithUnits : type}} max
     </small>
-    <small ng-if="limits.min && !limits.max">
+    <small ng-if="limits.min && !limits.max" translate>
       Min: {{limits.min | usageWithUnits : type}}
     </small>
-    <small ng-if="limits.max && !limits.min">
+    <small ng-if="limits.max && !limits.min" translate>
       Max: {{limits.max | usageWithUnits : type}}
     </small>
   </h3>
@@ -38,7 +38,6 @@
       ng-if="!hideLimit">
   </compute-resource>
   <div class="learn-more-block">
-    <a href="" ng-click="showComputeUnitsHelp()">What are
-      <span ng-if="type === 'cpu'">millicores</span><span ng-if="type === 'memory'">MiB</span>?</a>
+    <a href="" ng-click="showComputeUnitsHelp()" translate>What are <span ng-if="type === 'cpu'">millicores</span><span ng-if="type === 'memory'">MiB</span>?</a>
   </div>
 </ng-form>

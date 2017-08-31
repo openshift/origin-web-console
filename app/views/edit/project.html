@@ -10,13 +10,13 @@
         <div class="middle-content">
           <div class="container surface-shaded gutter-top">
             <div class="col-md-12">
-              <h1 style="margin-bottom: 5px;">Edit Project {{project.metadata.name}}</h1>
-              <div class="help-block mar-bottom-lg">Update the display name and description of your project. The project's unique name cannot be modified.</div>
+              <h1 style="margin-bottom: 5px;" translate>Edit Project {{project.metadata.name}}</h1>
+              <div class="help-block mar-bottom-lg" translate>Update the display name and description of your project. The project's unique name cannot be modified.</div>
               <alerts alerts="alerts"></alerts>
               <form name="editProjectForm">
                 <fieldset ng-disabled="disableInputs">
                   <div class="form-group">
-                    <label for="displayName">Display Name</label>
+                    <label for="displayName" translate>Display Name</label>
                     <input class="form-control input-lg"
                         name="displayName"
                         id="displayName"
@@ -26,7 +26,7 @@
                   </div>
 
                   <div class="form-group">
-                    <label for="description">Description</label>
+                    <label for="description" translate>Description</label>
                     <textarea class="form-control input-lg"
                         name="description"
                         id="description"
@@ -39,8 +39,8 @@
                         class="btn btn-primary btn-lg"
                         ng-click="update()"
                         ng-disabled="editProjectForm.$invalid || disableInputs"
-                        value="">Save</button>
-                    <a class="btn btn-default btn-lg" href="#" back>Cancel</a>
+                        value="" translate>Save</button>
+                    <a class="btn btn-default btn-lg" href="#" back translate>Cancel</a>
                   </div>
                 </fieldset>
               </form>

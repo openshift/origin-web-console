@@ -13,7 +13,7 @@
       </h3>
     </div>
     <div class="col-sm-7 col-md-6" ng-if="!($ctrl.binding | isBindingReady)">
-      <status-icon status="'Pending'"></status-icon>Pending
+      <status-icon status="'Pending'"></status-icon><translate>Pending</translate>
     </div>
   </div>
   <div class="service-binding-actions" ng-if="!ctrl.binding.metadata.deletionTimestamp">
@@ -26,7 +26,7 @@
       project-name="{{$ctrl.binding.metadata.namespace}}"
       stay-on-current-page="true">
     </delete-link>
-    <a ng-if="('secrets' | canI : 'get')" ng-href="{{$ctrl.binding.spec.secretName | navigateResourceURL : 'Secret' : $ctrl.namespace}}">
+    <a ng-if="('secrets' | canI : 'get')" ng-href="{{$ctrl.binding.spec.secretName | navigateResourceURL : 'Secret' : $ctrl.namespace}}" translate>
       View Secret
     </a>
   </div>

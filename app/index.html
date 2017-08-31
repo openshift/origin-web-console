@@ -4,7 +4,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
     <meta charset="utf-8">
     <base href="/">
-    <title>OpenShift Web Console</title>
+    <title translate>OpenShift Web Console</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="images/favicon.png" />
@@ -59,7 +59,7 @@
         <div class="middle surface-shaded">
           <div class="middle-section">
             <div class="empty-state-message">
-              <h2 class="text-center" id="temporary-loading-message" style="display: none;">Loading...</h2>
+              <h2 class="text-center" id="temporary-loading-message" style="display: none;" translate>Loading...</h2>
               <!-- So that we don't get the Loading... message AND the noscript message -->
               <script>
                 document.getElementById('temporary-loading-message').style.display = "";
@@ -67,10 +67,10 @@
             </div>
             <noscript>
               <div class="attention-message">
-                <h1>JavaScript Required</h1>
-                <p>The OpenShift web console requires JavaScript to provide a rich interactive experience. Please
-                enable JavaScript to continue. If you do not wish to enable JavaScript or are unable to do so,
-                you may use the command-line tools to manage your projects and applications instead.</p>
+                <h1 translate>JavaScript Required</h1>
+                <p><translate>The OpenShift web console requires JavaScript to provide a rich interactive experience.</translate>
+                  <translate>Please enable JavaScript to continue. If you do not wish to enable JavaScript or are unable to do so,</translate>
+                  <translate>you may use the command-line tools to manage your projects and applications instead.</translate></p>
               </div>
             </noscript>
           </div>
@@ -174,7 +174,7 @@
     <script src="bower_components/angular-utf8-base64/angular-utf8-base64.js"></script>
     <script src="bower_components/file-saver/FileSaver.js"></script>
     <script src="bower_components/hopscotch/dist/js/hopscotch.js"></script>
-    <script src="bower_components/origin-web-common/dist/origin-web-common.js"></script>
+    <script src="bower_components/dm-origin-web-common/dist/origin-web-common.js"></script>
     <script src="bower_components/tv4/tv4.js"></script>
     <script src="bower_components/objectpath/lib/ObjectPath.js"></script>
     <script src="bower_components/angular-schema-form/dist/schema-form.js"></script>
@@ -183,6 +183,7 @@
     <script src="bower_components/origin-web-catalog/dist/vendor-bundle.js"></script>
     <script src="bower_components/origin-web-catalog/dist/origin-web-catalogs.js"></script>
     <!-- endbower -->
+    <script src="bower_components/moment/locale/zh-cn.js"></script>
     <!-- endbuild -->
 
     <!-- This needs to be loaded before scripts.js -->

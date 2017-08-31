@@ -23,7 +23,8 @@ angular.module('openshiftConsole')
                         ProjectsService,
                         StorageService,
                         LabelFilter,
-                        labelNameFilter) {
+                        labelNameFilter,
+                        gettext) {
     var imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
 
     $scope.projectName = $routeParams.project;
@@ -41,7 +42,7 @@ angular.module('openshiftConsole')
       kind: 'DeploymentConfig',
       namespace: $routeParams.project
     });
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettext("Loading...");
     $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
                                                     "DeploymentConfig",
                                                     $routeParams.deploymentconfig);
@@ -100,7 +101,7 @@ angular.module('openshiftConsole')
 
         watches.push(DataService.watch("replicationcontrollers", context, function(deployments, action, deployment) {
           var deploymentConfigName = $routeParams.deploymentconfig;
-          $scope.emptyMessage = "No deployments to show";
+          $scope.emptyMessage = gettext("No deployments to show");
           if (!action) {
             var deploymentsByDeploymentConfig = DeploymentsService.associateDeploymentsToDeploymentConfig(deployments.by("metadata.name"));
             $scope.unfilteredDeployments = deploymentsByDeploymentConfig[$routeParams.deploymentconfig] || {};

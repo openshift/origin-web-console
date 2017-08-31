@@ -17,19 +17,19 @@
 
                 <div ng-if="!showGetStarted">
                   <div ng-if="loading" class="empty-state-message">
-                    <h2 class="text-center">Loading...</h2>
+                    <h2 class="text-center" translate>Loading...</h2>
                   </div>
                   <div ng-if="!loading">
                     <div class="projects-header">
                       <div class="projects-bar">
-                        <h1>My Projects</h1>
+                        <h1 translate>My Projects</h1>
                         <div class="projects-options">
                           <div class="projects-add" ng-if="canCreate">
                             <button ng-click="createProject()" class="btn btn-md btn-primary">
                               <span class="fa fa-plus" aria-hidden="true"></span>
-                              <span class="icon-button-text">Create Project</span>
+                              <span class="icon-button-text" translate>Create Project</span>
                             </button>
-                            <origin-modal-popup shown="newProjectPanelShown" modal-title="Create Project" on-close="closeNewProjectPanel">
+                            <origin-modal-popup shown="newProjectPanelShown" modal-title="{{'Create Project'|translate}}" on-close="closeNewProjectPanel">
                               <create-project is-dialog="true" redirect-action="onNewProject" on-cancel="closeNewProjectPanel"></create-project>
                             </origin-modal-popup>
                           </div>
@@ -37,11 +37,11 @@
                             <form role="form" class="search-pf has-button">
                               <div class="form-group has-clear">
                                 <div class="search-pf-input-group">
-                                  <label for="search-projects" class="sr-only">Filter by keyword</label>
+                                  <label for="search-projects" class="sr-only" translate>Filter by keyword</label>
                                   <input
                                     type="search"
                                     class="form-control"
-                                    placeholder="Filter by keyword"
+                                    placeholder="{{'Filter by keyword'|translate}}"
                                     id="search-projects"
                                     ng-model="search.text">
                                   <button
@@ -56,7 +56,7 @@
                               </div>
                             </form>
                             <span class="vertical-divider"></span>
-                            <span class="projects-sort-label">Sort by</span>
+                            <span class="projects-sort-label" translate>Sort by</span>
                             <div class="projects-sort">
                               <pf-sort config="sortConfig" class="sort-controls"></pf-sort>
                             </div>
@@ -67,13 +67,13 @@
                     <div ng-if="isProjectListIncomplete">
                       <div class="alert alert-warning">
                         <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-                        <span class="sr-only">Warning:</span>
-                        The complete list of your projects could not be loaded.
-                        Type a project name to go to that project.
+                        <span class="sr-only" translate>Warning:</span>
+                        <translate>The complete list of your projects could not be loaded.</translate>
+                        <translate>Type a project name to go to that project.</translate>
                       </div>
                       <form>
                         <div class="form-group">
-                          <label for="typed-project-name">Project Name</label>
+                          <label for="typed-project-name" translate>Project Name</label>
                           <div class="input-group">
                             <input
                               class="form-control"
@@ -91,7 +91,7 @@
                                       ng-disabled="!input.typedProjectName"
                                       ng-click="goToProject(input.typedProjectName)">
                                 <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                                <span class="sr-only">Go to Project</span>
+                                <span class="sr-only" translate>Go to Project</span>
                               </button>
                             </span>
                           </div>
@@ -99,8 +99,8 @@
                       </form>
                     </div>
                     <div ng-if="!projects.length && !isProjectListIncomplete" class="h3">
-                      The current filter is hiding all projects.
-                      <a href="" ng-click="search.text = ''" role="button">Clear Filter</a>
+                      <translate>The current filter is hiding all projects.</translate>
+                      <a href="" ng-click="search.text = ''" role="button" translate>Clear Filter</a>
                     </div>
                     <div class="list-group list-view-pf projects-list">
                       <div ng-repeat="project in projects | limitTo: limitListTo track by (project | uid)" class="list-group-item project-info tile-click">
@@ -111,13 +111,13 @@
                                 <a class="tile-target" ng-href="project/{{project.metadata.name}}" title="{{project | displayName}}"><span ng-bind-html="project | displayName | highlightKeywords : keywords"></span></a>
                                 <span ng-if="project.status.phase != 'Active'"
                                   data-toggle="tooltip"
-                                  title="This project has been marked for deletion."
+                                  title="{{'This project has been marked for deletion.'|translate}}"
                                   class="pficon pficon-warning-triangle-o"></span>
                               </h2>
                               <small>
                                 <span ng-if="project | displayName : true"><span ng-bind-html="project.metadata.name | highlightKeywords : keywords"></span> &ndash;</span>
-                                created
-                                <span ng-if="project | annotation : 'openshift.io/requester'">by <span ng-bind-html="project | annotation : 'openshift.io/requester' | highlightKeywords : keywords"></span></span>
+                                <translate>created</translate>
+                                <span ng-if="project | annotation : 'openshift.io/requester'"><translate>by</translate> <span ng-bind-html="project | annotation : 'openshift.io/requester' | highlightKeywords : keywords"></span></span>
                                 <span am-time-ago="project.metadata.creationTimestamp"></span>
                               </small>
                             </div>
@@ -131,21 +131,21 @@
                         </div>
                         <div row class="list-view-pf-actions list-pf-actions" ng-if="project.status.phase == 'Active'">
                           <div uib-dropdown>
-                            <a href="" uib-dropdown-toggle class="actions-dropdown-kebab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span></a>
+                            <a href="" uib-dropdown-toggle class="actions-dropdown-kebab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only" translate>Actions</span></a>
                             <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
                               <li role="menuitem">
-                                <a ng-href="project/{{project.metadata.name}}/membership">
+                                <a ng-href="project/{{project.metadata.name}}/membership" translate>
                                   View Membership
                                 </a>
                               </li>
                               <li role="menuitem">
-                                <a href="" ng-click="editProject(project)">
+                                <a href="" ng-click="editProject(project)" translate>
                                   Edit Project
                                 </a>
                               </li>
                               <li role="menuitem">
                                 <delete-project
-                                  label="Delete Project"
+                                  label="{{'Delete Project'|translate}}"
                                   project="project"
                                   type-name-to-confirm="true"
                                   stay-on-current-page="true"
@@ -157,7 +157,7 @@
                         </div>
                         <origin-modal-popup shown="editProjectPanelShown && editingProject === project"
                                             ng-class="{'with-description': (project | description | size)}"
-                                            modal-title="Edit Project" on-close="closeEditProjectPanel">
+                                            modal-title="{{'Edit Project'|translate}}" on-close="closeEditProjectPanel">
                           <edit-project project="project" is-dialog="true" redirect-action="onEditProject" on-cancel="closeEditProjectPanel"></edit-project>
                         </origin-modal-popup>
                       </div>
@@ -173,13 +173,13 @@
 
                 <div ng-if="showGetStarted">
                   <div class="empty-state-message empty-state-full-page text-center">
-                    <h1>Welcome to OpenShift.</h1>
+                    <h1 translate>Welcome to OpenShift.</h1>
                     <p>
-                      OpenShift helps you quickly develop, host, and scale applications.<br>
-                      <span ng-if="canCreate">Create a project for your application.</span>
+                      <translate>OpenShift helps you quickly develop, host, and scale applications.</translate><br>
+                      <span ng-if="canCreate" translate>Create a project for your application.</span>
                     </p>
-                    <a ng-if="canCreate" href="create-project" class="btn btn-lg btn-primary">Create Project</a>
-                    <p>To learn more, visit the OpenShift <a target="_blank" ng-href="{{'' | helpLink}}">documentation</a>.</p>
+                    <a ng-if="canCreate" href="create-project" class="btn btn-lg btn-primary" translate>Create Project</a>
+                    <p translate>To learn more, visit the OpenShift <a target="_blank" ng-href="{{'' | helpLink}}">documentation</a>.</p>
                     <p class="projects-instructions" ng-if="canCreate === false" ng-include="'views/_cannot-create-project.html'"></p>
                   </div>
                 </div>

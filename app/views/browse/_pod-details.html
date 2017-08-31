@@ -2,22 +2,22 @@
   <div class="row">
     <div class="col-lg-6">
       <h3>
-        Status
+        <translate>Status</translate>
         <small ng-if="pod | isDebugPod">
           debugging
           <a ng-href="{{pod | debugPodSourceName | navigateResourceURL : 'Pod' : pod.metadata.namespace}}">{{pod | debugPodSourceName}}</a>
         </small>
       </h3>
       <dl class="dl-horizontal left">
-        <dt>Status:</dt>
+        <dt translate>Status:</dt>
         <dd>
           <status-icon status="pod | podStatus"></status-icon>
-          {{pod | podStatus | sentenceCase}}<span ng-if="pod | podCompletionTime">, ran for {{(pod | podStartTime) | duration : (pod | podCompletionTime)}}</span>
-          <span ng-if="pod.metadata.deletionTimestamp">(expires {{pod.metadata.deletionTimestamp | date : 'medium'}})</span>
+          {{pod | podStatus | sentenceCase}}<span ng-if="pod | podCompletionTime" translate>, ran for {{(pod | podStartTime) | duration : (pod | podCompletionTime)}}</span>
+          <span ng-if="pod.metadata.deletionTimestamp" translate>(expires {{pod.metadata.deletionTimestamp | date : 'medium'}})</span>
         </dd>
-        <dt ng-if-start="pod.status.message">Message:</dt>
+        <dt ng-if-start="pod.status.message" translate>Message:</dt>
         <dd ng-if-end>{{pod.status.message}}</dd>
-        <dt ng-if-start="dcName">
+        <dt ng-if-start="dcName" translate>
           Deployment:
         </dt>
         <dd ng-if-end>
@@ -31,7 +31,7 @@
         <dd ng-if-end>
           <a ng-href="{{controllerRef.name | navigateResourceURL : controllerRef.kind : pod.metadata.namespace}}">{{controllerRef.name}}</a>
         </dd>
-        <dt ng-if-start="pod.metadata.deletionTimestamp && pod.spec.terminationGracePeriodSeconds">Grace Period:</dt>
+        <dt ng-if-start="pod.metadata.deletionTimestamp && pod.spec.terminationGracePeriodSeconds" translate>Grace Period:</dt>
         <dd ng-if-end>
           <!-- Don't show "a few seconds" for small values. -->
           <span ng-if="pod.spec.terminationGracePeriodSeconds < 60">
@@ -41,13 +41,13 @@
             {{pod.spec.terminationGracePeriodSeconds | humanizeDurationValue : 'seconds'}}
           </span>
         </dd>
-        <dt>IP:</dt>
+        <dt translate>IP:</dt>
         <dd>{{pod.status.podIP || 'unknown'}}</dd>
-        <dt>Node:</dt>
+        <dt translate>Node:</dt>
         <dd>{{pod.spec.nodeName || 'unknown'}} <span ng-if="pod.status.hostIP && pod.spec.nodeName != pod.status.hostIP">({{pod.status.hostIP}})</span></dd>
-        <dt>Restart Policy:</dt>
+        <dt translate>Restart Policy:</dt>
         <dd>{{pod.spec.restartPolicy || 'Always'}}</dd>
-        <dt ng-if-start="pod.spec.activeDeadlineSeconds">Active Deadline:</dt>
+        <dt ng-if-start="pod.spec.activeDeadlineSeconds" translate>Active Deadline:</dt>
         <dd ng-if-end>
           <!-- Don't show "a few seconds" for small values. -->
           <span ng-if="pod.spec.activeDeadlineSeconds < 60">
@@ -70,7 +70,7 @@
     </div>
     <div class="col-lg-6">
 
-      <h3>Template</h3>
+      <h3 translate>Template</h3>
       <pod-template
         pod-template="pod"
         images-by-docker-reference="imagesByDockerReference"
@@ -78,13 +78,13 @@
         detailed="true">
       </pod-template>
 
-      <h4>Volumes</h4>
+      <h4 translate>Volumes</h4>
       <volumes ng-if="pod.spec.volumes.length" volumes="pod.spec.volumes" namespace="project.metadata.name"></volumes>
-      <div ng-if="!pod.spec.volumes.length">none</div>
+      <div ng-if="!pod.spec.volumes.length" translate>none</div>
       <p ng-if="dcName && ('deploymentconfigs' | canI : 'update')">
-        <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{dcName}}">Add Storage to {{dcName}}</a>
+        <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{dcName}}" translate>Add Storage to {{dcName}}</a>
         <span class="action-divider" aria-hidden="true">|</span>
-        <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{dcName}}">Add Config Files to {{dcName}}</a>
+        <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{dcName}}" translate>Add Config Files to {{dcName}}</a>
       </p>
     </div>
   </div>

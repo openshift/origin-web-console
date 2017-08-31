@@ -2,4 +2,4 @@
 <span ng-repeat="id in imageIDs" title="{{id}}">
   <span class="hash">{{id | stripSHAPrefix | limitTo: 7}}</span><span ng-if="!$last">,</span>
 </span>
-<span ng-if="podTemplate.spec.containers.length > 1"> and {{podTemplate.spec.containers.length - 1}} other image<span ng-if="podTemplate.spec.containers.length > 2">s</span></span>
+<span ng-if="podTemplate.spec.containers.length > 1" translate> and {{podTemplate.spec.containers.length - 1}} other image<span ng-if="podTemplate.spec.containers.length > 2">s</span></span>

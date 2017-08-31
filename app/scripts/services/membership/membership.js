@@ -2,7 +2,7 @@
 
 angular
   .module('openshiftConsole')
-  .factory('MembershipService', function($filter) {
+  .factory('MembershipService', function($filter, gettext, gettextCatalog) {
 
     var annotation = $filter('annotation');
 
@@ -54,7 +54,7 @@ angular
          "ServiceAccount":{
             "kind":"ServiceAccount",
             "sortOrder":3,
-            "description":"Service accounts provide a flexible way to control API access without sharing a regular user’s credentials.",
+            "description":gettextCatalog.getString(gettext("Service accounts provide a flexible way to control API access without sharing a regular user’s credentials.")),
             "helpLinkKey":"service_accounts",
             "name":"ServiceAccount",
             "subjects":{
@@ -64,7 +64,7 @@ angular
          "SystemUser":{
             "kind":"SystemUser",
             "sortOrder":4,
-            "description":"System users are virtual users automatically provisioned by the system.",
+            "description":gettextCatalog.getString(gettext("System users are virtual users automatically provisioned by the system.")),
             "helpLinkKey":"users_and_groups",
             "name":"SystemUser",
             "subjects":{
@@ -74,7 +74,7 @@ angular
          "SystemGroup":{
             "kind":"SystemGroup",
             "sortOrder":5,
-            "description":"System groups are virtual groups automatically provisioned by the system.",
+            "description":gettextCatalog.getString(gettext("System groups are virtual groups automatically provisioned by the system.")),
             "helpLinkKey":"users_and_groups",
             "name":"SystemGroup",
             "subjects":{

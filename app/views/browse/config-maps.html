@@ -8,13 +8,13 @@
         <div class="container-fluid">
           <div class="page-header page-header-bleed-right page-header-bleed-left">
             <div class="pull-right" ng-if="project && ('configmaps' | canI : 'create')">
-              <a ng-href="project/{{project.metadata.name}}/create-config-map" class="btn btn-default">Create Config Map</a>
+              <a ng-href="project/{{project.metadata.name}}/create-config-map" class="btn btn-default" translate>Create Config Map</a>
             </div>
             <h1>
-              Config Maps
+              <translate>Config Maps</translate>
               <span class="page-header-link">
                 <a ng-href="{{'config-maps' | helpLink}}" target="_blank">
-                  Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
+                  <translate>Learn More</translate> <i class="fa fa-external-link" aria-hidden="true"></i>
                 </a>
               </span>
             </h1>
@@ -31,7 +31,7 @@
           <alerts alerts="alerts"></alerts>
           <div class="row">
             <div class="col-md-12">
-              <div ng-if="!loaded">Loading...</div>
+              <div ng-if="!loaded" translate>Loading...</div>
               <div ng-if="loaded">
                 <table class="table table-bordered table-hover table-mobile table-layout-fixed">
                   <colgroup>
@@ -39,13 +39,13 @@
                   </colgroup>
                   <thead>
                     <tr>
-                      <th>Name</th>
-                      <th>Created</th>
-                      <th>Labels</th>
+                      <th translate>Name</th>
+                      <th translate>Created</th>
+                      <th translate>Labels</th>
                     </tr>
                   </thead>
                   <tbody ng-if="(configMaps | hashSize) == 0">
-                    <tr><td colspan="3"><em>No config maps to show</em></td></tr>
+                    <tr><td colspan="3"><em translate>No config maps to show</em></td></tr>
                   </tbody>
                   <tbody ng-if="(configMaps | hashSize) > 0">
                     <tr ng-repeat="configMap in configMaps">

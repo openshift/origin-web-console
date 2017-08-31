@@ -1,5 +1,5 @@
 <!-- Make sure there is no whitespace before comma -->
-<span ng-if="probe.httpGet">
+<span ng-if="probe.httpGet" translate>
   GET {{probe.httpGet.path || '/'}} on port {{probe.httpGet.port || 'unknown'}} ({{probe.httpGet.scheme || 'HTTP'}})
 </span>
 <span ng-if="probe.exec.command">
@@ -13,11 +13,11 @@
     </truncate-long-text>
   </code>
 </span>
-<span ng-if="probe.tcpSocket">
+<span ng-if="probe.tcpSocket" translate>
   Open socket on port {{probe.tcpSocket.port}}
 </span>
 
 <small class="text-muted">
-  <span ng-if="probe.initialDelaySeconds" class="nowrap">{{probe.initialDelaySeconds}}s delay,</span>
-  <span class="nowrap">{{probe.timeoutSeconds || 1}}s timeout</span>
+  <span ng-if="probe.initialDelaySeconds" class="nowrap" translate>{{probe.initialDelaySeconds}}s delay,</span>
+  <span class="nowrap" translate>{{probe.timeoutSeconds || 1}}s timeout</span>
 </small>

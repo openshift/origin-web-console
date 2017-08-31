@@ -7,11 +7,11 @@
       <div class="middle-header header-toolbar">
         <div class="container-fluid">
           <div class="page-header page-header-bleed-right page-header-bleed-left">
-            <h1>Other Resources</h1>
+            <h1 translate>Other Resources</h1>
           </div>
           <div class="data-toolbar other-resources-toolbar">
-            <ui-select class="data-toolbar-dropdown" ng-model="kindSelector.selected" theme="bootstrap" search-enabled="true" ng-disabled="kindSelector.disabled" title="Choose a resource">
-              <ui-select-match placeholder="Choose a resource to list...">{{$select.selected.kind | humanizeKind : true}}</ui-select-match>
+            <ui-select class="data-toolbar-dropdown" ng-model="kindSelector.selected" theme="bootstrap" search-enabled="true" ng-disabled="kindSelector.disabled" title="{{'Choose a resource'|translate}}">
+              <ui-select-match placeholder="{{'Choose a resource to list...'|translate}}">{{$select.selected.kind | humanizeKind : true}}</ui-select-match>
               <ui-select-choices repeat="kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'">
                 <div ng-bind-html="(kind.kind | humanizeKind : true) | highlight: $select.search"></div>
                 <small ng-if="isDuplicateKind(kind.kind)" ng-bind-html="kind.group | highlight: $select.search" class="text-muted"></small>
@@ -38,31 +38,31 @@
                 </colgroup>
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Created</th>
-                    <th>Labels</th>
-                    <th><span class="sr-only">Actions</span></th>
+                    <th translate>Name</th>
+                    <th translate>Created</th>
+                    <th translate>Labels</th>
+                    <th><span class="sr-only" translate>Actions</span></th>
                   </tr>
                 </thead>
                 <tbody ng-if="(resources | hashSize) == 0">
-                  <tr><td colspan="4"><em>{{emptyMessage}}</em></td></tr>
+                  <tr><td colspan="4"><em>{{emptyMessage|translate}}</em></td></tr>
                 </tbody>
                 <tbody ng-if="(resources | hashSize) > 0">
                   <tr ng-repeat="resource in resources | orderObjectsByDate : true">
                     <td data-title="Name">{{resource.metadata.name}}</td>
                     <td data-title="Created"><span am-time-ago="resource.metadata.creationTimestamp"></span></td>
                     <td data-title="Labels">
-                      <em ng-if="(resource.metadata.labels | hashSize) === 0">none</em>
+                      <em ng-if="(resource.metadata.labels | hashSize) === 0" translate>none</em>
                       <labels labels="resource.metadata.labels" clickable="true" kind="{{kindSelector.selected.kind | kindToResource : true }}" project-name="{{resource.metadata.namespace}}" limit="3" filter-current-page="true"></labels></td>
                     <td data-title="Actions" class="text-xs-left text-right">
                       <span uib-dropdown ng-hide="!(selectedResource | canI : 'update') && !(selectedResource | canI : 'delete')">
                         <button type="button" class="dropdown-toggle btn btn-default" data-toggle="dropdown">
-                          Actions
+                          <translate>Actions</translate>
                           <span class="caret"></span>
                         </button>
                         <ul uib-dropdown-menu class="dropdown-menu-right" aria-labelledby="{{resource.metadata.name}}_actions">
                           <li ng-if="selectedResource | canI : 'update'">
-                            <a ng-href="{{resource | editYamlURL : getReturnURL()}}" role="button">Edit YAML</a>
+                            <a ng-href="{{resource | editYamlURL : getReturnURL()}}" role="button" translate>Edit YAML</a>
                           </li>
                           <li ng-if="selectedResource | canI : 'delete'">
                             <delete-link

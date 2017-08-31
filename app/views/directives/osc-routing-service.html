@@ -1,7 +1,7 @@
 <ng-form name="routingServiceForm">
   <div class="row">
     <div class="form-group" ng-class="{ 'col-sm-6': showWeight, 'col-sm-12': !showWeight }">
-      <label for="{{id}}-service-select" class="required">
+      <label for="{{id}}-service-select" class="required" translate>
         Service
       </label>
       <ui-select ng-model="model.name" input-id="{{id}}-service-select" aria-describedby="{{id}}-service-help" required>
@@ -12,26 +12,24 @@
       </ui-select>
       <div>
         <span ng-attr-id="{{id}}-service-help" class="help-block">
-          <span ng-if="!isAlternate">Service to route to.</span>
-          <span ng-if="isAlternate">Alternate service for route traffic.</span>
+          <span ng-if="!isAlternate" translate>Service to route to.</span>
+          <span ng-if="isAlternate" translate>Alternate service for route traffic.</span>
         </span>
       </div>
       <div ng-if="model.name && !allServices[model.name]" class="has-warning">
-        <span class="help-block">
+        <span class="help-block" translate>
           Service {{model.name}} does not exist.
         </span>
       </div>
       <div ng-if="(optionNames | size) === 0" class="has-error">
-        <span class="help-block">
-          There are no <span ng-if="is-alternate">additional</span> services in your project to expose
-          with a route.
+        <span class="help-block" translate>
+          There are no <span ng-if="is-alternate">additional</span> services in your project to expose with a route.
         </span>
       </div>
       <div ng-if="warnUnnamedPort" class="has-warning">
         <span class="help-block">
-          Service {{model.name}} has a single, unnamed port. A route cannot specifically target
-          an unnamed service port. If more service ports are added later, the route will also direct
-          traffic to them.
+          <translate>Service {{model.name}} has a single, unnamed port. A route cannot specifically target an unnamed service port.</translate>
+          <translate>If more service ports are added later, the route will also direct traffic to them.</translate>
         </span>
       </div>
     </div>
@@ -50,17 +48,16 @@
              class="form-control"
              aria-describedby="{{id}}-weight-help">
       <div>
-        <span id="{{id}}-weight-help" class="help-block">
-          Weight is a number between 0 and 256 that specifies the relative weight against other
-          route services.
+        <span id="{{id}}-weight-help" class="help-block" translate>
+          Weight is a number between 0 and 256 that specifies the relative weight against other route services.
         </span>
         <div ng-if="routingServiceForm.weight.$dirty && routingServiceForm.weight.$invalid" class="has-error">
-          <div ng-if="routingServiceForm.weight.$error.number" class="help-block">
+          <div ng-if="routingServiceForm.weight.$error.number" class="help-block" translate>
             Must be a number.
           </div>
           <!-- This message will also display for values less than the min (e.g., -1) since they
                don't match the pattern. -->
-          <div ng-if="routingServiceForm.weight.$error.pattern" class="help-block">
+          <div ng-if="routingServiceForm.weight.$error.pattern" class="help-block" translate>
             Must be a whole number greater than or equal to 0.
           </div>
         </div>
