@@ -73166,7 +73166,19 @@ n ? (t.truncatedContent = e(n, t.limit, t.useWordBoundary, t.newlineLimit), t.tr
 });
 }
 };
-} ]), angular.module("openshiftCommonUI").filter("alertStatus", function() {
+} ]), angular.module("openshiftCommonServices").constant("apiPreferredVersions", {
+builds: "builds",
+buildconfigs: "buildconfigs",
+deployments: {
+group: "apps",
+resource: "deployments"
+},
+pods: "pods",
+replicasets: {
+group: "extensions",
+resource: "replicasets"
+}
+}), angular.module("openshiftCommonUI").filter("alertStatus", function() {
 return function(e) {
 var t;
 switch (e) {
@@ -73487,25 +73499,25 @@ var e = (this.resource || "").split("/");
 return e.shift(), e;
 }, ResourceGroupVersion.prototype.equals = function(e, t, n) {
 return this.resource === e && (1 === arguments.length || this.group === t && (2 === arguments.length || this.version === n));
-}, angular.module("openshiftCommonServices").factory("APIService", [ "API_CFG", "APIS_CFG", "AuthService", "Constants", "Logger", "$q", "$http", "$filter", "$window", function(e, t, n, i, r, o, a, s, l) {
-function c(e) {
+}, angular.module("openshiftCommonServices").factory("APIService", [ "API_CFG", "APIS_CFG", "apiPreferredVersions", "AuthService", "Constants", "Logger", "$q", "$http", "$filter", "$window", function(e, t, n, i, r, o, a, s, l, c) {
+function u(e) {
 if (!e) return e;
 var t = e.indexOf("/");
 return -1 === t ? e.toLowerCase() : e.substring(0, t).toLowerCase() + e.substring(t);
 }
-function u(e, t) {
+function d(e, t) {
 if (!e) return "";
 var n = e;
-return t && (n = s("humanizeKind")(n)), "endpoints" === (n = String(n).toLowerCase()) || "securitycontextconstraints" === n || ("s" === n[n.length - 1] ? n += "es" : "y" === n[n.length - 1] ? n = n.substring(0, n.length - 1) + "ies" : n += "s"), n;
+return t && (n = l("humanizeKind")(n)), "endpoints" === (n = String(n).toLowerCase()) || "securitycontextconstraints" === n || ("s" === n[n.length - 1] ? n += "es" : "y" === n[n.length - 1] ? n = n.substring(0, n.length - 1) + "ies" : n += "s"), n;
 }
-var d = {
+var h = {
 "": "v1",
 extensions: "v1beta1"
-}, h = function(e) {
+}, f = function(e) {
 if (e instanceof ResourceGroupVersion) return e;
 var n, i, r;
-return angular.isString(e) ? (n = c(e), r = d[i = ""]) : e && e.resource && (n = c(e.resource), i = e.group || "", r = e.version || d[i] || _.get(t, [ "groups", i, "preferredVersion" ])), new ResourceGroupVersion(n, i, r);
-}, f = function(e) {
+return angular.isString(e) ? (n = u(e), r = h[i = ""]) : e && e.resource && (n = u(e.resource), i = e.group || "", r = e.version || h[i] || _.get(t, [ "groups", i, "preferredVersion" ])), new ResourceGroupVersion(n, i, r);
+}, p = function(e) {
 if (e) {
 var t = e.split("/");
 return 1 === t.length ? "v1" === t[0] ? {
@@ -73517,10 +73529,10 @@ version: ""
 } : 2 === t.length ? {
 group: t[0],
 version: t[1]
-} : void r.warn('Invalid apiVersion "' + e + '"');
+} : void o.warn('Invalid apiVersion "' + e + '"');
 }
-}, p = function(n) {
-var r = [], o = _.map(i.AVAILABLE_KINDS_BLACKLIST, function(e) {
+}, g = function(n) {
+var i = [], o = _.map(r.AVAILABLE_KINDS_BLACKLIST, function(e) {
 return _.isString(e) ? {
 kind: e,
 group: ""
@@ -73535,67 +73547,67 @@ if (_.includes(e.name, "/") || _.find(o, {
 kind: e.kind,
 group: ""
 })) return;
-r.push({
+i.push({
 kind: e.kind,
 group: ""
 });
 }
 });
 }), _.each(t.groups, function(e) {
-var t = d[e.name] || e.preferredVersion;
+var t = h[e.name] || e.preferredVersion;
 _.each(e.versions[t].resources, function(t) {
 _.includes(t.name, "/") || _.find(o, {
 kind: t.kind,
 group: e.name
-}) || "extensions" === e.name && "HorizontalPodAutoscaler" === t.kind || (t.namespaced || n) && r.push({
+}) || "extensions" === e.name && "HorizontalPodAutoscaler" === t.kind || (t.namespaced || n) && i.push({
 kind: t.kind,
 group: e.name
 });
 });
-}), _.uniqBy(r, function(e) {
+}), _.uniqBy(i, function(e) {
 return e.group + "/" + e.kind;
 });
-}, g = p(!1), m = p(!0);
+}, m = g(!1), v = g(!0);
 return {
-toResourceGroupVersion: h,
-parseGroupVersion: f,
+toResourceGroupVersion: f,
+parseGroupVersion: p,
 objectToResourceGroupVersion: function(e) {
 if (e && e.kind && e.apiVersion) {
-var t = u(e.kind);
+var t = d(e.kind);
 if (t) {
-var n = f(e.apiVersion);
+var n = p(e.apiVersion);
 if (n) return new ResourceGroupVersion(t, n.group, n.version);
 }
 }
 },
 deriveTargetResource: function(e, t) {
 if (e && t) {
-var n = u(t.kind), i = f(t.apiVersion), r = h(e);
+var n = d(t.kind), i = p(t.apiVersion), r = f(e);
 if (n && i && r) return angular.isString(e) ? (r.equals(n) && (r.group = i.group, r.version = i.version), r) : (r.equals(n, i.group) && (r.version = i.version), r);
 }
 },
-kindToResource: u,
+kindToResource: d,
 kindToResourceGroupVersion: function(e) {
-return h({
-resource: u(e.kind),
+return f({
+resource: d(e.kind),
 group: e.group
 });
 },
-apiInfo: function(i) {
+apiInfo: function(n) {
 if (t.API_DISCOVERY_ERRORS) return _.every(t.API_DISCOVERY_ERRORS, function(e) {
 return 0 === _.get(e, "data.status");
-}) && !n.isLoggedIn() ? void n.withUser() : void (l.location.href = URI("error").query({
+}) && !i.isLoggedIn() ? void i.withUser() : void (c.location.href = URI("error").query({
 error_description: "Unable to load details about the server. If the problem continues, please contact your system administrator.",
 error: "API_DISCOVERY"
 }).toString());
-var r, o = (i = h(i)).primaryResource();
-if (i.group) {
-if (!(r = _.get(t, [ "groups", i.group, "versions", i.version, "resources", o ]))) return;
-var a = _.get(t, [ "groups", i.group, "hostPrefix" ]) || t;
+var r, o = (n = f(n)).primaryResource();
+if (n.group) {
+if (!(r = _.get(t, [ "groups", n.group, "versions", n.version, "resources", o ]))) return;
+var a = _.get(t, [ "groups", n.group, "hostPrefix" ]) || t;
 return {
-resource: i.resource,
-group: i.group,
-version: i.version,
+resource: n.resource,
+group: n.group,
+version: n.version,
 protocol: a.protocol,
 hostPort: a.hostPort,
 prefix: a.prefix,
@@ -73604,9 +73616,9 @@ verbs: r.verbs
 };
 }
 var s;
-for (var c in e) if (s = e[c], r = _.get(s, [ "resources", i.version, o ])) return {
-resource: i.resource,
-version: i.version,
+for (var l in e) if (s = e[l], r = _.get(s, [ "resources", n.version, o ])) return {
+resource: n.resource,
+version: n.version,
 hostPort: s.hostPort,
 prefix: s.prefix,
 namespaced: r.namespaced,
@@ -73622,7 +73634,10 @@ var t = "<none>", n = "<none>";
 return e && e.kind && (t = e.kind), e && e.apiVersion && (n = e.apiVersion), "The API version " + n + " for kind " + t + " is not supported by this server";
 },
 availableKinds: function(e) {
-return e ? m : g;
+return e ? v : m;
+},
+getPreferredVersion: function(e) {
+return console.log(e, n[e]), n[e] || new Error(e + ' must be manually deduplicated, please create your own {resource:"", group:"", version: "" object.}');
 }
 };
 } ]), angular.module("openshiftCommonServices").provider("AuthService", function() {
