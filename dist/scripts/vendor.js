@@ -73751,9 +73751,9 @@ return _.some(e.resources, function(t) {
 return d(t) && !_.isEmpty(_.intersection(e.verbs, [ "*", "create", "update" ]));
 });
 });
-}, f = function(e) {
+}, f = {}, p = function(e) {
 return _.get(s.get(e || a), [ "rules" ]);
-}, p = function(e, t, n, i) {
+}, g = function(e, t, n, i) {
 var r = e[n];
 if (!r) return !1;
 var o = r[i];
@@ -73766,12 +73766,13 @@ var c = e.defer();
 a = t;
 var d = s.get(t);
 if (!d || d.forceRefresh || i) if (r.apiInfo("selfsubjectrulesreviews")) {
-n.log("AuthorizationService, loading user rules for " + t + " project");
-var f = {
+if (f[t]) return f[t];
+n.log("AuthorizationService, loading user rules for " + t + " project"), f[t] = c.promise;
+var p = {
 kind: "SelfSubjectRulesReview",
 apiVersion: "v1"
 };
-o.create("selfsubjectrulesreviews", null, f, {
+o.create("selfsubjectrulesreviews", null, p, {
 namespace: t
 }).then(function(e) {
 var n = u(e.status.rules), i = h(e.status.rules);
@@ -73783,19 +73784,21 @@ cacheTimestamp: _.now()
 }), c.resolve();
 }, function() {
 l = !0, c.resolve();
+}).finally(function() {
+delete f[t];
 });
 } else n.log("AuthorizationService, resource 'selfsubjectrulesreviews' is not part of APIserver. Switching into permissive mode."), l = !0, c.resolve(); else n.log("AuthorizationService, using cached rules for " + t + " project"), _.now() - d.cacheTimestamp >= 6e5 && (d.forceRefresh = !0), c.resolve();
 return c.promise;
 },
 canI: function(e, t, n) {
 if (l) return !0;
-var i = r.toResourceGroupVersion(e), o = f(n || a);
-return !!o && (p(o, t, i.group, i.resource) || p(o, t, "*", "*") || p(o, t, i.group, "*") || p(o, t, "*", i.resource));
+var i = r.toResourceGroupVersion(e), o = p(n || a);
+return !!o && (g(o, t, i.group, i.resource) || g(o, t, "*", "*") || g(o, t, i.group, "*") || g(o, t, "*", i.resource));
 },
 canIAddToProject: function(e) {
 return !!l || !!_.get(s.get(e || a), [ "canAddToProject" ]);
 },
-getRulesForProject: f
+getRulesForProject: p
 };
 } ]), angular.module("openshiftCommonServices").factory("base64util", function() {
 return {
@@ -73884,6 +73887,7 @@ return i.create(o, null, r, a);
 isServiceBindable: d,
 getPodPresetSelectorsForBindings: h,
 getBindingsForResource: function(e, t) {
+if ("Instance" === _.get(t, "kind")) return _.filter(e, [ "spec.instanceRef.name", _.get(t, "metadata.name") ]);
 var n = h(e), i = new LabelSelector(_.get(t, "spec.selector")), r = [];
 return _.each(n, function(t, n) {
 t.covers(i) && r.push(e[n]);
