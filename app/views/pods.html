@@ -1,38 +1,31 @@
-<project-header class="top-header"></project-header>
-<project-page>
-
-  <!-- Middle section -->
-  <div class="middle-section">
-    <div class="middle-container">
-      <div class="middle-header header-toolbar">
-        <div class="container-fluid">
-          <div class="page-header page-header-bleed-right page-header-bleed-left">
-            <h1>
-              Pods
-              <span class="page-header-link">
-                <a ng-href="{{'pods' | helpLink}}" target="_blank">
-                  Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
-                </a>
-              </span>
-            </h1>
-          </div>
-          <div ng-if="!renderOptions.showGetStarted" class="data-toolbar">
-            <div class="data-toolbar-filter">
-              <project-filter></project-filter>
-            </div>
-          </div>
+<div class="middle">
+  <div class="middle-header header-toolbar">
+    <div class="container-fluid">
+      <div class="page-header page-header-bleed-right page-header-bleed-left">
+        <h1>
+          Pods
+          <span class="page-header-link">
+            <a ng-href="{{'pods' | helpLink}}" target="_blank">
+              Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
+            </a>
+          </span>
+        </h1>
+      </div>
+      <div ng-if="!renderOptions.showGetStarted" class="data-toolbar">
+        <div class="data-toolbar-filter">
+          <project-filter></project-filter>
         </div>
-      </div><!-- /middle-header-->
-      <div class="middle-content">
-        <div class="container-fluid">
-          <alerts alerts="alerts"></alerts>
-          <div class="row">
-            <div class="col-md-12">
-              <pods-table pods="pods" empty-message="emptyMessage"></pods-table>
-            </div><!-- /col-* -->
-          </div>
-        </div>
-      </div><!-- /middle-content -->
-    </div><!-- /middle-container -->
-  </div><!-- /middle-section -->
-</project-page>
+      </div>
+    </div>
+  </div><!-- /middle-header-->
+  <div class="middle-content">
+    <div class="container-fluid">
+      <alerts alerts="alerts"></alerts>
+      <div class="row">
+        <div class="col-md-12">
+          <pods-table pods="pods" empty-message="emptyMessage"></pods-table>
+        </div><!-- /col-* -->
+      </div>
+    </div>
+  </div><!-- /middle-content -->
+</div>

@@ -23,10 +23,6 @@ angular.module('openshiftConsole')
     // TODO: Update BreadcrumbsService to handle create pages.
     $scope.breadcrumbs = [
       {
-        title: $scope.projectName,
-        link: "project/" + $scope.projectName
-      },
-      {
          title: "Config Maps",
          link: "project/" + $scope.projectName + "/browse/config-maps"
       },
@@ -49,8 +45,6 @@ angular.module('openshiftConsole')
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
-        // Update project breadcrumb with display name.
-        $scope.breadcrumbs[0].title = $filter('displayName')(project);
 
         if (!AuthorizationService.canI('configmaps', 'create', $routeParams.project)) {
           Navigate.toErrorPage('You do not have authority to create config maps in project ' + $routeParams.project + '.', 'access_denied');

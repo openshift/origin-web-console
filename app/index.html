@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js layout-pf-alt layout-pf-alt-fixed">
+<html class="no-js layout-pf layout-pf-fixed">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
     <meta charset="utf-8">
@@ -35,29 +35,18 @@
     <link rel="stylesheet" type="text/css" href="styles/extensions.css">
     <style type="text/css">
 
-
     </style>
   </head>
-<body class="console-os">
+  <body class="console-os" ng-class="{ 'has-project-bar': view.hasProject }">
     <!-- Add your site or application content here -->
-
+    <p ng-if="globalTechPreviewIndicator" ng-cloak class="tech-preview-banner">Technology preview is enabled</p>
+    <osc-header></osc-header>
     <toast-notifications></toast-notifications>
     <notification-drawer-wrapper></notification-drawer-wrapper>
-
-    <div ng-view>
-      <!-- Include default simple nav and shaded background as a placeholder until API discovery finishes -->
-      <nav class="navbar navbar-pf-alt top-header" role="navigation">
-        <div row>
-          <div class="navbar-header">
-            <a class="navbar-brand" id="openshift-logo" href="./">
-              <div id="header-logo"></div>
-            </a>
-          </div>
-        </div>
-      </nav>
-      <div class="wrap no-sidebar">
-        <div class="middle surface-shaded">
-          <div class="middle-section">
+    <div class="container-pf-nav-pf-vertical" ng-class="{ 'collapsed-nav': nav.collapsed }">
+      <div ng-view class="view">
+        <div class="middle">
+          <div class="middle-content">
             <div class="empty-state-message">
               <h2 class="text-center" id="temporary-loading-message" style="display: none;">Loading...</h2>
               <!-- So that we don't get the Loading... message AND the noscript message -->

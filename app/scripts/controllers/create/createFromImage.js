@@ -46,10 +46,6 @@ angular.module("openshiftConsole")
     $scope.advancedOptions = $routeParams.advanced === 'true';
     $scope.breadcrumbs = [
       {
-        title: $scope.projectName,
-        link: "project/" + $scope.projectName
-      },
-      {
         title: "Add to Project",
         link: "project/" + $scope.projectName + "/create"
       },
@@ -83,8 +79,6 @@ angular.module("openshiftConsole")
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
-        // Update project breadcrumb with display name.
-        $scope.breadcrumbs[0].title = $filter('displayName')(project);
         if($routeParams.sourceURI) {
           $scope.sourceURIinParams = true;
         }

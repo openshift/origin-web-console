@@ -11,7 +11,7 @@ class OverviewPage extends Page {
     return 'project/' + this.project.name + '/overview';
   }
   clickAddToProject() {
-    let button = element(by.cssContainingText('.add-to-project-btn', 'Add to Project'));
+    let button = element(by.cssContainingText('.add-to-project .dropdown-toggle', 'Add to Project'));
     h.waitForElem(button);
     button.click();
     let menuItem = element(by.cssContainingText('.dropdown-menu a', 'Browse Catalog'));

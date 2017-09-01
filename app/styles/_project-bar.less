@@ -1,0 +1,248 @@
+//
+// Project bar
+// -----------------------------------------------
+
+.project-bar {
+  background-color: @project-bar-bg;
+  border-bottom: 1px solid @project-bar-border-color;
+  display: flex;
+  height: @project-bar-height-mobile;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: @navbar-os-header-height-mobile;
+  z-index: @zindex-navbar-fixed - 1; // one less than navbar
+  @media (min-width: @screen-sm-min) {
+    height: @project-bar-height-desktop;
+    top: @navbar-os-header-height-desktop;
+  }
+  .add-to-project {
+    align-items: center;
+    color: @color-pf-black-300;
+    display: flex;
+    flex: 0 0 35px;
+    font-weight: 300;
+    justify-content: center;
+    @media (min-width: @screen-xs-max) {
+      flex: 1 0 auto;
+      margin-right: 15px;
+    }
+    &:before {
+      background:  @navbar-os-project-menu-border-inset;
+      content: '';
+      display: block;
+      height: 100%;
+      left: 0px;
+      position: absolute;
+      top: 0;
+      width: 1px;
+      @media (min-width: @screen-xs-max) {
+        display: none;
+      }
+    }
+    > a {
+      align-items: center;
+      color: @color-pf-black-300;
+      display: flex;
+      padding: 5px 0;
+      flex: 1 1 auto;
+      justify-content: center;
+      &:active,
+      &:focus,
+      &:hover {
+        color: #fff;
+        text-decoration: none;
+      }
+    }
+    .caret {
+      padding-left: 20px;
+    }
+    .dropdown-menu {
+      margin-top: 0; // align top edge to project bar bottom
+      @media (min-width: @screen-xs-max) {
+        right: -7px;
+      }
+    }
+  }
+  .bootstrap-select.btn-group {
+    @media(min-width: @screen-sm-min) {
+      max-width: 70%;
+      min-width: 200px;
+      width: auto;
+    }
+    @media(min-width: @screen-lg-min) {
+      max-width: 60%;
+    }
+    .btn {
+      background: transparent;
+      border-bottom: 0;
+      border-color: @project-bar-border-color;
+      border-left-width: 0;
+      border-radius: 0;
+      border-top: 0;
+      box-shadow: none;
+      color: @navbar-os-project-menu-color;
+      font-size: @font-size-large - 1;
+      font-weight: 300;
+      line-height: @line-height-base;
+      padding: 1px 40px 1px 15px; // padding so truncated name with ellipsis doesn't extend into down icon
+      @media(min-width: @screen-sm-min) {
+        padding-left: 25px;
+      }
+      transition: none;
+      @media (min-width: @screen-sm-min) {
+        font-size: @font-size-large + 3;
+        padding: 4px 40px 4px 20px;
+      }
+      @media(min-width: @screen-sm-min) {
+        &:after {
+          content: '';
+          background: @navbar-os-project-menu-border-inset;
+          display: block;
+          height: 100%;
+          left: 0px;
+          position: absolute;
+          top: 0;
+          width: 1px;
+        }
+      }
+      &:hover, &:focus {
+        background-color: @navbar-os-project-menu-active-bg;
+        color: @navbar-os-project-menu-active-color;
+      }
+      &:focus {
+        .tab-focus();
+        &:active {
+          outline: none !important;
+        }
+      }
+      .filter-option {
+        .truncate();
+      }
+    }
+    &.open {
+      .btn {
+        background-color: @navbar-os-project-menu-active-bg;
+      }
+    }
+    .dropdown-toggle {
+      &.btn-default {
+        border-right-width: 1px;
+        height: (@project-bar-height-mobile - 1);
+        @media(min-width: @screen-sm-min) {
+          border-left-width: 1px;
+          border-right: 0;
+          height: (@project-bar-height-desktop - 1);
+        }
+      }
+      .caret {
+        font-size: @font-size-base;
+        margin-top: -5px;
+        position: absolute;
+        right: 15px;
+        top: 50%;
+      }
+    }
+    .dropdown-menu {
+      background-color: @navbar-os-project-menu-active-bg;
+      border-color: @navbar-os-project-border-color;
+      border-radius: 0;
+      color: @navbar-os-project-menu-color;
+      margin-top: 0;
+      padding: 0;
+      li {
+        background-color: @navbar-os-project-menu-active-bg;
+        &.selected a {
+          background-color: @navbar-os-project-bg !important;
+          border-color: transparent !important;
+          color: @navbar-os-project-menu-active-color;
+          &:after {
+            content: '';
+            width: 2px;
+            height: 100%;
+            left:0;
+            top:0;
+            display: block;
+            position: absolute;
+            background-color: @sidebar-os-active;
+          }
+        }
+        &.divider {
+          border-top: 1px solid @project-bar-bg;
+          height: 1px;
+          margin: 0 !important;
+        }
+        &:last-child > a { // "View all projects"
+          color: @sidebar-os-active !important;
+        }
+        a {
+          color: @sidebar-os-color;
+          font-weight: 300;
+          padding: 3px 5px 3px 16px;
+          @media(min-width: @screen-sm-min) {
+            padding: 8px 20px;
+          }
+          white-space: normal;
+          &:hover, &:focus {
+            background-color: @navbar-os-project-menu-hover-bg;
+            border-color: transparent;
+            color: @sidebar-os-active-color;
+          }
+          @media (max-width: @screen-xs-max) {
+            span.text {
+              .word-break-all();
+            }
+          }
+        }
+      }
+    }
+  }
+  .form-group {
+    flex-basis: 100%;
+    margin-bottom: 0;
+    min-width: 0; // so that truncation on .filter-option works
+    .form-control {
+      background-color: transparent;
+      margin-bottom: 0;
+      height: auto;
+    }
+  }
+  .dropdown-menu:after {
+    border:6px solid transparent;
+    border-bottom-color:#fff;
+    border-top-width:0;
+    content:"";
+    display:block;
+    height:0;
+    position:absolute;
+    right:10px;
+    top:-6px;
+    vertical-align:middle;
+    width:0;
+  }
+  .navbar-toggle {
+    border: 0;
+    display: block;
+    float: left;
+    margin: 0 10px;
+    padding: 12px 16px; // match width of collapsed vertical-nav
+    @media(max-width: @screen-xs-max) {
+      display: none;
+    }
+    &:hover,
+    &:focus {
+      .icon-bar {
+        background: @navbar-pf-vertical-navbar-toggle-icon-bar-hover-bg;
+      }
+    }
+    .icon-bar {
+      background-color: @navbar-pf-vertical-color;
+    }
+  }
+  .tech-preview & {
+    top: @navbar-os-header-height-mobile + @tech-preview-banner-height;
+    @media (min-width: @screen-sm-min) {
+      top: @navbar-os-header-height-desktop + @tech-preview-banner-height;
+    }
+  }
+}

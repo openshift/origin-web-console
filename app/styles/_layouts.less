@@ -1,0 +1,60 @@
+//
+// Layouts (substructure)
+// ------------------------------------
+
+.header-toolbar {
+  background-color: @panel-light;
+  border-bottom: 1px solid @page-header-border-color;
+}
+.layout-pf.layout-pf-fixed {
+  height: 1px;
+  body {
+    height: 1px;
+    padding-top: @navbar-os-header-height-mobile;
+    &.tech-preview {
+      padding-top: (@navbar-os-header-height-mobile + @tech-preview-banner-height);
+    }
+    @media(min-width: @screen-sm-min) {
+      padding-top: @navbar-os-header-height-desktop;
+      &.tech-preview {
+        padding-top: (@navbar-os-header-height-desktop + @tech-preview-banner-height);
+      }
+    }
+    &.has-project-bar {
+      padding-top: (@navbar-os-header-height-mobile + @project-bar-height-mobile);
+      &.tech-preview {
+        padding-top: (@navbar-os-header-height-mobile + @project-bar-height-mobile + @tech-preview-banner-height);
+      }
+      @media(min-width: @screen-sm-min) {
+        padding-top: (@navbar-os-header-height-desktop + @project-bar-height-desktop);
+        &.tech-preview {
+          padding-top: (@navbar-os-header-height-desktop + @project-bar-height-desktop + @tech-preview-banner-height);
+        }
+        .container-pf-nav-pf-vertical {
+          margin-left: @nav-pf-vertical-width;
+          &.collapsed-nav {
+            margin-left: 75px;
+          }
+        }
+      }
+    }
+  }
+  .container-pf-nav-pf-vertical {
+    height: 100%;
+    transition: margin-left .1s ease-in-out;
+    &,
+    &.collapsed-nav {
+      margin-left: 0; // override PatternFly default
+    }
+    .middle-header {
+      margin-bottom: @grid-gutter-width / 2;
+    }
+    .view {
+      height: 100%;
+    }
+  }
+}
+.surface-shaded {
+  background-color: @panel-shaded;
+  min-height: 100%;
+}

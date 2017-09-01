@@ -26,7 +26,6 @@ angular.module('openshiftConsole')
       name: $routeParams.configMap,
       kind: 'ConfigMap',
       namespace: $routeParams.project,
-      includeProject: true,
       subpage: 'Edit Config Map'
     });
 
@@ -53,7 +52,6 @@ angular.module('openshiftConsole')
             $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
               name: $routeParams.configMap,
               object: configMap,
-              includeProject: true,
               project: project,
               subpage: 'Edit Config Map'
             });

@@ -59,12 +59,7 @@ angular.module('openshiftConsole')
       advancedOptions: false,
       hasHooks: false
     };
-    $scope.breadcrumbs = [
-      {
-        title: $routeParams.project,
-        link: "project/" + $routeParams.project
-      }
-    ];
+    $scope.breadcrumbs = [];
 
     if ($routeParams.isPipeline) {
       $scope.breadcrumbs.push({
@@ -253,8 +248,6 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
         $scope.context = context;
-        // Update project breadcrumb with display name.
-        $scope.breadcrumbs[0].title = $filter('displayName')(project);
 
         if (!AuthorizationService.canI('buildconfigs', 'update', $routeParams.project)) {
           Navigate.toErrorPage('You do not have authority to update build config ' +

@@ -1,31 +1,18 @@
-<default-header class="top-header"></default-header>
-<div class="sidebar-left collapse navbar-collapse navbar-collapse-2">
-  <navbar-utility-mobile></navbar-utility-mobile>
-</div>
-<div class="wrap chromeless"><!-- flex row -->
-  <!-- id="container-main" required for follow log (see logLinks.js) -->
-  <div id="container-main" class="middle">
-    <div class="middle-section"><!-- absolute position, height 100%, width 100% fill parent -->
-      <div class="middle-container"><!-- flex column, height 100% -->
-        <div class="middle-header">
-          <div class="container-fluid">
-            <alerts alerts="alerts"></alerts>
-          </div>
-        </div>
-        <div class="middle-content"><!-- flex item (fill the parent) -->
-          <log-viewer
-            ng-if="build"
-            object="build"
-            context="projectContext"
-            status="build.status.phase"
-            time-start="build.status.startTimestamp | date : 'medium'"
-            time-end="build.status.completionTimestamp | date : 'medium'"
-            chromeless="true"
-            run="logCanRun"
-            flex>
-          </log-viewer>
-        </div>
-      </div>
-    </div>
+<div class="chromeless">
+  <div class="container-fluid">
+    <alerts alerts="alerts"></alerts>
+  </div>
+  <div class="middle-content"><!-- flex item (fill the parent) -->
+    <log-viewer
+      ng-if="build"
+      object="build"
+      context="projectContext"
+      status="build.status.phase"
+      time-start="build.status.startTimestamp | date : 'medium'"
+      time-end="build.status.completionTimestamp | date : 'medium'"
+      chromeless="true"
+      run="logCanRun"
+      flex>
+    </log-viewer>
   </div>
 </div>

@@ -35,8 +35,7 @@ angular.module('openshiftConsole')
       name: $routeParams.name,
       kind: $routeParams.kind,
       namespace: $routeParams.project,
-      subpage: 'Edit Deployment Config',
-      includeProject: true
+      subpage: 'Edit Deployment Config'
     });
 
     $scope.deploymentConfigStrategyTypes = [
@@ -96,8 +95,7 @@ angular.module('openshiftConsole')
             $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
               object: deploymentConfig,
               project: project,
-              subpage: 'Edit',
-              includeProject: true
+              subpage: 'Edit'
             });
 
             // Create map which will associate concatiner name to container's data(envVar, trigger and image which will be used on manual deployment)
