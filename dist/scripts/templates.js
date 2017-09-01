@@ -7718,10 +7718,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/notifications/header.html',
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-xs-6\">\n" +
-    "<strong>{{notificationGroup.heading}}</strong>\n" +
+    "<div class=\"col-xs-7 notification-header\">\n" +
+    "<strong title=\"{{notificationGroup.heading}}\">{{notificationGroup.heading}}</strong>\n" +
     "</div>\n" +
-    "<div class=\"col-xs-6 text-right small\">\n" +
+    "<div class=\"col-xs-5 text-right small\">\n" +
     "<a title=\"All Events\" ng-href=\"project/{{$ctrl.customScope.projectName}}/browse/events\" ng-click=\"$ctrl.customScope.close()\">\n" +
     "View All Events\n" +
     "</a>\n" +
