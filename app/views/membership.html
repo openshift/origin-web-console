@@ -36,6 +36,9 @@
           <div  ng-if="!('rolebindings' | canI : 'list')">
             <p>You do not have permission to view roles in this project.</p>
           </div>
+
+
+
           <uib-tabset
             ng-if="'rolebindings' | canI : 'list'">
             <uib-tab
@@ -298,6 +301,101 @@
               </div>
             </uib-tab>
           </uib-tabset>
+
+
+
+
+          <uib-tabset
+            ng-if="'rolebindings' | canI : 'list'">
+            <uib-tab
+              ng-repeat="subjectKind in subjectKindsForUI | orderBy: 'sortOrder'"
+              active="selectedTab[subjectKind.name]"
+              select="selectTab(subjectKind.name)">
+              <uib-tab-heading>
+                {{subjectKind.name | startCase}}s&nbsp;({{subjectKind.subjects | hashSize}})
+              </uib-tab-heading>
+
+              <div
+                class="row"
+                ng-if="subjectKind.description">
+                <p>
+                  {{subjectKind.description}}
+                  <a
+                    ng-if="subjectKind.helpLinkKey"
+                    target="_blank"
+                    ng-href="{{subjectKind.helpLinkKey | helpLink}}"
+                    class="learn-more-inline">
+                    Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
+                  </a>
+                </p>
+              </div>
+
+              <div
+                class="content-pane"
+                ng-class="'content-' + subjectKind.name.toLowerCase()">
+
+                <div class="container-fluid">
+                  <div class="row">
+
+                    <div class="list-view-pf">
+                      <div
+                        ng-repeat="item in [
+                          { name: 'developer', roles: ['admin'], is: { expanded: true} },
+                          { name: 'sue', roles: ['view', 'edit', 'and two others'], is: { expanded: false} }
+                        ]">
+                        <div
+                          class="list-group-item list-group-item-expandable"
+                          ng-class="{'expanded': item.is.expanded}">
+
+                          <div
+                            class="list-view-pf-checkbox"
+                            ng-click="item.is.expanded = !item.is.expanded">
+                            <button class="sr-only">{{item.is.expanded ? 'Collapse' : 'Expand'}}</button>
+                            <span ng-if="item.is.expanded">
+                              <span class="fa fa-angle-down"></span>
+                            </span>
+                            <span ng-if="!item.is.expanded">
+                              <span class="fa fa-angle-right"></span>
+                            </span>
+                          </div>
+
+                          <div class="list-view-pf-main-info">
+                            <div class="list-view-pf-body">
+                              <div class="list-view-pf-description">
+                                <div class="list-group-item-heading">
+                                  <strong>{{item.name}}</strong>
+                                </div>
+                                <div class="list-group-item-text">
+                                  <span ng-repeat="role in item.roles">
+                                    {{role}}<span ng-if="!$last">,</span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+
+                        <div
+                          class="list-group-expanded-section"
+                          ng-show="item.is.expanded"
+                          ng-class="{'expanded': item.is.expanded}">
+                          Other things go in here.
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+
+            </uib-tab>
+          </uib-tabset>
+
+
+
         </div>
       </div>
     </div>
