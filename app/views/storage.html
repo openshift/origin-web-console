@@ -8,10 +8,10 @@
         <div class="container-fluid">
           <div class="page-header page-header-bleed-right page-header-bleed-left">
             <h1>
-              Storage
+              <translate>Storage</translate>
               <span class="page-header-link">
                 <a ng-href="{{'storage' | helpLink}}" target="_blank">
-                  Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
+                  <translate>Learn More</translate> <i class="fa fa-external-link" aria-hidden="true"></i>
                 </a>
               </span>
             </h1>
@@ -30,13 +30,13 @@
             <div class="col-md-12">
               <div class="section-header page-header-bleed-right page-header-bleed-left">
                 <div class="hidden-xs pull-right" ng-if="project && ('persistentvolumeclaims' | canI : 'create')">
-                  <a ng-if="!outOfClaims" ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-default">Create Storage</a>
-                  <a ng-if="outOfClaims" href="" class="btn btn-default disabled" aria-disabled="true">Create Storage</a>
+                  <a ng-if="!outOfClaims" ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-default" translate>Create Storage</a>
+                  <a ng-if="outOfClaims" href="" class="btn btn-default disabled" aria-disabled="true" translate>Create Storage</a>
                 </div>
-                <h2>Persistent Volume Claims</h2>
+                <h2 translate>Persistent Volume Claims</h2>
                 <div class="visible-xs-block mar-bottom-sm" ng-if="project && ('persistentvolumeclaims' | canI : 'create')">
-                  <a ng-if="!outOfClaims" ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-default">Create Storage</a>
-                  <a ng-if="outOfClaims" href="" class="btn btn-default disabled" aria-disabled="true">Create Storage</a>
+                  <a ng-if="!outOfClaims" ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-default" translate>Create Storage</a>
+                  <a ng-if="outOfClaims" href="" class="btn btn-default disabled" aria-disabled="true" translate>Create Storage</a>
                 </div>
               </div>
               <table class="table table-bordered table-hover table-mobile table-layout-fixed" ng-class="{ 'table-empty': (pvcs | hashSize) === 0 }">
@@ -45,30 +45,29 @@
                 </colgroup>
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th>Capacity</th>
-                    <th>Access Modes</th>
-                    <th>Age</th>
+                    <th translate>Name</th>
+                    <th translate>Status</th>
+                    <th translate>Capacity</th>
+                    <th translate>Access Modes</th>
+                    <th translate>Age</th>
                   </tr>
                 </thead>
                 <tbody ng-if="(pvcs | hashSize) === 0">
-                  <tr><td colspan="5"><em>{{emptyMessage}}</em></td></tr>
+                  <tr><td colspan="5"><em>{{emptyMessage|translate}}</em></td></tr>
                 </tbody>
                 <tbody ng-if="(pvcs | hashSize) > 0">
                   <tr ng-repeat="pvc in pvcs | orderObjectsByDate : true">
                     <td data-title="Name"><a ng-href="{{pvc | navigateResourceURL}}">{{pvc.metadata.name}}</a>
-                      <span ng-if="pvc | storageClass" class="text-muted"> using storage class {{pvc | storageClass}}</span>
+                      <span ng-if="pvc | storageClass" class="text-muted" translate> using storage class {{pvc | storageClass}}</span>
                     </td>
                     <td data-title="Status">
                       <status-icon status="pvc.status.phase" disable-animation></status-icon>
-                      {{pvc.status.phase}}
-                      <span ng-if="pvc.spec.volumeName">to volume <strong>{{pvc.spec.volumeName}}</strong></span>
+                      <translate>{{pvc.status.phase}} <span ng-if="pvc.spec.volumeName">to volume <strong>{{pvc.spec.volumeName}}</strong></span></translate>
                     </td>
                     <td data-title="Capacity">
                       <span ng-if="pvc.spec.volumeName">
                         <span ng-if="pvc.status.capacity['storage']">{{pvc.status.capacity['storage'] | usageWithUnits: 'storage'}}</span>
-                        <span ng-if="!pvc.status.capacity['storage']">unknown</span>
+                        <span ng-if="!pvc.status.capacity['storage']" translate>unknown</span>
                       </span>
                       <span ng-if="!pvc.spec.volumeName">
                         <span>-</span>

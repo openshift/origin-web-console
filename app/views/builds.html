@@ -8,9 +8,9 @@
         <div class="container-fluid">
           <div class="page-header page-header-bleed-right page-header-bleed-left">
             <h1>
-              Builds
+              <translate>Builds</translate>
               <span class="page-header-link">
-                <a ng-href="{{'builds' | helpLink}}" target="_blank">
+                <a ng-href="{{'builds' | helpLink}}" target="_blank" translate>
                   Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
                 </a>
               </span>
@@ -40,17 +40,17 @@
                 </colgroup>
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Last Build</th>
-                    <th>Status</th>
-                    <th>Duration</th>
-                    <th>Created</th>
-                    <th>Type</th>
-                    <th ng-class="{'hidden-sm' : (latestByConfig | hashSize)}">Source</th>
+                    <th translate>Name</th>
+                    <th translate>Last Build</th>
+                    <th translate>Status</th>
+                    <th translate>Duration</th>
+                    <th translate>Created</th>
+                    <th translate>Type</th>
+                    <th ng-class="{'hidden-sm' : (latestByConfig | hashSize)}" translate>Source</th>
                   </tr>
                 </thead>
                 <tbody ng-if="!(latestByConfig | hashSize) && !(buildsNoConfig | hashSize)">
-                  <tr><td colspan="7"><em>{{emptyMessage}}</em></td></tr>
+                  <tr><td colspan="7"><em>{{emptyMessage|translate}}</em></td></tr>
                 </tbody>
                 <tbody ng-if="(latestByConfig | hashSize) || (buildsNoConfig | hashSize)">
                   <tr ng-repeat="(buildConfigName, latestBuild) in latestByConfig" ng-if="buildConfigName !== ''">
@@ -58,7 +58,7 @@
                     <td ng-if-start="!latestBuild" data-title="Name">
                       <a href="{{buildConfigs[buildConfigName] | navigateResourceURL}}">{{buildConfigName}}</a>
                     </td>
-                    <td data-title="Last Build"><em>No builds</em></td>
+                    <td data-title="Last Build"><em translate>No builds</em></td>
                     <td class="hidden-xs">&nbsp;</td>
                     <td class="hidden-xs">&nbsp;</td>
                     <td class="hidden-xs">&nbsp;</td>
@@ -67,7 +67,7 @@
                       <span ng-if="source = buildConfigs[buildConfigName].spec.source">
                         <span ng-switch="source.type">
                           <span ng-switch-when="None">
-                            <i>None</i>
+                            <i translate>None</i>
                           </span>
                           <span ng-switch-when="Git">
                             <osc-git-link
@@ -85,7 +85,7 @@
                     <!-- We only show the first build from a build config for now-->
                     <td ng-if-start="latestBuild && (buildConfigs[buildConfigName] || !unfilteredBuildConfigs[buildConfigName])" data-title="Name">
                       <a ng-if="buildConfigName" href="{{latestBuild | configURLForResource}}">{{buildConfigName}}</a>
-                      <span ng-if="buildConfigs && buildConfigName && !buildConfigs[buildConfigName]" class="pficon pficon-warning-triangle-o" data-toggle="tooltip" title="This build config no longer exists" style="cursor: help;"></span>
+                      <span ng-if="buildConfigs && buildConfigName && !buildConfigs[buildConfigName]" class="pficon pficon-warning-triangle-o" data-toggle="tooltip" title="{{'This build config no longer exists'|translate}}" style="cursor: help;"></span>
                     </td>
                     <td data-title="Last Build">
                       <!-- Build number and link -->

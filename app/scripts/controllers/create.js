@@ -19,7 +19,8 @@ angular.module('openshiftConsole')
                                             DataService,
                                             LabelFilter,
                                             Logger,
-                                            ProjectsService) {
+                                            ProjectsService,
+                                            gettext) {
     $scope.projectName = $routeParams.project;
 
     $scope.categories = Constants.CATALOG_CATEGORIES;
@@ -32,7 +33,7 @@ angular.module('openshiftConsole')
         link: "project/" + $scope.projectName
       },
       {
-        title: "Add to Project"
+        title: gettext("Add to Project")
       }
     ];
 

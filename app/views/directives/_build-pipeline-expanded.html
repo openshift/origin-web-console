@@ -17,7 +17,7 @@
           </span>
         </span>
       </span>
-      <a ng-href="{{build | navigateResourceURL}}">Build #{{build | annotation : 'buildNumber'}}</a>
+      <a ng-href="{{build | navigateResourceURL}}" translate>Build #{{build | annotation : 'buildNumber'}}</a>
     </div>
     <span am-time-ago="build.metadata.creationTimestamp" class="build-timestamp"></span>
     <div ng-include="'views/directives/_build-pipeline-links.html'" class="build-links"></div>
@@ -25,7 +25,7 @@
   <div class="pipeline-container">
     <div class="pipeline" ng-if="!jenkinsStatus.stages.length">
       <div class="pipeline-stage no-stages">
-        <div class="pipeline-stage-name">No stages have started.</div>
+        <div class="pipeline-stage-name" translate>No stages have started.</div>
       </div>
     </div>
     <div class="pipeline">
@@ -36,9 +36,9 @@
           </div>
           <pipeline-status ng-if="stage.status" status="stage.status"></pipeline-status>
           <div class="pipeline-actions" ng-if="stage | pipelineStagePendingInput">
-            <a ng-href="{{build | jenkinsInputURL}}" target="_blank">Input Required</a>
+            <a ng-href="{{build | jenkinsInputURL}}" target="_blank" translate>Input Required</a>
           </div>
-          <div class="pipeline-time" ng-class="stage.status" ng-if="!stage.durationMillis && !(stage | pipelineStagePendingInput)">not started</div>
+          <div class="pipeline-time" ng-class="stage.status" ng-if="!stage.durationMillis && !(stage | pipelineStagePendingInput)" translate>not started</div>
           <div class="pipeline-time" ng-class="stage.status" ng-if="stage.startTimeMillis && !(stage | pipelineStagePendingInput) && !(stage | pipelineStageComplete)"><time-only-duration-until-now timestamp="stage.startTimeMillis"></time-only-duration-until-now></div>
           <div class="pipeline-time" ng-class="stage.status" ng-if="stage.durationMillis && (stage | pipelineStageComplete)">{{stage.durationMillis | timeOnlyDuration}}</div>
         </div>

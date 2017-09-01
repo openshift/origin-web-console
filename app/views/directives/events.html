@@ -1,4 +1,4 @@
-<div ng-if="!events">
+<div ng-if="!events" translate>
   Loading...
 </div>
 <div ng-if="events" class="events">
@@ -7,7 +7,7 @@
       <form role="form" class="search-pf has-button">
         <div class="form-group filter-controls has-clear">
           <div class="search-pf-input-group">
-            <label for="events-filter" class="sr-only">Filter</label>
+            <label for="events-filter" class="sr-only" translate>Filter</label>
             <input type="search"
                    placeholder="Filter by keyword"
                    class="form-control"
@@ -29,7 +29,7 @@
       </form>
       <div class="vertical-divider"></div>
       <div class="sort-group">
-        <span class="sort-label">Sort by</span>
+        <span class="sort-label" translate>Sort by</span>
         <pf-sort config="sortConfig" class="sort-controls"></pf-sort>
       </div>
     </div>
@@ -37,34 +37,34 @@
   <table class="table table-bordered table-condensed table-mobile table-hover table-layout-fixed events-table">
     <thead>
       <tr>
-        <th id="time">Time</th>
+        <th id="time" translate>Time</th>
         <!-- Only show Name and Kind columns if not passed to the directive. -->
         <th id="kind-name" ng-if="showKindAndName">
-          <span class="hidden-xs-inline visible-sm-inline visible-md-inline hidden-lg-inline">Kind and Name</span>
-          <span class="visible-lg-inline">Name</span>
+          <span class="hidden-xs-inline visible-sm-inline visible-md-inline hidden-lg-inline" translate>Kind and Name</span>
+          <span class="visible-lg-inline" translate>Name</span>
         </th>
         <th id="kind" ng-if="showKindAndName" class="hidden-sm hidden-md">
-          <span class="visible-lg-inline">Kind</span>
+          <span class="visible-lg-inline" translate>Kind</span>
         </th>
-        <th id="severity" class="hidden-xs hidden-sm hidden-md"><span class="sr-only">Severity</span></th>
-        <th id="reason" class="hidden-sm hidden-md"><span class="visible-lg-inline">Reason</span></th>
-        <th id="message"><span class="hidden-xs-inline visible-sm-inline visible-md-inline hidden-lg-inline">Reason and </span>Message</th>
+        <th id="severity" class="hidden-xs hidden-sm hidden-md"><span class="sr-only" translate>Severity</span></th>
+        <th id="reason" class="hidden-sm hidden-md"><span class="visible-lg-inline" translate>Reason</span></th>
+        <th id="message"><span class="hidden-xs-inline visible-sm-inline visible-md-inline hidden-lg-inline" translate>Reason and </span><translate>Message</translate></th>
       </tr>
     </thead>
     <tbody ng-if="(filteredEvents | hashSize) === 0">
       <tr>
         <td class="hidden-lg" colspan="{{showKindAndName ? 3 : 2}}">
-          <span ng-if="(events | hashSize) === 0"><em>No events to show.</em></span>
+          <span ng-if="(events | hashSize) === 0"><em translate>No events to show.</em></span>
           <span ng-if="(events | hashSize) > 0">
-            All events hidden by filter.
-            <a href="" ng-click="filter.text = ''" role="button">Clear Filter</a>
+            <translate>All events hidden by filter.</translate>
+            <a href="" ng-click="filter.text = ''" role="button" translate>Clear Filter</a>
           </span>
         </td>
           <td class="hidden-xs hidden-sm hidden-md" colspan="{{showKindAndName ? 6 : 4}}">
-          <span ng-if="(events | hashSize) === 0"><em>No events to show.</em></span>
+          <span ng-if="(events | hashSize) === 0"><em translate>No events to show.</em></span>
           <span ng-if="(events | hashSize) > 0">
-            All events hidden by filter.
-            <a href="" ng-click="filter.text = ''" role="button">Clear Filter</a>
+            <translate>All events hidden by filter.</translate>
+            <a href="" ng-click="filter.text = ''" role="button" translate>Clear Filter</a>
           </span>
         </td>
       </tr>
@@ -107,7 +107,7 @@
               expandable="true">
           </truncate-long-text>
           <div ng-if="event.count > 1" class="text-muted small">
-            {{event.count}} times in the last
+            <translate>{{event.count}} times in the last</translate>
             <duration-until-now timestamp="event.firstTimestamp" omit-single="true" precision="1"></duration-until-now>
           </div>
         </td>

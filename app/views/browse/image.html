@@ -8,7 +8,7 @@
         <div class="container-fluid">
           <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
           <alerts alerts="alerts"></alerts>
-          <div ng-if="!imageStream" class="mar-top-xl">Loading...</div>
+          <div ng-if="!imageStream" class="mar-top-xl" translate>Loading...</div>
           <div ng-if="imageStream">
             <h1>
               {{imageStream.metadata.name}}:{{tagName}}
@@ -18,27 +18,27 @@
       </div><!-- /middle-header-->
       <div class="middle-content" persist-tab-state>
         <div class="container-fluid">
-          <div ng-if="imageStream && !image">Loading...</div>
+          <div ng-if="imageStream && !image" translate>Loading...</div>
           <div class="row" ng-if="image">
             <div class="col-md-12">
               <registry-image-pull settings="settings" names="[ imageStream.metadata.name + ':' + tagName ]">
               </registry-image-pull>
               <uib-tabset>
                 <uib-tab heading="Details" active="selectedTab.body">
-                  <uib-tab-heading>Details</uib-tab-heading>
+                  <uib-tab-heading translate>Details</uib-tab-heading>
                   <registry-image-body image="image">
                   </registry-image-body>
                   <registry-image-meta image="image">
                   </registry-image-meta>
                 </uib-tab>
                 <uib-tab heading="Config" active="selectedTab.config">
-                  <uib-tab-heading>Configuration</uib-tab-heading>
+                  <uib-tab-heading translate>Configuration</uib-tab-heading>
                   <registry-image-config image="image">
                   </registry-image-config>
                 </uib-tab>
                 <uib-tab heading="Layers" active="selectedTab.meta">
-                  <uib-tab-heading>Layers</uib-tab-heading>
-                  <p ng-if="!layers.length"><em>No layer information is available for this image.</em></p>
+                  <uib-tab-heading translate>Layers</uib-tab-heading>
+                  <p ng-if="!layers.length"><em translate>No layer information is available for this image.</em></p>
                   <registry-image-layers layers="layers" ng-if="layers.length" class="mar-bottom-xl block">
                   </registry-image-layers>
                 </uib-tab>

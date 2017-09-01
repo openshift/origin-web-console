@@ -1,37 +1,33 @@
-<p ng-if="!loaded">Loading...</p>
+<p ng-if="!loaded" translate>Loading...</p>
 
 <div ng-if="emptyCatalog && loaded" class="empty-state-message empty-state-full-page">
-  <h2 class="text-center">No images or templates.</h2>
+  <h2 class="text-center" translate>No images or templates.</h2>
 
-  <p class="gutter-top">
-    No images or templates are loaded for this project or the shared
-    <code>openshift</code> namespace. An image or template is
-    required to add content.
+  <p class="gutter-top" translate>
+    No images or templates are loaded for this project or the shared <code>openshift</code> namespace. An image or template is required to add content.
   </p>
 
   <p>
-    To add an image stream or template from a file, use the editor in the
-    <strong>Import YAML / JSON</strong> tab, or run the following command:
+    <translate>To add an image stream or template from a file, use the editor in the <strong>Import YAML / JSON</strong> tab, or run the following command:</translate>
     <div><code>oc create -f &lt;filename&gt; -n {{projectName}}</code></div>
   </p>
 
-  <p><a href="{{projectName | projectOverviewURL}}">Back to overview</a></p>
+  <p><a href="{{projectName | projectOverviewURL}}" translate>Back to overview</a></p>
 </div>
 
 <div ng-show="!emptyCatalog && loaded && !singleCategory">
-  <p ng-if="!parentCategory">Choose from web frameworks, databases, and other components to
-  add content to your project.</p>
+  <p ng-if="!parentCategory" translate>Choose from web frameworks, databases, and other components to add content to your project.</p>
 
   <form role="form" fit class="search-pf has-button">
     <div class="form-group has-clear">
       <!-- Add a hidden label for screen readers. -->
       <div class="search-pf-input-group">
-        <label for="search" class="sr-only">Filter by name or description</label>
+        <label for="search" class="sr-only" translate>Filter by name or description</label>
         <input
            ng-model="filter.keyword"
            type="search"
            id="search"
-           placeholder="Filter by name or description"
+           placeholder="{{'Filter by name or description'|translate}}"
            class="search-input form-control"
            autocorrect="off"
            autocapitalize="none"
@@ -49,13 +45,13 @@
   </form>
 
   <div ng-if="allContentHidden" class="empty-state-message text-center h2">
-    All content is hidden by the current filter.
-    <a href="" ng-click="filter.keyword = ''">Clear Filter</a>
+    <translate>All content is hidden by the current filter.</translate>
+    <a href="" ng-click="filter.keyword = ''" translate>Clear Filter</a>
   </div>
 
   <div ng-if="!filterActive">
     <div ng-repeat="category in categories" ng-if="hasContent[category.id]">
-      <h2 class="h3" ng-if="category.label">{{category.label}}</h2>
+      <h2 class="h3" ng-if="category.label">{{category.label|translate}}</h2>
       <div class="row tile-row" ng-class="{ 'mar-top-xl': !category.label || category.items.length < 2 }">
         <div ng-repeat="item in category.items" ng-if="countByCategory[item.id]" class="col-xxs-12 col-xs-6 col-sm-6 col-md-4">
           <div class="tile tile-click" ng-class="{ 'tile-sans-icon' : !item.iconClass, 'tile-sans-description' : !item.description }">
@@ -66,16 +62,16 @@
               <h3>
                 <!-- top-level category item -->
                 <a ng-if="!parentCategory" ng-href="project/{{projectName}}/create/category/{{item.id || 'none'}}" class="tile-target">
-                  {{item.label}}
+                  {{item.label|translate}}
                 </a>
                 <!-- subcategory item -->
                 <a ng-if="parentCategory" ng-href="project/{{projectName}}/create/category/{{parentCategory.id}}/{{item.id || 'none'}}" class="tile-target">
-                  {{item.label}}
+                  {{item.label|translate}}
                 </a>
               </h3>
               <!-- <span class="tile-item-count badge">{{countByCategory[item.id] || 0}}</span> -->
             </div>
-            <p ng-if="item.description">{{item.description}}</p>
+            <p ng-if="item.description">{{item.description|translate}}</p>
           </div>
         </div>
       </div>

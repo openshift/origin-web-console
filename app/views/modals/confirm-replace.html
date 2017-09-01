@@ -1,23 +1,23 @@
 <div class="modal-resource-action">
   <div class="modal-body">
     <div ng-if="!isList">
-      <h1>{{resourceKind}} '<strong>{{resourceName}}</strong>' already exists</h1>
-      <p>Do you want to replace with the new content?</p>
+      <h1 translate>{{resourceKind}} '<strong>{{resourceName}}</strong>' already exists</h1>
+      <p translate>Do you want to replace with the new content?</p>
     </div>
-    
+
     <div ng-if="isList">
-      <h1>Some items already exist:</h1>
+      <h1 translate>Some items already exist:</h1>
       <dl class="dl-horizontal">
         <dt ng-repeat-start="resource in updateResources">{{resource.kind}}</dt>
         <dd ng-repeat-end>{{resource.metadata.name}}</dd>
       </dl>
-      <p>Do you want to replace the existing resources?</p>
+      <p translate>Do you want to replace the existing resources?</p>
     </div>
-    
-    
+
+
   </div>
   <div class="modal-footer">
-      <button class="btn btn-lg btn-primary" type="button" ng-click="replace();">Replace</button>
-      <button class="btn btn-lg btn-default" type="button" ng-click="cancel();">Cancel</button>
+      <button class="btn btn-lg btn-primary" type="button" ng-click="replace();" translate>Replace</button>
+      <button class="btn btn-lg btn-default" type="button" ng-click="cancel();" translate>Cancel</button>
   </div>
 </div>

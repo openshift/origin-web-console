@@ -1,8 +1,8 @@
 <div ng-controller="TasksController">
   <h1 ng-if="!tasks().length">Completed. <a href="" ng-click="$ctrl.goToOverview()">Go to overview</a>.</h1>
-  <h1 ng-if="tasks().length && $ctrl.allTasksSuccessful(tasks())">Application created. <a href="" ng-click="$ctrl.goToOverview()">Continue to overview</a>.</h1>
-  <h1 ng-if="$ctrl.pendingTasks(tasks()).length">Creating...</h1>
-  <h1 ng-if="!$ctrl.pendingTasks(tasks()).length && $ctrl.erroredTasks(tasks()).length">Completed, with errors</h1>
+  <h1 ng-if="tasks().length && $ctrl.allTasksSuccessful(tasks())"><translate>Application created.</translate> <a href="" ng-click="$ctrl.goToOverview()" translate>Continue to overview</a>.</h1>
+  <h1 ng-if="$ctrl.pendingTasks(tasks()).length" translate>Creating...</h1>
+  <h1 ng-if="!$ctrl.pendingTasks(tasks()).length && $ctrl.erroredTasks(tasks()).length" translate>Completed, with errors</h1>
 
   <div ng-repeat="task in tasks()" ng-if="tasks().length && !$ctrl.allTasksSuccessful(tasks())">
     <div class="tasks" ng-class="hasTaskWithError() ? 'failure' : 'success'">
@@ -41,50 +41,50 @@
 
 <div class="row" ng-controller="TasksController">
   <div ng-if="!$ctrl.pendingTasks(tasks()).length && $ctrl.erroredTasks(tasks()).length" class="col-md-12">
-    <h2>Things you can do</h2>
-    <p>Go to the <a href="" ng-click="$ctrl.goToOverview()">overview page</a> to see more details about this project. Make sure you don't already have <a href="project/{{$ctrl.projectName}}/browse/services">services</a>, <a href="project/{{$ctrl.projectName}}/browse/builds">build configs</a>, <a href="project/{{$ctrl.projectName}}/browse/deployments">deployment configs</a>, or other resources with the same names you are trying to create. Refer to the <a target="_blank" href="{{'new_app' | helpLink}}">documentation for creating new applications</a> for more information.</p>
-    <h3>Command line tools</h3>
-    <p>You may want to use the <code>oc</code> command line tool to help with troubleshooting. After <a target="_blank" href="command-line">downloading and installing</a> it, you can log in, switch to this particular project, and try some commands :</p>
+    <h2 translate>Things you can do</h2>
+    <p translate>Go to the <a href="" ng-click="$ctrl.goToOverview()">overview page</a> to see more details about this project. Make sure you don't already have <a href="project/{{$ctrl.projectName}}/browse/services">services</a>, <a href="project/{{$ctrl.projectName}}/browse/builds">build configs</a>, <a href="project/{{$ctrl.projectName}}/browse/deployments">deployment configs</a>, or other resources with the same names you are trying to create. Refer to the <a target="_blank" href="{{'new_app' | helpLink}}">documentation for creating new applications</a> for more information.</p>
+    <h3 translate>Command line tools</h3>
+    <p translate>You may want to use the <code>oc</code> command line tool to help with troubleshooting. After <a target="_blank" href="command-line">downloading and installing</a> it, you can log in, switch to this particular project, and try some commands :</p>
 
     <pre class="code prettyprint">oc login {{$ctrl.loginBaseUrl}}
 oc project {{$ctrl.projectName}}
 oc logs -h</pre>
 
-    <p>For more information about the command line tools, check the <a target="_blank" href="{{'cli' | helpLink}}">CLI Reference</a> and <a target="_blank" href="{{'basic_cli_operations' | helpLink}}">Basic CLI Operations</a>.</p>
+    <p translate>For more information about the command line tools, check the <a target="_blank" href="{{'cli' | helpLink}}">CLI Reference</a> and <a target="_blank" href="{{'basic_cli_operations' | helpLink}}">Basic CLI Operations</a>.</p>
   </div>
 
   <div ng-if="$ctrl.allTasksSuccessful(tasks())" ng-class="$ctrl.createdBuildConfigWithGitHubTrigger() ? 'col-md-6' : 'col-md-12'">
-    <h2>Manage your app</h2>
-    <p>The web console is convenient, but if you need deeper control you may want to try our command line tools.</p>
+    <h2 translate>Manage your app</h2>
+    <p translate>The web console is convenient, but if you need deeper control you may want to try our command line tools.</p>
 
-    <h3>Command line tools</h3>
-    <p><a target="_blank" href="command-line">Download and install</a> the <code>oc</code> command line tool. After that, you can start by logging in, switching to this particular project, and displaying an overview of it, by doing:</p>
+    <h3 translate>Command line tools</h3>
+    <p translate><a target="_blank" href="command-line">Download and install</a> the <code>oc</code> command line tool. After that, you can start by logging in, switching to this particular project, and displaying an overview of it, by doing:</p>
 
     <pre class="code prettyprint">oc login {{$ctrl.loginBaseUrl}}
 oc project {{$ctrl.projectName}}
 oc status</pre>
 
-    <p>For more information about the command line tools, check the <a target="_blank" href="{{'cli' | helpLink}}">CLI Reference</a> and <a target="_blank" href="{{'basic_cli_operations' | helpLink}}">Basic CLI Operations</a>.</p>
+    <p translate>For more information about the command line tools, check the <a target="_blank" href="{{'cli' | helpLink}}">CLI Reference</a> and <a target="_blank" href="{{'basic_cli_operations' | helpLink}}">Basic CLI Operations</a>.</p>
   </div>
 
   <div ng-if="$ctrl.createdBuildConfig" class="col-md-6">
-    <h2>Making code changes</h2>
+    <h2 translate>Making code changes</h2>
     <p ng-if="$ctrl.fromSampleRepo">
-      You are set up to use the example git repository. If you would like to modify the source code, fork the <osc-git-link uri="$ctrl.createdBuildConfig.spec.source.git.uri">{{$ctrl.createdBuildConfig.spec.source.git.uri}}</osc-git-link> repository to an OpenShift-visible git account and <a href="{{$ctrl.createdBuildConfig | editResourceURL}}">edit the <strong>{{$ctrl.createdBuildConfig.metadata.name}}</strong> build config</a> to point to your fork.
-      <span ng-if="$ctrl.createdBuildConfigWithConfigChangeTrigger()">Note that this will start a new build.</span>
+      <translate>You are set up to use the example git repository. If you would like to modify the source code, fork the <osc-git-link uri="$ctrl.createdBuildConfig.spec.source.git.uri">{{$ctrl.createdBuildConfig.spec.source.git.uri}}</osc-git-link> repository to an OpenShift-visible git account and <a href="{{$ctrl.createdBuildConfig | editResourceURL}}">edit the <strong>{{$ctrl.createdBuildConfig.metadata.name}}</strong> build config</a> to point to your fork.</translate>
+      <span ng-if="$ctrl.createdBuildConfigWithConfigChangeTrigger()" translate>Note that this will start a new build.</span>
     </p>
     <div ng-repeat="trigger in $ctrl.createdBuildConfig.spec.triggers" ng-if="trigger.type == 'GitHub'">
-      <p>
+      <p translate>
         A GitHub <a target="_blank" href="{{'webhooks' | helpLink}}">webhook trigger</a> has been created for the <strong>{{$ctrl.createdBuildConfig.metadata.name}}</strong> build config.
       </p>
-      <p ng-if="$ctrl.fromSampleRepo">
+      <p ng-if="$ctrl.fromSampleRepo" translate>
         You can configure the webhook in the forked repository's settings, using the following payload URL:
       </p>
       <p ng-if="!$ctrl.fromSampleRepo">
-        <span ng-if="$ctrl.createdBuildConfig.spec.source.git.uri | isGithubLink">
+        <span ng-if="$ctrl.createdBuildConfig.spec.source.git.uri | isGithubLink" translate>
           You can now set up the webhook in the GitHub repository settings if you own it, in <a target="_blank" class="word-break" href="{{$ctrl.createdBuildConfig.spec.source.git.uri | githubLink}}/settings/hooks">{{$ctrl.createdBuildConfig.spec.source.git.uri | githubLink}}/settings/hooks</a>, using the following payload URL and specifying a <i>Content type</i> of <code>application/json</code>:
         </span>
-        <span ng-if="!($ctrl.createdBuildConfig.spec.source.git.uri | isGithubLink)">
+        <span ng-if="!($ctrl.createdBuildConfig.spec.source.git.uri | isGithubLink)" translate>
           Your source does not appear to be a URL to a GitHub repository.  If you have a GitHub repository that you want to trigger this build from then use the following payload URL and specifying a <i>Content type</i> of <code>application/json</code>:
         </span>
       </p>
@@ -94,19 +94,19 @@ oc status</pre>
 </div>
 
 <div ng-if="$ctrl.parameters.all.length">
-  <h2>Applied Parameter Values</h2>
-  <p>These parameters often include things like passwords. If you will need to reference these values later, copy them to a safe location.
-    <span ng-if="$ctrl.parameters.generated.length > 1">Parameters <span ng-repeat="paramName in $ctrl.parameters.generated">{{paramName}}<span ng-if="!$last">, </span></span> were generated automatically.</span>
-    <span ng-if="$ctrl.parameters.generated.length === 1">Parameter {{$ctrl.parameters.generated[0]}} was generated automatically.</span>
+  <h2 translate>Applied Parameter Values</h2>
+  <p><translate>These parameters often include things like passwords. If you will need to reference these values later, copy them to a safe location.</translate>
+    <span ng-if="$ctrl.parameters.generated.length > 1" translate>Parameters <span ng-repeat="paramName in $ctrl.parameters.generated">{{paramName}}<span ng-if="!$last">, </span></span> were generated automatically.</span>
+    <span ng-if="$ctrl.parameters.generated.length === 1" translate>Parameter {{$ctrl.parameters.generated[0]}} was generated automatically.</span>
   </p>
   <div ng-if="!$ctrl.showParamsTable" class="center">
-    <a href="" ng-click="$ctrl.toggleParamsTable()">Show parameter values</a>
+    <a href="" ng-click="$ctrl.toggleParamsTable()" translate>Show parameter values</a>
   </div>
   <key-value-editor
     ng-if="$ctrl.showParamsTable"
     entries="$ctrl.parameters.all"
-    key-placeholder="Name"
-    value-placeholder="Value"
+    key-placeholder="{{'Name'|translate}}"
+    value-placeholder="{{'Value'|translate}}"
     cannot-add
     cannot-delete
     cannot-sort

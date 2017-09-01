@@ -8,7 +8,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('PodsController', function ($routeParams, $scope, DataService, ProjectsService, $filter, LabelFilter, Logger) {
+  .controller('PodsController', function ($routeParams, $scope, DataService, ProjectsService, $filter, LabelFilter, Logger, gettext) {
     $scope.projectName = $routeParams.project;
     $scope.pods = {};
     $scope.unfilteredPods = {};
@@ -18,7 +18,7 @@ angular.module('openshiftConsole')
     // $scope.imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
     $scope.labelSuggestions = {};
     $scope.alerts = $scope.alerts || {};
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettext("Loading...");
 
     var watches = [];
 
@@ -29,7 +29,7 @@ angular.module('openshiftConsole')
         watches.push(DataService.watch("pods", context, function(pods) {
           $scope.unfilteredPods = pods.by("metadata.name");
           $scope.pods = LabelFilter.getLabelSelector().select($scope.unfilteredPods);
-          $scope.emptyMessage = "No pods to show";
+          $scope.emptyMessage = gettext("No pods to show");
           // TODO should we add links to the image streams the pod is using
           //ImageStreamResolver.fetchReferencedImageStreamImages($scope.pods, $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, $scope);
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredPods, $scope.labelSuggestions);

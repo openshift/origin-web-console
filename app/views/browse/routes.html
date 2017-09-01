@@ -8,13 +8,13 @@
         <div class="container-fluid">
           <div class="page-header page-header-bleed-right page-header-bleed-left">
             <div class="pull-right" ng-if="project && ('routes' | canI : 'create')">
-              <a ng-href="project/{{project.metadata.name}}/create-route" class="btn btn-default">Create Route</a>
+              <a ng-href="project/{{project.metadata.name}}/create-route" class="btn btn-default" translate>Create Route</a>
             </div>
             <h1>
-              Routes
+              <translate>Routes</translate>
               <span class="page-header-link">
                 <a ng-href="{{'routes' | helpLink}}" target="_blank">
-                  Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
+                  <translate>Learn More</translate> <i class="fa fa-external-link" aria-hidden="true"></i>
                 </a>
               </span>
             </h1>
@@ -41,19 +41,19 @@
                 </colgroup>
                 <thead>
                   <tr>
-                    <th>{{customNameHeader || 'Name'}}</th>
-                    <th>Hostname</th>
+                    <th>{{customNameHeader || 'Name'|translate}}</th>
+                    <th translate>Hostname</th>
                     <!--
                       Right now only services are supported. If other types are
                       added, we'll need to change the table header.
                      -->
-                    <th>Service</th>
-                    <th>Target Port</th>
-                    <th>TLS Termination</th>
+                    <th translate>Service</th>
+                    <th translate>Target Port</th>
+                    <th translate>TLS Termination</th>
                   </tr>
                 </thead>
                 <tbody ng-if="(routes | hashSize) == 0">
-                  <tr><td colspan="5"><em>{{emptyMessage}}</em></td></tr>
+                  <tr><td colspan="5"><em>{{emptyMessage|translate}}</em></td></tr>
                 </tbody>
                 <tbody ng-if="(routes | hashSize) > 0">
                   <tr ng-repeat="route in routes | orderObjectsByDate : true">
@@ -74,9 +74,9 @@
                       <span ng-if="!(route | isWebRoute)">
                         {{route | routeLabel}}
                       </span>
-                      <span ng-if="!route.status.ingress" data-toggle="popover" data-trigger="hover" data-content="The route is not accepting traffic yet because it has not been admitted by a router." style="cursor: help; padding-left: 5px;">
+                      <span ng-if="!route.status.ingress" data-toggle="popover" data-trigger="hover" data-content="{{'The route is not accepting traffic yet because it has not been admitted by a router.'|translate}}" style="cursor: help; padding-left: 5px;">
                         <status-icon status="'Pending'"></status-icon>
-                        <span class="sr-only">Pending</span>
+                        <span class="sr-only" translate>Pending</span>
                       </span>
                     </td>
                     <!--

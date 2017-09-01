@@ -23,7 +23,8 @@ angular.module("openshiftConsole")
     $filter,
     imageObjectRefFilter,
     failureObjectNameFilter,
-    ProjectsService) {
+    ProjectsService,
+    gettext) {
     var displayNameFilter = $filter('displayName');
     var watches = [];
 
@@ -40,7 +41,7 @@ angular.module("openshiftConsole")
         link: "project/" + $scope.projectName
       },
       {
-        title: "Add to Project",
+        title: gettext("Add to Project"),
         link: "project/" + $scope.projectName + "/create"
       },
       {
@@ -48,7 +49,7 @@ angular.module("openshiftConsole")
         title: $routeParams.breadcrumbTitle || $routeParams.name
       },
       {
-        title: "Next Steps"
+        title: gettext("Next Steps")
       }
     ];
 

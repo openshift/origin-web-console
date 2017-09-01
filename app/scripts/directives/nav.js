@@ -58,7 +58,7 @@ angular.module('openshiftConsole')
       }
     };
   })
-  .directive('projectHeader', function($timeout, $location, $filter, ProjectsService, projectOverviewURLFilter, Constants) {
+  .directive('projectHeader', function($timeout, $location, $filter, ProjectsService, projectOverviewURLFilter, Constants, gettextCatalog, gettext) {
 
     // cache these to eliminate flicker
     var projects = {};
@@ -142,6 +142,7 @@ angular.module('openshiftConsole')
           select.append(options);
           select.append($('<option data-divider="true"></option>'));
           select.append($('<option value="">View all Projects</option>'));
+          select.append($('<option value="">' + gettextCatalog.getString(gettext('View all projects')) + '</option>'));
           select.selectpicker('refresh');
         };
 
@@ -174,12 +175,12 @@ angular.module('openshiftConsole')
       }
     };
   })
-  .directive('projectFilter', function(LabelFilter) {
+  .directive('projectFilter', function(LabelFilter, gettext) {
     return {
       restrict: 'E',
       templateUrl: 'views/directives/_project-filter.html',
       link: function($scope, $elem) {
-        LabelFilter.setupFilterWidget($elem.find('.navbar-filter-widget'), $elem.find('.active-filters'), { addButtonText: "Add" });
+        LabelFilter.setupFilterWidget($elem.find('.navbar-filter-widget'), $elem.find('.active-filters'), { addButtonText: gettext("Add") });
         LabelFilter.toggleFilterWidget(!$scope.renderOptions || !$scope.renderOptions.hideFilterWidget);
 
         $scope.$watch("renderOptions", function(renderOptions) {

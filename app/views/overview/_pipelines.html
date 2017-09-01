@@ -1,5 +1,5 @@
 <div ng-if="overviewPipelines.recentPipelines.length" class="expanded-section">
-  <div class="section-title no-border hidden-xs">Pipelines</div>
+  <div class="section-title no-border hidden-xs" translate>Pipelines</div>
   <div ng-repeat="pipeline in overviewPipelines.recentPipelines track by (pipeline | uid)"
        class="build-pipeline-wrapper animate-repeat">
     <build-pipeline build="pipeline" build-config-name-on-expanded="true" collapse-pending="true"></build-pipeline>

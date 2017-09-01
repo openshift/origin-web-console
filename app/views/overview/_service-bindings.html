@@ -1,5 +1,5 @@
 <div class="expanded-section">
-  <div class="section-title hidden-xs">Service Bindings</div>
+  <div class="section-title hidden-xs" translate>Service Bindings</div>
   <overview-service-binding
     ng-repeat="binding in $ctrl.bindings track by (binding | uid)"
     namespace="$ctrl.namespace"
@@ -11,13 +11,13 @@
   <div ng-if="($ctrl.bindableServiceInstances | size) && ({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create')">
     <a href="" ng-click="$ctrl.createBinding()" role="button">
       <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>
-      Create Binding
+      <translate>Create Binding</translate>
     </a>
   </div>
   <div ng-if="!($ctrl.bindableServiceInstances | size)">
-    <span>You must have a bindable service in your namespace in order to create bindings.</span>
+    <span translate>You must have a bindable service in your namespace in order to create bindings.</span>
     <div>
-      <a href="./">Browse Catalog</a>
+      <a href="./" translate>Browse Catalog</a>
     </div>
   </div>
 </div>

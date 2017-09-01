@@ -7,7 +7,7 @@
           ng-required="required && !containerSelected">
       <b>{{container.name}}</b>
       <span class="hidden-xs">
-        from image
+        <translate>from image</translate>
         <i ng-attr-title="{{container.image}}">{{container.image}}</i>
       </span>
     </label>
@@ -16,7 +16,7 @@
     {{helpText}}
   </div>
   <div class="has-error" ng-if="required && forms.containerSelect.$dirty && !containerSelected">
-    <span class="help-block">
+    <span class="help-block" translate>
       You must select at least one container.
     </span>
   </div>

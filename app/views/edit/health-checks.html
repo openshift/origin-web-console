@@ -12,26 +12,24 @@
             <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
             <div class="row">
               <div class="col-md-12">
-                <div ng-show="!containers.length" class="mar-top-md">Loading...</div>
+                <div ng-show="!containers.length" class="mar-top-md" translate>Loading...</div>
                 <form ng-show="containers.length" name="form" class="health-checks-form" novalidate>
-                  <h1>Health Checks: {{name}}</h1>
+                  <h1 translate>Health Checks: {{name}}</h1>
                   <div class="help-block">
-                    Container health is periodically checked using readiness and liveness probes.
+                    <translate>Container health is periodically checked using readiness and liveness probes.</translate>
                     <div class="learn-more-block">
-                      <a href="{{'application_health' | helpLink}}" target="_blank">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
+                      <a href="{{'application_health' | helpLink}}" target="_blank"><translate>Learn More</translate>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
                     </div>
                   </div>
                   <fieldset ng-disabled="disableInputs">
                     <div ng-repeat="container in containers">
-                      <h2 ng-if="containers.length > 1">Container {{container.name}}</h2>
-                      <h3>Readiness Probe</h3>
-                      <div class="help-block mar-bottom-md" ng-if="$first">
-                        A readiness probe checks if the container is ready to handle requests. A
-                        failed readiness probe means that a container should not receive any traffic
-                        from a proxy, even if it's running.
+                      <h2 ng-if="containers.length > 1" translate>Container {{container.name}}</h2>
+                      <h3 translate>Readiness Probe</h3>
+                      <div class="help-block mar-bottom-md" ng-if="$first" translate>
+                        A readiness probe checks if the container is ready to handle requests. A failed readiness probe means that a container should not receive any traffic from a proxy, even if it's running.
                       </div>
                       <div ng-if="!container.readinessProbe">
-                        <a href="" ng-click="addProbe(container, 'readinessProbe')">Add Readiness Probe</a>
+                        <a href="" ng-click="addProbe(container, 'readinessProbe')" translate>Add Readiness Probe</a>
                       </div>
                       <div ng-if="container.readinessProbe">
                         <edit-probe
@@ -40,16 +38,15 @@
                             ng-if="container.readinessProbe">
                         </edit-probe>
                         <p>
-                          <a href="" ng-click="removeProbe(container, 'readinessProbe')">Remove Readiness Probe</a>
+                          <a href="" ng-click="removeProbe(container, 'readinessProbe')" translate>Remove Readiness Probe</a>
                         </p>
                       </div>
-                      <h3>Liveness Probe</h3>
-                      <div class="help-block mar-bottom-md" ng-if="$first">
-                        A liveness probe checks if the container is still running. If the liveness
-                        probe fails, the container is killed.
+                      <h3 translate>Liveness Probe</h3>
+                      <div class="help-block mar-bottom-md" ng-if="$first" translate>
+                        A liveness probe checks if the container is still running. If the liveness probe fails, the container is killed.
                       </div>
                       <div ng-if="!container.livenessProbe">
-                        <a href="" ng-click="addProbe(container, 'livenessProbe')">Add Liveness Probe</a>
+                        <a href="" ng-click="addProbe(container, 'livenessProbe')" translate>Add Liveness Probe</a>
                       </div>
                       <div ng-if="container.livenessProbe">
                         <edit-probe
@@ -57,7 +54,7 @@
                             exposed-ports="container.ports">
                         </edit-probe>
                         <p>
-                          <a href="" ng-click="removeProbe(container, 'livenessProbe')">Remove Liveness Probe</a>
+                          <a href="" ng-click="removeProbe(container, 'livenessProbe')" translate>Remove Liveness Probe</a>
                         </p>
                       </div>
                     </div>
@@ -72,8 +69,8 @@
                         class="btn btn-primary btn-lg"
                         ng-click="save()"
                         ng-disabled="form.$invalid || form.$pristine || disableInputs"
-                        value="">Save</button>
-                      <button class="btn btn-default btn-lg" ng-click="cancel()">Cancel</button>
+                        value="" translate>Save</button>
+                      <button class="btn btn-default btn-lg" ng-click="cancel()" translate>Cancel</button>
                     </div>
                   </fieldset>
                 </form>

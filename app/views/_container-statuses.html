@@ -12,13 +12,13 @@
       <ng-pluralize count="pod.status.initContainerStatuses.length"
                       when="{'1': '&nbsp;Init container {{pod.status.initContainerStatuses[0].name}}','other': '&nbsp;{} init containers'}">
       </ng-pluralize>
-      completed successfully
+      <translate>completed successfully</translate>
     </span>
     <span ng-if="initContainersTerminated">
       <a class="page-header-link" href="" ng-click="toggleInitContainer()">
-        <span ng-if="!expandInitContainers">Show</span>
-        <span ng-if="expandInitContainers">Hide</span>
-        Details
+        <span ng-if="!expandInitContainers" translate>Show</span>
+        <span ng-if="expandInitContainers" translate>Hide</span>
+        <translate>Details</translate>
       </a>
     </span>
   </h4>
@@ -26,44 +26,44 @@
   <div class="animate-if"
        ng-if="expandInitContainers"
        ng-repeat="containerStatus in pod.status.initContainerStatuses track by containerStatus.name" >
-    <h4 class="component-label">Init container {{containerStatus.name}}</h4>
+    <h4 class="component-label" translate>Init container {{containerStatus.name}}</h4>
 
     <dl class="dl-horizontal left">
       <dt>State:</dt>
       <dd>
         <kubernetes-object-describe-container-state container-state="containerStatus.state"></kubernetes-object-describe-container-state>
       </dd>
-      <dt ng-if="!(containerStatus.lastState | isEmptyObj)">Last State</dt>
+      <dt ng-if="!(containerStatus.lastState | isEmptyObj)" translate>Last State</dt>
       <dd ng-if="!(containerStatus.lastState | isEmptyObj)">
         <kubernetes-object-describe-container-state container-state="containerStatus.lastState"></kubernetes-object-describe-container-state>
       </dd>
-      <dt>Ready:</dt>
+      <dt translate>Ready:</dt>
       <dd>{{containerStatus.ready}}</dd>
-      <dt>Restart Count:</dt>
+      <dt translate>Restart Count:</dt>
       <dd>{{containerStatus.restartCount}}</dd>
     </dl>
   </div>
 </div>
 
 <div ng-repeat="containerStatus in pod.status.containerStatuses track by containerStatus.name" >
-  <h4>Container {{containerStatus.name}}</h4>
+  <h4 translate>Container {{containerStatus.name}}</h4>
 
   <dl class="dl-horizontal left">
-    <dt>State:</dt>
+    <dt translate>State:</dt>
     <dd>
       <kubernetes-object-describe-container-state container-state="containerStatus.state"></kubernetes-object-describe-container-state>
     </dd>
-    <dt ng-if="!(containerStatus.lastState | isEmptyObj)">Last State</dt>
+    <dt ng-if="!(containerStatus.lastState | isEmptyObj)" translate>Last State</dt>
     <dd ng-if="!(containerStatus.lastState | isEmptyObj)">
       <kubernetes-object-describe-container-state container-state="containerStatus.lastState"></kubernetes-object-describe-container-state>
     </dd>
-    <dt>Ready:</dt>
+    <dt translate>Ready:</dt>
     <dd>{{containerStatus.ready}}</dd>
-    <dt>Restart Count:</dt>
+    <dt translate>Restart Count:</dt>
     <dd>{{containerStatus.restartCount}}</dd>
 
     <div ng-if="hasDebugTerminal && showDebugAction(containerStatus) && ('pods' | canI : 'create')" class="debug-pod-action">
-      <a href="" ng-click="debugTerminal(containerStatus.name)" role="button">Debug in Terminal</a>
+      <a href="" ng-click="debugTerminal(containerStatus.name)" role="button" translate>Debug in Terminal</a>
     </div>
   </dl>
 </div>

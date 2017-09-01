@@ -14,17 +14,17 @@
                     class="btn btn-default hidden-xs"
                     ng-if="('buildconfigs/instantiate' | canI : 'create') && !(buildConfig | isBinaryBuild)"
                     ng-click="startBuild()">
-                  <span ng-if="!(buildConfig | isJenkinsPipelineStrategy)">
+                  <span ng-if="!(buildConfig | isJenkinsPipelineStrategy)" translate>
                     Start Build
                   </span>
-                  <span ng-if="buildConfig | isJenkinsPipelineStrategy">
+                  <span ng-if="buildConfig | isJenkinsPipelineStrategy" translate>
                     Start Pipeline
                   </span>
                 </button>
 
                 <!-- Secondary Actions -->
                 <button type="button" class="dropdown-toggle actions-dropdown-btn btn btn-default hidden-xs" data-toggle="dropdown">
-                  Actions
+                  <translate>Actions</translate>
                   <span class="caret" aria-hidden="true"></span>
                 </button>
                 <a href=""
@@ -33,19 +33,19 @@
                 <ul class="dropdown-menu dropdown-menu-right actions action-button">
                   <li class="visible-xs-inline" ng-if="('buildconfigs/instantiate' | canI : 'create') && !(buildConfig | isBinaryBuild)">
                     <a href="" role="button" ng-click="startBuild()">
-                      <span ng-if="!(buildConfig | isJenkinsPipelineStrategy)">
+                      <span ng-if="!(buildConfig | isJenkinsPipelineStrategy)" translate>
                         Start Build
                       </span>
-                      <span ng-if="buildConfig | isJenkinsPipelineStrategy">
+                      <span ng-if="buildConfig | isJenkinsPipelineStrategy" translate>
                         Start Pipeline
                       </span>
                     </a>
                   </li>
                   <li ng-if="'buildconfigs' | canI : 'update'">
-                    <a ng-href="{{buildConfig | editResourceURL}}" role="button">Edit</a>
+                    <a ng-href="{{buildConfig | editResourceURL}}" role="button" translate>Edit</a>
                   </li>
                   <li ng-if="'buildconfigs' | canI : 'update'">
-                    <a ng-href="{{buildConfig | editYamlURL}}" role="button">Edit YAML</a>
+                    <a ng-href="{{buildConfig | editYamlURL}}" role="button" translate>Edit YAML</a>
                   </li>
                   <li ng-if="'buildconfigs' | canI : 'delete'">
                     <delete-link
@@ -71,50 +71,50 @@
         </div><!-- /middle-header-->
         <div class="middle-content" persist-tab-state>
           <div class="container-fluid">
-            <div ng-if="!loaded">Loading...</div>
+            <div ng-if="!loaded" translate>Loading...</div>
             <div class="row" ng-if="loaded">
               <div class="col-md-12" ng-class="{ 'hide-tabs' : !buildConfig }">
                 <uib-tabset>
                   <uib-tab active="selectedTab.history">
-                    <uib-tab-heading>History</uib-tab-heading>
+                    <uib-tab-heading translate>History</uib-tab-heading>
 
                     <!-- If unfilteredBuilds is undefined, the builds are still loading. -->
-                    <div ng-if="!unfilteredBuilds" class="gutter-bottom">Loading...</div>
+                    <div ng-if="!unfilteredBuilds" class="gutter-bottom" translate>Loading...</div>
 
                     <!-- Show an empty state message when there are no builds. -->
                     <div ng-if="buildConfig && unfilteredBuilds && (unfilteredBuilds | hashSize) === 0" class="empty-state-message text-center">
-                      <h2>No builds.</h2>
+                      <h2 translate>No builds.</h2>
 
                         <p>
                           <span ng-if="!buildConfig.spec.strategy.jenkinsPipelineStrategy">
-                            <span ng-if="!('buildconfigs/instantiate' | canI : 'create')">
+                            <span ng-if="!('buildconfigs/instantiate' | canI : 'create')" translate>
                               Builds will create an image from
                             </span>
-                            <span ng-if="'buildconfigs/instantiate' | canI : 'create'">
+                            <span ng-if="'buildconfigs/instantiate' | canI : 'create'" translate>
                               Start a new build to create an image from
                             </span>
                             <span ng-if="buildConfig.spec.source.type === 'Git'">
-                              source repository
+                              <translate>source repository</translate>
                               <span class="word-break"><osc-git-link
                                               uri="buildConfig.spec.source.git.uri"
                                               ref="buildConfig.spec.source.git.ref"
                                               context-dir="buildConfig.spec.source.contextDir">{{buildConfig.spec.source.git.uri}}</osc-git-link></span>
                             </span>
-                            <span ng-if="buildConfig.spec.source.type !== 'Git'">
+                            <span ng-if="buildConfig.spec.source.type !== 'Git'" translate>
                               build configuration {{buildConfig.metadata.name}}.
                             </span>
                           </span>
                           <span ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy">
-                            No pipeline builds have run for {{buildConfigName}}.
+                            <translate>No pipeline builds have run for {{buildConfigName}}.</translate>
                             <br>
-                            <span ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile">
+                            <span ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile" translate>
                               View the <a ng-href="{{(buildConfig | navigateResourceURL) + '?tab=configuration'}}">Jenkinsfile</a> to see what stages will run.
                             </span>
                             <span ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath">
-                              View the file <code>{{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</code> in the
-                              <a ng-if="buildConfig | jenkinsfileLink" ng-href="buildConfig | jenkinsfileLink">source repository</a>
-                              <span ng-if="!(buildConfig | jenkinsfileLink)">source repository</span>
-                              to see what stages will run.
+                              <translate>View the file <code>{{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</code> in the</translate>
+                              <a ng-if="buildConfig | jenkinsfileLink" ng-href="buildConfig | jenkinsfileLink" translate>source repository</a>
+                              <span ng-if="!(buildConfig | jenkinsfileLink)" translate>source repository</span>
+                              <translate>to see what stages will run.</translate>
                             </span>
                           </span>
                         </p>
@@ -123,10 +123,10 @@
                             class="btn btn-primary btn-lg"
                             ng-click="startBuild()"
                             ng-if="('buildconfigs/instantiate' | canI : 'create') && !(buildConfig | isBinaryBuild)">
-                          <span ng-if="!(buildConfig | isJenkinsPipelineStrategy)">
+                          <span ng-if="!(buildConfig | isJenkinsPipelineStrategy)" translate>
                             Start Build
                           </span>
-                          <span ng-if="buildConfig | isJenkinsPipelineStrategy">
+                          <span ng-if="buildConfig | isJenkinsPipelineStrategy" translate>
                             Start Pipeline
                           </span>
                         </button>
@@ -139,36 +139,36 @@
                       <div class="h3">
                         <span class="last-status">
                           <status-icon status="latestBuild.status.phase"></status-icon>
-                          Build
+                          <translate>Build</translate>
                           <!-- Line break comments to prevent whitespace from being underlined on link hover. -->
                           <a ng-href="{{latestBuild | navigateResourceURL}}"><!--
                             --><span ng-if="latestBuild | annotation : 'buildNumber'">#{{latestBuild | annotation : 'buildNumber'}}</span><!--
                             --><span ng-if="!(latestBuild | annotation : 'buildNumber')">{{latestBuild.metadata.name}}</span><!--
                           --></a>
                           <span ng-switch="latestBuild.status.phase" class="hide-ng-leave">
-                            <span ng-switch-when="Failed">failed.</span>
-                            <span ng-switch-when="Error">encountered an error.</span>
-                            <span ng-switch-when="Cancelled">was cancelled.</span>
-                            <span ng-switch-default>is {{latestBuild.status.phase | lowercase}}.</span>
+                            <span ng-switch-when="Failed" translate>failed.</span>
+                            <span ng-switch-when="Error" translate>encountered an error.</span>
+                            <span ng-switch-when="Cancelled" translate>was cancelled.</span>
+                            <span ng-switch-default><translate>is</translate> {{latestBuild.status.phase | lowercase}}.</span>
                           </span>
                         </span>
                         <span ng-if="latestBuild | buildLogURL">
                           <!-- Always show a log link for pipeline builds. -->
                           <span ng-if="latestBuild | isJenkinsPipelineStrategy">
-                            <a ng-href="{{latestBuild | buildLogURL}}" target="_blank">View Log</a>
+                            <a ng-href="{{latestBuild | buildLogURL}}" target="_blank" translate>View Log</a>
                           </span>
                           <!-- Show a log link for other builds if the user can view. -->
                           <span ng-if="!(latestBuild | isJenkinsPipelineStrategy) && ('builds/log' | canI : 'get')">
-                            <a ng-href="{{latestBuild | buildLogURL}}">View Log</a>
+                            <a ng-href="{{latestBuild | buildLogURL}}" translate>View Log</a>
                           </span>
                         </span>
                       </div>
                       <div class="last-timestamp meta text-muted">
                         <span ng-if="!latestBuild.status.startTimestamp">
-                          created <span am-time-ago="latestBuild.metadata.creationTimestamp"></span>
+                          <translate>created</translate> <span am-time-ago="latestBuild.metadata.creationTimestamp"></span>
                         </span>
                         <span ng-if="latestBuild.status.startTimestamp">
-                          started <span am-time-ago="latestBuild.status.startTimestamp"></span>
+                          <translate>started</translate> <span am-time-ago="latestBuild.status.startTimestamp"></span>
                         </span>
                       </div>
 
@@ -185,14 +185,14 @@
                       <table ng-if="!(buildConfig | isJenkinsPipelineStrategy)" class="table table-bordered table-hover table-mobile">
                         <thead>
                           <tr>
-                            <th>Build</th>
-                            <th>Status</th>
-                            <th>Duration</th>
-                            <th>Created</th>
+                            <th translate>Build</th>
+                            <th translate>Status</th>
+                            <th translate>Duration</th>
+                            <th translate>Created</th>
                           </tr>
                         </thead>
                         <tbody ng-if="(builds | hashSize) == 0">
-                          <tr><td colspan="3"><em>{{emptyMessage}}</em></td></tr>
+                          <tr><td colspan="3"><em>{{emptyMessage|translate}}</em></td></tr>
                         </tbody>
                         <tbody ng-if="(builds | hashSize) > 0">
                           <tr ng-repeat="build in orderedBuilds track by (build | uid)">
@@ -225,13 +225,13 @@
                       <div ng-if="buildConfig | isJenkinsPipelineStrategy">
                         <build-pipeline build="build" ng-repeat="build in orderedBuilds track by (build | uid)"></build-pipeline>
                         <table ng-if="(builds | hashSize) === 0" class="table table-bordered table-hover table-mobile">
-                          <tbody><tr><td><em>{{emptyMessage}}</em></td></tr></tbody>
+                          <tbody><tr><td><em>{{emptyMessage|translate}}</em></td></tr></tbody>
                         </table>
                       </div>
                     </div>
                   </uib-tab>
                   <uib-tab active="selectedTab.configuration" ng-if="buildConfig">
-                    <uib-tab-heading>Configuration</uib-tab-heading>
+                    <uib-tab-heading translate>Configuration</uib-tab-heading>
                     <div class="resource-details">
                       <div class="row">
                         <div class="col-lg-6">
@@ -239,26 +239,26 @@
                             Show a header at lg and xl screen sizes to balance the columns, but hide
                             it at smaller widths since "Details" is not very meaningful.
                           -->
-                          <h3 class="hidden visible-lg visible-xl">Details</h3>
+                          <h3 class="hidden visible-lg visible-xl" translate>Details</h3>
                           <dl class="dl-horizontal left">
                             <div>
-                              <dt>Build Strategy:</dt>
+                              <dt translate>Build Strategy:</dt>
                               <dd>{{buildConfig.spec.strategy.type | startCase}}</dd>
                             </div>
                             <div ng-if="buildConfig.spec.source">
                               <div ng-if="buildConfig.spec.source.type == 'Git'">
-                                <dt>Source Repo:</dt>
+                                <dt translate>Source Repo:</dt>
                                 <dd><span class="word-break"><osc-git-link
                                           uri="buildConfig.spec.source.git.uri"
                                           ref="buildConfig.spec.source.git.ref"
                                           context-dir="buildConfig.spec.source.contextDir">{{buildConfig.spec.source.git.uri}}</osc-git-link></span></dd>
-                                <dt ng-if="buildConfig.spec.source.git.ref">Source Ref:</dt>
+                                <dt ng-if="buildConfig.spec.source.git.ref" translate>Source Ref:</dt>
                                 <dd ng-if="buildConfig.spec.source.git.ref">{{buildConfig.spec.source.git.ref}}</dd>
-                                <dt ng-if="buildConfig.spec.source.contextDir">Source Context Dir:</dt>
+                                <dt ng-if="buildConfig.spec.source.contextDir" translate>Source Context Dir:</dt>
                                 <dd ng-if="buildConfig.spec.source.contextDir">{{buildConfig.spec.source.contextDir}}</dd>
                               </div>
                               <div ng-if="buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath">
-                                <dt>Jenkinsfile Path:</dt>
+                                <dt translate>Jenkinsfile Path:</dt>
                                 <dd ng-if="buildConfig | jenkinsfileLink">
                                   <a ng-href="{{buildConfig | jenkinsfileLink}}">{{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</a>
                                 </dd>
@@ -266,15 +266,15 @@
                                   {{buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}
                                 </dd>
                                 <div class="small">
-                                  <a href="" ng-click="showJenkinsfileExamples()">What's a Jenkinsfile?</a>
+                                  <a href="" ng-click="showJenkinsfileExamples()" translate>What's a Jenkinsfile?</a>
                                 </div>
                               </div>
-                              <dt ng-if-start="buildConfig.spec.source.binary.asFile">Binary Input as File:</dt>
+                              <dt ng-if-start="buildConfig.spec.source.binary.asFile" translate>Binary Input as File:</dt>
                               <dd ng-if-end>{{buildConfig.spec.source.binary.asFile}}</dd>
                               <div ng-if="buildConfig.spec.source.type == 'None' && !(buildConfig | isJenkinsPipelineStrategy)">
-                                <dt>Source:</dt>
+                                <dt translate>Source:</dt>
                                 <dd>
-                                  <i>none</i>
+                                  <i translate>none</i>
                                   <span class="help action-inline">
                                     <a href>
                                       <i class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="No source inputs have been defined for this build configuration.">
@@ -284,13 +284,13 @@
                                 </dd>
                               </div>
                               <div ng-if="buildConfig.spec.source.images" class="image-sources">
-                                <dt>Image Sources:</dt>
+                                <dt translate>Image Sources:</dt>
                                 <dd></dd>
                                 <div ng-repeat="imageSource in imageSources" class="image-source-item">
                                   <h4>{{imageSource.from | imageObjectRef : buildConfig.metadata.namespace}}</h4>
                                   <dl class="dl-horizontal left">
                                     <div class="is-item-description">
-                                      <dt>Paths:</dt>
+                                      <dt translate>Paths:</dt>
                                       <div ng-repeat="(source, destination) in imageSourcesPaths[$index]" class="image-source-paths">
                                         <dd><span class="source-path">{{source}}</span><i class="fa fa-long-arrow-right"></i><span class="destination-dir">{{destination}}</span></dd>
                                       </div>
@@ -299,7 +299,7 @@
                                 </div>
                               </div>
                             </div>
-                            <dt ng-if-start="buildFrom = (buildConfig | buildStrategy).from">Builder Image:</dt>
+                            <dt ng-if-start="buildFrom = (buildConfig | buildStrategy).from" translate>Builder Image:</dt>
                             <dd ng-if-end>
                               <a ng-if="buildFrom.kind === 'ImageStreamTag' && (!buildFrom.namespace || buildConfig.metadata.namespace === buildFrom.namespace)"
                                   ng-href="{{buildFrom.name | navigateResourceURL : 'ImageStreamTag' : buildConfig.metadata.namespace}}">
@@ -310,7 +310,7 @@
                               </span>
                             </dd>
                             <div ng-if="outputTo = buildConfig.spec.output.to">
-                              <dt>Output To:</dt>
+                              <dt translate>Output To:</dt>
                               <dd>
                                 <a ng-if="outputTo.kind === 'ImageStreamTag' && (!outputTo.namespace || buildConfig.metadata.namespace === outputTo.namespace)"
                                     ng-href="{{outputTo.name | navigateResourceURL : 'ImageStreamTag' : buildConfig.metadata.namespace}}">
@@ -322,7 +322,7 @@
                               </dd>
                             </div>
                             <div class="run-policy">
-                              <dt>Run Policy:</dt>
+                              <dt translate>Run Policy:</dt>
                               <dd>
                                 {{buildConfig.spec.runPolicy | sentenceCase}}
                                 <span class="help action-inline">
@@ -377,45 +377,45 @@
                             </div>
                           </dl>
                           <div ng-if="buildConfig | hasPostCommitHook">
-                            <h3>Post-Commit Hooks</h3>
+                            <h3 translate>Post-Commit Hooks</h3>
                             <build-hooks build="buildConfig"></build-hooks>
                           </div>
                         </div>
                         <div class="col-lg-6">
-                          <h3>Triggers <a href="{{'build-triggers' | helpLink}}" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a></h3>
+                          <h3><translate>Triggers</translate> <a href="{{'build-triggers' | helpLink}}" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a></h3>
                           <dl class="dl-horizontal left build-triggers">
                             <div ng-repeat="trigger in buildConfig.spec.triggers | orderBy : 'type' : false : compareTriggers">
                               <div ng-switch="trigger.type">
                                 <div ng-switch-when="Bitbucket">
-                                    <dt>Bitbucket Webhook URL:
+                                    <dt translate>Bitbucket Webhook URL:
                                     </dt>
                                     <dd>
                                       <copy-to-clipboard clipboard-text="buildConfig.metadata.name | webhookURL : trigger.type : trigger.bitbucket.secret : project.metadata.name"></copy-to-clipboard>
                                     </dd>
                                 </div>
                                 <div ng-switch-when="GitHub">
-                                    <dt>GitHub Webhook URL:
+                                    <dt translate>GitHub Webhook URL:
                                     </dt>
                                     <dd>
                                       <copy-to-clipboard clipboard-text="buildConfig.metadata.name | webhookURL : trigger.type : trigger.github.secret : project.metadata.name"></copy-to-clipboard>
                                     </dd>
                                 </div>
                                 <div ng-switch-when="GitLab">
-                                    <dt>GitLab Webhook URL:
+                                    <dt translate>GitLab Webhook URL:
                                     </dt>
                                     <dd>
                                       <copy-to-clipboard clipboard-text="buildConfig.metadata.name | webhookURL : trigger.type : trigger.gitlab.secret : project.metadata.name"></copy-to-clipboard>
                                     </dd>
                                 </div>
                                 <div ng-switch-when="Generic">
-                                    <dt>Generic Webhook URL:
+                                    <dt translate>Generic Webhook URL:
                                     </dt>
                                     <dd>
                                       <copy-to-clipboard clipboard-text="buildConfig.metadata.name | webhookURL : trigger.type : trigger.generic.secret : project.metadata.name"></copy-to-clipboard>
                                     </dd>
                                 </div>
                                 <div ng-switch-when="ImageChange">
-                                  <dt>
+                                  <dt translate>
                                     New Image For:
                                   </dt>
                                   <dd ng-init="triggerFrom = (trigger.imageChange.from || (buildConfig | buildStrategy).from)">
@@ -429,16 +429,16 @@
                                   </dd>
                                 </div>
                                 <div ng-switch-when="ConfigChange">
-                                  <dt>Config Change For:</dt>
-                                  <dd>Build config {{buildConfig.metadata.name}}</dd>
+                                  <dt translate>Config Change For:</dt>
+                                  <dd translate>Build config {{buildConfig.metadata.name}}</dd>
                                 </div>
                                 <div ng-switch-default>
-                                  <dt>Other Trigger:</dt>
+                                  <dt translate>Other Trigger:</dt>
                                   <dd>{{trigger.type}}</dd>
                                 </div>
                               </div>
                             </div>
-                            <dt>Manual (CLI):
+                            <dt translate>Manual (CLI):
                             </dt>
                             <dd>
                               <copy-to-clipboard clipboard-text="'oc start-build ' + buildConfig.metadata.name + ' -n ' + project.metadata.name"></copy-to-clipboard>
@@ -450,18 +450,18 @@
                     </div>
                   </uib-tab>
                   <uib-tab heading="Environment" active="selectedTab.environment" ng-if="buildConfig && !(buildConfig | isJenkinsPipelineStrategy)">
-                    <uib-tab-heading>Environment</uib-tab-heading>
-                    <h3>Environment Variables</h3>
+                    <uib-tab-heading translate>Environment</uib-tab-heading>
+                    <h3 translate>Environment Variables</h3>
                     <p ng-if="BCEnvVarsFromImage.length">
-                      The builder image has additional environment variables defined.  Variables defined below will overwrite any from the image with the same name.
-                      <a href="" ng-click="expand.imageEnv = true" ng-if="!expand.imageEnv">Show Image Environment Variables</a>
-                      <a href="" ng-click="expand.imageEnv = false" ng-if="expand.imageEnv">Hide Image Environment Variables</a>
+                      <translate>The builder image has additional environment variables defined.  Variables defined below will overwrite any from the image with the same name.</translate>
+                      <a href="" ng-click="expand.imageEnv = true" ng-if="!expand.imageEnv" translate>Show Image Environment Variables</a>
+                      <a href="" ng-click="expand.imageEnv = false" ng-if="expand.imageEnv" translate>Hide Image Environment Variables</a>
                     </p>
                     <key-value-editor
                       ng-if="expand.imageEnv"
                       entries="BCEnvVarsFromImage"
-                      key-placeholder="Name"
-                      value-placeholder="Value"
+                      key-placeholder="{{'Name'|translate}}"
+                      value-placeholder="{{'Value'|translate}}"
                       is-readonly
                       cannot-add
                       cannot-sort
@@ -472,8 +472,8 @@
                         <confirm-on-exit dirty="forms.bcEnvVars.$dirty"></confirm-on-exit>
                         <key-value-editor
                           entries="envVars"
-                          key-placeholder="Name"
-                          value-placeholder="Value"
+                          key-placeholder="{{'Name'|translate}}"
+                          value-placeholder="{{'Value'|translate}}"
                           key-validator="[A-Za-z_][A-Za-z0-9_]*"
                           key-validator-error="Please enter a valid key"
                           key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
@@ -488,13 +488,13 @@
                           href=""
                           ng-click="clearEnvVarUpdates()"
                           class="mar-left-sm"
-                          style="vertical-align: -2px;">Clear Changes</a>
+                          style="vertical-align: -2px;" translate>Clear Changes</a>
                       </div>
                       <key-value-editor
                         ng-if="!('buildconfigs' | canI : 'update')"
                         entries="envVars"
-                        key-placeholder="Name"
-                        value-placeholder="Value"
+                        key-placeholder="{{'Name'|translate}}"
+                        value-placeholder="{{'Value'|translate}}"
                         is-readonly
                         cannot-add
                         cannot-sort

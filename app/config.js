@@ -35,6 +35,9 @@
     metricsURL: ""
   };
 
+  // Additional support only for Chinese now: zh-CN
+  window.OPENSHIFT_LANG = "en";
+
   window.OPENSHIFT_VERSION = {
     openshift: "dev-mode",
     kubernetes: "dev-mode"

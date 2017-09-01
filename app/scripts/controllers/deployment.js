@@ -21,7 +21,8 @@ angular.module('openshiftConsole')
                         Navigate,
                         OwnerReferencesService,
                         ProjectsService,
-                        StorageService) {
+                        StorageService,
+                        gettext) {
     var imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
 
     $scope.projectName = $routeParams.project;
@@ -29,7 +30,7 @@ angular.module('openshiftConsole')
     $scope.replicaSetsForDeployment = {};
     $scope.unfilteredReplicaSetsForDeployment  = {};
     $scope.labelSuggestions = {};
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettext("Loading...");
     $scope.forms = {};
     $scope.alerts = {};
     $scope.imagesByDockerReference = {};
@@ -96,7 +97,7 @@ angular.module('openshiftConsole')
               group: 'extensions',
               resource: 'replicasets'
             }, context, function(replicaSetData) {
-              $scope.emptyMessage = "No deployments to show";
+              $scope.emptyMessage = gettext("No deployments to show");
 
               var replicaSets = replicaSetData.by('metadata.name');
               replicaSets = OwnerReferencesService.filterForController(replicaSets, deployment);

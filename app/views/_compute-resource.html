@@ -3,7 +3,7 @@
     <label ng-if="label">{{label}}</label>
     <div class="resource-size" ng-class="{ 'has-error': form.$invalid }">
       <div class="resource-amount">
-        <label class="sr-only" ng-attr-for="{{id}}">Amount</label>
+        <label class="sr-only" ng-attr-for="{{id}}" translate>Amount</label>
         <input type="number"
                name="amount"
                ng-attr-id="{{id}}"
@@ -16,7 +16,7 @@
                ng-attr-aria-describedby="{{description ? id + '-help' : undefined}}">
       </div>
       <div class="resource-unit">
-        <label class="sr-only" ng-attr-for="{{id}}-unit">Unit</label>
+        <label class="sr-only" ng-attr-for="{{id}}-unit" translate>Unit</label>
         <ui-select search-enabled="false" ng-model="input.unit" input-id="{{id}}-unit">
           <ui-select-match>{{$select.selected.label}}</ui-select-match>
           <ui-select-choices repeat="option.value as option in units" group-by="groupUnits">
@@ -29,30 +29,30 @@
       {{description}}
     </div>
     <div ng-if="form.$invalid" class="has-error">
-      <div ng-if="form.amount.$error.number" class="help-block">
+      <div ng-if="form.amount.$error.number" class="help-block" translate>
         Must be a number.
       </div>
-      <div ng-if="form.amount.$error.min" class="help-block">
+      <div ng-if="form.amount.$error.min" class="help-block" translate>
         Can't be negative.
       </div>
-      <div ng-if="form.amount.$error.limitRangeMin" class="help-block">
+      <div ng-if="form.amount.$error.limitRangeMin" class="help-block" translate>
         Can't be less than {{limitRangeMin | usageWithUnits : type}}.
       </div>
-      <div ng-if="form.amount.$error.limitRangeMax" class="help-block">
+      <div ng-if="form.amount.$error.limitRangeMax" class="help-block" translate>
         Can't be greater than {{limitRangeMax | usageWithUnits : type}}.
       </div>
-      <div ng-if="form.amount.$error.limitLargerThanRequest" class="help-block">
+      <div ng-if="form.amount.$error.limitLargerThanRequest" class="help-block" translate>
         Limit can't be less than request ({{request | usageWithUnits : type}}).
       </div>
       <div ng-if="form.amount.$error.limitWithinRatio" class="help-block">
-        <span ng-if="!input.amount && !defaultValue">
+        <span ng-if="!input.amount && !defaultValue" translate>
           Limit is required if request is set. (Max Limit/Request Ratio: {{maxLimitRequestRatio}})
         </span>
         <span ng-if="input.amount || defaultValue">
-          Limit cannot be more than {{maxLimitRequestRatio}} times request value.
-          (Request: {{request | usageWithUnits : type}},
+          <translate>Limit cannot be more than {{maxLimitRequestRatio}} times request value.</translate>
+          (<translate>Request</translate>: {{request | usageWithUnits : type}},
           <!-- Show default if amount is unset. -->
-          Limit: {{(input.amount ? (input.amount + input.unit) : defaultValue) | usageWithUnits : type}})
+          <translate>Limit</translate>: {{(input.amount ? (input.amount + input.unit) : defaultValue) | usageWithUnits : type}})
         </span>
       </div>
     </div>

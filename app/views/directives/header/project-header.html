@@ -3,10 +3,10 @@
   <div class="navbar-header hidden-xs">
     <a class="navbar-home" href="./"><span class="fa-fw pficon pficon-home" aria-hidden="true"></span>
       <span class="visible-xlg-inline-block">
-        <span ng-if="'service_catalog_landing_page' | enableTechPreviewFeature">
+        <span ng-if="'service_catalog_landing_page' | enableTechPreviewFeature" translate>
           Home
         </span>
-        <span ng-if="!('service_catalog_landing_page' | enableTechPreviewFeature)">
+        <span ng-if="!('service_catalog_landing_page' | enableTechPreviewFeature)" translate>
           Projects
         </span>
       </span></a>
@@ -15,7 +15,7 @@
     <!-- mobile nav menu -->
     <div row class="navbar-flex-btn toggle-menu">
       <button type="button" class="navbar-toggle project-action-btn ng-isolate-scope" data-toggle="collapse" data-target=".navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
+        <span class="sr-only" translate>Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -27,17 +27,17 @@
     </div>
     <!-- create buttons show at mobile -->
     <div row class="dropdown navbar-flex-btn" ng-if="project.metadata.name | canIAddToProject" uib-dropdown>
-      <a row class="nav-item-iconic dropdown-toggle add-to-project-btn" href="" ng-disabled="project.status.phase != 'Active'" title="Add to Project" uib-dropdown-toggle>
-        <i class="fa fa-plus visible-xs-inline-block" aria-hidden="true" title="Add to Project"></i><span class="hidden-xs add-to-project">Add to Project</span><span class="hidden-xs caret" aria-hidden="true" title="Add to Project"></span>
+      <a row class="nav-item-iconic dropdown-toggle add-to-project-btn" href="" ng-disabled="project.status.phase != 'Active'" title="{{'Add to Project'|translate}}" uib-dropdown-toggle>
+        <i class="fa fa-plus visible-xs-inline-block" aria-hidden="true" title="{{'Add to Project'|translate}}"></i><span class="hidden-xs add-to-project" translate>Add to Project</span><span class="hidden-xs caret" aria-hidden="true" title="{{'Add to Project'|translate}}"></span>
       </a>
       <ul role="menu" uib-dropdown-menu class="dropdown-menu dropdown-menu-right">
-        <li ng-if-start="!catalogLandingPageEnabled" role="menuitem"><a ng-href="project/{{projectName}}/create?tab=fromCatalog">Browse Catalog</a></li>
-        <li role="menuitem"><a ng-href="project/{{projectName}}/create?tab=deployImage">Deploy Image</a></li>
-        <li ng-if-end role="menuitem"><a ng-href="project/{{projectName}}/create?tab=fromFile">Import YAML / JSON</a></li>
+        <li ng-if-start="!catalogLandingPageEnabled" role="menuitem"><a ng-href="project/{{projectName}}/create?tab=fromCatalog" translate>Browse Catalog</a></li>
+        <li role="menuitem"><a ng-href="project/{{projectName}}/create?tab=deployImage" translate>Deploy Image</a></li>
+        <li ng-if-end role="menuitem"><a ng-href="project/{{projectName}}/create?tab=fromFile" translate>Import YAML / JSON</a></li>
 
-        <li ng-if-start="catalogLandingPageEnabled" role="menuitem"><a href="/">Browse Catalog</a></li>
-        <li role="menuitem"><a href="" ng-click="showOrderingPanel('deployImage')">Deploy Image</a></li>
-        <li ng-if-end role="menuitem"><a href="" ng-click="showOrderingPanel('fromFile')">Import YAML / JSON</a></li>
+        <li ng-if-start="catalogLandingPageEnabled" role="menuitem"><a href="/" translate>Browse Catalog</a></li>
+        <li role="menuitem"><a href="" ng-click="showOrderingPanel('deployImage')" translate>Deploy Image</a></li>
+        <li ng-if-end role="menuitem"><a href="" ng-click="showOrderingPanel('fromFile')" translate>Import YAML / JSON</a></li>
       </ul>
     </div>
     <div row

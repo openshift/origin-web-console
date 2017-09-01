@@ -1,17 +1,17 @@
 <div class="modal-resource-action">
   <div class="modal-body">
-    <h1>Save partial log for <strong>{{object.metadata.name}}</strong>?</h1>
+    <h1 translate>Save partial log for <strong>{{object.metadata.name}}</strong>?</h1>
     <div class="mar-bottom-xl">
-      The log might not be complete. Continuing will save only the content currently displayed.
-      <span ng-if="command">To get the complete log, run the command</span>
+      <translate>The log might not be complete. Continuing will save only the content currently displayed.</translate>
+      <span ng-if="command" translate>To get the complete log, run the command</span>
     </div>
     <copy-to-clipboard ng-if="command" display-wide="true" clipboard-text="command"></copy-to-clipboard>
-    <div class="mar-top-xl">
+    <div class="mar-top-xl" translate>
       Learn more about the <a href="command-line" target="_blank">command line tools</a>.
     </div>
   </div>
   <div class="modal-footer">
-      <button class="btn btn-lg btn-primary" type="button" ng-click="save()">Save</button>
-      <button class="btn btn-lg btn-default" type="button" ng-click="cancel()">Cancel</button>
+      <button class="btn btn-lg btn-primary" type="button" ng-click="save()" translate>Save</button>
+      <button class="btn btn-lg btn-default" type="button" ng-click="cancel()" translate>Cancel</button>
   </div>
 </div>

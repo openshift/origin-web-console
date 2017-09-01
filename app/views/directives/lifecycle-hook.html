@@ -1,28 +1,28 @@
 <h4>
-  {{type | upperFirst}} Hook
+  <translate>{{type | upperFirst}} Hook</translate>
   <span ng-switch="type">
-    <small ng-switch-when="pre">&ndash; runs before the deployment begins</small>
-    <small ng-switch-when="mid">&ndash; runs after the previous deployment is scaled down to zero and before the first pod of the new deployment is created</small>
-    <small ng-switch-when="post">&ndash; runs after the deployment strategy completes</small>
+    <small ng-switch-when="pre">&ndash; <translate>runs before the deployment begins</translate></small>
+    <small ng-switch-when="mid">&ndash; <translate>runs after the previous deployment is scaled down to zero and before the first pod of the new deployment is created</translate></small>
+    <small ng-switch-when="post">&ndash; <translate>runs after the deployment strategy completes</translate></small>
   </span>
 </h4>
 <dl class="dl-horizontal left">
-  <dt>Action:</dt>
+  <dt translate>Action:</dt>
   <dd>{{strategyParams[type].execNewPod ? "Run a command" : "Tag the image"}}</dd>
-  <dt>Failure Policy:</dt>
+  <dt translate>Failure Policy:</dt>
   <dd>{{strategyParams[type].failurePolicy}}
     <span class="help action-inline">
       <a href ng-switch="strategyParams[type].failurePolicy">
-        <i ng-switch-when="Ignore" class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Continue with deployment on failure"></i>
-        <i ng-switch-when="Abort" class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Abort deployment on failure"></i>
-        <i ng-switch-when="Retry" class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Retry the hook until it succeeds"></i>
+        <i ng-switch-when="Ignore" class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="{{'Continue with deployment on failure'|translate}}"></i>
+        <i ng-switch-when="Abort" class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="{{'Abort deployment on failure'|translate}}"></i>
+        <i ng-switch-when="Retry" class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="{{'Retry the hook until it succeeds'|translate}}"></i>
       </a>
     </span>
   </dd>
   <div ng-if="strategyParams[type].execNewPod">
-    <h5 class="container-name">Container {{strategyParams[type].execNewPod.containerName}}</h5>
+    <h5 class="container-name" translate>Container {{strategyParams[type].execNewPod.containerName}}</h5>
     <dl class="dl-horizontal left">
-      <dt>Command:</dt>
+      <dt translate>Command:</dt>
       <dd>
         <code class="command">
           <span ng-repeat="arg in strategyParams[type].execNewPod.command">
@@ -30,13 +30,13 @@
           </span>
         </code>
       </dd>
-      <dt ng-if-start="strategyParams[type].execNewPod.env">Environment Variables:</dt>
+      <dt ng-if-start="strategyParams[type].execNewPod.env" translate>Environment Variables:</dt>
       <dd ng-if-end>
         <div ng-repeat="env in strategyParams[type].execNewPod.env">
           <div class="truncate" ng-attr-title="{{env.value}}">{{env.name}}={{env.value}}</div>
         </div>
       </dd>
-      <dt ng-if-start="strategyParams[type].execNewPod.volumes">Volumes:</dt>
+      <dt ng-if-start="strategyParams[type].execNewPod.volumes" translate>Volumes:</dt>
       <dd ng-if-end>
         <div ng-repeat="volume in strategyParams[type].execNewPod.volumes">
           {{volume}}
@@ -48,7 +48,7 @@
     <div ng-repeat="tagImage in strategyParams[type].tagImages">
     <h5 class="container-name">Container {{tagImage.containerName}}</h5>
       <dl class="dl-horizontal left">
-        <div>Tag image as <a ng-if="!tagImage.to.namespace || tagImage.to.namespace === deploymentConfig.metadata.namespace" ng-href="{{tagImage.to.name | navigateResourceURL : 'ImageStreamTag' : deploymentConfig.metadata.namespace}}">{{tagImage.to | imageObjectRef : deploymentConfig.metadata.namespace}}</a>
+        <div><translate>Tag image as</translate> <a ng-if="!tagImage.to.namespace || tagImage.to.namespace === deploymentConfig.metadata.namespace" ng-href="{{tagImage.to.name | navigateResourceURL : 'ImageStreamTag' : deploymentConfig.metadata.namespace}}">{{tagImage.to | imageObjectRef : deploymentConfig.metadata.namespace}}</a>
           <span ng-if="tagImage.to.namespace && tagImage.to.namespace !== deploymentConfig.metadata.namespace">{{tagImage.to | imageObjectRef : deploymentConfig.metadata.namespace}}</span></div>
       </dl>
     </div>

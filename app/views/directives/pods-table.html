@@ -5,16 +5,16 @@
   </colgroup>
   <thead>
     <tr>
-      <th>{{customNameHeader || 'Name'}}</th>
-      <th>Status</th>
-      <th>Containers Ready</th>
-      <th>Container Restarts</th>
-      <th>Age</th>
-      <th ng-if="activePods">Receiving Traffic</th>
+      <th>{{customNameHeader || 'Name'|translate}}</th>
+      <th translate>Status</th>
+      <th translate>Containers Ready</th>
+      <th translate>Container Restarts</th>
+      <th translate>Age</th>
+      <th ng-if="activePods" translate>Receiving Traffic</th>
     </tr>
   </thead>
   <tbody ng-if="!sortedPods.length">
-    <tr><td colspan="{{activePods ? 6 : 5}}"><em>{{emptyMessage || 'No pods to show'}}</em></td></tr>
+    <tr><td colspan="{{activePods ? 6 : 5}}"><em ng-if="emptyMessage">{{emptyMessage|translate}}</em><em ng-if="!emptyMessage" translate>No pods to show</em></td></tr>
   </tbody>
   <tbody ng-if="sortedPods.length">
     <tr ng-repeat="pod in sortedPods track by (pod | uid)" class="animate-repeat">
@@ -26,7 +26,7 @@
              data-toggle="popover"
              data-trigger="hover"
              dynamic-content="Debugging pod {{pod | debugPodSourceName}}"></i>
-           <span class="sr-only">Debugging pod {{pod | debugPodSourceName}}</span>
+           <span class="sr-only" translate>Debugging pod {{pod | debugPodSourceName}}</span>
         </span>
       </td>
       <td data-title="Status">
@@ -41,12 +41,12 @@
       <td ng-if="activePods" data-title="Receiving Traffic">
         <span ng-if="activePods[pod.metadata.name]">
           <span class="fa fa-fw fa-check text-success" aria-hidden="true"></span>
-          <span class="sr-only">Yes</span>
+          <span class="sr-only" translate>Yes</span>
         </span>
         <span ng-if="!activePods[pod.metadata.name]">
            <span data-toggle="popover" data-trigger="hover" data-content="{{podFailureReasons[pod.status.phase] || 'This pod has no endpoints and is not accepting traffic.'}}" style="cursor: help;">
             <span class="fa fa-fw fa-times text-danger" aria-hidden="true" data-toggle="tooltip" style="cursor: help;"></span>
-            <span class="sr-only">No</span>
+            <span class="sr-only" translate>No</span>
           </span>
         </span>
       </td>

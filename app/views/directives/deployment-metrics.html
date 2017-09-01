@@ -1,10 +1,10 @@
 <div class="metrics">
   <div ng-if="!metricsError" class="metrics-options">
     <div class="pull-right learn-more-block hidden-xs">
-      <a href="" ng-click="showComputeUnitsHelp()">About Compute Resources</a>
+      <a href="" ng-click="showComputeUnitsHelp()" translate>About Compute Resources</a>
     </div>
     <div ng-if="containers.length" class="form-group">
-      <label for="selectContainer">Container:</label>
+      <label for="selectContainer" translate>Container:</label>
       <div class="select-container">
         <span ng-show="containers.length === 1">
           {{options.selectedContainer.name}}
@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="form-group">
-      <label for="timeRange">Time Range:</label>
+      <label for="timeRange" translate>Time Range:</label>
       <div class="select-range">
         <ui-select ng-model="options.timeRange" search-enabled="false" ng-disabled="metricsError" input-id="timeRange">
           <ui-select-match>{{$select.selected.label}}</ui-select-match>
@@ -31,20 +31,18 @@
   </div>
 
   <ellipsis-pulser color="dark" size="sm" msg="Loading metrics" ng-if="!loaded"></ellipsis-pulser>
-  <div ng-if="loaded && noData && !metricsError" class="mar-top-md">
+  <div ng-if="loaded && noData && !metricsError" class="mar-top-md" translate>
     No metrics to display.
   </div>
 
   <div ng-if="metricsError" class="empty-state-message text-center">
     <h2>
       <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
-      Metrics are not available.
+      <translate>Metrics are not available.</translate>
     </h2>
 
-    <p>
-      An error occurred getting metrics<span ng-if="options.selectedContainer.name">
-        for container {{options.selectedContainer.name}}</span><span ng-if="metricsURL">
-        from <a ng-href="{{metricsURL}}">{{metricsURL}}</a></span>.
+    <p translate>
+      An error occurred getting metrics<span ng-if="options.selectedContainer.name"> for container {{options.selectedContainer.name}}</span><span ng-if="metricsURL"> from <a ng-href="{{metricsURL}}">{{metricsURL}}</a></span>.
     </p>
 
     <p class="text-muted">
@@ -55,7 +53,7 @@
   <div ng-repeat="metric in metrics" ng-show="!noData && !metricsError" class="metrics-full">
     <h2 class="metric-label">
       {{metric.label}}
-      <small ng-if="showAverage">
+      <small ng-if="showAverage" translate>
         Average per pod
       </small>
     </h2>

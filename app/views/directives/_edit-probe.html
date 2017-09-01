@@ -15,7 +15,7 @@
               ng-model="probe.httpGet.scheme"
               ng-true-value=" 'HTTPS' "
               ng-false-value=" 'HTTP' ">
-          Use HTTPS
+          <translate>Use HTTPS</translate>
         </label>
       </div>
     </div>
@@ -45,7 +45,7 @@
     </div>
   </fieldset>
   <fieldset ng-if="selected.type === 'exec'">
-    <label class="required">Command</label>
+    <label class="required" translate>Command</label>
     <edit-command args="probe.exec.command" is-required="true"></edit-command>
   </fieldset>
   <fieldset ng-if="selected.type === 'tcpSocket'">
@@ -61,7 +61,7 @@
     </div>
   </fieldset>
   <div class="form-group">
-    <label ng-attr-for="{{id}}-initial-delay">Initial Delay</label>
+    <label ng-attr-for="{{id}}-initial-delay" translate>Initial Delay</label>
     <span class="input-group"
        ng-class="{ 'has-error': form.initialDelaySeconds.$invalid && form.initialDelaySeconds.$touched }">
       <input
@@ -74,19 +74,19 @@
           ng-attr-id="{{id}}-initial-delay"
           class="form-control"
           ng-attr-aria-describedby="{{id}}-delay-description">
-      <span class="input-group-addon">seconds</span>
+      <span class="input-group-addon" translate>seconds</span>
     </span>
-    <div class="help-block" ng-attr-id="{{id}}-delay-description">
+    <div class="help-block" ng-attr-id="{{id}}-delay-description" translate>
       How long to wait after the container starts before checking its health.
     </div>
     <div ng-if="form.initialDelaySeconds.$invalid && form.initialDelaySeconds.$touched" class="has-error">
-      <div ng-if="form.initialDelaySeconds.$error.number" class="help-block">
+      <div ng-if="form.initialDelaySeconds.$error.number" class="help-block" translate>
         Must be a number.
       </div>
-      <div ng-if="form.initialDelaySeconds.$error.min" class="help-block">
+      <div ng-if="form.initialDelaySeconds.$error.min" class="help-block" translate>
         Delay can't be negative.
       </div>
-      <span ng-if="form.initialDelaySeconds.$error.pattern && !form.initialDelaySeconds.$error.min" class="help-block">
+      <span ng-if="form.initialDelaySeconds.$error.pattern && !form.initialDelaySeconds.$error.min" class="help-block" translate>
         Must be a whole number.
       </span>
     </div>
@@ -106,19 +106,19 @@
           ng-attr-id="{{id}}-timeout"
           class="form-control"
           ng-attr-aria-describedby="{{id}}-timeout-description">
-      <span class="input-group-addon">seconds</span>
+      <span class="input-group-addon" translate>seconds</span>
     </span>
-    <div class="help-block" ng-attr-id="{{id}}-timeout-description">
+    <div class="help-block" ng-attr-id="{{id}}-timeout-description" translate>
       How long to wait for the probe to finish. If the time is exceeded, the probe is considered failed.
     </div>
     <div ng-if="form.timeoutSeconds.$invalid && form.timeoutSeconds.$touched" class="has-error">
-      <div ng-if="form.timeoutSeconds.$error.number" class="help-block">
+      <div ng-if="form.timeoutSeconds.$error.number" class="help-block" translate>
         Must be a number.
       </div>
-      <div ng-if="form.timeoutSeconds.$error.min" class="help-block">
+      <div ng-if="form.timeoutSeconds.$error.min" class="help-block" translate>
         Timeout must be greater than or equal to one.
       </div>
-      <span ng-if="form.timeoutSeconds.$error.pattern && !form.timeoutSeconds.$error.min" class="help-block">
+      <span ng-if="form.timeoutSeconds.$error.pattern && !form.timeoutSeconds.$error.min" class="help-block" translate>
         Must be a whole number.
       </span>
     </div>

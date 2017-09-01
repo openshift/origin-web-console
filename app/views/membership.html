@@ -12,13 +12,13 @@
                 href=""
                 ng-if="canUpdateRolebindings"
                 ng-click="toggleEditMode()">
-                <span ng-if="!(mode.edit)">Edit Membership</span>
-                <span ng-if="mode.edit">Done Editing</span>
+                <span ng-if="!(mode.edit)" translate>Edit Membership</span>
+                <span ng-if="mode.edit" translate>Done Editing</span>
               </a>
-               Membership
+               <translate>Membership</translate>
                <span class="page-header-link">
                  <a ng-href="{{'roles' | helpLink}}" target="_blank">
-                   Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
+                   <translate>Learn More</translate> <i class="fa fa-external-link" aria-hidden="true"></i>
                  </a>
                </span>
             </h1>
@@ -34,7 +34,7 @@
             </div>
           </div>
           <div  ng-if="!('rolebindings' | canI : 'list')">
-            <p>You do not have permission to view roles in this project.</p>
+            <p translate>You do not have permission to view roles in this project.</p>
           </div>
           <uib-tabset
             ng-if="'rolebindings' | canI : 'list'">
@@ -53,7 +53,7 @@
                     target="_blank"
                     ng-href="{{subjectKind.helpLinkKey | helpLink}}"
                     class="learn-more-inline">
-                    Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
+                    <translate>Learn More</translate> <i class="fa fa-external-link" aria-hidden="true"></i>
                   </a>
                 </p>
               </div>
@@ -66,13 +66,13 @@
                   class="col-heading item-row"
                   row mobile="column" flex-collapse-fix>
                   <div class="col-name" flex conceal="mobile" ng-class="{ 'half-width': !mode.edit }">
-                    <h3>Name</h3>
+                    <h3 translate>Name</h3>
                   </div>
                   <div class="col-roles" flex conceal="mobile">
-                    <h3>Roles</h3>
+                    <h3 translate>Roles</h3>
                   </div>
                   <div ng-if="mode.edit" class="col-add-role" conceal="tablet" flex-collapse-fix>
-                    <h3>
+                    <h3 translate>
                       Add Another Role
                     </h3>
                   </div>
@@ -80,7 +80,7 @@
 
                 <div ng-if="(subjectKind.subjects | hashSize) === 0">
                   <p>
-                    <em>There are no {{ subjectKind.name | humanizeKind }}s with access to this project.</em>
+                    <em translate>There are no {{ subjectKind.name | humanizeKind }}s with access to this project.</em>
                   </p>
                 </div>
                 <div
@@ -105,7 +105,7 @@
                       </strong>
                       <span
                         class="current-user"
-                        ng-if="subject.name === user.metadata.name">
+                        ng-if="subject.name === user.metadata.name" translate>
                         (you)
                       </span>
                     </span>
@@ -137,7 +137,7 @@
                           class="select-role"
                           flex>
                           <ui-select-match
-                            placeholder="Select a role">
+                            placeholder="{{'Select a role'|translate}}">
                             <span ng-bind="subject.newRole.metadata.name"></span>
                           </ui-select-match>
                           <ui-select-choices
@@ -194,10 +194,10 @@
                           on-select="selectProject($item, $model)"
                           theme="bootstrap"
                           search-enabled="true"
-                          title="Select a project"
+                          title="{{'Select a project'|translate}}"
                           class="select-role pad-bottom-sm">
                           <ui-select-match
-                            placeholder="Select a project">
+                            placeholder="{{'Select a project'|translate}}">
                             <span>{{newBinding.namespace}}</span>
                           </ui-select-match>
                           <ui-select-choices
@@ -221,10 +221,10 @@
                           ng-model="newBinding.name"
                           theme="bootstrap"
                           search-enabled="true"
-                          title="Select a service account"
+                          title="{{'Select a service account'|translate}}"
                           class="select-role">
                           <ui-select-match
-                            placeholder="Service account">
+                            placeholder="{{'Service account'|translate}}">
                             <span>{{newBinding.name}}</span>
                           </ui-select-match>
                           <ui-select-choices
@@ -251,7 +251,7 @@
                             class="select-role"
                             flex>
                             <ui-select-match
-                              placeholder="Select a role">
+                              placeholder="{{'Select a role'|translate}}">
                               <span ng-bind="newBinding.newRole.metadata.name"></span>
                             </ui-select-match>
                             <ui-select-choices
@@ -290,7 +290,7 @@
                                                             class="action-inline"
                                                             data-toggle="popover"
                                                             data-trigger="hover focus"
-                                                            data-content="System roles are hidden by default and do not typically need to be managed."><i class="pficon pficon-help"></i></a>
+                                                            data-content="{{'System roles are hidden by default and do not typically need to be managed.'|translate}}"><i class="pficon pficon-help"></i></a>
                       </div>
                     </div>
                   </div>
