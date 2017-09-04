@@ -14,7 +14,7 @@
   <navbar-utility></navbar-utility>
 </nav>
 
-<div ng-show="projectName && !chromeless" class="project-bar">
+<div ng-show="currentProjectName && !chromeless" class="project-bar">
   <div class="toggle-menu">
     <button type="button" class="navbar-toggle project-action-btn" ng-click="toggleNav()">
       <span class="sr-only">Toggle navigation</span>
@@ -28,14 +28,14 @@
     <select class="selectpicker form-control" data-selected-text-format="count>3" id="boostrapSelect" title=""></select>
   </div>
   <!-- create buttons show at mobile -->
-  <div class="dropdown add-to-project" ng-show="canIAddToProject" uib-dropdown>
+  <div class="dropdown add-to-project" ng-if="canIAddToProject" uib-dropdown>
     <a class="dropdown-toggle" href="" ng-disabled="currentProject.status.phase != 'Active'" title="Add to Project" uib-dropdown-toggle>
       <i class="fa fa-plus visible-xs-inline-block" aria-hidden="true" title="Add to Project"></i><span class="hidden-xs">Add to Project</span><span class="hidden-xs caret" aria-hidden="true" title="Add to Project"></span>
     </a>
     <ul role="menu" uib-dropdown-menu class="dropdown-menu dropdown-menu-right">
-      <li ng-if-start="!catalogLandingPageEnabled" role="menuitem"><a ng-href="project/{{projectName}}/create?tab=fromCatalog">Browse Catalog</a></li>
-      <li role="menuitem"><a ng-href="project/{{projectName}}/create?tab=deployImage">Deploy Image</a></li>
-      <li ng-if-end role="menuitem"><a ng-href="project/{{projectName}}/create?tab=fromFile">Import YAML / JSON</a></li>
+      <li ng-if-start="!catalogLandingPageEnabled" role="menuitem"><a ng-href="project/{{currentProjectName}}/create?tab=fromCatalog">Browse Catalog</a></li>
+      <li role="menuitem"><a ng-href="project/{{currentProjectName}}/create?tab=deployImage">Deploy Image</a></li>
+      <li ng-if-end role="menuitem"><a ng-href="project/{{currentProjectName}}/create?tab=fromFile">Import YAML / JSON</a></li>
 
       <li ng-if-start="catalogLandingPageEnabled" role="menuitem"><a href="/">Browse Catalog</a></li>
       <li role="menuitem"><a href="" ng-click="showOrderingPanel('deployImage')">Deploy Image</a></li>
