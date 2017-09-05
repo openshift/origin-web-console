@@ -178,7 +178,7 @@
                     </div>
                   </div>
                 </div>
-                <table ng-if="!(buildConfig | isJenkinsPipelineStrategy)" class="table table-bordered table-hover table-mobile">
+                <table ng-if="!(buildConfig | isJenkinsPipelineStrategy)" class="table table-bordered table-mobile">
                   <thead>
                     <tr>
                       <th>Build</th>
@@ -220,7 +220,7 @@
                 </table>
                 <div ng-if="buildConfig | isJenkinsPipelineStrategy">
                   <build-pipeline build="build" ng-repeat="build in orderedBuilds track by (build | uid)"></build-pipeline>
-                  <table ng-if="(builds | hashSize) === 0" class="table table-bordered table-hover table-mobile">
+                  <table ng-if="(builds | hashSize) === 0" class="table table-bordered table-mobile">
                     <tbody><tr><td><em>{{emptyMessage}}</em></td></tr></tbody>
                   </table>
                 </div>
