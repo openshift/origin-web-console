@@ -10806,7 +10806,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Logs are not available for replica sets.\n" +
     "<span ng-if=\"podsByOwnerUID[replicaSet.metadata.uid] | hashSize\">\n" +
     "To see application logs, view the logs for one of the replica set's\n" +
-    "<a href=\"\" ng-click=\"viewPodsForReplicaSet(replicaSet)\">pods</a>.\n" +
+    "<a href=\"\" ng-click=\"viewPodsForSet(replicaSet)\">pods</a>.\n" +
     "</span>\n" +
     "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
     "<deployment-metrics pods=\"podsByOwnerUID[replicaSet.metadata.uid]\" containers=\"replicaSet.spec.template.spec.containers\" alerts=\"alerts\">\n" +
@@ -10863,7 +10863,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Logs are not available for stateful sets.\n" +
     "<span ng-if=\"podsByOwnerUID[set.metadata.uid] | hashSize\">\n" +
     "To see application logs, view the logs for one of the stateful sets's\n" +
-    "<a href=\"\" ng-click=\"viewPodsForReplicaSet(set)\">pods</a>.\n" +
+    "<a href=\"\" ng-click=\"viewPodsForSet(set)\">pods</a>.\n" +
     "</span>\n" +
     "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
     "<deployment-metrics pods=\"podsByOwnerUID[set.metadata.uid]\" containers=\"set.spec.template.spec.containers\" alerts=\"alerts\">\n" +
