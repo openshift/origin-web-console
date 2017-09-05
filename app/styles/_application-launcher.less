@@ -2,47 +2,29 @@
 // Application Launcher
 // --------------------------------------------------
 
-.navbar-pf,.navbar-pf-alt {
-  .applauncher-pf {
-    .applauncher-pf-icon {
-      @media (min-width: @screen-sm-min) {
-        font-size: 16px;
-      }
-    }
-    .applauncher-pf-link-icon {
-      @media (min-width: @screen-sm-min) {
-        padding-right: 10px;
-      }
-    }
-  }
-}
-
-.nav.navbar-iconic .applauncher-pf .dropdown-menu {
-  right: 12px;
-}
-
-.navbar-iconic {
-  .applauncher-pf {
-
-    &.open > a,
-    &.open > a:focus {
-      background-color: inherit;
-      border-color: inherit;
-    }
-
-    &.dropdown > .dropdown-toggle,
-    .dropdown-toggle {
-      @media (min-width: @screen-sm-min) {
-        border-left-width: 0;
-        padding: (@grid-gutter-width / 2);
-        line-height: inherit;
-      }
-    }
-  }
-
-  .dropdown-kebab-pf .dropdown-menu {
+.applauncher-pf {
+  &.dropdown-kebab-pf .dropdown-menu {
+    margin-top: 0;
+    right: 10px;
     &:before {
-      border-color: transparent;
+      display: none;
+    }
+  }
+  &.open > a {
+    &,
+    &:focus,
+    &:hover {
+      background: transparent;
+    }
+  }
+  .dropdown-toggle {
+    color: @navbar-pf-vertical-color;
+    display: block;
+    font-size: 16px;
+    padding: 17px 15px 15px 12px !important;
+    &:focus,
+    &:hover {
+      color: @navbar-pf-vertical-active-color;
     }
   }
 }

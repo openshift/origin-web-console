@@ -1,48 +1,33 @@
-<default-header class="top-header"></default-header>
-<div class="wrap no-sidebar">
-  <div class="sidebar-left collapse navbar-collapse navbar-collapse-2">
-    <navbar-utility-mobile></navbar-utility-mobile>
-  </div>
   <div class="middle surface-shaded">
-    <!-- Middle section -->
-    <div class="middle-section">
-      <div class="middle-container">
-        <div class="middle-content">
-          <div class="container surface-shaded">
-            <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
-            <div class="row">
-              <div class="col-md-12">
-                <h1>{{category.label}}</h1>
-                <div ng-if="category.description" class="help-block mar-bottom-lg">{{category.description}}</div>
+    <div class="middle-content">
+      <div class="container-fluid">
+        <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+        <h1>{{category.label}}</h1>
+        <div ng-if="category.description" class="help-block mar-bottom-lg">{{category.description}}</div>
 
-                <!-- If a category has subcategories, display it as a catalog. -->
-                <div ng-if="category.subcategories">
-                  <catalog
-                      project-name="projectName"
-                      project-image-streams="projectImageStreams"
-                      openshift-image-streams="openshiftImageStreams"
-                      project-templates="projectTemplates"
-                      openshift-templates="openshiftTemplates"
-                      category="category">
-                  </catalog>
-                </div>
+        <!-- If a category has subcategories, display it as a catalog. -->
+        <div ng-if="category.subcategories">
+          <catalog
+              project-name="projectName"
+              project-image-streams="projectImageStreams"
+              openshift-image-streams="openshiftImageStreams"
+              project-templates="projectTemplates"
+              openshift-templates="openshiftTemplates"
+              category="category">
+          </catalog>
+        </div>
 
-                <!-- Otherwise, show the content. -->
-                <div ng-if="!category.subcategories">
-                  <category-content
-                      project-name="projectName"
-                      project-image-streams="projectImageStreams"
-                      openshift-image-streams="openshiftImageStreams"
-                      project-templates="projectTemplates"
-                      openshift-templates="openshiftTemplates"
-                      category="category">
-                  </category-content>
-                </div>
-              </div><!-- /col-* -->
-            </div><!-- /row -->
-          </div><!-- /container -->
-        </div><!-- /middle-content -->
-      </div><!-- /middle-container -->
-    </div><!-- /middle-section -->
+        <!-- Otherwise, show the content. -->
+        <div ng-if="!category.subcategories">
+          <category-content
+              project-name="projectName"
+              project-image-streams="projectImageStreams"
+              openshift-image-streams="openshiftImageStreams"
+              project-templates="projectTemplates"
+              openshift-templates="openshiftTemplates"
+              category="category">
+          </category-content>
+        </div>
+      </div><!-- /container -->
+    </div><!-- /middle-content -->
   </div><!-- /middle -->
-</div><!-- /wrap -->

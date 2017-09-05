@@ -11,9 +11,10 @@ angular.module('openshiftConsole')
           var liObj = {
             type: 'dom',
             node: [
-              '<li>',
+              '<li class="list-group-item">',
               '<a href="' + _.escape(app.href) + '">',
-              '<span class="' + _.escape(app.iconClass) + ' fa-fw" aria-hidden="true"></span> ' + _.escape(app.title),
+              '<span class="' + _.escape(app.iconClass) + ' fa-fw" aria-hidden="true"></span> ',
+              '<span class="list-group-item-value">' + _.escape(app.title) + '</span>',
               '</a>',
               '</li>'
             ].join('')
@@ -24,27 +25,27 @@ angular.module('openshiftConsole')
         dropdownItems = dropdownItems.concat([{
           type: 'dom',
           node: [
-            '<li>',
+            '<li class="list-group-item">',
               '<a href="{{\'default\' | helpLink}}">',
-                '<span class="fa fa-book fa-fw" aria-hidden="true"></span> Documentation',
+                '<span class="fa fa-book fa-fw" aria-hidden="true"></span> <span class="list-group-item-value">Documentation</span>',
               '</a>',
             '</li>'
           ].join('')
         }, {
           type: 'dom',
           node: [
-            '<li>',
+            '<li class="list-group-item">',
               '<a href="command-line">',
-                '<span class="fa fa-terminal" aria-hidden="true"></span> Command Line Tools',
+                '<span class="fa fa-terminal" aria-hidden="true"></span> <span class="list-group-item-value">Command Line Tools</span>',
               '</a>',
             '</li>'
           ].join('')
         }, {
           type: 'dom',
           node: [
-            '<li>',
+            '<li class="list-group-item">',
               '<a href="about">',
-                '<span class="pficon pficon-info fa-fw" aria-hidden="true"></span> About',
+                '<span class="pficon pficon-info fa-fw" aria-hidden="true"></span> <span class="list-group-item-value">About</span>',
               '</a>',
             '</li>'
           ].join('')
@@ -52,10 +53,10 @@ angular.module('openshiftConsole')
           {
             type: 'dom',
             node: _.template([
-              '<li>',
+              '<li class="list-group-item">',
               '<a href="logout">',
               '<span class="pficon pficon-user fa-fw" aria-hidden="true"></span>',
-              'Log out <span class="username"><%= userName %></span>',
+              '<span class="list-group-item-value">Log out <span class="username"><%= userName %></span></span>',
               '</a>',
               '</li>'
             ].join(''))({userName: (user ? (user.fullName || user.metadata.name) : "") })

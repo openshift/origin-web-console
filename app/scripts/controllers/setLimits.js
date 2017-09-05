@@ -55,8 +55,7 @@ angular.module('openshiftConsole')
       name: $routeParams.name,
       kind: $routeParams.kind,
       namespace: $routeParams.project,
-      subpage: 'Edit Resource Limits',
-      includeProject: true
+      subpage: 'Edit Resource Limits'
     });
 
     var getErrorDetails = $filter('getErrorDetails');
@@ -84,8 +83,6 @@ angular.module('openshiftConsole')
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
-        // Update project breadcrumb with display name.
-        $scope.breadcrumbs[0].title = $filter('displayName')(project);
 
         var resourceGroupVersion = {
           resource: APIService.kindToResource($routeParams.kind),
@@ -104,8 +101,7 @@ angular.module('openshiftConsole')
             $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
               object: object,
               project: project,
-              subpage: 'Edit Resource Limits',
-              includeProject: true
+              subpage: 'Edit Resource Limits'
             });
             $scope.resourceURL = Navigate.resourceURL(object);
             $scope.containers = _.get(object, 'spec.template.spec.containers');

@@ -64,17 +64,13 @@ angular.module('openshiftConsole')
       name: $routeParams.name,
       kind: $routeParams.kind,
       namespace: $routeParams.project,
-      subpage: 'Add Storage',
-      includeProject: true
+      subpage: 'Add Storage'
     });
 
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
-
-        // Update project breadcrumb with display name.
-        $scope.breadcrumbs[0].title = $filter('displayName')(project);
 
         if (!AuthorizationService.canI(resourceGroupVersion, 'update', $routeParams.project)) {
           Navigate.toErrorPage('You do not have authority to update ' +
@@ -126,8 +122,7 @@ angular.module('openshiftConsole')
               $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
                 object: resource,
                 project: project,
-                subpage: 'Add Storage',
-                includeProject: true
+                subpage: 'Add Storage'
               });
               var podTemplate = _.get(resource, 'spec.template');
               $scope.existingVolumeNames = StorageService.getVolumeNames(podTemplate);

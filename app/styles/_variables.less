@@ -7,7 +7,14 @@
 // Patternfly overrides
 @dropdown-divider-margin: 4px 0;
 @list-view-hover-bg: #fafafa;
-@navbar-pf-alt-navbar-brand-padding: 20px 0;
+@nav-pf-vertical-bg-color: #30363d;
+@nav-pf-vertical-border-color: @project-bar-border-color;
+@nav-pf-vertical-border-inset-color: @project-bar-border-inset-color;
+@nav-pf-vertical-secondary-bg-color: @project-bar-bg;
+@nav-pf-vertical-secondary-hover-color: lighten(@nav-pf-vertical-secondary-bg-color, 8%);
+@nav-pf-vertical-secondary-active-bg-color: @nav-pf-vertical-secondary-hover-color;
+@nav-pf-vertical-width: 220px;
+@navbar-pf-vertical-navbar-brand-padding: 20px 0;
 @navbar-pf-bg-color: @navbar-os-bg-color;
 @sidebar-pf-bg: @body-bg;
 @table-cell-padding-bottom: 8px;
@@ -44,17 +51,16 @@
 @log-scroll-offset-bottom: @log-scroll-offset-top;
 @log-scroll-offset-right: 25px;
 @log-scroll-offset-top: 10px;
-@log-scroll-top-offset-right-xs: (@log-scroll-offset-right + @middle-content-container-padding);
-@log-scroll-top-offset-right-sm: (@log-scroll-offset-right + @scrollbar-width + @middle-content-container-padding);
-@log-scroll-top-offset-right-lg: (@log-scroll-offset-right + @scrollbar-width + @middle-content-container-padding-lg);
+@log-scroll-top-offset-right: (@log-scroll-offset-right + @middle-content-container-padding);
 // The log viewer needs to be udpated if this value changes.  It accounts for
 // bottom margin when resizing the log in JavaScript.
 @middle-content-bottom-margin: @grid-gutter-width;
 @middle-content-container-padding: floor((@grid-gutter-width / 2)); // 20px bootstrap default
 @middle-content-container-padding-lg: (@middle-content-container-padding + 10px);
 @navbar-header-offset: 2px;
-@navbar-os-header-height-desktop: 60px;
-@navbar-os-header-height-mobile: 46px;
+@navbar-header-right-margin: 10px;
+@navbar-os-header-height-desktop: 59px;
+@navbar-os-header-height-mobile: 41px;
 @navbar-os-bg-color: #1c2127;
 @navbar-os-label-filter-bg: @navbar-os-project-menu-bg;
 @navbar-os-project-bg: @navbar-os-bg-color;
@@ -68,22 +74,24 @@
 @navbar-os-project-menu-hover-bg: @sidebar-os-active-bg;
 @navbar-project-label-color: @sidebar-os-color;
 @panel-light: @body-bg;
+@panel-shaded: #f2f2f2;
+@project-bar-bg: #383f47;
+@project-bar-border-color: #050505;
+@project-bar-border-inset-color: rgba(255,255,255,.04);
+@project-bar-height-mobile: 28px;
+@project-bar-height-desktop: 40px;
+@project-bar-select-bg: darken(@project-bar-bg, 8%);
 @scroll-shadows-bg-color: rgba(255, 255, 255, 1);
 @scroll-shadows-bg-color-transparent: rgba(255, 255, 255, 0);
 @sidebar-os-bg: #30363d;
 @sidebar-os-color: #dbdada;
 @sidebar-os-active-bg: #383f47;
 @sidebar-os-active-color: lighten(@sidebar-os-color, 13%);
-@sidebar-os-border-color: #050505; // #1a1d21
-@sidebar-os-border-inset-color: rgba(255,255,255,.04);
-@sidebar-os-dropdown-link-active-bg: lighten(@sidebar-os-active-bg, 5%);
-@sidebar-os-dropdown-link-active-hover-bg: lighten(@sidebar-os-active-bg, 9%);
-@sidebar-os-dropdown-link-hover-bg: lighten(@sidebar-os-hover-bg, 4%);
-@sidebar-os-hover-bg: #3f4750;
-@sidebar-os-icon-color: rgba(200,200,200, .8);
-@sidebar-os-padding-x: 20px;
-@sidebar-os-padding-x-secondary: 37px;
-@sidebar-os-padding-y: 15px;
+@sidebar-os-icon-hover-color: rgba(255,255,255, .7);
+// @sidebar-os-border-color: #050505;
+// @sidebar-os-border-inset-color: rgba(255,255,255,.04);
+// @sidebar-os-hover-bg: #3f4750; // primary hover
+// @sidebar-os-padding-x-secondary: 37px;
 @sidebar-os-active: @console-bright-blue;
 @sidebar-left-mobile: 250px;
 @sidebar-left-width-lg: 210px;
@@ -98,7 +106,7 @@
 @scrollbar-thumb-hover: rgba(0,0,0,.18);
 @scrollbar-thumb-hover-inverse: rgba(255,255,255,.35);
 @scrollbar-track: rgba(0,0,0,.03);
-@scrollbar-track-inverse: @sidebar-os-border-color;
+@scrollbar-track-inverse: @project-bar-border-color;
 @scrollbar-track-inverse-alt: rgba(255,255,255,.1);
 @scrollbar-track-landing: #042e43;
 @scrollbar-track-landing-side-bar: darken(#2C343D, 5%); // #2C343D is @landing-side-bar-bg in catalog

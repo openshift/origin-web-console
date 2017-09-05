@@ -24,10 +24,6 @@ angular.module('openshiftConsole')
 
     $scope.breadcrumbs = [
       {
-        title: $scope.projectName,
-        link: "project/" + $scope.projectName
-      },
-      {
          title: "Secrets",
          link: "project/" + $scope.projectName + "/browse/secrets"
       },
@@ -41,7 +37,6 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
         $scope.context = context;
-        $scope.breadcrumbs[0].title = $filter('displayName')(project);
 
         if (!AuthorizationService.canI('secrets', 'create', $routeParams.project)) {
           Navigate.toErrorPage('You do not have authority to create secrets in project ' + $routeParams.project + '.', 'access_denied');

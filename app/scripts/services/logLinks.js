@@ -17,19 +17,10 @@ angular.module('openshiftConsole')
 
       var scrollBottom = function(node) {
         if(!node) {
-          window.scrollTo(0, document.body.scrollHeight - document.body.clientHeight);
+          window.scrollTo(0, document.documentElement.scrollHeight - document.documentElement.clientHeight);
         } else {
           node.scrollTop = node.scrollHeight;
         }
-      };
-
-
-      var scrollTo = function(anchor, event) {
-        // sad face. stop reloading the page!!!!
-        event.preventDefault();
-        event.stopPropagation();
-        $location.hash(anchor);
-        $anchorScroll(anchor);
       };
 
 
@@ -89,7 +80,6 @@ angular.module('openshiftConsole')
       return {
         scrollTop: scrollTop,
         scrollBottom: scrollBottom,
-        scrollTo: scrollTo,
         chromelessLink: chromelessLink,
         archiveUri: archiveUri
       };

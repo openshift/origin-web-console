@@ -1,18 +1,34 @@
-// fixes positioning that doesn't quite work w/core patternfly styles
-.navbar-pf-alt .nav .nav-item-iconic .badge {
-  font-size: 9px;
-  margin: -15px 0 0 -12px;
-  min-width: 10px;
-  min-height: 10px;
-}
+//
+// Notification drawer
+// -----------------------------------------------
 
 notification-drawer-wrapper {
   .drawer-pf {
-    height: calc(~"100vh - 80px"); //to create a 20px offset bottom
-    top: @navbar-os-header-height-desktop - 10;
-    z-index: @zindex-navbar-fixed + 1; // was 1050
+    height: calc(100vh ~"-" (@navbar-os-header-height-mobile + @project-bar-height-mobile));
+    position: fixed;
+    top: (@navbar-os-header-height-mobile + @project-bar-height-mobile);
+    z-index: @zindex-navbar-fixed - 2; // two less than navbar, one less than project-bar
+    @media(max-width: 350px) {
+      left: 0;
+      width: 100%;
+    }
+    @media(min-width: @screen-sm-min) {
+      height: calc(100vh ~"-" (@navbar-os-header-height-desktop + @project-bar-height-desktop) ~"-" 20px); // 20px bottom gutter
+      top: (@navbar-os-header-height-desktop + @project-bar-height-desktop);
+    }
+    &.drawer-pf-expanded {
+      left: 0;
+      @media(min-width: @screen-sm-min) {
+        left: 270px;
+      }
+    }
     .tech-preview & {
-      top: @navbar-os-header-height-desktop + @tech-preview-banner-height - 10;
+      height: calc(100vh ~"-" (@navbar-os-header-height-mobile + @project-bar-height-mobile + @tech-preview-banner-height));
+      top: (@navbar-os-header-height-mobile + @project-bar-height-mobile + @tech-preview-banner-height);
+      @media(min-width: @screen-sm-min) {
+        height: calc(100vh ~"-" (@navbar-os-header-height-desktop + @project-bar-height-desktop + @tech-preview-banner-height) ~"-" 20px); // 20px bottom gutter
+        top: (@navbar-os-header-height-desktop + @project-bar-height-desktop + @tech-preview-banner-height);
+      }
     }
   }
   // the whole block is clickable, need to set pointer on all of these
@@ -23,25 +39,23 @@ notification-drawer-wrapper {
     cursor: pointer;
   }
   .drawer-pf-notification {
-    padding: 0px;
-  }
-  .drawer-pf-notification.ng-leave {
-    transition:0.25s linear all;
-    opacity:1;
-  }
-  .drawer-pf-notification.ng-leave.ng-leave-active {
-    opacity:0;
+    padding: 0;
+    &.ng-leave {
+      transition: 0.25s linear all;
+      opacity: 1;
+      &.ng-leave-active {
+        opacity: 0;
+      }
+    }
   }
   .drawer-pf-notification-inner {
-    padding:15px;
+    padding: 15px;
     .pficon-close {
-      color: #000;
+      color: @color-pf-black;
     }
   }
-  .expanded-notification {
-    .drawer-pf-notification-message {
-      max-width: 35%; // keeps flex in check in case of a really long message
-    }
+  .expanded-notification .drawer-pf-notification-message {
+    max-width: 35%; // keeps flex in check in case of a really long message
   }
 }
 
@@ -52,7 +66,7 @@ notification-drawer-wrapper {
     //   - https://github.com/patternfly/angular-patternfly/issues/539
     // I'm putting quite a bit of markup inside the header,
     // need to tinker to eliminate this rule.
-    overflow:hidden;
+    overflow: hidden;
     .container-fluid {
       margin-left: 0;
       margin-right: 0;
@@ -62,6 +76,6 @@ notification-drawer-wrapper {
   }
   .small {
     .small();
-    color: #000000;
+    color: @color-pf-black;
   }
 }
