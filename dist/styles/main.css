@@ -5010,8 +5010,8 @@ h2+.list-view-pf{margin-top:20px}
 .monitoring-page .list-pf-additional-content .list-pf-additional-content-item+.list-pf-additional-content-item{width:50%}
 }
 .monitoring-page .text-prepended-icon .fa,.monitoring-page .text-prepended-icon .pficon{margin-right:7px}
-#header-logo{background-image:url(../images/logo-origin-thin.svg);background-position:left center;background-repeat:no-repeat;height:40px;width:196px}
-@media (min-width:768px){#header-logo{width:230px}
+#header-logo{background-image:url(../images/logo-OCP-console-hdr-stacked.svg);background-position:left center;background-repeat:no-repeat;height:40px;width:128px}
+@media (min-width:475px){#header-logo{background-image:url(../images/logo-OCP-console-hdr-thin.svg);width:320px}
 }
 .navbar-pf-vertical{background-color:#030303;border-bottom:1px solid #050505;border-top:none;min-height:0}
 @media (min-width:767px){.navbar-pf-vertical{padding-left:20px}
