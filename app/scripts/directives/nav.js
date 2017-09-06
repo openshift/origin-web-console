@@ -7,6 +7,7 @@ angular.module('openshiftConsole')
       $filter,
       $timeout,
       $rootScope,
+      $routeParams,
       AuthorizationService,
       Constants,
       HTMLService) {
@@ -27,6 +28,7 @@ angular.module('openshiftConsole')
         $scope.sidebar = {};
 
         var updateActive = function() {
+          $scope.projectName = $routeParams.project;
           _.set($scope, 'sidebar.secondaryOpen',  false);
           _.set($rootScope, 'nav.showMobileNav', false);
           $scope.activeSecondary = null;
@@ -260,7 +262,7 @@ angular.module('openshiftConsole')
         var options = [];
 
         var updateOptions = function() {
-          var name = $scope.projectName;
+          var name = $scope.currentProjectName;
           if (!name) {
             return;
           }
@@ -304,33 +306,48 @@ angular.module('openshiftConsole')
         };
 
         $scope.$on('$routeChangeSuccess', function() {
-          var projectName = $routeParams.project;
-          if ($scope.projectName === projectName) {
+          var currentProjectName = $routeParams.project;
+          if ($scope.currentProjectName === currentProjectName) {
             // The project hasn't changed.
             return;
           }
 
-          $scope.projectName = projectName;
+          $scope.currentProjectName = currentProjectName;
           $scope.chromeless = $routeParams.view === "chromeless";
 
-          if (projectName && !$scope.chromeless) {
+          if (currentProjectName && !$scope.chromeless) {
             _.set($rootScope, 'view.hasProject', true);
             // Check if the user can add to project after switching projects.
             // Assume false until the request completes.
             $scope.canIAddToProject = false;
             // Make sure we have project rules before we check canIAddToProject or we get the wrong value.
-            AuthorizationService.getProjectRules(projectName).then(function() {
+            AuthorizationService.getProjectRules(currentProjectName).then(function() {
               // Make sure the user hasn't switched projects while the request was still in flight.
-              if ($scope.projectName !== projectName) {
+              if ($scope.currentProjectName !== currentProjectName) {
                 return;
               }
 
-              $scope.canIAddToProject = AuthorizationService.canIAddToProject(projectName);
+              $scope.canIAddToProject = AuthorizationService.canIAddToProject(currentProjectName);
             });
 
             updateProjects().then(function() {
-              $scope.projectName = projectName;
-              $scope.currentProject = _.get(projects, [ projectName ]);
+              if (!$scope.currentProjectName || !projects) {
+                return;
+              }
+
+              if (!projects[$scope.currentProjectName]) {
+                // Make sure there is an entry for the current project in the
+                // dropdown. If it doesn't actually exist, the controller for
+                // the current view is responsible for redirecting to an error
+                // page.
+                projects[$scope.currentProjectName] = {
+                  metadata: {
+                    name: $scope.currentProjectName
+                  }
+                };
+              }
+
+              $scope.currentProject = projects[$scope.currentProjectName];
               updateOptions();
             });
           } else {

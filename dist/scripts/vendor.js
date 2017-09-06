@@ -42883,7 +42883,7 @@ a.sWidthOrig = c.attr("width") || null;
 var u = (c.attr("style") || "").match(/width:\s*(\d+[pxem%]+)/);
 u && (a.sWidthOrig = u[1]);
 }
-r !== i && null !== r && (l(r), o(qe.defaults.column, r), r.mDataProp === i || r.mData || (r.mData = r.mDataProp), r.sType && (a._sManualType = r.sType), r.className && !r.sClass && (r.sClass = r.className), e.extend(a, r), Fe(a, r, "sWidth", "sWidthOrig"), r.iDataSort !== i && (a.aDataSort = [ r.iDataSort ]), Fe(a, r, "aDataSort"));
+r !== i && null !== r && (l(r), o(qe.defaults.column, r), r.mDataProp === i || r.mData || (r.mData = r.mDataProp), r.sType && (a._sManualType = r.sType), r.className && !r.sClass && (r.sClass = r.className), r.sClass && c.addClass(r.sClass), e.extend(a, r), Fe(a, r, "sWidth", "sWidthOrig"), r.iDataSort !== i && (a.aDataSort = [ r.iDataSort ]), Fe(a, r, "aDataSort"));
 var d = a.mData, h = $(d), f = a.mRender ? $(a.mRender) : null, p = function(e) {
 return "string" == typeof e && -1 !== e.indexOf("@");
 };
@@ -43479,7 +43479,7 @@ for (var n = t.oClasses, i = t.sTableId, r = t.aLengthMenu, o = e.isArray(r[0]),
 name: i + "_length",
 "aria-controls": i,
 class: n.sLengthSelect
-}), c = 0, u = a.length; c < u; c++) l[0][c] = new Option(s[c], a[c]);
+}), c = 0, u = a.length; c < u; c++) l[0][c] = new Option("number" == typeof s[c] ? t.fnFormatNumber(s[c]) : s[c], a[c]);
 var d = e("<div><label/></div>").addClass(n.sLength);
 return t.aanFeatures.l || (d[0].id = i + "_length"), d.children().append(t.oLanguage.sLengthMenu.replace("_MENU_", l[0].outerHTML)), e("select", d).val(t._iDisplayLength).on("change.DT", function(n) {
 ae(t, e(this).val()), O(t);
@@ -43953,10 +43953,10 @@ sDestroyWidth: C[0].style.width,
 sInstance: v,
 sTableId: v
 });
-D.nTable = this, D.oApi = n.internal, D.oInit = g, S.push(D), D.oInstance = 1 === n.length ? n : C.dataTable(), s(g), g.oLanguage && a(g.oLanguage), g.aLengthMenu && !g.iDisplayLength && (g.iDisplayLength = e.isArray(g.aLengthMenu[0]) ? g.aLengthMenu[0][0] : g.aLengthMenu[0]), g = Ie(e.extend(!0, {}, _), g), Fe(D.oFeatures, g, [ "bPaginate", "bLengthChange", "bFilter", "bSort", "bSortMulti", "bInfo", "bProcessing", "bAutoWidth", "bSortClasses", "bServerSide", "bDeferRender" ]), Fe(D, g, [ "asStripeClasses", "ajax", "fnServerData", "fnFormatNumber", "sServerMethod", "aaSorting", "aaSortingFixed", "aLengthMenu", "sPaginationType", "sAjaxSource", "sAjaxDataProp", "iStateDuration", "sDom", "bSortCellsTop", "iTabIndex", "fnStateLoadCallback", "fnStateSaveCallback", "renderer", "searchDelay", "rowId", [ "iCookieDuration", "iStateDuration" ], [ "oSearch", "oPreviousSearch" ], [ "aoSearchCols", "aoPreSearchCols" ], [ "iDisplayLength", "_iDisplayLength" ], [ "bJQueryUI", "bJUI" ] ]), Fe(D.oScroll, g, [ [ "sScrollX", "sX" ], [ "sScrollXInner", "sXInner" ], [ "sScrollY", "sY" ], [ "bScrollCollapse", "bCollapse" ] ]), 
+D.nTable = this, D.oApi = n.internal, D.oInit = g, S.push(D), D.oInstance = 1 === n.length ? n : C.dataTable(), s(g), g.oLanguage && a(g.oLanguage), g.aLengthMenu && !g.iDisplayLength && (g.iDisplayLength = e.isArray(g.aLengthMenu[0]) ? g.aLengthMenu[0][0] : g.aLengthMenu[0]), g = Ie(e.extend(!0, {}, _), g), Fe(D.oFeatures, g, [ "bPaginate", "bLengthChange", "bFilter", "bSort", "bSortMulti", "bInfo", "bProcessing", "bAutoWidth", "bSortClasses", "bServerSide", "bDeferRender" ]), Fe(D, g, [ "asStripeClasses", "ajax", "fnServerData", "fnFormatNumber", "sServerMethod", "aaSorting", "aaSortingFixed", "aLengthMenu", "sPaginationType", "sAjaxSource", "sAjaxDataProp", "iStateDuration", "sDom", "bSortCellsTop", "iTabIndex", "fnStateLoadCallback", "fnStateSaveCallback", "renderer", "searchDelay", "rowId", [ "iCookieDuration", "iStateDuration" ], [ "oSearch", "oPreviousSearch" ], [ "aoSearchCols", "aoPreSearchCols" ], [ "iDisplayLength", "_iDisplayLength" ] ]), Fe(D.oScroll, g, [ [ "sScrollX", "sX" ], [ "sScrollXInner", "sXInner" ], [ "sScrollY", "sY" ], [ "bScrollCollapse", "bCollapse" ] ]), 
 Fe(D.oLanguage, g, "fnInfoCallback"), Pe(D, "aoDrawCallback", g.fnDrawCallback, "user"), Pe(D, "aoServerParams", g.fnServerParams, "user"), Pe(D, "aoStateSaveParams", g.fnStateSaveParams, "user"), Pe(D, "aoStateLoadParams", g.fnStateLoadParams, "user"), Pe(D, "aoStateLoaded", g.fnStateLoaded, "user"), Pe(D, "aoRowCallback", g.fnRowCallback, "user"), Pe(D, "aoRowCreatedCallback", g.fnCreatedRow, "user"), Pe(D, "aoHeaderCallback", g.fnHeaderCallback, "user"), Pe(D, "aoFooterCallback", g.fnFooterCallback, "user"), Pe(D, "aoInitComplete", g.fnInitComplete, "user"), Pe(D, "aoPreDrawCallback", g.fnPreDrawCallback, "user"), D.rowIdFn = $(g.rowId), c(D);
 var E = D.oClasses;
-if (g.bJQueryUI ? (e.extend(E, qe.ext.oJUIClasses, g.oClasses), g.sDom === _.sDom && "lfrtip" === _.sDom && (D.sDom = '<"H"lfr>t<"F"ip>'), D.renderer ? e.isPlainObject(D.renderer) && !D.renderer.header && (D.renderer.header = "jqueryui") : D.renderer = "jqueryui") : e.extend(E, qe.ext.classes, g.oClasses), C.addClass(E.sTable), D.iInitDisplayStart === i && (D.iInitDisplayStart = g.iDisplayStart, D._iDisplayStart = g.iDisplayStart), null !== g.iDeferLoading) {
+if (e.extend(E, qe.ext.classes, g.oClasses), C.addClass(E.sTable), D.iInitDisplayStart === i && (D.iInitDisplayStart = g.iDisplayStart, D._iDisplayStart = g.iDisplayStart), null !== g.iDeferLoading) {
 D.bDeferLoading = !0;
 var F = e.isArray(g.iDeferLoading);
 D._iRecordsDisplay = F ? g.iDeferLoading[0] : g.iDeferLoading, D._iRecordsTotal = F ? g.iDeferLoading[1] : g.iDeferLoading;
@@ -44413,7 +44413,7 @@ var e = this;
 return this.iterator("row", function(t, n, r) {
 var o, a, s, l, c, u, d = t.aoData, h = d[n];
 for (d.splice(n, 1), o = 0, a = d.length; o < a; o++) if (c = d[o], u = c.anCells, null !== c.nTr && (c.nTr._DT_RowIndex = o), null !== u) for (s = 0, l = u.length; s < l; s++) u[s]._DT_CellIndex.row = o;
-D(t.aiDisplayMaster, n), D(t.aiDisplay, n), D(e[r], n, !1), Oe(t);
+D(t.aiDisplayMaster, n), D(t.aiDisplay, n), D(e[r], n, !1), t._iRecordsDisplay > 0 && t._iRecordsDisplay--, Oe(t);
 var f = t.rowIdFn(h._aData);
 f !== i && delete t.aIds[f];
 }), this.iterator("table", function(e) {
@@ -44777,10 +44777,7 @@ return n = n || !1, this.iterator("table", function(i) {
 var r, o = i.nTableWrapper.parentNode, a = i.oClasses, s = i.nTable, l = i.nTBody, c = i.nTHead, u = i.nTFoot, d = e(s), h = e(l), f = e(i.nTableWrapper), p = e.map(i.aoData, function(e) {
 return e.nTr;
 });
-i.bDestroying = !0, Le(i, "aoDestroyCallback", "destroy", [ i ]), n || new Ue(i).columns().visible(!0), f.off(".DT").find(":not(tbody *)").off(".DT"), e(t).off(".DT-" + i.sInstance), s != c.parentNode && (d.children("thead").detach(), d.append(c)), u && s != u.parentNode && (d.children("tfoot").detach(), d.append(u)), i.aaSorting = [], i.aaSortingFixed = [], $e(i), e(p).removeClass(i.asStripeClasses.join(" ")), e("th, td", c).removeClass(a.sSortable + " " + a.sSortableAsc + " " + a.sSortableDesc + " " + a.sSortableNone), i.bJUI && (e("th span." + a.sSortIcon + ", td span." + a.sSortIcon, c).detach(), e("th, td", c).each(function() {
-var t = e("div." + a.sSortJUIWrapper, this);
-e(this).append(t.contents()), t.detach();
-})), h.children().detach(), h.append(p);
+i.bDestroying = !0, Le(i, "aoDestroyCallback", "destroy", [ i ]), n || new Ue(i).columns().visible(!0), f.off(".DT").find(":not(tbody *)").off(".DT"), e(t).off(".DT-" + i.sInstance), s != c.parentNode && (d.children("thead").detach(), d.append(c)), u && s != u.parentNode && (d.children("tfoot").detach(), d.append(u)), i.aaSorting = [], i.aaSortingFixed = [], $e(i), e(p).removeClass(i.asStripeClasses.join(" ")), e("th, td", c).removeClass(a.sSortable + " " + a.sSortableAsc + " " + a.sSortableDesc + " " + a.sSortableNone), h.children().detach(), h.append(p);
 var g = n ? "remove" : "detach";
 d[g](), f[g](), !n && o && (o.insertBefore(s, i.nTableReinsertBefore), d.css("width", i.sDestroyWidth).removeClass(a.sTable), (r = i.asDestroyStripes.length) && h.children().each(function(t) {
 e(this).addClass(i.asDestroyStripes[t % r]);
@@ -44798,7 +44795,7 @@ e.call(r[t](a, "cell" === t ? s : n, "cell" === t ? n : i), a, s, l, c);
 }), ze("i18n()", function(t, n, r) {
 var o = this.context[0], a = $(t)(o.oLanguage);
 return a === i && (a = n), r !== i && e.isPlainObject(a) && (a = a[r] !== i ? a[r] : a._), a.replace("%d", r);
-}), qe.version = "1.10.15", qe.settings = [], qe.models = {}, qe.models.oSearch = {
+}), qe.version = "1.10.16", qe.settings = [], qe.models = {}, qe.models.oSearch = {
 bCaseInsensitive: !0,
 sSearch: "",
 bRegex: !1,
@@ -44855,7 +44852,6 @@ bDeferRender: !1,
 bDestroy: !1,
 bFilter: !0,
 bInfo: !0,
-bJQueryUI: !1,
 bLengthChange: !0,
 bPaginate: !0,
 bProcessing: !1,
@@ -45048,7 +45044,6 @@ _iDisplayLength: 10,
 _iDisplayStart: 0,
 _iRecordsTotal: 0,
 _iRecordsDisplay: 0,
-bJUI: null,
 oClasses: {},
 bFiltered: !1,
 bSorted: !1,
@@ -45157,34 +45152,7 @@ sSortJUIWrapper: "",
 sSortIcon: "",
 sJUIHeader: "",
 sJUIFooter: ""
-}), function() {
-var t = "ui-state-default", n = "css_right ui-icon ui-icon-", i = "fg-toolbar ui-toolbar ui-widget-header ui-helper-clearfix";
-e.extend(qe.ext.oJUIClasses, qe.ext.classes, {
-sPageButton: "fg-button ui-button " + t,
-sPageButtonActive: "ui-state-disabled",
-sPageButtonDisabled: "ui-state-disabled",
-sPaging: "dataTables_paginate fg-buttonset ui-buttonset fg-buttonset-multi ui-buttonset-multi paging_",
-sSortAsc: t + " sorting_asc",
-sSortDesc: t + " sorting_desc",
-sSortable: t + " sorting",
-sSortableAsc: t + " sorting_asc_disabled",
-sSortableDesc: t + " sorting_desc_disabled",
-sSortableNone: t + " sorting_disabled",
-sSortJUIAsc: n + "triangle-1-n",
-sSortJUIDesc: n + "triangle-1-s",
-sSortJUI: n + "carat-2-n-s",
-sSortJUIAscAllowed: n + "carat-1-n",
-sSortJUIDescAllowed: n + "carat-1-s",
-sSortJUIWrapper: "DataTables_sort_wrapper",
-sSortIcon: "DataTables_sort_icon",
-sScrollHead: "dataTables_scrollHead " + t,
-sScrollFoot: "dataTables_scrollFoot " + t,
-sHeaderTH: t,
-sFooterTH: t,
-sJUIHeader: i + " ui-corner-tl ui-corner-tr",
-sJUIFooter: i + " ui-corner-bl ui-corner-br"
 });
-}();
 var Bt = qe.ext.pager;
 e.extend(Bt, {
 simple: function(e, t) {
