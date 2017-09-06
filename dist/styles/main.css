@@ -4892,7 +4892,7 @@ h2+.list-view-pf{margin-top:20px}
 @media (min-width:768px){.navbar-pf-vertical .navbar-brand{padding-bottom:10px;padding-top:10px}
 .navbar-pf-vertical .navbar-iconic{margin-right:10px}
 }
-.navbar-pf-vertical .navbar-iconic .badge{margin:0!important;position:absolute;top:9px;right:13px}
+.navbar-pf-vertical .navbar-iconic .badge{margin:0!important;position:absolute;right:13px;top:9px}
 .navbar-pf-vertical .navbar-iconic .drawer-pf-trigger{display:inline-block}
 .navbar-pf-vertical .navbar-iconic .drawer-pf-trigger a{display:block}
 .navbar-pf-vertical .navbar-iconic .dropdown .nav-item-iconic{padding-right:20px}
@@ -5367,7 +5367,7 @@ dl.secret-data pre{margin-bottom:0}
 .events-sidebar .events-sidebar-collapse a{text-decoration:none}
 .events-sidebar .sidebar-header.right-header{align-items:center;display:flex;justify-content:space-between;margin-top:17.5px}
 .events-sidebar .sidebar-header.right-header h2{font-family:inherit;font-weight:500;line-height:1.1;color:inherit;margin-top:10.5px;margin-bottom:10.5px;font-size:14px;display:inline-block}
-.config-map-table .key,.config-map-table .truncated-content,.edit-yaml .ace_editor.editor,.log-view{font-family:Menlo,Monaco,Consolas,monospace}
+.config-map-table .key,.config-map-table .truncated-content,.log-view{font-family:Menlo,Monaco,Consolas,monospace}
 .events-sidebar .sidebar-header.right-header h2 .small,.events-sidebar .sidebar-header.right-header h2 small{font-weight:400;line-height:1;color:#9c9c9c;font-size:75%}
 .events-sidebar .sidebar-header.right-header .warning-count{white-space:nowrap;margin-left:2px}
 .events-sidebar .sidebar-header.right-header .warning-count .pficon{vertical-align:-1px}
@@ -5437,7 +5437,7 @@ dl.secret-data pre{margin-bottom:0}
 .table-mobile>tbody>tr>td:last-child{border-bottom:none}
 .table-mobile>tbody>tr>td:before{content:attr(data-title);position:absolute;top:8px;left:6px;width:35%;padding-right:10px;white-space:nowrap}
 }
-.tooltip-inner,h1.contains-actions{overflow-wrap:break-word;min-width:0;word-wrap:break-word;word-break:break-word}
+.tooltip-inner,h1.contains-actions{overflow-wrap:break-word;min-width:0;word-break:break-word;word-wrap:break-word}
 .table-responsive{margin-bottom:21px}
 .table-responsive.scroll-shadows-horizontal{border-left:1px solid #d1d1d1;border-right:1px solid #d1d1d1;background-attachment:scroll;background-color:#fff;background-image:radial-gradient(ellipse at left,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 75%),radial-gradient(ellipse at right,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 75%);background-position:0 0,100% 0;background-repeat:no-repeat;background-size:8px 100%;-ms-overflow-style:auto;overflow-x:auto}
 .table-responsive.scroll-shadows-horizontal .table{background-color:transparent}
@@ -5848,13 +5848,15 @@ kubernetes-container-terminal .terminal-actions .spinner{top:5px}
 .membership .content-pane .col-name input{max-width:175px}
 .membership .content-pane .select-role{width:150px}
 }
-notification-drawer-wrapper .drawer-pf{height:calc(100vh - 69px);position:fixed;top:69px;z-index:1028}
+notification-drawer-wrapper .drawer-pf{height:calc(100vh - 69px);opacity:1;position:fixed;right:0;top:69px;transition:top 150ms ease-in-out,opacity 150ms;z-index:1028}
 @media (max-width:350px){notification-drawer-wrapper .drawer-pf{left:0;width:100%}
 }
 notification-drawer-wrapper .drawer-pf.drawer-pf-expanded{left:0}
 @media (min-width:768px){notification-drawer-wrapper .drawer-pf{height:calc(100vh - 99px - 20px);top:99px}
 notification-drawer-wrapper .drawer-pf.drawer-pf-expanded{left:270px}
 }
+notification-drawer-wrapper .drawer-pf.hide{opacity:0;top:38px}
+notification-drawer-wrapper .drawer-pf.hide-add,notification-drawer-wrapper .drawer-pf.hide-remove{display:block!important}
 .tech-preview notification-drawer-wrapper .drawer-pf{height:calc(100vh - 89px);top:89px}
 @media (min-width:768px){.tech-preview notification-drawer-wrapper .drawer-pf{height:calc(100vh - 119px - 20px);top:119px}
 }
@@ -5862,12 +5864,19 @@ notification-drawer-wrapper .drawer-pf-notification,notification-drawer-wrapper 
 notification-drawer-wrapper .drawer-pf-notification{padding:0}
 notification-drawer-wrapper .drawer-pf-notification.ng-leave{transition:.25s linear all;opacity:1}
 notification-drawer-wrapper .drawer-pf-notification.ng-leave.ng-leave-active{opacity:0}
+notification-drawer-wrapper .drawer-pf-notification-info{font-size:11px}
 notification-drawer-wrapper .drawer-pf-notification-inner{padding:15px}
-notification-drawer-wrapper .drawer-pf-notification-inner .pficon-close{color:#030303}
-notification-drawer-wrapper .expanded-notification .drawer-pf-notification-message{max-width:35%}
-.panel-heading .panel-title{overflow:hidden}
+notification-drawer-wrapper .drawer-pf-notification-inner .pficon-close{color:#bbb}
+notification-drawer-wrapper .drawer-pf-notification-inner .pficon-close:active,notification-drawer-wrapper .drawer-pf-notification-inner .pficon-close:focus,notification-drawer-wrapper .drawer-pf-notification-inner .pficon-close:hover{color:#4d5258}
+notification-drawer-wrapper .drawer-pf-title h3{font-size:12px}
+notification-drawer-wrapper .expanded-notification .drawer-pf-notification-info{color:#9c9c9c}
+notification-drawer-wrapper .expanded-notification .drawer-pf-notification-message-expanded{font-size:12px;padding:10px 10px 10px 42px;color:#9c9c9c}
+notification-drawer-wrapper .expanded-notification.unread .drawer-pf-notification-info{color:inherit}
+notification-drawer-wrapper .expanded-notification.unread .drawer-pf-notification-message-expanded{color:inherit;font-weight:400;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
+.panel-heading .panel-title{color:#4d5258;font-size:14px;font-weight:700;line-height:normal;overflow:hidden}
 .panel-heading .panel-title .container-fluid{margin-left:0;margin-right:0;padding-left:0;padding-right:0}
-.panel-heading .small{font-size:84%;color:#030303}
+.panel-heading .panel-title .panel-counter{font-size:11px;font-weight:400;padding:0}
+.panel-heading .panel-title .panel-counter a{display:inline-block;font-style:normal}
 .action-chip{margin:0 5px 2px 0;font-size:12px;display:flex;flex-direction:row}
 .action-chip .item{padding:.2em .6em .3em}
 .action-chip .item:first-child{border-top-left-radius:2px;border-bottom-left-radius:2px}
@@ -5897,7 +5906,7 @@ notification-drawer-wrapper .expanded-notification .drawer-pf-notification-messa
 .ace-inline{height:300px}
 .ace-inline-small{height:200px}
 .ace_editor.dockerfile-mode .ace_constant.ace_numeric,.editor.yaml-mode .ace_constant.ace_numeric{color:inherit}
-.edit-yaml .ace_editor.editor{line-height:1.5;width:100%;min-height:140px;height:50vh}
+.edit-yaml .ace_editor.editor{font-family:Menlo,Monaco,Consolas,monospace;line-height:1.5;width:100%;min-height:140px;height:50vh}
 @media (min-height:700px){.edit-yaml .ace_editor.editor{height:60vh}
 }
 .edit-yaml .ace_editor.editor .ace_gutter{color:#8b8d8f}

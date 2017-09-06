@@ -7457,19 +7457,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/notifications/header.html',
     "<div class=\"container-fluid\">\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-xs-6\">\n" +
-    "<strong>{{notificationGroup.heading}}</strong>\n" +
+    "<div class=\"truncate\">\n" +
+    "{{notificationGroup.heading}}\n" +
     "</div>\n" +
-    "<div class=\"col-xs-6 text-right small\">\n" +
+    "<div class=\"row mar-top-md panel-counter\">\n" +
+    "<div class=\"col-xs-6\">\n" +
+    "{{notificationGroup.totalUnread}} Unread\n" +
+    "</div>\n" +
+    "<div class=\"col-xs-6 text-right\">\n" +
     "<a title=\"All Events\" ng-href=\"project/{{$ctrl.customScope.projectName}}/browse/events\" ng-click=\"$ctrl.customScope.close()\">\n" +
     "View All Events\n" +
     "</a>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"row mar-top-md\">\n" +
-    "<div class=\"col-xs-12\">\n" +
-    "<em>{{notificationGroup.totalUnread}} Unread</em>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>"
@@ -7514,13 +7512,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<duration-until-now timestamp=\"notification.event.firstTimestamp\" omit-single=\"true\" precision=\"1\"></duration-until-now>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<span ng-if=\"$ctrl.drawerExpanded\" class=\"drawer-pf-notification-message text-muted small word-break\">\n" +
-    "{{notification.event.message}}\n" +
-    "</span>\n" +
     "<div class=\"drawer-pf-notification-info\">\n" +
     "<span class=\"date\">{{notification.event.lastTimestamp | date:'shortDate'}}</span>\n" +
     "<span class=\"time\">{{notification.event.lastTimestamp | date:'mediumTime'}}</span>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"$ctrl.drawerExpanded\" class=\"drawer-pf-notification-message drawer-pf-notification-message-expanded\">\n" +
+    "{{notification.event.message}}\n" +
     "</div>\n" +
     "</div>"
   );

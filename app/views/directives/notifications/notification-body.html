@@ -78,12 +78,12 @@
       </div>
     </div>
 
-    <span ng-if="$ctrl.drawerExpanded" class="drawer-pf-notification-message text-muted small word-break">
-      {{notification.event.message}}
-    </span>
     <div class="drawer-pf-notification-info">
       <span class="date">{{notification.event.lastTimestamp | date:'shortDate'}}</span>
       <span class="time">{{notification.event.lastTimestamp | date:'mediumTime'}}</span>
     </div>
+  </div>
+  <div ng-if="$ctrl.drawerExpanded" class="drawer-pf-notification-message drawer-pf-notification-message-expanded">
+    {{notification.event.message}}
   </div>
 </div>
