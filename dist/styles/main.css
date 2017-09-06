@@ -4868,8 +4868,8 @@ h2+.list-view-pf{margin-top:20px}
 .list-view-pf-additional-info{width:40%}
 .list-view-pf-description{width:60%}
 }
-#header-logo{background-image:url(../images/logo-origin-thin.svg);background-position:left center;background-repeat:no-repeat;height:40px;width:196px}
-@media (min-width:768px){#header-logo{width:230px}
+#header-logo{background-image:url(../images/logo-OCP-console-hdr-stacked.svg);background-position:left center;background-repeat:no-repeat;height:40px;width:128px}
+@media (min-width:475px){#header-logo{background-image:url(../images/logo-OCP-console-hdr-thin.svg);width:320px}
 }
 .navbar-pf-vertical{background-color:#1c2127;border-bottom:1px solid #050505;border-top:none;min-height:0}
 @media (min-width:767px){.navbar-pf-vertical{padding-left:20px}
