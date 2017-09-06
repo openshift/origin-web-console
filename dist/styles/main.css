@@ -3,6 +3,7 @@ body,figure{margin:0}
 .text-left,caption,th{text-align:left}
 .navbar-fixed-bottom .navbar-collapse,.navbar-fixed-top .navbar-collapse,.pre-scrollable{max-height:340px}
 .c3 svg,html{-webkit-tap-highlight-color:transparent}
+.list-view-pf-top-align .list-view-pf-actions,.list-view-pf-top-align .list-view-pf-checkbox{align-self:flex-start}
 .fa,.font-icon,.glyphicon{-moz-osx-font-smoothing:grayscale}
 @font-face{font-family:"Open Sans";font-style:normal;font-weight:300;src:url(../styles/fonts/OpenSans-Light-webfont.eot);src:local("Open Sans Light"),local("OpenSans-Light"),url(../styles/fonts/OpenSans-Light-webfont.eot?#iefix) format("embedded-opentype"),url(../styles/fonts/OpenSans-Light-webfont.woff2) format("woff2"),url(../styles/fonts/OpenSans-Light-webfont.woff) format("woff"),url(../styles/fonts/OpenSans-Light-webfont.ttf) format("truetype"),url(../styles/fonts/OpenSans-Light-webfont.svg#OpenSans) format("svg")}
 @font-face{font-family:"Open Sans";font-style:normal;font-weight:400;src:url(../styles/fonts/OpenSans-Regular-webfont.eot);src:local("Open Sans"),local("OpenSans"),url(../styles/fonts/OpenSans-Regular-webfont.eot?#iefix) format("embedded-opentype"),url(../styles/fonts/OpenSans-Regular-webfont.woff2) format("woff2"),url(../styles/fonts/OpenSans-Regular-webfont.woff) format("woff"),url(../styles/fonts/OpenSans-Regular-webfont.ttf) format("truetype"),url(../styles/fonts/OpenSans-Regular-webfont.svg#OpenSans) format("svg")}
@@ -766,6 +767,7 @@ select[multiple].input-lg,textarea.input-lg{height:auto}
 .form-horizontal .form-group-sm .control-label{padding-top:3px;font-size:11px}
 }
 .btn{display:inline-block;margin-bottom:0;font-weight:600;text-align:center;vertical-align:middle;touch-action:manipulation;cursor:pointer;border:1px solid transparent;white-space:nowrap;padding:2px 6px;font-size:13px;line-height:1.66666667;border-radius:1px;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+.bootstrap-switch,.datepicker table{-webkit-user-select:none;-moz-user-select:none}
 .btn.active.focus,.btn.active:focus,.btn.focus,.btn:active.focus,.btn:active:focus,.btn:focus{outline:dotted thin!important;outline:-webkit-focus-ring-color auto 5px!important;outline-offset:-2px!important}
 .btn.focus,.btn:focus,.btn:hover{color:#4d5258;text-decoration:none}
 .btn.active,.btn:active{outline:0;-webkit-box-shadow:inset 0 3px 5px rgba(0,0,0,.125);box-shadow:inset 0 3px 5px rgba(0,0,0,.125)}
@@ -950,7 +952,7 @@ select[multiple].input-group-sm>.form-control,select[multiple].input-group-sm>.i
 .navbar-collapse.in{overflow-y:visible}
 .navbar-fixed-bottom .navbar-collapse,.navbar-fixed-top .navbar-collapse,.navbar-static-top .navbar-collapse{padding-left:0;padding-right:0}
 }
-.embed-responsive,.modal,.modal-open,.progress{overflow:hidden}
+.carousel-inner,.embed-responsive,.modal,.modal-open,.progress{overflow:hidden}
 @media (max-device-width:480px) and (orientation:landscape){.navbar-fixed-bottom .navbar-collapse,.navbar-fixed-top .navbar-collapse{max-height:200px}
 }
 .membership .ui-select-bootstrap>.ui-select-choices,.typeahead-long{max-height:300px}
@@ -1336,7 +1338,7 @@ button.close{padding:0;cursor:pointer;background:0 0;border:0;-webkit-appearance
 .popover.bottom>.arrow:after{content:" ";top:1px;margin-left:-10px;border-top-width:0;border-bottom-color:#fff}
 .popover.left>.arrow{top:50%;right:-11px;margin-top:-11px;border-right-width:0;border-left-color:#bbb}
 .popover.left>.arrow:after{right:1px;border-right-width:0;border-left-color:#fff}
-.carousel-inner{overflow:hidden;width:100%}
+.carousel-inner{width:100%}
 .carousel-inner>.item{display:none;position:relative;-webkit-transition:.6s ease-in-out left;-o-transition:.6s ease-in-out left;transition:.6s ease-in-out left}
 @media all and (transform-3d),(-webkit-transform-3d){.carousel-inner>.item{-webkit-transition:-webkit-transform .6s ease-in-out;-moz-transition:-moz-transform .6s ease-in-out;-o-transition:-o-transform .6s ease-in-out;transition:transform .6s ease-in-out;-webkit-backface-visibility:hidden;-moz-backface-visibility:hidden;backface-visibility:hidden;-webkit-perspective:1000px;-moz-perspective:1000px;perspective:1000px}
 .carousel-inner>.item.active.right,.carousel-inner>.item.next{-webkit-transform:translate3d(100%,0,0);transform:translate3d(100%,0,0);left:0}
@@ -2374,7 +2376,7 @@ td>.progress:first-child:last-child{margin-bottom:0;margin-top:3px}
 .datepicker-dropdown.datepicker-orient-bottom:after{top:-6px}
 .datepicker-dropdown.datepicker-orient-top:before{bottom:-7px;border-bottom:0;border-top:7px solid #bbb}
 .datepicker-dropdown.datepicker-orient-top:after{bottom:-6px;border-bottom:0;border-top:6px solid #fff}
-.datepicker table{margin:0;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+.datepicker table{margin:0;-webkit-touch-callout:none;-khtml-user-select:none;-ms-user-select:none;user-select:none}
 .datepicker table tr td,.datepicker table tr th{text-align:center;width:30px;height:30px;border:none}
 .datepicker table tr td.new,.datepicker table tr td.old{color:#9c9c9c}
 .datepicker table tr td.day:hover,.datepicker table tr td.focused{background:#f1f1f1;cursor:pointer}
@@ -2510,7 +2512,8 @@ select.bs-select-hidden,select.selectpicker{display:none!important}
 .bs-donebutton .btn-group button{width:100%}
 .bs-searchbox+.bs-actionsbox{padding:0 8px 4px}
 .bs-searchbox .form-control{margin-bottom:0;width:100%;float:none}
-.bootstrap-switch{display:inline-block;direction:ltr;cursor:pointer;border-radius:1px;border:1px solid #bbb;position:relative;text-align:left;overflow:hidden;line-height:8px;z-index:0;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;vertical-align:middle;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;-o-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}
+.bootstrap-switch{display:inline-block;direction:ltr;cursor:pointer;border-radius:1px;border:1px solid #bbb;position:relative;text-align:left;overflow:hidden;line-height:8px;z-index:0;-ms-user-select:none;user-select:none;vertical-align:middle;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;-o-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}
+.c3 text,.log-line-number{-moz-user-select:none;-webkit-user-select:none}
 .bootstrap-switch .bootstrap-switch-container{display:inline-block;top:0;border-radius:1px;-webkit-transform:translate3d(0,0,0);transform:translate3d(0,0,0)}
 .bootstrap-switch .bootstrap-switch-handle-off,.bootstrap-switch .bootstrap-switch-handle-on,.bootstrap-switch .bootstrap-switch-label{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;cursor:pointer;display:inline-block!important;height:100%;padding:2px 6px;font-size:13px;line-height:21px}
 .ie9.layout-pf-alt-fixed .nav-pf-vertical-alt,.ie9.layout-pf-fixed .nav-pf-secondary-nav,.ie9.layout-pf-fixed .nav-pf-tertiary-nav,.ie9.layout-pf-fixed .nav-pf-vertical,.list-group-item-header{box-sizing:content-box}
@@ -2544,7 +2547,7 @@ select.bs-select-hidden,select.selectpicker{display:none!important}
 .bootstrap-touchspin .input-group-btn-vertical i{position:absolute;font-weight:400}
 .c3 svg{font:10px sans-serif}
 .c3 line,.c3 path{fill:none;stroke:#000}
-.c3 text{-webkit-user-select:none;-moz-user-select:none;user-select:none}
+.c3 text{user-select:none}
 .c3-bars path,.c3-event-rect,.c3-legend-item-tile,.c3-xgrid-focus,.c3-ygrid{shape-rendering:crispEdges}
 .c3-chart-arc text{fill:#fff;font-size:13px}
 .c3-grid text{fill:#aaa}
@@ -3129,7 +3132,6 @@ a.disabled{color:#8b8d8f;cursor:not-allowed;text-decoration:none}
 }
 .list-view-pf-actions{float:right;margin-bottom:20px;margin-left:20px;margin-top:20px;order:2}
 .list-view-pf-actions .dropdown-kebab-pf,.list-view-pf-actions button,.list-view-pf-actions>a{margin-left:10px}
-.list-view-pf-top-align .list-view-pf-actions{align-self:flex-start}
 .list-view-pf-additional-info{align-items:center;display:flex;flex-wrap:wrap}
 @media (min-width:992px){.list-view-pf-additional-info{flex:1 0 auto;float:left;width:50%}
 }
@@ -3144,7 +3146,6 @@ a.disabled{color:#8b8d8f;cursor:not-allowed;text-decoration:none}
 @media (min-width:992px){.list-view-pf-body{align-items:center;display:flex;flex-direction:row}
 }
 .list-view-pf-checkbox{border-right:1px solid #d1d1d1;float:left;margin-right:15px;padding:3px 10px 3px 0}
-.list-view-pf-top-align .list-view-pf-checkbox{align-self:flex-start}
 .list-view-pf-stacked .list-view-pf-description{display:block;flex:none}
 @media (min-width:992px){.list-view-pf-description{align-items:center;display:flex;float:left;width:50%}
 }
@@ -5307,6 +5308,17 @@ td.visible-print,th.visible-print{display:table-cell!important}
 .landing::-webkit-scrollbar-track{background-color:#042e43}
 .landing-side-bar::-webkit-scrollbar-track{background-color:#21272e}
 .project-bar ::-webkit-scrollbar-track{background-color:#050505}
+.add-secret-to-application .catalogs-overlay-panel{max-width:600px}
+.add-secret-to-application .dialog-title{border-bottom:1px solid #d1d1d1}
+.add-secret-to-application .dialog-title h3{margin:18px 0;padding-left:15px}
+.add-secret-to-application .dialog-body{padding:20px}
+.add-secret-to-application .dialog-body .add-choice{margin-bottom:10px}
+.add-secret-to-application .dialog-body .button-group .btn{margin-left:10px}
+.add-secret-to-application .dialog-body .button-group .btn:first-of-type{margin-left:0}
+.add-secret-to-application .dialog-body legend{border-bottom:0;font-size:14px;font-weight:600;margin-bottom:10px}
+.add-secret-to-application .dialog-body .radio{margin-top:0}
+.add-secret-to-application .updating{background-color:#fff;bottom:55px;left:0;padding-top:60px;position:absolute;right:0;top:55px;z-index:1000}
+.add-secret-to-application .volume-options{margin-left:20px}
 .osc-secrets-form .advanced-secrets .help-blocks,.osc-secrets-form .advanced-secrets .input-labels,.osc-secrets-form .basic-secrets .help-blocks,.osc-secrets-form .basic-secrets .input-labels{display:table;padding-right:30px;position:relative;width:100%}
 .osc-secrets-form .advanced-secrets .help-blocks .help-block,.osc-secrets-form .advanced-secrets .help-blocks .input-label,.osc-secrets-form .advanced-secrets .input-labels .help-block,.osc-secrets-form .advanced-secrets .input-labels .input-label,.osc-secrets-form .basic-secrets .help-blocks .help-block,.osc-secrets-form .basic-secrets .help-blocks .input-label,.osc-secrets-form .basic-secrets .input-labels .help-block,.osc-secrets-form .basic-secrets .input-labels .input-label{width:100%;float:left;padding-right:5px}
 .osc-secrets-form .advanced-secrets .secret-row,.osc-secrets-form .basic-secrets .secret-row{display:table;padding-right:30px;position:relative;width:100%;margin-bottom:15px}
@@ -5322,7 +5334,7 @@ dl.secret-data dt{margin-bottom:5px}
 dl.secret-data dt{clear:left;float:left;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:160px}
 }
 dl.secret-data pre{margin-bottom:0}
-.create-secret-modal{background-color:#F5F5F5}
+.create-secret-modal{background-color:#f5f5f5}
 .create-secret-modal .modal-footer{margin-top:0px}
 .create-secret-modal .modal-body{padding:0px 18px}
 .create-secret-editor{height:150px}
@@ -5657,7 +5669,7 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .log-line{color:#d1d1d1}
 .log-line:hover{background-color:#22262b;color:#ededed}
 .log-line-number:before{content:attr(data-line-number)}
-.log-line-number{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;border-right:1px #272b30 solid;padding-right:10px;vertical-align:top;white-space:nowrap;width:60px;color:#72767b}
+.log-line-number{-ms-user-select:none;border-right:1px #272b30 solid;padding-right:10px;vertical-align:top;white-space:nowrap;width:60px;color:#72767b}
 .log-line-text{padding:0 10px;white-space:pre-wrap;width:100%;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .appended-icon,.project-date [am-time-ago],.projects-list [am-time-ago]{white-space:nowrap}
 .log-line-text::-moz-selection{color:#101214;background:#e5e5e5}
