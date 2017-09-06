@@ -12164,7 +12164,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-container\">\n" +
     "<div class=\"expanded-section\">\n" +
     "<alerts alerts=\"row.notifications\"></alerts>\n" +
-    "\n" +
     "<div ng-switch=\"row.instanceStatus\">\n" +
     "<div ng-switch-when=\"deleted\" class=\"row\">\n" +
     "<div class=\"col-sm-12\">\n" +
@@ -12195,7 +12194,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-switch-default>\n" +
+    "</div>\n" +
+    "<div>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-sm-12\" ng-if=\"row.description\">\n" +
     "<p class=\"pre-wrap\" ng-bind-html=\"row.description | linky\"></p>\n" +
@@ -12248,7 +12248,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\" ng-if=\"!row.bindings.length && (!row.isBindable || !({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create'))\">\n" +
     "<div class=\"col-sm-12\">\n" +
     "<em>No bindings</em>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
