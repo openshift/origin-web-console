@@ -95,24 +95,6 @@
     <div class="list-pf-container">
       <div class="expanded-section">
         <alerts alerts="row.notifications"></alerts>
-        <!--
-          TODO: follow-on PR
-        <div class="expanded-section">
-          <div class="section-title">
-            Configuration Details
-          </div>
-          <div class="row" ng-repeat="item in [{
-            name: 'password',
-            value: '*****'
-          }, {
-            name: 'lorem ipsum',
-            value: 'dolor sit amet'
-          }]">
-            <div class="col-sm-5">{{item.name}}</div>
-            <div class="col-sm-7">{{item.value}}</div>
-          </div>
-        </div>
-        -->
         <div ng-switch="row.instanceStatus">
           <div ng-switch-when="deleted" class="row">
             <div class="col-sm-12">
@@ -143,61 +125,61 @@
               </div>
             </div>
           </div>
-          <div ng-switch-default>
-            <div class="row">
-              <div class="col-sm-12" ng-if="row.description">
-                <p class="pre-wrap" ng-bind-html="row.description | linky"></p>
+        </div>
+        <div>
+          <div class="row">
+            <div class="col-sm-12" ng-if="row.description">
+              <p class="pre-wrap" ng-bind-html="row.description | linky"></p>
+            </div>
+          </div>
+          <div class="section-title" ng-if="row.isBindable || row.bindings">
+            Bindings
+          </div>
+          <div class="row overview-bindings" ng-repeat="(name, binding) in row.bindings">
+            <div class="col-sm-5 col-md-6">
+              <div ng-if="!(row.state.applicationsByBinding[binding.metadata.name] | size)">
+                <h3>
+                  <div class="component-label">
+                    Secret
+                  </div>
+                  <a ng-if="('secrets' | canI : 'get')"
+                     ng-href="{{binding.spec.secretName | navigateResourceURL : 'Secret' : row.apiObject.metadata.namespace}}">
+                    {{binding.spec.secretName}}
+                  </a>
+                  <span ng-if="!('secrets' | canI : 'get')">
+                    {{binding.spec.secretName}}
+                  </span>
+                </h3>
+              </div>
+              <div ng-repeat="target in row.state.applicationsByBinding[binding.metadata.name] track by (target | uid)">
+                <h3>
+                  <div class="component-label">
+                    {{target.kind | humanizeKind : true}}
+                  </div>
+                  <a ng-href="{{target | navigateResourceURL}}">{{target.metadata.name}}</a>
+                </h3>
               </div>
             </div>
-            <div class="section-title" ng-if="row.isBindable || row.bindings">
-              Bindings
+            <div class="col-sm-7 col-md-6 overview-bindings">
+              <span ng-if="binding.metadata.deletionTimestamp">
+                <status-icon status="'Pending'"></status-icon> Deleting
+              </span>
+              <span ng-if="!(binding | isBindingReady) && !binding.metadata.deletionTimestamp">
+                <status-icon status="'Pending'"></status-icon> Pending
+              </span>
             </div>
-            <div class="row overview-bindings" ng-repeat="(name, binding) in row.bindings">
-              <div class="col-sm-5 col-md-6">
-                <div ng-if="!(row.state.applicationsByBinding[binding.metadata.name] | size)">
-                  <h3>
-                    <div class="component-label">
-                      Secret
-                    </div>
-                    <a ng-if="('secrets' | canI : 'get')"
-                       ng-href="{{binding.spec.secretName | navigateResourceURL : 'Secret' : row.apiObject.metadata.namespace}}">
-                      {{binding.spec.secretName}}
-                    </a>
-                    <span ng-if="!('secrets' | canI : 'get')">
-                      {{binding.spec.secretName}}
-                    </span>
-                  </h3>
-                </div>
-                <div ng-repeat="target in row.state.applicationsByBinding[binding.metadata.name] track by (target | uid)">
-                  <h3>
-                    <div class="component-label">
-                      {{target.kind | humanizeKind : true}}
-                    </div>
-                    <a ng-href="{{target | navigateResourceURL}}">{{target.metadata.name}}</a>
-                  </h3>
-                </div>
-              </div>
-              <div class="col-sm-7 col-md-6 overview-bindings">
-                <span ng-if="binding.metadata.deletionTimestamp">
-                  <status-icon status="'Pending'"></status-icon> Deleting
-                </span>
-                <span ng-if="!(binding | isBindingReady) && !binding.metadata.deletionTimestamp">
-                  <status-icon status="'Pending'"></status-icon> Pending
-                </span>
-              </div>
+          </div>
+          <div class="row" ng-if="row.isBindable && ({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create')">
+            <div class="col-sm-12">
+              <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">
+                <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>
+                Create Binding
+              </a>
             </div>
-            <div class="row" ng-if="row.isBindable && ({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create')">
-              <div class="col-sm-12">
-                <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">
-                  <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>
-                  Create Binding
-                </a>
-              </div>
-            </div>
-            <div class="row" ng-if="!row.bindings.length && (!row.isBindable || !({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create'))">
-              <div class="col-sm-12">
-                <em>No bindings</em>
-              </div>
+          </div>
+          <div class="row" ng-if="!row.bindings.length && (!row.isBindable || !({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create'))">
+            <div class="col-sm-12">
+              <em>No bindings</em>
             </div>
           </div>
         </div>
