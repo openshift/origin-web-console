@@ -13888,69 +13888,70 @@ u(), d();
 angular.module("openshiftConsole").component("notificationDrawerWrapper", {
 templateUrl: "views/directives/notifications/notification-drawer-wrapper.html",
 controller: [ "$filter", "$interval", "$location", "$timeout", "$routeParams", "$rootScope", "Constants", "DataService", "NotificationsService", "EventsService", function(e, t, n, a, r, o, i, s, c, l) {
-var u, d, m = _.get(i, "DISABLE_GLOBAL_EVENT_WATCH"), p = e("isIE")() || e("isEdge")(), f = this, g = [], h = {}, v = {}, y = [], b = {}, C = function(e) {
+var u, d, m = _.get(i, "DISABLE_GLOBAL_EVENT_WATCH"), p = e("isIE")() || e("isEdge")(), f = this, g = [], h = {}, v = [], y = {}, b = function(e) {
 return s.get("projects", e, {}, {
 errorNotification: !1
 }).then(function(e) {
-return b[e.metadata.name] = e, e;
+return y[e.metadata.name] = e, e;
 });
-}, S = function(t, n) {
+}, C = function(t, n) {
 n && !t[n] && (t[n] = {
-heading: e("displayName")(b[n]) || n,
-project: b[n],
+heading: e("displayName")(y[n]) || n,
+project: y[n],
 notifications: []
 });
-}, w = function() {
+}, S = function() {
 d && s.unwatch(d);
-}, k = function(e, t) {
-w(), e && (d = s.watch("events", {
+}, w = function(e, t) {
+S(), e && (d = s.watch("events", {
 namespace: e
 }, _.debounce(t, 400), {
 skipDigest: !0
 }));
-}, j = function() {
+}, k = function() {
 u && u(), u = null;
-}, P = function(e) {
+}, j = function(e) {
 return _.filter(e, "unread");
-}, R = function(e) {
+}, P = function(e) {
 o.$applyAsync(function() {
-e.totalUnread = P(e.notifications).length, e.hasUnread = !!e.totalUnread, o.$emit("NotificationDrawerWrapper.count", e.totalUnread);
+e.totalUnread = j(e.notifications).length, e.hasUnread = !!e.totalUnread, o.$emit("NotificationDrawerWrapper.count", e.totalUnread);
 });
-}, E = function() {
-_.each(y, R);
-}, T = function(e) {
+}, R = function() {
+_.each(v, P);
+}, E = function(e) {
 return _.orderBy(e, [ "event.lastTimestamp", "event.firstTimestamp" ], [ "desc", "desc" ]);
-}, I = function(e) {
+}, T = function(e) {
 var t = _.sortBy(e, function(e) {
 return e.heading;
 });
 return _.each(t, function(e) {
-e.notifications = T(e.notifications), e.counts = R(e);
+e.notifications = E(e.notifications), e.counts = P(e);
 }), t;
-}, N = function(e) {
+}, I = function(e) {
 var t = {};
-return S(t, r.project), _.each(e, function(e) {
-l.isImportantEvent(e) && !l.isCleared(e) && (S(t, e.metadata.namespace), t[e.metadata.namespace].notifications.push({
+return C(t, r.project), _.each(e, function(e) {
+l.isImportantEvent(e) && !l.isCleared(e) && (C(t, e.metadata.namespace), t[e.metadata.namespace].notifications.push({
 unread: !l.isRead(e),
+uid: e.metadata.uid,
 event: e,
 actions: null
 }));
 }), t;
-}, D = function() {
+}, N = function() {
 _.each(g, function(e) {
 e();
 }), g = [];
-}, $ = function(e) {
+}, D = function(e) {
 e || (f.drawerHidden = !0);
-}, A = function() {
+}, $ = function() {
 o.$evalAsync(function() {
-E(), f.notificationGroups = _.filter(y, function(e) {
+R(), f.notificationGroups = _.filter(v, function(e) {
 return e.project.metadata.name === r.project;
 });
 });
-}, B = function(e) {
-h = e.by("metadata.name"), v = N(h), y = I(v), A();
-}, L = {
+}, A = function(e) {
+h = I(e.by("metadata.uid")), v = T(h), $();
+}, B = {
 Normal: "pficon pficon-info",
 Warning: "pficon pficon-warning-triangle-o"
 };
@@ -13968,51 +13969,51 @@ f.drawerHidden = !0;
 onMarkAllRead: function(e) {
 _.each(e.notifications, function(e) {
 e.unread = !1, l.markRead(e.event);
-}), A(), o.$emit("NotificationDrawerWrapper.onMarkAllRead");
+}), $(), o.$emit("NotificationDrawerWrapper.onMarkAllRead");
 },
 onClearAll: function(e) {
 _.each(e.notifications, function(e) {
 l.markRead(e.event), l.markCleared(e.event);
-}), e.notifications = [], A(), o.$emit("NotificationDrawerWrapper.onMarkAllRead");
+}), e.notifications = [], $(), o.$emit("NotificationDrawerWrapper.onMarkAllRead");
 },
-notificationGroups: y,
+notificationGroups: v,
 headingInclude: "views/directives/notifications/header.html",
 notificationBodyInclude: "views/directives/notifications/notification-body.html",
 customScope: {
 clear: function(e, t, n) {
-l.markCleared(e.event), n.notifications.splice(t, 1), E();
+l.markCleared(e.event), n.notifications.splice(t, 1), R();
 },
 markRead: function(e) {
-e.unread = !1, l.markRead(e.event), E();
+e.unread = !1, l.markRead(e.event), R();
 },
 getNotficationStatusIconClass: function(e) {
-return L[e.type] || L.info;
+return B[e.type] || B.info;
 },
 getStatusForCount: function(e) {
-return L[e] || L.info;
+return B[e] || B.info;
 },
 close: function() {
 f.drawerHidden = !0;
 }
 }
 });
-var U = function(e, t) {
+var L = function(e, t) {
 return _.get(e, "params.project") !== _.get(t, "params.project");
-}, O = function() {
-C(r.project).then(function() {
-k(r.project, B), $(r.project), A();
+}, U = function() {
+b(r.project).then(function() {
+w(r.project, A), D(r.project), $();
 });
-}, F = function() {
-r.project && O(), g.push(o.$on("$routeChangeSuccess", function(e, t, n) {
-U(t, n) && (f.customScope.projectName = r.project, O());
+}, O = function() {
+r.project && U(), g.push(o.$on("$routeChangeSuccess", function(e, t, n) {
+L(t, n) && (f.customScope.projectName = r.project, U());
 })), g.push(o.$on("NotificationDrawerWrapper.toggle", function() {
 f.drawerHidden = !f.drawerHidden;
 }));
 };
 f.$onInit = function() {
-m || p || F();
+m || p || O();
 }, f.$onDestroy = function() {
-j(), w(), D();
+k(), S(), N();
 };
 } ]
 });
