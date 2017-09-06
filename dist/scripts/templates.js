@@ -7702,7 +7702,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"drawer-pf-notification-inner\" tabindex=\"0\" ng-click=\"$ctrl.customScope.markRead(notification)\">\n" +
     "<a class=\"pull-right\" href=\"\" ng-click=\"$ctrl.customScope.clear(notification, $index, notificationGroup)\">\n" +
     "<span class=\"sr-only\">Clear notification</span>\n" +
-    "<span ng-if=\"notification.event\" aria-hidden=\"true\" class=\"pull-left pficon pficon-close\"></span>\n" +
+    "<span aria-hidden=\"true\" class=\"pull-left pficon pficon-close\"></span>\n" +
     "</a>\n" +
     "<div uib-dropdown class=\"dropdown pull-right dropdown-kebab-pf\" ng-if=\"notification.actions.length\">\n" +
     "<button uib-dropdown-toggle class=\"btn btn-link dropdown-toggle\" type=\"button\" id=\"dropdownKebabRight-{{$id}}\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"true\">\n" +
@@ -7716,19 +7716,27 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</li>\n" +
     "</ul>\n" +
     "</div>\n" +
-    "<span ng-if=\"notification.event\" aria-hidden=\"true\" class=\"pull-left\" ng-class=\"$ctrl.customScope.getNotficationStatusIconClass(notification.event)\"></span>\n" +
+    "<span class=\"pull-left {{notification.type | alertIcon}}\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">{{notification.event.type}}</span>\n" +
     "<div class=\"drawer-pf-notification-content\">\n" +
     "<div class=\"drawer-pf-notification-message\" ng-attr-title=\"{{notification.event.message}}\">\n" +
     "<div>\n" +
-    "<span>\n" +
-    "{{notification.event.reason | humanize}} &mdash; {{notification.event.involvedObject.kind | humanize}}\n" +
+    "<span ng-if=\"notification.event.reason\">\n" +
+    "{{notification.event.reason | humanize}} &mdash; <span ng-if=\"notification.event.involvedObject\">{{notification.event.involvedObject.kind | humanize}}</span>\n" +
     "</span>\n" +
-    "<span ng-init=\"eventObjUrl = (notification.event | navigateEventInvolvedObjectURL)\">\n" +
+    "<span ng-if=\"notification.event.involvedObject\" ng-init=\"eventObjUrl = (notification.event | navigateEventInvolvedObjectURL)\">\n" +
     "<a ng-if=\"eventObjUrl\" ng-attr-title=\"Navigate to {{notification.event.involvedObject.name}}\" href=\"{{eventObjUrl}}\" ng-click=\"$ctrl.customScope.close()\">\n" +
     "{{notification.event.involvedObject.name}}\n" +
     "</a>\n" +
     "<span ng-if=\"!(eventObjUrl)\">{{notification.event.involvedObject.name}}</span>\n" +
+    "</span>\n" +
+    "<span ng-if=\"!(notification.event.involvedObject)\">\n" +
+    "{{notification.message}}\n" +
+    "<span ng-repeat=\"link in notification.links\">\n" +
+    "<a ng-if=\"!link.href\" href=\"\" ng-click=\"$ctrl.customScope.onLinkClick(link)\" role=\"button\">{{link.label}}</a>\n" +
+    "<a ng-if=\"link.href\" ng-href=\"{{link.href}}\" ng-click=\"$ctrl.customScope.close()\" ng-attr-target=\"{{link.target}}\">{{link.label}}</a>\n" +
+    "<span ng-if=\"!$last\" class=\"toast-action-divider\">|</span>\n" +
+    "</span>\n" +
     "</span>\n" +
     "</div>\n" +
     "<div ng-if=\"notification.event.count > 1\" class=\"text-muted small\">\n" +
@@ -7737,12 +7745,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"drawer-pf-notification-info\">\n" +
-    "<span class=\"date\">{{notification.event.lastTimestamp | date:'shortDate'}}</span>\n" +
-    "<span class=\"time\">{{notification.event.lastTimestamp | date:'mediumTime'}}</span>\n" +
+    "<span class=\"date\">{{notification.lastTimestamp | date:'shortDate'}}</span>\n" +
+    "<span class=\"time\">{{notification.lastTimestamp | date:'mediumTime'}}</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"$ctrl.drawerExpanded\" class=\"drawer-pf-notification-message drawer-pf-notification-message-expanded\">\n" +
-    "{{notification.event.message}}\n" +
+    "{{notification.event.message || notification.details}}\n" +
     "</div>\n" +
     "</div>"
   );
