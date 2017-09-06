@@ -262,7 +262,7 @@
                   Logs are not available for replica sets.
                   <span ng-if="podsByOwnerUID[replicaSet.metadata.uid] | hashSize">
                     To see application logs, view the logs for one of the replica set's
-                    <a href="" ng-click="viewPodsForReplicaSet(replicaSet)">pods</a>.
+                    <a href="" ng-click="viewPodsForSet(replicaSet)">pods</a>.
                   </span>
                   <div class="mar-top-lg" ng-if="metricsAvailable">
                     <deployment-metrics
@@ -330,7 +330,7 @@
                   Logs are not available for stateful sets.
                   <span ng-if="podsByOwnerUID[set.metadata.uid] | hashSize">
                     To see application logs, view the logs for one of the stateful sets's
-                    <a href="" ng-click="viewPodsForReplicaSet(set)">pods</a>.
+                    <a href="" ng-click="viewPodsForSet(set)">pods</a>.
                   </span>
                   <div class="mar-top-lg" ng-if="metricsAvailable">
                     <deployment-metrics
