@@ -5669,10 +5669,9 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .appended-icon{display:inline-block}
 .block{display:block}
 .nav-pf-vertical{background-color:#30363d;top:41px;transition:width .1s ease-in-out,left .1s ease-in-out;z-index:990}
-@media (min-width:768px){.nav-pf-vertical{top:59px}
-}
 .has-project-bar .nav-pf-vertical{top:69px}
-@media (min-width:768px){.has-project-bar .nav-pf-vertical{top:99px}
+@media (min-width:768px){.nav-pf-vertical{display:none}
+.has-project-bar .nav-pf-vertical{display:block;top:99px}
 }
 .nav-pf-vertical .list-group-item{border-color:#050505}
 .nav-pf-vertical .list-group-item:after{background:rgba(255,255,255,.04);content:'';display:block;height:1px;position:absolute;top:0px;width:100%}
