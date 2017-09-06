@@ -53,10 +53,10 @@ return _.get(e, "metadata.name");
 return _.get(e, "metadata.uid");
 }, W = function() {
 return _.size(P.deploymentConfigs) + _.size(P.vanillaReplicationControllers) + _.size(P.deployments) + _.size(P.vanillaReplicaSets) + _.size(P.statefulSets) + _.size(P.monopods) + _.size(P.state.serviceInstances);
-}, G = function() {
-return _.size(P.filteredDeploymentConfigs) + _.size(P.filteredReplicationControllers) + _.size(P.filteredDeployments) + _.size(P.filteredReplicaSets) + _.size(P.filteredStatefulSets) + _.size(P.filteredMonopods) + _.size(P.filteredServiceInstances);
 }, K = function() {
-P.size = W(), P.filteredSize = G();
+return _.size(P.filteredDeploymentConfigs) + _.size(P.filteredReplicationControllers) + _.size(P.filteredDeployments) + _.size(P.filteredReplicaSets) + _.size(P.filteredStatefulSets) + _.size(P.filteredMonopods) + _.size(P.filteredServiceInstances);
+}, G = function() {
+P.size = W(), P.filteredSize = K();
 var e = 0 === P.size, t = P.deploymentConfigs && P.replicationControllers && P.deployments && P.replicaSets && P.statefulSets && P.pods && P.state.serviceInstances;
 V.expandAll = t && 1 === P.size, P.showGetStarted = t && e, P.showLoading = !t && e, P.everythingFiltered = !e && !P.filteredSize, P.hidePipelineOtherResources = "pipeline" === P.viewBy && (P.filterActive || _.isEmpty(P.pipelineBuildConfigs));
 }, Q = function(e) {
@@ -119,7 +119,7 @@ case "name":
 return !_.isEmpty(V.filterKeywords);
 }
 }, ie = function() {
-P.filteredDeploymentConfigs = re(P.deploymentConfigs), P.filteredReplicationControllers = re(P.vanillaReplicationControllers), P.filteredDeployments = re(P.deployments), P.filteredReplicaSets = re(P.vanillaReplicaSets), P.filteredStatefulSets = re(P.statefulSets), P.filteredMonopods = re(P.monopods), P.filteredPipelineBuildConfigs = re(P.pipelineBuildConfigs), P.filteredServiceInstances = re(V.orderedServiceInstances), P.filterActive = oe(), Z(), K();
+P.filteredDeploymentConfigs = re(P.deploymentConfigs), P.filteredReplicationControllers = re(P.vanillaReplicationControllers), P.filteredDeployments = re(P.deployments), P.filteredReplicaSets = re(P.vanillaReplicaSets), P.filteredStatefulSets = re(P.statefulSets), P.filteredMonopods = re(P.monopods), P.filteredPipelineBuildConfigs = re(P.pipelineBuildConfigs), P.filteredServiceInstances = re(V.orderedServiceInstances), P.filterActive = oe(), Z(), G();
 }, se = n.project + "/overview/view-by";
 P.viewBy = localStorage.getItem(se) || "app", e.$watch(function() {
 return P.viewBy;
@@ -315,7 +315,7 @@ _.isEmpty(o) || (t = t.concat(o));
 qe(), ze();
 }, We = function() {
 _.each(P.deploymentConfigs, Me);
-}, Ge = function() {
+}, Ke = function() {
 if (V.builds && P.buildConfigs) {
 P.recentPipelinesByBuildConfig = {}, V.recentBuildsByBuildConfig = {}, V.recentPipelinesByDeploymentConfig = {};
 var e = {};
@@ -330,7 +330,7 @@ return i.sortBuilds(e, !0);
 return i.sortBuilds(e, !0);
 }), We();
 }
-}, Ke = function() {
+}, Ge = function() {
 k.setGenericQuotaWarning(V.quotas, V.clusterQuotas, n.project, V.alerts);
 };
 P.clearFilter = function() {
@@ -395,7 +395,7 @@ resource: "deployments"
 }, a, function(e) {
 E = e.by("metadata.uid"), P.deployments = _.sortBy(E, "metadata.name"), Ne(), $e(P.deployments), $e(P.vanillaReplicaSets), we(P.deployments), Qe(), ie(), h.log("deployments (subscribe)", P.deploymentsByUID);
 })), Ye.push(l.watch("builds", a, function(e) {
-V.builds = e.by("metadata.name"), Ge(), h.log("builds (subscribe)", V.builds);
+V.builds = e.by("metadata.name"), Ke(), h.log("builds (subscribe)", V.builds);
 })), Ye.push(l.watch({
 group: "apps",
 resource: "statefulsets"
@@ -415,7 +415,7 @@ P.routes = e.by("metadata.name"), Be(), h.log("routes (subscribe)", P.routes);
 poll: R,
 pollInterval: 6e4
 })), Ye.push(l.watch("buildConfigs", a, function(e) {
-P.buildConfigs = e.by("metadata.name"), Fe(), He(), Ge(), ie(), h.log("buildconfigs (subscribe)", P.buildConfigs);
+P.buildConfigs = e.by("metadata.name"), Fe(), He(), Ke(), ie(), h.log("buildconfigs (subscribe)", P.buildConfigs);
 }, {
 poll: R,
 pollInterval: 6e4
@@ -434,12 +434,12 @@ T = e.by("metadata.name"), p.buildDockerRefMapForImageStreams(T, V.imageStreamIm
 poll: R,
 pollInterval: 6e4
 })), Ye.push(l.watch("resourcequotas", a, function(e) {
-V.quotas = e.by("metadata.name"), Ke();
+V.quotas = e.by("metadata.name"), Ge();
 }, {
 poll: !0,
 pollInterval: 6e4
 })), Ye.push(l.watch("appliedclusterresourcequotas", a, function(e) {
-V.clusterQuotas = e.by("metadata.name"), Ke();
+V.clusterQuotas = e.by("metadata.name"), Ge();
 }, {
 poll: !0,
 pollInterval: 6e4
@@ -4263,6 +4263,8 @@ e.template && (y(), e.template = null), _.set(e, "ordering.panelName", "");
 _.set(e, "ordering.panelName", "deployImage");
 }, e.fromFileSelected = function() {
 _.set(e, "ordering.panelName", "fromFile");
+}, e.fromProjectSelected = function() {
+_.set(e, "ordering.panelName", "fromProject");
 }, n.withUser().then(function() {
 var t = !_.get(r, "ENABLE_TECH_PREVIEW_FEATURE.template_service_broker");
 a.getCatalogItems(t).then(_.spread(function(t, n) {
@@ -12536,6 +12538,8 @@ controllerAs: "$ctrl",
 bindings: {
 template: "<",
 project: "<",
+onProjectSelected: "<",
+availableProjects: "<",
 prefillParameters: "<",
 isDialog: "<"
 },
@@ -12543,33 +12547,66 @@ templateUrl: "views/directives/process-template.html"
 });
 }(), function() {
 angular.module("openshiftConsole").component("processTemplateDialog", {
-controller: [ "$scope", "DataService", function(e, t) {
-function n() {
-var e = _.get(s, "template.metadata.annotations.iconClass", "fa fa-clone");
+controller: [ "$scope", "$filter", "Catalog", "DataService", "KeywordService", "NotificationsService", "ProjectsService", "RecentlyViewedProjectsService", function(e, t, n, a, r, o, i, s) {
+function c() {
+var e = _.get(y, "template.metadata.annotations.iconClass", "fa fa-clone");
 return -1 !== e.indexOf("icon-") ? "font-icon " + e : e;
 }
-function a() {
-s.steps = [ s.configStep, s.resultsStep ];
+function l() {
+y.steps || (y.steps = [ y.selectStep, y.configStep, y.resultsStep ]);
 }
-function r() {
-i && (i(), i = void 0);
+function u() {
+v && (v(), v = void 0);
 }
-function o() {
+function d() {
 e.$broadcast("instantiateTemplate");
 }
-var i, s = this;
-s.configStep = {
+function m(e, t) {
+return r.filterForKeywords(t, [ "name", "tags" ], r.generateKeywords(e));
+}
+function p(e) {
+y.filterConfig.appliedFilters = e, f();
+}
+function f() {
+y.filteredItems = y.catalogItems, y.filterConfig.appliedFilters && y.filterConfig.appliedFilters.length > 0 && _.each(y.filterConfig.appliedFilters, function(e) {
+y.filteredItems = m(e.value, y.filteredItems);
+}), _.includes(y.filteredItems, y.selectedTemplate) || y.templateSelected(), g();
+}
+function g() {
+y.filterConfig.resultsCount = y.filteredItems.length, y.totalCount <= 1 ? $(".filter-pf.filter-fields input").attr("disabled", "") : $(".filter-pf.filter-fields input").removeAttr("disabled");
+}
+function h() {
+y.unfilteredProjects || i.list().then(function(e) {
+y.unfilteredProjects = _.toArray(e.by("metadata.name"));
+}, function() {
+y.unfilteredProjects = [];
+}).finally(function() {
+b();
+});
+}
+var v, y = this;
+y.selectStep = {
+id: "projectTemplates",
+label: "Selection",
+view: "views/directives/process-template-dialog/process-template-select.html",
+hidden: !0 !== y.useProjectTemplate,
+allowed: !0,
+valid: !1,
+onShow: function() {
+y.selectStep.selected = !0, y.configStep.selected = !1, y.resultsStep.selected = !1, y.nextTitle = "Next >", u(), h();
+}
+}, y.configStep = {
 id: "configuration",
 label: "Configuration",
 view: "views/directives/process-template-dialog/process-template-config.html",
 valid: !1,
 allowed: !0,
 onShow: function() {
-s.configStep.selected = !0, s.resultsStep.selected = !1, s.nextTitle = "Create", s.resultsStep.allowed = s.configStep.valid, i = e.$watch("$ctrl.form.$valid", function(e) {
-s.configStep.valid = e, s.resultsStep.allowed = e;
+y.selectStep.selected = !1, y.configStep.selected = !0, y.resultsStep.selected = !1, y.nextTitle = "Create", y.resultsStep.allowed = y.configStep.valid, v = e.$watch("$ctrl.form.$valid", function(e) {
+y.configStep.valid = e && y.selectedProject, y.resultsStep.allowed = e;
 });
 }
-}, s.resultsStep = {
+}, y.resultsStep = {
 id: "results",
 label: "Results",
 view: "views/directives/process-template-dialog/process-template-results.html",
@@ -12577,26 +12614,65 @@ valid: !0,
 allowed: !1,
 prevEnabled: !1,
 onShow: function() {
-s.configStep.selected = !1, s.resultsStep.selected = !0, s.nextTitle = "Close", r(), s.wizardDone = !0;
+y.selectStep.selected = !1, y.configStep.selected = !1, y.resultsStep.selected = !0, y.nextTitle = "Close", u(), y.wizardDone = !0;
 }
-}, s.$onInit = function() {
-s.loginBaseUrl = t.openshiftAPIBaseUrl();
-}, s.$onChanges = function(e) {
-e.template && s.template && (a(), s.iconClass = n());
+}, y.$onInit = function() {
+y.loginBaseUrl = a.openshiftAPIBaseUrl(), y.preSelectedProject = y.selectedProject = y.project, h(), y.projectEmptyState = {
+icon: "pficon pficon-info",
+title: "No Project Selected",
+info: "Please select a project from the dropdown to load Templates from that project."
+}, y.templatesEmptyState = {
+icon: "pficon pficon-info",
+title: "No Templates",
+info: "The selected project has no templates available to import."
+}, y.filterConfig = {
+fields: [ {
+id: "keyword",
+title: "Keyword",
+placeholder: "Filter by Keyword",
+filterType: "text"
+} ],
+inlineResults: !0,
+showTotalCountResults: !0,
+itemsLabel: "Item",
+itemsLabelPlural: "Items",
+resultsCount: 0,
+appliedFilters: [],
+onFilterChange: p
+};
+}, y.$onChanges = function(e) {
+e.template && y.template && (l(), y.iconClass = c()), e.useProjectTemplate && l();
 }, e.$on("templateInstantiated", function(e, t) {
-s.selectedProject = t.project, s.currentStep = s.resultsStep.label;
-}), s.$onDestroy = function() {
-r();
-}, s.next = function(e) {
-return e.stepId === s.configStep.id ? (o(), !1) : e.stepId !== s.resultsStep.id || (s.close(), !1);
-}, s.close = function() {
-var e = s.onDialogClosed();
+y.selectedProject = t.project, y.currentStep = y.resultsStep.label;
+}), y.$onDestroy = function() {
+u();
+}, y.next = function(e) {
+return e.stepId === y.configStep.id ? (d(), !1) : e.stepId !== y.resultsStep.id || (y.close(), !1);
+}, y.close = function() {
+var e = y.onDialogClosed();
 _.isFunction(e) && e();
+}, y.onProjectSelected = function(t) {
+y.selectedProject = t, y.configStep.valid = e.$ctrl.form.$valid && y.selectedProject;
+}, y.templateSelected = function(e) {
+y.selectedTemplate = e, y.template = _.get(e, "resource"), y.selectStep.valid = !!e;
+}, y.templateProjectChange = function() {
+y.templateProjectName = _.get(y.templateProject, "metadata.name"), y.catalogItems = {}, y.templateSelected(), n.getProjectCatalogItems(y.templateProjectName, !1, !0).then(_.spread(function(e, t) {
+y.catalogItems = e, y.totalCount = y.catalogItems.length, f(), t && o.addNotification({
+type: "error",
+message: t
+});
+}));
+};
+var b = function() {
+var e = _.reject(y.unfilteredProjects, "metadata.deletionTimestamp"), n = _.sortBy(e, t("displayName"));
+y.searchEnabled = !_.isEmpty(e), y.templateProjects = s.orderByMostRecentlyViewed(n);
 };
 } ],
 controllerAs: "$ctrl",
 bindings: {
 template: "<",
+project: "<",
+useProjectTemplate: "<",
 onDialogClosed: "&"
 },
 templateUrl: "views/directives/process-template-dialog.html"

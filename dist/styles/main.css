@@ -4758,6 +4758,7 @@ pre.clipped.scroll{max-height:150px;overflow:auto;width:100%}
 .environment-variables.table.table-bordered>tbody>tr>td:last-child .env-var-value a{font-family:"Open Sans",Helvetica,Arial,sans-serif}
 .info-popover,.warnings-popover{cursor:help;vertical-align:middle;margin-left:2px}
 .info-popover.pficon-info,.warnings-popover.pficon-info{color:#4d5258}
+.order-service-config .services-item.show-selection:focus,.order-service-config .services-item.show-selection:focus .services-item-name{color:#363636}
 .label-tech-preview{display:inline-block;margin-top:7px}
 @media (min-width:480px){.label-tech-preview{float:right;margin-left:10px}
 }
@@ -4766,6 +4767,14 @@ pre.clipped.scroll{max-height:150px;overflow:auto;width:100%}
 }
 .page-header .label-tech-preview{margin-top:3px}
 .icon-row .icon-wrap{text-align:center;width:30px}
+.order-service-config .order-services-filter{margin-left:0}
+.order-service-config .blank-slate-pf{margin-bottom:0;padding-bottom:0}
+.order-service-config .select-project-for-template{border-bottom:solid 1px #d1d1d1;padding-bottom:10px}
+.order-service-config .select-project-for-template>h2{margin-bottom:20px;margin-top:0}
+.order-service-config .select-project-for-template .ui-select-container{display:inline-block;width:275px}
+.order-service-config .services-item.show-selection:focus .services-item-icon:after{border:none}
+.order-service-config .services-item.show-selection.active,.order-service-config .services-item.show-selection.active .services-item-name{color:#00659c}
+.order-service-config .services-item.show-selection.active .services-item-icon:after{border:2px solid #0088ce}
 .data-toolbar{padding:5px 0}
 .data-toolbar.other-resources-toolbar .data-toolbar-dropdown{min-width:210px}
 .data-toolbar .checkbox{margin-bottom:0;margin-top:10px}
@@ -4898,6 +4907,7 @@ h2+.list-view-pf{margin-top:20px}
 .navbar-pf-vertical .navbar-iconic>li{display:inline-block}
 .navbar-pf-vertical .navbar-toggle{margin:13px 15px}
 .navbar-pf-vertical .navbar-toggle .icon-bar{width:22px}
+.order-service-config-single-column{padding-left:0}
 }
 .order-service-config-single-column,.overview .data-toolbar-filter .name-filter form,.overview .data-toolbar-filter .name-filter input{width:100%}
 .navbar-toggle:focus{color:#fff;outline:dotted thin!important;outline:-webkit-focus-ring-color auto 5px!important;outline-offset:-2px!important}
