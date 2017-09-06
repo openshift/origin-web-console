@@ -26,6 +26,7 @@
     var validityWatcher;
     var bindingWatch;
     var statusCondition = $filter('statusCondition');
+    var enableTechPreviewFeature = $filter('enableTechPreviewFeature');
 
     var preselectService = function(){
       var newestReady;
@@ -70,10 +71,11 @@
 
     var showBind = function() {
       ctrl.nextTitle = 'Bind';
-
-      validityWatcher = $scope.$watch("ctrl.selectionForm.$valid", function(isValid) {
-        ctrl.steps[0].valid = isValid;
-      });
+      if (ctrl.podPresets) {
+        validityWatcher = $scope.$watch("ctrl.selectionForm.$valid", function(isValid) {
+          ctrl.steps[0].valid = isValid;
+        });
+      }
     };
 
     var showResults = function() {
@@ -142,6 +144,7 @@
     ctrl.$onInit = function() {
       ctrl.serviceSelection = {};
       ctrl.projectDisplayName = $filter('displayName')(ctrl.project);
+      ctrl.podPresets = enableTechPreviewFeature('pod_presets');
 
       ctrl.steps = [
         {
@@ -177,7 +180,9 @@
         ctrl.bindType = "secret-only";
         ctrl.appToBind = null;
         ctrl.serviceToBind = ctrl.target;
-        loadApplications();
+        if (ctrl.podPresets) {
+          loadApplications();
+        }
       }
       else {
         ctrl.bindType = 'application';
