@@ -5649,13 +5649,14 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .log-line-number:before{content:attr(data-line-number)}
 .log-line-number{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;border-right:1px #272b30 solid;padding-right:10px;vertical-align:top;white-space:nowrap;width:60px;color:#72767b}
 .log-line-text{padding:0 10px;white-space:pre-wrap;width:100%;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
+.appended-icon,.project-date [am-time-ago],.projects-list [am-time-ago]{white-space:nowrap}
 .log-line-text::-moz-selection{color:#101214;background:#e5e5e5}
 .table-log-pods{background-color:#fff;border:1px solid #D1D1D1}
 .table-log-pods>tbody+tbody{border-top-width:1px}
 .log-fixed-height.empty-state-message{margin-top:0}
 .settings-item{margin:4px 8px 4px 0}
 .hide-if-empty:empty{display:none!important}
-.appended-icon{display:inline-block;white-space:nowrap}
+.appended-icon{display:inline-block}
 .block{display:block}
 .nav-pf-vertical{background-color:#30363d;top:41px;transition:width .1s ease-in-out,left .1s ease-in-out;z-index:990}
 @media (min-width:768px){.nav-pf-vertical{top:59px}
