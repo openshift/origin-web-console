@@ -458,14 +458,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/_sidebar.html',
-    "<div ng-if=\"view.hasProject\" class=\"nav-pf-vertical nav-pf-vertical-with-sub-menus\" ng-class=\"{\n" +
+    "<div class=\"nav-pf-vertical nav-pf-vertical-with-sub-menus\" ng-class=\"{\n" +
     "    collapsed: nav.collapsed && !isMobile,\n" +
     "    'hide-mobile-nav': !nav.showMobileNav && isMobile,\n" +
     "    'hover-secondary-nav-pf': sidebar.secondaryOpen && !isMobile,\n" +
     "    'show-mobile-nav': nav.showMobileNav && isMobile,\n" +
     "    'show-mobile-secondary': nav.showMobileNav && sidebar.showMobileSecondary && isMobile\n" +
     "  }\" on-esc=\"closeNav()\">\n" +
-    "<nav class=\"nav-vertical-primary\">\n" +
+    "<nav ng-if=\"view.hasProject\" class=\"nav-vertical-primary\">\n" +
     "<ul class=\"list-group\">\n" +
     "\n" +
     "<li ng-repeat=\"primaryItem in navItems\" ng-class=\"{\n" +
