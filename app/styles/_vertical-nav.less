@@ -32,14 +32,14 @@
     &.active > a,
     &:focus > a,
     &:hover > a {
-      background-color: @nav-pf-vertical-secondary-bg-color;
+      background-color: @nav-pf-vertical-active-bg-color;
       font-weight: 300;
     }
     &:focus > a,
     &:hover > a {
       .pficon,
       .fa {
-        color: @sidebar-os-icon-hover-color;
+        color: @nav-pf-vertical-active-color;
       }
     }
     &.active > a {
@@ -58,6 +58,7 @@
         padding: 10px 15px;
       }
       .fa, .pficon {
+        color: @nav-pf-vertical-icon-color;
         font-size: (@font-size-base + 2);
         @media(min-width: @screen-sm-min) {
           font-size: (@font-size-base + 5);
@@ -96,7 +97,7 @@
   }
   .list-group-item.secondary-nav-item-pf {
     &:hover > a:after {
-      color: @sidebar-os-icon-hover-color;
+      color: @nav-pf-vertical-active-color;
     }
     // right arrow alignment
     > a:after {
@@ -104,7 +105,7 @@
     }
   }
   .nav-pf-secondary-nav {
-    background: @nav-pf-vertical-secondary-bg-color;
+    background: @nav-pf-vertical-active-bg-color;
     border-left: 0;
     border-right: 1px solid @nav-pf-vertical-border-color;
     top:(@project-bar-height-mobile + @navbar-os-header-height-mobile);
