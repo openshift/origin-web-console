@@ -24,7 +24,7 @@
       <div class="row">
         <div class="col-md-12">
           <h3 ng-if="(deployments | size) || (replicaSets | size)">Deployment Configurations</h3>
-          <table class="table table-bordered table-hover table-mobile table-layout-fixed">
+          <table class="table table-bordered table-mobile table-layout-fixed">
             <colgroup>
               <col class="col-sm-3">
               <col class="col-sm-2">
@@ -110,7 +110,7 @@
           </table>
           <div ng-if="deployments | size">
             <h3>Deployments</h3>
-            <table class="table table-bordered table-hover table-mobile table-layout-fixed">
+            <table class="table table-bordered table-mobile table-layout-fixed">
               <colgroup>
                 <col class="col-sm-4">
                 <col class="col-sm-2">
@@ -155,7 +155,7 @@
           </div>
           <div ng-if="replicaSets | hashSize" id="replica-sets">
             <h3>Replica Sets</h3>
-            <table class="table table-bordered table-hover table-mobile table-layout-fixed">
+            <table class="table table-bordered table-mobile table-layout-fixed">
               <colgroup>
                 <col class="col-sm-4">
               </colgroup>
@@ -183,7 +183,7 @@
           </div>
           <div ng-if="(unfilteredReplicationControllers | hashSize) > 0" id="replica-controllers">
             <h3>Other Replication Controllers</h3>
-            <table class="table table-bordered table-hover table-mobile table-layout-fixed">
+            <table class="table table-bordered table-mobile table-layout-fixed">
               <colgroup>
                 <col class="col-sm-5">
               </colgroup>
