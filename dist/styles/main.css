@@ -5850,6 +5850,7 @@ kubernetes-container-terminal .terminal-actions .spinner{top:5px}
 .membership .content-pane .col-name input{max-width:175px}
 .membership .content-pane .select-role{width:150px}
 }
+notification-drawer-wrapper .blank-state-pf-title{font-size:14px}
 notification-drawer-wrapper .drawer-pf{height:calc(100vh - 69px);opacity:1;position:fixed;right:0;top:69px;transition:top 150ms ease-in-out,opacity 150ms;z-index:1028}
 @media (max-width:350px){notification-drawer-wrapper .drawer-pf{left:0;width:100%}
 }
