@@ -72754,7 +72754,7 @@ e.put("src/components/create-project/createProject.html", '<form name="createPro
 e.put("src/components/delete-project/delete-project-button.html", '<div class="actions">\n  \x3c!-- Avoid whitespace inside the link --\x3e\n  <a href=""\n     ng-click="$event.stopPropagation(); openDeleteModal()"\n     role="button"\n     class="action-button"\n     ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n     ng-class="{ \'disabled-link\': disableDelete }"\n    ><i class="fa fa-trash-o" aria-hidden="true"\n    ></i><span class="sr-only">Delete Project {{projectName}}</span></a>\n</div>\n'), e.put("src/components/delete-project/delete-project-modal.html", '<div class="delete-resource-modal">\n  \x3c!-- Use a form so that the enter key submits when typing a project name to confirm. --\x3e\n  <form>\n    <div class="modal-body">\n      <h1>Are you sure you want to delete the project \'<strong>{{project | displayName}}</strong>\'?</h1>\n      <p>\n        This will <strong>delete all resources</strong> associated with\n        the project {{project | displayName}} and <strong>cannot be\n        undone</strong>.  Make sure this is something you really want to do!\n      </p>\n      <div ng-show="typeNameToConfirm">\n        <p>Type the name of the project to confirm.</p>\n        <p>\n          <label class="sr-only" for="resource-to-delete">project to delete</label>\n          <input\n              ng-model="confirmName"\n              id="resource-to-delete"\n              type="text"\n              class="form-control input-lg"\n              autocorrect="off"\n              autocapitalize="off"\n              spellcheck="false"\n              autofocus>\n        </p>\n      </div>\n    </div>\n    <div class="modal-footer">\n      <button ng-disabled="typeNameToConfirm && confirmName !== project.metadata.name && confirmName !== (project | displayName : false)" class="btn btn-lg btn-danger" type="submit" ng-click="delete()">Delete</button>\n      <button class="btn btn-lg btn-default" type="button" ng-click="cancel()">Cancel</button>\n    </div>\n  </form>\n</div>\n'), 
 e.put("src/components/delete-project/delete-project.html", '<a href="javascript:void(0)"\n   ng-click="openDeleteModal()"\n   role="button"\n   ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n   ng-class="{ \'disabled-link\': disableDelete }"\n>{{label || \'Delete\'}}</a>\n'), e.put("src/components/edit-project/editProject.html", '<form name="editProjectForm">\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control"\n             name="displayName"\n             id="displayName"\n             placeholder="My Project"\n             type="text"\n             ng-model="editableFields.displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n                    <textarea class="form-control"\n                              name="description"\n                              id="description"\n                              placeholder="A short description."\n                              ng-model="editableFields.description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n              class="btn btn-primary"\n              ng-class="{\'dialog-btn\': isDialog}"\n              ng-click="update()"\n              ng-disabled="editProjectForm.$invalid || disableInputs"\n              value="">{{submitButtonLabel}}</button>\n      <button\n          class="btn btn-default"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelEditProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
 e.put("src/components/origin-modal-popup/origin-modal-popup.html", '<div class="origin-modal-popup tile-click-prevent" ng-if="$ctrl.shown" ng-style="$ctrl.positionStyle"\n     ng-class="{\'position-above\': $ctrl.showAbove, \'position-left\': $ctrl.showLeft}">\n  <h4 class="origin-modal-popup-title">\n    {{$ctrl.modalTitle}}\n  </h4>\n  <div ng-transclude></div>\n  <a href="" class="origin-modal-popup-close" ng-click="$ctrl.onClose()">\n    <span class="pficon pficon-close"></span>\n  </a>\n</div>\n'), e.put("src/components/toast-notifications/toast-notifications.html", '<div class="toast-notifications-list-pf">\n  <div ng-repeat="(notificationID, notification) in notifications track by (notificationID + (notification.message || notification.details))" ng-if="!notification.hidden || notification.isHover"\n       ng-mouseenter="setHover(notification, true)" ng-mouseleave="setHover(notification, false)">\n    <div class="toast-pf alert {{notification.type | alertStatus}}" ng-class="{\'alert-dismissable\': !hideCloseButton}">\n      <button ng-if="!hideCloseButton" type="button" class="close" ng-click="close(notification)">\n        <span class="pficon pficon-close" aria-hidden="true"></span>\n        <span class="sr-only">Close</span>\n      </button>\n      <span class="{{notification.type | alertIcon}}" aria-hidden="true"></span>\n      <span class="sr-only">{{notification.type}}</span>\n      <span class="toast-notification-message" ng-if="notification.message">{{notification.message}}</span>\n      <div ng-if="notification.details" class="toast-notification-details">\n        <truncate-long-text\n          limit="200"\n          content="notification.details"\n          use-word-boundary="true"\n          expandable="true"\n          hide-collapse="true">\n        </truncate-long-text>\n      </div>\n      <span ng-repeat="link in notification.links">\n        <a ng-if="!link.href" href="" ng-click="onClick(notification, link)" role="button">{{link.label}}</a>\n        <a ng-if="link.href" ng-href="{{link.href}}" ng-attr-target="{{link.target}}">{{link.label}}</a>\n        <span ng-if="!$last" class="toast-action-divider">|</span>\n      </span>\n    </div>\n  </div>\n</div>\n'), 
-e.put("src/components/truncate-long-text/truncateLongText.html", '\x3c!--\n  Do not remove class `truncated-content` (here or below) even though it\'s not\n  styled directly in origin-web-common.  `truncated-content` is used by\n  origin-web-console in certain contexts.\n--\x3e\n<span ng-if="!truncated" ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n<span ng-if="truncated">\n  <span ng-if="!toggles.expanded">\n    <span ng-attr-title="{{content}}" class="truncation-block">\n      <span ng-bind-html="truncatedContent | highlightKeywords : keywords" class="truncated-content"></span>&hellip;\n    </span>\n    <a ng-if="expandable" href="" ng-click="toggles.expanded = true" class="nowrap">See All</a>\n  </span>\n  <span ng-if="toggles.expanded">\n    <div ng-if="prettifyJson" class="well">\n      <span ng-if="!hideCollapse" class="pull-right" style="margin-top: -10px;"><a href="" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a></span>\n      <span ng-bind-html="content | prettifyJSON | highlightKeywords : keywords" class="pretty-json truncated-content"></span>\n    </div>\n    <span ng-if="!prettifyJson">\n      <span ng-if="!hideCollapse" class="pull-right"><a href="" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a></span>\n      <span ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n    </span>\n  </span>\n</span>\n');
+e.put("src/components/truncate-long-text/truncateLongText.html", '\x3c!--\n  Do not remove class `truncated-content` (here or below) even though it\'s not\n  styled directly in origin-web-common.  `truncated-content` is used by\n  origin-web-console in certain contexts.\n--\x3e\n<span ng-if="!truncated" ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n<span ng-if="truncated">\n  <span ng-if="!toggles.expanded">\n    <span ng-attr-title="{{content}}" class="truncation-block">\n      <span ng-bind-html="truncatedContent | highlightKeywords : keywords" class="truncated-content"></span>&hellip;\n    </span>\n    <a ng-if="expandable" href="" ng-click="toggles.expanded = true" class="truncation-expand-link">See All</a>\n  </span>\n  <span ng-if="toggles.expanded">\n    <div ng-if="prettifyJson" class="well">\n      <a href="" ng-if="!hideCollapse" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a>\n      <span ng-bind-html="content | prettifyJSON | highlightKeywords : keywords" class="pretty-json truncated-content"></span>\n    </div>\n    <span ng-if="!prettifyJson">\n      <a href="" ng-if="!hideCollapse" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a>\n      <span ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n    </span>\n  </span>\n</span>\n');
 } ]), angular.module("openshiftCommonUI").component("bindApplicationForm", {
 controllerAs: "ctrl",
 bindings: {
@@ -73141,7 +73141,7 @@ n ? (t.truncatedContent = e(n, t.limit, t.useWordBoundary, t.newlineLimit), t.tr
 } ]), angular.module("openshiftCommonUI").filter("alertStatus", function() {
 return function(e) {
 var t;
-switch (e) {
+switch (e.toLowerCase()) {
 case "error":
 t = "alert-danger";
 break;
@@ -73154,6 +73154,10 @@ case "success":
 t = "alert-success";
 break;
 
+case "normal":
+t = "alert-info";
+break;
+
 default:
 t = "alert-info";
 }
@@ -73162,7 +73166,7 @@ return t;
 }).filter("alertIcon", function() {
 return function(e) {
 var t;
-switch (e) {
+switch (e.toLowerCase()) {
 case "error":
 t = "pficon pficon-error-circle-o";
 break;
@@ -73173,6 +73177,10 @@ break;
 
 case "success":
 t = "pficon pficon-ok";
+break;
+
+case "normal":
+t = "pficon pficon-info";
 break;
 
 default:
@@ -73803,15 +73811,33 @@ var n = _.get(e, "spec.planName");
 return _.find(t.plans, {
 name: n
 });
-}, l = function(e, i) {
-var r = s(e, i);
-return _.has(r, [ "alphaBindingCreateParameterSchema", "properties", "template.openshift.io/requester-username" ]) ? n.withUser().then(function(e) {
-return {
-"template.openshift.io/requester-username": e.metadata.name
+}, l = e("generateName"), c = function(e) {
+var t = _.truncate(e, {
+length: r.maxlength - 5 - 1,
+omission: ""
+});
+return l(t, 5);
+}, u = function(e, t, n) {
+var i = {
+apiVersion: "v1",
+kind: "Secret",
+metadata: {
+name: e,
+ownerReferences: [ {
+apiVersion: n.apiVersion,
+kind: n.kind,
+name: n.metadata.name,
+uid: n.metadata.uid,
+controller: !1,
+blockOwnerDeletion: !1
+} ]
+},
+type: "Opaque",
+stringData: {}
 };
-}) : t.when({});
-}, c = e("generateName"), u = function(e, t, n) {
-var i = e.metadata.name, o = c(_.truncate(i, r.maxlength - 6) + "-"), a = {
+return i.stringData.parameters = JSON.stringify(t), i;
+}, d = function(e, t, n) {
+var n, i = e.metadata.name, r = {
 kind: "Binding",
 apiVersion: "servicecatalog.k8s.io/v1alpha1",
 metadata: {
@@ -73821,24 +73847,29 @@ spec: {
 instanceRef: {
 name: i
 },
-secretName: o
+secretName: c(e.metadata.name + "-credentials-")
 }
 };
-_.isEmpty(n) || (a.spec.parameters = n);
-var s = _.get(t, "spec.selector");
-return s && (s.matchLabels || s.matchExpressions || (s = {
-matchLabels: s
-}), a.spec.alphaPodPresetTemplate = {
-name: o,
-selector: s
-}), a;
-}, d = function(e, t) {
+n && (r.spec.parametersFrom = [ {
+secretKeyRef: {
+name: n,
+key: "parameters"
+}
+} ]);
+var o = _.get(t, "spec.selector");
+return o && (o.matchLabels || o.matchExpressions || (o = {
+matchLabels: o
+}), r.spec.alphaPodPresetTemplate = {
+name: relatedObjName,
+selector: o
+}), r;
+}, h = function(e, t) {
 var n = a(e, t);
 if (_.get(e, "metadata.deletionTimestamp")) return !1;
 if (!n) return !!e;
 var i = s(e, n), r = _.get(i, "bindable");
 return !0 === r || !1 !== r && n.bindable;
-}, h = function(e) {
+}, f = function(e) {
 var t = {};
 return _.each(e, function(e) {
 var n = _.get(e, "spec.alphaPodPresetTemplate.selector");
@@ -73848,26 +73879,32 @@ n && (t[e.metadata.name] = new LabelSelector(n));
 return {
 bindingResource: o,
 getServiceClassForInstance: a,
-bindService: function(e, t, n) {
-return l(e, n).then(function(n) {
-var r = u(e, t, n), a = {
+getPlanForInstance: s,
+bindService: function(e, t, n, r) {
+var a;
+_.isEmpty(r) || (a = c(e.metadata.name + "-bind-parameters-"));
+var s = d(e, t, a), l = {
 namespace: e.metadata.namespace
-};
-return i.create(o, null, r, a);
+}, h = i.create(o, null, s, l);
+return a ? h.then(function(e) {
+var t = u(a, r, e);
+return i.create("secrets", null, t, l).then(function() {
+return e;
 });
+}) : h;
 },
-isServiceBindable: d,
-getPodPresetSelectorsForBindings: h,
+isServiceBindable: h,
+getPodPresetSelectorsForBindings: f,
 getBindingsForResource: function(e, t) {
 if ("Instance" === _.get(t, "kind")) return _.filter(e, [ "spec.instanceRef.name", _.get(t, "metadata.name") ]);
-var n = h(e), i = new LabelSelector(_.get(t, "spec.selector")), r = [];
+var n = f(e), i = new LabelSelector(_.get(t, "spec.selector")), r = [];
 return _.each(n, function(t, n) {
 t.covers(i) && r.push(e[n]);
 }), r;
 },
 filterBindableServiceInstances: function(e, t) {
 return e || t ? _.filter(e, function(e) {
-return d(e, t);
+return h(e, t);
 }) : null;
 },
 sortServiceInstances: function(e, t) {
@@ -75012,7 +75049,7 @@ this.dismissDelay = 8e3, this.autoDismissTypes = [ "info", "success" ], this.$ge
 var t = [], n = this.dismissDelay, i = this.autoDismissTypes, r = function(e, t) {
 return t ? "hide/notification/" + t + "/" + e : "hide/notification/" + e;
 }, o = function(n) {
-a(n) || s(n) || (t.push(n), e.$emit("NotificationsService.onNotificationAdded", n));
+n.id = n.id || _.uniqueId("notification-"), n.timestamp = new Date().toISOString(), a(n) || s(n) || (t.push(n), e.$emit("NotificationsService.onNotificationAdded", n));
 }, a = function(e) {
 if (!e.id) return !1;
 var t = r(e.id, e.namespace);
@@ -77000,15 +77037,17 @@ e.exports = '<bind-application-form application-name="$ctrl.name"\n             
 }, function(e, t) {
 e.exports = '<div class="config-top">\n  <form name="$ctrl.builderForm" class="config-form">\n    <div class="form-group">\n      <label class="control-label" for="version">Version</label>\n      <ui-select ng-model="$ctrl.istag" required search-enabled="false">\n        <ui-select-match>\n          {{$select.selected.name}}\n        </ui-select-match>\n        <ui-select-choices repeat="tag in $ctrl.versions track by tag.name">\n          {{tag.name}}\n          <small ng-repeat="otherTag in $ctrl.referencedBy[tag.name]">\n            <span ng-if="$first"> &mdash; </span>{{otherTag}}<span ng-if="!$last">,</span>\n          </small>\n        </ui-select-choices>\n      </ui-select>\n    </div>\n    <select-project selected-project="$ctrl.selectedProject" name-taken="$ctrl.projectNameTaken"></select-project>\n    <div class="form-group">\n      <label class="control-label required" for="app-name">Application Name</label>\n      <div ng-class="{ \'has-error\': $ctrl.builderForm.name.$touched && $ctrl.builderForm.name.$invalid }">\n        <input\n          class="form-control"\n          type="text"\n          id="app-name"\n          required\n          minlength="2"\n          ng-maxlength="$ctrl.nameMaxLength"\n          ng-pattern="$ctrl.namePattern"\n          ng-model="$ctrl.name"\n          name="name"\n          autocorrect="off"\n          autocapitalize="none"\n          spellcheck="false">\n        \x3c!-- Wait until users leave the field to avoid flashing errors as they type. --\x3e\n        <div ng-if="$ctrl.builderForm.name.$touched">\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.required">\n            <span class="help-block">\n              Application name is required.\n            </span>\n          </div>\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.pattern">\n            <span class="help-block">\n              Application name consists of lower-case letters, numbers, and dashes. It must start with a letter and can\'t end with a <code>-</code>.\n            </span>\n          </div>\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.minlength">\n            <span class="help-block">\n              Application name must be at least 2 characters.\n            </span>\n          </div>\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.maxlength">\n            <span class="help-block">\n              Application name can\'t be more than 24 characters.\n            </span>\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <div class="form-group">\n      <label class="control-label required" for="repository">Git Repository</label>\n      <div ng-class="{ \'has-error\': $ctrl.builderForm.repository.$touched && $ctrl.builderForm.repository.$error.$required }">\n        <input class="form-control"\n          type="text"\n          id="repository"\n          name="repository"\n          required\n          ng-model="$ctrl.repository"\n          autocorrect="off"\n          autocapitalize="off"\n          spellcheck="false">\n        <div ng-if="$ctrl.istag.annotations.sampleRepo" class="help-block">\n          <a href="" ng-click="$ctrl.fillSampleRepo()">Try Sample Repository\n            <i class="fa fa-level-up" aria-hidden="true"></i></a>\n        </div>\n        <div class="has-error" ng-if="$ctrl.builderForm.repository.$touched && $ctrl.builderForm.repository.$error.$required">\n          <span class="help-block">\n            Git repository is required.\n          </span>\n        </div>\n        <div class="has-warning" ng-if="$ctrl.builderForm.repository.$touched && $ctrl.repository && !$ctrl.repositoryPattern.test($ctrl.repository)">\n          <span class="help-block">\n            This might not be a valid Git URL. Check that it is the correct URL to a remote Git repository.\n          </span>\n        </div>\n      </div>\n    </div>\n\n    \x3c!--\n      Only show the link for existing projects. It will be broken for new\n      projects.  Use class `invisible` when the project list is still loading\n      so the dialog doesn\'t resize.\n    --\x3e\n    <div ng-hide="$ctrl.selectedProject && !$ctrl.selectedProject.metadata.uid"\n         ng-class="{ invisible: !$ctrl.selectedProject || !$ctrl.istag }"\n         class="form-group">\n      If you have a private Git repository or need to change application defaults, view\n      <a href="" ng-click="$ctrl.navigateToAdvancedForm()">advanced options</a>.\n    </div>\n  </form>\n</div>\n';
 }, function(e, t) {
-e.exports = '<div ng-if="!$ctrl.success && !$ctrl.error">\n  <div ng-if="!$ctrl.serviceToBind">\n    <h3 class="text-center">\n      <div class="spinner spinner-lg" aria-hidden="true"></div>\n    </h3>\n    <h3 class="text-center">\n      <span>The application is being created</span>\n    </h3>\n  </div>\n  <div ng-if="$ctrl.serviceToBind" class="review-status">\n    <div class="spinner spinner-sm spinner-inline" aria-hidden="true"></div>\n    <h3 class="review-message">\n      The application is being created\n    </h3>\n  </div>\n</div>\n<div ng-if="$ctrl.success">\n  <div class="review-status">\n    <span class="pficon pficon-ok" aria-hidden="true"></span>\n    <span class="sr-only">Success</span>\n    <h3 class="review-message">\n    <span>\n      <strong>{{$ctrl.name}}</strong> has been created in <strong>{{$ctrl.selectedProject.metadata.name}}</strong> successfully\n    </span>\n    </h3>\n  </div>\n</div>\n<div ng-if="!$ctrl.error && ($ctrl.bindInProgress || $ctrl.bindComplete)">\n  <bind-results error="$ctrl.bindError"\n                progress-inline="true"\n                binding="$ctrl.binding"\n                service-to-bind="$ctrl.serviceToBind.metadata.name"\n                bind-type="application"\n                application-to-bind="$ctrl.name"\n                show-pod-presets="$ctrl.showPodPresets">\n  </bind-results>\n</div>\n<div ng-if="$ctrl.success">\n  <p ng-if="!$ctrl.serviceToBind || $ctrl.bindComplete">\n    Continue to your project to check the status of your application as it builds and deploys.\n  </p>\n</div>\n<div class="review-failure" ng-if="$ctrl.error">\n  <div class="review-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <h3 class="review-message">\n      Error creating <strong>{{$ctrl.name}}</strong> in\n      <strong>{{$ctrl.selectedProject | displayName}}</strong>\n    </h3>\n  </div>\n  <div class="sub-title">\n    <span ng-if="$ctrl.error.data.message">\n      {{$ctrl.error.data.message | upperFirst}}\n    </span>\n    <span ng-if="!$ctrl.error.data.message">\n      An error occurred creating the application.\n    </span>\n  </div>\n  \x3c!-- TODO: Improve error message presentation --\x3e\n  <ul ng-if="$ctrl.error.failure.length" class="failure-messages">\n    <li ng-repeat="failure in $ctrl.error.failure">\n      {{failure.data.message}}\n    </li>\n  </ul>\n</div>\n<div class="footer-panel">\n  <a class="btn btn-primary" href="{{$ctrl.selectedProject | projectUrl : $ctrl.baseProjectUrl}}">View Project</a>\n</div>\n';
+e.exports = '<div ng-if="!$ctrl.success && !$ctrl.error">\n  <h3 class="text-center">\n    <div class="spinner spinner-lg" aria-hidden="true"></div>\n  </h3>\n  <h3 class="text-center">\n    <span>The application is being created</span>\n  </h3>\n</div>\n<div ng-if="$ctrl.success">\n  <div class="review-status">\n    <span class="pficon pficon-ok" aria-hidden="true"></span>\n    <span class="sr-only">Success</span>\n    <h3 class="review-message">\n    <span>\n      <strong>{{$ctrl.name}}</strong> has been created in <strong>{{$ctrl.selectedProject.metadata.name}}</strong> successfully\n    </span>\n    </h3>\n  </div>\n</div>\n<div ng-if="$ctrl.success && $ctrl.binding">\n  <bind-results error="$ctrl.bindError"\n                progress-inline="true"\n                binding="$ctrl.binding"\n                service-to-bind="$ctrl.serviceToBind.metadata.name"\n                bind-type="application"\n                application-to-bind="$ctrl.name"\n                show-pod-presets="$ctrl.showPodPresets">\n  </bind-results>\n</div>\n<div ng-if="$ctrl.success">\n  <p ng-if="!$ctrl.serviceToBind || $ctrl.bindComplete">\n    Continue to your project to check the status of your application as it builds and deploys.\n  </p>\n</div>\n<div class="review-failure" ng-if="$ctrl.error">\n  <div class="review-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <h3 class="review-message">\n      Error creating <strong>{{$ctrl.name}}</strong> in\n      <strong>{{$ctrl.selectedProject | displayName}}</strong>\n    </h3>\n  </div>\n  <div class="sub-title">\n    <span ng-if="$ctrl.error.data.message">\n      {{$ctrl.error.data.message | upperFirst}}\n    </span>\n    <span ng-if="!$ctrl.error.data.message">\n      An error occurred creating the application.\n    </span>\n  </div>\n  \x3c!-- TODO: Improve error message presentation --\x3e\n  <ul ng-if="$ctrl.error.failure.length" class="failure-messages">\n    <li ng-repeat="failure in $ctrl.error.failure">\n      {{failure.data.message}}\n    </li>\n  </ul>\n</div>\n<div class="footer-panel">\n  <a class="btn btn-primary" href="{{$ctrl.selectedProject | projectUrl : $ctrl.baseProjectUrl}}">View Project</a>\n</div>\n';
 }, function(e, t) {
-e.exports = '<bind-service-form service-class="$ctrl.serviceClass.resource"\n                   service-class-name="$ctrl.serviceClass.name"\n                   applications="$ctrl.applications"\n                   form-name="$ctrl.forms.bindForm"\n                   allow-no-binding="true"\n                   project-name="$ctrl.projectDisplayName"\n                   bind-type="$ctrl.bindType"\n                   app-to-bind="$ctrl.appToBind">\n</bind-service-form>\n';
+e.exports = '<div class="config-top">\n  <form name="$ctrl.forms.bindParametersForm" class="config-form">\n    <catalog-parameters\n      ng-if="$ctrl.bindParameterSchema.properties"\n      model="$ctrl.bindParameterData"\n      parameter-schema="$ctrl.bindParameterSchema">\n    </catalog-parameters>\n  </form>\n</div>\n';
+}, function(e, t) {
+e.exports = '<bind-service-form service-class="$ctrl.serviceClass.resource"\n                   service-class-name="$ctrl.serviceClass.name"\n                   show-pod-presets="$ctrl.showPodPresets"\n                   applications="$ctrl.applications"\n                   form-name="$ctrl.forms.bindForm"\n                   allow-no-binding="true"\n                   project-name="$ctrl.projectDisplayName"\n                   bind-type="$ctrl.bindType"\n                   app-to-bind="$ctrl.appToBind">\n</bind-service-form>\n';
 }, function(e, t) {
 e.exports = '<div class="config-top">\n  <form name="$ctrl.forms.orderConfigureForm" class="config-form">\n    <select-project selected-project="$ctrl.selectedProject" name-taken="$ctrl.nameTaken"></select-project>\n    <catalog-parameters\n      ng-if="$ctrl.parameterSchema.properties"\n      model="$ctrl.parameterData"\n      parameter-schema="$ctrl.parameterSchema"\n      parameter-form-definition="$ctrl.parameterFormDefinition">\n    </catalog-parameters>\n  </form>\n  <div ng-if="$ctrl.error" class="has-error">\n    <span class="help-block">{{$ctrl.error}}</span>\n  </div>\n</div>\n';
 }, function(e, t) {
 e.exports = '<div class="config-top">\n  <div class="select-plans">\n    <h3>Select a Plan</h3>\n    <div ng-repeat="plan in $ctrl.serviceClass.resource.plans" class="radio">\n      <label>\n        <input\n          type="radio"\n          ng-model="$ctrl.planIndex"\n          ng-change="$ctrl.selectPlan(plan)"\n          value="{{$index}}">\n        <span class="plan-name">{{plan.externalMetadata.displayName || plan.name}}</span>\n        \x3c!-- TODO: truncate long text --\x3e\n        <div ng-if="plan.description">{{plan.description}}</div>\n        \x3c!-- TODO: show plan bullets --\x3e\n      </label>\n    </div>\n  </div>\n</div>\n';
 }, function(e, t) {
-e.exports = '<div ng-if="!$ctrl.error">\n  <div ng-if="!$ctrl.orderComplete">\n    <div ng-if="$ctrl.bindType === \'none\'">\n      <h3 class="text-center">\n        <div class="spinner spinner-lg" aria-hidden="true"></div>\n      </h3>\n      <h3 class="text-center">\n        <span>The service is being provisioned</span>\n      </h3>\n    </div>\n    <div ng-if="$ctrl.bindType !== \'none\'" class="review-status">\n      <div class="spinner spinner-sm spinner-inline" aria-hidden="true"></div>\n      <h3 class="review-message">\n        The service is being provisioned\n      </h3>\n    </div>\n  </div>\n</div>\n<div class="review-failure" ng-if="$ctrl.error">\n  <div class="review-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <h3 class="review-message">\n      Error provisioning <strong>{{$ctrl.serviceClass.name}}</strong> in\n      <strong>{{$ctrl.projectDisplayName}}</strong>\n    </h3>\n  </div>\n  <div class="sub-title">\n    <span ng-if="$ctrl.error.message">\n      {{$ctrl.error.message}}\n    </span>\n    <span ng-if="!$ctrl.error.message">\n      An error occurred provisioning the service.\n    </span>\n  </div>\n</div>\n<div ng-if="$ctrl.orderComplete">\n  <div class="review-status">\n    <span class="pficon pficon-ok" aria-hidden="true"></span>\n    <span class="sr-only">Success</span>\n    <h3 class="review-message">\n      <span>\n        <strong>{{$ctrl.serviceInstance.metadata.name}}</strong> has been added to <strong>{{$ctrl.projectDisplayName}}</strong> successfully\n      </span>\n    </h3>\n  </div>\n</div>\n<div ng-if="$ctrl.bindType !== \'none\'">\n  <bind-results error="$ctrl.bindError"\n                progress-inline="true"\n                binding="$ctrl.binding"\n                service-to-bind="$ctrl.serviceInstance.metadata.name"\n                bind-type="{{$ctrl.bindType}}"\n                application-to-bind="$ctrl.appToBind.metadata.name"\n                show-pod-presets="$ctrl.showPodPresets">\n  </bind-results>\n</div>\n<div class="alert alert-info" ng-if="$ctrl.orderComplete && $ctrl.bindType === \'none\'">\n  <span class="pficon pficon-info" aria-hidden="true"></span>\n  <span class="sr-only">Info</span>\n  Continue to your project to bind this service to your application. Binding this service creates a secret containing the information necessary for your application to use the service.\n</div>\n<div class="footer-panel">\n  <a class="btn btn-primary" href="{{$ctrl.selectedProject | projectUrl : $ctrl.baseProjectUrl}}">View Project</a>\n</div>\n';
+e.exports = '<div ng-if="!$ctrl.error">\n  <div ng-if="!$ctrl.orderComplete">\n    <h3 class="text-center">\n      <div class="spinner spinner-lg" aria-hidden="true"></div>\n    </h3>\n    <h3 class="text-center">\n      <span>The service is being provisioned</span>\n    </h3>\n  </div>\n</div>\n<div class="review-failure" ng-if="$ctrl.error">\n  <div class="review-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <h3 class="review-message">\n      Error provisioning <strong>{{$ctrl.serviceClass.name}}</strong> in\n      <strong>{{$ctrl.projectDisplayName}}</strong>\n    </h3>\n  </div>\n  <div class="sub-title">\n    <span ng-if="$ctrl.error.message">\n      {{$ctrl.error.message}}\n    </span>\n    <span ng-if="!$ctrl.error.message">\n      An error occurred provisioning the service.\n    </span>\n  </div>\n</div>\n<div ng-if="$ctrl.orderComplete">\n  <div class="review-status">\n    <span class="pficon pficon-ok" aria-hidden="true"></span>\n    <span class="sr-only">Success</span>\n    <h3 class="review-message">\n      <span>\n        <strong>{{$ctrl.serviceInstance.metadata.name}}</strong> has been added to <strong>{{$ctrl.projectDisplayName}}</strong> successfully\n      </span>\n    </h3>\n  </div>\n</div>\n<div ng-if="$ctrl.orderComplete && $ctrl.binding">\n  <bind-results error="$ctrl.bindError"\n                progress-inline="true"\n                binding="$ctrl.binding"\n                secret-href="$ctrl.baseProjectUrl + \'/browse/secrets/\' + $ctrl.binding.spec.secretName"\n                service-to-bind="$ctrl.serviceInstance.metadata.name"\n                bind-type="{{$ctrl.bindType}}"\n                application-to-bind="$ctrl.appToBind.metadata.name"\n                show-pod-presets="$ctrl.showPodPresets">\n  </bind-results>\n</div>\n<div class="alert alert-info" ng-if="$ctrl.orderComplete && $ctrl.bindType === \'none\'">\n  <span class="pficon pficon-info" aria-hidden="true"></span>\n  <span class="sr-only">Info</span>\n  Continue to your project to bind this service to your application. Binding this service creates a secret containing the information necessary for your application to use the service.\n</div>\n<div class="footer-panel">\n  <a class="btn btn-primary" href="{{$ctrl.selectedProject | projectUrl : $ctrl.baseProjectUrl}}">View Project</a>\n</div>\n';
 }, function(e, t) {
 e.exports = '<div  class="schema-form-array {{form.htmlClass}}"\n      sf-field-model="sf-new-array"\n      sf-new-array>\n  <label class="control-label" ng-show="showTitle()">{{ form.title }}</label>\n  <ol class="list-group" sf-field-model ui-sortable="form.sortOptions">\n    <li class="list-group-item {{form.fieldHtmlClass}}"\n        schema-form-array-items\n        sf-field-model="ng-repeat"\n        ng-repeat="item in $$value$$ track by $index">\n      <button ng-hide="form.readonly || form.remove === null"\n              ng-click="deleteFromArray($index)"\n              ng-disabled="form.schema.minItems >= modelArray.length"\n              style="position: absolute; z-index: 20; right: 0; top: 12px; font-size: 20px;"\n              type="button" class="close">\n              <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>\n      </button>\n    </li>\n  </ol>\n  <div class="clearfix" style="padding: 15px;" ng-model="modelArray" schema-validate="form">\n    <div class="help-block"\n         ng-show="(hasError() && errorMessage(schemaError())) || form.description"\n         ng-bind-html="(hasError() && errorMessage(schemaError())) || form.description"></div>\n\n    <button ng-hide="form.readonly || form.add === null"\n            ng-click="appendToArray()"\n            ng-disabled="form.schema.maxItems <= modelArray.length"\n            type="button"\n            class="btn {{ form.style.add || \'btn-default\' }} pull-right">\n      {{ form.add || \'Add\'}}\n    </button>\n  </div>\n</div>\n';
 }, function(e, t) {
@@ -77022,7 +77061,7 @@ e.exports = '<div class="form-group {{form.htmlClass}} schema-form-select"\n    
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
-var i = n(44);
+var i = n(45);
 t.catalogFilter = {
 bindings: {
 config: "<",
@@ -77030,12 +77069,12 @@ filterOnKeyword: "<",
 applyFilters: "&"
 },
 controller: i.CatalogFilterController,
-template: n(33)
+template: n(34)
 };
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
-var i = n(45);
+var i = n(46);
 t.catalogParameters = {
 bindings: {
 parameterSchema: "<",
@@ -77043,24 +77082,24 @@ parameterFormDefinition: "<",
 model: "="
 },
 controller: i.CatalogParametersController,
-template: n(34)
-};
-}, function(e, t, n) {
-"use strict";
-t.__esModule = !0;
-var i = n(46);
-t.catalogSearch = {
-bindings: {
-baseProjectUrl: "@",
-catalogItems: "<"
-},
-controller: i.CatalogSearchController,
 template: n(35)
 };
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
 var i = n(47);
+t.catalogSearch = {
+bindings: {
+baseProjectUrl: "@",
+catalogItems: "<"
+},
+controller: i.CatalogSearchController,
+template: n(36)
+};
+}, function(e, t, n) {
+"use strict";
+t.__esModule = !0;
+var i = n(48);
 t.createFromBuilder = {
 bindings: {
 baseProjectUrl: "@",
@@ -77068,19 +77107,19 @@ imageStream: "<",
 handleClose: "<"
 },
 controller: i.CreateFromBuilderController,
-template: n(36)
+template: n(37)
 };
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
-var i = n(48);
+var i = n(49);
 t.landingPage = {
 bindings: {
 baseProjectUrl: "@",
 onTemplateSelected: "&"
 },
 controller: i.LandingPageController,
-template: n(37),
+template: n(38),
 transclude: {
 landingsearch: "landingsearch",
 landingheader: "landingheader",
@@ -77091,7 +77130,7 @@ landingside: "landingside"
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
-var i = n(49);
+var i = n(50);
 t.orderService = {
 bindings: {
 baseProjectUrl: "@",
@@ -77099,12 +77138,12 @@ serviceClass: "<",
 handleClose: "<"
 },
 controller: i.OrderServiceController,
-template: n(38)
+template: n(39)
 };
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
-var i = n(50);
+var i = n(51);
 t.overlayPanel = {
 bindings: {
 showClose: "<",
@@ -77113,13 +77152,13 @@ handleClose: "<",
 singleColumn: "<"
 },
 controller: i.OverlayPanelController,
-template: n(39),
+template: n(40),
 transclude: !0
 };
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
-var i = n(51);
+var i = n(52);
 t.projectsSummary = {
 bindings: {
 baseProjectUrl: "@",
@@ -77129,24 +77168,24 @@ viewEditMembership: "&",
 startTour: "&"
 },
 controller: i.ProjectsSummaryController,
-template: n(40)
-};
-}, function(e, t, n) {
-"use strict";
-t.__esModule = !0;
-var i = n(52);
-t.saasList = {
-bindings: {
-saasTitle: "<?",
-saasOfferings: "<"
-},
-controller: i.SaasListController,
 template: n(41)
 };
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
 var i = n(53);
+t.saasList = {
+bindings: {
+saasTitle: "<?",
+saasOfferings: "<"
+},
+controller: i.SaasListController,
+template: n(42)
+};
+}, function(e, t, n) {
+"use strict";
+t.__esModule = !0;
+var i = n(54);
 t.selectProject = {
 bindings: {
 selectedProject: "=",
@@ -77155,12 +77194,12 @@ onProjectSelected: "<",
 availableProjects: "<"
 },
 controller: i.SelectProjectController,
-template: n(42)
+template: n(43)
 };
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
-var i = n(54);
+var i = n(55);
 t.servicesView = {
 bindings: {
 baseProjectUrl: "@",
@@ -77170,7 +77209,7 @@ onFromFileSelected: "<",
 onCreateFromProject: "<"
 },
 controller: i.ServicesViewController,
-template: n(43)
+template: n(44)
 };
 }, function(e, t, n) {
 "use strict";
@@ -77282,25 +77321,50 @@ icon: "font-icon icon-mariadb"
 id: "middleware",
 label: "Middleware",
 subCategories: [ {
-id: "jboss",
-label: "JBoss",
-tags: [ "jboss" ],
-icon: "font-icon icon-openjdk"
-}, {
-id: "fuse",
-label: "Fuse",
-tags: [ "fuse" ],
-icon: "font-icon icon-openjdk"
-}, {
 id: "amq",
 label: "A-MQ",
 tags: [ "amq" ],
-icon: "font-icon icon-openjdk"
+icon: "font-icon icon-jboss"
 }, {
-id: "bpm",
-label: "BPM",
-tags: [ "bpm" ],
-icon: "font-icon icon-openjdk"
+id: "processserver",
+label: "BPM Suite",
+tags: [ "processserver" ],
+icon: "font-icon icon-jboss"
+}, {
+id: "decisionserver",
+label: "BRMS",
+tags: [ "decisionserver" ],
+icon: "font-icon icon-jboss"
+}, {
+id: "datagrid",
+label: "Data Grid",
+tags: [ "datagrid" ],
+icon: "font-icon icon-jboss"
+}, {
+id: "datavirt",
+label: "Data Virt",
+tags: [ "datavirt" ],
+icon: "font-icon icon-jboss"
+}, {
+id: "eap",
+label: "EAP",
+tags: [ "eap" ],
+icon: "font-icon icon-jboss"
+}, {
+id: "fuse",
+label: "Fuse",
+tags: [ "fuse", "jboss-fuse" ],
+icon: "font-icon icon-jboss"
+}, {
+id: "tomcat",
+label: "Tomcat",
+tags: [ "tomcat" ],
+icon: "font-icon icon-jboss"
+}, {
+id: "sso",
+label: "SSO",
+tags: [ "sso" ],
+icon: "font-icon icon-jboss"
 } ]
 }, {
 id: "cicd",
@@ -77319,6 +77383,10 @@ icon: "fa fa-clone"
 } ];
 i.set(window, "OPENSHIFT_CONSTANTS.SERVICE_CATALOG_CATEGORIES", a), i.set(window, "OPENSHIFT_CONSTANTS.SAAS_OFFERINGS", o);
 var s = {
+pod_presets: !1
+};
+i.set(window, "OPENSHIFT_CONSTANTS.ENABLE_TECH_PREVIEW_FEATURE", s);
+var l = {
 links: [ {
 title: "Documentation",
 help: ""
@@ -77339,8 +77407,8 @@ title: "Blog",
 href: "https://blog.openshift.com"
 } ]
 };
-i.set(window, "OPENSHIFT_CONSTANTS.CATALOG_HELP_RESOURCES", s);
-var l = {
+i.set(window, "OPENSHIFT_CONSTANTS.CATALOG_HELP_RESOURCES", l);
+var c = {
 landing_page_tour: {
 enabled: !0,
 auto_launch: !1,
@@ -77394,7 +77462,7 @@ placement: "left"
 }
 }
 };
-i.set(window, "OPENSHIFT_CONSTANTS.GUIDED_TOURS", l);
+i.set(window, "OPENSHIFT_CONSTANTS.GUIDED_TOURS", c);
 }).call(t, n(2));
 }, function(e, t, n) {
 "use strict";
@@ -77752,7 +77820,7 @@ return r.get(this.resource, "externalMetadata.longDescription") || "";
 }, e.prototype.getTags = function() {
 return r.get(this.resource, "alphaTags") || [];
 }, e.prototype.getVendor = function() {
-return r.get(this.resource, "metadata.providerDisplayName") || "";
+return r.get(this.resource, "externalMetadata.providerDisplayName") || "";
 }, e;
 }();
 t.ServiceItem = a;
@@ -77777,7 +77845,7 @@ return e = -1 !== e.indexOf("icon-") ? "font-icon " + e : e;
 var e = this.catalogSrv.$filter("displayName")(this.resource);
 return e || (e = this.resource.metadata.name), e;
 }, e.prototype.getVendor = function() {
-return r.get(this.resource, "metadata.providerDisplayName") || "";
+return "";
 }, e.prototype.getDescription = function() {
 return null;
 }, e.prototype.getLongDescription = function() {
@@ -77803,7 +77871,7 @@ return r.get(this.resource, [ "metadata", "annotations", "template.openshift.io/
 }, e.prototype.getTags = function() {
 return r.get(this.resource, "metadata.annotations.tags", "").split(/\s*,\s*/);
 }, e.prototype.getVendor = function() {
-return r.get(this.resource, "metadata.providerDisplayName") || "";
+return r.get(this.resource, [ "metadata", "annotations", "template.openshift.io/provider-display-name" ]) || "";
 }, e;
 }();
 t.TemplateItem = l;
@@ -77838,7 +77906,7 @@ e.exports = '<div class="order-service">\n  <pf-wizard\n       hide-header="true
 }, function(e, t) {
 e.exports = '<div class="landing-search-area" ng-transclude="landingsearch"></div>\n<div class="landing">\n  <overlay-panel show-panel="$ctrl.orderingPanelVisible" show-close="true" handle-close="$ctrl.closeOrderingPanel">\n    <order-service\n        ng-if="$ctrl.selectedItem.resource.kind === \'ServiceClass\'"\n        base-project-url="{{$ctrl.baseProjectUrl}}"\n        service-class="$ctrl.selectedItem"\n        handle-close="$ctrl.closeOrderingPanel">\n    </order-service>\n    <create-from-builder\n        ng-if="$ctrl.selectedItem.resource.kind === \'ImageStream\'"\n        base-project-url="{{$ctrl.baseProjectUrl}}"\n        image-stream="$ctrl.selectedItem"\n        handle-close="$ctrl.closeOrderingPanel">\n    </create-from-builder>\n  </overlay-panel>\n  <div class="landing-main-area">\n    <div class="landing-header-area" ng-transclude="landingheader"></div>\n    <div class="landing-body-area">\n      <div class="landing-body" ng-transclude="landingbody"></div>\n    </div>\n  </div>\n  <div class="landing-side-bar" ng-transclude="landingside"></div>\n</div>\n';
 }, function(e, t) {
-e.exports = '<div class="order-service">\n  <pf-wizard\n       hide-header="true"\n       hide-sidebar="true"\n       step-class="order-service-wizard-step"\n       wizard-ready="$ctrl.wizardReady"\n       next-title="$ctrl.nextTitle"\n       on-finish="$ctrl.closePanel()"\n       on-cancel="$ctrl.closePanel()"\n       wizard-done="$ctrl.wizardDone">\n    <pf-wizard-step ng-repeat="step in $ctrl.steps track by $index"\n         step-title="{{step.label}}"\n         wz-disabled="{{step.hidden}}"\n         allow-click-nav="step.allowed"\n         next-enabled="step.valid && !$ctrl.updating"\n         prev-enabled="step.prevEnabled"\n         on-show="step.onShow"\n         step-id="{{step.id}}"\n         step-priority="{{$index}}">\n      <div class="wizard-pf-main-inner-shadow-covers">\n        <div class="order-service-details">\n          <div class="order-service-details-top">\n            <div class="service-icon">\n              <span ng-if="!$ctrl.imageUrl" class="icon {{$ctrl.iconClass}}"></span>\n              <span ng-if="$ctrl.imageUrl" class="image"><img ng-src="{{$ctrl.imageUrl}}" alt=""></span>\n            </div>\n            <div class="service-title-area">\n              <div class="service-title">\n                {{$ctrl.serviceName}}\n              </div>\n              <div ng-if="$ctrl.serviceClass.tags" class="order-service-tags">\n                <span ng-repeat="tag in $ctrl.serviceClass.tags" class="tag">\n                  {{tag}}\n                </span>\n              </div>\n              <div ng-if="$ctrl.serviceClass.resource.externalMetadata.documentationUrl" class="order-service-documentation-url">\n                <a ng-href="{{$ctrl.serviceClass.resource.externalMetadata.documentationUrl}}" target="_blank" class="learn-more-link">Learn More <i class="fa fa-external-link" aria-hidden="true"></i></a>\n              </div>\n            </div>\n          </div>\n          <div class="order-service-description-block">\n            <p ng-if="$ctrl.currentStep.id !== \'plans\' && ($ctrl.selectedPlan.externalMetadata.displayName || $ctrl.selectedPlan.description)">\n              <span ng-if="$ctrl.selectedPlan.externalMetadata.displayName">\n                Plan {{$ctrl.selectedPlan.externalMetadata.displayName}}\n                <span ng-if="$ctrl.selectedPlan.description">&ndash;</span>\n              </span>\n              <span ng-if="$ctrl.selectedPlan.description">{{$ctrl.selectedPlan.description}}</span>\n            </p>\n            <p ng-if="$ctrl.description" ng-bind-html="$ctrl.description | linky : \'_blank\'" class="description"></p>\n            <p ng-if="$ctrl.longDescription" ng-bind-html="$ctrl.longDescription | linky : \'_blank\'" class="description"></p>\n          </div>\n        </div>\n        <div class="order-service-config">\n          <div ng-include="step.view" class="wizard-pf-main-form-contents"></div>\n        </div>\n      </div>\n    </>\n  </>\n</div>\n';
+e.exports = '<div class="order-service">\n  <pf-wizard\n       hide-header="true"\n       hide-sidebar="true"\n       step-class="order-service-wizard-step"\n       wizard-ready="$ctrl.wizardReady"\n       next-title="$ctrl.nextTitle"\n       on-finish="$ctrl.closePanel()"\n       on-cancel="$ctrl.closePanel()"\n       wizard-done="$ctrl.wizardDone">\n    <pf-wizard-step ng-repeat="step in $ctrl.steps track by step.id"\n         step-title="{{step.label}}"\n         wz-disabled="{{step.hidden}}"\n         allow-click-nav="step.allowed"\n         next-enabled="step.valid && !$ctrl.updating"\n         prev-enabled="step.prevEnabled"\n         on-show="step.onShow"\n         step-id="{{step.id}}"\n         step-priority="{{$index}}">\n      <div class="wizard-pf-main-inner-shadow-covers">\n        <div class="order-service-details">\n          <div class="order-service-details-top">\n            <div class="service-icon">\n              <span ng-if="!$ctrl.imageUrl" class="icon {{$ctrl.iconClass}}"></span>\n              <span ng-if="$ctrl.imageUrl" class="image"><img ng-src="{{$ctrl.imageUrl}}" alt=""></span>\n            </div>\n            <div class="service-title-area">\n              <div class="service-title">\n                {{$ctrl.serviceName}}\n              </div>\n              <div ng-if="$ctrl.serviceClass.tags" class="order-service-tags">\n                <span ng-repeat="tag in $ctrl.serviceClass.tags" class="tag">\n                  {{tag}}\n                </span>\n              </div>\n              <div ng-if="$ctrl.serviceClass.resource.externalMetadata.documentationUrl" class="order-service-documentation-url">\n                <a ng-href="{{$ctrl.serviceClass.resource.externalMetadata.documentationUrl}}" target="_blank" class="learn-more-link">Learn More <i class="fa fa-external-link" aria-hidden="true"></i></a>\n              </div>\n            </div>\n          </div>\n          <div class="order-service-description-block">\n            <p ng-if="$ctrl.currentStep.id !== \'plans\' && ($ctrl.selectedPlan.externalMetadata.displayName || $ctrl.selectedPlan.description)">\n              <span ng-if="$ctrl.selectedPlan.externalMetadata.displayName">\n                Plan {{$ctrl.selectedPlan.externalMetadata.displayName}}\n                <span ng-if="$ctrl.selectedPlan.description">&ndash;</span>\n              </span>\n              <span ng-if="$ctrl.selectedPlan.description">{{$ctrl.selectedPlan.description}}</span>\n            </p>\n            <p ng-if="$ctrl.description" ng-bind-html="$ctrl.description | linky : \'_blank\'" class="description"></p>\n            <p ng-if="$ctrl.longDescription" ng-bind-html="$ctrl.longDescription | linky : \'_blank\'" class="description"></p>\n          </div>\n        </div>\n        <div class="order-service-config">\n          <div ng-include="step.view" class="wizard-pf-main-form-contents"></div>\n        </div>\n      </div>\n    </>\n  </>\n</div>\n';
 }, function(e, t) {
 e.exports = '<div class="catalogs-overlay-modal" role="dialog">\n  <div ng-if="$ctrl.shown" class="modal-backdrop fade in"></div>\n  <div ng-if="$ctrl.shown" class="catalogs-overlay-panel-wrapper">\n    <div class="catalogs-overlay-panel-grow-height">\n      <div class="catalogs-overlay-panel" ng-class="{\'catalogs-overlay-panel-single-column\' : $ctrl.singleColumn}">\n        <a ng-if="$ctrl.showClose" ng-click="$ctrl.closePanel()">\n          <span class="catalogs-overlay-panel-close pficon pficon-close"></span>\n        </a>\n        <div class="catalogs-overlay-panel-body" ng-transclude>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n';
 }, function(e, t) {
@@ -78021,7 +78089,7 @@ r.$inject = [ "$rootScope", "$scope", "$q", "Catalog", "KeywordService" ], t.Cat
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
-var i = n(1), r = n(0), o = n(55), a = function() {
+var i = n(1), r = n(0), o = n(56), a = function() {
 function e(e, t, n, i, o, a, s, l, c, u, d) {
 var h = this;
 this.ctrl = this, this.watches = [], this.clearValidityWatcher = function() {
@@ -78035,7 +78103,7 @@ h.clearValidityWatcher(), h.ctrl.nextTitle = "Create", h.reviewStep.allowed = !0
 }, this.showResults = function() {
 h.clearValidityWatcher(), h.ctrl.nextTitle = "Close", h.ctrl.wizardDone = !0, h.createApp();
 }, this.onProjectUpdate = function() {
-!h.instancesSupported || h.isNewProject() ? (h.ctrl.serviceInstances = [], h.updateBindability()) : (h.ctrl.updating = !0, h.DataService.list({
+!h.instancesSupported || h.isNewProject() ? (h.ctrl.serviceInstances = [], h.updateBindability()) : h.ctrl.showPodPresets && (h.ctrl.updating = !0, h.DataService.list({
 group: "servicecatalog.k8s.io",
 resource: "instances"
 }, {
@@ -78067,7 +78135,7 @@ id: "bind",
 view: "create-from-builder/create-from-builder-bind.html",
 valid: !0,
 allowed: !1,
-hidden: !1,
+hidden: !this.ctrl.showPodPresets,
 onShow: this.showBind
 }, this.reviewStep = {
 label: "Results",
@@ -78175,16 +78243,16 @@ t.ctrl.error = e;
 });
 }, e.prototype.bindService = function(e) {
 var t = this;
-this.ctrl.bindInProgress = !0, this.ctrl.bindError = !1;
+this.ctrl.bindError = !1;
 var n = {
 namespace: r.get(this.ctrl.selectedProject, "metadata.name")
 }, i = this.BindingService.getServiceClassForInstance(this.ctrl.serviceToBind, this.ctrl.serviceClasses);
 this.BindingService.bindService(this.ctrl.serviceToBind, e, i).then(function(e) {
-t.ctrl.binding = e, t.ctrl.bindInProgress = !1, t.ctrl.bindComplete = !0, t.ctrl.bindError = null, t.watches.push(t.DataService.watchObject(t.BindingService.bindingResource, r.get(t.ctrl.binding, "metadata.name"), n, function(e) {
+t.ctrl.binding = e, t.watches.push(t.DataService.watchObject(t.BindingService.bindingResource, r.get(t.ctrl.binding, "metadata.name"), n, function(e) {
 t.ctrl.binding = e;
 }));
 }, function(e) {
-t.ctrl.bindInProgress = !1, t.ctrl.bindComplete = !0, t.ctrl.bindError = e;
+t.ctrl.bindComplete = !0, t.ctrl.bindError = e;
 });
 }, e.prototype.getServiceClasses = function() {
 var e = this, t = {
@@ -78237,8 +78305,12 @@ u.clearValidityWatcher(), u.ctrl.configPageShown = !0, u.reviewStep.allowed = u.
 u.configStep.valid = e, u.bindStep.allowed = u.configStep.valid, u.reviewStep.allowed = u.bindStep.hidden && u.configStep.valid;
 });
 }, this.showBind = function() {
-u.clearValidityWatcher(), u.ctrl.configPageShown = !1, u.ctrl.nextTitle = "Create", u.reviewStep.allowed = u.bindStep.valid, u.isNewProject() ? u.ctrl.projectDisplayName = u.ctrl.selectedProject.metadata.annotations["new-display-name"] || u.ctrl.selectedProject.metadata.name : u.ctrl.projectDisplayName = u.$filter("displayName")(u.ctrl.selectedProject), u.validityWatcher = u.$scope.$watch("$ctrl.forms.bindForm.$valid", function(e, t) {
-u.bindStep.valid = e, u.reviewStep.allowed = u.bindStep.valid;
+u.clearValidityWatcher(), u.ctrl.configPageShown = !1, u.ctrl.nextTitle = u.bindParametersStep.hidden ? "Create" : "Next >", u.reviewStep.allowed = u.bindParametersStep.hidden && u.bindStep.valid, u.isNewProject() ? u.ctrl.projectDisplayName = u.ctrl.selectedProject.metadata.annotations["new-display-name"] || u.ctrl.selectedProject.metadata.name : u.ctrl.projectDisplayName = u.$filter("displayName")(u.ctrl.selectedProject), u.validityWatcher = u.$scope.$watch("$ctrl.forms.bindForm.$valid", function(e, t) {
+u.bindStep.valid = e, u.bindParametersStep.allowed = e, u.reviewStep.allowed = u.bindParametersStep.hidden && u.bindStep.valid;
+});
+}, this.showBindParameters = function() {
+u.clearValidityWatcher(), u.ctrl.nextTitle = "Create", u.validityWatcher = u.$scope.$watch("$ctrl.forms.bindParametersForm.$valid", function(e, t) {
+u.bindParametersStep.valid = e, u.reviewStep.allowed = u.bindParametersStep.valid;
 });
 }, this.showResults = function() {
 u.clearValidityWatcher(), u.ctrl.configPageShown = !1, u.ctrl.nextTitle = "Close", u.ctrl.wizardDone = !0, u.provisionService();
@@ -78252,7 +78324,7 @@ u.ctrl.error = e.data;
 });
 } else u.ctrl.projectDisplayName = u.$filter("displayName")(u.ctrl.selectedProject), u.createService();
 }, this.onProjectUpdate = function() {
-u.isNewProject() ? (u.ctrl.applications = [], u.ctrl.updating = !1, u.updateBindability()) : (u.ctrl.updating = !0, u.ProjectsService.get(u.ctrl.selectedProject.metadata.name).then(r.spread(function(e, t) {
+u.isNewProject() ? (u.ctrl.applications = [], u.ctrl.updating = !1, u.updateBindability()) : u.ctrl.showPodPresets && (u.ctrl.updating = !0, u.ProjectsService.get(u.ctrl.selectedProject.metadata.name).then(r.spread(function(e, t) {
 u.ctrl.bindType = "none", u.ctrl.serviceToBind = u.ctrl.serviceClass, u.DataService.list("deploymentconfigs", t).then(function(e) {
 u.deploymentConfigs = r.toArray(e.by("metadata.name")), u.sortApplications();
 }), u.DataService.list("replicationcontrollers", t).then(function(e) {
@@ -78288,7 +78360,7 @@ status: "True"
 }
 return e.prototype.$onInit = function() {
 var e = this;
-this.ctrl.iconClass = this.ctrl.serviceClass.iconClass || "fa fa-clone", this.ctrl.imageUrl = this.ctrl.serviceClass.imageUrl, this.ctrl.serviceName = this.ctrl.serviceClass.name, this.ctrl.description = this.ctrl.serviceClass.description, this.ctrl.longDescription = this.ctrl.serviceClass.longDescription, this.ctrl.plans = r.get(this, "ctrl.serviceClass.resource.plans", []), this.ctrl.applications = [], this.ctrl.parameterData = {}, this.ctrl.forms = {}, this.ctrl.appToBind = null, this.ctrl.configStepValid = !0, this.planStep = {
+this.ctrl.iconClass = this.ctrl.serviceClass.iconClass || "fa fa-clone", this.ctrl.imageUrl = this.ctrl.serviceClass.imageUrl, this.ctrl.serviceName = this.ctrl.serviceClass.name, this.ctrl.description = this.ctrl.serviceClass.description, this.ctrl.longDescription = this.ctrl.serviceClass.longDescription, this.ctrl.plans = r.get(this, "ctrl.serviceClass.resource.plans", []), this.ctrl.applications = [], this.ctrl.parameterData = {}, this.ctrl.bindParameterData = {}, this.ctrl.forms = {}, this.ctrl.appToBind = null, this.ctrl.configStepValid = !0, this.planStep = {
 id: "plans",
 label: "Plan",
 view: "order-service/order-service-plans.html",
@@ -78312,6 +78384,14 @@ hidden: !1,
 allowed: !1,
 valid: !0,
 onShow: this.showBind
+}, this.bindParametersStep = {
+label: "Parameters",
+id: "bind-parameters",
+view: "order-service/order-service-bind-parameters.html",
+hidden: !1,
+allowed: !1,
+valid: !0,
+onShow: this.showBindParameters
 }, this.reviewStep = {
 label: "Results",
 id: "results",
@@ -78321,9 +78401,11 @@ allowed: !1,
 valid: !0,
 prevEnabled: !1,
 onShow: this.showResults
-}, this.ctrl.steps = [ this.planStep, this.configStep, this.bindStep, this.reviewStep ], this.ctrl.nameTaken = !1, this.ctrl.wizardDone = !1, this.ctrl.bindType = "none", this.selectPlan(r.head(this.ctrl.plans)), this.ctrl.planIndex = 0, this.ctrl.updating = !0, this.selectedProjectWatch = this.$scope.$watch(function() {
+}, this.ctrl.steps = [ this.planStep, this.configStep, this.bindStep, this.bindParametersStep, this.reviewStep ], this.ctrl.nameTaken = !1, this.ctrl.wizardDone = !1, this.ctrl.bindType = "none", this.selectPlan(r.head(this.ctrl.plans)), this.ctrl.planIndex = 0, this.ctrl.updating = !0, this.selectedProjectWatch = this.$scope.$watch(function() {
 return e.ctrl.selectedProject;
-}, this.onProjectUpdate), this.AuthService.withUser().then(function(t) {
+}, this.onProjectUpdate), this.bindTypeWatch = this.$scope.$watch("$ctrl.bindType", function(t, n) {
+t !== n && (e.updateBindParametersStepVisibility(), e.ctrl.nextTitle = e.bindParametersStep.hidden ? "Create" : "Next >", e.reviewStep.allowed = e.bindParametersStep.hidden && e.bindStep.valid);
+}), this.AuthService.withUser().then(function(t) {
 e.user = t, e.ctrl.wizardReady = !0;
 });
 }, e.prototype.selectPlan = function(e) {
@@ -78348,29 +78430,31 @@ e.ctrl.error = r.get(t, "data");
 });
 }, e.prototype.bindService = function() {
 var e = this;
-this.ctrl.bindInProgress = !0, this.ctrl.bindError = !1;
+this.ctrl.bindError = !1;
 var t = {
 namespace: r.get(this.ctrl.selectedProject, "metadata.name")
 }, n = "application" === this.ctrl.bindType ? this.ctrl.appToBind : void 0;
-this.BindingService.bindService(this.ctrl.serviceInstance, n, this.ctrl.serviceClass.resource).then(function(n) {
-e.ctrl.binding = n, e.ctrl.bindInProgress = !1, e.ctrl.bindComplete = !0, e.ctrl.bindError = null, e.watches.push(e.DataService.watchObject(e.BindingService.bindingResource, r.get(e.ctrl.binding, "metadata.name"), t, function(t) {
+this.BindingService.bindService(this.ctrl.serviceInstance, n, this.ctrl.serviceClass.resource, this.ctrl.bindParameterData).then(function(n) {
+e.ctrl.binding = n, e.watches.push(e.DataService.watchObject(e.BindingService.bindingResource, r.get(e.ctrl.binding, "metadata.name"), t, function(t) {
 e.ctrl.binding = t;
 }));
 }, function(t) {
-e.ctrl.bindInProgress = !1, e.ctrl.bindComplete = !0, e.ctrl.bindError = t;
+e.ctrl.bindError = t;
 });
 }, e.prototype.$onDestroy = function() {
-this.DataService.unwatchAll(this.watches), this.selectedProjectWatch(), this.clearValidityWatcher();
+this.DataService.unwatchAll(this.watches), this.selectedProjectWatch(), this.bindTypeWatch(), this.clearValidityWatcher();
 }, e.prototype.closePanel = function() {
 i.isFunction(this.ctrl.handleClose) && this.ctrl.handleClose();
 }, e.prototype.updateBindability = function() {
 if (!this.ctrl.wizardDone) {
 var e = r.get(this.ctrl.selectedPlan, "bindable");
-this.bindStep.hidden = !0 !== e && (!1 === e || !r.get(this.ctrl.serviceClass, "resource.bindable")), this.ctrl.configPageShown && (this.reviewStep.allowed = this.bindStep.hidden, this.bindStep.hidden ? this.ctrl.nextTitle = "Create" : this.ctrl.nextTitle = "Next >");
+this.bindStep.hidden = !0 !== e && (!1 === e || !r.get(this.ctrl.serviceClass, "resource.bindable")), this.updateBindParametersStepVisibility(), this.ctrl.configPageShown && (this.reviewStep.allowed = this.bindStep.hidden, this.bindStep.hidden ? this.ctrl.nextTitle = "Create" : this.ctrl.nextTitle = "Next >");
 }
+}, e.prototype.updateBindParametersStepVisibility = function() {
+this.bindParametersStep.hidden = this.bindStep.hidden || "none" === this.ctrl.bindType || !r.has(this.ctrl, "bindParameterSchema.properties"), this.bindParametersStep.allowed = this.bindStep.valid;
 }, e.prototype.updateParameterSchema = function(t) {
 var n = r.get(t, "alphaInstanceCreateParameterSchema");
-r.has(n, [ "properties", e.REQUESTER_USERNAME_PARAM_NAME ]) ? (n = i.copy(n), delete n.properties[e.REQUESTER_USERNAME_PARAM_NAME], this.sendRequesterUsername = !0) : this.sendRequesterUsername = !1, this.ctrl.parameterSchema = n, this.ctrl.parameterFormDefinition = r.get(this, "ctrl.selectedPlan.externalMetadata.schemas.service_instance.create.openshift_form_definition");
+r.has(n, [ "properties", e.REQUESTER_USERNAME_PARAM_NAME ]) ? (n = i.copy(n), delete n.properties[e.REQUESTER_USERNAME_PARAM_NAME], this.sendRequesterUsername = !0) : this.sendRequesterUsername = !1, this.ctrl.parameterSchema = n, this.ctrl.parameterFormDefinition = r.get(this, "ctrl.selectedPlan.externalMetadata.schemas.service_instance.create.openshift_form_definition"), this.ctrl.bindParameterSchema = r.get(t, "alphaBindingCreateParameterSchema");
 }, e.prototype.sortApplications = function() {
 if (this.deploymentConfigs && this.deployments && this.replicationControllers && this.replicaSets && this.statefulSets) {
 var e = this.deploymentConfigs.concat(this.deployments).concat(this.replicationControllers).concat(this.replicaSets).concat(this.statefulSets);
@@ -78738,9 +78822,9 @@ e.exports = URI;
 "use strict";
 t.__esModule = !0;
 var i = n(1);
-n(3), n(28);
-var r = n(29), o = n(30), a = n(18), s = n(19), l = n(31), c = n(20), u = n(21), d = n(22), h = n(23), f = n(24), p = n(25), g = n(26), m = n(27), v = n(32), b = n(17);
+n(3), n(29);
+var r = n(30), o = n(31), a = n(19), s = n(20), l = n(32), c = n(21), u = n(22), d = n(23), h = n(24), f = n(25), p = n(26), g = n(27), m = n(28), v = n(33), b = n(18);
 t.webCatalog = "webCatalog", i.module(t.webCatalog, [ "patternfly", "ngAnimate", "ui.bootstrap", "angularMoment", "ui.select", "schemaForm" ]).service("BuilderAppService", o.BuilderAppService).service("Catalog", l.CatalogService).service("RecentlyViewedServiceItems", v.RecentlyViewedServiceItems).filter("projectUrl", r.projectUrlFilter).component("catalogParameters", a.catalogParameters).component("catalogSearch", s.catalogSearch).component("createFromBuilder", c.createFromBuilder).component("landingPage", u.landingPage).component("orderService", d.orderService).component("overlayPanel", h.overlayPanel).component("projectsSummary", f.projectsSummary).component("saasList", p.saasList).component("selectProject", g.selectProject).component("servicesView", m.servicesView).component("catalogFilter", b.catalogFilter).run([ "$templateCache", function(e) {
-e.put("catalog-search/catalog-search-result.html", n(4)), e.put("create-from-builder/create-from-builder-configure.html", n(6)), e.put("create-from-builder/create-from-builder-bind.html", n(5)), e.put("create-from-builder/create-from-builder-results.html", n(7)), e.put("order-service/order-service-plans.html", n(10)), e.put("order-service/order-service-configure.html", n(9)), e.put("order-service/order-service-bind.html", n(8)), e.put("order-service/order-service-review.html", n(11)), e.put("decorators/bootstrap/array.html", n(12)), e.put("decorators/bootstrap/checkbox.html", n(13)), e.put("decorators/bootstrap/checkboxes.html", n(14)), e.put("decorators/bootstrap/default.html", n(15)), e.put("decorators/bootstrap/select.html", n(16));
+e.put("catalog-search/catalog-search-result.html", n(4)), e.put("create-from-builder/create-from-builder-configure.html", n(6)), e.put("create-from-builder/create-from-builder-bind.html", n(5)), e.put("create-from-builder/create-from-builder-results.html", n(7)), e.put("order-service/order-service-plans.html", n(11)), e.put("order-service/order-service-configure.html", n(10)), e.put("order-service/order-service-bind.html", n(9)), e.put("order-service/order-service-bind-parameters.html", n(8)), e.put("order-service/order-service-review.html", n(12)), e.put("decorators/bootstrap/array.html", n(13)), e.put("decorators/bootstrap/checkbox.html", n(14)), e.put("decorators/bootstrap/checkboxes.html", n(15)), e.put("decorators/bootstrap/default.html", n(16)), e.put("decorators/bootstrap/select.html", n(17));
 } ]);
-} ], [ 56 ]);
+} ], [ 57 ]);
