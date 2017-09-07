@@ -4,7 +4,6 @@
 
 .right-section {
   height: 100%;
-  position: fixed;
   .right-container {
     align-items: flex-start;
     bottom: 0;
@@ -14,8 +13,6 @@
     justify-content: flex-start;
     height: 100%;
     left: 0;
-    overflow: hidden;
-    position: absolute;
     right: 0;
     top: 0;
     .right-content {
@@ -156,11 +153,6 @@
     }
   }
   .right-content {
-    .events {
-      // Because .right-section is position:fixed, we need to account for the top nav and project bar combined height,
-      // so offset that amount by adding padding-bottom, which makes the entire scrollable area visible.
-      padding-bottom: (@navbar-os-header-height-mobile + @project-bar-height-mobile + @tech-preview-banner-height);
-    }
     .event {
       display: flex;
       align-items: center;
