@@ -6949,7 +6949,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li ng-if-start=\"!catalogLandingPageEnabled\" role=\"menuitem\"><a ng-href=\"project/{{currentProjectName}}/create?tab=fromCatalog\">Browse Catalog</a></li>\n" +
     "<li role=\"menuitem\"><a ng-href=\"project/{{currentProjectName}}/create?tab=deployImage\">Deploy Image</a></li>\n" +
     "<li ng-if-end role=\"menuitem\"><a ng-href=\"project/{{currentProjectName}}/create?tab=fromFile\">Import YAML / JSON</a></li>\n" +
-    "<li ng-if-start=\"catalogLandingPageEnabled\" role=\"menuitem\"><a href=\"/\">Browse Catalog</a></li>\n" +
+    "<li ng-if-start=\"catalogLandingPageEnabled\" role=\"menuitem\"><a href=\"./\">Browse Catalog</a></li>\n" +
     "<li role=\"menuitem\"><a href=\"\" ng-click=\"showOrderingPanel('deployImage')\">Deploy Image</a></li>\n" +
     "<li ng-if-end role=\"menuitem\"><a href=\"\" ng-click=\"showOrderingPanel('fromFile')\">Import YAML / JSON</a></li>\n" +
     "</ul>\n" +
