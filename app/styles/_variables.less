@@ -7,16 +7,14 @@
 // Patternfly overrides
 @dropdown-divider-margin: 4px 0;
 @list-view-hover-bg: #fafafa;
-@nav-pf-vertical-bg-color: #30363d;
+@nav-pf-vertical-active-bg-color: #383f47; // #383f47 “very slightly tweaked from pf-black-800” ~ jhaines
+@nav-pf-vertical-bg-color: @color-pf-black-900; // #292e34 vertical nav
 @nav-pf-vertical-border-color: @project-bar-border-color;
 @nav-pf-vertical-border-inset-color: @project-bar-border-inset-color;
-@nav-pf-vertical-secondary-bg-color: @project-bar-bg;
-@nav-pf-vertical-secondary-hover-color: lighten(@nav-pf-vertical-secondary-bg-color, 8%);
+@nav-pf-vertical-secondary-hover-color: lighten(@nav-pf-vertical-active-bg-color, 8%);
 @nav-pf-vertical-secondary-active-bg-color: @nav-pf-vertical-secondary-hover-color;
 @nav-pf-vertical-width: 220px;
-@navbar-pf-vertical-navbar-brand-padding: 20px 0;
-@navbar-pf-bg-color: @navbar-os-bg-color;
-@sidebar-pf-bg: @body-bg;
+@navbar-pf-bg-color: @color-pf-black; // #030303 navbar
 @table-cell-padding-bottom: 8px;
 @table-cell-padding-top: 8px;
 
@@ -39,8 +37,6 @@
 @btn-flat-border-color: #e7e7e7;
 @component-label: 11px;
 @console-panel-color: #fff;
-@console-bright-blue: #00a8e1;
-@console-dark-blue: #006e9c;
 @console-text-color-default: @gray-dark;
 @easeInCubic: cubic-bezier(0.55, 0.055, 0.675, 0.19);
 @easeOutCubic: cubic-bezier(0.215, 0.61, 0.355, 1);
@@ -57,50 +53,30 @@
 @middle-content-bottom-margin: @grid-gutter-width;
 @middle-content-container-padding: floor((@grid-gutter-width / 2)); // 20px bootstrap default
 @middle-content-container-padding-lg: (@middle-content-container-padding + 10px);
-@navbar-header-offset: 2px;
 @navbar-header-right-margin: 10px;
 @navbar-os-header-height-desktop: 59px;
 @navbar-os-header-height-mobile: 41px;
-@navbar-os-bg-color: #1c2127;
-@navbar-os-label-filter-bg: @navbar-os-project-menu-bg;
-@navbar-os-project-bg: @navbar-os-bg-color;
-@navbar-os-project-menu-active-bg: darken(@navbar-os-bg-color, 8%);
-@navbar-os-project-menu-active-color: @sidebar-os-active-color;
-@navbar-os-project-border-color: @navbar-os-project-menu-border;
-@navbar-os-project-menu-bg: @navbar-os-bg-color;
-@navbar-os-project-menu-border: #000;
-@navbar-os-project-menu-border-inset: rgba(255,255,255,.1);
-@navbar-os-project-menu-color: @sidebar-os-color;
-@navbar-os-project-menu-hover-bg: @sidebar-os-active-bg;
-@navbar-project-label-color: @sidebar-os-color;
+@navbar-os-project-menu-active-bar: @nav-pf-vertical-active-icon-color;
+@navbar-os-project-menu-active-bg: #000;
+@navbar-os-project-menu-active-color: @nav-pf-vertical-active-color;
+@navbar-os-project-menu-border-color: #000;
+@navbar-os-project-menu-border-inset: @project-bar-border-inset-color;
+@navbar-os-project-menu-color: @navbar-pf-vertical-color;
+@navbar-os-project-menu-hover-bg: lighten(@project-bar-bg, 8%);
 @panel-light: @body-bg;
 @panel-shaded: #f2f2f2;
-@project-bar-bg: #383f47;
+@project-bar-bg: @color-pf-black-900; // #292e34 project bar
 @project-bar-border-color: #050505;
 @project-bar-border-inset-color: rgba(255,255,255,.04);
 @project-bar-height-mobile: 28px;
 @project-bar-height-desktop: 40px;
-@project-bar-select-bg: darken(@project-bar-bg, 8%);
 @scroll-shadows-bg-color: rgba(255, 255, 255, 1);
 @scroll-shadows-bg-color-transparent: rgba(255, 255, 255, 0);
-@sidebar-os-bg: #30363d;
-@sidebar-os-color: #dbdada;
-@sidebar-os-active-bg: #383f47;
-@sidebar-os-active-color: lighten(@sidebar-os-color, 13%);
-@sidebar-os-icon-hover-color: rgba(255,255,255, .7);
-// @sidebar-os-border-color: #050505;
-// @sidebar-os-border-inset-color: rgba(255,255,255,.04);
-// @sidebar-os-hover-bg: #3f4750; // primary hover
-// @sidebar-os-padding-x-secondary: 37px;
-@sidebar-os-active: @console-bright-blue;
-@sidebar-left-mobile: 250px;
-@sidebar-left-width-lg: 210px;
 @sidebar-left-width-md: 145px;
 @sidebar-right-width-xlg: 480px;
 @sidebar-right-width-lg: 400px;
 @sidebar-right-width-md: 310px;
 @sidebar-right-width-sm: 210px;
-@screen-height-sm: 600px;
 @scrollbar-thumb: rgba(0,0,0,.08);
 @scrollbar-thumb-inverse: rgba(255,255,255,.25);
 @scrollbar-thumb-hover: rgba(0,0,0,.18);
