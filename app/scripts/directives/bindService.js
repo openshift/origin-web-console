@@ -5,6 +5,7 @@
     controller: [
       '$scope',
       '$filter',
+      'ApplicationsService',
       'DataService',
       'BindingService',
       BindService
@@ -20,6 +21,7 @@
 
   function BindService($scope,
                        $filter,
+                       ApplicationsService,
                        DataService,
                        BindingService) {
     var ctrl = this;
@@ -59,20 +61,6 @@
       }
     };
 
-    var deploymentConfigs, deployments, replicationControllers, replicaSets, statefulSets;
-    var sortApplications = function() {
-      // Don't waste time sorting on each data load, just sort when we have them all
-      if (deploymentConfigs && deployments && replicationControllers && replicaSets && statefulSets) {
-        var apiObjects =  [].concat(deploymentConfigs)
-                            .concat(deployments)
-                            .concat(replicationControllers)
-                            .concat(replicaSets)
-                            .concat(statefulSets);
-        ctrl.applications = _.sortBy(apiObjects, ['metadata.name', 'kind']);
-        ctrl.bindType = ctrl.applications.length ? "application" : "secret-only";
-      }
-    };
-
     var showBind = function() {
       ctrl.nextTitle = bindParametersStep.hidden ? 'Bind' : 'Next >';
       if (ctrl.podPresets && !selectionValidityWatcher) {
@@ -106,41 +94,13 @@
       ctrl.bindService();
     };
 
-
     var loadApplications = function() {
       var context = {
         namespace: _.get(ctrl.target, 'metadata.namespace')
       };
-
-      // Load all the "application" types
-      DataService.list('deploymentconfigs', context).then(function(deploymentConfigData) {
-        deploymentConfigs = _.toArray(deploymentConfigData.by('metadata.name'));
-        sortApplications();
-      });
-      DataService.list('replicationcontrollers', context).then(function(replicationControllerData) {
-        replicationControllers = _.reject(replicationControllerData.by('metadata.name'), $filter('hasDeploymentConfig'));
-        sortApplications();
-      });
-      DataService.list({
-        group: 'apps',
-        resource: 'deployments'
-      }, context).then(function(deploymentData) {
-        deployments = _.toArray(deploymentData.by('metadata.name'));
-        sortApplications();
-      });
-      DataService.list({
-        group: 'extensions',
-        resource: 'replicasets'
-      }, context).then(function(replicaSetData) {
-        replicaSets = _.reject(replicaSetData.by('metadata.name'), $filter('hasDeployment'));
-        sortApplications();
-      });
-      DataService.list({
-        group: 'apps',
-        resource: 'statefulsets'
-      }, context).then(function(statefulSetData) {
-        statefulSets = _.toArray(statefulSetData.by('metadata.name'));
-        sortApplications();
+      ApplicationsService.getApplications(context).then(function(applications) {
+        ctrl.applications = applications;
+        ctrl.bindType = ctrl.applications.length ? "application" : "secret-only";
       });
     };
 

@@ -5,6 +5,7 @@
       '$filter',
       '$scope',
       'APIService',
+      'ApplicationsService',
       'DataService',
       'Navigate',
       'NotificationsService',
@@ -21,63 +22,16 @@
     templateUrl: 'views/directives/add-secret-to-application.html'
   });
 
-  function AddSecretToApplication($filter, $scope, APIService, DataService, Navigate, NotificationsService, StorageService) {
+  function AddSecretToApplication($filter, $scope, APIService, ApplicationsService, DataService, Navigate, NotificationsService, StorageService) {
     var ctrl = this;
-    var deploymentConfigs;
-    var deployments;
-    var replicationControllers;
-    var replicaSets;
-    var statefulSets;
-
-    var sortApplications = function() {
-      // Don't waste time sorting on each data load, just sort when we have them all
-      if (deploymentConfigs && deployments && replicationControllers && replicaSets && statefulSets) {
-        var apiObjects = deploymentConfigs.concat(deployments)
-          .concat(replicationControllers)
-          .concat(replicaSets)
-          .concat(statefulSets);
-        ctrl.applications = _.sortBy(apiObjects, ['metadata.name', 'kind']);
-        ctrl.updating = false;
-      }
-    };
 
     var getApplications = function() {
-      var hasDeploymentFilter = $filter('hasDeployment');
-      var hasDeploymentConfigFilter = $filter('hasDeploymentConfig');
-
-      ctrl.updating = true;
       var context = {
         namespace: ctrl.project.metadata.name
       };
-      // Load all the "application" types
-      DataService.list('deploymentconfigs', context).then(function(deploymentConfigData) {
-        deploymentConfigs = _.toArray(deploymentConfigData.by('metadata.name'));
-        sortApplications();
-      });
-      DataService.list('replicationcontrollers', context).then(function(replicationControllerData) {
-        replicationControllers = _.reject(replicationControllerData.by('metadata.name'), hasDeploymentConfigFilter);
-        sortApplications();
-      });
-      DataService.list({
-        group: 'apps',
-        resource: 'deployments'
-      }, context).then(function(deploymentData) {
-        deployments = _.toArray(deploymentData.by('metadata.name'));
-        sortApplications();
-      });
-      DataService.list({
-        group: 'extensions',
-        resource: 'replicasets'
-      }, context).then(function(replicaSetData) {
-        replicaSets = _.reject(replicaSetData.by('metadata.name'), hasDeploymentFilter);
-        sortApplications();
-      });
-      DataService.list({
-        group: 'apps',
-        resource: 'statefulsets'
-      }, context).then(function(statefulSetData) {
-        statefulSets = _.toArray(statefulSetData.by('metadata.name'));
-        sortApplications();
+      ApplicationsService.getApplications(context).then(function(applications) {
+        ctrl.applications = applications;
+        ctrl.updating = false;
       });
     };
 
