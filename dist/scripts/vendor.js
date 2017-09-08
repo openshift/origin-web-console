@@ -75049,7 +75049,7 @@ this.dismissDelay = 8e3, this.autoDismissTypes = [ "info", "success" ], this.$ge
 var t = [], n = this.dismissDelay, i = this.autoDismissTypes, r = function(e, t) {
 return t ? "hide/notification/" + t + "/" + e : "hide/notification/" + e;
 }, o = function(n) {
-n.id = n.id || _.uniqueId("notification-"), n.timestamp = new Date().toISOString(), a(n) || s(n) || (t.push(n), e.$emit("NotificationsService.onNotificationAdded", n));
+n.id = n.id || _.uniqueId("notification-") + Date.now(), n.timestamp = new Date().toISOString(), a(n) || s(n) || (t.push(n), e.$emit("NotificationsService.onNotificationAdded", n));
 }, a = function(e) {
 if (!e.id) return !1;
 var t = r(e.id, e.namespace);
