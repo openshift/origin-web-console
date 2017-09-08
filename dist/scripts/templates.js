@@ -6952,6 +6952,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li ng-if-start=\"catalogLandingPageEnabled\" role=\"menuitem\"><a href=\"./\">Browse Catalog</a></li>\n" +
     "<li role=\"menuitem\"><a href=\"\" ng-click=\"showOrderingPanel('deployImage')\">Deploy Image</a></li>\n" +
     "<li ng-if-end role=\"menuitem\"><a href=\"\" ng-click=\"showOrderingPanel('fromFile')\">Import YAML / JSON</a></li>\n" +
+    "<li role=\"menuitem\"><a href=\"\" ng-click=\"showOrderingPanel('fromProject')\">Select from Project</a></li>\n" +
     "</ul>\n" +
     "</div>\n" +
     "</div> \n" +
@@ -6959,60 +6960,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<overlay-panel show-panel=\"ordering.panelName\" show-close=\"true\" handle-close=\"closeOrderingPanel\">\n" +
     "<deploy-image-dialog ng-if=\"ordering.panelName === 'deployImage'\" project=\"currentProject\" context=\"context\" on-dialog-closed=\"closeOrderingPanel\"></deploy-image-dialog>\n" +
     "<from-file-dialog ng-if=\"ordering.panelName === 'fromFile'\" project=\"currentProject\" context=\"context\" on-dialog-closed=\"closeOrderingPanel\"></from-file-dialog>\n" +
-    "</overlay-panel>"
-  );
-
-
-  $templateCache.put('views/directives/header/project-header.html',
-    "<ng-include ng-if=\"globalTechPreviewIndicator\" src=\"'views/directives/header/_tech-preview-banner.html'\" class=\"tech-preview-banner\"></ng-include>\n" +
-    "<nav class=\"navbar navbar-pf-alt\" role=\"navigation\">\n" +
-    "<div class=\"navbar-header hidden-xs\">\n" +
-    "<a class=\"navbar-home\" href=\"./\"><span class=\"fa-fw pficon pficon-home\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"visible-xlg-inline-block\">\n" +
-    "<span ng-if=\"'service_catalog_landing_page' | enableTechPreviewFeature\">\n" +
-    "Home\n" +
-    "</span>\n" +
-    "<span ng-if=\"!('service_catalog_landing_page' | enableTechPreviewFeature)\">\n" +
-    "Projects\n" +
-    "</span>\n" +
-    "</span></a>\n" +
-    "</div>\n" +
-    "<div class=\"nav navbar-project-menu\">\n" +
-    "\n" +
-    "<div row class=\"navbar-flex-btn toggle-menu\">\n" +
-    "<button type=\"button\" class=\"navbar-toggle project-action-btn ng-isolate-scope\" data-toggle=\"collapse\" data-target=\".navbar-collapse-1\">\n" +
-    "<span class=\"sr-only\">Toggle navigation</span>\n" +
-    "<span class=\"icon-bar\"></span>\n" +
-    "<span class=\"icon-bar\"></span>\n" +
-    "<span class=\"icon-bar\"></span>\n" +
-    "</button>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "\n" +
-    "<select class=\"selectpicker form-control\" data-selected-text-format=\"count>3\" id=\"boostrapSelect\" title=\"\"></select>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div row class=\"dropdown navbar-flex-btn\" ng-if=\"project.metadata.name | canIAddToProject\" uib-dropdown>\n" +
-    "<a row class=\"nav-item-iconic dropdown-toggle add-to-project-btn\" href=\"\" ng-disabled=\"project.status.phase != 'Active'\" title=\"Add to Project\" uib-dropdown-toggle>\n" +
-    "<i class=\"fa fa-plus visible-xs-inline-block\" aria-hidden=\"true\" title=\"Add to Project\"></i><span class=\"hidden-xs add-to-project\">Add to Project</span><span class=\"hidden-xs caret\" aria-hidden=\"true\" title=\"Add to Project\"></span>\n" +
-    "</a>\n" +
-    "<ul role=\"menu\" uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right\">\n" +
-    "<li ng-if-start=\"!catalogLandingPageEnabled\" role=\"menuitem\"><a ng-href=\"project/{{projectName}}/create?tab=fromCatalog\">Browse Catalog</a></li>\n" +
-    "<li role=\"menuitem\"><a ng-href=\"project/{{projectName}}/create?tab=deployImage\">Deploy Image</a></li>\n" +
-    "<li ng-if-end role=\"menuitem\"><a ng-href=\"project/{{projectName}}/create?tab=fromFile\">Import YAML / JSON</a></li>\n" +
-    "<li ng-if-start=\"catalogLandingPageEnabled\" role=\"menuitem\"><a href=\"/\">Browse Catalog</a></li>\n" +
-    "<li role=\"menuitem\"><a href=\"\" ng-click=\"showOrderingPanel('deployImage')\">Deploy Image</a></li>\n" +
-    "<li ng-if-end role=\"menuitem\"><a href=\"\" ng-click=\"showOrderingPanel('fromFile')\">Import YAML / JSON</a></li>\n" +
-    "<li ng-if-end role=\"menuitem\"><a href=\"\" ng-click=\"showOrderingPanel('fromProject')\">Select from Project</a></li>\n" +
-    "</ul>\n" +
-    "</div>\n" +
-    "<div row extension-point extension-name=\"nav-system-status-mobile\" extension-types=\"dom\" class=\"navbar-flex-btn hide-if-empty\"></div>\n" +
-    "</div> \n" +
-    "<navbar-utility class=\"hidden-xs\"></navbar-utility>\n" +
-    "</nav>\n" +
-    "<overlay-panel show-panel=\"ordering.panelName\" show-close=\"true\" handle-close=\"closeOrderingPanel\">\n" +
-    "<deploy-image-dialog ng-if=\"ordering.panelName === 'deployImage'\" project=\"project\" context=\"context\" on-dialog-closed=\"closeOrderingPanel\"></deploy-image-dialog>\n" +
-    "<from-file-dialog ng-if=\"ordering.panelName === 'fromFile'\" project=\"project\" context=\"context\" on-dialog-closed=\"closeOrderingPanel\"></from-file-dialog>\n" +
     "<process-template-dialog ng-if=\"ordering.panelName === 'fromProject'\" project=\"project\" use-project-template=\"true\" on-dialog-closed=\"closeOrderingPanel\"></process-template-dialog>\n" +
     "</overlay-panel>"
   );
