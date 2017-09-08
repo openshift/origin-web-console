@@ -5772,6 +5772,7 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 }
 @media (min-width:992px){.projects-list .with-description .origin-modal-popup{margin-top:-25px}
 }
+.projects-list-create-popup form{width:400px}
 .container-terminal-wrapper{position:relative}
 @media (min-width:768px){.projects-list .with-description .origin-modal-popup.position-above{margin-top:20px}
 .container-terminal-wrapper:hover .fullscreen-toggle{display:block}

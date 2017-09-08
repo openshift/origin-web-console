@@ -133,7 +133,12 @@ angular.module('openshiftConsole')
 
     $scope.newProjectPanelShown = false;
 
-    $scope.createProject = function() {
+    $scope.createProject = function(event) {
+      var button =_.get(event, 'target');
+      while (button && !angular.element(button).hasClass('btn')) {
+        button = button.parentElement;
+      }
+      $scope.popupElement = button;
       $scope.newProjectPanelShown = true;
     };
 
