@@ -5318,10 +5318,10 @@ td.visible-print,th.visible-print{display:table-cell!important}
 .add-secret-to-application .dialog-body .add-choice{margin-bottom:10px}
 .add-secret-to-application .dialog-body .button-group .btn{margin-left:10px}
 .add-secret-to-application .dialog-body .button-group .btn:first-of-type{margin-left:0}
+.add-secret-to-application .env-warning,.add-secret-to-application .volume-options{margin-left:20px}
 .add-secret-to-application .dialog-body legend{border-bottom:0;font-size:14px;font-weight:600;margin-bottom:10px}
 .add-secret-to-application .dialog-body .radio{margin-top:0}
 .add-secret-to-application .updating{background-color:#fff;bottom:55px;left:0;padding-top:60px;position:absolute;right:0;top:55px;z-index:1000}
-.add-secret-to-application .volume-options{margin-left:20px}
 .osc-secrets-form .advanced-secrets .help-blocks,.osc-secrets-form .advanced-secrets .input-labels,.osc-secrets-form .basic-secrets .help-blocks,.osc-secrets-form .basic-secrets .input-labels{display:table;padding-right:30px;position:relative;width:100%}
 .osc-secrets-form .advanced-secrets .help-blocks .help-block,.osc-secrets-form .advanced-secrets .help-blocks .input-label,.osc-secrets-form .advanced-secrets .input-labels .help-block,.osc-secrets-form .advanced-secrets .input-labels .input-label,.osc-secrets-form .basic-secrets .help-blocks .help-block,.osc-secrets-form .basic-secrets .help-blocks .input-label,.osc-secrets-form .basic-secrets .input-labels .help-block,.osc-secrets-form .basic-secrets .input-labels .input-label{width:100%;float:left;padding-right:5px}
 .osc-secrets-form .advanced-secrets .secret-row,.osc-secrets-form .basic-secrets .secret-row{display:table;padding-right:30px;position:relative;width:100%;margin-bottom:15px}

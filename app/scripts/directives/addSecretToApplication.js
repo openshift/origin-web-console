@@ -84,7 +84,13 @@
     ctrl.$onInit = function() {
       ctrl.addType = 'env';
       ctrl.disableInputs = false;
+
       getApplications();
+
+      var keyValidator = new RegExp("^[A-Za-z_]{1}[A-Za-z0-9_]*$");
+      ctrl.hasInvalidEnvVars = _.some(ctrl.secret.data, function(value, key) {
+        return !keyValidator.test(key);
+      });
     };
 
     ctrl.$postLink = function() {
