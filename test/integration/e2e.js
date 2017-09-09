@@ -1,6 +1,5 @@
 'use strict';
 
-require('jasmine-beforeall');
 var h = require('./helpers.js');
 
 describe('', function() {

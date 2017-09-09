@@ -94,13 +94,16 @@ angular
                         _.each(rolebinding.subjects, function(subject) {
                           var subjectKey = uniqueKey(subject.namespace, subject.name);
                           if(!result[subject.kind].subjects[subjectKey]) {
-                            result[subject.kind].subjects[subjectKey]  = {
+                            var subjectValue = {
                               name: subject.name,
-                              namespace: subject.namespace,
                               roles: {}
                             };
+                            if (subject.namespace) {
+                              subjectValue.namespace = subject.namespace;
+                            }
+                            result[subject.kind].subjects[subjectKey]  = subjectValue;
                           }
-                          if(!_.includes(result[subject.kind].subjects[subjectKey].roles, roleKey)) {
+                          if(roles[roleKey] && !_.includes(result[subject.kind].subjects[subjectKey].roles, roleKey)) {
                             result[subject.kind].subjects[subjectKey].roles[roleKey] = roles[roleKey];
                           }
                         });

@@ -1,4 +1,5 @@
 'use strict';
+let until = require('selenium-webdriver').until;
 
 var EC = protractor.ExpectedConditions;
 
@@ -22,19 +23,16 @@ exports.login = function(loginPageAlreadyLoaded) {
   // The login page doesn't use angular, so we have to use the underlying WebDriver instance
   var driver = browser.driver;
   if (!loginPageAlreadyLoaded) {
-    browser.get('/');
+    driver.get('/');
     driver.wait(function() {
-      return driver.isElementPresent(by.name("username"));
-    }, 3000);
+      return until.elementLocated(by.name("username"), 3000);
+    }, 5000, "Waiting for login page to render");
   }
-
   driver.findElement(by.name("username")).sendKeys("e2e-user");
   driver.findElement(by.name("password")).sendKeys("e2e-user");
   driver.findElement(by.css("button[type='submit']")).click();
 
-  driver.wait(function() {
-    return driver.isElementPresent(by.css(".navbar-iconic .username"));
-  }, 5000);
+  driver.wait(until.elementLocated(by.css(".navbar-iconic .username")), 5000, "Waiting for successful login");
 };
 
 exports.clickAndGo = function(buttonText, uri) {

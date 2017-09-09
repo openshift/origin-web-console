@@ -7,7 +7,9 @@ var baseConf = require('./protractor.conf').config;
 
 // overrides to the base protractor.conf to use gecko.driver on mac
 exports.config = _.extend({}, baseConf, {
-  seleniumArgs: ['-Dwebdriver.gecko.driver=./node_modules/geckodriver/geckodriver'],
+  localSeleniumStandaloneOpts: {
+    jvmArgs: ['-Dwebdriver.gecko.driver=./node_modules/geckodriver/geckodriver']
+  },
   capabilities: {
     name: 'Unnamed Job',
     count: 1,
