@@ -22,6 +22,8 @@
     bindings: {
       template: '<',
       project: '<',
+      onProjectSelected: '<',
+      availableProjects: '<',
       prefillParameters: '<',
       isDialog: '<'
     },

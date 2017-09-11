@@ -1,5 +1,4 @@
 <div
-  ng-if="view.hasProject"
   class="nav-pf-vertical nav-pf-vertical-with-sub-menus"
   ng-class="{
     collapsed: nav.collapsed && !isMobile,
@@ -9,7 +8,7 @@
     'show-mobile-secondary': nav.showMobileNav && sidebar.showMobileSecondary && isMobile
   }"
   on-esc="closeNav()">
-  <nav class="nav-vertical-primary">
+  <nav ng-if="view.hasProject" class="nav-vertical-primary">
     <ul class="list-group">
 
       <!-- Primary Nav -->

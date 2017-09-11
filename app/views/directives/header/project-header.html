@@ -38,6 +38,7 @@
         <li ng-if-start="catalogLandingPageEnabled" role="menuitem"><a href="/">Browse Catalog</a></li>
         <li role="menuitem"><a href="" ng-click="showOrderingPanel('deployImage')">Deploy Image</a></li>
         <li ng-if-end role="menuitem"><a href="" ng-click="showOrderingPanel('fromFile')">Import YAML / JSON</a></li>
+        <li ng-if-end role="menuitem"><a href="" ng-click="showOrderingPanel('fromProject')">Select from Project</a></li>
       </ul>
     </div>
     <div row
@@ -51,4 +52,5 @@
 <overlay-panel show-panel="ordering.panelName" show-close="true" handle-close="closeOrderingPanel">
   <deploy-image-dialog ng-if="ordering.panelName === 'deployImage'" project="project" context="context" on-dialog-closed="closeOrderingPanel"></deploy-image-dialog>
   <from-file-dialog ng-if="ordering.panelName === 'fromFile'" project="project" context="context" on-dialog-closed="closeOrderingPanel"></from-file-dialog>
+  <process-template-dialog ng-if="ordering.panelName === 'fromProject'" project="project" use-project-template="true" on-dialog-closed="closeOrderingPanel"></process-template-dialog>
 </overlay-panel>

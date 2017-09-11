@@ -49641,32 +49641,34 @@ centerLabel: "<?",
 onThresholdChange: "&"
 },
 templateUrl: "charts/donut/donut-pct-chart.html",
-controller: [ "pfUtils", "$element", "$timeout", function(e, t, n) {
+controller: [ "pfUtils", "$scope", function(e, t) {
 "use strict";
-var i, r = this;
-r.$onInit = function() {
-r.donutChartId = "donutPctChart", r.config.chartId && (r.donutChartId = r.config.chartId + r.donutChartId), r.updateAll();
-}, r.updateAvailable = function() {
-r.data.available = r.data.total - r.data.used;
-}, r.getStatusColor = function(t, n) {
-var i = "none", o = e.colorPalette.blue;
-return n && (i = "ok", o = e.colorPalette.green, t >= n.error ? (i = "error", o = e.colorPalette.red) : t >= n.warning && (i = "warning", o = e.colorPalette.orange)), r.threshold && r.threshold === i || (r.threshold = i, r.onThresholdChange({
-threshold: r.threshold
+var n, i = this;
+i.$id = t.$id, i.$onInit = function() {
+i.donutChartId = "donutPctChart" + i.$id, i.config.chartId && (i.donutChartId = i.config.chartId + i.donutChartId), i.updateAll();
+}, i.updateAvailable = function() {
+i.data.available = i.data.total - i.data.used;
+}, i.updatePercentage = function() {
+i.data.percent = Math.round(i.data.used / i.data.total * 100);
+}, i.getStatusColor = function(t, n) {
+var r = "none", o = e.colorPalette.blue;
+return n && (r = "ok", o = e.colorPalette.green, t >= n.error ? (r = "error", o = e.colorPalette.red) : t >= n.warning && (r = "warning", o = e.colorPalette.orange)), i.threshold && i.threshold === r || (i.threshold = r, i.onThresholdChange({
+threshold: i.threshold
 })), o;
-}, r.statusDonutColor = function() {
+}, i.statusDonutColor = function() {
 var t, n;
 return t = {
 pattern: []
-}, n = r.data.used / r.data.total * 100, t.pattern[0] = r.getStatusColor(n, r.config.thresholds), t.pattern[1] = e.colorPalette.black300, t;
-}, r.donutTooltip = function() {
+}, n = i.data.used / i.data.total * 100, t.pattern[0] = i.getStatusColor(n, i.config.thresholds), t.pattern[1] = e.colorPalette.black300, t;
+}, i.donutTooltip = function() {
 return {
 contents: function(e) {
-return r.config.tooltipFn ? '<span class="donut-tooltip-pf" style="white-space: nowrap;">' + r.config.tooltipFn(e) + "</span>" : '<span class="donut-tooltip-pf" style="white-space: nowrap;">' + Math.round(100 * e[0].ratio) + "% " + r.config.units + " " + e[0].name + "</span>";
+return i.config.tooltipFn ? '<span class="donut-tooltip-pf" style="white-space: nowrap;">' + i.config.tooltipFn(e) + "</span>" : '<span class="donut-tooltip-pf" style="white-space: nowrap;">' + Math.round(100 * e[0].ratio) + "% " + i.config.units + " " + e[0].name + "</span>";
 }
 };
-}, r.getDonutData = function() {
+}, i.getDonutData = function() {
 return {
-columns: [ [ "Used", r.data.used ], [ "Available", r.data.available ] ],
+columns: [ [ "Used", i.data.used ], [ "Available", i.data.available ] ],
 type: "donut",
 donut: {
 label: {
@@ -49676,23 +49678,23 @@ show: !1
 groups: [ [ "used", "available" ] ],
 order: null
 };
-}, r.getCenterLabelText = function() {
+}, i.getCenterLabelText = function() {
 var e;
 return e = {
-bigText: r.data.used,
-smText: r.config.units + " Used"
-}, r.config.centerLabelFn ? (e.bigText = r.config.centerLabelFn(), e.smText = "") : "none" === r.centerLabel ? (e.bigText = "", e.smText = "") : "available" === r.centerLabel ? (e.bigText = r.data.available, e.smText = r.config.units + " Available") : "percent" === r.centerLabel && (e.bigText = Math.round(r.data.used / r.data.total * 100) + "%", e.smText = "of " + r.data.total + " " + r.config.units), e;
-}, r.updateAll = function() {
-i = angular.copy(r.data), r.config = e.merge(patternfly.c3ChartDefaults().getDefaultDonutConfig(), r.config), r.updateAvailable(), r.config.data = e.merge(r.config.data, r.getDonutData()), r.config.color = r.statusDonutColor(r), r.config.tooltip = r.donutTooltip(), r.config.data.onclick = r.config.onClickFn;
-}, r.setupDonutChartTitle = function() {
+bigText: i.data.used,
+smText: i.config.units + " Used"
+}, i.config.centerLabelFn ? (e.bigText = i.config.centerLabelFn(), e.smText = "") : "none" === i.centerLabel ? (e.bigText = "", e.smText = "") : "available" === i.centerLabel ? (e.bigText = i.data.available, e.smText = i.config.units + " Available") : "percent" === i.centerLabel && (e.bigText = Math.round(i.data.used / i.data.total * 100) + "%", e.smText = "of " + i.data.total + " " + i.config.units), e;
+}, i.updateAll = function() {
+n = angular.copy(i.data), i.config = e.merge(patternfly.c3ChartDefaults().getDefaultDonutConfig(), i.config), i.updateAvailable(), i.updatePercentage(), i.config.data = e.merge(i.config.data, i.getDonutData()), i.config.color = i.statusDonutColor(i), i.config.tooltip = i.donutTooltip(), i.config.data.onclick = i.config.onClickFn;
+}, i.setupDonutChartTitle = function() {
 var e, t;
-angular.isUndefined(r.chart) || (e = d3.select(r.chart.element).select("text.c3-chart-arcs-title")) && (t = r.getCenterLabelText(), e.selectAll("*").remove(), t.bigText && !t.smText ? e.text(t.bigText) : (e.insert("tspan").text(t.bigText).classed("donut-title-big-pf", !0).attr("dy", 0).attr("x", 0), e.insert("tspan").text(t.smText).classed("donut-title-small-pf", !0).attr("dy", 20).attr("x", 0)));
-}, r.setChart = function(e) {
-r.chart = e, r.setupDonutChartTitle();
-}, r.$onChanges = function(e) {
-(e.config || e.data) && r.updateAll(), e.chartHeight && (r.config.size.height = e.chartHeight.currentValue), e.centerLabel && r.setupDonutChartTitle();
-}, r.$doCheck = function() {
-angular.equals(r.data, i) || r.updateAll();
+angular.isUndefined(i.chart) || (e = d3.select(i.chart.element).select("text.c3-chart-arcs-title")) && (t = i.getCenterLabelText(), e.selectAll("*").remove(), t.bigText && !t.smText ? e.text(t.bigText) : (e.insert("tspan").text(t.bigText).classed("donut-title-big-pf", !0).attr("dy", 0).attr("x", 0), e.insert("tspan").text(t.smText).classed("donut-title-small-pf", !0).attr("dy", 20).attr("x", 0)));
+}, i.setChart = function(e) {
+i.chart = e, i.setupDonutChartTitle();
+}, i.$onChanges = function(e) {
+(e.config || e.data) && i.updateAll(), e.chartHeight && (i.config.size.height = e.chartHeight.currentValue), e.centerLabel && i.setupDonutChartTitle();
+}, i.$doCheck = function() {
+angular.equals(i.data, n) || i.updateAll();
 };
 } ]
 }), angular.module("patternfly.charts").component("pfEmptyChart", {
@@ -50400,7 +50402,7 @@ templateUrl: "filters/simple-filter/filter-results.html",
 controller: function() {
 "use strict";
 function e() {
-i = angular.copy(r.config), r.config.appliedFilters || (r.config.appliedFilters = []), void 0 === r.config.resultsCount && (r.config.resultsCount = 0);
+i = angular.copy(r.config), r.config.appliedFilters || (r.config.appliedFilters = []), void 0 === r.config.resultsCount && (r.config.resultsCount = 0), r.config.itemsLabel = r.config.itemsLabel || "Result", r.config.itemsLabelPlural = r.config.itemsLabelPlural || "Results";
 }
 function t(e) {
 var t = [];
@@ -50420,7 +50422,7 @@ clearAllFilters: n
 }, r.$onChanges = function() {
 e();
 }, r.$doCheck = function() {
-angular.equals(r.config, i);
+angular.equals(r.config, i) || e();
 };
 }
 }), angular.module("patternfly.form").component("pfFormButtons", {
@@ -50765,6 +50767,7 @@ allowExpand: "=?",
 drawerExpanded: "=?",
 drawerTitle: "@",
 notificationGroups: "<",
+notificationTrackField: "@",
 onClose: "=?",
 showMarkAllRead: "<?",
 onMarkAllRead: "=?",
@@ -51994,17 +51997,17 @@ e.put("card/aggregate-status/aggregate-status-card.html", '<div ng-if=!$ctrl.isM
 e.put("card/basic/card-filter.html", '<div uib-dropdown class=card-pf-time-frame-filter><button type=button uib-dropdown-toggle class="btn btn-default">{{$ctrl.currentFilter.label}} <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-repeat="item in $ctrl.filter.filters" ng-class="{\'selected\': item === $ctrl.currentFilter}"><a role=menuitem tabindex=-1 ng-click=$ctrl.filterCallBackFn(item)>{{item.label}}</a></li></ul></div>'), e.put("card/basic/card.html", "<div ng-class=\"$ctrl.showTopBorder === 'true' ? 'card-pf card-pf-accented' : 'card-pf'\"><div ng-if=$ctrl.showHeader() ng-class=\"$ctrl.shouldShowTitlesSeparator ? 'card-pf-heading' : 'card-pf-heading-no-bottom'\"><div ng-if=$ctrl.showFilterInHeader() ng-include=\"'card/basic/card-filter.html'\"></div><h2 class=card-pf-title>{{$ctrl.headTitle}}</h2></div><span ng-if=$ctrl.subTitle class=card-pf-subtitle>{{$ctrl.subTitle}}</span><div class=card-pf-body><div ng-transclude></div></div><div ng-if=$ctrl.footer class=card-pf-footer><div ng-if=$ctrl.showFilterInFooter() ng-include=\"'card/basic/card-filter.html'\"></div><p><a ng-if=$ctrl.footer.href href={{$ctrl.footer.href}} ng-class=\"{'card-pf-link-with-icon':$ctrl.footer.iconClass,'card-pf-link':!$ctrl.footer.iconClass}\"><span ng-if=$ctrl.footer.iconClass class=\"{{$ctrl.footer.iconClass}} card-pf-footer-text\"></span> <span ng-if=$ctrl.footer.text class=card-pf-footer-text>{{$ctrl.footer.text}}</span></a> <a ng-if=\"$ctrl.footer.callBackFn && !$ctrl.footer.href\" ng-click=$ctrl.footerCallBackFn() ng-class=\"{'card-pf-link-with-icon':$ctrl.footer.iconClass,'card-pf-link':!$ctrl.footer.iconClass}\"><span class=\"{{$ctrl.footer.iconClass}} card-pf-footer-text\" ng-if=$ctrl.footer.iconClass></span> <span class=card-pf-footer-text ng-if=$ctrl.footer.text>{{$ctrl.footer.text}}</span></a> <span ng-if=\"!$ctrl.footer.href && !$ctrl.footer.callBackFn\"><span ng-if=$ctrl.footer.iconClass class=\"{{$ctrl.footer.iconClass}} card-pf-footer-text\" ng-class=\"{'card-pf-link-with-icon':$ctrl.footer.iconClass,'card-pf-link':!$ctrl.footer.iconClass}\"></span> <span ng-if=$ctrl.footer.text class=card-pf-footer-text>{{$ctrl.footer.text}}</span></span></p></div></div>");
 } ]), angular.module("patternfly.charts").run([ "$templateCache", function(e) {
 "use strict";
-e.put("charts/donut/donut-chart.html", '<span><pf-c3-chart ng-if="$ctrl.data.dataAvailable !== false" id={{$ctrl.donutChartId}} config=$ctrl.config get-chart-callback=$ctrl.setChart></pf-c3-chart><pf-empty-chart ng-if="$ctrl.data.dataAvailable === false" chart-height=$ctrl.chartHeight></pf-empty-chart></span>'), e.put("charts/donut/donut-pct-chart.html", '<span><pf-c3-chart ng-if="$ctrl.data.dataAvailable !== false" id={{$ctrl.donutChartId}} config=$ctrl.config get-chart-callback=$ctrl.setChart></pf-c3-chart><pf-empty-chart ng-if="$ctrl.data.dataAvailable === false" chart-height=$ctrl.chartHeight></pf-empty-chart></span>'), e.put("charts/empty-chart.html", '<div class=empty-chart-content ng-style=$ctrl.sizeStyles><span class="pficon pficon-info"></span> <span>No data available</span></div>'), e.put("charts/heatmap/heatmap-legend.html", '<ul class=heatmap-pf-legend-container><li ng-repeat="item in $ctrl.legendItems" class=heatmap-pf-legend-items><span class=legend-pf-color-box ng-style="{background: item.color}"></span> <span class=legend-pf-text>{{item.text}}</span></li></ul>'), 
-e.put("charts/heatmap/heatmap.html", '<div class=heatmap-pf-container><h3>{{$ctrl.chartTitle}}</h3><div class=heatmap-container ng-style=$ctrl.containerStyles><svg class=heatmap-pf-svg></svg></div><pf-empty-chart ng-if="$ctrl.chartDataAvailable === false" chart-height=$ctrl.height></pf-empty-chart><div ng-if=!$ctrl.loadingDone class="spinner spinner-lg loading"></div><pf-heatmap-legend ng-if=$ctrl.showLegend legend=$ctrl.legendLabels legend-colors=$ctrl.heatmapColorPattern></pf-heatmap-legend></div>'), e.put("charts/line/line-chart.html", '<span><pf-c3-chart id={{$ctrl.lineChartId}} ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.chartConfig></pf-c3-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.chartConfig.size.height></pf-empty-chart></span>'), e.put("charts/sparkline/sparkline-chart.html", '<span><pf-c3-chart ng-if="$ctrl.chartData.dataAvailable !== false" id={{$ctrl.sparklineChartId}} config=$ctrl.chartConfig></pf-c3-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.chartHeight></pf-empty-chart></span>'), 
-e.put("charts/trends/trends-chart.html", '<span ng-switch on=$ctrl.config.layout ng-class="{\'data-unavailable-pf\': $ctrl.chartData.dataAvailable === false}"><div ng-switch-default ng-class="{\'trend-card-large-pf\': $ctrl.showLargeCardLayout,\'trend-card-small-pf\': $ctrl.showSmallCardLayout}"><span class=trend-header-pf ng-if=$ctrl.config.title>{{$ctrl.config.title}}</span> <span ng-if=$ctrl.showActualValue><span class=trend-title-big-pf>{{$ctrl.getLatestValue()}}</span> <span class=trend-title-small-pf>{{$ctrl.config.units}}</span></span> <span ng-if=$ctrl.showPercentageValue><span class=trend-title-big-pf>{{$ctrl.getPercentageValue() + \'%\'}}</span> <span class=trend-title-small-pf>of {{$ctrl.chartData.total + \' \' + $ctrl.config.units}}</span></span><pf-sparkline-chart ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.config chart-data=$ctrl.chartData chart-height=$ctrl.getChartHeight() show-x-axis=$ctrl.showXAxis show-y-axis=$ctrl.showYAxis></pf-sparkline-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.getChartHeight()></pf-empty-chart><span class=trend-footer-pf ng-if=$ctrl.config.timeFrame>{{$ctrl.config.timeFrame}}</span></div><div ng-switch-when=compact class=trend-card-compact-pf><div class="row trend-row"><div class=col-sm-2 ng-class="{\'col-sm-push-10\': $ctrl.config.compactLabelPosition === \'right\'}"><div class=trend-compact-details><span ng-if=$ctrl.showActualValue><span class=trend-title-compact-big-pf>{{$ctrl.getLatestValue()}}</span> <span class=trend-title-compact-small-pf>{{$ctrl.config.units}}</span></span> <span ng-if=$ctrl.showPercentageValue><span class=trend-title-compact-big-pf>{{$ctrl.getPercentageValue() + \'%\'}}</span> <span class=trend-title-compact-small-pf>of {{$ctrl.chartData.total + \' \' + $ctrl.config.units}}</span></span> <span class=trend-header-compact-pf ng-if=$ctrl.config.title>{{$ctrl.config.title}}</span></div></div><div class=col-sm-10 ng-class="{\'col-sm-pull-2\': $ctrl.config.compactLabelPosition === \'right\'}"><pf-sparkline-chart ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.config chart-data=$ctrl.chartData chart-height=$ctrl.getChartHeight() show-x-axis=$ctrl.showXAxis show-y-axis=$ctrl.showYAxis></pf-sparkline-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.getChartHeight()></pf-empty-chart></div></div></div><div ng-switch-when=inline class=trend-card-inline-pf><div class="row trend-row"><div class="col-sm-8 trend-flat-col"><pf-sparkline-chart ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.config chart-data=$ctrl.chartData chart-height=$ctrl.getChartHeight() show-x-axis=$ctrl.showXAxis show-y-axis=$ctrl.showYAxis></pf-sparkline-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.getChartHeight()></pf-empty-chart></div><div class="col-sm-4 trend-flat-col"><div class=trend-flat-details><div class=trend-flat-details-cell><span class=trend-title-flat-big-pf>{{$ctrl.getPercentageValue() + \'%\'}}</span></div><div class=trend-flat-details-cell><span class=trend-label-flat-strong-pf>{{$ctrl.config.trendLabel}}</span> <span class=trend-label-flat-pf>{{$ctrl.getLatestValue()}} of {{$ctrl.chartData.total + \' \' + $ctrl.config.units}}</span></div></div></div></div></div></span>'), 
+e.put("charts/donut/donut-chart.html", '<span><pf-c3-chart ng-if="$ctrl.data.dataAvailable !== false" id={{$ctrl.donutChartId}} config=$ctrl.config get-chart-callback=$ctrl.setChart></pf-c3-chart><pf-empty-chart ng-if="$ctrl.data.dataAvailable === false" chart-height=$ctrl.chartHeight></pf-empty-chart></span>'), e.put("charts/donut/donut-pct-chart.html", '<span class=pct-donut-chart-pf><span ng-class="{\'pct-donut-chart-pf-left\': $ctrl.config.labelConfig.orientation === \'left\', \'pct-donut-chart-pf-right\': $ctrl.config.labelConfig.orientation === \'right\'}"><span class=pct-donut-chart-pf-chart><pf-c3-chart ng-if="$ctrl.data.dataAvailable !== false" id={{$ctrl.donutChartId}} config=$ctrl.config get-chart-callback=$ctrl.setChart></pf-c3-chart><pf-empty-chart ng-if="$ctrl.data.dataAvailable === false" chart-height=$ctrl.chartHeight></pf-empty-chart></span> <span ng-if="$ctrl.data.dataAvailable !== false && $ctrl.config.labelConfig && !$ctrl.config.labelConfig.labelFn()" class=pct-donut-chart-pf-label>{{$ctrl.config.labelConfig.title}} <span ng-if=$ctrl.data ng-switch=$ctrl.config.labelConfig.label><span ng-switch-when=none></span> <span ng-switch-when=available>{{$ctrl.data.available}} {{$ctrl.config.labelConfig.units}} available</span> <span ng-switch-when=percent>{{$ctrl.data.percent}}&#37; used</span> <span ng-switch-default="">{{$ctrl.data.used}} {{$ctrl.config.labelConfig.units}} of {{$ctrl.data.total}} {{$ctrl.config.labelConfig.units}} used</span></span></span> <span ng-if="$ctrl.data.dataAvailable !== false && $ctrl.config.labelConfig && $ctrl.config.labelConfig.labelFn()" class=pct-donut-chart-pf-label ng-bind-html=$ctrl.config.labelConfig.labelFn()></span></span></span>'), 
+e.put("charts/empty-chart.html", '<div class=empty-chart-content ng-style=$ctrl.sizeStyles><span class="pficon pficon-info"></span> <span>No data available</span></div>'), e.put("charts/heatmap/heatmap-legend.html", '<ul class=heatmap-pf-legend-container><li ng-repeat="item in $ctrl.legendItems" class=heatmap-pf-legend-items><span class=legend-pf-color-box ng-style="{background: item.color}"></span> <span class=legend-pf-text>{{item.text}}</span></li></ul>'), e.put("charts/heatmap/heatmap.html", '<div class=heatmap-pf-container><h3>{{$ctrl.chartTitle}}</h3><div class=heatmap-container ng-style=$ctrl.containerStyles><svg class=heatmap-pf-svg></svg></div><pf-empty-chart ng-if="$ctrl.chartDataAvailable === false" chart-height=$ctrl.height></pf-empty-chart><div ng-if=!$ctrl.loadingDone class="spinner spinner-lg loading"></div><pf-heatmap-legend ng-if=$ctrl.showLegend legend=$ctrl.legendLabels legend-colors=$ctrl.heatmapColorPattern></pf-heatmap-legend></div>'), e.put("charts/line/line-chart.html", '<span><pf-c3-chart id={{$ctrl.lineChartId}} ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.chartConfig></pf-c3-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.chartConfig.size.height></pf-empty-chart></span>'), 
+e.put("charts/sparkline/sparkline-chart.html", '<span><pf-c3-chart ng-if="$ctrl.chartData.dataAvailable !== false" id={{$ctrl.sparklineChartId}} config=$ctrl.chartConfig></pf-c3-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.chartHeight></pf-empty-chart></span>'), e.put("charts/trends/trends-chart.html", '<span ng-switch on=$ctrl.config.layout ng-class="{\'data-unavailable-pf\': $ctrl.chartData.dataAvailable === false}"><div ng-switch-default ng-class="{\'trend-card-large-pf\': $ctrl.showLargeCardLayout,\'trend-card-small-pf\': $ctrl.showSmallCardLayout}"><span class=trend-header-pf ng-if=$ctrl.config.title>{{$ctrl.config.title}}</span> <span ng-if=$ctrl.showActualValue><span class=trend-title-big-pf>{{$ctrl.getLatestValue()}}</span> <span class=trend-title-small-pf>{{$ctrl.config.units}}</span></span> <span ng-if=$ctrl.showPercentageValue><span class=trend-title-big-pf>{{$ctrl.getPercentageValue() + \'%\'}}</span> <span class=trend-title-small-pf>of {{$ctrl.chartData.total + \' \' + $ctrl.config.units}}</span></span><pf-sparkline-chart ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.config chart-data=$ctrl.chartData chart-height=$ctrl.getChartHeight() show-x-axis=$ctrl.showXAxis show-y-axis=$ctrl.showYAxis></pf-sparkline-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.getChartHeight()></pf-empty-chart><span class=trend-footer-pf ng-if=$ctrl.config.timeFrame>{{$ctrl.config.timeFrame}}</span></div><div ng-switch-when=compact class=trend-card-compact-pf><div class="row trend-row"><div class=col-sm-2 ng-class="{\'col-sm-push-10\': $ctrl.config.compactLabelPosition === \'right\'}"><div class=trend-compact-details><span ng-if=$ctrl.showActualValue><span class=trend-title-compact-big-pf>{{$ctrl.getLatestValue()}}</span> <span class=trend-title-compact-small-pf>{{$ctrl.config.units}}</span></span> <span ng-if=$ctrl.showPercentageValue><span class=trend-title-compact-big-pf>{{$ctrl.getPercentageValue() + \'%\'}}</span> <span class=trend-title-compact-small-pf>of {{$ctrl.chartData.total + \' \' + $ctrl.config.units}}</span></span> <span class=trend-header-compact-pf ng-if=$ctrl.config.title>{{$ctrl.config.title}}</span></div></div><div class=col-sm-10 ng-class="{\'col-sm-pull-2\': $ctrl.config.compactLabelPosition === \'right\'}"><pf-sparkline-chart ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.config chart-data=$ctrl.chartData chart-height=$ctrl.getChartHeight() show-x-axis=$ctrl.showXAxis show-y-axis=$ctrl.showYAxis></pf-sparkline-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.getChartHeight()></pf-empty-chart></div></div></div><div ng-switch-when=inline class=trend-card-inline-pf><div class="row trend-row"><div class="col-sm-8 trend-flat-col"><pf-sparkline-chart ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.config chart-data=$ctrl.chartData chart-height=$ctrl.getChartHeight() show-x-axis=$ctrl.showXAxis show-y-axis=$ctrl.showYAxis></pf-sparkline-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.getChartHeight()></pf-empty-chart></div><div class="col-sm-4 trend-flat-col"><div class=trend-flat-details><div class=trend-flat-details-cell><span class=trend-title-flat-big-pf>{{$ctrl.getPercentageValue() + \'%\'}}</span></div><div class=trend-flat-details-cell><span class=trend-label-flat-strong-pf>{{$ctrl.config.trendLabel}}</span> <span class=trend-label-flat-pf>{{$ctrl.getLatestValue()}} of {{$ctrl.chartData.total + \' \' + $ctrl.config.units}}</span></div></div></div></div></div></span>'), 
 e.put("charts/utilization-bar/utilization-bar-chart.html", '<div class=utilization-bar-chart-pf ng-class="{\'data-unavailable-pf\': $ctrl.chartData.dataAvailable === false}"><span ng-if="!$ctrl.layout || $ctrl.layout.type === \'regular\'"><div ng-if=$ctrl.chartTitle class=progress-description>{{$ctrl.chartTitle}}</div><div class="progress progress-label-top-right" ng-if="$ctrl.chartData.dataAvailable !== false"><div class=progress-bar aria-valuenow={{$ctrl.chartData.percentageUsed}} aria-valuemin=0 aria-valuemax=100 ng-class="{\'animate\': animate,\n           \'progress-bar-success\': $ctrl.isOk, \'progress-bar-danger\': $ctrl.isError, \'progress-bar-warning\': $ctrl.isWarn}" ng-style="{width:$ctrl.chartData.percentageUsed + \'%\'}" uib-tooltip="{{$ctrl.chartData.percentageUsed}}% Used"><span ng-if=$ctrl.chartFooter ng-bind-html=$ctrl.chartFooter></span> <span ng-if="!$ctrl.chartFooter && (!$ctrl.footerLabelFormat || $ctrl.footerLabelFormat === \'actual\')"><strong>{{$ctrl.chartData.used}} of {{$ctrl.chartData.total}} {{$ctrl.units}}</strong> Used</span> <span ng-if="!$ctrl.chartFooter && $ctrl.footerLabelFormat === \'percent\'"><strong>{{$ctrl.chartData.percentageUsed}}%</strong> Used</span></div><div class="progress-bar progress-bar-remaining" ng-style="{width:(100 - $ctrl.chartData.percentageUsed) + \'%\'}" uib-tooltip="{{100 - $ctrl.chartData.percentageUsed}}% Available"></div></div></span> <span ng-if="$ctrl.layout && $ctrl.layout.type === \'inline\'"><div class="progress-container progress-description-left progress-label-right" ng-style="{\'padding-left\':$ctrl.layout.titleLabelWidth, \'padding-right\':$ctrl.layout.footerLabelWidth}"><div ng-if=$ctrl.chartTitle class=progress-description ng-style="{\'max-width\':$ctrl.layout.titleLabelWidth}">{{$ctrl.chartTitle}}</div><div class=progress ng-if="$ctrl.chartData.dataAvailable !== false"><div class=progress-bar aria-valuenow={{$ctrl.chartData.percentageUsed}} aria-valuemin=0 aria-valuemax=100 ng-class="{\'animate\': $ctrl.animate, \'progress-bar-success\': $ctrl.isOk, \'progress-bar-danger\': $ctrl.isError, \'progress-bar-warning\': $ctrl.isWarn}" ng-style="{width:$ctrl.chartData.percentageUsed + \'%\'}" uib-tooltip="{{$ctrl.chartData.percentageUsed}}% Used"><span ng-if=$ctrl.chartFooter ng-bind-html=$ctrl.chartFooter></span> <span ng-if="(!$ctrl.chartFooter) && (!$ctrl.footerLabelFormat || $ctrl.footerLabelFormat === \'actual\')" ng-style="{\'max-width\':$ctrl.layout.footerLabelWidth}"><strong>{{$ctrl.chartData.used}} {{$ctrl.units}}</strong> Used</span> <span ng-if="(!$ctrl.chartFooter) && $ctrl.footerLabelFormat === \'percent\'" ng-style="{\'max-width\':$ctrl.layout.footerLabelWidth}"><strong>{{$ctrl.chartData.percentageUsed}}%</strong> Used</span></div><div class="progress-bar progress-bar-remaining" ng-style="{width:(100 - $ctrl.chartData.percentageUsed) + \'%\'}" uib-tooltip="{{100 - $ctrl.chartData.percentageUsed}}% Available"></div></div></div></span><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=45></pf-empty-chart></div>'), 
 e.put("charts/utilization-trend/utilization-trend-chart.html", '<div class=utilization-trend-chart-pf ng-class="{\'data-unavailable-pf\': $ctrl.chartData.dataAvailable === false}"><h3>{{$ctrl.config.title}}</h3><div class=current-values><h1 class="available-count pull-left">{{$ctrl.currentValue}}</h1><div class="available-text pull-left"><div><span>{{$ctrl.currentText}}</span></div><div><span>of {{$ctrl.chartData.total}} {{$ctrl.config.units}}</span></div></div></div><div class=donut-chart-pf><pf-donut-pct-chart ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.donutConfig data=$ctrl.chartData center-label=$ctrl.centerLabel></pf-donut-pct-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=231></pf-empty-chart></div><div ng-if="$ctrl.chartData.dataAvailable !== false" class=sparkline-chart><pf-sparkline-chart config=$ctrl.sparklineConfig chart-data=$ctrl.chartData chart-height=$ctrl.sparklineChartHeight show-x-axis=$ctrl.showSparklineXAxis show-y-axis=$ctrl.showSparklineYAxis></pf-sparkline-chart></div><span class="pull-left legend-text">{{$ctrl.legendLeftText}}</span> <span class="pull-right legend-text">{{$ctrl.legendRightText}}</span></div>');
 } ]), angular.module("patternfly.filters").run([ "$templateCache", function(e) {
 "use strict";
 e.put("filters/filter-panel/filter-panel-results.html", '<span class=filter-pf><span class=toolbar-pf-results><h5>{{$ctrl.config.resultsCount}} <span ng-if=$ctrl.config.appliedFilters.length>of {{$ctrl.config.totalCount}}</span> {{$ctrl.config.resultsLabel === undefined ? "Results" : $ctrl.config.resultsLabel}}</h5><p ng-if=$ctrl.config.appliedFilters.length>Active filters:</p><ul class=list-inline><li ng-repeat="filter in $ctrl.config.appliedFilters"><span ng-if="filter.values.length === 1" class="active-filter label label-info single-label"><span class=pf-filter-label-category>{{filter.title}}:</span> {{filter.values[0]}} <a><span ng-click="$ctrl.clearFilter(filter, filter.values[0])" class="pficon pficon-close"></span></a></span> <span ng-if="filter.values.length > 1" class="active-filter label pf-filter-label-category">{{filter.title}}:<ul class="list-inline category-values"><li ng-repeat="value in filter.values"><span class="active-filter label label-info">{{value}} <a><span ng-click="$ctrl.clearFilter(filter, value)" class="pficon pficon-close"></span></a></span></li></ul></span></li></ul><p><a class=clear-filters ng-click=$ctrl.clearAllFilters() ng-if="$ctrl.config.appliedFilters.length > 0">Clear All Filters</a></p></span></span>'), 
-e.put("filters/filter-panel/filter-panel.html", '<div class=filter-pf><span class="dropdown primary-action" uib-dropdown><button class="btn btn-default dropdown-toggle" uib-dropdown-toggle type=button>Filter <span class=caret></span></button><div ng-transclude class=dropdown-menu ng-click=$event.stopPropagation()></div></span><pf-filter-panel-results config=$ctrl.config></pf-filter-panel-results></div>'), e.put("filters/simple-filter/filter-fields.html", '<div class="filter-pf filter-fields"><div class="input-group form-group"><div uib-dropdown class=input-group-btn><button uib-dropdown-toggle type=button class="btn btn-default filter-fields" uib-tooltip="Filter by" tooltip-placement=top tooltip-append-to-body=true>{{$ctrl.currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat="item in $ctrl.config.fields" ng-class="{\'selected\': item === $ctrl.currentField}"><a class=filter-field role=menuitem tabindex=-1 ng-click=$ctrl.selectField(item)>{{item.title}}</a></li></ul></div><div ng-if="$ctrl.currentField.filterType !== \'select\' && $ctrl.currentField.filterType !== \'complex-select\'"><input class=form-control type={{$ctrl.currentField.filterType}} ng-model=$ctrl.currentValue placeholder={{$ctrl.currentField.placeholder}} ng-keypress="$ctrl.onValueKeyPress($event)"></div><div ng-if="$ctrl.currentField.filterType === \'select\'"><div class="btn-group bootstrap-select form-control filter-select" uib-dropdown><button type=button uib-dropdown-toggle class="btn btn-default dropdown-toggle"><span class="filter-option pull-left">{{$ctrl.currentValue.title || $ctrl.currentValue || $ctrl.currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.placeholder}}</a></li><li ng-repeat="filterValue in $ctrl.currentField.filterValues" ng-class="{\'selected\': (filterValue === $ctrl.currentValue)}"><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue(filterValue)>{{filterValue.title || filterValue}}</a></li></ul></div></div><div ng-if="$ctrl.currentField.filterType === \'complex-select\'" class=category-select><div class="btn-group bootstrap-select form-control filter-select" uib-dropdown><button type=button uib-dropdown-toggle class="btn btn-default dropdown-toggle"><span class="filter-option pull-left">{{$ctrl.filterCategory.title || $ctrl.filterCategory || $ctrl.currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.placeholder}}</a></li><li ng-repeat="filterCategory in $ctrl.currentField.filterValues" ng-class="{\'selected\': (filterCategory == $ctrl.filterCategory)}"><a role=menuitem tabindex=-1 ng-click="$ctrl.selectValue(filterCategory, \'filter-category\')">{{filterCategory.title ||filterCategory}}</a></li></ul></div><div class="btn-group bootstrap-select form-control filter-select" uib-dropdown><button type=button uib-dropdown-toggle class="btn btn-default dropdown-toggle category-select-value"><span class="filter-option pull-left">{{$ctrl.filterValue.title || $ctrl.filterValue || $ctrl.currentField.filterCategoriesPlaceholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.filterCategoriesPlaceholder}}</a></li><li ng-repeat="filterValue in $ctrl.currentField.filterCategories[$ctrl.filterCategory.id.toLowerCase() || $ctrl.filterCategory.toLowerCase() ].filterValues" ng-class="{\'selected\': filterValue === $ctrl.filterValue}"><a role=menuitem tabindex=-1 ng-click="$ctrl.selectValue(filterValue, \'filter-value\')">{{filterValue.title || filterValue}}</a></li></ul></div></div></div></div>'), 
-e.put("filters/simple-filter/filter-results.html", '<div class=filter-pf><div class="row toolbar-pf-results"><div class=col-sm-12><h5>{{$ctrl.config.resultsCount}} Results</h5><p ng-if="$ctrl.config.appliedFilters.length > 0">Active filters:</p><ul class=list-inline><li ng-repeat="filter in $ctrl.config.appliedFilters"><span class="active-filter label label-info">{{filter.title}}: {{((filter.value.filterCategory.title || filter.value.filterCategory) + filter.value.filterDelimiter + (filter.value.filterValue.title || filter.value.filterValue)) || filter.value.title || filter.value}} <a><span class="pficon pficon-close" ng-click=$ctrl.clearFilter(filter)></span></a></span></li></ul><p><a class=clear-filters ng-click=$ctrl.clearAllFilters() ng-if="$ctrl.config.appliedFilters.length > 0">Clear All Filters</a></p><div ng-if="$ctrl.config.selectedCount !== undefined && $ctrl.config.totalCount !== undefined" class=pf-table-view-selected-label><strong>{{$ctrl.config.selectedCount}}</strong> of <strong>{{$ctrl.config.totalCount}}</strong> selected</div></div>\x3c!-- /col --\x3e</div>\x3c!-- /row --\x3e</div>'), 
-e.put("filters/simple-filter/filter.html", "<div class=filter-pf><pf-filter-fields config=$ctrl.config add-filter-fn=$ctrl.addFilter></pf-filter-fields><pf-filter-results config=$ctrl.config></pf-filter-results></div>");
+e.put("filters/filter-panel/filter-panel.html", '<div class=filter-pf><span class="dropdown primary-action" uib-dropdown><button class="btn btn-default dropdown-toggle" uib-dropdown-toggle type=button>Filter <span class=caret></span></button><div ng-transclude class=dropdown-menu ng-click=$event.stopPropagation()></div></span><pf-filter-panel-results config=$ctrl.config></pf-filter-panel-results></div>'), e.put("filters/simple-filter/filter-fields.html", '<div class="filter-pf filter-fields"><div class="input-group form-group"><div uib-dropdown class=input-group-btn><button ng-if="$ctrl.config.fields.length > 1" uib-dropdown-toggle type=button class="btn btn-default filter-fields" uib-tooltip="Filter by" tooltip-placement=top tooltip-append-to-body=true>{{$ctrl.currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat="item in $ctrl.config.fields" ng-class="{\'selected\': item === $ctrl.currentField}"><a class=filter-field role=menuitem tabindex=-1 ng-click=$ctrl.selectField(item)>{{item.title}}</a></li></ul></div><div ng-if="$ctrl.currentField.filterType !== \'select\' && $ctrl.currentField.filterType !== \'complex-select\'"><input class=form-control type={{$ctrl.currentField.filterType}} ng-model=$ctrl.currentValue placeholder={{$ctrl.currentField.placeholder}} ng-keypress="$ctrl.onValueKeyPress($event)"></div><div ng-if="$ctrl.currentField.filterType === \'select\'"><div class="btn-group bootstrap-select form-control filter-select" uib-dropdown><button type=button uib-dropdown-toggle class="btn btn-default dropdown-toggle"><span class="filter-option pull-left">{{$ctrl.currentValue.title || $ctrl.currentValue || $ctrl.currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.placeholder}}</a></li><li ng-repeat="filterValue in $ctrl.currentField.filterValues" ng-class="{\'selected\': (filterValue === $ctrl.currentValue)}"><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue(filterValue)>{{filterValue.title || filterValue}}</a></li></ul></div></div><div ng-if="$ctrl.currentField.filterType === \'complex-select\'" class=category-select><div class="btn-group bootstrap-select form-control filter-select" uib-dropdown><button type=button uib-dropdown-toggle class="btn btn-default dropdown-toggle"><span class="filter-option pull-left">{{$ctrl.filterCategory.title || $ctrl.filterCategory || $ctrl.currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.placeholder}}</a></li><li ng-repeat="filterCategory in $ctrl.currentField.filterValues" ng-class="{\'selected\': (filterCategory == $ctrl.filterCategory)}"><a role=menuitem tabindex=-1 ng-click="$ctrl.selectValue(filterCategory, \'filter-category\')">{{filterCategory.title ||filterCategory}}</a></li></ul></div><div class="btn-group bootstrap-select form-control filter-select" uib-dropdown><button type=button uib-dropdown-toggle class="btn btn-default dropdown-toggle category-select-value"><span class="filter-option pull-left">{{$ctrl.filterValue.title || $ctrl.filterValue || $ctrl.currentField.filterCategoriesPlaceholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.filterCategoriesPlaceholder}}</a></li><li ng-repeat="filterValue in $ctrl.currentField.filterCategories[$ctrl.filterCategory.id.toLowerCase() || $ctrl.filterCategory.toLowerCase() ].filterValues" ng-class="{\'selected\': filterValue === $ctrl.filterValue}"><a role=menuitem tabindex=-1 ng-click="$ctrl.selectValue(filterValue, \'filter-value\')">{{filterValue.title || filterValue}}</a></li></ul></div></div></div></div>'), 
+e.put("filters/simple-filter/filter-results.html", '<div class=filter-pf><div class="row toolbar-pf-results"><div class=col-sm-12><span ng-if="$ctrl.config.showTotalCountResults !== true || $ctrl.config.totalCount === undefined || $ctrl.config.appliedFilters.length === 0"><h5 ng-if="$ctrl.config.resultsCount === 1">{{$ctrl.config.resultsCount}} {{$ctrl.config.itemsLabel}}</h5><h5 ng-if="$ctrl.config.resultsCount !== 1">{{$ctrl.config.resultsCount}} {{$ctrl.config.itemsLabelPlural}}</h5></span> <span ng-if="$ctrl.config.showTotalCountResults === true && $ctrl.config.totalCount !== undefined && $ctrl.config.appliedFilters.length > 0"><h5 ng-if="$ctrl.config.totalCount === 1">{{$ctrl.config.resultsCount}} of {{$ctrl.config.totalCount}} {{$ctrl.config.itemsLabel}}</h5><h5 ng-if="$ctrl.config.totalCount !== 1">{{$ctrl.config.resultsCount}} of {{$ctrl.config.totalCount}} {{$ctrl.config.itemsLabelPlural}}</h5></span><p ng-if="$ctrl.config.appliedFilters.length > 0">Active Filters:</p><ul class=list-inline><li ng-repeat="filter in $ctrl.config.appliedFilters"><span class="active-filter label label-info">{{filter.title}}: {{((filter.value.filterCategory.title || filter.value.filterCategory) + filter.value.filterDelimiter + (filter.value.filterValue.title || filter.value.filterValue)) || filter.value.title || filter.value}} <a><span class="pficon pficon-close" ng-click=$ctrl.clearFilter(filter)></span></a></span></li></ul><p><a class=clear-filters ng-click=$ctrl.clearAllFilters() ng-if="$ctrl.config.appliedFilters.length > 0">Clear All Filters</a></p><div ng-if="$ctrl.config.selectedCount !== undefined && $ctrl.config.totalCount !== undefined" class=pf-table-view-selected-label><strong>{{$ctrl.config.selectedCount}}</strong> of <strong>{{$ctrl.config.totalCount}}</strong> selected</div></div>\x3c!-- /col --\x3e</div>\x3c!-- /row --\x3e</div>'), 
+e.put("filters/simple-filter/filter.html", "<div class=filter-pf ng-class=\"{'inline-filter-pf': $ctrl.config.inlineResults === true}\"><pf-filter-fields config=$ctrl.config add-filter-fn=$ctrl.addFilter></pf-filter-fields><pf-filter-results config=$ctrl.config></pf-filter-results></div>");
 } ]), angular.module("patternfly.form").run([ "$templateCache", function(e) {
 "use strict";
 e.put("form/form-buttons/form-buttons.html", '<div class=form-group><div class={{$ctrl.pfButtonContainerClass}}><div class="control-group buttons"><button class="btn btn-default" type=button ng-click=$ctrl.pfHandleCancel() ng-disabled=$ctrl.pfWorking translate>Cancel</button> <button class="btn btn-primary" ng-click="$ctrl.pfHandleSave(); $ctrl.pfWorking = true" ng-disabled="$ctrl.isInvalid() || $ctrl.pfWorking"><i class="icon-spinner icon-spin" ng-show=$ctrl.pfWorking></i> <span ng-show=$ctrl.pfWorking translate>Saving...</span> <span ng-hide=$ctrl.pfWorking translate>Save</span></button></div></div></div>'), e.put("form/form-group/form-group.html", '<div class=form-group ng-class="{ \'has-error\' : $ctrl.hasErrors() }"><label for="{{ $ctrl.pfField }}" class="control-label {{ $ctrl.pfLabelClass }}">{{ $ctrl.pfLabel }}</label><div class="{{ $ctrl.pfInputClass }}"><span ng-transclude></span> <span class=help-block ng-show=$ctrl.error.messages><ul><li ng-repeat="message in $ctrl.error.messages">{{ message }}</li></ul></span></div></div>');
@@ -52017,7 +52020,7 @@ e.put("navigation/application-launcher.html", '<div><div class="applauncher-pf d
 e.put("navigation/vertical-navigation.html", "<div><nav class=\"navbar navbar-pf-vertical\"><div class=navbar-header><button type=button class=navbar-toggle ng-click=$ctrl.handleNavBarToggleClick()><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button> <span class=navbar-brand><img class=navbar-brand-icon ng-if=$ctrl.brandSrc ng-src={{$ctrl.brandSrc}} alt=\"{{$ctrl.brandAlt}}\"> <span class=navbar-brand-txt ng-if=!$ctrl.brandSrc>{{$ctrl.brandAlt}}</span></span></div><nav class=\"collapse navbar-collapse\" ng-transclude></nav><div class=nav-pf-vertical ng-class=\"{'nav-pf-persistent-secondary': $ctrl.persistentSecondary,\n                    'nav-pf-vertical-collapsible-menus': $ctrl.pinnableMenus,\n                    'hidden-icons-pf': $ctrl.hiddenIcons,\n                    'nav-pf-vertical-with-badges': $ctrl.showBadges,\n                    'secondary-visible-pf': $ctrl.activeSecondary,\n                    'show-mobile-secondary': $ctrl.showMobileSecondary,\n                    'show-mobile-tertiary': $ctrl.showMobileTertiary,\n                    'hover-secondary-nav-pf': $ctrl.hoverSecondaryNav,\n                    'hover-tertiary-nav-pf': $ctrl.hoverTertiaryNav,\n                    'collapsed-secondary-nav-pf': $ctrl.collapsedSecondaryNav,\n                    'collapsed-tertiary-nav-pf': $ctrl.collapsedTertiaryNav,\n                    'hidden': $ctrl.inMobileState,\n                    'collapsed': $ctrl.navCollapsed,\n                    'force-hide-secondary-nav-pf': $ctrl.forceHidden,\n                    'show-mobile-nav': $ctrl.showMobileNav}\"><ul class=list-group><li ng-repeat=\"item in $ctrl.items\" class=list-group-item ng-class=\"{'secondary-nav-item-pf': item.children && item.children.length > 0,\n                       'active': item.isActive,\n                       'is-hover': item.isHover,\n                       'mobile-nav-item-pf': item.isMobileItem && $ctrl.showMobileSecondary,\n" + '                       \'mobile-secondary-item-pf\': item.isMobileItem && $ctrl.showMobileTertiary}" ng-mouseenter=$ctrl.handlePrimaryHover(item) ng-mouseleave=$ctrl.handlePrimaryUnHover(item)><a ng-click="$ctrl.handlePrimaryClick(item, $event)"><span class={{item.iconClass}} ng-if=item.iconClass ng-class="{hidden: $ctrl.hiddenIcons}" uib-tooltip={{item.title}} tooltip-append-to-body=true tooltip-enable={{$ctrl.navCollapsed}} tooltip-placement=bottom tooltip-class=nav-pf-vertical-tooltip></span> <span class=list-group-item-value>{{item.title}}</span><div ng-if="$ctrl.showBadges && item.badges" class=badge-container-pf><div class="badge {{badge.badgeClass}}" ng-repeat="badge in item.badges" uib-tooltip={{badge.tooltip}} tooltip-append-to-body=true tooltip-placement=right><span ng-if="badge.count && badge.iconClass" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a><div ng-if="item.children && item.children.length > 0" class=nav-pf-secondary-nav><div class=nav-item-pf-header><a class=secondary-collapse-toggle-pf ng-click="$ctrl.collapseSecondaryNav(item, $event)" ng-class="{\'collapsed\': item.secondaryCollapsed}"></a> <span>{{item.title}}</span></div><ul class=list-group><li ng-repeat="secondaryItem in item.children" class=list-group-item ng-class="{\'tertiary-nav-item-pf\': secondaryItem.children && secondaryItem.children.length > 0,\n                             \'active\': secondaryItem.isActive,\n                             \'is-hover\': secondaryItem.isHover,\n                             \'mobile-nav-item-pf\': secondaryItem.isMobileItem}" ng-mouseenter=$ctrl.handleSecondaryHover(secondaryItem) ng-mouseleave=$ctrl.handleSecondaryUnHover(secondaryItem)><a ng-click="$ctrl.handleSecondaryClick(item, secondaryItem, $event)"><span class=list-group-item-value>{{secondaryItem.title}}</span><div ng-if="showBadges && secondaryItem.badges" class=badge-container-pf><div class="badge {{badge.badgeClass}}" ng-repeat="badge in secondaryItem.badges" uib-tooltip={{badge.tooltip}} tooltip-append-to-body=true tooltip-placement=right><span ng-if="badge.count && badge.iconClass" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a><div ng-if="secondaryItem.children && secondaryItem.children.length > 0" class=nav-pf-tertiary-nav><div class=nav-item-pf-header><a class=tertiary-collapse-toggle-pf ng-click="$ctrl.collapseTertiaryNav(secondaryItem, $event)" ng-class="{\'collapsed\': secondaryItem.tertiaryCollapsed}"></a> <span>{{secondaryItem.title}}</span></div><ul class=list-group><li ng-repeat="tertiaryItem in secondaryItem.children" class=list-group-item ng-class="{\'active\': tertiaryItem.isActive}"><a ng-click="$ctrl.handleTertiaryClick(item, secondaryItem, tertiaryItem, $event)"><span class=list-group-item-value>{{tertiaryItem.title}}</span><div ng-if="$ctrl.showBadges && tertiaryItem.badges" class=badge-container-pf><div class="badge {{badge.badgeClass}}" ng-repeat="badge in tertiaryItem.badges" uib-tooltip={{badge.tooltip}} tooltip-append-to-body=true tooltip-placement=right><span ng-if="badge.count && badge.iconClass" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a></li></ul></div></li></ul></div></li></ul></div></nav></div>');
 } ]), angular.module("patternfly.notification").run([ "$templateCache", function(e) {
 "use strict";
-e.put("notification/inline-notification.html", '<div class="alert alert-{{$ctrl.pfNotificationType}}" ng-class="{\'alert-dismissable\': $ctrl.pfNotificationPersistent === true}"><button ng-show=$ctrl.pfNotificationPersistent ng-click=$ctrl.pfNotificationRemove() type=button class=close data-dismiss=alert aria-hidden=true><span class="pficon pficon-close"></span></button> <span class="pficon pficon-ok" ng-show="$ctrl.pfNotificationType === \'success\'"></span> <span class="pficon pficon-info" ng-show="$ctrl.pfNotificationType === \'info\'"></span> <span class="pficon pficon-error-circle-o" ng-show="$ctrl.pfNotificationType === \'danger\'"></span> <span class="pficon pficon-warning-triangle-o" ng-show="$ctrl.pfNotificationType === \'warning\'"></span> <strong>{{$ctrl.pfNotificationHeader}}</strong> {{$ctrl.pfNotificationMessage}}</div>'), e.put("notification/notification-drawer.html", '<div class=drawer-pf ng-class="{\'hide\': $ctrl.drawerHidden, \'drawer-pf-expanded\': $ctrl.drawerExpanded}"><div ng-if=$ctrl.drawerTitle class=drawer-pf-title><a ng-if=$ctrl.allowExpand class="drawer-pf-toggle-expand fa fa-angle-double-left" ng-click=$ctrl.toggleExpandDrawer()></a> <a ng-if=$ctrl.onClose class="drawer-pf-close pficon pficon-close" ng-click=$ctrl.onClose()></a><h3 class=text-center>{{$ctrl.drawerTitle}}</h3></div><div ng-if=$ctrl.titleInclude class=drawer-pf-title ng-include src=$ctrl.titleInclude></div><div ng-if=!$ctrl.notificationGroups class=apf-blank-notification-groups><pf-empty-state config=$ctrl.emptyStateConfig></pf-empty-state></div><div ng-if=$ctrl.notificationGroups pf-fixed-accordion scroll-selector=.panel-body><div class=panel-group><div class="panel panel-default" ng-repeat="notificationGroup in $ctrl.notificationGroups track by $index"><div class=panel-heading><h4 class=panel-title><a ng-if=!$ctrl.singleGroup ng-click=$ctrl.toggleCollapse(notificationGroup) ng-class="{collapsed: !notificationGroup.open}" ng-include src=$ctrl.headingInclude></a> <span ng-if=$ctrl.singleGroup ng-include src=$ctrl.headingInclude></span></h4><span class=panel-counter ng-include src=$ctrl.subheadingInclude></span></div><div class="panel-collapse collapse" ng-class="{in: notificationGroup.open || $ctrl.notificationGroups.length === 1}"><div ng-if=$ctrl.hasNotifications(notificationGroup) class=panel-body><div class=drawer-pf-notification ng-class="{unread: notification.unread, \'expanded-notification\': $ctrl.drawerExpanded}" ng-repeat="notification in notificationGroup.notifications" ng-include src=$ctrl.notificationBodyInclude></div><div ng-if=notificationGroup.isLoading class="drawer-pf-loading text-center"><span class="spinner spinner-xs spinner-inline"></span> Loading More</div></div><div ng-if="($ctrl.showClearAll || $ctrl.showMarkAllRead) && $ctrl.hasNotifications(notificationGroup)" class=drawer-pf-action><span class=drawer-pf-action-link ng-if="$ctrl.showMarkAllRead && $ctrl.hasUnread(notificationGroup)"><button class="btn btn-link" ng-click=$ctrl.onMarkAllRead(notificationGroup)>Mark All Read</button></span> <span class=drawer-pf-action-link><button class="btn btn-link" ng-if=$ctrl.showClearAll ng-click=$ctrl.onClearAll(notificationGroup)><span class="pficon pficon-close"></span> Clear All</button></span></div><div ng-if="$ctrl.actionButtonTitle && $ctrl.hasNotifications(notificationGroup)" class=drawer-pf-action><a class="btn btn-link btn-block" ng-click=$ctrl.actionButtonCallback(notificationGroup)>{{$ctrl.actionButtonTitle}}</a></div><div ng-if=!$ctrl.hasNotifications(notificationGroup)><div class=panel-body><pf-empty-state config=notificationGroup.emptyStateConfig></pf-empty-state></div></div><div ng-if=$ctrl.notificationFooterInclude ng-include src=$ctrl.notificationFooterInclude></div></div></div></div></div></div>'), 
+e.put("notification/inline-notification.html", '<div class="alert alert-{{$ctrl.pfNotificationType}}" ng-class="{\'alert-dismissable\': $ctrl.pfNotificationPersistent === true}"><button ng-show=$ctrl.pfNotificationPersistent ng-click=$ctrl.pfNotificationRemove() type=button class=close data-dismiss=alert aria-hidden=true><span class="pficon pficon-close"></span></button> <span class="pficon pficon-ok" ng-show="$ctrl.pfNotificationType === \'success\'"></span> <span class="pficon pficon-info" ng-show="$ctrl.pfNotificationType === \'info\'"></span> <span class="pficon pficon-error-circle-o" ng-show="$ctrl.pfNotificationType === \'danger\'"></span> <span class="pficon pficon-warning-triangle-o" ng-show="$ctrl.pfNotificationType === \'warning\'"></span> <strong>{{$ctrl.pfNotificationHeader}}</strong> {{$ctrl.pfNotificationMessage}}</div>'), e.put("notification/notification-drawer.html", '<div class=drawer-pf ng-class="{\'hide\': $ctrl.drawerHidden, \'drawer-pf-expanded\': $ctrl.drawerExpanded}"><div ng-if=$ctrl.drawerTitle class=drawer-pf-title><a ng-if=$ctrl.allowExpand class="drawer-pf-toggle-expand fa fa-angle-double-left" ng-click=$ctrl.toggleExpandDrawer()></a> <a ng-if=$ctrl.onClose class="drawer-pf-close pficon pficon-close" ng-click=$ctrl.onClose()></a><h3 class=text-center>{{$ctrl.drawerTitle}}</h3></div><div ng-if=$ctrl.titleInclude class=drawer-pf-title ng-include src=$ctrl.titleInclude></div><div ng-if=!$ctrl.notificationGroups class=apf-blank-notification-groups><pf-empty-state config=$ctrl.emptyStateConfig></pf-empty-state></div><div ng-if=$ctrl.notificationGroups pf-fixed-accordion scroll-selector=.panel-body><div class=panel-group><div class="panel panel-default" ng-repeat="notificationGroup in $ctrl.notificationGroups track by $index"><div class=panel-heading><h4 class=panel-title><a ng-if=!$ctrl.singleGroup ng-click=$ctrl.toggleCollapse(notificationGroup) ng-class="{collapsed: !notificationGroup.open}" ng-include src=$ctrl.headingInclude></a> <span ng-if=$ctrl.singleGroup ng-include src=$ctrl.headingInclude></span></h4><span class=panel-counter ng-include src=$ctrl.subheadingInclude></span></div><div class="panel-collapse collapse" ng-class="{in: notificationGroup.open || $ctrl.notificationGroups.length === 1}"><div ng-if=$ctrl.hasNotifications(notificationGroup) class=panel-body><div class=drawer-pf-notification ng-class="{unread: notification.unread, \'expanded-notification\': $ctrl.drawerExpanded}" ng-repeat="notification in notificationGroup.notifications track by $ctrl.notificationTrackField ? notification[$ctrl.notificationTrackField] || $index : $index" ng-include src=$ctrl.notificationBodyInclude></div><div ng-if=notificationGroup.isLoading class="drawer-pf-loading text-center"><span class="spinner spinner-xs spinner-inline"></span> Loading More</div></div><div ng-if="($ctrl.showClearAll || $ctrl.showMarkAllRead) && $ctrl.hasNotifications(notificationGroup)" class=drawer-pf-action><span class=drawer-pf-action-link ng-if="$ctrl.showMarkAllRead && $ctrl.hasUnread(notificationGroup)"><button class="btn btn-link" ng-click=$ctrl.onMarkAllRead(notificationGroup)>Mark All Read</button></span> <span class=drawer-pf-action-link><button class="btn btn-link" ng-if=$ctrl.showClearAll ng-click=$ctrl.onClearAll(notificationGroup)><span class="pficon pficon-close"></span> Clear All</button></span></div><div ng-if="$ctrl.actionButtonTitle && $ctrl.hasNotifications(notificationGroup)" class=drawer-pf-action><a class="btn btn-link btn-block" ng-click=$ctrl.actionButtonCallback(notificationGroup)>{{$ctrl.actionButtonTitle}}</a></div><div ng-if=!$ctrl.hasNotifications(notificationGroup)><div class=panel-body><pf-empty-state config=notificationGroup.emptyStateConfig></pf-empty-state></div></div><div ng-if=$ctrl.notificationFooterInclude ng-include src=$ctrl.notificationFooterInclude></div></div></div></div></div></div>'), 
 e.put("notification/notification-list.html", '<div data-ng-show="$ctrl.notifications.data.length > 0"><div ng-repeat="notification in $ctrl.notifications.data"><pf-inline-notification pf-notification-type=notification.type pf-notification-header=notification.header pf-notification-message=notification.message pf-notification-persistent=notification.isPersistent pf-notification-index=$index></pf-inline-notification></div></div>'), e.put("notification/toast-notification-list.html", '<div class=toast-notifications-list-pf data-ng-show="$ctrl.notifications.length > 0"><div ng-repeat="notification in $ctrl.notifications"><pf-toast-notification notification-type={{notification.type}} header={{notification.header}} message={{notification.message}} show-close="{{($ctrl.showClose || notification.isPersistent === true) && !(notification.menuActions && notification.menuActions.length > 0)}}" close-callback=$ctrl.handleClose action-title={{notification.actionTitle}} action-callback=notification.actionCallback menu-actions=notification.menuActions update-viewing=$ctrl.handleViewingChange data=notification></pf-toast-notification></div></div>'), 
 e.put("notification/toast-notification.html", '<div class="toast-pf alert alert-{{$ctrl.notificationType}}" ng-class="{\'alert-dismissable\': $ctrl.showCloseButton}" ng-mouseenter=$ctrl.handleEnter() ng-mouseleave=$ctrl.handleLeave()><div uib-dropdown class="pull-right dropdown-kebab-pf" ng-if="$ctrl.menuActions && $ctrl.menuActions.length > 0"><button uib-dropdown-toggle class="btn btn-link" type=button id=dropdownKebabRight><span class="fa fa-ellipsis-v"></span></button><ul uib-dropdown-menu class=dropdown-menu-right aria-labelledby=dropdownKebabRight><li ng-repeat="menuAction in $ctrl.menuActions" role="{{menuAction.isSeparator === true ? \'separator\' : \'menuitem\'}}" ng-class="{\'divider\': menuAction.isSeparator === true, \'disabled\': menuAction.isDisabled === true}"><a ng-if="menuAction.isSeparator !== true" class=secondary-action title={{menuAction.title}} ng-click=$ctrl.handleMenuAction(menuAction)>{{menuAction.name}}</a></li></ul></div><button ng-if=$ctrl.showCloseButton type=button class=close aria-hidden=true ng-click=$ctrl.handleClose()><span class="pficon pficon-close"></span></button><div class="pull-right toast-pf-action" ng-if=$ctrl.actionTitle><a ng-click=$ctrl.handleAction()>{{$ctrl.actionTitle}}</a></div><span class="pficon pficon-ok" ng-if="$ctrl.notificationType === \'success\'"></span> <span class="pficon pficon-info" ng-if="$ctrl.notificationType === \'info\'"></span> <span class="pficon pficon-error-circle-o" ng-if="$ctrl.notificationType === \'danger\'"></span> <span class="pficon pficon-warning-triangle-o" ng-if="$ctrl.notificationType === \'warning\'"></span> <span ng-if=$ctrl.header><strong>{{$ctrl.header}}</strong> {{$ctrl.message}}</span> <span ng-if=!$ctrl.header>{{$ctrl.message}}</span></div>');
 } ]), angular.module("patternfly.pagination").run([ "$templateCache", function(e) {
@@ -72745,13 +72748,13 @@ description: "Name must consist of lower-case letters, numbers, periods, and hyp
 }).constant("IS_IOS", /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream), hawtioPluginLoader.addModule("openshiftCommonUI"), angular.module("openshiftCommonUI").run([ "$templateCache", function(e) {
 "use strict";
 e.put("src/components/binding/bindApplicationForm.html", '<div class="bind-form">\n  <form>\n    <div class="form-group">\n      <label>\n        <h3>Create a binding for application <strong>{{ctrl.applicationName}}</strong></h3>\n      </label>\n      <span class="help-block">\n        Bindings create a secret containing the necessary information for an application to use a service.\n      </span>\n    </div>\n  </form>\n\n  <label ng-if="!ctrl.allowNoBinding">\n    Select a service:\n  </label>\n  <form name="ctrl.formName">\n    <fieldset>\n      <div class="radio">\n        <div ng-if="ctrl.allowNoBinding" class="bind-service-selection">\n          <label>\n            <input type="radio" ng-model="ctrl.serviceToBind" ng-value="null">\n            Do not bind at this time.\n          </label>\n          <div class="bind-description">\n          <span class="help-block service-instance-name">\n            Bindings can be created later from within a project.\n          </span>\n          </div>\n        </div>\n        <div ng-repeat="serviceInstance in ctrl.bindableServiceInstances" class="bind-service-selection">\n          <label>\n            <input type="radio" ng-model="ctrl.serviceToBind" ng-value="serviceInstance">\n            {{ctrl.serviceClasses[serviceInstance.spec.serviceClassName].externalMetadata.displayName || serviceInstance.spec.serviceClassName}}\n          </label>\n          <div class="bind-description">\n            <span class="pficon pficon-info"\n                  ng-if="!(serviceInstance | isServiceInstanceReady)"\n                  data-content="This service is not yet ready. If you bind to it, then the binding will be pending until the service is ready."\n                  data-toggle="popover"\n                  data-trigger="hover">\n            </span>\n            <span class="help-block service-instance-name">\n              {{serviceInstance.metadata.name}}\n            </span>\n          </div>\n        </div>\n        <h4 ng-if="!ctrl.bindableServiceInstances.length">\n          <span class="pficon pficon-info" aria-hidden="true"></span>\n          <span class="help-block service-instance-name">\n            There are no bindable services in this project\n          </span>\n        </h4>\n      </div>\n    </fieldset>\n  </form>\n</div>\n'), 
-e.put("src/components/binding/bindResults.html", '<div ng-if="!ctrl.error">\n  <div ng-if="!(ctrl.binding | isBindingReady)" class="bind-status" ng-class="{\'text-center\': !ctrl.progressInline, \'show-progress\': !ctrl.progressInline}">\n    <div class="spinner" ng-class="{\'spinner-sm\': ctrl.progressInline, \'spinner-inline\': ctrl.progressInline, \'spinner-lg\': !ctrl.progressInline}" aria-hidden="true"></div>\n    <h3 class="bind-message">\n      <span class="sr-only">Pending</span>\n      <div class="bind-pending-message" ng-class="{\'progress-inline\': ctrl.progressInline}">The binding was created but is not ready yet.</div>\n    </h3>\n  </div>\n  <div ng-if="(ctrl.binding | isBindingReady)">\n    <div class="bind-status">\n      <span class="pficon pficon-ok" aria-hidden="true"></span>\n      <span class="sr-only">Success</span>\n      <h3 class="bind-message">\n        <strong>{{ctrl.serviceToBind}}</strong>\n        <span>has been bound</span>\n        <span ng-if="ctrl.bindType === \'application\'"> to <strong>{{ctrl.applicationToBind}}</strong> successfully</span>\n      </h3>\n    </div>\n    <div class="sub-title">\n      The binding operation created the secret\n      <a ng-if="ctrl.secretHref && \'secrets\' | canI : \'list\'"\n         ng-href="{{ctrl.secretHref}}">{{ctrl.binding.spec.secretName}}</a>\n      <span ng-if="!ctrl.secretHref || !(\'secrets\' | canI : \'list\')">{{ctrl.binding.spec.secretName}}</span>\n      that you may need to reference in your application.\n      <span ng-if="ctrl.showPodPresets">Its data will be available to your application as environment variables.</span>\n    </div>\n    <div class="alert alert-info bind-info">\n      <span class="pficon pficon-info" aria-hidden="true"></span>\n      <span class="sr-only">Info</span>\n      The binding secret will only be available to new pods. You will need to redeploy your application.\n    </div>\n  </div>\n</div>\n<div ng-if="ctrl.error">\n  <div class="bind-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <span class="sr-only">Error</span>\n    <h3 class="bind-message">\n      <span>Binding Failed</span>\n    </h3>\n  </div>\n  <div class="sub-title">\n    <span ng-if="ctrl.error.data.message">\n      {{ctrl.error.data.message | upperFirst}}\n    </span>\n    <span ng-if="!ctrl.error.data.message">\n      An error occurred creating the binding.\n    </span>\n  </div>\n</div>\n'), 
-e.put("src/components/binding/bindServiceForm.html", '<div class="bind-form">\n  <form>\n    <div class="form-group">\n        <label>\n          <h3>Create a binding for <strong>{{ctrl.serviceClass.externalMetadata.displayName || ctrl.serviceClassName}}</strong></h3>\n        </label>\n        <span class="help-block">Bindings create a secret containing the necessary information for an application to use this service.</span>\n    </div>\n  </form>\n\n  <form name="ctrl.formName" class="mar-bottom-lg">\n    <fieldset>\n      <div class="radio">\n        <label class="bind-choice" ng-disabled="!ctrl.applications.length">\n          <input type="radio" ng-model="ctrl.bindType" value="application" ng-disabled="!ctrl.applications.length">\n          Create a secret and inject it into an application\n        </label>\n        <div class="application-select">\n          <ui-select ng-model="ctrl.appToBind"\n                     ng-disabled="ctrl.bindType !== \'application\'"\n                     ng-required="ctrl.bindType === \'application\'">\n            <ui-select-match placeholder="{{ctrl.applications.length ? \'Select an application\' : \'There are no applications in this project\'}}">\n              <span>\n                {{$select.selected.metadata.name}}\n                <small class="text-muted">&ndash; {{$select.selected.kind | humanizeKind : true}}</small>\n              </span>\n            </ui-select-match>\n            <ui-select-choices\n              repeat="application in (ctrl.applications) | filter : { metadata: { name: $select.search } } track by (application | uid)"\n              group-by="ctrl.groupByKind">\n              <span ng-bind-html="application.metadata.name | highlight : $select.search"></span>\n            </ui-select-choices>\n          </ui-select>\n        </div>\n        <label class="bind-choice">\n          <input type="radio" ng-model="ctrl.bindType" value="secret-only">\n          Create a secret in <strong>{{ctrl.projectName}}</strong> to be used later\n        </label>\n        <div class="help-block bind-description">\n          Secrets can be referenced later from an application.\n        </div>\n        <label ng-if="ctrl.allowNoBinding" class="bind-choice">\n          <input type="radio" ng-model="ctrl.bindType" value="none">\n          Do not bind at this time\n        </label>\n        <div ng-if="ctrl.allowNoBinding" class="help-block bind-description">\n          Bindings can be created later from within a project.\n        </div>\n      </div>\n    </fieldset>\n  </form>\n</div>\n'), 
+e.put("src/components/binding/bindResults.html", '<div ng-if="!ctrl.error">\n  <div ng-if="ctrl.binding && !(ctrl.binding | isBindingReady)" class="bind-status" ng-class="{\'text-center\': !ctrl.progressInline, \'show-progress\': !ctrl.progressInline}">\n    <div class="spinner" ng-class="{\'spinner-sm\': ctrl.progressInline, \'spinner-inline\': ctrl.progressInline, \'spinner-lg\': !ctrl.progressInline}" aria-hidden="true"></div>\n    <h3 class="bind-message">\n      <span class="sr-only">Pending</span>\n      <div class="bind-pending-message" ng-class="{\'progress-inline\': ctrl.progressInline}">The binding was created but is not ready yet.</div>\n    </h3>\n  </div>\n  <div ng-if="(ctrl.binding | isBindingReady)">\n    <div class="bind-status">\n      <span class="pficon pficon-ok" aria-hidden="true"></span>\n      <span class="sr-only">Success</span>\n      <h3 class="bind-message">\n        <strong>{{ctrl.serviceToBind}}</strong>\n        <span>has been bound</span>\n        <span ng-if="ctrl.bindType === \'application\'"> to <strong>{{ctrl.applicationToBind}}</strong> successfully</span>\n      </h3>\n    </div>\n    <div class="sub-title">\n      The binding operation created the secret\n      <a ng-if="ctrl.secretHref && \'secrets\' | canI : \'list\'"\n         ng-href="{{ctrl.secretHref}}">{{ctrl.binding.spec.secretName}}</a>\n      <span ng-if="!ctrl.secretHref || !(\'secrets\' | canI : \'list\')">{{ctrl.binding.spec.secretName}}</span>\n      that you may need to reference in your application.\n      <span ng-if="ctrl.showPodPresets">Its data will be available to your application as environment variables.</span>\n    </div>\n    <div class="alert alert-info bind-info">\n      <span class="pficon pficon-info" aria-hidden="true"></span>\n      <span class="sr-only">Info</span>\n      The binding secret will only be available to new pods. You will need to redeploy your application.\n    </div>\n  </div>\n</div>\n<div ng-if="ctrl.error">\n  <div class="bind-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <span class="sr-only">Error</span>\n    <h3 class="bind-message">\n      <span>Binding Failed</span>\n    </h3>\n  </div>\n  <div class="sub-title">\n    <span ng-if="ctrl.error.data.message">\n      {{ctrl.error.data.message | upperFirst}}\n    </span>\n    <span ng-if="!ctrl.error.data.message">\n      An error occurred creating the binding.\n    </span>\n  </div>\n</div>\n'), 
+e.put("src/components/binding/bindServiceForm.html", '<div class="bind-form">\n  <form>\n    <div class="form-group">\n      <label>\n        <h3>Create a binding for <strong>{{ctrl.serviceClass.externalMetadata.displayName || ctrl.serviceClassName}}</strong></h3>\n      </label>\n      <span class="help-block">Bindings create a secret containing the necessary information for an application to use this service.</span>\n    </div>\n  </form>\n\n  <form ng-if="ctrl.allowNoBinding || ctrl.showPodPresets" name="ctrl.formName" class="mar-bottom-lg">\n    <fieldset>\n      <div class="radio">\n        <label ng-if="ctrl.showPodPresets" class="bind-choice" ng-disabled="!ctrl.applications.length">\n          <input type="radio" ng-model="ctrl.bindType" value="application" ng-disabled="!ctrl.applications.length">\n          Create a secret and inject it into an application\n        </label>\n        <div ng-if="ctrl.showPodPresets" class="application-select">\n          <ui-select ng-model="ctrl.appToBind"\n                     ng-disabled="ctrl.bindType !== \'application\'"\n                     ng-required="ctrl.bindType === \'application\'">\n            <ui-select-match placeholder="{{ctrl.applications.length ? \'Select an application\' : \'There are no applications in this project\'}}">\n              <span>\n                {{$select.selected.metadata.name}}\n                <small class="text-muted">&ndash; {{$select.selected.kind | humanizeKind : true}}</small>\n              </span>\n            </ui-select-match>\n            <ui-select-choices\n              repeat="application in (ctrl.applications) | filter : { metadata: { name: $select.search } } track by (application | uid)"\n              group-by="ctrl.groupByKind">\n              <span ng-bind-html="application.metadata.name | highlight : $select.search"></span>\n            </ui-select-choices>\n          </ui-select>\n        </div>\n        <label class="bind-choice">\n          <input type="radio" ng-model="ctrl.bindType" value="secret-only">\n          Create a secret in <strong>{{ctrl.projectName}}</strong> to be used later\n        </label>\n        <div class="help-block bind-description">\n          Secrets can be referenced later from an application.\n        </div>\n        <label ng-if="ctrl.allowNoBinding" class="bind-choice">\n          <input type="radio" ng-model="ctrl.bindType" value="none">\n          Do not bind at this time\n        </label>\n        <div ng-if="ctrl.allowNoBinding" class="help-block bind-description">\n          Bindings can be created later from within a project.\n        </div>\n      </div>\n    </fieldset>\n  </form>\n</div>\n'), 
 e.put("src/components/create-project/createProject.html", '<form name="createProjectForm" novalidate>\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="name" class="required">Name</label>\n      <span ng-class="{\'has-error\': (createProjectForm.name.$error.pattern && createProjectForm.name.$touched) || nameTaken}">\n        <input class="form-control"\n            name="name"\n            id="name"\n            placeholder="my-project"\n            type="text"\n            required\n            take-focus\n            minlength="2"\n            maxlength="63"\n            pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?"\n            aria-describedby="nameHelp"\n            ng-model="name"\n            ng-model-options="{ updateOn: \'default blur\' }"\n            ng-change="nameTaken = false"\n            autocorrect="off"\n            autocapitalize="off"\n            spellcheck="false">\n      </span>\n      <div>\n        <span class="help-block">A unique name for the project.</span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.required && createProjectForm.name.$dirty">\n          Name is required.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.minlength && createProjectForm.name.$touched">\n          Name must have at least two characters.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.pattern && createProjectForm.name.$touched">\n          Project names may only contain lower-case letters, numbers, and dashes.\n          They may not start or end with a dash.\n        </span>\n      </div>\n      <div class="has-error">\n        <span class="help-block" ng-if="nameTaken">\n          This name is already in use. Please choose a different name.\n        </span>\n      </div>\n    </div>\n\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control"\n          name="displayName"\n          id="displayName"\n          placeholder="My Project"\n          type="text"\n          ng-model="displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n      <textarea class="form-control"\n          name="description"\n          id="description"\n          placeholder="A short description."\n          ng-model="description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n          class="btn btn-primary"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="createProject()"\n          ng-disabled="createProjectForm.$invalid || nameTaken || disableInputs"\n          value="">\n        Create\n      </button>\n      <button\n          class="btn btn-default"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelCreateProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
 e.put("src/components/delete-project/delete-project-button.html", '<div class="actions">\n  \x3c!-- Avoid whitespace inside the link --\x3e\n  <a href=""\n     ng-click="$event.stopPropagation(); openDeleteModal()"\n     role="button"\n     class="action-button"\n     ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n     ng-class="{ \'disabled-link\': disableDelete }"\n    ><i class="fa fa-trash-o" aria-hidden="true"\n    ></i><span class="sr-only">Delete Project {{projectName}}</span></a>\n</div>\n'), e.put("src/components/delete-project/delete-project-modal.html", '<div class="delete-resource-modal">\n  \x3c!-- Use a form so that the enter key submits when typing a project name to confirm. --\x3e\n  <form>\n    <div class="modal-body">\n      <h1>Are you sure you want to delete the project \'<strong>{{project | displayName}}</strong>\'?</h1>\n      <p>\n        This will <strong>delete all resources</strong> associated with\n        the project {{project | displayName}} and <strong>cannot be\n        undone</strong>.  Make sure this is something you really want to do!\n      </p>\n      <div ng-show="typeNameToConfirm">\n        <p>Type the name of the project to confirm.</p>\n        <p>\n          <label class="sr-only" for="resource-to-delete">project to delete</label>\n          <input\n              ng-model="confirmName"\n              id="resource-to-delete"\n              type="text"\n              class="form-control input-lg"\n              autocorrect="off"\n              autocapitalize="off"\n              spellcheck="false"\n              autofocus>\n        </p>\n      </div>\n    </div>\n    <div class="modal-footer">\n      <button ng-disabled="typeNameToConfirm && confirmName !== project.metadata.name && confirmName !== (project | displayName : false)" class="btn btn-lg btn-danger" type="submit" ng-click="delete()">Delete</button>\n      <button class="btn btn-lg btn-default" type="button" ng-click="cancel()">Cancel</button>\n    </div>\n  </form>\n</div>\n'), 
 e.put("src/components/delete-project/delete-project.html", '<a href="javascript:void(0)"\n   ng-click="openDeleteModal()"\n   role="button"\n   ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n   ng-class="{ \'disabled-link\': disableDelete }"\n>{{label || \'Delete\'}}</a>\n'), e.put("src/components/edit-project/editProject.html", '<form name="editProjectForm">\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control"\n             name="displayName"\n             id="displayName"\n             placeholder="My Project"\n             type="text"\n             ng-model="editableFields.displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n                    <textarea class="form-control"\n                              name="description"\n                              id="description"\n                              placeholder="A short description."\n                              ng-model="editableFields.description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n              class="btn btn-primary"\n              ng-class="{\'dialog-btn\': isDialog}"\n              ng-click="update()"\n              ng-disabled="editProjectForm.$invalid || disableInputs"\n              value="">{{submitButtonLabel}}</button>\n      <button\n          class="btn btn-default"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelEditProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
 e.put("src/components/origin-modal-popup/origin-modal-popup.html", '<div class="origin-modal-popup tile-click-prevent" ng-if="$ctrl.shown" ng-style="$ctrl.positionStyle"\n     ng-class="{\'position-above\': $ctrl.showAbove, \'position-left\': $ctrl.showLeft}">\n  <h4 class="origin-modal-popup-title">\n    {{$ctrl.modalTitle}}\n  </h4>\n  <div ng-transclude></div>\n  <a href="" class="origin-modal-popup-close" ng-click="$ctrl.onClose()">\n    <span class="pficon pficon-close"></span>\n  </a>\n</div>\n'), e.put("src/components/toast-notifications/toast-notifications.html", '<div class="toast-notifications-list-pf">\n  <div ng-repeat="(notificationID, notification) in notifications track by (notificationID + (notification.message || notification.details))" ng-if="!notification.hidden || notification.isHover"\n       ng-mouseenter="setHover(notification, true)" ng-mouseleave="setHover(notification, false)">\n    <div class="toast-pf alert {{notification.type | alertStatus}}" ng-class="{\'alert-dismissable\': !hideCloseButton}">\n      <button ng-if="!hideCloseButton" type="button" class="close" ng-click="close(notification)">\n        <span class="pficon pficon-close" aria-hidden="true"></span>\n        <span class="sr-only">Close</span>\n      </button>\n      <span class="{{notification.type | alertIcon}}" aria-hidden="true"></span>\n      <span class="sr-only">{{notification.type}}</span>\n      <span class="toast-notification-message" ng-if="notification.message">{{notification.message}}</span>\n      <div ng-if="notification.details" class="toast-notification-details">\n        <truncate-long-text\n          limit="200"\n          content="notification.details"\n          use-word-boundary="true"\n          expandable="true"\n          hide-collapse="true">\n        </truncate-long-text>\n      </div>\n      <span ng-repeat="link in notification.links">\n        <a ng-if="!link.href" href="" ng-click="onClick(notification, link)" role="button">{{link.label}}</a>\n        <a ng-if="link.href" ng-href="{{link.href}}" ng-attr-target="{{link.target}}">{{link.label}}</a>\n        <span ng-if="!$last" class="toast-action-divider">|</span>\n      </span>\n    </div>\n  </div>\n</div>\n'), 
-e.put("src/components/truncate-long-text/truncateLongText.html", '\x3c!--\n  Do not remove class `truncated-content` (here or below) even though it\'s not\n  styled directly in origin-web-common.  `truncated-content` is used by\n  origin-web-console in certain contexts.\n--\x3e\n<span ng-if="!truncated" ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n<span ng-if="truncated">\n  <span ng-if="!toggles.expanded">\n    <span ng-attr-title="{{content}}" class="truncation-block">\n      <span ng-bind-html="truncatedContent | highlightKeywords : keywords" class="truncated-content"></span>&hellip;\n    </span>\n    <a ng-if="expandable" href="" ng-click="toggles.expanded = true" class="nowrap">See All</a>\n  </span>\n  <span ng-if="toggles.expanded">\n    <div ng-if="prettifyJson" class="well">\n      <span ng-if="!hideCollapse" class="pull-right" style="margin-top: -10px;"><a href="" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a></span>\n      <span ng-bind-html="content | prettifyJSON | highlightKeywords : keywords" class="pretty-json truncated-content"></span>\n    </div>\n    <span ng-if="!prettifyJson">\n      <span ng-if="!hideCollapse" class="pull-right"><a href="" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a></span>\n      <span ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n    </span>\n  </span>\n</span>\n');
+e.put("src/components/truncate-long-text/truncateLongText.html", '\x3c!--\n  Do not remove class `truncated-content` (here or below) even though it\'s not\n  styled directly in origin-web-common.  `truncated-content` is used by\n  origin-web-console in certain contexts.\n--\x3e\n<span ng-if="!truncated" ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n<span ng-if="truncated">\n  <span ng-if="!toggles.expanded">\n    <span ng-attr-title="{{content}}" class="truncation-block">\n      <span ng-bind-html="truncatedContent | highlightKeywords : keywords" class="truncated-content"></span>&hellip;\n    </span>\n    <a ng-if="expandable" href="" ng-click="toggles.expanded = true" class="truncation-expand-link">See All</a>\n  </span>\n  <span ng-if="toggles.expanded">\n    <div ng-if="prettifyJson" class="well">\n      <a href="" ng-if="!hideCollapse" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a>\n      <span ng-bind-html="content | prettifyJSON | highlightKeywords : keywords" class="pretty-json truncated-content"></span>\n    </div>\n    <span ng-if="!prettifyJson">\n      <a href="" ng-if="!hideCollapse" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a>\n      <span ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n    </span>\n  </span>\n</span>\n');
 } ]), angular.module("openshiftCommonUI").component("bindApplicationForm", {
 controllerAs: "ctrl",
 bindings: {
@@ -72799,6 +72802,7 @@ controllerAs: "ctrl",
 bindings: {
 serviceClass: "<",
 serviceClassName: "<",
+showPodPresets: "<",
 applications: "<",
 formName: "=",
 allowNoBinding: "<?",
@@ -73137,7 +73141,7 @@ n ? (t.truncatedContent = e(n, t.limit, t.useWordBoundary, t.newlineLimit), t.tr
 } ]), angular.module("openshiftCommonUI").filter("alertStatus", function() {
 return function(e) {
 var t;
-switch (e) {
+switch (e.toLowerCase()) {
 case "error":
 t = "alert-danger";
 break;
@@ -73150,6 +73154,10 @@ case "success":
 t = "alert-success";
 break;
 
+case "normal":
+t = "alert-info";
+break;
+
 default:
 t = "alert-info";
 }
@@ -73158,7 +73166,7 @@ return t;
 }).filter("alertIcon", function() {
 return function(e) {
 var t;
-switch (e) {
+switch (e.toLowerCase()) {
 case "error":
 t = "pficon pficon-error-circle-o";
 break;
@@ -73169,6 +73177,10 @@ break;
 
 case "success":
 t = "pficon pficon-ok";
+break;
+
+case "normal":
+t = "pficon pficon-info";
 break;
 
 default:
@@ -73799,15 +73811,33 @@ var n = _.get(e, "spec.planName");
 return _.find(t.plans, {
 name: n
 });
-}, l = function(e, i) {
-var r = s(e, i);
-return _.has(r, [ "alphaBindingCreateParameterSchema", "properties", "template.openshift.io/requester-username" ]) ? n.withUser().then(function(e) {
-return {
-"template.openshift.io/requester-username": e.metadata.name
+}, l = e("generateName"), c = function(e) {
+var t = _.truncate(e, {
+length: r.maxlength - 5 - 1,
+omission: ""
+});
+return l(t, 5);
+}, u = function(e, t, n) {
+var i = {
+apiVersion: "v1",
+kind: "Secret",
+metadata: {
+name: e,
+ownerReferences: [ {
+apiVersion: n.apiVersion,
+kind: n.kind,
+name: n.metadata.name,
+uid: n.metadata.uid,
+controller: !1,
+blockOwnerDeletion: !1
+} ]
+},
+type: "Opaque",
+stringData: {}
 };
-}) : t.when({});
-}, c = e("generateName"), u = function(e, t, n) {
-var i = e.metadata.name, o = c(_.truncate(i, r.maxlength - 6) + "-"), a = {
+return i.stringData.parameters = JSON.stringify(t), i;
+}, d = function(e, t, n) {
+var n, i = e.metadata.name, r = {
 kind: "Binding",
 apiVersion: "servicecatalog.k8s.io/v1alpha1",
 metadata: {
@@ -73817,24 +73847,29 @@ spec: {
 instanceRef: {
 name: i
 },
-secretName: o
+secretName: c(e.metadata.name + "-credentials-")
 }
 };
-_.isEmpty(n) || (a.spec.parameters = n);
-var s = _.get(t, "spec.selector");
-return s && (s.matchLabels || s.matchExpressions || (s = {
-matchLabels: s
-}), a.spec.alphaPodPresetTemplate = {
-name: o,
-selector: s
-}), a;
-}, d = function(e, t) {
+n && (r.spec.parametersFrom = [ {
+secretKeyRef: {
+name: n,
+key: "parameters"
+}
+} ]);
+var o = _.get(t, "spec.selector");
+return o && (o.matchLabels || o.matchExpressions || (o = {
+matchLabels: o
+}), r.spec.alphaPodPresetTemplate = {
+name: relatedObjName,
+selector: o
+}), r;
+}, h = function(e, t) {
 var n = a(e, t);
 if (_.get(e, "metadata.deletionTimestamp")) return !1;
 if (!n) return !!e;
 var i = s(e, n), r = _.get(i, "bindable");
 return !0 === r || !1 !== r && n.bindable;
-}, h = function(e) {
+}, f = function(e) {
 var t = {};
 return _.each(e, function(e) {
 var n = _.get(e, "spec.alphaPodPresetTemplate.selector");
@@ -73844,26 +73879,32 @@ n && (t[e.metadata.name] = new LabelSelector(n));
 return {
 bindingResource: o,
 getServiceClassForInstance: a,
-bindService: function(e, t, n) {
-return l(e, n).then(function(n) {
-var r = u(e, t, n), a = {
+getPlanForInstance: s,
+bindService: function(e, t, n, r) {
+var a;
+_.isEmpty(r) || (a = c(e.metadata.name + "-bind-parameters-"));
+var s = d(e, t, a), l = {
 namespace: e.metadata.namespace
-};
-return i.create(o, null, r, a);
+}, h = i.create(o, null, s, l);
+return a ? h.then(function(e) {
+var t = u(a, r, e);
+return i.create("secrets", null, t, l).then(function() {
+return e;
 });
+}) : h;
 },
-isServiceBindable: d,
-getPodPresetSelectorsForBindings: h,
+isServiceBindable: h,
+getPodPresetSelectorsForBindings: f,
 getBindingsForResource: function(e, t) {
 if ("Instance" === _.get(t, "kind")) return _.filter(e, [ "spec.instanceRef.name", _.get(t, "metadata.name") ]);
-var n = h(e), i = new LabelSelector(_.get(t, "spec.selector")), r = [];
+var n = f(e), i = new LabelSelector(_.get(t, "spec.selector")), r = [];
 return _.each(n, function(t, n) {
 t.covers(i) && r.push(e[n]);
 }), r;
 },
 filterBindableServiceInstances: function(e, t) {
 return e || t ? _.filter(e, function(e) {
-return d(e, t);
+return h(e, t);
 }) : null;
 },
 sortServiceInstances: function(e, t) {
@@ -75008,7 +75049,7 @@ this.dismissDelay = 8e3, this.autoDismissTypes = [ "info", "success" ], this.$ge
 var t = [], n = this.dismissDelay, i = this.autoDismissTypes, r = function(e, t) {
 return t ? "hide/notification/" + t + "/" + e : "hide/notification/" + e;
 }, o = function(n) {
-a(n) || s(n) || (t.push(n), e.$emit("NotificationsService.onNotificationAdded", n));
+n.id = n.id || _.uniqueId("notification-") + Date.now(), n.timestamp = new Date().toISOString(), a(n) || s(n) || (t.push(n), e.$emit("NotificationsService.onNotificationAdded", n));
 }, a = function(e) {
 if (!e.id) return !1;
 var t = r(e.id, e.namespace);
@@ -76996,15 +77037,17 @@ e.exports = '<bind-application-form application-name="$ctrl.name"\n             
 }, function(e, t) {
 e.exports = '<div class="config-top">\n  <form name="$ctrl.builderForm" class="config-form">\n    <div class="form-group">\n      <label class="control-label" for="version">Version</label>\n      <ui-select ng-model="$ctrl.istag" required search-enabled="false">\n        <ui-select-match>\n          {{$select.selected.name}}\n        </ui-select-match>\n        <ui-select-choices repeat="tag in $ctrl.versions track by tag.name">\n          {{tag.name}}\n          <small ng-repeat="otherTag in $ctrl.referencedBy[tag.name]">\n            <span ng-if="$first"> &mdash; </span>{{otherTag}}<span ng-if="!$last">,</span>\n          </small>\n        </ui-select-choices>\n      </ui-select>\n    </div>\n    <select-project selected-project="$ctrl.selectedProject" name-taken="$ctrl.projectNameTaken"></select-project>\n    <div class="form-group">\n      <label class="control-label required" for="app-name">Application Name</label>\n      <div ng-class="{ \'has-error\': $ctrl.builderForm.name.$touched && $ctrl.builderForm.name.$invalid }">\n        <input\n          class="form-control"\n          type="text"\n          id="app-name"\n          required\n          minlength="2"\n          ng-maxlength="$ctrl.nameMaxLength"\n          ng-pattern="$ctrl.namePattern"\n          ng-model="$ctrl.name"\n          name="name"\n          autocorrect="off"\n          autocapitalize="none"\n          spellcheck="false">\n        \x3c!-- Wait until users leave the field to avoid flashing errors as they type. --\x3e\n        <div ng-if="$ctrl.builderForm.name.$touched">\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.required">\n            <span class="help-block">\n              Application name is required.\n            </span>\n          </div>\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.pattern">\n            <span class="help-block">\n              Application name consists of lower-case letters, numbers, and dashes. It must start with a letter and can\'t end with a <code>-</code>.\n            </span>\n          </div>\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.minlength">\n            <span class="help-block">\n              Application name must be at least 2 characters.\n            </span>\n          </div>\n          <div class="has-error" ng-show="$ctrl.builderForm.name.$error.maxlength">\n            <span class="help-block">\n              Application name can\'t be more than 24 characters.\n            </span>\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <div class="form-group">\n      <label class="control-label required" for="repository">Git Repository</label>\n      <div ng-class="{ \'has-error\': $ctrl.builderForm.repository.$touched && $ctrl.builderForm.repository.$error.$required }">\n        <input class="form-control"\n          type="text"\n          id="repository"\n          name="repository"\n          required\n          ng-model="$ctrl.repository"\n          autocorrect="off"\n          autocapitalize="off"\n          spellcheck="false">\n        <div ng-if="$ctrl.istag.annotations.sampleRepo" class="help-block">\n          <a href="" ng-click="$ctrl.fillSampleRepo()">Try Sample Repository\n            <i class="fa fa-level-up" aria-hidden="true"></i></a>\n        </div>\n        <div class="has-error" ng-if="$ctrl.builderForm.repository.$touched && $ctrl.builderForm.repository.$error.$required">\n          <span class="help-block">\n            Git repository is required.\n          </span>\n        </div>\n        <div class="has-warning" ng-if="$ctrl.builderForm.repository.$touched && $ctrl.repository && !$ctrl.repositoryPattern.test($ctrl.repository)">\n          <span class="help-block">\n            This might not be a valid Git URL. Check that it is the correct URL to a remote Git repository.\n          </span>\n        </div>\n      </div>\n    </div>\n\n    \x3c!--\n      Only show the link for existing projects. It will be broken for new\n      projects.  Use class `invisible` when the project list is still loading\n      so the dialog doesn\'t resize.\n    --\x3e\n    <div ng-hide="$ctrl.selectedProject && !$ctrl.selectedProject.metadata.uid"\n         ng-class="{ invisible: !$ctrl.selectedProject || !$ctrl.istag }"\n         class="form-group">\n      If you have a private Git repository or need to change application defaults, view\n      <a href="" ng-click="$ctrl.navigateToAdvancedForm()">advanced options</a>.\n    </div>\n  </form>\n</div>\n';
 }, function(e, t) {
-e.exports = '<div ng-if="!$ctrl.success && !$ctrl.error">\n  <div ng-if="!$ctrl.serviceToBind">\n    <h3 class="text-center">\n      <div class="spinner spinner-lg" aria-hidden="true"></div>\n    </h3>\n    <h3 class="text-center">\n      <span>The application is being created</span>\n    </h3>\n  </div>\n  <div ng-if="$ctrl.serviceToBind" class="review-status">\n    <div class="spinner spinner-sm spinner-inline" aria-hidden="true"></div>\n    <h3 class="review-message">\n      The application is being created\n    </h3>\n  </div>\n</div>\n<div ng-if="$ctrl.success">\n  <div class="review-status">\n    <span class="pficon pficon-ok" aria-hidden="true"></span>\n    <span class="sr-only">Success</span>\n    <h3 class="review-message">\n    <span>\n      <strong>{{$ctrl.name}}</strong> has been created in <strong>{{$ctrl.selectedProject.metadata.name}}</strong> successfully\n    </span>\n    </h3>\n  </div>\n</div>\n<div ng-if="!$ctrl.error && ($ctrl.bindInProgress || $ctrl.bindComplete)">\n  <bind-results error="$ctrl.bindError"\n                progress-inline="true"\n                binding="$ctrl.binding"\n                service-to-bind="$ctrl.serviceToBind.metadata.name"\n                bind-type="application"\n                application-to-bind="$ctrl.name"\n                show-pod-presets="$ctrl.showPodPresets">\n  </bind-results>\n</div>\n<div ng-if="$ctrl.success">\n  <p ng-if="!$ctrl.serviceToBind || $ctrl.bindComplete">\n    Continue to your project to check the status of your application as it builds and deploys.\n  </p>\n</div>\n<div class="review-failure" ng-if="$ctrl.error">\n  <div class="review-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <h3 class="review-message">\n      Error creating <strong>{{$ctrl.name}}</strong> in\n      <strong>{{$ctrl.selectedProject | displayName}}</strong>\n    </h3>\n  </div>\n  <div class="sub-title">\n    <span ng-if="$ctrl.error.data.message">\n      {{$ctrl.error.data.message | upperFirst}}\n    </span>\n    <span ng-if="!$ctrl.error.data.message">\n      An error occurred creating the application.\n    </span>\n  </div>\n  \x3c!-- TODO: Improve error message presentation --\x3e\n  <ul ng-if="$ctrl.error.failure.length" class="failure-messages">\n    <li ng-repeat="failure in $ctrl.error.failure">\n      {{failure.data.message}}\n    </li>\n  </ul>\n</div>\n<div class="footer-panel">\n  <a class="btn btn-primary" href="{{$ctrl.selectedProject | projectUrl : $ctrl.baseProjectUrl}}">View Project</a>\n</div>\n';
+e.exports = '<div ng-if="!$ctrl.success && !$ctrl.error">\n  <h3 class="text-center">\n    <div class="spinner spinner-lg" aria-hidden="true"></div>\n  </h3>\n  <h3 class="text-center">\n    <span>The application is being created</span>\n  </h3>\n</div>\n<div ng-if="$ctrl.success">\n  <div class="review-status">\n    <span class="pficon pficon-ok" aria-hidden="true"></span>\n    <span class="sr-only">Success</span>\n    <h3 class="review-message">\n    <span>\n      <strong>{{$ctrl.name}}</strong> has been created in <strong>{{$ctrl.selectedProject.metadata.name}}</strong> successfully\n    </span>\n    </h3>\n  </div>\n</div>\n<div ng-if="$ctrl.success && $ctrl.binding">\n  <bind-results error="$ctrl.bindError"\n                progress-inline="true"\n                binding="$ctrl.binding"\n                service-to-bind="$ctrl.serviceToBind.metadata.name"\n                bind-type="application"\n                application-to-bind="$ctrl.name"\n                show-pod-presets="$ctrl.showPodPresets">\n  </bind-results>\n</div>\n<div ng-if="$ctrl.success">\n  <p ng-if="!$ctrl.serviceToBind || $ctrl.bindComplete">\n    Continue to your project to check the status of your application as it builds and deploys.\n  </p>\n</div>\n<div class="review-failure" ng-if="$ctrl.error">\n  <div class="review-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <h3 class="review-message">\n      Error creating <strong>{{$ctrl.name}}</strong> in\n      <strong>{{$ctrl.selectedProject | displayName}}</strong>\n    </h3>\n  </div>\n  <div class="sub-title">\n    <span ng-if="$ctrl.error.data.message">\n      {{$ctrl.error.data.message | upperFirst}}\n    </span>\n    <span ng-if="!$ctrl.error.data.message">\n      An error occurred creating the application.\n    </span>\n  </div>\n  \x3c!-- TODO: Improve error message presentation --\x3e\n  <ul ng-if="$ctrl.error.failure.length" class="failure-messages">\n    <li ng-repeat="failure in $ctrl.error.failure">\n      {{failure.data.message}}\n    </li>\n  </ul>\n</div>\n<div class="footer-panel">\n  <a class="btn btn-primary" href="{{$ctrl.selectedProject | projectUrl : $ctrl.baseProjectUrl}}">View Project</a>\n</div>\n';
 }, function(e, t) {
-e.exports = '<bind-service-form service-class="$ctrl.serviceClass.resource"\n                   service-class-name="$ctrl.serviceClass.name"\n                   applications="$ctrl.applications"\n                   form-name="$ctrl.forms.bindForm"\n                   allow-no-binding="true"\n                   project-name="$ctrl.projectDisplayName"\n                   bind-type="$ctrl.bindType"\n                   app-to-bind="$ctrl.appToBind">\n</bind-service-form>\n';
+e.exports = '<div class="config-top">\n  <form name="$ctrl.forms.bindParametersForm" class="config-form">\n    <catalog-parameters\n      ng-if="$ctrl.bindParameterSchema.properties"\n      model="$ctrl.bindParameterData"\n      parameter-schema="$ctrl.bindParameterSchema">\n    </catalog-parameters>\n  </form>\n</div>\n';
+}, function(e, t) {
+e.exports = '<bind-service-form service-class="$ctrl.serviceClass.resource"\n                   service-class-name="$ctrl.serviceClass.name"\n                   show-pod-presets="$ctrl.showPodPresets"\n                   applications="$ctrl.applications"\n                   form-name="$ctrl.forms.bindForm"\n                   allow-no-binding="true"\n                   project-name="$ctrl.projectDisplayName"\n                   bind-type="$ctrl.bindType"\n                   app-to-bind="$ctrl.appToBind">\n</bind-service-form>\n';
 }, function(e, t) {
 e.exports = '<div class="config-top">\n  <form name="$ctrl.forms.orderConfigureForm" class="config-form">\n    <select-project selected-project="$ctrl.selectedProject" name-taken="$ctrl.nameTaken"></select-project>\n    <catalog-parameters\n      ng-if="$ctrl.parameterSchema.properties"\n      model="$ctrl.parameterData"\n      parameter-schema="$ctrl.parameterSchema"\n      parameter-form-definition="$ctrl.parameterFormDefinition">\n    </catalog-parameters>\n  </form>\n  <div ng-if="$ctrl.error" class="has-error">\n    <span class="help-block">{{$ctrl.error}}</span>\n  </div>\n</div>\n';
 }, function(e, t) {
 e.exports = '<div class="config-top">\n  <div class="select-plans">\n    <h3>Select a Plan</h3>\n    <div ng-repeat="plan in $ctrl.serviceClass.resource.plans" class="radio">\n      <label>\n        <input\n          type="radio"\n          ng-model="$ctrl.planIndex"\n          ng-change="$ctrl.selectPlan(plan)"\n          value="{{$index}}">\n        <span class="plan-name">{{plan.externalMetadata.displayName || plan.name}}</span>\n        \x3c!-- TODO: truncate long text --\x3e\n        <div ng-if="plan.description">{{plan.description}}</div>\n        \x3c!-- TODO: show plan bullets --\x3e\n      </label>\n    </div>\n  </div>\n</div>\n';
 }, function(e, t) {
-e.exports = '<div ng-if="!$ctrl.error">\n  <div ng-if="!$ctrl.orderComplete">\n    <div ng-if="$ctrl.bindType === \'none\'">\n      <h3 class="text-center">\n        <div class="spinner spinner-lg" aria-hidden="true"></div>\n      </h3>\n      <h3 class="text-center">\n        <span>The service is being provisioned</span>\n      </h3>\n    </div>\n    <div ng-if="$ctrl.bindType !== \'none\'" class="review-status">\n      <div class="spinner spinner-sm spinner-inline" aria-hidden="true"></div>\n      <h3 class="review-message">\n        The service is being provisioned\n      </h3>\n    </div>\n  </div>\n</div>\n<div class="review-failure" ng-if="$ctrl.error">\n  <div class="review-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <h3 class="review-message">\n      Error provisioning <strong>{{$ctrl.serviceClass.name}}</strong> in\n      <strong>{{$ctrl.projectDisplayName}}</strong>\n    </h3>\n  </div>\n  <div class="sub-title">\n    <span ng-if="$ctrl.error.message">\n      {{$ctrl.error.message}}\n    </span>\n    <span ng-if="!$ctrl.error.message">\n      An error occurred provisioning the service.\n    </span>\n  </div>\n</div>\n<div ng-if="$ctrl.orderComplete">\n  <div class="review-status">\n    <span class="pficon pficon-ok" aria-hidden="true"></span>\n    <span class="sr-only">Success</span>\n    <h3 class="review-message">\n      <span>\n        <strong>{{$ctrl.serviceInstance.metadata.name}}</strong> has been added to <strong>{{$ctrl.projectDisplayName}}</strong> successfully\n      </span>\n    </h3>\n  </div>\n</div>\n<div ng-if="$ctrl.bindType !== \'none\'">\n  <bind-results error="$ctrl.bindError"\n                progress-inline="true"\n                binding="$ctrl.binding"\n                service-to-bind="$ctrl.serviceInstance.metadata.name"\n                bind-type="{{$ctrl.bindType}}"\n                application-to-bind="$ctrl.appToBind.metadata.name"\n                show-pod-presets="$ctrl.showPodPresets">\n  </bind-results>\n</div>\n<div class="alert alert-info" ng-if="$ctrl.orderComplete && $ctrl.bindType === \'none\'">\n  <span class="pficon pficon-info" aria-hidden="true"></span>\n  <span class="sr-only">Info</span>\n  Continue to your project to bind this service to your application. Binding this service creates a secret containing the information necessary for your application to use the service.\n</div>\n<div class="footer-panel">\n  <a class="btn btn-primary" href="{{$ctrl.selectedProject | projectUrl : $ctrl.baseProjectUrl}}">View Project</a>\n</div>\n';
+e.exports = '<div ng-if="!$ctrl.error">\n  <div ng-if="!$ctrl.orderComplete">\n    <h3 class="text-center">\n      <div class="spinner spinner-lg" aria-hidden="true"></div>\n    </h3>\n    <h3 class="text-center">\n      <span>The service is being provisioned</span>\n    </h3>\n  </div>\n</div>\n<div class="review-failure" ng-if="$ctrl.error">\n  <div class="review-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <h3 class="review-message">\n      Error provisioning <strong>{{$ctrl.serviceClass.name}}</strong> in\n      <strong>{{$ctrl.projectDisplayName}}</strong>\n    </h3>\n  </div>\n  <div class="sub-title">\n    <span ng-if="$ctrl.error.message">\n      {{$ctrl.error.message}}\n    </span>\n    <span ng-if="!$ctrl.error.message">\n      An error occurred provisioning the service.\n    </span>\n  </div>\n</div>\n<div ng-if="$ctrl.orderComplete">\n  <div class="review-status">\n    <span class="pficon pficon-ok" aria-hidden="true"></span>\n    <span class="sr-only">Success</span>\n    <h3 class="review-message">\n      <span>\n        <strong>{{$ctrl.serviceInstance.metadata.name}}</strong> has been added to <strong>{{$ctrl.projectDisplayName}}</strong> successfully\n      </span>\n    </h3>\n  </div>\n</div>\n<div ng-if="$ctrl.orderComplete && $ctrl.binding">\n  <bind-results error="$ctrl.bindError"\n                progress-inline="true"\n                binding="$ctrl.binding"\n                secret-href="$ctrl.baseProjectUrl + \'/browse/secrets/\' + $ctrl.binding.spec.secretName"\n                service-to-bind="$ctrl.serviceInstance.metadata.name"\n                bind-type="{{$ctrl.bindType}}"\n                application-to-bind="$ctrl.appToBind.metadata.name"\n                show-pod-presets="$ctrl.showPodPresets">\n  </bind-results>\n</div>\n<div class="alert alert-info" ng-if="$ctrl.orderComplete && $ctrl.bindType === \'none\'">\n  <span class="pficon pficon-info" aria-hidden="true"></span>\n  <span class="sr-only">Info</span>\n  Continue to your project to bind this service to your application. Binding this service creates a secret containing the information necessary for your application to use the service.\n</div>\n<div class="footer-panel">\n  <a class="btn btn-primary" href="{{$ctrl.selectedProject | projectUrl : $ctrl.baseProjectUrl}}">View Project</a>\n</div>\n';
 }, function(e, t) {
 e.exports = '<div  class="schema-form-array {{form.htmlClass}}"\n      sf-field-model="sf-new-array"\n      sf-new-array>\n  <label class="control-label" ng-show="showTitle()">{{ form.title }}</label>\n  <ol class="list-group" sf-field-model ui-sortable="form.sortOptions">\n    <li class="list-group-item {{form.fieldHtmlClass}}"\n        schema-form-array-items\n        sf-field-model="ng-repeat"\n        ng-repeat="item in $$value$$ track by $index">\n      <button ng-hide="form.readonly || form.remove === null"\n              ng-click="deleteFromArray($index)"\n              ng-disabled="form.schema.minItems >= modelArray.length"\n              style="position: absolute; z-index: 20; right: 0; top: 12px; font-size: 20px;"\n              type="button" class="close">\n              <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>\n      </button>\n    </li>\n  </ol>\n  <div class="clearfix" style="padding: 15px;" ng-model="modelArray" schema-validate="form">\n    <div class="help-block"\n         ng-show="(hasError() && errorMessage(schemaError())) || form.description"\n         ng-bind-html="(hasError() && errorMessage(schemaError())) || form.description"></div>\n\n    <button ng-hide="form.readonly || form.add === null"\n            ng-click="appendToArray()"\n            ng-disabled="form.schema.maxItems <= modelArray.length"\n            type="button"\n            class="btn {{ form.style.add || \'btn-default\' }} pull-right">\n      {{ form.add || \'Add\'}}\n    </button>\n  </div>\n</div>\n';
 }, function(e, t) {
@@ -77018,7 +77061,7 @@ e.exports = '<div class="form-group {{form.htmlClass}} schema-form-select"\n    
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
-var i = n(44);
+var i = n(45);
 t.catalogFilter = {
 bindings: {
 config: "<",
@@ -77026,12 +77069,12 @@ filterOnKeyword: "<",
 applyFilters: "&"
 },
 controller: i.CatalogFilterController,
-template: n(33)
+template: n(34)
 };
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
-var i = n(45);
+var i = n(46);
 t.catalogParameters = {
 bindings: {
 parameterSchema: "<",
@@ -77039,24 +77082,24 @@ parameterFormDefinition: "<",
 model: "="
 },
 controller: i.CatalogParametersController,
-template: n(34)
-};
-}, function(e, t, n) {
-"use strict";
-t.__esModule = !0;
-var i = n(46);
-t.catalogSearch = {
-bindings: {
-baseProjectUrl: "@",
-catalogItems: "<"
-},
-controller: i.CatalogSearchController,
 template: n(35)
 };
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
 var i = n(47);
+t.catalogSearch = {
+bindings: {
+baseProjectUrl: "@",
+catalogItems: "<"
+},
+controller: i.CatalogSearchController,
+template: n(36)
+};
+}, function(e, t, n) {
+"use strict";
+t.__esModule = !0;
+var i = n(48);
 t.createFromBuilder = {
 bindings: {
 baseProjectUrl: "@",
@@ -77064,19 +77107,19 @@ imageStream: "<",
 handleClose: "<"
 },
 controller: i.CreateFromBuilderController,
-template: n(36)
+template: n(37)
 };
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
-var i = n(48);
+var i = n(49);
 t.landingPage = {
 bindings: {
 baseProjectUrl: "@",
 onTemplateSelected: "&"
 },
 controller: i.LandingPageController,
-template: n(37),
+template: n(38),
 transclude: {
 landingsearch: "landingsearch",
 landingheader: "landingheader",
@@ -77087,7 +77130,7 @@ landingside: "landingside"
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
-var i = n(49);
+var i = n(50);
 t.orderService = {
 bindings: {
 baseProjectUrl: "@",
@@ -77095,12 +77138,12 @@ serviceClass: "<",
 handleClose: "<"
 },
 controller: i.OrderServiceController,
-template: n(38)
+template: n(39)
 };
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
-var i = n(50);
+var i = n(51);
 t.overlayPanel = {
 bindings: {
 showClose: "<",
@@ -77109,13 +77152,13 @@ handleClose: "<",
 singleColumn: "<"
 },
 controller: i.OverlayPanelController,
-template: n(39),
+template: n(40),
 transclude: !0
 };
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
-var i = n(51);
+var i = n(52);
 t.projectsSummary = {
 bindings: {
 baseProjectUrl: "@",
@@ -77125,24 +77168,24 @@ viewEditMembership: "&",
 startTour: "&"
 },
 controller: i.ProjectsSummaryController,
-template: n(40)
-};
-}, function(e, t, n) {
-"use strict";
-t.__esModule = !0;
-var i = n(52);
-t.saasList = {
-bindings: {
-saasTitle: "<?",
-saasOfferings: "<"
-},
-controller: i.SaasListController,
 template: n(41)
 };
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
 var i = n(53);
+t.saasList = {
+bindings: {
+saasTitle: "<?",
+saasOfferings: "<"
+},
+controller: i.SaasListController,
+template: n(42)
+};
+}, function(e, t, n) {
+"use strict";
+t.__esModule = !0;
+var i = n(54);
 t.selectProject = {
 bindings: {
 selectedProject: "=",
@@ -77151,12 +77194,12 @@ onProjectSelected: "<",
 availableProjects: "<"
 },
 controller: i.SelectProjectController,
-template: n(42)
+template: n(43)
 };
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
-var i = n(54);
+var i = n(55);
 t.servicesView = {
 bindings: {
 baseProjectUrl: "@",
@@ -77166,7 +77209,7 @@ onFromFileSelected: "<",
 onCreateFromProject: "<"
 },
 controller: i.ServicesViewController,
-template: n(43)
+template: n(44)
 };
 }, function(e, t, n) {
 "use strict";
@@ -77278,25 +77321,50 @@ icon: "font-icon icon-mariadb"
 id: "middleware",
 label: "Middleware",
 subCategories: [ {
-id: "jboss",
-label: "JBoss",
-tags: [ "jboss" ],
-icon: "font-icon icon-openjdk"
-}, {
-id: "fuse",
-label: "Fuse",
-tags: [ "fuse" ],
-icon: "font-icon icon-openjdk"
-}, {
 id: "amq",
 label: "A-MQ",
 tags: [ "amq" ],
-icon: "font-icon icon-openjdk"
+icon: "font-icon icon-jboss"
 }, {
-id: "bpm",
-label: "BPM",
-tags: [ "bpm" ],
-icon: "font-icon icon-openjdk"
+id: "processserver",
+label: "BPM Suite",
+tags: [ "processserver" ],
+icon: "font-icon icon-jboss"
+}, {
+id: "decisionserver",
+label: "BRMS",
+tags: [ "decisionserver" ],
+icon: "font-icon icon-jboss"
+}, {
+id: "datagrid",
+label: "Data Grid",
+tags: [ "datagrid" ],
+icon: "font-icon icon-jboss"
+}, {
+id: "datavirt",
+label: "Data Virt",
+tags: [ "datavirt" ],
+icon: "font-icon icon-jboss"
+}, {
+id: "eap",
+label: "EAP",
+tags: [ "eap" ],
+icon: "font-icon icon-jboss"
+}, {
+id: "fuse",
+label: "Fuse",
+tags: [ "fuse", "jboss-fuse" ],
+icon: "font-icon icon-jboss"
+}, {
+id: "tomcat",
+label: "Tomcat",
+tags: [ "tomcat" ],
+icon: "font-icon icon-jboss"
+}, {
+id: "sso",
+label: "SSO",
+tags: [ "sso" ],
+icon: "font-icon icon-jboss"
 } ]
 }, {
 id: "cicd",
@@ -77315,6 +77383,10 @@ icon: "fa fa-clone"
 } ];
 i.set(window, "OPENSHIFT_CONSTANTS.SERVICE_CATALOG_CATEGORIES", a), i.set(window, "OPENSHIFT_CONSTANTS.SAAS_OFFERINGS", o);
 var s = {
+pod_presets: !1
+};
+i.set(window, "OPENSHIFT_CONSTANTS.ENABLE_TECH_PREVIEW_FEATURE", s);
+var l = {
 links: [ {
 title: "Documentation",
 help: ""
@@ -77335,8 +77407,8 @@ title: "Blog",
 href: "https://blog.openshift.com"
 } ]
 };
-i.set(window, "OPENSHIFT_CONSTANTS.CATALOG_HELP_RESOURCES", s);
-var l = {
+i.set(window, "OPENSHIFT_CONSTANTS.CATALOG_HELP_RESOURCES", l);
+var c = {
 landing_page_tour: {
 enabled: !0,
 auto_launch: !1,
@@ -77390,7 +77462,7 @@ placement: "left"
 }
 }
 };
-i.set(window, "OPENSHIFT_CONSTANTS.GUIDED_TOURS", l);
+i.set(window, "OPENSHIFT_CONSTANTS.GUIDED_TOURS", c);
 }).call(t, n(2));
 }, function(e, t, n) {
 "use strict";
@@ -77748,7 +77820,7 @@ return r.get(this.resource, "externalMetadata.longDescription") || "";
 }, e.prototype.getTags = function() {
 return r.get(this.resource, "alphaTags") || [];
 }, e.prototype.getVendor = function() {
-return r.get(this.resource, "metadata.providerDisplayName") || "";
+return r.get(this.resource, "externalMetadata.providerDisplayName") || "";
 }, e;
 }();
 t.ServiceItem = a;
@@ -77773,7 +77845,7 @@ return e = -1 !== e.indexOf("icon-") ? "font-icon " + e : e;
 var e = this.catalogSrv.$filter("displayName")(this.resource);
 return e || (e = this.resource.metadata.name), e;
 }, e.prototype.getVendor = function() {
-return r.get(this.resource, "metadata.providerDisplayName") || "";
+return "";
 }, e.prototype.getDescription = function() {
 return null;
 }, e.prototype.getLongDescription = function() {
@@ -77799,7 +77871,7 @@ return r.get(this.resource, [ "metadata", "annotations", "template.openshift.io/
 }, e.prototype.getTags = function() {
 return r.get(this.resource, "metadata.annotations.tags", "").split(/\s*,\s*/);
 }, e.prototype.getVendor = function() {
-return r.get(this.resource, "metadata.providerDisplayName") || "";
+return r.get(this.resource, [ "metadata", "annotations", "template.openshift.io/provider-display-name" ]) || "";
 }, e;
 }();
 t.TemplateItem = l;
@@ -77834,7 +77906,7 @@ e.exports = '<div class="order-service">\n  <pf-wizard\n       hide-header="true
 }, function(e, t) {
 e.exports = '<div class="landing-search-area" ng-transclude="landingsearch"></div>\n<div class="landing">\n  <overlay-panel show-panel="$ctrl.orderingPanelVisible" show-close="true" handle-close="$ctrl.closeOrderingPanel">\n    <order-service\n        ng-if="$ctrl.selectedItem.resource.kind === \'ServiceClass\'"\n        base-project-url="{{$ctrl.baseProjectUrl}}"\n        service-class="$ctrl.selectedItem"\n        handle-close="$ctrl.closeOrderingPanel">\n    </order-service>\n    <create-from-builder\n        ng-if="$ctrl.selectedItem.resource.kind === \'ImageStream\'"\n        base-project-url="{{$ctrl.baseProjectUrl}}"\n        image-stream="$ctrl.selectedItem"\n        handle-close="$ctrl.closeOrderingPanel">\n    </create-from-builder>\n  </overlay-panel>\n  <div class="landing-main-area">\n    <div class="landing-header-area" ng-transclude="landingheader"></div>\n    <div class="landing-body-area">\n      <div class="landing-body" ng-transclude="landingbody"></div>\n    </div>\n  </div>\n  <div class="landing-side-bar" ng-transclude="landingside"></div>\n</div>\n';
 }, function(e, t) {
-e.exports = '<div class="order-service">\n  <pf-wizard\n       hide-header="true"\n       hide-sidebar="true"\n       step-class="order-service-wizard-step"\n       wizard-ready="$ctrl.wizardReady"\n       next-title="$ctrl.nextTitle"\n       on-finish="$ctrl.closePanel()"\n       on-cancel="$ctrl.closePanel()"\n       wizard-done="$ctrl.wizardDone">\n    <pf-wizard-step ng-repeat="step in $ctrl.steps track by $index"\n         step-title="{{step.label}}"\n         wz-disabled="{{step.hidden}}"\n         allow-click-nav="step.allowed"\n         next-enabled="step.valid && !$ctrl.updating"\n         prev-enabled="step.prevEnabled"\n         on-show="step.onShow"\n         step-id="{{step.id}}"\n         step-priority="{{$index}}">\n      <div class="wizard-pf-main-inner-shadow-covers">\n        <div class="order-service-details">\n          <div class="order-service-details-top">\n            <div class="service-icon">\n              <span ng-if="!$ctrl.imageUrl" class="icon {{$ctrl.iconClass}}"></span>\n              <span ng-if="$ctrl.imageUrl" class="image"><img ng-src="{{$ctrl.imageUrl}}" alt=""></span>\n            </div>\n            <div class="service-title-area">\n              <div class="service-title">\n                {{$ctrl.serviceName}}\n              </div>\n              <div ng-if="$ctrl.serviceClass.tags" class="order-service-tags">\n                <span ng-repeat="tag in $ctrl.serviceClass.tags" class="tag">\n                  {{tag}}\n                </span>\n              </div>\n              <div ng-if="$ctrl.serviceClass.resource.externalMetadata.documentationUrl" class="order-service-documentation-url">\n                <a ng-href="{{$ctrl.serviceClass.resource.externalMetadata.documentationUrl}}" target="_blank" class="learn-more-link">Learn More <i class="fa fa-external-link" aria-hidden="true"></i></a>\n              </div>\n            </div>\n          </div>\n          <div class="order-service-description-block">\n            <p ng-if="$ctrl.currentStep.id !== \'plans\' && ($ctrl.selectedPlan.externalMetadata.displayName || $ctrl.selectedPlan.description)">\n              <span ng-if="$ctrl.selectedPlan.externalMetadata.displayName">\n                Plan {{$ctrl.selectedPlan.externalMetadata.displayName}}\n                <span ng-if="$ctrl.selectedPlan.description">&ndash;</span>\n              </span>\n              <span ng-if="$ctrl.selectedPlan.description">{{$ctrl.selectedPlan.description}}</span>\n            </p>\n            <p ng-if="$ctrl.description" ng-bind-html="$ctrl.description | linky : \'_blank\'" class="description"></p>\n            <p ng-if="$ctrl.longDescription" ng-bind-html="$ctrl.longDescription | linky : \'_blank\'" class="description"></p>\n          </div>\n        </div>\n        <div class="order-service-config">\n          <div ng-include="step.view" class="wizard-pf-main-form-contents"></div>\n        </div>\n      </div>\n    </>\n  </>\n</div>\n';
+e.exports = '<div class="order-service">\n  <pf-wizard\n       hide-header="true"\n       hide-sidebar="true"\n       step-class="order-service-wizard-step"\n       wizard-ready="$ctrl.wizardReady"\n       next-title="$ctrl.nextTitle"\n       on-finish="$ctrl.closePanel()"\n       on-cancel="$ctrl.closePanel()"\n       wizard-done="$ctrl.wizardDone">\n    <pf-wizard-step ng-repeat="step in $ctrl.steps track by step.id"\n         step-title="{{step.label}}"\n         wz-disabled="{{step.hidden}}"\n         allow-click-nav="step.allowed"\n         next-enabled="step.valid && !$ctrl.updating"\n         prev-enabled="step.prevEnabled"\n         on-show="step.onShow"\n         step-id="{{step.id}}"\n         step-priority="{{$index}}">\n      <div class="wizard-pf-main-inner-shadow-covers">\n        <div class="order-service-details">\n          <div class="order-service-details-top">\n            <div class="service-icon">\n              <span ng-if="!$ctrl.imageUrl" class="icon {{$ctrl.iconClass}}"></span>\n              <span ng-if="$ctrl.imageUrl" class="image"><img ng-src="{{$ctrl.imageUrl}}" alt=""></span>\n            </div>\n            <div class="service-title-area">\n              <div class="service-title">\n                {{$ctrl.serviceName}}\n              </div>\n              <div ng-if="$ctrl.serviceClass.tags" class="order-service-tags">\n                <span ng-repeat="tag in $ctrl.serviceClass.tags" class="tag">\n                  {{tag}}\n                </span>\n              </div>\n              <div ng-if="$ctrl.serviceClass.resource.externalMetadata.documentationUrl" class="order-service-documentation-url">\n                <a ng-href="{{$ctrl.serviceClass.resource.externalMetadata.documentationUrl}}" target="_blank" class="learn-more-link">Learn More <i class="fa fa-external-link" aria-hidden="true"></i></a>\n              </div>\n            </div>\n          </div>\n          <div class="order-service-description-block">\n            <p ng-if="$ctrl.currentStep.id !== \'plans\' && ($ctrl.selectedPlan.externalMetadata.displayName || $ctrl.selectedPlan.description)">\n              <span ng-if="$ctrl.selectedPlan.externalMetadata.displayName">\n                Plan {{$ctrl.selectedPlan.externalMetadata.displayName}}\n                <span ng-if="$ctrl.selectedPlan.description">&ndash;</span>\n              </span>\n              <span ng-if="$ctrl.selectedPlan.description">{{$ctrl.selectedPlan.description}}</span>\n            </p>\n            <p ng-if="$ctrl.description" ng-bind-html="$ctrl.description | linky : \'_blank\'" class="description"></p>\n            <p ng-if="$ctrl.longDescription" ng-bind-html="$ctrl.longDescription | linky : \'_blank\'" class="description"></p>\n          </div>\n        </div>\n        <div class="order-service-config">\n          <div ng-include="step.view" class="wizard-pf-main-form-contents"></div>\n        </div>\n      </div>\n    </>\n  </>\n</div>\n';
 }, function(e, t) {
 e.exports = '<div class="catalogs-overlay-modal" role="dialog">\n  <div ng-if="$ctrl.shown" class="modal-backdrop fade in"></div>\n  <div ng-if="$ctrl.shown" class="catalogs-overlay-panel-wrapper">\n    <div class="catalogs-overlay-panel-grow-height">\n      <div class="catalogs-overlay-panel" ng-class="{\'catalogs-overlay-panel-single-column\' : $ctrl.singleColumn}">\n        <a ng-if="$ctrl.showClose" ng-click="$ctrl.closePanel()">\n          <span class="catalogs-overlay-panel-close pficon pficon-close"></span>\n        </a>\n        <div class="catalogs-overlay-panel-body" ng-transclude>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n';
 }, function(e, t) {
@@ -78017,7 +78089,7 @@ r.$inject = [ "$rootScope", "$scope", "$q", "Catalog", "KeywordService" ], t.Cat
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
-var i = n(1), r = n(0), o = n(55), a = function() {
+var i = n(1), r = n(0), o = n(56), a = function() {
 function e(e, t, n, i, o, a, s, l, c, u, d) {
 var h = this;
 this.ctrl = this, this.watches = [], this.clearValidityWatcher = function() {
@@ -78031,7 +78103,7 @@ h.clearValidityWatcher(), h.ctrl.nextTitle = "Create", h.reviewStep.allowed = !0
 }, this.showResults = function() {
 h.clearValidityWatcher(), h.ctrl.nextTitle = "Close", h.ctrl.wizardDone = !0, h.createApp();
 }, this.onProjectUpdate = function() {
-!h.instancesSupported || h.isNewProject() ? (h.ctrl.serviceInstances = [], h.updateBindability()) : (h.ctrl.updating = !0, h.DataService.list({
+!h.instancesSupported || h.isNewProject() ? (h.ctrl.serviceInstances = [], h.updateBindability()) : h.ctrl.showPodPresets && (h.ctrl.updating = !0, h.DataService.list({
 group: "servicecatalog.k8s.io",
 resource: "instances"
 }, {
@@ -78063,7 +78135,7 @@ id: "bind",
 view: "create-from-builder/create-from-builder-bind.html",
 valid: !0,
 allowed: !1,
-hidden: !1,
+hidden: !this.ctrl.showPodPresets,
 onShow: this.showBind
 }, this.reviewStep = {
 label: "Results",
@@ -78171,16 +78243,16 @@ t.ctrl.error = e;
 });
 }, e.prototype.bindService = function(e) {
 var t = this;
-this.ctrl.bindInProgress = !0, this.ctrl.bindError = !1;
+this.ctrl.bindError = !1;
 var n = {
 namespace: r.get(this.ctrl.selectedProject, "metadata.name")
 }, i = this.BindingService.getServiceClassForInstance(this.ctrl.serviceToBind, this.ctrl.serviceClasses);
 this.BindingService.bindService(this.ctrl.serviceToBind, e, i).then(function(e) {
-t.ctrl.binding = e, t.ctrl.bindInProgress = !1, t.ctrl.bindComplete = !0, t.ctrl.bindError = null, t.watches.push(t.DataService.watchObject(t.BindingService.bindingResource, r.get(t.ctrl.binding, "metadata.name"), n, function(e) {
+t.ctrl.binding = e, t.watches.push(t.DataService.watchObject(t.BindingService.bindingResource, r.get(t.ctrl.binding, "metadata.name"), n, function(e) {
 t.ctrl.binding = e;
 }));
 }, function(e) {
-t.ctrl.bindInProgress = !1, t.ctrl.bindComplete = !0, t.ctrl.bindError = e;
+t.ctrl.bindComplete = !0, t.ctrl.bindError = e;
 });
 }, e.prototype.getServiceClasses = function() {
 var e = this, t = {
@@ -78233,8 +78305,12 @@ u.clearValidityWatcher(), u.ctrl.configPageShown = !0, u.reviewStep.allowed = u.
 u.configStep.valid = e, u.bindStep.allowed = u.configStep.valid, u.reviewStep.allowed = u.bindStep.hidden && u.configStep.valid;
 });
 }, this.showBind = function() {
-u.clearValidityWatcher(), u.ctrl.configPageShown = !1, u.ctrl.nextTitle = "Create", u.reviewStep.allowed = u.bindStep.valid, u.isNewProject() ? u.ctrl.projectDisplayName = u.ctrl.selectedProject.metadata.annotations["new-display-name"] || u.ctrl.selectedProject.metadata.name : u.ctrl.projectDisplayName = u.$filter("displayName")(u.ctrl.selectedProject), u.validityWatcher = u.$scope.$watch("$ctrl.forms.bindForm.$valid", function(e, t) {
-u.bindStep.valid = e, u.reviewStep.allowed = u.bindStep.valid;
+u.clearValidityWatcher(), u.ctrl.configPageShown = !1, u.ctrl.nextTitle = u.bindParametersStep.hidden ? "Create" : "Next >", u.reviewStep.allowed = u.bindParametersStep.hidden && u.bindStep.valid, u.isNewProject() ? u.ctrl.projectDisplayName = u.ctrl.selectedProject.metadata.annotations["new-display-name"] || u.ctrl.selectedProject.metadata.name : u.ctrl.projectDisplayName = u.$filter("displayName")(u.ctrl.selectedProject), u.validityWatcher = u.$scope.$watch("$ctrl.forms.bindForm.$valid", function(e, t) {
+u.bindStep.valid = e, u.bindParametersStep.allowed = e, u.reviewStep.allowed = u.bindParametersStep.hidden && u.bindStep.valid;
+});
+}, this.showBindParameters = function() {
+u.clearValidityWatcher(), u.ctrl.nextTitle = "Create", u.validityWatcher = u.$scope.$watch("$ctrl.forms.bindParametersForm.$valid", function(e, t) {
+u.bindParametersStep.valid = e, u.reviewStep.allowed = u.bindParametersStep.valid;
 });
 }, this.showResults = function() {
 u.clearValidityWatcher(), u.ctrl.configPageShown = !1, u.ctrl.nextTitle = "Close", u.ctrl.wizardDone = !0, u.provisionService();
@@ -78248,7 +78324,7 @@ u.ctrl.error = e.data;
 });
 } else u.ctrl.projectDisplayName = u.$filter("displayName")(u.ctrl.selectedProject), u.createService();
 }, this.onProjectUpdate = function() {
-u.isNewProject() ? (u.ctrl.applications = [], u.ctrl.updating = !1, u.updateBindability()) : (u.ctrl.updating = !0, u.ProjectsService.get(u.ctrl.selectedProject.metadata.name).then(r.spread(function(e, t) {
+u.isNewProject() ? (u.ctrl.applications = [], u.ctrl.updating = !1, u.updateBindability()) : u.ctrl.showPodPresets && (u.ctrl.updating = !0, u.ProjectsService.get(u.ctrl.selectedProject.metadata.name).then(r.spread(function(e, t) {
 u.ctrl.bindType = "none", u.ctrl.serviceToBind = u.ctrl.serviceClass, u.DataService.list("deploymentconfigs", t).then(function(e) {
 u.deploymentConfigs = r.toArray(e.by("metadata.name")), u.sortApplications();
 }), u.DataService.list("replicationcontrollers", t).then(function(e) {
@@ -78284,7 +78360,7 @@ status: "True"
 }
 return e.prototype.$onInit = function() {
 var e = this;
-this.ctrl.iconClass = this.ctrl.serviceClass.iconClass || "fa fa-clone", this.ctrl.imageUrl = this.ctrl.serviceClass.imageUrl, this.ctrl.serviceName = this.ctrl.serviceClass.name, this.ctrl.description = this.ctrl.serviceClass.description, this.ctrl.longDescription = this.ctrl.serviceClass.longDescription, this.ctrl.plans = r.get(this, "ctrl.serviceClass.resource.plans", []), this.ctrl.applications = [], this.ctrl.parameterData = {}, this.ctrl.forms = {}, this.ctrl.appToBind = null, this.ctrl.configStepValid = !0, this.planStep = {
+this.ctrl.iconClass = this.ctrl.serviceClass.iconClass || "fa fa-clone", this.ctrl.imageUrl = this.ctrl.serviceClass.imageUrl, this.ctrl.serviceName = this.ctrl.serviceClass.name, this.ctrl.description = this.ctrl.serviceClass.description, this.ctrl.longDescription = this.ctrl.serviceClass.longDescription, this.ctrl.plans = r.get(this, "ctrl.serviceClass.resource.plans", []), this.ctrl.applications = [], this.ctrl.parameterData = {}, this.ctrl.bindParameterData = {}, this.ctrl.forms = {}, this.ctrl.appToBind = null, this.ctrl.configStepValid = !0, this.planStep = {
 id: "plans",
 label: "Plan",
 view: "order-service/order-service-plans.html",
@@ -78308,6 +78384,14 @@ hidden: !1,
 allowed: !1,
 valid: !0,
 onShow: this.showBind
+}, this.bindParametersStep = {
+label: "Parameters",
+id: "bind-parameters",
+view: "order-service/order-service-bind-parameters.html",
+hidden: !1,
+allowed: !1,
+valid: !0,
+onShow: this.showBindParameters
 }, this.reviewStep = {
 label: "Results",
 id: "results",
@@ -78317,9 +78401,11 @@ allowed: !1,
 valid: !0,
 prevEnabled: !1,
 onShow: this.showResults
-}, this.ctrl.steps = [ this.planStep, this.configStep, this.bindStep, this.reviewStep ], this.ctrl.nameTaken = !1, this.ctrl.wizardDone = !1, this.ctrl.bindType = "none", this.selectPlan(r.head(this.ctrl.plans)), this.ctrl.planIndex = 0, this.ctrl.updating = !0, this.selectedProjectWatch = this.$scope.$watch(function() {
+}, this.ctrl.steps = [ this.planStep, this.configStep, this.bindStep, this.bindParametersStep, this.reviewStep ], this.ctrl.nameTaken = !1, this.ctrl.wizardDone = !1, this.ctrl.bindType = "none", this.selectPlan(r.head(this.ctrl.plans)), this.ctrl.planIndex = 0, this.ctrl.updating = !0, this.selectedProjectWatch = this.$scope.$watch(function() {
 return e.ctrl.selectedProject;
-}, this.onProjectUpdate), this.AuthService.withUser().then(function(t) {
+}, this.onProjectUpdate), this.bindTypeWatch = this.$scope.$watch("$ctrl.bindType", function(t, n) {
+t !== n && (e.updateBindParametersStepVisibility(), e.ctrl.nextTitle = e.bindParametersStep.hidden ? "Create" : "Next >", e.reviewStep.allowed = e.bindParametersStep.hidden && e.bindStep.valid);
+}), this.AuthService.withUser().then(function(t) {
 e.user = t, e.ctrl.wizardReady = !0;
 });
 }, e.prototype.selectPlan = function(e) {
@@ -78344,29 +78430,31 @@ e.ctrl.error = r.get(t, "data");
 });
 }, e.prototype.bindService = function() {
 var e = this;
-this.ctrl.bindInProgress = !0, this.ctrl.bindError = !1;
+this.ctrl.bindError = !1;
 var t = {
 namespace: r.get(this.ctrl.selectedProject, "metadata.name")
 }, n = "application" === this.ctrl.bindType ? this.ctrl.appToBind : void 0;
-this.BindingService.bindService(this.ctrl.serviceInstance, n, this.ctrl.serviceClass.resource).then(function(n) {
-e.ctrl.binding = n, e.ctrl.bindInProgress = !1, e.ctrl.bindComplete = !0, e.ctrl.bindError = null, e.watches.push(e.DataService.watchObject(e.BindingService.bindingResource, r.get(e.ctrl.binding, "metadata.name"), t, function(t) {
+this.BindingService.bindService(this.ctrl.serviceInstance, n, this.ctrl.serviceClass.resource, this.ctrl.bindParameterData).then(function(n) {
+e.ctrl.binding = n, e.watches.push(e.DataService.watchObject(e.BindingService.bindingResource, r.get(e.ctrl.binding, "metadata.name"), t, function(t) {
 e.ctrl.binding = t;
 }));
 }, function(t) {
-e.ctrl.bindInProgress = !1, e.ctrl.bindComplete = !0, e.ctrl.bindError = t;
+e.ctrl.bindError = t;
 });
 }, e.prototype.$onDestroy = function() {
-this.DataService.unwatchAll(this.watches), this.selectedProjectWatch(), this.clearValidityWatcher();
+this.DataService.unwatchAll(this.watches), this.selectedProjectWatch(), this.bindTypeWatch(), this.clearValidityWatcher();
 }, e.prototype.closePanel = function() {
 i.isFunction(this.ctrl.handleClose) && this.ctrl.handleClose();
 }, e.prototype.updateBindability = function() {
 if (!this.ctrl.wizardDone) {
 var e = r.get(this.ctrl.selectedPlan, "bindable");
-this.bindStep.hidden = !0 !== e && (!1 === e || !r.get(this.ctrl.serviceClass, "resource.bindable")), this.ctrl.configPageShown && (this.reviewStep.allowed = this.bindStep.hidden, this.bindStep.hidden ? this.ctrl.nextTitle = "Create" : this.ctrl.nextTitle = "Next >");
+this.bindStep.hidden = !0 !== e && (!1 === e || !r.get(this.ctrl.serviceClass, "resource.bindable")), this.updateBindParametersStepVisibility(), this.ctrl.configPageShown && (this.reviewStep.allowed = this.bindStep.hidden, this.bindStep.hidden ? this.ctrl.nextTitle = "Create" : this.ctrl.nextTitle = "Next >");
 }
+}, e.prototype.updateBindParametersStepVisibility = function() {
+this.bindParametersStep.hidden = this.bindStep.hidden || "none" === this.ctrl.bindType || !r.has(this.ctrl, "bindParameterSchema.properties"), this.bindParametersStep.allowed = this.bindStep.valid;
 }, e.prototype.updateParameterSchema = function(t) {
 var n = r.get(t, "alphaInstanceCreateParameterSchema");
-r.has(n, [ "properties", e.REQUESTER_USERNAME_PARAM_NAME ]) ? (n = i.copy(n), delete n.properties[e.REQUESTER_USERNAME_PARAM_NAME], this.sendRequesterUsername = !0) : this.sendRequesterUsername = !1, this.ctrl.parameterSchema = n, this.ctrl.parameterFormDefinition = r.get(this, "ctrl.selectedPlan.externalMetadata.schemas.service_instance.create.openshift_form_definition");
+r.has(n, [ "properties", e.REQUESTER_USERNAME_PARAM_NAME ]) ? (n = i.copy(n), delete n.properties[e.REQUESTER_USERNAME_PARAM_NAME], this.sendRequesterUsername = !0) : this.sendRequesterUsername = !1, this.ctrl.parameterSchema = n, this.ctrl.parameterFormDefinition = r.get(this, "ctrl.selectedPlan.externalMetadata.schemas.service_instance.create.openshift_form_definition"), this.ctrl.bindParameterSchema = r.get(t, "alphaBindingCreateParameterSchema");
 }, e.prototype.sortApplications = function() {
 if (this.deploymentConfigs && this.deployments && this.replicationControllers && this.replicaSets && this.statefulSets) {
 var e = this.deploymentConfigs.concat(this.deployments).concat(this.replicationControllers).concat(this.replicaSets).concat(this.statefulSets);
@@ -78734,9 +78822,9 @@ e.exports = URI;
 "use strict";
 t.__esModule = !0;
 var i = n(1);
-n(3), n(28);
-var r = n(29), o = n(30), a = n(18), s = n(19), l = n(31), c = n(20), u = n(21), d = n(22), h = n(23), f = n(24), p = n(25), g = n(26), m = n(27), v = n(32), b = n(17);
+n(3), n(29);
+var r = n(30), o = n(31), a = n(19), s = n(20), l = n(32), c = n(21), u = n(22), d = n(23), h = n(24), f = n(25), p = n(26), g = n(27), m = n(28), v = n(33), b = n(18);
 t.webCatalog = "webCatalog", i.module(t.webCatalog, [ "patternfly", "ngAnimate", "ui.bootstrap", "angularMoment", "ui.select", "schemaForm" ]).service("BuilderAppService", o.BuilderAppService).service("Catalog", l.CatalogService).service("RecentlyViewedServiceItems", v.RecentlyViewedServiceItems).filter("projectUrl", r.projectUrlFilter).component("catalogParameters", a.catalogParameters).component("catalogSearch", s.catalogSearch).component("createFromBuilder", c.createFromBuilder).component("landingPage", u.landingPage).component("orderService", d.orderService).component("overlayPanel", h.overlayPanel).component("projectsSummary", f.projectsSummary).component("saasList", p.saasList).component("selectProject", g.selectProject).component("servicesView", m.servicesView).component("catalogFilter", b.catalogFilter).run([ "$templateCache", function(e) {
-e.put("catalog-search/catalog-search-result.html", n(4)), e.put("create-from-builder/create-from-builder-configure.html", n(6)), e.put("create-from-builder/create-from-builder-bind.html", n(5)), e.put("create-from-builder/create-from-builder-results.html", n(7)), e.put("order-service/order-service-plans.html", n(10)), e.put("order-service/order-service-configure.html", n(9)), e.put("order-service/order-service-bind.html", n(8)), e.put("order-service/order-service-review.html", n(11)), e.put("decorators/bootstrap/array.html", n(12)), e.put("decorators/bootstrap/checkbox.html", n(13)), e.put("decorators/bootstrap/checkboxes.html", n(14)), e.put("decorators/bootstrap/default.html", n(15)), e.put("decorators/bootstrap/select.html", n(16));
+e.put("catalog-search/catalog-search-result.html", n(4)), e.put("create-from-builder/create-from-builder-configure.html", n(6)), e.put("create-from-builder/create-from-builder-bind.html", n(5)), e.put("create-from-builder/create-from-builder-results.html", n(7)), e.put("order-service/order-service-plans.html", n(11)), e.put("order-service/order-service-configure.html", n(10)), e.put("order-service/order-service-bind.html", n(9)), e.put("order-service/order-service-bind-parameters.html", n(8)), e.put("order-service/order-service-review.html", n(12)), e.put("decorators/bootstrap/array.html", n(13)), e.put("decorators/bootstrap/checkbox.html", n(14)), e.put("decorators/bootstrap/checkboxes.html", n(15)), e.put("decorators/bootstrap/default.html", n(16)), e.put("decorators/bootstrap/select.html", n(17));
 } ]);
-} ], [ 56 ]);
+} ], [ 57 ]);

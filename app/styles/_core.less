@@ -1246,3 +1246,51 @@ pre.clipped {
     width: 30px;
   }
 }
+
+.order-service-config {
+  .order-services-filter {
+    margin-left: 0;
+  }
+  .blank-slate-pf {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  .select-project-for-template {
+    border-bottom: solid 1px @color-pf-black-300;
+    padding-bottom: 10px;
+
+    > h2 {
+      margin-bottom: 20px;
+      margin-top: 0;
+    }
+    .ui-select-container {
+      display: inline-block;
+      width: 275px;
+    }
+  }
+  .services-item {
+    &.show-selection {
+      // Clear focus settings, keep before active settings
+      &:focus {
+        color: @text-color;
+        .services-item-icon:after {
+          border: none;
+        }
+
+        .services-item-name {
+          color: @text-color;
+        }
+      }
+      &.active {
+        color: @link-hover-color;
+        .services-item-icon:after {
+          border: 2px solid @link-color;
+        }
+        .services-item-name {
+          color: @link-hover-color;
+        }
+      }
+    }
+  }
+}
+

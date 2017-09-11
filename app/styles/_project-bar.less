@@ -18,7 +18,7 @@
   }
   .add-to-project {
     align-items: center;
-    color: @color-pf-black-300;
+    color: @navbar-pf-vertical-color;
     display: flex;
     flex: 0 0 35px;
     font-weight: 300;
@@ -42,7 +42,7 @@
     }
     > a {
       align-items: center;
-      color: @color-pf-black-300;
+      color: @navbar-os-project-menu-color;
       display: flex;
       padding: 5px 0;
       flex: 1 1 auto;
@@ -145,7 +145,7 @@
     }
     .dropdown-menu {
       background-color: @navbar-os-project-menu-active-bg;
-      border-color: @navbar-os-project-border-color;
+      border-color: @navbar-os-project-menu-border-color;
       border-radius: 0;
       color: @navbar-os-project-menu-color;
       margin-top: 0;
@@ -153,7 +153,7 @@
       li {
         background-color: @navbar-os-project-menu-active-bg;
         &.selected a {
-          background-color: @navbar-os-project-bg !important;
+          background-color: @navbar-os-project-menu-hover-bg !important;
           border-color: transparent !important;
           color: @navbar-os-project-menu-active-color;
           &:after {
@@ -164,7 +164,7 @@
             top:0;
             display: block;
             position: absolute;
-            background-color: @sidebar-os-active;
+            background-color: @navbar-os-project-menu-active-bar;
           }
         }
         &.divider {
@@ -173,10 +173,10 @@
           margin: 0 !important;
         }
         &:last-child > a { // "View all projects"
-          color: @sidebar-os-active !important;
+          color: @color-pf-blue-300 !important;
         }
         a {
-          color: @sidebar-os-color;
+          color: @navbar-os-project-menu-color;
           font-weight: 300;
           padding: 3px 5px 3px 16px;
           @media(min-width: @screen-sm-min) {
@@ -186,7 +186,7 @@
           &:hover, &:focus {
             background-color: @navbar-os-project-menu-hover-bg;
             border-color: transparent;
-            color: @sidebar-os-active-color;
+            color: @navbar-os-project-menu-active-color;
           }
           @media (max-width: @screen-xs-max) {
             span.text {

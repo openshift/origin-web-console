@@ -1,5 +1,5 @@
 <div class="osc-form">
   <form name="$ctrl.form">
-    <process-template template="$ctrl.template" is-dialog="true"></process-template>
+    <process-template template="$ctrl.template" project="$ctrl.preSelectedProject" on-project-selected="$ctrl.onProjectSelected" available-projects="$ctrl.unfilteredProjects" is-dialog="true"></process-template>
   </form>
 </div>
