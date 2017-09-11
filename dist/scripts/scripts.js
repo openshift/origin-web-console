@@ -4355,8 +4355,9 @@ d = _.toArray(t.by("metadata.name")), e.loading = !1, e.showGetStarted = _.isEmp
 }, k = function() {
 g || u.list().then(w);
 };
-e.newProjectPanelShown = !1, e.createProject = function() {
-e.newProjectPanelShown = !0;
+e.newProjectPanelShown = !1, e.createProject = function(t) {
+for (var n = _.get(t, "target"); n && !angular.element(n).hasClass("btn"); ) n = n.parentElement;
+e.popupElement = n, e.newProjectPanelShown = !0;
 }, e.closeNewProjectPanel = function() {
 e.newProjectPanelShown = !1;
 }, e.onNewProject = function() {
