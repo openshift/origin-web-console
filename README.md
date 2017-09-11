@@ -92,6 +92,44 @@ If Jenkins complains that the built dist files are different than the committed 
 3. Run `grunt build`
 4. If anything under dist or dist.java has changed, add it to your commit and re-push
 
+#### Contributing to the primary repositories
+
+The web console is currently split into three repositories.  The two dependency repos are
+[origin-web-common](https://github.com/openshift/origin-web-common) and
+[origin-web-catalog](https://github.com/openshift/origin-web-catalog).
+To make changes to one of these repositories while working in the web console, it is recommended that you clone down the
+repository and create a `bower link`.  The following example assumes you clone your forks to `~/git-repos`:
+
+```bash
+# fork the origin-web-console & clone:
+$ cd ~/git-repos
+$ git clone git@github.com:<your-fork>/origin-web-console.git
+# fork origin-web-common & clone:
+$ cd ~/git-repos
+$ git clone git@github.com:<your-fork>/origin-web-common.git
+# fork origin-web-catalog & clone:
+$ cd ~/git-repos
+$ git clone git@github.com:<your-fork>/origin-web-catalog.git
+#
+# Now, using bower link you can:
+$ cd ~/git-repos/origin-web-common
+$ bower link
+$ cd ~/git-repos/origin-web-catalog
+$ bower link
+$ cd ~/git-repos/origin-web-console
+$ bower link origin-web-common
+$ bower link origin-web-catalog
+#
+# NOTE:
+# When you make changes in the linked repos you will need to rebuild
+# as origin-web-console pulls from the /dist.  `grunt build` or `grunt watch`
+# should take care of this.
+```
+
+When finished, be sure to `hack/clean-deps.sh` and `hack/install-deps.sh` to remove
+the links & avoid having issues with `/dist` conflicts the next time you build.
+
+
 Architecture
 ------------
 
