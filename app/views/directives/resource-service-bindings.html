@@ -7,7 +7,7 @@
     service-classes="$ctrl.serviceClasses"
     service-instances="$ctrl.serviceInstances">
   </overview-service-binding>
-  <div ng-if="($ctrl.bindableServiceInstances | size) && ({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create')">
+  <div ng-if="($ctrl.bindableServiceInstances | size) && ({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create')">
     <a href="" ng-click="$ctrl.createBinding()" role="button">
       <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>
       Create Binding
@@ -19,7 +19,7 @@
       <a href="./">Browse Catalog</a>
     </div>
   </div>
-  <div ng-if="!($ctrl.bindings | size) && ($ctrl.bindableServiceInstances | size) && !({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create')">
+  <div ng-if="!($ctrl.bindings | size) && ($ctrl.bindableServiceInstances | size) && !({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create')">
     <span>There are no service bindings.</span>
   </div>
 </div>

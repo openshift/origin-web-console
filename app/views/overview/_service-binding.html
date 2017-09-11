@@ -18,7 +18,7 @@
   </div>
   <div class="service-binding-actions" ng-if="!ctrl.binding.metadata.deletionTimestamp">
     <delete-link
-      ng-if="({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'delete')"
+      ng-if="({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'delete')"
       label="Delete Binding"
       kind="binding"
       group="servicecatalog.k8s.io"

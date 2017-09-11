@@ -446,11 +446,11 @@ pollInterval: 6e4
 }));
 var o = t("canI");
 s.SERVICE_CATALOG_ENABLED && o({
-resource: "instances",
+resource: "serviceinstances",
 group: "servicecatalog.k8s.io"
 }, "watch") && Ye.push(l.watch({
 group: "servicecatalog.k8s.io",
-resource: "instances"
+resource: "serviceinstances"
 }, a, function(e) {
 V.serviceInstances = e.by("metadata.name"), _.each(V.serviceInstances, function(e) {
 var t = k.getServiceInstanceAlerts(e);
@@ -460,11 +460,11 @@ ue(e, t);
 poll: R,
 pollInterval: 6e4
 })), s.SERVICE_CATALOG_ENABLED && o({
-resource: "bindings",
+resource: "serviceinstancecredentials",
 group: "servicecatalog.k8s.io"
 }, "watch") && Ye.push(l.watch({
 group: "servicecatalog.k8s.io",
-resource: "bindings"
+resource: "serviceinstancecredentials"
 }, a, function(e) {
 V.bindings = e.by("metadata.name"), P.bindingsByInstanceRef = _.groupBy(V.bindings, "spec.instanceRef.name"), Qe();
 }, {
@@ -473,7 +473,7 @@ pollInterval: 6e4
 })), l.list("limitranges", a, function(e) {
 V.limitRanges = e.by("metadata.name");
 }), s.SERVICE_CATALOG_ENABLED && o({
-resource: "instances",
+resource: "serviceinstances",
 group: "servicecatalog.k8s.io"
 }, "watch") && l.list({
 group: "servicecatalog.k8s.io",
@@ -509,22 +509,22 @@ r.overlayPanelVisible = !1;
 };
 var d = function() {
 t.unwatchAll(s), s = [], a.SERVICE_CATALOG_ENABLED && c({
-resource: "bindings",
+resource: "serviceinstancecredentials",
 group: "servicecatalog.k8s.io"
 }, "watch") && s.push(t.watch({
 group: "servicecatalog.k8s.io",
-resource: "bindings"
+resource: "serviceinstancecredentials"
 }, r.projectContext, function(e) {
 r.bindings = e.by("metadata.name"), l();
 }, {
 poll: i,
 pollInterval: 6e4
 })), a.SERVICE_CATALOG_ENABLED && c({
-resource: "instances",
+resource: "serviceinstances",
 group: "servicecatalog.k8s.io"
 }, "watch") && (s.push(t.watch({
 group: "servicecatalog.k8s.io",
-resource: "instances"
+resource: "serviceinstances"
 }, r.projectContext, function(e) {
 r.serviceInstances = e.by("metadata.name"), u();
 }, {
@@ -3668,10 +3668,10 @@ group: "servicecatalog.k8s.io",
 resource: "serviceclasses"
 }) && t.apiInfo({
 group: "servicecatalog.k8s.io",
-resource: "instances"
+resource: "serviceinstances"
 }) && t.apiInfo({
 group: "servicecatalog.k8s.io",
-resource: "bindings"
+resource: "serviceinstancecredentials"
 }), i = {};
 _.each(n.CATALOG_CATEGORIES, function(e) {
 _.each(e.items, function(e) {
@@ -12413,7 +12413,7 @@ namespace: _.get(g.target, "metadata.namespace")
 };
 n.list({
 group: "servicecatalog.k8s.io",
-resource: "instances"
+resource: "serviceinstances"
 }, e).then(function(e) {
 g.serviceInstances = e.by("metadata.name"), b();
 });
@@ -12449,8 +12449,8 @@ s && (s(), s = void 0), c && (c(), c = void 0), g.nextTitle = "Close", g.wizardC
 };
 var k = function() {
 if (g.serviceClasses) {
-var e = "Instance" === g.target.kind ? g.target : g.serviceToBind;
-e && (g.serviceClass = g.serviceClasses[e.spec.serviceClassName], g.serviceClassName = e.spec.serviceClassName, g.plan = a.getPlanForInstance(e, g.serviceClass), g.parameterSchema = _.get(g.plan, "alphaBindingCreateParameterSchema"), o.hidden = !_.has(g.parameterSchema, "properties"), g.nextTitle = o.hidden ? "Bind" : "Next >");
+var e = "ServiceInstance" === g.target.kind ? g.target : g.serviceToBind;
+e && (g.serviceClass = g.serviceClasses[e.spec.serviceClassName], g.serviceClassName = e.spec.serviceClassName, g.plan = a.getPlanForInstance(e, g.serviceClass), g.parameterSchema = _.get(g.plan, "alphaServiceInstanceCredentialCreateParameterSchema"), o.hidden = !_.has(g.parameterSchema, "properties"), g.nextTitle = o.hidden ? "Bind" : "Next >");
 }
 };
 e.$watch("ctrl.serviceToBind", k), g.$onInit = function() {
@@ -12459,13 +12459,13 @@ group: "servicecatalog.k8s.io",
 resource: "serviceclasses"
 }, {}).then(function(e) {
 g.serviceClasses = e.by("metadata.name"), k(), b();
-}), "Instance" === g.target.kind ? (g.bindType = "secret-only", g.appToBind = null, g.serviceToBind = g.target, g.podPresets && S()) : (g.bindType = "application", g.appToBind = g.target, w());
+}), "ServiceInstance" === g.target.kind ? (g.bindType = "secret-only", g.appToBind = null, g.serviceToBind = g.target, g.podPresets && S()) : (g.bindType = "application", g.appToBind = g.target, w());
 }, g.$onChanges = function(e) {
 e.project && !e.project.isFirstChange() && (g.projectDisplayName = t("displayName")(g.project));
 }, g.$onDestroy = function() {
 s && (s(), s = void 0), c && (c(), c = void 0), l && n.unwatch(l);
 }, g.bindService = function() {
-var e = "Instance" === g.target.kind ? g.target : g.serviceToBind, t = "application" === g.bindType ? g.appToBind : void 0, r = {
+var e = "ServiceInstance" === g.target.kind ? g.target : g.serviceToBind, t = "application" === g.bindType ? g.appToBind : void 0, r = {
 namespace: _.get(e, "metadata.namespace")
 }, o = a.getServiceClassForInstance(e, g.serviceClasses);
 a.bindService(e, t, o, g.parameterData).then(function(e) {
@@ -12494,7 +12494,7 @@ var a, r, o = this, i = t("serviceInstanceDisplayName"), s = function() {
 var e = o.selectedBinding.metadata.name;
 o.unboundApps = o.appsForBinding(e), n.delete({
 group: "servicecatalog.k8s.io",
-resource: "bindings"
+resource: "serviceinstancecredentials"
 }, e, r, {
 propagationPolicy: null
 }).then(_.noop, function(e) {
@@ -12513,7 +12513,7 @@ o.nextTitle = "Delete", c();
 o.nextTitle = "Close", o.wizardComplete = !0, s(), l();
 };
 o.$onInit = function() {
-var e = "Instance" === o.target.kind ? "Applications" : "Services";
+var e = "ServiceInstance" === o.target.kind ? "Applications" : "Services";
 o.displayName = i(o.target), o.steps = [ {
 id: "deleteForm",
 label: e,
@@ -13195,10 +13195,10 @@ var e = _.get(l, "apiObject.kind"), t = _.get(l, "apiObject.metadata.uid"), n = 
 switch (e) {
 case "DeploymentConfig":
 return !!u("deploymentconfigs/instantiate", "create") || !!u("deploymentconfigs", "update") || !(!l.current || !u("deploymentconfigs/log", "get")) || !(!p("pod_presets") || _.isEmpty(l.state.bindableServiceInstances) || !u({
-resource: "bindings",
+resource: "serviceinstancecredentials",
 group: "servicecatalog.k8s.io"
 }, "create")) || !(!p("pod_presets") || _.isEmpty(n) || !u({
-resource: "bindings",
+resource: "serviceinstancecredentials",
 group: "servicecatalog.k8s.io"
 }, "delete")) || l.showStartPipelineAction() || l.showStartBuildAction();
 
@@ -13207,10 +13207,10 @@ return !!u("pods/log", "get") || !!u("pods", "update");
 
 default:
 return !((!l.firstPod(l.current) || !u("pods/log", "get")) && !u(l.rgv, "update") && (!p("pod_presets") || _.isEmpty(l.state.bindableServiceInstances) || !u({
-resource: "bindings",
+resource: "serviceinstancecredentials",
 group: "servicecatalog.k8s.io"
 }, "create")) && (!p("pod_presets") || _.isEmpty(n) || !u({
-resource: "bindings",
+resource: "serviceinstancecredentials",
 group: "servicecatalog.k8s.io"
 }, "delete")));
 }
@@ -13308,13 +13308,13 @@ e.bindings && (s.deleteableBindings = _.reject(s.bindings, "metadata.deletionTim
 return e && _.get(s, [ "state", "secrets", e.spec.secretName ]);
 }, s.actionsDropdownVisible = function() {
 return !(_.get(s.apiObject, "metadata.deletionTimestamp") || (!s.isBindable || !i.canI({
-resource: "bindings",
+resource: "serviceinstancecredentials",
 group: "servicecatalog.k8s.io"
 }, "create")) && (_.isEmpty(s.deleteableBindings) || !i.canI({
-resource: "bindings",
+resource: "serviceinstancecredentials",
 group: "servicecatalog.k8s.io"
 }, "delete")) && !i.canI({
-resource: "instances",
+resource: "serviceinstances",
 group: "servicecatalog.k8s.io"
 }, "delete"));
 }, s.closeOverlayPanel = function() {
@@ -13346,7 +13346,7 @@ return e;
 }).result.then(function() {
 o.hideNotification("deprovision-service-error"), n.delete({
 group: "servicecatalog.k8s.io",
-resource: "instances"
+resource: "serviceinstances"
 }, s.apiObject.metadata.name, {
 namespace: s.apiObject.metadata.namespace
 }, {
