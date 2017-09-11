@@ -7622,7 +7622,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/notifications/notification-drawer-wrapper.html',
-    "<pf-notification-drawer allow-expand=\"$ctrl.allowExpand\" custom-scope=\"$ctrl.customScope\" drawer-expanded=\"$ctrl.drawerExpanded\" drawer-hidden=\"$ctrl.drawerHidden\" drawer-title=\"{{$ctrl.drawerTitle}}\" heading-include=\"{{$ctrl.headingInclude}}\" notification-body-include=\"{{$ctrl.notificationBodyInclude}}\" notification-groups=\"$ctrl.notificationGroups\" notification-track-field=\"uid\" on-close=\"$ctrl.onClose\" on-clear-all=\"$ctrl.onClearAll\" on-mark-all-read=\"$ctrl.onMarkAllRead\" show-clear-all=\"$ctrl.showClearAll\" show-mark-all-read=\"$ctrl.showMarkAllRead\"></pf-notification-drawer>"
+    "<pf-notification-drawer allow-expand=\"$ctrl.allowExpand\" custom-scope=\"$ctrl.customScope\" drawer-expanded=\"$ctrl.drawerExpanded\" drawer-hidden=\"$ctrl.drawerHidden\" drawer-title=\"{{$ctrl.drawerTitle}}\" heading-include=\"{{$ctrl.headingInclude}}\" notification-body-include=\"{{$ctrl.notificationBodyInclude}}\" notification-groups=\"$ctrl.notificationGroups\" notification-track-field=\"trackByID\" on-close=\"$ctrl.onClose\" on-clear-all=\"$ctrl.onClearAll\" on-mark-all-read=\"$ctrl.onMarkAllRead\" show-clear-all=\"$ctrl.showClearAll\" show-mark-all-read=\"$ctrl.showMarkAllRead\"></pf-notification-drawer>"
   );
 
 

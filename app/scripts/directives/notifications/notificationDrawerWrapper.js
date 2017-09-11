@@ -158,7 +158,7 @@
             ensureProjectGroupExists(filtered, event.metadata.namespace);
             filtered[event.metadata.namespace].notifications.push({
               unread:  !EventsService.isRead(event),
-              uid: event.metadata.uid,
+              trackByID: event.metadata.uid,
               event: event,
               actions: null
             });

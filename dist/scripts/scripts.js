@@ -14133,7 +14133,7 @@ var t = {};
 return C(t, r.project), _.each(e, function(e) {
 l.isImportantEvent(e) && !l.isCleared(e) && (C(t, e.metadata.namespace), t[e.metadata.namespace].notifications.push({
 unread: !l.isRead(e),
-uid: e.metadata.uid,
+trackByID: e.metadata.uid,
 event: e,
 actions: null
 }));
