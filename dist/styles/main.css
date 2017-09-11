@@ -4506,19 +4506,25 @@ body{padding-right:0px!important}
 .nav-tabs{margin-bottom:20px}
 .resource-details h3{border-bottom:1px solid #eee;padding-bottom:10px}
 .empty-state-message{margin:40px auto 60px;max-width:600px;padding:0}
-@media (min-width:480px){.empty-state-message{padding-left:20px;padding-right:20px}
-}
-.empty-state-message .h2,.empty-state-message h2{line-height:1.4}
-.empty-state-message .btn{margin:10px 0 20px}
-@media (min-height:600px){.empty-state-message .hero-icon{display:inline-block;font-size:90px}
-}
+.empty-state-message.loading{margin:0 auto;padding:40px 0 60px}
+.empty-state-message.loading h2{margin-top:0}
 @media (min-height:800px){.empty-state-message{margin-top:130px}
-.empty-state-message .hero-icon{font-size:100px}
 alerts+.empty-state-message{margin-top:90px}
+.empty-state-message.loading{margin-top:0;padding-top:130px}
 }
 @media (min-height:1024px){.empty-state-message{margin-top:170px}
-.empty-state-message .hero-icon{font-size:120px}
 alerts+.empty-state-message{margin-top:130px}
+.empty-state-message.loading{margin-top:0;padding-top:170px}
+}
+@media (min-width:480px){.empty-state-message{padding-left:20px;padding-right:20px}
+}
+.empty-state-message .btn{margin:10px 0 20px}
+.empty-state-message .h2,.empty-state-message h2{line-height:1.4}
+@media (min-height:600px){.empty-state-message .hero-icon{display:inline-block;font-size:90px}
+}
+@media (min-height:800px){.empty-state-message .hero-icon{font-size:100px}
+}
+@media (min-height:1024px){.empty-state-message .hero-icon{font-size:120px}
 }
 mark{padding:0;background-color:rgba(252,248,160,.5)}
 .ui-select-choices-row.active>span mark{background-color:rgba(252,248,160,.75)}
@@ -5603,21 +5609,27 @@ a.subtle-link:active,a.subtle-link:focus,a.subtle-link:hover{color:#00659c;borde
 .chromeless{color:#d1d1d1}
 .chromeless .log-loading-msg{margin:40px auto 60px;max-width:600px;padding:0;line-height:1.4;text-align:center}
 .log-line-number,.log-link-external{text-align:right}
+.chromeless .log-loading-msg.loading{margin:0 auto;padding:40px 0 60px}
+.chromeless .log-loading-msg.loading h2{margin-top:0}
+@media (min-height:800px){.chromeless .log-loading-msg{margin-top:130px}
+alerts+.chromeless .log-loading-msg{margin-top:90px}
+.chromeless .log-loading-msg.loading{margin-top:0;padding-top:130px}
+}
+@media (min-height:1024px){.chromeless .log-loading-msg{margin-top:170px}
+alerts+.chromeless .log-loading-msg{margin-top:130px}
+.chromeless .log-loading-msg.loading{margin-top:0;padding-top:170px}
+}
 @media (min-width:480px){.chromeless .log-loading-msg{padding-left:20px;padding-right:20px}
 }
 .log-header .log-actions .btn-link,.log-view{padding:0}
-.chromeless .log-loading-msg .h2,.chromeless .log-loading-msg h2{line-height:1.4}
 .chromeless .log-loading-msg .btn{margin:10px 0 20px}
+.chromeless .log-loading-msg .h2,.chromeless .log-loading-msg h2{line-height:1.4}
 .chromeless .log-loading-msg .hero-icon{display:none}
 @media (min-height:600px){.chromeless .log-loading-msg .hero-icon{display:inline-block;font-size:90px}
 }
-@media (min-height:800px){.chromeless .log-loading-msg{margin-top:130px}
-.chromeless .log-loading-msg .hero-icon{font-size:100px}
-alerts+.chromeless .log-loading-msg{margin-top:90px}
+@media (min-height:800px){.chromeless .log-loading-msg .hero-icon{font-size:100px}
 }
-@media (min-height:1024px){.chromeless .log-loading-msg{margin-top:170px}
-.chromeless .log-loading-msg .hero-icon{font-size:120px}
-alerts+.chromeless .log-loading-msg{margin-top:130px}
+@media (min-height:1024px){.chromeless .log-loading-msg .hero-icon{font-size:120px}
 }
 .log-title{margin-top:0}
 .log-header{margin-bottom:3px}
