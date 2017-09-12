@@ -10629,6 +10629,10 @@ d = _.toArray(e.by("metadata.name")), p();
 };
 m.$onInit = function() {
 m.addType = "env", m.disableInputs = !1, f();
+var e = new RegExp("^[A-Za-z_]{1}[A-Za-z0-9_]*$");
+m.hasInvalidEnvVars = _.some(m.secret.data, function(t, n) {
+return !e.test(n);
+});
 }, m.$postLink = function() {
 t.$watch(function() {
 return m.application;

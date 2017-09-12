@@ -5567,18 +5567,24 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<legend>Add secret as:</legend>\n" +
     "<div class=\"form-group\">\n" +
     "<div class=\"radio\">\n" +
-    "<label class=\"add-choice\" for=\"envFrom\">\n" +
-    "<input id=\"envFrom\" type=\"radio\" ng-model=\"ctrl.addType\" value=\"env\" ng-disabled=\"ctrl.disableInputs\">\n" +
+    "<div class=\"add-choice\">\n" +
+    "<label>\n" +
+    "<input type=\"radio\" ng-model=\"ctrl.addType\" value=\"env\" ng-disabled=\"ctrl.disableInputs\">\n" +
     "Environment variables\n" +
     "</label>\n" +
+    "<div class=\"alert alert-warning env-warning\" ng-show=\"ctrl.hasInvalidEnvVars\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "<span>Some of the keys for secret <strong>{{ctrl.secret.metadata.name}}</strong> are not valid environment variable names and will not be added.</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "<div>\n" +
-    "<label class=\"add-choice\" for=\"mountVolume\">\n" +
-    "<input type=\"radio\" ng-model=\"ctrl.addType\" value=\"volume\" ng-disabled=\"ctrl.disableInputs\">\n" +
+    "<label class=\"add-choice\" for=\"volume\">\n" +
+    "<input id=\"volume\" type=\"radio\" ng-model=\"ctrl.addType\" value=\"volume\" ng-disabled=\"ctrl.disableInputs\">\n" +
     "Volume\n" +
     "</label>\n" +
     "</div>\n" +
     "<div class=\"volume-options\">\n" +
-    "<div ng-class=\"{'has-error': (addToApplicationForm.mountVolume.$error.pattern && addToApplicationForm.mountVolume.$touched)}\">\n" +
+    "<div ng-class=\"{'has-error': (addToApplicationForm.mountVolume.$error.oscUnique || (addToApplicationForm.mountVolume.$error.pattern && addToApplicationForm.mountVolume.$touched))}\">\n" +
     "<input class=\"form-control\" name=\"mountVolume\" id=\"mountVolume\" placeholder=\"Enter a mount path\" type=\"text\" required ng-pattern=\"/^\\/.*$/\" osc-unique=\"ctrl.existingMountPaths\" aria-describedby=\"mount-path-help\" ng-disabled=\"ctrl.addType !== 'volume' || ctrl.disableInputs\" ng-model=\"ctrl.mountVolume\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "</div>\n" +
     "<div class=\"help-block bind-description\">\n" +
