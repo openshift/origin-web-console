@@ -10586,9 +10586,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"kind === 'Deployment'\">\n" +
     "This will delete the deployment, all rollout history, and any running pods.\n" +
     "</span>\n" +
-    "<span ng-if=\"kind === 'BuildConfig'\">\n" +
-    "This will delete the build config and all build history.\n" +
-    "</span>\n" +
     "<span ng-if=\"kind === 'ReplicationController' || kind === 'ReplicaSet' || kind === 'StatefulSet'\">\n" +
     "This will delete the {{typeDisplayName || (kind | humanizeKind)}} and any running pods.\n" +
     "</span>\n" +

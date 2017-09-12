@@ -14,10 +14,6 @@
           This will delete the deployment, all rollout history, and any running pods.
         </span>
 
-        <span ng-if="kind === 'BuildConfig'">
-          This will delete the build config and all build history.
-        </span>
-
         <span ng-if="kind === 'ReplicationController' || kind === 'ReplicaSet' || kind === 'StatefulSet'">
           This will delete the {{typeDisplayName || (kind | humanizeKind)}} and any running pods.
         </span>
