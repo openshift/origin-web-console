@@ -5314,6 +5314,9 @@ td.visible-print,th.visible-print{display:table-cell!important}
 .landing-side-bar::-webkit-scrollbar-track{background-color:#21272e}
 .project-bar ::-webkit-scrollbar-track{background-color:#050505}
 .add-secret-to-application .catalogs-overlay-panel{max-width:600px}
+.add-secret-to-application .container-options{margin-left:20px}
+.add-secret-to-application .container-options .select-container{max-height:200px;overflow-y:auto}
+.add-secret-to-application .container-options .select-container .checkbox:first-of-type{margin-top:0}
 .add-secret-to-application .dialog-title{border-bottom:1px solid #d1d1d1}
 .add-secret-to-application .dialog-title h3{margin:18px 0;padding-left:15px}
 .add-secret-to-application .dialog-body{padding:20px}
