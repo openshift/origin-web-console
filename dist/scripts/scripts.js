@@ -12677,14 +12677,14 @@ templateUrl: "views/directives/process-template.html"
 angular.module("openshiftConsole").component("processTemplateDialog", {
 controller: [ "$scope", "$filter", "Catalog", "DataService", "KeywordService", "NotificationsService", "ProjectsService", "RecentlyViewedProjectsService", function(e, t, n, a, r, o, i, s) {
 function c() {
-var e = _.get(y, "template.metadata.annotations.iconClass", "fa fa-clone");
+var e = _.get(v, "template.metadata.annotations.iconClass", "fa fa-clone");
 return -1 !== e.indexOf("icon-") ? "font-icon " + e : e;
 }
 function l() {
-y.steps || (y.steps = [ y.selectStep, y.configStep, y.resultsStep ]);
+v.steps || (v.steps = [ v.selectStep, v.configStep, v.resultsStep ]);
 }
 function u() {
-v && (v(), v = void 0);
+h && (h(), h = void 0);
 }
 function d() {
 e.$broadcast("instantiateTemplate");
@@ -12693,48 +12693,45 @@ function m(e, t) {
 return r.filterForKeywords(t, [ "name", "tags" ], r.generateKeywords(e));
 }
 function p(e) {
-y.filterConfig.appliedFilters = e, f();
+v.filterConfig.appliedFilters = e, f();
 }
 function f() {
-y.filteredItems = y.catalogItems, y.filterConfig.appliedFilters && y.filterConfig.appliedFilters.length > 0 && _.each(y.filterConfig.appliedFilters, function(e) {
-y.filteredItems = m(e.value, y.filteredItems);
-}), _.includes(y.filteredItems, y.selectedTemplate) || y.templateSelected(), g();
+v.filteredItems = v.catalogItems, v.filterConfig.appliedFilters && v.filterConfig.appliedFilters.length > 0 && _.each(v.filterConfig.appliedFilters, function(e) {
+v.filteredItems = m(e.value, v.filteredItems);
+}), v.filterConfig.resultsCount = v.filteredItems.length, _.includes(v.filteredItems, v.selectedTemplate) || v.templateSelected();
 }
 function g() {
-y.filterConfig.resultsCount = y.filteredItems.length, y.totalCount <= 1 ? $(".filter-pf.filter-fields input").attr("disabled", "") : $(".filter-pf.filter-fields input").removeAttr("disabled");
-}
-function h() {
-y.unfilteredProjects || i.list().then(function(e) {
-y.unfilteredProjects = _.toArray(e.by("metadata.name"));
+v.unfilteredProjects || i.list().then(function(e) {
+v.unfilteredProjects = _.toArray(e.by("metadata.name"));
 }, function() {
-y.unfilteredProjects = [];
+v.unfilteredProjects = [];
 }).finally(function() {
-b();
+y();
 });
 }
-var v, y = this;
-y.selectStep = {
+var h, v = this;
+v.selectStep = {
 id: "projectTemplates",
 label: "Selection",
 view: "views/directives/process-template-dialog/process-template-select.html",
-hidden: !0 !== y.useProjectTemplate,
+hidden: !0 !== v.useProjectTemplate,
 allowed: !0,
 valid: !1,
 onShow: function() {
-y.selectStep.selected = !0, y.configStep.selected = !1, y.resultsStep.selected = !1, y.nextTitle = "Next >", u(), h();
+v.selectStep.selected = !0, v.configStep.selected = !1, v.resultsStep.selected = !1, v.nextTitle = "Next >", u(), g();
 }
-}, y.configStep = {
+}, v.configStep = {
 id: "configuration",
 label: "Configuration",
 view: "views/directives/process-template-dialog/process-template-config.html",
 valid: !1,
 allowed: !0,
 onShow: function() {
-y.selectStep.selected = !1, y.configStep.selected = !0, y.resultsStep.selected = !1, y.nextTitle = "Create", y.resultsStep.allowed = y.configStep.valid, v = e.$watch("$ctrl.form.$valid", function(e) {
-y.configStep.valid = e && y.selectedProject, y.resultsStep.allowed = e;
+v.selectStep.selected = !1, v.configStep.selected = !0, v.resultsStep.selected = !1, v.nextTitle = "Create", v.resultsStep.allowed = v.configStep.valid, h = e.$watch("$ctrl.form.$valid", function(e) {
+v.configStep.valid = e && v.selectedProject, v.resultsStep.allowed = e;
 });
 }
-}, y.resultsStep = {
+}, v.resultsStep = {
 id: "results",
 label: "Results",
 view: "views/directives/process-template-dialog/process-template-results.html",
@@ -12742,18 +12739,18 @@ valid: !0,
 allowed: !1,
 prevEnabled: !1,
 onShow: function() {
-y.selectStep.selected = !1, y.configStep.selected = !1, y.resultsStep.selected = !0, y.nextTitle = "Close", u(), y.wizardDone = !0;
+v.selectStep.selected = !1, v.configStep.selected = !1, v.resultsStep.selected = !0, v.nextTitle = "Close", u(), v.wizardDone = !0;
 }
-}, y.$onInit = function() {
-y.loginBaseUrl = a.openshiftAPIBaseUrl(), y.preSelectedProject = y.selectedProject = y.project, h(), y.projectEmptyState = {
+}, v.$onInit = function() {
+v.loginBaseUrl = a.openshiftAPIBaseUrl(), v.preSelectedProject = v.selectedProject = v.project, g(), v.projectEmptyState = {
 icon: "pficon pficon-info",
 title: "No Project Selected",
 info: "Please select a project from the dropdown to load Templates from that project."
-}, y.templatesEmptyState = {
+}, v.templatesEmptyState = {
 icon: "pficon pficon-info",
 title: "No Templates",
 info: "The selected project has no templates available to import."
-}, y.filterConfig = {
+}, v.filterConfig = {
 fields: [ {
 id: "keyword",
 title: "Keyword",
@@ -12768,32 +12765,32 @@ resultsCount: 0,
 appliedFilters: [],
 onFilterChange: p
 };
-}, y.$onChanges = function(e) {
-e.template && y.template && (l(), y.iconClass = c()), e.useProjectTemplate && l();
+}, v.$onChanges = function(e) {
+e.template && v.template && (l(), v.iconClass = c()), e.useProjectTemplate && l();
 }, e.$on("templateInstantiated", function(e, t) {
-y.selectedProject = t.project, y.currentStep = y.resultsStep.label;
-}), y.$onDestroy = function() {
+v.selectedProject = t.project, v.currentStep = v.resultsStep.label;
+}), v.$onDestroy = function() {
 u();
-}, y.next = function(e) {
-return e.stepId === y.configStep.id ? (d(), !1) : e.stepId !== y.resultsStep.id || (y.close(), !1);
-}, y.close = function() {
-var e = y.onDialogClosed();
+}, v.next = function(e) {
+return e.stepId === v.configStep.id ? (d(), !1) : e.stepId !== v.resultsStep.id || (v.close(), !1);
+}, v.close = function() {
+var e = v.onDialogClosed();
 _.isFunction(e) && e();
-}, y.onProjectSelected = function(t) {
-y.selectedProject = t, y.configStep.valid = e.$ctrl.form.$valid && y.selectedProject;
-}, y.templateSelected = function(e) {
-y.selectedTemplate = e, y.template = _.get(e, "resource"), y.selectStep.valid = !!e;
-}, y.templateProjectChange = function() {
-y.templateProjectName = _.get(y.templateProject, "metadata.name"), y.catalogItems = {}, y.templateSelected(), n.getProjectCatalogItems(y.templateProjectName, !1, !0).then(_.spread(function(e, t) {
-y.catalogItems = e, y.totalCount = y.catalogItems.length, f(), t && o.addNotification({
+}, v.onProjectSelected = function(t) {
+v.selectedProject = t, v.configStep.valid = e.$ctrl.form.$valid && v.selectedProject;
+}, v.templateSelected = function(e) {
+v.selectedTemplate = e, v.template = _.get(e, "resource"), v.selectStep.valid = !!e;
+}, v.templateProjectChange = function() {
+v.templateProjectName = _.get(v.templateProject, "metadata.name"), v.catalogItems = {}, v.templateSelected(), n.getProjectCatalogItems(v.templateProjectName, !1, !0).then(_.spread(function(e, t) {
+v.catalogItems = e, v.totalCount = v.catalogItems.length, p(), t && o.addNotification({
 type: "error",
 message: t
 });
 }));
 };
-var b = function() {
-var e = _.reject(y.unfilteredProjects, "metadata.deletionTimestamp"), n = _.sortBy(e, t("displayName"));
-y.searchEnabled = !_.isEmpty(e), y.templateProjects = s.orderByMostRecentlyViewed(n);
+var y = function() {
+var e = _.reject(v.unfilteredProjects, "metadata.deletionTimestamp"), n = _.sortBy(e, t("displayName"));
+v.searchEnabled = !_.isEmpty(e), v.templateProjects = s.orderByMostRecentlyViewed(n);
 };
 } ],
 controllerAs: "$ctrl",
