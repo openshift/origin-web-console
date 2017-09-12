@@ -7418,7 +7418,7 @@ title: "Edit YAML"
 var p = function() {
 e.modified = !1, a.returnURL ? n.url(a.returnURL) : r.history.back();
 };
-e.$watch("resource", function(t, n) {
+e.$watch("updated.resource", function(t, n) {
 t !== n && (e.modified = !0);
 });
 var f = [];

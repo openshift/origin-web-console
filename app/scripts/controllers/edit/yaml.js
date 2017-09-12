@@ -48,7 +48,7 @@ angular.module('openshiftConsole')
       $window.history.back();
     };
 
-    $scope.$watch('resource', function(current, previous) {
+    $scope.$watch('updated.resource', function(current, previous) {
       if (current !== previous) {
         $scope.modified = true;
       }
