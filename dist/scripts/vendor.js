@@ -26578,35 +26578,35 @@ function o(t) {
 var n = t.settings()[0]._select.selector;
 e(t.table().container()).off("mousedown.dtSelect", n).off("mouseup.dtSelect", n).off("click.dtSelect", n), e("body").off("click.dtSelect" + t.table().node().id);
 }
-function a(i) {
-var r = e(i.table().container()), o = i.settings()[0], a = o._select.selector;
-r.on("mousedown.dtSelect", a, function(e) {
-(e.shiftKey || e.metaKey || e.ctrlKey) && r.css("-moz-user-select", "none").one("selectstart.dtSelect", a, function() {
+function a(n) {
+var i = e(n.table().container()), r = n.settings()[0], o = r._select.selector;
+i.on("mousedown.dtSelect", o, function(e) {
+(e.shiftKey || e.metaKey || e.ctrlKey) && i.css("-moz-user-select", "none").one("selectstart.dtSelect", o, function() {
 return !1;
 });
-}).on("mouseup.dtSelect", a, function() {
-r.css("-moz-user-select", "");
-}).on("click.dtSelect", a, function(n) {
-var r, o = i.select.items();
+}).on("mouseup.dtSelect", o, function() {
+i.css("-moz-user-select", "");
+}).on("click.dtSelect", o, function(i) {
+var r, o = n.select.items();
 if (!t.getSelection || !e.trim(t.getSelection().toString())) {
-var a = i.settings()[0];
-if (e(n.target).closest("div.dataTables_wrapper")[0] == i.table().container()) {
-var l = i.cell(e(n.target).closest("td, th"));
+var a = n.settings()[0];
+if (e(i.target).closest("div.dataTables_wrapper")[0] == n.table().container()) {
+var l = n.cell(e(i.target).closest("td, th"));
 if (l.any()) {
 var c = e.Event("user-select.dt");
-if (s(i, c, [ o, l, n ]), !c.isDefaultPrevented()) {
+if (s(n, c, [ o, l, i ]), !c.isDefaultPrevented()) {
 var u = l.index();
-"row" === o ? (r = u.row, h(n, i, a, "row", r)) : "column" === o ? (r = l.index().column, h(n, i, a, "column", r)) : "cell" === o && (r = l.index(), h(n, i, a, "cell", r)), a._select_lastCell = u;
+"row" === o ? (r = u.row, h(i, n, a, "row", r)) : "column" === o ? (r = l.index().column, h(i, n, a, "column", r)) : "cell" === o && (r = l.index(), h(i, n, a, "cell", r)), a._select_lastCell = u;
 }
 }
 }
 }
-}), e("body").on("click.dtSelect" + i.table().node().id, function(t) {
-if (o._select.blurable) {
-if (e(t.target).parents().filter(i.table().container()).length) return;
-if (t.target.getRootNode() !== n) return;
+}), e("body").on("click.dtSelect" + n.table().node().id, function(t) {
+if (r._select.blurable) {
+if (e(t.target).parents().filter(n.table().container()).length) return;
+if (0 === e(t.target).parents("html").length) return;
 if (e(t.target).parents("div.DTE").length) return;
-d(o, !0);
+d(r, !0);
 }
 });
 }
@@ -26615,7 +26615,7 @@ r && !t.flatten().length || ("string" == typeof n && (n += ".dt"), i.unshift(t),
 }
 function l(t) {
 var n = t.settings()[0];
-if (n._select.info && n.aanFeatures.i) {
+if (n._select.info && n.aanFeatures.i && "api" !== t.select.style()) {
 var i = t.rows({
 selected: !0
 }).flatten().length, r = t.columns({
@@ -26723,7 +26723,7 @@ var t = e._eventNamespace;
 return "draw.dt.DT" + t + " select.dt.DT" + t + " deselect.dt.DT" + t;
 }
 var g = e.fn.dataTable;
-g.select = {}, g.select.version = "1.2.2", g.select.init = function(t) {
+g.select = {}, g.select.version = "1.2.3", g.select.init = function(t) {
 var n = t.settings()[0], r = n.oInit.select, o = g.defaults.select, a = r === i ? o : r, s = "row", l = "api", c = !1, u = !0, d = "td, th", h = "selected", f = !1;
 n._select = {}, !0 === a ? (l = "os", f = !0) : "string" == typeof a ? (l = a, f = !0) : e.isPlainObject(a) && (a.blurable !== i && (c = a.blurable), a.info !== i && (u = a.info), a.items !== i && (s = a.items), a.style !== i && (l = a.style, f = !0), a.selector !== i && (d = a.selector), a.className !== i && (h = a.className)), t.select.selector(d), t.select.items(s), t.select.style(l), t.select.blurable(c), t.select.info(u), n._select.className = h, e.fn.dataTable.ext.order["select-checkbox"] = function(t, n) {
 return this.api().column(n, {
