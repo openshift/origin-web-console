@@ -166,7 +166,9 @@
       Catalog.getProjectCatalogItems(ctrl.templateProjectName, false, true).then( _.spread(function(catalogServiceItems, errorMessage) {
         ctrl.catalogItems = catalogServiceItems;
         ctrl.totalCount = ctrl.catalogItems.length;
-        filterItems();
+
+        // Clear previous filters
+        filterChange();
 
         if (errorMessage) {
           NotificationsService.addNotification(
@@ -248,22 +250,11 @@
           ctrl.filteredItems = filterForKeywords(filter.value, ctrl.filteredItems);
         });
       }
+      ctrl.filterConfig.resultsCount = ctrl.filteredItems.length;
 
       // Deselect the currently selected template if it was filtered out
       if (!_.includes(ctrl.filteredItems, ctrl.selectedTemplate)) {
         ctrl.templateSelected();
-      }
-
-      updateFilterControls();
-    }
-
-    function updateFilterControls() {
-      ctrl.filterConfig.resultsCount = ctrl.filteredItems.length;
-
-      if (ctrl.totalCount <= 1) {
-        $('.filter-pf.filter-fields input').attr('disabled', '');
-      } else {
-        $('.filter-pf.filter-fields input').removeAttr("disabled");
       }
     }
 
