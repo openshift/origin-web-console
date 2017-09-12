@@ -3074,24 +3074,30 @@ message: null
 };
 }), angular.module("openshiftConsole").factory("SecretsService", function() {
 var e = function(e) {
-var t = {}, n = JSON.parse(window.atob(e));
+var t = {
+auths: {}
+}, n = JSON.parse(window.atob(e));
 return _.each(n, function(e, n) {
-t[n] = {
+t.auths[n] = {
 username: e.username,
 password: e.password,
 email: e.email
 };
 }), t;
 }, t = function(e) {
-var t = {}, n = JSON.parse(window.atob(e));
+var t = {
+auths: {}
+}, n = JSON.parse(window.atob(e));
 return _.each(n.auths, function(e, n) {
+if (e.auth) {
 var a = window.atob(e.auth).split(":");
-t[n] = {
+t.auths[n] = {
 username: a[0],
 password: a[1],
 email: e.email
 };
-}), t;
+} else t.auths[n] = e;
+}), n.credsStore && (t.credsStore = n.credsStore), t;
 };
 return {
 groupSecretsByType: function(e) {

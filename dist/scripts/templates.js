@@ -123,17 +123,29 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/_config-file-params.html',
-    "<div ng-repeat=\"(serverName, data) in secretData\" class=\"image-source-item\">\n" +
+    "<div ng-repeat=\"(serverName, data) in secretData.auths\" class=\"image-source-item\">\n" +
     "<h3>{{serverName}}</h3>\n" +
-    "<dt>username</dt>\n" +
-    "<dd class=\"word-break\">{{data.username}}</dd>\n" +
-    "<dt>password</dt>\n" +
-    "<dd ng-if=\"view.showSecret\">\n" +
+    "<dt ng-if-start=\"data.username\">username</dt>\n" +
+    "<dd ng-if-end class=\"word-break\">{{data.username}}</dd>\n" +
+    "<dt ng-if-start=\"data.password\">password</dt>\n" +
+    "<dd ng-if-end>\n" +
+    "<span ng-if=\"view.showSecret\">\n" +
     "<copy-to-clipboard clipboard-text=\"data.password\" display-wide=\"true\"></copy-to-clipboard>\n" +
+    "</span>\n" +
+    "<span ng-if=\"!view.showSecret\">*****</span>\n" +
     "</dd>\n" +
-    "<dd ng-if=\"!view.showSecret\">*****</dd>\n" +
-    "<dt>email</dt>\n" +
-    "<dd class=\"word-break\">{{data.email}}</dd>\n" +
+    "<dt ng-if-start=\"data.email\">email</dt>\n" +
+    "<dd ng-if-end class=\"word-break\">{{data.email}}</dd>\n" +
+    "<div ng-if=\"!data.username && !data.password && !data.email\">\n" +
+    "No username and password.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<h3 ng-if-start=\"secretData.credsStore\">Credentials Store</h3>\n" +
+    "<div ng-if-end>\n" +
+    "<span ng-if=\"view.showSecret\">\n" +
+    "<copy-to-clipboard clipboard-text=\"secretData.credsStore\" display-wide=\"true\"></copy-to-clipboard>\n" +
+    "</span>\n" +
+    "<span ng-if=\"!view.showSecret\">*****</span>\n" +
     "</div>"
   );
 
