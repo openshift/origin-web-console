@@ -10137,10 +10137,11 @@ return s.list().then(function(e) {
 l = e.by("metadata.name");
 });
 };
-r.$on("$routeChangeSuccess", function() {
-var e = a.project;
-r.currentProjectName !== e && (r.currentProjectName = e, r.chromeless = "chromeless" === a.view, e && !r.chromeless ? (_.set(n, "view.hasProject", !0), r.canIAddToProject = !1, o.getProjectRules(e).then(function() {
-r.currentProjectName === e && (r.canIAddToProject = o.canIAddToProject(e));
+r.$on("$routeChangeSuccess", function(e, t) {
+r.nextRoute = t;
+var i = a.project;
+r.currentProjectName !== i && (r.currentProjectName = i, r.chromeless = "chromeless" === a.view, i && !r.chromeless ? (_.set(n, "view.hasProject", !0), r.canIAddToProject = !1, o.getProjectRules(i).then(function() {
+r.currentProjectName === i && (r.canIAddToProject = o.canIAddToProject(i));
 }), C().then(function() {
 r.currentProjectName && l && (l[r.currentProjectName] || (l[r.currentProjectName] = {
 metadata: {

@@ -6927,9 +6927,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"icon-bar\"></span>\n" +
     "</button>\n" +
     "\n" +
-    "<a class=\"navbar-brand\" id=\"openshift-logo\" href=\"./\">\n" +
-    "<div id=\"header-logo\"></div>\n" +
-    "</a>\n" +
+    "\n" +
+    "\n" +
+    "\n" +
+    "\n" +
+    "<div style=\"color: white\">\n" +
+    "view.hasProject: {{view.hasProject}} currentProjectName: {{currentProjectName}}\n" +
+    "</div>\n" +
+    "<div style=\"color: white\">\n" +
+    "nextRoute: {{nextRoute.params}}\n" +
+    "</div>\n" +
     "</div>\n" +
     "<navbar-utility></navbar-utility>\n" +
     "</nav>\n" +
