@@ -99,6 +99,7 @@
                   Environment variables can be edited on the <a ng-href="{{build | configURLForResource}}?tab=environment">build configuration</a>.
                 </p>
                 <key-value-editor
+                  ng-if="(build | buildStrategy).env | size"
                   entries="(build | buildStrategy).env"
                   key-placeholder="Name"
                   value-placeholder="Value"
