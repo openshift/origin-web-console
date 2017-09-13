@@ -305,7 +305,8 @@ angular.module('openshiftConsole')
           });
         };
 
-        $scope.$on('$routeChangeSuccess', function() {
+        $scope.$on('$routeChangeSuccess', function(event, next) {
+          $scope.nextRoute = next;
           var currentProjectName = $routeParams.project;
           if ($scope.currentProjectName === currentProjectName) {
             // The project hasn't changed.
