@@ -930,8 +930,9 @@ a.disabled-link {
   }
 }
 
-@media(max-width: @screen-xs-max) {
-  .contains-actions .dropdown {
+.contains-actions .dropdown {
+  margin-left: 10px;
+  @media(max-width: @screen-xs-max) {
     // add dropdown-pf-kebab styles
     .dropdown-kebab-pf;
     // adjust position of dropdown to account for larger kebab
@@ -1293,4 +1294,3 @@ pre.clipped {
     }
   }
 }
-

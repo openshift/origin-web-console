@@ -4693,6 +4693,7 @@ a.disabled-link{color:#bbb;cursor:not-allowed;opacity:.4}
 a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;text-decoration:none}
 .actions-dropdown-kebab{color:#252525;padding:0 10px}
 .actions-dropdown-kebab:active,.actions-dropdown-kebab:focus,.actions-dropdown-kebab:hover{color:#0088ce}
+.contains-actions .dropdown{margin-left:10px}
 @media (max-width:767px){.contains-actions .dropdown .btn-link{color:#252525;font-size:17px;line-height:1;padding:4px 10px;margin-left:-10px;margin-right:-10px}
 .contains-actions .dropdown .btn-link:active,.contains-actions .dropdown .btn-link:focus,.contains-actions .dropdown .btn-link:hover{color:#0088ce}
 .contains-actions .dropdown .dropdown-menu{left:-15px;margin-top:11px}
