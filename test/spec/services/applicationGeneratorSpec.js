@@ -255,77 +255,69 @@ describe("ApplicationGenerator", function(){
     });
 
     it("should generate a BuildConfig for the source", function(){
-      expect(resources.buildConfig).toEqual(
-        {
-            "apiVersion": "v1",
-            "kind": "BuildConfig",
-            "metadata": {
-                "name": "ruby-hello-world",
-                "labels": {
-                  "foo" : "bar",
-                  "abc" : "xyz"
-                },
-                "annotations": {
-                  "openshift.io/generated-by": "OpenShiftWebConsole"
-                }
-            },
-            "spec": {
-                "output": {
-                    "to": {
-                        "name": "ruby-hello-world:latest",
-                        "kind": "ImageStreamTag"
-                    }
-                },
-                "source": {
-                    "git": {
-                        "ref": "master",
-                        "uri": "https://github.com/openshift/ruby-hello-world.git"
-                    },
-                    "type": "Git"
-                },
-                "strategy": {
-                    "type": "Source",
-                    "sourceStrategy" : {
-                      "from": {
-                        "kind": "ImageStreamTag",
-                        "name": "origin-ruby-sample:latest"
-                      },
-                      "env": [
-                        {
-                          "name": "BUILD_ENV_1",
-                          "value": "someValue"
-                        },
-                        {
-                          "name": "BUILD_ENV_2",
-                          "value": "anotherValue"
-                        }
-                      ]
-                    }
-                },
-                "triggers": [
-                    {
-                        "generic": {
-                            "secret": "secret101"
-                        },
-                        "type": "Generic"
-                    },
-                    {
-                        "github": {
-                            "secret": "secret101"
-                        },
-                        "type": "GitHub"
-                    },
-                    {
-                      "imageChange" : {},
-                      "type" : "ImageChange"
-                    },
-                    {
-                        "type": "ConfigChange"
-                    }
-                ]
-            }
+      // the full output tree should match
+      expect(resources.buildConfig).toEqual({
+        "apiVersion": "v1",
+        "kind": "BuildConfig",
+        "metadata": {
+          "name": "ruby-hello-world",
+          "labels": {
+            "foo" : "bar",
+            "abc" : "xyz"
+          },
+          "annotations": {
+            "openshift.io/generated-by": "OpenShiftWebConsole"
           }
-      );
+        },
+        "spec": {
+          "output": {
+            "to": {
+              "name": "ruby-hello-world:latest",
+              "kind": "ImageStreamTag"
+            }
+          },
+          "source": {
+            "git": {
+              "ref": "master",
+              "uri": "https://github.com/openshift/ruby-hello-world.git"
+            },
+            "type": "Git"
+          },
+          "strategy": {
+            "type": "Source",
+            "sourceStrategy" : {
+              "from": {
+                "kind": "ImageStreamTag",
+                "name": "origin-ruby-sample:latest"
+              },
+              "env": [{
+                "name": "BUILD_ENV_1",
+                "value": "someValue"
+              },{
+                "name": "BUILD_ENV_2",
+                "value": "anotherValue"
+              }]
+            }
+          },
+          "triggers": [{
+              "generic": {
+                "secret": "secret101"
+              },
+              "type": "Generic"
+            },{
+              "github": {
+                "secret": "secret101"
+              },
+              "type": "GitHub"
+            },{
+              "imageChange" : {},
+              "type" : "ImageChange"
+            },{
+              "type": "ConfigChange"
+            }
+           ]
+         }
+       });
     });
 
     it("should generate an ImageStream for the build output", function(){

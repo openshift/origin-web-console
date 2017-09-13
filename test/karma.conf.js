@@ -7,8 +7,14 @@ module.exports = function(config) {
   'use strict';
 
   config.set({
+    // maximum boot-up time allowed for a browser to start and connect to Karma
+    // a browser gets 3x changes within this timeout range to connect to Karma
+    // there are other timeouts as well, consult the config file
+    // docs: https://karma-runner.github.io/1.0/config/configuration-file.html
+    captureTimeout: 3000,
     // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: true,
+    // why set to true when we have grunt watch?
+    autoWatch: false,
 
     // base path, that will be used to resolve files and exclude
     basePath: '../',
@@ -107,7 +113,7 @@ module.exports = function(config) {
     exclude: [],
 
     // web server port
-    port: 8443,
+    // port: 8443,
 
     // Start these browsers, currently available:
     // - Chrome
@@ -121,25 +127,23 @@ module.exports = function(config) {
       'karma-firefox-launcher',
       'karma-chrome-launcher',
       'karma-phantomjs-launcher',
+      'karma-nightmare',
       'karma-ng-html2js-preprocessor',
       'karma-jasmine',
-      'karma-coverage'
+      'karma-coverage',
+      'karma-jasmine-diff-reporter'
     ],
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: false,
+     singleRun: false,
 
-    colors: true,
+     colors: true,
 
     // level of logging
     // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG
-    logLevel: config.LOG_DEBUG,
+    logLevel: config.LOG_ERROR,
 
-    // Help karma find the views on disk in the app subdirectory
-    proxies: {
-      '/views/': '/app/views/'
-    },
     // URL root prevent conflicts with the site root
     // urlRoot: '_karma_'
 
@@ -153,18 +157,28 @@ module.exports = function(config) {
 
     ngHtml2JsPreprocessor: {
       moduleName: 'openshiftConsoleTemplates',
-      cacheIdFromPath: function(filepath) {
-        return filepath.replace('app/', '');
-      },
+      stripPrefix: '/app',
     },
 
-    reporters: ['progress', 'coverage'],
+    // order of reporters matters, input/output may break
+    reporters: ['jasmine-diff', 'progress', 'coverage'],
 
     coverageReporter: {
-      reporters:[
-        {type: 'json', dir:'test/coverage/'},
-        {type: 'text-summary', dir:'test/coverage/'}
-      ]
+      type: 'text',
+      // outputs the results of coverage reporter to this dir
+      dir: 'test-results/coverage/'
+    },
+
+    jasmineDiffReporter: {
+      // jasmine kinda has its own diff now, but its sub-par.
+      legacy: true
+    },
+
+    nightmareOptions: {
+      width: 1048,
+      height: 600,
+      show: false,
     }
+
   });
 };

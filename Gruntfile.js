@@ -15,6 +15,7 @@ module.exports = function (grunt) {
   var contextRoot = grunt.option('contextRoot') || "dev-console";
   var isMac = /^darwin/.test(process.platform) || grunt.option('mac');
 
+
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt, {
     pattern: ['grunt-*', '!grunt-template-jasmine-istanbul']
@@ -602,9 +603,8 @@ module.exports = function (grunt) {
 
     // Test settings
     karma: {
-      unit: {
+      options: {
         configFile: 'test/karma.conf.js',
-        singleRun: true,
         // default in karma.conf.js is Firefox, however, Chrome has much better
         // error messages when writing tests.  Call like this:
         // grunt test
@@ -612,37 +612,45 @@ module.exports = function (grunt) {
         // grunt test --browsers=Chrome,Firefox,Safari (be sure karma-<browser_name>-launcher is installed)
         browsers: grunt.option('browsers') ?
                     grunt.option('browsers').split(',') :
-                    ['Firefox']
+                    // if running locally on mac, we can test both FF & Chrome,
+                    // in Travis, just FF
+                    // ['Nightmare'] is a good alt for a current headless
+                    // FIXME: fix this, PhantomJS is deprecated
+                    isMac ?
+                      ['Firefox', 'Chrome'] :
+                      ['PhantomJS']
+      },
+      unit: {
+        singleRun: true,
       }
     },
 
     protractor: {
       options: {
-        configFile: "test/protractor.conf.js", // Default config file
+        configFile: "test/protractor.conf.js",
         keepAlive: false, // If false, the grunt process stops when the test fails.
-        noColor: false, // If true, protractor will not use colors in its output.
+        noColor: false,
         args: {
-          // Arguments passed to the command
           suite: grunt.option('suite') || 'full',
           baseUrl: grunt.option('baseUrl') || ("https://localhost:9000/" + contextRoot + "/")
         }
       },
       default: {
         options: {
-          configFile: "test/protractor.conf.js", // Target-specific config file
+          configFile: "test/protractor.conf.js",
           args: {
             baseUrl: grunt.option('baseUrl') || ("https://localhost:9000/" + contextRoot + "/"),
             browser: grunt.option('browser') || "firefox"
-          } // Target-specific arguments
+          }
         }
       },
       mac: {
         options: {
-          configFile: "test/protractor-mac.conf.js", // Target-specific config file
+          configFile: "test/protractor-mac.conf.js",
           args: {
             baseUrl: grunt.option('baseUrl') || ("https://localhost:9000/" + contextRoot + "/"),
             browser: grunt.option('browser') || "firefox"
-          } // Target-specific arguments
+          }
         }
       }
     },
@@ -728,7 +736,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-angular-templates');
 
   // karma must run prior to coverage since karma will generate the coverage results
-  grunt.registerTask('test', [
+  grunt.registerTask('test-unit', [
     'clean:server',
     'concurrent:test',
     'postcss',
@@ -737,18 +745,23 @@ module.exports = function (grunt) {
     // 'coverage' - add back if we want to enforce coverage percentages
   ]);
 
+  // test as an alias to unit.  after updating protractor,
+  // will make test an alias for both unit & e2e
+  grunt.registerTask('test', ['test-unit']);
+
   grunt.registerTask('test-integration',
+    // if a baseUrl is defined assume we dont want to run the local grunt server
     grunt.option('baseUrl') ?
-    [isMac ? 'protractor:mac' : 'protractor:default'] : // if a baseUrl is defined assume we dont want to run the local grunt server
-    [
-      'clean:server',
-      'development-build',
-      'postcss',
-      'connect:test',
-      'add-redirect-uri',
-      (isMac ? 'protractor:mac' : 'protractor:default'),
-      'clean:server'
-    ]
+      [isMac ? 'protractor:mac' : 'protractor:default'] :
+      [
+        'clean:server',
+        'development-build',
+        'postcss',
+        'connect:test',
+        'add-redirect-uri',
+        (isMac ? 'protractor:mac' : 'protractor:default'),
+        'clean:server'
+      ]
   );
 
   grunt.registerTask('build', [
