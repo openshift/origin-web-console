@@ -5610,6 +5610,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<legend ng-if-start=\"ctrl.application.spec.template.spec.containers.length > 1\">Containers:</legend>\n" +
+    "<div ng-if-end class=\"form-group container-options\">\n" +
+    "<div ng-if=\"ctrl.attachAllContainers\">\n" +
+    "The secret will be added to all containers. You can\n" +
+    "<a href=\"\" ng-click=\"ctrl.attachAllContainers = false\">select specific containers</a>\n" +
+    "instead.\n" +
+    "</div>\n" +
+    "<div ng-if=\"!ctrl.attachAllContainers\" class=\"form-group\">\n" +
+    "<label class=\"sr-only required\">Containers</label>\n" +
+    "<select-containers ng-model=\"ctrl.attachContainers\" pod-template=\"ctrl.application.spec.template\" ng-required=\"true\" help-text=\"Add the secret to the selected containers.\">\n" +
+    "</select-containers>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "<div class=\"button-group pull-right\">\n" +
     "<button class=\"btn btn-default\" ng-class=\"{'dialog-btn': isDialog}\" ng-click=\"ctrl.onCancel()\">\n" +
     "Cancel\n" +
@@ -8811,6 +8824,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/select-containers.html',
     "<ng-form name=\"forms.containerSelect\">\n" +
+    "<div class=\"select-container\">\n" +
     "<div class=\"checkbox\" ng-repeat=\"container in template.spec.containers\">\n" +
     "<label class=\"truncate\">\n" +
     "<input type=\"checkbox\" ng-model=\"containers[container.name]\" ng-required=\"required && !containerSelected\">\n" +
@@ -8820,6 +8834,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<i ng-attr-title=\"{{container.image}}\">{{container.image}}</i>\n" +
     "</span>\n" +
     "</label>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"helpText\" class=\"help-block\">\n" +
     "{{helpText}}\n" +

@@ -10639,12 +10639,16 @@ var e = new RegExp("^[A-Za-z_]{1}[A-Za-z0-9_]*$");
 m.hasInvalidEnvVars = _.some(m.secret.data, function(t, n) {
 return !e.test(n);
 });
-}, m.$postLink = function() {
+};
+var g = function(e) {
+return m.attachAllContainers || m.attachContainers[e.name];
+};
+m.$postLink = function() {
 t.$watch(function() {
 return m.application;
 }, function() {
 var e = _.get(m.application, "spec.template");
-m.existingMountPaths = i.getMountPaths(e);
+m.existingMountPaths = i.getMountPaths(e), m.attachAllContainers = !0;
 });
 }, m.addToApplication = function() {
 var t = angular.copy(m.application), i = _.get(t, "spec.template");
@@ -10655,7 +10659,7 @@ name: m.secret.metadata.name
 }
 };
 _.each(i.spec.containers, function(e) {
-e.envFrom = e.envFrom || [], e.envFrom.push(s);
+g(e) && (e.envFrom = e.envFrom || [], e.envFrom.push(s));
 });
 } else {
 var c = e("generateName")(m.secret.metadata.name + "-"), l = {
@@ -10664,7 +10668,7 @@ mountPath: m.mountVolume,
 readOnly: !0
 };
 _.each(i.spec.containers, function(e) {
-e.volumeMounts = e.volumeMounts || [], e.volumeMounts.push(l);
+g(e) && (e.volumeMounts = e.volumeMounts || [], e.volumeMounts.push(l));
 });
 var u = {
 name: c,
@@ -10674,10 +10678,10 @@ secretName: m.secret.metadata.name
 };
 i.spec.volumes = i.spec.volumes || [], i.spec.volumes.push(u);
 }
-var d = e("humanizeKind"), p = d(m.secret.kind), f = d(t.kind), g = {
+var d = e("humanizeKind"), p = d(m.secret.kind), f = d(t.kind), h = {
 namespace: m.project.metadata.name
 };
-a.update(n.kindToResource(t.kind), t.metadata.name, t, g).then(function() {
+a.update(n.kindToResource(t.kind), t.metadata.name, t, h).then(function() {
 o.addNotification({
 type: "success",
 message: "Successfully added " + p + " " + m.secret.metadata.name + " to " + f + " " + t.metadata.name + ".",
