@@ -5008,7 +5008,7 @@ h2+.list-view-pf{margin-top:20px}
 }
 .overview .list-row-tabset .nav-tabs>li.active>a .build-count{color:#4d5258}
 .overview .list-view-pf-actions .actions-dropdown-kebab{font-size:18px;width:100%}
-.overview .loading-message{margin-top:20px}
+.overview .loading-message{padding-top:20px}
 .overview .metrics-collapsed{flex-grow:1;text-align:center}
 .overview .metrics-summary{display:inline-block;text-align:center}
 .overview .metrics-summary+.metrics-summary{margin-left:20px}
