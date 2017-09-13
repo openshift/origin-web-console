@@ -6958,7 +6958,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<navbar-utility></navbar-utility>\n" +
     "</nav>\n" +
-    "<div ng-show=\"currentProjectName && !chromeless\" class=\"project-bar\">\n" +
+    "<div ng-show=\"view.hasProject\" class=\"project-bar\">\n" +
     "<div class=\"toggle-menu\">\n" +
     "<button type=\"button\" class=\"navbar-toggle project-action-btn\" ng-click=\"toggleNav()\">\n" +
     "<span class=\"sr-only\">Toggle navigation</span>\n" +

@@ -305,7 +305,7 @@ angular.module('openshiftConsole')
           });
         };
 
-        $scope.$on('$routeChangeSuccess', function() {
+        var onRouteChange = function() {
           var currentProjectName = $routeParams.project;
           if ($scope.currentProjectName === currentProjectName) {
             // The project hasn't changed.
@@ -353,7 +353,14 @@ angular.module('openshiftConsole')
           } else {
             _.set($rootScope, 'view.hasProject', false);
           }
-        });
+        };
+
+        // Make sure `onRouteChange` gets called on page load, even if
+        // `$routeChangeSuccess` doesn't fire. `onRouteChange` doesn't do any
+        // work if the project name hasn't changed, so there's no penalty if it
+        // gets called twice. This fixes a flake in our integration tests.
+        onRouteChange();
+        $scope.$on('$routeChangeSuccess', onRouteChange);
 
         select
           .selectpicker({
