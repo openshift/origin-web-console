@@ -14,7 +14,7 @@ angular.module('openshiftConsole')
           }
         );
 
-        if (_.get(window, 'OPENSHIFT_CONSTANTS.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page')) {
+        if (!_.get(window, 'OPENSHIFT_CONSTANTS.DISABLE_SERVICE_CATALOG_LANDING_PAGE')) {
           var tourConfig = _.get(window, 'OPENSHIFT_CONSTANTS.GUIDED_TOURS.landing_page_tour');
           if (tourConfig && tourConfig.enabled && tourConfig.steps) {
             options.push(

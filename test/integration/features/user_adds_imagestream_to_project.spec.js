@@ -2,7 +2,7 @@
 
 const h = require('../helpers');
 const projectHelpers = require('../helpers/project');
-const OverviewPage = require('../page-objects/overview').OverviewPage;
+const CatalogPage = require('../page-objects/catalog').CatalogPage;
 const CreateProjectPage = require('../page-objects/createProject').CreateProjectPage;
 const ImageStreamsPage = require('../page-objects/imageStreams').ImageStreamsPage;
 const centosImageStream = require('../fixtures/image-streams-centos7.json');
@@ -26,9 +26,8 @@ describe('User adds an image stream to a project', () => {
         let createProjectPage = new CreateProjectPage(project);
         createProjectPage.visit();
         createProjectPage.createProject();
-        let overviewPage = new OverviewPage(project);
-        overviewPage.visit();
-        let catalogPage = overviewPage.clickAddToProject();   // implicit redirect to catalog page
+        let catalogPage = new CatalogPage(project);
+        catalogPage.visit();
         catalogPage
           .processImageStream(JSON.stringify(centosImageStream))
           .then(() => {

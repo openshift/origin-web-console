@@ -11210,11 +11210,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Use your source or an example repository to build an application image, or add components like databases and message queues.\n" +
     "</p>\n" +
     "<p class=\"gutter-top\">\n" +
-    "<a ng-if=\"!('service_catalog_landing_page' | enableTechPreviewFeature)\" ng-href=\"project/{{projectName}}/create\" class=\"btn btn-lg btn-primary\">\n" +
-    "Add to Project\n" +
-    "</a>\n" +
-    "<a ng-if=\"'service_catalog_landing_page' | enableTechPreviewFeature\" ng-href=\"./\" class=\"btn btn-lg btn-primary\">\n" +
+    "<a ng-if=\"overview.catalogLandingPageEnabled\" href=\"./\" class=\"btn btn-lg btn-primary\">\n" +
     "Browse Catalog\n" +
+    "</a>\n" +
+    "<a ng-if=\"!overview.catalogLandingPageEnabled\" ng-href=\"project/{{projectName}}/create\" class=\"btn btn-lg btn-primary\">\n" +
+    "Add to Project\n" +
     "</a>\n" +
     "</p>\n" +
     "</div>\n" +
