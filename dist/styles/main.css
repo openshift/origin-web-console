@@ -4919,6 +4919,7 @@ h2+.list-view-pf{margin-top:20px}
 .order-service-config-single-column,.overview .data-toolbar-filter .name-filter form,.overview .data-toolbar-filter .name-filter input{width:100%}
 .navbar-toggle:focus{color:#fff;outline:dotted thin!important;outline:-webkit-focus-ring-color auto 5px!important;outline-offset:-2px!important}
 .wizard-pf-main .ace_editor.editor{height:285px}
+.landing-page .wizard-pf-main .ace_editor.editor{height:220px}
 .wizard-pf-main .deploy-image .empty-state-message{margin:30px auto}
 .build-count .icon-count,.builds-label{margin-right:5px;display:inline-block}
 .build-count .builds,.build-count .pipelines{display:block}
