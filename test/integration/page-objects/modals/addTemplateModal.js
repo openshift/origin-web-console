@@ -1,6 +1,7 @@
 'use strict';
 
 const inputs = require('../../helpers/inputs');
+const timing = require('../../helpers/timing');
 
 class AddTemplateModal {
   constructor(project) {
@@ -16,7 +17,7 @@ class AddTemplateModal {
     inputs.check(this.processBox);
     inputs.uncheck(this.saveBox);
     this.continue.click();
-    return browser.sleep(500).then(() => {
+    return browser.sleep(timing.implicitRedirect).then(() => {
       // lazy require to avoid potential of circular dependencies
       let CreateFromTemplatePage = require('../createFromTemplate').CreateFromTemplatePage;
       return new CreateFromTemplatePage(this.project);
@@ -26,7 +27,7 @@ class AddTemplateModal {
     inputs.uncheck(this.processBox);
     inputs.check(this.saveBox);
     this.continue.click();
-    return browser.sleep(500).then(() => {
+    return browser.sleep(timing.implicitRedirect).then(() => {
       // lazy require
       let OverviewPage = require('../overview').OverviewPage;
       return new OverviewPage(this.project); // automatic redirect

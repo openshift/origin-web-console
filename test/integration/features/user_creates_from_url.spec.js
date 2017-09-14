@@ -1,18 +1,20 @@
 'use strict';
 
-require('jasmine-beforeall');
-
-const h = require('../helpers');
+const common = require('../helpers/common');
 const addExtension = require('../helpers/extensions').addExtension;
 const resetExtensions = require('../helpers/extensions').resetExtensions;
 const matchersHelpers = require('../helpers/matchers');
 const projectHelpers = require('../helpers/project');
 const inputsHelpers = require('../helpers/inputs');
+const forms = require('../helpers/forms');
+
 const CreateFromURLPage = require('../page-objects/createFromURL').CreateFromURLPage;
 const CreateProjectPage = require('../page-objects/createProject').CreateProjectPage;
-const CatalogPage = require('../page-objects/catalog').CatalogPage;
+const LegacyCatalogPage = require('../page-objects/legacyCatalog').LegacyCatalogPage;
+
 const nodeMongoTemplate = require('../fixtures/nodejs-mongodb');
 const centosImageStream = require('../fixtures/image-streams-centos7.json');
+
 
 describe('authenticated e2e-user', function() {
 
@@ -31,7 +33,7 @@ describe('authenticated e2e-user', function() {
     let createProjectPage = new CreateProjectPage(fixturesProject);
     createProjectPage.visit();
     createProjectPage.createProject();
-    let catalogPage = new CatalogPage(fixturesProject);
+    let catalogPage = new LegacyCatalogPage(fixturesProject);
     // - add an image stream to that namespace
     catalogPage.visit();
     catalogPage.processImageStream(JSON.stringify(centosImageStream));
@@ -40,17 +42,16 @@ describe('authenticated e2e-user', function() {
     catalogPage.saveTemplate(JSON.stringify(nodeMongoTemplate));
   };
 
-  beforeAll(function() {
-    h.commonSetup();
-    h.login();
-    projectHelpers.deleteAllProjects();
+  // NOTE: beforeAll vs beforeEach.
+  // these tests only do the setup once.
+  beforeAll(() => {
+    common.beforeEach();
     setupEnv();
   });
 
-  afterAll(function() {
-    projectHelpers.deleteAllProjects();
+  afterAll(() => {
+    common.afterEach();
     resetExtensions();
-    h.afterAllTeardown();
   });
 
   describe('create from URL', function() {
@@ -67,6 +68,7 @@ describe('authenticated e2e-user', function() {
       let words = project.name.split(' ');
       let timestamp = words[words.length - 1];
 
+
       it('should display details about the the image', function() {
         let createFromURLPage = new CreateFromURLPage();
         createFromURLPage.visit(qs);
@@ -77,18 +79,26 @@ describe('authenticated e2e-user', function() {
         let createFromURLPage = new CreateFromURLPage();
         createFromURLPage.visit(qs);
         createFromURLPage.clickCreateNewProjectTab();
-        projectHelpers.createProject(project, 'project/' + project['name'] + 'create/fromimage' + qs);
+
+        let createProjectPage = new CreateProjectPage(project);
+        createProjectPage.visit();
+        createProjectPage.createProject();
+
         matchersHelpers.expectHeading(heading);
+
         projectHelpers.deleteProject(project);
       });
 
-      it('should load the image stream in to an existing project and verify the query string params are loaded in to the corresponding form fields', function(){
+      it('should load the image stream in to an existing project and verify the query string params are loaded in to the corresponding form fields', function() {
+        let createProjectPage = new CreateProjectPage(project);
+        createProjectPage.visit();
+        createProjectPage.createProject();
+
         let createFromURLPage = new CreateFromURLPage();
-        projectHelpers.visitCreatePage();
-        projectHelpers.createProject(project);
         createFromURLPage.visit(qs);
         createFromURLPage.selectExistingProject(timestamp, uri);
         matchersHelpers.expectHeading(heading);
+
         let nameInput = element(by.model('name'));
         expect(nameInput.getAttribute('value')).toEqual(name);
         let sourceURIInput = element(by.model('buildConfig.sourceUrl'));
@@ -98,6 +108,7 @@ describe('authenticated e2e-user', function() {
         expect(sourceRefInput.getAttribute('value')).toEqual(sourceRef);
         let contextDirInput = element(by.model('buildConfig.contextDir'));
         expect(contextDirInput.getAttribute('value')).toEqual(contextDir);
+
         projectHelpers.deleteProject(project);
       });
 
@@ -112,25 +123,30 @@ describe('authenticated e2e-user', function() {
       let words = project.name.split(' ');
       let timestamp = words[words.length - 1];
 
+
       it('should display details about the template', function() {
         let createFromURLPage = new CreateFromURLPage();
         createFromURLPage.visit(qs);
         matchersHelpers.expectHeading(heading);
       });
 
+
       it('should load the template in to a newly created project', function() {
         let createFromURLPage = new CreateFromURLPage();
         createFromURLPage.visit(qs);
         createFromURLPage.clickCreateNewProjectTab();
-        projectHelpers.createProject(project, 'project/' + project['name'] + 'create/fromtemplate' + qs);
+        forms.submitNewProjectForm(project);
         matchersHelpers.expectHeading(heading);
         projectHelpers.deleteProject(project);
       });
 
+
       it('should load the template in an existing project and verify the query string param sourceURL is loaded in to a corresponding form field', function(){
+        let createProjectPage = new CreateProjectPage(project);
+        createProjectPage.visit();
+        createProjectPage.createProject();
+
         let createFromURLPage = new CreateFromURLPage();
-        projectHelpers.visitCreatePage();
-        projectHelpers.createProject(project);
         createFromURLPage.visit(qs);
         createFromURLPage.selectExistingProject(timestamp, uri);
         matchersHelpers.expectHeading(heading);
@@ -140,7 +156,7 @@ describe('authenticated e2e-user', function() {
             expect(found).toEqual(sourceURL);
             projectHelpers.deleteProject(project);
           });
-        });
+      });
 
     });
 
@@ -183,6 +199,7 @@ describe('authenticated e2e-user', function() {
         matchersHelpers.expectAlert('An image stream or template is required.');
       });
     });
+
     describe('using both an image stream and a template', function() {
       it('should display an error about combining resources', function() {
         let createFromURLPage = new CreateFromURLPage();
@@ -190,6 +207,7 @@ describe('authenticated e2e-user', function() {
         matchersHelpers.expectAlert('Image streams and templates cannot be combined.');
       });
     });
+
     describe('using an invalid app name as a query string param', function() {
       it('should display an error about the app name', function() {
         let createFromURLPage = new CreateFromURLPage();

@@ -26,6 +26,7 @@
     "afterAll": false,
     "angular": false,
     "by": false,
+    "By": false,
     "before": false,
     "beforeAll": false,
     "beforeEach": false,

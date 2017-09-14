@@ -1,5 +1,13 @@
 'use strict';
-/*jshint esversion: 6 */
+
+
+const setInputValue = (selector, value) => {
+  var input = element(selector);
+  input.clear();
+  input.sendKeys(value);
+  expect(input.getAttribute("value")).toBe(value);
+  return input;
+};
 
 // is a pain to get an array of input values because .getAttribute()
 // is a promise
@@ -56,6 +64,7 @@ const uncheck = (checkboxElem) => {
   });
 };
 
+exports.setInputValue = setInputValue;
 exports.getInputValues = getInputValues;
 exports.findValueInInputs = findValueInInputs;
 
