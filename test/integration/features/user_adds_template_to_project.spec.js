@@ -1,24 +1,24 @@
 'use strict';
 
-const h = require('../helpers');
+const common = require('../helpers/common');
 const projectHelpers = require('../helpers/project');
-const CatalogPage = require('../page-objects/catalog').CatalogPage;
+
+const CatalogPage = require('../page-objects/legacyCatalog').LegacyCatalogPage;
 const CreateProjectPage = require('../page-objects/createProject').CreateProjectPage;
 const DeploymentsPage = require('../page-objects/deployments').DeploymentsPage;
 const ServicesPage = require('../page-objects/services').ServicesPage;
 const RoutesPage = require('../page-objects/routes').RoutesPage;
+
 const nodeMongoTemplate = require('../fixtures/nodejs-mongodb');
 
 describe('User adds a template to a project', () => {
 
   beforeEach(() => {
-    h.commonSetup();
-    h.login();
-    projectHelpers.deleteAllProjects();
+    common.beforeEach();
   });
 
   afterEach(() => {
-    h.commonTeardown();
+    common.afterEach();
   });
 
   describe('after creating a new project', () => {
@@ -33,21 +33,25 @@ describe('User adds a template to a project', () => {
         catalogPage
           .processTemplate(JSON.stringify(nodeMongoTemplate))
           .then((createFromTemplatePage) => {
-            createFromTemplatePage.clickCreate();             // implicit redirect to overview page
+            // implicit redirect to overview page
+            createFromTemplatePage.clickCreate();
+
             // verify we have the 2 deployments in the template
             let deploymentsPage = new DeploymentsPage(project);
             deploymentsPage.visit();
-            expect(element(by.cssContainingText('td', 'mongodb')).isPresent()).toBe(true); // TODO: use fixture
-            expect(element(by.cssContainingText('td', 'nodejs-mongodb-example')).isPresent()).toBe(true); // TODO: use fixture
+            // TODO: these are not good tests. The output logs will just say
+            // expected false to be true. Tests should be much more explicit.
+            expect(element(by.cssContainingText('td a', 'mongodb')).isPresent()).toBe(true); // TODO: use fixture
+            expect(element(by.cssContainingText('td a', 'nodejs-mongodb-example')).isPresent()).toBe(true); // TODO: use fixture
             // verify we have the two services in the template
             let servicesPage = new ServicesPage(project);
             servicesPage.visit();
-            expect(element(by.cssContainingText('td', 'mongodb')).isPresent()).toBe(true); // TODO: use fixture
-            expect(element(by.cssContainingText('td', 'nodejs-mongodb-example')).isPresent()).toBe(true); // TODO: use fixture
+            expect(element(by.cssContainingText('td a', 'mongodb')).isPresent()).toBe(true); // TODO: use fixture
+            expect(element(by.cssContainingText('td a', 'nodejs-mongodb-example')).isPresent()).toBe(true); // TODO: use fixture
             // verify we have one route for the mongo app
             let routesPage = new RoutesPage(project);
             routesPage.visit();
-            expect(element(by.cssContainingText('td', 'nodejs-mongodb-example')).isPresent()).toBe(true); // TODO: use fixture
+            expect(element(by.cssContainingText('td a', 'nodejs-mongodb-example')).isPresent()).toBe(true); // TODO: use fixture
           });
       });
 
@@ -64,11 +68,13 @@ describe('User adds a template to a project', () => {
         catalogPage
           .saveTemplate(JSON.stringify(nodeMongoTemplate))
           .then(() => {
-            // once the template processes, we just have to return
-            // to the catalog and verify the tile exists
             catalogPage.visit();
             catalogPage.clickCategory('JavaScript'); // TODO: pass in the tile name from the template fixture
             catalogPage.findTileBy('Node.js + MongoDB (Ephemeral)', project.name); // TODO: pass in...
+            // TODO: this is not a good test. The output logs will just say
+            // expected false to be true. Tests should be much more explicit.
+            // once the template processes, we just have to return
+            // to the catalog and verify the tile exists
             expect(element).toBeTruthy();
           });
       });

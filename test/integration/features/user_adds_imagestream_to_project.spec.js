@@ -1,22 +1,22 @@
 'use strict';
 
-const h = require('../helpers');
+const common = require('../helpers/common');
 const projectHelpers = require('../helpers/project');
-const CatalogPage = require('../page-objects/catalog').CatalogPage;
+
+const CatalogPage = require('../page-objects/legacyCatalog').LegacyCatalogPage;
 const CreateProjectPage = require('../page-objects/createProject').CreateProjectPage;
 const ImageStreamsPage = require('../page-objects/imageStreams').ImageStreamsPage;
+
 const centosImageStream = require('../fixtures/image-streams-centos7.json');
 
 describe('User adds an image stream to a project', () => {
 
   beforeEach(() => {
-    h.commonSetup();
-    h.login();
-    projectHelpers.deleteAllProjects();
+    common.beforeEach();
   });
 
   afterEach(() => {
-    h.commonTeardown();
+    common.afterEach();
   });
 
   describe('after creating a new project', () => {
@@ -31,9 +31,10 @@ describe('User adds an image stream to a project', () => {
         catalogPage
           .processImageStream(JSON.stringify(centosImageStream))
           .then(() => {
-            // verify we have the nodejs image stream loaded
             let imageStreamsPage = new ImageStreamsPage(project);
             imageStreamsPage.visit();
+            // TODO: this is not a good test. The output logs will just say
+            // expected false to be true. Tests should be much more explicit.
             expect(element(by.cssContainingText('td', 'nodejs')).isPresent()).toBe(true); // TODO: use fixture
           });
       });
