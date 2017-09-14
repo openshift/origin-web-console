@@ -151,7 +151,7 @@
 
       DataService.list({
         group: 'servicecatalog.k8s.io',
-        resource: 'instances'
+        resource: 'serviceinstances'
       }, context).then(function(instances) {
         ctrl.serviceInstances = instances.by('metadata.name');
         sortServiceInstances();
@@ -187,7 +187,7 @@
         return;
       }
 
-      var instance = ctrl.target.kind === 'Instance' ? ctrl.target : ctrl.serviceToBind;
+      var instance = ctrl.target.kind === 'ServiceInstance' ? ctrl.target : ctrl.serviceToBind;
       if (!instance) {
         return;
       }
@@ -195,7 +195,7 @@
       ctrl.serviceClass = ctrl.serviceClasses[instance.spec.serviceClassName];
       ctrl.serviceClassName = instance.spec.serviceClassName;
       ctrl.plan = BindingService.getPlanForInstance(instance, ctrl.serviceClass);
-      ctrl.parameterSchema = _.get(ctrl.plan, 'alphaBindingCreateParameterSchema');
+      ctrl.parameterSchema = _.get(ctrl.plan, 'alphaServiceInstanceCredentialCreateParameterSchema');
       bindParametersStep.hidden = !_.has(ctrl.parameterSchema, 'properties');
       ctrl.nextTitle = bindParametersStep.hidden ? 'Bind' : 'Next >';
     };
@@ -220,7 +220,7 @@
         sortServiceInstances();
       });
 
-      if (ctrl.target.kind === 'Instance') {
+      if (ctrl.target.kind === 'ServiceInstance') {
         ctrl.bindType = "secret-only";
         ctrl.appToBind = null;
         ctrl.serviceToBind = ctrl.target;
@@ -256,7 +256,7 @@
     };
 
     ctrl.bindService = function() {
-      var svcToBind = ctrl.target.kind === 'Instance' ? ctrl.target : ctrl.serviceToBind;
+      var svcToBind = ctrl.target.kind === 'ServiceInstance' ? ctrl.target : ctrl.serviceToBind;
       var application = ctrl.bindType === 'application' ? ctrl.appToBind : undefined;
 
       var context = {
