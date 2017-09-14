@@ -111,42 +111,57 @@
   margin: 40px auto 60px;
   max-width: 600px;
   padding: 0;
+  &.loading {
+    margin: 0 auto;
+    padding: 40px 0 60px;
+    h2 {
+      margin-top: 0;
+    }
+  }
+  @media (min-height: 800px) {
+    margin-top: 130px;
+    // reduce margin-top when alert is shown
+    alerts + & {
+      margin-top: 90px;
+    }
+    &.loading {
+      margin-top: 0;
+      padding-top: 130px;
+    }
+  }
+  @media (min-height: 1024px) {
+    margin-top: 170px;
+    alerts + & {
+      margin-top: 130px;
+    }
+    &.loading {
+      margin-top: 0;
+      padding-top: 170px;
+    }
+  }
   @media(min-width: @screen-xs-min) {
     padding-left: (@grid-gutter-width / 2);
     padding-right: (@grid-gutter-width / 2);
+  }
+  .btn {
+    margin: 10px 0 20px;
   }
   h2, .h2 {
     // Avoid clipped descenders with class truncate or overflow: hidden
     line-height: 1.4;
   }
-  .btn {
-    margin: 10px 0 20px;
-  }
   .hero-icon {
-    // Hidden at height <600px.
+    // Hidden at height < 600px.
     display: none;
-    @media (min-height:600px) {
+    @media (min-height: 600px) {
       display: inline-block;
       font-size: 90px;
     }
-  }
-  @media (min-height:800px) {
-    margin-top: 130px;
-    .hero-icon {
+    @media (min-height: 800px) {
       font-size: 100px;
     }
-    // reduce margin-top when alert is shown
-    alerts+ & {
-      margin-top: 90px;
-    }
-  }
-  @media (min-height:1024px) {
-    margin-top: 170px;
-    .hero-icon {
+    @media (min-height: 1024px) {
       font-size: 120px;
-    }
-    alerts+ & {
-      margin-top: 130px;
     }
   }
 }
