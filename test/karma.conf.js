@@ -2,6 +2,7 @@
 // http://karma-runner.github.io/0.12/config/configuration-file.html
 // Generated on 2014-09-12 using
 // generator-karma 0.8.3
+let isMac = /^darwin/.test(process.platform);
 
 module.exports = function(config) {
   'use strict';
@@ -139,7 +140,7 @@ module.exports = function(config) {
     // if true, it capture browsers, run tests and exit
      singleRun: false,
 
-     colors: true,
+     colors: isMac,
 
     // level of logging
     // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG

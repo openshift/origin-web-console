@@ -1,15 +1,17 @@
 'use strict';
 
 const h = require('../helpers.js');
+const timing = require('../helpers/timing');
 const Page = require('./page').Page;
 const AddTemplateModal = require('./modals/addTemplateModal').AddTemplateModal;
 
-class CatalogPage extends Page {
+class LegacyCatalogPage extends Page {
   constructor(project, menu) {
     super(project, menu);
   }
   getUrl() {
-    // TODO: ?tab=tab=fromFile, ?tab=fromCatalog, ?tab=deployImage
+    //  This should probably support tabs:
+    //  ?tab=tab=fromFile, ?tab=fromCatalog, ?tab=deployImage
     return 'project/' + this.project.name + '/create';
   }
   _findTabs() {
@@ -56,12 +58,17 @@ class CatalogPage extends Page {
   }
   submitTemplate() {
     element(by.cssContainingText('.btn-primary','Create')).click();
-    return browser.sleep(500).then(() => {
+    return browser.sleep(timing.implicitRedirect).then(() => {
       return new AddTemplateModal(this.project);
     });
   }
   submitImageStream() {
-    element(by.cssContainingText('.btn-primary','Create')).click();
+    return element(by.cssContainingText('.btn-primary','Create'))
+            .click().then(() => {
+              // delay to allow the server to generate
+              // resources before continuing through the flow.
+              return browser.sleep(timing.standardDelay);
+            });
   }
   processTemplate(templateStr) {
     this.clickImport();
@@ -89,4 +96,4 @@ class CatalogPage extends Page {
   }
 }
 
-exports.CatalogPage = CatalogPage;
+exports.LegacyCatalogPage = LegacyCatalogPage;

@@ -8,9 +8,34 @@ exports.expectHeading = (text, level) => {
   expect(element(by.css(level || '.middle h1')).getText()).toEqual(text);
 };
 
-exports.expectPartialHeading = (partialText, level, caseSensitive) => {
+// on some pages we hide help links within the heading,
+// this lets the assert be a little more fuzzy and ignore extra markup
+exports.expectHeadingContainsText = (partialText, caseSensitive, level) => {
   element(by.css(level || '.middle h1')).getText().then((text) => {
+    let toMatch = caseSensitive ? partialText : partialText.toLowerCase();
     text = caseSensitive ? text : text.toLowerCase();
-    expect(text).toContain(partialText);
+    expect(text).toContain(toMatch);
+  });
+};
+
+exports.expectElementToExist = (elem) => {
+  expect(elem.isPresent()).toBe(true);
+};
+
+exports.expectElementToBeVisible = (elem) => {
+  expect(elem.isDisplayed()).toBeTruthy();
+};
+
+exports.expectElementToBeHidden = (elem) => {
+  expect(elem.isDisplayed()).toBeFalsy();
+};
+
+exports.expectPageUrl = (pageUrl) => {
+  browser.getCurrentUrl().then((actualUrl) => {
+    // NOTE: this uses contains instead of equals
+    // to avoid worrying about query string inconsistencies, etc.
+    // we can add a flag for exact matching if there comes a
+    // point when it would be helpful.
+    expect(actualUrl).toContain(pageUrl);
   });
 };

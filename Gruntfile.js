@@ -11,10 +11,21 @@
 var modRewrite = require('connect-modrewrite');
 var serveStatic = require('serve-static');
 
+var capitalize = (str) => {
+  return str.charAt(0).toUpperCase() + str.substr(1);
+};
+
 module.exports = function (grunt) {
   var contextRoot = grunt.option('contextRoot') || "dev-console";
   var isMac = /^darwin/.test(process.platform) || grunt.option('mac');
-
+  var specifiedUnitTestBrowsers = grunt.option('browsers') &&
+                                  grunt.option('browsers').split(',').map(capitalize);
+  // Travis & Jenkins expect Chrome
+  var defaultUnitTestBrowsers = isMac ? ['Firefox', 'Chrome'] : ['Chrome'];
+  var unitTestBrowsers = specifiedUnitTestBrowsers ?
+                          specifiedUnitTestBrowsers :
+                          defaultUnitTestBrowsers;
+  var e2eTestBrower = grunt.option('browser') || 'chrome';
 
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt, {
@@ -610,15 +621,7 @@ module.exports = function (grunt) {
         // grunt test
         // grunt test --browsers=Chrome
         // grunt test --browsers=Chrome,Firefox,Safari (be sure karma-<browser_name>-launcher is installed)
-        browsers: grunt.option('browsers') ?
-                    grunt.option('browsers').split(',') :
-                    // if running locally on mac, we can test both FF & Chrome,
-                    // in Travis, just FF
-                    // ['Nightmare'] is a good alt for a current headless
-                    // FIXME: fix this, PhantomJS is deprecated
-                    isMac ?
-                      ['Firefox', 'Chrome'] :
-                      ['PhantomJS']
+        browsers: unitTestBrowsers
       },
       unit: {
         singleRun: true,
@@ -632,7 +635,8 @@ module.exports = function (grunt) {
         noColor: false,
         args: {
           suite: grunt.option('suite') || 'full',
-          baseUrl: grunt.option('baseUrl') || ("https://localhost:9000/" + contextRoot + "/")
+          baseUrl: grunt.option('baseUrl') || ("https://localhost:9000/" + contextRoot + "/"),
+          browser: e2eTestBrower
         }
       },
       default: {
@@ -640,16 +644,7 @@ module.exports = function (grunt) {
           configFile: "test/protractor.conf.js",
           args: {
             baseUrl: grunt.option('baseUrl') || ("https://localhost:9000/" + contextRoot + "/"),
-            browser: grunt.option('browser') || "firefox"
-          }
-        }
-      },
-      mac: {
-        options: {
-          configFile: "test/protractor-mac.conf.js",
-          args: {
-            baseUrl: grunt.option('baseUrl') || ("https://localhost:9000/" + contextRoot + "/"),
-            browser: grunt.option('browser') || "firefox"
+            browser: e2eTestBrower
           }
         }
       }
@@ -735,34 +730,52 @@ module.exports = function (grunt) {
 
   grunt.loadNpmTasks('grunt-angular-templates');
 
+  // ex:
+  // grunt test-unit
+  // grunt test-unit --skipRebuild (to save time between test runs)
   // karma must run prior to coverage since karma will generate the coverage results
-  grunt.registerTask('test-unit', [
-    'clean:server',
-    'concurrent:test',
-    'postcss',
-    'connect:test',
-    'karma'
-    // 'coverage' - add back if we want to enforce coverage percentages
-  ]);
+  grunt.registerTask('test-unit',
+    grunt.option('skipRebuild') ?
+      [
+        'connect:test',
+        'karma'
+      ] :
+      [
+        'clean:server',
+        'concurrent:test',
+        'postcss',
+        'connect:test',
+        'karma'
+        // 'coverage' - add back if we want to enforce coverage percentages
+      ]
+    );
 
-  // test as an alias to unit.  after updating protractor,
-  // will make test an alias for both unit & e2e
-  grunt.registerTask('test', ['test-unit']);
-
+  // ex:
+  // grunt test-integration
+  // grunt test-integration --baseUrl=      (for build environments)
+  // grunt test-integration --skipRebuild   (to save time between test runs)
+  // grunt test-integration --suite=login,create-project --skipRebuild (to run specific suites)
   grunt.registerTask('test-integration',
-    // if a baseUrl is defined assume we dont want to run the local grunt server
-    grunt.option('baseUrl') ?
-      [isMac ? 'protractor:mac' : 'protractor:default'] :
+    ( grunt.option('baseUrl') || grunt.option('skipRebuild') ) ?
+      [
+        'connect:test',
+        'protractor:default'
+      ] :
       [
         'clean:server',
         'development-build',
         'postcss',
         'connect:test',
         'add-redirect-uri',
-        (isMac ? 'protractor:mac' : 'protractor:default'),
+        'protractor:default',
         'clean:server'
       ]
-  );
+    );
+
+  // alias
+  grunt.registerTask('test-e2e', ['test-integration']);
+
+  grunt.registerTask('test', ['test-unit', 'test-integration']);
 
   grunt.registerTask('build', [
     'clean:dist',

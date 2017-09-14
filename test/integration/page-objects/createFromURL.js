@@ -1,8 +1,10 @@
 'use strict';
 
-const Page = require('./page').Page;
-const logger = require('../helpers/logger');
 const h = require('../helpers.js');
+const timing = require('../helpers/timing');
+const logger = require('../helpers/logger');
+
+const Page = require('./page').Page;
 
 class CreateFromURLPage extends Page {
   constructor(project, menu) {
@@ -11,12 +13,15 @@ class CreateFromURLPage extends Page {
   getUrl(qs) {
     return 'create' + qs;
   }
-  // TODO: for some reason, the Page.visit()'s use of helpers.goToPage()
+  // FIXME: for some reason, the Page.visit()'s use of helpers.goToPage()
   // does not work here, so we have to override.
   visit(qs) {
     this.qs = qs;
-    logger.log('visiting url:', this.getUrl(this.qs));
-    return browser.get('create' + this.qs);
+    logger.log('Visiting url (refresh):', this.getUrl(this.qs));
+    return browser.get('create' + this.qs).then(() => {
+      // Calling visit performs a browser refresh each time.
+      return browser.sleep(timing.initialVisit);
+    });
   }
   clickCreateNewProjectTab() {
     return element(by.css('.nav-tabs')).isPresent()
