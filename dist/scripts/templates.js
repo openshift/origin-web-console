@@ -75,7 +75,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"resource-size\" ng-class=\"{ 'has-error': form.$invalid }\">\n" +
     "<div class=\"resource-amount\">\n" +
     "<label class=\"sr-only\" ng-attr-for=\"{{id}}\">Amount</label>\n" +
-    "<input type=\"number\" name=\"amount\" ng-attr-id=\"{{id}}\" ng-model=\"input.amount\" min=\"0\" pattern=\"\\d*\" ng-attr-placeholder=\"{{placeholder}}\" select-on-focus class=\"form-control\" ng-attr-aria-describedby=\"{{description ? id + '-help' : undefined}}\">\n" +
+    "<input type=\"number\" name=\"amount\" ng-attr-id=\"{{id}}\" ng-model=\"input.amount\" min=\"0\" pattern=\"\\d+(\\.\\d+)?\" ng-attr-placeholder=\"{{placeholder}}\" select-on-focus class=\"form-control\" ng-attr-aria-describedby=\"{{description ? id + '-help' : undefined}}\">\n" +
     "</div>\n" +
     "<div class=\"resource-unit\">\n" +
     "<label class=\"sr-only\" ng-attr-for=\"{{id}}-unit\">Unit</label>\n" +
@@ -7895,7 +7895,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"resource-size\" ng-class=\"{ 'has-error': persistentVolumeClaimForm.capacity.$invalid && persistentVolumeClaimForm.capacity.$touched && !claimDisabled }\">\n" +
     "<div class=\"resource-amount\">\n" +
     "<label for=\"claim-amount\" class=\"sr-only\">Amount</label>\n" +
-    "<input type=\"number\" name=\"capacity\" id=\"claim-amount\" ng-model=\"claim.amount\" required min=\"0\" pattern=\"\\d*\" select-on-focus class=\"form-control\" aria-describedby=\"claim-capacity-help\">\n" +
+    "<input type=\"number\" name=\"capacity\" id=\"claim-amount\" ng-model=\"claim.amount\" required min=\"0\" pattern=\"\\d+(\\.\\d+)?\" select-on-focus class=\"form-control\" aria-describedby=\"claim-capacity-help\">\n" +
     "</div>\n" +
     "<div class=\"resource-unit\">\n" +
     "<label class=\"sr-only\">Unit</label>\n" +
