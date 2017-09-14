@@ -5696,15 +5696,15 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .nav-pf-vertical .list-group-item{border-color:#050505}
 .nav-pf-vertical .list-group-item:after{background:rgba(255,255,255,.04);content:'';display:block;height:1px;position:absolute;top:0px;width:100%}
 .nav-pf-vertical .list-group-item.active>a,.nav-pf-vertical .list-group-item:focus>a,.nav-pf-vertical .list-group-item:hover>a{background-color:#383f47;font-weight:300}
+.nav-pf-vertical .list-group-item.active>a .fa,.nav-pf-vertical .list-group-item.active>a .pficon{color:#39a5dc!important}
 .nav-pf-vertical .list-group-item:focus>a .fa,.nav-pf-vertical .list-group-item:focus>a .pficon,.nav-pf-vertical .list-group-item:hover>a .fa,.nav-pf-vertical .list-group-item:hover>a .pficon{color:#fff}
-.nav-pf-vertical .list-group-item.active>a .fa,.nav-pf-vertical .list-group-item.active>a .pficon{color:#39a5dc}
-.nav-pf-vertical .list-group-item>a,.nav-pf-vertical .list-group-item>a:focus{font-size:13px;font-weight:300;text-decoration:none}
-@media (max-width:767px){.nav-pf-vertical .list-group-item>a,.nav-pf-vertical .list-group-item>a:focus{height:auto;padding:10px 15px}
+.nav-pf-vertical .list-group-item>a{font-size:13px;font-weight:300;text-decoration:none}
+@media (max-width:767px){.nav-pf-vertical .list-group-item>a{height:auto;padding:10px 15px}
 }
-.nav-pf-vertical .list-group-item>a .fa,.nav-pf-vertical .list-group-item>a .pficon,.nav-pf-vertical .list-group-item>a:focus .fa,.nav-pf-vertical .list-group-item>a:focus .pficon{color:#72767b;font-size:15px}
-@media (min-width:768px){.nav-pf-vertical .list-group-item>a .fa,.nav-pf-vertical .list-group-item>a .pficon,.nav-pf-vertical .list-group-item>a:focus .fa,.nav-pf-vertical .list-group-item>a:focus .pficon{font-size:18px}
+.nav-pf-vertical .list-group-item>a .fa,.nav-pf-vertical .list-group-item>a .pficon{color:#72767b;font-size:15px}
+@media (min-width:768px){.nav-pf-vertical .list-group-item>a .fa,.nav-pf-vertical .list-group-item>a .pficon{font-size:18px}
 }
-.nav-pf-vertical .list-group-item>a .list-group-item-value,.nav-pf-vertical .list-group-item>a:focus .list-group-item-value{line-height:inherit;text-decoration:none!important}
+.nav-pf-vertical .list-group-item>a .list-group-item-value{line-height:inherit;text-decoration:none!important}
 .nav-pf-vertical .list-group-item.secondary-nav-item-pf>a:after{padding:16px 0;font-size:14px}
 @media (max-width:767px){.nav-pf-vertical .list-group-item.secondary-nav-item-pf>a:after{padding:8px 0}
 }
