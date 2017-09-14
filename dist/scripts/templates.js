@@ -5607,6 +5607,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "The mount path is already used. Please choose another mount path.\n" +
     "</span>\n" +
     "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"addToApplicationForm.mountVolume.$error.pattern && addToApplicationForm.mountVolume.$touched\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Mount path must be a valid path to a directory starting with <code>/</code>.\n" +
+    "</span>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
