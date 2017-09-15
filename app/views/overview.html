@@ -362,7 +362,7 @@
               </h2>
               <div class="list-pf">
                 <service-instance-row
-                  ng-repeat="serviceInstance in overview.filteredServiceInstances"
+                  ng-repeat="serviceInstance in overview.filteredServiceInstances track by (serviceInstance | uid)"
                   api-object="serviceInstance"
                   bindings="overview.bindingsByInstanceRef[serviceInstance.metadata.name]"
                   state="overview.state"></service-instance-row>
