@@ -5759,7 +5759,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{appForBinding.metadata.name}} <small class=\"text-muted\">&ndash; {{ appForBinding.kind | humanizeKind : true}}</small>\n" +
     "</div>\n" +
     "<div ng-if=\"!(ctrl.appsForBinding(binding.metadata.name)  | size)\">\n" +
-    "{{binding.spec.secretName}} <small class=\"text-muted\">&ndash; Secret</small>\n" +
+    "{{binding.spec.secretName}}\n" +
+    "<small class=\"text-muted\">&ndash; Secret</small>\n" +
+    "</div>\n" +
+    "<div>\n" +
+    "<small class=\"text-muted\">Created <span am-time-ago=\"binding.metadata.creationTimestamp\"></span></small>\n" +
     "</div>\n" +
     "</label>\n" +
     "</div>\n" +
