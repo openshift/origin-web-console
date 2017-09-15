@@ -12490,7 +12490,7 @@ templateUrl: "views/directives/bind-service.html"
 }(), function() {
 angular.module("openshiftConsole").component("unbindService", {
 controller: [ "$scope", "$filter", "DataService", function(e, t, n) {
-var a, r, o = this, i = t("serviceInstanceDisplayName"), s = function() {
+var a, r, o = this, i = t("enableTechPreviewFeature"), s = t("serviceInstanceDisplayName"), c = function() {
 var e = o.selectedBinding.metadata.name;
 o.unboundApps = o.appsForBinding(e), n.delete({
 group: "servicecatalog.k8s.io",
@@ -12500,30 +12500,30 @@ propagationPolicy: null
 }).then(_.noop, function(e) {
 o.error = e;
 });
-}, c = function() {
+}, l = function() {
 var t = _.head(o.steps);
 t.valid = !1, a = e.$watch("ctrl.selectedBinding", function(e) {
 t.valid = !!e;
 });
-}, l = function() {
-a && (a(), a = void 0);
 }, u = function() {
-o.nextTitle = "Delete", c();
+a && (a(), a = void 0);
 }, d = function() {
-o.nextTitle = "Close", o.wizardComplete = !0, s(), l();
+o.nextTitle = "Delete", l();
+}, m = function() {
+o.nextTitle = "Close", o.wizardComplete = !0, c(), u();
 };
 o.$onInit = function() {
-var e = "ServiceInstance" === o.target.kind ? "Applications" : "Services";
-o.displayName = i(o.target), o.steps = [ {
+var e;
+e = "ServiceInstance" === o.target.kind ? i("pod_presets") ? "Applications" : "Bindings" : "Services", o.displayName = s(o.target), o.steps = [ {
 id: "deleteForm",
 label: e,
 view: "views/directives/bind-service/delete-binding-select-form.html",
-onShow: u
+onShow: d
 }, {
 id: "results",
 label: "Results",
 view: "views/directives/bind-service/delete-binding-result.html",
-onShow: d
+onShow: m
 } ], r = {
 namespace: _.get(o.target, "metadata.namespace")
 };
@@ -12532,7 +12532,7 @@ return _.get(o.applicationsByBinding, e);
 }, o.closeWizard = function() {
 _.isFunction(o.onClose) && o.onClose();
 }, o.$onDestroy = function() {
-l();
+u();
 };
 } ],
 controllerAs: "ctrl",
