@@ -4841,7 +4841,7 @@ pre.clipped.scroll{max-height:150px;overflow:auto;width:100%}
 .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical,.layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.collapsed-nav{margin-left:0}
 .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical .middle-header{margin-bottom:20px}
 .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical .view{height:100%}
-.surface-shaded{background-color:#f2f2f2;min-height:100%}
+.surface-shaded{background-color:#ededed;min-height:100%}
 .list-pf-actions .actions-dropdown-kebab{font-size:18px;margin-right:-5px}
 .list-pf-actions .dropdown .btn-link{color:#252525;font-size:17px;line-height:1;padding:4px 10px;margin-left:-10px;margin-right:-10px}
 .list-pf-actions .dropdown .btn-link:active,.list-pf-actions .dropdown .btn-link:focus,.list-pf-actions .dropdown .btn-link:hover{color:#0088ce}
@@ -5042,7 +5042,7 @@ h2+.list-view-pf{margin-top:20px}
 @media (min-width:992px){.overview .status-icons{margin-right:15px;width:40%}
 }
 .overview :not(.tab-pane)>overview-pipelines>.expanded-section{margin-bottom:30px}
-.overview .toolbar-container{padding-bottom:13px;padding-top:13px;background-color:#f2f2f2;min-height:100%}
+.overview .toolbar-container{padding-bottom:13px;padding-top:13px;background-color:#ededed;min-height:100%}
 .overview .triggers{margin-bottom:20px}
 .overview .usage-value{font-size:18px;font-weight:300;line-height:1}
 .overview .usage-label{font-size:84%;color:#9c9c9c}
