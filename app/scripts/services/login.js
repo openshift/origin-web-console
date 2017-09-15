@@ -5,6 +5,7 @@ angular.module('openshiftConsole')
 .provider('RedirectLoginService', function() {
   var _oauth_client_id = "";
   var _oauth_authorize_uri = "";
+  var _oauth_token_uri = "";
   var _oauth_redirect_uri = "";
 
   this.OAuthClientID = function(id) {
@@ -19,6 +20,12 @@ angular.module('openshiftConsole')
     }
     return _oauth_authorize_uri;
   };
+  this.OAuthTokenURI = function(uri) {
+    if (uri) {
+      _oauth_token_uri = uri;
+    }
+    return _oauth_token_uri;
+  };
   this.OAuthRedirectURI = function(uri) {
     if (uri) {
       _oauth_redirect_uri = uri;
@@ -26,7 +33,7 @@ angular.module('openshiftConsole')
     return _oauth_redirect_uri;
   };
 
-  this.$get = function($location, $q, Logger, base64) {
+  this.$get = function($injector, $location, $q, Logger, base64) {
     var authLogger = Logger.get("auth");
 
     var getRandomInts = function(length) {
@@ -45,17 +52,17 @@ angular.module('openshiftConsole')
           randomValues = null;
         }
       }
-      
+
       if (!randomValues) {
         randomValues = [];
         for (var i=0; i < length; i++) {
           randomValues.push(Math.floor(Math.random() * 4294967296));
         }
       }
-      
+
       return randomValues;
     };
-    
+
     var nonceKey = "RedirectLoginService.nonce";
     var makeState = function(then) {
       var nonce = String(new Date().getTime()) + "-" + getRandomInts(8).join("");
@@ -79,7 +86,7 @@ angular.module('openshiftConsole')
       } catch(e) {
         authLogger.log("RedirectLoginService.parseState, localStorage error: ", e);
       }
-      
+
       try {
         var data = state ? JSON.parse(base64.urldecode(state)) : {};
         if (data && data.nonce && nonce && data.nonce === nonce) {
@@ -106,16 +113,23 @@ angular.module('openshiftConsole')
           return $q.reject({error:'invalid_request', error_description:'RedirectLoginServiceProvider.OAuthRedirectURI not set'});
         }
 
-        var deferred = $q.defer();
-        var uri = new URI(_oauth_authorize_uri);
         // Never send a local fragment to remote servers
         var returnUri = new URI($location.url()).fragment("");
-        uri.query({
+        var authorizeParams = {
           client_id: _oauth_client_id,
           response_type: 'token',
           state: makeState(returnUri.toString()),
           redirect_uri: _oauth_redirect_uri
-        });
+        };
+
+        if (_oauth_token_uri) {
+          authorizeParams.response_type = "code";
+          // TODO: add PKCE
+        }
+
+        var deferred = $q.defer();
+        var uri = new URI(_oauth_authorize_uri);
+        uri.query(authorizeParams);
         authLogger.log("RedirectLoginService.login(), redirecting", uri.toString());
         window.location.href = uri.toString();
         // Return a promise we never intend to keep, because we're redirecting to another page
@@ -127,6 +141,39 @@ angular.module('openshiftConsole')
       // If no token and no error is present, resolves with {}
       // Example error codes: https://tools.ietf.org/html/rfc6749#section-5.2
       finish: function() {
+        // Obtain the $http service.
+        // Can't declare the dependency directly because it causes a cycle between $http->AuthInjector->AuthService->RedirectLoginService
+        var http = $injector.get("$http");
+
+        // handleParams handles error or access_token responses
+        var handleParams = function(params, stateData) {
+          // Handle an error response from the OAuth server
+          if (params.error) {
+            authLogger.log("RedirectLoginService.finish(), error", params.error, params.error_description, params.error_uri);
+            return $q.reject({
+              error: params.error,
+              error_description: params.error_description,
+              error_uri: params.error_uri
+            });
+          }
+
+          // Handle an access_token fragment response
+          if (params.access_token) {
+            return $q.when({
+              token: params.access_token,
+              ttl: params.expires_in,
+              then: stateData.then,
+              verified: stateData.verified
+            });
+          }
+
+          // No token and no error is invalid
+          return $q.reject({
+            error: "invalid_request",
+            error_description: "No API token returned"
+          });
+        };
+
         // Get url
         var u = new URI($location.url());
 
@@ -135,32 +182,51 @@ angular.module('openshiftConsole')
         var fragmentParams = new URI("?" + u.fragment()).query(true);
         authLogger.log("RedirectLoginService.finish()", queryParams, fragmentParams);
 
-        // Error codes can come in query params or fragment params
-        // Handle an error response from the OAuth server
-        var error = queryParams.error || fragmentParams.error;
-        if (error) {
-          var error_description = queryParams.error_description || fragmentParams.error_description;
-          var error_uri = queryParams.error_uri || fragmentParams.error_uri;
-          authLogger.log("RedirectLoginService.finish(), error", error, error_description, error_uri);
-          return $q.reject({
-            error: error,
-            error_description: error_description,
-            error_uri: error_uri
-          });
+        // immediate error
+        if (queryParams.error) {
+          return handleParams(queryParams, parseState(queryParams.state));
         }
+        // implicit error
+        if (fragmentParams.error) {
+          return handleParams(fragmentParams, parseState(fragmentParams.state));
+        }
+        // implicit success
+        if (fragmentParams.access_token) {
+          return handleParams(fragmentParams, parseState(fragmentParams.state));
+        }
+        // code flow
+        if (_oauth_token_uri && queryParams.code) {
+          // verify before attempting to exchange code for token
+          // hard-fail state verification errors for code exchange
+          var stateData = parseState(queryParams.state);
+          if (!stateData.verified) {
+            return $q.reject({
+              error: "invalid_request",
+              error_description: "Client state could not be verified"
+            });
+          }
 
-        var stateData = parseState(fragmentParams.state);
+          var tokenPostData = [
+            "grant_type=authorization_code",
+            "code="         + encodeURIComponent(queryParams.code),
+            "redirect_uri=" + encodeURIComponent(_oauth_redirect_uri),
+            "client_id="    + encodeURIComponent(_oauth_client_id)
+          ].join("&");
 
-        // Handle an access_token response
-        if (fragmentParams.access_token && (fragmentParams.token_type || "").toLowerCase() === "bearer") {
-          var deferred = $q.defer();
-          deferred.resolve({
-            token: fragmentParams.access_token,
-            ttl: fragmentParams.expires_in,
-            then: stateData.then,
-            verified: stateData.verified
+          return http({
+            method: "POST",
+            url: _oauth_token_uri,
+            headers: {
+              "Authorization": "Basic " + window.btoa(_oauth_client_id+":"),
+              "Content-Type": "application/x-www-form-urlencoded"
+            },
+            data: tokenPostData
+          }).then(function(response){
+            return handleParams(response.data, stateData);
+          }, function(response) {
+            authLogger.log("RedirectLoginService.finish(), error getting access token", response);
+            return handleParams(response.data, stateData);
           });
-          return deferred.promise;
         }
 
         // No token and no error is invalid
