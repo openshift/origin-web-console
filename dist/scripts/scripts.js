@@ -567,7 +567,7 @@ description:"Name must consist of lower-case letters, numbers, periods, and hyph
 }).constant("SOURCE_URL_PATTERN", /^[a-z][a-z0-9+.-@]*:(\/\/)?[0-9a-z_-]+/i).constant("RELATIVE_PATH_PATTERN", /^(?!\/)(?!\.\.(\/|$))(?!.*\/\.\.(\/|$)).*$/).constant("IS_IOS", /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream).constant("amTimeAgoConfig", {
 titleFormat:"LLL"
 }).config([ "$httpProvider", "AuthServiceProvider", "RedirectLoginServiceProvider", "AUTH_CFG", "API_CFG", "kubernetesContainerSocketProvider", function(a, b, c, d, e, f) {
-a.interceptors.push("AuthInterceptor"), b.LoginService("RedirectLoginService"), b.LogoutService("DeleteTokenLogoutService"), b.UserStore("LocalStorageUserStore"), c.OAuthClientID(d.oauth_client_id), c.OAuthAuthorizeURI(d.oauth_authorize_uri), c.OAuthRedirectURI(URI(d.oauth_redirect_base).segment("oauth").toString()), f.WebSocketFactory = "ContainerWebSocket";
+a.interceptors.push("AuthInterceptor"), b.LoginService("RedirectLoginService"), b.LogoutService("DeleteTokenLogoutService"), b.UserStore("LocalStorageUserStore"), c.OAuthClientID(d.oauth_client_id), c.OAuthAuthorizeURI(d.oauth_authorize_uri), c.OAuthTokenURI(d.oauth_token_uri), c.OAuthRedirectURI(URI(d.oauth_redirect_base).segment("oauth").toString()), f.WebSocketFactory = "ContainerWebSocket";
 } ]).config([ "$compileProvider", function(a) {
 a.aHrefSanitizationWhitelist(/^\s*(https?|mailto|git):/i);
 } ]).run([ "$rootScope", "LabelFilter", function(a, b) {
@@ -2047,102 +2047,124 @@ localStorage.setItem(d, "true");
 }
 };
 }), angular.module("openshiftConsole").provider("RedirectLoginService", function() {
-var a = "", b = "", c = "";
+var a = "", b = "", c = "", d = "";
 this.OAuthClientID = function(b) {
 return b && (a = b), a;
 }, this.OAuthAuthorizeURI = function(a) {
 return a && (b = a), b;
-}, this.OAuthRedirectURI = function(a) {
+}, this.OAuthTokenURI = function(a) {
 return a && (c = a), c;
-}, this.$get = [ "$location", "$q", "Logger", "base64", function(d, e, f, g) {
-var h = f.get("auth"), i = function(a) {
+}, this.OAuthRedirectURI = function(a) {
+return a && (d = a), d;
+}, this.$get = [ "$injector", "$location", "$q", "Logger", "base64", function(e, f, g, h, i) {
+var j = h.get("auth"), k = function(a) {
 var b;
 if (window.crypto && window.Uint32Array) try {
 var c = new Uint32Array(a);
 window.crypto.getRandomValues(c), b = [];
 for (var d = 0; d < a; d++) b.push(c[d]);
 } catch (e) {
-h.debug("RedirectLoginService.getRandomInts: ", e), b = null;
+j.debug("RedirectLoginService.getRandomInts: ", e), b = null;
 }
 if (!b) {
 b = [];
 for (var f = 0; f < a; f++) b.push(Math.floor(4294967296 * Math.random()));
 }
 return b;
-}, j = "RedirectLoginService.nonce", k = function(a) {
-var b = String(new Date().getTime()) + "-" + i(8).join("");
+}, l = "RedirectLoginService.nonce", m = function(a) {
+var b = String(new Date().getTime()) + "-" + k(8).join("");
 try {
-window.localStorage[j] = b;
+window.localStorage[l] = b;
 } catch (c) {
-h.log("RedirectLoginService.makeState, localStorage error: ", c);
+j.log("RedirectLoginService.makeState, localStorage error: ", c);
 }
-return g.urlencode(JSON.stringify({
+return i.urlencode(JSON.stringify({
 then:a,
 nonce:b
 }));
-}, l = function(a) {
+}, n = function(a) {
 var b = {
 then:null,
 verified:!1
 }, c = "";
 try {
-c = window.localStorage[j], window.localStorage.removeItem(j);
+c = window.localStorage[l], window.localStorage.removeItem(l);
 } catch (d) {
-h.log("RedirectLoginService.parseState, localStorage error: ", d);
+j.log("RedirectLoginService.parseState, localStorage error: ", d);
 }
 try {
-var e = a ? JSON.parse(g.urldecode(a)) :{};
+var e = a ? JSON.parse(i.urldecode(a)) :{};
 e && e.nonce && c && e.nonce === c && (b.verified = !0, b.then = e.then);
 } catch (d) {
-h.error("RedirectLoginService.parseState, state error: ", d);
+j.error("RedirectLoginService.parseState, state error: ", d);
 }
-return h.error("RedirectLoginService.parseState", b), b;
+return j.error("RedirectLoginService.parseState", b), b;
 };
 return {
 login:function() {
-if ("" === a) return e.reject({
+if ("" === a) return g.reject({
 error:"invalid_request",
 error_description:"RedirectLoginServiceProvider.OAuthClientID() not set"
 });
-if ("" === b) return e.reject({
+if ("" === b) return g.reject({
 error:"invalid_request",
 error_description:"RedirectLoginServiceProvider.OAuthAuthorizeURI() not set"
 });
-if ("" === c) return e.reject({
+if ("" === d) return g.reject({
 error:"invalid_request",
 error_description:"RedirectLoginServiceProvider.OAuthRedirectURI not set"
 });
-var f = e.defer(), g = new URI(b), i = new URI(d.url()).fragment("");
-return g.query({
+var e = new URI(f.url()).fragment(""), h = {
 client_id:a,
 response_type:"token",
-state:k(i.toString()),
-redirect_uri:c
-}), h.log("RedirectLoginService.login(), redirecting", g.toString()), window.location.href = g.toString(), f.promise;
+state:m(e.toString()),
+redirect_uri:d
+};
+c && (h.response_type = "code");
+var i = g.defer(), k = new URI(b);
+return k.query(h), j.log("RedirectLoginService.login(), redirecting", k.toString()), window.location.href = k.toString(), i.promise;
 },
 finish:function() {
-var a = new URI(d.url()), b = a.query(!0), c = new URI("?" + a.fragment()).query(!0);
-h.log("RedirectLoginService.finish()", b, c);
-var f = b.error || c.error;
-if (f) {
-var g = b.error_description || c.error_description, i = b.error_uri || c.error_uri;
-return h.log("RedirectLoginService.finish(), error", f, g, i), e.reject({
-error:f,
-error_description:g,
-error_uri:i
+var b = e.get("$http"), h = function(a, b) {
+return a.error ? (j.log("RedirectLoginService.finish(), error", a.error, a.error_description, a.error_uri), g.reject({
+error:a.error,
+error_description:a.error_description,
+error_uri:a.error_uri
+})) :a.access_token ? g.when({
+token:a.access_token,
+ttl:a.expires_in,
+then:b.then,
+verified:b.verified
+}) :g.reject({
+error:"invalid_request",
+error_description:"No API token returned"
+});
+}, i = new URI(f.url()), k = i.query(!0), l = new URI("?" + i.fragment()).query(!0);
+if (j.log("RedirectLoginService.finish()", k, l), k.error) return h(k, n(k.state));
+if (l.error) return h(l, n(l.state));
+if (l.access_token) return h(l, n(l.state));
+if (c && k.code) {
+var m = n(k.state);
+if (!m.verified) return g.reject({
+error:"invalid_request",
+error_description:"Client state could not be verified"
+});
+var o = [ "grant_type=authorization_code", "code=" + encodeURIComponent(k.code), "redirect_uri=" + encodeURIComponent(d), "client_id=" + encodeURIComponent(a) ].join("&");
+return b({
+method:"POST",
+url:c,
+headers:{
+Authorization:"Basic " + window.btoa(a + ":"),
+"Content-Type":"application/x-www-form-urlencoded"
+},
+data:o
+}).then(function(a) {
+return h(a.data, m);
+}, function(a) {
+return j.log("RedirectLoginService.finish(), error getting access token", a), h(a.data, m);
 });
 }
-var j = l(c.state);
-if (c.access_token && "bearer" === (c.token_type || "").toLowerCase()) {
-var k = e.defer();
-return k.resolve({
-token:c.access_token,
-ttl:c.expires_in,
-then:j.then,
-verified:j.verified
-}), k.promise;
-}
-return e.reject({
+return g.reject({
 error:"invalid_request",
 error_description:"No API token returned"
 });
