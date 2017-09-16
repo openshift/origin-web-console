@@ -236,6 +236,8 @@ describe('MembershipService', function() {
     // NOTE: ideally the above tests catch any issues as they do a better job of
     // declaring intent, if not, this test will compare raw output.
     it('should build a map for the tabbed role list interface', function() {
+
+      // the full output tree should match
       expect(MembershipService.mapRolebindingsForUI(roleBindings, keyedRoles))
         .toEqual([{
             "kind": "User",
@@ -304,6 +306,7 @@ describe('MembershipService', function() {
             "name": "SystemGroup",
             "subjects": {}
         }]);
+
     });
   });
 

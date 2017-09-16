@@ -96,12 +96,16 @@ angular
                           if(!result[subject.kind].subjects[subjectKey]) {
                             result[subject.kind].subjects[subjectKey]  = {
                               name: subject.name,
-                              namespace: subject.namespace,
                               roles: {}
                             };
+                            if(subject.namespace) {
+                              result[subject.kind].subjects[subjectKey].namespace = subject.namespace;
+                            }
                           }
                           if(!_.includes(result[subject.kind].subjects[subjectKey].roles, roleKey)) {
-                            result[subject.kind].subjects[subjectKey].roles[roleKey] = roles[roleKey];
+                            if(roles[roleKey]) {
+                              result[subject.kind].subjects[subjectKey].roles[roleKey] = roles[roleKey];
+                            }
                           }
                         });
                         return result;

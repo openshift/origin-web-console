@@ -1479,8 +1479,7 @@ type: "Source",
 sourceStrategy: {
 from: {
 kind: "ImageStreamTag",
-name: e.imageName + ":" + e.imageTag,
-namespace: e.namespace
+name: e.imageName + ":" + e.imageTag
 },
 env: n
 }
@@ -1488,7 +1487,7 @@ env: n
 triggers: a
 }
 };
-return _.get(e, "buildConfig.secrets.gitSecret[0].name") && (l.spec.source.sourceSecret = _.head(e.buildConfig.secrets.gitSecret)), e.buildConfig.contextDir && (l.spec.source.contextDir = e.buildConfig.contextDir), l;
+return e.namespace && (l.spec.strategy.namespace = e.namespace), _.get(e, "buildConfig.secrets.gitSecret[0].name") && (l.spec.source.sourceSecret = _.head(e.buildConfig.secrets.gitSecret)), e.buildConfig.contextDir && (l.spec.source.contextDir = e.buildConfig.contextDir), l;
 }, o._generateImageStream = function(e) {
 return {
 apiVersion: "v1",
@@ -2324,9 +2323,8 @@ return _.each(a.subjects, function(a) {
 var o = n(a.namespace, a.name);
 e[a.kind].subjects[o] || (e[a.kind].subjects[o] = {
 name: a.name,
-namespace: a.namespace,
 roles: {}
-}), _.includes(e[a.kind].subjects[o].roles, r) || (e[a.kind].subjects[o].roles[r] = t[r]);
+}, a.namespace && (e[a.kind].subjects[o].namespace = a.namespace)), _.includes(e[a.kind].subjects[o].roles, r) || t[r] && (e[a.kind].subjects[o].roles[r] = t[r]);
 }), e;
 }, {
 User: {
