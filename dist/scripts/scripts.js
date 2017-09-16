@@ -10600,104 +10600,80 @@ templateUrl: "views/directives/action-chip.html"
 };
 }), function() {
 angular.module("openshiftConsole").component("addSecretToApplication", {
-controller: [ "$filter", "$scope", "APIService", "DataService", "Navigate", "NotificationsService", "StorageService", function(e, t, n, a, r, o, i) {
-var s, c, l, u, d, m = this, p = function() {
-if (s && c && l && u && d) {
-var e = s.concat(c).concat(l).concat(u).concat(d);
-m.applications = _.sortBy(e, [ "metadata.name", "kind" ]), m.updating = !1;
-}
-}, f = function() {
-var t = e("hasDeployment"), n = e("hasDeploymentConfig");
-m.updating = !0;
-var r = {
-namespace: m.project.metadata.name
+controller: [ "$filter", "$scope", "APIService", "ApplicationsService", "DataService", "Navigate", "NotificationsService", "StorageService", function(e, t, n, a, r, o, i, s) {
+var c = this, l = function() {
+var e = {
+namespace: c.project.metadata.name
 };
-a.list("deploymentconfigs", r).then(function(e) {
-s = _.toArray(e.by("metadata.name")), p();
-}), a.list("replicationcontrollers", r).then(function(e) {
-l = _.reject(e.by("metadata.name"), n), p();
-}), a.list({
-group: "apps",
-resource: "deployments"
-}, r).then(function(e) {
-c = _.toArray(e.by("metadata.name")), p();
-}), a.list({
-group: "extensions",
-resource: "replicasets"
-}, r).then(function(e) {
-u = _.reject(e.by("metadata.name"), t), p();
-}), a.list({
-group: "apps",
-resource: "statefulsets"
-}, r).then(function(e) {
-d = _.toArray(e.by("metadata.name")), p();
+a.getApplications(e).then(function(e) {
+c.applications = e, c.updating = !1;
 });
 };
-m.$onInit = function() {
-m.addType = "env", m.disableInputs = !1, f();
+c.$onInit = function() {
+c.addType = "env", c.disableInputs = !1, l();
 var e = new RegExp("^[A-Za-z_]{1}[A-Za-z0-9_]*$");
-m.hasInvalidEnvVars = _.some(m.secret.data, function(t, n) {
+c.hasInvalidEnvVars = _.some(c.secret.data, function(t, n) {
 return !e.test(n);
 });
 };
-var g = function(e) {
-return m.attachAllContainers || m.attachContainers[e.name];
+var u = function(e) {
+return c.attachAllContainers || c.attachContainers[e.name];
 };
-m.$postLink = function() {
+c.$postLink = function() {
 t.$watch(function() {
-return m.application;
+return c.application;
 }, function() {
-var e = _.get(m.application, "spec.template");
-m.existingMountPaths = i.getMountPaths(e), m.attachAllContainers = !0;
+var e = _.get(c.application, "spec.template");
+c.existingMountPaths = s.getMountPaths(e), c.attachAllContainers = !0;
 });
-}, m.addToApplication = function() {
-var t = angular.copy(m.application), i = _.get(t, "spec.template");
-if (m.disableInputs = !0, "env" === m.addType) {
+}, c.addToApplication = function() {
+var t = angular.copy(c.application), a = _.get(t, "spec.template");
+if (c.disableInputs = !0, "env" === c.addType) {
 var s = {
 secretRef: {
-name: m.secret.metadata.name
+name: c.secret.metadata.name
 }
 };
-_.each(i.spec.containers, function(e) {
-g(e) && (e.envFrom = e.envFrom || [], e.envFrom.push(s));
+_.each(a.spec.containers, function(e) {
+u(e) && (e.envFrom = e.envFrom || [], e.envFrom.push(s));
 });
 } else {
-var c = e("generateName")(m.secret.metadata.name + "-"), l = {
-name: c,
-mountPath: m.mountVolume,
+var l = e("generateName")(c.secret.metadata.name + "-"), d = {
+name: l,
+mountPath: c.mountVolume,
 readOnly: !0
 };
-_.each(i.spec.containers, function(e) {
-g(e) && (e.volumeMounts = e.volumeMounts || [], e.volumeMounts.push(l));
+_.each(a.spec.containers, function(e) {
+u(e) && (e.volumeMounts = e.volumeMounts || [], e.volumeMounts.push(d));
 });
-var u = {
-name: c,
+var m = {
+name: l,
 secret: {
-secretName: m.secret.metadata.name
+secretName: c.secret.metadata.name
 }
 };
-i.spec.volumes = i.spec.volumes || [], i.spec.volumes.push(u);
+a.spec.volumes = a.spec.volumes || [], a.spec.volumes.push(m);
 }
-var d = e("humanizeKind"), p = d(m.secret.kind), f = d(t.kind), h = {
-namespace: m.project.metadata.name
+var p = e("humanizeKind"), f = p(c.secret.kind), g = p(t.kind), h = {
+namespace: c.project.metadata.name
 };
-a.update(n.kindToResource(t.kind), t.metadata.name, t, h).then(function() {
-o.addNotification({
+r.update(n.kindToResource(t.kind), t.metadata.name, t, h).then(function() {
+i.addNotification({
 type: "success",
-message: "Successfully added " + p + " " + m.secret.metadata.name + " to " + f + " " + t.metadata.name + ".",
+message: "Successfully added " + f + " " + c.secret.metadata.name + " to " + g + " " + t.metadata.name + ".",
 links: [ {
-href: r.resourceURL(t),
-label: "View " + d(t.kind, !0)
+href: o.resourceURL(t),
+label: "View " + p(t.kind, !0)
 } ]
-}), angular.isFunction(m.onComplete) && m.onComplete();
+}), angular.isFunction(c.onComplete) && c.onComplete();
 }, function(n) {
 var a = e("getErrorDetails");
-o.addNotification({
+i.addNotification({
 type: "error",
-message: "An error occurred  adding " + p + " " + m.secret.metadata.name + " to " + f + " " + t.metadata.name + ". " + a(n)
+message: "An error occurred  adding " + f + " " + c.secret.metadata.name + " to " + g + " " + t.metadata.name + ". " + a(n)
 });
 }).finally(function() {
-m.disableInputs = !1;
+c.disableInputs = !1;
 });
 };
 } ],
@@ -12369,114 +12345,92 @@ templateUrl: "views/directives/route-service-bar-chart.html"
 });
 }(), function() {
 angular.module("openshiftConsole").component("bindService", {
-controller: [ "$scope", "$filter", "DataService", "BindingService", function(e, t, n, a) {
-var r, o, i, s, c, l, u, d, m, p, f, g = this, h = t("statusCondition"), v = t("enableTechPreviewFeature"), y = function() {
+controller: [ "$scope", "$filter", "ApplicationsService", "DataService", "BindingService", function(e, t, n, a, r) {
+var o, i, s, c, l, u, d = this, m = t("statusCondition"), p = t("enableTechPreviewFeature"), f = function() {
 var e, t;
-_.each(g.serviceInstances, function(n) {
-var a = "True" === _.get(h(n, "Ready"), "status");
+_.each(d.serviceInstances, function(n) {
+var a = "True" === _.get(m(n, "Ready"), "status");
 a && (!e || n.metadata.creationTimestamp > e.metadata.creationTimestamp) && (e = n), a || t && !(n.metadata.creationTimestamp > t.metadata.creationTimestamp) || (t = n);
-}), g.serviceToBind = e || t;
-}, b = function() {
-g.serviceClasses && g.serviceInstances && (g.serviceInstances = a.filterBindableServiceInstances(g.serviceInstances, g.serviceClasses), g.orderedServiceInstances = a.sortServiceInstances(g.serviceInstances, g.serviceClasses), g.serviceToBind || y());
-}, C = function() {
-if (u && d && m && p && f) {
-var e = [].concat(u).concat(d).concat(m).concat(p).concat(f);
-g.applications = _.sortBy(e, [ "metadata.name", "kind" ]), g.bindType = g.applications.length ? "application" : "secret-only";
-}
-}, S = function() {
+}), d.serviceToBind = e || t;
+}, g = function() {
+d.serviceClasses && d.serviceInstances && (d.serviceInstances = r.filterBindableServiceInstances(d.serviceInstances, d.serviceClasses), d.orderedServiceInstances = r.sortServiceInstances(d.serviceInstances, d.serviceClasses), d.serviceToBind || f());
+}, h = function() {
 var e = {
-namespace: _.get(g.target, "metadata.namespace")
+namespace: _.get(d.target, "metadata.namespace")
 };
-n.list("deploymentconfigs", e).then(function(e) {
-u = _.toArray(e.by("metadata.name")), C();
-}), n.list("replicationcontrollers", e).then(function(e) {
-m = _.reject(e.by("metadata.name"), t("hasDeploymentConfig")), C();
-}), n.list({
-group: "apps",
-resource: "deployments"
-}, e).then(function(e) {
-d = _.toArray(e.by("metadata.name")), C();
-}), n.list({
-group: "extensions",
-resource: "replicasets"
-}, e).then(function(e) {
-p = _.reject(e.by("metadata.name"), t("hasDeployment")), C();
-}), n.list({
-group: "apps",
-resource: "statefulsets"
-}, e).then(function(e) {
-f = _.toArray(e.by("metadata.name")), C();
+n.getApplications(e).then(function(e) {
+d.applications = e, d.bindType = d.applications.length ? "application" : "secret-only";
 });
-}, w = function() {
+}, v = function() {
 var e = {
-namespace: _.get(g.target, "metadata.namespace")
+namespace: _.get(d.target, "metadata.namespace")
 };
-n.list({
+a.list({
 group: "servicecatalog.k8s.io",
 resource: "serviceinstances"
 }, e).then(function(e) {
-g.serviceInstances = e.by("metadata.name"), b();
+d.serviceInstances = e.by("metadata.name"), g();
 });
 };
-r = {
+o = {
 id: "bindForm",
 label: "Binding",
 view: "views/directives/bind-service/bind-service-form.html",
 valid: !0,
 onShow: function() {
-g.nextTitle = o.hidden ? "Bind" : "Next >", g.podPresets && !s && (s = e.$watch("ctrl.selectionForm.$valid", function(e) {
-r.valid = e;
+d.nextTitle = i.hidden ? "Bind" : "Next >", d.podPresets && !c && (c = e.$watch("ctrl.selectionForm.$valid", function(e) {
+o.valid = e;
 }));
 }
-}, o = {
+}, i = {
 id: "bindParameters",
 label: "Parameters",
 view: "views/directives/bind-service/bind-parameters.html",
 hidden: !0,
 onShow: function() {
-g.nextTitle = "Bind", c || (c = e.$watch("ctrl.parametersForm.$valid", function(e) {
-o.valid = e;
+d.nextTitle = "Bind", l || (l = e.$watch("ctrl.parametersForm.$valid", function(e) {
+i.valid = e;
 }));
 }
-}, i = {
+}, s = {
 id: "results",
 label: "Results",
 view: "views/directives/bind-service/results.html",
 valid: !0,
 onShow: function() {
-s && (s(), s = void 0), c && (c(), c = void 0), g.nextTitle = "Close", g.wizardComplete = !0, g.bindService();
+c && (c(), c = void 0), l && (l(), l = void 0), d.nextTitle = "Close", d.wizardComplete = !0, d.bindService();
 }
 };
-var k = function() {
-if (g.serviceClasses) {
-var e = "ServiceInstance" === g.target.kind ? g.target : g.serviceToBind;
-e && (g.serviceClass = g.serviceClasses[e.spec.serviceClassName], g.serviceClassName = e.spec.serviceClassName, g.plan = a.getPlanForInstance(e, g.serviceClass), g.parameterSchema = _.get(g.plan, "alphaServiceInstanceCredentialCreateParameterSchema"), o.hidden = !_.has(g.parameterSchema, "properties"), g.nextTitle = o.hidden ? "Bind" : "Next >");
+var y = function() {
+if (d.serviceClasses) {
+var e = "ServiceInstance" === d.target.kind ? d.target : d.serviceToBind;
+e && (d.serviceClass = d.serviceClasses[e.spec.serviceClassName], d.serviceClassName = e.spec.serviceClassName, d.plan = r.getPlanForInstance(e, d.serviceClass), d.parameterSchema = _.get(d.plan, "alphaServiceInstanceCredentialCreateParameterSchema"), i.hidden = !_.has(d.parameterSchema, "properties"), d.nextTitle = i.hidden ? "Bind" : "Next >");
 }
 };
-e.$watch("ctrl.serviceToBind", k), g.$onInit = function() {
-g.serviceSelection = {}, g.projectDisplayName = t("displayName")(g.project), g.podPresets = v("pod_presets"), g.parameterData = {}, g.steps = [ r, o, i ], n.list({
+e.$watch("ctrl.serviceToBind", y), d.$onInit = function() {
+d.serviceSelection = {}, d.projectDisplayName = t("displayName")(d.project), d.podPresets = p("pod_presets"), d.parameterData = {}, d.steps = [ o, i, s ], a.list({
 group: "servicecatalog.k8s.io",
 resource: "serviceclasses"
 }, {}).then(function(e) {
-g.serviceClasses = e.by("metadata.name"), k(), b();
-}), "ServiceInstance" === g.target.kind ? (g.bindType = "secret-only", g.appToBind = null, g.serviceToBind = g.target, g.podPresets && S()) : (g.bindType = "application", g.appToBind = g.target, w());
-}, g.$onChanges = function(e) {
-e.project && !e.project.isFirstChange() && (g.projectDisplayName = t("displayName")(g.project));
-}, g.$onDestroy = function() {
-s && (s(), s = void 0), c && (c(), c = void 0), l && n.unwatch(l);
-}, g.bindService = function() {
-var e = "ServiceInstance" === g.target.kind ? g.target : g.serviceToBind, t = "application" === g.bindType ? g.appToBind : void 0, r = {
+d.serviceClasses = e.by("metadata.name"), y(), g();
+}), "ServiceInstance" === d.target.kind ? (d.bindType = "secret-only", d.appToBind = null, d.serviceToBind = d.target, d.podPresets && h()) : (d.bindType = "application", d.appToBind = d.target, v());
+}, d.$onChanges = function(e) {
+e.project && !e.project.isFirstChange() && (d.projectDisplayName = t("displayName")(d.project));
+}, d.$onDestroy = function() {
+c && (c(), c = void 0), l && (l(), l = void 0), u && a.unwatch(u);
+}, d.bindService = function() {
+var e = "ServiceInstance" === d.target.kind ? d.target : d.serviceToBind, t = "application" === d.bindType ? d.appToBind : void 0, n = {
 namespace: _.get(e, "metadata.namespace")
-}, o = a.getServiceClassForInstance(e, g.serviceClasses);
-a.bindService(e, t, o, g.parameterData).then(function(e) {
-g.binding = e, g.error = null, l = n.watchObject(a.bindingResource, _.get(g.binding, "metadata.name"), r, function(e) {
-g.binding = e;
+}, o = r.getServiceClassForInstance(e, d.serviceClasses);
+r.bindService(e, t, o, d.parameterData).then(function(e) {
+d.binding = e, d.error = null, u = a.watchObject(r.bindingResource, _.get(d.binding, "metadata.name"), n, function(e) {
+d.binding = e;
 });
 }, function(e) {
-g.error = e;
+d.error = e;
 });
-}, g.closeWizard = function() {
-_.isFunction(g.onClose) && g.onClose();
+}, d.closeWizard = function() {
+_.isFunction(d.onClose) && d.onClose();
 };
 } ],
 controllerAs: "ctrl",
