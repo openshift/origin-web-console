@@ -2161,13 +2161,21 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"loaded && !error\">\n" +
     "<h1 class=\"contains-actions\">\n" +
-    "<div class=\"pull-right dropdown\" ng-if=\"'configmaps' | canIDoAny\">\n" +
-    "<button type=\"button\" class=\"dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs\" data-toggle=\"dropdown\">\n" +
+    "<div class=\"pull-right dropdown\">\n" +
+    "\n" +
+    "<button ng-if=\"project.metadata.name | canIAddToProject\" type=\"button\" class=\"btn btn-default hidden-xs\" ng-click=\"addToApplication()\">\n" +
+    "Add to Application\n" +
+    "</button>\n" +
+    "<button ng-if=\"'configmaps' | canIDoAny\" type=\"button\" class=\"dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs\" data-toggle=\"dropdown\">\n" +
     "Actions\n" +
     "<span class=\"caret\"></span>\n" +
     "</button>\n" +
-    "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
+    "\n" +
+    "<a href=\"\" ng-if=\"project.metadata.name | canIAddToProject\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
+    "<li ng-if=\"project.metadata.name | canIAddToProject\" class=\"visible-xs\">\n" +
+    "<a href=\"\" role=\"button\" ng-click=\"addToApplication()\">Add to Application</a>\n" +
+    "</li>\n" +
     "<li ng-if=\"'configmaps' | canI : 'update'\">\n" +
     "<a ng-href=\"{{configMap | editResourceURL}}\" role=\"button\">Edit</a>\n" +
     "</li>\n" +
@@ -2200,7 +2208,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tr ng-repeat=\"(prop, value) in configMap.data\">\n" +
     "<td class=\"key\">{{prop}}</td>\n" +
     "<td class=\"value\">\n" +
-    "<truncate-long-text content=\"value\" limit=\"1024\" newlinelimit=\"20\" expandable=\"true\">\n" +
+    "<truncate-long-text content=\"value\" limit=\"1024\" newline-limit=\"20\" expandable=\"true\">\n" +
     "</truncate-long-text>\n" +
     "</td>\n" +
     "</tr>\n" +
@@ -2211,6 +2219,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<overlay-panel class=\"add-config-to-application\" show-panel=\"addToApplicationVisible\" show-close=\"true\" handle-close=\"closeAddToApplication\">\n" +
+    "<add-config-to-application project=\"project\" api-object=\"configMap\" on-cancel=\"closeAddToApplication\" on-complete=\"closeAddToApplication\"></add-config-to-application>\n" +
+    "</overlay-panel>\n" +
     "</div>\n" +
     "</div>"
   );
@@ -3588,16 +3599,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"loaded && !error\">\n" +
     "<h1 class=\"contains-actions\">\n" +
     "<div class=\"pull-right dropdown\">\n" +
-    "<button type=\"button\" class=\"btn btn-default hidden-xs\" ng-click=\"addToApplication()\">\n" +
+    "\n" +
+    "<button ng-if=\"project.metadata.name | canIAddToProject\" type=\"button\" class=\"btn btn-default hidden-xs\" ng-click=\"addToApplication()\">\n" +
     "Add to Application\n" +
     "</button>\n" +
     "<button type=\"button\" class=\"dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs\" data-toggle=\"dropdown\" ng-hide=\"!('secrets' | canIDoAny)\">\n" +
     "Actions\n" +
     "<span class=\"caret\"></span>\n" +
     "</button>\n" +
-    "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
+    "\n" +
+    "<a href=\"\" ng-if=\"project.metadata.name | canIAddToProject\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
-    "<li class=\"visible-xs\">\n" +
+    "<li ng-if=\"project.metadata.name | canIAddToProject\" class=\"visible-xs\">\n" +
     "<a href=\"\" role=\"button\" ng-click=\"addToApplication()\">Add to Application</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'secrets' | canI : 'update'\">\n" +
@@ -3652,8 +3665,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<overlay-panel class=\"add-secret-to-application\" show-panel=\"addToApplicationVisible\" show-close=\"true\" handle-close=\"closeAddToApplication\">\n" +
-    "<add-secret-to-application project=\"project\" secret=\"secret\" on-cancel=\"closeAddToApplication\" on-complete=\"closeAddToApplication\"></add-secret-to-application>\n" +
+    "<overlay-panel class=\"add-config-to-application\" show-panel=\"addToApplicationVisible\" show-close=\"true\" handle-close=\"closeAddToApplication\">\n" +
+    "<add-config-to-application project=\"project\" api-object=\"secret\" on-cancel=\"closeAddToApplication\" on-complete=\"closeAddToApplication\"></add-config-to-application>\n" +
     "</overlay-panel>\n" +
     "</div>\n" +
     "</div>"
@@ -5556,7 +5569,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/directives/add-secret-to-application.html',
+  $templateCache.put('views/directives/add-config-to-application.html',
     "<div>\n" +
     "<div class=\"dialog-title\">\n" +
     "<h3>Add to Application</h3>\n" +
@@ -5564,7 +5577,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"dialog-body\">\n" +
     "<form name=\"addToApplicationForm\" novalidate>\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
-    "<legend>Add this secret to application:</legend>\n" +
+    "<legend>Add this {{ctrl.apiObject.kind | humanizeKind}} to application:</legend>\n" +
     "<div class=\"form-group\">\n" +
     "<div class=\"application-select\">\n" +
     "<ui-select id=\"application\" ng-model=\"ctrl.application\" required=\"true\" ng-disabled=\"ctrl.disableInputs\">\n" +
@@ -5580,7 +5593,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<legend>Add secret as:</legend>\n" +
+    "<legend>Add {{ctrl.apiObject.kind | humanizeKind}} as:</legend>\n" +
     "<div class=\"form-group\">\n" +
     "<div class=\"radio\">\n" +
     "<div class=\"add-choice\">\n" +
@@ -5590,7 +5603,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</label>\n" +
     "<div class=\"alert alert-warning env-warning\" ng-show=\"ctrl.hasInvalidEnvVars\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
-    "<span>Some of the keys for secret <strong>{{ctrl.secret.metadata.name}}</strong> are not valid environment variable names and will not be added.</span>\n" +
+    "<span>Some of the keys for {{ctrl.apiObject.kind | humanizeKind}}\n" +
+    "<strong>{{ctrl.apiObject.metadata.name}}</strong> are not valid environment variable names and will not be added.</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div>\n" +
@@ -5604,7 +5618,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input class=\"form-control\" name=\"mountVolume\" id=\"mountVolume\" placeholder=\"Enter a mount path\" type=\"text\" required ng-pattern=\"/^\\/.*$/\" osc-unique=\"ctrl.existingMountPaths\" aria-describedby=\"mount-path-help\" ng-disabled=\"ctrl.addType !== 'volume' || ctrl.disableInputs\" ng-model=\"ctrl.mountVolume\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "</div>\n" +
     "<div class=\"help-block bind-description\">\n" +
-    "Mount Path for the volume. A file will be created in this director for each key from the secret. The file contents will be the value of the key.\n" +
+    "Mount Path for the volume. A file will be created in this directory for each key from the {{ctrl.apiObject.kind | humanizeKind}}. The file contents will be the value of the key.\n" +
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"addToApplicationForm.mountVolume.$error.oscUnique\">\n" +
     "<span class=\"help-block\">\n" +
@@ -5622,13 +5636,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<legend ng-if-start=\"ctrl.application.spec.template.spec.containers.length > 1\">Containers:</legend>\n" +
     "<div ng-if-end class=\"form-group container-options\">\n" +
     "<div ng-if=\"ctrl.attachAllContainers\">\n" +
-    "The secret will be added to all containers. You can\n" +
+    "The {{ctrl.apiObject.kind | humanizeKind}} will be added to all containers. You can\n" +
     "<a href=\"\" ng-click=\"ctrl.attachAllContainers = false\">select specific containers</a>\n" +
     "instead.\n" +
     "</div>\n" +
     "<div ng-if=\"!ctrl.attachAllContainers\" class=\"form-group\">\n" +
     "<label class=\"sr-only required\">Containers</label>\n" +
-    "<select-containers ng-model=\"ctrl.attachContainers\" pod-template=\"ctrl.application.spec.template\" ng-required=\"true\" help-text=\"Add the secret to the selected containers.\">\n" +
+    "<select-containers ng-model=\"ctrl.attachContainers\" pod-template=\"ctrl.application.spec.template\" ng-required=\"true\" help-text=\"Add the {{ctrl.apiObject.kind | humanizeKind}} to the selected containers.\">\n" +
     "</select-containers>\n" +
     "</div>\n" +
     "</div>\n" +

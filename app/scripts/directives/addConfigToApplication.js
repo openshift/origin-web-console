@@ -1,6 +1,6 @@
 "use strict";
 (function() {
-  angular.module("openshiftConsole").component('addSecretToApplication', {
+  angular.module("openshiftConsole").component('addConfigToApplication', {
     controller: [
       '$filter',
       '$scope',
@@ -10,19 +10,19 @@
       'Navigate',
       'NotificationsService',
       'StorageService',
-      AddSecretToApplication
+      AddConfigToApplication
     ],
     controllerAs: 'ctrl',
     bindings: {
       project: '<',
-      secret: '<',
+      apiObject: '<',
       onComplete: '<',
       onCancel: '<'
     },
-    templateUrl: 'views/directives/add-secret-to-application.html'
+    templateUrl: 'views/directives/add-config-to-application.html'
   });
 
-  function AddSecretToApplication($filter, $scope, APIService, ApplicationsService, DataService, Navigate, NotificationsService, StorageService) {
+  function AddConfigToApplication($filter, $scope, APIService, ApplicationsService, DataService, Navigate, NotificationsService, StorageService) {
     var ctrl = this;
 
     var getApplications = function() {
@@ -41,8 +41,8 @@
 
       getApplications();
 
-      var keyValidator = new RegExp("^[A-Za-z_]{1}[A-Za-z0-9_]*$");
-      ctrl.hasInvalidEnvVars = _.some(ctrl.secret.data, function(value, key) {
+      var keyValidator = new RegExp("^[A-Za-z_][A-Za-z0-9_]*$");
+      ctrl.hasInvalidEnvVars = _.some(ctrl.apiObject.data, function(value, key) {
         return !keyValidator.test(key);
       });
     };
@@ -70,11 +70,19 @@
       ctrl.disableInputs = true;
 
       if (ctrl.addType === 'env') {
-        var newEnvFrom = {
-          secretRef: {
-            name: ctrl.secret.metadata.name
-          }
-        };
+        var newEnvFrom = {};
+        switch (ctrl.apiObject.kind) {
+          case 'Secret':
+            newEnvFrom.secretRef = {
+              name: ctrl.apiObject.metadata.name
+            };
+            break;
+          case 'ConfigMap':
+            newEnvFrom.configMapRef = {
+              name: ctrl.apiObject.metadata.name
+            };
+            break;
+        }
 
         // For each container, add the new volume mount.
         _.each(podTemplate.spec.containers, function(container) {
@@ -85,7 +93,7 @@
         });
       } else {
         var generateName = $filter('generateName');
-        var name = generateName(ctrl.secret.metadata.name + '-');
+        var name = generateName(ctrl.apiObject.metadata.name + '-');
         var newVolumeMount = {
           name: name,
           mountPath: ctrl.mountVolume,
@@ -101,18 +109,28 @@
         });
 
         var newVolume = {
-          name: name,
-          secret: {
-            secretName: ctrl.secret.metadata.name
-          }
+          name: name
         };
+
+        switch (ctrl.apiObject.kind) {
+          case 'Secret':
+            newVolume.secret = {
+              secretName: ctrl.apiObject.metadata.name
+            };
+            break;
+          case 'ConfigMap':
+            newVolume.configMap = {
+              name: ctrl.apiObject.metadata.name
+            };
+            break;
+        }
 
         podTemplate.spec.volumes = podTemplate.spec.volumes || [];
         podTemplate.spec.volumes.push(newVolume);
       }
 
       var humanizeKind = $filter('humanizeKind');
-      var sourceKind = humanizeKind(ctrl.secret.kind);
+      var sourceKind = humanizeKind(ctrl.apiObject.kind);
       var targetKind = humanizeKind(applicationToUpdate.kind);
       var context = {
         namespace: ctrl.project.metadata.name
@@ -122,7 +140,7 @@
         function() {
           NotificationsService.addNotification({
             type: "success",
-            message: "Successfully added " + sourceKind + " " + ctrl.secret.metadata.name + " to " + targetKind + " " + applicationToUpdate.metadata.name + ".",
+            message: "Successfully added " + sourceKind + " " + ctrl.apiObject.metadata.name + " to " + targetKind + " " + applicationToUpdate.metadata.name + ".",
             links: [{
               href: Navigate.resourceURL(applicationToUpdate),
               label: "View " + humanizeKind(applicationToUpdate.kind, true)
@@ -137,7 +155,7 @@
 
           NotificationsService.addNotification({
             type: "error",
-            message: "An error occurred  adding " + sourceKind + " " + ctrl.secret.metadata.name + " to " + targetKind + " " + applicationToUpdate.metadata.name + ". " +
+            message: "An error occurred  adding " + sourceKind + " " + ctrl.apiObject.metadata.name + " to " + targetKind + " " + applicationToUpdate.metadata.name + ". " +
             getErrorDetails(result)
           });
         }).finally(function() {
