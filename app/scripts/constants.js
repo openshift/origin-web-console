@@ -10,6 +10,24 @@ if (angular.isUndefined(window.OPENSHIFT_CONSTANTS)) {
   window.OPENSHIFT_CONSTANTS = {};
 }
 
+// Ugly to have to put extra route monkey business up here.  Better solution?
+var landingPageRoute;
+var projectsPageRoute = {
+  templateUrl: 'views/projects.html',
+  controller: 'ProjectsController'
+};
+
+if (_.get(window, 'OPENSHIFT_CONSTANTS.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page')) {
+  landingPageRoute = {
+    templateUrl: 'views/landing-page.html',
+    controller: 'LandingPageController',
+    reloadOnSearch: false
+  };
+} else {
+  landingPageRoute = projectsPageRoute;
+}
+// end route conditional
+
 angular.extend(window.OPENSHIFT_CONSTANTS, {
   // Maps links to specific topics in external documentation.
   HELP_BASE_URL: "https://docs.openshift.org/latest/",
@@ -379,6 +397,391 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
       // ]
     }
   ],
+  // The actual routes that the console will understand and respond to
+  ROUTES: {
+    '/': landingPageRoute,
+    '/create-project': {
+      templateUrl: 'views/create-project.html',
+      controller: 'CreateProjectController'
+    },
+    '/project/:project': {
+      redirectTo: function(params) {
+        return '/project/' + encodeURIComponent(params.project) + "/overview";
+      }
+    },
+    '/project/:project/overview': {
+      templateUrl: 'views/overview.html',
+      controller: 'OverviewController',
+      controllerAs: 'overview',
+      reloadOnSearch: false
+    },
+    '/project/:project/quota': {
+      templateUrl: 'views/quota.html',
+      controller: 'QuotaController'
+    },
+    '/project/:project/monitoring': {
+      templateUrl: 'views/monitoring.html',
+      controller: 'MonitoringController',
+      reloadOnSearch: false
+    },
+    '/project/:project/membership': {
+      templateUrl: 'views/membership.html',
+      controller: 'MembershipController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse': {
+      redirectTo: function(params) {
+        return '/project/' + encodeURIComponent(params.project) + "/browse/pods";  // TODO decide what subtab to default to here
+      }
+    },
+    '/project/:project/browse/builds': {
+      templateUrl: 'views/builds.html',
+      controller: 'BuildsController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/pipelines': {
+      templateUrl: 'views/pipelines.html',
+      controller: 'PipelinesController'
+    },
+    '/project/:project/browse/builds/:buildconfig': {
+      templateUrl: 'views/browse/build-config.html',
+      controller: 'BuildConfigController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/pipelines/:buildconfig': {
+      templateUrl: 'views/browse/build-config.html',
+      controller: 'BuildConfigController',
+      resolve: {
+        isPipeline: function ($route) {
+          $route.current.params.isPipeline = true;
+        }
+      }
+    },
+    '/project/:project/edit/yaml': {
+      templateUrl: 'views/edit/yaml.html',
+      controller: 'EditYAMLController'
+    },
+    '/project/:project/edit/builds/:buildconfig': {
+      templateUrl: 'views/edit/build-config.html',
+      controller: 'EditBuildConfigController'
+    },
+    '/project/:project/edit/pipelines/:buildconfig': {
+      templateUrl: 'views/edit/build-config.html',
+      controller: 'EditBuildConfigController',
+      resolve: {
+        isPipeline: function ($route) {
+          $route.current.params.isPipeline = true;
+        }
+      },
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/builds/:buildconfig/:build': {
+      templateUrl: function(params) {
+        if (params.view === 'chromeless') {
+          return 'views/logs/chromeless-build-log.html';
+        }
+
+        return 'views/browse/build.html';
+      },
+      controller: 'BuildController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/pipelines/:buildconfig/:build': {
+      templateUrl: 'views/browse/build.html',
+      controller: 'BuildController',
+      resolve: {
+        isPipeline: function ($route) {
+          $route.current.params.isPipeline = true;
+        }
+      },
+      reloadOnSearch: false
+    },
+    // For when a build is missing a buildconfig label
+    // Needs to still be prefixed with browse/builds so the secondary nav active state is correct
+    '/project/:project/browse/builds-noconfig/:build': {
+      templateUrl: 'views/browse/build.html',
+      controller: 'BuildController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/pipelines-noconfig/:build': {
+      templateUrl: 'views/browse/build.html',
+      controller: 'BuildController',
+      resolve: {
+        isPipeline: function ($route) {
+          $route.current.params.isPipeline = true;
+        }
+      },
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/deployments': {
+      templateUrl: 'views/deployments.html',
+      controller: 'DeploymentsController',
+      reloadOnSearch: false
+    },
+    // Can't be /deployments/ (plural) because we used that previously for deployment config URLs. See redirect below.
+    '/project/:project/browse/deployment/:deployment': {
+      templateUrl: 'views/browse/deployment.html',
+      controller: 'DeploymentController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/dc/:deploymentconfig': {
+      templateUrl: 'views/browse/deployment-config.html',
+      controller: 'DeploymentConfigController',
+      reloadOnSearch: false
+    },
+    '/project/:project/edit/dc/:deploymentconfig': {
+      templateUrl: 'views/edit/deployment-config.html',
+      controller: 'EditDeploymentConfigController'
+    },
+    '/project/:project/browse/stateful-sets/': {
+      templateUrl: 'views/browse/stateful-sets.html',
+      controller: 'StatefulSetsController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/stateful-sets/:statefulset': {
+      templateUrl: 'views/browse/stateful-set.html',
+      controller: 'StatefulSetController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/rs/:replicaSet': {
+      templateUrl: 'views/browse/replica-set.html',
+      resolve: {
+        // The ReplicaSetController handles both ReplicaSet and ReplicationController.
+        kind: function () {
+          return 'ReplicaSet';
+        }
+      },
+      controller: 'ReplicaSetController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/rc/:replicaSet': {
+      templateUrl: function(params) {
+        if (params.view === 'chromeless') {
+          return 'views/logs/chromeless-deployment-log.html';
+        }
+
+        return 'views/browse/replica-set.html';
+      },
+      resolve: {
+        // The ReplicaSetController handles both ReplicaSet and ReplicationController.
+        kind: function () {
+          return 'ReplicationController';
+        }
+      },
+      controller: 'ReplicaSetController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/events': {
+      templateUrl: 'views/events.html',
+      controller: 'EventsController'
+    },
+    '/project/:project/browse/images': {
+      templateUrl: 'views/images.html',
+      controller: 'ImagesController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/images/:imagestream': {
+      templateUrl: 'views/browse/imagestream.html',
+      controller: 'ImageStreamController'
+    },
+    '/project/:project/browse/images/:imagestream/:tag': {
+      templateUrl: 'views/browse/image.html',
+      controller: 'ImageController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/pods': {
+      templateUrl: 'views/pods.html',
+      controller: 'PodsController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/pods/:pod': {
+      templateUrl: function(params) {
+        if (params.view === 'chromeless') {
+          return 'views/logs/chromeless-pod-log.html';
+        }
+
+        return 'views/browse/pod.html';
+      },
+      controller: 'PodController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/services': {
+      templateUrl: 'views/services.html',
+      controller: 'ServicesController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/services/:service': {
+      templateUrl: 'views/browse/service.html',
+      controller: 'ServiceController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/storage': {
+      templateUrl: 'views/storage.html',
+      controller: 'StorageController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/secrets/:secret': {
+      templateUrl: 'views/browse/secret.html',
+      controller: 'SecretController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/secrets': {
+      templateUrl: 'views/secrets.html',
+      controller: 'SecretsController',
+      reloadOnSearch: false
+    },
+    '/project/:project/create-secret': {
+      templateUrl: 'views/create-secret.html',
+      controller: 'CreateSecretController'
+    },
+    '/project/:project/browse/config-maps': {
+      templateUrl: 'views/browse/config-maps.html',
+      controller: 'ConfigMapsController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/config-maps/:configMap': {
+      templateUrl: 'views/browse/config-map.html',
+      controller: 'ConfigMapController'
+    },
+    '/project/:project/create-config-map': {
+      templateUrl: 'views/create-config-map.html',
+      controller: 'CreateConfigMapController'
+    },
+    '/project/:project/edit/config-maps/:configMap': {
+      templateUrl: 'views/edit/config-map.html',
+      controller: 'EditConfigMapController'
+    },
+    '/project/:project/browse/other': {
+      templateUrl: 'views/other-resources.html',
+      controller: 'OtherResourcesController',
+      reloadOnSearch: false
+    },
+    '/project/:project/browse/persistentvolumeclaims/:pvc': {
+      templateUrl: 'views/browse/persistent-volume-claim.html',
+      controller: 'PersistentVolumeClaimController'
+    },
+    '/project/:project/browse/routes': {
+      templateUrl: 'views/browse/routes.html',
+      controller: 'RoutesController',
+      reloadOnSearch: false
+    },
+    '/project/:project/edit/routes/:route': {
+      templateUrl: 'views/edit/route.html',
+      controller: 'EditRouteController'
+    },
+    '/project/:project/browse/routes/:route': {
+      templateUrl: 'views/browse/route.html',
+      controller: 'RouteController'
+    },
+    '/project/:project/create-route': {
+      templateUrl: 'views/create-route.html',
+      controller: 'CreateRouteController'
+    },
+    '/project/:project/edit': {
+      templateUrl: 'views/edit/project.html',
+      controller: 'EditProjectController'
+    },
+    '/project/:project/create-pvc': {
+      templateUrl: 'views/create-persistent-volume-claim.html',
+      controller: 'CreatePersistentVolumeClaimController'
+    },
+    '/project/:project/attach-pvc': {
+      templateUrl: 'views/attach-pvc.html',
+      controller: 'AttachPVCController'
+    },
+    '/project/:project/add-config-volume': {
+      templateUrl: 'views/add-config-volume.html',
+      controller: 'AddConfigVolumeController'
+    },
+    '/project/:project/create': {
+      templateUrl: 'views/create.html',
+      controller: 'CreateController',
+      reloadOnSearch: false
+    },
+    '/project/:project/create/category/:category': {
+      templateUrl: 'views/create/category.html',
+      controller: 'BrowseCategoryController'
+    },
+    '/project/:project/create/category/:category/:subcategory': {
+      templateUrl: 'views/create/category.html',
+      controller: 'BrowseCategoryController'
+    },
+    '/project/:project/create/fromtemplate': {
+      templateUrl: 'views/newfromtemplate.html',
+      controller: 'NewFromTemplateController'
+    },
+    '/project/:project/create/fromimage': {
+      templateUrl: 'views/create/fromimage.html',
+      controller: 'CreateFromImageController'
+    },
+    '/project/:project/create/next': {
+      templateUrl: 'views/create/next-steps.html',
+      controller: 'NextStepsController'
+    },
+    '/project/:project/set-limits': {
+      templateUrl: 'views/set-limits.html',
+      controller: 'SetLimitsController'
+    },
+    '/project/:project/edit/autoscaler': {
+      templateUrl: 'views/edit/autoscaler.html',
+      controller: 'EditAutoscalerController'
+    },
+    '/project/:project/edit/health-checks': {
+      templateUrl: 'views/edit/health-checks.html',
+      controller: 'EditHealthChecksController'
+    },
+    '/about': {
+      templateUrl: 'views/about.html',
+      controller: 'AboutController'
+    },
+    '/command-line': {
+      templateUrl: 'views/command-line.html',
+      controller: 'CommandLineController'
+    },
+    '/oauth': {
+      templateUrl: 'views/util/oauth.html',
+      controller: 'OAuthController'
+    },
+    '/error': {
+      templateUrl: 'views/util/error.html',
+      controller: 'ErrorController'
+    },
+    '/logout': {
+      templateUrl: 'views/util/logout.html',
+      controller: 'LogoutController'
+    },
+    '/create': {
+      templateUrl: 'views/create-from-url.html',
+      controller: 'CreateFromURLController'
+    },
+    // legacy redirects
+    '/createProject': {
+      redirectTo: '/create-project'
+    },
+    '/project/:project/createRoute': {
+      redirectTo: '/project/:project/create-route'
+    },
+    '/project/:project/attachPVC': {
+      redirectTo: '/project/:project/attach-pvc'
+    },
+    '/project/:project/browse/deployments/:deploymentconfig': {
+      redirectTo: '/project/:project/browse/dc/:deploymentconfig'
+    },
+    '/project/:project/browse/deployments/:deploymentconfig/:rc': {
+      redirectTo: '/project/:project/browse/rc/:rc'
+    },
+    '/project/:project/browse/deployments-replicationcontrollers/:rc': {
+      redirectTo: '/project/:project/browse/rc/:rc'
+    }
+  },
+  TECH_PREVIEW_ROUTES: {
+    // POC, quick hack in. prob not the way I would recommend doing this.
+    service_catalog_landing_page: (function() {
+      _.get(window, 'OPENSHIFT_CONSTANTS.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page') ?
+        { '/projects': projectsPageRoute } :
+        { '/projects': { redirectTo: '/' } };
+    })(),
+  },
   CATALOG_CATEGORIES: [
     {
       id: 'languages',
