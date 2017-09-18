@@ -10,15 +10,31 @@
       </div>
       <div ng-if="loaded && !error">
         <h1 class="contains-actions">
-          <div class="pull-right dropdown" ng-if="'configmaps' | canIDoAny">
-            <button type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
+          <div class="pull-right dropdown">
+            <!--
+              `canIAddToProject` returns true if you can update any resource.
+              We'll use this as a best-effort check to see if we should show the
+              button.
+            -->
+            <button ng-if="project.metadata.name | canIAddToProject"
+                    type="button"
+                    class="btn btn-default hidden-xs"
+                    ng-click="addToApplication()">
+              Add to Application
+            </button>
+            <button ng-if="'configmaps' | canIDoAny" type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
               Actions
               <span class="caret"></span>
             </button>
+            <!-- Check `canIAddToProject` for the mobile menu since "Add to Application" uses it. -->
             <a href=""
+               ng-if="project.metadata.name | canIAddToProject"
                class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
-               data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
+               data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span></a>
             <ul class="dropdown-menu dropdown-menu-right actions action-button">
+              <li ng-if="project.metadata.name | canIAddToProject" class="visible-xs">
+                <a href="" role="button" ng-click="addToApplication()">Add to Application</a>
+              </li>
               <li ng-if="'configmaps' | canI : 'update'">
                 <a ng-href="{{configMap | editResourceURL}}" role="button">Edit</a>
               </li>
@@ -58,7 +74,7 @@
                     <truncate-long-text
                         content="value"
                         limit="1024"
-                        newlineLimit="20"
+                        newline-limit="20"
                         expandable="true">
                     </truncate-long-text>
                   </td>
@@ -70,5 +86,8 @@
         </div><!-- /col-* -->
       </div>
     </div>
+    <overlay-panel class="add-config-to-application" show-panel="addToApplicationVisible" show-close="true" handle-close="closeAddToApplication">
+      <add-config-to-application project="project" api-object="configMap" on-cancel="closeAddToApplication" on-complete="closeAddToApplication"></add-config-to-application>
+    </overlay-panel>
   </div><!-- /middle-content -->
 </div>

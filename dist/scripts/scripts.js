@@ -6176,8 +6176,12 @@ type: "warning",
 message: "This config map has been deleted."
 });
 };
-r.get(t.project).then(_.spread(function(n, r) {
-a.get("configmaps", t.configMap, r, {
+e.addToApplicationVisible = !1, e.addToApplication = function() {
+e.addToApplicationVisible = !0;
+}, e.closeAddToApplication = function() {
+e.addToApplicationVisible = !1;
+}, r.get(t.project).then(_.spread(function(n, r) {
+e.project = n, a.get("configmaps", t.configMap, r, {
 errorNotification: !1
 }).then(function(e) {
 i(e), o.push(a.watchObject("configmaps", t.configMap, r, i));
@@ -10606,7 +10610,7 @@ showAction: "=?"
 templateUrl: "views/directives/action-chip.html"
 };
 }), function() {
-angular.module("openshiftConsole").component("addSecretToApplication", {
+angular.module("openshiftConsole").component("addConfigToApplication", {
 controller: [ "$filter", "$scope", "APIService", "ApplicationsService", "DataService", "Navigate", "NotificationsService", "StorageService", function(e, t, n, a, r, o, i, s) {
 var c = this, l = function() {
 var e = {
@@ -10618,8 +10622,8 @@ c.applications = e, c.updating = !1;
 };
 c.$onInit = function() {
 c.addType = "env", c.disableInputs = !1, l();
-var e = new RegExp("^[A-Za-z_]{1}[A-Za-z0-9_]*$");
-c.hasInvalidEnvVars = _.some(c.secret.data, function(t, n) {
+var e = new RegExp("^[A-Za-z_][A-Za-z0-9_]*$");
+c.hasInvalidEnvVars = _.some(c.apiObject.data, function(t, n) {
 return !e.test(n);
 });
 };
@@ -10636,16 +10640,24 @@ c.existingMountPaths = s.getMountPaths(e), c.attachAllContainers = !0;
 }, c.addToApplication = function() {
 var t = angular.copy(c.application), a = _.get(t, "spec.template");
 if (c.disableInputs = !0, "env" === c.addType) {
-var s = {
-secretRef: {
-name: c.secret.metadata.name
-}
+var s = {};
+switch (c.apiObject.kind) {
+case "Secret":
+s.secretRef = {
+name: c.apiObject.metadata.name
 };
+break;
+
+case "ConfigMap":
+s.configMapRef = {
+name: c.apiObject.metadata.name
+};
+}
 _.each(a.spec.containers, function(e) {
 u(e) && (e.envFrom = e.envFrom || [], e.envFrom.push(s));
 });
 } else {
-var l = e("generateName")(c.secret.metadata.name + "-"), d = {
+var l = e("generateName")(c.apiObject.metadata.name + "-"), d = {
 name: l,
 mountPath: c.mountVolume,
 readOnly: !0
@@ -10654,20 +10666,29 @@ _.each(a.spec.containers, function(e) {
 u(e) && (e.volumeMounts = e.volumeMounts || [], e.volumeMounts.push(d));
 });
 var m = {
-name: l,
-secret: {
-secretName: c.secret.metadata.name
-}
+name: l
 };
+switch (c.apiObject.kind) {
+case "Secret":
+m.secret = {
+secretName: c.apiObject.metadata.name
+};
+break;
+
+case "ConfigMap":
+m.configMap = {
+name: c.apiObject.metadata.name
+};
+}
 a.spec.volumes = a.spec.volumes || [], a.spec.volumes.push(m);
 }
-var p = e("humanizeKind"), f = p(c.secret.kind), g = p(t.kind), h = {
+var p = e("humanizeKind"), f = p(c.apiObject.kind), g = p(t.kind), h = {
 namespace: c.project.metadata.name
 };
 r.update(n.kindToResource(t.kind), t.metadata.name, t, h).then(function() {
 i.addNotification({
 type: "success",
-message: "Successfully added " + f + " " + c.secret.metadata.name + " to " + g + " " + t.metadata.name + ".",
+message: "Successfully added " + f + " " + c.apiObject.metadata.name + " to " + g + " " + t.metadata.name + ".",
 links: [ {
 href: o.resourceURL(t),
 label: "View " + p(t.kind, !0)
@@ -10677,7 +10698,7 @@ label: "View " + p(t.kind, !0)
 var a = e("getErrorDetails");
 i.addNotification({
 type: "error",
-message: "An error occurred  adding " + f + " " + c.secret.metadata.name + " to " + g + " " + t.metadata.name + ". " + a(n)
+message: "An error occurred  adding " + f + " " + c.apiObject.metadata.name + " to " + g + " " + t.metadata.name + ". " + a(n)
 });
 }).finally(function() {
 c.disableInputs = !1;
@@ -10687,11 +10708,11 @@ c.disableInputs = !1;
 controllerAs: "ctrl",
 bindings: {
 project: "<",
-secret: "<",
+apiObject: "<",
 onComplete: "<",
 onCancel: "<"
 },
-templateUrl: "views/directives/add-secret-to-application.html"
+templateUrl: "views/directives/add-config-to-application.html"
 });
 }(), angular.module("openshiftConsole").directive("templateOptions", function() {
 return {

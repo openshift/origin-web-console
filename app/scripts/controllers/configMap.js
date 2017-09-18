@@ -37,9 +37,20 @@ angular.module('openshiftConsole')
       }
     };
 
+    $scope.addToApplicationVisible = false;
+
+    $scope.addToApplication = function() {
+      $scope.addToApplicationVisible = true;
+    };
+
+    $scope.closeAddToApplication = function() {
+      $scope.addToApplicationVisible = false;
+    };
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
+        $scope.project = project;
         DataService
           .get("configmaps", $routeParams.configMap, context, { errorNotification: false })
           .then(function(configMap) {
