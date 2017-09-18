@@ -1,0 +1,84 @@
+<project-header class="top-header"></project-header>
+<project-page>
+
+  <!-- Middle section -->
+  <div class="middle-section">
+    <div class="middle-container">
+      <div class="middle-header header-toolbar">
+        <div class="container-fluid">
+          <div class="page-header page-header-bleed-right page-header-bleed-left">
+            <h1>
+              Provisioned Services
+            </h1>
+          </div>
+          <div class="data-toolbar">
+            <div class="data-toolbar-filter">
+              <project-filter></project-filter>
+            </div>
+          </div>
+        </div>
+      </div><!-- /middle-header-->
+      <div class="middle-content">
+        <div class="container-fluid">
+          <alerts alerts="alerts"></alerts>
+          <div class="row">
+            <div class="col-md-12">
+              <table class="table table-bordered table-mobile table-layout-fixed">
+                <colgroup>
+                  <col class="col-sm-3">
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Bindings</th>
+                  </tr>
+                </thead>
+                <tbody ng-if="(serviceInstances | size) === 0">
+                  <tr>
+                    <td colspan="4"><em>{{emptyMessage}}</em></td>
+                  </tr>
+                </tbody>
+                <tbody ng-if="(serviceInstances | size) > 0">
+                  <tr ng-repeat="serviceInstance in serviceInstances track by (serviceInstance | uid)">
+                    <td data-title="Name"><a ng-href="{{serviceInstance | navigateResourceURL}}">{{serviceInstance | serviceInstanceDisplayName:serviceClasses}}</a></td>
+
+                    <td data-title="Status">
+                      <div row class="status">
+                        <status-icon status="serviceInstance | serviceInstanceStatus" disable-animation></status-icon>
+                        <span flex>{{serviceInstance | serviceInstanceStatus | sentenceCase}}</span>
+                      </div>
+                    </td>
+                    <td data-title="Created">
+                      <span am-time-ago="serviceInstance.metadata.creationTimestamp" am-without-suffix="true"></span> ago
+                    </td>
+                    <td data-title="Bindings">
+                      <div ng-if="bindingsByInstanceRef[serviceInstance.metadata.name].length">
+                        <p ng-if="firstBinding = bindingsByInstanceRef[serviceInstance.metadata.name][0]">
+                          <span ng-if="application = applicationsByBinding[firstBinding.metadata.name][0]">
+                            {{application.metadata.name}}
+                          </span>
+                          <span ng-if="!application">
+                            {{firstBinding.spec.secretName}}
+                          </span>
+                          <ng-pluralize count="bindingsByInstanceRef[serviceInstance.metadata.name].length"
+                                        when="{'0':'', '1':'', '2':'and {} other', 'other':'and {} others'}"
+                                        offset="1">
+                          </ng-pluralize>
+                        </p>
+                      </div>
+                      <div ng-if="!bindingsByInstanceRef[serviceInstance.metadata.name].length">
+                        No bindings
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div><!-- /col-* -->
+          </div>
+        </div>
+      </div><!-- /middle-content -->
+    </div><!-- /middle-container -->
+  </div><!-- /middle-section -->
+</project-page>

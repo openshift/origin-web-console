@@ -1,0 +1,88 @@
+<project-header class="top-header"></project-header>
+<project-page>
+
+  <!-- Middle section -->
+  <div class="middle-section">
+    <div class="middle-container">
+      <div class="middle-header">
+        <div class="container-fluid">
+          <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+          <alerts alerts="alerts"></alerts>
+          <div ng-if="!loaded" class="mar-top-xl">Loading...</div>
+          <div ng-if="serviceInstance">
+            <h1 class="contains-actions">
+              <div class="pull-right dropdown" ng-hide="!('serviceInstances' | canIDoAny)">
+                <button type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
+                  Actions
+                  <span class="caret"></span>
+                </button>
+                <a href=""
+                   class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
+                   data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span></a>
+                <ul class="dropdown-menu dropdown-menu-right actions action-button">
+                  <li ng-if="{resource: 'serviceinstances', group: 'servicecatalog.k8s.io'} | canI : 'update'">
+                    <a ng-href="{{serviceInstance | editYamlURL}}" role="button">Edit YAML</a>
+                  </li>
+                  <li ng-if="{resource: 'serviceinstances', group: 'servicecatalog.k8s.io'} | canI : 'delete'">
+                    <a href="" ng-click="deprovision()" role="button">Delete</a>
+                  </li>
+                </ul>
+              </div>
+              {{serviceInstance | serviceInstanceDisplayName:serviceClasses}}
+              <small class="meta">created <span am-time-ago="serviceInstance.metadata.creationTimestamp"></span></small>
+            </h1>
+            <labels labels="serviceInstance.metadata.labels" clickable="true" kind="service-instances" project-name="{{serviceInstance.metadata.namespace}}" limit="3"></labels>
+          </div>
+        </div>
+      </div><!-- /middle-header-->
+      <div class="middle-content" persist-tab-state>
+        <div class="container-fluid">
+          <div class="row" ng-if="serviceInstance">
+            <div class="col-md-12">
+              <uib-tabset>
+                <uib-tab active="selectedTab.details">
+                  <uib-tab-heading>Details</uib-tab-heading>
+                  <div class="resource-details">
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <p ng-bind-html="plan.description | linkify : '_blank'"></p>
+                        <dl class="dl-horizontal left">
+                          <dt ng-if-start="serviceClass.description || serviceClass.externalMetadata.longDescription">Description:</dt>
+                          <dd ng-if-end>
+                            <p class="pre-wrap" ng-bind-html="serviceClass.description | linkify : '_blank'"></p>
+                            <p class="pre-wrap" ng-bind-html="serviceClass.externalMetadata.longDescription | linkify : '_blank'"></p>
+                          </dd>
+                          <dt>Status:</dt>
+                          <dd>
+                            <status-icon status="serviceInstance | serviceInstanceStatus" disable-animation></status-icon>
+                            <span flex>{{serviceInstance | serviceInstanceStatus | sentenceCase}}</span>
+                          </dd>
+                          <dt ng-if-start="serviceInstance | serviceInstanceConditionMessage">Status Reason:</dt>
+                          <dd ng-if-end>
+                            {{serviceInstance | serviceInstanceConditionMessage}}
+                          </dd>
+                        </dl>
+                      </div>
+                      <div class="col-lg-6">
+                        <resource-service-bindings
+                          project="project"
+                          project-context="projectContext"
+                          api-object="serviceInstance">
+                        </resource-service-bindings>
+                      </div>
+                    </div>
+                    <annotations annotations="serviceInstance.metadata.annotations"></annotations>
+                  </div>
+                </uib-tab>
+                <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">
+                  <uib-tab-heading>Events</uib-tab-heading>
+                  <events api-objects="[ serviceInstance ]" project-context="projectContext" ng-if="selectedTab.events"></events>
+                </uib-tab>
+              </uib-tabset>
+            </div><!-- /col-* -->
+          </div>
+        </div>
+      </div><!-- /middle-content -->
+    </div><!-- /middle-container -->
+  </div><!-- /middle-section -->
+</project-page>

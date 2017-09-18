@@ -261,6 +261,18 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
                 "/create-route",
                 "/edit/routes/"
               ]
+            },
+            {
+              label: "Provisioned Services",
+              href: "/browse/service-instances",
+              prefixes: [
+                "/browse/service-instances/"
+              ],
+              canI: {
+                resource: 'serviceinstances',
+                group: 'servicecatalog.k8s.io',
+                verb: 'list'
+              }
             }
           ]
         }
