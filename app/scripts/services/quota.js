@@ -3,12 +3,21 @@
 angular.module("openshiftConsole")
   .factory("QuotaService", function(APIService,
                                     $filter,
+                                    $location,
+                                    $rootScope,
+                                    $routeParams,
                                     $q,
+                                    Constants,
                                     DataService,
-                                    Logger) {
+                                    EventsService,
+                                    Logger,
+                                    NotificationsService) {
 
     var isNil = $filter('isNil');
     var usageValue = $filter('usageValue');
+    var usageWithUnits = $filter('usageWithUnits');
+    var percent = $filter('percent');
+
     var isBestEffortPod = function(pod) {
       // To be best effort a pod must not have any containers that have non-zero requests or limits
       // Break out as soon as we find any pod with a non-zero request or limit
@@ -254,6 +263,99 @@ angular.module("openshiftConsole")
       });
     };
 
+    var COMPUTE_RESOURCE_QUOTAS = [
+      "cpu",
+      "requests.cpu",
+      "memory",
+      "requests.memory",
+      "limits.cpu",
+      "limits.memory"
+    ];
+
+    var getNotificaitonMessage = function(used, usedValue, hard, hardValue, quotaKey) {
+      // Note: This function returns HTML markup, not plain text
+
+      var msgPrefix = "Your project is " + (hardValue < usedValue ? 'over' : 'at') + " quota. ";
+      var msg;
+      if (_.includes(COMPUTE_RESOURCE_QUOTAS, quotaKey)) {
+        msg = msgPrefix + "It is using " + percent((usedValue/hardValue), 0) + " of " + usageWithUnits(hard, quotaKey) + " " + humanizeQuotaResource(quotaKey) + ".";
+      } else {
+        msg = msgPrefix + "It is using " + usedValue + " of " + hardValue + " " + humanizeQuotaResource(quotaKey) + ".";
+      }
+
+      msg = _.escape(msg);
+
+      if (Constants.QUOTA_NOTIFICATION_MESSAGE && Constants.QUOTA_NOTIFICATION_MESSAGE[quotaKey]) {
+        // QUOTA_NOTICIATION_MESSAGE can contain HTML and shouldn't be escaped.
+        msg += " " + Constants.QUOTA_NOTIFICATION_MESSAGE[quotaKey];
+      }
+
+      return msg;
+    };
+
+    // Return notifications if you are at quota or over any quota for any resource. Do *not*
+    // warn about quota for 'resourcequotas' or resources whose hard limit is
+    // 0, however.
+    var getQuotaNotifications = function(quotas, clusterQuotas, projectName) {
+      var notifications = [];
+
+      var notificationsForQuota = function(quota) {
+        var q = quota.status.total || quota.status;
+        _.each(q.hard, function(hard, quotaKey) {
+          var hardValue = usageValue(hard);
+          var used = _.get(q, ['used', quotaKey]);
+          var usedValue = usageValue(used);
+
+          // We always ignore quota warnings about being out of
+          // resourcequotas since end users cant do anything about it
+          if (quotaKey === 'resourcequotas' || !hardValue || !usedValue) {
+            return;
+          }
+
+          if(hardValue <= usedValue) {
+            notifications.push({
+              id: "quota-limit-reached-" + quotaKey,
+              namespace: projectName,
+              type: (hardValue < usedValue ? 'warning' : 'info'),
+              message: getNotificaitonMessage(used, usedValue, hard, hardValue, quotaKey),
+              isHTML: true,
+              skipToast: true,
+              showInDrawer: true,
+              actions: [
+                {
+                  name: 'View Quotas',
+                  title: 'View project quotas',
+                  onClick: function() {
+                    $location.url("/project/" + $routeParams.project + "/quota");
+                    $rootScope.$emit('NotificationDrawerWrapper.hide');
+                  }
+                },
+                {
+                  name: "Don't Show Me Again",
+                  title: 'Permenantly hide this notificaiton until quota limit changes',
+                  onClick: function(notification) {
+                    NotificationsService.permanentlyHideNotification(notification.uid, notification.namespace);
+                    $rootScope.$emit('NotificationDrawerWrapper.clear', notification);
+                  }
+                },
+                {
+                  name: "Clear",
+                  title: 'Clear this notificaiton',
+                  onClick: function(notification) {
+                    $rootScope.$emit('NotificationDrawerWrapper.clear', notification);
+                  }
+                }
+              ]
+            });
+          }
+        });
+      };
+      _.each(quotas, notificationsForQuota);
+      _.each(clusterQuotas, notificationsForQuota);
+
+      return notifications;
+    };
+
     // Warn if you are at quota or over any quota for any resource. Do *not*
     // warn about quota for 'resourcequotas' or resources whose hard limit is
     // 0, however.
@@ -324,6 +426,7 @@ angular.module("openshiftConsole")
       getLatestQuotaAlerts: getLatestQuotaAlerts,
       isAnyQuotaExceeded: isAnyQuotaExceeded,
       isAnyStorageQuotaExceeded: isAnyStorageQuotaExceeded,
-      willRequestExceedQuota: willRequestExceedQuota
+      willRequestExceedQuota: willRequestExceedQuota,
+      getQuotaNotifications: getQuotaNotifications
     };
   });

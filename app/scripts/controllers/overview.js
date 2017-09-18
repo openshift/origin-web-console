@@ -1041,11 +1041,10 @@ function OverviewController($scope,
     groupRecentBuildsByDeploymentConfig();
   };
 
-  var updateQuotaWarnings = function() {
-    ResourceAlertsService.setGenericQuotaWarning(state.quotas,
-                                                 state.clusterQuotas,
-                                                 $routeParams.project,
-                                                 state.alerts);
+  var setQuotaNotifications = function() {
+    ResourceAlertsService.setQuotaNotifications(state.quotas,
+                                                state.clusterQuotas,
+                                                $routeParams.project);
   };
 
   overview.clearFilter = function() {
@@ -1305,12 +1304,12 @@ function OverviewController($scope,
     // Always poll quotas instead of watching, its not worth the overhead of maintaining websocket connections
     watches.push(DataService.watch('resourcequotas', context, function(quotaData) {
       state.quotas = quotaData.by("metadata.name");
-      updateQuotaWarnings();
+      setQuotaNotifications();
     }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
 
     watches.push(DataService.watch('appliedclusterresourcequotas', context, function(clusterQuotaData) {
       state.clusterQuotas = clusterQuotaData.by("metadata.name");
-      updateQuotaWarnings();
+      setQuotaNotifications();
     }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
 
     var canI = $filter('canI');

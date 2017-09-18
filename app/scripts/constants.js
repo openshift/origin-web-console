@@ -555,5 +555,10 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     //   href: 'http://example.com/',
     //   tooltip: 'Open Dashboard'
     // }
-  ]
+  ],
+  QUOTA_NOTIFICATION_MESSAGE: {
+    // Example quota messages to show in notification drawer
+    // "pods": "Upgrade to <a href='http://www.openshift.com'>OpenShift Pro</a> if you need additional resources.",
+    // "limits.memory": "Upgrade to <a href='http://www.openshift.com'>OpenShift Online Pro</a> if you need additional resources."
+  }
 });

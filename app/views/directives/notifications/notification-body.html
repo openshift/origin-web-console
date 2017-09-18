@@ -5,6 +5,7 @@
   <a
     class="pull-right"
     href=""
+    ng-if="!notification.actions.length"
     ng-click="$ctrl.customScope.clear(notification, $index, notificationGroup)">
     <span class="sr-only">Clear notification</span>
     <span aria-hidden="true" class="pull-left pficon pficon-close"></span>
@@ -35,7 +36,7 @@
           href=""
           class="secondary-action"
           title="{{action.title}}"
-          ng-click="$ctrl.customScope.handleAction(notification, action)">
+          ng-click="action.onClick(notification)">
           {{action.name}}
         </a>
       </li>
@@ -71,7 +72,8 @@
         </span>
 
         <span ng-if="!(notification.event.involvedObject)">
-          {{notification.message}}
+          <span ng-if="notification.isHTML" ng-bind-html="notification.message"></span>
+          <span ng-if="!notification.isHTML">{{notification.message}}</span>
           <span ng-repeat="link in notification.links">
             <a
               ng-if="!link.href"

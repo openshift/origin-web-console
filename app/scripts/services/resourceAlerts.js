@@ -6,6 +6,7 @@ angular.module("openshiftConsole")
                     AlertMessageService,
                     DeploymentsService,
                     Navigate,
+                    NotificationsService,
                     QuotaService) {
     var annotation = $filter('annotation');
     var humanizeKind = $filter('humanizeKind');
@@ -70,36 +71,13 @@ angular.module("openshiftConsole")
       return alerts;
     };
 
-    var setGenericQuotaWarning = function(quotas, clusterQuotas, projectName, alerts) {
-      var isHidden = AlertMessageService.isAlertPermanentlyHidden("overview-quota-limit-reached", projectName);
-      if (!isHidden && QuotaService.isAnyQuotaExceeded(quotas, clusterQuotas)) {
-        if (alerts['quotaExceeded']) {
-          // Don't recreate the alert or it will reset the temporary hidden state
-          return;
+    var setQuotaNotifications = function(quotas, clusterQuotas, projectName) {
+      var notifications = QuotaService.getQuotaNotifications(quotas, clusterQuotas, projectName);
+      _.each(notifications, function(notification) {
+        if(!NotificationsService.isNotificationPermanentlyHidden(notification)) {
+          NotificationsService.addNotification(notification);
         }
-
-        alerts['quotaExceeded'] = {
-          type: 'warning',
-          message: 'Quota limit has been reached.',
-          links: [{
-            href: Navigate.quotaURL(projectName),
-            label: "View Quota"
-          },{
-            href: "",
-            label: "Don't Show Me Again",
-            onClick: function() {
-              // Hide the alert on future page loads.
-              AlertMessageService.permanentlyHideAlert("overview-quota-limit-reached", projectName);
-
-              // Return true close the existing alert.
-              return true;
-            }
-          }]
-        };
-      }
-      else {
-        delete alerts['quotaExceeded'];
-      }
+      });
     };
 
     // deploymentConfig, k8s deployment
@@ -207,9 +185,9 @@ angular.module("openshiftConsole")
 
     return {
       getPodAlerts: getPodAlerts,
-      setGenericQuotaWarning: setGenericQuotaWarning,
       getDeploymentStatusAlerts: getDeploymentStatusAlerts,
       getPausedDeploymentAlerts: getPausedDeploymentAlerts,
-      getServiceInstanceAlerts: getServiceInstanceAlerts
+      getServiceInstanceAlerts: getServiceInstanceAlerts,
+      setQuotaNotifications: setQuotaNotifications
     };
   });

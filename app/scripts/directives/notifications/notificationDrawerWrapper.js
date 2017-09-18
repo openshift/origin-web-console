@@ -17,6 +17,7 @@
         'Constants',
         'DataService',
         'EventsService',
+        'NotificationsService',
         NotificationDrawerWrapper
       ]
     });
@@ -91,6 +92,12 @@
           group.totalUnread = unread(group.notifications).length;
           group.hasUnread = !!group.totalUnread;
           $rootScope.$emit('NotificationDrawerWrapper.onUnreadNotifications', group.totalUnread);
+        });
+      };
+
+      var removeNotificationFromGroup = function(notification) {
+        _.each(drawer.notificationGroups, function(group) {
+          _.remove(group.notifications, { uid: notification.uid, namespace: notification.namespace });
         });
       };
 
@@ -172,7 +179,7 @@
         var id = notification.id || _.uniqueId('notification_') + Date.now();
         notificationsMap[project] = notificationsMap[project] || {};
         notificationsMap[project][id] = {
-          actions: null,
+          actions: notification.actions,
           unread: !EventsService.isRead(id),
           // using uid to match API events and have one filed to pass
           // to EventsService for read/cleared, etc
@@ -183,6 +190,7 @@
           // but we sort based on lastTimestamp first.
           lastTimestamp: notification.timestamp,
           message: notification.message,
+          isHTML: notification.isHTML,
           details: notification.details,
           namespace: project,
           links: notification.links
@@ -261,7 +269,8 @@
           onLinkClick: function(link) {
             link.onClick();
             drawer.drawerHidden = true;
-          }
+          },
+          countUnreadNotifications: countUnreadNotifications
         }
       });
 
@@ -285,6 +294,18 @@
         // event from the counter to signal the drawer to open/close
         rootScopeWatches.push($rootScope.$on('NotificationDrawerWrapper.toggle', function() {
           drawer.drawerHidden = !drawer.drawerHidden;
+        }));
+
+        // event to signal the drawer to close
+        rootScopeWatches.push($rootScope.$on('NotificationDrawerWrapper.hide', function() {
+          drawer.drawerHidden = true;
+        }));
+
+        // event to signal the drawer to clear a notification
+        rootScopeWatches.push($rootScope.$on('NotificationDrawerWrapper.clear', function(event, notification) {
+          EventsService.markCleared(notification.uid);
+          removeNotificationFromGroup(notification);
+          drawer.countUnreadNotifications();
         }));
       };
 
