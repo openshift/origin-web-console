@@ -288,14 +288,14 @@ angular.module('openshiftConsole')
               return makeOption(project, false);
             });
           } else {
-            // Show the current project and a "View all Projects" link.
+            // Show the current project and a "View All Projects" link.
             options = [ makeOption(projects[name], true) ];
           }
 
           select.empty();
           select.append(options);
           select.append($('<option data-divider="true"></option>'));
-          select.append($('<option value="">View all Projects</option>'));
+          select.append($('<option value="">View All Projects</option>'));
           select.selectpicker('refresh');
         };
 
