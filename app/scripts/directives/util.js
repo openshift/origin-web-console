@@ -103,6 +103,36 @@ angular.module('openshiftConsole')
       }
     };
   })
+  .directive('copyLoginToClipboard', function(NotificationsService) {
+    return {
+      restrict: 'E',
+      replace: true,
+      scope: {
+        clipboardText: "="
+      },
+      template: '<a href="" data-clipboard-text="">Copy Login Command</a>',
+      link: function($scope, element) {
+        var clipboard = new Clipboard( element.get(0) );
+        clipboard.on('success', function () {
+          NotificationsService.addNotification({
+            id: 'copied_to_clipboard_toast_success',
+            type: 'warning',
+            message: 'Do not share the API token in your clipboard. A token is a form of a password.'
+          });
+        });
+        clipboard.on('error', function () {
+          NotificationsService.addNotification({
+            id: 'copied_to_clipboard_toast_error',
+            type: 'error',
+            message: 'Unable to copy.'
+          });
+        });
+        element.on('$destroy', function() {
+          clipboard.destroy();
+        });
+      }
+    };
+  })
   .directive('shortId', function() {
     return {
       restrict:'E',
