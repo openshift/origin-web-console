@@ -10,7 +10,7 @@ angular.module("openshiftConsole")
     // Enable service catalog features if the new experience is enabled and the
     // servicecatalog.k8s.io resources are available.
     var SERVICE_CATALOG_ENABLED =
-      _.get(Constants, 'ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page') &&
+      !Constants.SERVICE_CATALOG_ENABLED &&
       APIService.apiInfo({ group: 'servicecatalog.k8s.io', resource: 'serviceclasses' }) &&
       APIService.apiInfo({ group: 'servicecatalog.k8s.io', resource: 'serviceinstances' }) &&
       APIService.apiInfo({ group: 'servicecatalog.k8s.io', resource: 'serviceinstancecredentials' });

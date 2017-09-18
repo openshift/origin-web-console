@@ -14,7 +14,7 @@ angular.module('openshiftConsole')
                        $window,
                        AuthService,
                        Constants) {
-    var landingPageEnabled = _.get(Constants, 'ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page');
+    var landingPageEnabled = !Constants.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
 
     $scope.onProjectCreated = function(encodedProjectName) {
       if (landingPageEnabled) {

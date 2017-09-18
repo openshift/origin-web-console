@@ -25,7 +25,7 @@ exports.createProject = (project, uri) => {
 };
 
 exports.deleteProject = (project) => {
-  h.goToPage('/');
+  h.goToPage('projects');
   let projectTile = element(by.cssContainingText(".project-info", project['name']));
   projectTile.element(by.css('.dropdown-toggle')).click();
   projectTile.element(by.linkText('Delete Project')).click();
@@ -41,7 +41,7 @@ exports.deleteProject = (project) => {
 // Be careful about using this function if your test gives the e2e-user access
 // to internal projects such as openshift, or openshift-infra
 exports.deleteAllProjects = () => {
-  h.goToPage('/');
+  h.goToPage('projects');
   let projectTiles = element.all(by.css(".project-info"));
   let allDeleted = protractor.promise.defer();
   let numDeleted = 0;

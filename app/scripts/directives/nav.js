@@ -257,7 +257,7 @@ angular.module('openshiftConsole')
           _.set($scope, 'ordering.panelName', panelName);
         };
 
-        $scope.catalogLandingPageEnabled = _.get(Constants, 'ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page');
+        $scope.catalogLandingPageEnabled = !Constants.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
         var select = $elem.find('.selectpicker');
         var options = [];
 

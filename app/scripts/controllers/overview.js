@@ -59,6 +59,7 @@ function OverviewController($scope,
   var DEFAULT_POLL_INTERVAL = 60 * 1000; // milliseconds
 
   $scope.projectName = $routeParams.project;
+  overview.catalogLandingPageEnabled = !Constants.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
 
   // Filters used by this controller.
   var annotation = $filter('annotation');

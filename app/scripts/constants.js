@@ -82,15 +82,21 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
   // when users navigate away from a page without saving.
   DISABLE_CONFIRM_ON_EXIT: false,
 
-  // This blacklist hides certain kinds from the "Other Resources" page because they are unpersisted, disallowed for most end users, or not supported by openshift but exist in kubernetes
+  // Disable the new landing page and service catalog experience.
+  DISABLE_SERVICE_CATALOG_LANDING_PAGE: false,
+
+  // This blacklist hides certain kinds from the "Other Resources" page because
+  // they are unpersisted, disallowed for most end users, or not supported by
+  // openshift but exist in kubernetes.
   AVAILABLE_KINDS_BLACKLIST: [],
-  // Currently disables watch on events used by the drawer
+
+  // Currently disables watch on events used by the drawer.
   DISABLE_GLOBAL_EVENT_WATCH: false,
+
   ENABLE_TECH_PREVIEW_FEATURE: {
-    // Enable the new landing page and service catalog experience
-    service_catalog_landing_page: false,
-    // Set to `true` when the template service broker is enabled for the cluster in master-config.yaml
+    // Set to true when the template service broker is enabled for the cluster in master-config.yaml.
     template_service_broker: false,
+    // Set to true if the service catalog supports pod presets for binding services to applications.
     pod_presets: false
   },
 
