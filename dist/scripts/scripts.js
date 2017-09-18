@@ -10147,7 +10147,7 @@ return n ? a.text(d(e)) : a.text(m(e, u)), a;
 };
 _.size(l) <= 100 ? (u = e("orderByDisplayName")(l), y = _.map(u, function(e) {
 return n(e, !1);
-})) : y = [ n(l[t], !0) ], v.empty(), v.append(y), v.append($('<option data-divider="true"></option>')), v.append($('<option value="">View all Projects</option>')), v.selectpicker("refresh");
+})) : y = [ n(l[t], !0) ], v.empty(), v.append(y), v.append($('<option data-divider="true"></option>')), v.append($('<option value="">View All Projects</option>')), v.selectpicker("refresh");
 }
 }, C = function() {
 return s.list().then(function(e) {
