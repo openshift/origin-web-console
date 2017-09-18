@@ -336,7 +336,7 @@ table.dataTable tbody td,table.dataTable tbody th{padding:2px 10px 3px}
 .selectize-dropdown .active{background-color:#f5fafd;color:#495c68}
 .selectize-dropdown .active.create{color:#495c68}
 .selectize-dropdown .create{color:rgba(48,48,48,.5)}
-.selectize-dropdown-content{overflow-y:auto;overflow-x:hidden;max-height:200px}
+.selectize-dropdown-content{overflow-y:auto;overflow-x:hidden;max-height:200px;-webkit-overflow-scrolling:touch}
 .selectize-control.single .selectize-input,.selectize-control.single .selectize-input input{cursor:pointer}
 .selectize-control.single .selectize-input.input-active,.selectize-control.single .selectize-input.input-active input{cursor:text}
 .selectize-control.single .selectize-input:after{content:' ';display:block;position:absolute;top:50%;right:15px;margin-top:0;width:0;height:0;border-style:solid;border-width:0;border-color:grey transparent transparent}
@@ -368,9 +368,9 @@ table.dataTable tbody td,table.dataTable tbody th{padding:2px 10px 3px}
 .filter .navbar-filter-widget .label-filter .selectize-control .selectize-input.full:after{border:0}
 .filter .navbar-filter-widget .label-filter .selectize-control .selectize-input input{font-size:12px;height:22px;margin-left:0!important;margin-right:0!important}
 .filter .navbar-filter-widget .label-filter .selectize-control .selectize-input input::-webkit-input-placeholder{font-style:italic;color:#999}
-.filter .navbar-filter-widget .label-filter .selectize-control .selectize-input input::-moz-placeholder{font-style:italic;color:#999;opacity:1}
 .filter .navbar-filter-widget .label-filter .selectize-control .selectize-input input:-ms-input-placeholder{font-style:italic;color:#999}
 .filter .navbar-filter-widget .label-filter .selectize-control .selectize-input input::placeholder{color:#999;font-style:italic}
+.filter .navbar-filter-widget .label-filter .selectize-control .selectize-input input::-moz-placeholder{color:#999;opacity:1}
 .filter .navbar-filter-widget .label-filter-add.btn{border-left:0;border-radius:1px;display:table-cell}
 .selectize-dropdown{border:1px solid #bbb;box-shadow:0 6px 12px rgba(0,0,0,.175);font-size:12px;margin:1px 0 0 -1px;min-width:40%;padding:5px 0;z-index:9999}
 @media (min-width:768px){.selectize-dropdown{min-width:0;width:auto!important;white-space:nowrap}
