@@ -828,14 +828,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>{{error | getErrorDetails}}</p>\n" +
     "</div>\n" +
     "<div ng-if=\"targetObject && configMaps && secrets\">\n" +
-    "<div ng-if=\"!configMaps.length && !secrets.length && !('configmaps' | canI : 'create') && !('secrets' | canI : 'create')\" class=\"empty-state-message empty-state-full-page\">\n" +
+    "<div ng-if=\"!configMaps.length && !secrets.length && !(configMapVersion | canI : 'create') && !(secretVersion | canI : 'create')\" class=\"empty-state-message empty-state-full-page\">\n" +
     "<h2 class=\"text-center\">No config maps or secrets.</h2>\n" +
     "<p class=\"gutter-top\">\n" +
     "There are no config maps or secrets in project {{project | displayName}} to use as a volume for this {{kind | humanizeKind}}.\n" +
     "</p>\n" +
     "<p ng-if=\"targetObject\"><a ng-href=\"{{targetObject | navigateResourceURL}}\">Back to {{kind | humanizeKind}} {{name}}</a></p>\n" +
     "</div>\n" +
-    "<div ng-if=\"configMaps.length || secrets.length || ('configmaps' | canI : 'create') || ('secrets' | canI : 'create')\" class=\"mar-top-xl\">\n" +
+    "<div ng-if=\"configMaps.length || secrets.length || (configMapVersion | canI : 'create') || (secretVersion | canI : 'create')\" class=\"mar-top-xl\">\n" +
     "<h1>Add Config Files to {{name}}</h1>\n" +
     "<div class=\"help-block\">\n" +
     "Add values from a config map or secret as volume. This will make the data available as files for {{kind | humanizeKind}} {{name}}.\n" +
@@ -855,12 +855,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-bind-html=\"source.metadata.name | highlight : $select.search\"></span>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
-    "<div ng-if=\"('configmaps' | canI : 'create') || ('secrets' | canI : 'create')\" class=\"mar-top-md\">\n" +
-    "<span ng-if=\"'configmaps' | canI : 'create'\">\n" +
+    "<div ng-if=\"(configMapVersion | canI : 'create') || (secretVersion | canI : 'create')\" class=\"mar-top-md\">\n" +
+    "<span ng-if=\"configMapVersion | canI : 'create'\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-config-map\">Create Config Map</a>\n" +
     "</span>\n" +
-    "<span ng-if=\"'secrets' | canI : 'create'\">\n" +
-    "<span ng-if=\"'configmaps' | canI : 'create'\" class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
+    "<span ng-if=\"secretVersion | canI : 'create'\">\n" +
+    "<span ng-if=\"configMapVersion | canI : 'create'\" class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-secret\">Create Secret</a>\n" +
     "</span>\n" +
     "</div>\n" +

@@ -11,7 +11,7 @@
         </div>
 
         <div ng-if="targetObject && configMaps && secrets">
-          <div ng-if="!configMaps.length && !secrets.length && !('configmaps' | canI : 'create') && !('secrets' | canI : 'create')" class="empty-state-message empty-state-full-page">
+          <div ng-if="!configMaps.length && !secrets.length && !(configMapVersion | canI : 'create') && !(secretVersion | canI : 'create')" class="empty-state-message empty-state-full-page">
             <h2 class="text-center">No config maps or secrets.</h2>
 
             <p class="gutter-top">
@@ -22,7 +22,7 @@
             <p ng-if="targetObject"><a ng-href="{{targetObject | navigateResourceURL}}">Back to {{kind | humanizeKind}} {{name}}</a></p>
           </div>
 
-          <div ng-if="configMaps.length || secrets.length || ('configmaps' | canI : 'create') || ('secrets' | canI : 'create')" class="mar-top-xl">
+          <div ng-if="configMaps.length || secrets.length || (configMapVersion | canI : 'create') || (secretVersion | canI : 'create')" class="mar-top-xl">
             <h1>Add Config Files to {{name}}</h1>
             <div class="help-block">
               Add values from a config map or secret as volume. This will make the data available as files for {{kind | humanizeKind}} {{name}}.
@@ -44,12 +44,12 @@
                       <span ng-bind-html="source.metadata.name | highlight : $select.search"></span>
                     </ui-select-choices>
                   </ui-select>
-                  <div ng-if="('configmaps' | canI : 'create') || ('secrets' | canI : 'create')" class="mar-top-md">
-                    <span ng-if="'configmaps' | canI : 'create'">
+                  <div ng-if="(configMapVersion | canI : 'create') || (secretVersion | canI : 'create')" class="mar-top-md">
+                    <span ng-if="configMapVersion | canI : 'create'">
                       <a ng-href="project/{{project.metadata.name}}/create-config-map">Create Config Map</a>
                     </span>
-                    <span ng-if="'secrets' | canI : 'create'">
-                      <span ng-if="'configmaps' | canI : 'create'" class="action-divider" aria-hidden="true">|</span>
+                    <span ng-if="secretVersion | canI : 'create'">
+                      <span ng-if="configMapVersion | canI : 'create'" class="action-divider" aria-hidden="true">|</span>
                       <a ng-href="project/{{project.metadata.name}}/create-secret">Create Secret</a>
                     </span>
                   </div>
