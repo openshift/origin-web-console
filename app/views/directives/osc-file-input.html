@@ -10,7 +10,6 @@
         readonly
         ng-show="supportsFileUpload"
         ng-disabled="disabled"
-        ng-readonly="readonly"
         ng-attr-aria-describedby="{{helpText ? helpID : undefined}}">
     <span class="input-group-btn">
       <span class="btn btn-default btn-file" ng-show="supportsFileUpload" ng-attr-disabled="{{ (disabled || readonly) || undefined }}">
