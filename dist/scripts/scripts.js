@@ -244,20 +244,20 @@ return Ee(e, n);
 P.replicaSetsByDeploymentUID[t] = r, P.currentByDeploymentUID[t] = _.head(r);
 }
 }), P.vanillaReplicaSets = _.sortBy(P.replicaSetsByDeploymentUID[""], "metadata.name"), Ce());
-}, De = {}, $e = function(e) {
+}, De = {}, Ae = function(e) {
 e && V.allServices && _.each(e, function(e) {
 var t = [], n = H(e), a = O(e);
 _.each(De, function(e, n) {
 e.matches(a) && t.push(V.allServices[n]);
 }), V.servicesByObjectUID[n] = _.sortBy(t, "metadata.name");
 });
-}, Ae = function() {
+}, $e = function() {
 if (V.allServices) {
 De = _.mapValues(V.allServices, function(e) {
 return new LabelSelector(e.spec.selector);
 });
 var e = [ P.deploymentConfigs, P.vanillaReplicationControllers, P.deployments, P.vanillaReplicaSets, P.statefulSets, P.monopods ];
-_.each(e, $e), Y();
+_.each(e, Ae), Y();
 }
 }, Be = function() {
 var e = j.groupByService(P.routes, !0);
@@ -379,33 +379,33 @@ var r = function() {
 P.pods && m.fetchReferencedImageStreamImages(P.pods, V.imagesByDockerReference, V.imageStreamImageRefByDockerReference, a);
 };
 Ye.push(l.watch("pods", a, function(e) {
-P.pods = e.by("metadata.name"), Pe(), r(), _e(), $e(P.monopods), me(P.monopods), we(P.monopods), ie(), h.log("pods (subscribe)", P.pods);
+P.pods = e.by("metadata.name"), Pe(), r(), _e(), Ae(P.monopods), me(P.monopods), we(P.monopods), ie(), h.log("pods (subscribe)", P.pods);
 })), Ye.push(l.watch("replicationcontrollers", a, function(e) {
-P.replicationControllers = e.by("metadata.name"), Te(), $e(P.vanillaReplicationControllers), $e(P.monopods), me(P.vanillaReplicationControllers), we(P.vanillaReplicationControllers), Qe(), ie(), h.log("replicationcontrollers (subscribe)", P.replicationControllers);
+P.replicationControllers = e.by("metadata.name"), Te(), Ae(P.vanillaReplicationControllers), Ae(P.monopods), me(P.vanillaReplicationControllers), we(P.vanillaReplicationControllers), Qe(), ie(), h.log("replicationcontrollers (subscribe)", P.replicationControllers);
 })), Ye.push(l.watch("deploymentconfigs", a, function(e) {
-P.deploymentConfigs = e.by("metadata.name"), Te(), $e(P.deploymentConfigs), $e(P.vanillaReplicationControllers), we(P.deploymentConfigs), Ce(), He(), Ge(), Qe(), ie(), h.log("deploymentconfigs (subscribe)", P.deploymentConfigs);
+P.deploymentConfigs = e.by("metadata.name"), Te(), Ae(P.deploymentConfigs), Ae(P.vanillaReplicationControllers), we(P.deploymentConfigs), Ce(), He(), Ge(), Qe(), ie(), h.log("deploymentconfigs (subscribe)", P.deploymentConfigs);
 })), Ye.push(l.watch({
 group: "extensions",
 resource: "replicasets"
 }, a, function(e) {
-P.replicaSets = e.by("metadata.name"), Ne(), $e(P.vanillaReplicaSets), $e(P.monopods), me(P.vanillaReplicaSets), we(P.vanillaReplicaSets), Qe(), ie(), h.log("replicasets (subscribe)", P.replicaSets);
+P.replicaSets = e.by("metadata.name"), Ne(), Ae(P.vanillaReplicaSets), Ae(P.monopods), me(P.vanillaReplicaSets), we(P.vanillaReplicaSets), Qe(), ie(), h.log("replicasets (subscribe)", P.replicaSets);
 })), Ye.push(l.watch({
 group: "apps",
 resource: "deployments"
 }, a, function(e) {
-I = e.by("metadata.uid"), P.deployments = _.sortBy(I, "metadata.name"), Ne(), $e(P.deployments), $e(P.vanillaReplicaSets), we(P.deployments), Qe(), ie(), h.log("deployments (subscribe)", P.deploymentsByUID);
+I = e.by("metadata.uid"), P.deployments = _.sortBy(I, "metadata.name"), Ne(), Ae(P.deployments), Ae(P.vanillaReplicaSets), we(P.deployments), Qe(), ie(), h.log("deployments (subscribe)", P.deploymentsByUID);
 })), Ye.push(l.watch("builds", a, function(e) {
 V.builds = e.by("metadata.name"), Ke(), h.log("builds (subscribe)", V.builds);
 })), Ye.push(l.watch({
 group: "apps",
 resource: "statefulsets"
 }, a, function(e) {
-P.statefulSets = e.by("metadata.name"), $e(P.statefulSets), $e(P.monopods), me(P.statefulSets), we(P.statefulSets), Qe(), ie(), h.log("statefulsets (subscribe)", P.statefulSets);
+P.statefulSets = e.by("metadata.name"), Ae(P.statefulSets), Ae(P.monopods), me(P.statefulSets), we(P.statefulSets), Qe(), ie(), h.log("statefulsets (subscribe)", P.statefulSets);
 }, {
 poll: R,
 pollInterval: 6e4
 })), Ye.push(l.watch("services", a, function(e) {
-V.allServices = e.by("metadata.name"), Ae(), h.log("services (subscribe)", V.allServices);
+V.allServices = e.by("metadata.name"), $e(), h.log("services (subscribe)", V.allServices);
 }, {
 poll: R,
 pollInterval: 6e4
@@ -602,6 +602,7 @@ DISABLE_CONFIRM_ON_EXIT: !1,
 DISABLE_SERVICE_CATALOG_LANDING_PAGE: !1,
 AVAILABLE_KINDS_BLACKLIST: [],
 DISABLE_GLOBAL_EVENT_WATCH: !1,
+DISABLE_COPY_LOGIN_COMMAND: !1,
 ENABLE_TECH_PREVIEW_FEATURE: {
 template_service_broker: !1,
 pod_presets: !1
@@ -5860,9 +5861,9 @@ details: t("getErrorDetails")(n)
 } : e.deploymentConfigMissing = !0;
 });
 }
-}, $ = function() {
+}, A = function() {
 e.isActive = i.isActiveReplicaSet(e.replicaSet, e.deployment);
-}, A = function(t) {
+}, $ = function(t) {
 return _.some(t, function(t) {
 if (_.get(t, "status.replicas") && _.get(t, "metadata.uid") !== _.get(e.replicaSet, "metadata.uid")) {
 var n = m.getControllerReferences(t);
@@ -5895,13 +5896,13 @@ title: e.deployment.metadata.name,
 link: p.resourceURL(e.deployment)
 },
 humanizedKind: "Deployments"
-}), $(), T();
+}), A(), T();
 })), j.push(o.watch({
 group: "extensions",
 resource: "replicasets"
 }, g, function(e) {
 var t = e.by("metadata.name");
-B = A(t);
+B = $(t);
 }));
 });
 }, U = function() {
@@ -5927,7 +5928,7 @@ object: t
 "DELETED" === n && (e.alerts.deleted = {
 type: "warning",
 message: "This " + S + " has been deleted."
-}), e.replicaSet = t, R(t), N(), U(), e.deployment && $();
+}), e.replicaSet = t, R(t), N(), U(), e.deployment && A();
 })), e.deploymentConfigName && E(), j.push(o.watch("pods", g, function(t) {
 var n = t.by("metadata.name");
 e.podsForDeployment = f.filterForOwner(n, e.replicaSet);
@@ -7838,7 +7839,7 @@ f.toErrorPage("Cannot create from source: the specified image could not be retri
 f.toErrorPage("Cannot create from source: the specified image could not be retrieved.");
 });
 }(e);
-var $, A = function() {
+var A, $ = function() {
 var t = {
 started: "Creating application " + e.name + " in project " + e.projectDisplayName(),
 success: "Created application " + e.name + " in project " + e.projectDisplayName(),
@@ -7846,7 +7847,7 @@ failure: "Failed to create " + e.name + " in project " + e.projectDisplayName()
 }, o = {};
 C.clear(), C.add(t, o, r.project, function() {
 var t = a.defer();
-return c.batch($, n).then(function(n) {
+return c.batch(A, n).then(function(n) {
 var a = [], r = !1;
 _.isEmpty(n.failure) ? a.push({
 type: "success",
@@ -7887,23 +7888,23 @@ cancelButtonText: "Cancel"
 };
 }
 }
-}).result.then(A);
+}).result.then($);
 }, L = function(t) {
 D(), N = t.quotaAlerts || [], e.nameTaken || _.some(N, {
 type: "error"
 }) ? (e.disableInputs = !1, _.each(N, function(e) {
 e.id = _.uniqueId("create-builder-alert-"), g.addNotification(e);
-})) : _.isEmpty(N) ? A() : (B(N), e.disableInputs = !1);
+})) : _.isEmpty(N) ? $() : (B(N), e.disableInputs = !1);
 };
 e.projectDisplayName = function() {
 return k(this.project) || this.projectName;
 }, e.createApp = function() {
 e.disableInputs = !0, D(), e.buildConfig.envVars = w.compactEntries(e.buildConfigEnvVars), e.deploymentConfig.envVars = w.compactEntries(e.DCEnvVarsFromUser), e.labels = w.mapEntries(w.compactEntries(e.labelArray));
 var t = s.generate(e);
-$ = [], angular.forEach(t, function(e) {
-null !== e && (p.debug("Generated resource definition:", e), $.push(e));
+A = [], angular.forEach(t, function(e) {
+null !== e && (p.debug("Generated resource definition:", e), A.push(e));
 });
-var a = s.ifResourcesDontExist($, e.projectName), r = v.getLatestQuotaAlerts($, n), o = function(t) {
+var a = s.ifResourcesDontExist(A, e.projectName), r = v.getLatestQuotaAlerts(A, n), o = function(t) {
 return e.nameTaken = t.nameTaken, r;
 };
 a.then(o, o).then(L, L);
@@ -8646,9 +8647,7 @@ kubernetes: n.VERSION.kubernetes
 }
 };
 } ]), angular.module("openshiftConsole").controller("CommandLineController", [ "$scope", "DataService", "AuthService", "Constants", function(e, t, n, a) {
-n.withUser(), e.cliDownloadURL = a.CLI, e.cliDownloadURLPresent = e.cliDownloadURL && !_.isEmpty(e.cliDownloadURL), e.loginBaseURL = t.openshiftAPIBaseUrl(), e.sessionToken = n.UserStore().getToken(), e.showSessionToken = !1, e.toggleShowSessionToken = function() {
-e.showSessionToken = !e.showSessionToken;
-};
+n.withUser(), e.cliDownloadURL = a.CLI, e.cliDownloadURLPresent = e.cliDownloadURL && !_.isEmpty(e.cliDownloadURL), e.loginBaseURL = t.openshiftAPIBaseUrl(), a.DISABLE_COPY_LOGIN_COMMAND || (e.sessionToken = n.UserStore().getToken());
 } ]), angular.module("openshiftConsole").controller("CreatePersistentVolumeClaimController", [ "$filter", "$routeParams", "$scope", "$window", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "NotificationsService", "ProjectsService", "keyValueEditorUtils", function(e, t, n, a, r, o, i, s, c, l, u) {
 n.projectName = t.project, n.accessModes = "ReadWriteOnce", n.claim = {}, n.breadcrumbs = [ {
 title: "Storage",
@@ -9319,9 +9318,9 @@ details: e("getErrorDetails")(n)
 }
 function w() {
 var e = {
-started: "Creating resources in project " + $(m.input.selectedProject),
-success: "Creating resources in project " + $(m.input.selectedProject),
-failure: "Failed to create some resources in project " + $(m.input.selectedProject)
+started: "Creating resources in project " + A(m.input.selectedProject),
+success: "Creating resources in project " + A(m.input.selectedProject),
+failure: "Failed to create some resources in project " + A(m.input.selectedProject)
 }, t = {};
 d.add(e, t, m.input.selectedProject.metadata.name, function() {
 var e = n.defer();
@@ -9356,9 +9355,9 @@ hasErrors: a
 }
 function k() {
 var e = {
-started: "Updating resources in project " + $(m.input.selectedProject),
-success: "Updated resources in project " + $(m.input.selectedProject),
-failure: "Failed to update some resources in project " + $(m.input.selectedProject)
+started: "Updating resources in project " + A(m.input.selectedProject),
+success: "Updated resources in project " + A(m.input.selectedProject),
+failure: "Failed to update some resources in project " + A(m.input.selectedProject)
 }, t = {};
 d.add(e, t, m.input.selectedProject.metadata.name, function() {
 var e = n.defer();
@@ -9468,7 +9467,7 @@ details: R(e)
 }, m.cancel = function() {
 E(), s.toProjectOverview(m.input.selectedProject.metadata.name);
 };
-var $ = e("displayName");
+var A = e("displayName");
 m.$on("importFileFromYAMLOrJSON", m.create), m.$on("$destroy", E);
 } ]
 };
@@ -10540,7 +10539,7 @@ r.destroy();
 });
 }
 };
-}).directive("copyLoginToClipboard", [ "NotificationsService", function(e) {
+}).directive("copyLoginToClipboard", [ "AlertMessageService", "NotificationsService", function(e, t) {
 return {
 restrict: "E",
 replace: !0,
@@ -10548,22 +10547,34 @@ scope: {
 clipboardText: "="
 },
 template: '<a href="" data-clipboard-text="">Copy Login Command</a>',
-link: function(t, n) {
-var a = new Clipboard(n.get(0));
-a.on("success", function() {
-e.addNotification({
-id: "copied_to_clipboard_toast_success",
+link: function(n, a) {
+var r = new Clipboard(a.get(0));
+r.on("success", function() {
+t.addNotification({
+id: "copy-login-command-success",
+type: "success",
+message: "Login command copied."
+});
+e.isAlertPermanentlyHidden("openshift/token-warning") || t.addNotification({
+id: "openshift/token-warning",
 type: "warning",
-message: "Do not share the API token in your clipboard. A token is a form of a password."
+message: "A token is a form of a password. Do not share your API token.",
+links: [ {
+href: "",
+label: "Don't Show Me Again",
+onClick: function() {
+return e.permanentlyHideAlert("openshift/token-warning"), !0;
+}
+} ]
 });
-}), a.on("error", function() {
-e.addNotification({
-id: "copied_to_clipboard_toast_error",
+}), r.on("error", function() {
+t.addNotification({
+id: "copy-login-command-error",
 type: "error",
-message: "Unable to copy."
+message: "Unable to copy the login command."
 });
-}), n.on("$destroy", function() {
-a.destroy();
+}), a.on("$destroy", function() {
+r.destroy();
 });
 }
 };
@@ -11134,7 +11145,7 @@ Available: "#d1d1d1"
 }
 };
 I[t.id] ? I[t.id].load(r) : ((n = B(e)).data = r, a(function() {
-$ || (I[t.id] = c3.generate(n));
+A || (I[t.id] = c3.generate(n));
 }));
 }
 }
@@ -11150,7 +11161,7 @@ var n, r = c.getSparklineData(t), o = e.chartPrefix + "sparkline";
 T[o] ? T[o].load(r) : ((n = L(e)).data = r, e.chartDataColors && (n.color = {
 pattern: e.chartDataColors
 }), a(function() {
-$ || (T[o] = c3.generate(n));
+A || (T[o] = c3.generate(n));
 }));
 }
 }
@@ -11176,12 +11187,12 @@ containerName: e.containerMetric ? p.options.selectedContainer.name : "pod"
 }) : null;
 }
 function C() {
-$ || (U = 0, _.each(p.metrics, function(e) {
+A || (U = 0, _.each(p.metrics, function(e) {
 g(e), f(e);
 }));
 }
 function S(e) {
-if (!$) if (U++, p.noData) p.metricsError = {
+if (!A) if (U++, p.noData) p.metricsError = {
 status: _.get(e, "status", 0),
 details: _.get(e, "data.errorMsg") || _.get(e, "statusText") || "Status code " + _.get(e, "status", 0)
 }; else if (!(U < 2)) {
@@ -11226,7 +11237,7 @@ k(n, r, e);
 }));
 }
 }), t = t.concat(a), r.all(a).then(function(e) {
-$ || angular.forEach(e, function(e) {
+A || angular.forEach(e, function(e) {
 e && j(_.find(n.datasets, {
 id: e.metricID
 }), e);
@@ -11238,7 +11249,7 @@ p.loaded = !0;
 }
 }
 p.includedMetrics = p.includedMetrics || [ "cpu", "memory", "network" ];
-var R, I = {}, T = {}, E = n("resources.limits.memory"), N = n("resources.limits.cpu"), D = 30, $ = !1;
+var R, I = {}, T = {}, E = n("resources.limits.memory"), N = n("resources.limits.cpu"), D = 30, A = !1;
 p.uniqueID = c.uniqueID(), p.metrics = [], _.includes(p.includedMetrics, "memory") && p.metrics.push({
 label: "Memory",
 units: "MiB",
@@ -11284,12 +11295,12 @@ p.metricsURL = e;
 }), p.options = {
 rangeOptions: c.getTimeRangeOptions()
 }, p.options.timeRange = _.head(p.options.rangeOptions);
-var A = e("upperFirst"), B = function(e) {
+var $ = e("upperFirst"), B = function(e) {
 var t = "#" + e.chartPrefix + p.uniqueID + "-donut";
 return {
 bindto: t,
 onrendered: function() {
-i.updateDonutCenterText(t, e.datasets[0].used, A(e.units) + " Used");
+i.updateDonutCenterText(t, e.datasets[0].used, $(e.units) + " Used");
 },
 donut: {
 label: {
@@ -11342,7 +11353,7 @@ R && (t.cancel(R), R = null), O && (O(), O = null), angular.forEach(I, function(
 e.destroy();
 }), I = null, angular.forEach(T, function(e) {
 e.destroy();
-}), T = null, $ = !0;
+}), T = null, A = !0;
 });
 }
 };
@@ -11543,11 +11554,11 @@ R = {}, j = null, delete t.metricsError, y();
 }, !0), b = e(y, s.getDefaultUpdateInterval(), !1), t.updateInView = function(e) {
 I = !e, e && (!P || Date.now() > P + s.getDefaultUpdateInterval()) && y();
 };
-var $ = r.$on("metrics.charts.resize", function() {
+var A = r.$on("metrics.charts.resize", function() {
 s.redraw(C);
 });
 t.$on("$destroy", function() {
-b && (e.cancel(b), b = null), $ && ($(), $ = null), angular.forEach(C, function(e) {
+b && (e.cancel(b), b = null), A && (A(), A = null), angular.forEach(C, function(e) {
 e.destroy();
 }), C = null, k = !0;
 });
@@ -14280,14 +14291,14 @@ e();
 }), g = [];
 }, D = function(e) {
 e || (f.drawerHidden = !0);
-}, $ = function() {
+}, A = function() {
 o.$evalAsync(function() {
 R(), f.notificationGroups = _.filter(v, function(e) {
 return e.project.metadata.name === r.project;
 });
 });
-}, A = function(e) {
-h = E(e.by("metadata.uid")), v = T(h), $();
+}, $ = function(e) {
+h = E(e.by("metadata.uid")), v = T(h), A();
 }, B = {
 Normal: "pficon pficon-info",
 Warning: "pficon pficon-warning-triangle-o"
@@ -14306,12 +14317,12 @@ f.drawerHidden = !0;
 onMarkAllRead: function(e) {
 _.each(e.notifications, function(e) {
 e.unread = !1, l.markRead(e.event);
-}), $(), o.$emit("NotificationDrawerWrapper.onMarkAllRead");
+}), A(), o.$emit("NotificationDrawerWrapper.onMarkAllRead");
 },
 onClearAll: function(e) {
 _.each(e.notifications, function(e) {
 l.markRead(e.event), l.markCleared(e.event);
-}), e.notifications = [], $(), o.$emit("NotificationDrawerWrapper.onMarkAllRead");
+}), e.notifications = [], A(), o.$emit("NotificationDrawerWrapper.onMarkAllRead");
 },
 notificationGroups: v,
 headingInclude: "views/directives/notifications/header.html",
@@ -14338,7 +14349,7 @@ var L = function(e, t) {
 return _.get(e, "params.project") !== _.get(t, "params.project");
 }, U = function() {
 b(r.project).then(function() {
-w(r.project, A), D(r.project), $();
+w(r.project, $), D(r.project), A();
 });
 }, O = function() {
 r.project && U(), g.push(o.$on("$routeChangeSuccess", function(e, t, n) {
@@ -15622,14 +15633,16 @@ node: '<li><a href="about">About</a></li>'
 });
 } ]), angular.module("openshiftConsole").run([ "extensionRegistry", "$rootScope", "DataService", "AuthService", function(e, t, n, a) {
 e.add("nav-user-dropdown", function() {
-var e = "Log out";
-return t.user.fullName && t.user.fullName !== t.user.metadata.name && (e += " (" + t.user.metadata.name + ")"), [ {
+var e = [];
+_.get(window, "OPENSHIFT_CONSTANTS.DISABLE_COPY_LOGIN_COMMAND") || e.push({
 type: "dom",
 node: "<li><copy-login-to-clipboard clipboard-text=\"'oc login " + n.openshiftAPIBaseUrl() + " --token=" + a.UserStore().getToken() + "'\"></copy-login-to-clipboard></li>"
-}, {
+});
+var r = "Log Out";
+return t.user.fullName && t.user.fullName !== t.user.metadata.name && (r += " (" + t.user.metadata.name + ")"), e.push({
 type: "dom",
-node: '<li><a href="logout">' + _.escape(e) + "</a></li>"
-} ];
+node: '<li><a href="logout">' + _.escape(r) + "</a></li>"
+}), e;
 });
 } ]), angular.module("openshiftConsole").run([ "extensionRegistry", "Constants", function(e, t) {
 e.add("nav-dropdown-mobile", _.spread(function(e) {

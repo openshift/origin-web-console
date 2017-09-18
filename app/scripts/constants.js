@@ -93,6 +93,9 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
   // Currently disables watch on events used by the drawer.
   DISABLE_GLOBAL_EVENT_WATCH: false,
 
+  // Disables the copy login command option from the user menu and CLI page.
+  DISABLE_COPY_LOGIN_COMMAND: false,
+
   ENABLE_TECH_PREVIEW_FEATURE: {
     // Set to true when the template service broker is enabled for the cluster in master-config.yaml.
     template_service_broker: false,

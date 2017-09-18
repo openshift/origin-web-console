@@ -29,13 +29,11 @@
             </p>
             <p>
               After downloading and installing it, you can start by logging in. You are currently logged into this console as <strong>{{user.metadata.name}}</strong>. If you want to log into the CLI using the same session token:
-              <copy-to-clipboard display-wide="true" clipboard-text="'oc login ' + loginBaseURL + ' --token=' + sessionToken" input-text="'oc login ' + loginBaseURL + ' --token=<hidden>'"></copy-to-clipboard>
-              <pre class="code prettyprint ng-binding" ng-if="!sessionToken">
-                oc login {{loginBaseURL}}
-              </pre>
+              <copy-to-clipboard ng-if="sessionToken" display-wide="true" clipboard-text="'oc login ' + loginBaseURL + ' --token=' + sessionToken" input-text="'oc login ' + loginBaseURL + ' --token=<hidden>'"></copy-to-clipboard>
+              <copy-to-clipboard ng-if="!sessionToken" display-wide="true" clipboard-text="'oc login ' + loginBaseURL"></copy-to-clipboard>
             </p>
 
-            <div class="alert alert-warning">
+            <div ng-if="sessionToken" class="alert alert-warning">
               <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
               <strong>A token is a form of a password.</strong>
               Do not share your API token. To reveal your token, press the copy to clipboard button and then paste the clipboard contents.
