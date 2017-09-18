@@ -4230,12 +4230,23 @@ controller: !0
 };
 }), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "$rootScope", "AuthService", "Catalog", "Constants", "DataService", "Navigate", "NotificationsService", "RecentlyViewedServiceItems", "GuidedTourService", "HTMLService", "$timeout", "$q", "$routeParams", "$location", function(e, t, n, a, r, o, i, s, c, l, u, d, m, p, f) {
 function g() {
+var n = f.search().serviceClass;
+if (n) {
+var a = _.find(e.catalogItems, {
+resource: {
+metadata: {
+name: n
+}
+}
+});
+if (a) return void e.$broadcast("open-overlay-panel", a);
+}
 if (v) if (p.startTour) d(function() {
 f.replace(), f.search("startTour", null), e.startGuidedTour();
 }, 500); else if (_.get(h, "auto_launch")) {
-var n = "openshift/viewedHomePage/" + t.user.metadata.name;
-"true" !== localStorage.getItem(n) && d(function() {
-e.startGuidedTour() && localStorage.setItem(n, "true");
+var r = "openshift/viewedHomePage/" + t.user.metadata.name;
+"true" !== localStorage.getItem(r) && d(function() {
+e.startGuidedTour() && localStorage.setItem(r, "true");
 }, 500);
 }
 }
