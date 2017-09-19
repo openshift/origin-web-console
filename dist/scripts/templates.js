@@ -12370,7 +12370,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"alert word-break alert-info\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">info</span>\n" +
-    "<span>The service is not yeat ready.</span>\n" +
+    "<span>The service is not yet ready.</span>\n" +
     "<span>{{row.pendingMessage}}</span>\n" +
     "</div>\n" +
     "</div>\n" +
