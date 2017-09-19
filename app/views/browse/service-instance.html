@@ -39,6 +39,12 @@
         <div class="container-fluid">
           <div class="row" ng-if="serviceInstance">
             <div class="col-md-12">
+              <div ng-if="serviceInstance.metadata.deletionTimestamp" class="alert word-break alert-warning">
+                <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
+                <span class="sr-only">warning</span>
+                <span class="strong">The service was marked for deletion</span>
+                <span class="strong" am-time-ago="serviceInstance.metadata.deletionTimestamp"></span>.
+              </div>
               <uib-tabset>
                 <uib-tab active="selectedTab.details">
                   <uib-tab-heading>Details</uib-tab-heading>
