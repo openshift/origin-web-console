@@ -3712,6 +3712,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\" ng-if=\"serviceInstance\">\n" +
     "<div class=\"col-md-12\">\n" +
+    "<div ng-if=\"serviceInstance.metadata.deletionTimestamp\" class=\"alert word-break alert-warning\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">warning</span>\n" +
+    "<span class=\"strong\">The service was marked for deletion</span>\n" +
+    "<span class=\"strong\" am-time-ago=\"serviceInstance.metadata.deletionTimestamp\"></span>.\n" +
+    "</div>\n" +
     "<uib-tabset>\n" +
     "<uib-tab active=\"selectedTab.details\">\n" +
     "<uib-tab-heading>Details</uib-tab-heading>\n" +
@@ -5610,7 +5616,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<small>created <span am-time-ago=\"$ctrl.binding.metadata.creationTimestamp\"></span></small>\n" +
     "</h3>\n" +
     "</div>\n" +
-    "<div class=\"col-sm-7 col-md-6\" ng-if=\"!($ctrl.binding | isBindingReady)\">\n" +
+    "<div class=\"col-sm-7 col-md-6\" ng-if=\"$ctrl.binding.metadata.deletionTimestamp\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "Marked for Deletion\n" +
+    "</div>\n" +
+    "<div class=\"col-sm-7 col-md-6\" ng-if=\"!$ctrl.binding.metadata.deletionTimestamp && !($ctrl.binding | isBindingReady)\">\n" +
     "<status-icon status=\"'Pending'\"></status-icon>Pending\n" +
     "</div>\n" +
     "</div>\n" +
@@ -12283,7 +12293,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "<span ng-switch-when=\"deleted\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
-    "<span>Marked for Deletion</span>\n" +
+    "Marked for Deletion\n" +
     "</span>\n" +
     "<span ng-switch-when=\"pending\">\n" +
     "<span class=\"spinner spinner-xs spinner-inline\" aria-hidden=\"true\"></span>\n" +
@@ -12352,7 +12362,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">warning</span>\n" +
     "<span class=\"strong\">The service was marked for deletion</span>\n" +
-    "<span class=\"strong\" am-time-ago=\"row.apiObject.metadata.deletionTimestamp\"></span>\n" +
+    "<span class=\"strong\" am-time-ago=\"row.apiObject.metadata.deletionTimestamp\"></span>.\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -12411,7 +12421,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"col-sm-7 col-md-6 overview-bindings\">\n" +
     "<span ng-if=\"binding.metadata.deletionTimestamp\">\n" +
-    "<status-icon status=\"'Pending'\"></status-icon> Deleting\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "Marked for Deletion\n" +
     "</span>\n" +
     "<span ng-if=\"!(binding | isBindingReady) && !binding.metadata.deletionTimestamp\">\n" +
     "<status-icon status=\"'Pending'\"></status-icon> Pending\n" +

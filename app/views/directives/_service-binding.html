@@ -17,7 +17,11 @@
         <small>created <span am-time-ago="$ctrl.binding.metadata.creationTimestamp"></span></small>
       </h3>
     </div>
-    <div class="col-sm-7 col-md-6" ng-if="!($ctrl.binding | isBindingReady)">
+    <div class="col-sm-7 col-md-6" ng-if="$ctrl.binding.metadata.deletionTimestamp">
+      <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
+      Marked for Deletion
+    </div>
+    <div class="col-sm-7 col-md-6" ng-if="!$ctrl.binding.metadata.deletionTimestamp && !($ctrl.binding | isBindingReady)">
       <status-icon status="'Pending'"></status-icon>Pending
     </div>
   </div>

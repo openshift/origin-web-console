@@ -24,7 +24,7 @@
         </span>
         <span ng-switch-when="deleted">
           <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-          <span>Marked for Deletion</span>
+          Marked for Deletion
         </span>
         <span ng-switch-when="pending">
           <span class="spinner spinner-xs spinner-inline" aria-hidden="true"></span>
@@ -102,7 +102,7 @@
                 <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
                 <span class="sr-only">warning</span>
                 <span class="strong">The service was marked for deletion</span>
-                <span class="strong" am-time-ago="row.apiObject.metadata.deletionTimestamp"></span>
+                <span class="strong" am-time-ago="row.apiObject.metadata.deletionTimestamp"></span>.
               </div>
             </div>
           </div>
@@ -162,7 +162,8 @@
             </div>
             <div class="col-sm-7 col-md-6 overview-bindings">
               <span ng-if="binding.metadata.deletionTimestamp">
-                <status-icon status="'Pending'"></status-icon> Deleting
+                <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
+                Marked for Deletion
               </span>
               <span ng-if="!(binding | isBindingReady) && !binding.metadata.deletionTimestamp">
                 <status-icon status="'Pending'"></status-icon> Pending
