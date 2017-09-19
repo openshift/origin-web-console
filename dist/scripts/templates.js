@@ -4481,12 +4481,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "<p>\n" +
     "After downloading and installing it, you can start by logging in. You are currently logged into this console as <strong>{{user.metadata.name}}</strong>. If you want to log into the CLI using the same session token:\n" +
-    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'oc login ' + loginBaseURL + ' --token=' + sessionToken\" input-text=\"'oc login ' + loginBaseURL + ' --token=<hidden>'\"></copy-to-clipboard>\n" +
-    "<pre class=\"code prettyprint ng-binding\" ng-if=\"!sessionToken\">\n" +
-    "                oc login {{loginBaseURL}}\n" +
-    "              </pre>\n" +
+    "<copy-to-clipboard ng-if=\"sessionToken\" display-wide=\"true\" clipboard-text=\"'oc login ' + loginBaseURL + ' --token=' + sessionToken\" input-text=\"'oc login ' + loginBaseURL + ' --token=<hidden>'\"></copy-to-clipboard>\n" +
+    "<copy-to-clipboard ng-if=\"!sessionToken\" display-wide=\"true\" clipboard-text=\"'oc login ' + loginBaseURL\"></copy-to-clipboard>\n" +
     "</p>\n" +
-    "<div class=\"alert alert-warning\">\n" +
+    "<div ng-if=\"sessionToken\" class=\"alert alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "<strong>A token is a form of a password.</strong>\n" +
     "Do not share your API token. To reveal your token, press the copy to clipboard button and then paste the clipboard contents.\n" +
