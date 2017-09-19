@@ -7692,7 +7692,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/notifications/notification-body.html',
     "<div class=\"drawer-pf-notification-inner\" tabindex=\"0\" ng-click=\"$ctrl.customScope.markRead(notification)\">\n" +
-    "<a class=\"pull-right\" tabindex=\"0\" ng-click=\"$ctrl.customScope.clear(notification, $index, notificationGroup)\">\n" +
+    "<a class=\"pull-right\" href=\"\" ng-click=\"$ctrl.customScope.clear(notification, $index, notificationGroup)\">\n" +
     "<span class=\"sr-only\">Clear notification</span>\n" +
     "<span ng-if=\"notification.event\" aria-hidden=\"true\" class=\"pull-left pficon pficon-close\"></span>\n" +
     "</a>\n" +
