@@ -17,6 +17,7 @@
         'Constants',
         'DataService',
         'EventsService',
+        'NotificationDrawerService',
         NotificationDrawerWrapper
       ]
     });
@@ -30,7 +31,8 @@
       $rootScope,
       Constants,
       DataService,
-      EventsService) {
+      EventsService,
+      NotificationDrawerService) {
 
       // kill switch if watching events is too expensive
       var DISABLE_GLOBAL_EVENT_WATCH = _.get(Constants, 'DISABLE_GLOBAL_EVENT_WATCH');
@@ -54,6 +56,15 @@
 
       var projects = {};
 
+      var mergeMaps = NotificationDrawerService.mergeNotificationMaps;
+      var sortMap = NotificationDrawerService.sortNotificationMap;
+      var makeProjectGroup = NotificationDrawerService.makeProjectGroup;
+      var formatInternalNotification = NotificationDrawerService.formatInternalNotification;
+      var formatAPIEvents = NotificationDrawerService.formatAPIEvents;
+      var filterAPIEvents = NotificationDrawerService.filterAPIEvents;
+      var countUnreadNotifications = NotificationDrawerService.countUnreadNotifications;
+      var clearAllNotificationsForGroup = NotificationDrawerService.clearAllNotificationsForGroup;
+
       var hideIfNoProject = function(projectName) {
         if(!projectName) {
           drawer.drawerHidden = true;
@@ -73,70 +84,16 @@
                 });
       };
 
-      var makeProjectGroup = function(projectName, notifications) {
-        return {
-          heading: $filter('displayName')(projects[projectName]),
-          project: projects[projectName],
-          notifications: notifications
-        };
-      };
-
-      var unread = function(notifications) {
-        return _.filter(notifications, 'unread');
-      };
-
-
-      var countUnreadNotifications = function() {
-        _.each(drawer.notificationGroups, function(group) {
-          group.totalUnread = unread(group.notifications).length;
-          group.hasUnread = !!group.totalUnread;
-          $rootScope.$emit('NotificationDrawerWrapper.onUnreadNotifications', group.totalUnread);
-        });
-      };
-
-      var formatAPIEvents = function(apiEvents) {
-        return _.map(apiEvents, function(event) {
-          return {
-            actions: null,
-            uid: event.metadata.uid,
-            trackByID: event.metadata.uid,
-            unread: !EventsService.isRead(event.metadata.uid),
-            type: event.type,
-            lastTimestamp: event.lastTimestamp,
-            firstTimestamp: event.firstTimestamp,
-            event: event
-          };
-        });
-      };
-
-      var filterAPIEvents = function(events) {
-        return _.reduce(events, function(result, event) {
-          if(EventsService.isImportantAPIEvent(event) && !EventsService.isCleared(event.metadata.uid)) {
-            result[event.metadata.uid] = event;
-          }
-          return result;
-        }, {});
-      };
-
-      // we have to keep notifications & events separate as
-      // notifications are ephemerial, but events have a time to live
-      // set by the server.  we can merge them right before we update
-      // the UI.
-      var mergeMaps = function(firstMap, secondMap) {
-        var proj = $routeParams.project;
-        return _.assign({}, firstMap[proj], secondMap[proj]);
-      };
-
-      var sortMap = function(map) {
-        return _.orderBy(map, ['event.lastTimestamp', 'event.firstTimestamp'], ['desc', 'desc']);
-      };
-
       var render = function() {
         $rootScope.$evalAsync(function() {
+            var proj = $routeParams.project;
             drawer.notificationGroups = [
-              makeProjectGroup($routeParams.project, sortMap( mergeMaps(apiEventsMap, notificationsMap )))
+              makeProjectGroup(
+                projects[proj],
+                sortMap(
+                  mergeMaps(apiEventsMap[proj], notificationsMap[proj] )))
             ];
-            countUnreadNotifications();
+            countUnreadNotifications(drawer.notificationGroups);
         });
       };
 
@@ -168,25 +125,10 @@
         if(!notification.showInDrawer) {
           return;
         }
-        var project = notification.namespace || $routeParams.project;
+        var projectName = notification.namespace || $routeParams.project;
         var id = notification.id || _.uniqueId('notification_') + Date.now();
-        notificationsMap[project] = notificationsMap[project] || {};
-        notificationsMap[project][id] = {
-          actions: null,
-          unread: !EventsService.isRead(id),
-          // using uid to match API events and have one filed to pass
-          // to EventsService for read/cleared, etc
-          trackByID: notification.trackByID,
-          uid: id,
-          type: notification.type,
-          // API events have both lastTimestamp & firstTimestamp,
-          // but we sort based on lastTimestamp first.
-          lastTimestamp: notification.timestamp,
-          message: notification.message,
-          details: notification.details,
-          namespace: project,
-          links: notification.links
-        };
+        notificationsMap[projectName] = notificationsMap[projectName] || {};
+        notificationsMap[projectName][id] = formatInternalNotification(notification, projectName);
         render();
       };
 
@@ -231,11 +173,7 @@
           $rootScope.$emit('NotificationDrawerWrapper.onMarkAllRead');
         },
         onClearAll: function(group) {
-          _.each(group.notifications, function(notification) {
-            notification.unread = false;
-            EventsService.markRead(notification.uid);
-            EventsService.markCleared(notification.uid);
-          });
+          clearAllNotificationsForGroup(group.notifications);
           apiEventsMap[$routeParams.project] = {};
           notificationsMap[$routeParams.project] = {};
           render();
@@ -248,12 +186,12 @@
           clear: function(notification, index, group) {
             EventsService.markCleared(notification.uid);
             group.notifications.splice(index, 1);
-            countUnreadNotifications();
+            countUnreadNotifications(drawer.notificationGroups);
           },
           markRead: function(notification) {
             notification.unread = false;
             EventsService.markRead(notification.uid);
-            countUnreadNotifications();
+            countUnreadNotifications(drawer.notificationGroups);
           },
           close: function() {
             drawer.drawerHidden = true;

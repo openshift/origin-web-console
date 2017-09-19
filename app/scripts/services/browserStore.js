@@ -19,6 +19,9 @@ angular.module('openshiftConsole')
         },
         loadJSON: function(storeType, storeKey) {
           return JSON.parse(stores[storeType].getItem(prefix + storeKey) || '{}');
+        },
+        clear: function(storeType, storeKey) {
+          return stores[storeType].removeItem(prefix + storeKey);
         }
       };
     }
