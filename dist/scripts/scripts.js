@@ -12617,7 +12617,7 @@ c && (c(), c = void 0), l && (l(), l = void 0), d.nextTitle = "Close", d.wizardC
 var y = function() {
 if (d.serviceClasses) {
 var e = "ServiceInstance" === d.target.kind ? d.target : d.serviceToBind;
-e && (d.serviceClass = d.serviceClasses[e.spec.serviceClassName], d.serviceClassName = e.spec.serviceClassName, d.plan = r.getPlanForInstance(e, d.serviceClass), d.parameterSchema = _.get(d.plan, "alphaServiceInstanceCredentialCreateParameterSchema"), i.hidden = !_.has(d.parameterSchema, "properties"), d.nextTitle = i.hidden ? "Bind" : "Next >");
+e && (d.serviceClass = d.serviceClasses[e.spec.serviceClassName], d.serviceClassName = e.spec.serviceClassName, d.plan = r.getPlanForInstance(e, d.serviceClass), d.parameterSchema = _.get(d.plan, "serviceInstanceCredentialCreateParameterSchema"), i.hidden = !_.has(d.parameterSchema, "properties"), d.nextTitle = i.hidden ? "Bind" : "Next >");
 }
 };
 e.$watch("ctrl.serviceToBind", y), d.$onInit = function() {
