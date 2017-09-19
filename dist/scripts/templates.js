@@ -7020,7 +7020,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"osc-form\">\n" +
     "<alerts alerts=\"$ctrl.alerts\"></alerts>\n" +
     "<form name=\"$ctrl.templateForm\">\n" +
-    "<process-template project=\"$ctrl.project\" template=\"$ctrl.template\" alerts=\"$ctrl.alerts\" is-dialog=\"true\"></process-template>\n" +
+    "<process-template project=\"$ctrl.selectedProject\" template=\"$ctrl.template\" alerts=\"$ctrl.alerts\" is-dialog=\"true\"></process-template>\n" +
     "</form>\n" +
     "</div>\n" +
     "</div>\n" +
