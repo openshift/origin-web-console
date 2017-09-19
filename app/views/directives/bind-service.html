@@ -8,12 +8,13 @@
        on-finish="ctrl.closeWizard()"
        on-cancel="ctrl.closeWizard()"
        wizard-done="ctrl.wizardComplete">
-    <pf-wizard-step ng-repeat="step in ctrl.steps track by $index"
+    <pf-wizard-step ng-repeat="step in ctrl.steps track by step.id"
        step-title="{{step.label}}"
        next-enabled="step.valid"
        on-show="step.onShow"
        step-id="{{step.id}}"
-       step-priority="{{$index}}">
+       step-priority="{{$index}}"
+       allow-click-nav="step.allowClickNav">
       <div class="wizard-pf-main-inner-shadow-covers">
         <div class="bind-service-config">
           <div ng-include="step.view" class="wizard-pf-main-form-contents"></div>

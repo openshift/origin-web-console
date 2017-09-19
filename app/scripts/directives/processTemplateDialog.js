@@ -41,6 +41,7 @@
       hidden: ctrl.useProjectTemplate !== true,
       allowed: true,
       valid: false,
+      allowClickNav: true,
       onShow: showSelect
     };
 
@@ -52,6 +53,7 @@
       // is displayed and the template has required fields.
       valid: false,
       allowed: true,
+      allowClickNav: true,
       onShow: showConfig
     };
 
@@ -62,6 +64,7 @@
       valid: true,
       allowed: false,
       prevEnabled: false,
+      allowClickNav: false,
       onShow: showResults
     };
 
