@@ -155,7 +155,7 @@
       ctrl.serviceClass = ctrl.serviceClasses[instance.spec.serviceClassName];
       ctrl.serviceClassName = instance.spec.serviceClassName;
       ctrl.plan = BindingService.getPlanForInstance(instance, ctrl.serviceClass);
-      ctrl.parameterSchema = _.get(ctrl.plan, 'alphaServiceInstanceCredentialCreateParameterSchema');
+      ctrl.parameterSchema = _.get(ctrl.plan, 'serviceInstanceCredentialCreateParameterSchema');
       bindParametersStep.hidden = !_.has(ctrl.parameterSchema, 'properties');
       ctrl.nextTitle = bindParametersStep.hidden ? 'Bind' : 'Next >';
     };
