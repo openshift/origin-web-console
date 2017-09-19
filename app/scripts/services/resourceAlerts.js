@@ -18,6 +18,18 @@ angular.module("openshiftConsole")
       }
 
       var alerts = {};
+      // Handle evicted pod warnings specially so that evicted pods don't appear in the donut.
+      if (_.some(pods, { status: { phase: 'Failed', reason: 'Evicted' } })) {
+        alerts['pod_evicted'] = {
+          type: 'warning',
+          message: 'Pods have been evicted.',
+          links: [{
+            href: Navigate.resourceListURL('pods', namespace),
+            label: 'View Pods'
+          }]
+        };
+      }
+
       var groupedPodWarnings = getGroupedPodWarnings(pods);
       _.each(groupedPodWarnings, function(podWarnings, groupID) {
         var warning = _.head(podWarnings);
