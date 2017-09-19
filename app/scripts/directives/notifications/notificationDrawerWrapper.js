@@ -16,7 +16,6 @@
         '$rootScope',
         'Constants',
         'DataService',
-        'NotificationsService',
         'EventsService',
         NotificationDrawerWrapper
       ]
@@ -31,7 +30,6 @@
       $rootScope,
       Constants,
       DataService,
-      NotificationsService,
       EventsService) {
 
       // kill switch if watching events is too expensive
@@ -45,23 +43,26 @@
       // this one is treated separately from the rootScopeWatches as
       // it may need to be updated outside of the lifecycle of init/destroy
       var notificationListener;
-      // our internal notifications
-      // var clientGeneratedNotifications = [];
-
-      var eventsWatcher;
-      var eventsMap = {};
-
-      // TODO:
-      // include both Notifications & Events,
-      // rather than destroying the map each time maintain it & add new items
-
-      // final Processed set of notification groups for UI
-      // IF POSSIBLE, avoid having to convert back to an array.
-      // var notificationGroupsMap = {};
-      var notificationGroups = [];
-
+      var apiEventsWatcher;
+      // data
+      var apiEventsMap = {
+        // projName: { events }
+      };
+      var notificationsMap = {
+        // projName: { notifications }
+      };
 
       var projects = {};
+
+      var hideIfNoProject = function(projectName) {
+        if(!projectName) {
+          drawer.drawerHidden = true;
+        }
+      };
+
+      var projectChanged = function(next, current) {
+        return _.get(next, 'params.project') !== _.get(current, 'params.project');
+      };
 
       var getProject = function(projectName) {
         return DataService
@@ -72,99 +73,71 @@
                 });
       };
 
-      var ensureProjectGroupExists = function(groups, projectName) {
-        if(projectName && !groups[projectName]) {
-          groups[projectName] = {
-            heading: $filter('displayName')(projects[projectName]) || projectName,
-            project: projects[projectName],
-            notifications: []
-          };
-        }
-      };
-
-      var deregisterEventsWatch = function() {
-        if(eventsWatcher) {
-          DataService.unwatch(eventsWatcher);
-        }
-      };
-
-      var watchEvents = function(projectName, cb) {
-        deregisterEventsWatch();
-        if(projectName) {
-          eventsWatcher = DataService.watch('events', {namespace: projectName}, _.debounce(cb, 400), { skipDigest: true });
-        }
-      };
-
-      // NotificationService notifications are minimal, they do no necessarily contain projectName info.
-      // ATM tacking this on via watching the current project.
-      // var watchNotifications = function(projectName, cb) {
-      //   deregisterNotificationListener();
-      //   if(!projectName) {
-      //     return;
-      //   }
-      //   notificationListener = $rootScope.$on('NotificationsService.onNotificationAdded', cb);
-      // };
-
-      var deregisterNotificationListener = function() {
-        notificationListener && notificationListener();
-        notificationListener = null;
+      var makeProjectGroup = function(projectName, notifications) {
+        return {
+          heading: $filter('displayName')(projects[projectName]),
+          project: projects[projectName],
+          notifications: notifications
+        };
       };
 
       var unread = function(notifications) {
         return _.filter(notifications, 'unread');
       };
 
-      // returns a count for each type of notification, example:
-      // {Normal: 1, Warning: 5}
-      // TODO: eliminate this $rootScope.$applyAsync,
-      // there is a quirk here where the values are not picked up the
-      // first time the function runs, despite the same $applyAsync
-      // in the render() function
-      var countUnreadNotificationsForGroup = function(group) {
-        $rootScope.$applyAsync(function() {
+
+      var countUnreadNotifications = function() {
+        _.each(drawer.notificationGroups, function(group) {
           group.totalUnread = unread(group.notifications).length;
           group.hasUnread = !!group.totalUnread;
-          $rootScope.$emit('NotificationDrawerWrapper.count', group.totalUnread);
+          $rootScope.$emit('NotificationDrawerWrapper.onUnreadNotifications', group.totalUnread);
         });
       };
 
-      // currently we only show 1 at a time anyway
-      var countUnreadNotificationsForAllGroups = function() {
-        _.each(notificationGroups, countUnreadNotificationsForGroup);
-      };
-
-      var sortNotifications = function(notifications) {
-        return _.orderBy(notifications, ['event.lastTimestamp', 'event.firstTimestamp'], ['desc', 'desc']);
-      };
-
-      var sortNotificationGroups = function(groupsMap) {
-        // convert the map into a sorted array
-        var sortedGroups = _.sortBy(groupsMap, function(group) {
-          return group.heading;
+      var formatAPIEvents = function(apiEvents) {
+        return _.map(apiEvents, function(event) {
+          return {
+            actions: null,
+            uid: event.metadata.uid,
+            trackByID: event.metadata.uid,
+            unread: !EventsService.isRead(event.metadata.uid),
+            type: event.type,
+            lastTimestamp: event.lastTimestamp,
+            firstTimestamp: event.firstTimestamp,
+            event: event
+          };
         });
-        // and sort the notifications under each one
-        _.each(sortedGroups, function(group) {
-          group.notifications = sortNotifications(group.notifications);
-          group.counts = countUnreadNotificationsForGroup(group);
-        });
-        return sortedGroups;
       };
 
-      var formatAndFilterEvents = function(eventMap) {
-        var filtered = {};
-        ensureProjectGroupExists(filtered, $routeParams.project);
-        _.each(eventMap, function(event) {
-          if(EventsService.isImportantEvent(event) && !EventsService.isCleared(event)) {
-            ensureProjectGroupExists(filtered, event.metadata.namespace);
-            filtered[event.metadata.namespace].notifications.push({
-              unread:  !EventsService.isRead(event),
-              trackByID: event.metadata.uid,
-              event: event,
-              actions: null
-            });
+      var filterAPIEvents = function(events) {
+        return _.reduce(events, function(result, event) {
+          if(EventsService.isImportantAPIEvent(event) && !EventsService.isCleared(event.metadata.uid)) {
+            result[event.metadata.uid] = event;
           }
+          return result;
+        }, {});
+      };
+
+      // we have to keep notifications & events separate as
+      // notifications are ephemerial, but events have a time to live
+      // set by the server.  we can merge them right before we update
+      // the UI.
+      var mergeMaps = function(firstMap, secondMap) {
+        var proj = $routeParams.project;
+        return _.assign({}, firstMap[proj], secondMap[proj]);
+      };
+
+      var sortMap = function(map) {
+        return _.orderBy(map, ['event.lastTimestamp', 'event.firstTimestamp'], ['desc', 'desc']);
+      };
+
+      var render = function() {
+        $rootScope.$evalAsync(function() {
+            drawer.notificationGroups = [
+              makeProjectGroup($routeParams.project, sortMap( mergeMaps(apiEventsMap, notificationsMap )))
+            ];
+            countUnreadNotifications();
         });
-        return filtered;
       };
 
       var deregisterRootScopeWatches = function() {
@@ -174,50 +147,68 @@
         rootScopeWatches = [];
       };
 
-      var hideIfNoProject = function(projectName) {
-        if(!projectName) {
-          drawer.drawerHidden = true;
+      var deregisterAPIEventsWatch = function() {
+        if(apiEventsWatcher) {
+          DataService.unwatch(apiEventsWatcher);
+          apiEventsWatcher = null;
         }
       };
 
-      var render = function() {
-        $rootScope.$evalAsync(function () {
-          countUnreadNotificationsForAllGroups();
-          // NOTE: we are currently only showing one project in the drawer at a
-          // time. If we go back to multiple projects, we can eliminate the filter here
-          // and just pass the whole array as notificationGroups.
-          // if we do, we will have to handle group.open to keep track of what the
-          // user is viewing at the time & indicate to the user that the non-active
-          // project is "asleep"/not being watched.
-          drawer.notificationGroups = _.filter(notificationGroups, function(group) {
-            return group.project.metadata.name === $routeParams.project;
-          });
-        });
+      var deregisterNotificationListener = function() {
+        notificationListener && notificationListener();
+        notificationListener = null;
       };
 
-      // TODO: follow-on PR to decide which of these events to toast,
-      // via config in constants.js
-      var eventWatchCallback = function(eventData) {
-        eventsMap = formatAndFilterEvents(eventData.by('metadata.uid'));
-        // TODO: Update to an intermediate map, so that we can then combine both
-        // events + notifications into the final notificationGroups output
-        notificationGroups = sortNotificationGroups(eventsMap);
+      var apiEventWatchCallback = function(eventData) {
+        apiEventsMap[$routeParams.project] = formatAPIEvents(filterAPIEvents(eventData.by('metadata.name')));
         render();
       };
 
-      // TODO: Follow-on PR to update & add the internal notifications to the
-      // var notificationWatchCallback = function(event, notification) {
-      //   // will need to add .event = {} and immitate structure
-      //   if(!notification.lastTimestamp) {
-      //     // creates a timestamp that matches event format: 2017-08-09T19:55:35Z
-      //     notification.lastTimestamp = moment.parseZone(new Date()).utc().format();
-      //   }
-      //   clientGeneratedNotifications.push(notification);
-      // };
+      var notificationWatchCallback = function(event, notification) {
+        if(!notification.showInDrawer) {
+          return;
+        }
+        var project = notification.namespace || $routeParams.project;
+        var id = notification.id || _.uniqueId('notification_') + Date.now();
+        notificationsMap[project] = notificationsMap[project] || {};
+        notificationsMap[project][id] = {
+          actions: null,
+          unread: !EventsService.isRead(id),
+          // using uid to match API events and have one filed to pass
+          // to EventsService for read/cleared, etc
+          trackByID: notification.trackByID,
+          uid: id,
+          type: notification.type,
+          // API events have both lastTimestamp & firstTimestamp,
+          // but we sort based on lastTimestamp first.
+          lastTimestamp: notification.timestamp,
+          message: notification.message,
+          details: notification.details,
+          namespace: project,
+          links: notification.links
+        };
+        render();
+      };
 
-      var iconClassByEventSeverity = {
-        Normal: 'pficon pficon-info',
-        Warning: 'pficon pficon-warning-triangle-o'
+      var watchEvents = function(projectName, cb) {
+        deregisterAPIEventsWatch();
+        if(projectName) {
+          apiEventsWatcher = DataService.watch('events', {namespace: projectName}, _.debounce(cb, 400), { skipDigest: true });
+        }
+      };
+
+      var watchNotifications = _.once(function(projectName, cb) {
+        deregisterNotificationListener();
+        notificationListener = $rootScope.$on('NotificationsService.onNotificationAdded', cb);
+      });
+
+      var reset = function() {
+        getProject($routeParams.project).then(function() {
+          watchEvents($routeParams.project, apiEventWatchCallback);
+          watchNotifications($routeParams.project, notificationWatchCallback);
+          hideIfNoProject($routeParams.project);
+          render();
+        });
       };
 
       angular.extend(drawer, {
@@ -234,58 +225,46 @@
         onMarkAllRead: function(group) {
           _.each(group.notifications, function(notification) {
             notification.unread = false;
-            EventsService.markRead(notification.event);
+            EventsService.markRead(notification.uid);
           });
           render();
           $rootScope.$emit('NotificationDrawerWrapper.onMarkAllRead');
         },
         onClearAll: function(group) {
           _.each(group.notifications, function(notification) {
-            EventsService.markRead(notification.event);
-            EventsService.markCleared(notification.event);
+            notification.unread = false;
+            EventsService.markRead(notification.uid);
+            EventsService.markCleared(notification.uid);
           });
-          group.notifications = [];
+          apiEventsMap[$routeParams.project] = {};
+          notificationsMap[$routeParams.project] = {};
           render();
           $rootScope.$emit('NotificationDrawerWrapper.onMarkAllRead');
         },
-        notificationGroups: notificationGroups,
+        notificationGroups: [],
         headingInclude: 'views/directives/notifications/header.html',
         notificationBodyInclude: 'views/directives/notifications/notification-body.html',
         customScope: {
           clear: function(notification, index, group) {
-            EventsService.markCleared(notification.event);
+            EventsService.markCleared(notification.uid);
             group.notifications.splice(index, 1);
-            countUnreadNotificationsForAllGroups();
+            countUnreadNotifications();
           },
           markRead: function(notification) {
             notification.unread = false;
-            EventsService.markRead(notification.event);
-            countUnreadNotificationsForAllGroups();
-          },
-          getNotficationStatusIconClass: function(event) {
-            return iconClassByEventSeverity[event.type] || iconClassByEventSeverity.info;
-          },
-          getStatusForCount:  function(countKey) {
-            return iconClassByEventSeverity[countKey] || iconClassByEventSeverity.info;
+            EventsService.markRead(notification.uid);
+            countUnreadNotifications();
           },
           close: function() {
+            drawer.drawerHidden = true;
+          },
+          onLinkClick: function(link) {
+            link.onClick();
             drawer.drawerHidden = true;
           }
         }
       });
 
-      var projectChanged = function(next, current) {
-        return _.get(next, 'params.project') !== _.get(current, 'params.project');
-      };
-
-      var reset = function() {
-        getProject($routeParams.project).then(function() {
-          watchEvents($routeParams.project, eventWatchCallback);
-          //watchNotifications($routeParams.project, notificationWatchCallback);
-          hideIfNoProject($routeParams.project);
-          render();
-        });
-      };
 
       var initWatches = function() {
         if($routeParams.project) {
@@ -318,10 +297,9 @@
 
       drawer.$onDestroy = function() {
         deregisterNotificationListener();
-        deregisterEventsWatch();
+        deregisterAPIEventsWatch();
         deregisterRootScopeWatches();
       };
-
   }
 
 })();

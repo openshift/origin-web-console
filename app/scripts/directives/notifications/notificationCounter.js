@@ -32,7 +32,7 @@
         if(!projectName) {
           return;
         }
-        notificationListeners.push($rootScope.$on('NotificationDrawerWrapper.count', cb));
+        notificationListeners.push($rootScope.$on('NotificationDrawerWrapper.onUnreadNotifications', cb));
       };
 
       var deregisterNotificationListeners = function() {

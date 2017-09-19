@@ -7,10 +7,7 @@
     href=""
     ng-click="$ctrl.customScope.clear(notification, $index, notificationGroup)">
     <span class="sr-only">Clear notification</span>
-    <span
-      ng-if="notification.event"
-      aria-hidden="true"
-      class="pull-left pficon pficon-close"></span>
+    <span aria-hidden="true" class="pull-left pficon pficon-close"></span>
   </a>
   <div
     uib-dropdown
@@ -46,20 +43,23 @@
   </div>
 
   <span
-    ng-if="notification.event"
-    aria-hidden="true"
-    class="pull-left"
-    ng-class="$ctrl.customScope.getNotficationStatusIconClass(notification.event)"></span>
+    class="pull-left {{notification.type | alertIcon}}"
+    aria-hidden="true"></span>
   <span class="sr-only">{{notification.event.type}}</span>
   <div class="drawer-pf-notification-content">
+
     <div
       class="drawer-pf-notification-message"
       ng-attr-title="{{notification.event.message}}">
       <div>
-        <span>
-          {{notification.event.reason | humanize}} &mdash; {{notification.event.involvedObject.kind | humanize}}
+
+        <span ng-if="notification.event.reason">
+          {{notification.event.reason | humanize}} &mdash; <span ng-if="notification.event.involvedObject">{{notification.event.involvedObject.kind | humanize}}</span>
         </span>
-        <span ng-init="eventObjUrl = (notification.event | navigateEventInvolvedObjectURL)">
+
+        <span
+          ng-if="notification.event.involvedObject"
+          ng-init="eventObjUrl = (notification.event | navigateEventInvolvedObjectURL)">
           <a
             ng-if="eventObjUrl"
             ng-attr-title="Navigate to {{notification.event.involvedObject.name}}"
@@ -69,21 +69,42 @@
           </a>
           <span ng-if="!(eventObjUrl)">{{notification.event.involvedObject.name}}</span>
         </span>
+
+        <span ng-if="!(notification.event.involvedObject)">
+          {{notification.message}}
+          <span ng-repeat="link in notification.links">
+            <a
+              ng-if="!link.href"
+              href=""
+              ng-click="$ctrl.customScope.onLinkClick(link)"
+              role="button">{{link.label}}</a>
+            <a
+              ng-if="link.href"
+              ng-href="{{link.href}}"
+              ng-click="$ctrl.customScope.close()"
+              ng-attr-target="{{link.target}}">{{link.label}}</a>
+            <span ng-if="!$last" class="toast-action-divider">|</span>
+          </span>
+        </span>
+
       </div>
       <div
         ng-if="notification.event.count > 1"
         class="text-muted small">
         {{notification.event.count}} times in the last
-        <duration-until-now timestamp="notification.event.firstTimestamp" omit-single="true" precision="1"></duration-until-now>
+        <duration-until-now
+          timestamp="notification.event.firstTimestamp"
+          omit-single="true"
+          precision="1"></duration-until-now>
       </div>
     </div>
 
     <div class="drawer-pf-notification-info">
-      <span class="date">{{notification.event.lastTimestamp | date:'shortDate'}}</span>
-      <span class="time">{{notification.event.lastTimestamp | date:'mediumTime'}}</span>
+      <span class="date">{{notification.lastTimestamp | date:'shortDate'}}</span>
+      <span class="time">{{notification.lastTimestamp | date:'mediumTime'}}</span>
     </div>
   </div>
   <div ng-if="$ctrl.drawerExpanded" class="drawer-pf-notification-message drawer-pf-notification-message-expanded">
-    {{notification.event.message}}
+    {{notification.event.message || notification.details}}
   </div>
 </div>
