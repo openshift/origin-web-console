@@ -123,6 +123,7 @@
       label: 'Binding',
       view: 'views/directives/bind-service/bind-service-form.html',
       valid: true,
+      allowClickNav: true,
       onShow: showBind
     };
 
@@ -131,6 +132,7 @@
       label: 'Parameters',
       view: 'views/directives/bind-service/bind-parameters.html',
       hidden: true,
+      allowClickNav: true,
       onShow: showParameters
     };
 
@@ -139,6 +141,7 @@
       label: 'Results',
       view: 'views/directives/bind-service/results.html',
       valid: true,
+      allowClickNav: false,
       onShow: showResults
     };
 

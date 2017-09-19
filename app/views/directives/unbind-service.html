@@ -11,9 +11,10 @@
     wizard-done="ctrl.wizardComplete"
     class="pf-wizard-no-back">
     <pf-wizard-step
-      ng-repeat="step in ctrl.steps track by $index"
+      ng-repeat="step in ctrl.steps track by step.id"
       step-title="{{step.label}}"
       next-enabled="step.valid"
+      allow-click-nav="false"
       on-show="step.onShow"
       step-id="{{step.id}}"
       step-priority="{{$index}}">
