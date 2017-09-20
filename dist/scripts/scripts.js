@@ -6328,35 +6328,35 @@ a.project = e, a.context = o, i.canI("secrets", "create", n.project) ? a.navigat
 n.then ? t.url(n.then) : r.history.back();
 } : c.toErrorPage("You do not have authority to create secrets in project " + n.project + ".", "access_denied");
 }));
-} ]), angular.module("openshiftConsole").controller("ConfigMapsController", [ "$scope", "$routeParams", "DataService", "LabelFilter", "ProjectsService", function(e, t, n, a, r) {
-e.projectName = t.project, e.alerts = e.alerts || {}, e.loaded = !1, e.labelSuggestions = {};
-var o, i = [], s = function() {
-a.getLabelSelector().isEmpty() || !_.isEmpty(e.configMaps) || _.isEmpty(o) ? delete e.alerts["config-maps"] : e.alerts["config-maps"] = {
+} ]), angular.module("openshiftConsole").controller("ConfigMapsController", [ "$scope", "$routeParams", "APIService", "DataService", "LabelFilter", "ProjectsService", function(e, t, n, a, r, o) {
+e.projectName = t.project, e.alerts = e.alerts || {}, e.loaded = !1, e.labelSuggestions = {}, e.configMapsVersion = n.getPreferredVersion("configmaps");
+var i, s = [], c = function() {
+r.getLabelSelector().isEmpty() || !_.isEmpty(e.configMaps) || _.isEmpty(i) ? delete e.alerts["config-maps"] : e.alerts["config-maps"] = {
 type: "warning",
 details: "The active filters are hiding all config maps."
 };
-}, c = function() {
-a.addLabelSuggestionsFromResources(o, e.labelSuggestions), a.setLabelSuggestions(e.labelSuggestions);
 }, l = function() {
-var t = a.getLabelSelector().select(o);
-e.configMaps = _.sortBy(t, "metadata.name"), s();
+r.addLabelSuggestionsFromResources(i, e.labelSuggestions), r.setLabelSuggestions(e.labelSuggestions);
+}, u = function() {
+var t = r.getLabelSelector().select(i);
+e.configMaps = _.sortBy(t, "metadata.name"), c();
 };
-r.get(t.project).then(_.spread(function(t, r) {
-e.project = t, i.push(n.watch("configmaps", r, function(t) {
-o = t.by("metadata.name"), c(), l(), e.loaded = !0;
-})), a.onActiveFiltersChanged(function() {
-e.$apply(l);
+o.get(t.project).then(_.spread(function(t, n) {
+e.project = t, s.push(a.watch(e.configMapsVersion, n, function(t) {
+i = t.by("metadata.name"), l(), u(), e.loaded = !0;
+})), r.onActiveFiltersChanged(function() {
+e.$apply(u);
 }), e.$on("$destroy", function() {
-n.unwatchAll(i);
+a.unwatchAll(s);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("ConfigMapController", [ "$scope", "$routeParams", "BreadcrumbsService", "DataService", "ProjectsService", function(e, t, n, a, r) {
-e.projectName = t.project, e.alerts = e.alerts || {}, e.loaded = !1, e.labelSuggestions = {}, e.breadcrumbs = n.getBreadcrumbs({
+} ]), angular.module("openshiftConsole").controller("ConfigMapController", [ "$scope", "$routeParams", "APIService", "BreadcrumbsService", "DataService", "ProjectsService", function(e, t, n, a, r, o) {
+e.projectName = t.project, e.alerts = e.alerts || {}, e.loaded = !1, e.labelSuggestions = {}, e.breadcrumbs = a.getBreadcrumbs({
 name: t.configMap,
 kind: "ConfigMap",
 namespace: t.project
-});
-var o = [], i = function(t, n) {
+}), e.configMapsVersion = n.getPreferredVersion("configmaps");
+var i = [], s = function(t, n) {
 e.loaded = !0, e.configMap = t, "DELETED" === n && (e.alerts.deleted = {
 type: "warning",
 message: "This config map has been deleted."
@@ -6366,15 +6366,15 @@ e.addToApplicationVisible = !1, e.addToApplication = function() {
 e.addToApplicationVisible = !0;
 }, e.closeAddToApplication = function() {
 e.addToApplicationVisible = !1;
-}, r.get(t.project).then(_.spread(function(n, r) {
-e.project = n, a.get("configmaps", t.configMap, r, {
+}, o.get(t.project).then(_.spread(function(n, a) {
+e.project = n, r.get(e.configMapsVersion, t.configMap, a, {
 errorNotification: !1
 }).then(function(e) {
-i(e), o.push(a.watchObject("configmaps", t.configMap, r, i));
+s(e), i.push(r.watchObject("configmaps", t.configMap, a, s));
 }, function(t) {
 e.loaded = !0, e.error = t;
 }), e.$on("$destroy", function() {
-a.unwatchAll(o);
+r.unwatchAll(i);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("CreateConfigMapController", [ "$filter", "$routeParams", "$scope", "$window", "AuthorizationService", "DataService", "Navigate", "NotificationsService", "ProjectsService", function(e, t, n, a, r, o, i, s, c) {
