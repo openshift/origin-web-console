@@ -7700,7 +7700,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/notifications/notification-body.html',
     "<div class=\"drawer-pf-notification-inner\" tabindex=\"0\" ng-click=\"$ctrl.customScope.markRead(notification)\">\n" +
-    "<a class=\"pull-right\" href=\"\" ng-click=\"$ctrl.customScope.clear(notification, $index, notificationGroup)\">\n" +
+    "<a class=\"pull-right\" href=\"\" ng-if=\"!notification.actions.length\" ng-click=\"$ctrl.customScope.clear(notification, $index, notificationGroup)\">\n" +
     "<span class=\"sr-only\">Clear notification</span>\n" +
     "<span aria-hidden=\"true\" class=\"pull-left pficon pficon-close\"></span>\n" +
     "</a>\n" +
@@ -7710,7 +7710,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<ul class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"dropdownKebabRight\">\n" +
     "<li ng-repeat=\"action in notification.actions\" role=\"{{action.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}\">\n" +
-    "<a ng-if=\"!action.isSeparator\" href=\"\" class=\"secondary-action\" title=\"{{action.title}}\" ng-click=\"$ctrl.customScope.handleAction(notification, action)\">\n" +
+    "<a ng-if=\"!action.isSeparator\" href=\"\" class=\"secondary-action\" title=\"{{action.title}}\" ng-click=\"action.onClick(notification)\">\n" +
     "{{action.name}}\n" +
     "</a>\n" +
     "</li>\n" +
@@ -7731,7 +7731,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"!(eventObjUrl)\">{{notification.event.involvedObject.name}}</span>\n" +
     "</span>\n" +
     "<span ng-if=\"!(notification.event.involvedObject)\">\n" +
-    "{{notification.message}}\n" +
+    "<span ng-if=\"notification.isHTML\" ng-bind-html=\"notification.message\"></span>\n" +
+    "<span ng-if=\"!notification.isHTML\">{{notification.message}}</span>\n" +
     "<span ng-repeat=\"link in notification.links\">\n" +
     "<a ng-if=\"!link.href\" href=\"\" ng-click=\"$ctrl.customScope.onLinkClick(link)\" role=\"button\">{{link.label}}</a>\n" +
     "<a ng-if=\"link.href\" ng-href=\"{{link.href}}\" ng-click=\"$ctrl.customScope.close()\" ng-attr-target=\"{{link.target}}\">{{link.label}}</a>\n" +
