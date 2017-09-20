@@ -11,6 +11,7 @@ angular.module('openshiftConsole')
   .controller('ConfigMapController',
               function ($scope,
                         $routeParams,
+                        APIService,
                         BreadcrumbsService,
                         DataService,
                         ProjectsService) {
@@ -23,7 +24,7 @@ angular.module('openshiftConsole')
       kind: 'ConfigMap',
       namespace: $routeParams.project
     });
-
+    $scope.configMapsVersion = APIService.getPreferredVersion('configmaps');
     var watches = [];
 
     var configMapResolved = function(configMap, action) {
@@ -52,7 +53,7 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
         DataService
-          .get("configmaps", $routeParams.configMap, context, { errorNotification: false })
+          .get($scope.configMapsVersion, $routeParams.configMap, context, { errorNotification: false })
           .then(function(configMap) {
             configMapResolved(configMap);
             watches.push(DataService.watchObject("configmaps", $routeParams.configMap, context, configMapResolved));

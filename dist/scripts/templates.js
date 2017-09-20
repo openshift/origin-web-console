@@ -2176,13 +2176,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li ng-if=\"project.metadata.name | canIAddToProject\" class=\"visible-xs\">\n" +
     "<a href=\"\" role=\"button\" ng-click=\"addToApplication()\">Add to Application</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"'configmaps' | canI : 'update'\">\n" +
+    "<li ng-if=\"configMapsVersion | canI : 'update'\">\n" +
     "<a ng-href=\"{{configMap | editResourceURL}}\" role=\"button\">Edit</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"'configmaps' | canI : 'update'\">\n" +
+    "<li ng-if=\"configMapsVersion | canI : 'update'\">\n" +
     "<a ng-href=\"{{configMap | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"'configmaps' | canI : 'delete'\">\n" +
+    "<li ng-if=\"configMapsVersion | canI : 'delete'\">\n" +
     "<delete-link kind=\"ConfigMap\" resource-name=\"{{configMap.metadata.name}}\" project-name=\"{{configMap.metadata.namespace}}\" alerts=\"alerts\">\n" +
     "</delete-link>\n" +
     "</li>\n" +
@@ -2232,7 +2232,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-header header-toolbar\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<div class=\"pull-right\" ng-if=\"project && ('configmaps' | canI : 'create')\">\n" +
+    "<div class=\"pull-right\" ng-if=\"project && (configMapsVersion | canI : 'create')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-config-map\" class=\"btn btn-default\">Create Config Map</a>\n" +
     "</div>\n" +
     "<h1>\n" +

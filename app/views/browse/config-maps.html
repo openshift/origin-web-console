@@ -2,7 +2,7 @@
   <div class="middle-header header-toolbar">
     <div class="container-fluid">
       <div class="page-header page-header-bleed-right page-header-bleed-left">
-        <div class="pull-right" ng-if="project && ('configmaps' | canI : 'create')">
+        <div class="pull-right" ng-if="project && (configMapsVersion | canI : 'create')">
           <a ng-href="project/{{project.metadata.name}}/create-config-map" class="btn btn-default">Create Config Map</a>
         </div>
         <h1>
