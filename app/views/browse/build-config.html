@@ -37,13 +37,13 @@
                 </span>
               </a>
             </li>
-            <li ng-if="'buildconfigs' | canI : 'update'">
+            <li ng-if="buildConfigsVersion | canI : 'update'">
               <a ng-href="{{buildConfig | editResourceURL}}" role="button">Edit</a>
             </li>
-            <li ng-if="'buildconfigs' | canI : 'update'">
+            <li ng-if="buildConfigsVersion | canI : 'update'">
               <a ng-href="{{buildConfig | editYamlURL}}" role="button">Edit YAML</a>
             </li>
-            <li ng-if="'buildconfigs' | canI : 'delete'">
+            <li ng-if="buildConfigsVersion | canI : 'delete'">
               <delete-link
                 kind="BuildConfig"
                 resource-name="{{buildConfig.metadata.name}}"
@@ -464,7 +464,7 @@
                 cannot-delete
                 show-header></key-value-editor>
               <ng-form name="forms.bcEnvVars" class="mar-bottom-xl block">
-                <div ng-if="'buildconfigs' | canI : 'update'">
+                <div ng-if="buildConfigsVersion | canI : 'update'">
                   <confirm-on-exit dirty="forms.bcEnvVars.$dirty"></confirm-on-exit>
                   <key-value-editor
                     entries="envVars"
@@ -487,7 +487,7 @@
                     style="vertical-align: -2px;">Clear Changes</a>
                 </div>
                 <key-value-editor
-                  ng-if="!('buildconfigs' | canI : 'update')"
+                  ng-if="!(buildConfigsVersion | canI : 'update')"
                   entries="envVars"
                   key-placeholder="Name"
                   value-placeholder="Value"

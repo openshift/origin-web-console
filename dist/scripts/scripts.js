@@ -5263,7 +5263,7 @@ title: "Builds",
 link: "project/" + n.project + "/browse/builds"
 }), e.breadcrumbs.push({
 title: n.buildconfig
-}), e.emptyMessage = "Loading...", e.aceLoaded = function(e) {
+}), e.buildConfigsVersion = a.getPreferredVersion("buildconfigs"), e.buildsVersion = a.getPreferredVersion("builds"), e.emptyMessage = "Loading...", e.aceLoaded = function(e) {
 var t = e.getSession();
 t.setOption("tabSize", 2), t.setOption("useSoftTabs", !0), e.$blockScrolling = 1 / 0;
 };
@@ -5323,17 +5323,17 @@ type: "warning",
 details: "The active filters are hiding all builds."
 };
 }
-e.project = a, p = o, i.get("buildconfigs", n.buildconfig, o, {
+e.project = a, p = o, i.get(e.buildConfigsVersion, n.buildconfig, o, {
 errorNotification: !1
-}).then(function(e) {
-y(e), g.push(i.watchObject("buildconfigs", n.buildconfig, o, y));
+}).then(function(t) {
+y(t), g.push(i.watchObject(e.buildConfigsVersion, n.buildconfig, o, y));
 }, function(n) {
 e.loaded = !0, e.alerts.load = {
 type: "error",
 message: 404 === n.status ? "This build configuration can not be found, it may have been deleted." : "The build configuration details could not be loaded.",
 details: 404 === n.status ? "Any remaining build history for this build will be shown." : t("getErrorDetails")(n)
 };
-}), g.push(i.watch("builds", o, function(t, a, o) {
+}), g.push(i.watch(e.buildsVersion, o, function(t, a, o) {
 if (e.emptyMessage = "No builds to show", a) {
 if (m(o) === n.buildconfig) {
 var i = o.metadata.name;
