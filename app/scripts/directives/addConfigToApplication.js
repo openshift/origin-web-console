@@ -24,6 +24,7 @@
 
   function AddConfigToApplication($filter, $scope, APIService, ApplicationsService, DataService, Navigate, NotificationsService, StorageService) {
     var ctrl = this;
+    var humanizeKind = $filter('humanizeKind');
 
     var getApplications = function() {
       var context = {
@@ -60,6 +61,10 @@
         ctrl.existingMountPaths = StorageService.getMountPaths(podTemplate);
         ctrl.attachAllContainers = true;
       });
+    };
+
+    ctrl.groupByKind = function(object) {
+      return humanizeKind(object.kind);
     };
 
     ctrl.addToApplication = function() {
