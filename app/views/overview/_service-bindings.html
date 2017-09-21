@@ -1,7 +1,8 @@
 <div class="expanded-section">
-  <div class="section-title hidden-xs">Service Bindings</div>
+  <div class="section-title hidden-xs">{{$ctrl.sectionTitle}}</div>
   <service-binding
     ng-repeat="binding in $ctrl.bindings track by (binding | uid)"
+    is-overview="true"
     namespace="$ctrl.namespace"
     binding="binding"
     service-classes="$ctrl.serviceClasses"

@@ -1,12 +1,16 @@
 <div class="service-binding">
   <div class="row">
-    <div class="col-sm-5 col-md-6">
-      <h3 ng-if="$ctrl.serviceClass">
+    <div ng-class="{'col-sm-5 col-md-6': $ctrl.isOverview,
+                    'col-sm-8 col-md-6 col-lg-8': !$ctrl.isOverview}">
+      <h3>
+        <div class="component-label">
+          Secret
+        </div>
         <span ng-if="$ctrl.serviceClass">
-          <span ng-if="$ctrl.refApiObject.kind !== 'Instance'">
+          <span ng-if="$ctrl.refApiObject.kind !== 'ServiceInstance'">
             {{$ctrl.serviceClass.externalMetadata.displayName || $ctrl.serviceClass.metadata.name}}
           </span>
-          <span ng-if="$ctrl.refApiObject.kind === 'Instance'">
+          <span ng-if="$ctrl.refApiObject.kind === 'ServiceInstance'">
             {{$ctrl.binding.spec.secretName}}
           </span>
         </span>
@@ -17,25 +21,37 @@
         <small>created <span am-time-ago="$ctrl.binding.metadata.creationTimestamp"></span></small>
       </h3>
     </div>
-    <div class="col-sm-7 col-md-6" ng-if="$ctrl.binding.metadata.deletionTimestamp">
+    <div ng-if="$ctrl.binding.metadata.deletionTimestamp"
+         ng-class="{'col-sm-7 col-md-6': $ctrl.isOverview,
+                    'col-sm-4 col-md-3': !$ctrl.isOverview}">
       <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
       Marked for Deletion
     </div>
-    <div class="col-sm-7 col-md-6" ng-if="!$ctrl.binding.metadata.deletionTimestamp && !($ctrl.binding | isBindingReady)">
+    <div ng-if="!$ctrl.binding.metadata.deletionTimestamp && ($ctrl.binding | isBindingFailed)"
+         ng-class="{'col-sm-7 col-md-6': $ctrl.isOverview,
+                    'col-sm-4 col-md-6 col-lg-4': !$ctrl.isOverview}">
+      <span dynamic-content="{{$ctrl.binding | bindingFailedMessage}}" data-toggle="tooltip" data-trigger="hover">
+        <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
+        <span>Error</span>
+      </span>
+    </div>
+    <div ng-if="!$ctrl.binding.metadata.deletionTimestamp && !($ctrl.binding | isBindingFailed) && !($ctrl.binding | isBindingReady)"
+         ng-class="{'col-sm-7 col-md-6': $ctrl.isOverview,
+                    'col-sm-4 col-md-6 col-lg-4': !$ctrl.isOverview}">
       <status-icon status="'Pending'"></status-icon>Pending
     </div>
   </div>
   <div class="service-binding-actions" ng-if="!ctrl.binding.metadata.deletionTimestamp">
     <delete-link
       ng-if="({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'delete')"
-      label="Delete Binding"
-      kind="binding"
+      kind="serviceinstancecredential"
       group="servicecatalog.k8s.io"
       resource-name="{{$ctrl.binding.metadata.name}}"
       project-name="{{$ctrl.binding.metadata.namespace}}"
       stay-on-current-page="true">
     </delete-link>
-    <a ng-if="('secrets' | canI : 'get') && ($ctrl.binding | isBindingReady)" ng-href="{{$ctrl.binding.spec.secretName | navigateResourceURL : 'Secret' : $ctrl.namespace}}">
+    <a ng-if="('secrets' | canI : 'get') && !($ctrl.binding | isBindingFailed) && !(binding | isBindingReady)"
+       ng-href="{{$ctrl.binding.spec.secretName | navigateResourceURL : 'Secret' : $ctrl.namespace}}">
       View Secret
     </a>
   </div>

@@ -178,6 +178,7 @@
           <uib-tab ng-if="row.showBindings && (row.bindings | size)" active="row.selectedTab.bindings">
             <uib-tab-heading>Bindings</uib-tab-heading>
             <overview-service-bindings
+              section-title="Service Bindings"
               namespace="row.apiObject.metadata.namespace"
               bindings="row.bindings"
               bindable-service-instances="row.state.bindableServiceInstances"
@@ -213,6 +214,7 @@
       </overview-builds>
 
       <overview-service-bindings
+        section-title="Service Bindings"
         ng-if="row.showBindings && (row.bindings | size)"
         namespace="row.apiObject.metadata.namespace"
         bindings="row.bindings"

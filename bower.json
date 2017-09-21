@@ -46,7 +46,7 @@
     "angular-moment": "1.0.0",
     "angular-utf8-base64": "0.0.5",
     "file-saver": "1.3.3",
-    "origin-web-common": "0.0.58",
+    "origin-web-common": "0.0.59",
     "origin-web-catalog": "0.0.49"
   },
   "devDependencies": {
