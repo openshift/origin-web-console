@@ -5625,7 +5625,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"service-binding-actions\" ng-if=\"!ctrl.binding.metadata.deletionTimestamp\">\n" +
     "<delete-link ng-if=\"({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'delete')\" label=\"Delete Binding\" kind=\"binding\" group=\"servicecatalog.k8s.io\" resource-name=\"{{$ctrl.binding.metadata.name}}\" project-name=\"{{$ctrl.binding.metadata.namespace}}\" stay-on-current-page=\"true\">\n" +
     "</delete-link>\n" +
-    "<a ng-if=\"('secrets' | canI : 'get')\" ng-href=\"{{$ctrl.binding.spec.secretName | navigateResourceURL : 'Secret' : $ctrl.namespace}}\">\n" +
+    "<a ng-if=\"('secrets' | canI : 'get') && ($ctrl.binding | isBindingReady)\" ng-href=\"{{$ctrl.binding.spec.secretName | navigateResourceURL : 'Secret' : $ctrl.namespace}}\">\n" +
     "View Secret\n" +
     "</a>\n" +
     "</div>\n" +
@@ -12409,10 +12409,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"component-label\">\n" +
     "Secret\n" +
     "</div>\n" +
-    "<a ng-if=\"('secrets' | canI : 'get')\" ng-href=\"{{binding.spec.secretName | navigateResourceURL : 'Secret' : row.apiObject.metadata.namespace}}\">\n" +
+    "<a ng-if=\"('secrets' | canI : 'get') && (binding | isBindingReady)\" ng-href=\"{{binding.spec.secretName | navigateResourceURL : 'Secret' : row.apiObject.metadata.namespace}}\">\n" +
     "{{binding.spec.secretName}}\n" +
     "</a>\n" +
-    "<span ng-if=\"!('secrets' | canI : 'get')\">\n" +
+    "<span ng-if=\"!('secrets' | canI : 'get') || !(binding | isBindingReady)\">\n" +
     "{{binding.spec.secretName}}\n" +
     "</span>\n" +
     "</h3>\n" +
