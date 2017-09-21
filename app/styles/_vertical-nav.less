@@ -31,21 +31,22 @@
     }
     &.active > a,
     &:focus > a,
-    &:hover > a {
+    &:hover > a,
+    > a:focus,
+    > a:hover {
       background-color: @nav-pf-vertical-active-bg-color;
+      color: @nav-pf-vertical-active-color;
       font-weight: 300;
+      &:after,
+      .fa,
+      .pficon {
+        color: @nav-pf-vertical-active-color;
+      }
     }
     &.active > a {
       .fa,
       .pficon {
         color: @nav-pf-vertical-active-icon-color !important;
-      }
-    }
-    &:focus > a,
-    &:hover > a {
-      .fa,
-      .pficon {
-        color: @nav-pf-vertical-active-color;
       }
     }
     > a {
@@ -76,6 +77,10 @@
         padding: 8px 0;
       }
     }
+    // make right arrow size consistent with project-bar arrows
+    &.secondary-nav-item-pf > a:after {
+      font-size: 14px;
+    }
   }
   &.collapsed {
     .list-group-item.secondary-nav-item-pf:hover,
@@ -94,15 +99,6 @@
   &.show-mobile-nav {
     box-shadow: 2px 0 3px rgba(3,3,3,.15);
     left: 0;
-  }
-  .list-group-item.secondary-nav-item-pf {
-    &:hover > a:after {
-      color: @nav-pf-vertical-active-color;
-    }
-    // right arrow alignment
-    > a:after {
-      font-size: 14px;
-    }
   }
   .nav-pf-secondary-nav {
     background: @nav-pf-vertical-active-bg-color;
@@ -126,9 +122,11 @@
       }
       > a {
         background: transparent;
+        &:focus,
         &:hover {
-          text-decoration: none;
           background: @nav-pf-vertical-secondary-hover-color;
+          color: @nav-pf-vertical-secondary-active-color;
+          text-decoration: none;
         }
       }
     }
