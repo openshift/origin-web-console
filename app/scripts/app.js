@@ -41,18 +41,18 @@ angular
       templateUrl: 'views/projects.html',
       controller: 'ProjectsController'
     };
-    if (_.get(window, 'OPENSHIFT_CONSTANTS.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page')) {
+    if (_.get(window, 'OPENSHIFT_CONSTANTS.DISABLE_SERVICE_CATALOG_LANDING_PAGE')) {
+      landingPageRoute = projectsPageRoute;
+      $routeProvider.when('/projects', {
+        redirectTo: '/'
+      });
+    } else {
       landingPageRoute = {
         templateUrl: 'views/landing-page.html',
         controller: 'LandingPageController',
         reloadOnSearch: false
       };
       $routeProvider.when('/projects', projectsPageRoute);
-    } else {
-      landingPageRoute = projectsPageRoute;
-      $routeProvider.when('/projects', {
-        redirectTo: '/'
-      });
     }
 
     $routeProvider
@@ -270,6 +270,16 @@ angular
       .when('/project/:project/browse/services/:service', {
         templateUrl: 'views/browse/service.html',
         controller: 'ServiceController',
+        reloadOnSearch: false
+      })
+      .when('/project/:project/browse/service-instances', {
+        templateUrl: 'views/service-instances.html',
+        controller: 'ServiceInstancesController',
+        reloadOnSearch: false
+      })
+      .when('/project/:project/browse/service-instances/:instance', {
+        templateUrl: 'views/browse/service-instance.html',
+        controller: 'ServiceInstanceController',
         reloadOnSearch: false
       })
       .when('/project/:project/browse/storage', {
@@ -495,15 +505,6 @@ angular
       // since iOS will treat the first tap as a hover if it changes the DOM
       // content (e.g. using :before pseudo-elements).
       $('body').addClass('ios');
-    }
-  })
-  .run(function($rootScope){
-    // if the service catalog landing page is enabled,
-    // set global variable for use in views
-    // and add class to body
-    if (_.get(window, 'OPENSHIFT_CONSTANTS.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page')) {
-      $rootScope.globalTechPreviewIndicator = true;
-      $('body').addClass('tech-preview');
     }
   });
 

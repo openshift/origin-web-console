@@ -1,0 +1,69 @@
+.add-config-to-application {
+  .catalogs-overlay-panel {
+    max-width: 600px;
+  }
+
+  .container-options {
+    margin-left: 20px;
+    .select-container {
+      max-height: 200px;
+      overflow-y: auto;
+      .checkbox:first-of-type {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .dialog-title {
+    border-bottom: 1px solid @color-pf-black-300;
+
+    h3 {
+      margin: 18px 0;
+      padding-left: 15px;
+    }
+  }
+
+  .dialog-body {
+    padding: 20px;
+
+    .add-choice {
+      margin-bottom: 10px;
+    }
+    .button-group {
+      .btn {
+        margin-left: 10px;
+        &:first-of-type {
+          margin-left: 0;
+        }
+      }
+    }
+    legend {
+      border-bottom: 0;
+      font-size:  @font-size-base + 1;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .radio {
+      margin-top: 0;
+    }
+  }
+
+  .env-warning {
+    margin-left: 20px;
+  }
+
+  .updating {
+    background-color: @color-pf-white;
+    bottom: 55px;
+    left: 0;
+    padding-top: 60px;
+    position: absolute;
+    right: 0;
+    top: 55px;
+    z-index: 1000;
+  }
+
+  .volume-options {
+    margin-left: 20px;
+  }
+}

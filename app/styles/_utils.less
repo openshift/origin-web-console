@@ -29,3 +29,12 @@
 .block {
   display: block;
 }
+
+// Keeps icon and text together inline
+// Wraps 2 spans <div class="text-prepended-icon"><span class="pficon fa ..."></span> <span class="word-break-all">EnableTextToWrap</span></div>
+// note: no need to add .fa-fw to icon
+.text-prepended-icon {
+  align-items: baseline; // align icon with text
+  display: flex;
+  .word-break;
+}

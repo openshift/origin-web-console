@@ -1,8 +1,14 @@
 language: node_js
 node_js:
-  - "4"
+  - "6"
 before_script:
-  - make build
+  - make build 
+  # FIXME:
+  # This needs to be enabled again when we eliminate PhantomJS for Firefox
+  # Even the unit tests require a browser
+  # - export DISPLAY=:99.0
+  # - sh -e /etc/init.d/xvfb start
+  # - sleep 3 # give xvfb some time to start
 script:
-  - grunt test --browsers=PhantomJS
+  - grunt test
   - hack/verify-dist.sh

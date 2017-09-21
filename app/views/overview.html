@@ -13,11 +13,11 @@
             image, or add components like databases and message queues.
           </p>
           <p class="gutter-top">
-            <a ng-if="!('service_catalog_landing_page' | enableTechPreviewFeature)" ng-href="project/{{projectName}}/create" class="btn btn-lg btn-primary">
-              Add to Project
-            </a>
-            <a ng-if="'service_catalog_landing_page' | enableTechPreviewFeature" ng-href="./" class="btn btn-lg btn-primary">
+            <a ng-if="overview.catalogLandingPageEnabled" href="./" class="btn btn-lg btn-primary">
               Browse Catalog
+            </a>
+            <a ng-if="!overview.catalogLandingPageEnabled" ng-href="project/{{projectName}}/create" class="btn btn-lg btn-primary">
+              Add to Project
             </a>
           </p>
         </div>
@@ -362,7 +362,7 @@
               </h2>
               <div class="list-pf">
                 <service-instance-row
-                  ng-repeat="serviceInstance in overview.filteredServiceInstances"
+                  ng-repeat="serviceInstance in overview.filteredServiceInstances track by (serviceInstance | uid)"
                   api-object="serviceInstance"
                   bindings="overview.bindingsByInstanceRef[serviceInstance.metadata.name]"
                   state="overview.state"></service-instance-row>

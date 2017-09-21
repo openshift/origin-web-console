@@ -13,10 +13,7 @@ angular.module('openshiftConsole')
     $scope.cliDownloadURL = Constants.CLI;
     $scope.cliDownloadURLPresent = $scope.cliDownloadURL && !_.isEmpty($scope.cliDownloadURL);
     $scope.loginBaseURL = DataService.openshiftAPIBaseUrl();
-    $scope.sessionToken = AuthService.UserStore().getToken();
-    $scope.showSessionToken = false;
-
-    $scope.toggleShowSessionToken = function() {
-      $scope.showSessionToken = !$scope.showSessionToken;
-    };
+    if (!Constants.DISABLE_COPY_LOGIN_COMMAND) {
+      $scope.sessionToken = AuthService.UserStore().getToken();
+    }
   });

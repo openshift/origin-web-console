@@ -44,6 +44,9 @@ angular.module('openshiftConsole')
       title: $routeParams.buildconfig
     });
 
+    $scope.buildConfigsVersion = APIService.getPreferredVersion('buildconfigs');
+    $scope.buildsVersion = APIService.getPreferredVersion('builds');
+
     $scope.emptyMessage = "Loading...";
 
     $scope.aceLoaded = function(editor) {
@@ -178,11 +181,11 @@ angular.module('openshiftConsole')
         $scope.project = project;
         requestContext = context;
         DataService
-          .get("buildconfigs", $routeParams.buildconfig, context, { errorNotification: false })
+          .get($scope.buildConfigsVersion, $routeParams.buildconfig, context, { errorNotification: false })
           .then(function(buildConfig) {
             buildConfigResolved(buildConfig);
             // If we found the item successfully, watch for changes on it
-            watches.push(DataService.watchObject("buildconfigs", $routeParams.buildconfig, context, buildConfigResolved));
+            watches.push(DataService.watchObject($scope.buildConfigsVersion, $routeParams.buildconfig, context, buildConfigResolved));
           },
           // failure
           function(e) {
@@ -195,7 +198,7 @@ angular.module('openshiftConsole')
           }
         );
 
-      watches.push(DataService.watch("builds", context, function(builds, action, build) {
+      watches.push(DataService.watch($scope.buildsVersion, context, function(builds, action, build) {
         $scope.emptyMessage = "No builds to show";
         if (!action) {
           $scope.unfilteredBuilds = BuildsService.validatedBuildsForBuildConfig($routeParams.buildconfig, builds.by('metadata.name'));

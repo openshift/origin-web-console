@@ -59,6 +59,7 @@ function OverviewController($scope,
   var DEFAULT_POLL_INTERVAL = 60 * 1000; // milliseconds
 
   $scope.projectName = $routeParams.project;
+  overview.catalogLandingPageEnabled = !Constants.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
 
   // Filters used by this controller.
   var annotation = $filter('annotation');
@@ -1040,11 +1041,10 @@ function OverviewController($scope,
     groupRecentBuildsByDeploymentConfig();
   };
 
-  var updateQuotaWarnings = function() {
-    ResourceAlertsService.setGenericQuotaWarning(state.quotas,
-                                                 state.clusterQuotas,
-                                                 $routeParams.project,
-                                                 state.alerts);
+  var setQuotaNotifications = function() {
+    ResourceAlertsService.setQuotaNotifications(state.quotas,
+                                                state.clusterQuotas,
+                                                $routeParams.project);
   };
 
   overview.clearFilter = function() {
@@ -1304,20 +1304,20 @@ function OverviewController($scope,
     // Always poll quotas instead of watching, its not worth the overhead of maintaining websocket connections
     watches.push(DataService.watch('resourcequotas', context, function(quotaData) {
       state.quotas = quotaData.by("metadata.name");
-      updateQuotaWarnings();
+      setQuotaNotifications();
     }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
 
     watches.push(DataService.watch('appliedclusterresourcequotas', context, function(clusterQuotaData) {
       state.clusterQuotas = clusterQuotaData.by("metadata.name");
-      updateQuotaWarnings();
+      setQuotaNotifications();
     }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
 
     var canI = $filter('canI');
     // The canI check on watch should be temporary until we have a different solution for handling secret parameters
-    if (CatalogService.SERVICE_CATALOG_ENABLED && canI({resource: 'instances', group: 'servicecatalog.k8s.io'}, 'watch')) {
+    if (CatalogService.SERVICE_CATALOG_ENABLED && canI({resource: 'serviceinstances', group: 'servicecatalog.k8s.io'}, 'watch')) {
       watches.push(DataService.watch({
         group: 'servicecatalog.k8s.io',
-        resource: 'instances'
+        resource: 'serviceinstances'
       }, context, function(serviceInstances) {
         state.serviceInstances = serviceInstances.by('metadata.name');
         _.each(state.serviceInstances, function(instance) {
@@ -1330,10 +1330,10 @@ function OverviewController($scope,
       }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
     }
 
-    if (CatalogService.SERVICE_CATALOG_ENABLED && canI({resource: 'bindings', group: 'servicecatalog.k8s.io'}, 'watch')) {
+    if (CatalogService.SERVICE_CATALOG_ENABLED && canI({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'}, 'watch')) {
       watches.push(DataService.watch({
         group: 'servicecatalog.k8s.io',
-        resource: 'bindings'
+        resource: 'serviceinstancecredentials'
       }, context, function(bindings) {
         state.bindings = bindings.by('metadata.name');
         overview.bindingsByInstanceRef = _.groupBy(state.bindings, 'spec.instanceRef.name');
@@ -1347,7 +1347,7 @@ function OverviewController($scope,
       state.limitRanges = response.by("metadata.name");
     });
 
-    if (CatalogService.SERVICE_CATALOG_ENABLED && canI({resource: 'instances', group: 'servicecatalog.k8s.io'}, 'watch')) {
+    if (CatalogService.SERVICE_CATALOG_ENABLED && canI({resource: 'serviceinstances', group: 'servicecatalog.k8s.io'}, 'watch')) {
       // TODO: update to behave like ImageStreamResolver
       // - we may not even need to list these... perhaps just fetch the ones we need when needed
       // If we can't watch instances don't bother getting service classes either

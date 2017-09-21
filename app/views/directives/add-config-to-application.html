@@ -5,7 +5,7 @@
   <div class="dialog-body">
     <form name="addToApplicationForm" novalidate>
       <fieldset ng-disabled="disableInputs">
-        <legend>Add this secret to application:</legend>
+        <legend>Add this {{ctrl.apiObject.kind | humanizeKind}} to application:</legend>
         <div class="form-group">
           <div class="application-select">
             <ui-select id="application" ng-model="ctrl.application" required="true" ng-disabled="ctrl.disableInputs">
@@ -23,21 +23,30 @@
             </ui-select>
           </div>
         </div>
-        <legend>Add secret as:</legend>
+        <legend>Add {{ctrl.apiObject.kind | humanizeKind}} as:</legend>
         <div class="form-group">
           <div class="radio">
-            <label class="add-choice" for="envFrom">
-              <input id="envFrom" type="radio" ng-model="ctrl.addType" value="env" ng-disabled="ctrl.disableInputs">
-              Environment variables
-            </label>
+            <div class="add-choice">
+              <label>
+                <input type="radio" ng-model="ctrl.addType" value="env" ng-disabled="ctrl.disableInputs">
+                Environment variables
+              </label>
+              <div class="alert alert-warning  env-warning" ng-show="ctrl.hasInvalidEnvVars">
+                <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
+                <span>Some of the keys for {{ctrl.apiObject.kind | humanizeKind}}
+                  <strong>{{ctrl.apiObject.metadata.name}}</strong> are not
+                  valid environment variable names and will not be
+                  added.</span>
+              </div>
+            </div>
             <div>
-              <label class="add-choice" for="mountVolume">
-                <input type="radio" ng-model="ctrl.addType" value="volume" ng-disabled="ctrl.disableInputs">
+              <label class="add-choice" for="volume">
+                <input id="volume" type="radio" ng-model="ctrl.addType" value="volume" ng-disabled="ctrl.disableInputs">
                 Volume
               </label>
             </div>
             <div class="volume-options">
-              <div ng-class="{'has-error': (addToApplicationForm.mountVolume.$error.pattern && addToApplicationForm.mountVolume.$touched)}">
+              <div ng-class="{'has-error': (addToApplicationForm.mountVolume.$error.oscUnique || (addToApplicationForm.mountVolume.$error.pattern && addToApplicationForm.mountVolume.$touched))}">
                 <input class="form-control"
                        name="mountVolume"
                        id="mountVolume"
@@ -54,14 +63,38 @@
                        spellcheck="false">
               </div>
               <div class="help-block bind-description">
-                Mount Path for the volume. A file will be created in this director for each key from the secret. The file contents will be the value of the key.
+                Mount Path for the volume. A file will be created in this
+                directory for each key from the {{ctrl.apiObject.kind | humanizeKind}}.
+                The file contents will be the value of the key.
               </div>
               <div class="has-error" ng-show="addToApplicationForm.mountVolume.$error.oscUnique">
-              <span class="help-block">
-                The mount path is already used. Please choose another mount path.
-              </span>
+                <span class="help-block">
+                  The mount path is already used. Please choose another mount path.
+                </span>
+              </div>
+              <div class="has-error" ng-show="addToApplicationForm.mountVolume.$error.pattern && addToApplicationForm.mountVolume.$touched">
+                <span class="help-block">
+                  Mount path must be a valid path to a directory starting with <code>/</code>.
+                </span>
               </div>
             </div>
+          </div>
+        </div>
+        <legend ng-if-start="ctrl.application.spec.template.spec.containers.length > 1">Containers:</legend>
+        <div ng-if-end class="form-group container-options">
+          <div ng-if="ctrl.attachAllContainers">
+            The {{ctrl.apiObject.kind | humanizeKind}} will be added to all containers. You can
+            <a href="" ng-click="ctrl.attachAllContainers = false">select specific containers</a>
+            instead.
+          </div>
+          <div ng-if="!ctrl.attachAllContainers" class="form-group">
+            <label class="sr-only required">Containers</label>
+            <select-containers
+              ng-model="ctrl.attachContainers"
+              pod-template="ctrl.application.spec.template"
+              ng-required="true"
+              help-text="Add the {{ctrl.apiObject.kind | humanizeKind}} to the selected containers.">
+            </select-containers>
           </div>
         </div>
         <div class="button-group pull-right">

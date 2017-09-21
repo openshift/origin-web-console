@@ -23,6 +23,7 @@
     var ctrl = this;
     var validityWatcher;
     var context;
+    var enableTechPreviewFeature = $filter('enableTechPreviewFeature');
     var serviceInstanceDisplayName = $filter('serviceInstanceDisplayName');
 
     var unbindService = function() {
@@ -33,7 +34,7 @@
       ctrl.unboundApps = ctrl.appsForBinding(bindingName);
       DataService.delete({
         group: 'servicecatalog.k8s.io',
-        resource: 'bindings'
+        resource: 'serviceinstancecredentials'
       },
       bindingName,
       context,
@@ -77,7 +78,12 @@
     };
 
     ctrl.$onInit = function() {
-      var formStepLabel = (ctrl.target.kind === 'Instance') ? 'Applications' : 'Services';
+      var formStepLabel;
+      if (ctrl.target.kind === 'ServiceInstance') {
+        formStepLabel = enableTechPreviewFeature('pod_presets') ? 'Applications' : 'Bindings';
+      } else {
+        formStepLabel = 'Services';
+      }
       ctrl.displayName = serviceInstanceDisplayName(ctrl.target);
       ctrl.steps = [{
         id: 'deleteForm',

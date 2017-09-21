@@ -47,7 +47,7 @@
       <div ng-view class="view">
         <div class="middle">
           <div class="middle-content">
-            <div class="empty-state-message">
+            <div class="empty-state-message loading">
               <h2 class="text-center" id="temporary-loading-message" style="display: none;">Loading...</h2>
               <!-- So that we don't get the Loading... message AND the noscript message -->
               <script>
@@ -224,6 +224,7 @@
         <script src="scripts/services/resourceAlerts.js"></script>
         <script src="scripts/services/listRowUtils.js"></script>
         <script src="scripts/services/ownerReferences.js"></script>
+        <script src="scripts/services/serviceInstances.js"></script>
         <script src="scripts/controllers/landingPage.js"></script>
         <script src="scripts/services/events.js"></script>
         <script src="scripts/controllers/projects.js"></script>
@@ -248,6 +249,8 @@
         <script src="scripts/controllers/statefulSet.js"></script>
         <script src="scripts/controllers/services.js"></script>
         <script src="scripts/controllers/service.js"></script>
+        <script src="scripts/controllers/serviceInstances.js"></script>
+        <script src="scripts/controllers/serviceInstance.js"></script>
         <script src="scripts/controllers/secrets.js"></script>
         <script src="scripts/controllers/secret.js"></script>
         <script src="scripts/controllers/createSecret.js"></script>
@@ -328,7 +331,7 @@
         <script src="scripts/directives/labels.js"></script>
         <script src="scripts/directives/lifecycleHook.js"></script>
         <script src="scripts/directives/actionChip.js"></script>
-        <script src="scripts/directives/addSecretToApplication.js"></script>
+        <script src="scripts/directives/addConfigToApplication.js"></script>
         <script src="scripts/directives/templateopt.js"></script>
         <script src="scripts/directives/tasks.js"></script>
         <script src="scripts/directives/catalog.js"></script>
@@ -359,6 +362,7 @@
         <script src="scripts/directives/fromFileDialog.js"></script>
         <script src="scripts/directives/create/nextSteps.js"></script>
         <script src="scripts/directives/imageNames.js"></script>
+        <script src="scripts/directives/serviceBinding.js"></script>
 
         <!-- New Overview -->
         <script src="scripts/directives/buildCounts.js"></script>
@@ -371,7 +375,6 @@
         <script src="scripts/directives/overview/networking.js"></script>
         <script src="scripts/directives/overview/pipelines.js"></script>
         <script src="scripts/directives/overview/serviceBindings.js"></script>
-        <script src="scripts/directives/overview/serviceBinding.js"></script>
 
         <script src="scripts/directives/istagSelect.js"></script>
         <script src="scripts/directives/deployImage.js"></script>

@@ -2,7 +2,7 @@
 
 const h = require('../helpers');
 const projectHelpers = require('../helpers/project');
-const OverviewPage = require('../page-objects/overview').OverviewPage;
+const CatalogPage = require('../page-objects/catalog').CatalogPage;
 const CreateProjectPage = require('../page-objects/createProject').CreateProjectPage;
 const DeploymentsPage = require('../page-objects/deployments').DeploymentsPage;
 const ServicesPage = require('../page-objects/services').ServicesPage;
@@ -28,9 +28,8 @@ describe('User adds a template to a project', () => {
         let createProjectPage = new CreateProjectPage(project);
         createProjectPage.visit();
         createProjectPage.createProject();
-        let overviewPage = new OverviewPage(project);
-        overviewPage.visit();
-        let catalogPage = overviewPage.clickAddToProject();   // implicit redirect to catalog page
+        let catalogPage = new CatalogPage(project);
+        catalogPage.visit();
         catalogPage
           .processTemplate(JSON.stringify(nodeMongoTemplate))
           .then((createFromTemplatePage) => {
@@ -60,18 +59,16 @@ describe('User adds a template to a project', () => {
         let createProjectPage = new CreateProjectPage(project);
         createProjectPage.visit();
         createProjectPage.createProject();
-        let overviewPage = new OverviewPage(project);
-        overviewPage.visit();
-        let catalogPage = overviewPage.clickAddToProject();   // implicit redirect to catalog page
+        let catalogPage = new CatalogPage(project);
+        catalogPage.visit();
         catalogPage
           .saveTemplate(JSON.stringify(nodeMongoTemplate))
-          .then((overview2) => {
-            let cat2 = overview2.clickAddToProject();   // implicit redirect to catalog page
+          .then(() => {
             // once the template processes, we just have to return
             // to the catalog and verify the tile exists
-            cat2.visit();
-            cat2.clickCategory('JavaScript'); // TODO: pass in the tile name from the template fixture
-            cat2.findTileBy('Node.js + MongoDB (Ephemeral)', project.name); // TODO: pass in...
+            catalogPage.visit();
+            catalogPage.clickCategory('JavaScript'); // TODO: pass in the tile name from the template fixture
+            catalogPage.findTileBy('Node.js + MongoDB (Ephemeral)', project.name); // TODO: pass in...
             expect(element).toBeTruthy();
           });
       });

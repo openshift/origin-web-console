@@ -29,10 +29,12 @@ angular.module("openshiftConsole")
     };
 
     var decodeDockercfg = function(encodedData) {
-      var decodedSecretData = {};
+      var decodedSecretData = {
+        auths: {}
+      };
       var decodedData = JSON.parse(window.atob(encodedData));
       _.each(decodedData, function(data, serverName) {
-        decodedSecretData[serverName] = {
+        decodedSecretData.auths[serverName] = {
           username: data.username,
           password: data.password,
           email: data.email
@@ -42,16 +44,28 @@ angular.module("openshiftConsole")
     };
 
     var decodeDockerconfigjson = function(encodedData) {
-      var decodedSecretData = {};
+      var decodedSecretData = {
+        auths: {}
+      };
       var decodedData = JSON.parse(window.atob(encodedData));
       _.each(decodedData.auths, function(data, serverName) {
+        if (!data.auth) {
+          decodedSecretData.auths[serverName] = data;
+          return;
+        }
+
         var usernamePassword = window.atob(data.auth).split(":");
-        decodedSecretData[serverName] = {
+        decodedSecretData.auths[serverName] = {
           username: usernamePassword[0],
           password: usernamePassword[1],
           email: data.email
         };
       });
+
+      if (decodedData.credsStore) {
+        decodedSecretData.credsStore = decodedData.credsStore;
+      }
+
       return decodedSecretData;
     };
 

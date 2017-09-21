@@ -3,7 +3,12 @@
     <div class="col-sm-5 col-md-6">
       <h3 ng-if="$ctrl.serviceClass">
         <span ng-if="$ctrl.serviceClass">
-          {{$ctrl.serviceClass.externalMetadata.displayName || $ctrl.serviceClass.metadata.name}}
+          <span ng-if="$ctrl.refApiObject.kind !== 'Instance'">
+            {{$ctrl.serviceClass.externalMetadata.displayName || $ctrl.serviceClass.metadata.name}}
+          </span>
+          <span ng-if="$ctrl.refApiObject.kind === 'Instance'">
+            {{$ctrl.binding.spec.secretName}}
+          </span>
         </span>
         <span ng-if="!$ctrl.serviceClass">
           {{$ctrl.binding.spec.instanceRef.name}}
@@ -12,13 +17,17 @@
         <small>created <span am-time-ago="$ctrl.binding.metadata.creationTimestamp"></span></small>
       </h3>
     </div>
-    <div class="col-sm-7 col-md-6" ng-if="!($ctrl.binding | isBindingReady)">
+    <div class="col-sm-7 col-md-6" ng-if="$ctrl.binding.metadata.deletionTimestamp">
+      <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
+      Marked for Deletion
+    </div>
+    <div class="col-sm-7 col-md-6" ng-if="!$ctrl.binding.metadata.deletionTimestamp && !($ctrl.binding | isBindingReady)">
       <status-icon status="'Pending'"></status-icon>Pending
     </div>
   </div>
   <div class="service-binding-actions" ng-if="!ctrl.binding.metadata.deletionTimestamp">
     <delete-link
-      ng-if="({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'delete')"
+      ng-if="({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'delete')"
       label="Delete Binding"
       kind="binding"
       group="servicecatalog.k8s.io"

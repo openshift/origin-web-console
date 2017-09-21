@@ -93,6 +93,12 @@ exports.waitForPresence = function(selector, elementText, timeout, callback) {
     });
 };
 
+var waitForVisibility = function(elem, timeout) {
+  return browser.wait(EC.visibilityOf(elem), timeout || 5000, 'Element not visible: ' + elem.locator().toString());
+};
+exports.waitForVisibility = waitForVisibility;
+
+
 exports.goToPage = function(uri) {
   return browser.get(uri).then(() => {
     return waitForUri(uri);

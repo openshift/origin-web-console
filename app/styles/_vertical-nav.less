@@ -35,21 +35,20 @@
       background-color: @nav-pf-vertical-active-bg-color;
       font-weight: 300;
     }
+    &.active > a {
+      .fa,
+      .pficon {
+        color: @nav-pf-vertical-active-icon-color !important;
+      }
+    }
     &:focus > a,
     &:hover > a {
-      .pficon,
-      .fa {
+      .fa,
+      .pficon {
         color: @nav-pf-vertical-active-color;
       }
     }
-    &.active > a {
-      .pficon,
-      .fa {
-        color: @nav-pf-vertical-active-icon-color;
-      }
-    }
-    > a,
-    > a:focus {
+    > a {
       font-size: @font-size-base;
       font-weight: 300;
       text-decoration: none;
@@ -57,7 +56,8 @@
         height: auto;
         padding: 10px 15px;
       }
-      .fa, .pficon {
+      .fa,
+      .pficon {
         color: @nav-pf-vertical-icon-color;
         font-size: (@font-size-base + 2);
         @media(min-width: @screen-sm-min) {

@@ -111,6 +111,24 @@ angular.module('openshiftConsole')
     });
 
     function dataLoaded() {
+      // Check for a service class param to launch the catalog flow for
+      var paramClass = $location.search()['serviceClass'];
+      if (paramClass) {
+        // Search by class name e.g. cakephp-mysql-persistent
+        var paramItem = _.find($scope.catalogItems, {
+          resource: {
+            metadata: {
+              name: paramClass
+            }
+          }
+        });
+        // If a catalog item matches, lauch the catalog flow
+        if (paramItem) {
+          $scope.$broadcast('open-overlay-panel', paramItem);
+          return;
+        }
+      }
+
       if (!tourEnabled) {
         return;
       }

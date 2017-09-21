@@ -99,7 +99,6 @@
                       </div>
                       <div class="list-view-pf-additional-info">
                         <div class="list-view-pf-additional-info-item">
-                          <span class="pficon fa-fw pficon-image"></span>
                           <image-names pod-template="pod" pods="[pod]"></image-names>
                         </div>
                       </div>
@@ -186,7 +185,6 @@
                       </div>
                       <div class="list-view-pf-additional-info">
                         <div class="list-view-pf-additional-info-item">
-                          <span class="pficon fa-fw pficon-image"></span>
                           <image-names
                               pod-template="replicationController.spec.template"
                               pods="podsByOwnerUID[replicationController.metadata.uid]">
@@ -248,7 +246,6 @@
                       </div>
                       <div class="list-view-pf-additional-info">
                         <div class="list-view-pf-additional-info-item">
-                          <span class="pficon fa-fw pficon-image"></span>
                           <image-names
                               pod-template="replicaSet.spec.template"
                               pods="podsByOwnerUID[replicaSet.metadata.uid]">
@@ -319,7 +316,6 @@
                       </div>
                       <div class="list-view-pf-additional-info">
                         <div class="list-view-pf-additional-info-item">
-                          <span class="pficon fa-fw pficon-image"></span>
                           <image-names pod-template="set.spec.template" pods="podsByOwnerUID[set.metadata.uid]"></image-names>
                         </div>
                       </div>
@@ -383,8 +379,8 @@
                       </div>
                       <div class="list-view-pf-additional-info">
                         <div class="list-view-pf-additional-info-item">
-                          <span ng-if="build.spec.source.type || build.spec.revision.git.commit || build.spec.source.git.uri">
-                            <span class="fa fa-fw fa-code"></span>
+                          <div class="text-prepended-icon word-break" ng-if="build.spec.source.type || build.spec.revision.git.commit || build.spec.source.git.uri">
+                            <span class="fa fa-code" aria-hidden="true"></span>
                             <span ng-if="build.spec.revision.git.commit">
                               {{build.spec.revision.git.message}}
                               <osc-git-link
@@ -401,7 +397,7 @@
                             <span ng-if="build.spec.source.type && !build.spec.source.git">
                               Source: {{build.spec.source.type}}
                             </span>
-                          </span>
+                          </div>
                         </div>
                       </div>
                     </div>

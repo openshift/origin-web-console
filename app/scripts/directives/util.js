@@ -103,6 +103,54 @@ angular.module('openshiftConsole')
       }
     };
   })
+  .directive('copyLoginToClipboard', function(AlertMessageService, NotificationsService) {
+    return {
+      restrict: 'E',
+      replace: true,
+      scope: {
+        clipboardText: "="
+      },
+      template: '<a href="" data-clipboard-text="">Copy Login Command</a>',
+      link: function($scope, element) {
+        var clipboard = new Clipboard( element.get(0) );
+        clipboard.on('success', function () {
+          NotificationsService.addNotification({
+            id: 'copy-login-command-success',
+            type: 'success',
+            message: 'Login command copied.'
+          });
+
+          var tokenWarningAlertID = 'openshift/token-warning';
+          if (!AlertMessageService.isAlertPermanentlyHidden(tokenWarningAlertID)) {
+            NotificationsService.addNotification({
+              id: tokenWarningAlertID,
+              type: 'warning',
+              message: 'A token is a form of a password. Do not share your API token.',
+              links: [{
+                href: "",
+                label: "Don't Show Me Again",
+                onClick: function() {
+                  AlertMessageService.permanentlyHideAlert(tokenWarningAlertID);
+                  // Return true close the existing alert.
+                  return true;
+                }
+              }]
+            });
+          }
+        });
+        clipboard.on('error', function () {
+          NotificationsService.addNotification({
+            id: 'copy-login-command-error',
+            type: 'error',
+            message: 'Unable to copy the login command.'
+          });
+        });
+        element.on('$destroy', function() {
+          clipboard.destroy();
+        });
+      }
+    };
+  })
   .directive('shortId', function() {
     return {
       restrict:'E',

@@ -1328,4 +1328,44 @@ angular.module('openshiftConsole')
       var serviceClassDisplayName = _.get(serviceClasses, [serviceClassName, 'externalMetadata', 'displayName']);
       return serviceClassDisplayName || serviceClassName || instanceName;
     };
+  })
+  .filter('serviceInstanceStatus', function(isServiceInstanceReadyFilter) {
+    return function(instance) {
+      var status = 'Pending';
+      var conditions = _.get(instance, 'status.conditions');
+      var instanceError = _.find(conditions, {type: 'Failed', status: 'True'});
+
+      if (instanceError) {
+        status = 'Failed';
+      } else if (isServiceInstanceReadyFilter(instance)) {
+        status = 'Ready';
+      }
+
+      return status;
+    };
+  })
+  .filter('readyConditionMessage', function(statusConditionFilter) {
+    return function(instance) {
+      return _.get(statusConditionFilter(instance, 'Ready'), 'message');
+    };
+  })
+  .filter('failedConditionMessage', function(statusConditionFilter) {
+    return function(instance) {
+      return _.get(statusConditionFilter(instance, 'Failed'), 'message');
+    };
+  })
+  .filter('serviceInstanceConditionMessage', function(serviceInstanceStatusFilter, statusConditionFilter) {
+    return function(instance) {
+      var serviceInstanceStatus = serviceInstanceStatusFilter(instance);
+      var serviceInstanceMessage = null;
+
+      switch(serviceInstanceStatus) {
+        case 'Failed':
+        case 'Ready':
+          serviceInstanceMessage = _.get(statusConditionFilter(instance, serviceInstanceStatus), 'message');
+          break;
+      }
+
+      return serviceInstanceMessage;
+    };
   });

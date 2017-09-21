@@ -15,7 +15,7 @@
     <pf-wizard-step ng-repeat="step in $ctrl.steps track by step.id"
          step-title="{{step.label}}"
          wz-disabled="{{step.hidden}}"
-         allow-click-nav="step.allowed"
+         allow-click-nav="step.allowClickNav"
          next-enabled="step.valid"
          prev-enabled="step.prevEnabled"
          on-show="step.onShow"

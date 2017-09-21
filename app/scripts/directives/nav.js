@@ -257,7 +257,7 @@ angular.module('openshiftConsole')
           _.set($scope, 'ordering.panelName', panelName);
         };
 
-        $scope.catalogLandingPageEnabled = _.get(Constants, 'ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page');
+        $scope.catalogLandingPageEnabled = !Constants.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
         var select = $elem.find('.selectpicker');
         var options = [];
 
@@ -288,14 +288,14 @@ angular.module('openshiftConsole')
               return makeOption(project, false);
             });
           } else {
-            // Show the current project and a "View all Projects" link.
+            // Show the current project and a "View All Projects" link.
             options = [ makeOption(projects[name], true) ];
           }
 
           select.empty();
           select.append(options);
           select.append($('<option data-divider="true"></option>'));
-          select.append($('<option value="">View all Projects</option>'));
+          select.append($('<option value="">View All Projects</option>'));
           select.selectpicker('refresh');
         };
 
@@ -305,7 +305,7 @@ angular.module('openshiftConsole')
           });
         };
 
-        $scope.$on('$routeChangeSuccess', function() {
+        var onRouteChange = function() {
           var currentProjectName = $routeParams.project;
           if ($scope.currentProjectName === currentProjectName) {
             // The project hasn't changed.
@@ -353,7 +353,14 @@ angular.module('openshiftConsole')
           } else {
             _.set($rootScope, 'view.hasProject', false);
           }
-        });
+        };
+
+        // Make sure `onRouteChange` gets called on page load, even if
+        // `$routeChangeSuccess` doesn't fire. `onRouteChange` doesn't do any
+        // work if the project name hasn't changed, so there's no penalty if it
+        // gets called twice. This fixes a flake in our integration tests.
+        onRouteChange();
+        $scope.$on('$routeChangeSuccess', onRouteChange);
 
         select
           .selectpicker({

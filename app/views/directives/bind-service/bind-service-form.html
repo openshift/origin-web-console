@@ -1,4 +1,4 @@
-<div ng-if="ctrl.target.kind !== 'Instance'">
+<div ng-if="ctrl.target.kind !== 'ServiceInstance'">
   <bind-application-form application-name="ctrl.target.metadata.name"
                          form-name="ctrl.selectionForm"
                          service-classes="ctrl.serviceClasses"
@@ -6,7 +6,7 @@
                          service-to-bind="ctrl.serviceToBind">
   </bind-application-form>
 </div>
-<div ng-if="ctrl.target.kind === 'Instance'">
+<div ng-if="ctrl.target.kind === 'ServiceInstance'">
   <bind-service-form selected-project="ctrl.project"
                      service-class="ctrl.serviceClass"
                      service-class-name="ctrl.serviceClassName"

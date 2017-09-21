@@ -5,6 +5,7 @@
     controller: [
       '$scope',
       '$filter',
+      'ApplicationsService',
       'DataService',
       'BindingService',
       BindService
@@ -20,6 +21,7 @@
 
   function BindService($scope,
                        $filter,
+                       ApplicationsService,
                        DataService,
                        BindingService) {
     var ctrl = this;
@@ -59,20 +61,6 @@
       }
     };
 
-    var deploymentConfigs, deployments, replicationControllers, replicaSets, statefulSets;
-    var sortApplications = function() {
-      // Don't waste time sorting on each data load, just sort when we have them all
-      if (deploymentConfigs && deployments && replicationControllers && replicaSets && statefulSets) {
-        var apiObjects =  [].concat(deploymentConfigs)
-                            .concat(deployments)
-                            .concat(replicationControllers)
-                            .concat(replicaSets)
-                            .concat(statefulSets);
-        ctrl.applications = _.sortBy(apiObjects, ['metadata.name', 'kind']);
-        ctrl.bindType = ctrl.applications.length ? "application" : "secret-only";
-      }
-    };
-
     var showBind = function() {
       ctrl.nextTitle = bindParametersStep.hidden ? 'Bind' : 'Next >';
       if (ctrl.podPresets && !selectionValidityWatcher) {
@@ -106,41 +94,13 @@
       ctrl.bindService();
     };
 
-
     var loadApplications = function() {
       var context = {
         namespace: _.get(ctrl.target, 'metadata.namespace')
       };
-
-      // Load all the "application" types
-      DataService.list('deploymentconfigs', context).then(function(deploymentConfigData) {
-        deploymentConfigs = _.toArray(deploymentConfigData.by('metadata.name'));
-        sortApplications();
-      });
-      DataService.list('replicationcontrollers', context).then(function(replicationControllerData) {
-        replicationControllers = _.reject(replicationControllerData.by('metadata.name'), $filter('hasDeploymentConfig'));
-        sortApplications();
-      });
-      DataService.list({
-        group: 'apps',
-        resource: 'deployments'
-      }, context).then(function(deploymentData) {
-        deployments = _.toArray(deploymentData.by('metadata.name'));
-        sortApplications();
-      });
-      DataService.list({
-        group: 'extensions',
-        resource: 'replicasets'
-      }, context).then(function(replicaSetData) {
-        replicaSets = _.reject(replicaSetData.by('metadata.name'), $filter('hasDeployment'));
-        sortApplications();
-      });
-      DataService.list({
-        group: 'apps',
-        resource: 'statefulsets'
-      }, context).then(function(statefulSetData) {
-        statefulSets = _.toArray(statefulSetData.by('metadata.name'));
-        sortApplications();
+      ApplicationsService.getApplications(context).then(function(applications) {
+        ctrl.applications = applications;
+        ctrl.bindType = ctrl.applications.length ? "application" : "secret-only";
       });
     };
 
@@ -151,7 +111,7 @@
 
       DataService.list({
         group: 'servicecatalog.k8s.io',
-        resource: 'instances'
+        resource: 'serviceinstances'
       }, context).then(function(instances) {
         ctrl.serviceInstances = instances.by('metadata.name');
         sortServiceInstances();
@@ -163,6 +123,7 @@
       label: 'Binding',
       view: 'views/directives/bind-service/bind-service-form.html',
       valid: true,
+      allowClickNav: true,
       onShow: showBind
     };
 
@@ -171,6 +132,7 @@
       label: 'Parameters',
       view: 'views/directives/bind-service/bind-parameters.html',
       hidden: true,
+      allowClickNav: true,
       onShow: showParameters
     };
 
@@ -179,6 +141,7 @@
       label: 'Results',
       view: 'views/directives/bind-service/results.html',
       valid: true,
+      allowClickNav: false,
       onShow: showResults
     };
 
@@ -187,7 +150,7 @@
         return;
       }
 
-      var instance = ctrl.target.kind === 'Instance' ? ctrl.target : ctrl.serviceToBind;
+      var instance = ctrl.target.kind === 'ServiceInstance' ? ctrl.target : ctrl.serviceToBind;
       if (!instance) {
         return;
       }
@@ -195,7 +158,7 @@
       ctrl.serviceClass = ctrl.serviceClasses[instance.spec.serviceClassName];
       ctrl.serviceClassName = instance.spec.serviceClassName;
       ctrl.plan = BindingService.getPlanForInstance(instance, ctrl.serviceClass);
-      ctrl.parameterSchema = _.get(ctrl.plan, 'alphaBindingCreateParameterSchema');
+      ctrl.parameterSchema = _.get(ctrl.plan, 'serviceInstanceCredentialCreateParameterSchema');
       bindParametersStep.hidden = !_.has(ctrl.parameterSchema, 'properties');
       ctrl.nextTitle = bindParametersStep.hidden ? 'Bind' : 'Next >';
     };
@@ -220,7 +183,7 @@
         sortServiceInstances();
       });
 
-      if (ctrl.target.kind === 'Instance') {
+      if (ctrl.target.kind === 'ServiceInstance') {
         ctrl.bindType = "secret-only";
         ctrl.appToBind = null;
         ctrl.serviceToBind = ctrl.target;
@@ -256,7 +219,7 @@
     };
 
     ctrl.bindService = function() {
-      var svcToBind = ctrl.target.kind === 'Instance' ? ctrl.target : ctrl.serviceToBind;
+      var svcToBind = ctrl.target.kind === 'ServiceInstance' ? ctrl.target : ctrl.serviceToBind;
       var application = ctrl.bindType === 'application' ? ctrl.appToBind : undefined;
 
       var context = {
