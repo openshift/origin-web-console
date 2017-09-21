@@ -35,7 +35,7 @@
       project-name="{{$ctrl.binding.metadata.namespace}}"
       stay-on-current-page="true">
     </delete-link>
-    <a ng-if="('secrets' | canI : 'get')" ng-href="{{$ctrl.binding.spec.secretName | navigateResourceURL : 'Secret' : $ctrl.namespace}}">
+    <a ng-if="('secrets' | canI : 'get') && ($ctrl.binding | isBindingReady)" ng-href="{{$ctrl.binding.spec.secretName | navigateResourceURL : 'Secret' : $ctrl.namespace}}">
       View Secret
     </a>
   </div>

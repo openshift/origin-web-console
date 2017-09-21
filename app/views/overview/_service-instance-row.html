@@ -142,11 +142,11 @@
                   <div class="component-label">
                     Secret
                   </div>
-                  <a ng-if="('secrets' | canI : 'get')"
+                  <a ng-if="('secrets' | canI : 'get') && (binding | isBindingReady)"
                      ng-href="{{binding.spec.secretName | navigateResourceURL : 'Secret' : row.apiObject.metadata.namespace}}">
                     {{binding.spec.secretName}}
                   </a>
-                  <span ng-if="!('secrets' | canI : 'get')">
+                  <span ng-if="!('secrets' | canI : 'get') || !(binding | isBindingReady)">
                     {{binding.spec.secretName}}
                   </span>
                 </h3>
