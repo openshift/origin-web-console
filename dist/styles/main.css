@@ -4548,6 +4548,7 @@ body{padding-right:0px!important}
 .nav-tabs>li>a:before{left:0!important}
 .nav-tabs{margin-bottom:20px}
 .resource-details h3{border-bottom:1px solid #eee;padding-bottom:10px}
+.resource-details overlay-panel h3{border-bottom:0;padding-bottom:0}
 .empty-state-message{margin:40px auto 60px;max-width:600px;padding:0}
 .empty-state-message.loading{margin:0 auto;padding:40px 0 60px}
 .empty-state-message.loading h2{margin-top:0}
