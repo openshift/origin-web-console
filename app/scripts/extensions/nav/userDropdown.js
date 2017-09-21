@@ -8,7 +8,10 @@ angular.module('openshiftConsole')
         if (!_.get(window, 'OPENSHIFT_CONSTANTS.DISABLE_COPY_LOGIN_COMMAND')) {
           items.push({
             type: 'dom',
-            node: '<li><copy-login-to-clipboard clipboard-text="\'oc login ' + DataService.openshiftAPIBaseUrl() + ' --token=' + AuthService.UserStore().getToken() + '\'"></copy-login-to-clipboard></li>'
+            node: '<li><copy-login-to-clipboard clipboard-text="oc login ' +
+                  _.escape(DataService.openshiftAPIBaseUrl()) +
+                  ' --token=' +
+                  _.escape(AuthService.UserStore().getToken()) + '"></copy-login-to-clipboard></li>'
           });
         }
 

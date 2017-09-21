@@ -10566,23 +10566,23 @@ r.destroy();
 });
 }
 };
-}).directive("copyLoginToClipboard", [ "AlertMessageService", "NotificationsService", function(e, t) {
+}).directive("copyLoginToClipboard", [ "NotificationsService", function(e) {
 return {
 restrict: "E",
 replace: !0,
 scope: {
-clipboardText: "="
+clipboardText: "@"
 },
 template: '<a href="" data-clipboard-text="">Copy Login Command</a>',
-link: function(n, a) {
-var r = new Clipboard(a.get(0));
-r.on("success", function() {
-t.addNotification({
+link: function(t, n) {
+var a = new Clipboard(n.get(0));
+a.on("success", function() {
+e.addNotification({
 id: "copy-login-command-success",
 type: "success",
 message: "Login command copied."
 });
-e.isAlertPermanentlyHidden("openshift/token-warning") || t.addNotification({
+e.addNotification({
 id: "openshift/token-warning",
 type: "warning",
 message: "A token is a form of a password. Do not share your API token.",
@@ -10590,18 +10590,18 @@ links: [ {
 href: "",
 label: "Don't Show Me Again",
 onClick: function() {
-return e.permanentlyHideAlert("openshift/token-warning"), !0;
+return e.permanentlyHideNotification("openshift/token-warning"), !0;
 }
 } ]
 });
-}), r.on("error", function() {
-t.addNotification({
+}), a.on("error", function() {
+e.addNotification({
 id: "copy-login-command-error",
 type: "error",
 message: "Unable to copy the login command."
 });
-}), a.on("$destroy", function() {
-r.destroy();
+}), n.on("$destroy", function() {
+a.destroy();
 });
 }
 };
@@ -15693,7 +15693,7 @@ e.add("nav-user-dropdown", function() {
 var e = [];
 _.get(window, "OPENSHIFT_CONSTANTS.DISABLE_COPY_LOGIN_COMMAND") || e.push({
 type: "dom",
-node: "<li><copy-login-to-clipboard clipboard-text=\"'oc login " + n.openshiftAPIBaseUrl() + " --token=" + a.UserStore().getToken() + "'\"></copy-login-to-clipboard></li>"
+node: '<li><copy-login-to-clipboard clipboard-text="oc login ' + _.escape(n.openshiftAPIBaseUrl()) + " --token=" + _.escape(a.UserStore().getToken()) + '"></copy-login-to-clipboard></li>'
 });
 var r = "Log Out";
 return t.user.fullName && t.user.fullName !== t.user.metadata.name && (r += " (" + t.user.metadata.name + ")"), e.push({
