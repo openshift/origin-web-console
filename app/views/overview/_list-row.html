@@ -13,7 +13,7 @@
     <div ng-include src=" 'views/overview/_list-row-expanded.html' "></div>
   </div>
 </div>
-<overlay-panel single-column="true" show-panel="row.overlay.panelVisible" show-close="true" handle-close="row.closeOverlayPanel">
+<overlay-panel show-panel="row.overlay.panelVisible" handle-close="row.closeOverlayPanel">
   <div ng-if="row.overlay.panelName === 'bindService'">
     <bind-service target="row.overlay.state.target"
                   project="row.state.project"

@@ -1,6 +1,6 @@
 <div class="order-service">
   <pf-wizard
-       hide-header="true"
+       title="{{!$ctrl.useProjectTemplate && ($ctrl.template | displayName) || 'Select from Project'}}"
        hide-sidebar="true"
        hide-back-button="!$ctrl.useProjectTemplate"
        step-class="order-service-wizard-step"
@@ -22,29 +22,7 @@
          step-id="{{step.id}}"
          step-priority="{{$index}}">
       <div class="wizard-pf-main-inner-shadow-covers">
-        <div class="order-service-details" ng-if="!$ctrl.selectStep.selected">
-          <div class="order-service-details-top">
-            <div class="service-icon">
-              <span class="icon {{$ctrl.iconClass}}"></span>
-            </div>
-            <div class="service-title-area">
-              <div class="service-title">
-                {{$ctrl.template | displayName}}
-              </div>
-              <div class="order-service-tags">
-                <span ng-repeat="tag in $ctrl.template.metadata.annotations.tags.split(',')" class="tag">
-                  {{tag}}
-                </span>
-              </div>
-            </div>
-          </div>
-          <div class="order-service-description-block">
-            <p ng-bind-html="$ctrl.template | description | linky : '_blank'" class="description"></p>
-          </div>
-        </div>
-        <div class="order-service-config" ng-class="{'order-service-config-single-column': $ctrl.selectStep.selected}">
-          <div ng-if="step.selected" ng-include="step.view" class="wizard-pf-main-form-contents"></div>
-        </div>
+        <div ng-if="step.selected" ng-include="step.view" class="wizard-pf-main-form-contents"></div>
       </div>
     </pf-wizard-step>
   </pf-wizard>

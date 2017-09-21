@@ -24,7 +24,7 @@
     <span>There are no service bindings.</span>
   </div>
 </div>
-<overlay-panel single-column="true" show-panel="$ctrl.overlayPanelVisible" show-close="true" handle-close="$ctrl.closeOverlayPanel">
+<overlay-panel show-panel="$ctrl.overlayPanelVisible" handle-close="$ctrl.closeOverlayPanel">
   <bind-service target="$ctrl.apiObject"
                 project="$ctrl.project"
                 on-close="$ctrl.closeOverlayPanel"></bind-service>

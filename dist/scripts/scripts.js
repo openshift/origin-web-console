@@ -12899,7 +12899,7 @@ var e = _.get(v, "template.metadata.annotations.iconClass", "fa fa-clone");
 return -1 !== e.indexOf("icon-") ? "font-icon " + e : e;
 }
 function l() {
-v.steps || (v.steps = [ v.selectStep, v.configStep, v.resultsStep ]);
+v.steps || (v.steps = [ v.selectStep, v.infoStep, v.configStep, v.resultsStep ]);
 }
 function u() {
 h && (h(), h = void 0);
@@ -12937,7 +12937,17 @@ allowed: !0,
 valid: !1,
 allowClickNav: !0,
 onShow: function() {
-v.selectStep.selected = !0, v.configStep.selected = !1, v.resultsStep.selected = !1, v.nextTitle = "Next >", u(), g();
+v.infoStep.selected = !1, v.selectStep.selected = !0, v.configStep.selected = !1, v.resultsStep.selected = !1, v.nextTitle = "Next >", u(), g();
+}
+}, v.infoStep = {
+id: "info",
+label: "Information",
+view: "views/directives/process-template-dialog/process-template-info.html",
+allowed: !0,
+valid: !0,
+allowClickNav: !0,
+onShow: function() {
+v.infoStep.selected = !0, v.selectStep.selected = !1, v.configStep.selected = !1, v.resultsStep.selected = !1, v.nextTitle = "Next >", u();
 }
 }, v.configStep = {
 id: "configuration",
@@ -12947,7 +12957,7 @@ valid: !1,
 allowed: !0,
 allowClickNav: !0,
 onShow: function() {
-v.selectStep.selected = !1, v.configStep.selected = !0, v.resultsStep.selected = !1, v.nextTitle = "Create", v.resultsStep.allowed = v.configStep.valid, h = e.$watch("$ctrl.form.$valid", function(e) {
+v.infoStep.selected = !1, v.selectStep.selected = !1, v.configStep.selected = !0, v.resultsStep.selected = !1, v.nextTitle = "Create", v.resultsStep.allowed = v.configStep.valid, h = e.$watch("$ctrl.form.$valid", function(e) {
 v.configStep.valid = e && v.selectedProject, v.resultsStep.allowed = e;
 });
 }
@@ -12960,7 +12970,7 @@ allowed: !1,
 prevEnabled: !1,
 allowClickNav: !1,
 onShow: function() {
-v.selectStep.selected = !1, v.configStep.selected = !1, v.resultsStep.selected = !0, v.nextTitle = "Close", u(), v.wizardDone = !0;
+v.infoStep.selected = !1, v.selectStep.selected = !1, v.configStep.selected = !1, v.resultsStep.selected = !0, v.nextTitle = "Close", u(), v.wizardDone = !0;
 }
 }, v.$onInit = function() {
 v.loginBaseUrl = a.openshiftAPIBaseUrl(), v.preSelectedProject = v.selectedProject = v.project, g(), v.projectEmptyState = {
@@ -13000,7 +13010,7 @@ _.isFunction(e) && e();
 }, v.onProjectSelected = function(t) {
 v.selectedProject = t, v.configStep.valid = e.$ctrl.form.$valid && v.selectedProject;
 }, v.templateSelected = function(e) {
-v.selectedTemplate = e, v.template = _.get(e, "resource"), v.selectStep.valid = !!e;
+v.selectedTemplate = e, v.template = _.get(e, "resource"), v.selectStep.valid = !!e, v.iconClass = c();
 }, v.templateProjectChange = function() {
 v.templateProjectName = _.get(v.templateProject, "metadata.name"), v.catalogItems = {}, v.templateSelected(), n.getProjectCatalogItems(v.templateProjectName, !1, !0).then(_.spread(function(e, t) {
 v.catalogItems = e, v.totalCount = v.catalogItems.length, m(), t && o.addNotification({
