@@ -6,7 +6,7 @@
     <a ng-href="{{row.urlForImageChangeTrigger(row.imageChangeTriggers[0])}}">
       {{row.imageChangeTriggers[0].imageChangeParams.from | imageObjectRef : row.apiObject.metadata.namespace}}</a>.
   </span>
-  <span ng-if="row.imageChangeParams.length > 1">
+  <span ng-if="row.imageChangeTriggers.length > 1">
     one of the images referenced by this deployment config changes.
   </span>
 </div>
