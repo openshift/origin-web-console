@@ -5,6 +5,7 @@ angular.module('openshiftConsole').component('overviewServiceBindings', {
   bindings: {
     sectionTitle: '@',
     namespace: '<',
+    refApiObject: '<',
     bindings: '<',
     bindableServiceInstances: '<',
     serviceClasses: '<',

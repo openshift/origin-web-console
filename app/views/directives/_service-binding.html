@@ -6,18 +6,13 @@
         <div class="component-label">
           Secret
         </div>
-        <span ng-if="$ctrl.serviceClass">
-          <span ng-if="$ctrl.refApiObject.kind !== 'ServiceInstance'">
+        {{$ctrl.binding.metadata.name}}
+        <span ng-if="$ctrl.refApiObject.kind !== 'ServiceInstance'">
+          <small ng-if="$ctrl.serviceClass">
             {{$ctrl.serviceClass.externalMetadata.displayName || $ctrl.serviceClass.metadata.name}}
-          </span>
-          <span ng-if="$ctrl.refApiObject.kind === 'ServiceInstance'">
-            {{$ctrl.binding.spec.secretName}}
-          </span>
+          </small>
+          <small>{{$ctrl.binding.spec.instanceRef.name}}</small>
         </span>
-        <span ng-if="!$ctrl.serviceClass">
-          {{$ctrl.binding.spec.instanceRef.name}}
-        </span>
-        <small ng-if="$ctrl.serviceClass">{{$ctrl.binding.spec.instanceRef.name}}</small>
         <small>created <span am-time-ago="$ctrl.binding.metadata.creationTimestamp"></span></small>
       </h3>
     </div>
