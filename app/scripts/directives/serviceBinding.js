@@ -11,7 +11,8 @@
       binding: '<',
       refApiObject: '<?',
       serviceClasses: '<',
-      serviceInstances: '<'
+      serviceInstances: '<',
+      isOverview: '<?'
     },
     templateUrl: 'views/directives/_service-binding.html'
   });

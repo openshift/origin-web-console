@@ -3,6 +3,7 @@
 angular.module('openshiftConsole').component('overviewServiceBindings', {
   controllerAs: '$ctrl',
   bindings: {
+    sectionTitle: '@',
     namespace: '<',
     bindings: '<',
     bindableServiceInstances: '<',

@@ -16,7 +16,7 @@
       <div class="list-pf-details" ng-if="!row.expanded" ng-switch="row.instanceStatus">
 
         <span ng-switch-when="failed"
-              dynamic-content="{{row.instanceError.message}}"
+              dynamic-content="{{row.apiObject | serviceInstanceFailedMessage}}"
               data-toggle="tooltip"
               data-trigger="hover">
           <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
@@ -111,7 +111,7 @@
               <div class="alert word-break alert-danger">
                 <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
                 <span class="sr-only">error</span>
-                <span class="strong">{{row.instanceError.message}}</span>
+                <span class="strong">{{row.apiObject | serviceInstanceFailedMessage}}</span>
               </div>
             </div>
           </div>
@@ -132,57 +132,15 @@
               <p class="pre-wrap" ng-bind-html="row.description | linky"></p>
             </div>
           </div>
-          <div class="section-title" ng-if="row.isBindable || row.bindings">
-            Bindings
-          </div>
-          <div class="row overview-bindings" ng-repeat="(name, binding) in row.bindings">
-            <div class="col-sm-5 col-md-6">
-              <div ng-if="!(row.state.applicationsByBinding[binding.metadata.name] | size)">
-                <h3>
-                  <div class="component-label">
-                    Secret
-                  </div>
-                  <a ng-if="('secrets' | canI : 'get') && (binding | isBindingReady)"
-                     ng-href="{{binding.spec.secretName | navigateResourceURL : 'Secret' : row.apiObject.metadata.namespace}}">
-                    {{binding.spec.secretName}}
-                  </a>
-                  <span ng-if="!('secrets' | canI : 'get') || !(binding | isBindingReady)">
-                    {{binding.spec.secretName}}
-                  </span>
-                </h3>
-              </div>
-              <div ng-repeat="target in row.state.applicationsByBinding[binding.metadata.name] track by (target | uid)">
-                <h3>
-                  <div class="component-label">
-                    {{target.kind | humanizeKind : true}}
-                  </div>
-                  <a ng-href="{{target | navigateResourceURL}}">{{target.metadata.name}}</a>
-                </h3>
-              </div>
-            </div>
-            <div class="col-sm-7 col-md-6 overview-bindings">
-              <span ng-if="binding.metadata.deletionTimestamp">
-                <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-                Marked for Deletion
-              </span>
-              <span ng-if="!(binding | isBindingReady) && !binding.metadata.deletionTimestamp">
-                <status-icon status="'Pending'"></status-icon> Pending
-              </span>
-            </div>
-          </div>
-          <div class="row" ng-if="row.isBindable && ({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create')">
-            <div class="col-sm-12">
-              <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">
-                <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>
-                Create Binding
-              </a>
-            </div>
-          </div>
-          <div class="row" ng-if="!row.bindings.length && (!row.isBindable || !({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create'))">
-            <div class="col-sm-12">
-              <em>No bindings</em>
-            </div>
-          </div>
+          <overview-service-bindings
+            ng-if="row.isBindable || row.bindings"
+            section-title="Bindings"
+            namespace="row.apiObject.metadata.namespace"
+            bindings="row.bindings"
+            bindable-service-instances="row.state.bindableServiceInstances"
+            service-classes="row.state.serviceClasses"
+            create-binding="row.showOverlayPanel('bindService', {target: row.apiObject})">
+          </overview-service-bindings>
         </div>
       </div>
     </div>

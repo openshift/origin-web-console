@@ -173,6 +173,20 @@ code.command {
       }
     }
   }
+
+  .component-label {
+    font-size: @component-label;
+    font-weight: 500;
+    padding: 0 0 4px 0;
+    .text-muted();
+    text-transform: uppercase;
+    .sublabel {
+      font-size: (@component-label - 1);
+      margin-left: 2px;
+      text-transform: none;
+    }
+  }
+
   .resource-details & {
     h3 {
       border-bottom: 0;
