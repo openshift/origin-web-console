@@ -478,7 +478,7 @@ group: "servicecatalog.k8s.io"
 }, "watch") && l.list({
 group: "servicecatalog.k8s.io",
 resource: "serviceclasses"
-}, a, function(e) {
+}, {}, function(e) {
 V.serviceClasses = e.by("metadata.name"), Je(), ie();
 });
 var i = c.SAMPLE_PIPELINE_TEMPLATE;
@@ -533,7 +533,7 @@ pollInterval: 6e4
 })), t.list({
 group: "servicecatalog.k8s.io",
 resource: "serviceclasses"
-}, r.projectContext, function(e) {
+}, {}, function(e) {
 r.serviceClasses = e.by("metadata.name"), u();
 }));
 };
@@ -6230,7 +6230,7 @@ e.emptyMessage = "No provisioned services to show", e.unfilteredServiceInstances
 })), i.list({
 group: "servicecatalog.k8s.io",
 resource: "serviceclasses"
-}, n, function(t) {
+}, {}, function(t) {
 e.serviceClasses = t.by("metadata.name"), p(), d();
 }), s.onActiveFiltersChanged(function(t) {
 e.$evalAsync(function() {
@@ -6284,7 +6284,7 @@ details: t("getErrorDetails")(n)
 }), a.list({
 group: "servicecatalog.k8s.io",
 resource: "serviceclasses"
-}, o, function(t) {
+}, {}, function(t) {
 e.serviceClasses = t.by("metadata.name"), c(), s();
 }), e.$on("$destroy", function() {
 a.unwatchAll(i);

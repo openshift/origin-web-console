@@ -93,7 +93,7 @@ angular.module('openshiftConsole')
         DataService.list({
           group: 'servicecatalog.k8s.io',
           resource: 'serviceclasses'
-        }, context, function(serviceClasses) {
+        }, {}, function(serviceClasses) {
           $scope.serviceClasses = serviceClasses.by('metadata.name');
           updateServiceClassMetadata();
           updateBreadcrumbs();

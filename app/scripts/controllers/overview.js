@@ -1354,7 +1354,7 @@ function OverviewController($scope,
       DataService.list({
         group: 'servicecatalog.k8s.io',
         resource: 'serviceclasses'
-      }, context, function(serviceClasses) {
+      }, {}, function(serviceClasses) {
         state.serviceClasses = serviceClasses.by('metadata.name');
         sortServiceInstances();
         updateFilter();

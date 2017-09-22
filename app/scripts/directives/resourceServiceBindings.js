@@ -85,7 +85,7 @@ function ResourceServiceBindings($filter, DataService, BindingService, CatalogSe
       DataService.list({
         group: 'servicecatalog.k8s.io',
         resource: 'serviceclasses'
-      }, ctrl.projectContext, function(serviceClasses) {
+      }, {}, function(serviceClasses) {
         ctrl.serviceClasses = serviceClasses.by('metadata.name');
         sortServiceInstances();
       });
