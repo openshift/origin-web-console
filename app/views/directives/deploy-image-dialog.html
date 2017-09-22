@@ -1,7 +1,7 @@
 <pf-wizard
+     title="Deploy Image"
      on-cancel="$ctrl.close()"
      on-finish="$ctrl.close()"
-     hide-header="true"
      hide-back-button="true"
      hide-sidebar="true"
      next-title="$ctrl.nextButtonTitle"
@@ -20,7 +20,7 @@
        allow-click-nav="false"
        next-enabled="$ctrl.deployForm.$valid || $ctrl.deployImageNewAppCreated">
     <div class="wizard-pf-main-inner-shadow-covers">
-      <div class="order-service-config order-service-config-single-column">
+      <div class="order-service-config">
         <div class="wizard-pf-main-form-contents">
           <form name="$ctrl.deployForm">
             <deploy-image is-dialog="true" project="$ctrl.project" context="$ctrl.context"></deploy-image>
@@ -37,7 +37,7 @@
        ok-to-nav-away="true"
        allow-click-nav="false">
     <div class="wizard-pf-main-inner-shadow-covers">
-      <div class="order-service-config order-service-config-single-column">
+      <div class="order-service-config">
         <div class="wizard-pf-main-form-contents">
           <next-steps project="$ctrl.selectedProject"
                       project-name="$ctrl.selectedProject.metadata.name"

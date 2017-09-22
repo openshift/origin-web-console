@@ -1,7 +1,7 @@
 <pf-wizard
+     title="Import YAML / JSON"
      on-cancel="$ctrl.close()"
      on-finish="$ctrl.close()"
-     hide-header="true"
      hide-sidebar="true"
      next-title="$ctrl.nextButtonTitle"
      next-callback="$ctrl.nextCallback"
@@ -18,7 +18,7 @@
        allow-click-nav="false"
        next-enabled="!$ctrl.importForm.$invalid">
     <div class="wizard-pf-main-inner-shadow-covers">
-      <div class="order-service-config order-service-config-single-column">
+      <div class="order-service-config">
         <div class="wizard-pf-main-form-contents">
           <form name="$ctrl.importForm">
             <from-file is-dialog="true" project="$ctrl.project"></from-file>
@@ -78,7 +78,7 @@
        allow-click-nav="false"
        prev-enabled="false">
     <div class="wizard-pf-main-inner-shadow-covers">
-      <div class="order-service-config order-service-config-single-column">
+      <div class="order-service-config">
         <div class="wizard-pf-main-form-contents">
           <!-- We don't want the directive to render until the results step is shown, this makes sure processed template info gets pulled from cache correctly -->
           <next-steps ng-if="$ctrl.currentStep === 'Results'" project="$ctrl.selectedProject"

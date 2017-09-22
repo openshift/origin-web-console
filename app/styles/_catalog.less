@@ -1,25 +1,5 @@
 @bind-service-page-height: 310px;
-@bind-service-wizard-min-external-height: 300px;
 @landing-search-area-height: 52px;
-
-.bind-service-config {
-  padding: 0 (@grid-gutter-width / 2);
-  width: 100%;
-  @media (min-width: @screen-sm-min) {
-    margin-bottom: -(@grid-gutter-width / 2);
-    margin-top: -(@grid-gutter-width / 2);
-    overflow-y: auto;
-    padding-right: 0;
-    .scroll-shadows-vertical(65%, 0.25);
-    _::-webkit-full-page-media, _:future, :root & { // only target Safari
-      .scroll-shadows-vertical-with-covers(65%, 0.25);
-    }
-
-    .form-horizontal .control-label {
-      padding-right: 0;
-    }
-  }
-}
 
 .landing {
   @media(min-width: @screen-sm-min) {
@@ -34,16 +14,9 @@
   }
 }
 
-.wizard-pf-footer.wizard-pf-position-override {
-  position: relative;
-}
-
 .wizard-pf-main.bind-service-wizard-step {
   @media (min-width: @screen-sm-min) {
     height: @bind-service-page-height + @grid-gutter-width;
-    max-height: calc(100vh ~"-" @bind-service-wizard-min-external-height);
-    min-height: 200px;
-    overflow-y: auto;
   }
 }
 

@@ -1,39 +1,41 @@
-<div class="config-top">
-  <div class="select-project-for-template">
-    <h2>Select from Project</h2>
-    <ui-select
-      name="selectProject"
-      ng-model="$ctrl.templateProject"
-      ng-change="$ctrl.templateProjectChange()"
-      search-enabled="$ctrl.searchEnabled">
-      <ui-select-match placeholder="Select a Project">
-        {{$select.selected | displayName}}
-      </ui-select-match>
-      <ui-select-choices repeat="project in $ctrl.templateProjects | searchProjects : $select.search track by (project | uid)">
-        <span ng-bind-html="project | displayName | highlightKeywords : $select.search"></span>
-        <span ng-if="project | displayName : true" class="small text-muted">
-          <span ng-if="project.metadata.name">&ndash;</span>
-          <span ng-bind-html="project.metadata.name | highlightKeywords : $select.search"></span>
-        </span>
-      </ui-select-choices>
-    </ui-select>
-  </div>
-  <pf-empty-state ng-if="!$ctrl.templateProject" config="$ctrl.projectEmptyState"></pf-empty-state>
-  <pf-empty-state ng-if="$ctrl.templateProject && !$ctrl.catalogItems.length" config="$ctrl.templatesEmptyState"></pf-empty-state>
-  <div class="services-view">
-    <div ng-if="$ctrl.templateProject && $ctrl.catalogItems.length" class="services-items">
-      <pf-filter config="$ctrl.filterConfig" class="services-items-filter order-services-filter"></pf-filter>
-      <a href="" class="services-item show-selection" ng-class="{'active': item === $ctrl.selectedTemplate}" ng-repeat="item in $ctrl.filteredItems track by item.resource.metadata.uid" ng-click="$ctrl.templateSelected(item)">
-        <div ng-if="!item.imageUrl" class="services-item-icon">
-          <span class="{{item.iconClass}}"></span>
-        </div>
-        <div ng-if="item.imageUrl" class="services-item-icon">
-          <img ng-src="{{item.imageUrl}}" alt="">
-        </div>
-        <div class="services-item-name" title="{{item.name}}">
-          {{item.name}}
-        </div>
-      </a>
+<div class="order-service-config">
+  <div class="config-top">
+    <div class="select-project-for-template">
+      <h2>Select from Project</h2>
+      <ui-select
+        name="selectProject"
+        ng-model="$ctrl.templateProject"
+        ng-change="$ctrl.templateProjectChange()"
+        search-enabled="$ctrl.searchEnabled">
+        <ui-select-match placeholder="Select a Project">
+          {{$select.selected | displayName}}
+        </ui-select-match>
+        <ui-select-choices repeat="project in $ctrl.templateProjects | searchProjects : $select.search track by (project | uid)">
+          <span ng-bind-html="project | displayName | highlightKeywords : $select.search"></span>
+          <span ng-if="project | displayName : true" class="small text-muted">
+            <span ng-if="project.metadata.name">&ndash;</span>
+            <span ng-bind-html="project.metadata.name | highlightKeywords : $select.search"></span>
+          </span>
+        </ui-select-choices>
+      </ui-select>
+    </div>
+    <pf-empty-state ng-if="!$ctrl.templateProject" config="$ctrl.projectEmptyState"></pf-empty-state>
+    <pf-empty-state ng-if="$ctrl.templateProject && !$ctrl.catalogItems.length" config="$ctrl.templatesEmptyState"></pf-empty-state>
+    <div class="services-view">
+      <div ng-if="$ctrl.templateProject && $ctrl.catalogItems.length" class="services-items">
+        <pf-filter config="$ctrl.filterConfig" class="services-items-filter order-services-filter"></pf-filter>
+        <a href="" class="services-item show-selection" ng-class="{'active': item === $ctrl.selectedTemplate}" ng-repeat="item in $ctrl.filteredItems track by item.resource.metadata.uid" ng-click="$ctrl.templateSelected(item)">
+          <div ng-if="!item.imageUrl" class="services-item-icon">
+            <span class="{{item.iconClass}}"></span>
+          </div>
+          <div ng-if="item.imageUrl" class="services-item-icon">
+            <img ng-src="{{item.imageUrl}}" alt="">
+          </div>
+          <div class="services-item-name" title="{{item.name}}">
+            {{item.name}}
+          </div>
+        </a>
+      </div>
     </div>
   </div>
 </div>

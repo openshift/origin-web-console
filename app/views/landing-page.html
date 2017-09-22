@@ -1,6 +1,6 @@
 <div class="middle landing-page">
   <div class="middle-content">
-    <overlay-panel show-panel="ordering.panelName" show-close="true" handle-close="closeOrderingPanel">
+    <overlay-panel show-panel="ordering.panelName" handle-close="closeOrderingPanel">
       <process-template-dialog ng-if="template" template="template" on-dialog-closed="closeOrderingPanel"></process-template-dialog>
       <deploy-image-dialog ng-if="ordering.panelName === 'deployImage'" on-dialog-closed="closeOrderingPanel"></deploy-image-dialog>
       <from-file-dialog ng-if="ordering.panelName === 'fromFile'" on-dialog-closed="closeOrderingPanel"></from-file-dialog>
