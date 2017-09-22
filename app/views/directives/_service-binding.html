@@ -6,7 +6,7 @@
         {{$ctrl.binding.metadata.name}}
         <span ng-if="$ctrl.refApiObject.kind !== 'ServiceInstance'">
           <small ng-if="$ctrl.serviceClass">
-            {{$ctrl.serviceClass.externalMetadata.displayName || $ctrl.serviceClass.metadata.name}}
+            {{$ctrl.serviceClass.spec.externalMetadata.displayName || $ctrl.serviceClass.metadata.name}}
           </small>
           <small>{{$ctrl.binding.spec.instanceRef.name}}</small>
         </span>

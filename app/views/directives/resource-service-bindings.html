@@ -9,7 +9,7 @@
     service-instances="$ctrl.serviceInstances">
   </service-binding>
   <div ng-if="(($ctrl.apiObject.kind === 'ServiceInstance') || ($ctrl.bindableServiceInstances | size)) &&
-              ({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create') &&
+              ($ctrl.serviceBindingsVersion | canI : 'create') &&
               !$ctrl.apiObject.metadata.deletionTimestamp">
     <a href="" ng-click="$ctrl.createBinding()" role="button">
       <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>
@@ -22,7 +22,7 @@
       <a href="./">Browse Catalog</a>
     </div>
   </div>
-  <div ng-if="($ctrl.apiObject.kind !== 'ServiceInstance') && !($ctrl.bindings | size) && ($ctrl.bindableServiceInstances | size) && !({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create')">
+  <div ng-if="($ctrl.apiObject.kind !== 'ServiceInstance') && !($ctrl.bindings | size) && ($ctrl.bindableServiceInstances | size) && !($ctrl.serviceBindingsVersion | canI : 'create')">
     <span>There are no service bindings.</span>
   </div>
 </div>

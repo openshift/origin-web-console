@@ -6,6 +6,7 @@
     controller: [
       '$scope',
       '$filter',
+      'APIService',
       'DataService',
       UnbindService
     ],
@@ -19,12 +20,17 @@
     templateUrl: 'views/directives/unbind-service.html'
   });
 
-  function UnbindService($scope, $filter, DataService) {
+  function UnbindService($scope,
+                         $filter,
+                         APIService,
+                         DataService) {
     var ctrl = this;
     var validityWatcher;
     var context;
     var enableTechPreviewFeature = $filter('enableTechPreviewFeature');
     var serviceInstanceDisplayName = $filter('serviceInstanceDisplayName');
+
+    var serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
 
     var unbindService = function() {
       var bindingName = ctrl.selectedBinding.metadata.name;
@@ -32,16 +38,13 @@
       // the result page since deleting the binding will remove them from the
       // map that is passed in.
       ctrl.unboundApps = ctrl.appsForBinding(bindingName);
-      DataService.delete({
-        group: 'servicecatalog.k8s.io',
-        resource: 'serviceinstancecredentials'
-      },
-      bindingName,
-      context,
-      { propagationPolicy: null })
-      .then(_.noop, function(err) {
-        ctrl.error = err;
-      });
+      DataService.delete(serviceBindingsVersion,
+                         bindingName,
+                         context,
+                         { propagationPolicy: null })
+        .then(_.noop, function(err) {
+          ctrl.error = err;
+        });
     };
 
     var setupValidator = function() {

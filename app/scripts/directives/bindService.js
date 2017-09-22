@@ -5,9 +5,11 @@
     controller: [
       '$scope',
       '$filter',
+      'APIService',
       'ApplicationsService',
-      'DataService',
       'BindingService',
+      'DataService',
+      'ServiceInstancesService',
       BindService
     ],
     controllerAs: 'ctrl',
@@ -21,9 +23,11 @@
 
   function BindService($scope,
                        $filter,
+                       APIService,
                        ApplicationsService,
+                       BindingService,
                        DataService,
-                       BindingService) {
+                       ServiceInstancesService) {
     var ctrl = this;
     var bindFormStep;
     var bindParametersStep;
@@ -50,10 +54,15 @@
     };
 
     var sortServiceInstances = function() {
-      // wait till both service instances and service classes are available so that the sort is stable and items dont jump around
+      // wait till both service instances and service classes are available so
+      // that the sort is stable and items dont jump around
       if (ctrl.serviceClasses && ctrl.serviceInstances) {
-        ctrl.serviceInstances = BindingService.filterBindableServiceInstances(ctrl.serviceInstances, ctrl.serviceClasses);
-        ctrl.orderedServiceInstances = BindingService.sortServiceInstances(ctrl.serviceInstances, ctrl.serviceClasses);
+        ctrl.serviceInstances =
+          BindingService.filterBindableServiceInstances(ctrl.serviceInstances,
+                                                        ctrl.serviceClasses,
+                                                        ctrl.servicePlans);
+        ctrl.orderedServiceInstances =
+          BindingService.sortServiceInstances(ctrl.serviceInstances, ctrl.serviceClasses);
 
         if (!ctrl.serviceToBind) {
           preselectService();
@@ -109,10 +118,8 @@
         namespace: _.get(ctrl.target, 'metadata.namespace')
       };
 
-      DataService.list({
-        group: 'servicecatalog.k8s.io',
-        resource: 'serviceinstances'
-      }, context).then(function(instances) {
+      var serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
+      DataService.list(serviceInstancesVersion, context).then(function(instances) {
         ctrl.serviceInstances = instances.by('metadata.name');
         sortServiceInstances();
       });
@@ -146,7 +153,7 @@
     };
 
     var updateInstance = function() {
-      if (!ctrl.serviceClasses) {
+      if (!ctrl.serviceClasses || !ctrl.servicePlans) {
         return;
       }
 
@@ -155,11 +162,12 @@
         return;
       }
 
-      ctrl.serviceClass = ctrl.serviceClasses[instance.spec.serviceClassName];
-      ctrl.serviceClassName = instance.spec.serviceClassName;
-      ctrl.plan = BindingService.getPlanForInstance(instance, ctrl.serviceClass);
-      ctrl.parameterSchema = _.get(ctrl.plan, 'serviceInstanceCredentialCreateParameterSchema');
-      ctrl.parameterFormDefinition = _.get(ctrl.plan, 'externalMetadata.schemas.service_binding.create.openshift_form_definition');
+      var serviceClassName = ServiceInstancesService.getServiceClassNameForInstance(instance);
+      ctrl.serviceClass = ctrl.serviceClasses[serviceClassName];
+      var servicePlanName = ServiceInstancesService.getServicePlanNameForInstance(instance);
+      ctrl.plan = ctrl.servicePlans[servicePlanName];
+      ctrl.parameterSchema = _.get(ctrl.plan, 'spec.serviceInstanceCredentialCreateParameterSchema');
+      ctrl.parameterFormDefinition = _.get(ctrl.plan, 'spec.externalMetadata.schemas.service_binding.create.openshift_form_definition');
       bindParametersStep.hidden = !_.has(ctrl.parameterSchema, 'properties');
       ctrl.nextTitle = bindParametersStep.hidden ? 'Bind' : 'Next >';
       ctrl.hideBack = bindParametersStep.hidden;
@@ -177,13 +185,19 @@
       ctrl.hideBack = bindParametersStep.hidden;
 
       // We will want ServiceClasses either way for display purposes
-      DataService.list({
-        group: 'servicecatalog.k8s.io',
-        resource: 'serviceclasses'
-      }, {}).then(function(serviceClasses) {
+      var serviceClassesVersion = APIService.getPreferredVersion('clusterserviceclasses');
+      DataService.list(serviceClassesVersion, {}).then(function(serviceClasses) {
         ctrl.serviceClasses = serviceClasses.by('metadata.name');
         updateInstance();
         sortServiceInstances();
+      });
+
+      // We'll need service plans for binding parameters.
+      // TODO: Only load plans for selected instance.
+      var servicePlansVersion = APIService.getPreferredVersion('clusterserviceplans');
+      DataService.list(servicePlansVersion, {}).then(function(plans) {
+        ctrl.servicePlans = plans.by('metadata.name');
+        updateInstance();
       });
 
       if (ctrl.target.kind === 'ServiceInstance') {

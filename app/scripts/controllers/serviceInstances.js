@@ -30,24 +30,25 @@ angular.module('openshiftConsole')
       $scope.unfilteredServiceInstances = BindingService.sortServiceInstances($scope.unfilteredServiceInstances, $scope.serviceClasses);
     };
 
+    $scope.getServiceClass = function(serviceInstance) {
+      var serviceClassName = _.get(serviceInstance, 'spec.serviceClassRef.name');
+      return _.get($scope, ['serviceClasses', serviceClassName]);
+    };
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
         $scope.projectContext = context;
 
-        watches.push(DataService.watch({
-          group: 'servicecatalog.k8s.io',
-          resource: 'serviceinstancecredentials'
-        }, context, function(bindings) {
+        var serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
+        watches.push(DataService.watch(serviceBindingsVersion, context, function(bindings) {
           var bindingsByName = bindings.by('metadata.name');
           $scope.bindingsByInstanceRef = _.groupBy(bindingsByName, 'spec.instanceRef.name');
         }));
 
-        watches.push(DataService.watch({
-          group: 'servicecatalog.k8s.io',
-          resource: 'serviceinstances'
-        }, context, function(serviceInstances) {
+        var serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
+        watches.push(DataService.watch(serviceInstancesVersion, context, function(serviceInstances) {
           $scope.emptyMessage = "No provisioned services to show";
           $scope.unfilteredServiceInstances = serviceInstances.by('metadata.name');
 
@@ -61,10 +62,8 @@ angular.module('openshiftConsole')
           Logger.log("provisioned services (subscribe)", $scope.unfilteredServiceInstances);
         }));
 
-        DataService.list({
-          group: 'servicecatalog.k8s.io',
-          resource: 'serviceclasses'
-        }, {}, function(serviceClasses) {
+        var serviceClassesVersion = APIService.getPreferredVersion('clusterserviceclasses');
+        DataService.list(serviceClassesVersion, {}, function(serviceClasses) {
           $scope.serviceClasses = serviceClasses.by('metadata.name');
           sortServiceInstances();
           updateFilter();
