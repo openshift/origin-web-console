@@ -135,6 +135,7 @@
           <overview-service-bindings
             ng-if="row.isBindable || row.bindings"
             section-title="Bindings"
+            ref-api-object="row.apiObject"
             namespace="row.apiObject.metadata.namespace"
             bindings="row.bindings"
             bindable-service-instances="row.state.bindableServiceInstances"

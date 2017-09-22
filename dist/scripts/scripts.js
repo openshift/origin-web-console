@@ -13168,8 +13168,10 @@ n.imageIDs = r ? [ r ] : t.getImageIDs(n.pods, e.name);
 angular.module("openshiftConsole").component("serviceBinding", {
 controller: [ function() {
 var e = this, t = function() {
+if ("ServiceInstance" !== _.get(e.refApiObject, "kind")) {
 var t = _.get(e.binding, "spec.instanceRef.name"), n = _.get(e.serviceInstances, [ t ]), a = _.get(n, "spec.serviceClassName");
 e.serviceClass = _.get(e.serviceClasses, [ a ]);
+}
 };
 this.$onChanges = function(e) {
 (e.binding || e.serviceInstances || e.serviceClasses) && t();
@@ -13589,6 +13591,7 @@ controllerAs: "$ctrl",
 bindings: {
 sectionTitle: "@",
 namespace: "<",
+refApiObject: "<",
 bindings: "<",
 bindableServiceInstances: "<",
 serviceClasses: "<",
