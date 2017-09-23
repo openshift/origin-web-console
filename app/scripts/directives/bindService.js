@@ -161,6 +161,7 @@
       ctrl.parameterSchema = _.get(ctrl.plan, 'serviceInstanceCredentialCreateParameterSchema');
       bindParametersStep.hidden = !_.has(ctrl.parameterSchema, 'properties');
       ctrl.nextTitle = bindParametersStep.hidden ? 'Bind' : 'Next >';
+      ctrl.hideBack = bindParametersStep.hidden;
     };
 
     $scope.$watch("ctrl.serviceToBind", updateInstance);
@@ -172,6 +173,7 @@
       ctrl.parameterData = {};
 
       ctrl.steps = [ bindFormStep, bindParametersStep, resultsStep ];
+      ctrl.hideBack = bindParametersStep.hidden;
 
       // We will want ServiceClasses either way for display purposes
       DataService.list({
