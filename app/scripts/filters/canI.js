@@ -20,8 +20,8 @@ angular
         {group: '', resource: 'configmaps', verbs: ['update', 'delete']}
       ],
       'deployments': [
-        {group: 'autoscaling', resource: 'horizontalpodautoscalers', verbs: ['create', 'update']},
-        {group: 'apps',        resource: 'deployments',              verbs: ['update', 'delete']}
+        _.assign({}, APIService.getPreferredVersion('horizontalpodautoscalers'), {verbs: ['create', 'update']}),
+        _.assign({}, APIService.getPreferredVersion('deployments'), {verbs: ['update', 'delete']})
       ],
       'deploymentConfigs': [
         {group: 'autoscaling', resource: 'horizontalpodautoscalers', verbs: ['create', 'update']},
