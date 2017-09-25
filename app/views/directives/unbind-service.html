@@ -8,8 +8,7 @@
     next-title="ctrl.nextTitle"
     on-finish="ctrl.closeWizard()"
     on-cancel="ctrl.closeWizard()"
-    wizard-done="ctrl.wizardComplete"
-    class="pf-wizard-no-back">
+    wizard-done="ctrl.wizardComplete">
     <pf-wizard-step
       ng-repeat="step in ctrl.steps track by step.id"
       step-title="{{step.label}}"

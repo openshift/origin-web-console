@@ -2,7 +2,6 @@
   <pf-wizard
        title="{{!$ctrl.useProjectTemplate && ($ctrl.template | displayName) || 'Select from Project'}}"
        hide-sidebar="true"
-       hide-back-button="!$ctrl.useProjectTemplate"
        step-class="order-service-wizard-step"
        wizard-ready="$ctrl.wizardReady"
        next-title="$ctrl.nextTitle"
@@ -10,8 +9,7 @@
        on-finish="$ctrl.close()"
        on-cancel="$ctrl.close()"
        wizard-done="$ctrl.wizardDone"
-       current-step="$ctrl.currentStep"
-       ng-class="{'pf-wizard-no-back': !$ctrl.useProjectTemplate}">
+       current-step="$ctrl.currentStep">
     <pf-wizard-step ng-repeat="step in $ctrl.steps track by step.id"
          step-title="{{step.label}}"
          wz-disabled="{{step.hidden}}"

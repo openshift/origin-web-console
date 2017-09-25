@@ -12660,11 +12660,11 @@ c && (c(), c = void 0), l && (l(), l = void 0), d.nextTitle = "Close", d.wizardC
 var y = function() {
 if (d.serviceClasses) {
 var e = "ServiceInstance" === d.target.kind ? d.target : d.serviceToBind;
-e && (d.serviceClass = d.serviceClasses[e.spec.serviceClassName], d.serviceClassName = e.spec.serviceClassName, d.plan = r.getPlanForInstance(e, d.serviceClass), d.parameterSchema = _.get(d.plan, "serviceInstanceCredentialCreateParameterSchema"), i.hidden = !_.has(d.parameterSchema, "properties"), d.nextTitle = i.hidden ? "Bind" : "Next >");
+e && (d.serviceClass = d.serviceClasses[e.spec.serviceClassName], d.serviceClassName = e.spec.serviceClassName, d.plan = r.getPlanForInstance(e, d.serviceClass), d.parameterSchema = _.get(d.plan, "serviceInstanceCredentialCreateParameterSchema"), i.hidden = !_.has(d.parameterSchema, "properties"), d.nextTitle = i.hidden ? "Bind" : "Next >", d.hideBack = i.hidden);
 }
 };
 e.$watch("ctrl.serviceToBind", y), d.$onInit = function() {
-d.serviceSelection = {}, d.projectDisplayName = t("displayName")(d.project), d.podPresets = m("pod_presets"), d.parameterData = {}, d.steps = [ o, i, s ], a.list({
+d.serviceSelection = {}, d.projectDisplayName = t("displayName")(d.project), d.podPresets = m("pod_presets"), d.parameterData = {}, d.steps = [ o, i, s ], d.hideBack = i.hidden, a.list({
 group: "servicecatalog.k8s.io",
 resource: "serviceclasses"
 }, {}).then(function(e) {
