@@ -8319,7 +8319,7 @@ details: n("getErrorDetails")(t)
 }
 });
 }));
-} ]), angular.module("openshiftConsole").controller("CreateRouteController", [ "$filter", "$routeParams", "$scope", "$window", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "NotificationsService", "ProjectsService", "keyValueEditorUtils", function(e, t, n, a, r, o, i, s, c, l, u) {
+} ]), angular.module("openshiftConsole").controller("CreateRouteController", [ "$filter", "$routeParams", "$scope", "$window", "APIService", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "NotificationsService", "ProjectsService", "keyValueEditorUtils", function(e, t, n, a, r, o, i, s, c, l, u, d) {
 n.renderOptions = {
 hideFilterWidget: !0
 }, n.projectName = t.project, n.serviceName = t.service, n.labels = [], n.routing = {
@@ -8330,27 +8330,27 @@ link: "project/" + n.projectName + "/browse/routes"
 }, {
 title: "Create Route"
 } ];
-var d = function() {
-c.hideNotification("create-route-error");
+var p = r.getPreferredVersion("routes"), m = r.getPreferredVersion("services"), f = function() {
+l.hideNotification("create-route-error");
 };
-n.$on("$destroy", d);
-var p = function() {
+n.$on("$destroy", f);
+var g = function() {
 a.history.back();
 };
-n.cancel = p, l.get(t.project).then(_.spread(function(a, l) {
-if (n.project = a, o.canI("routes", "create", t.project)) {
-var m, f = e("orderByDisplayName");
+n.cancel = g, u.get(t.project).then(_.spread(function(a, r) {
+if (n.project = a, i.canI(p, "create", t.project)) {
+var u, h = e("orderByDisplayName");
 n.routing.to = {
 kind: "Service",
 name: n.serviceName,
 weight: 1
 };
-var g, h = function() {
-var e = g, t = _.get(n, "routing.to.name");
-g = _.get(m, [ t, "metadata", "labels" ], {});
-var a = u.mapEntries(u.compactEntries(n.labels)), r = _.assign(a, g);
+var v, y = function() {
+var e = v, t = _.get(n, "routing.to.name");
+v = _.get(u, [ t, "metadata", "labels" ], {});
+var a = d.mapEntries(d.compactEntries(n.labels)), r = _.assign(a, v);
 e && (r = _.omitBy(r, function(t, n) {
-return e[n] && !g[n];
+return e[n] && !v[n];
 })), n.labels = _.map(r, function(e, t) {
 return {
 name: t,
@@ -8358,25 +8358,25 @@ value: e
 };
 });
 };
-i.list("services", l).then(function(e) {
-m = e.by("metadata.name"), n.services = f(m), n.$watch("routing.to.name", h);
+s.list(m, r).then(function(e) {
+u = e.by("metadata.name"), n.services = h(u), n.$watch("routing.to.name", y);
 }), n.createRoute = function() {
 if (n.createRouteForm.$valid) {
-d(), n.disableInputs = !0;
-var t = n.routing.to.name, a = u.mapEntries(u.compactEntries(n.labels)), o = r.createRoute(n.routing, t, a), s = _.get(n, "routing.alternateServices", []);
-_.isEmpty(s) || (o.spec.to.weight = _.get(n, "routing.to.weight"), o.spec.alternateBackends = _.map(s, function(e) {
+f(), n.disableInputs = !0;
+var t = n.routing.to.name, a = d.mapEntries(d.compactEntries(n.labels)), i = o.createRoute(n.routing, t, a), c = _.get(n, "routing.alternateServices", []);
+_.isEmpty(c) || (i.spec.to.weight = _.get(n, "routing.to.weight"), i.spec.alternateBackends = _.map(c, function(e) {
 return {
 kind: "Service",
 name: e.name,
 weight: e.weight
 };
-})), i.create("routes", null, o, l).then(function() {
-c.addNotification({
+})), s.create(p, null, i, r).then(function() {
+l.addNotification({
 type: "success",
-message: "Route " + o.metadata.name + " was successfully created."
-}), p();
+message: "Route " + i.metadata.name + " was successfully created."
+}), g();
 }, function(t) {
-n.disableInputs = !1, c.addNotification({
+n.disableInputs = !1, l.addNotification({
 type: "error",
 id: "create-route-error",
 message: "An error occurred creating the route.",
@@ -8385,7 +8385,7 @@ details: e("getErrorDetails")(t)
 });
 }
 };
-} else s.toErrorPage("You do not have authority to create routes in project " + t.project + ".", "access_denied");
+} else c.toErrorPage("You do not have authority to create routes in project " + t.project + ".", "access_denied");
 }));
 } ]), angular.module("openshiftConsole").controller("AttachPVCController", [ "$filter", "$routeParams", "$scope", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "QuotaService", "Navigate", "NotificationsService", "ProjectsService", "StorageService", "RELATIVE_PATH_PATTERN", function(e, t, n, a, r, o, i, s, c, l, u, d, p, m) {
 if (t.kind && t.name) {
