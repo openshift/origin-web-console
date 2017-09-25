@@ -14,12 +14,12 @@
               but none are loaded on this project.
             </p>
 
-            <div ng-if="project && ('persistentvolumeclaims' | canI : 'create')" class="text-center">
+            <div ng-if="project && (pvcVersion | canI : 'create')" class="text-center">
               <a ng-href="project/{{project.metadata.name}}/create-pvc"
                  class="btn btn-primary">Create Storage</a>
             </div>
 
-            <p ng-if="project && !('persistentvolumeclaims' | canI : 'create')">
+            <p ng-if="project && !(pvcVersion | canI : 'create')">
               To claim storage from a persistent volume, refer to the documentation on <a target="_blank" ng-href="{{'persistent_volumes' | helpLink}}">using persistent volumes</a>.
             </p>
 
@@ -60,10 +60,10 @@
                     </tbody>
                   </table>
                 </div>
-                <div ng-if="!(project && ('persistentvolumeclaims' | canI : 'create'))" class="help-block">
+                <div ng-if="!(project && (pvcVersion | canI : 'create'))" class="help-block">
                   Select storage to use.
                 </div>
-                <div ng-if="project && ('persistentvolumeclaims' | canI : 'create')" class="help-block">
+                <div ng-if="project && (pvcVersion | canI : 'create')" class="help-block">
                   Select storage to use<span ng-if="!outOfClaims"> or <a ng-href="project/{{project.metadata.name}}/create-pvc" >create storage</a>.</span>
                   <span ng-if="outOfClaims">. You cannot create new storage since you are at quota.</span>
                 </div>
