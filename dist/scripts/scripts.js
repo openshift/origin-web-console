@@ -6377,22 +6377,22 @@ e.loaded = !0, e.error = t;
 r.unwatchAll(i);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("CreateConfigMapController", [ "$filter", "$routeParams", "$scope", "$window", "AuthorizationService", "DataService", "Navigate", "NotificationsService", "ProjectsService", function(e, t, n, a, r, o, i, s, c) {
+} ]), angular.module("openshiftConsole").controller("CreateConfigMapController", [ "$filter", "$routeParams", "$scope", "$window", "APIService", "AuthorizationService", "DataService", "Navigate", "NotificationsService", "ProjectsService", function(e, t, n, a, r, o, i, s, c, l) {
 n.projectName = t.project, n.breadcrumbs = [ {
 title: "Config Maps",
 link: "project/" + n.projectName + "/browse/config-maps"
 }, {
 title: "Create Config Map"
 } ];
-var l = function() {
-s.hideNotification("create-config-map-error");
+var u = r.getPreferredVersion("configmaps"), d = function() {
+c.hideNotification("create-config-map-error");
 };
-n.$on("$destroy", l);
-var u = function() {
+n.$on("$destroy", d);
+var p = function() {
 a.history.back();
 };
-n.cancel = u, c.get(t.project).then(_.spread(function(a, c) {
-n.project = a, r.canI("configmaps", "create", t.project) ? (n.configMap = {
+n.cancel = p, l.get(t.project).then(_.spread(function(a, r) {
+n.project = a, o.canI("configmaps", "create", t.project) ? (n.configMap = {
 apiVersion: "v1",
 kind: "ConfigMap",
 metadata: {
@@ -6400,20 +6400,20 @@ namespace: t.project
 },
 data: {}
 }, n.createConfigMap = function() {
-n.createConfigMapForm.$valid && (l(), n.disableInputs = !0, o.create("configmaps", null, n.configMap, c).then(function() {
-s.addNotification({
+n.createConfigMapForm.$valid && (d(), n.disableInputs = !0, i.create(u, null, n.configMap, r).then(function() {
+c.addNotification({
 type: "success",
 message: "Config map " + n.configMap.metadata.name + " successfully created."
-}), u();
+}), p();
 }, function(t) {
-n.disableInputs = !1, s.addNotification({
+n.disableInputs = !1, c.addNotification({
 id: "create-config-map-error",
 type: "error",
 message: "An error occurred creating the config map.",
 details: e("getErrorDetails")(t)
 });
 }));
-}) : i.toErrorPage("You do not have authority to create config maps in project " + t.project + ".", "access_denied");
+}) : s.toErrorPage("You do not have authority to create config maps in project " + t.project + ".", "access_denied");
 }));
 } ]), angular.module("openshiftConsole").controller("RoutesController", [ "$routeParams", "$scope", "DataService", "$filter", "LabelFilter", "ProjectsService", function(e, t, n, a, r, o) {
 t.projectName = e.project, t.unfilteredRoutes = {}, t.routes = {}, t.labelSuggestions = {}, t.alerts = t.alerts || {}, t.emptyMessage = "Loading...";
