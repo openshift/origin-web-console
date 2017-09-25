@@ -13,6 +13,7 @@ angular.module('openshiftConsole')
                        $routeParams,
                        $scope,
                        $window,
+                       APIService,
                        ApplicationGenerator,
                        AuthorizationService,
                        DataService,
@@ -42,6 +43,9 @@ angular.module('openshiftConsole')
       }
     ];
 
+    var routesVersion = APIService.getPreferredVersion('routes');
+    var servicesVersion = APIService.getPreferredVersion('services');
+
     var hideErrorNotifications = function() {
       NotificationsService.hideNotification("create-route-error");
     };
@@ -57,7 +61,7 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
 
-        if (!AuthorizationService.canI('routes', 'create', $routeParams.project)) {
+        if (!AuthorizationService.canI(routesVersion, 'create', $routeParams.project)) {
           Navigate.toErrorPage('You do not have authority to create routes in project ' + $routeParams.project + '.', 'access_denied');
           return;
         }
@@ -97,7 +101,7 @@ angular.module('openshiftConsole')
           });
         };
 
-        DataService.list("services", context).then(function(serviceData) {
+        DataService.list(servicesVersion, context).then(function(serviceData) {
           servicesByName = serviceData.by("metadata.name");
           $scope.services = orderByDisplayName(servicesByName);
           // Wait until the services load before trying to copy service labels.
@@ -124,7 +128,7 @@ angular.module('openshiftConsole')
               });
             }
 
-            DataService.create('routes', null, route, context)
+            DataService.create(routesVersion, null, route, context)
               .then(function() { // Success
                 NotificationsService.addNotification({
                     type: "success",
