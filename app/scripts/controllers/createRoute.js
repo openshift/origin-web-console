@@ -128,7 +128,8 @@ angular.module('openshiftConsole')
               });
             }
 
-            DataService.create(routesVersion, null, route, context)
+            var createRouteVersion = APIService.objectToResourceGroupVersion(route);
+            DataService.create(createRouteVersion, null, route, context)
               .then(function() { // Success
                 NotificationsService.addNotification({
                     type: "success",

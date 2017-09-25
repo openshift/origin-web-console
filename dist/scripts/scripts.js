@@ -8337,20 +8337,20 @@ n.$on("$destroy", f);
 var g = function() {
 a.history.back();
 };
-n.cancel = g, u.get(t.project).then(_.spread(function(a, r) {
+n.cancel = g, u.get(t.project).then(_.spread(function(a, u) {
 if (n.project = a, i.canI(p, "create", t.project)) {
-var u, h = e("orderByDisplayName");
+var h, v = e("orderByDisplayName");
 n.routing.to = {
 kind: "Service",
 name: n.serviceName,
 weight: 1
 };
-var v, y = function() {
-var e = v, t = _.get(n, "routing.to.name");
-v = _.get(u, [ t, "metadata", "labels" ], {});
-var a = d.mapEntries(d.compactEntries(n.labels)), r = _.assign(a, v);
+var y, b = function() {
+var e = y, t = _.get(n, "routing.to.name");
+y = _.get(h, [ t, "metadata", "labels" ], {});
+var a = d.mapEntries(d.compactEntries(n.labels)), r = _.assign(a, y);
 e && (r = _.omitBy(r, function(t, n) {
-return e[n] && !v[n];
+return e[n] && !y[n];
 })), n.labels = _.map(r, function(e, t) {
 return {
 name: t,
@@ -8358,8 +8358,8 @@ value: e
 };
 });
 };
-s.list(m, r).then(function(e) {
-u = e.by("metadata.name"), n.services = h(u), n.$watch("routing.to.name", y);
+s.list(m, u).then(function(e) {
+h = e.by("metadata.name"), n.services = v(h), n.$watch("routing.to.name", b);
 }), n.createRoute = function() {
 if (n.createRouteForm.$valid) {
 f(), n.disableInputs = !0;
@@ -8370,7 +8370,9 @@ kind: "Service",
 name: e.name,
 weight: e.weight
 };
-})), s.create(p, null, i, r).then(function() {
+}));
+var p = r.objectToResourceGroupVersion(i);
+s.create(p, null, i, u).then(function() {
 l.addNotification({
 type: "success",
 message: "Route " + i.metadata.name + " was successfully created."
