@@ -11,6 +11,7 @@ angular.module('openshiftConsole')
   .controller('DeploymentsController', function ($scope,
                                                  $filter,
                                                  $routeParams,
+                                                 APIService,
                                                  DataService,
                                                  DeploymentsService,
                                                  LabelFilter,
@@ -31,6 +32,11 @@ angular.module('openshiftConsole')
 
     var replicaSets, deploymentsByUID;
     var annotation = $filter('annotation');
+
+    var deploymentsVersion = APIService.getPreferredVersion('deployments');
+    var deploymentConfigsVersion = APIService.getPreferredVersion('deploymentconfigs');
+    var replicationControllersVersion = APIService.getPreferredVersion('replicationcontrollers');
+    var replicaSetsVersion = APIService.getPreferredVersion('replicasets');
 
     var groupReplicaSets = function() {
       if (!replicaSets || !deploymentsByUID) {
@@ -60,7 +66,7 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
 
-        watches.push(DataService.watch("replicationcontrollers", context, function(replicationControllers, action, replicationController) {
+        watches.push(DataService.watch(replicationControllersVersion, context, function(replicationControllers, action, replicationController) {
           $scope.replicationControllers = replicationControllers.by("metadata.name");
 
           var dcName, rcName;
@@ -108,16 +114,13 @@ angular.module('openshiftConsole')
           Logger.log("replicationControllers (subscribe)", $scope.replicationControllers);
         }));
 
-        watches.push(DataService.watch({
-          group: "extensions",
-          resource: "replicasets"
-        }, context, function(replicaSetsData) {
+        watches.push(DataService.watch(replicaSetsVersion, context, function(replicaSetsData) {
           replicaSets = replicaSetsData.by("metadata.name");
           groupReplicaSets();
           Logger.log("replicasets (subscribe)", $scope.replicaSets);
         }));
 
-        watches.push(DataService.watch("deploymentconfigs", context, function(deploymentConfigs) {
+        watches.push(DataService.watch(deploymentConfigsVersion, context, function(deploymentConfigs) {
           $scope.unfilteredDeploymentConfigs = deploymentConfigs.by("metadata.name");
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredDeploymentConfigs, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
@@ -132,10 +135,7 @@ angular.module('openshiftConsole')
           Logger.log("deploymentconfigs (subscribe)", $scope.deploymentConfigs);
         }));
 
-        watches.push(DataService.watch({
-          group: "apps",
-          resource: "deployments"
-        }, context, function(deploymentData) {
+        watches.push(DataService.watch(deploymentsVersion, context, function(deploymentData) {
           deploymentsByUID = $scope.unfilteredDeployments = deploymentData.by("metadata.uid");
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredDeployments, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
