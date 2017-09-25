@@ -1617,7 +1617,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h1 class=\"contains-actions\">\n" +
     "<div class=\"pull-right dropdown\" ng-if=\"buildConfig\" ng-hide=\"!('buildConfigs' | canIDoAny)\">\n" +
     "\n" +
-    "<button class=\"btn btn-default hidden-xs\" ng-if=\"('buildconfigs/instantiate' | canI : 'create') && !(buildConfig | isBinaryBuild)\" ng-click=\"startBuild()\">\n" +
+    "<button class=\"btn btn-default hidden-xs\" ng-if=\"(buildConfigsInstantiateVersion | canI : 'create') && !(buildConfig | isBinaryBuild)\" ng-click=\"startBuild()\">\n" +
     "<span ng-if=\"!(buildConfig | isJenkinsPipelineStrategy)\">\n" +
     "Start Build\n" +
     "</span>\n" +
@@ -1632,7 +1632,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
-    "<li class=\"visible-xs-inline\" ng-if=\"('buildconfigs/instantiate' | canI : 'create') && !(buildConfig | isBinaryBuild)\">\n" +
+    "<li class=\"visible-xs-inline\" ng-if=\"(buildConfigsInstantiateVersion | canI : 'create') && !(buildConfig | isBinaryBuild)\">\n" +
     "<a href=\"\" role=\"button\" ng-click=\"startBuild()\">\n" +
     "<span ng-if=\"!(buildConfig | isJenkinsPipelineStrategy)\">\n" +
     "Start Build\n" +
@@ -1677,10 +1677,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h2>No builds.</h2>\n" +
     "<p>\n" +
     "<span ng-if=\"!buildConfig.spec.strategy.jenkinsPipelineStrategy\">\n" +
-    "<span ng-if=\"!('buildconfigs/instantiate' | canI : 'create')\">\n" +
+    "<span ng-if=\"!(buildConfigsInstantiateVersion | canI : 'create')\">\n" +
     "Builds will create an image from\n" +
     "</span>\n" +
-    "<span ng-if=\"'buildconfigs/instantiate' | canI : 'create'\">\n" +
+    "<span ng-if=\"buildConfigsInstantiateVersion | canI : 'create'\">\n" +
     "Start a new build to create an image from\n" +
     "</span>\n" +
     "<span ng-if=\"buildConfig.spec.source.type === 'Git'\">\n" +
@@ -1705,7 +1705,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</span>\n" +
     "</p>\n" +
-    "<button class=\"btn btn-primary btn-lg\" ng-click=\"startBuild()\" ng-if=\"('buildconfigs/instantiate' | canI : 'create') && !(buildConfig | isBinaryBuild)\">\n" +
+    "<button class=\"btn btn-primary btn-lg\" ng-click=\"startBuild()\" ng-if=\"(buildConfigsInstantiateVersion | canI : 'create') && !(buildConfig | isBinaryBuild)\">\n" +
     "<span ng-if=\"!(buildConfig | isJenkinsPipelineStrategy)\">\n" +
     "Start Build\n" +
     "</span>\n" +

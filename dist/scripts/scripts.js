@@ -5295,7 +5295,7 @@ title: "Builds",
 link: "project/" + n.project + "/browse/builds"
 }), e.breadcrumbs.push({
 title: n.buildconfig
-}), e.buildConfigsVersion = a.getPreferredVersion("buildconfigs"), e.buildsVersion = a.getPreferredVersion("builds"), e.emptyMessage = "Loading...", e.aceLoaded = function(e) {
+}), e.buildConfigsVersion = a.getPreferredVersion("buildconfigs"), e.buildsVersion = a.getPreferredVersion("builds"), e.buildConfigsInstantiateVersion = a.getPreferredVersion("buildconfigs/instantiate"), e.emptyMessage = "Loading...", e.aceLoaded = function(e) {
 var t = e.getSession();
 t.setOption("tabSize", 2), t.setOption("useSoftTabs", !0), e.$blockScrolling = 1 / 0;
 };
@@ -5305,7 +5305,7 @@ e.updatedBuildConfig = angular.copy(t), e.envVars = m(e.updatedBuildConfig).env 
 e.compareTriggers = function(e, t) {
 return _.isNumber(e.value) ? -1 : "ConfigChange" === e.value ? -1 : "ConfigChange" === t.value ? 1 : "ImageChange" === e.value ? -1 : "ImageChange" === t.value ? 1 : e.value.localeCompare(t.value);
 }, e.saveEnvVars = function() {
-l.hideNotification("save-bc-env-error"), e.envVars = _.filter(e.envVars, "name"), m(e.updatedBuildConfig).env = d.compactEntries(angular.copy(e.envVars)), i.update("buildconfigs", n.buildconfig, e.updatedBuildConfig, e.projectContext).then(function() {
+l.hideNotification("save-bc-env-error"), e.envVars = _.filter(e.envVars, "name"), m(e.updatedBuildConfig).env = d.compactEntries(angular.copy(e.envVars)), i.update(e.buildConfigsVersion, n.buildconfig, e.updatedBuildConfig, e.projectContext).then(function() {
 l.addNotification({
 type: "success",
 message: "Environment variables for build config " + e.buildConfigName + " were successfully updated."

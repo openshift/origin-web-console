@@ -8,7 +8,7 @@
           <!-- Primary Actions -->
           <button
               class="btn btn-default hidden-xs"
-              ng-if="('buildconfigs/instantiate' | canI : 'create') && !(buildConfig | isBinaryBuild)"
+              ng-if="(buildConfigsInstantiateVersion | canI : 'create') && !(buildConfig | isBinaryBuild)"
               ng-click="startBuild()">
             <span ng-if="!(buildConfig | isJenkinsPipelineStrategy)">
               Start Build
@@ -27,7 +27,7 @@
              class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
              data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
           <ul class="dropdown-menu dropdown-menu-right actions action-button">
-            <li class="visible-xs-inline" ng-if="('buildconfigs/instantiate' | canI : 'create') && !(buildConfig | isBinaryBuild)">
+            <li class="visible-xs-inline" ng-if="(buildConfigsInstantiateVersion | canI : 'create') && !(buildConfig | isBinaryBuild)">
               <a href="" role="button" ng-click="startBuild()">
                 <span ng-if="!(buildConfig | isJenkinsPipelineStrategy)">
                   Start Build
@@ -83,10 +83,10 @@
 
                   <p>
                     <span ng-if="!buildConfig.spec.strategy.jenkinsPipelineStrategy">
-                      <span ng-if="!('buildconfigs/instantiate' | canI : 'create')">
+                      <span ng-if="!(buildConfigsInstantiateVersion | canI : 'create')">
                         Builds will create an image from
                       </span>
-                      <span ng-if="'buildconfigs/instantiate' | canI : 'create'">
+                      <span ng-if="buildConfigsInstantiateVersion | canI : 'create'">
                         Start a new build to create an image from
                       </span>
                       <span ng-if="buildConfig.spec.source.type === 'Git'">
@@ -118,7 +118,7 @@
                   <button
                       class="btn btn-primary btn-lg"
                       ng-click="startBuild()"
-                      ng-if="('buildconfigs/instantiate' | canI : 'create') && !(buildConfig | isBinaryBuild)">
+                      ng-if="(buildConfigsInstantiateVersion | canI : 'create') && !(buildConfig | isBinaryBuild)">
                     <span ng-if="!(buildConfig | isJenkinsPipelineStrategy)">
                       Start Build
                     </span>
