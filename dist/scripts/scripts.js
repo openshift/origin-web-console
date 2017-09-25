@@ -5166,45 +5166,45 @@ a.toggle.roles = !a.toggle.roles, a.toggle.roles ? a.filteredRoles = t : (a.filt
 });
 });
 }));
-} ]), angular.module("openshiftConsole").controller("BuildsController", [ "$routeParams", "$scope", "DataService", "$filter", "LabelFilter", "Logger", "$location", "BuildsService", "ProjectsService", function(e, t, n, a, r, o, i, s, c) {
-t.projectName = e.project, t.builds = {}, t.unfilteredBuildConfigs = {}, t.buildConfigs = void 0, t.labelSuggestions = {}, t.alerts = t.alerts || {}, t.emptyMessage = "Loading...", t.latestByConfig = {};
-var l = a("buildConfigForBuild"), u = [];
-c.get(e.project).then(_.spread(function(e, i) {
-function c(e) {
-var n = r.getLabelSelector();
-if (n.isEmpty()) return !0;
-var a = l(e) || "";
-return a && t.unfilteredBuildConfigs[a] ? !!t.buildConfigs[a] : n.matches(e);
+} ]), angular.module("openshiftConsole").controller("BuildsController", [ "$filter", "$location", "$routeParams", "$scope", "APIService", "BuildsService", "DataService", "LabelFilter", "Logger", "ProjectsService", function(e, t, n, a, r, o, i, s, c, l) {
+a.projectName = n.project, a.builds = {}, a.unfilteredBuildConfigs = {}, a.buildConfigs = void 0, a.labelSuggestions = {}, a.alerts = a.alerts || {}, a.emptyMessage = "Loading...", a.latestByConfig = {};
+var u = e("buildConfigForBuild"), d = r.getPreferredVersion("builds"), p = r.getPreferredVersion("buildconfigs"), m = [];
+l.get(n.project).then(_.spread(function(t, n) {
+function r(e) {
+var t = s.getLabelSelector();
+if (t.isEmpty()) return !0;
+var n = u(e) || "";
+return n && a.unfilteredBuildConfigs[n] ? !!a.buildConfigs[n] : t.matches(e);
 }
-function d(e) {
-if (l(e)) return !1;
-var t = r.getLabelSelector();
+function l(e) {
+if (u(e)) return !1;
+var t = s.getLabelSelector();
 return !!t.isEmpty() || t.matches(e);
 }
-function p() {
-t.latestByConfig = s.latestBuildByConfig(t.builds, c), t.buildsNoConfig = _.pickBy(t.builds, d), angular.forEach(t.buildConfigs, function(e, n) {
-t.latestByConfig[n] = t.latestByConfig[n] || null;
+function f() {
+a.latestByConfig = o.latestBuildByConfig(a.builds, r), a.buildsNoConfig = _.pickBy(a.builds, l), angular.forEach(a.buildConfigs, function(e, t) {
+a.latestByConfig[t] = a.latestByConfig[t] || null;
 });
 }
-function m() {
-var e = _.omitBy(t.latestByConfig, _.isNull);
-!r.getLabelSelector().isEmpty() && _.isEmpty(t.buildConfigs) && _.isEmpty(e) ? t.alerts.builds = {
+function g() {
+var e = _.omitBy(a.latestByConfig, _.isNull);
+!s.getLabelSelector().isEmpty() && _.isEmpty(a.buildConfigs) && _.isEmpty(e) ? a.alerts.builds = {
 type: "warning",
 details: "The active filters are hiding all builds."
-} : delete t.alerts.builds;
+} : delete a.alerts.builds;
 }
-t.project = e;
-var f = a("isJenkinsPipelineStrategy");
-u.push(n.watch("builds", i, function(e) {
-t.builds = _.omitBy(e.by("metadata.name"), f), t.emptyMessage = "No builds to show", p(), r.addLabelSuggestionsFromResources(t.builds, t.labelSuggestions), o.log("builds (subscribe)", t.builds);
-})), u.push(n.watch("buildconfigs", i, function(e) {
-t.unfilteredBuildConfigs = _.omitBy(e.by("metadata.name"), f), r.addLabelSuggestionsFromResources(t.unfilteredBuildConfigs, t.labelSuggestions), r.setLabelSuggestions(t.labelSuggestions), t.buildConfigs = r.getLabelSelector().select(t.unfilteredBuildConfigs), p(), m(), o.log("buildconfigs (subscribe)", t.buildConfigs);
-})), r.onActiveFiltersChanged(function(e) {
-t.$apply(function() {
-t.buildConfigs = e.select(t.unfilteredBuildConfigs), p(), m();
+a.project = t;
+var h = e("isJenkinsPipelineStrategy");
+m.push(i.watch(d, n, function(e) {
+a.builds = _.omitBy(e.by("metadata.name"), h), a.emptyMessage = "No builds to show", f(), s.addLabelSuggestionsFromResources(a.builds, a.labelSuggestions), c.log("builds (subscribe)", a.builds);
+})), m.push(i.watch(p, n, function(e) {
+a.unfilteredBuildConfigs = _.omitBy(e.by("metadata.name"), h), s.addLabelSuggestionsFromResources(a.unfilteredBuildConfigs, a.labelSuggestions), s.setLabelSuggestions(a.labelSuggestions), a.buildConfigs = s.getLabelSelector().select(a.unfilteredBuildConfigs), f(), g(), c.log("buildconfigs (subscribe)", a.buildConfigs);
+})), s.onActiveFiltersChanged(function(e) {
+a.$apply(function() {
+a.buildConfigs = e.select(a.unfilteredBuildConfigs), f(), g();
 });
-}), t.$on("$destroy", function() {
-n.unwatchAll(u);
+}), a.$on("$destroy", function() {
+i.unwatchAll(m);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("PipelinesController", [ "$filter", "$routeParams", "$scope", "Constants", "Navigate", "BuildsService", "DataService", "Logger", "ProjectsService", function(e, t, n, a, r, o, i, s, c) {
