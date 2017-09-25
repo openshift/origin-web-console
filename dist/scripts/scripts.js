@@ -6384,14 +6384,14 @@ link: "project/" + n.projectName + "/browse/config-maps"
 }, {
 title: "Create Config Map"
 } ];
-var u = r.getPreferredVersion("configmaps"), d = function() {
+var u = function() {
 c.hideNotification("create-config-map-error");
 };
-n.$on("$destroy", d);
-var p = function() {
+n.$on("$destroy", u);
+var d = function() {
 a.history.back();
 };
-n.cancel = p, l.get(t.project).then(_.spread(function(a, r) {
+n.cancel = d, l.get(t.project).then(_.spread(function(a, l) {
 n.project = a, o.canI("configmaps", "create", t.project) ? (n.configMap = {
 apiVersion: "v1",
 kind: "ConfigMap",
@@ -6400,11 +6400,14 @@ namespace: t.project
 },
 data: {}
 }, n.createConfigMap = function() {
-n.createConfigMapForm.$valid && (d(), n.disableInputs = !0, i.create(u, null, n.configMap, r).then(function() {
+if (n.createConfigMapForm.$valid) {
+u(), n.disableInputs = !0;
+var t = r.objectToResourceGroupVersion(n.configMap);
+i.create(t, null, n.configMap, l).then(function() {
 c.addNotification({
 type: "success",
 message: "Config map " + n.configMap.metadata.name + " successfully created."
-}), p();
+}), d();
 }, function(t) {
 n.disableInputs = !1, c.addNotification({
 id: "create-config-map-error",
@@ -6412,7 +6415,8 @@ type: "error",
 message: "An error occurred creating the config map.",
 details: e("getErrorDetails")(t)
 });
-}));
+});
+}
 }) : s.toErrorPage("You do not have authority to create config maps in project " + t.project + ".", "access_denied");
 }));
 } ]), angular.module("openshiftConsole").controller("RoutesController", [ "$routeParams", "$scope", "DataService", "$filter", "LabelFilter", "ProjectsService", function(e, t, n, a, r, o) {
