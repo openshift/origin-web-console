@@ -14,6 +14,7 @@ angular.module('openshiftConsole')
                                             $q,
                                             $routeParams,
                                             $uibModal,
+                                            APIService,
                                             CatalogService,
                                             Constants,
                                             DataService,
@@ -32,6 +33,9 @@ angular.module('openshiftConsole')
       }
     ];
 
+    var imageStreamsVersion = APIService.getPreferredVersion('imagestreams');
+    var templatesVersion = APIService.getPreferredVersion('templates');
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -40,12 +44,12 @@ angular.module('openshiftConsole')
 
         // List image streams and templates in the both the shared `openshift`
         // namespace and the project namespace.
-        DataService.list("imagestreams", {namespace: "openshift"}).then(function(resp) {
+        DataService.list(imageStreamsVersion, {namespace: "openshift"}).then(function(resp) {
             $scope.openshiftImageStreams = resp.by("metadata.name");
           });
 
         // Request only the template metadata. Otherwise the response contains all of the object definitions, which can be megabytes of data.
-        DataService.list("templates", {namespace: "openshift"}, null, {partialObjectMetadataList: true}).then(function(resp) {
+        DataService.list(templatesVersion, {namespace: "openshift"}, null, {partialObjectMetadataList: true}).then(function(resp) {
             $scope.openshiftTemplates = resp.by("metadata.name");
           });
 
@@ -55,11 +59,11 @@ angular.module('openshiftConsole')
           $scope.projectImageStreams = [];
           $scope.projectTemplates = [];
         } else {
-          DataService.list("imagestreams", context).then(function(resp) {
+          DataService.list(imageStreamsVersion, context).then(function(resp) {
               $scope.projectImageStreams = resp.by("metadata.name");
             });
 
-          DataService.list("templates", context, null, {partialObjectMetadataList: true}).then(function(resp) {
+          DataService.list(templatesVersion, context, null, {partialObjectMetadataList: true}).then(function(resp) {
               $scope.projectTemplates = resp.by("metadata.name");
             });
         }

@@ -8168,23 +8168,25 @@ t.location.href = "/";
 t.debug("LogoutController"), n.isLoggedIn() ? (t.debug("LogoutController, logged in, initiating logout"), e.logoutMessage = "Logging out...", n.startLogout().finally(function() {
 n.isLoggedIn() ? (t.debug("LogoutController, logout failed, still logged in"), e.logoutMessage = 'You could not be logged out. Return to the <a href="./">console</a>.') : a.logout_uri ? (t.debug("LogoutController, logout completed, redirecting to AUTH_CFG.logout_uri", a.logout_uri), window.location.href = a.logout_uri) : (t.debug("LogoutController, logout completed, reloading the page"), window.location.reload(!1));
 })) : a.logout_uri ? (t.debug("LogoutController, logout completed, redirecting to AUTH_CFG.logout_uri", a.logout_uri), e.logoutMessage = "Logging out...", window.location.href = a.logout_uri) : (t.debug("LogoutController, not logged in, logout complete"), e.logoutMessage = 'You are logged out. Return to the <a href="./">console</a>.');
-} ]), angular.module("openshiftConsole").controller("CreateController", [ "$scope", "$filter", "$location", "$q", "$routeParams", "$uibModal", "CatalogService", "Constants", "DataService", "LabelFilter", "Logger", "ProjectsService", function(e, t, n, a, r, o, i, s, c, l, u, d) {
-e.projectName = r.project, e.categories = s.CATALOG_CATEGORIES, e.alerts = e.alerts || {}, e.breadcrumbs = [ {
+} ]), angular.module("openshiftConsole").controller("CreateController", [ "$scope", "$filter", "$location", "$q", "$routeParams", "$uibModal", "APIService", "CatalogService", "Constants", "DataService", "LabelFilter", "Logger", "ProjectsService", function(e, t, n, a, r, o, i, s, c, l, u, d, p) {
+e.projectName = r.project, e.categories = c.CATALOG_CATEGORIES, e.alerts = e.alerts || {}, e.breadcrumbs = [ {
 title: "Add to Project"
-} ], d.get(r.project).then(_.spread(function(t, n) {
-e.project = t, e.context = n, c.list("imagestreams", {
+} ];
+var m = i.getPreferredVersion("imagestreams"), f = i.getPreferredVersion("templates");
+p.get(r.project).then(_.spread(function(t, n) {
+e.project = t, e.context = n, l.list(m, {
 namespace: "openshift"
 }).then(function(t) {
 e.openshiftImageStreams = t.by("metadata.name");
-}), c.list("templates", {
+}), l.list(f, {
 namespace: "openshift"
 }, null, {
 partialObjectMetadataList: !0
 }).then(function(t) {
 e.openshiftTemplates = t.by("metadata.name");
-}), "openshift" === r.project ? (e.projectImageStreams = [], e.projectTemplates = []) : (c.list("imagestreams", n).then(function(t) {
+}), "openshift" === r.project ? (e.projectImageStreams = [], e.projectTemplates = []) : (l.list(m, n).then(function(t) {
 e.projectImageStreams = t.by("metadata.name");
-}), c.list("templates", n, null, {
+}), l.list(f, n, null, {
 partialObjectMetadataList: !0
 }).then(function(t) {
 e.projectTemplates = t.by("metadata.name");
