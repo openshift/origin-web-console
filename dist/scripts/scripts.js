@@ -8709,27 +8709,18 @@ kubernetes: n.VERSION.kubernetes
 };
 } ]), angular.module("openshiftConsole").controller("CommandLineController", [ "$scope", "DataService", "AuthService", "Constants", function(e, t, n, a) {
 n.withUser(), e.cliDownloadURL = a.CLI, e.cliDownloadURLPresent = e.cliDownloadURL && !_.isEmpty(e.cliDownloadURL), e.loginBaseURL = t.openshiftAPIBaseUrl(), a.DISABLE_COPY_LOGIN_COMMAND || (e.sessionToken = n.UserStore().getToken());
-} ]), angular.module("openshiftConsole").controller("CreatePersistentVolumeClaimController", [ "$filter", "$routeParams", "$scope", "$window", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "NotificationsService", "ProjectsService", "keyValueEditorUtils", function(e, t, n, a, r, o, i, s, c, l, u) {
+} ]), angular.module("openshiftConsole").controller("CreatePersistentVolumeClaimController", [ "$filter", "$routeParams", "$scope", "$window", "APIService", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "NotificationsService", "ProjectsService", "keyValueEditorUtils", function(e, t, n, a, r, o, i, s, c, l, u, d) {
 n.projectName = t.project, n.accessModes = "ReadWriteOnce", n.claim = {}, n.breadcrumbs = [ {
 title: "Storage",
 link: "project/" + n.projectName + "/browse/storage"
 }, {
 title: "Create Storage"
 } ];
-var d = function() {
-c.hideNotification("create-pvc-error");
-};
-n.$on("$destroy", d);
-var p = function() {
-a.history.back();
-};
-n.cancel = p, l.get(t.project).then(_.spread(function(a, r) {
-function l() {
-var e = {
+var p = {
 kind: "PersistentVolumeClaim",
 apiVersion: "v1",
 metadata: {
-name: n.claim.name,
+name: void 0,
 labels: {},
 annotations: {}
 },
@@ -8738,26 +8729,35 @@ resources: {
 requests: {}
 }
 }
+}, m = r.objectToResourceGroupVersion(p), f = function() {
+l.hideNotification("create-pvc-error");
 };
-e.spec.accessModes = [ n.claim.accessModes || "ReadWriteOnce" ];
+n.$on("$destroy", f);
+var g = function() {
+a.history.back();
+};
+n.cancel = g, u.get(t.project).then(_.spread(function(a, r) {
+function o() {
+var e = angular.copy(p);
+e.metadata.name = n.claim.name, e.spec.accessModes = [ n.claim.accessModes || "ReadWriteOnce" ];
 var t = n.claim.unit || "Mi";
 if (e.spec.resources.requests.storage = n.claim.amount + t, n.claim.selectedLabels) {
-var a = u.mapEntries(u.compactEntries(n.claim.selectedLabels));
+var a = d.mapEntries(d.compactEntries(n.claim.selectedLabels));
 _.isEmpty(a) || _.set(e, "spec.selector.matchLabels", a);
 }
 return n.claim.storageClass && "No Storage Class" !== n.claim.storageClass.metadata.name && (e.metadata.annotations["volume.beta.kubernetes.io/storage-class"] = n.claim.storageClass.metadata.name), e;
 }
-n.project = a, o.canI("persistentvolumeclaims", "create", t.project) ? n.createPersistentVolumeClaim = function() {
-if (d(), n.createPersistentVolumeClaimForm.$valid) {
+n.project = a, i.canI(m, "create", t.project) ? n.createPersistentVolumeClaim = function() {
+if (f(), n.createPersistentVolumeClaimForm.$valid) {
 n.disableInputs = !0;
-var t = l();
-i.create("persistentvolumeclaims", null, t, r).then(function(e) {
-c.addNotification({
+var t = o();
+s.create(m, null, t, r).then(function(e) {
+l.addNotification({
 type: "success",
 message: "Persistent volume claim " + e.metadata.name + " successfully created."
-}), p();
+}), g();
 }, function(t) {
-n.disableInputs = !1, c.addNotification({
+n.disableInputs = !1, l.addNotification({
 id: "create-pvc-error",
 type: "error",
 message: "An error occurred requesting storage.",
@@ -8765,7 +8765,7 @@ details: e("getErrorDetails")(t)
 });
 });
 }
-} : s.toErrorPage("You do not have authority to create persistent volume claims in project " + t.project + ".", "access_denied");
+} : c.toErrorPage("You do not have authority to create persistent volume claims in project " + t.project + ".", "access_denied");
 }));
 } ]), angular.module("openshiftConsole").directive("buildClose", [ "$window", function(e) {
 var t = function(e) {
