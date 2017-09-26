@@ -36,7 +36,7 @@
       <status-icon status="'Pending'"></status-icon>Pending
     </div>
   </div>
-  <div class="service-binding-actions" ng-if="!ctrl.binding.metadata.deletionTimestamp">
+  <div class="service-binding-actions" ng-if="!$ctrl.binding.metadata.deletionTimestamp">
     <delete-link
       ng-if="({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'delete')"
       kind="ServiceInstanceCredential"
