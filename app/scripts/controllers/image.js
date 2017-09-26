@@ -7,13 +7,14 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('ImageController', function ($scope,
+  .controller('ImageController', function ($filter,
+                                           $scope,
                                            $routeParams,
+                                           APIService,
                                            DataService,
-                                           ProjectsService,
-                                           $filter,
                                            ImageStreamsService,
-                                           imageLayers) {
+                                           imageLayers,
+                                           ProjectsService) {
     $scope.projectName = $routeParams.project;
     $scope.imageStream = null;
     $scope.image = null;
@@ -37,11 +38,14 @@ angular.module('openshiftConsole')
       }
     ];
 
+    var imageStreamTagsVersion = APIService.getPreferredVersion('imagestreamtags');
+    var imageStreamsVersion = APIService.getPreferredVersion('imagestreams');
+
     var watches = [];
 
     var fetchImageStreamTag = _.debounce(function(tagData, context) {
       var name = $routeParams.imagestream + ":" + $routeParams.tag;
-      DataService.get("imagestreamtags", name, context).then(
+      DataService.get(imageStreamTagsVersion, name, context).then(
         // success
         function(imageStreamTag) {
           $scope.loaded = true;
@@ -95,10 +99,10 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
         DataService
-          .get("imagestreams", $routeParams.imagestream, context, { errorNotification: false })
+          .get(imageStreamsVersion, $routeParams.imagestream, context, { errorNotification: false })
           .then(function(imageStream) {
             imageStreamResolved(imageStream, context);
-            watches.push(DataService.watchObject("imagestreams", $routeParams.imagestream, context, function(imageStream, action) {
+            watches.push(DataService.watchObject(imageStreamsVersion, $routeParams.imagestream, context, function(imageStream, action) {
               imageStreamResolved(imageStream, context, action);
             }));
           }, function(e) {

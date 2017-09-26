@@ -31,7 +31,7 @@ angular
         {group: 'autoscaling', resource: 'horizontalpodautoscalers', verbs: ['update', 'delete']}
       ],
       'imageStreams': [
-        {group: '', resource: 'imagestreams', verbs: ['update', 'delete']}
+        _.assign({}, APIService.getPreferredVersion('imagestreams'), {verbs: ['update', 'delete']})
       ],
       'serviceInstances': [
         {group: 'servicecatalog.k8s.io', resource: 'serviceinstances', verbs: ['update', 'delete']}
