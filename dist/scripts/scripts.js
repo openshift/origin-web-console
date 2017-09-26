@@ -15224,8 +15224,8 @@ r = _.get(t(n, a), "message");
 }
 return r;
 };
-} ]), angular.module("openshiftConsole").filter("canIDoAny", [ "canIFilter", function(e) {
-var t = {
+} ]), angular.module("openshiftConsole").filter("canIDoAny", [ "APIService", "canIFilter", function(e, t) {
+var n = {
 buildConfigs: [ {
 group: "",
 resource: "buildconfigs",
@@ -15235,15 +15235,11 @@ group: "",
 resource: "buildconfigs/instantiate",
 verbs: [ "create" ]
 } ],
-builds: [ {
-group: "",
-resource: "builds/clone",
+builds: [ _.assign({}, e.getPreferredVersion("builds/clone"), {
 verbs: [ "create" ]
-}, {
-group: "",
-resource: "builds",
+}), _.assign({}, e.getPreferredVersion("builds"), {
 verbs: [ "delete", "update" ]
-} ],
+}) ],
 configmaps: [ {
 group: "",
 resource: "configmaps",
@@ -15336,12 +15332,12 @@ resource: "statefulsets",
 verbs: [ "update", "delete" ]
 } ]
 };
-return function(n) {
-return _.some(t[n], function(t) {
-return _.some(t.verbs, function(n) {
-return e({
-resource: t.resource,
-group: t.group
+return function(e) {
+return _.some(n[e], function(e) {
+return _.some(e.verbs, function(n) {
+return t({
+resource: e.resource,
+group: e.group
 }, n);
 });
 });
