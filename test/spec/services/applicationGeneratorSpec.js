@@ -15,6 +15,7 @@ describe("ApplicationGenerator", function(){
 
     inputTemplate = {
       name: "ruby-hello-world",
+      namespace: "openshift",
       routing: {
         include: true,
         targetPort: {
@@ -288,7 +289,8 @@ describe("ApplicationGenerator", function(){
             "sourceStrategy" : {
               "from": {
                 "kind": "ImageStreamTag",
-                "name": "origin-ruby-sample:latest"
+                "name": "origin-ruby-sample:latest",
+                "namespace": "openshift"
               },
               "env": [{
                 "name": "BUILD_ENV_1",

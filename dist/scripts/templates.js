@@ -2036,6 +2036,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<key-value-editor ng-if=\"!(buildConfigsVersion | canI : 'update')\" entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" is-readonly cannot-add cannot-sort cannot-delete show-header></key-value-editor>\n" +
     "</ng-form>\n" +
     "</uib-tab>\n" +
+    "<uib-tab active=\"selectedTab.events\" ng-if=\"('events' | canI : 'watch')\">\n" +
+    "<uib-tab-heading>Events</uib-tab-heading>\n" +
+    "<events api-objects=\"[ buildConfig ]\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
+    "</uib-tab>\n" +
     "</uib-tabset>\n" +
     "</div>\n" +
     "</div>\n" +
