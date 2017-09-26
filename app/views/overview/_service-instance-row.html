@@ -63,8 +63,8 @@
           class="hidden-xs"
           ng-if="(!row.instanceStatus || row.instanceStatus === 'ready') && row.apiObject.status.dashboardURL">
           <a ng-href="{{row.apiObject.status.dashboardURL}}" target="_blank">
-            Console
-          </a> <i class="fa fa-external-link small" aria-hidden="true"></i>
+            Console <i class="fa fa-external-link" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
     </div>
@@ -112,7 +112,13 @@
               <div class="alert word-break alert-danger">
                 <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
                 <span class="sr-only">error</span>
-                <span class="strong">{{row.apiObject | serviceInstanceFailedMessage}}</span>
+                <span class="strong">The service failed.</span>
+                <span class="mar-right-md">
+                  <truncate-long-text content="row.apiObject | serviceInstanceFailedMessage" limit="265"></truncate-long-text>
+                </span>
+                <span ng-if="{resource: 'serviceinstances', group: 'servicecatalog.k8s.io'} | canI : 'delete'" class="nowrap">
+                  <a href="" ng-click="row.deprovision()">Delete This Service</a>
+                </span>
               </div>
             </div>
           </div>
@@ -121,16 +127,20 @@
               <div class="alert word-break alert-info">
                 <span class="pficon pficon-info" aria-hidden="true"></span>
                 <span class="sr-only">info</span>
-                <span>The service is not yet ready.</span>
-                <span>{{row.pendingMessage}}</span>
+                <span class="strong">The service is not yet ready.</span>
+                <truncate-long-text content="row.pendingMessage" limit="265"></truncate-long-text>
               </div>
             </div>
           </div>
         </div>
         <div>
           <div class="row">
-            <div class="col-sm-12" ng-if="row.description">
-              <p class="pre-wrap" ng-bind-html="row.description | linky"></p>
+            <div class="col-sm-12" ng-if="row.serviceClass.description">
+              <p class="pre-wrap" ng-bind-html="row.serviceClass.description | linky"></p>
+              <div ng-if="row.serviceClass.externalMetadata.documentationUrl || row.serviceClass.externalMetadata.supportUrl">
+                <a ng-if="row.serviceClass.externalMetadata.documentationUrl" ng-href="{{row.serviceClass.externalMetadata.documentationUrl}}" target="_blank" class="learn-more-link">View Documentation <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                <a ng-if="row.serviceClass.externalMetadata.supportUrl" ng-href="{{row.serviceClass.externalMetadata.supportUrl}}" target="_blank" class="learn-more-link">Get Support <i class="fa fa-external-link" aria-hidden="true"></i></a>
+              </div>
             </div>
           </div>
           <overview-service-bindings

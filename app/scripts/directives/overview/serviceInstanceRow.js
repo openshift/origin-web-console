@@ -32,11 +32,6 @@
 
     var serviceInstanceDisplayName = $filter('serviceInstanceDisplayName');
 
-    var getDescription = function() {
-      var serviceClassName = row.apiObject.spec.serviceClassName;
-      return _.get(row, ['state','serviceClasses', serviceClassName, 'description']);
-    };
-
     var updateInstanceStatus = function() {
       if (_.get(row.apiObject, 'metadata.deletionTimestamp')) {
         row.instanceStatus = 'deleted';
@@ -55,7 +50,7 @@
       row.notifications = ListRowUtils.getNotifications(row.apiObject, row.state);
       row.displayName = serviceInstanceDisplayName(row.apiObject, row.state.serviceClasses);
       row.isBindable = BindingService.isServiceBindable(row.apiObject, row.state.serviceClasses);
-      row.description = getDescription();
+      row.serviceClass = _.get(row, ['state', 'serviceClasses', row.apiObject.spec.serviceClassName]);
     };
 
     row.$onChanges = function(changes) {
