@@ -351,7 +351,8 @@ angular.module("openshiftConsole")
             sourceStrategy: {
               from: {
                 kind: "ImageStreamTag",
-                name: input.imageName + ":" + input.imageTag
+                name: input.imageName + ":" + input.imageTag,
+                namespace: input.namespace
               },
               env: env
             }
@@ -359,9 +360,7 @@ angular.module("openshiftConsole")
           triggers: triggers
         }
       };
-      if(input.namespace) {
-        bc.spec.strategy.namespace = input.namespace;
-      }
+
       if (_.get(input, 'buildConfig.secrets.gitSecret[0].name')) {
         bc.spec.source.sourceSecret = _.head(input.buildConfig.secrets.gitSecret);
       }

@@ -1496,7 +1496,8 @@ type: "Source",
 sourceStrategy: {
 from: {
 kind: "ImageStreamTag",
-name: e.imageName + ":" + e.imageTag
+name: e.imageName + ":" + e.imageTag,
+namespace: e.namespace
 },
 env: n
 }
@@ -1504,7 +1505,7 @@ env: n
 triggers: a
 }
 };
-return e.namespace && (l.spec.strategy.namespace = e.namespace), _.get(e, "buildConfig.secrets.gitSecret[0].name") && (l.spec.source.sourceSecret = _.head(e.buildConfig.secrets.gitSecret)), e.buildConfig.contextDir && (l.spec.source.contextDir = e.buildConfig.contextDir), l;
+return _.get(e, "buildConfig.secrets.gitSecret[0].name") && (l.spec.source.sourceSecret = _.head(e.buildConfig.secrets.gitSecret)), e.buildConfig.contextDir && (l.spec.source.contextDir = e.buildConfig.contextDir), l;
 }, o._generateImageStream = function(e) {
 return {
 apiVersion: "v1",
