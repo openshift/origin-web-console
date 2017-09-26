@@ -4278,51 +4278,82 @@ controller: !0
 });
 }
 };
-}), angular.module("openshiftConsole").factory("ServiceInstancesService", [ "$filter", "$uibModal", "DataService", "NotificationsService", function(e, t, n, a) {
-return {
-deprovision: function(r) {
-var o = e("getErrorDetails"), i = {
-alerts: {
-deprovision: {
+}), angular.module("openshiftConsole").factory("ServiceInstancesService", [ "$filter", "$q", "$uibModal", "APIService", "BindingService", "CatalogService", "DataService", "Logger", "NotificationsService", function(e, t, n, a, r, o, i, s, c) {
+var l = function(e, n) {
+if (angular.isDefined(n)) return t.when(n);
+var o = {
+namespace: e.metadata.namespace
+}, s = a.getPreferredVersion("serviceinstancecredentials");
+return i.list(s, o).then(function(t) {
+return n = t.by("metadata.name"), r.getBindingsForResource(n, e);
+});
+}, u = function(t) {
+var n = {
+namespace: t.metadata.namespace
+}, r = a.getPreferredVersion("serviceinstances");
+c.hideNotification("deprovision-service-error");
+var o = {
+propagationPolicy: null
+};
+return i.delete(r, t.metadata.name, n, o).then(function() {
+c.addNotification({
+type: "success",
+message: "Provisioned service '" + t.metadata.name + "' was marked for deletion."
+});
+}, function(n) {
+c.addNotification({
+id: "deprovision-service-error",
 type: "error",
-message: "Service '" + r.spec.serviceClassName + "' will be deleted and no longer available."
+message: "An error occurred while deleting provisioned service " + t.metadata.name + ".",
+details: e("getErrorDetails")(n)
+}), s("An error occurred while deleting provisioned service " + t.metadata.name + ".", n);
+});
+}, d = function(t, n) {
+if (o.SERVICE_CATALOG_ENABLED) {
+var r = {
+namespace: t.metadata.namespace
+}, u = a.getPreferredVersion("serviceinstancecredentials");
+l(t, n).then(function(t) {
+_.each(t, function(t) {
+t.metadata.deletionTimestamp && i.delete(u, t.metadata.name, r).then(function() {
+c.addNotification({
+type: "success",
+message: "Binding " + t.metadata.name + "' was marked for deletion."
+});
+}).catch(function(n) {
+c.addNotification({
+type: "error",
+message: "Binding " + t.metadata.name + "' could not be deleted.",
+details: e("getErrorDetails")(n)
+}), s.error("Binding " + t.metadata.name + "' could not be deleted.", n);
+});
+});
+});
 }
-},
-detailsMarkup: "Delete Service?",
+};
+return {
+deprovision: function(e, t) {
+var a, r = {
+kind: e.kind,
+displayName: e.metadata.name,
 okButtonText: "Delete",
 okButtonClass: "btn-danger",
-cancelButtonText: "Cancel"
+cancelButtonText: "Cancel",
+delete: function() {
+a.close("delete");
+}
 };
-return t.open({
+return (a = n.open({
 animation: !0,
-templateUrl: "views/modals/confirm.html",
+templateUrl: "views/modals/delete-resource.html",
 controller: "ConfirmModalController",
 resolve: {
 modalConfig: function() {
-return i;
+return r;
 }
 }
-}).result.then(function() {
-return a.hideNotification("deprovision-service-error"), n.delete({
-group: "servicecatalog.k8s.io",
-resource: "serviceinstances"
-}, r.metadata.name, {
-namespace: r.metadata.namespace
-}, {
-propagationPolicy: null
-}).then(function() {
-a.addNotification({
-type: "success",
-message: "Successfully deleted provisioned service " + r.metadata.name + "."
-});
-}, function(e) {
-a.addNotification({
-id: "deprovision-service-error",
-type: "error",
-message: "An error occurred while deleting provisioned service " + r.metadata.name + ".",
-details: o(e)
-});
-});
+})).result.then(function() {
+d(e, t), u(e);
 });
 }
 };
@@ -13566,7 +13597,7 @@ _.set(o, "overlay.panelVisible", !1);
 }, o.showOverlayPanel = function(e, t) {
 _.set(o, "overlay.panelVisible", !0), _.set(o, "overlay.panelName", e), _.set(o, "overlay.state", t);
 }, o.deprovision = function() {
-r.deprovision(o.apiObject);
+r.deprovision(o.apiObject, o.deleteableBindings);
 };
 } ],
 controllerAs: "row",

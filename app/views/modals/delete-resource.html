@@ -18,6 +18,10 @@
           This will delete the {{typeDisplayName || (kind | humanizeKind)}} and any running pods.
         </span>
 
+        <span ng-if="kind === 'ServiceInstance'">
+          {{displayName ? displayName : resourceName}} and its data will no longer be available to your applications.
+        </span>
+
         <span ng-if="isProject">
           This will <strong>delete all resources</strong> associated with the
           project {{displayName ? displayName : resourceName}}.
