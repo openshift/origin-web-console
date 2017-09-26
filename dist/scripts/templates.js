@@ -5052,7 +5052,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid next-steps\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
-    "<next-steps project=\"project\" project-name=\"projectName\" login-base-url=\"loginBaseUrl\" from-sample-repo=\"fromSampleRepo\" created-build-config=\"createdBuildConfig\"></next-steps>\n" +
+    "<next-steps project=\"project\" project-name=\"projectName\" login-base-url=\"loginBaseUrl\" from-sample-repo=\"fromSampleRepo\" created-build-config=\"createdBuildConfig\" name=\"name\"></next-steps>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>"
@@ -6269,7 +6269,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
     "<div class=\"order-service-config\">\n" +
     "<div class=\"wizard-pf-main-form-contents\">\n" +
-    "<next-steps project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\" on-continue=\"$ctrl.close\">\n" +
+    "<next-steps project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\" on-continue=\"$ctrl.close\" show-project-name=\"$ctrl.showProjectName\" name=\"$ctrl.appName\" is-dialog=\"true\">\n" +
     "</next-steps>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7047,7 +7047,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/from-file-dialog.html',
     "<pf-wizard title=\"Import YAML / JSON\" on-cancel=\"$ctrl.close()\" on-finish=\"$ctrl.close()\" hide-sidebar=\"true\" next-title=\"$ctrl.nextButtonTitle\" next-callback=\"$ctrl.nextCallback\" current-step=\"$ctrl.currentStep\" wizard-done=\"$ctrl.wizardDone\" on-step-changed=\"$ctrl.stepChanged(step)\" step-class=\"order-service-wizard-step\">\n" +
-    "<pf-wizard-step step-title=\"JSON / YAML\" step-id=\"file\" step-priority=\"1\" substeps=\"false\" ok-to-nav-away=\"true\" allow-click-nav=\"false\" next-enabled=\"!$ctrl.importForm.$invalid\">\n" +
+    "<pf-wizard-step step-title=\"YAML / JSON\" step-id=\"file\" step-priority=\"1\" substeps=\"false\" ok-to-nav-away=\"true\" allow-click-nav=\"false\" next-enabled=\"!$ctrl.importForm.$invalid\">\n" +
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
     "<div class=\"order-service-config\">\n" +
     "<div class=\"wizard-pf-main-form-contents\">\n" +
@@ -7097,7 +7097,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"order-service-config\">\n" +
     "<div class=\"wizard-pf-main-form-contents\">\n" +
     "\n" +
-    "<next-steps ng-if=\"$ctrl.currentStep === 'Results'\" project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\" on-continue=\"$ctrl.close\">\n" +
+    "<next-steps ng-if=\"$ctrl.currentStep === 'Results'\" project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\" on-continue=\"$ctrl.close\" show-project-name=\"$ctrl.showProjectName\" name=\"$ctrl.name\" is-dialog=\"true\">\n" +
     "</next-steps>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7647,11 +7647,56 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/next-steps.html',
     "<div ng-controller=\"TasksController\">\n" +
-    "<h1 ng-if=\"!tasks().length\">Completed. <a href=\"\" ng-click=\"$ctrl.goToOverview()\">Go to overview</a>.</h1>\n" +
-    "<h1 ng-if=\"tasks().length && $ctrl.allTasksSuccessful(tasks())\">Application created. <a href=\"\" ng-click=\"$ctrl.goToOverview()\">Continue to overview</a>.</h1>\n" +
-    "<h1 ng-if=\"$ctrl.pendingTasks(tasks()).length\">Creating...</h1>\n" +
-    "<h1 ng-if=\"!$ctrl.pendingTasks(tasks()).length && $ctrl.erroredTasks(tasks()).length\">Completed, with errors</h1>\n" +
-    "<div ng-repeat=\"task in tasks()\" ng-if=\"tasks().length && !$ctrl.allTasksSuccessful(tasks())\">\n" +
+    "<div ng-if=\"$ctrl.pendingTasks(tasks()).length\">\n" +
+    "<div class=\"results-status\">\n" +
+    "<span class=\"spinner spinner-sm\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Pending</span>\n" +
+    "<h1 class=\"results-message h3\">\n" +
+    "<strong>{{$ctrl.name}}</strong> is being created<span ng-if=\"$ctrl.showProjectName && $ctrl.projectName\"> in <strong>{{$ctrl.projectName}}</strong></span>.\n" +
+    "</h1>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"results-failure\" ng-if=\"!$ctrl.pendingTasks(tasks()).length && $ctrl.erroredTasks(tasks()).length\">\n" +
+    "<div class=\"results-status\">\n" +
+    "<span class=\"pficon pficon-error-circle-o text-danger\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Error</span>\n" +
+    "<h1 class=\"results-message h3\">\n" +
+    "<strong>{{$ctrl.name}}</strong> failed to be created<span ng-if=\"$ctrl.showProjectName && $ctrl.projectName\"> in <strong>{{$ctrl.projectName}}</strong></span>.\n" +
+    "</h1>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div ng-if=\"!tasks().length\">\n" +
+    "<div class=\"results-status\">\n" +
+    "<span class=\"pficon pficon-ok\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Success</span>\n" +
+    "<h1 class=\"results-message h3\">\n" +
+    "<strong>{{$ctrl.name}}</strong> has been created<span ng-if=\"$ctrl.showProjectName && $ctrl.projectName\"> in <strong>{{$ctrl.projectName}}</strong> successfully</span>.\n" +
+    "</h1>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"tasks().length && $ctrl.allTasksSuccessful(tasks())\">\n" +
+    "<div class=\"results-status\">\n" +
+    "<span class=\"pficon pficon-ok\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Success</span>\n" +
+    "<h1 class=\"results-message h3\">\n" +
+    "<strong>{{$ctrl.name}}</strong> has been created<span ng-if=\"$ctrl.showProjectName && $ctrl.projectName\"> in <strong>{{$ctrl.projectName}}</strong> successfully</span>.\n" +
+    "</h1>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<p ng-if=\"!$ctrl.pendingTasks(tasks()).length && !$ctrl.erroredTasks(tasks()).length\">\n" +
+    "<a href=\"\" ng-click=\"$ctrl.goToOverview()\">Continue to the project overview</a>.\n" +
+    "</p>\n" +
+    "\n" +
+    "<div ng-if=\"$ctrl.isDialog && hasTaskWithError()\">\n" +
+    "<ul ng-repeat=\"task in tasks()\">\n" +
+    "<li ng-repeat=\"alert in task.alerts\" ng-if=\"alert.type === 'error' || alert.type === 'warning'\">\n" +
+    "{{alert.message}} {{alert.details}}\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div ng-repeat=\"task in tasks()\" ng-if=\"!$ctrl.isDialog && tasks().length && !$ctrl.allTasksSuccessful(tasks())\">\n" +
     "<div class=\"tasks\" ng-class=\"hasTaskWithError() ? 'failure' : 'success'\">\n" +
     "<div class=\"task-content\">\n" +
     "<i class=\"pficon task-icon\" ng-class=\"task.hasErrors ? 'pficon-error-circle-o' : 'pficon-ok'\"></i>\n" +
@@ -7684,29 +7729,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "<div class=\"resource-description\" ng-bind-html=\"$ctrl.templateMessage | linkify : '_blank'\"></div>\n" +
     "</div>\n" +
-    "<div class=\"row\" ng-controller=\"TasksController\">\n" +
-    "<div ng-if=\"!$ctrl.pendingTasks(tasks()).length && $ctrl.erroredTasks(tasks()).length\" class=\"col-md-12\">\n" +
-    "<h2>Things you can do</h2>\n" +
-    "<p>Go to the <a href=\"\" ng-click=\"$ctrl.goToOverview()\">overview page</a> to see more details about this project. Make sure you don't already have <a href=\"project/{{$ctrl.projectName}}/browse/services\">services</a>, <a href=\"project/{{$ctrl.projectName}}/browse/builds\">build configs</a>, <a href=\"project/{{$ctrl.projectName}}/browse/deployments\">deployment configs</a>, or other resources with the same names you are trying to create. Refer to the <a target=\"_blank\" href=\"{{'new_app' | helpLink}}\">documentation for creating new applications</a> for more information.</p>\n" +
-    "<h3>Command line tools</h3>\n" +
-    "<p>You may want to use the <code>oc</code> command line tool to help with troubleshooting. After <a target=\"_blank\" href=\"command-line\">downloading and installing</a> it, you can log in, switch to this particular project, and try some commands :</p>\n" +
-    "<pre class=\"code prettyprint\">oc login {{$ctrl.loginBaseUrl}}\n" +
-    "oc project {{$ctrl.projectName}}\n" +
-    "oc logs -h</pre>\n" +
-    "<p>For more information about the command line tools, check the <a target=\"_blank\" href=\"{{'cli' | helpLink}}\">CLI Reference</a> and <a target=\"_blank\" href=\"{{'basic_cli_operations' | helpLink}}\">Basic CLI Operations</a>.</p>\n" +
-    "</div>\n" +
-    "<div ng-if=\"$ctrl.allTasksSuccessful(tasks())\" ng-class=\"$ctrl.createdBuildConfigWithGitHubTrigger() ? 'col-md-6' : 'col-md-12'\">\n" +
-    "<h2>Manage your app</h2>\n" +
-    "<p>The web console is convenient, but if you need deeper control you may want to try our command line tools.</p>\n" +
-    "<h3>Command line tools</h3>\n" +
-    "<p><a target=\"_blank\" href=\"command-line\">Download and install</a> the <code>oc</code> command line tool. After that, you can start by logging in, switching to this particular project, and displaying an overview of it, by doing:</p>\n" +
-    "<pre class=\"code prettyprint\">oc login {{$ctrl.loginBaseUrl}}\n" +
-    "oc project {{$ctrl.projectName}}\n" +
-    "oc status</pre>\n" +
-    "<p>For more information about the command line tools, check the <a target=\"_blank\" href=\"{{'cli' | helpLink}}\">CLI Reference</a> and <a target=\"_blank\" href=\"{{'basic_cli_operations' | helpLink}}\">Basic CLI Operations</a>.</p>\n" +
-    "</div>\n" +
-    "<div ng-if=\"$ctrl.createdBuildConfig\" class=\"col-md-6\">\n" +
-    "<h2>Making code changes</h2>\n" +
+    "<div ng-if=\"$ctrl.createdBuildConfig\">\n" +
+    "<h2 class=\"h3\">Making code changes</h2>\n" +
     "<p ng-if=\"$ctrl.fromSampleRepo\">\n" +
     "You are set up to use the example git repository. If you would like to modify the source code, fork the <osc-git-link uri=\"$ctrl.createdBuildConfig.spec.source.git.uri\">{{$ctrl.createdBuildConfig.spec.source.git.uri}}</osc-git-link> repository to an OpenShift-visible git account and <a href=\"{{$ctrl.createdBuildConfig | editResourceURL}}\">edit the <strong>{{$ctrl.createdBuildConfig.metadata.name}}</strong> build config</a> to point to your fork.\n" +
     "<span ng-if=\"$ctrl.createdBuildConfigWithConfigChangeTrigger()\">Note that this will start a new build.</span>\n" +
@@ -7729,9 +7753,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<copy-to-clipboard clipboard-text=\"$ctrl.createdBuildConfig.metadata.name | webhookURL : trigger.type : trigger.github.secret : $ctrl.projectName\"></copy-to-clipboard>\n" +
     "</div>\n" +
     "</div>\n" +
-    "</div>\n" +
     "<div ng-if=\"$ctrl.parameters.all.length\">\n" +
-    "<h2>Applied Parameter Values</h2>\n" +
+    "<h2 class=\"h3\">Applied Parameter Values</h2>\n" +
     "<p>These parameters often include things like passwords. If you will need to reference these values later, copy them to a safe location.\n" +
     "<span ng-if=\"$ctrl.parameters.generated.length > 1\">Parameters <span ng-repeat=\"paramName in $ctrl.parameters.generated\">{{paramName}}<span ng-if=\"!$last\">, </span></span> were generated automatically.</span>\n" +
     "<span ng-if=\"$ctrl.parameters.generated.length === 1\">Parameter {{$ctrl.parameters.generated[0]}} was generated automatically.</span>\n" +
@@ -8914,7 +8937,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/process-template-dialog/process-template-results.html',
     "<div class=\"order-service-config\">\n" +
-    "<next-steps project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\" on-continue=\"$ctrl.close\">\n" +
+    "<next-steps project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\" on-continue=\"$ctrl.close\" show-project-name=\"$ctrl.showProjectName\" name=\"$ctrl.template | displayName\" is-dialog=\"true\">\n" +
     "</next-steps>\n" +
     "</div>"
   );
@@ -11434,7 +11457,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle\">\n" +
     "\n" +
     "<div ng-if=\"overview.showGetStarted\" class=\"container-fluid empty-state\">\n" +
-    "<tasks></tasks>\n" +
     "<alerts alerts=\"overview.state.alerts\"></alerts>\n" +
     "\n" +
     "<div class=\"empty-state-message text-center\">\n" +
@@ -12411,7 +12433,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"hidden-xs\" ng-if=\"(!row.instanceStatus || row.instanceStatus === 'ready') && row.apiObject.status.dashboardURL\">\n" +
     "<a ng-href=\"{{row.apiObject.status.dashboardURL}}\" target=\"_blank\">\n" +
-    "Console <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "Dashboard <i class=\"fa fa-external-link small\" aria-hidden=\"true\"></i>\n" +
     "</a>\n" +
     "</div>\n" +
     "</div>\n" +

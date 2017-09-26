@@ -5,6 +5,8 @@
     controller: [
       '$scope',
       '$timeout',
+      '$routeParams',
+      '$filter',
       'DataService',
       FromFileDialog
     ],
@@ -17,12 +19,16 @@
     templateUrl: 'views/directives/from-file-dialog.html'
   });
 
-  function FromFileDialog($scope, $timeout, DataService) {
+  function FromFileDialog($scope, $timeout, $routeParams, $filter, DataService) {
     var ctrl = this;
 
     ctrl.$onInit = function() {
       ctrl.alerts = {};
       ctrl.loginBaseUrl = DataService.openshiftAPIBaseUrl();
+      // if on the landing page, show the project name in next-steps
+      if (!$routeParams.project) {
+        ctrl.showProjectName = true;
+      }
     };
 
     function getIconClass() {
@@ -42,6 +48,7 @@
       ctrl.selectedProject = message.project;
       ctrl.template = message.template;
       ctrl.iconClass = getIconClass();
+      ctrl.name = "YAML / JSON";
       // Need to let the current digest loop finish so the template config step becomes visible or the wizard will throw an error
       // from the change to currentStep
       $timeout(function() {
@@ -51,6 +58,7 @@
 
     $scope.$on('templateInstantiated', function(event, message) {
       ctrl.selectedProject = message.project;
+      ctrl.name = $filter('displayName')(ctrl.template);
       ctrl.currentStep = "Results";
     });
 
@@ -73,7 +81,7 @@
       }
     };
 
-    ctrl.currentStep = "JSON / YAML";
+    ctrl.currentStep = "YAML / JSON";
 
     ctrl.nextCallback = function (step) {
       if (step.stepId === 'file') {

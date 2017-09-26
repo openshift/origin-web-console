@@ -350,11 +350,14 @@ angular.module("openshiftConsole")
             DataService.create(APIService.kindToResource(resource.kind), null, resource, {namespace: $scope.input.selectedProject.metadata.name}).then(
               // create resource success
               function() {
-                var kind = humanizeKind(resource.kind);
-                NotificationsService.addNotification({
-                  type: "success",
-                  message: _.capitalize(kind) + " " + resource.metadata.name + " was successfully created."
-                });
+                if (!$scope.isDialog) {
+                  var kind = humanizeKind(resource.kind);
+                  NotificationsService.addNotification({
+                    type: "success",
+                    message: _.capitalize(kind) + " " + resource.metadata.name + " was successfully created."
+                  });
+                }
+
                 redirect();
               },
               // create resource failure
@@ -371,11 +374,14 @@ angular.module("openshiftConsole")
             DataService.update(APIService.kindToResource(resource.kind), resource.metadata.name, resource, {namespace: $scope.input.selectedProject.metadata.name}).then(
               // update resource success
               function() {
-                var kind = humanizeKind(resource.kind);
-                NotificationsService.addNotification({
-                  type: "success",
-                  message: _.capitalize(kind) + " " + resource.metadata.name + " was successfully updated."
-                });
+                if (!$scope.isDialog) {
+                  var kind = humanizeKind(resource.kind);
+                  NotificationsService.addNotification({
+                    type: "success",
+                    message: _.capitalize(kind) + " " + resource.metadata.name + " was successfully updated."
+                  });
+                }
+
                 redirect();
               },
               // update resource failure

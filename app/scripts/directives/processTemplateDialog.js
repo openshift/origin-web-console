@@ -5,6 +5,7 @@
     controller: [
       '$scope',
       '$filter',
+      '$routeParams',
       'Catalog',
       'DataService',
       'KeywordService',
@@ -25,6 +26,7 @@
 
   function ProcessTemplateDialog($scope,
                                  $filter,
+                                 $routeParams,
                                  Catalog,
                                  DataService,
                                  KeywordService,
@@ -78,7 +80,6 @@
       onShow: showResults
     };
 
-
     ctrl.$onInit = function() {
       ctrl.loginBaseUrl = DataService.openshiftAPIBaseUrl();
       ctrl.preSelectedProject = ctrl.selectedProject = ctrl.project;
@@ -113,6 +114,10 @@
         appliedFilters: [],
         onFilterChange: filterChange
       };
+      // if on the landing page, show the project name in next-steps
+      if (!$routeParams.project) {
+        ctrl.showProjectName = true;
+      }
     };
 
     ctrl.$onChanges = function(changes) {
