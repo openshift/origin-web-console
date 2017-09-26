@@ -103,12 +103,12 @@ angular.module('openshiftConsole')
       }
     };
   })
-  .directive('copyLoginToClipboard', function(AlertMessageService, NotificationsService) {
+  .directive('copyLoginToClipboard', function(NotificationsService) {
     return {
       restrict: 'E',
       replace: true,
       scope: {
-        clipboardText: "="
+        clipboardText: "@"
       },
       template: '<a href="" data-clipboard-text="">Copy Login Command</a>',
       link: function($scope, element) {
@@ -121,22 +121,20 @@ angular.module('openshiftConsole')
           });
 
           var tokenWarningAlertID = 'openshift/token-warning';
-          if (!AlertMessageService.isAlertPermanentlyHidden(tokenWarningAlertID)) {
-            NotificationsService.addNotification({
-              id: tokenWarningAlertID,
-              type: 'warning',
-              message: 'A token is a form of a password. Do not share your API token.',
-              links: [{
-                href: "",
-                label: "Don't Show Me Again",
-                onClick: function() {
-                  AlertMessageService.permanentlyHideAlert(tokenWarningAlertID);
-                  // Return true close the existing alert.
-                  return true;
-                }
-              }]
-            });
-          }
+          NotificationsService.addNotification({
+            id: tokenWarningAlertID,
+            type: 'warning',
+            message: 'A token is a form of a password. Do not share your API token.',
+            links: [{
+              href: "",
+              label: "Don't Show Me Again",
+              onClick: function() {
+                NotificationsService.permanentlyHideNotification(tokenWarningAlertID);
+                // Return true close the existing notification.
+                return true;
+              }
+            }]
+          });
         });
         clipboard.on('error', function () {
           NotificationsService.addNotification({

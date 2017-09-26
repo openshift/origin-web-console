@@ -8,7 +8,17 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('BuildsController', function ($routeParams, $scope, DataService, $filter, LabelFilter, Logger, $location, BuildsService, ProjectsService) {
+  .controller('BuildsController', function (
+    $filter,
+    $location,
+    $routeParams,
+    $scope,
+    APIService,
+    BuildsService,
+    DataService,
+    LabelFilter,
+    Logger,
+    ProjectsService) {
     $scope.projectName = $routeParams.project;
     $scope.builds = {};
     $scope.unfilteredBuildConfigs = {};
@@ -20,6 +30,9 @@ angular.module('openshiftConsole')
 
     var buildConfigForBuild = $filter('buildConfigForBuild');
 
+    var buildsVersion = APIService.getPreferredVersion('builds');
+    var buildConfigsVersion = APIService.getPreferredVersion('buildconfigs');
+
     var watches = [];
 
     ProjectsService
@@ -29,7 +42,7 @@ angular.module('openshiftConsole')
 
         var isPipeline = $filter('isJenkinsPipelineStrategy');
 
-        watches.push(DataService.watch("builds", context, function(builds) {
+        watches.push(DataService.watch(buildsVersion, context, function(builds) {
           // Filter out pipeline builds, which have a separate page.
           $scope.builds = _.omitBy(builds.by("metadata.name"), isPipeline);
           $scope.emptyMessage = "No builds to show";
@@ -39,7 +52,7 @@ angular.module('openshiftConsole')
           Logger.log("builds (subscribe)", $scope.builds);
         }));
 
-        watches.push(DataService.watch("buildconfigs", context, function(buildConfigs) {
+        watches.push(DataService.watch(buildConfigsVersion, context, function(buildConfigs) {
           // Filter out pipeline builds, which have a separate page.
           $scope.unfilteredBuildConfigs = _.omitBy(buildConfigs.by("metadata.name"), isPipeline);
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredBuildConfigs, $scope.labelSuggestions);

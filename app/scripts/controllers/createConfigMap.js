@@ -13,6 +13,7 @@ angular.module('openshiftConsole')
                         $routeParams,
                         $scope,
                         $window,
+                        APIService,
                         AuthorizationService,
                         DataService,
                         Navigate,
@@ -64,7 +65,8 @@ angular.module('openshiftConsole')
           if ($scope.createConfigMapForm.$valid) {
             hideErrorNotifications();
             $scope.disableInputs = true;
-            DataService.create('configmaps', null, $scope.configMap, context)
+            var createConfigMapVersion = APIService.objectToResourceGroupVersion($scope.configMap);
+            DataService.create(createConfigMapVersion, null, $scope.configMap, context)
               .then(function() { // Success
                 NotificationsService.addNotification({
                   type: "success",

@@ -29,7 +29,10 @@
                 </ul>
               </div>
               {{serviceInstance | serviceInstanceDisplayName:serviceClasses}}
-              <small class="meta">created <span am-time-ago="serviceInstance.metadata.creationTimestamp"></span></small>
+              <small class="list-row-longname">{{serviceInstance.metadata.name}}</small>
+              <div>
+                <small class="meta">created <span am-time-ago="serviceInstance.metadata.creationTimestamp"></span></small>
+              </div>
             </h1>
             <labels labels="serviceInstance.metadata.labels" clickable="true" kind="service-instances" project-name="{{serviceInstance.metadata.namespace}}" limit="3"></labels>
           </div>
@@ -53,11 +56,6 @@
                       <div class="col-lg-6">
                         <p ng-bind-html="plan.description | linkify : '_blank'"></p>
                         <dl class="dl-horizontal left">
-                          <dt ng-if-start="serviceClass.description || serviceClass.externalMetadata.longDescription">Description:</dt>
-                          <dd ng-if-end>
-                            <p class="pre-wrap" ng-bind-html="serviceClass.description | linkify : '_blank'"></p>
-                            <p class="pre-wrap" ng-bind-html="serviceClass.externalMetadata.longDescription | linkify : '_blank'"></p>
-                          </dd>
                           <dt>Status:</dt>
                           <dd>
                             <status-icon status="serviceInstance | serviceInstanceStatus" disable-animation></status-icon>
@@ -66,6 +64,11 @@
                           <dt ng-if-start="serviceInstance | serviceInstanceConditionMessage">Status Reason:</dt>
                           <dd ng-if-end>
                             {{serviceInstance | serviceInstanceConditionMessage}}
+                          </dd>
+                          <dt ng-if-start="serviceClass.description || serviceClass.externalMetadata.longDescription">Description:</dt>
+                          <dd ng-if-end>
+                            <p class="pre-wrap" ng-bind-html="serviceClass.description | linkify : '_blank'"></p>
+                            <p class="pre-wrap" ng-bind-html="serviceClass.externalMetadata.longDescription | linkify : '_blank'"></p>
                           </dd>
                         </dl>
                       </div>

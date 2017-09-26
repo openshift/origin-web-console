@@ -10,7 +10,7 @@
             <!-- Primary Actions -->
             <button class="btn btn-default hidden-xs"
                     ng-click="cancelBuild()"
-                    ng-if="!build.metadata.deletionTimestamp && (build | isIncompleteBuild) && ('builds' | canI : 'update')">Cancel Build</button>
+                    ng-if="!build.metadata.deletionTimestamp && (build | isIncompleteBuild) && (buildsVersion | canI : 'update')">Cancel Build</button>
             <button class="btn btn-default hidden-xs"
                     ng-click="cloneBuild()"
                     ng-hide="build.metadata.deletionTimestamp || (build | isIncompleteBuild) || !('builds/clone' | canI : 'create') || (build | isBinaryBuild)"
@@ -25,7 +25,7 @@
                class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
             <ul class="dropdown-menu dropdown-menu-right actions action-button">
-              <li ng-if="'buildconfigs' | canI : 'update'">
+              <li ng-if="buildConfigsVersion | canI : 'update'">
                 <a ng-href="{{buildConfig | editResourceURL}}" role="button">
                   <span ng-if="!(buildConfig | isJenkinsPipelineStrategy)">
                     Edit Configuration
@@ -35,8 +35,8 @@
                   </span>
                 </a>
               </li>
-              <li class="divider" ng-if="'buildconfigs' | canI : 'update'"></li>
-              <li ng-if="!build.metadata.deletionTimestamp && (build | isIncompleteBuild) && ('builds' | canI : 'update')"
+              <li class="divider" ng-if="buildConfigsVersion | canI : 'update'"></li>
+              <li ng-if="!build.metadata.deletionTimestamp && (build | isIncompleteBuild) && (buildsVersion | canI : 'update')"
                   class="visible-xs-inline">
                 <a href=""
                    role="button"
@@ -51,10 +51,10 @@
                    ng-attr-aria-disabled="{{canBuild ? undefined : 'true'}}"
                    ng-class="{ 'disabled-link': !canBuild }">Rebuild</a>
               </li>
-              <li ng-if="('builds' | canI : 'update')">
+              <li ng-if="(buildsVersion | canI : 'update')">
                 <a ng-href="{{build | editYamlURL}}" role="button">Edit YAML</a>
               </li>
-              <li ng-if="('builds' | canI : 'delete')">
+              <li ng-if="(buildsVersion | canI : 'delete')">
                 <delete-link
                   kind="Build"
                   resource-name="{{build.metadata.name}}"
@@ -94,7 +94,7 @@
               <uib-tab heading="Environment" active="selectedTab.environment" ng-if="!(build | isJenkinsPipelineStrategy)">
                 <uib-tab-heading>Environment</uib-tab-heading>
                 <h3>Environment Variables</h3>
-                <p ng-if="'buildconfigs' | canI : 'update'">
+                <p ng-if="buildConfigsVersion | canI : 'update'">
                   <span class="pficon pficon-info" aria-hidden="true"></span>
                   Environment variables can be edited on the <a ng-href="{{build | configURLForResource}}?tab=environment">build configuration</a>.
                 </p>

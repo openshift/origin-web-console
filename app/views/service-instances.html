@@ -30,6 +30,7 @@
                 <thead>
                   <tr>
                     <th>Name</th>
+                    <th>Instance Name</th>
                     <th>Status</th>
                     <th>Created</th>
                     <th>Bindings</th>
@@ -43,7 +44,7 @@
                 <tbody ng-if="(serviceInstances | size) > 0">
                   <tr ng-repeat="serviceInstance in serviceInstances track by (serviceInstance | uid)">
                     <td data-title="Name"><a ng-href="{{serviceInstance | navigateResourceURL}}">{{serviceInstance | serviceInstanceDisplayName:serviceClasses}}</a></td>
-
+                    <td data-title="Instance Name"><span>{{serviceInstance.metadata.name}}</span></td>
                     <td data-title="Status">
                       <div row class="status">
                         <status-icon status="serviceInstance | serviceInstanceStatus" disable-animation></status-icon>

@@ -1,0 +1,20 @@
+<div class="order-service-details">
+  <div class="order-service-details-top">
+    <div class="service-icon">
+      <span class="icon {{$ctrl.iconClass}}" aria-hidden="true"></span>
+    </div>
+    <div class="service-title-area">
+      <div class="service-title">
+        {{$ctrl.template | displayName}}
+      </div>
+      <div class="order-service-tags">
+        <span ng-repeat="tag in $ctrl.template.metadata.annotations.tags.split(',')" class="tag">
+          {{tag}}
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="order-service-description-block">
+    <p ng-bind-html="$ctrl.template | description | linky : '_blank'" class="description"></p>
+  </div>
+</div>

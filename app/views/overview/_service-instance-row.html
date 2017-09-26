@@ -9,54 +9,55 @@
           <a ng-href="{{row.apiObject | navigateResourceURL}}" ng-bind-html="row.displayName | highlightKeywords : row.state.filterKeywords"></a>
           <div ng-bind-html="row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords" class="list-row-longname"></div>
         </h3>
-        <div class="status-icons">
-          <notification-icon ng-if="!row.expanded" alerts="row.notifications"></notification-icon>
+        <div class="status-icons" ng-if="!row.expanded">
+          <notification-icon alerts="row.notifications"></notification-icon>
+          <div ng-switch="row.instanceStatus">
+            <span ng-switch-when="failed"
+                  dynamic-content="{{row.apiObject | serviceInstanceFailedMessage}}"
+                  data-toggle="tooltip"
+                  data-trigger="hover"
+                  class="notification-icon-count">
+              <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
+              <span>Error</span>
+            </span>
+            <span ng-switch-when="deleted" class="notification-icon-count">
+              <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
+              Marked for Deletion
+            </span>
+            <span ng-switch-when="pending" class="notification-icon-count">
+              <span class="spinner spinner-xs spinner-inline" aria-hidden="true"></span>
+              <span>Pending</span>
+            </span>
+          </div>
         </div>
       </div>
-      <div class="list-pf-details" ng-if="!row.expanded" ng-switch="row.instanceStatus">
-
-        <span ng-switch-when="failed"
-              dynamic-content="{{row.instanceError.message}}"
-              data-toggle="tooltip"
-              data-trigger="hover">
-          <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
-          <span>Error</span>
+      <div class="list-pf-details" ng-if="!row.expanded">
+        <span ng-if="!row.bindings.length
+                    && row.isBindable
+                    && ({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create')"
+              class="hidden-xs hidden-sm">
+          <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">
+            <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>
+            Create Binding
+          </a>
         </span>
-        <span ng-switch-when="deleted">
-          <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-          Marked for Deletion
-        </span>
-        <span ng-switch-when="pending">
-          <span class="spinner spinner-xs spinner-inline" aria-hidden="true"></span>
-          <span>Pending</span>
-        </span>
-        <div ng-switch-default>
-          <div class="hidden-xs hidden-sm">
-            <span ng-if="!row.bindings.length
-                        && row.isBindable
-                        && ({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create')">
-              <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">
-                <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>
-                Create Binding
-              </a>
+        <div ng-if="row.bindings.length" class="hidden-xs hidden-sm">
+          <span class="component-label">Bindings</span>
+          <p ng-if="firstBinding = row.bindings[0]" class="bindings">
+            <span ng-if="application = row.state.applicationsByBinding[firstBinding.metadata.name][0]">
+              {{application.metadata.name}}
             </span>
-            <span ng-if="row.bindings.length" class="component-label">Bindings</span>
-            <p ng-if="firstBinding = row.bindings[0]" class="bindings">
-              <span ng-if="application = row.state.applicationsByBinding[firstBinding.metadata.name][0]">
-                {{application.metadata.name}}
-              </span>
-              <span ng-if="!application">
-                {{firstBinding.spec.secretName}}
-              </span>
-              <span ng-if="row.bindings.length > 1">
-                and
-                <a
-                  ng-if="row.bindings.length > 1"
-                  ng-click="row.toggleExpand($event, true)">
-                  {{row.bindings.length -1}} other<span ng-if="row.bindings.length > 2">s</span></a>
-              </span>
-            </p>
-          </div>
+            <span ng-if="!application">
+              {{firstBinding.spec.secretName}}
+            </span>
+            <span ng-if="row.bindings.length > 1">
+              and
+              <a
+                ng-if="row.bindings.length > 1"
+                ng-click="row.toggleExpand($event, true)">
+                {{row.bindings.length -1}} other<span ng-if="row.bindings.length > 2">s</span></a>
+            </span>
+          </p>
         </div>
         <div
           class="hidden-xs"
@@ -111,7 +112,7 @@
               <div class="alert word-break alert-danger">
                 <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
                 <span class="sr-only">error</span>
-                <span class="strong">{{row.instanceError.message}}</span>
+                <span class="strong">{{row.apiObject | serviceInstanceFailedMessage}}</span>
               </div>
             </div>
           </div>
@@ -132,63 +133,22 @@
               <p class="pre-wrap" ng-bind-html="row.description | linky"></p>
             </div>
           </div>
-          <div class="section-title" ng-if="row.isBindable || row.bindings">
-            Bindings
-          </div>
-          <div class="row overview-bindings" ng-repeat="(name, binding) in row.bindings">
-            <div class="col-sm-5 col-md-6">
-              <div ng-if="!(row.state.applicationsByBinding[binding.metadata.name] | size)">
-                <h3>
-                  <div class="component-label">
-                    Secret
-                  </div>
-                  <a ng-if="('secrets' | canI : 'get')"
-                     ng-href="{{binding.spec.secretName | navigateResourceURL : 'Secret' : row.apiObject.metadata.namespace}}">
-                    {{binding.spec.secretName}}
-                  </a>
-                  <span ng-if="!('secrets' | canI : 'get')">
-                    {{binding.spec.secretName}}
-                  </span>
-                </h3>
-              </div>
-              <div ng-repeat="target in row.state.applicationsByBinding[binding.metadata.name] track by (target | uid)">
-                <h3>
-                  <div class="component-label">
-                    {{target.kind | humanizeKind : true}}
-                  </div>
-                  <a ng-href="{{target | navigateResourceURL}}">{{target.metadata.name}}</a>
-                </h3>
-              </div>
-            </div>
-            <div class="col-sm-7 col-md-6 overview-bindings">
-              <span ng-if="binding.metadata.deletionTimestamp">
-                <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-                Marked for Deletion
-              </span>
-              <span ng-if="!(binding | isBindingReady) && !binding.metadata.deletionTimestamp">
-                <status-icon status="'Pending'"></status-icon> Pending
-              </span>
-            </div>
-          </div>
-          <div class="row" ng-if="row.isBindable && ({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create')">
-            <div class="col-sm-12">
-              <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">
-                <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>
-                Create Binding
-              </a>
-            </div>
-          </div>
-          <div class="row" ng-if="!row.bindings.length && (!row.isBindable || !({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create'))">
-            <div class="col-sm-12">
-              <em>No bindings</em>
-            </div>
-          </div>
+          <overview-service-bindings
+            ng-if="row.isBindable || row.bindings"
+            section-title="Bindings"
+            ref-api-object="row.apiObject"
+            namespace="row.apiObject.metadata.namespace"
+            bindings="row.bindings"
+            bindable-service-instances="row.state.bindableServiceInstances"
+            service-classes="row.state.serviceClasses"
+            create-binding="row.showOverlayPanel('bindService', {target: row.apiObject})">
+          </overview-service-bindings>
         </div>
       </div>
     </div>
   </div>
 </div>
-<overlay-panel single-column="true" show-panel="row.overlay.panelVisible" show-close="true" handle-close="row.closeOverlayPanel">
+<overlay-panel show-panel="row.overlay.panelVisible" handle-close="row.closeOverlayPanel">
   <div ng-if="row.overlay.panelName === 'bindService'">
     <bind-service target="row.overlay.state.target"
                   project="row.state.project"

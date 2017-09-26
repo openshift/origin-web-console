@@ -67,6 +67,10 @@ angular.module('openshiftConsole')
       subpage: 'Add Storage'
     });
 
+    $scope.pvcVersion = APIService.getPreferredVersion('persistentvolumeclaims');
+    var resourceQuotasVersion = APIService.getPreferredVersion('resourcequotas');
+    var appliedClusterResourceQuotasVersion = APIService.getPreferredVersion('appliedclusterresourcequotas');
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -132,18 +136,18 @@ angular.module('openshiftConsole')
             }
           );
 
-          DataService.list("persistentvolumeclaims", context).then(function(pvcs) {
+          DataService.list($scope.pvcVersion, context).then(function(pvcs) {
             $scope.pvcs = orderByDisplayName(pvcs.by("metadata.name"));
             if (!_.isEmpty($scope.pvcs) && !$scope.attach.persistentVolumeClaim) {
               $scope.attach.persistentVolumeClaim = _.head($scope.pvcs);
             }
           });
 
-          DataService.list('resourcequotas', { namespace: $scope.projectName }, function(quotaData) {
+          DataService.list(resourceQuotasVersion, { namespace: $scope.projectName }, function(quotaData) {
             $scope.quotas = quotaData.by('metadata.name');
             $scope.outOfClaims = QuotaService.isAnyStorageQuotaExceeded($scope.quotas, $scope.clusterQuotas);
           });
-          DataService.list('appliedclusterresourcequotas', { namespace: $scope.projectName }, function(quotaData) {
+          DataService.list(appliedClusterResourceQuotasVersion, { namespace: $scope.projectName }, function(quotaData) {
             $scope.clusterQuotas = quotaData.by('metadata.name');
             $scope.outOfClaims = QuotaService.isAnyStorageQuotaExceeded($scope.quotas, $scope.clusterQuotas);
           });

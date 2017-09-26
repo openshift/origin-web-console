@@ -984,10 +984,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p class=\"gutter-top\">\n" +
     "A <b>persistent volume claim</b> is required to attach to this {{kind | humanizeKind}}, but none are loaded on this project.\n" +
     "</p>\n" +
-    "<div ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\" class=\"text-center\">\n" +
+    "<div ng-if=\"project && (pvcVersion | canI : 'create')\" class=\"text-center\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-primary\">Create Storage</a>\n" +
     "</div>\n" +
-    "<p ng-if=\"project && !('persistentvolumeclaims' | canI : 'create')\">\n" +
+    "<p ng-if=\"project && !(pvcVersion | canI : 'create')\">\n" +
     "To claim storage from a persistent volume, refer to the documentation on <a target=\"_blank\" ng-href=\"{{'persistent_volumes' | helpLink}}\">using persistent volumes</a>.\n" +
     "</p>\n" +
     "<p ng-if=\"attach.resource\"><a ng-href=\"{{attach.resource | navigateResourceURL}}\">Back to {{kind | humanizeKind}} {{name}}</a></p>\n" +
@@ -1021,10 +1021,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tbody>\n" +
     "</table>\n" +
     "</div>\n" +
-    "<div ng-if=\"!(project && ('persistentvolumeclaims' | canI : 'create'))\" class=\"help-block\">\n" +
+    "<div ng-if=\"!(project && (pvcVersion | canI : 'create'))\" class=\"help-block\">\n" +
     "Select storage to use.\n" +
     "</div>\n" +
-    "<div ng-if=\"project && ('persistentvolumeclaims' | canI : 'create')\" class=\"help-block\">\n" +
+    "<div ng-if=\"project && (pvcVersion | canI : 'create')\" class=\"help-block\">\n" +
     "Select storage to use<span ng-if=\"!outOfClaims\"> or <a ng-href=\"project/{{project.metadata.name}}/create-pvc\">create storage</a>.</span>\n" +
     "<span ng-if=\"outOfClaims\">. You cannot create new storage since you are at quota.</span>\n" +
     "</div>\n" +
@@ -2056,7 +2056,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h1 class=\"contains-actions\">\n" +
     "<div class=\"pull-right dropdown\" ng-hide=\"!('builds' | canIDoAny)\">\n" +
     "\n" +
-    "<button class=\"btn btn-default hidden-xs\" ng-click=\"cancelBuild()\" ng-if=\"!build.metadata.deletionTimestamp && (build | isIncompleteBuild) && ('builds' | canI : 'update')\">Cancel Build</button>\n" +
+    "<button class=\"btn btn-default hidden-xs\" ng-click=\"cancelBuild()\" ng-if=\"!build.metadata.deletionTimestamp && (build | isIncompleteBuild) && (buildsVersion | canI : 'update')\">Cancel Build</button>\n" +
     "<button class=\"btn btn-default hidden-xs\" ng-click=\"cloneBuild()\" ng-hide=\"build.metadata.deletionTimestamp || (build | isIncompleteBuild) || !('builds/clone' | canI : 'create') || (build | isBinaryBuild)\" ng-disabled=\"!canBuild\">Rebuild</button>\n" +
     "\n" +
     "<button type=\"button\" class=\"dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs\" data-toggle=\"dropdown\">\n" +
@@ -2065,7 +2065,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
-    "<li ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
+    "<li ng-if=\"buildConfigsVersion | canI : 'update'\">\n" +
     "<a ng-href=\"{{buildConfig | editResourceURL}}\" role=\"button\">\n" +
     "<span ng-if=\"!(buildConfig | isJenkinsPipelineStrategy)\">\n" +
     "Edit Configuration\n" +
@@ -2075,17 +2075,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</a>\n" +
     "</li>\n" +
-    "<li class=\"divider\" ng-if=\"'buildconfigs' | canI : 'update'\"></li>\n" +
-    "<li ng-if=\"!build.metadata.deletionTimestamp && (build | isIncompleteBuild) && ('builds' | canI : 'update')\" class=\"visible-xs-inline\">\n" +
+    "<li class=\"divider\" ng-if=\"buildConfigsVersion | canI : 'update'\"></li>\n" +
+    "<li ng-if=\"!build.metadata.deletionTimestamp && (build | isIncompleteBuild) && (buildsVersion | canI : 'update')\" class=\"visible-xs-inline\">\n" +
     "<a href=\"\" role=\"button\" ng-click=\"cancelBuild()\">Cancel Build</a>\n" +
     "</li>\n" +
     "<li class=\"visible-xs-inline\" ng-class=\"{ disabled: !canBuild }\" ng-hide=\"build.metadata.deletionTimestamp || (build | isIncompleteBuild) || !('builds/clone' | canI : 'create') || (build | isBinaryBuild)\">\n" +
     "<a href=\"\" role=\"button\" ng-click=\"cloneBuild()\" ng-attr-aria-disabled=\"{{canBuild ? undefined : 'true'}}\" ng-class=\"{ 'disabled-link': !canBuild }\">Rebuild</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"('builds' | canI : 'update')\">\n" +
+    "<li ng-if=\"(buildsVersion | canI : 'update')\">\n" +
     "<a ng-href=\"{{build | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"('builds' | canI : 'delete')\">\n" +
+    "<li ng-if=\"(buildsVersion | canI : 'delete')\">\n" +
     "<delete-link kind=\"Build\" resource-name=\"{{build.metadata.name}}\" project-name=\"{{build.metadata.namespace}}\" alerts=\"alerts\" redirect-url=\"{{build | configURLForResource}}\">\n" +
     "</delete-link>\n" +
     "</li>\n" +
@@ -2114,7 +2114,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab heading=\"Environment\" active=\"selectedTab.environment\" ng-if=\"!(build | isJenkinsPipelineStrategy)\">\n" +
     "<uib-tab-heading>Environment</uib-tab-heading>\n" +
     "<h3>Environment Variables</h3>\n" +
-    "<p ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
+    "<p ng-if=\"buildConfigsVersion | canI : 'update'\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "Environment variables can be edited on the <a ng-href=\"{{build | configURLForResource}}?tab=environment\">build configuration</a>.\n" +
     "</p>\n" +
@@ -3702,7 +3702,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ul>\n" +
     "</div>\n" +
     "{{serviceInstance | serviceInstanceDisplayName:serviceClasses}}\n" +
+    "<small class=\"list-row-longname\">{{serviceInstance.metadata.name}}</small>\n" +
+    "<div>\n" +
     "<small class=\"meta\">created <span am-time-ago=\"serviceInstance.metadata.creationTimestamp\"></span></small>\n" +
+    "</div>\n" +
     "</h1>\n" +
     "<labels labels=\"serviceInstance.metadata.labels\" clickable=\"true\" kind=\"service-instances\" project-name=\"{{serviceInstance.metadata.namespace}}\" limit=\"3\"></labels>\n" +
     "</div>\n" +
@@ -3726,11 +3729,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-lg-6\">\n" +
     "<p ng-bind-html=\"plan.description | linkify : '_blank'\"></p>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
-    "<dt ng-if-start=\"serviceClass.description || serviceClass.externalMetadata.longDescription\">Description:</dt>\n" +
-    "<dd ng-if-end>\n" +
-    "<p class=\"pre-wrap\" ng-bind-html=\"serviceClass.description | linkify : '_blank'\"></p>\n" +
-    "<p class=\"pre-wrap\" ng-bind-html=\"serviceClass.externalMetadata.longDescription | linkify : '_blank'\"></p>\n" +
-    "</dd>\n" +
     "<dt>Status:</dt>\n" +
     "<dd>\n" +
     "<status-icon status=\"serviceInstance | serviceInstanceStatus\" disable-animation></status-icon>\n" +
@@ -3739,6 +3737,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt ng-if-start=\"serviceInstance | serviceInstanceConditionMessage\">Status Reason:</dt>\n" +
     "<dd ng-if-end>\n" +
     "{{serviceInstance | serviceInstanceConditionMessage}}\n" +
+    "</dd>\n" +
+    "<dt ng-if-start=\"serviceClass.description || serviceClass.externalMetadata.longDescription\">Description:</dt>\n" +
+    "<dd ng-if-end>\n" +
+    "<p class=\"pre-wrap\" ng-bind-html=\"serviceClass.description | linkify : '_blank'\"></p>\n" +
+    "<p class=\"pre-wrap\" ng-bind-html=\"serviceClass.externalMetadata.longDescription | linkify : '_blank'\"></p>\n" +
     "</dd>\n" +
     "</dl>\n" +
     "</div>\n" +
@@ -5597,35 +5600,43 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/_service-binding.html',
     "<div class=\"service-binding\">\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-sm-5 col-md-6\">\n" +
-    "<h3 ng-if=\"$ctrl.serviceClass\">\n" +
-    "<span ng-if=\"$ctrl.serviceClass\">\n" +
-    "<span ng-if=\"$ctrl.refApiObject.kind !== 'Instance'\">\n" +
+    "<div ng-class=\"{'col-sm-5 col-md-6': $ctrl.isOverview,\n" +
+    "                    'col-sm-8 col-md-6 col-lg-8': !$ctrl.isOverview}\">\n" +
+    "<h3>\n" +
+    "<div class=\"component-label\">\n" +
+    "Secret\n" +
+    "</div>\n" +
+    "{{$ctrl.binding.metadata.name}}\n" +
+    "<span ng-if=\"$ctrl.refApiObject.kind !== 'ServiceInstance'\">\n" +
+    "<small ng-if=\"$ctrl.serviceClass\">\n" +
     "{{$ctrl.serviceClass.externalMetadata.displayName || $ctrl.serviceClass.metadata.name}}\n" +
+    "</small>\n" +
+    "<small>{{$ctrl.binding.spec.instanceRef.name}}</small>\n" +
     "</span>\n" +
-    "<span ng-if=\"$ctrl.refApiObject.kind === 'Instance'\">\n" +
-    "{{$ctrl.binding.spec.secretName}}\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "<span ng-if=\"!$ctrl.serviceClass\">\n" +
-    "{{$ctrl.binding.spec.instanceRef.name}}\n" +
-    "</span>\n" +
-    "<small ng-if=\"$ctrl.serviceClass\">{{$ctrl.binding.spec.instanceRef.name}}</small>\n" +
     "<small>created <span am-time-ago=\"$ctrl.binding.metadata.creationTimestamp\"></span></small>\n" +
     "</h3>\n" +
     "</div>\n" +
-    "<div class=\"col-sm-7 col-md-6\" ng-if=\"$ctrl.binding.metadata.deletionTimestamp\">\n" +
+    "<div ng-if=\"$ctrl.binding.metadata.deletionTimestamp\" ng-class=\"{'col-sm-7 col-md-6': $ctrl.isOverview,\n" +
+    "                    'col-sm-4 col-md-3': !$ctrl.isOverview}\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "Marked for Deletion\n" +
     "</div>\n" +
-    "<div class=\"col-sm-7 col-md-6\" ng-if=\"!$ctrl.binding.metadata.deletionTimestamp && !($ctrl.binding | isBindingReady)\">\n" +
+    "<div ng-if=\"!$ctrl.binding.metadata.deletionTimestamp && ($ctrl.binding | isBindingFailed)\" ng-class=\"{'col-sm-7 col-md-6': $ctrl.isOverview,\n" +
+    "                    'col-sm-4 col-md-6 col-lg-4': !$ctrl.isOverview}\">\n" +
+    "<span dynamic-content=\"{{$ctrl.binding | bindingFailedMessage}}\" data-toggle=\"tooltip\" data-trigger=\"hover\">\n" +
+    "<span class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></span>\n" +
+    "<span>Error</span>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!$ctrl.binding.metadata.deletionTimestamp && !($ctrl.binding | isBindingFailed) && !($ctrl.binding | isBindingReady)\" ng-class=\"{'col-sm-7 col-md-6': $ctrl.isOverview,\n" +
+    "                    'col-sm-4 col-md-6 col-lg-4': !$ctrl.isOverview}\">\n" +
     "<status-icon status=\"'Pending'\"></status-icon>Pending\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"service-binding-actions\" ng-if=\"!ctrl.binding.metadata.deletionTimestamp\">\n" +
-    "<delete-link ng-if=\"({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'delete')\" label=\"Delete Binding\" kind=\"binding\" group=\"servicecatalog.k8s.io\" resource-name=\"{{$ctrl.binding.metadata.name}}\" project-name=\"{{$ctrl.binding.metadata.namespace}}\" stay-on-current-page=\"true\">\n" +
+    "<delete-link ng-if=\"({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'delete')\" kind=\"ServiceInstanceCredential\" group=\"servicecatalog.k8s.io\" type-display-name=\"binding\" resource-name=\"{{$ctrl.binding.metadata.name}}\" project-name=\"{{$ctrl.binding.metadata.namespace}}\" stay-on-current-page=\"true\">\n" +
     "</delete-link>\n" +
-    "<a ng-if=\"('secrets' | canI : 'get')\" ng-href=\"{{$ctrl.binding.spec.secretName | navigateResourceURL : 'Secret' : $ctrl.namespace}}\">\n" +
+    "<a ng-if=\"('secrets' | canI : 'get') && ($ctrl.binding | isBindingReady)\" ng-href=\"{{$ctrl.binding.spec.secretName | navigateResourceURL : 'Secret' : $ctrl.namespace}}\">\n" +
     "View Secret\n" +
     "</a>\n" +
     "</div>\n" +
@@ -5825,11 +5836,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/bind-service.html',
     "<div class=\"bind-service-wizard\">\n" +
-    "<pf-wizard hide-header=\"true\" hide-sidebar=\"true\" step-class=\"bind-service-wizard-step\" wizard-ready=\"ctrl.wizardReady\" next-title=\"ctrl.nextTitle\" on-finish=\"ctrl.closeWizard()\" on-cancel=\"ctrl.closeWizard()\" wizard-done=\"ctrl.wizardComplete\">\n" +
-    "<pf-wizard-step ng-repeat=\"step in ctrl.steps track by step.id\" step-title=\"{{step.label}}\" next-enabled=\"step.valid\" on-show=\"step.onShow\" step-id=\"{{step.id}}\" step-priority=\"{{$index}}\" allow-click-nav=\"step.allowClickNav\">\n" +
+    "<pf-wizard title=\"Create Binding\" hide-sidebar=\"true\" step-class=\"bind-service-wizard-step\" wizard-ready=\"ctrl.wizardReady\" next-title=\"ctrl.nextTitle\" hide-back-button=\"{{ctrl.hideBack}}\" on-finish=\"ctrl.closeWizard()\" on-cancel=\"ctrl.closeWizard()\" wizard-done=\"ctrl.wizardComplete\">\n" +
+    "<pf-wizard-step ng-repeat=\"step in ctrl.steps track by step.id\" step-title=\"{{step.label}}\" next-enabled=\"step.valid\" wz-disabled=\"{{step.hidden}}\" on-show=\"step.onShow\" step-id=\"{{step.id}}\" step-priority=\"{{$index}}\" allow-click-nav=\"step.allowClickNav\">\n" +
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
     "<div class=\"bind-service-config\">\n" +
-    "<div ng-include=\"step.view\" class=\"wizard-pf-main-form-contents\"></div>\n" +
+    "<div ng-if=\"!step.hidden\" ng-include=\"step.view\" class=\"wizard-pf-main-form-contents\"></div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</pf-wizard-step>\n" +
@@ -6244,10 +6255,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/deploy-image-dialog.html',
-    "<pf-wizard on-cancel=\"$ctrl.close()\" on-finish=\"$ctrl.close()\" hide-header=\"true\" hide-back-button=\"true\" hide-sidebar=\"true\" next-title=\"$ctrl.nextButtonTitle\" next-callback=\"$ctrl.nextCallback\" current-step=\"$ctrl.currentStep\" on-step-changed=\"$ctrl.stepChanged(step)\" step-class=\"order-service-wizard-step\" wizard-done=\"$ctrl.wizardDone\" class=\"pf-wizard-no-back\">\n" +
+    "<pf-wizard title=\"Deploy Image\" on-cancel=\"$ctrl.close()\" on-finish=\"$ctrl.close()\" hide-back-button=\"true\" hide-sidebar=\"true\" next-title=\"$ctrl.nextButtonTitle\" next-callback=\"$ctrl.nextCallback\" current-step=\"$ctrl.currentStep\" on-step-changed=\"$ctrl.stepChanged(step)\" step-class=\"order-service-wizard-step\" wizard-done=\"$ctrl.wizardDone\">\n" +
     "<pf-wizard-step step-title=\"Image\" step-id=\"image\" step-priority=\"1\" substeps=\"false\" ok-to-nav-away=\"true\" allow-click-nav=\"false\" next-enabled=\"$ctrl.deployForm.$valid || $ctrl.deployImageNewAppCreated\">\n" +
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
-    "<div class=\"order-service-config order-service-config-single-column\">\n" +
+    "<div class=\"order-service-config\">\n" +
     "<div class=\"wizard-pf-main-form-contents\">\n" +
     "<form name=\"$ctrl.deployForm\">\n" +
     "<deploy-image is-dialog=\"true\" project=\"$ctrl.project\" context=\"$ctrl.context\"></deploy-image>\n" +
@@ -6258,7 +6269,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</pf-wizard-step>\n" +
     "<pf-wizard-step step-title=\"Results\" step-id=\"results\" step-priority=\"2\" substeps=\"false\" ok-to-nav-away=\"true\" allow-click-nav=\"false\">\n" +
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
-    "<div class=\"order-service-config order-service-config-single-column\">\n" +
+    "<div class=\"order-service-config\">\n" +
     "<div class=\"wizard-pf-main-form-contents\">\n" +
     "<next-steps project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\" on-continue=\"$ctrl.close\">\n" +
     "</next-steps>\n" +
@@ -6981,10 +6992,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/from-file-dialog.html',
-    "<pf-wizard on-cancel=\"$ctrl.close()\" on-finish=\"$ctrl.close()\" hide-header=\"true\" hide-sidebar=\"true\" next-title=\"$ctrl.nextButtonTitle\" next-callback=\"$ctrl.nextCallback\" current-step=\"$ctrl.currentStep\" wizard-done=\"$ctrl.wizardDone\" on-step-changed=\"$ctrl.stepChanged(step)\" step-class=\"order-service-wizard-step\">\n" +
+    "<pf-wizard title=\"Import YAML / JSON\" on-cancel=\"$ctrl.close()\" on-finish=\"$ctrl.close()\" hide-sidebar=\"true\" next-title=\"$ctrl.nextButtonTitle\" next-callback=\"$ctrl.nextCallback\" current-step=\"$ctrl.currentStep\" wizard-done=\"$ctrl.wizardDone\" on-step-changed=\"$ctrl.stepChanged(step)\" step-class=\"order-service-wizard-step\">\n" +
     "<pf-wizard-step step-title=\"JSON / YAML\" step-id=\"file\" step-priority=\"1\" substeps=\"false\" ok-to-nav-away=\"true\" allow-click-nav=\"false\" next-enabled=\"!$ctrl.importForm.$invalid\">\n" +
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
-    "<div class=\"order-service-config order-service-config-single-column\">\n" +
+    "<div class=\"order-service-config\">\n" +
     "<div class=\"wizard-pf-main-form-contents\">\n" +
     "<form name=\"$ctrl.importForm\">\n" +
     "<from-file is-dialog=\"true\" project=\"$ctrl.project\"></from-file>\n" +
@@ -7029,7 +7040,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</pf-wizard-step>\n" +
     "<pf-wizard-step step-title=\"Results\" step-id=\"results\" step-priority=\"3\" substeps=\"false\" ok-to-nav-away=\"true\" allow-click-nav=\"false\" prev-enabled=\"false\">\n" +
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
-    "<div class=\"order-service-config order-service-config-single-column\">\n" +
+    "<div class=\"order-service-config\">\n" +
     "<div class=\"wizard-pf-main-form-contents\">\n" +
     "\n" +
     "<next-steps ng-if=\"$ctrl.currentStep === 'Results'\" project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\" on-continue=\"$ctrl.close\">\n" +
@@ -7145,7 +7156,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div> \n" +
     "<sidebar></sidebar>\n" +
-    "<overlay-panel show-panel=\"ordering.panelName\" show-close=\"true\" handle-close=\"closeOrderingPanel\">\n" +
+    "<overlay-panel show-panel=\"ordering.panelName\" handle-close=\"closeOrderingPanel\">\n" +
     "<deploy-image-dialog ng-if=\"ordering.panelName === 'deployImage'\" project=\"currentProject\" context=\"context\" on-dialog-closed=\"closeOrderingPanel\"></deploy-image-dialog>\n" +
     "<from-file-dialog ng-if=\"ordering.panelName === 'fromFile'\" project=\"currentProject\" context=\"context\" on-dialog-closed=\"closeOrderingPanel\"></from-file-dialog>\n" +
     "<process-template-dialog ng-if=\"ordering.panelName === 'fromProject'\" project=\"project\" use-project-template=\"true\" on-dialog-closed=\"closeOrderingPanel\"></process-template-dialog>\n" +
@@ -8801,13 +8812,33 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/process-template-dialog.html',
     "<div class=\"order-service\">\n" +
-    "<pf-wizard hide-header=\"true\" hide-sidebar=\"true\" hide-back-button=\"!$ctrl.useProjectTemplate\" step-class=\"order-service-wizard-step\" wizard-ready=\"$ctrl.wizardReady\" next-title=\"$ctrl.nextTitle\" next-callback=\"$ctrl.next\" on-finish=\"$ctrl.close()\" on-cancel=\"$ctrl.close()\" wizard-done=\"$ctrl.wizardDone\" current-step=\"$ctrl.currentStep\" ng-class=\"{'pf-wizard-no-back': !$ctrl.useProjectTemplate}\">\n" +
+    "<pf-wizard title=\"{{!$ctrl.useProjectTemplate && ($ctrl.template | displayName) || 'Select from Project'}}\" hide-sidebar=\"true\" step-class=\"order-service-wizard-step\" wizard-ready=\"$ctrl.wizardReady\" next-title=\"$ctrl.nextTitle\" next-callback=\"$ctrl.next\" on-finish=\"$ctrl.close()\" on-cancel=\"$ctrl.close()\" wizard-done=\"$ctrl.wizardDone\" current-step=\"$ctrl.currentStep\">\n" +
     "<pf-wizard-step ng-repeat=\"step in $ctrl.steps track by step.id\" step-title=\"{{step.label}}\" wz-disabled=\"{{step.hidden}}\" allow-click-nav=\"step.allowClickNav\" next-enabled=\"step.valid\" prev-enabled=\"step.prevEnabled\" on-show=\"step.onShow\" step-id=\"{{step.id}}\" step-priority=\"{{$index}}\">\n" +
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
-    "<div class=\"order-service-details\" ng-if=\"!$ctrl.selectStep.selected\">\n" +
+    "<div ng-if=\"step.selected\" ng-include=\"step.view\" class=\"wizard-pf-main-form-contents\"></div>\n" +
+    "</div>\n" +
+    "</pf-wizard-step>\n" +
+    "</pf-wizard>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/directives/process-template-dialog/process-template-config.html',
+    "<div class=\"order-service-config\">\n" +
+    "<div class=\"osc-form\">\n" +
+    "<form name=\"$ctrl.form\">\n" +
+    "<process-template template=\"$ctrl.template\" project=\"$ctrl.preSelectedProject\" on-project-selected=\"$ctrl.onProjectSelected\" available-projects=\"$ctrl.unfilteredProjects\" is-dialog=\"true\"></process-template>\n" +
+    "</form>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/directives/process-template-dialog/process-template-info.html',
+    "<div class=\"order-service-details\">\n" +
     "<div class=\"order-service-details-top\">\n" +
     "<div class=\"service-icon\">\n" +
-    "<span class=\"icon {{$ctrl.iconClass}}\"></span>\n" +
+    "<span class=\"icon {{$ctrl.iconClass}}\" aria-hidden=\"true\"></span>\n" +
     "</div>\n" +
     "<div class=\"service-title-area\">\n" +
     "<div class=\"service-title\">\n" +
@@ -8823,33 +8854,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"order-service-description-block\">\n" +
     "<p ng-bind-html=\"$ctrl.template | description | linky : '_blank'\" class=\"description\"></p>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"order-service-config\" ng-class=\"{'order-service-config-single-column': $ctrl.selectStep.selected}\">\n" +
-    "<div ng-if=\"step.selected\" ng-include=\"step.view\" class=\"wizard-pf-main-form-contents\"></div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</pf-wizard-step>\n" +
-    "</pf-wizard>\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('views/directives/process-template-dialog/process-template-config.html',
-    "<div class=\"osc-form\">\n" +
-    "<form name=\"$ctrl.form\">\n" +
-    "<process-template template=\"$ctrl.template\" project=\"$ctrl.preSelectedProject\" on-project-selected=\"$ctrl.onProjectSelected\" available-projects=\"$ctrl.unfilteredProjects\" is-dialog=\"true\"></process-template>\n" +
-    "</form>\n" +
     "</div>"
   );
 
 
   $templateCache.put('views/directives/process-template-dialog/process-template-results.html',
+    "<div class=\"order-service-config\">\n" +
     "<next-steps project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\" on-continue=\"$ctrl.close\">\n" +
-    "</next-steps>"
+    "</next-steps>\n" +
+    "</div>"
   );
 
 
   $templateCache.put('views/directives/process-template-dialog/process-template-select.html',
+    "<div class=\"order-service-config\">\n" +
     "<div class=\"config-top\">\n" +
     "<div class=\"select-project-for-template\">\n" +
     "<h2>Select from Project</h2>\n" +
@@ -8882,6 +8900,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{item.name}}\n" +
     "</div>\n" +
     "</a>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>"
@@ -8964,7 +8983,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span>There are no service bindings.</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<overlay-panel single-column=\"true\" show-panel=\"$ctrl.overlayPanelVisible\" show-close=\"true\" handle-close=\"$ctrl.closeOverlayPanel\">\n" +
+    "<overlay-panel show-panel=\"$ctrl.overlayPanelVisible\" handle-close=\"$ctrl.closeOverlayPanel\">\n" +
     "<bind-service target=\"$ctrl.apiObject\" project=\"$ctrl.project\" on-close=\"$ctrl.closeOverlayPanel\"></bind-service>\n" +
     "</overlay-panel>"
   );
@@ -9154,7 +9173,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/unbind-service.html',
     "<div class=\"bind-service-wizard unbind-service\">\n" +
-    "<pf-wizard hide-header=\"true\" hide-sidebar=\"true\" hide-back-button=\"true\" step-class=\"bind-service-wizard-step\" wizard-ready=\"ctrl.wizardReady\" next-title=\"ctrl.nextTitle\" on-finish=\"ctrl.closeWizard()\" on-cancel=\"ctrl.closeWizard()\" wizard-done=\"ctrl.wizardComplete\" class=\"pf-wizard-no-back\">\n" +
+    "<pf-wizard title=\"Delete Binding\" hide-sidebar=\"true\" hide-back-button=\"true\" step-class=\"bind-service-wizard-step\" wizard-ready=\"ctrl.wizardReady\" next-title=\"ctrl.nextTitle\" on-finish=\"ctrl.closeWizard()\" on-cancel=\"ctrl.closeWizard()\" wizard-done=\"ctrl.wizardComplete\">\n" +
     "<pf-wizard-step ng-repeat=\"step in ctrl.steps track by step.id\" step-title=\"{{step.label}}\" next-enabled=\"step.valid\" allow-click-nav=\"false\" on-show=\"step.onShow\" step-id=\"{{step.id}}\" step-priority=\"{{$index}}\">\n" +
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
     "<div class=\"bind-service-config\">\n" +
@@ -10297,7 +10316,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/landing-page.html',
     "<div class=\"middle landing-page\">\n" +
     "<div class=\"middle-content\">\n" +
-    "<overlay-panel show-panel=\"ordering.panelName\" show-close=\"true\" handle-close=\"closeOrderingPanel\">\n" +
+    "<overlay-panel show-panel=\"ordering.panelName\" handle-close=\"closeOrderingPanel\">\n" +
     "<process-template-dialog ng-if=\"template\" template=\"template\" on-dialog-closed=\"closeOrderingPanel\"></process-template-dialog>\n" +
     "<deploy-image-dialog ng-if=\"ordering.panelName === 'deployImage'\" on-dialog-closed=\"closeOrderingPanel\"></deploy-image-dialog>\n" +
     "<from-file-dialog ng-if=\"ordering.panelName === 'fromFile'\" on-dialog-closed=\"closeOrderingPanel\"></from-file-dialog>\n" +
@@ -11891,7 +11910,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{row.urlForImageChangeTrigger(row.imageChangeTriggers[0])}}\">\n" +
     "{{row.imageChangeTriggers[0].imageChangeParams.from | imageObjectRef : row.apiObject.metadata.namespace}}</a>.\n" +
     "</span>\n" +
-    "<span ng-if=\"row.imageChangeParams.length > 1\">\n" +
+    "<span ng-if=\"row.imageChangeTriggers.length > 1\">\n" +
     "one of the images referenced by this deployment config changes.\n" +
     "</span>\n" +
     "</div>\n" +
@@ -12041,7 +12060,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab ng-if=\"row.showBindings && (row.bindings | size)\" active=\"row.selectedTab.bindings\">\n" +
     "<uib-tab-heading>Bindings</uib-tab-heading>\n" +
-    "<overview-service-bindings namespace=\"row.apiObject.metadata.namespace\" bindings=\"row.bindings\" bindable-service-instances=\"row.state.bindableServiceInstances\" service-classes=\"row.state.serviceClasses\" service-instances=\"row.state.serviceInstances\" create-binding=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">\n" +
+    "<overview-service-bindings section-title=\"Service Bindings\" ref-api-object=\"row.apiObject\" namespace=\"row.apiObject.metadata.namespace\" bindings=\"row.bindings\" bindable-service-instances=\"row.state.bindableServiceInstances\" service-classes=\"row.state.serviceClasses\" service-instances=\"row.state.serviceInstances\" create-binding=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">\n" +
     "</overview-service-bindings>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
@@ -12057,7 +12076,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<overview-builds build-configs=\"row.buildConfigs\" recent-builds-by-build-config=\"row.state.recentBuildsByBuildConfig\" context=\"row.state.context\" hide-log=\"row.state.limitWatches\">\n" +
     "</overview-builds>\n" +
-    "<overview-service-bindings ng-if=\"row.showBindings && (row.bindings | size)\" namespace=\"row.apiObject.metadata.namespace\" bindings=\"row.bindings\" bindable-service-instances=\"row.state.bindableServiceInstances\" service-classes=\"row.state.serviceClasses\" service-instances=\"row.state.serviceInstances\" create-binding=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">\n" +
+    "<overview-service-bindings section-title=\"Service Bindings\" ng-if=\"row.showBindings && (row.bindings | size)\" ref-api-object=\"row.apiObject\" namespace=\"row.apiObject.metadata.namespace\" bindings=\"row.bindings\" bindable-service-instances=\"row.state.bindableServiceInstances\" service-classes=\"row.state.serviceClasses\" service-instances=\"row.state.serviceInstances\" create-binding=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">\n" +
     "</overview-service-bindings>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -12081,7 +12100,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-include src=\" 'views/overview/_list-row-expanded.html' \"></div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<overlay-panel single-column=\"true\" show-panel=\"row.overlay.panelVisible\" show-close=\"true\" handle-close=\"row.closeOverlayPanel\">\n" +
+    "<overlay-panel show-panel=\"row.overlay.panelVisible\" handle-close=\"row.closeOverlayPanel\">\n" +
     "<div ng-if=\"row.overlay.panelName === 'bindService'\">\n" +
     "<bind-service target=\"row.overlay.state.target\" project=\"row.state.project\" on-close=\"row.closeOverlayPanel\"></bind-service>\n" +
     "</div>\n" +
@@ -12236,8 +12255,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_service-bindings.html',
     "<div class=\"expanded-section\">\n" +
-    "<div class=\"section-title hidden-xs\">Service Bindings</div>\n" +
-    "<service-binding ng-repeat=\"binding in $ctrl.bindings track by (binding | uid)\" namespace=\"$ctrl.namespace\" binding=\"binding\" service-classes=\"$ctrl.serviceClasses\" service-instances=\"$ctrl.serviceInstances\" secrets=\"$ctrl.secrets\">\n" +
+    "<div class=\"section-title hidden-xs\">{{$ctrl.sectionTitle}}</div>\n" +
+    "<service-binding ng-repeat=\"binding in $ctrl.bindings track by (binding | uid)\" is-overview=\"true\" namespace=\"$ctrl.namespace\" ref-api-object=\"$ctrl.refApiObject\" binding=\"binding\" service-classes=\"$ctrl.serviceClasses\" service-instances=\"$ctrl.serviceInstances\" secrets=\"$ctrl.secrets\">\n" +
     "</service-binding>\n" +
     "<div ng-if=\"($ctrl.bindableServiceInstances | size) && ({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create')\">\n" +
     "<a href=\"\" ng-click=\"$ctrl.createBinding()\" role=\"button\">\n" +
@@ -12289,34 +12308,35 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{row.apiObject | navigateResourceURL}}\" ng-bind-html=\"row.displayName | highlightKeywords : row.state.filterKeywords\"></a>\n" +
     "<div ng-bind-html=\"row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords\" class=\"list-row-longname\"></div>\n" +
     "</h3>\n" +
-    "<div class=\"status-icons\">\n" +
-    "<notification-icon ng-if=\"!row.expanded\" alerts=\"row.notifications\"></notification-icon>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"list-pf-details\" ng-if=\"!row.expanded\" ng-switch=\"row.instanceStatus\">\n" +
-    "<span ng-switch-when=\"failed\" dynamic-content=\"{{row.instanceError.message}}\" data-toggle=\"tooltip\" data-trigger=\"hover\">\n" +
+    "<div class=\"status-icons\" ng-if=\"!row.expanded\">\n" +
+    "<notification-icon alerts=\"row.notifications\"></notification-icon>\n" +
+    "<div ng-switch=\"row.instanceStatus\">\n" +
+    "<span ng-switch-when=\"failed\" dynamic-content=\"{{row.apiObject | serviceInstanceFailedMessage}}\" data-toggle=\"tooltip\" data-trigger=\"hover\" class=\"notification-icon-count\">\n" +
     "<span class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></span>\n" +
     "<span>Error</span>\n" +
     "</span>\n" +
-    "<span ng-switch-when=\"deleted\">\n" +
+    "<span ng-switch-when=\"deleted\" class=\"notification-icon-count\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "Marked for Deletion\n" +
     "</span>\n" +
-    "<span ng-switch-when=\"pending\">\n" +
+    "<span ng-switch-when=\"pending\" class=\"notification-icon-count\">\n" +
     "<span class=\"spinner spinner-xs spinner-inline\" aria-hidden=\"true\"></span>\n" +
     "<span>Pending</span>\n" +
     "</span>\n" +
-    "<div ng-switch-default>\n" +
-    "<div class=\"hidden-xs hidden-sm\">\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-details\" ng-if=\"!row.expanded\">\n" +
     "<span ng-if=\"!row.bindings.length\n" +
-    "                        && row.isBindable\n" +
-    "                        && ({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create')\">\n" +
+    "                    && row.isBindable\n" +
+    "                    && ({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create')\" class=\"hidden-xs hidden-sm\">\n" +
     "<a href=\"\" ng-click=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">\n" +
     "<span class=\"pficon pficon-add-circle-o\" aria-hidden=\"true\"></span>\n" +
     "Create Binding\n" +
     "</a>\n" +
     "</span>\n" +
-    "<span ng-if=\"row.bindings.length\" class=\"component-label\">Bindings</span>\n" +
+    "<div ng-if=\"row.bindings.length\" class=\"hidden-xs hidden-sm\">\n" +
+    "<span class=\"component-label\">Bindings</span>\n" +
     "<p ng-if=\"firstBinding = row.bindings[0]\" class=\"bindings\">\n" +
     "<span ng-if=\"application = row.state.applicationsByBinding[firstBinding.metadata.name][0]\">\n" +
     "{{application.metadata.name}}\n" +
@@ -12330,7 +12350,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{row.bindings.length -1}} other<span ng-if=\"row.bindings.length > 2\">s</span></a>\n" +
     "</span>\n" +
     "</p>\n" +
-    "</div>\n" +
     "</div>\n" +
     "<div class=\"hidden-xs\" ng-if=\"(!row.instanceStatus || row.instanceStatus === 'ready') && row.apiObject.status.dashboardURL\">\n" +
     "<a ng-href=\"{{row.apiObject.status.dashboardURL}}\" target=\"_blank\">\n" +
@@ -12378,7 +12397,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"alert word-break alert-danger\">\n" +
     "<span class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">error</span>\n" +
-    "<span class=\"strong\">{{row.instanceError.message}}</span>\n" +
+    "<span class=\"strong\">{{row.apiObject | serviceInstanceFailedMessage}}</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -12399,62 +12418,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p class=\"pre-wrap\" ng-bind-html=\"row.description | linky\"></p>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"section-title\" ng-if=\"row.isBindable || row.bindings\">\n" +
-    "Bindings\n" +
-    "</div>\n" +
-    "<div class=\"row overview-bindings\" ng-repeat=\"(name, binding) in row.bindings\">\n" +
-    "<div class=\"col-sm-5 col-md-6\">\n" +
-    "<div ng-if=\"!(row.state.applicationsByBinding[binding.metadata.name] | size)\">\n" +
-    "<h3>\n" +
-    "<div class=\"component-label\">\n" +
-    "Secret\n" +
-    "</div>\n" +
-    "<a ng-if=\"('secrets' | canI : 'get')\" ng-href=\"{{binding.spec.secretName | navigateResourceURL : 'Secret' : row.apiObject.metadata.namespace}}\">\n" +
-    "{{binding.spec.secretName}}\n" +
-    "</a>\n" +
-    "<span ng-if=\"!('secrets' | canI : 'get')\">\n" +
-    "{{binding.spec.secretName}}\n" +
-    "</span>\n" +
-    "</h3>\n" +
-    "</div>\n" +
-    "<div ng-repeat=\"target in row.state.applicationsByBinding[binding.metadata.name] track by (target | uid)\">\n" +
-    "<h3>\n" +
-    "<div class=\"component-label\">\n" +
-    "{{target.kind | humanizeKind : true}}\n" +
-    "</div>\n" +
-    "<a ng-href=\"{{target | navigateResourceURL}}\">{{target.metadata.name}}</a>\n" +
-    "</h3>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-sm-7 col-md-6 overview-bindings\">\n" +
-    "<span ng-if=\"binding.metadata.deletionTimestamp\">\n" +
-    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
-    "Marked for Deletion\n" +
-    "</span>\n" +
-    "<span ng-if=\"!(binding | isBindingReady) && !binding.metadata.deletionTimestamp\">\n" +
-    "<status-icon status=\"'Pending'\"></status-icon> Pending\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"row\" ng-if=\"row.isBindable && ({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create')\">\n" +
-    "<div class=\"col-sm-12\">\n" +
-    "<a href=\"\" ng-click=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">\n" +
-    "<span class=\"pficon pficon-add-circle-o\" aria-hidden=\"true\"></span>\n" +
-    "Create Binding\n" +
-    "</a>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"row\" ng-if=\"!row.bindings.length && (!row.isBindable || !({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create'))\">\n" +
-    "<div class=\"col-sm-12\">\n" +
-    "<em>No bindings</em>\n" +
+    "<overview-service-bindings ng-if=\"row.isBindable || row.bindings\" section-title=\"Bindings\" ref-api-object=\"row.apiObject\" namespace=\"row.apiObject.metadata.namespace\" bindings=\"row.bindings\" bindable-service-instances=\"row.state.bindableServiceInstances\" service-classes=\"row.state.serviceClasses\" create-binding=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">\n" +
+    "</overview-service-bindings>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<overlay-panel single-column=\"true\" show-panel=\"row.overlay.panelVisible\" show-close=\"true\" handle-close=\"row.closeOverlayPanel\">\n" +
+    "<overlay-panel show-panel=\"row.overlay.panelVisible\" handle-close=\"row.closeOverlayPanel\">\n" +
     "<div ng-if=\"row.overlay.panelName === 'bindService'\">\n" +
     "<bind-service target=\"row.overlay.state.target\" project=\"row.state.project\" on-close=\"row.closeOverlayPanel\"></bind-service>\n" +
     "</div>\n" +
@@ -13146,6 +13117,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<thead>\n" +
     "<tr>\n" +
     "<th>Name</th>\n" +
+    "<th>Instance Name</th>\n" +
     "<th>Status</th>\n" +
     "<th>Created</th>\n" +
     "<th>Bindings</th>\n" +
@@ -13159,6 +13131,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody ng-if=\"(serviceInstances | size) > 0\">\n" +
     "<tr ng-repeat=\"serviceInstance in serviceInstances track by (serviceInstance | uid)\">\n" +
     "<td data-title=\"Name\"><a ng-href=\"{{serviceInstance | navigateResourceURL}}\">{{serviceInstance | serviceInstanceDisplayName:serviceClasses}}</a></td>\n" +
+    "<td data-title=\"Instance Name\"><span>{{serviceInstance.metadata.name}}</span></td>\n" +
     "<td data-title=\"Status\">\n" +
     "<div row class=\"status\">\n" +
     "<status-icon status=\"serviceInstance | serviceInstanceStatus\" disable-animation></status-icon>\n" +
