@@ -498,6 +498,10 @@
                   show-header></key-value-editor>
               </ng-form>
             </uib-tab>
+            <uib-tab active="selectedTab.events" ng-if="('events' | canI : 'watch')">
+              <uib-tab-heading>Events</uib-tab-heading>
+              <events api-objects="[ buildConfig ]" project-context="projectContext" ng-if="selectedTab.events"></events>
+            </uib-tab>
           </uib-tabset>
         </div><!-- /col-* -->
       </div>
