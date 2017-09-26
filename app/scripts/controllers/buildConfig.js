@@ -60,8 +60,6 @@ angular.module('openshiftConsole')
     var buildStrategy = $filter('buildStrategy');
     var watches = [];
 
-    var requestContext;
-
     // copy buildConfig and ensure it has env so that we can edit env vars using key-value-editor
     var copyBuildConfigAndEnsureEnv = function(buildConfig) {
       $scope.updatedBuildConfig = angular.copy(buildConfig);
@@ -94,7 +92,7 @@ angular.module('openshiftConsole')
       $scope.envVars = _.filter($scope.envVars, 'name');
       buildStrategy($scope.updatedBuildConfig).env = keyValueEditorUtils.compactEntries(angular.copy($scope.envVars));
       DataService
-        .update("buildconfigs", $routeParams.buildconfig, $scope.updatedBuildConfig, requestContext)
+        .update("buildconfigs", $routeParams.buildconfig, $scope.updatedBuildConfig, $scope.projectContext)
         .then(function success() {
           NotificationsService.addNotification({
             type: "success",
@@ -179,7 +177,7 @@ angular.module('openshiftConsole')
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
-        requestContext = context;
+        $scope.projectContext = context;
         DataService
           .get($scope.buildConfigsVersion, $routeParams.buildconfig, context, { errorNotification: false })
           .then(function(buildConfig) {
