@@ -9167,7 +9167,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "      mode: 'yaml',\n" +
     "      theme: 'eclipse',\n" +
     "      onLoad: $ctrl.aceLoaded,\n" +
-    "      onChange: $ctrl.aceChanged,\n" +
     "      rendererOptions: {\n" +
     "        showPrintMargin: false\n" +
     "      }\n" +

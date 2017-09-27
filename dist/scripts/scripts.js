@@ -7650,11 +7650,7 @@ title: "Edit YAML"
 } ];
 var m = function() {
 e.modified = !1, a.returnURL ? n.url(a.returnURL) : r.history.back();
-};
-e.$watch("updated.resource", function(t, n) {
-t !== n && (e.modified = !0);
-});
-var f = [];
+}, f = [];
 d.get(a.project).then(_.spread(function(n, r) {
 var s = {
 resource: o.kindToResource(a.kind),
@@ -7664,7 +7660,9 @@ i.canI(s, "update", a.project) ? (c.get(s, e.name, r, {
 errorNotification: !1
 }).then(function(n) {
 var i = n;
-_.set(e, "updated.resource", angular.copy(n));
+_.set(e, "updated.resource", angular.copy(n)), e.$watch("updated.resource", function(t, n) {
+t !== n && (e.modified = !0);
+});
 var l = function(e) {
 return _.get(e, "metadata.resourceVersion");
 };
@@ -14140,9 +14138,16 @@ e !== t && (n.model = e);
 n.resource && (n.model = jsyaml.safeDump(n.resource, {
 sortKeys: !0
 }));
-}, n.aceChanged = function() {
+}, n.aceLoaded = function(e) {
+t = e;
+var n = e.getSession();
+n.setOption("tabSize", 2), n.setOption("useSoftTabs", !0), e.setDragDelay = 0;
+}, e.$watch(function() {
+return n.model;
+}, function(e, t) {
+var s;
 try {
-n.resource = a(!1), i(!0);
+s = a(!1), i(!0), e !== t && (n.resource = s);
 try {
 a(!0), r();
 } catch (e) {
@@ -14151,11 +14156,7 @@ o(e, "warning");
 } catch (e) {
 o(e, "error"), i(!1);
 }
-}, n.aceLoaded = function(e) {
-t = e;
-var n = e.getSession();
-n.setOption("tabSize", 2), n.setOption("useSoftTabs", !0), e.setDragDelay = 0;
-}, n.gotoLine = function(e) {
+}), n.gotoLine = function(e) {
 t.gotoLine(e);
 };
 } ],

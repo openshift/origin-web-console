@@ -48,12 +48,6 @@ angular.module('openshiftConsole')
       $window.history.back();
     };
 
-    $scope.$watch('updated.resource', function(current, previous) {
-      if (current !== previous) {
-        $scope.modified = true;
-      }
-    });
-
     var watches = [];
     ProjectsService
       .get($routeParams.project)
@@ -75,6 +69,14 @@ angular.module('openshiftConsole')
 
             // Modify a copy of the resource.
             _.set($scope, 'updated.resource', angular.copy(result));
+            $scope.$watch('updated.resource', function(updated, previous) {
+              // Skip the initial $watch callback when we first add the listener.
+              if (updated === previous) {
+                return;
+              }
+
+              $scope.modified = true;
+            });
 
             // TODO: Update the BreadcrumbsService to handle types without browse pages.
             // $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
