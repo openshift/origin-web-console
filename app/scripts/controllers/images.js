@@ -8,7 +8,15 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('ImagesController', function ($routeParams, $scope, DataService, ProjectsService, $filter, LabelFilter, Logger) {
+  .controller('ImagesController', function (
+    $filter,
+    $routeParams,
+    $scope,
+    APIService,
+    DataService,
+    LabelFilter,
+    Logger,
+    ProjectsService) {
     $scope.projectName = $routeParams.project;
     $scope.imageStreams = {};
     $scope.unfilteredImageStreams = {};
@@ -18,13 +26,15 @@ angular.module('openshiftConsole')
     $scope.alerts = $scope.alerts || {};
     $scope.emptyMessage = "Loading...";
 
+    var imageStreamsVersion = APIService.getPreferredVersion('imagestreams');
+
     var watches = [];
 
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
-        watches.push(DataService.watch("imagestreams", context, function(imageStreams) {
+        watches.push(DataService.watch(imageStreamsVersion, context, function(imageStreams) {
           $scope.unfilteredImageStreams = imageStreams.by("metadata.name");
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredImageStreams, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
