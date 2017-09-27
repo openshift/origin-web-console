@@ -280,7 +280,8 @@ describe("EnvironmentService", function() {
             key: 'my.key'
           }
         }
-      }]
+      }],
+      envFrom: []
     }, {
       name: 'my-second-container',
       env: [{
@@ -294,7 +295,8 @@ describe("EnvironmentService", function() {
       }, {
         name: 'FOO',
         value: 'bar'
-      }]
+      }],
+      envFrom: []
     }];
 
     // Change some values.

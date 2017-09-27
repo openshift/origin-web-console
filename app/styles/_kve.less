@@ -1,6 +1,7 @@
 // Angular Key Value Editor styles
 
-.key-value-editor {
+.key-value-editor,
+.environment-from-editor {
   &.as-sortable-dragging {
     .as-sortable-item-delete,
     .input-group-addon,
@@ -101,21 +102,47 @@
     border-collapse: separate;
     display: table;
     position: relative;
+    &.faux-input-single-input {
+      width: 100%;
+    }
   }
 
-  .key-value-editor-buttons {
+  .key-value-editor-buttons,
+  .environment-from-editor-button {
     position: absolute;
     right: 0;
     top: 0;
     width: (@as-sortable-item-button-width * 2);
   }
 
-  .key-value-editor-entry {
+  .key-value-editor-entry,
+  .environment-from-entry {
     display: table;
     padding-right: (@as-sortable-item-button-width * 2);
     position: relative;
     table-layout: fixed;
     width: 100%;
+    @media(min-width: @screen-md-min)  {
+      .environment-from-editor-button {
+        float: left;
+        padding-right: 5px;
+        position: relative;
+        width: 50%;
+      }
+    }
+    .environment-from-input {
+      float: left;
+      padding-right: 5px;
+      width: 100%;
+      @media(min-width: @screen-md-min) {
+        width: 50%;
+      }
+      .faux-input-group,
+      .ui-select {
+        float: left;
+        width: 100%;
+      }
+    }
   }
 
   .key-value-editor-input .ui-select {
@@ -140,10 +167,12 @@
   width: 50%;
 }
 
-.key-value-editor-entry-header {
+.key-value-editor-entry-header,
+.environment-from-editor-entry-header {
   padding-right: (@as-sortable-item-button-width * 2);
 }
 
-.key-value-editor-header {
+.key-value-editor-header,
+.environment-from-editor-header {
   margin-bottom: 5px;
 }
