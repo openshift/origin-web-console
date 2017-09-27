@@ -2,15 +2,19 @@
 
 angular
   .module('openshiftConsole')
-  .filter('canIDoAny', function(canIFilter) {
-    var resourceRulesMap = {
+  .filter('canIDoAny', function(APIService, canIFilter) {
+    // Top level keys are representing pages.
+    // Within each page may one or more resources.
+    // canIDoAny returns truthy if the user passes the canIFilter
+    // for at least one of the resources and verbs listed in the page.
+    var pageRulesMap = {
       'buildConfigs': [
         {group: '', resource: 'buildconfigs',             verbs: ['delete', 'update']},
         {group: '', resource: 'buildconfigs/instantiate', verbs: ['create']}
       ],
       'builds': [
-        {group: '', resource: 'builds/clone', verbs: ['create']},
-        {group: '', resource: 'builds',       verbs: ['delete', 'update']}
+        _.assign({}, APIService.getPreferredVersion('builds/clone'), {verbs: ['create']}),
+        _.assign({}, APIService.getPreferredVersion('builds'), {verbs: ['delete', 'update']})
       ],
       'configmaps': [
         {group: '', resource: 'configmaps', verbs: ['update', 'delete']}
@@ -58,12 +62,15 @@ angular
       'projects': [
         {group: '', resource: 'projects', verbs: ['delete', 'update']}
       ],
+      // FIXME: inconsistent case (camel)
       'statefulsets': [
         {group: 'apps', resource: 'statefulsets', verbs: ['update', 'delete']}
       ]
     };
-    return function(resource) {
-      return _.some(resourceRulesMap[resource], function(rule) {
+
+    // the primary key is the page name, NOT the actual resource, though they appear to match.
+    return function(pageName) {
+      return _.some(pageRulesMap[pageName], function(rule) {
         return _.some(rule.verbs, function(verb) {
           return canIFilter({resource: rule.resource, group: rule.group}, verb);
         });
