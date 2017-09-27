@@ -13570,13 +13570,10 @@ controller: [ "$filter", "AuthorizationService", "BindingService", "ListRowUtils
 var o = this, i = e("isBindingFailed"), s = e("isBindingReady");
 _.extend(o, a.ui);
 var c = e("serviceInstanceDisplayName"), l = function() {
-var e = o.apiObject.spec.serviceClassName;
-return _.get(o, [ "state", "serviceClasses", e, "description" ]);
-}, u = function() {
 _.get(o.apiObject, "metadata.deletionTimestamp") ? o.instanceStatus = "deleted" : i(o.apiObject) ? o.instanceStatus = "failed" : s(o.apiObject) ? o.instanceStatus = "ready" : o.instanceStatus = "pending";
 };
 o.$doCheck = function() {
-u(), o.notifications = a.getNotifications(o.apiObject, o.state), o.displayName = c(o.apiObject, o.state.serviceClasses), o.isBindable = n.isServiceBindable(o.apiObject, o.state.serviceClasses), o.description = l();
+l(), o.notifications = a.getNotifications(o.apiObject, o.state), o.displayName = c(o.apiObject, o.state.serviceClasses), o.isBindable = n.isServiceBindable(o.apiObject, o.state.serviceClasses), o.serviceClass = _.get(o, [ "state", "serviceClasses", o.apiObject.spec.serviceClassName ]);
 }, o.$onChanges = function(e) {
 e.bindings && (o.deleteableBindings = _.reject(o.bindings, "metadata.deletionTimestamp"));
 }, o.getSecretForBinding = function(e) {

@@ -5060,10 +5060,12 @@ h2+.list-view-pf{margin-top:20px}
 .overview .overview-row-inline-actions{margin-left:10px}
 .overview pod-donut[mini]{align-items:center;display:flex}
 .overview .provisioned-service .expanded-section{margin-top:0}
-@media (min-width:768px){.overview .provisioned-service .list-pf-details{justify-content:space-between}
-}
 .overview .provisioned-service .list-pf-details .bindings{margin-bottom:0;margin-top:-4px}
 .overview .provisioned-service .list-pf-details .small{color:#9c9c9c;font-size:10px}
+.overview .provisioned-service .list-pf-expansion .learn-more-link{display:block;font-size:13px}
+@media (min-width:768px){.overview .provisioned-service .list-pf-details{justify-content:space-between}
+.overview .provisioned-service .list-pf-expansion .learn-more-link{display:inline;margin-right:10px}
+}
 @media (min-width:992px){.overview .status-icons{margin-right:15px;width:40%}
 }
 .overview :not(.tab-pane)>overview-pipelines>.expanded-section{margin-bottom:30px}
