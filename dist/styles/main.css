@@ -5847,29 +5847,36 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .container-terminal-wrapper:-fullscreen .fullscreen-toggle .go-fullscreen{display:none}
 kubernetes-container-terminal .terminal-actions{top:0;right:47px}
 kubernetes-container-terminal .terminal-actions .spinner{top:5px}
-.key-value-editor.as-sortable-dragging .as-sortable-item-delete,.key-value-editor.as-sortable-dragging .input-group-addon,.key-value-editor.as-sortable-dragging input{opacity:.65}
-.key-value-editor .as-sortable-DISABLED-item-delete:hover,.key-value-editor .as-sortable-item-delete:hover,.key-value-editor .as-sortable-item-handle:hover,.key-value-editor.as-sortable-dragging .as-sortable-item-handle{opacity:1}
-.key-value-editor .as-sortable-DISABLED-item-delete,.key-value-editor .as-sortable-item-delete,.key-value-editor .as-sortable-item-handle{display:inline-block;font-size:15px;opacity:.65;padding:6px;vertical-align:middle}
-.key-value-editor .as-sortable-DISABLED-item-delete,.key-value-editor .as-sortable-item-delete{color:#333}
-.key-value-editor .as-sortable-DISABLED-item-delete:active,.key-value-editor .as-sortable-DISABLED-item-delete:focus,.key-value-editor .as-sortable-DISABLED-item-delete:hover,.key-value-editor .as-sortable-item-delete:active,.key-value-editor .as-sortable-item-delete:focus,.key-value-editor .as-sortable-item-delete:hover{text-decoration:none}
-.key-value-editor .as-sortable-item-handle{cursor:move}
-.key-value-editor .as-sortable-placeholder{border-top:2px solid #0088ce;clear:left;width:100%!important}
-.key-value-editor .faux-form-control{background-color:#fff;background-image:none;border:1px solid #bbb;border-radius:1px;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075);box-shadow:inset 0 1px 1px rgba(0,0,0,.075);color:#363636;display:table-cell;font-size:13px;height:27px;line-height:1.66666667;padding:2px 6px;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;-o-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;width:100%;word-break:break-all;word-break:break-word;overflow-wrap:break-word}
-.key-value-editor .faux-form-control.readonly{background-color:#f5f5f5;-webkit-box-shadow:none;box-shadow:none;color:#8b8d8f;opacity:1}
-.key-value-editor .faux-form-control.readonly:hover{border-color:#bbb}
-.key-value-editor .faux-form-control-addon{background-color:#f1f1f1;border:1px solid #bbb;border-radius:1px;color:#363636;display:table-cell;font-size:13px;font-weight:400;line-height:1;margin-right:2px;padding:2px 6px;text-align:center;vertical-align:middle;white-space:nowrap;width:1%}
-.key-value-editor .faux-form-control-addon:first-child{border-right:0}
-.key-value-editor .faux-form-control-addon span[title]:not([data-original-title=""]){cursor:help}
-.key-value-editor .faux-input-group{border-collapse:separate;display:table;position:relative}
-.key-value-editor .key-value-editor-buttons{position:absolute;right:0;top:0;width:52px}
-.key-value-editor .key-value-editor-entry{display:table;padding-right:52px;position:relative;table-layout:fixed;width:100%}
-.key-value-editor .key-value-editor-input .ui-select+.ui-select{padding-top:5px}
-@media (min-width:992px){.key-value-editor .key-value-editor-input .ui-select{float:left;width:50%}
-.key-value-editor .key-value-editor-input .ui-select+.ui-select{padding-top:0;padding-left:5px}
+.environment-from-editor.as-sortable-dragging .as-sortable-item-delete,.environment-from-editor.as-sortable-dragging .input-group-addon,.environment-from-editor.as-sortable-dragging input,.key-value-editor.as-sortable-dragging .as-sortable-item-delete,.key-value-editor.as-sortable-dragging .input-group-addon,.key-value-editor.as-sortable-dragging input{opacity:.65}
+.environment-from-editor .as-sortable-DISABLED-item-delete:hover,.environment-from-editor .as-sortable-item-delete:hover,.environment-from-editor .as-sortable-item-handle:hover,.environment-from-editor.as-sortable-dragging .as-sortable-item-handle,.key-value-editor .as-sortable-DISABLED-item-delete:hover,.key-value-editor .as-sortable-item-delete:hover,.key-value-editor .as-sortable-item-handle:hover,.key-value-editor.as-sortable-dragging .as-sortable-item-handle{opacity:1}
+.environment-from-editor .as-sortable-DISABLED-item-delete,.environment-from-editor .as-sortable-item-delete,.environment-from-editor .as-sortable-item-handle,.key-value-editor .as-sortable-DISABLED-item-delete,.key-value-editor .as-sortable-item-delete,.key-value-editor .as-sortable-item-handle{display:inline-block;font-size:15px;opacity:.65;padding:6px;vertical-align:middle}
+.environment-from-editor .as-sortable-DISABLED-item-delete,.environment-from-editor .as-sortable-item-delete,.key-value-editor .as-sortable-DISABLED-item-delete,.key-value-editor .as-sortable-item-delete{color:#333}
+.environment-from-editor .as-sortable-DISABLED-item-delete:active,.environment-from-editor .as-sortable-DISABLED-item-delete:focus,.environment-from-editor .as-sortable-DISABLED-item-delete:hover,.environment-from-editor .as-sortable-item-delete:active,.environment-from-editor .as-sortable-item-delete:focus,.environment-from-editor .as-sortable-item-delete:hover,.key-value-editor .as-sortable-DISABLED-item-delete:active,.key-value-editor .as-sortable-DISABLED-item-delete:focus,.key-value-editor .as-sortable-DISABLED-item-delete:hover,.key-value-editor .as-sortable-item-delete:active,.key-value-editor .as-sortable-item-delete:focus,.key-value-editor .as-sortable-item-delete:hover{text-decoration:none}
+.environment-from-editor .as-sortable-item-handle,.key-value-editor .as-sortable-item-handle{cursor:move}
+.environment-from-editor .as-sortable-placeholder,.key-value-editor .as-sortable-placeholder{border-top:2px solid #0088ce;clear:left;width:100%!important}
+.environment-from-editor .faux-form-control,.key-value-editor .faux-form-control{background-color:#fff;background-image:none;border:1px solid #bbb;border-radius:1px;-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075);box-shadow:inset 0 1px 1px rgba(0,0,0,.075);color:#363636;display:table-cell;font-size:13px;height:27px;line-height:1.66666667;padding:2px 6px;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;-o-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;width:100%;word-break:break-all;word-break:break-word;overflow-wrap:break-word}
+.environment-from-editor .faux-form-control.readonly,.key-value-editor .faux-form-control.readonly{background-color:#f5f5f5;-webkit-box-shadow:none;box-shadow:none;color:#8b8d8f;opacity:1}
+.environment-from-editor .faux-form-control.readonly:hover,.key-value-editor .faux-form-control.readonly:hover{border-color:#bbb}
+.environment-from-editor .faux-form-control-addon,.key-value-editor .faux-form-control-addon{background-color:#f1f1f1;border:1px solid #bbb;border-radius:1px;color:#363636;display:table-cell;font-size:13px;font-weight:400;line-height:1;margin-right:2px;padding:2px 6px;text-align:center;vertical-align:middle;white-space:nowrap;width:1%}
+.environment-from-editor .faux-form-control-addon:first-child,.key-value-editor .faux-form-control-addon:first-child{border-right:0}
+.environment-from-editor .faux-form-control-addon span[title]:not([data-original-title=""]),.key-value-editor .faux-form-control-addon span[title]:not([data-original-title=""]){cursor:help}
+.environment-from-editor .faux-input-group,.key-value-editor .faux-input-group{border-collapse:separate;display:table;position:relative}
+.environment-from-editor .faux-input-group.faux-input-single-input,.key-value-editor .faux-input-group.faux-input-single-input{width:100%}
+.environment-from-editor .environment-from-editor-button,.environment-from-editor .key-value-editor-buttons,.key-value-editor .environment-from-editor-button,.key-value-editor .key-value-editor-buttons{position:absolute;right:0;top:0;width:52px}
+.environment-from-editor .environment-from-entry,.environment-from-editor .key-value-editor-entry,.key-value-editor .environment-from-entry,.key-value-editor .key-value-editor-entry{display:table;padding-right:52px;position:relative;table-layout:fixed;width:100%}
+@media (min-width:992px){.environment-from-editor .environment-from-entry .environment-from-editor-button,.environment-from-editor .key-value-editor-entry .environment-from-editor-button,.key-value-editor .environment-from-entry .environment-from-editor-button,.key-value-editor .key-value-editor-entry .environment-from-editor-button{float:left;padding-right:5px;position:relative;width:50%}
+}
+.environment-from-editor .environment-from-entry .environment-from-input,.environment-from-editor .key-value-editor-entry .environment-from-input,.key-value-editor .environment-from-entry .environment-from-input,.key-value-editor .key-value-editor-entry .environment-from-input{float:left;padding-right:5px;width:100%}
+@media (min-width:992px){.environment-from-editor .environment-from-entry .environment-from-input,.environment-from-editor .key-value-editor-entry .environment-from-input,.key-value-editor .environment-from-entry .environment-from-input,.key-value-editor .key-value-editor-entry .environment-from-input{width:50%}
+}
+.environment-from-editor .environment-from-entry .environment-from-input .faux-input-group,.environment-from-editor .environment-from-entry .environment-from-input .ui-select,.environment-from-editor .key-value-editor-entry .environment-from-input .faux-input-group,.environment-from-editor .key-value-editor-entry .environment-from-input .ui-select,.key-value-editor .environment-from-entry .environment-from-input .faux-input-group,.key-value-editor .environment-from-entry .environment-from-input .ui-select,.key-value-editor .key-value-editor-entry .environment-from-input .faux-input-group,.key-value-editor .key-value-editor-entry .environment-from-input .ui-select{float:left;width:100%}
+.environment-from-editor .key-value-editor-input .ui-select+.ui-select,.key-value-editor .key-value-editor-input .ui-select+.ui-select{padding-top:5px}
+@media (min-width:992px){.environment-from-editor .key-value-editor-input .ui-select,.key-value-editor .key-value-editor-input .ui-select{float:left;width:50%}
+.environment-from-editor .key-value-editor-input .ui-select+.ui-select,.key-value-editor .key-value-editor-input .ui-select+.ui-select{padding-top:0;padding-left:5px}
 }
 .key-value-editor .key-value-editor-input,.key-value-editor-header{float:left;padding-right:5px;width:50%}
-.key-value-editor-entry-header{padding-right:52px}
-.key-value-editor-header{margin-bottom:5px}
+.environment-from-editor-entry-header,.key-value-editor-entry-header{padding-right:52px}
+.environment-from-editor-header,.key-value-editor-header{margin-bottom:5px}
 .membership h1 .learn-more-inline{white-space:nowrap;margin-right:10px;margin-left:0px;display:inline-block}
 .membership .content-pane .col-heading .col-add-role h3,.membership .content-pane .form-new-role .col-roles{display:none}
 .membership .content-pane{width:100%}

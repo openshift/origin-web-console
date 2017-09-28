@@ -73157,83 +73157,133 @@ n ? (t.truncatedContent = e(n, t.limit, t.useWordBoundary, t.newlineLimit), t.tr
 } ]), angular.module("openshiftCommonServices").constant("API_PREFERRED_VERSIONS", {
 appliedclusterresourcequotas: {
 group: "quota.openshift.io",
+version: "v1",
 resource: "appliedclusterresourcequotas"
 },
 builds: {
 group: "build.openshift.io",
+version: "v1",
 resource: "builds"
 },
 "builds/clone": {
 group: "build.openshift.io",
+version: "v1",
 resource: "builds/clone"
 },
 "buildconfigs/instantiate": {
 group: "build.openshift.io",
+version: "v1",
 resource: "buildconfigs/instantiate"
 },
 buildconfigs: {
 group: "build.openshift.io",
+version: "v1",
 resource: "buildconfigs"
 },
-configmaps: "configmaps",
+configmaps: {
+version: "v1",
+resource: "configmaps"
+},
 deployments: {
 group: "apps",
+version: "v1beta1",
 resource: "deployments"
 },
 deploymentconfigs: {
 group: "apps.openshift.io",
+version: "v1",
 resource: "deploymentconfigs"
 },
 "deploymentconfigs/instantiate": {
 group: "apps.openshift.io",
+version: "v1",
 resource: "deploymentconfigs/instantiate"
 },
 "deploymentconfigs/rollback": {
 group: "apps.openshift.io",
+version: "v1",
 resource: "deploymentconfigs/rollback"
 },
-events: "events",
+events: {
+version: "v1",
+resource: "events"
+},
 horizontalpodautoscalers: {
 group: "autoscaling",
+version: "v1",
 resource: "horizontalpodautoscalers"
 },
 imagestreams: {
 group: "image.openshift.io",
+version: "v1",
 resource: "imagestreams"
 },
 imagestreamtags: {
 group: "image.openshift.io",
+version: "v1",
 resource: "imagestreamtags"
 },
-limitranges: "limitranges",
-pods: "pods",
+limitranges: {
+version: "v1",
+resource: "limitranges"
+},
+pods: {
+version: "v1",
+resource: "pods"
+},
 projects: {
 group: "project.openshift.io",
+version: "v1",
 resource: "projects"
 },
 projectrequests: {
 group: "project.openshift.io",
+version: "v1",
 resource: "projectrequests"
 },
-persistentvolumeclaims: "persistentvolumeclaims",
+persistentvolumeclaims: {
+version: "v1",
+resource: "persistentvolumeclaims"
+},
 replicasets: {
 group: "extensions",
+version: "v1beta1",
 resource: "replicasets"
 },
-replicationcontrollers: "replicationcontrollers",
-resourcequotas: "resourcequotas",
-rolebindings: "rolebindings",
+replicationcontrollers: {
+version: "v1",
+resource: "replicationcontrollers"
+},
+resourcequotas: {
+version: "v1",
+resource: "resourcequotas"
+},
+rolebindings: {
+version: "v1",
+resource: "rolebindings"
+},
 routes: {
 group: "route.openshift.io",
+version: "v1",
 resource: "routes"
 },
-secrets: "secrets",
+secrets: {
+version: "v1",
+resource: "secrets"
+},
 selfsubjectrulesreviews: {
-group: "authorization.k8s.io",
+group: "authorization.openshift.io",
+version: "v1",
 resource: "selfsubjectrulesreviews"
 },
-services: "services",
-serviceaccounts: "serviceaccounts",
+services: {
+version: "v1",
+resource: "services"
+},
+serviceaccounts: {
+version: "v1",
+resource: "serviceaccounts"
+},
 serviceclasses: {
 group: "servicecatalog.k8s.io",
 resource: "serviceclasses"
@@ -73248,10 +73298,12 @@ resource: "serviceinstances"
 },
 statefulsets: {
 group: "apps",
+version: "v1beta1",
 resource: "statefulsets"
 },
 templates: {
 group: "template.openshift.io",
+verison: "v1",
 resource: "templates"
 }
 }), angular.module("openshiftCommonUI").filter("alertStatus", function() {

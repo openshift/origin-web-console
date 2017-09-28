@@ -13,6 +13,7 @@ angular.module('openshiftConsole')
                        $routeParams,
                        $scope,
                        $window,
+                       APIService,
                        ApplicationGenerator,
                        AuthorizationService,
                        DataService,
@@ -34,6 +35,22 @@ angular.module('openshiftConsole')
       }
     ];
 
+    var pvcTemplate = {
+      kind: "PersistentVolumeClaim",
+      apiVersion: "v1",
+      metadata: {
+        name: undefined,
+        labels: {},
+        annotations: {}
+      },
+      spec: {
+        resources: {
+          requests:{}
+        }
+      }
+    };
+    var createPVCVersion = APIService.objectToResourceGroupVersion(pvcTemplate);
+
     var hideErrorNotifications = function() {
       NotificationsService.hideNotification("create-pvc-error");
     };
@@ -48,8 +65,7 @@ angular.module('openshiftConsole')
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
-
-        if (!AuthorizationService.canI('persistentvolumeclaims', 'create', $routeParams.project)) {
+        if (!AuthorizationService.canI(createPVCVersion, 'create', $routeParams.project)) {
           Navigate.toErrorPage('You do not have authority to create persistent volume claims in project ' + $routeParams.project + '.', 'access_denied');
           return;
         }
@@ -59,7 +75,7 @@ angular.module('openshiftConsole')
           if ($scope.createPersistentVolumeClaimForm.$valid) {
             $scope.disableInputs = true;
             var claim = generatePersistentVolumeClaim();
-            DataService.create('persistentvolumeclaims', null, claim, context)
+            DataService.create(createPVCVersion, null, claim, context)
               .then(function(claim) { // Success
                 NotificationsService.addNotification({
                   type: "success",
@@ -81,21 +97,8 @@ angular.module('openshiftConsole')
         };
 
       function generatePersistentVolumeClaim() {
-        var pvc = {
-          kind: "PersistentVolumeClaim",
-          apiVersion: "v1",
-          metadata: {
-            name: $scope.claim.name,
-            labels: {},
-            annotations: {}
-          },
-          spec: {
-            resources: {
-              requests:{}
-            }
-          }
-        };
-
+        var pvc = angular.copy(pvcTemplate);
+        pvc.metadata.name = $scope.claim.name;
         pvc.spec.accessModes = [$scope.claim.accessModes || "ReadWriteOnce"] ;
         var unit =  $scope.claim.unit || "Mi";
         pvc.spec.resources.requests.storage = $scope.claim.amount + unit;

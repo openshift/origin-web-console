@@ -1,0 +1,81 @@
+<ng-form name="$ctrl.editEnvironmentFromForm" novalidate>
+  <div
+    ng-if="$ctrl.showHeader"
+    class="environment-from-entry environment-from-editor-entry-header">
+    <div class="form-group environment-from-editor-header value-header">
+      <div class="input-group">
+        <span class="help-block">{{$ctrl.selectorPlaceholder}}</span>
+      </div>
+    </div>
+  </div>
+
+  <div ng-model="$ctrl.entries" class="environment-from-editor" as-sortable="$ctrl.dragControlListeners">
+    <div
+      class="environment-from-entry"
+      ng-class-odd="'odd'"
+      ng-class-even="'even'"
+      ng-repeat="entry in $ctrl.envFromEntries"
+      as-sortable-item>
+
+      <div class="form-group environment-from-input">
+        <div ng-if="$ctrl.isEnvFromReadonly(entry)" class="faux-input-group">
+          <div ng-if="!entry.configMapRef.name && !entry.secretRef.name">
+            No secrets or config maps have been added as Environment From.
+          </div>
+          <div ng-if="entry.configMapRef.name || entry.secretRef.name" class="faux-form-control readonly">
+            Use all keys and values from
+            <span ng-if="entry.configMapRef.name">config map {{entry.configMapRef.name}}</span>
+            <span ng-if="entry.secretRef.name">secret {{entry.secretRef.name}}</span>
+          </div>
+        </div>
+
+        <div ng-if="!$ctrl.isEnvFromReadonly(entry)">
+          <div class="ui-select">
+            <ui-select ng-model="entry.selectedEnvFrom"
+                       ng-required="entry.selectedEnvFrom"
+                       on-select="$ctrl.envFromObjectSelected($index, entry, $select.selected)"
+                       ng-class="{'{{$ctrl.setFocusClass}}' : $last}">
+              <ui-select-match placeholder="Select a resource">
+                <span>
+                  {{$select.selected.metadata.name}}
+                  <small class="text-muted">&ndash; {{$select.selected.kind | humanizeKind : true}}</small>
+                </span>
+              </ui-select-match>
+              <ui-select-choices
+                ui-disable-choice="$ctrl.checkEntries(source)"
+                repeat="source in $ctrl.envFromSelectorOptions | filter : { metadata: { name: $select.search } } track by (source | uid)"
+                group-by="$ctrl.groupByKind">
+                <span ng-bind-html="source.metadata.name | highlight : $select.search"></span>
+              </ui-select-choices>
+            </ui-select>
+          </div>
+        </div>
+      </div>
+
+      <div ng-if="!$ctrl.isEnvFromReadonly(entry)" class="environment-from-editor-button">
+        <span
+          ng-if="!$ctrl.cannotSort"
+          class="fa fa-bars sort-row"
+          role="button"
+          aria-label="Move row"
+          aria-grabbed="false"
+          as-sortable-item-handle></span>
+        <a
+          ng-if="!$ctrl.cannotDeleteAny"
+          href=""
+          class="pficon pficon-close delete-row as-sortable-item-delete"
+          role="button"
+          aria-label="Delete row"
+          ng-click="$ctrl.deleteEntry($index, 1)"></a>
+      </div>
+    </div>
+
+    <div class="environment-from-entry form-group" ng-if="!$ctrl.cannotAdd">
+      <a
+        href=""
+        class="add-row-link"
+        role="button"
+        ng-click="$ctrl.onAddRow()">{{ $ctrl.addRowLink }}</a>
+    </div>
+  </div>
+</ng-form>
