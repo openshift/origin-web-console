@@ -11,6 +11,7 @@ angular.module('openshiftConsole')
               function ($scope,
                         $filter,
                         $routeParams,
+                        APIService,
                         BreadcrumbsService,
                         DataService,
                         DeploymentsService,
@@ -42,9 +43,20 @@ angular.module('openshiftConsole')
       namespace: $routeParams.project
     });
     $scope.emptyMessage = "Loading...";
+    $scope.deploymentConfigsInstantiateVersion = APIService.getPreferredVersion('deploymentconfigs/instantiate');
+    $scope.deploymentConfigsVersion = APIService.getPreferredVersion('deploymentconfigs');
+    $scope.eventsVersion = APIService.getPreferredVersion('events');
+    $scope.horizontalPodAutoscalersVersion = APIService.getPreferredVersion('horizontalpodautoscalers');
+
+    var buildsVersion = APIService.getPreferredVersion('builds');
+    var imageStreamsVersion = APIService.getPreferredVersion('imagestreams');
+    var limitRangesVersion = APIService.getPreferredVersion('limitranges');
+    var replicationControllersVersion = APIService.getPreferredVersion('replicationcontrollers');
+
     $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
                                                     "DeploymentConfig",
-                                                    $routeParams.deploymentconfig);
+                                                    $routeParams.deploymentconfig,
+                                                    $scope.deploymentConfigsVersion.group);
 
     var mostRecent = $filter('mostRecent');
     var orderByDate = $filter('orderObjectsByDate');
@@ -66,7 +78,7 @@ angular.module('openshiftConsole')
             });
         };
 
-        DataService.get("deploymentconfigs", $routeParams.deploymentconfig, context, { errorNotification: false }).then(
+        DataService.get($scope.deploymentConfigsVersion, $routeParams.deploymentconfig, context, { errorNotification: false }).then(
           // success
           function(deploymentConfig) {
             $scope.loaded = true;
@@ -74,7 +86,7 @@ angular.module('openshiftConsole')
             $scope.strategyParams = $filter('deploymentStrategyParams')(deploymentConfig);
             updateHPAWarnings();
             // If we found the item successfully, watch for changes on it
-            watches.push(DataService.watchObject("deploymentconfigs", $routeParams.deploymentconfig, context, function(deploymentConfig, action) {
+            watches.push(DataService.watchObject($scope.deploymentConfigsVersion, $routeParams.deploymentconfig, context, function(deploymentConfig, action) {
               if (action === "DELETED") {
                 $scope.alerts["deleted"] = {
                   type: "warning",
@@ -98,7 +110,7 @@ angular.module('openshiftConsole')
           }
         );
 
-        watches.push(DataService.watch("replicationcontrollers", context, function(deployments, action, deployment) {
+        watches.push(DataService.watch(replicationControllersVersion, context, function(deployments, action, deployment) {
           var deploymentConfigName = $routeParams.deploymentconfig;
           $scope.emptyMessage = "No deployments to show";
           if (!action) {
@@ -155,12 +167,12 @@ angular.module('openshiftConsole')
 
         // List limit ranges in this project to determine if there is a default
         // CPU request for autoscaling.
-        DataService.list("limitranges", context).then(function(resp) {
+        DataService.list(limitRangesVersion, context).then(function(resp) {
           limitRanges = resp.by("metadata.name");
           updateHPAWarnings();
         });
 
-        watches.push(DataService.watch("imagestreams", context, function(imageStreamData) {
+        watches.push(DataService.watch(imageStreamsVersion, context, function(imageStreamData) {
           var imageStreams = imageStreamData.by("metadata.name");
           ImageStreamResolver.buildDockerRefMapForImageStreams(imageStreams, imageStreamImageRefByDockerReference);
           // If the dep config has been loaded already
@@ -170,16 +182,12 @@ angular.module('openshiftConsole')
           Logger.log("imagestreams (subscribe)", $scope.imageStreams);
         }));
 
-        watches.push(DataService.watch("builds", context, function(builds) {
+        watches.push(DataService.watch(buildsVersion, context, function(builds) {
           $scope.builds = builds.by("metadata.name");
           Logger.log("builds (subscribe)", $scope.builds);
         }));
 
-        watches.push(DataService.watch({
-          group: "autoscaling",
-          resource: "horizontalpodautoscalers",
-          version: "v1"
-        }, context, function(hpa) {
+        watches.push(DataService.watch($scope.horizontalPodAutoscalersVersion, context, function(hpa) {
           $scope.autoscalers =
             HPAService.filterHPA(hpa.by("metadata.name"), 'DeploymentConfig', $routeParams.deploymentconfig);
           updateHPAWarnings();

@@ -8,7 +8,7 @@
           <div class="pull-right dropdown" ng-if="deploymentConfig" ng-hide="!('deploymentConfigs' | canIDoAny)">
             <!-- Primary Actions -->
             <button
-                ng-if="'deploymentconfigs/instantiate' | canI : 'create'"
+                ng-if="deploymentConfigsInstantiateVersion | canI : 'create'"
                 class="btn btn-default hidden-xs"
                 ng-click="startLatestDeployment()"
                 ng-disabled="!canDeploy()">
@@ -24,49 +24,49 @@
                class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
             <ul class="dropdown-menu dropdown-menu-right actions action-button">
-              <li class="visible-xs-inline" ng-class="{ disabled: !canDeploy() }" ng-if="'deploymentconfigs/instantiate' | canI : 'create'">
+              <li class="visible-xs-inline" ng-class="{ disabled: !canDeploy() }" ng-if="deploymentConfigsInstantiateVersion | canI : 'create'">
                 <a href=""
                   role="button"
                   ng-attr-aria-disabled="{{canDeploy() ? undefined : 'true'}}"
                   ng-class="{ 'disabled-link': !canDeploy() }"
                   ng-click="startLatestDeployment()">Deploy</a>
               </li>
-              <li ng-if="'deploymentconfigs' | canI : 'update'">
+              <li ng-if="deploymentConfigsVersion | canI : 'update'">
                 <a ng-href="{{deploymentConfig | editResourceURL}}" role="button">Edit</a>
               </li>
-              <li class="divider" ng-if="'deploymentconfigs' | canI : 'update'"></li>
-              <li ng-if="!deploymentConfig.spec.paused && !updatingPausedState && ('deploymentconfigs' | canI : 'update')">
+              <li class="divider" ng-if="deploymentConfigsVersion | canI : 'update'"></li>
+              <li ng-if="!deploymentConfig.spec.paused && !updatingPausedState && (deploymentConfigsVersion | canI : 'update')">
                 <a href="" ng-click="setPaused(true)" role="button">Pause Rollouts</a>
               </li>
-              <li ng-if="deploymentConfig.spec.paused && !updatingPausedState && ('deploymentconfigs' | canI : 'update')">
+              <li ng-if="deploymentConfig.spec.paused && !updatingPausedState && (deploymentConfigsVersion | canI : 'update')">
                 <a href="" ng-click="setPaused(false)" role="button">Resume Rollouts</a>
               </li>
-              <li ng-if="'deploymentconfigs' | canI : 'update'">
+              <li ng-if="deploymentConfigsVersion | canI : 'update'">
                 <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
                    role="button">Add Storage</a>
               </li>
-              <li ng-if="!autoscalers.length && ({resource: 'horizontalpodautoscalers', group: 'autoscaling'} | canI : 'create')">
+              <li ng-if="!autoscalers.length && (horizontalPodAutoscalersVersion | canI : 'create')">
                 <!-- Create a new HPA. -->
                 <a ng-href="project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
                    role="button">Add Autoscaler</a>
               </li>
-              <li ng-if="autoscalers.length === 1 && ({resource: 'horizontalpodautoscalers', group: 'autoscaling'} | canI : 'update')">
+              <li ng-if="autoscalers.length === 1 && (horizontalPodAutoscalersVersion | canI : 'update')">
                 <!-- Edit an existing HPA. -->
                 <a ng-href="project/{{projectName}}/edit/autoscaler?kind=HorizontalPodAutoscaler&group=autoscaling&name={{autoscalers[0].metadata.name}}"
                   role="button">Edit Autoscaler</a>
               </li>
-              <li ng-if="'deploymentconfigs' | canI : 'update'">
+              <li ng-if="deploymentConfigsVersion | canI : 'update'">
                 <a ng-href="project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
                   role="button">Edit Resource Limits</a>
               </li>
-              <li ng-if="'deploymentconfigs' | canI : 'update'">
+              <li ng-if="deploymentConfigsVersion | canI : 'update'">
                 <a ng-href="{{healthCheckURL}}" role="button">Edit Health Checks</a>
               </li>
-              <li ng-if="'deploymentconfigs' | canI : 'update'">
+              <li ng-if="deploymentConfigsVersion | canI : 'update'">
                 <a ng-href="{{deploymentConfig | editYamlURL}}" role="button">Edit YAML</a>
               </li>
-              <li class="divider" ng-if="'deploymentconfigs' | canI : 'update'"></li>
-              <li ng-if="'deploymentconfigs' | canI : 'delete'">
+              <li class="divider" ng-if="deploymentConfigsVersion | canI : 'update'"></li>
+              <li ng-if="deploymentConfigsVersion | canI : 'delete'">
                 <delete-link
                   kind="DeploymentConfig"
                   resource-name="{{deploymentConfig.metadata.name}}"
@@ -94,7 +94,7 @@
             <span class="pficon pficon-info" aria-hidden="true"></span>
             <strong>{{deploymentConfig.metadata.name}} is paused.</strong>
             This will stop any new rollouts or triggers from running until resumed.
-            <span ng-if="!updatingPausedState && ('deploymentconfigs' | canI : 'update')" class="nowrap">
+            <span ng-if="!updatingPausedState && (deploymentConfigsVersion | canI : 'update')" class="nowrap">
               <a href="" ng-click="setPaused(false)" role="button">Resume Rollouts</a>
             </span>
           </div>
@@ -230,19 +230,19 @@
                         images-by-docker-reference="imagesByDockerReference"
                         builds="builds"
                         detailed="true"
-                        add-health-check-url="{{('deploymentconfigs' | canI : 'update') ? healthCheckURL : ''}}">
+                        add-health-check-url="{{(deploymentConfigsVersion | canI : 'update') ? healthCheckURL : ''}}">
                     </pod-template>
                     <h3>Volumes</h3>
-                    <p ng-if="!deploymentConfig.spec.template.spec.volumes.length && !('deploymentconfigs' | canI : 'update')">
+                    <p ng-if="!deploymentConfig.spec.template.spec.volumes.length && !(deploymentConfigsVersion | canI : 'update')">
                       none
                     </p>
                     <volumes
                         volumes="deploymentConfig.spec.template.spec.volumes"
                         namespace="project.metadata.name"
-                        can-remove="'deploymentconfigs' | canI : 'update'"
+                        can-remove="deploymentConfigsVersion | canI : 'update'"
                         remove-fn="removeVolume(volume)">
                     </volumes>
-                    <p ng-if="'deploymentconfigs' | canI : 'update'">
+                    <p ng-if="deploymentConfigsVersion | canI : 'update'">
                       <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}">Add Storage</a>
                       <span class="action-divider" aria-hidden="true">|</span>
                       <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}">Add Config Files</a>
@@ -261,16 +261,16 @@
 
                       <!-- If the CPU request is missing, add an action to set one. -->
                       <a ng-href="project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
-                         ng-if="warning.reason === 'NoCPURequest' && ('deploymentconfigs' | canI : 'update')"
+                         ng-if="warning.reason === 'NoCPURequest' && (deploymentConfigsVersion | canI : 'update')"
                          role="button">Edit Resource
                         <span ng-if="!('cpu' | isRequestCalculated : project)">Requests and</span> Limits</a>
                     </div>
 
                     <!-- Create autoscaler -->
                     <div ng-if="!autoscalers.length">
-                      <a ng-if="{resource: 'horizontalpodautoscalers', group: 'autoscaling'} | canI : 'create'" ng-href="project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
+                      <a ng-if="horizontalPodAutoscalersVersion | canI : 'create'" ng-href="project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
                          role="button">Add Autoscaler</a>
-                      <span ng-if="!({resource: 'horizontalpodautoscalers', group: 'autoscaling'} | canI : 'create')">Autoscaling is not enabled. There are no autoscalers for this deployment config.</span>
+                      <span ng-if="!(horizontalPodAutoscalersVersion | canI : 'create')">Autoscaling is not enabled. There are no autoscalers for this deployment config.</span>
                     </div>
 
                     <!-- HPA details -->
@@ -347,7 +347,7 @@
               <uib-tab-heading>Environment</uib-tab-heading>
               <edit-environment-variables api-object="deploymentConfig"></edit-environment-variables>
             </uib-tab>
-            <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">
+            <uib-tab active="selectedTab.events" ng-if="eventsVersion | canI : 'watch'">
               <uib-tab-heading>Events</uib-tab-heading>
               <events api-objects="[ deploymentConfig ]" project-context="projectContext" ng-if="selectedTab.events"></events>
             </uib-tab>

@@ -5718,35 +5718,37 @@ f.removeVolume(e.deployment, t, d);
 r.unwatchAll(C);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("DeploymentConfigController", [ "$scope", "$filter", "$routeParams", "BreadcrumbsService", "DataService", "DeploymentsService", "HPAService", "ImageStreamResolver", "ModalsService", "Navigate", "NotificationsService", "Logger", "ProjectsService", "StorageService", "LabelFilter", "labelNameFilter", function(e, t, n, a, r, o, i, s, c, l, u, d, m, p, f, g) {
-var h = {};
-e.projectName = n.project, e.deploymentConfigName = n.deploymentconfig, e.deploymentConfig = null, e.deployments = {}, e.unfilteredDeployments = {}, e.imagesByDockerReference = {}, e.builds = {}, e.labelSuggestions = {}, e.forms = {}, e.alerts = {}, e.breadcrumbs = a.getBreadcrumbs({
+} ]), angular.module("openshiftConsole").controller("DeploymentConfigController", [ "$scope", "$filter", "$routeParams", "APIService", "BreadcrumbsService", "DataService", "DeploymentsService", "HPAService", "ImageStreamResolver", "ModalsService", "Navigate", "NotificationsService", "Logger", "ProjectsService", "StorageService", "LabelFilter", "labelNameFilter", function(e, t, n, a, r, o, i, s, c, l, u, d, m, p, f, g, h) {
+var v = {};
+e.projectName = n.project, e.deploymentConfigName = n.deploymentconfig, e.deploymentConfig = null, e.deployments = {}, e.unfilteredDeployments = {}, e.imagesByDockerReference = {}, e.builds = {}, e.labelSuggestions = {}, e.forms = {}, e.alerts = {}, e.breadcrumbs = r.getBreadcrumbs({
 name: n.deploymentconfig,
 kind: "DeploymentConfig",
 namespace: n.project
-}), e.emptyMessage = "Loading...", e.healthCheckURL = l.healthCheckURL(n.project, "DeploymentConfig", n.deploymentconfig);
-var v = t("mostRecent"), y = t("orderObjectsByDate"), b = [];
-m.get(n.project).then(_.spread(function(a, l) {
+}), e.emptyMessage = "Loading...", e.deploymentConfigsInstantiateVersion = a.getPreferredVersion("deploymentconfigs/instantiate"), e.deploymentConfigsVersion = a.getPreferredVersion("deploymentconfigs"), e.eventsVersion = a.getPreferredVersion("events"), e.horizontalPodAutoscalersVersion = a.getPreferredVersion("horizontalpodautoscalers");
+var y = a.getPreferredVersion("builds"), b = a.getPreferredVersion("imagestreams"), C = a.getPreferredVersion("limitranges"), S = a.getPreferredVersion("replicationcontrollers");
+e.healthCheckURL = u.healthCheckURL(n.project, "DeploymentConfig", n.deploymentconfig, e.deploymentConfigsVersion.group);
+var w = t("mostRecent"), k = t("orderObjectsByDate"), j = [];
+p.get(n.project).then(_.spread(function(a, r) {
 function u() {
-f.getLabelSelector().isEmpty() || !$.isEmptyObject(e.deployments) || $.isEmptyObject(e.unfilteredDeployments) ? delete e.alerts.deployments : e.alerts.deployments = {
+g.getLabelSelector().isEmpty() || !$.isEmptyObject(e.deployments) || $.isEmptyObject(e.unfilteredDeployments) ? delete e.alerts.deployments : e.alerts.deployments = {
 type: "warning",
 details: "The active filters are hiding all deployments."
 };
 }
-e.project = a, e.projectContext = l;
-var m = {}, C = function() {
-i.getHPAWarnings(e.deploymentConfig, e.autoscalers, m, a).then(function(t) {
+e.project = a, e.projectContext = r;
+var d = {}, p = function() {
+s.getHPAWarnings(e.deploymentConfig, e.autoscalers, d, a).then(function(t) {
 e.hpaWarnings = t;
 });
 };
-r.get("deploymentconfigs", n.deploymentconfig, l, {
+o.get(e.deploymentConfigsVersion, n.deploymentconfig, r, {
 errorNotification: !1
 }).then(function(a) {
-e.loaded = !0, e.deploymentConfig = a, e.strategyParams = t("deploymentStrategyParams")(a), C(), b.push(r.watchObject("deploymentconfigs", n.deploymentconfig, l, function(t, n) {
+e.loaded = !0, e.deploymentConfig = a, e.strategyParams = t("deploymentStrategyParams")(a), p(), j.push(o.watchObject(e.deploymentConfigsVersion, n.deploymentconfig, r, function(t, n) {
 "DELETED" === n && (e.alerts.deleted = {
 type: "warning",
 message: "This deployment configuration has been deleted."
-}), e.deploymentConfig = t, e.updatingPausedState = !1, C(), s.fetchReferencedImageStreamImages([ t.spec.template ], e.imagesByDockerReference, h, l);
+}), e.deploymentConfig = t, e.updatingPausedState = !1, p(), c.fetchReferencedImageStreamImages([ t.spec.template ], e.imagesByDockerReference, v, r);
 }));
 }, function(n) {
 e.loaded = !0, e.alerts.load = {
@@ -5754,15 +5756,15 @@ type: "error",
 message: 404 === n.status ? "This deployment configuration can not be found, it may have been deleted." : "The deployment configuration details could not be loaded.",
 details: 404 === n.status ? "Any remaining deployment history for this deployment will be shown." : t("getErrorDetails")(n)
 };
-}), b.push(r.watch("replicationcontrollers", l, function(a, r, i) {
+}), j.push(o.watch(S, r, function(a, r, o) {
 var s = n.deploymentconfig;
 if (e.emptyMessage = "No deployments to show", r) {
-if (o.deploymentBelongsToConfig(i, n.deploymentconfig)) {
-var c = i.metadata.name;
+if (i.deploymentBelongsToConfig(o, n.deploymentconfig)) {
+var c = o.metadata.name;
 switch (r) {
 case "ADDED":
 case "MODIFIED":
-e.unfilteredDeployments[c] = i, t("deploymentIsInProgress")(i) ? (e.deploymentConfigDeploymentsInProgress[s] = e.deploymentConfigDeploymentsInProgress[s] || {}, e.deploymentConfigDeploymentsInProgress[s][c] = i) : e.deploymentConfigDeploymentsInProgress[s] && delete e.deploymentConfigDeploymentsInProgress[s][c], i.causes = t("deploymentCauses")(i);
+e.unfilteredDeployments[c] = o, t("deploymentIsInProgress")(o) ? (e.deploymentConfigDeploymentsInProgress[s] = e.deploymentConfigDeploymentsInProgress[s] || {}, e.deploymentConfigDeploymentsInProgress[s][c] = o) : e.deploymentConfigDeploymentsInProgress[s] && delete e.deploymentConfigDeploymentsInProgress[s][c], o.causes = t("deploymentCauses")(o);
 break;
 
 case "DELETED":
@@ -5770,41 +5772,37 @@ delete e.unfilteredDeployments[c], e.deploymentConfigDeploymentsInProgress[s] &&
 }
 }
 } else {
-var l = o.associateDeploymentsToDeploymentConfig(a.by("metadata.name"));
+var l = i.associateDeploymentsToDeploymentConfig(a.by("metadata.name"));
 e.unfilteredDeployments = l[n.deploymentconfig] || {}, angular.forEach(e.unfilteredDeployments, function(e) {
 e.causes = t("deploymentCauses")(e);
-}), e.deploymentConfigDeploymentsInProgress = o.associateRunningDeploymentToDeploymentConfig(l);
+}), e.deploymentConfigDeploymentsInProgress = i.associateRunningDeploymentToDeploymentConfig(l);
 }
-e.deployments = f.getLabelSelector().select(e.unfilteredDeployments), e.orderedDeployments = y(e.deployments, !0), e.deploymentInProgress = !!_.size(e.deploymentConfigDeploymentsInProgress[s]), e.mostRecent = v(e.unfilteredDeployments), u(), f.addLabelSuggestionsFromResources(e.unfilteredDeployments, e.labelSuggestions), f.setLabelSuggestions(e.labelSuggestions);
+e.deployments = g.getLabelSelector().select(e.unfilteredDeployments), e.orderedDeployments = k(e.deployments, !0), e.deploymentInProgress = !!_.size(e.deploymentConfigDeploymentsInProgress[s]), e.mostRecent = w(e.unfilteredDeployments), u(), g.addLabelSuggestionsFromResources(e.unfilteredDeployments, e.labelSuggestions), g.setLabelSuggestions(e.labelSuggestions);
 }, {
 http: {
 params: {
-labelSelector: g("deploymentConfig") + "=" + e.deploymentConfigName
+labelSelector: h("deploymentConfig") + "=" + e.deploymentConfigName
 }
 }
-})), r.list("limitranges", l).then(function(e) {
-m = e.by("metadata.name"), C();
-}), b.push(r.watch("imagestreams", l, function(t) {
+})), o.list(C, r).then(function(e) {
+d = e.by("metadata.name"), p();
+}), j.push(o.watch(b, r, function(t) {
 var n = t.by("metadata.name");
-s.buildDockerRefMapForImageStreams(n, h), e.deploymentConfig && s.fetchReferencedImageStreamImages([ e.deploymentConfig.spec.template ], e.imagesByDockerReference, h, l), d.log("imagestreams (subscribe)", e.imageStreams);
-})), b.push(r.watch("builds", l, function(t) {
-e.builds = t.by("metadata.name"), d.log("builds (subscribe)", e.builds);
-})), b.push(r.watch({
-group: "autoscaling",
-resource: "horizontalpodautoscalers",
-version: "v1"
-}, l, function(t) {
-e.autoscalers = i.filterHPA(t.by("metadata.name"), "DeploymentConfig", n.deploymentconfig), C();
-})), f.onActiveFiltersChanged(function(t) {
+c.buildDockerRefMapForImageStreams(n, v), e.deploymentConfig && c.fetchReferencedImageStreamImages([ e.deploymentConfig.spec.template ], e.imagesByDockerReference, v, r), m.log("imagestreams (subscribe)", e.imageStreams);
+})), j.push(o.watch(y, r, function(t) {
+e.builds = t.by("metadata.name"), m.log("builds (subscribe)", e.builds);
+})), j.push(o.watch(e.horizontalPodAutoscalersVersion, r, function(t) {
+e.autoscalers = s.filterHPA(t.by("metadata.name"), "DeploymentConfig", n.deploymentconfig), p();
+})), g.onActiveFiltersChanged(function(t) {
 e.$apply(function() {
-e.deployments = t.select(e.unfilteredDeployments), e.orderedDeployments = y(e.deployments, !0), u();
+e.deployments = t.select(e.unfilteredDeployments), e.orderedDeployments = k(e.deployments, !0), u();
 });
 }), e.canDeploy = function() {
 return !!e.deploymentConfig && (!e.deploymentConfig.metadata.deletionTimestamp && (!e.deploymentInProgress && !e.deploymentConfig.spec.paused));
 }, e.startLatestDeployment = function() {
-e.canDeploy() && o.startLatestDeployment(e.deploymentConfig, l);
+e.canDeploy() && i.startLatestDeployment(e.deploymentConfig, r);
 }, e.scale = function(n) {
-o.scale(e.deploymentConfig, n).then(_.noop, function(n) {
+i.scale(e.deploymentConfig, n).then(_.noop, function(n) {
 e.alerts["scale-error"] = {
 type: "error",
 message: "An error occurred scaling the deployment config.",
@@ -5812,7 +5810,7 @@ details: t("getErrorDetails")(n)
 };
 });
 }, e.setPaused = function(n) {
-e.updatingPausedState = !0, o.setPaused(e.deploymentConfig, n, l).then(_.noop, function(a) {
+e.updatingPausedState = !0, i.setPaused(e.deploymentConfig, n, r).then(_.noop, function(a) {
 e.updatingPausedState = !1, e.alerts["pause-error"] = {
 type: "error",
 message: "An error occurred " + (n ? "pausing" : "resuming") + " the deployment config.",
@@ -5820,7 +5818,7 @@ details: t("getErrorDetails")(a)
 };
 });
 };
-var S = function() {
+var P = function() {
 if (_.get(e, "deploymentConfig.spec.paused")) return !1;
 var t = _.get(e, "deploymentConfig.spec.triggers", []);
 return _.some(t, {
@@ -5829,18 +5827,18 @@ type: "ConfigChange"
 };
 e.removeVolume = function(t) {
 var n;
-n = S() ? "This will remove the volume from the deployment config and trigger a new deployment." : "This will remove the volume from the deployment config.", t.persistentVolumeClaim ? n += " It will not delete the persistent volume claim." : t.secret ? n += " It will not delete the secret." : t.configMap && (n += " It will not delete the config map.");
-c.confirm({
+n = P() ? "This will remove the volume from the deployment config and trigger a new deployment." : "This will remove the volume from the deployment config.", t.persistentVolumeClaim ? n += " It will not delete the persistent volume claim." : t.secret ? n += " It will not delete the secret." : t.configMap && (n += " It will not delete the config map.");
+l.confirm({
 message: "Remove volume " + t.name + "?",
 details: n,
 okButtonText: "Remove",
 okButtonClass: "btn-danger",
 cancelButtonText: "Cancel"
 }).then(function() {
-p.removeVolume(e.deploymentConfig, t, l);
+f.removeVolume(e.deploymentConfig, t, r);
 });
 }, e.$on("$destroy", function() {
-r.unwatchAll(b);
+o.unwatchAll(j);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("ReplicaSetController", [ "$scope", "$filter", "$routeParams", "AuthorizationService", "BreadcrumbsService", "DataService", "DeploymentsService", "HPAService", "ImageStreamResolver", "Logger", "MetricsService", "ModalsService", "Navigate", "OwnerReferencesService", "PodsService", "ProjectsService", "StorageService", "keyValueEditorUtils", "kind", function(e, t, n, a, r, o, i, s, c, l, u, d, m, p, f, g, h, v, y) {
@@ -15330,15 +15328,11 @@ verbs: [ "create", "update" ]
 }), _.assign({}, e.getPreferredVersion("deployments"), {
 verbs: [ "update", "delete" ]
 }) ],
-deploymentConfigs: [ {
-group: "autoscaling",
-resource: "horizontalpodautoscalers",
+deploymentConfigs: [ _.assign({}, e.getPreferredVersion("horizontalpodautoscalers"), {
 verbs: [ "create", "update" ]
-}, {
-group: "",
-resource: "deploymentconfigs",
+}), _.assign({}, e.getPreferredVersion("deploymentconfigs"), {
 verbs: [ "create", "update" ]
-} ],
+}) ],
 horizontalPodAutoscalers: [ {
 group: "autoscaling",
 resource: "horizontalpodautoscalers",
