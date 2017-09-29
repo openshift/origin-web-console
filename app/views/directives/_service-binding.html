@@ -3,9 +3,6 @@
     <div ng-class="{'col-sm-5 col-md-6': $ctrl.isOverview,
                     'col-sm-8 col-md-6 col-lg-8': !$ctrl.isOverview}">
       <h3>
-        <div class="component-label">
-          Secret
-        </div>
         {{$ctrl.binding.metadata.name}}
         <span ng-if="$ctrl.refApiObject.kind !== 'ServiceInstance'">
           <small ng-if="$ctrl.serviceClass">
