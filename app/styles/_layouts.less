@@ -11,25 +11,13 @@
   body {
     height: 1px;
     padding-top: @navbar-os-header-height-mobile;
-    &.tech-preview {
-      padding-top: (@navbar-os-header-height-mobile + @tech-preview-banner-height);
-    }
     @media(min-width: @screen-sm-min) {
       padding-top: @navbar-os-header-height-desktop;
-      &.tech-preview {
-        padding-top: (@navbar-os-header-height-desktop + @tech-preview-banner-height);
-      }
     }
     &.has-project-bar {
       padding-top: (@navbar-os-header-height-mobile + @project-bar-height-mobile);
-      &.tech-preview {
-        padding-top: (@navbar-os-header-height-mobile + @project-bar-height-mobile + @tech-preview-banner-height);
-      }
       @media(min-width: @screen-sm-min) {
         padding-top: (@navbar-os-header-height-desktop + @project-bar-height-desktop);
-        &.tech-preview {
-          padding-top: (@navbar-os-header-height-desktop + @project-bar-height-desktop + @tech-preview-banner-height);
-        }
         .container-pf-nav-pf-vertical {
           margin-left: @nav-pf-vertical-width;
           &.collapsed-nav {
