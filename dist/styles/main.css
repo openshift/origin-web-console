@@ -5671,7 +5671,7 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 @media (min-width:768px){.log-view .log-scroll-top.affix{top:111px}
 }
 .chromeless .log-view .log-scroll-top.affix{right:25px;top:51px}
-.log-view .log-view-output{font-size:11px;padding:40px 0}
+.log-view .log-view-output{font-size:11px;padding:40px 15px 40px 0}
 @media (min-width:768px){.chromeless .log-view .log-scroll-top.affix{top:71px}
 .log-view .log-view-output{font-size:12px}
 }
