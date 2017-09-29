@@ -6475,9 +6475,6 @@ if (!t || !t.host || !t.routerCanonicalHostname) return !1;
 if (!n || "True" !== n.status) return !1;
 var r = u(t);
 return !a.isAlertPermanentlyHidden(r, e.projectName);
-}, e.hideRouterHostnameAlert = function(t) {
-var n = u(t);
-a.permanentlyHideAlert(n, e.projectName);
 }, o.get(n.project).then(_.spread(function(a, o) {
 e.project = a, r.get("routes", n.route, o, {
 errorNotification: !1
