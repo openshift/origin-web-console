@@ -10,7 +10,7 @@
      on-step-changed="$ctrl.stepChanged(step)"
      step-class="order-service-wizard-step">
   <pf-wizard-step
-       step-title="JSON / YAML"
+       step-title="YAML / JSON"
        step-id="file"
        step-priority="1"
        substeps="false"
@@ -84,7 +84,10 @@
           <next-steps ng-if="$ctrl.currentStep === 'Results'" project="$ctrl.selectedProject"
                       project-name="$ctrl.selectedProject.metadata.name"
                       login-base-url="$ctrl.loginBaseUrl"
-                      on-continue="$ctrl.close">
+                      on-continue="$ctrl.close"
+                      show-project-name="$ctrl.showProjectName"
+                      name="$ctrl.name"
+                      is-dialog="true">
           </next-steps>
         </div>
       </div>

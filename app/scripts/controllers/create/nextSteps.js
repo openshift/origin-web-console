@@ -33,6 +33,7 @@ angular.module("openshiftConsole")
 
     $scope.projectName = $routeParams.project;
     $scope.fromSampleRepo = $routeParams.fromSample;
+    $scope.name = $routeParams.breadcrumbTitle || $routeParams.name;
 
     $scope.breadcrumbs = [
       {
