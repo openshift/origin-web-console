@@ -4648,20 +4648,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/create-project.html',
-    "<div class=\"middle surface-shaded\">\n" +
-    "<div class=\"middle-content\">\n" +
-    "<div class=\"container gutter-top\">\n" +
-    "<div class=\"col-md-12\">\n" +
-    "<h1>Create Project</h1>\n" +
-    "<create-project redirect-action=\"onProjectCreated\"></create-project>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>"
-  );
-
-
   $templateCache.put('views/create-route.html',
     "<div class=\"middle surface-shaded\">\n" +
     "<div class=\"middle-content\">\n" +
@@ -10184,37 +10170,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "and the\n" +
     "<a ng-href=\"{{ 'pipeline-plugin' | helpLink}}\" target=\"_blank\">OpenShift Pipeline Plugin</a>.\n" +
     "</p>\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('views/edit/project.html',
-    "<div class=\"middle surface-shaded\">\n" +
-    "<div class=\"middle-content\">\n" +
-    "<div class=\"container gutter-top\">\n" +
-    "<div class=\"col-md-12\">\n" +
-    "<h1 style=\"margin-bottom: 5px\">Edit Project {{project.metadata.name}}</h1>\n" +
-    "<div class=\"help-block mar-bottom-lg\">Update the display name and description of your project. The project's unique name cannot be modified.</div>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<form name=\"editProjectForm\">\n" +
-    "<fieldset ng-disabled=\"disableInputs\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"displayName\">Display Name</label>\n" +
-    "<input class=\"form-control input-lg\" name=\"displayName\" id=\"displayName\" placeholder=\"My Project\" type=\"text\" ng-model=\"editableFields.displayName\">\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"description\">Description</label>\n" +
-    "<textarea class=\"form-control input-lg\" name=\"description\" id=\"description\" placeholder=\"A short description.\" ng-model=\"editableFields.description\"></textarea>\n" +
-    "</div>\n" +
-    "<div class=\"button-group\">\n" +
-    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"update()\" ng-disabled=\"editProjectForm.$invalid || disableInputs\" value=\"\">Save</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
-    "</div>\n" +
-    "</fieldset>\n" +
-    "</form>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "</div>"
   );
 

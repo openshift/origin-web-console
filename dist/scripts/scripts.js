@@ -964,10 +964,7 @@ redirectTo: "/"
 templateUrl: "views/landing-page.html",
 controller: "LandingPageController",
 reloadOnSearch: !1
-}, e.when("/projects", n)), e.when("/", t).when("/create-project", {
-templateUrl: "views/create-project.html",
-controller: "CreateProjectController"
-}).when("/project/:project", {
+}, e.when("/projects", n)), e.when("/", t).when("/project/:project", {
 redirectTo: function(e) {
 return "/project/" + encodeURIComponent(e.project) + "/overview";
 }
@@ -1184,9 +1181,6 @@ controller: "RouteController"
 }).when("/project/:project/create-route", {
 templateUrl: "views/create-route.html",
 controller: "CreateRouteController"
-}).when("/project/:project/edit", {
-templateUrl: "views/edit/project.html",
-controller: "EditProjectController"
 }).when("/project/:project/create-pvc", {
 templateUrl: "views/create-persistent-volume-claim.html",
 controller: "CreatePersistentVolumeClaimController"
@@ -1242,6 +1236,8 @@ controller: "LogoutController"
 }).when("/create", {
 templateUrl: "views/create-from-url.html",
 controller: "CreateFromURLController"
+}).when("/create-project", {
+redirectTo: "projects"
 }).when("/createProject", {
 redirectTo: "/create-project"
 }).when("/project/:project/createRoute", {
@@ -8291,49 +8287,6 @@ e.canCreateProject = !0;
 }, function() {
 e.canCreateProject = !1;
 });
-} ]), angular.module("openshiftConsole").controller("CreateProjectController", [ "$scope", "$location", "$window", "AuthService", "Constants", function(e, t, n, a, r) {
-var o = !r.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
-e.onProjectCreated = function(e) {
-o ? n.history.back() : t.path("project/" + e + "/create");
-}, a.withUser();
-} ]), angular.module("openshiftConsole").controller("EditProjectController", [ "$scope", "$routeParams", "$filter", "$location", "DataService", "ProjectsService", "Navigate", function(e, t, n, a, r, o, i) {
-e.alerts = {};
-var s = n("annotation"), c = n("annotationName");
-o.get(t.project).then(_.spread(function(r) {
-var l = function(e) {
-return {
-description: s(e, "description"),
-displayName: s(e, "displayName")
-};
-}, u = function(e, t) {
-var n = angular.copy(e);
-return n.metadata.annotations[c("description")] = t.description, n.metadata.annotations[c("displayName")] = t.displayName, n;
-};
-angular.extend(e, {
-project: r,
-editableFields: l(r),
-show: {
-editing: !1
-},
-actions: {
-canSubmit: !1
-},
-canSubmit: function(t) {
-e.actions.canSubmit = t;
-},
-update: function() {
-e.disableInputs = !0, o.update(t.project, u(r, e.editableFields)).then(function() {
-t.then ? a.path(t.then) : i.toProjectOverview(r.metadata.name);
-}, function(t) {
-e.disableInputs = !1, e.editableFields = l(r), e.alerts.update = {
-type: "error",
-message: "An error occurred while updating the project",
-details: n("getErrorDetails")(t)
-};
-});
-}
-});
-}));
 } ]), angular.module("openshiftConsole").controller("CreateRouteController", [ "$filter", "$routeParams", "$scope", "$window", "APIService", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "NotificationsService", "ProjectsService", "keyValueEditorUtils", function(e, t, n, a, r, o, i, s, c, l, u, d) {
 n.renderOptions = {
 hideFilterWidget: !0

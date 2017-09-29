@@ -57,10 +57,6 @@ angular
 
     $routeProvider
       .when('/', landingPageRoute)
-      .when('/create-project', {
-        templateUrl: 'views/create-project.html',
-        controller: 'CreateProjectController'
-      })
       .when('/project/:project', {
         redirectTo: function(params) {
           return '/project/' + encodeURIComponent(params.project) + "/overview";
@@ -344,10 +340,6 @@ angular
         templateUrl: 'views/create-route.html',
         controller: 'CreateRouteController'
       })
-      .when('/project/:project/edit', {
-        templateUrl: 'views/edit/project.html',
-        controller: 'EditProjectController'
-      })
       .when('/project/:project/create-pvc', {
         templateUrl: 'views/create-persistent-volume-claim.html',
         controller: 'CreatePersistentVolumeClaimController'
@@ -422,6 +414,9 @@ angular
         controller: 'CreateFromURLController'
       })
       // legacy redirects
+      .when('/create-project', {
+        redirectTo: 'projects'
+      })
       .when('/createProject', {
         redirectTo: '/create-project'
       })
