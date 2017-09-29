@@ -4,9 +4,6 @@
 .landing {
   @media(min-width: @screen-sm-min) {
     top: (@navbar-os-header-height-desktop + @landing-search-area-height);
-    .tech-preview & {
-      top: (@navbar-os-header-height-desktop + @tech-preview-banner-height + @landing-search-area-height);
-    }
   }
   h1, .nav-tabs {
     margin-bottom: 0 !important;
@@ -24,8 +21,5 @@
   .catalog-search,
   .landing-side-bar {
     top: @navbar-os-header-height-desktop;
-    .tech-preview & {
-      top: @navbar-os-header-height-desktop + @tech-preview-banner-height;
-    }
   }
 }

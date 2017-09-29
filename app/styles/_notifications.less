@@ -36,14 +36,6 @@ notification-drawer-wrapper {
     &.hide-remove {
       display: block !important;
     }
-    .tech-preview & {
-      height: calc(100vh ~"-" (@navbar-os-header-height-mobile + @project-bar-height-mobile + @tech-preview-banner-height));
-      top: (@navbar-os-header-height-mobile + @project-bar-height-mobile + @tech-preview-banner-height);
-      @media(min-width: @screen-sm-min) {
-        height: calc(100vh ~"-" (@navbar-os-header-height-desktop + @project-bar-height-desktop + @tech-preview-banner-height) ~"-" 20px); // 20px bottom gutter
-        top: (@navbar-os-header-height-desktop + @project-bar-height-desktop + @tech-preview-banner-height);
-      }
-    }
   }
   // the whole block is clickable, need to set pointer on all of these
   // for the correct visual

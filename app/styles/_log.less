@@ -135,18 +135,6 @@
           top: (@log-scroll-offset-top + @navbar-os-header-height-desktop);
         }
       }
-      .tech-preview & {
-        top: (@log-scroll-offset-top + @navbar-os-header-height-mobile + @project-bar-height-mobile + @tech-preview-banner-height);
-        @media (min-width: @screen-sm-min) {
-          top: (@log-scroll-offset-top + @navbar-os-header-height-desktop + @project-bar-height-desktop + @tech-preview-banner-height);
-        }
-      }
-      .tech-preview .chromeless & {
-        top: (@log-scroll-offset-top + @navbar-os-header-height-mobile + @tech-preview-banner-height);
-        @media (min-width: @screen-sm-min) {
-          top: (@log-scroll-offset-top + @navbar-os-header-height-desktop + @tech-preview-banner-height);
-        }
-      }
     }
   }
   .log-view-output {
