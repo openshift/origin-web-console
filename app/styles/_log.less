@@ -1,6 +1,7 @@
 .chromeless {
   background-color:  @log-bg-color;
   color: #d1d1d1;
+  height: 100%; // extends dark background to full height while logs are loading
   .log-loading-msg {
     .empty-state-message();
     .h2();
@@ -165,17 +166,6 @@
     }
   }
   &.log-fixed-height {
-    .ellipsis-loader {
-      bottom: 0;
-      #gradient > .vertical(transparent, @log-bg-color, 0%, 15%);
-      height: 30px;
-      right: @scrollbar-width;
-      width: auto;
-      &.dots div {
-        left: 50%;
-        top: 12px;
-      }
-    }
     .log-end-msg {
       margin: 20px 0 -35px 10px;
       position: static;
