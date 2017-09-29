@@ -6382,8 +6382,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"row\" ng-if-end>\n" +
-    "<div class=\"col-sm-12\">\n" +
+    "<div ng-if-end>\n" +
     "<ng-form name=\"forms.deployImage\" class=\"osc-form\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"name\" class=\"required\">Name</label>\n" +
@@ -6420,7 +6419,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
     "</div>\n" +
     "</ng-form>\n" +
-    "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!loading && import.error\" class=\"empty-state-message text-center\">\n" +
     "<h2>\n" +
