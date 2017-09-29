@@ -72,11 +72,6 @@ angular.module('openshiftConsole')
       return !AlertMessageService.isAlertPermanentlyHidden(alertKey, $scope.projectName);
     };
 
-    $scope.hideRouterHostnameAlert = function(ingress) {
-      var alertKey = routerHostnameAlertKey(ingress);
-      AlertMessageService.permanentlyHideAlert(alertKey, $scope.projectName);
-    };
-
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {

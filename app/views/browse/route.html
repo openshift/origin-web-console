@@ -82,11 +82,8 @@
               <div ng-if="showRouterHostnameAlert(ingress, admittedCondition)" class="mar-top-lg">
                 <div class="alert alert-info">
                   <span class="pficon pficon-info" aria-hidden="true"></span>
-                  <span class="mar-right-sm">
-                    The DNS admin should set up a CNAME from the route's hostname, {{ingress.host}},
-                    to the router's canonical hostname, {{ingress.routerCanonicalHostname}}.
-                  </span>
-                  <a href="" ng-click="hideRouterHostnameAlert(ingress)" role="button" class="nowrap">Don't Show Me Again</a>
+                  The DNS admin should set up a CNAME from the route's hostname, {{ingress.host}},
+                  to the router's canonical hostname, {{ingress.routerCanonicalHostname}}.
                 </div>
               </div>
             </div>

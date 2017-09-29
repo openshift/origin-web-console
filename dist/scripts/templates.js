@@ -3350,10 +3350,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"showRouterHostnameAlert(ingress, admittedCondition)\" class=\"mar-top-lg\">\n" +
     "<div class=\"alert alert-info\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"mar-right-sm\">\n" +
     "The DNS admin should set up a CNAME from the route's hostname, {{ingress.host}}, to the router's canonical hostname, {{ingress.routerCanonicalHostname}}.\n" +
-    "</span>\n" +
-    "<a href=\"\" ng-click=\"hideRouterHostnameAlert(ingress)\" role=\"button\" class=\"nowrap\">Don't Show Me Again</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
