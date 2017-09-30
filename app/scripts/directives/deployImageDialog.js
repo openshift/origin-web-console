@@ -4,6 +4,7 @@
   angular.module('openshiftConsole').component('deployImageDialog', {
     controller: [
       '$scope',
+      '$routeParams',
       'DataService',
       DeployImageDialog
     ],
@@ -16,12 +17,16 @@
     templateUrl: 'views/directives/deploy-image-dialog.html'
   });
 
-  function DeployImageDialog($scope, DataService) {
+  function DeployImageDialog($scope, $routeParams, DataService) {
     var ctrl = this;
 
     ctrl.$onInit = function() {
       ctrl.loginBaseUrl = DataService.openshiftAPIBaseUrl();
       ctrl.currentStep = "Image";
+      // if on the landing page, show the project name in next-steps
+      if (!$routeParams.project) {
+        ctrl.showProjectName = true;
+      }
     };
 
     ctrl.deployImage = function() {
@@ -30,6 +35,7 @@
 
     $scope.$on('deployImageNewAppCreated', function(event, message) {
       ctrl.selectedProject = message.project;
+      ctrl.appName = message.appName;
       ctrl.deployImageNewAppCreated = true;
       ctrl.currentStep = "Results";
     });

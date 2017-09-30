@@ -24,8 +24,8 @@ angular
         _.assign({}, APIService.getPreferredVersion('deployments'), {verbs: ['update', 'delete']})
       ],
       'deploymentConfigs': [
-        {group: 'autoscaling', resource: 'horizontalpodautoscalers', verbs: ['create', 'update']},
-        {group: '',            resource: 'deploymentconfigs',        verbs: ['create', 'update']}
+        _.assign({}, APIService.getPreferredVersion('horizontalpodautoscalers'), {verbs: ['create', 'update']}),
+        _.assign({}, APIService.getPreferredVersion('deploymentconfigs'), {verbs: ['create', 'update']})
       ],
       'horizontalPodAutoscalers': [
         {group: 'autoscaling', resource: 'horizontalpodautoscalers', verbs: ['update', 'delete']}

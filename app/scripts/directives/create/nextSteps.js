@@ -13,7 +13,10 @@
       loginBaseUrl: '<',
       fromSampleRepo: '<',
       createdBuildConfig: '<',
-      onContinue: '<'
+      onContinue: '<',
+      showProjectName: '<',
+      name: '<',
+      isDialog: '<'
     },
     templateUrl: 'views/directives/next-steps.html'
   });
