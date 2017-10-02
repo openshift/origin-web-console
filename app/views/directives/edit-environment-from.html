@@ -52,7 +52,7 @@
         </div>
       </div>
 
-      <div ng-if="!$ctrl.isEnvFromReadonly(entry)" class="environment-from-editor-button">
+      <div ng-if="!$ctrl.isReadonlyAny && !entry.isReadonlyValue" class="environment-from-editor-button">
         <span
           ng-if="!$ctrl.cannotSort"
           class="fa fa-bars sort-row"
