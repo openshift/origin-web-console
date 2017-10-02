@@ -42,7 +42,7 @@
                 </span>
               </ui-select-match>
               <ui-select-choices
-                ui-disable-choice="$ctrl.checkEntries(source)"
+                ui-disable-choice="$ctrl.checkEntries(source, entry.selectedEnvFrom)"
                 repeat="source in $ctrl.envFromSelectorOptions | filter : { metadata: { name: $select.search } } track by (source | uid)"
                 group-by="$ctrl.groupByKind">
                 <span ng-bind-html="source.metadata.name | highlight : $select.search"></span>
@@ -54,7 +54,7 @@
 
       <div ng-if="!$ctrl.isReadonlyAny && !entry.isReadonlyValue" class="environment-from-editor-button">
         <span
-          ng-if="!$ctrl.cannotSort"
+          ng-if="!$ctrl.cannotSort && $ctrl.entries.length > 1"
           class="fa fa-bars sort-row"
           role="button"
           aria-label="Move row"
