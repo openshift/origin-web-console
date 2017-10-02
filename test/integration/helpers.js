@@ -54,7 +54,7 @@ var waitForUri = function(expectedUri) {
       actualUrl = url;
       return actualUrl.indexOf(expectedUri) > -1;
     });
-  }, 5000, "URL hasn't changed to " + expectedUri + '(is currently: ' + actualUrl + ')');
+  }, 30 * 1000, "URL hasn't changed to " + expectedUri + '(is currently: ' + actualUrl + ')');
 };
 exports.waitForUri = waitForUri;
 
