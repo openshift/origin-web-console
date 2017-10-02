@@ -9151,7 +9151,11 @@ n[e.key] = e.value;
 angular.module("openshiftConsole").component("editEnvironmentFrom", {
 controller: [ "$attrs", "$filter", "keyValueEditorUtils", function(e, t, n) {
 var a = this, r = t("canI"), o = t("humanizeKind"), i = _.uniqueId();
-a.setFocusClass = "edit-environment-from-set-focus-" + i;
+a.setFocusClass = "edit-environment-from-set-focus-" + i, a.viewOverlayPanel = function(e) {
+a.overlayPaneEntryDetails = e, a.overlayPanelVisible = !0;
+}, a.closeOverlayPanel = function() {
+a.overlayPanelVisible = !1;
+};
 var s = function(e, t) {
 e && e.push(t || {});
 };

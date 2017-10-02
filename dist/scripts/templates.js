@@ -6696,11 +6696,43 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"!$ctrl.cannotSort && $ctrl.entries.length > 1\" class=\"fa fa-bars sort-row\" role=\"button\" aria-label=\"Move row\" aria-grabbed=\"false\" as-sortable-item-handle></span>\n" +
     "<a ng-if=\"!$ctrl.cannotDeleteAny\" href=\"\" class=\"pficon pficon-close delete-row as-sortable-item-delete\" role=\"button\" aria-label=\"Delete row\" ng-click=\"$ctrl.deleteEntry($index, 1)\"></a>\n" +
     "</div>\n" +
+    "<div class=\"environment-from-view-details\">\n" +
+    "<a ng-if=\"entry.selectedEnvFrom\" href=\"\" ng-click=\"$ctrl.viewOverlayPanel(entry.selectedEnvFrom)\">View Details</a>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div class=\"environment-from-entry form-group\" ng-if=\"!$ctrl.cannotAdd\">\n" +
     "<a href=\"\" class=\"add-row-link\" role=\"button\" ng-click=\"$ctrl.onAddRow()\">{{ $ctrl.addRowLink }}</a>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<overlay-panel class=\"add-config-to-application\" show-panel=\"$ctrl.overlayPanelVisible\" show-close=\"true\" handle-close=\"$ctrl.closeOverlayPanel\">\n" +
+    "<div class=\"dialog-title\">\n" +
+    "<h3>Value Details</h3>\n" +
+    "</div>\n" +
+    "<div class=\"modal-body\">\n" +
+    "<h4>{{$ctrl.overlayPaneEntryDetails.metadata.name}}\n" +
+    "<small class=\"muted\">&ndash; {{$ctrl.overlayPaneEntryDetails.kind | humanizeKind : true}}</small></h4>\n" +
+    "<div ng-if=\"!($ctrl.overlayPaneEntryDetails.data | size)\" class=\"empty-state-message text-center\">\n" +
+    "The {{$ctrl.overlayPaneEntryDetails.kind | humanizeKind}} has no properties.\n" +
+    "</div>\n" +
+    "<div ng-if=\"$ctrl.overlayPaneEntryDetails.data | size\" class=\"table-responsive scroll-shadows-horizontal\">\n" +
+    "<table class=\"table table-bordered table-bordered-columns config-map-table key-value-table\">\n" +
+    "<tbody>\n" +
+    "<tr ng-repeat=\"(prop, value) in $ctrl.overlayPaneEntryDetails.data\">\n" +
+    "<td class=\"key\">{{prop}}</td>\n" +
+    "<td class=\"value\">\n" +
+    "<truncate-long-text ng-if=\"$ctrl.overlayPaneEntryDetails.kind === 'ConfigMap'\" content=\"value\" limit=\"50\" newline-limit=\"2\" expandable=\"true\">\n" +
+    "</truncate-long-text>\n" +
+    "<span ng-if=\"$ctrl.overlayPaneEntryDetails.kind === 'Secret'\">&#42;&#42;&#42;&#42;&#42;</span>\n" +
+    "</td>\n" +
+    "</tr>\n" +
+    "</tbody>\n" +
+    "</table>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "<button ng-click=\"$ctrl.closeOverlayPanel()\" type=\"button\" class=\"btn btn-primary pull-right\">Close</button>\n" +
+    "</div>\n" +
+    "</overlay-panel>\n" +
     "</ng-form>"
   );
 
