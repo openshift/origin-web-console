@@ -100,7 +100,7 @@ exports.waitForVisibility = waitForVisibility;
 
 
 exports.goToPage = function(uri) {
-  return browser.get(uri).then(() => {
+  return browser.get(uri, 30 * 1000).then(() => {
     return waitForUri(uri);
   });
 };
