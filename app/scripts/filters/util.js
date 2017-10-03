@@ -478,16 +478,6 @@ angular.module('openshiftConsole')
       return _.filter(collection, predicate);
     };
   })
-  .filter('isAbsoluteURL', function() {
-    return function(url) {
-      if (!url) {
-        return false;
-      }
-      var uri = new URI(url);
-      var protocol = uri.protocol();
-      return uri.is('absolute') && (protocol === 'http' || protocol === 'https');
-    };
-  })
   // Use of isIE and isEdge is HIGHLY discouraged, only use if absolutely required
   .filter('isIE', function() {
     var ua = navigator.userAgent;
