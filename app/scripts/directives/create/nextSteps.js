@@ -15,8 +15,7 @@
       createdBuildConfig: '<',
       onContinue: '<',
       showProjectName: '<',
-      name: '<',
-      isDialog: '<'
+      name: '<'
     },
     templateUrl: 'views/directives/next-steps.html'
   });
