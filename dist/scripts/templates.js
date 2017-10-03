@@ -11537,7 +11537,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
-    "<tasks></tasks>\n" +
     "<alerts alerts=\"overview.state.alerts\"></alerts>\n" +
     "<div ng-if=\"overview.everythingFiltered && overview.viewBy !== 'pipeline'\">\n" +
     "<div class=\"empty-state-message text-center h2\">\n" +
