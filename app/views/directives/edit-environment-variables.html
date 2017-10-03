@@ -3,7 +3,6 @@
   <div ng-repeat="container in $ctrl.containers">
     <h3>Container {{container.name}}</h3>
 
-    <h4 class="section-label">Variables</h4>
     <div ng-if="!$ctrl.canIUpdate || $ctrl.ngReadonly">
       <span ng-if="!container.env.length">
         No environment variables set in the {{$ctrl.apiObject.kind | humanizeKind}}
@@ -30,8 +29,8 @@
       key-validator="[A-Za-z_][A-Za-z0-9_]*"
       key-validator-error="Please enter a valid key."
       key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
-      add-row-link="Add Variable"
-      add-row-with-selectors-link="Add Variable from Config Map or Secret"
+      add-row-link="Add Value"
+      add-row-with-selectors-link="Add Value from Config Map or Secret"
       show-header>
     </key-value-editor>
 
@@ -44,9 +43,9 @@
     </h4>
     <edit-environment-from
       entries="container.envFrom"
-      selector-placeholder="Secret/Config Map"
+      selector-placeholder="Config Map/Secret"
       env-from-selector-options="$ctrl.valueFromObjects"
-      add-row-link="Add ALL Values from Secret or Config Map"
+      add-row-link="Add ALL Values from Config Map or Secret"
       show-header>
     </edit-environment-from>
   </div>
