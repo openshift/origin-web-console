@@ -100,9 +100,7 @@ exports.waitForVisibility = waitForVisibility;
 
 
 exports.goToPage = function(uri) {
-  return browser.get(uri).then(() => {
-    return waitForUri(uri);
-  });
+  browser.setLocation(uri);
 };
 
 exports.presenceOf = function(obj) {
