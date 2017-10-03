@@ -22,7 +22,7 @@ exports.login = function(loginPageAlreadyLoaded) {
   // The login page doesn't use angular, so we have to use the underlying WebDriver instance
   var driver = browser.driver;
   if (!loginPageAlreadyLoaded) {
-    browser.get('/');
+    browser.get('/', 10 * 1000);
     driver.wait(function() {
       return driver.isElementPresent(by.name("username"));
     }, 3000);
