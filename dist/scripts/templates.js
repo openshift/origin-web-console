@@ -526,50 +526,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/_tasks.html',
-    "<div ng-controller=\"TasksController\">\n" +
-    "<div ng-repeat=\"task in tasks()\" ng-if=\"!task.namespace || !projectName || task.namespace === projectName\">\n" +
-    "<div class=\"tasks\" ng-class=\"hasTaskWithError() ? 'failure' : 'success'\">\n" +
-    "<div class=\"task-content\">\n" +
-    "<i class=\"pficon task-icon\" ng-class=\"task.hasErrors ? 'pficon-error-circle-o' : 'pficon-ok'\"></i>\n" +
-    "<div class=\"task-info\">\n" +
-    "<span class=\"task-title\">\n" +
-    "{{ task | taskTitle }}.\n" +
-    "</span>\n" +
-    "<span class=\"task-links\">\n" +
-    "<span>\n" +
-    "<a href=\"\" ng-click=\"expanded = !expanded\" role=\"button\">\n" +
-    "<span ng-hide=\"expanded\">Show Details</span>\n" +
-    "<span ng-show=\"expanded\">Hide Details</span>\n" +
-    "</a>\n" +
-    "</span>\n" +
-    "<span ng-show=\"task.status=='completed'\">\n" +
-    "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
-    "<a href=\"\" ng-click=\"delete(task)\" role=\"button\">\n" +
-    "Dismiss\n" +
-    "</a>\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "<div ng-if=\"task.helpLinks.length\">\n" +
-    "<h4>Helpful Links</h4>\n" +
-    "<ul class=\"list-unstyled\">\n" +
-    "<li ng-repeat=\"link in task.helpLinks\">\n" +
-    "<a href=\"{{ link.link }}\" target=\"_blank\">{{ link.title }}</a>\n" +
-    "</li>\n" +
-    "</ul>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-show=\"expanded\" class=\"task-expanded-details\">\n" +
-    "\n" +
-    "<alerts alerts=\"task.alerts\" hide-close-button=\"true\"></alerts>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>"
-  );
-
-
   $templateCache.put('views/_templateopt.html',
     "<div class=\"template-options\" ng-form=\"paramForm\">\n" +
     "<div ng-if=\"!isDialog && parameters.length\" class=\"flow\">\n" +
@@ -6269,7 +6225,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
     "<div class=\"order-service-config\">\n" +
     "<div class=\"wizard-pf-main-form-contents\">\n" +
-    "<next-steps project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\" on-continue=\"$ctrl.close\" show-project-name=\"$ctrl.showProjectName\" name=\"$ctrl.appName\" is-dialog=\"true\">\n" +
+    "<next-steps project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\" on-continue=\"$ctrl.close\" show-project-name=\"$ctrl.showProjectName\" name=\"$ctrl.appName\">\n" +
     "</next-steps>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7097,7 +7053,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"order-service-config\">\n" +
     "<div class=\"wizard-pf-main-form-contents\">\n" +
     "\n" +
-    "<next-steps ng-if=\"$ctrl.currentStep === 'Results'\" project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\" on-continue=\"$ctrl.close\" show-project-name=\"$ctrl.showProjectName\" name=\"$ctrl.name\" is-dialog=\"true\">\n" +
+    "<next-steps ng-if=\"$ctrl.currentStep === 'Results'\" project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\" on-continue=\"$ctrl.close\" show-project-name=\"$ctrl.showProjectName\" name=\"$ctrl.name\">\n" +
     "</next-steps>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7649,80 +7605,56 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-controller=\"TasksController\">\n" +
     "<div ng-if=\"$ctrl.pendingTasks(tasks()).length\">\n" +
     "<div class=\"results-status\">\n" +
-    "<span class=\"spinner spinner-sm\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"fa fa-clock-o text-muted\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Pending</span>\n" +
-    "<h1 class=\"results-message h3\">\n" +
+    "<div class=\"results-message\">\n" +
+    "<h1 class=\"h3\">\n" +
     "<strong>{{$ctrl.name}}</strong> is being created<span ng-if=\"$ctrl.showProjectName && $ctrl.projectName\"> in <strong>{{$ctrl.projectName}}</strong></span>.\n" +
     "</h1>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"results-failure\" ng-if=\"!$ctrl.pendingTasks(tasks()).length && $ctrl.erroredTasks(tasks()).length\">\n" +
     "<div class=\"results-status\">\n" +
     "<span class=\"pficon pficon-error-circle-o text-danger\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Error</span>\n" +
-    "<h1 class=\"results-message h3\">\n" +
+    "<div class=\"results-message\">\n" +
+    "<h1 class=\"h3\">\n" +
     "<strong>{{$ctrl.name}}</strong> failed to be created<span ng-if=\"$ctrl.showProjectName && $ctrl.projectName\"> in <strong>{{$ctrl.projectName}}</strong></span>.\n" +
     "</h1>\n" +
     "</div>\n" +
     "</div>\n" +
+    "</div>\n" +
     "\n" +
     "<div ng-if=\"!tasks().length\">\n" +
-    "<div class=\"results-status\">\n" +
-    "<span class=\"pficon pficon-ok\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"sr-only\">Success</span>\n" +
-    "<h1 class=\"results-message h3\">\n" +
-    "<strong>{{$ctrl.name}}</strong> has been created<span ng-if=\"$ctrl.showProjectName && $ctrl.projectName\"> in <strong>{{$ctrl.projectName}}</strong> successfully</span>.\n" +
+    "<div class=\"results-status results-status-unknown\">\n" +
+    "<div class=\"results-message\">\n" +
+    "<h1 class=\"h3\">\n" +
+    "<strong>{{$ctrl.name}}</strong> completed.\n" +
     "</h1>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"tasks().length && $ctrl.allTasksSuccessful(tasks())\">\n" +
     "<div class=\"results-status\">\n" +
     "<span class=\"pficon pficon-ok\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Success</span>\n" +
-    "<h1 class=\"results-message h3\">\n" +
+    "<div class=\"results-message\">\n" +
+    "<h1 class=\"h3\">\n" +
     "<strong>{{$ctrl.name}}</strong> has been created<span ng-if=\"$ctrl.showProjectName && $ctrl.projectName\"> in <strong>{{$ctrl.projectName}}</strong> successfully</span>.\n" +
     "</h1>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<p ng-if=\"!$ctrl.pendingTasks(tasks()).length && !$ctrl.erroredTasks(tasks()).length\">\n" +
     "<a href=\"\" ng-click=\"$ctrl.goToOverview()\">Continue to the project overview</a>.\n" +
     "</p>\n" +
-    "\n" +
-    "<div ng-if=\"$ctrl.isDialog && hasTaskWithError()\">\n" +
+    "<div ng-if=\"hasTaskWithError()\">\n" +
     "<ul ng-repeat=\"task in tasks()\">\n" +
     "<li ng-repeat=\"alert in task.alerts\" ng-if=\"alert.type === 'error' || alert.type === 'warning'\">\n" +
     "{{alert.message}} {{alert.details}}\n" +
     "</li>\n" +
     "</ul>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div ng-repeat=\"task in tasks()\" ng-if=\"!$ctrl.isDialog && tasks().length && !$ctrl.allTasksSuccessful(tasks())\">\n" +
-    "<div class=\"tasks\" ng-class=\"hasTaskWithError() ? 'failure' : 'success'\">\n" +
-    "<div class=\"task-content\">\n" +
-    "<i class=\"pficon task-icon\" ng-class=\"task.hasErrors ? 'pficon-error-circle-o' : 'pficon-ok'\"></i>\n" +
-    "<div class=\"task-info\">\n" +
-    "{{ task | taskTitle }}.\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"alerts task-expanded-details\">\n" +
-    "<div ng-repeat=\"alert in task.alerts\">\n" +
-    "<div ng-switch=\"alert.type\">\n" +
-    "<div ng-switch-when=\"error\" class=\"alert alert-danger\">\n" +
-    "<span class=\"pficon pficon-error-circle-o\"></span>\n" +
-    "<span ng-if=\"alert.message\">{{alert.message}}</span><span ng-if=\"alert.details\">{{alert.details}}.</span>\n" +
-    "</div>\n" +
-    "<div ng-switch-when=\"warning\" class=\"alert alert-warning\">\n" +
-    "<span class=\"pficon pficon-warning-triangle-o\"></span>\n" +
-    "<span ng-if=\"alert.message\">{{alert.message}}</span><span ng-if=\"alert.details\">{{alert.details}}.</span>\n" +
-    "</div>\n" +
-    "<div ng-switch-when=\"success\" class=\"alert alert-success\">\n" +
-    "<span class=\"pficon pficon-ok\"></span>\n" +
-    "<span ng-if=\"alert.message\">{{alert.message}}</span><span ng-if=\"alert.details\">{{alert.details}}.</span>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"alert alert-info template-message\" ng-if=\"$ctrl.templateMessage.length\">\n" +
@@ -8937,7 +8869,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/process-template-dialog/process-template-results.html',
     "<div class=\"order-service-config\">\n" +
-    "<next-steps project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\" on-continue=\"$ctrl.close\" show-project-name=\"$ctrl.showProjectName\" name=\"$ctrl.template | displayName\" is-dialog=\"true\">\n" +
+    "<next-steps project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\" on-continue=\"$ctrl.close\" show-project-name=\"$ctrl.showProjectName\" name=\"$ctrl.template | displayName\">\n" +
     "</next-steps>\n" +
     "</div>"
   );
@@ -11537,7 +11469,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
-    "<tasks></tasks>\n" +
     "<alerts alerts=\"overview.state.alerts\"></alerts>\n" +
     "<div ng-if=\"overview.everythingFiltered && overview.viewBy !== 'pipeline'\">\n" +
     "<div class=\"empty-state-message text-center h2\">\n" +

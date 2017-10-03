@@ -11070,11 +11070,6 @@ angular.element("#" + e).focus();
 };
 }
 };
-}), angular.module("openshiftConsole").directive("tasks", function() {
-return {
-restrict: "E",
-templateUrl: "views/_tasks.html"
-};
 }), angular.module("openshiftConsole").directive("catalog", [ "CatalogService", "Constants", "KeywordService", "Logger", function(e, t, n, a) {
 return {
 restrict: "E",
@@ -13257,8 +13252,7 @@ fromSampleRepo: "<",
 createdBuildConfig: "<",
 onContinue: "<",
 showProjectName: "<",
-name: "<",
-isDialog: "<"
+name: "<"
 },
 templateUrl: "views/directives/next-steps.html"
 });

@@ -3958,11 +3958,22 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.left,div.hopscotch-bubble
 .bind-form .radio label[disabled]{cursor:not-allowed}
 .bind-service-selection{margin-bottom:5px}
 .results-info{margin-bottom:20px;margin-top:30px}
-.results-message{line-height:1.4;margin-top:0;padding-left:10px}
-.results-message strong{word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
-.results-status{display:flex;font-size:16px}
-.results-status .pficon{margin-top:3px}
-.results-status .spinner.spinner-sm{height:16px;margin:3px 0 0;width:16px}
+.results-message{flex:1 1 0%;padding-left:10px}
+.results-message .h3,.results-message h3{font-size:15px;line-height:1.4;margin-bottom:0;margin-top:0}
+@media (min-width:768px){.bind-form .application-select .ui-select-bootstrap>.ui-select-choices{max-height:170px}
+.results-message{padding-left:15px}
+.results-message .h3,.results-message h3{font-size:20px;font-weight:300}
+}
+.results-message .h3 strong,.results-message h3 strong{font-weight:600;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
+.results-status-unknown .results-message{padding-left:0}
+.results-message-details{font-style:italic;margin-bottom:0}
+.results-status{align-items:center;display:flex;margin-bottom:15px}
+.results-status .fa,.results-status .pficon{font-size:24px}
+@media (min-width:768px){.results-status .fa,.results-status .pficon{font-size:32px}
+}
+.results-status .fa-clock-o{font-size:30px}
+@media (min-width:768px){.results-status .fa-clock-o{font-size:36px}
+}
 .delete-resource-modal{background-color:#f1f1f1}
 .delete-resource-modal h1{font-size:21px;font-weight:500;margin-bottom:20px;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .delete-resource-modal p{font-size:16px}
@@ -3977,8 +3988,7 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.left,div.hopscotch-bubble
 .truncation-expand-link{white-space:nowrap}
 .table-responsive .truncation-expand-link{display:block}
 label.required:before{content:'*';position:absolute;left:10px}
-@media (min-width:768px){.bind-form .application-select .ui-select-bootstrap>.ui-select-choices{max-height:170px}
-.form-horizontal label.required:before{position:relative;left:-3px}
+@media (min-width:768px){.form-horizontal label.required:before{position:relative;left:-3px}
 }
 .guided-tour-backdrop{z-index:1052}
 div.hopscotch-bubble{border-color:#bbb;border-width:1px;box-shadow:1px 1px 3px rgba(0,0,0,.3)}
@@ -4118,7 +4128,6 @@ div.hopscotch-bubble .hopscotch-nav-button.prev{color:#030303}
 .order-service-details .order-service-description-block .description{white-space:pre-wrap}
 .order-service-details .order-service-description-block .learn-more-link{font-size:11px;white-space:nowrap}
 .order-service-details .order-service-documentation-url{margin-top:4px}
-.order-service-details .order-service-documentation-url a{margin-right:10px}
 .order-service-details .order-service-tags{margin-top:5px}
 .order-service-details .order-service-tags .tag{margin-right:5px;text-transform:uppercase}
 .order-service-config .config-top .adv-ops{height:30%}
@@ -4135,7 +4144,7 @@ div.hopscotch-bubble .hopscotch-nav-button.prev{color:#030303}
 .order-service-config .or{margin-left:15px}
 .order-service-config .select-plans .plan-name{display:inline-block;font-size:14px;margin-bottom:5px;margin-top:-2px}
 .order-service-config .select-plans .radio{margin-top:15px}
-.order-service-config .sub-title{margin:-5px 0 10px 25px}
+.order-service-config .sub-title{margin:0 0 10px}
 .order-service-config .success-check{color:#3f9c35}
 .order-service-config .related-services-container{background-color:#ededed;margin-top:62px;padding:14px;display:flex;align-items:center}
 .order-service-config .related-services-container .related-services-label{font-size:14px;font-weight:600;padding-right:14px}
@@ -4292,7 +4301,7 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .services-view .services-item-icon{align-items:center;display:flex;font-size:48px;height:92px;justify-content:center;position:relative}
 .services-view .services-item-icon img{max-height:50px;max-width:50px}
 .services-view .services-item-name{flex:1 1 0%;font-size:14px;font-weight:600;display:-webkit-box;line-height:1.4em;max-height:4.2em;overflow:hidden;padding:0!important;-webkit-box-orient:vertical;-webkit-line-clamp:3;position:relative;word-wrap:break-word}
-.services-view .services-items{align-content:flex-start;background-color:#fff;display:flex;flex:1 1 auto;flex-wrap:wrap;padding-bottom:30px;z-index:9}
+.services-view .services-items{align-content:flex-start;background-color:#fff;display:flex;flex:1 1 auto;flex-wrap:wrap;padding-bottom:30px;width:100%;z-index:9}
 .services-view .services-items-filter{flex:1 1 100%;margin:20px 20px 10px}
 @media (min-width:480px){.services-view .services-sub-category .services-sub-category-tab:focus .services-sub-category-tab-image img,.services-view .services-sub-category .services-sub-category-tab:hover .services-sub-category-tab-image img,.services-view .services-sub-category.active .services-sub-category-tab .services-sub-category-tab-image img{opacity:1}
 .services-view .services-no-sub-categories{display:flex;flex:1 1 auto;padding:15px 20px 12px}
@@ -4665,7 +4674,7 @@ label.checkbox{font-weight:400}
 .env-variable-list li .value,.label-list li .value{max-width:500px}
 .env-variable-list li .btn,.label-list li .btn{vertical-align:top}
 .label+.label{margin-left:3px}
-.template-message{background-color:transparent;border:1px solid #d1d1d1}
+.template-message{background-color:transparent;border:1px solid #d1d1d1;margin-top:21px!important}
 .attention-message,.tasks,div.code,pre.code{background-color:#fff}
 .template-message .resource-description{font-size:12px;margin-bottom:0}
 .resource-metadata,.tasks{margin-bottom:20px}
