@@ -48,4 +48,20 @@
       View Secret
     </a>
   </div>
+  <div class="service-binding-parameters" ng-if="$ctrl.bindParameterSchema.properties">
+    <span class="parameters-heading">Parameters</span>
+    <a href="" ng-click="$ctrl.toggleShowParameterValues()" role="button">
+      {{$ctrl.showParameterValues ? 'Hide Values' : 'Reveal Values'}}
+    </a>
+    <form name="ctrl.parametersForm">
+      <catalog-parameters
+        hide-values="!$ctrl.showParameterValues"
+        model="$ctrl.parameterData"
+        parameter-form-definition="$ctrl.bindParameterFormDefinition"
+        parameter-schema="$ctrl.bindParameterSchema"
+        is-horizontal="true"
+        read-only="true">
+      </catalog-parameters>
+    </form>
+  </div>
 </div>

@@ -196,6 +196,29 @@ code.command {
   }
 }
 
+.service-binding-message {
+  margin-left: 20px;
+}
+.service-binding-parameters {
+  margin-left: 20px;
+  > a {
+    border-left: 1px solid @color-pf-black-300;
+    padding: 0 10px;
+
+    &:first-of-type {
+      border-left: 0;
+    }
+  }
+  .parameters-heading {
+    color: @color-pf-black-500;
+    text-transform: uppercase;
+  }
+  .parameter-title {
+    font-weight: 700;
+    text-align: right;
+  }
+}
+
 .service-binding-actions {
   font-size: 13px;
   font-weight: 400;

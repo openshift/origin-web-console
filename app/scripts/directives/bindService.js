@@ -166,7 +166,7 @@
       ctrl.serviceClass = ctrl.serviceClasses[serviceClassName];
       var servicePlanName = ServiceInstancesService.getServicePlanNameForInstance(instance);
       ctrl.plan = ctrl.servicePlans[servicePlanName];
-      ctrl.parameterSchema = _.get(ctrl.plan, 'spec.serviceInstanceCredentialCreateParameterSchema');
+      ctrl.parameterSchema = _.get(ctrl.plan, 'spec.serviceBindingCreateParameterSchema');
       ctrl.parameterFormDefinition = _.get(ctrl.plan, 'spec.externalMetadata.schemas.service_binding.create.openshift_form_definition');
       bindParametersStep.hidden = !_.has(ctrl.parameterSchema, 'properties');
       ctrl.nextTitle = bindParametersStep.hidden ? 'Bind' : 'Next >';
