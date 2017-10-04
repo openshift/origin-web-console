@@ -9158,8 +9158,8 @@ name: e.metadata.name
 }
 return t;
 };
-a.checkEntries = function(e) {
-return !!l(e);
+a.checkEntries = function(e, t) {
+return e !== t && !!l(e);
 };
 var u = function(e, t) {
 a.cannotAdd = a.isReadonlyAny || _.isEmpty(t), t && _.each(t, function(e) {
@@ -11069,11 +11069,6 @@ return /^\s+$/.test(e);
 angular.element("#" + e).focus();
 };
 }
-};
-}), angular.module("openshiftConsole").directive("tasks", function() {
-return {
-restrict: "E",
-templateUrl: "views/_tasks.html"
 };
 }), angular.module("openshiftConsole").directive("catalog", [ "CatalogService", "Constants", "KeywordService", "Logger", function(e, t, n, a) {
 return {
@@ -13257,8 +13252,7 @@ fromSampleRepo: "<",
 createdBuildConfig: "<",
 onContinue: "<",
 showProjectName: "<",
-name: "<",
-isDialog: "<"
+name: "<"
 },
 templateUrl: "views/directives/next-steps.html"
 });

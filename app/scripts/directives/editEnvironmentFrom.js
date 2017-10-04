@@ -134,7 +134,11 @@
       return referenceValue;
     };
 
-    ctrl.checkEntries = function(option) {
+    ctrl.checkEntries = function(option, entrySelectedEnvFrom) {
+      if(option === entrySelectedEnvFrom) {
+        return false;
+      }
+
       return !!(getReferenceValue(option));
     };
 
