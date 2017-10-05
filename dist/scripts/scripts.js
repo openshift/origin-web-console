@@ -3511,7 +3511,7 @@ target: "_blank"
 var n = [], a = "Pod" === e.kind ? e : _.get(e, "spec.template");
 return a ? (_.each([ "cpu", "memory", "requests.cpu", "requests.memory", "limits.cpu", "limits.memory", "pods" ], function(r) {
 var o = t.status.total || t.status;
-if (("Pod" !== e.kind || "pods" !== r) && !d(o.hard[r])) {
+if (("Pod" !== e.kind || "pods" !== r) && _.has(o, [ "hard", r ]) && _.has(o, [ "used", r ])) {
 var i = S(t, e, r);
 if (i) n.push(i); else if ("pods" !== r) {
 var s = k(t, e, a, r);
