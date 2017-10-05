@@ -159,6 +159,7 @@
       ctrl.serviceClassName = instance.spec.serviceClassName;
       ctrl.plan = BindingService.getPlanForInstance(instance, ctrl.serviceClass);
       ctrl.parameterSchema = _.get(ctrl.plan, 'serviceInstanceCredentialCreateParameterSchema');
+      ctrl.parameterFormDefinition = _.get(ctrl.plan, 'externalMetadata.schemas.service_binding.create.openshift_form_definition');
       bindParametersStep.hidden = !_.has(ctrl.parameterSchema, 'properties');
       ctrl.nextTitle = bindParametersStep.hidden ? 'Bind' : 'Next >';
       ctrl.hideBack = bindParametersStep.hidden;
