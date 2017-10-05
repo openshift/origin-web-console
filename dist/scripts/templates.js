@@ -5805,7 +5805,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/bind-service/bind-parameters.html',
     "<form name=\"ctrl.parametersForm\">\n" +
-    "<catalog-parameters model=\"ctrl.parameterData\" parameter-schema=\"ctrl.parameterSchema\"></catalog-parameters>\n" +
+    "<catalog-parameters model=\"ctrl.parameterData\" parameter-schema=\"ctrl.parameterSchema\" parameter-form-definition=\"ctrl.parameterFormDefinition\">\n" +
+    "</catalog-parameters>\n" +
     "</form>"
   );
 
