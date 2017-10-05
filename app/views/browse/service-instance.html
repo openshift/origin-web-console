@@ -69,8 +69,20 @@
                           </dd>
                           <dt ng-if-start="serviceClass.spec.description || serviceClass.spec.externalMetadata.longDescription">Description:</dt>
                           <dd ng-if-end>
-                            <p class="pre-wrap" ng-bind-html="serviceClass.spec.description | linkify : '_blank'"></p>
-                            <p class="pre-wrap" ng-bind-html="serviceClass.spec.externalMetadata.longDescription | linkify : '_blank'"></p>
+                            <p class="service-description"><truncate-long-text
+                                limit="500"
+                                content="serviceClass.spec.description"
+                                use-word-boundary="true"
+                                expandable="true"
+                                linkify="true">
+                              </truncate-long-text></p>
+                            <p class="service-description"><truncate-long-text
+                                limit="500"
+                                content="serviceClass.spec.externalMetadata.longDescription"
+                                use-word-boundary="true"
+                                expandable="true"
+                                linkify="true">
+                              </truncate-long-text></p>
                           </dd>
                         </dl>
                       </div>
