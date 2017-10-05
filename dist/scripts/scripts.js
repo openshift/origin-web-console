@@ -3598,7 +3598,7 @@ var t = e.status.total || e.status;
 _.each(t.hard, function(e, s) {
 var c = m(e), l = _.get(t, [ "used", s ]), d = m(l);
 "resourcequotas" !== s && c && d && c <= d && i.push({
-id: "quota-limit-reached-" + s,
+id: o + "/quota-limit-reached-" + s,
 namespace: o,
 type: c < d ? "warning" : "info",
 message: I(0, d, e, c, s),
@@ -14418,7 +14418,7 @@ _.remove(t.notifications, {
 uid: e.uid,
 namespace: e.namespace
 });
-});
+}), delete h[r.project][e.uid];
 }, P = function(e) {
 return _.map(e, function(e) {
 return {
@@ -14456,9 +14456,8 @@ l && l(), l = null;
 }, $ = function(e) {
 g[r.project] = P(R(e.by("metadata.name"))), T();
 }, B = function(e, t) {
-if (t.showInDrawer) {
-var n = t.namespace || r.project, a = t.id || _.uniqueId("notification_") + Date.now();
-h[n] = h[n] || {}, h[n][a] = {
+var n = t.namespace || r.project, a = t.id ? n + "/" + t.id : _.uniqueId("notification_") + Date.now();
+t.showInDrawer && !c.isCleared(a) && (h[n] = h[n] || {}, h[n][a] = {
 actions: t.actions,
 unread: !c.isRead(a),
 trackByID: t.trackByID,
@@ -14470,8 +14469,7 @@ isHTML: t.isHTML,
 details: t.details,
 namespace: n,
 links: t.links
-}, T();
-}
+}, T());
 }, L = function(e, t) {
 D(), e && (u = s.watch("events", {
 namespace: e
