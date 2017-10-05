@@ -12792,10 +12792,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/quota.html',
     "<div class=\"middle\">\n" +
     "<div class=\"middle-content\">\n" +
-    "<div class=\"container-fluid mar-top-xl\">\n" +
+    "<div class=\"container-fluid\">\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-12\">\n" +
     "<h1>\n" +
     "<span ng-if=\"clusterQuotas.length\">Cluster </span>Quota\n" +
     "<span class=\"page-header-link\">\n" +
@@ -12858,7 +12856,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</thead>\n" +
     "<tbody>\n" +
     "<tr ng-if=\"!quota.status.total.used\" class=\"danger\">\n" +
-    "<td colspan=\"5\">\n" +
+    "<td colspan=\"4\">\n" +
     "<span data-toggle=\"tooltip\" title=\"Missing quota status\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
     "Status has not been reported on this quota usage record. Any resources limited by this quota record can not be allocated.\n" +
     "</td>\n" +
@@ -12940,7 +12938,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</thead>\n" +
     "<tbody>\n" +
     "<tr ng-if=\"!quota.status.used\" class=\"danger\">\n" +
-    "<td colspan=\"5\">\n" +
+    "<td colspan=\"3\">\n" +
     "<span data-toggle=\"tooltip\" title=\"Missing quota status\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
     "Status has not been reported on this quota usage record. Any resources limited by this quota record can not be allocated.\n" +
     "</td>\n" +
@@ -13015,8 +13013,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</th>\n" +
     "</thead>\n" +
-    "<tbody>\n" +
-    "<tr ng-repeat-start=\"limit in limitRange.spec.limits\"></tr>\n" +
+    "<tbody ng-repeat=\"limit in limitRange.spec.limits\">\n" +
     "<tr ng-repeat=\"(type, typeLimits) in limitsByType[limitRange.metadata.name][limit.type]\">\n" +
     "<td>{{limit.type}} {{type | computeResourceLabel : true}}</td>\n" +
     "<td>{{(typeLimits.min | usageWithUnits : type) || \"&mdash;\"}}</td>\n" +
@@ -13025,11 +13022,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td>{{(typeLimits[\"default\"] | usageWithUnits : type) || \"&mdash;\"}}</td>\n" +
     "<td>{{typeLimits.maxLimitRequestRatio || \"&mdash;\"}}</td>\n" +
     "</tr>\n" +
-    "<tr ng-repeat-end></tr>\n" +
     "</tbody>\n" +
     "</table>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
