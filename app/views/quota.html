@@ -1,9 +1,7 @@
 <div class="middle">
   <div class="middle-content">
-    <div class="container-fluid mar-top-xl">
+    <div class="container-fluid">
       <alerts alerts="alerts"></alerts>
-      <div class="row">
-        <div class="col-md-12">
           <h1>
             <span ng-if="clusterQuotas.length">Cluster </span>Quota
             <span class="page-header-link">
@@ -68,7 +66,7 @@
                 </thead>
                 <tbody>
                   <tr ng-if='!quota.status.total.used' class="danger">
-                    <td colspan="5">
+                    <td colspan="4">
                       <span data-toggle="tooltip" title="Missing quota status" class="pficon pficon-error-circle-o" style="cursor: help;"></span>
                       Status has not been reported on this quota usage record.  Any resources limited by this quota record can not be allocated.
                     </td>
@@ -159,7 +157,7 @@
                 </thead>
                 <tbody>
                   <tr ng-if='!quota.status.used' class="danger">
-                    <td colspan="5">
+                    <td colspan="3">
                       <span data-toggle="tooltip" title="Missing quota status" class="pficon pficon-error-circle-o" style="cursor: help;"></span>
                       Status has not been reported on this quota usage record.  Any resources limited by this quota record can not be allocated.
                     </td>
@@ -243,8 +241,7 @@
                       </span>
                     </th>
                   </thead>
-                  <tbody>
-                    <tr ng-repeat-start="limit in limitRange.spec.limits"></tr>
+                  <tbody ng-repeat="limit in limitRange.spec.limits">
                     <tr ng-repeat="(type, typeLimits) in limitsByType[limitRange.metadata.name][limit.type]">
                       <td>{{limit.type}} {{type | computeResourceLabel : true}}</td>
                       <td>{{(typeLimits.min | usageWithUnits : type) || "&mdash;"}}</td>
@@ -253,14 +250,11 @@
                       <td>{{(typeLimits["default"] | usageWithUnits : type) || "&mdash;"}}</td>
                       <td>{{typeLimits.maxLimitRequestRatio || "&mdash;"}}</td>
                     </tr>
-                    <tr ng-repeat-end></tr>
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
-        </div><!-- /col-* -->
-      </div>
     </div>
   </div><!-- /middle-content -->
 </div>
