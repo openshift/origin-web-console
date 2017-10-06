@@ -3490,7 +3490,9 @@ memory: "resources.requests.memory",
 persistentvolumeclaims: "resources.limits.persistentvolumeclaims",
 "requests.storage": "resources.request.storage"
 }, k = function(e, t, n, a) {
-var r = e.status.total || e.status, o = w[a], i = 0;
+var r = e.status.total || e.status;
+if (!_.has(r, [ "hard", a ]) || !_.has(r, [ "used", a ])) return null;
+var o = w[a], i = 0;
 if (_.each(n.spec.containers, function(e) {
 var t = _.get(e, o);
 t && (i += m(t));
@@ -3507,6 +3509,7 @@ target: "_blank"
 } ]
 };
 }
+return null;
 }, j = function(e, t) {
 var n = [], a = "Pod" === e.kind ? e : _.get(e, "spec.template");
 return a ? (_.each([ "cpu", "memory", "requests.cpu", "requests.memory", "limits.cpu", "limits.memory", "pods" ], function(r) {

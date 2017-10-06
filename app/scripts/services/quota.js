@@ -121,6 +121,10 @@ angular.module("openshiftConsole")
 
     var getRequestedResourceQuotaAlert = function(quota, resource, podTemplate, type) {
       var q = quota.status.total || quota.status;
+      if (!_.has(q, ['hard', type]) || !_.has(q, ['used', type])) {
+        return null;
+      }
+
       var containerField = QUOTA_TYPE_TO_RESOURCE[type];
       var templateTotal = 0;
       _.each(podTemplate.spec.containers, function(container) {
@@ -148,6 +152,8 @@ angular.module("openshiftConsole")
           }]
         };
       }
+
+      return null;
     };
 
     var getResourceLimitAlerts = function(resource, quota){
