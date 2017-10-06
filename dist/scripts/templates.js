@@ -5763,12 +5763,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/annotations.html',
-    "<p ng-class=\"{'mar-bottom-xl': !expandAnnotations}\">\n" +
-    "<a href=\"\" ng-click=\"toggleAnnotations()\" ng-if=\"!expandAnnotations\">Show Annotations</a>\n" +
-    "<a href=\"\" ng-click=\"toggleAnnotations()\" ng-if=\"expandAnnotations\">Hide Annotations</a>\n" +
+    "<p ng-if=\"annotations\" ng-class=\"{'mar-bottom-xl': !expandAnnotations}\">\n" +
+    "<a href=\"\" ng-click=\"toggleAnnotations()\">{{!expandAnnotations ? 'Hide Annotations' : 'Show Annotations'}}</a>\n" +
     "</p>\n" +
-    "<div ng-if=\"expandAnnotations\">\n" +
-    "<div ng-if=\"annotations\" class=\"table-responsive scroll-shadows-horizontal\">\n" +
+    "<div ng-if=\"expandAnnotations && annotations\" class=\"table-responsive scroll-shadows-horizontal\">\n" +
     "<table class=\"table table-bordered table-bordered-columns key-value-table\">\n" +
     "<tbody>\n" +
     "<tr ng-repeat=\"(annotationKey, annotationValue) in annotations\">\n" +
@@ -5783,8 +5781,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<p ng-if=\"!annotations\" class=\"mar-bottom-xl\">\n" +
     "There are no annotations on this resource.\n" +
-    "</p>\n" +
-    "</div>"
+    "</p>"
   );
 
 
@@ -5805,7 +5802,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/bind-service/bind-parameters.html',
     "<form name=\"ctrl.parametersForm\">\n" +
-    "<catalog-parameters model=\"ctrl.parameterData\" parameter-schema=\"ctrl.parameterSchema\"></catalog-parameters>\n" +
+    "<catalog-parameters model=\"ctrl.parameterData\" parameter-schema=\"ctrl.parameterSchema\" parameter-form-definition=\"ctrl.parameterFormDefinition\">\n" +
+    "</catalog-parameters>\n" +
     "</form>"
   );
 
@@ -6655,7 +6653,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<confirm-on-exit ng-if=\"$ctrl.canIUpdate && !$ctrl.ngReadonly\" dirty=\"$ctrl.form.$dirty\"></confirm-on-exit>\n" +
     "<div ng-repeat=\"container in $ctrl.containers\">\n" +
     "<h3>Container {{container.name}}</h3>\n" +
-    "<h4 class=\"section-label\">Variables</h4>\n" +
     "<div ng-if=\"!$ctrl.canIUpdate || $ctrl.ngReadonly\">\n" +
     "<span ng-if=\"!container.env.length\">\n" +
     "No environment variables set in the {{$ctrl.apiObject.kind | humanizeKind}} template for container {{container.name}}.\n" +
@@ -6663,13 +6660,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<key-value-editor ng-if=\"container.env.length\" entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" cannot-add cannot-sort cannot-delete is-readonly show-header>\n" +
     "</key-value-editor>\n" +
     "</div>\n" +
-    "<key-value-editor ng-if=\"$ctrl.canIUpdate && !$ctrl.ngReadonly\" entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" value-from-selector-options=\"$ctrl.valueFromObjects\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key.\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Variable\" add-row-with-selectors-link=\"Add Variable from Config Map or Secret\" show-header>\n" +
+    "<key-value-editor ng-if=\"$ctrl.canIUpdate && !$ctrl.ngReadonly\" entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" value-from-selector-options=\"$ctrl.valueFromObjects\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key.\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\" show-header>\n" +
     "</key-value-editor>\n" +
     "<h4 class=\"section-label\">\n" +
     "Environment From\n" +
     "<span class=\"pficon pficon-help\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Environment From lets you add all key-value pairs from a config map or secret as environment variables.\"></span>\n" +
     "</h4>\n" +
-    "<edit-environment-from entries=\"container.envFrom\" selector-placeholder=\"Secret/Config Map\" env-from-selector-options=\"$ctrl.valueFromObjects\" add-row-link=\"Add ALL Values from Secret or Config Map\" show-header>\n" +
+    "<edit-environment-from entries=\"container.envFrom\" selector-placeholder=\"Config Map/Secret\" env-from-selector-options=\"$ctrl.valueFromObjects\" add-row-link=\"Add ALL Values from Config Map or Secret\" show-header>\n" +
     "</edit-environment-from>\n" +
     "</div>\n" +
     "<button class=\"btn btn-default\" ng-if=\"$ctrl.canIUpdate && !$ctrl.ngReadonly\" ng-click=\"$ctrl.save()\" ng-disabled=\"$ctrl.form.$pristine || $ctrl.form.$invalid\">Save</button>\n" +
@@ -12795,10 +12792,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/quota.html',
     "<div class=\"middle\">\n" +
     "<div class=\"middle-content\">\n" +
-    "<div class=\"container-fluid mar-top-xl\">\n" +
+    "<div class=\"container-fluid\">\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-12\">\n" +
     "<h1>\n" +
     "<span ng-if=\"clusterQuotas.length\">Cluster </span>Quota\n" +
     "<span class=\"page-header-link\">\n" +
@@ -12861,7 +12856,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</thead>\n" +
     "<tbody>\n" +
     "<tr ng-if=\"!quota.status.total.used\" class=\"danger\">\n" +
-    "<td colspan=\"5\">\n" +
+    "<td colspan=\"4\">\n" +
     "<span data-toggle=\"tooltip\" title=\"Missing quota status\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
     "Status has not been reported on this quota usage record. Any resources limited by this quota record can not be allocated.\n" +
     "</td>\n" +
@@ -12943,7 +12938,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</thead>\n" +
     "<tbody>\n" +
     "<tr ng-if=\"!quota.status.used\" class=\"danger\">\n" +
-    "<td colspan=\"5\">\n" +
+    "<td colspan=\"3\">\n" +
     "<span data-toggle=\"tooltip\" title=\"Missing quota status\" class=\"pficon pficon-error-circle-o\" style=\"cursor: help\"></span>\n" +
     "Status has not been reported on this quota usage record. Any resources limited by this quota record can not be allocated.\n" +
     "</td>\n" +
@@ -13018,8 +13013,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</th>\n" +
     "</thead>\n" +
-    "<tbody>\n" +
-    "<tr ng-repeat-start=\"limit in limitRange.spec.limits\"></tr>\n" +
+    "<tbody ng-repeat=\"limit in limitRange.spec.limits\">\n" +
     "<tr ng-repeat=\"(type, typeLimits) in limitsByType[limitRange.metadata.name][limit.type]\">\n" +
     "<td>{{limit.type}} {{type | computeResourceLabel : true}}</td>\n" +
     "<td>{{(typeLimits.min | usageWithUnits : type) || \"&mdash;\"}}</td>\n" +
@@ -13028,11 +13022,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td>{{(typeLimits[\"default\"] | usageWithUnits : type) || \"&mdash;\"}}</td>\n" +
     "<td>{{typeLimits.maxLimitRequestRatio || \"&mdash;\"}}</td>\n" +
     "</tr>\n" +
-    "<tr ng-repeat-end></tr>\n" +
     "</tbody>\n" +
     "</table>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

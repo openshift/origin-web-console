@@ -175,17 +175,20 @@ angular.module("openshiftConsole")
         if (resource.kind === 'Pod' && type === 'pods') {
           return;
         }
-        if (!isNil(q.hard[type])) {
-          var quotaReachedAlert = getQuotaResourceReachedAlert(quota, resource, type);
-          if (quotaReachedAlert) {
-            alerts.push(quotaReachedAlert);
-          }
-          else if (type !== 'pods') {
-            // Only calculate this if we havent already reached quota
-            var requestedAlert = getRequestedResourceQuotaAlert(quota, resource, podTemplate, type);
-            if (requestedAlert) {
-              alerts.push(requestedAlert);
-            }
+
+        if (!_.has(q, ['hard', type]) || !_.has(q, ['used', type])) {
+          return;
+        }
+
+        var quotaReachedAlert = getQuotaResourceReachedAlert(quota, resource, type);
+        if (quotaReachedAlert) {
+          alerts.push(quotaReachedAlert);
+        }
+        else if (type !== 'pods') {
+          // Only calculate this if we havent already reached quota
+          var requestedAlert = getRequestedResourceQuotaAlert(quota, resource, podTemplate, type);
+          if (requestedAlert) {
+            alerts.push(requestedAlert);
           }
         }
       });

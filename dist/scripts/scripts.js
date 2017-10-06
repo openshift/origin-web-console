@@ -3511,7 +3511,7 @@ target: "_blank"
 var n = [], a = "Pod" === e.kind ? e : _.get(e, "spec.template");
 return a ? (_.each([ "cpu", "memory", "requests.cpu", "requests.memory", "limits.cpu", "limits.memory", "pods" ], function(r) {
 var o = t.status.total || t.status;
-if (("Pod" !== e.kind || "pods" !== r) && !d(o.hard[r])) {
+if (("Pod" !== e.kind || "pods" !== r) && _.has(o, [ "hard", r ]) && _.has(o, [ "used", r ])) {
 var i = S(t, e, r);
 if (i) n.push(i); else if ("pods" !== r) {
 var s = k(t, e, a, r);
@@ -6565,27 +6565,28 @@ n.projectName = e.project, n.labelSuggestions = {}, n.alerts = n.alerts || {}, n
 disabled: !0
 }, n.kinds = _.filter(l.availableKinds(), function(e) {
 switch (e.kind) {
-case "ReplicationController":
+case "AppliedClusterResourceQuota":
+case "Build":
+case "BuildConfig":
+case "ConfigMap":
 case "Deployment":
 case "DeploymentConfig":
-case "BuildConfig":
-case "Build":
-case "ConfigMap":
-case "Pod":
-case "PersistentVolumeClaim":
 case "Event":
-case "Secret":
-case "Service":
-case "Route":
 case "ImageStream":
-case "ImageStreamTag":
 case "ImageStreamImage":
 case "ImageStreamImport":
 case "ImageStreamMapping":
+case "ImageStreamTag":
 case "LimitRange":
+case "PersistentVolumeClaim":
+case "Pod":
 case "ReplicaSet":
+case "ReplicationController":
 case "ResourceQuota":
-case "AppliedClusterResourceQuota":
+case "Route":
+case "Secret":
+case "Service":
+case "ServiceInstance":
 case "StatefulSet":
 return !1;
 
@@ -12767,7 +12768,7 @@ c && (c(), c = void 0), l && (l(), l = void 0), d.nextTitle = "Close", d.wizardC
 var y = function() {
 if (d.serviceClasses) {
 var e = "ServiceInstance" === d.target.kind ? d.target : d.serviceToBind;
-e && (d.serviceClass = d.serviceClasses[e.spec.serviceClassName], d.serviceClassName = e.spec.serviceClassName, d.plan = r.getPlanForInstance(e, d.serviceClass), d.parameterSchema = _.get(d.plan, "serviceInstanceCredentialCreateParameterSchema"), i.hidden = !_.has(d.parameterSchema, "properties"), d.nextTitle = i.hidden ? "Bind" : "Next >", d.hideBack = i.hidden);
+e && (d.serviceClass = d.serviceClasses[e.spec.serviceClassName], d.serviceClassName = e.spec.serviceClassName, d.plan = r.getPlanForInstance(e, d.serviceClass), d.parameterSchema = _.get(d.plan, "serviceInstanceCredentialCreateParameterSchema"), d.parameterFormDefinition = _.get(d.plan, "externalMetadata.schemas.service_binding.create.openshift_form_definition"), i.hidden = !_.has(d.parameterSchema, "properties"), d.nextTitle = i.hidden ? "Bind" : "Next >", d.hideBack = i.hidden);
 }
 };
 e.$watch("ctrl.serviceToBind", y), d.$onInit = function() {

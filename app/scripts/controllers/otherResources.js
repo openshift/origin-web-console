@@ -19,27 +19,28 @@ angular.module('openshiftConsole')
     $scope.kindSelector = {disabled: true};
     $scope.kinds = _.filter(APIService.availableKinds(), function(kind) {
       switch (kind.kind) {
-        case "ReplicationController":
+        case "AppliedClusterResourceQuota":
+        case "Build":
+        case "BuildConfig":
+        case "ConfigMap":
         case "Deployment":
         case "DeploymentConfig":
-        case "BuildConfig":
-        case "Build":
-        case "ConfigMap":
-        case "Pod":
-        case "PersistentVolumeClaim":
         case "Event":
-        case "Secret":
-        case "Service":
-        case "Route":
         case "ImageStream":
-        case "ImageStreamTag":
         case "ImageStreamImage":
         case "ImageStreamImport":
         case "ImageStreamMapping":
+        case "ImageStreamTag":
         case "LimitRange":
+        case "PersistentVolumeClaim":
+        case "Pod":
         case "ReplicaSet":
+        case "ReplicationController":
         case "ResourceQuota":
-        case "AppliedClusterResourceQuota":
+        case "Route":
+        case "Secret":
+        case "Service":
+        case "ServiceInstance":
         case "StatefulSet":
           return false;
         default:
