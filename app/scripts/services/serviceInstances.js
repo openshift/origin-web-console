@@ -60,7 +60,7 @@ angular.module("openshiftConsole")
       var resource = APIService.getPreferredVersion('serviceinstancecredentials');
       getBindingsIfNecessary(apiObject, bindings).then(function(serviceBindings) {
         _.each(serviceBindings, function (binding) {
-          if (!binding.metadata.deletionTimestamp) {
+          if (binding.metadata.deletionTimestamp) {
             return;
           }
 

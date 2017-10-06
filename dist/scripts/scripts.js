@@ -4315,7 +4315,7 @@ namespace: t.metadata.namespace
 }, u = a.getPreferredVersion("serviceinstancecredentials");
 l(t, n).then(function(t) {
 _.each(t, function(t) {
-t.metadata.deletionTimestamp && i.delete(u, t.metadata.name, r).then(function() {
+t.metadata.deletionTimestamp || i.delete(u, t.metadata.name, r).then(function() {
 c.addNotification({
 type: "success",
 message: "Binding " + t.metadata.name + "' was marked for deletion."
