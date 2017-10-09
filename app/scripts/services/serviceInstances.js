@@ -43,7 +43,7 @@ angular.module("openshiftConsole")
       }
 
       var context = {namespace: apiObject.metadata.namespace};
-      var resource = APIService.getPreferredVersion('serviceinstancecredentials');
+      var resource = APIService.getPreferredVersion('servicebindings');
 
       return DataService.list(resource, context).then(function(serviceBindings) {
         bindings = serviceBindings.by('metadata.name');
@@ -84,7 +84,7 @@ angular.module("openshiftConsole")
       }
 
       var context = {namespace: apiObject.metadata.namespace};
-      var resource = APIService.getPreferredVersion('serviceinstancecredentials');
+      var resource = APIService.getPreferredVersion('servicebindings');
       getBindingsIfNecessary(apiObject, bindings).then(function(serviceBindings) {
         _.each(serviceBindings, function (binding) {
           if (binding.metadata.deletionTimestamp) {

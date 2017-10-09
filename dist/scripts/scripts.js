@@ -4261,7 +4261,7 @@ return _.get(e, "spec.servicePlanRef.name");
 if (angular.isDefined(n)) return t.when(n);
 var o = {
 namespace: e.metadata.namespace
-}, s = a.getPreferredVersion("serviceinstancecredentials");
+}, s = a.getPreferredVersion("servicebindings");
 return i.list(s, o).then(function(t) {
 return n = t.by("metadata.name"), r.getBindingsForResource(n, e);
 });
@@ -4290,7 +4290,7 @@ details: e("getErrorDetails")(n)
 if (o.SERVICE_CATALOG_ENABLED) {
 var r = {
 namespace: t.metadata.namespace
-}, l = a.getPreferredVersion("serviceinstancecredentials");
+}, l = a.getPreferredVersion("servicebindings");
 p(t, n).then(function(t) {
 _.each(t, function(t) {
 t.metadata.deletionTimestamp || i.delete(l, t.metadata.name, r).then(function() {
