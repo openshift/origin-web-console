@@ -35,6 +35,7 @@
                                  RecentlyViewedProjectsService) {
     var ctrl = this;
     var validityWatcher;
+    var imageForIconClass = $filter('imageForIconClass');
 
     ctrl.selectStep = {
       id: 'projectTemplates',
@@ -125,6 +126,7 @@
         if (ctrl.template) {
           initializeSteps();
           ctrl.iconClass = getIconClass();
+          ctrl.image = getImage();
         }
       }
       if (changes.useProjectTemplate) {
@@ -173,6 +175,7 @@
       ctrl.template = _.get(template, 'resource');
       ctrl.selectStep.valid = !!template;
       ctrl.iconClass = getIconClass();
+      ctrl.image = getImage();
     };
 
     ctrl.templateProjectChange = function () {
@@ -201,8 +204,13 @@
     };
 
     function getIconClass() {
-      var icon = _.get(ctrl, 'template.metadata.annotations.iconClass', 'fa fa-clone');
-      return (icon.indexOf('icon-') !== -1) ? 'font-icon ' + icon : icon;
+      var iconClass = _.get(ctrl, 'template.metadata.annotations.iconClass', 'fa fa-clone');
+      return (iconClass.indexOf('icon-') !== -1) ? 'font-icon ' + iconClass : iconClass;
+    }
+
+    function getImage() {
+      var iconClass = _.get(ctrl, 'template.metadata.annotations.iconClass', 'fa fa-clone');
+      return imageForIconClass(iconClass);
     }
 
     function initializeSteps() {

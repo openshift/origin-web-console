@@ -1,2 +1,2 @@
-<span ng-if="!isDataIcon" aria-hidden="true" ng-class="icon.contains('fa ') ? icon : 'font-icon ' + icon"></span>
-<img ng-if="isDataIcon" alt="" ng-src="{{icon}}">
+<img ng-if="image" alt="" ng-src="{{image}}">
+<span ng-if="!image" aria-hidden="true" ng-class="icon.contains('fa ') ? icon : 'font-icon ' + icon"></span>
