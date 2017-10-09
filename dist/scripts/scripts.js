@@ -13083,10 +13083,10 @@ b.unfilteredProjects = _.toArray(e.by("metadata.name"));
 }, function() {
 b.unfilteredProjects = [];
 }).finally(function() {
-S();
+w();
 });
 }
-var y, b = this, C = t("imageForIconClass");
+var y, b = this, C = t("imageForIconClass"), S = t("annotation");
 b.selectStep = {
 id: "projectTemplates",
 label: "Selection",
@@ -13156,7 +13156,7 @@ appliedFilters: [],
 onFilterChange: g
 }, n.project || (b.showProjectName = !0);
 }, b.$onChanges = function(e) {
-e.template && b.template && (d(), b.iconClass = l(), b.image = u()), e.useProjectTemplate && d();
+e.template && b.template && (d(), b.iconClass = l(), b.image = u(), b.docUrl = S(b.template, "template.openshift.io/documentation-url"), b.supportUrl = S(b.template, "template.openshift.io/support-url")), e.useProjectTemplate && d();
 }, e.$on("templateInstantiated", function(e, t) {
 b.selectedProject = t.project, b.currentStep = b.resultsStep.label;
 }), b.$onDestroy = function() {
@@ -13178,7 +13178,7 @@ message: t
 });
 }));
 };
-var S = function() {
+var w = function() {
 var e = _.reject(b.unfilteredProjects, "metadata.deletionTimestamp"), n = _.sortBy(e, t("displayName"));
 b.searchEnabled = !_.isEmpty(e), b.templateProjects = c.orderByMostRecentlyViewed(n);
 };

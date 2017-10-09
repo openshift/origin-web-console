@@ -36,6 +36,7 @@
     var ctrl = this;
     var validityWatcher;
     var imageForIconClass = $filter('imageForIconClass');
+    var annotation = $filter('annotation');
 
     ctrl.selectStep = {
       id: 'projectTemplates',
@@ -127,6 +128,8 @@
           initializeSteps();
           ctrl.iconClass = getIconClass();
           ctrl.image = getImage();
+          ctrl.docUrl = annotation(ctrl.template, "template.openshift.io/documentation-url");
+          ctrl.supportUrl = annotation(ctrl.template, "template.openshift.io/support-url");
         }
       }
       if (changes.useProjectTemplate) {
