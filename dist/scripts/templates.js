@@ -8858,6 +8858,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{tag}}\n" +
     "</span>\n" +
     "</div>\n" +
+    "<ul ng-if=\"$ctrl.docUrl || $ctrl.supportUrl\" class=\"list-inline order-service-documentation-url\">\n" +
+    "<li ng-if=\"$ctrl.docUrl\">\n" +
+    "<a ng-href=\"{{$ctrl.docUrl}}\" target=\"_blank\" class=\"learn-more-link\">View Documentation <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
+    "</li>\n" +
+    "<li ng-if=\"$ctrl.supportUrl\">\n" +
+    "<a ng-href=\"{{$ctrl.supportUrl}}\" target=\"_blank\" class=\"learn-more-link\">Get Support <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
+    "</li>\n" +
+    "</ul>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"order-service-description-block\">\n" +
