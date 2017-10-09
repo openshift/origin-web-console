@@ -10,6 +10,33 @@ angular.module("openshiftConsole")
                                                DataService,
                                                Logger,
                                                NotificationsService) {
+    var serviceClassesVersion = APIService.getPreferredVersion('clusterserviceclasses');
+    var servicePlansVersion = APIService.getPreferredVersion('clusterserviceplans');
+
+    var getServiceClassNameForInstance = function(serviceInstance) {
+      return _.get(serviceInstance, 'spec.serviceClassRef.name');
+    };
+
+    var fetchServiceClassForInstance = function(serviceInstance) {
+      var serviceClassName = getServiceClassNameForInstance(serviceInstance);
+      return DataService.get(serviceClassesVersion, serviceClassName, {});
+    };
+
+    var getServicePlanNameForInstance = function(serviceInstance) {
+      return _.get(serviceInstance, 'spec.servicePlanRef.name');
+    };
+
+    var fetchServicePlanForInstance = function(serviceInstance) {
+      var servicePlanName = getServicePlanNameForInstance(serviceInstance);
+      return DataService.get(servicePlansVersion, servicePlanName, {});
+    };
+
+    // Checks if this plan is currently the one the instance references.
+    var isCurrentPlan = function(serviceInstance, servicePlan) {
+      var servicePlanName = getServicePlanNameForInstance(serviceInstance);
+      return servicePlanName === _.get(servicePlan, 'metadata.name');
+    };
+
     var getBindingsIfNecessary = function(apiObject, bindings) {
       if (angular.isDefined(bindings)) {
         return $q.when(bindings);
@@ -115,6 +142,11 @@ angular.module("openshiftConsole")
     };
 
     return {
+      getServiceClassNameForInstance: getServiceClassNameForInstance,
+      fetchServiceClassForInstance: fetchServiceClassForInstance,
+      getServicePlanNameForInstance: getServicePlanNameForInstance,
+      fetchServicePlanForInstance: fetchServicePlanForInstance,
+      isCurrentPlan: isCurrentPlan,
       deprovision: deprovision
     };
   });

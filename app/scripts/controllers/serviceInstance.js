@@ -4,6 +4,7 @@ angular.module('openshiftConsole')
   .controller('ServiceInstanceController', function ($scope,
                                                      $filter,
                                                      $routeParams,
+                                                     APIService,
                                                      DataService,
                                                      ProjectsService,
                                                      ServiceInstancesService) {
@@ -11,7 +12,6 @@ angular.module('openshiftConsole')
     $scope.projectName = $routeParams.project;
     $scope.serviceInstance = null;
     $scope.serviceClass = null;
-    $scope.serviceClasses = null;
 
     $scope.breadcrumbs = [
       {
@@ -26,29 +26,42 @@ angular.module('openshiftConsole')
 
     var watches = [];
 
-    var updateBreadcrumbs = function() {
-      if(!$scope.serviceInstance || !$scope.serviceClasses) {
-        return;
-      }
+    var serviceInstanceDisplayName = $filter('serviceInstanceDisplayName');
 
+    // API Versions
+    var serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
+
+    var updateBreadcrumbs = function() {
       $scope.breadcrumbs.push({
-        title: $filter('serviceInstanceDisplayName')($scope.serviceInstance, $scope.serviceClasses)
+        title: $scope.displayName
       });
     };
 
-    var updateServiceClassMetadata = function() {
-      if(!$scope.serviceInstance || !$scope.serviceClasses) {
+    var updateServiceClass = function() {
+      if ($scope.serviceClass) {
         return;
       }
 
-      var serviceClassName = _.get($scope.serviceInstance.spec, 'serviceClassName');
-      $scope.serviceClass = _.get($scope.serviceClasses, [serviceClassName]);
-      $scope.plan = _.find(_.get($scope.serviceClass, 'plans'), {name: $scope.serviceInstance.spec.planName });
+      ServiceInstancesService.fetchServiceClassForInstance($scope.serviceInstance).then(function(serviceClass) {
+        $scope.serviceClass = serviceClass;
+        $scope.displayName = serviceInstanceDisplayName($scope.serviceInstance, serviceClass);
+        updateBreadcrumbs();
+      });
     };
 
-    var serviceResolved = function(service, action) {
+    var updatePlan = function() {
+      if (ServiceInstancesService.isCurrentPlan($scope.serviceInstance, $scope.plan)) {
+        return;
+      }
+
+      ServiceInstancesService.fetchServicePlanForInstance($scope.serviceInstance).then(function(plan) {
+        $scope.plan = plan;
+      });
+    };
+
+    var serviceResolved = function(serviceInstance, action) {
       $scope.loaded = true;
-      $scope.serviceInstance = service;
+      $scope.serviceInstance = serviceInstance;
 
       if (action === "DELETED") {
         $scope.alerts["deleted"] = {
@@ -57,7 +70,8 @@ angular.module('openshiftConsole')
         };
       }
 
-      updateServiceClassMetadata();
+      updateServiceClass();
+      updatePlan();
     };
 
     ProjectsService
@@ -67,41 +81,21 @@ angular.module('openshiftConsole')
         $scope.projectContext = context;
 
         DataService
-          .get({
-            group: 'servicecatalog.k8s.io',
-            resource: 'serviceinstances'
-          }, $routeParams.instance, context, { errorNotification: false })
-          .then(function(service) {
-
-            serviceResolved(service);
-            updateBreadcrumbs();
-
-            watches.push(DataService.watchObject({
-              group: 'servicecatalog.k8s.io',
-              resource: 'serviceinstances'
-            }, $routeParams.instance, context, serviceResolved));
-
+          .get(serviceInstancesVersion, $routeParams.instance, context, { errorNotification: false })
+          .then(function(serviceInstance) {
+            serviceResolved(serviceInstance);
+            watches.push(DataService.watchObject(serviceInstancesVersion, $routeParams.instance, context, serviceResolved));
           }, function(error) {
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: "The service details could not be loaded.",
+              message: "The provisioned service details could not be loaded.",
               details: $filter('getErrorDetails')(error)
             };
           });
 
-        DataService.list({
-          group: 'servicecatalog.k8s.io',
-          resource: 'serviceclasses'
-        }, {}, function(serviceClasses) {
-          $scope.serviceClasses = serviceClasses.by('metadata.name');
-          updateServiceClassMetadata();
-          updateBreadcrumbs();
-        });
-
         $scope.$on('$destroy', function(){
           DataService.unwatchAll(watches);
         });
-
     }));
   });

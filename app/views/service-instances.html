@@ -43,7 +43,9 @@
                 </tbody>
                 <tbody ng-if="(serviceInstances | size) > 0">
                   <tr ng-repeat="serviceInstance in serviceInstances track by (serviceInstance | uid)">
-                    <td data-title="Name"><a ng-href="{{serviceInstance | navigateResourceURL}}">{{serviceInstance | serviceInstanceDisplayName:serviceClasses}}</a></td>
+                    <td data-title="Name">
+                      <a ng-href="{{serviceInstance | navigateResourceURL}}">{{serviceInstance | serviceInstanceDisplayName : getServiceClass(serviceInstance)}}</a>
+                    </td>
                     <td data-title="Instance Name"><span>{{serviceInstance.metadata.name}}</span></td>
                     <td data-title="Status">
                       <div row class="status">

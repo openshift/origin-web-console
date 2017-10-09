@@ -28,8 +28,10 @@
                   </li>
                 </ul>
               </div>
-              {{serviceInstance | serviceInstanceDisplayName:serviceClasses}}
-              <small class="list-row-longname">{{serviceInstance.metadata.name}}</small>
+              {{displayName}}
+              <small class="list-row-longname" ng-if="displayName !== serviceInstance.metadata.name">
+                {{serviceInstance.metadata.name}}
+              </small>
               <div>
                 <small class="meta">created <span am-time-ago="serviceInstance.metadata.creationTimestamp"></span></small>
               </div>
@@ -54,7 +56,7 @@
                   <div class="resource-details">
                     <div class="row">
                       <div class="col-lg-6">
-                        <p ng-bind-html="plan.description | linkify : '_blank'"></p>
+                        <p ng-bind-html="plan.spec.description | linkify : '_blank'"></p>
                         <dl class="dl-horizontal left">
                           <dt>Status:</dt>
                           <dd>
@@ -65,10 +67,10 @@
                           <dd ng-if-end>
                             {{serviceInstance | serviceInstanceConditionMessage}}
                           </dd>
-                          <dt ng-if-start="serviceClass.description || serviceClass.externalMetadata.longDescription">Description:</dt>
+                          <dt ng-if-start="serviceClass.spec.description || serviceClass.spec.externalMetadata.longDescription">Description:</dt>
                           <dd ng-if-end>
-                            <p class="pre-wrap" ng-bind-html="serviceClass.description | linkify : '_blank'"></p>
-                            <p class="pre-wrap" ng-bind-html="serviceClass.externalMetadata.longDescription | linkify : '_blank'"></p>
+                            <p class="pre-wrap" ng-bind-html="serviceClass.spec.description | linkify : '_blank'"></p>
+                            <p class="pre-wrap" ng-bind-html="serviceClass.spec.externalMetadata.longDescription | linkify : '_blank'"></p>
                           </dd>
                         </dl>
                       </div>
