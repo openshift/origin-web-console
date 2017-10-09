@@ -2329,7 +2329,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!loaded\">Loading...</div>\n" +
     "<div class=\"row\" ng-if=\"loaded\">\n" +
     "<div class=\"col-md-12\" ng-class=\"{ 'hide-tabs' : !deploymentConfig }\">\n" +
-    "<div ng-if=\"deploymentConfig.spec.paused\" class=\"alert alert-info animate-if\">\n" +
+    "<div ng-if=\"deploymentConfig.spec.paused && !updatingPausedState\" class=\"alert alert-info animate-if\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "<strong>{{deploymentConfig.metadata.name}} is paused.</strong>\n" +
     "This will stop any new rollouts or triggers from running until resumed.\n" +
@@ -2625,7 +2625,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!loaded\">Loading...</div>\n" +
     "<div class=\"row\" ng-if=\"loaded\">\n" +
     "<div class=\"col-md-12\" ng-class=\"{ 'hide-tabs' : !deployment }\">\n" +
-    "<div ng-if=\"deployment.spec.paused\" class=\"alert alert-info animate-if\">\n" +
+    "<div ng-if=\"deployment.spec.paused && !updatingPausedState\" class=\"alert alert-info animate-if\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "<strong>{{deployment.metadata.name}} is paused.</strong>\n" +
     "This pauses any in-progress rollouts and stops new rollouts from running until the deployment is resumed.\n" +
@@ -3658,8 +3658,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</li>\n" +
     "</ul>\n" +
     "</div>\n" +
-    "{{serviceInstance | serviceInstanceDisplayName:serviceClasses}}\n" +
-    "<small class=\"list-row-longname\">{{serviceInstance.metadata.name}}</small>\n" +
+    "{{displayName}}\n" +
+    "<small class=\"list-row-longname\" ng-if=\"displayName !== serviceInstance.metadata.name\">\n" +
+    "{{serviceInstance.metadata.name}}\n" +
+    "</small>\n" +
     "<div>\n" +
     "<small class=\"meta\">created <span am-time-ago=\"serviceInstance.metadata.creationTimestamp\"></span></small>\n" +
     "</div>\n" +
@@ -3684,7 +3686,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"resource-details\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-lg-6\">\n" +
-    "<p ng-bind-html=\"plan.description | linkify : '_blank'\"></p>\n" +
+    "<p ng-bind-html=\"plan.spec.description | linkify : '_blank'\"></p>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<dt>Status:</dt>\n" +
     "<dd>\n" +
@@ -3695,10 +3697,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd ng-if-end>\n" +
     "{{serviceInstance | serviceInstanceConditionMessage}}\n" +
     "</dd>\n" +
-    "<dt ng-if-start=\"serviceClass.description || serviceClass.externalMetadata.longDescription\">Description:</dt>\n" +
+    "<dt ng-if-start=\"serviceClass.spec.description || serviceClass.spec.externalMetadata.longDescription\">Description:</dt>\n" +
     "<dd ng-if-end>\n" +
-    "<p class=\"pre-wrap\" ng-bind-html=\"serviceClass.description | linkify : '_blank'\"></p>\n" +
-    "<p class=\"pre-wrap\" ng-bind-html=\"serviceClass.externalMetadata.longDescription | linkify : '_blank'\"></p>\n" +
+    "<p class=\"pre-wrap\" ng-bind-html=\"serviceClass.spec.description | linkify : '_blank'\"></p>\n" +
+    "<p class=\"pre-wrap\" ng-bind-html=\"serviceClass.spec.externalMetadata.longDescription | linkify : '_blank'\"></p>\n" +
     "</dd>\n" +
     "</dl>\n" +
     "</div>\n" +
@@ -5563,7 +5565,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{$ctrl.binding.metadata.name}}\n" +
     "<span ng-if=\"$ctrl.refApiObject.kind !== 'ServiceInstance'\">\n" +
     "<small ng-if=\"$ctrl.serviceClass\">\n" +
-    "{{$ctrl.serviceClass.externalMetadata.displayName || $ctrl.serviceClass.metadata.name}}\n" +
+    "{{$ctrl.serviceClass.spec.externalMetadata.displayName || $ctrl.serviceClass.metadata.name}}\n" +
     "</small>\n" +
     "<small>{{$ctrl.binding.spec.instanceRef.name}}</small>\n" +
     "</span>\n" +
@@ -5814,7 +5816,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</bind-application-form>\n" +
     "</div>\n" +
     "<div ng-if=\"ctrl.target.kind === 'ServiceInstance'\">\n" +
-    "<bind-service-form selected-project=\"ctrl.project\" service-class=\"ctrl.serviceClass\" service-class-name=\"ctrl.serviceClassName\" form-name=\"ctrl.selectionForm\" show-pod-presets=\"ctrl.podPresets\" applications=\"ctrl.applications\" project-name=\"ctrl.projectDisplayName\" bind-type=\"ctrl.bindType\" app-to-bind=\"ctrl.appToBind\">\n" +
+    "<bind-service-form selected-project=\"ctrl.project\" service-class=\"ctrl.serviceClass\" form-name=\"ctrl.selectionForm\" show-pod-presets=\"ctrl.podPresets\" applications=\"ctrl.applications\" project-name=\"ctrl.projectDisplayName\" bind-type=\"ctrl.bindType\" app-to-bind=\"ctrl.appToBind\">\n" +
     "</bind-service-form>\n" +
     "</div>"
   );
@@ -8974,7 +8976,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<service-binding ng-repeat=\"binding in $ctrl.bindings track by (binding | uid)\" namespace=\"$ctrl.projectContext.projectName\" binding=\"binding\" ref-api-object=\"$ctrl.apiObject\" service-classes=\"$ctrl.serviceClasses\" service-instances=\"$ctrl.serviceInstances\">\n" +
     "</service-binding>\n" +
     "<div ng-if=\"(($ctrl.apiObject.kind === 'ServiceInstance') || ($ctrl.bindableServiceInstances | size)) &&\n" +
-    "              ({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create') &&\n" +
+    "              ($ctrl.serviceBindingsVersion | canI : 'create') &&\n" +
     "              !$ctrl.apiObject.metadata.deletionTimestamp\">\n" +
     "<a href=\"\" ng-click=\"$ctrl.createBinding()\" role=\"button\">\n" +
     "<span class=\"pficon pficon-add-circle-o\" aria-hidden=\"true\"></span>\n" +
@@ -8987,7 +8989,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"./\">Browse Catalog</a>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"($ctrl.apiObject.kind !== 'ServiceInstance') && !($ctrl.bindings | size) && ($ctrl.bindableServiceInstances | size) && !({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create')\">\n" +
+    "<div ng-if=\"($ctrl.apiObject.kind !== 'ServiceInstance') && !($ctrl.bindings | size) && ($ctrl.bindableServiceInstances | size) && !($ctrl.serviceBindingsVersion | canI : 'create')\">\n" +
     "<span>There are no service bindings.</span>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -12428,11 +12430,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div>\n" +
     "<div class=\"row\">\n" +
-    "<div class=\"col-sm-12\" ng-if=\"row.serviceClass.description\">\n" +
-    "<p class=\"pre-wrap\" ng-bind-html=\"row.serviceClass.description | linky\"></p>\n" +
-    "<div ng-if=\"row.serviceClass.externalMetadata.documentationUrl || row.serviceClass.externalMetadata.supportUrl\">\n" +
-    "<a ng-if=\"row.serviceClass.externalMetadata.documentationUrl\" ng-href=\"{{row.serviceClass.externalMetadata.documentationUrl}}\" target=\"_blank\" class=\"learn-more-link\">View Documentation <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
-    "<a ng-if=\"row.serviceClass.externalMetadata.supportUrl\" ng-href=\"{{row.serviceClass.externalMetadata.supportUrl}}\" target=\"_blank\" class=\"learn-more-link\">Get Support <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
+    "<div class=\"col-sm-12\" ng-if=\"row.serviceClass.spec.description\">\n" +
+    "<p class=\"pre-wrap\" ng-bind-html=\"row.serviceClass.spec.description | linky\"></p>\n" +
+    "<div ng-if=\"row.serviceClass.spec.externalMetadata.documentationUrl || row.serviceClass.spec.externalMetadata.supportUrl\">\n" +
+    "<a ng-if=\"row.serviceClass.spec.externalMetadata.documentationUrl\" ng-href=\"{{row.serviceClass.spec.externalMetadata.documentationUrl}}\" target=\"_blank\" class=\"learn-more-link\">View Documentation <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
+    "<a ng-if=\"row.serviceClass.spec.externalMetadata.supportUrl\" ng-href=\"{{row.serviceClass.spec.externalMetadata.supportUrl}}\" target=\"_blank\" class=\"learn-more-link\">Get Support <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -13142,7 +13144,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tbody>\n" +
     "<tbody ng-if=\"(serviceInstances | size) > 0\">\n" +
     "<tr ng-repeat=\"serviceInstance in serviceInstances track by (serviceInstance | uid)\">\n" +
-    "<td data-title=\"Name\"><a ng-href=\"{{serviceInstance | navigateResourceURL}}\">{{serviceInstance | serviceInstanceDisplayName:serviceClasses}}</a></td>\n" +
+    "<td data-title=\"Name\">\n" +
+    "<a ng-href=\"{{serviceInstance | navigateResourceURL}}\">{{serviceInstance | serviceInstanceDisplayName : getServiceClass(serviceInstance)}}</a>\n" +
+    "</td>\n" +
     "<td data-title=\"Instance Name\"><span>{{serviceInstance.metadata.name}}</span></td>\n" +
     "<td data-title=\"Status\">\n" +
     "<div row class=\"status\">\n" +

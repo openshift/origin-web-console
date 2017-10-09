@@ -24,7 +24,7 @@
       if (_.get(ctrl.refApiObject, 'kind') !== 'ServiceInstance') {
         var instanceName = _.get(ctrl.binding, 'spec.instanceRef.name');
         var instance = _.get(ctrl.serviceInstances, [instanceName]);
-        var serviceClassName = _.get(instance, 'spec.serviceClassName');
+        var serviceClassName = _.get(instance, 'spec.serviceClassRef.name');
         ctrl.serviceClass = _.get(ctrl.serviceClasses, [serviceClassName]);
       }
     };

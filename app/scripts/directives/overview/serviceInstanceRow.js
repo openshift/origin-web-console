@@ -32,6 +32,16 @@
 
     var serviceInstanceDisplayName = $filter('serviceInstanceDisplayName');
 
+    var getServiceClass = function() {
+      var serviceClassName = ServiceInstancesService.getServiceClassNameForInstance(row.apiObject);
+      return _.get(row, ['state','serviceClasses', serviceClassName]);
+    };
+
+    var getServicePlan = function() {
+      var servicePlanName = ServiceInstancesService.getServicePlanNameForInstance(row.apiObject);
+      return _.get(row, ['state', 'servicePlans', servicePlanName]);
+    };
+
     var updateInstanceStatus = function() {
       if (_.get(row.apiObject, 'metadata.deletionTimestamp')) {
         row.instanceStatus = 'deleted';
@@ -48,9 +58,10 @@
       updateInstanceStatus();
 
       row.notifications = ListRowUtils.getNotifications(row.apiObject, row.state);
-      row.displayName = serviceInstanceDisplayName(row.apiObject, row.state.serviceClasses);
-      row.isBindable = BindingService.isServiceBindable(row.apiObject, row.state.serviceClasses);
-      row.serviceClass = _.get(row, ['state', 'serviceClasses', row.apiObject.spec.serviceClassName]);
+      row.serviceClass = getServiceClass();
+      row.servicePlan = getServicePlan();
+      row.displayName = serviceInstanceDisplayName(row.apiObject, row.serviceClass);
+      row.isBindable = BindingService.isServiceBindable(row.apiObject, row.serviceClass, row.servicePlan);
     };
 
     row.$onChanges = function(changes) {

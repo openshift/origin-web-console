@@ -99,6 +99,7 @@
         _.each(drawer.notificationGroups, function(group) {
           _.remove(group.notifications, { uid: notification.uid, namespace: notification.namespace });
         });
+        delete notificationsMap[$routeParams.project][notification.uid];
       };
 
       var formatAPIEvents = function(apiEvents) {
@@ -172,11 +173,13 @@
       };
 
       var notificationWatchCallback = function(event, notification) {
-        if(!notification.showInDrawer) {
+        var project = notification.namespace || $routeParams.project;
+        var id = notification.id ? project + "/" + notification.id : _.uniqueId('notification_') + Date.now();
+
+        if(!notification.showInDrawer || EventsService.isCleared(id)) {
           return;
         }
-        var project = notification.namespace || $routeParams.project;
-        var id = notification.id || _.uniqueId('notification_') + Date.now();
+
         notificationsMap[project] = notificationsMap[project] || {};
         notificationsMap[project][id] = {
           actions: notification.actions,

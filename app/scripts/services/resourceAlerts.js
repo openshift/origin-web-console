@@ -101,6 +101,7 @@ angular.module("openshiftConsole")
                     details: $filter('getErrorDetails')(e)
                   };
                 });
+              return true;
             }
           }]
         };

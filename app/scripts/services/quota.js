@@ -317,7 +317,7 @@ angular.module("openshiftConsole")
 
           if(hardValue <= usedValue) {
             notifications.push({
-              id: "quota-limit-reached-" + quotaKey,
+              id: projectName + "/quota-limit-reached-" + quotaKey,
               namespace: projectName,
               type: (hardValue < usedValue ? 'warning' : 'info'),
               message: getNotificaitonMessage(used, usedValue, hard, hardValue, quotaKey),

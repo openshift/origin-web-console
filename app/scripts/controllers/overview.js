@@ -7,6 +7,7 @@ angular.module('openshiftConsole').controller('OverviewController', [
   'AlertMessageService',
   'APIService',
   'AppsService',
+  'BindingService',
   'BuildsService',
   'CatalogService',
   'Constants',
@@ -23,9 +24,9 @@ angular.module('openshiftConsole').controller('OverviewController', [
   'OwnerReferencesService',
   'PodsService',
   'ProjectsService',
-  'BindingService',
   'ResourceAlertsService',
   'RoutesService',
+  'ServiceInstancesService',
   OverviewController
 ]);
 
@@ -35,6 +36,7 @@ function OverviewController($scope,
                             AlertMessageService,
                             APIService,
                             AppsService,
+                            BindingService,
                             BuildsService,
                             CatalogService,
                             Constants,
@@ -51,9 +53,9 @@ function OverviewController($scope,
                             OwnerReferencesService,
                             PodsService,
                             ProjectsService,
-                            BindingService,
                             ResourceAlertsService,
-                            RoutesService) {
+                            RoutesService,
+                            ServiceInstancesService) {
   var overview = this;
   var limitWatches = $filter('isIE')() || $filter('isEdge')();
   var DEFAULT_POLL_INTERVAL = 60 * 1000; // milliseconds
@@ -63,6 +65,7 @@ function OverviewController($scope,
 
   // Filters used by this controller.
   var annotation = $filter('annotation');
+  var canI = $filter('canI');
   var getBuildConfigName = $filter('buildConfigForBuild');
   var deploymentIsInProgress = $filter('deploymentIsInProgress');
   var imageObjectRef = $filter('imageObjectRef');
@@ -70,6 +73,12 @@ function OverviewController($scope,
   var isNewerResource = $filter('isNewerResource');
   var label = $filter('label');
   var getPodTemplate = $filter('podTemplate');
+
+  // API versions
+  var serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
+  var serviceClassesVersion = APIService.getPreferredVersion('clusterserviceclasses');
+  var serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
+  var servicePlansVersion = APIService.getPreferredVersion('clusterserviceplans');
 
   var deploymentsByUID;
   var imageStreams;
@@ -102,6 +111,8 @@ function OverviewController($scope,
     routesByService: {},
     servicesByObjectUID: {},
     serviceInstances: {},
+    serviceClasses: {},
+    servicePlans: {},
     bindingsByInstanceRef: {},
     bindingsByApplicationUID: {},
     applicationsByBinding: {},
@@ -314,7 +325,7 @@ function OverviewController($scope,
   };
 
   // Updated on viewBy changes to include the app label when appropriate.
-  var filterFields = ['metadata.name', 'spec.serviceClassName'];
+  var filterFields = ['metadata.name', 'spec.externalServiceClassName'];
   var filterByName = function(items) {
     return KeywordService.filterForKeywords(items, filterFields, state.filterKeywords);
   };
@@ -1150,8 +1161,12 @@ function OverviewController($scope,
   };
 
   var sortServiceInstances = function() {
-    state.bindableServiceInstances = BindingService.filterBindableServiceInstances(state.serviceInstances, state.serviceClasses);
-    state.orderedServiceInstances = BindingService.sortServiceInstances(state.serviceInstances, state.serviceClasses);
+    state.bindableServiceInstances =
+      BindingService.filterBindableServiceInstances(state.serviceInstances,
+                                                    state.serviceClasses,
+                                                    state.servicePlans);
+    state.orderedServiceInstances =
+      BindingService.sortServiceInstances(state.serviceInstances, state.serviceClasses);
   };
 
   var watches = [];
@@ -1312,17 +1327,51 @@ function OverviewController($scope,
       setQuotaNotifications();
     }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
 
-    var canI = $filter('canI');
+    var fetchServiceClass, fetchServicePlan;
+
+    // Avoid requesting the same service class or service plan twice.
+    var serviceClassPromises = {};
+    var servicePlanPromises = {};
+
     // The canI check on watch should be temporary until we have a different solution for handling secret parameters
-    if (CatalogService.SERVICE_CATALOG_ENABLED && canI({resource: 'serviceinstances', group: 'servicecatalog.k8s.io'}, 'watch')) {
-      watches.push(DataService.watch({
-        group: 'servicecatalog.k8s.io',
-        resource: 'serviceinstances'
-      }, context, function(serviceInstances) {
+    if (CatalogService.SERVICE_CATALOG_ENABLED && canI(serviceInstancesVersion, 'watch')) {
+
+      // Get the service class for this instance.
+      fetchServiceClass = function(instance) {
+        var serviceClassName = ServiceInstancesService.getServiceClassNameForInstance(instance);
+
+        // Check if we already have the service class or if a request is already in flight.
+        if (!_.has(state, ['serviceClasses', serviceClassName]) && !serviceClassPromises[serviceClassName]) {
+          serviceClassPromises[serviceClassName] = DataService.get(serviceClassesVersion, serviceClassName, {}).then(function(serviceClass) {
+            state.serviceClasses[serviceClassName] = serviceClass;
+          }).finally(function() {
+            delete servicePlanPromises[serviceClassName];
+          });
+        }
+      };
+
+      // Get the service plan for this instance.
+      fetchServicePlan = function(instance) {
+        var servicePlanName = ServiceInstancesService.getServicePlanNameForInstance(instance);
+
+        // Check if we already have the service plan or if a request is already in flight.
+        if (!_.has(state, ['servicePlans', servicePlanName]) && !servicePlanPromises[servicePlanName]) {
+          servicePlanPromises[servicePlanName] = DataService.get(servicePlansVersion, servicePlanName, {}).then(function(servicePlan) {
+            state.servicePlans[servicePlanName] = servicePlan;
+          }).finally(function() {
+            delete servicePlanPromises[servicePlanName];
+          });
+        }
+      };
+
+      watches.push(DataService.watch(serviceInstancesVersion, context, function(serviceInstances) {
         state.serviceInstances = serviceInstances.by('metadata.name');
         _.each(state.serviceInstances, function(instance) {
           var notifications = ResourceAlertsService.getServiceInstanceAlerts(instance);
           setNotifications(instance, notifications);
+
+          fetchServiceClass(instance);
+          fetchServicePlan(instance);
         });
         sortServiceInstances();
         updateLabelSuggestions(state.serviceInstances);
@@ -1330,11 +1379,8 @@ function OverviewController($scope,
       }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
     }
 
-    if (CatalogService.SERVICE_CATALOG_ENABLED && canI({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'}, 'watch')) {
-      watches.push(DataService.watch({
-        group: 'servicecatalog.k8s.io',
-        resource: 'serviceinstancecredentials'
-      }, context, function(bindings) {
+    if (CatalogService.SERVICE_CATALOG_ENABLED && canI(serviceBindingsVersion, 'watch')) {
+      watches.push(DataService.watch(serviceBindingsVersion, context, function(bindings) {
         state.bindings = bindings.by('metadata.name');
         overview.bindingsByInstanceRef = _.groupBy(state.bindings, 'spec.instanceRef.name');
         groupBindings();
@@ -1346,20 +1392,6 @@ function OverviewController($scope,
     DataService.list("limitranges", context, function(response) {
       state.limitRanges = response.by("metadata.name");
     });
-
-    if (CatalogService.SERVICE_CATALOG_ENABLED && canI({resource: 'serviceinstances', group: 'servicecatalog.k8s.io'}, 'watch')) {
-      // TODO: update to behave like ImageStreamResolver
-      // - we may not even need to list these... perhaps just fetch the ones we need when needed
-      // If we can't watch instances don't bother getting service classes either
-      DataService.list({
-        group: 'servicecatalog.k8s.io',
-        resource: 'serviceclasses'
-      }, {}, function(serviceClasses) {
-        state.serviceClasses = serviceClasses.by('metadata.name');
-        sortServiceInstances();
-        updateFilter();
-      });
-    }
 
     var samplePipelineTemplate = Constants.SAMPLE_PIPELINE_TEMPLATE;
     if (samplePipelineTemplate) {

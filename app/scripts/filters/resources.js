@@ -1316,17 +1316,28 @@ angular.module('openshiftConsole')
       return !_.isEmpty(alternateBackends);
     };
   })
-  // .filter('serviceClassDisplayName', function() {
-  //   return function(serviceClass) {
-  //    TODO: this filter may also be useful.
-  //   };
-  // })
-  .filter('serviceInstanceDisplayName', function() {
-    return function(instance, serviceClasses) {
-      var serviceClassName = instance.spec.serviceClassName;
-      var instanceName = instance.metadata.name;
-      var serviceClassDisplayName = _.get(serviceClasses, [serviceClassName, 'externalMetadata', 'displayName']);
-      return serviceClassDisplayName || serviceClassName || instanceName;
+  .filter('serviceClassDisplayName', function() {
+    return function(serviceClass) {
+      var serviceClassDisplayName = _.get(serviceClass, 'spec.externalMetadata.displayName');
+      if (serviceClassDisplayName) {
+        return serviceClassDisplayName;
+      }
+
+      var serviceClassExternalName = _.get(serviceClass, 'spec.externalName');
+      if (serviceClassExternalName) {
+        return serviceClassExternalName;
+      }
+
+      return _.get(serviceClass, 'metadata.name');
+    };
+  })
+  .filter('serviceInstanceDisplayName', function(serviceClassDisplayNameFilter) {
+    return function(instance, serviceClass) {
+      if (serviceClass) {
+        return serviceClassDisplayNameFilter(serviceClass);
+      }
+
+      return _.get(instance, 'metadata.name');
     };
   })
   .filter('serviceInstanceStatus', function(isServiceInstanceReadyFilter) {
