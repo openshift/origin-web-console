@@ -3,10 +3,14 @@
 const timing = require('./timing');
 const setInputValue = require('./inputs').setInputValue;
 
-exports.submitNewProjectForm = function(project) {
+const inputNewProject = (project) => {
   for (let key in project) {
     setInputValue(by.model(key), project[key]);
   }
+};
+
+const submitNewProjectForm = (project) => {
+  inputNewProject(project);
 
   return element(by.buttonText('Create')).click().then(() => {
     // There is an implicit redirect in these forms, but it
@@ -15,3 +19,7 @@ exports.submitNewProjectForm = function(project) {
     return browser.sleep(timing.implicitRedirect);
   });
 };
+
+
+exports.inputNewProject = inputNewProject;
+exports.submitNewProjectForm = submitNewProjectForm;

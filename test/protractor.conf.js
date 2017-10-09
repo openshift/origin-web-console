@@ -28,7 +28,8 @@ exports.config = {
   // set of suites:
   //   grunt test-integration --suite=create-projct,add-template-to-project
   suites: {
-    'create-project': 'integration/features/user_creates_project.spec.js',
+    'create-project': 'integration/features/user_creates_project.spec.js', 
+    'add-to-project': 'integration/features/user_adds_to_project_from_catalog.spec.js',
     'add-template-to-project': 'integration/features/user_adds_template_to_project.spec.js',
     'add-imagestream-to-project': 'integration/features/user_adds_imagestream_to_project.spec.js',
     'create-from-url': 'integration/features/user_creates_from_url.spec.js',

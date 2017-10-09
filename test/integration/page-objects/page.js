@@ -13,6 +13,15 @@ class Page {
     // it some time to render
     browser.sleep(timing.standardDelay);
   }
+
+  // In case the project needs to be changed after the fact.
+  // page-objects are loosely tied to the underlying pages, so
+  // it is fine to reuse them.  Typically it is recommended to
+  // create new objects, however, to keep the test flow clear.
+  setProject(project) {
+    this.project = project;
+  }
+
   getUrl() {
 
   }
