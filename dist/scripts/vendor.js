@@ -75281,7 +75281,7 @@ return !0;
 },
 linkify: function(e, t, n) {
 return e ? (n || (e = _.escape(e)), e.replace(/https?:\/\/[A-Za-z0-9._%+-]+\S*[^\s.;,(){}<>"\u201d\u2019]/gm, function(e) {
-return t ? '<a href="' + e + '" target="' + t + '">' + e + "</a>" : '<a href="' + e + '">' + e + "</a>";
+return t ? '<a href="' + e + '" target="' + t + '">' + e + ' <i class="fa fa-external-link" aria-hidden="true"></i></a>' : '<a href="' + e + '">' + e + "</a>";
 })) : e;
 }
 };
