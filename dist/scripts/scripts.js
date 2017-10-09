@@ -9207,8 +9207,14 @@ a.onAddRow = function() {
 s(a.envFromEntries), n.setFocusOn("." + a.setFocusClass);
 }, a.deleteEntry = function(e, t) {
 a.envFromEntries && !a.envFromEntries.length || (a.envFromEntries.splice(e, t), !a.envFromEntries.length && a.addRowLink && s(a.envFromEntries), a.updateEntries(a.envFromEntries), a.editEnvironmentFromForm.$setDirty());
+}, a.hasOptions = function() {
+return !_.isEmpty(a.envFromSelectorOptions);
+}, a.hasEntries = function() {
+return _.some(a.entries, function(e) {
+return _.get(e, "configMapRef.name") || _.get(e, "secretRef.name");
+});
 }, a.isEnvFromReadonly = function(e) {
-return a.isReadonlyAny || !0 === e.isReadonlyValue || (e.secretRef || e.configMapRef) && !e.selectedEnvFrom || _.isEmpty(a.envFromSelectorOptions);
+return !0 === a.isReadonly || e && !0 === e.isReadonly;
 }, a.groupByKind = function(e) {
 return o(e.kind);
 }, a.dragControlListeners = {
@@ -9238,50 +9244,37 @@ a.entries = _.filter(e, function(e) {
 return e.secretRef || e.configMapRef;
 });
 };
-var c = function(e) {
-a.envFromEntries = e || [], a.envFromEntries.length || s(a.envFromEntries), _.each(a.envFromEntries, function(e) {
-e && (e.configMapRef && !r("configmaps", "get") && (e.isReadonlyValue = !0), e.secretRef && !r("secrets", "get") && (e.isReadonlyValue = !0));
-});
-}, l = function(e) {
-var t;
-switch (e.kind) {
+var c = function() {
+var e = {}, t = {};
+a.envFromEntries = a.entries || [], a.envFromEntries.length || s(a.envFromEntries), _.each(a.envFromSelectorOptions, function(n) {
+switch (n.kind) {
 case "ConfigMap":
-t = _.find(a.envFromEntries, {
-configMapRef: {
-name: e.metadata.name
-}
-});
+e[n.metadata.name] = n;
 break;
 
 case "Secret":
-t = _.find(a.envFromEntries, {
-secretRef: {
-name: e.metadata.name
+t[n.metadata.name] = n;
 }
-});
+}), _.each(a.envFromEntries, function(n) {
+var a, o;
+if (n.configMapRef && (a = "configMapRef", o = "configmaps"), n.secretRef && (a = "secretRef", o = "secrets"), a && o) {
+var i = n[a].name;
+n.configMapRef && i in e && (n.selectedEnvFrom = e[i]), n.secretRef && i in t && (n.selectedEnvFrom = t[i]), r(o, "get") || (n.isReadonly = !0);
 }
-return t;
-};
-a.checkEntries = function(e, t) {
-return e !== t && !!l(e);
-};
-var u = function(e, t) {
-a.cannotAdd = a.isReadonlyAny || _.isEmpty(t), t && _.each(t, function(e) {
-var t = l(e);
-t && _.set(t, "selectedEnvFrom", e);
 });
 };
 a.$onInit = function() {
-c(a.entries), u(a.entries, a.envFromSelectorOptions), "cannotDelete" in e && (a.cannotDeleteAny = !0), "cannotSort" in e && (a.cannotSort = !0), "isReadonly" in e && (a.isReadonlyAny = !0), "showHeader" in e && (a.showHeader = !0), a.envFromEntries && !a.envFromEntries.length && s(a.envFromEntries);
+c(), "cannotDelete" in e && (a.cannotDeleteAny = !0), "cannotSort" in e && (a.cannotSort = !0), "showHeader" in e && (a.showHeader = !0), a.envFromEntries && !a.envFromEntries.length && s(a.envFromEntries);
 }, a.$onChanges = function(e) {
-e.entries && c(e.entries.currentValue), e.envFromSelectorOptions && u(a.envFromEntries, e.envFromSelectorOptions.currentValue);
+(e.entries || e.envFromSelectorOptions) && c();
 };
 } ],
 bindings: {
 addRowLink: "@",
 entries: "=",
 envFromSelectorOptions: "<",
-selectorPlaceholder: "@"
+selectorPlaceholder: "@",
+isReadonly: "<?"
 },
 templateUrl: "views/directives/edit-environment-from.html"
 });
