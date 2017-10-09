@@ -5349,8 +5349,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/_custom-icon.html',
-    "<span ng-if=\"!isDataIcon\" aria-hidden=\"true\" ng-class=\"icon.contains('fa ') ? icon : 'font-icon ' + icon\"></span>\n" +
-    "<img ng-if=\"isDataIcon\" alt=\"\" ng-src=\"{{icon}}\">"
+    "<img ng-if=\"image\" alt=\"\" ng-src=\"{{image}}\">\n" +
+    "<span ng-if=\"!image\" aria-hidden=\"true\" ng-class=\"icon.contains('fa ') ? icon : 'font-icon ' + icon\"></span>"
   );
 
 
@@ -8846,7 +8846,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"order-service-details\">\n" +
     "<div class=\"order-service-details-top\">\n" +
     "<div class=\"service-icon\">\n" +
-    "<span class=\"icon {{$ctrl.iconClass}}\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-if=\"$ctrl.image\" class=\"image\"><img ng-src=\"{{$ctrl.image}}\" alt=\"\"></span>\n" +
+    "<span ng-if=\"!$ctrl.image\" class=\"icon {{$ctrl.iconClass}}\" aria-hidden=\"true\"></span>\n" +
     "</div>\n" +
     "<div class=\"service-title-area\">\n" +
     "<div class=\"service-title\">\n" +

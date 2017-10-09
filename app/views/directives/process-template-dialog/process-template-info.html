@@ -1,7 +1,8 @@
 <div class="order-service-details">
   <div class="order-service-details-top">
     <div class="service-icon">
-      <span class="icon {{$ctrl.iconClass}}" aria-hidden="true"></span>
+      <span ng-if="$ctrl.image" class="image"><img ng-src="{{$ctrl.image}}" alt=""></span>
+      <span ng-if="!$ctrl.image" class="icon {{$ctrl.iconClass}}" aria-hidden="true"></span>
     </div>
     <div class="service-title-area">
       <div class="service-title">

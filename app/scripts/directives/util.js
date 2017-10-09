@@ -158,7 +158,7 @@ angular.module('openshiftConsole')
       template: '<code class="short-id" title="{{id}}">{{id.substring(0, 6)}}</code>'
     };
   })
-  .directive('customIcon', function() {
+  .directive('customIcon', function($filter) {
     return {
       restrict:'E',
       scope: {
@@ -166,21 +166,24 @@ angular.module('openshiftConsole')
         kind: '@',
         tag: '=?'
       },
-      controller: function($scope, $filter) {
+      controller: function($scope) {
         $scope.$watchGroup(['resource', 'tag'], function() {
           if ($scope.tag) {
             $scope.icon = $filter('imageStreamTagAnnotation')($scope.resource, "icon", $scope.tag);
           } else {
             $scope.icon = $filter('annotation')($scope.resource, "icon");
           }
-          $scope.isDataIcon = $scope.icon && ($scope.icon.indexOf("data:") === 0);
-          if (!$scope.isDataIcon) {
+          var isDataIcon = $scope.icon && ($scope.icon.indexOf("data:") === 0);
+          if (isDataIcon) {
+            $scope.image = $scope.icon;
+          } else {
             // The icon class filter will at worst return the default icon for the given kind
             if ($scope.tag) {
               $scope.icon = $filter('imageStreamTagIconClass')($scope.resource, $scope.tag);
             } else {
               $scope.icon = $filter('iconClass')($scope.resource, $scope.kind);
             }
+            $scope.image = $filter('imageForIconClass')($scope.icon);
           }
         });
       },
