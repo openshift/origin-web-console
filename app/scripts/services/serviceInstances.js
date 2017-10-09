@@ -14,7 +14,7 @@ angular.module("openshiftConsole")
     var servicePlansVersion = APIService.getPreferredVersion('clusterserviceplans');
 
     var getServiceClassNameForInstance = function(serviceInstance) {
-      return _.get(serviceInstance, 'spec.serviceClassRef.name');
+      return _.get(serviceInstance, 'spec.clusterServiceClassRef.name');
     };
 
     var fetchServiceClassForInstance = function(serviceInstance) {
@@ -23,7 +23,7 @@ angular.module("openshiftConsole")
     };
 
     var getServicePlanNameForInstance = function(serviceInstance) {
-      return _.get(serviceInstance, 'spec.servicePlanRef.name');
+      return _.get(serviceInstance, 'spec.clusterServicePlanRef.name');
     };
 
     var fetchServicePlanForInstance = function(serviceInstance) {

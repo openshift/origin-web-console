@@ -34,7 +34,7 @@ angular
         _.assign({}, APIService.getPreferredVersion('imagestreams'), {verbs: ['update', 'delete']})
       ],
       'serviceInstances': [
-        {group: 'servicecatalog.k8s.io', resource: 'serviceinstances', verbs: ['update', 'delete']}
+        _.assign({}, APIService.getPreferredVersion('serviceinstances'), {verbs: ['update', 'delete']})
       ],
       'persistentVolumeClaims': [
         {group: '', resource: 'persistentvolumeclaims', verbs: ['update', 'delete']}
