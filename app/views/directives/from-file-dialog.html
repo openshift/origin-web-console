@@ -38,19 +38,31 @@
        next-enabled="!$ctrl.templateForm.$invalid">
     <div class="wizard-pf-main-inner-shadow-covers" ng-if="$ctrl.template">
       <div class="order-service-details">
-        <div class="order-service-details-top">
+        <div class="order-service-details-top" ng-class="{'order-service-details-top-icon-top': ($ctrl.vendor || ($ctrl.docUrl || $ctrl.supportUrl))}">
           <div class="service-icon">
-            <span class="icon {{$ctrl.iconClass}}"></span>
+            <span ng-if="$ctrl.image" class="image"><img ng-src="{{$ctrl.image}}" alt=""></span>
+            <span ng-if="!$ctrl.image" class="icon {{$ctrl.iconClass}}" aria-hidden="true"></span>
           </div>
           <div class="service-title-area">
             <div class="service-title">
               {{$ctrl.template | displayName}}
+            </div>
+            <div ng-if="$ctrl.vendor" class="service-vendor">
+              {{$ctrl.vendor}}
             </div>
             <div class="order-service-tags">
               <span ng-repeat="tag in $ctrl.template.metadata.annotations.tags.split(',')" class="tag">
                 {{tag}}
               </span>
             </div>
+            <ul ng-if="$ctrl.docUrl || $ctrl.supportUrl" class="list-inline order-service-documentation-url">
+              <li ng-if="$ctrl.docUrl" >
+                <a ng-href="{{$ctrl.docUrl}}" target="_blank" class="learn-more-link">View Documentation <i class="fa fa-external-link" aria-hidden="true"></i></a>
+              </li>
+              <li ng-if="$ctrl.supportUrl" >
+                <a ng-href="{{$ctrl.supportUrl}}" target="_blank" class="learn-more-link">Get Support <i class="fa fa-external-link" aria-hidden="true"></i></a>
+              </li>
+            </ul>
           </div>
         </div>
         <div class="order-service-description-block">
