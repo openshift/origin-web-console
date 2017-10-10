@@ -7018,7 +7018,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"order-service-details\">\n" +
     "<div class=\"order-service-details-top\">\n" +
     "<div class=\"service-icon\">\n" +
-    "<span class=\"icon {{$ctrl.iconClass}}\"></span>\n" +
+    "<span ng-if=\"$ctrl.image\" class=\"image\"><img ng-src=\"{{$ctrl.image}}\" alt=\"\"></span>\n" +
+    "<span ng-if=\"!$ctrl.image\" class=\"icon {{$ctrl.iconClass}}\" aria-hidden=\"true\"></span>\n" +
     "</div>\n" +
     "<div class=\"service-title-area\">\n" +
     "<div class=\"service-title\">\n" +
