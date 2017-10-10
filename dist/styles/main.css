@@ -3968,7 +3968,7 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.left,div.hopscotch-bubble
 .results-message .h3 strong,.results-message h3 strong{font-weight:600;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .results-status-unknown .results-message{padding-left:0}
 .results-message-details{font-style:italic;margin-bottom:0}
-.results-status{align-items:center;display:flex;margin-bottom:15px}
+.results-status{display:flex;margin-bottom:15px}
 .results-status .fa,.results-status .pficon{font-size:24px}
 @media (min-width:768px){.results-status .fa,.results-status .pficon{font-size:32px}
 }

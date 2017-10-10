@@ -13,6 +13,14 @@
           {{tag}}
         </span>
       </div>
+      <ul ng-if="$ctrl.docUrl || $ctrl.supportUrl" class="list-inline order-service-documentation-url">
+        <li ng-if="$ctrl.docUrl" >
+          <a ng-href="{{$ctrl.docUrl}}" target="_blank" class="learn-more-link">View Documentation <i class="fa fa-external-link" aria-hidden="true"></i></a>
+        </li>
+        <li ng-if="$ctrl.supportUrl" >
+          <a ng-href="{{$ctrl.supportUrl}}" target="_blank" class="learn-more-link">Get Support <i class="fa fa-external-link" aria-hidden="true"></i></a>
+        </li>
+      </ul>
     </div>
   </div>
   <div class="order-service-description-block">
