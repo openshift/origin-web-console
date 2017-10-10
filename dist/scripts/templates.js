@@ -7719,10 +7719,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/notifications/notification-body.html',
     "<div class=\"drawer-pf-notification-inner\" tabindex=\"0\" ng-click=\"$ctrl.customScope.markRead(notification)\">\n" +
-    "<a class=\"pull-right\" href=\"\" ng-if=\"!notification.actions.length\" ng-click=\"$ctrl.customScope.clear(notification, $index, notificationGroup)\">\n" +
+    "<button class=\"btn btn-link pull-right drawer-pf-notification-close\" type=\"button\" ng-if=\"!notification.actions.length\" ng-click=\"$ctrl.customScope.clear(notification, $index, notificationGroup)\">\n" +
     "<span class=\"sr-only\">Clear notification</span>\n" +
-    "<span aria-hidden=\"true\" class=\"pull-left pficon pficon-close\"></span>\n" +
-    "</a>\n" +
+    "<span aria-hidden=\"true\" class=\"pficon pficon-close\"></span>\n" +
+    "</button>\n" +
     "<div uib-dropdown class=\"dropdown pull-right dropdown-kebab-pf\" ng-if=\"notification.actions.length\">\n" +
     "<button uib-dropdown-toggle class=\"btn btn-link dropdown-toggle\" type=\"button\" id=\"dropdownKebabRight-{{$id}}\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"true\">\n" +
     "<span class=\"fa fa-ellipsis-v\"></span>\n" +
