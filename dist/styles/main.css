@@ -4631,6 +4631,7 @@ label.checkbox{font-weight:400}
 .lifecycle-hook:first-of-type{padding-top:20px}
 .lifecycle-hook .read-only-tag-image{padding-bottom:10px}
 .osc-form .icon custom-icon{font-size:100px;line-height:1}
+.osc-form .icon custom-icon img{max-width:100px}
 .osc-form span.fa.visible-xs-inline{margin-right:10px}
 .osc-form .flow{border-top:1px solid rgba(0,0,0,.15);display:table;margin-top:40px;width:100%}
 .wizard-pf-main-form-contents .osc-form .flow{border-top:0;margin-top:0}
