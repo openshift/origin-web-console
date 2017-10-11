@@ -1813,14 +1813,7 @@ group: a || ""
 }).toString();
 }
 };
-} ]), angular.module("openshiftConsole").service("NameGenerator", function() {
-return {
-suggestFromSourceUrl: function(e) {
-var t = e.substr(e.lastIndexOf("/") + 1, e.length), n = t.indexOf(".");
-return -1 !== n && (t = t.substr(0, n)), t.split("#")[0];
-}
-};
-}), angular.module("openshiftConsole").factory("TaskList", [ "$timeout", function(e) {
+} ]), angular.module("openshiftConsole").factory("TaskList", [ "$timeout", function(e) {
 function t() {
 this.tasks = [];
 }
