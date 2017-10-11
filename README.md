@@ -7,10 +7,10 @@ The management console for [OpenShift Origin](https://github.com/openshift/origi
 Contributing
 ------------
 
-#### Getting started
+#### Getting Started
 
 1. Be sure to have a development environment running for OpenShift. See [the contributing doc](https://github.com/openshift/origin/blob/master/CONTRIBUTING.adoc#develop-locally-on-your-host), we recommend the use of `oc cluster up`.
-1. Install [Nodejs](http://nodejs.org/) and [npm](https://www.npmjs.org/)
+1. Install [Nodejs](http://nodejs.org/) and [yarn](https://yarnpkg.com/en/docs/install)
 1. Install [grunt-cli](http://gruntjs.com/installing-grunt) and [bower](http://bower.io/) by running `npm install -g grunt-cli bower` (may need to be run with sudo)
 1. Install dev dependencies by running `hack/install-deps.sh`
 1. Launch the console and start watching for asset changes by running `grunt serve`. This should open <https://localhost:9000/> in your default browser.
@@ -21,6 +21,7 @@ Contributing
     echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
     ```
 1. Accept the self-signed certificate for the web console. (For Chrome on OS X, import `server.crt` into Keychain Access or accept the web console certificate in Safari.)
+
 
 #### Enable / disable console log output
 
