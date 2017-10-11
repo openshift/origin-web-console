@@ -13173,7 +13173,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{application.metadata.name}}\n" +
     "</span>\n" +
     "<span ng-if=\"!application\">\n" +
-    "{{firstBinding.spec.secretName}}\n" +
+    "{{firstBinding.metadata.name}}\n" +
     "</span>\n" +
     "<ng-pluralize count=\"bindingsByInstanceRef[serviceInstance.metadata.name].length\" when=\"{'0':'', '1':'', '2':'and {} other', 'other':'and {} others'}\" offset=\"1\">\n" +
     "</ng-pluralize>\n" +
