@@ -136,7 +136,13 @@
         <div>
           <div class="row">
             <div class="col-sm-12" ng-if="row.serviceClass.spec.description">
-              <p class="pre-wrap" ng-bind-html="row.serviceClass.spec.description | linky"></p>
+              <p class="service-description"><truncate-long-text
+                  limit="500"
+                  content="row.serviceClass.spec.description"
+                  use-word-boundary="true"
+                  expandable="true"
+                  linkify="true">
+                </truncate-long-text></p>
               <div ng-if="row.serviceClass.spec.externalMetadata.documentationUrl || row.serviceClass.spec.externalMetadata.supportUrl">
                 <a ng-if="row.serviceClass.spec.externalMetadata.documentationUrl" ng-href="{{row.serviceClass.spec.externalMetadata.documentationUrl}}" target="_blank" class="learn-more-link">View Documentation <i class="fa fa-external-link" aria-hidden="true"></i></a>
                 <a ng-if="row.serviceClass.spec.externalMetadata.supportUrl" ng-href="{{row.serviceClass.spec.externalMetadata.supportUrl}}" target="_blank" class="learn-more-link">Get Support <i class="fa fa-external-link" aria-hidden="true"></i></a>

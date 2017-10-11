@@ -3699,8 +3699,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dd>\n" +
     "<dt ng-if-start=\"serviceClass.spec.description || serviceClass.spec.externalMetadata.longDescription\">Description:</dt>\n" +
     "<dd ng-if-end>\n" +
-    "<p class=\"pre-wrap\" ng-bind-html=\"serviceClass.spec.description | linkify : '_blank'\"></p>\n" +
-    "<p class=\"pre-wrap\" ng-bind-html=\"serviceClass.spec.externalMetadata.longDescription | linkify : '_blank'\"></p>\n" +
+    "<p class=\"service-description\"><truncate-long-text limit=\"500\" content=\"serviceClass.spec.description\" use-word-boundary=\"true\" expandable=\"true\" linkify=\"true\">\n" +
+    "</truncate-long-text></p>\n" +
+    "<p class=\"service-description\"><truncate-long-text limit=\"500\" content=\"serviceClass.spec.externalMetadata.longDescription\" use-word-boundary=\"true\" expandable=\"true\" linkify=\"true\">\n" +
+    "</truncate-long-text></p>\n" +
     "</dd>\n" +
     "</dl>\n" +
     "</div>\n" +
@@ -12440,7 +12442,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-sm-12\" ng-if=\"row.serviceClass.spec.description\">\n" +
-    "<p class=\"pre-wrap\" ng-bind-html=\"row.serviceClass.spec.description | linky\"></p>\n" +
+    "<p class=\"service-description\"><truncate-long-text limit=\"500\" content=\"row.serviceClass.spec.description\" use-word-boundary=\"true\" expandable=\"true\" linkify=\"true\">\n" +
+    "</truncate-long-text></p>\n" +
     "<div ng-if=\"row.serviceClass.spec.externalMetadata.documentationUrl || row.serviceClass.spec.externalMetadata.supportUrl\">\n" +
     "<a ng-if=\"row.serviceClass.spec.externalMetadata.documentationUrl\" ng-href=\"{{row.serviceClass.spec.externalMetadata.documentationUrl}}\" target=\"_blank\" class=\"learn-more-link\">View Documentation <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
     "<a ng-if=\"row.serviceClass.spec.externalMetadata.supportUrl\" ng-href=\"{{row.serviceClass.spec.externalMetadata.supportUrl}}\" target=\"_blank\" class=\"learn-more-link\">Get Support <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
