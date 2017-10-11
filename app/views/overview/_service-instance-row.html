@@ -34,7 +34,7 @@
       <div class="list-pf-details" ng-if="!row.expanded">
         <span ng-if="!row.bindings.length
                     && row.isBindable
-                    && ({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create')"
+                    && (row.serviceBindingsVersion | canI : 'create')"
               class="hidden-xs hidden-sm">
           <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">
             <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>
@@ -74,16 +74,16 @@
         uib-dropdown-toggle
         class="actions-dropdown-kebab"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
         <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
-          <li role="menuitem" ng-if="row.isBindable && ({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create')">
+          <li role="menuitem" ng-if="row.isBindable && (row.serviceBindingsVersion | canI : 'create')">
             <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">
               Create Binding
             </a>
           </li>
-          <li role="menuitem" ng-if="row.deleteableBindings.length && ({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'delete')">
+          <li role="menuitem" ng-if="row.deleteableBindings.length && (row.serviceBindingsVersion | canI : 'delete')">
             <a href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})">Delete Binding</a>
           </li>
           <li role="menuitem">
-            <a href="" ng-click="row.deprovision()" role="button" ng-if="{resource: 'serviceinstances', group: 'servicecatalog.k8s.io'} | canI : 'delete'">Delete</a>
+            <a href="" ng-click="row.deprovision()" role="button" ng-if="row.serviceInstancesVersion | canI : 'delete'">Delete</a>
           </li>
         </ul>
       </div>
@@ -116,7 +116,7 @@
                 <span class="mar-right-md">
                   <truncate-long-text content="row.apiObject | serviceInstanceFailedMessage" limit="265"></truncate-long-text>
                 </span>
-                <span ng-if="{resource: 'serviceinstances', group: 'servicecatalog.k8s.io'} | canI : 'delete'" class="nowrap">
+                <span ng-if="row.serviceInstancesVersion | canI : 'delete'" class="nowrap">
                   <a href="" ng-click="row.deprovision()">Delete This Service</a>
                 </span>
               </div>

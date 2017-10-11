@@ -20,10 +20,10 @@
                    class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                    data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span></a>
                 <ul class="dropdown-menu dropdown-menu-right actions action-button">
-                  <li ng-if="{resource: 'serviceinstances', group: 'servicecatalog.k8s.io'} | canI : 'update'">
+                  <li ng-if="serviceInstancesVersion | canI : 'update'">
                     <a ng-href="{{serviceInstance | editYamlURL}}" role="button">Edit YAML</a>
                   </li>
-                  <li ng-if="{resource: 'serviceinstances', group: 'servicecatalog.k8s.io'} | canI : 'delete'">
+                  <li ng-if="serviceInstancesVersion | canI : 'delete'">
                     <a href="" ng-click="deprovision()" role="button">Delete</a>
                   </li>
                 </ul>

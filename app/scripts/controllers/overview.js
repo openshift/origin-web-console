@@ -325,7 +325,7 @@ function OverviewController($scope,
   };
 
   // Updated on viewBy changes to include the app label when appropriate.
-  var filterFields = ['metadata.name', 'spec.externalServiceClassName'];
+  var filterFields = ['metadata.name', 'spec.externalClusterServiceClassName'];
   var filterByName = function(items) {
     return KeywordService.filterForKeywords(items, filterFields, state.filterKeywords);
   };
