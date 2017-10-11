@@ -4631,6 +4631,7 @@ label.checkbox{font-weight:400}
 .lifecycle-hook:first-of-type{padding-top:20px}
 .lifecycle-hook .read-only-tag-image{padding-bottom:10px}
 .osc-form .icon custom-icon{font-size:100px;line-height:1}
+.osc-form .icon custom-icon img{max-width:100px}
 .osc-form span.fa.visible-xs-inline{margin-right:10px}
 .osc-form .flow{border-top:1px solid rgba(0,0,0,.15);display:table;margin-top:40px;width:100%}
 .wizard-pf-main-form-contents .osc-form .flow{border-top:0;margin-top:0}
@@ -5900,8 +5901,9 @@ notification-drawer-wrapper .drawer-pf-notification.ng-leave{transition:.25s lin
 notification-drawer-wrapper .drawer-pf-notification.ng-leave.ng-leave-active{opacity:0}
 notification-drawer-wrapper .drawer-pf-notification-info{font-size:11px}
 notification-drawer-wrapper .drawer-pf-notification-inner{padding:15px}
-notification-drawer-wrapper .drawer-pf-notification-inner .pficon-close{color:#bbb}
-notification-drawer-wrapper .drawer-pf-notification-inner .pficon-close:active,notification-drawer-wrapper .drawer-pf-notification-inner .pficon-close:focus,notification-drawer-wrapper .drawer-pf-notification-inner .pficon-close:hover{color:#4d5258}
+notification-drawer-wrapper .drawer-pf-notification-inner .drawer-pf-notification-close{margin-right:-10px}
+notification-drawer-wrapper .drawer-pf-notification-inner .drawer-pf-notification-close .pficon-close{color:#252525}
+notification-drawer-wrapper .drawer-pf-notification-inner .drawer-pf-notification-close .pficon-close:active,notification-drawer-wrapper .drawer-pf-notification-inner .drawer-pf-notification-close .pficon-close:focus,notification-drawer-wrapper .drawer-pf-notification-inner .drawer-pf-notification-close .pficon-close:hover{text-decoration:none}
 notification-drawer-wrapper .drawer-pf-title h3{font-size:12px}
 notification-drawer-wrapper .expanded-notification .drawer-pf-notification-info{color:#9c9c9c}
 notification-drawer-wrapper .expanded-notification .drawer-pf-notification-message-expanded{font-size:12px;padding:10px 10px 10px 42px;color:#9c9c9c}

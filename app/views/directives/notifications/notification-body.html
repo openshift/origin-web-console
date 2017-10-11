@@ -2,14 +2,14 @@
   class="drawer-pf-notification-inner"
   tabindex="0"
   ng-click="$ctrl.customScope.markRead(notification)">
-  <a
-    class="pull-right"
-    href=""
+  <button
+    class="btn btn-link pull-right drawer-pf-notification-close"
+    type="button"
     ng-if="!notification.actions.length"
     ng-click="$ctrl.customScope.clear(notification, $index, notificationGroup)">
     <span class="sr-only">Clear notification</span>
-    <span aria-hidden="true" class="pull-left pficon pficon-close"></span>
-  </a>
+    <span aria-hidden="true" class="pficon pficon-close"></span>
+  </button>
   <div
     uib-dropdown
     class="dropdown pull-right dropdown-kebab-pf"

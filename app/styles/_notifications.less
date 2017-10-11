@@ -59,10 +59,16 @@ notification-drawer-wrapper {
   }
   .drawer-pf-notification-inner {
     padding: 15px;
-    .pficon-close {
-      color: @color-pf-black-400;
-      &:hover,&:focus,&:active {
-        color: @color-pf-black-700;
+    .drawer-pf-notification-close {
+      margin-right: (@grid-gutter-width/(-4)); // vertically align with dropdown-kebab-pf
+      .pficon-close {
+        color: @gray-darker; // match dropdown-kebab-pf color
+        &:active,
+        &:focus,
+        &:hover
+         {
+          text-decoration: none;
+        }
       }
     }
   }

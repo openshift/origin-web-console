@@ -35,7 +35,7 @@
     "grunt-postcss": "^0.8.0",
     "grunt-protractor-runner": "1.2.1",
     "grunt-replace": "1.0.1",
-    "grunt-svgmin": "0.4.0",
+    "grunt-svgmin": "4.0.0",
     "grunt-usemin": "2.4.0",
     "grunt-wiredep": "3.0.0",
     "html-minifier": "1.1.1",
