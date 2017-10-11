@@ -63,7 +63,7 @@
                             {{application.metadata.name}}
                           </span>
                           <span ng-if="!application">
-                            {{firstBinding.spec.secretName}}
+                            {{firstBinding.metadata.name}}
                           </span>
                           <ng-pluralize count="bindingsByInstanceRef[serviceInstance.metadata.name].length"
                                         when="{'0':'', '1':'', '2':'and {} other', 'other':'and {} others'}"
