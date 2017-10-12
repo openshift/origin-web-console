@@ -6315,29 +6315,29 @@ i.deprovision(e.serviceInstance);
 };
 var s = [], c = t("serviceInstanceDisplayName");
 e.serviceInstancesVersion = a.getPreferredVersion("serviceinstances");
-var l = function() {
+var l, u = function() {
 e.breadcrumbs.push({
 title: e.displayName
 });
-}, u = function() {
-e.serviceClass || i.fetchServiceClassForInstance(e.serviceInstance).then(function(t) {
-e.serviceClass = t, e.displayName = c(e.serviceInstance, t), l();
-});
 }, d = function() {
+e.serviceClass || l || (l = i.fetchServiceClassForInstance(e.serviceInstance).then(function(t) {
+e.serviceClass = t, e.displayName = c(e.serviceInstance, t), u(), l = null;
+}));
+}, m = function() {
 i.isCurrentPlan(e.serviceInstance, e.plan) || i.fetchServicePlanForInstance(e.serviceInstance).then(function(t) {
 e.plan = t;
 });
-}, m = function(t, n) {
+}, p = function(t, n) {
 e.loaded = !0, e.serviceInstance = t, "DELETED" === n && (e.alerts.deleted = {
 type: "warning",
 message: "This provisioned service has been deleted."
-}), u(), d();
+}), d(), m();
 };
 o.get(n.project).then(_.spread(function(a, o) {
 e.project = a, e.projectContext = o, r.get(e.serviceInstancesVersion, n.instance, o, {
 errorNotification: !1
 }).then(function(t) {
-m(t), s.push(r.watchObject(e.serviceInstancesVersion, n.instance, o, m));
+p(t), s.push(r.watchObject(e.serviceInstancesVersion, n.instance, o, p));
 }, function(n) {
 e.loaded = !0, e.alerts.load = {
 type: "error",
