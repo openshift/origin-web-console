@@ -37,15 +37,18 @@ angular.module('openshiftConsole')
       });
     };
 
+    var serviceClassPromise;
     var updateServiceClass = function() {
-      if ($scope.serviceClass) {
+      // If we've previously loaded the service class or a request is in flight, don't do anything.
+      if ($scope.serviceClass || serviceClassPromise) {
         return;
       }
 
-      ServiceInstancesService.fetchServiceClassForInstance($scope.serviceInstance).then(function(serviceClass) {
+      serviceClassPromise = ServiceInstancesService.fetchServiceClassForInstance($scope.serviceInstance).then(function(serviceClass) {
         $scope.serviceClass = serviceClass;
         $scope.displayName = serviceInstanceDisplayName($scope.serviceInstance, serviceClass);
         updateBreadcrumbs();
+        serviceClassPromise = null;
       });
     };
 
