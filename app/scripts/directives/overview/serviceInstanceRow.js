@@ -4,6 +4,7 @@
   angular.module('openshiftConsole').component('serviceInstanceRow', {
     controller: [
       '$filter',
+      'APIService',
       'AuthorizationService',
       'BindingService',
       'ListRowUtils',
@@ -20,6 +21,7 @@
   });
 
   function ServiceInstanceRow($filter,
+                              APIService,
                               AuthorizationService,
                               BindingService,
                               ListRowUtils,
@@ -31,6 +33,9 @@
     _.extend(row, ListRowUtils.ui);
 
     var serviceInstanceDisplayName = $filter('serviceInstanceDisplayName');
+
+    row.serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
+    row.serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
 
     var getServiceClass = function() {
       var serviceClassName = ServiceInstancesService.getServiceClassNameForInstance(row.apiObject);
@@ -81,15 +86,15 @@
       }
 
       // We can create bindings
-      if (row.isBindable && AuthorizationService.canI({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'}, 'create')) {
+      if (row.isBindable && AuthorizationService.canI(row.serviceBindingsVersion, 'create')) {
         return true;
       }
       // We can delete bindings
-      if (!_.isEmpty(row.deleteableBindings) && AuthorizationService.canI({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'}, 'delete')) {
+      if (!_.isEmpty(row.deleteableBindings) && AuthorizationService.canI(row.serviceBindingsVersion, 'delete')) {
         return true;
       }
       // We can delete instances
-      if (AuthorizationService.canI({resource: 'serviceinstances', group: 'servicecatalog.k8s.io'}, 'delete')) {
+      if (AuthorizationService.canI(row.serviceInstancesVersion, 'delete')) {
         return true;
       }
 

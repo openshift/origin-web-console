@@ -29,7 +29,7 @@ angular.module('openshiftConsole')
     var serviceInstanceDisplayName = $filter('serviceInstanceDisplayName');
 
     // API Versions
-    var serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
+    $scope.serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
 
     var updateBreadcrumbs = function() {
       $scope.breadcrumbs.push({
@@ -81,10 +81,10 @@ angular.module('openshiftConsole')
         $scope.projectContext = context;
 
         DataService
-          .get(serviceInstancesVersion, $routeParams.instance, context, { errorNotification: false })
+          .get($scope.serviceInstancesVersion, $routeParams.instance, context, { errorNotification: false })
           .then(function(serviceInstance) {
             serviceResolved(serviceInstance);
-            watches.push(DataService.watchObject(serviceInstancesVersion, $routeParams.instance, context, serviceResolved));
+            watches.push(DataService.watchObject($scope.serviceInstancesVersion, $routeParams.instance, context, serviceResolved));
           }, function(error) {
             $scope.loaded = true;
             $scope.alerts["load"] = {

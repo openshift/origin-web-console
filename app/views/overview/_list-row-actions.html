@@ -25,12 +25,12 @@
             </li>
             <li ng-if="('pod_presets' | enableTechPreviewFeature)
                       && row.state.bindableServiceInstances.length
-                      && ({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create')" role="menuitem">
+                      && (row.serviceBindingsVersion | canI : 'create')" role="menuitem">
               <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</a>
             </li>
             <li ng-if="('pod_presets' | enableTechPreviewFeature)
                       && row.state.deleteableBindingsByApplicationUID[row.apiObject.metadata.uid].length
-                      && ({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'delete')" role="menuitem">
+                      && (row.serviceBindingsVersion | canI : 'delete')" role="menuitem">
               <a href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})">Delete Binding</a>
             </li>
             <li ng-if="row.current && ('deploymentconfigs/log' | canI : 'get')" role="menuitem">
@@ -65,12 +65,12 @@
             </li>
             <li ng-if="('pod_presets' | enableTechPreviewFeature)
                       && row.state.bindableServiceInstances.length
-                      && ({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'create')" role="menuitem">
+                      && (row.serviceBindingsVersion | canI : 'create')" role="menuitem">
               <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</a>
             </li>
             <li ng-if="('pod_presets' | enableTechPreviewFeature)
                       && row.state.deleteableBindingsByApplicationUID[row.apiObject.metadata.uid].length
-                      && ({resource: 'serviceinstancecredentials', group: 'servicecatalog.k8s.io'} | canI : 'delete')" role="menuitem">
+                      && (row.serviceBindingsVersion | canI : 'delete')" role="menuitem">
               <a href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})">Delete Binding</a>
             </li>
             <li ng-if="(pod = row.firstPod(row.current)) && ('pods/log' | canI : 'get')" role="menuitem">
