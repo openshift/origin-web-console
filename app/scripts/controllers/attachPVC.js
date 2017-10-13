@@ -118,6 +118,63 @@ angular.module('openshiftConsole')
         $scope.$watchGroup(['attach.resource', 'attach.allContainers'], updateMountPaths);
         $scope.$watch('attach.containers', updateMountPaths, true);
 
+        var checkVolumeMountPath = function(newVolumeMount, container) {
+          var duplicateMount = _.find(container.volumeMounts, function(mount) {
+            return mount.mountPath === newVolumeMount && mount.name !== newVolumeMount.name;
+          });
+
+          // if a new volumeMount matches an existing mountPath,
+          // fail if their names differ. This can happen when the
+          // "overwrite" option is specified.
+          if (duplicateMount) {
+              displayError('The volume mount "' + duplicateMount.mountPath + '" with name "' + duplicateMount.name +'" already exists for container "' + container.name + '"');
+              return false;
+          }
+
+          return true;
+        };
+
+        var replaceExistingVolumeMount = function(newVolumeMount, container) {
+          // if the volume mount we are trying to add already exists,
+          // replace the existing mount with the newly created one.
+          // This can happen when the "overwrite" option is specified.
+          var index = _.findIndex(container.volumeMounts, { name: newVolumeMount.name });
+          if (index === -1) {
+            return false;
+          }
+
+          container.volumeMounts[index] = newVolumeMount;
+          return true;
+        };
+
+        var setVolumeMount = function(podTemplate, name, mountPath, subPath, readOnly) {
+          var success = true;
+          _.each(podTemplate.spec.containers, function(container) {
+            if (!isContainerSelected(container)) {
+              return;
+            }
+
+            var newVolumeMount =
+              StorageService.createVolumeMount(name, mountPath, subPath, readOnly);
+            if (!container.volumeMounts) {
+              container.volumeMounts = [];
+            }
+
+            if (!checkVolumeMountPath(newVolumeMount, container)) {
+              success = false;
+              return false;
+            }
+
+            if (replaceExistingVolumeMount(newVolumeMount, container)) {
+              return false;
+            }
+
+            container.volumeMounts.push(newVolumeMount);
+          });
+
+          return success;
+        };
+
         // load resources required to show the page (list of pvcs and deployment or deployment config)
         var load = function() {
           DataService.get(resourceGroupVersion, $routeParams.name, context).then(
@@ -175,16 +232,10 @@ angular.module('openshiftConsole')
             var readOnly = $scope.attach.readOnly;
             if (mountPath) {
               // for each container in the pod spec, add the new volume mount
-              angular.forEach(podTemplate.spec.containers, function(container) {
-                if (isContainerSelected(container)) {
-                  var newVolumeMount =
-                    StorageService.createVolumeMount(name, mountPath, subPath, readOnly);
-                  if (!container.volumeMounts) {
-                    container.volumeMounts = [];
-                  }
-                  container.volumeMounts.push(newVolumeMount);
-                }
-              });
+              if(!setVolumeMount(podTemplate, name, mountPath, subPath, readOnly)) {
+                $scope.disableInputs = false;
+                return;
+              }
             }
 
             // add the new volume to the pod template
@@ -192,7 +243,14 @@ angular.module('openshiftConsole')
             if (!podTemplate.spec.volumes) {
               podTemplate.spec.volumes = [];
             }
-            podTemplate.spec.volumes.push(newVolume);
+
+            // if the newly created volume already exists, only
+            // fail if the "overwrite" option was not set
+            var volumeExists = _.some(podTemplate.spec.volumes, { name: newVolume.name });
+
+            if (!volumeExists) {
+              podTemplate.spec.volumes.push(newVolume);
+            }
 
             DataService.update(resourceGroupVersion, resource.metadata.name, $scope.attach.resource, context).then(
               function() {
