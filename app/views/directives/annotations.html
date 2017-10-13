@@ -1,5 +1,5 @@
 <p ng-if="annotations" ng-class="{'mar-bottom-xl': !expandAnnotations}">
-  <a href="" ng-click="toggleAnnotations()">{{!expandAnnotations ? 'Hide Annotations' : 'Show Annotations'}}</a>
+  <a href="" ng-click="toggleAnnotations()">{{expandAnnotations ? 'Hide Annotations' : 'Show Annotations'}}</a>
 </p>
 <div ng-if="expandAnnotations && annotations" class="table-responsive scroll-shadows-horizontal">
   <table class="table table-bordered table-bordered-columns key-value-table">
