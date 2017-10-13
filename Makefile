@@ -41,8 +41,9 @@ build: install
 # Examples:
 #   make test
 #   make test GRUNT_FLAGS='--gruntfile=~/special/Gruntfile.js'
+#   make test GRUNT_UNIT_TEST_FLAGS='--browser=chrome' GRUNT_INTEGRATION_TEST_FLAG='--foo'
 test: build
 	hack/verify-dist.sh
-	hack/test-headless.sh test $(GRUNT_FLAGS)
-	hack/test-headless.sh test-integration $(GRUNT_FLAGS)
+	hack/test-headless.sh test-unit $(GRUNT_UNIT_TEST_FLAGS)
+	hack/test-headless.sh test-integration $(GRUNT_INTEGRATION_TEST_FLAGS)
 .PHONY: test
