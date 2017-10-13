@@ -90,11 +90,11 @@
           <span class="sr-only">{{event.type}}</span>
           <span class="pficon pficon-warning-triangle-o" ng-show="event.type === 'Warning'" aria-hidden="true" data-toggle="tooltip" data-original-title="Warning"></span></td>
         <td class="hidden-sm hidden-md" data-title="Reason">
-          <span ng-bind-html="event.reason | sentenceCase | highlightKeywords : filterExpressions"></span>&nbsp;<span class="visible-xs-inline pficon pficon-warning-triangle-o" ng-show="event.type === 'Warning'" aria-hidden="true" data-toggle="tooltip" data-original-title="Warning"></span>
+          <span ng-bind-html="event.reason | humanizeReason | highlightKeywords : filterExpressions"></span>&nbsp;<span class="visible-xs-inline pficon pficon-warning-triangle-o" ng-show="event.type === 'Warning'" aria-hidden="true" data-toggle="tooltip" data-original-title="Warning"></span>
         </td>
         <td data-title="Message">
           <div class="hidden-xs-block visible-sm-block visible-md-block hidden-lg-block">
-            <span ng-bind-html="event.reason | sentenceCase | highlightKeywords : filterExpressions"></span>&nbsp;
+            <span ng-bind-html="event.reason | humanizeReason | highlightKeywords : filterExpressions"></span>&nbsp;
             <span class="pficon pficon-warning-triangle-o" ng-show="event.type === 'Warning'" aria-hidden="true" data-toggle="tooltip" data-original-title="Warning"></span>
           </div>
           <!-- Truncate long messages to 1000 chars or 4 lines. -->

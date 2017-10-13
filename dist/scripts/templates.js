@@ -1236,7 +1236,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Status:</dt>\n" +
     "<dd>\n" +
     "<status-icon status=\"pod | podStatus\"></status-icon>\n" +
-    "{{pod | podStatus | sentenceCase}}<span ng-if=\"pod | podCompletionTime\">, ran for {{(pod | podStartTime) | duration : (pod | podCompletionTime)}}</span>\n" +
+    "{{pod | podStatus | humanizePodStatus}}<span ng-if=\"pod | podCompletionTime\">, ran for {{(pod | podStartTime) | duration : (pod | podCompletionTime)}}</span>\n" +
     "<span ng-if=\"pod.metadata.deletionTimestamp\">(expires {{pod.metadata.deletionTimestamp | date : 'medium'}})</span>\n" +
     "</dd>\n" +
     "<dt ng-if-start=\"pod.status.message\">Message:</dt>\n" +
@@ -6870,7 +6870,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"event-details\">\n" +
     "<div class=\"detail-group\">\n" +
     "<div class=\"event-reason\">\n" +
-    "{{event.reason | sentenceCase}}\n" +
+    "{{event.reason | humanizeReason}}\n" +
     "</div>\n" +
     "<div class=\"event-object\" ng-init=\"resourceURL = (event | navigateEventInvolvedObjectURL)\">\n" +
     "<a ng-if=\"resourceURL\" ng-attr-title=\"Navigate to {{event.involvedObject.name}}\" href=\"{{resourceURL}}\">\n" +
@@ -6980,11 +6980,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"sr-only\">{{event.type}}</span>\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" ng-show=\"event.type === 'Warning'\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Warning\"></span></td>\n" +
     "<td class=\"hidden-sm hidden-md\" data-title=\"Reason\">\n" +
-    "<span ng-bind-html=\"event.reason | sentenceCase | highlightKeywords : filterExpressions\"></span>&nbsp;<span class=\"visible-xs-inline pficon pficon-warning-triangle-o\" ng-show=\"event.type === 'Warning'\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Warning\"></span>\n" +
+    "<span ng-bind-html=\"event.reason | humanizeReason | highlightKeywords : filterExpressions\"></span>&nbsp;<span class=\"visible-xs-inline pficon pficon-warning-triangle-o\" ng-show=\"event.type === 'Warning'\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Warning\"></span>\n" +
     "</td>\n" +
     "<td data-title=\"Message\">\n" +
     "<div class=\"hidden-xs-block visible-sm-block visible-md-block hidden-lg-block\">\n" +
-    "<span ng-bind-html=\"event.reason | sentenceCase | highlightKeywords : filterExpressions\"></span>&nbsp;\n" +
+    "<span ng-bind-html=\"event.reason | humanizeReason | highlightKeywords : filterExpressions\"></span>&nbsp;\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" ng-show=\"event.type === 'Warning'\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Warning\"></span>\n" +
     "</div>\n" +
     "\n" +
@@ -8808,7 +8808,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<td data-title=\"Status\">\n" +
     "<div row class=\"status\">\n" +
     "<status-icon status=\"pod | podStatus\" disable-animation></status-icon>\n" +
-    "<span flex>{{pod | podStatus | sentenceCase}}</span>\n" +
+    "<span flex>{{pod | podStatus | humanizePodStatus}}</span>\n" +
     "</div>\n" +
     "</td>\n" +
     "<td data-title=\"Ready\">{{pod | numContainersReady}}/{{pod.spec.containers.length}}</td>\n" +
@@ -10759,7 +10759,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<small class=\"text-muted\">\n" +
     "{{debugPod.metadata.name}} &mdash;\n" +
     "<status-icon status=\"debugPod | podStatus\"></status-icon>\n" +
-    "{{debugPod | podStatus | sentenceCase}}\n" +
+    "{{debugPod | podStatus | humanizePodStatus}}\n" +
     "</small>\n" +
     "</div>\n" +
     "<div class=\"modal-body\">\n" +
@@ -11008,7 +11008,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"list-group-item-text\">\n" +
     "<status-icon status=\"pod | podStatus\" disable-animation></status-icon>\n" +
-    "{{pod | podStatus | sentenceCase}}\n" +
+    "{{pod | podStatus | humanizeReason}}\n" +
     "<small ng-if=\"(pod | podStatus) === 'Running'\" class=\"text-muted\">\n" +
     "&ndash; {{pod | numContainersReady}}/{{pod.spec.containers.length}} ready\n" +
     "</small>\n" +
