@@ -990,7 +990,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group mar-top-xl\">\n" +
     "<label for=\"mount-path\">Mount Path</label>\n" +
-    "<input id=\"mount-path\" class=\"form-control\" type=\"text\" name=\"mountPath\" ng-model=\"attach.mountPath\" ng-pattern=\"/^\\/.*$/\" osc-unique=\"existingMountPaths\" placeholder=\"example: /data\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"mount-path-help\">\n" +
+    "<input id=\"mount-path\" class=\"form-control\" type=\"text\" name=\"mountPath\" ng-model=\"attach.mountPath\" ng-pattern=\"/^\\/.*$/\" osc-unique=\"existingMountPaths\" osc-unique-disabled=\"attach.overwrite\" placeholder=\"example: /data\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"mount-path-help\">\n" +
     "<div>\n" +
     "<span id=\"mount-path-help\" class=\"help-block\">Mount path for the volume inside the container. If not specified, the volume will not be mounted automatically.</span>\n" +
     "</div>\n" +
@@ -1020,7 +1020,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<label for=\"volume-name\">Volume Name</label>\n" +
     "\n" +
-    "<input id=\"volume-path\" class=\"form-control\" type=\"text\" name=\"volumeName\" ng-model=\"attach.volumeName\" osc-unique=\"existingVolumeNames\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/\" maxlength=\"63\" placeholder=\"(generated if empty)\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"volume-name-help\">\n" +
+    "<input id=\"volume-path\" class=\"form-control\" type=\"text\" name=\"volumeName\" ng-model=\"attach.volumeName\" osc-unique=\"existingVolumeNames\" osc-unique-disabled=\"attach.overwrite\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/\" maxlength=\"63\" placeholder=\"(generated if empty)\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"volume-name-help\">\n" +
     "<div>\n" +
     "<span id=\"volume-name-help\" class=\"help-block\">Unique name used to identify this volume. If not specified, a volume name is generated.</span>\n" +
     "</div>\n" +
@@ -1038,6 +1038,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"help-block\">\n" +
     "Volume name already exists. Please choose another name.\n" +
     "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<div class=\"checkbox\">\n" +
+    "<label>\n" +
+    "<input type=\"checkbox\" ng-model=\"attach.overwrite\" aria-describedby=\"overwrite-help\">\n" +
+    "Overwrite\n" +
+    "</label>\n" +
+    "<div id=\"overwrite-help\" class=\"help-block\">\n" +
+    "Overwrite a volume mount if it already exists.\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
@@ -5768,7 +5779,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/annotations.html',
     "<p ng-if=\"annotations\" ng-class=\"{'mar-bottom-xl': !expandAnnotations}\">\n" +
-    "<a href=\"\" ng-click=\"toggleAnnotations()\">{{!expandAnnotations ? 'Hide Annotations' : 'Show Annotations'}}</a>\n" +
+    "<a href=\"\" ng-click=\"toggleAnnotations()\">{{expandAnnotations ? 'Hide Annotations' : 'Show Annotations'}}</a>\n" +
     "</p>\n" +
     "<div ng-if=\"expandAnnotations && annotations\" class=\"table-responsive scroll-shadows-horizontal\">\n" +
     "<table class=\"table table-bordered table-bordered-columns key-value-table\">\n" +
@@ -7018,23 +7029,35 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<pf-wizard-step wz-disabled=\"{{!$ctrl.template}}\" step-title=\"Template Configuration\" step-id=\"template\" step-priority=\"2\" substeps=\"false\" ok-to-nav-away=\"true\" allow-click-nav=\"false\" next-enabled=\"!$ctrl.templateForm.$invalid\">\n" +
     "<div class=\"wizard-pf-main-inner-shadow-covers\" ng-if=\"$ctrl.template\">\n" +
     "<div class=\"order-service-details\">\n" +
-    "<div class=\"order-service-details-top\">\n" +
+    "<div class=\"order-service-details-top\" ng-class=\"{'order-service-details-top-icon-top': ($ctrl.vendor || ($ctrl.docUrl || $ctrl.supportUrl))}\">\n" +
     "<div class=\"service-icon\">\n" +
-    "<span class=\"icon {{$ctrl.iconClass}}\"></span>\n" +
+    "<span ng-if=\"$ctrl.image\" class=\"image\"><img ng-src=\"{{$ctrl.image}}\" alt=\"\"></span>\n" +
+    "<span ng-if=\"!$ctrl.image\" class=\"icon {{$ctrl.iconClass}}\" aria-hidden=\"true\"></span>\n" +
     "</div>\n" +
     "<div class=\"service-title-area\">\n" +
     "<div class=\"service-title\">\n" +
     "{{$ctrl.template | displayName}}\n" +
+    "</div>\n" +
+    "<div ng-if=\"$ctrl.vendor\" class=\"service-vendor\">\n" +
+    "{{$ctrl.vendor}}\n" +
     "</div>\n" +
     "<div class=\"order-service-tags\">\n" +
     "<span ng-repeat=\"tag in $ctrl.template.metadata.annotations.tags.split(',')\" class=\"tag\">\n" +
     "{{tag}}\n" +
     "</span>\n" +
     "</div>\n" +
+    "<ul ng-if=\"$ctrl.docUrl || $ctrl.supportUrl\" class=\"list-inline order-service-documentation-url\">\n" +
+    "<li ng-if=\"$ctrl.docUrl\">\n" +
+    "<a ng-href=\"{{$ctrl.docUrl}}\" target=\"_blank\" class=\"learn-more-link\">View Documentation <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
+    "</li>\n" +
+    "<li ng-if=\"$ctrl.supportUrl\">\n" +
+    "<a ng-href=\"{{$ctrl.supportUrl}}\" target=\"_blank\" class=\"learn-more-link\">Get Support <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
+    "</li>\n" +
+    "</ul>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"order-service-description-block\">\n" +
-    "<p ng-bind-html=\"$ctrl.template | description | linky : '_blank'\" class=\"description\"></p>\n" +
+    "<p ng-bind-html=\"($ctrl.template | description | linky : '_blank') || 'No description provided.'\" class=\"description\"></p>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"order-service-config\">\n" +
@@ -8846,7 +8869,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/process-template-dialog/process-template-info.html',
     "<div class=\"order-service-details\">\n" +
-    "<div class=\"order-service-details-top\">\n" +
+    "<div class=\"order-service-details-top\" ng-class=\"{'order-service-details-top-icon-top': ($ctrl.serviceClass.vendor || ($ctrl.docUrl || $ctrl.supportUrl))}\">\n" +
     "<div class=\"service-icon\">\n" +
     "<span ng-if=\"$ctrl.image\" class=\"image\"><img ng-src=\"{{$ctrl.image}}\" alt=\"\"></span>\n" +
     "<span ng-if=\"!$ctrl.image\" class=\"icon {{$ctrl.iconClass}}\" aria-hidden=\"true\"></span>\n" +
@@ -8854,6 +8877,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"service-title-area\">\n" +
     "<div class=\"service-title\">\n" +
     "{{$ctrl.template | displayName}}\n" +
+    "</div>\n" +
+    "<div ng-if=\"$ctrl.vendor\" class=\"service-vendor\">\n" +
+    "{{$ctrl.vendor}}\n" +
     "</div>\n" +
     "<div class=\"order-service-tags\">\n" +
     "<span ng-repeat=\"tag in $ctrl.template.metadata.annotations.tags.split(',')\" class=\"tag\">\n" +
@@ -8871,7 +8897,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"order-service-description-block\">\n" +
-    "<p ng-bind-html=\"$ctrl.template | description | linky : '_blank'\" class=\"description\"></p>\n" +
+    "<p ng-bind-html=\"($ctrl.template | description | linky : '_blank') || 'No description provided.'\" class=\"description\"></p>\n" +
     "</div>\n" +
     "</div>"
   );

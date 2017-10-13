@@ -21,6 +21,8 @@
 
   function FromFileDialog($scope, $timeout, $routeParams, $filter, DataService) {
     var ctrl = this;
+    var annotation = $filter('annotation');
+    var imageForIconClass = $filter('imageForIconClass');
 
     ctrl.$onInit = function() {
       ctrl.alerts = {};
@@ -36,6 +38,11 @@
       return (icon.indexOf('icon-') !== -1) ? 'font-icon ' + icon : icon;
     }
 
+    function getImage() {
+      var iconClass = _.get(ctrl, 'template.metadata.annotations.iconClass', 'fa fa-clone');
+      return imageForIconClass(iconClass);
+    }
+
     ctrl.importFile = function() {
       $scope.$broadcast('importFileFromYAMLOrJSON');
     };
@@ -48,6 +55,10 @@
       ctrl.selectedProject = message.project;
       ctrl.template = message.template;
       ctrl.iconClass = getIconClass();
+      ctrl.image = getImage();
+      ctrl.vendor = annotation(message.template, "template.openshift.io/provider-display-name");
+      ctrl.docUrl = annotation(ctrl.template, "template.openshift.io/documentation-url");
+      ctrl.supportUrl = annotation(ctrl.template, "template.openshift.io/support-url");
       ctrl.name = "YAML / JSON";
       // Need to let the current digest loop finish so the template config step becomes visible or the wizard will throw an error
       // from the change to currentStep

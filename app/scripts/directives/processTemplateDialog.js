@@ -130,6 +130,7 @@
           ctrl.image = getImage();
           ctrl.docUrl = annotation(ctrl.template, "template.openshift.io/documentation-url");
           ctrl.supportUrl = annotation(ctrl.template, "template.openshift.io/support-url");
+          ctrl.vendor = annotation(ctrl.template, "template.openshift.io/provider-display-name");
         }
       }
       if (changes.useProjectTemplate) {
@@ -179,6 +180,9 @@
       ctrl.selectStep.valid = !!template;
       ctrl.iconClass = getIconClass();
       ctrl.image = getImage();
+      ctrl.docUrl = annotation(ctrl.template, "template.openshift.io/documentation-url");
+      ctrl.supportUrl = annotation(ctrl.template, "template.openshift.io/support-url");
+      ctrl.vendor = annotation(ctrl.template, "template.openshift.io/provider-display-name");
     };
 
     ctrl.templateProjectChange = function () {

@@ -8492,6 +8492,25 @@ var e = _.get(n, "attach.resource.spec.template");
 n.existingMountPaths = m.getMountPaths(e, k);
 };
 n.$watchGroup([ "attach.resource", "attach.allContainers" ], j), n.$watch("attach.containers", j, !0);
+var P = function(e, t) {
+var n = _.find(t.volumeMounts, function(t) {
+return t.mountPath === e && t.name !== e.name;
+});
+return !n || (C('The volume mount "' + n.mountPath + '" with name "' + n.name + '" already exists for container "' + t.name + '"'), !1);
+}, R = function(e, t) {
+var n = _.findIndex(t.volumeMounts, {
+name: e.name
+});
+return -1 !== n && (t.volumeMounts[n] = e, !0);
+}, I = function(e, t, n, a, r) {
+var o = !0;
+return _.each(e.spec.containers, function(e) {
+if (k(e)) {
+var i = m.createVolumeMount(t, n, a, r);
+return e.volumeMounts || (e.volumeMounts = []), P(i, e) ? !R(i, e) && void e.volumeMounts.push(i) : (o = !1, !1);
+}
+}), o;
+};
 s.get(v, t.name, d).then(function(e) {
 n.attach.resource = e, n.breadcrumbs = i.getBreadcrumbs({
 object: e,
@@ -8516,14 +8535,11 @@ n.clusterQuotas = e.by("metadata.name"), n.outOfClaims = c.isAnyStorageQuotaExce
 if (n.disableInputs = !0, S(), n.attachPVCForm.$valid) {
 n.attach.volumeName || (n.attach.volumeName = b("volume-"));
 var e = n.attach.resource, a = _.get(e, "spec.template"), r = n.attach.persistentVolumeClaim, o = n.attach.volumeName, i = n.attach.mountPath, c = n.attach.subPath, l = n.attach.readOnly;
-i && angular.forEach(a.spec.containers, function(e) {
-if (k(e)) {
-var t = m.createVolumeMount(o, i, c, l);
-e.volumeMounts || (e.volumeMounts = []), e.volumeMounts.push(t);
-}
-});
+if (i && !I(a, o, i, c, l)) return void (n.disableInputs = !1);
 var p = m.createVolume(o, r);
-a.spec.volumes || (a.spec.volumes = []), a.spec.volumes.push(p), s.update(v, e.metadata.name, n.attach.resource, d).then(function() {
+a.spec.volumes || (a.spec.volumes = []), _.some(a.spec.volumes, {
+name: p.name
+}) || a.spec.volumes.push(p), s.update(v, e.metadata.name, n.attach.resource, d).then(function() {
 var e;
 i || (e = "No mount path was provided. The volume reference was added to the configuration, but it will not be mounted into running pods."), u.addNotification({
 type: "success",
@@ -13158,7 +13174,7 @@ appliedFilters: [],
 onFilterChange: g
 }, n.project || (b.showProjectName = !0);
 }, b.$onChanges = function(e) {
-e.template && b.template && (d(), b.iconClass = l(), b.image = u(), b.docUrl = S(b.template, "template.openshift.io/documentation-url"), b.supportUrl = S(b.template, "template.openshift.io/support-url")), e.useProjectTemplate && d();
+e.template && b.template && (d(), b.iconClass = l(), b.image = u(), b.docUrl = S(b.template, "template.openshift.io/documentation-url"), b.supportUrl = S(b.template, "template.openshift.io/support-url"), b.vendor = S(b.template, "template.openshift.io/provider-display-name")), e.useProjectTemplate && d();
 }, e.$on("templateInstantiated", function(e, t) {
 b.selectedProject = t.project, b.currentStep = b.resultsStep.label;
 }), b.$onDestroy = function() {
@@ -13171,7 +13187,7 @@ _.isFunction(e) && e();
 }, b.onProjectSelected = function(t) {
 b.selectedProject = t, b.configStep.valid = e.$ctrl.form.$valid && b.selectedProject;
 }, b.templateSelected = function(e) {
-b.selectedTemplate = e, b.template = _.get(e, "resource"), b.selectStep.valid = !!e, b.iconClass = l(), b.image = u();
+b.selectedTemplate = e, b.template = _.get(e, "resource"), b.selectStep.valid = !!e, b.iconClass = l(), b.image = u(), b.docUrl = S(b.template, "template.openshift.io/documentation-url"), b.supportUrl = S(b.template, "template.openshift.io/support-url"), b.vendor = S(b.template, "template.openshift.io/provider-display-name");
 }, b.templateProjectChange = function() {
 b.templateProjectName = _.get(b.templateProject, "metadata.name"), b.catalogItems = {}, b.templateSelected(), a.getProjectCatalogItems(b.templateProjectName, !1, !0).then(_.spread(function(e, t) {
 b.catalogItems = e, b.totalCount = b.catalogItems.length, g(), t && i.addNotification({
@@ -13225,30 +13241,34 @@ templateUrl: "views/directives/deploy-image-dialog.html"
 angular.module("openshiftConsole").component("fromFileDialog", {
 controller: [ "$scope", "$timeout", "$routeParams", "$filter", "DataService", function(e, t, n, a, r) {
 function o() {
-var e = _.get(i, "template.metadata.annotations.iconClass", "fa fa-clone");
+var e = _.get(s, "template.metadata.annotations.iconClass", "fa fa-clone");
 return -1 !== e.indexOf("icon-") ? "font-icon " + e : e;
 }
-var i = this;
-i.$onInit = function() {
-i.alerts = {}, i.loginBaseUrl = r.openshiftAPIBaseUrl(), n.project || (i.showProjectName = !0);
-}, i.importFile = function() {
+function i() {
+var e = _.get(s, "template.metadata.annotations.iconClass", "fa fa-clone");
+return l(e);
+}
+var s = this, c = a("annotation"), l = a("imageForIconClass");
+s.$onInit = function() {
+s.alerts = {}, s.loginBaseUrl = r.openshiftAPIBaseUrl(), n.project || (s.showProjectName = !0);
+}, s.importFile = function() {
 e.$broadcast("importFileFromYAMLOrJSON");
-}, i.instantiateTemplate = function() {
+}, s.instantiateTemplate = function() {
 e.$broadcast("instantiateTemplate");
 }, e.$on("fileImportedFromYAMLOrJSON", function(e, n) {
-i.selectedProject = n.project, i.template = n.template, i.iconClass = o(), i.name = "YAML / JSON", t(function() {
-i.currentStep = i.template ? "Template Configuration" : "Results";
+s.selectedProject = n.project, s.template = n.template, s.iconClass = o(), s.image = i(), s.vendor = c(n.template, "template.openshift.io/provider-display-name"), s.docUrl = c(s.template, "template.openshift.io/documentation-url"), s.supportUrl = c(s.template, "template.openshift.io/support-url"), s.name = "YAML / JSON", t(function() {
+s.currentStep = s.template ? "Template Configuration" : "Results";
 }, 0);
 }), e.$on("templateInstantiated", function(e, t) {
-i.selectedProject = t.project, i.name = a("displayName")(i.template), i.currentStep = "Results";
-}), i.close = function() {
-i.template = null;
-var e = i.onDialogClosed();
-return _.isFunction(e) && e(), i.wizardDone = !1, !0;
-}, i.stepChanged = function(e) {
-"results" === e.stepId ? (i.nextButtonTitle = "Close", i.wizardDone = !0) : i.nextButtonTitle = "Create";
-}, i.currentStep = "YAML / JSON", i.nextCallback = function(e) {
-return "file" === e.stepId ? (i.importFile(), !1) : "template" === e.stepId ? (i.instantiateTemplate(), !1) : "results" !== e.stepId || (i.close(), !1);
+s.selectedProject = t.project, s.name = a("displayName")(s.template), s.currentStep = "Results";
+}), s.close = function() {
+s.template = null;
+var e = s.onDialogClosed();
+return _.isFunction(e) && e(), s.wizardDone = !1, !0;
+}, s.stepChanged = function(e) {
+"results" === e.stepId ? (s.nextButtonTitle = "Close", s.wizardDone = !0) : s.nextButtonTitle = "Create";
+}, s.currentStep = "YAML / JSON", s.nextCallback = function(e) {
+return "file" === e.stepId ? (s.importFile(), !1) : "template" === e.stepId ? (s.instantiateTemplate(), !1) : "results" !== e.stepId || (s.close(), !1);
 };
 } ],
 controllerAs: "$ctrl",

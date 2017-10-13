@@ -83,6 +83,7 @@
                       ng-model="attach.mountPath"
                       ng-pattern="/^\/.*$/"
                       osc-unique="existingMountPaths"
+                      osc-unique-disabled="attach.overwrite"
                       placeholder="example: /data"
                       autocorrect="off"
                       autocapitalize="none"
@@ -143,6 +144,7 @@
                       name="volumeName"
                       ng-model="attach.volumeName"
                       osc-unique="existingVolumeNames"
+                      osc-unique-disabled="attach.overwrite"
                       ng-pattern="/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/"
                       maxlength="63"
                       placeholder="(generated if empty)"
@@ -168,6 +170,18 @@
                     <span class="help-block">
                       Volume name already exists. Please choose another name.
                     </span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" ng-model="attach.overwrite" aria-describedby="overwrite-help">
+                      Overwrite
+                    </label>
+                    <div id="overwrite-help" class="help-block">
+                      Overwrite a volume mount if it already exists.
+                    </div>
                   </div>
                 </div>
 
