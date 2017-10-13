@@ -4,7 +4,7 @@
     <small class="text-muted">
       {{debugPod.metadata.name}} &mdash;
       <status-icon status="debugPod | podStatus"></status-icon>
-      {{debugPod | podStatus | sentenceCase}}
+      {{debugPod | podStatus | humanizePodStatus}}
     </small>
   </div>
   <div class="modal-body">

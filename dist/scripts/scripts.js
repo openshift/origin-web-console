@@ -15350,6 +15350,12 @@ r = _.get(t(n, a), "message");
 }
 return r;
 };
+} ]).filter("humanizeReason", function() {
+return function(e) {
+return _.startCase(e).replace("Back Off", "Back-off").replace("O Auth", "OAuth");
+};
+}).filter("humanizePodStatus", [ "humanizeReasonFilter", function(e) {
+return e;
 } ]), angular.module("openshiftConsole").filter("canIDoAny", [ "APIService", "canIFilter", function(e, t) {
 var n = {
 buildConfigs: [ {

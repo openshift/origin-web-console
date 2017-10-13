@@ -1340,4 +1340,14 @@ angular.module('openshiftConsole')
 
       return serviceInstanceMessage;
     };
+  })
+  .filter('humanizeReason', function() {
+    return function(reason) {
+      var humanizedReason = _.startCase(reason);
+      // Special case some values like "BackOff" -> "Back-off"
+      return humanizedReason.replace("Back Off", "Back-off").replace("O Auth", "OAuth");
+    };
+  })
+  .filter('humanizePodStatus', function(humanizeReasonFilter) {
+    return humanizeReasonFilter;
   });

@@ -32,7 +32,7 @@
       <td data-title="Status">
         <div row class="status">
           <status-icon status="pod | podStatus" disable-animation></status-icon>
-          <span flex>{{pod | podStatus | sentenceCase}}</span>
+          <span flex>{{pod | podStatus | humanizePodStatus}}</span>
         </div>
       </td>
       <td data-title="Ready">{{pod | numContainersReady}}/{{pod.spec.containers.length}}</td>
