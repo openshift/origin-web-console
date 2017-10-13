@@ -27,6 +27,6 @@
     </div>
   </div>
   <div class="order-service-description-block">
-    <p ng-bind-html="$ctrl.template | description | linky : '_blank'" class="description"></p>
+    <p ng-bind-html="($ctrl.template | description | linky : '_blank') || 'No description provided.'" class="description"></p>
   </div>
 </div>
