@@ -10514,8 +10514,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ui-select-match placeholder=\"Select a role\">\n" +
     "<span ng-bind=\"subject.newRole.metadata.name\"></span>\n" +
     "</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"role as role in filteredRoles | filter: excludeExistingRoles(subject.roles) | filter: $select.search | orderBy: 'metadata.name'\">\n" +
-    "<div>{{ role.metadata.name }}</div>\n" +
+    "<ui-select-choices repeat=\"role as role in filteredRoles | filter: excludeExistingRoles(subject.roles) | filter: { metadata: { name: $select.search } } track by (role | uid)\">\n" +
+    "<div ng-bind-html=\"role.metadata.name | highlight: $select.search\"></div>\n" +
     "<div ng-if=\"role | annotation : 'description'\">\n" +
     "<small>{{role | annotation : 'description'}}</small>\n" +
     "</div>\n" +
@@ -10568,8 +10568,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ui-select-match placeholder=\"Select a role\">\n" +
     "<span ng-bind=\"newBinding.newRole.metadata.name\"></span>\n" +
     "</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"role as role in filteredRoles | filter: $select.search | orderBy: 'metadata.name'\">\n" +
-    "<div>{{ role.metadata.name }}</div>\n" +
+    "<ui-select-choices repeat=\"role as role in filteredRoles | filter: { metadata: { name: $select.search } } track by (role | uid)\">\n" +
+    "<div ng-bind-html=\"role.metadata.name | highlight: $select.search\"></div>\n" +
     "<div ng-if=\"role | annotation : 'description'\">\n" +
     "<small>{{role | annotation : 'description'}}</small>\n" +
     "</div>\n" +
