@@ -7029,19 +7029,31 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<pf-wizard-step wz-disabled=\"{{!$ctrl.template}}\" step-title=\"Template Configuration\" step-id=\"template\" step-priority=\"2\" substeps=\"false\" ok-to-nav-away=\"true\" allow-click-nav=\"false\" next-enabled=\"!$ctrl.templateForm.$invalid\">\n" +
     "<div class=\"wizard-pf-main-inner-shadow-covers\" ng-if=\"$ctrl.template\">\n" +
     "<div class=\"order-service-details\">\n" +
-    "<div class=\"order-service-details-top\">\n" +
+    "<div class=\"order-service-details-top\" ng-class=\"{'order-service-details-top-icon-top': ($ctrl.vendor || ($ctrl.docUrl || $ctrl.supportUrl))}\">\n" +
     "<div class=\"service-icon\">\n" +
-    "<span class=\"icon {{$ctrl.iconClass}}\"></span>\n" +
+    "<span ng-if=\"$ctrl.image\" class=\"image\"><img ng-src=\"{{$ctrl.image}}\" alt=\"\"></span>\n" +
+    "<span ng-if=\"!$ctrl.image\" class=\"icon {{$ctrl.iconClass}}\" aria-hidden=\"true\"></span>\n" +
     "</div>\n" +
     "<div class=\"service-title-area\">\n" +
     "<div class=\"service-title\">\n" +
     "{{$ctrl.template | displayName}}\n" +
+    "</div>\n" +
+    "<div ng-if=\"$ctrl.vendor\" class=\"service-vendor\">\n" +
+    "{{$ctrl.vendor}}\n" +
     "</div>\n" +
     "<div class=\"order-service-tags\">\n" +
     "<span ng-repeat=\"tag in $ctrl.template.metadata.annotations.tags.split(',')\" class=\"tag\">\n" +
     "{{tag}}\n" +
     "</span>\n" +
     "</div>\n" +
+    "<ul ng-if=\"$ctrl.docUrl || $ctrl.supportUrl\" class=\"list-inline order-service-documentation-url\">\n" +
+    "<li ng-if=\"$ctrl.docUrl\">\n" +
+    "<a ng-href=\"{{$ctrl.docUrl}}\" target=\"_blank\" class=\"learn-more-link\">View Documentation <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
+    "</li>\n" +
+    "<li ng-if=\"$ctrl.supportUrl\">\n" +
+    "<a ng-href=\"{{$ctrl.supportUrl}}\" target=\"_blank\" class=\"learn-more-link\">Get Support <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
+    "</li>\n" +
+    "</ul>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"order-service-description-block\">\n" +
@@ -8857,7 +8869,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/process-template-dialog/process-template-info.html',
     "<div class=\"order-service-details\">\n" +
-    "<div class=\"order-service-details-top\">\n" +
+    "<div class=\"order-service-details-top\" ng-class=\"{'order-service-details-top-icon-top': ($ctrl.serviceClass.vendor || ($ctrl.docUrl || $ctrl.supportUrl))}\">\n" +
     "<div class=\"service-icon\">\n" +
     "<span ng-if=\"$ctrl.image\" class=\"image\"><img ng-src=\"{{$ctrl.image}}\" alt=\"\"></span>\n" +
     "<span ng-if=\"!$ctrl.image\" class=\"icon {{$ctrl.iconClass}}\" aria-hidden=\"true\"></span>\n" +
@@ -8865,6 +8877,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"service-title-area\">\n" +
     "<div class=\"service-title\">\n" +
     "{{$ctrl.template | displayName}}\n" +
+    "</div>\n" +
+    "<div ng-if=\"$ctrl.vendor\" class=\"service-vendor\">\n" +
+    "{{$ctrl.vendor}}\n" +
     "</div>\n" +
     "<div class=\"order-service-tags\">\n" +
     "<span ng-repeat=\"tag in $ctrl.template.metadata.annotations.tags.split(',')\" class=\"tag\">\n" +

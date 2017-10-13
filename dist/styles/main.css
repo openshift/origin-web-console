@@ -4115,6 +4115,7 @@ div.hopscotch-bubble .hopscotch-nav-button.prev{color:#030303}
 @media (min-width:1600px){.landing-side-bar{width:475px}
 }
 .order-service-details .order-service-details-top{align-items:center;display:flex}
+.order-service-details .order-service-details-top.order-service-details-top-icon-top{align-items:flex-start}
 .order-service-details .order-service-details-top .service-icon{margin-right:15px}
 .order-service-details .order-service-details-top .service-icon .icon{font-size:60px}
 .order-service-details .order-service-details-top .service-icon .image img{max-height:52px;max-width:52px}
@@ -4127,11 +4128,12 @@ div.hopscotch-bubble .hopscotch-nav-button.prev{color:#030303}
 @media (min-width:450px){.order-service-details .order-service-details-top .service-title{font-size:22px}
 }
 .order-service-details .order-service-details-top .service-title-area{flex:1 1 0%;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
+.order-service-details .order-service-details-top .service-vendor{margin-top:5px}
 .order-service-details .order-service-details-top .sub-title{font-size:20px;font-weight:600;color:#72767b}
 .order-service-details .order-service-description-block{margin-top:15px}
 .order-service-details .order-service-description-block .learn-more-link{font-size:11px;white-space:nowrap}
 .order-service-details .order-service-documentation-url{margin-top:4px}
-.order-service-details .order-service-tags{margin-top:5px}
+.order-service-details .order-service-tags{color:#9c9c9c;margin-top:5px}
 .order-service-details .order-service-tags .tag{margin-right:5px;text-transform:uppercase}
 .order-service-config .config-top .adv-ops{height:30%}
 .order-service-config .config-top .adv-ops-href{cursor:pointer;font-size:14px}
