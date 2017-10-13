@@ -5768,7 +5768,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/annotations.html',
     "<p ng-if=\"annotations\" ng-class=\"{'mar-bottom-xl': !expandAnnotations}\">\n" +
-    "<a href=\"\" ng-click=\"toggleAnnotations()\">{{!expandAnnotations ? 'Hide Annotations' : 'Show Annotations'}}</a>\n" +
+    "<a href=\"\" ng-click=\"toggleAnnotations()\">{{expandAnnotations ? 'Hide Annotations' : 'Show Annotations'}}</a>\n" +
     "</p>\n" +
     "<div ng-if=\"expandAnnotations && annotations\" class=\"table-responsive scroll-shadows-horizontal\">\n" +
     "<table class=\"table table-bordered table-bordered-columns key-value-table\">\n" +
