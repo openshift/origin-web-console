@@ -137,8 +137,8 @@
                         <span ng-bind="subject.newRole.metadata.name"></span>
                       </ui-select-match>
                       <ui-select-choices
-                        repeat="role as role in filteredRoles | filter: excludeExistingRoles(subject.roles) | filter: $select.search | orderBy: 'metadata.name'">
-                        <div>{{ role.metadata.name }}</div>
+                        repeat="role as role in filteredRoles | filter: excludeExistingRoles(subject.roles) | filter: { metadata: { name: $select.search } } track by (role | uid)">
+                        <div ng-bind-html="role.metadata.name | highlight: $select.search"></div>
                         <div ng-if="role | annotation : 'description'">
                           <small>{{role | annotation : 'description'}}</small>
                         </div>
@@ -251,8 +251,8 @@
                           <span ng-bind="newBinding.newRole.metadata.name"></span>
                         </ui-select-match>
                         <ui-select-choices
-                          repeat="role as role in filteredRoles | filter: $select.search | orderBy: 'metadata.name'">
-                          <div>{{ role.metadata.name }}</div>
+                          repeat="role as role in filteredRoles | filter: { metadata: { name: $select.search } } track by (role | uid)">
+                          <div ng-bind-html="role.metadata.name | highlight: $select.search"></div>
                           <div ng-if="role | annotation : 'description'">
                             <small>{{role | annotation : 'description'}}</small>
                           </div>

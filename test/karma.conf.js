@@ -131,7 +131,8 @@ module.exports = function(config) {
       'karma-ng-html2js-preprocessor',
       'karma-jasmine',
       'karma-coverage',
-      'karma-jasmine-diff-reporter'
+      'karma-jasmine-diff-reporter',
+      'karma-junit-reporter'
     ],
 
     // Continuous Integration mode
@@ -161,7 +162,7 @@ module.exports = function(config) {
     },
 
     // order of reporters matters, input/output may break
-    reporters: ['jasmine-diff', 'progress', 'coverage'],
+    reporters: ['jasmine-diff', 'progress', 'coverage', 'junit'],
 
     coverageReporter: {
       type: 'text',
@@ -172,6 +173,11 @@ module.exports = function(config) {
     jasmineDiffReporter: {
       // jasmine kinda has its own diff now, but its sub-par.
       legacy: true
+    },
+
+    junitReporter: {
+      // will be resolved to basePath (in the same way as files/exclude patterns)
+      outputDir: 'test/junit/'
     },
 
     nightmareOptions: {
