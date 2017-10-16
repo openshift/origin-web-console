@@ -6856,7 +6856,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"right-content\">\n" +
     "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading\" ng-if=\"!events\" class=\"events\"></ellipsis-pulser>\n" +
     "<div ng-if=\"events\" class=\"events\">\n" +
-    "<div ng-if=\"!(events | hashSize)\" class=\"mar-left-xl\">\n" +
+    "<div ng-if=\"!(events | hashSize)\" class=\"event\">\n" +
     "<em>No events.</em>\n" +
     "</div>\n" +
     "<div ng-repeat=\"event in events track by (event | uid)\" class=\"event animate-repeat\" ng-class=\"{'highlight': highlightedEvents[event.involvedObject.kind + '/' + event.involvedObject.name]}\">\n" +

@@ -21,7 +21,7 @@
   <div class="right-content">
     <ellipsis-pulser color="dark" size="sm" msg="Loading" ng-if="!events" class="events"></ellipsis-pulser>
     <div ng-if="events" class="events">
-      <div ng-if="!(events | hashSize)" class="mar-left-xl">
+      <div ng-if="!(events | hashSize)" class="event">
         <em>No events.</em>
       </div>
       <div ng-repeat="event in events track by (event | uid)" class="event animate-repeat" ng-class="{'highlight': highlightedEvents[event.involvedObject.kind + '/' + event.involvedObject.name]}">
