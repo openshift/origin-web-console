@@ -21,6 +21,9 @@ angular.module('openshiftConsole')
     ];
 
     $scope.deprovision = function() {
+      if ($scope.serviceInstance.metadata.deletionTimestamp) {
+        return;
+      }
       ServiceInstancesService.deprovision($scope.serviceInstance);
     };
 

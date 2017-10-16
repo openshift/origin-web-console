@@ -3654,7 +3654,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{serviceInstance | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"serviceInstancesVersion | canI : 'delete'\">\n" +
-    "<a href=\"\" ng-click=\"deprovision()\" role=\"button\">Delete</a>\n" +
+    "<a href=\"\" ng-click=\"deprovision()\" ng-attr-aria-disabled=\"{{serviceInstance.metadata.deletionTimestamp ? 'true' : undefined}}\" ng-class=\"{ 'disabled-link': serviceInstance.metadata.deletionTimestamp }\" role=\"button\">Delete</a>\n" +
     "</li>\n" +
     "</ul>\n" +
     "</div>\n" +

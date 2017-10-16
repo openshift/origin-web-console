@@ -24,7 +24,7 @@
                     <a ng-href="{{serviceInstance | editYamlURL}}" role="button">Edit YAML</a>
                   </li>
                   <li ng-if="serviceInstancesVersion | canI : 'delete'">
-                    <a href="" ng-click="deprovision()" role="button">Delete</a>
+                    <a href="" ng-click="deprovision()" ng-attr-aria-disabled="{{serviceInstance.metadata.deletionTimestamp ? 'true' : undefined}}" ng-class="{ 'disabled-link': serviceInstance.metadata.deletionTimestamp }" role="button">Delete</a>
                   </li>
                 </ul>
               </div>
