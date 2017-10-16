@@ -5957,11 +5957,11 @@ notification-drawer-wrapper .expanded-notification.unread .drawer-pf-notificatio
 .add-config-to-application .container-options .select-container .checkbox:first-of-type{margin-top:0}
 .add-config-to-application .dialog-title{border-bottom:1px solid #d1d1d1}
 .add-config-to-application .dialog-title h3{margin:18px 0;padding-left:15px}
+.add-config-to-application .dialog-body .add-choice,.add-config-to-application .help-block{margin-bottom:10px}
 .add-config-to-application .dialog-body{padding:20px}
-.add-config-to-application .dialog-body .add-choice{margin-bottom:10px}
 .add-config-to-application .dialog-body .button-group .btn{margin-left:10px}
 .add-config-to-application .dialog-body .button-group .btn:first-of-type{margin-left:0}
-.add-config-to-application .env-warning,.add-config-to-application .volume-options{margin-left:20px}
 .add-config-to-application .dialog-body legend{border-bottom:0;font-size:14px;font-weight:600;margin-bottom:10px}
 .add-config-to-application .dialog-body .radio{margin-top:0}
 .add-config-to-application .updating{background-color:#fff;bottom:55px;left:0;padding-top:60px;position:absolute;right:0;top:55px;z-index:1000}
+.add-config-to-application .volume-options{margin-left:20px}

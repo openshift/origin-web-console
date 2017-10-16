@@ -10993,7 +10993,23 @@ templateUrl: "views/directives/action-chip.html"
 }), function() {
 angular.module("openshiftConsole").component("addConfigToApplication", {
 controller: [ "$filter", "$scope", "APIService", "ApplicationsService", "DataService", "Navigate", "NotificationsService", "StorageService", function(e, t, n, a, r, o, i, s) {
-var c = this, l = e("humanizeKind"), u = function() {
+var c = this, l = e("humanizeKind"), u = function(e) {
+var t = c.apiObject.metadata.name;
+return "ConfigMap" === c.apiObject.kind ? _.some(e.envFrom, {
+configMapRef: {
+name: t
+}
+}) : _.some(e.envFrom, {
+secretRef: {
+name: t
+}
+});
+};
+c.checkApplicationContainersRefs = function(e) {
+var t = _.get(e, "spec.template.spec.containers");
+c.canAddRefToApplication = !_.every(t, u);
+};
+var d = function() {
 var e = {
 namespace: c.project.metadata.name
 };
@@ -11002,13 +11018,13 @@ c.applications = e, c.updating = !1;
 });
 };
 c.$onInit = function() {
-c.addType = "env", c.disableInputs = !1, u();
+c.addType = "env", c.disableInputs = !1, d();
 var e = new RegExp("^[A-Za-z_][A-Za-z0-9_]*$");
 c.hasInvalidEnvVars = _.some(c.apiObject.data, function(t, n) {
 return !e.test(n);
 });
 };
-var d = function(e) {
+var m = function(e) {
 return c.attachAllContainers || c.attachContainers[e.name];
 };
 c.$postLink = function() {
@@ -11037,51 +11053,51 @@ name: c.apiObject.metadata.name
 };
 }
 _.each(a.spec.containers, function(e) {
-d(e) && (e.envFrom = e.envFrom || [], e.envFrom.push(s));
+m(e) && !u(e) && (e.envFrom = e.envFrom || [], e.envFrom.push(s));
 });
 } else {
-var l = e("generateName")(c.apiObject.metadata.name + "-"), u = {
+var l = e("generateName")(c.apiObject.metadata.name + "-"), d = {
 name: l,
 mountPath: c.mountVolume,
 readOnly: !0
 };
 _.each(a.spec.containers, function(e) {
-d(e) && (e.volumeMounts = e.volumeMounts || [], e.volumeMounts.push(u));
+m(e) && (e.volumeMounts = e.volumeMounts || [], e.volumeMounts.push(d));
 });
-var m = {
+var p = {
 name: l
 };
 switch (c.apiObject.kind) {
 case "Secret":
-m.secret = {
+p.secret = {
 secretName: c.apiObject.metadata.name
 };
 break;
 
 case "ConfigMap":
-m.configMap = {
+p.configMap = {
 name: c.apiObject.metadata.name
 };
 }
-a.spec.volumes = a.spec.volumes || [], a.spec.volumes.push(m);
+a.spec.volumes = a.spec.volumes || [], a.spec.volumes.push(p);
 }
-var p = e("humanizeKind"), f = p(c.apiObject.kind), g = p(t.kind), v = {
+var f = e("humanizeKind"), g = f(c.apiObject.kind), v = f(t.kind), h = {
 namespace: c.project.metadata.name
 };
-r.update(n.kindToResource(t.kind), t.metadata.name, t, v).then(function() {
+r.update(n.kindToResource(t.kind), t.metadata.name, t, h).then(function() {
 i.addNotification({
 type: "success",
-message: "Successfully added " + f + " " + c.apiObject.metadata.name + " to " + g + " " + t.metadata.name + ".",
+message: "Successfully added " + g + " " + c.apiObject.metadata.name + " to " + v + " " + t.metadata.name + ".",
 links: [ {
 href: o.resourceURL(t),
-label: "View " + p(t.kind, !0)
+label: "View " + f(t.kind, !0)
 } ]
 }), angular.isFunction(c.onComplete) && c.onComplete();
 }, function(n) {
 var a = e("getErrorDetails");
 i.addNotification({
 type: "error",
-message: "An error occurred  adding " + f + " " + c.apiObject.metadata.name + " to " + g + " " + t.metadata.name + ". " + a(n)
+message: "An error occurred  adding " + g + " " + c.apiObject.metadata.name + " to " + v + " " + t.metadata.name + ". " + a(n)
 });
 }).finally(function() {
 c.disableInputs = !1;
