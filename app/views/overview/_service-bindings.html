@@ -10,7 +10,7 @@
     service-instances="$ctrl.serviceInstances"
     secrets="$ctrl.secrets">
   </service-binding>
-  <div ng-if="!$ctrl.refApiObject.metadata.deletionTimestamp && (($ctrl.refApiObject.kind === 'ServiceInstance') || ($ctrl.bindableServiceInstances | size)) && ({resource: 'servicebindings', group: 'servicecatalog.k8s.io'} | canI : 'create')">
+  <div ng-if="!$ctrl.refApiObject.metadata.deletionTimestamp && ($ctrl.bindableServiceInstances | size) && ({resource: 'servicebindings', group: 'servicecatalog.k8s.io'} | canI : 'create')">
     <a href="" ng-click="$ctrl.createBinding()" role="button">
       <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>
       Create Binding

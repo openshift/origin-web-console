@@ -86,12 +86,15 @@
                           </dd>
                         </dl>
                       </div>
-                      <div class="col-lg-6">
-                        <resource-service-bindings
+                      <div class="col-lg-6 mar-bottom-xl">
+                        <service-instance-bindings
+                          show-header="true"
                           project="project"
-                          project-context="projectContext"
-                          api-object="serviceInstance">
-                        </resource-service-bindings>
+                          bindings="bindings"
+                          service-instance="serviceInstance"
+                          service-class="serviceClass"
+                          service-plan="plan">
+                        </service-instance-bindings>
                       </div>
                     </div>
                     <annotations annotations="serviceInstance.metadata.annotations"></annotations>
