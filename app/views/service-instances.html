@@ -11,7 +11,7 @@
               Provisioned Services
             </h1>
           </div>
-          <div class="data-toolbar">
+          <div ng-if="(serviceInstances | size) > 0 || filterWithZeroResults" class="data-toolbar">
             <div class="data-toolbar-filter">
               <project-filter></project-filter>
             </div>
@@ -20,10 +20,23 @@
       </div><!-- /middle-header-->
       <div class="middle-content">
         <div class="container-fluid">
-          <alerts alerts="alerts"></alerts>
           <div class="row">
             <div class="col-md-12">
-              <table class="table table-bordered table-mobile table-layout-fixed">
+              <div ng-if="(serviceInstances | hashSize) == 0">
+                <p ng-if="!serviceInstancesLoaded">
+                  Loading...
+                </p>
+                <div ng-if="serviceInstancesLoaded" class="empty-state-message text-center">
+                  <div ng-if="!filterWithZeroResults">
+                    <h2>No provisioned services.</h2>
+                    <p>No provisioned services have been added to project {{projectName}}.</p>
+                  </div>
+                  <div ng-if="filterWithZeroResults">
+                    <h2>The filter is hiding all provisioned services. <a href="" ng-click="clearFilter()">Clear Filter</a></h2>
+                  </div>
+                </div>
+              </div>
+              <table ng-if="(serviceInstances | size) > 0" class="table table-bordered table-mobile table-layout-fixed">
                 <colgroup>
                   <col class="col-sm-3">
                 </colgroup>
@@ -36,11 +49,6 @@
                     <th>Bindings</th>
                   </tr>
                 </thead>
-                <tbody ng-if="(serviceInstances | size) === 0">
-                  <tr>
-                    <td colspan="4"><em>{{emptyMessage}}</em></td>
-                  </tr>
-                </tbody>
                 <tbody ng-if="(serviceInstances | size) > 0">
                   <tr ng-repeat="serviceInstance in serviceInstances track by (serviceInstance | uid)">
                     <td data-title="Name">

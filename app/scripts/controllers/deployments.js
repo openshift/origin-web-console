@@ -24,11 +24,14 @@ angular.module('openshiftConsole')
     $scope.unfilteredDeployments = {};
     $scope.replicationControllersByDC = {};
     $scope.labelSuggestions = {};
-    $scope.alerts = $scope.alerts || {};
     $scope.emptyMessage = "Loading...";
     $scope.expandedDeploymentConfigRow = {};
     $scope.unfilteredReplicaSets = {};
     $scope.unfilteredReplicationControllers = {};
+    $scope.showEmptyState = true;
+    $scope.clearFilter = function() {
+      LabelFilter.clear();
+    };
 
     var replicaSets, deploymentsByUID;
     var annotation = $filter('annotation');
@@ -37,6 +40,26 @@ angular.module('openshiftConsole')
     var deploymentConfigsVersion = APIService.getPreferredVersion('deploymentconfigs');
     var replicationControllersVersion = APIService.getPreferredVersion('replicationcontrollers');
     var replicaSetsVersion = APIService.getPreferredVersion('replicasets');
+
+    function updateFilterMessage() {
+
+      var unfilteredDeploymentsEmpty =
+        _.isEmpty($scope.unfilteredDeploymentConfigs) &&
+        _.isEmpty($scope.unfilteredReplicationControllers) &&
+        _.isEmpty($scope.unfilteredDeployments) &&
+        _.isEmpty($scope.unfilteredReplicaSets);
+
+      var isFiltering = !LabelFilter.getLabelSelector().isEmpty();
+
+      var filteredDeploymentsEmpty =
+        _.isEmpty($scope.deploymentConfigs) &&
+        _.isEmpty($scope.replicationControllersByDC['']) &&
+        _.isEmpty($scope.deployments) &&
+        _.isEmpty($scope.replicaSets);
+
+      $scope.showEmptyState = unfilteredDeploymentsEmpty;
+      $scope.filterWithZeroResults = isFiltering && filteredDeploymentsEmpty && !unfilteredDeploymentsEmpty;
+    }
 
     var groupReplicaSets = function() {
       if (!replicaSets || !deploymentsByUID) {
@@ -58,6 +81,7 @@ angular.module('openshiftConsole')
         $scope.latestReplicaSetByDeploymentUID[deploymentUID] =
           DeploymentsService.getActiveReplicaSet(replicaSets, deploymentsByUID[deploymentUID]);
       });
+      updateFilterMessage();
     };
 
     var watches = [];
@@ -82,7 +106,7 @@ angular.module('openshiftConsole')
             LabelFilter.setLabelSuggestions($scope.labelSuggestions);
             $scope.replicationControllersByDC[''] = LabelFilter.getLabelSelector().select($scope.replicationControllersByDC['']);
           }
-          updateFilterWarning();
+          updateFilterMessage();
 
           if (!action) {
             // Loading of the page that will create deploymentConfigDeploymentsInProgress structure, which will associate running deployment to his deploymentConfig.
@@ -121,6 +145,7 @@ angular.module('openshiftConsole')
         }));
 
         watches.push(DataService.watch(deploymentConfigsVersion, context, function(deploymentConfigs) {
+          $scope.deploymentConfigsLoaded = true;
           $scope.unfilteredDeploymentConfigs = deploymentConfigs.by("metadata.name");
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredDeploymentConfigs, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
@@ -131,7 +156,7 @@ angular.module('openshiftConsole')
             $scope.unfilteredReplicationControllers = $scope.replicationControllersByDC[''];
             $scope.replicationControllersByDC[''] = LabelFilter.getLabelSelector().select($scope.replicationControllersByDC['']);
           }
-          updateFilterWarning();
+          updateFilterMessage();
           Logger.log("deploymentconfigs (subscribe)", $scope.deploymentConfigs);
         }));
 
@@ -144,54 +169,15 @@ angular.module('openshiftConsole')
           Logger.log("deployments (subscribe)", $scope.unfilteredDeployments);
         }));
 
-        function updateFilterWarning() {
-          var isFiltering = !LabelFilter.getLabelSelector().isEmpty();
-          if (!isFiltering) {
-            delete $scope.alerts["deployments"];
-            return;
-          }
-
-          var unfilteredDeploymentsEmpty =
-            _.isEmpty($scope.unfilteredDeploymentConfigs) &&
-            _.isEmpty($scope.unfilteredReplicationControllers) &&
-            _.isEmpty($scope.unfilteredDeployments) &&
-            _.isEmpty($scope.unfilteredReplicaSets);
-          if (unfilteredDeploymentsEmpty) {
-            delete $scope.alerts["deployments"];
-            return;
-          }
-
-          var filteredDeploymentsEmpty =
-            _.isEmpty($scope.deploymentConfigs) &&
-            _.isEmpty($scope.replicationControllersByDC['']) &&
-            _.isEmpty($scope.deployments) &&
-            _.isEmpty($scope.replicaSets);
-          if (!filteredDeploymentsEmpty) {
-            delete $scope.alerts["deployments"];
-            return;
-          }
-
-          $scope.alerts["deployments"] = {
-            type: "warning",
-            details: "The active filters are hiding all deployments."
-          };
-        }
-
-        $scope.showEmptyMessage = function() {
-          if ($filter('hashSize')($scope.replicationControllersByDC) === 0) {
-            return true;
-          }
-
-          if ($filter('hashSize')($scope.replicationControllersByDC) === 1 && $scope.replicationControllersByDC['']) {
-            return true;
-          }
-
-          return false;
+        // Does the deployment config table have content?
+        $scope.showDeploymentConfigTable = function() {
+          var size = _.size($scope.replicationControllersByDC);
+          return size > 1 || (size === 1 && !$scope.replicationControllersByDC['']);
         };
 
         LabelFilter.onActiveFiltersChanged(function(labelSelector) {
           // trigger a digest loop
-          $scope.$apply(function() {
+          $scope.$evalAsync(function() {
             $scope.deploymentConfigs = labelSelector.select($scope.unfilteredDeploymentConfigs);
             $scope.replicationControllersByDC = DeploymentsService.associateDeploymentsToDeploymentConfig($scope.replicationControllers, $scope.deploymentConfigs, true);
             if ($scope.replicationControllersByDC['']) {
@@ -200,7 +186,7 @@ angular.module('openshiftConsole')
             }
             $scope.deployments = labelSelector.select($scope.unfilteredDeployments);
             $scope.replicaSets = labelSelector.select($scope.unfilteredReplicaSets);
-            updateFilterWarning();
+            updateFilterMessage();
           });
         });
 
