@@ -3917,7 +3917,9 @@ e.env = e.env || [], e.envFrom = e.envFrom || [];
 compact: function(e) {
 var a = n(e);
 _.each(a, function(e) {
-e.env = t.compactEntries(e.env);
+e.env = t.compactEntries(e.env), e.envFrom = _.reject(e.envFrom, function(e) {
+return !e.configMapRef && !e.secretRef;
+});
 });
 },
 copyAndNormalize: function(e) {
