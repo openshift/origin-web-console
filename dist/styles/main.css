@@ -3573,7 +3573,6 @@ table.dataTable thead .sorting_asc:after{content:"\f106";top:-3px}
 .toast-pf>.pficon:before{color:rgba(255,255,255,.74)}
 .toast-pf .toast-pf-action{margin-left:15px}
 .toast-pf .dropdown-kebab-pf .btn-link{padding-top:0;padding-bottom:0;vertical-align:text-bottom}
-.wizard-pf-substep-number,.wizard-pf-substep-title{vertical-align:middle;margin-right:5px;display:inline-block}
 .toast-pf-top-right{left:20px;position:absolute;right:20px;top:12px;z-index:1055}
 @media (min-width:992px){.toast-pf{display:inline-block}
 .toast-pf-max-width{max-width:31.1%}
@@ -3819,8 +3818,8 @@ table.dataTable thead .sorting_asc:after{content:"\f106";top:-3px}
 .wizard-pf-sidebar .list-group-item.active>a:before{content:" ";background:#39a5dc;height:100%;left:0;position:absolute;top:0;width:3px}
 .wizard-pf-sidebar .list-group-item.active>a:after{color:#39a5dc;content:"\f105";display:block;font-family:FontAwesome;font-size:24px;font-weight:500;line-height:30px;padding-top:10px;position:absolute;right:23px;top:0}
 }
-.wizard-pf-substep-number{width:25px}
-.wizard-pf-substep-title{text-align:left}
+.wizard-pf-substep-number{display:inline-block;margin-right:5px;vertical-align:middle;width:25px}
+.wizard-pf-substep-title{display:inline-block;margin-right:5px;text-align:left;vertical-align:middle}
 .wizard-pf-steps{border-bottom:solid 1px #d1d1d1}
 .wizard-pf-steps-indicator{background:#ededed;border-top:1px solid #d1d1d1;display:inline-block;display:flex;font-size:18px;list-style:none;margin-bottom:0;padding:15px 0}
 @media (min-width:768px){.wizard-pf-steps{text-align:center}
@@ -5480,6 +5479,7 @@ dl.secret-data pre{margin-bottom:0}
 .table-mobile>tbody>tr>td{border:none;border-bottom:1px solid #dedede;min-height:37.67px;padding-left:35%;position:relative}
 .table-mobile>tbody>tr>td:last-child{border-bottom:none}
 .table-mobile>tbody>tr>td:before{content:attr(data-title);position:absolute;top:8px;left:6px;width:35%;padding-right:10px;white-space:nowrap}
+td[role=presentation]{display:none}
 }
 .tooltip-inner,h1.contains-actions{word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .table-responsive{margin-bottom:21px}
@@ -5495,9 +5495,7 @@ dl.secret-data pre{margin-bottom:0}
 .table-responsive .table.table-bordered>tbody>tr:first-child>td,.table-responsive .table.table-bordered>tbody>tr:first-child>th,.table-responsive .table.table-bordered>thead>tr:first-child>td,.table-responsive .table.table-bordered>thead>tr:first-child>th{border-top:0}
 .table>tbody>tr.disabled>td,.table>tbody>tr.disabled>th,.table>tbody>tr>td.disabled,.table>tbody>tr>th.disabled,.table>tfoot>tr.disabled>td,.table>tfoot>tr.disabled>th,.table>tfoot>tr>td.disabled,.table>tfoot>tr>th.disabled,.table>thead>tr.disabled>td,.table>thead>tr.disabled>th,.table>thead>tr>td.disabled,.table>thead>tr>th.disabled{background-color:#f5f5f5}
 .table-hover>tbody>tr.disabled:hover>td,.table-hover>tbody>tr.disabled:hover>th,.table-hover>tbody>tr:hover>.disabled,.table-hover>tbody>tr>td.disabled:hover,.table-hover>tbody>tr>th.disabled:hover{background-color:#e8e8e8}
-td[role=presentation].arrow:after{content:"\2193"}
-@media (min-width:768px){td[role=presentation].arrow:after{content:"\2192"}
-}
+td[role=presentation].arrow:after{content:"\2192"}
 .tile{background:#fff;padding:20px;margin-bottom:20px;word-wrap:break-word;overflow-x:hidden}
 .tile h1,.tile h2,.tile h3{margin:10.5px 0px}
 .tile-click:hover .image-icon{opacity:.75}
