@@ -6311,7 +6311,7 @@ e.alerts = {}, e.projectName = n.project, e.serviceInstance = null, e.serviceCla
 title: "Provisioned Services",
 link: "project/" + n.project + "/browse/service-instances"
 } ], e.deprovision = function() {
-i.deprovision(e.serviceInstance);
+e.serviceInstance.metadata.deletionTimestamp || i.deprovision(e.serviceInstance);
 };
 var s = [], c = t("serviceInstanceDisplayName");
 e.serviceInstancesVersion = a.getPreferredVersion("serviceinstances");
