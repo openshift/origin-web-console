@@ -5677,9 +5677,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<form name=\"addToApplicationForm\" novalidate>\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
     "<legend>Add this {{ctrl.apiObject.kind | humanizeKind}} to application:</legend>\n" +
-    "<div class=\"form-group\">\n" +
+    "<div class=\"form-group\" ng-class=\"{'has-error' : ctrl.addType === 'env' && ctrl.application && !ctrl.canAddRefToApplication}\">\n" +
     "<div class=\"application-select\">\n" +
-    "<ui-select id=\"application\" ng-model=\"ctrl.application\" required=\"true\" ng-disabled=\"ctrl.disableInputs\">\n" +
+    "<ui-select id=\"application\" ng-model=\"ctrl.application\" on-select=\"ctrl.checkApplicationContainersRefs($item)\" required=\"true\" ng-disabled=\"ctrl.disableInputs\">\n" +
     "<ui-select-match placeholder=\"{{ctrl.applications.length ? 'Select an application' : 'There are no applications in this project'}}\">\n" +
     "<span>\n" +
     "{{$select.selected.metadata.name}}\n" +
@@ -5692,6 +5692,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div class=\"has-error\" ng-if=\"ctrl.addType === 'env' && ctrl.application && !ctrl.canAddRefToApplication\">\n" +
+    "<span class=\"help-block\">\n" +
+    "The {{ctrl.apiObject.kind | humanizeKind}} has already been added to this application.\n" +
+    "</span>\n" +
+    "</div>\n" +
     "<legend>Add {{ctrl.apiObject.kind | humanizeKind}} as:</legend>\n" +
     "<div class=\"form-group\">\n" +
     "<div class=\"radio\">\n" +
@@ -5700,10 +5705,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input type=\"radio\" ng-model=\"ctrl.addType\" value=\"env\" ng-disabled=\"ctrl.disableInputs\">\n" +
     "Environment variables\n" +
     "</label>\n" +
-    "<div class=\"alert alert-warning env-warning\" ng-show=\"ctrl.hasInvalidEnvVars\">\n" +
-    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
-    "<span>Some of the keys for {{ctrl.apiObject.kind | humanizeKind}}\n" +
-    "<strong>{{ctrl.apiObject.metadata.name}}</strong> are not valid environment variable names and will not be added.</span>\n" +
+    "<div class=\"has-warning\" ng-if=\"ctrl.hasInvalidEnvVars\">\n" +
+    "<span class=\"help-block\">Some of the keys for {{ctrl.apiObject.kind | humanizeKind}} <strong>{{ctrl.apiObject.metadata.name}}</strong> are not valid environment variable names and will not be added.</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div>\n" +
@@ -5714,7 +5717,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"volume-options\">\n" +
     "<div ng-class=\"{'has-error': (addToApplicationForm.mountVolume.$error.oscUnique || (addToApplicationForm.mountVolume.$error.pattern && addToApplicationForm.mountVolume.$touched))}\">\n" +
-    "<input class=\"form-control\" name=\"mountVolume\" id=\"mountVolume\" placeholder=\"Enter a mount path\" type=\"text\" required ng-pattern=\"/^\\/.*$/\" osc-unique=\"ctrl.existingMountPaths\" aria-describedby=\"mount-path-help\" ng-disabled=\"ctrl.addType !== 'volume' || ctrl.disableInputs\" ng-model=\"ctrl.mountVolume\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
+    "<input class=\"form-control\" name=\"mountVolume\" id=\"mountVolume\" placeholder=\"Enter a mount path\" type=\"text\" required ng-pattern=\"/^\\/.*$/\" osc-unique=\"ctrl.existingMountPaths\" aria-describedby=\"mount-path-help\" ng-disabled=\"ctrl.addType !== 'volume' || ctrl.disableInputs || !ctrl.application\" ng-model=\"ctrl.mountVolume\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "</div>\n" +
     "<div class=\"help-block bind-description\">\n" +
     "Mount Path for the volume. A file will be created in this directory for each key from the {{ctrl.apiObject.kind | humanizeKind}}. The file contents will be the value of the key.\n" +
@@ -5732,6 +5735,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div ng-if=\"ctrl.canAddRefToApplication\">\n" +
     "<legend ng-if-start=\"ctrl.application.spec.template.spec.containers.length > 1\">Containers:</legend>\n" +
     "<div ng-if-end class=\"form-group container-options\">\n" +
     "<div ng-if=\"ctrl.attachAllContainers\">\n" +
@@ -5745,11 +5749,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</select-containers>\n" +
     "</div>\n" +
     "</div>\n" +
+    "</div>\n" +
     "<div class=\"button-group pull-right\">\n" +
     "<button class=\"btn btn-default\" ng-class=\"{'dialog-btn': isDialog}\" ng-click=\"ctrl.onCancel()\">\n" +
     "Cancel\n" +
     "</button>\n" +
-    "<button type=\"submit\" class=\"btn btn-primary\" ng-class=\"{'dialog-btn': isDialog}\" ng-click=\"ctrl.addToApplication()\" ng-disabled=\"ctrl.addType === 'volume' && addToApplicationForm.$invalid || !ctrl.application\" value=\"\">\n" +
+    "<button type=\"submit\" class=\"btn btn-primary\" ng-class=\"{'dialog-btn': isDialog}\" ng-click=\"ctrl.addToApplication()\" ng-disabled=\"addToApplicationForm.$invalid || (ctrl.addType === 'env' && !ctrl.canAddRefToApplication)\" value=\"\">\n" +
     "Save\n" +
     "</button>\n" +
     "</div>\n" +
