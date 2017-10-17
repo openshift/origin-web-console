@@ -249,11 +249,12 @@
 
 .table-row-variant(disabled; @color-pf-black-150);
 
-// swaps direction of arrow in table cell
-td[role="presentation"].arrow:after {
-  content: "\2193";
-
-  @media (min-width: @screen-sm-min) {
+td[role="presentation"] {
+  @media(max-width: @screen-xs-max) {
+    // hide td[role="presentation"] at mobile
+    display: none;
+  }
+  &.arrow:after {
     content: "\2192";
   }
 }
