@@ -5259,7 +5259,7 @@ toggle: {
 roles: !1
 },
 filteredRoles: n,
-showAllRoles: function() {
+toggleRoles: function() {
 a.toggle.roles = !a.toggle.roles, a.toggle.roles ? a.filteredRoles = t : (a.filteredRoles = n, r(a.newBinding.role, n) || (a.newBinding.role = null));
 }
 });

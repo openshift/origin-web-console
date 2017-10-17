@@ -380,7 +380,7 @@ angular
                   roles: false
                 },
                 filteredRoles: filteredRoles,
-                showAllRoles: function() {
+                toggleRoles: function() {
                   $scope.toggle.roles = !$scope.toggle.roles;
                   if($scope.toggle.roles) {
                     $scope.filteredRoles = sortedRoles;
