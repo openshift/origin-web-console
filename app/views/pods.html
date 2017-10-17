@@ -11,7 +11,7 @@
           </span>
         </h1>
       </div>
-      <div ng-if="!renderOptions.showGetStarted" class="data-toolbar">
+      <div ng-if="((pods | hashSize) > 0) || filterWithZeroResults" class="data-toolbar">
         <div class="data-toolbar-filter">
           <project-filter></project-filter>
         </div>
@@ -20,10 +20,23 @@
   </div><!-- /middle-header-->
   <div class="middle-content">
     <div class="container-fluid">
-      <alerts alerts="alerts"></alerts>
       <div class="row">
         <div class="col-md-12">
-          <pods-table pods="pods" empty-message="emptyMessage"></pods-table>
+          <div ng-if="(pods | hashSize) == 0">
+            <p ng-if="!podsLoaded">
+              Loading...
+            </p>
+            <div ng-if="podsLoaded" class="empty-state-message text-center">
+              <div ng-if="!filterWithZeroResults">
+                <h2>No pods.</h2>
+                <p>No pods have been added to project {{projectName}}.</p>
+              </div>
+              <div ng-if="filterWithZeroResults">
+                <h2>The filter is hiding all pods. <a href="" ng-click="clearFilter()">Clear Filter</a></h2>
+              </div>
+            </div>
+          </div>
+          <pods-table ng-if="(pods | hashSize) > 0" pods="pods"></pods-table>
         </div><!-- /col-* -->
       </div>
     </div>

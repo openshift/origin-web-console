@@ -17,9 +17,9 @@ angular.module('openshiftConsole')
     // $scope.imagesByDockerReference = {};
     // $scope.imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
     $scope.labelSuggestions = {};
-    $scope.alerts = $scope.alerts || {};
-    $scope.emptyMessage = "Loading...";
-
+    $scope.clearFilter = function() {
+      LabelFilter.clear();
+    };
     var watches = [];
 
     ProjectsService
@@ -27,14 +27,14 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
         watches.push(DataService.watch("pods", context, function(pods) {
+          $scope.podsLoaded = true;
           $scope.unfilteredPods = pods.by("metadata.name");
           $scope.pods = LabelFilter.getLabelSelector().select($scope.unfilteredPods);
-          $scope.emptyMessage = "No pods to show";
           // TODO should we add links to the image streams the pod is using
           //ImageStreamResolver.fetchReferencedImageStreamImages($scope.pods, $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, $scope);
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredPods, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
-          updateFilterWarning();
+          updateFilterMessage();
           Logger.log("pods (subscribe)", $scope.unfilteredPods);
         }));
 
@@ -47,23 +47,15 @@ angular.module('openshiftConsole')
         //   Logger.log("imagestreams (subscribe)", $scope.imageStreams);
         // }));
 
-        function updateFilterWarning() {
-          if (!LabelFilter.getLabelSelector().isEmpty() && $.isEmptyObject($scope.pods) && !$.isEmptyObject($scope.unfilteredPods)) {
-            $scope.alerts["pods"] = {
-              type: "warning",
-              details: "The active filters are hiding all pods."
-            };
-          }
-          else {
-            delete $scope.alerts["pods"];
-          }
+        function updateFilterMessage() {
+          $scope.filterWithZeroResults = !LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.pods) && !_.isEmpty($scope.unfilteredPods);
         }
 
         LabelFilter.onActiveFiltersChanged(function(labelSelector) {
           // trigger a digest loop
-          $scope.$apply(function() {
+          $scope.$evalAsync(function() {
             $scope.pods = labelSelector.select($scope.unfilteredPods);
-            updateFilterWarning();
+            updateFilterMessage();
           });
         });
 

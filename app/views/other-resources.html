@@ -21,10 +21,25 @@
   </div><!-- /middle-header-->
   <div class="middle-content">
     <div class="container-fluid">
-      <alerts alerts="alerts"></alerts>
       <div class="row">
         <div class="col-md-12">
-          <table class="table table-bordered table-mobile table-layout-fixed" ng-class="{ 'table-empty': (resources | hashSize) === 0 }">
+          <div ng-if="(resources | hashSize) == 0">
+            <p ng-if="!kindSelector.selected">
+              <em>Select a resource from the list above...</em>
+            </p>
+            <div ng-if="kindSelector.selected" class="empty-state-message text-center">
+              <div ng-if="!filterWithZeroResults">
+                <h2>No {{resourceName}}.</h2>
+                <p>
+                  No {{resourceName}} have been added to project {{projectName}}.
+                </p>
+              </div>
+              <div ng-if="filterWithZeroResults">
+                <h2>The filter is hiding all {{resourceName}}. <a href="" ng-click="clearFilter()">Clear Filter</a></h2>
+              </div>
+            </div>
+          </div>
+          <table ng-if="(resources | hashSize) > 0" class="table table-bordered table-mobile table-layout-fixed">
             <colgroup>
               <col class="col-sm-3">
               <col class="col-sm-2">
@@ -39,10 +54,7 @@
                 <th><span class="sr-only">Actions</span></th>
               </tr>
             </thead>
-            <tbody ng-if="(resources | hashSize) == 0">
-              <tr><td colspan="4"><em>{{emptyMessage}}</em></td></tr>
-            </tbody>
-            <tbody ng-if="(resources | hashSize) > 0">
+            <tbody>
               <tr ng-repeat="resource in resources | orderObjectsByDate : true">
                 <td data-title="Name">{{resource.metadata.name}}</td>
                 <td data-title="Created"><span am-time-ago="resource.metadata.creationTimestamp"></span></td>
@@ -65,7 +77,6 @@
                           group="{{kindSelector.selected.group}}"
                           resource-name="{{resource.metadata.name}}"
                           project-name="{{resource.metadata.namespace}}"
-                          alerts="alerts"
                           stay-on-current-page="true"
                           success="loadKind">
                         </delete-link>

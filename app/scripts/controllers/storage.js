@@ -15,7 +15,6 @@ angular.module('openshiftConsole')
     $scope.labelSuggestions = {};
     $scope.alerts = $scope.alerts || {};
     $scope.outOfClaims = false;
-    $scope.emptyMessage = "Loading...";
 
     var setOutOfClaimsWarning = function() {
       var isHidden = AlertMessageService.isAlertPermanentlyHidden("storage-quota-limit-reached", $scope.projectName);
@@ -55,11 +54,11 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
          watches.push(DataService.watch("persistentvolumeclaims", context, function(pvcs) {
+          $scope.pvcsLoaded = true;
           $scope.unfilteredPVCs = pvcs.by("metadata.name");
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredPVCs, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
           $scope.pvcs = LabelFilter.getLabelSelector().select($scope.unfilteredPVCs);
-          $scope.emptyMessage = "No persistent volume claims to show";
           updateFilterWarning();
           Logger.log("pvcs (subscribe)", $scope.unfilteredPVCs);
         }));
@@ -70,9 +69,11 @@ angular.module('openshiftConsole')
               type: "warning",
               details: "The active filters are hiding all persistent volume claims."
             };
+            $scope.filterWithZeroResults = true;
           }
           else {
             delete $scope.alerts["storage"];
+            $scope.filterWithZeroResults = false;
           }
         }
 

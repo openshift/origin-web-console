@@ -23,8 +23,9 @@ angular.module('openshiftConsole')
     $scope.missingStatusTagsByImageStream = {};
     $scope.builds = {};
     $scope.labelSuggestions = {};
-    $scope.alerts = $scope.alerts || {};
-    $scope.emptyMessage = "Loading...";
+    $scope.clearFilter = function() {
+      LabelFilter.clear();
+    };
 
     var imageStreamsVersion = APIService.getPreferredVersion('imagestreams');
 
@@ -35,13 +36,13 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
         watches.push(DataService.watch(imageStreamsVersion, context, function(imageStreams) {
+          $scope.imageStreamsLoaded = true;
           $scope.unfilteredImageStreams = imageStreams.by("metadata.name");
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredImageStreams, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
           $scope.imageStreams = LabelFilter.getLabelSelector().select($scope.unfilteredImageStreams);
-          $scope.emptyMessage = "No image streams to show";
           updateMissingStatusTags();
-          updateFilterWarning();
+          updateFilterMessage();
           Logger.log("image streams (subscribe)", $scope.imageStreams);
         }));
 
@@ -71,23 +72,15 @@ angular.module('openshiftConsole')
           });
         }
 
-        function updateFilterWarning() {
-          if (!LabelFilter.getLabelSelector().isEmpty() && $.isEmptyObject($scope.imageStreams) && !$.isEmptyObject($scope.unfilteredImageStreams)) {
-            $scope.alerts["imageStreams"] = {
-              type: "warning",
-              details: "The active filters are hiding all image streams."
-            };
-          }
-          else {
-            delete $scope.alerts["imageStreams"];
-          }
+        function updateFilterMessage() {
+          $scope.filterWithZeroResults = !LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.imageStreams) && !_.isEmpty($scope.unfilteredImageStreams);
         }
 
         LabelFilter.onActiveFiltersChanged(function(labelSelector) {
           // trigger a digest loop
-          $scope.$apply(function() {
+          $scope.$evalAsync(function() {
             $scope.imageStreams = labelSelector.select($scope.unfilteredImageStreams);
-            updateFilterWarning();
+            updateFilterMessage();
           });
         });
 

@@ -15,7 +15,7 @@
           -->
         </h1>
       </div>
-      <div ng-if="!renderOptions.showGetStarted" class="data-toolbar">
+      <div ng-if="((statefulSets | hashSize) > 0) || filterWithZeroResults" class="data-toolbar">
         <div class="data-toolbar-filter">
           <project-filter></project-filter>
         </div>
@@ -24,11 +24,23 @@
   </div>
   <div class="middle-content" persist-tab-state>
     <div class="container-fluid">
-      <alerts alerts="alerts"></alerts>
-      <div ng-if="!loaded">Loading...</div>
       <div class="row" ng-if="loaded">
         <div class="col-md-12">
-          <table class="table table-bordered table-mobile table-layout-fixed">
+          <div ng-if="(statefulSets | hashSize) == 0">
+            <p ng-if="!loaded">
+              Loading...
+            </p>
+            <div ng-if="loaded" class="empty-state-message text-center">
+              <div ng-if="!filterWithZeroResults">
+                <h2>No stateful sets.</h2>
+                <p>No stateful sets have been added to project {{projectName}}.</p>
+              </div>
+              <div ng-if="filterWithZeroResults">
+                <h2>The filter is hiding all stateful sets. <a href="" ng-click="clearFilter()">Clear Filter</a></h2>
+              </div>
+            </div>
+          </div>
+          <table ng-if="(statefulSets | hashSize) > 0" class="table table-bordered table-mobile table-layout-fixed">
             <colgroup>
               <col class="col-sm-5">
             </colgroup>
@@ -39,11 +51,6 @@
                 <th>Created</th>
               </tr>
             </thead>
-            <tbody ng-if="(statefulSets | hashSize) == 0">
-              <tr>
-                <td colspan="3"><em>No stateful sets to show</em></td>
-              </tr>
-            </tbody>
             <tbody ng-repeat="(statefulSetName, statefulSet) in statefulSets">
               <tr>
                 <td data-title="Name">

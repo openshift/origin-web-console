@@ -2,6 +2,10 @@
   <div class="middle-header header-toolbar">
     <div class="container-fluid">
       <div class="page-header page-header-bleed-right page-header-bleed-left">
+        <div class="pull-right" ng-if="project && ('persistentvolumeclaims' | canI : 'create') && ((pvcs | hashSize) > 0 || filterWithZeroResults)">
+          <a ng-if="!outOfClaims" ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-default">Create Storage</a>
+          <a ng-if="outOfClaims" href="" class="btn btn-default disabled" aria-disabled="true">Create Storage</a>
+        </div>
         <h1>
           Storage
           <span class="page-header-link">
@@ -11,7 +15,7 @@
           </span>
         </h1>
       </div>
-      <div ng-if="!renderOptions.showGetStarted" class="data-toolbar">
+      <div ng-if="(pvcs | hashSize) > 0 || filterWithZeroResults" class="data-toolbar">
         <div class="data-toolbar-filter">
           <project-filter></project-filter>
         </div>
@@ -23,18 +27,22 @@
       <alerts alerts="alerts"></alerts>
       <div class="row">
         <div class="col-md-12">
-          <div class="section-header page-header-bleed-right page-header-bleed-left">
-            <div class="hidden-xs pull-right" ng-if="project && ('persistentvolumeclaims' | canI : 'create')">
-              <a ng-if="!outOfClaims" ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-default">Create Storage</a>
-              <a ng-if="outOfClaims" href="" class="btn btn-default disabled" aria-disabled="true">Create Storage</a>
-            </div>
-            <h2>Persistent Volume Claims</h2>
-            <div class="visible-xs-block mar-bottom-sm" ng-if="project && ('persistentvolumeclaims' | canI : 'create')">
-              <a ng-if="!outOfClaims" ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-default">Create Storage</a>
-              <a ng-if="outOfClaims" href="" class="btn btn-default disabled" aria-disabled="true">Create Storage</a>
+          <div ng-if="(pvcs | hashSize) === 0">
+            <p ng-if="!pvcsLoaded">
+              Loading...
+            </p>
+            <div ng-if="pvcsLoaded" class="empty-state-message text-center">
+              <h2>No persistent volume claims.</h2>
+              <p ng-if="!filterWithZeroResults">
+                No persistent volume claims have been added to project {{projectName}}.
+              </p>
+              <p ng-if="project && ('persistentvolumeclaims' | canI : 'create') && !filterWithZeroResults">
+                <a ng-if="!outOfClaims" ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-primary">Create Storage</a>
+                <a ng-if="outOfClaims" href="" class="btn btn-primary disabled" aria-disabled="true">Create Storage</a>
+              </p>
             </div>
           </div>
-          <table class="table table-bordered table-mobile table-layout-fixed" ng-class="{ 'table-empty': (pvcs | hashSize) === 0 }">
+          <table ng-if="(pvcs | hashSize) > 0" class="table table-bordered table-mobile table-layout-fixed">
             <colgroup>
               <col class="col-sm-5">
             </colgroup>
@@ -47,10 +55,7 @@
                 <th>Age</th>
               </tr>
             </thead>
-            <tbody ng-if="(pvcs | hashSize) === 0">
-              <tr><td colspan="5"><em>{{emptyMessage}}</em></td></tr>
-            </tbody>
-            <tbody ng-if="(pvcs | hashSize) > 0">
+            <tbody>
               <tr ng-repeat="pvc in pvcs | orderObjectsByDate : true">
                 <td data-title="Name"><a ng-href="{{pvc | navigateResourceURL}}">{{pvc.metadata.name}}</a>
                   <span ng-if="pvc | storageClass" class="text-muted"> using storage class {{pvc | storageClass}}</span>

@@ -11,14 +11,15 @@ angular.module('openshiftConsole')
                                                       LabelFilter,
                                                       Logger,
                                                       ProjectsService) {
-    $scope.alerts = {};
     $scope.bindingsByInstanceRef = {};
-    $scope.emptyMessage = "Loading...";
     $scope.labelSuggestions = {};
     $scope.projectName = $routeParams.project;
     $scope.serviceClasses = {};
     $scope.serviceInstances = {};
     $scope.unfilteredServiceInstances = {};
+    $scope.clearFilter = function() {
+      LabelFilter.clear();
+    };
 
     var watches = [];
 
@@ -49,12 +50,12 @@ angular.module('openshiftConsole')
 
         var serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
         watches.push(DataService.watch(serviceInstancesVersion, context, function(serviceInstances) {
-          $scope.emptyMessage = "No provisioned services to show";
+          $scope.serviceInstancesLoaded = true;
           $scope.unfilteredServiceInstances = serviceInstances.by('metadata.name');
 
           sortServiceInstances();
           updateFilter();
-          updateFilterWarning();
+          updateFilterMessage();
 
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredServiceInstances, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
@@ -69,23 +70,15 @@ angular.module('openshiftConsole')
           updateFilter();
         });
 
-        function updateFilterWarning() {
-          if (!LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.serviceInstances)  && !_.isEmpty($scope.unfilteredServiceInstances)) {
-            $scope.alerts["all-instances-filtered"] = {
-              type: "warning",
-              details: "The active filters are hiding all provisioned services."
-            };
-          }
-          else {
-            delete $scope.alerts["all-instances-filtered"];
-          }
+        function updateFilterMessage() {
+          $scope.filterWithZeroResults = !LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.serviceInstances)  && !_.isEmpty($scope.unfilteredServiceInstances);
         }
 
         LabelFilter.onActiveFiltersChanged(function(labelSelector) {
           // trigger a digest loop
           $scope.$evalAsync(function() {
             $scope.serviceInstances = labelSelector.select($scope.unfilteredServiceInstances);
-            updateFilterWarning();
+            updateFilterMessage();
           });
         });
 

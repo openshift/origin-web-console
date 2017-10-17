@@ -11,7 +11,7 @@
           </span>
         </h1>
       </div>
-      <div ng-if="!renderOptions.showGetStarted" class="data-toolbar">
+      <div ng-if="(((latestByConfig | hashSize) || (buildsNoConfig | hashSize)) || filterWithZeroResults)" class="data-toolbar">
         <div class="data-toolbar-filter">
           <project-filter></project-filter>
         </div>
@@ -20,10 +20,23 @@
   </div><!-- /middle-header-->
   <div class="middle-content">
     <div class="container-fluid">
-      <alerts alerts="alerts"></alerts>
       <div class="row">
         <div class="col-md-12">
-          <table class="table table-bordered table-mobile table-layout-fixed">
+          <div ng-if="!(latestByConfig | hashSize) && !(buildsNoConfig | hashSize)">
+            <p ng-if="!buildsLoaded">
+              Loading...
+            </p>
+            <div ng-if="buildsLoaded" class="empty-state-message text-center">
+              <div ng-if="!filterWithZeroResults">
+                <h2>No builds.</h2>
+                <p>No builds have been added to project {{projectName}}.</p>
+              </div>
+              <div ng-if="filterWithZeroResults">
+                <h2>The filter is hiding all builds. <a href="" ng-click="clearFilter()">Clear Filter</a></h2>
+              </div>
+            </div>
+          </div>
+          <table class="table table-bordered table-mobile table-layout-fixed" ng-if="(latestByConfig | hashSize) || (buildsNoConfig | hashSize)">
             <colgroup>
               <col class="col-sm-2">
               <col class="col-sm-1">
@@ -44,10 +57,7 @@
                 <th ng-class="{'hidden-sm' : (latestByConfig | hashSize)}">Source</th>
               </tr>
             </thead>
-            <tbody ng-if="!(latestByConfig | hashSize) && !(buildsNoConfig | hashSize)">
-              <tr><td colspan="7"><em>{{emptyMessage}}</em></td></tr>
-            </tbody>
-            <tbody ng-if="(latestByConfig | hashSize) || (buildsNoConfig | hashSize)">
+            <tbody>
               <tr ng-repeat="(buildConfigName, latestBuild) in latestByConfig" ng-if="buildConfigName !== ''">
                 <!-- Build config with no builds-->
                 <td ng-if-start="!latestBuild" data-title="Name">
