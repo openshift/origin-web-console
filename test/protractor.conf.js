@@ -117,7 +117,10 @@ exports.config = {
 
     jasmine.getEnv().addReporter(specReporter);
 
-    jasmine.getEnv().addReporter(videoReporter);
+    // we only need the video reporter in Jenkins
+    if(!isMac) {
+      jasmine.getEnv().addReporter(videoReporter);
+    }
 
     jasmine.getEnv().addReporter(junitReporter);
   },
