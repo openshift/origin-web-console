@@ -4431,6 +4431,7 @@ copy-to-clipboard .input-group.limit-width{max-width:300px}
 .row-cards-pf-flex .card-pf-footer .btn{margin-bottom:10px}
 .row-cards-pf-flex .card-pf-title{line-height:1.3;margin:0;overflow:hidden;text-overflow:ellipsis}
 .landing .nav-tabs,.landing h1{margin-bottom:0!important;margin-top:0!important}
+.landing-page{background:#292e34;min-height:100%}
 @media (min-width:768px){.wizard-pf-main.bind-service-wizard-step{height:350px}
 .catalog-search,.landing-side-bar{top:61px}
 }
