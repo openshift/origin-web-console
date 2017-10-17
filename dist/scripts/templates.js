@@ -10616,7 +10616,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-add-role\" row>\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +
-    "<input type=\"checkbox\" class=\"toggle-hidden\" ng-click=\"showAllRoles($event)\">\n" +
+    "<input type=\"checkbox\" class=\"toggle-hidden\" ng-click=\"toggleRoles($event)\" ng-checked=\"toggle.roles\">\n" +
     "Show hidden roles</label>&nbsp;<a href=\"\" class=\"action-inline\" data-toggle=\"popover\" data-trigger=\"hover focus\" data-content=\"System roles are hidden by default and do not typically need to be managed.\"><i class=\"pficon pficon-help\"></i></a>\n" +
     "</div>\n" +
     "</div>\n" +

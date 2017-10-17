@@ -281,7 +281,11 @@
                 <div class="col-add-role" row>
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox" class="toggle-hidden" ng-click="showAllRoles($event)">
+                      <input
+                        type="checkbox"
+                        class="toggle-hidden"
+                        ng-click="toggleRoles($event)"
+                        ng-checked="toggle.roles">
                       Show hidden roles</label>&nbsp;<a href=""
                                                         class="action-inline"
                                                         data-toggle="popover"
