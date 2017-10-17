@@ -72694,7 +72694,8 @@ t.k8s.v1 = _.keyBy(e.resources, "name");
 i.push({
 data: e,
 textStatus: t,
-xhr: n
+xhr: n,
+fatal: !0
 });
 }), s = r + window.OPENSHIFT_CONFIG.api.openshift.hostPort + window.OPENSHIFT_CONFIG.api.openshift.prefix, l = $.get(s + "/v1").done(function(e) {
 t.openshift.v1 = _.keyBy(e.resources, "name");
@@ -72702,9 +72703,10 @@ t.openshift.v1 = _.keyBy(e.resources, "name");
 i.push({
 data: e,
 textStatus: t,
-xhr: n
+xhr: n,
+fatal: !0
 });
-}), c = r + window.OPENSHIFT_CONFIG.apis.hostPort + window.OPENSHIFT_CONFIG.apis.prefix, u = function(e, t, r) {
+}), c = r + window.OPENSHIFT_CONFIG.apis.hostPort + window.OPENSHIFT_CONFIG.apis.prefix, u = [ a, l, $.get(c).then(_.partial(function(e, t, r) {
 var o = [];
 return _.each(r.groups, function(r) {
 var a = {
@@ -72729,25 +72731,15 @@ xhr: n
 }));
 });
 }), $.when.apply(this, o);
-}, d = $.get(c).then(_.partial(u, c, null), function(e, t, n) {
+}, c, null), function(e, t, n) {
 i.push({
 data: e,
 textStatus: t,
-xhr: n
+xhr: n,
+fatal: !0
 });
-}), h = [];
-_.each(window.OPENSHIFT_CONFIG.additionalServers, function(e) {
-var t = (e.protocol ? e.protocol + "://" : r) + e.hostPort + e.prefix;
-h.push($.get(t).then(_.partial(u, t, e), function(t, n, r) {
-!1 !== e.required && i.push({
-data: t,
-textStatus: n,
-xhr: r
-});
-}));
-});
-var f = [ a, l, d ];
-f = f.concat(h), $.when.apply(this, f).always(function() {
+}) ];
+$.when.apply(this, u).always(function() {
 window.OPENSHIFT_CONFIG.api.k8s.resources = t.k8s, window.OPENSHIFT_CONFIG.api.openshift.resources = t.openshift, window.OPENSHIFT_CONFIG.apis.groups = n, i.length && (window.OPENSHIFT_CONFIG.apis.API_DISCOVERY_ERRORS = i), e();
 });
 }
@@ -73311,53 +73303,37 @@ resource: "templates"
 }
 }), angular.module("openshiftCommonUI").filter("alertStatus", function() {
 return function(e) {
-var t;
-switch (e.toLowerCase()) {
+switch ((e = e || "").toLowerCase()) {
 case "error":
-t = "alert-danger";
-break;
+return "alert-danger";
 
 case "warning":
-t = "alert-warning";
-break;
+return "alert-warning";
 
 case "success":
-t = "alert-success";
-break;
+return "alert-success";
 
 case "normal":
-t = "alert-info";
-break;
-
-default:
-t = "alert-info";
+return "alert-info";
 }
-return t;
+return "alert-info";
 };
 }).filter("alertIcon", function() {
 return function(e) {
-var t;
-switch (e.toLowerCase()) {
+switch ((e = e || "").toLowerCase()) {
 case "error":
-t = "pficon pficon-error-circle-o";
-break;
+return "pficon pficon-error-circle-o";
 
 case "warning":
-t = "pficon pficon-warning-triangle-o";
-break;
+return "pficon pficon-warning-triangle-o";
 
 case "success":
-t = "pficon pficon-ok";
-break;
+return "pficon pficon-ok";
 
 case "normal":
-t = "pficon pficon-info";
-break;
-
-default:
-t = "pficon pficon-info";
+return "pficon pficon-info";
 }
-return t;
+return "pficon pficon-info";
 };
 }), angular.module("openshiftCommonUI").filter("annotationName", function() {
 var e = {
@@ -73456,17 +73432,17 @@ return _.isRegExp(e) ? e.source : _.escapeRegExp(e);
 }).join("|"), a = "", s = 0, l = i ? "g" : "ig", c = new RegExp(o, l); null !== (r = c.exec(t)); ) s < r.index && (a += _.escape(t.substring(s, r.index))), a += "<mark>" + _.escape(r[0]) + "</mark>", s = c.lastIndex;
 return s < t.length && (a += _.escape(t.substring(s))), a;
 };
-} ]), angular.module("openshiftCommonUI").filter("imageForIconClass", [ "isAbsoluteURLFilter", function(e) {
-return function(t) {
-if (!t) return "";
-var n = _.get(window, [ "OPENSHIFT_CONSTANTS", "LOGOS", t ]);
+} ]), angular.module("openshiftCommonUI").filter("imageForIconClass", [ "$window", "isAbsoluteURLFilter", function(e, t) {
+return function(n) {
 if (!n) return "";
-var i = _.get(window, "OPENSHIFT_CONSTANTS.LOGO_BASE_URL");
-return !i || e(n) ? n : (i.endsWith("/") || (i += "/"), i + n);
+var i = _.get(e, [ "OPENSHIFT_CONSTANTS", "LOGOS", n ]);
+if (!i) return "";
+var r = _.get(e, "OPENSHIFT_CONSTANTS.LOGO_BASE_URL");
+return !r || t(i) ? i : (_.endsWith(r, "/") || (r += "/"), r + i);
 };
 } ]), angular.module("openshiftCommonUI").filter("isAbsoluteURL", function() {
 return function(e) {
-if (!e) return !1;
+if (!e || !_.isString(e)) return !1;
 var t = new URI(e), n = t.protocol();
 return t.is("absolute") && ("http" === n || "https" === n);
 };
@@ -73585,13 +73561,13 @@ return !!e(t, "deploymentConfig");
 } ]).filter("serviceClassDisplayName", function() {
 return function(e) {
 var t = _.get(e, "spec.externalMetadata.displayName");
-if (t) return t;
-var n = _.get(e, "spec.externalName");
-return n || _.get(e, "metadata.name");
+return t || _.get(e, "spec.externalName");
 };
 }).filter("serviceInstanceDisplayName", [ "serviceClassDisplayNameFilter", function(e) {
 return function(t, n) {
-return n ? e(n) : _.get(t, "metadata.name");
+if (n) return e(n);
+var i = _.get(t, "spec.externalClusterServiceClassName");
+return i || _.get(t, "metadata.name");
 };
 } ]).filter("serviceInstanceStatus", [ "isServiceInstanceReadyFilter", function(e) {
 return function(t) {
@@ -73603,26 +73579,19 @@ status: "True"
 };
 } ]), angular.module("openshiftCommonUI").filter("camelToLower", function() {
 return function(e) {
-return e ? _.startCase(e).toLowerCase() : e;
+return e ? _.startCase(e).toLowerCase() : "";
 };
 }).filter("upperFirst", function() {
-return function(e) {
-return e ? e.charAt(0).toUpperCase() + e.slice(1) : e;
-};
-}).filter("sentenceCase", [ "camelToLowerFilter", "upperFirstFilter", function(e, t) {
-return function(n) {
-if (!n) return n;
-var i = e(n);
-return t(i);
+return _.upperFirst;
+}).filter("sentenceCase", [ "camelToLowerFilter", function(e) {
+return function(t) {
+var n = e(t);
+return _.upperFirst(n);
 };
 } ]).filter("startCase", function() {
-return function(e) {
-return e ? _.startCase(e) : e;
-};
+return _.startCase;
 }).filter("capitalize", function() {
-return function(e) {
-return _.capitalize(e);
-};
+return _.capitalize;
 }).filter("isMultiline", function() {
 return function(e, t) {
 if (!e) return !1;
@@ -73647,11 +73616,11 @@ return r;
 return _.toArray;
 }).filter("size", function() {
 return _.size;
-}).filter("hashSize", [ "$log", function(e) {
+}).filter("hashSize", function() {
 return function(e) {
 return e ? Object.keys(e).length : 0;
 };
-} ]).filter("filterCollection", function() {
+}).filter("filterCollection", function() {
 return function(e, t) {
 return e && t ? _.filter(e, t) : e;
 };
@@ -73661,6 +73630,7 @@ return e || (e = ""), t || (t = 5), e + Math.round(Math.pow(36, t + 1) - Math.ra
 };
 }).filter("getErrorDetails", [ "upperFirstFilter", function(e) {
 return function(t, n) {
+if (!t) return "";
 var i = t.data || {};
 if (i.message) return n ? e(i.message) : i.message;
 var r = t.status || i.status;
@@ -73787,35 +73757,42 @@ group: e.group
 });
 },
 apiInfo: function(n) {
-if (t.API_DISCOVERY_ERRORS) return _.every(t.API_DISCOVERY_ERRORS, function(e) {
+if (t.API_DISCOVERY_ERRORS) {
+if (_.every(t.API_DISCOVERY_ERRORS, function(e) {
 return 0 === _.get(e, "data.status");
-}) && !i.isLoggedIn() ? void i.withUser() : void (c.location.href = URI("error").query({
+}) && !i.isLoggedIn()) return void i.withUser();
+var r = !1;
+if (_.each(t.API_DISCOVERY_ERRORS, function(e) {
+if (e.fatal) return o.error("API discovery failed (fatal error)", e), void (r = !0);
+o.warn("API discovery failed", e);
+}), r) return void (c.location.href = URI("error").query({
 error_description: "Unable to load details about the server. If the problem continues, please contact your system administrator.",
 error: "API_DISCOVERY"
 }).toString());
-var r, o = (n = f(n)).primaryResource();
+}
+var a, s = (n = f(n)).primaryResource();
 if (n.group) {
-if (!(r = _.get(t, [ "groups", n.group, "versions", n.version, "resources", o ]))) return;
-var a = _.get(t, [ "groups", n.group, "hostPrefix" ]) || t;
+if (!(a = _.get(t, [ "groups", n.group, "versions", n.version, "resources", s ]))) return;
+var l = _.get(t, [ "groups", n.group, "hostPrefix" ]) || t;
 return {
 resource: n.resource,
 group: n.group,
 version: n.version,
-protocol: a.protocol,
-hostPort: a.hostPort,
-prefix: a.prefix,
-namespaced: r.namespaced,
-verbs: r.verbs
+protocol: l.protocol,
+hostPort: l.hostPort,
+prefix: l.prefix,
+namespaced: a.namespaced,
+verbs: a.verbs
 };
 }
-var s;
-for (var l in e) if (s = e[l], r = _.get(s, [ "resources", n.version, o ])) return {
+var u;
+for (var d in e) if (u = e[d], a = _.get(u, [ "resources", n.version, s ])) return {
 resource: n.resource,
 version: n.version,
-hostPort: s.hostPort,
-prefix: s.prefix,
-namespaced: r.namespaced,
-verbs: r.verbs
+hostPort: u.hostPort,
+prefix: u.prefix,
+namespaced: a.namespaced,
+verbs: a.verbs
 };
 },
 invalidObjectKindOrVersion: function(e) {
@@ -75338,7 +75315,7 @@ getNotifications: function() {
 return t;
 },
 clearNotifications: function() {
-_.take(t, 0);
+t.length = 0;
 },
 isNotificationPermanentlyHidden: a,
 permanentlyHideNotification: function(e, t) {
