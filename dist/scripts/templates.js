@@ -3706,9 +3706,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dd>\n" +
     "</dl>\n" +
     "</div>\n" +
-    "<div class=\"col-lg-6\">\n" +
-    "<resource-service-bindings project=\"project\" project-context=\"projectContext\" api-object=\"serviceInstance\">\n" +
-    "</resource-service-bindings>\n" +
+    "<div class=\"col-lg-6 mar-bottom-xl\">\n" +
+    "<service-instance-bindings show-header=\"true\" project=\"project\" bindings=\"bindings\" service-instance=\"serviceInstance\" service-class=\"serviceClass\" service-plan=\"plan\">\n" +
+    "</service-instance-bindings>\n" +
     "</div>\n" +
     "</div>\n" +
     "<annotations annotations=\"serviceInstance.metadata.annotations\"></annotations>\n" +
@@ -9006,7 +9006,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h3>Bindings</h3>\n" +
     "<service-binding ng-repeat=\"binding in $ctrl.bindings track by (binding | uid)\" namespace=\"$ctrl.projectContext.projectName\" binding=\"binding\" ref-api-object=\"$ctrl.apiObject\" service-classes=\"$ctrl.serviceClasses\" service-instances=\"$ctrl.serviceInstances\">\n" +
     "</service-binding>\n" +
-    "<div ng-if=\"(($ctrl.apiObject.kind === 'ServiceInstance') || ($ctrl.bindableServiceInstances | size)) &&\n" +
+    "<div ng-if=\"($ctrl.bindableServiceInstances | size) &&\n" +
     "              ($ctrl.serviceBindingsVersion | canI : 'create') &&\n" +
     "              !$ctrl.apiObject.metadata.deletionTimestamp\">\n" +
     "<a href=\"\" ng-click=\"$ctrl.createBinding()\" role=\"button\">\n" +
@@ -9014,13 +9014,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Create Binding\n" +
     "</a>\n" +
     "</div>\n" +
-    "<div ng-if=\"!$ctrl.apiObject.metadata.deletionTimestamp && ($ctrl.apiObject.kind !== 'ServiceInstance') && !($ctrl.bindableServiceInstances | size)\">\n" +
+    "<div ng-if=\"!$ctrl.apiObject.metadata.deletionTimestamp && !($ctrl.bindableServiceInstances | size)\">\n" +
     "<span>You must have a bindable service in your namespace in order to create bindings.</span>\n" +
     "<div>\n" +
     "<a href=\"./\">Browse Catalog</a>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"($ctrl.apiObject.kind !== 'ServiceInstance') && !($ctrl.bindings | size) && ($ctrl.bindableServiceInstances | size) && !($ctrl.serviceBindingsVersion | canI : 'create')\">\n" +
+    "<div ng-if=\"!($ctrl.bindings | size) && ($ctrl.bindableServiceInstances | size) && !($ctrl.serviceBindingsVersion | canI : 'create')\">\n" +
     "<span>There are no service bindings.</span>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -9094,6 +9094,27 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>"
+  );
+
+
+  $templateCache.put('views/directives/service-instance-bindings.html',
+    "<div ng-if=\"$ctrl.bindable || ($ctrl.bindings | size)\">\n" +
+    "<h3 ng-if=\"$ctrl.showHeader\">Bindings</h3>\n" +
+    "<service-binding ng-repeat=\"binding in $ctrl.bindings track by (binding | uid)\" namespace=\"binding.metadata.namespace\" binding=\"binding\" ref-api-object=\"$ctrl.serviceInstance\">\n" +
+    "</service-binding>\n" +
+    "<div ng-if=\"$ctrl.bindable\">\n" +
+    "<a href=\"\" ng-click=\"$ctrl.createBinding()\" role=\"button\">\n" +
+    "<span class=\"pficon pficon-add-circle-o\" aria-hidden=\"true\"></span>\n" +
+    "Create Binding\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!$ctrl.bindable && !($ctrl.bindings | size)\">\n" +
+    "<span>There are no service bindings.</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<overlay-panel show-panel=\"$ctrl.overlayPanelVisible\" handle-close=\"$ctrl.closeOverlayPanel\">\n" +
+    "<bind-service target=\"$ctrl.serviceInstance\" project=\"$ctrl.project\" on-close=\"$ctrl.closeOverlayPanel\"></bind-service>\n" +
+    "</overlay-panel>"
   );
 
 
@@ -12299,7 +12320,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"section-title hidden-xs\">{{$ctrl.sectionTitle}}</div>\n" +
     "<service-binding ng-repeat=\"binding in $ctrl.bindings track by (binding | uid)\" is-overview=\"true\" namespace=\"$ctrl.namespace\" ref-api-object=\"$ctrl.refApiObject\" binding=\"binding\" service-classes=\"$ctrl.serviceClasses\" service-instances=\"$ctrl.serviceInstances\" secrets=\"$ctrl.secrets\">\n" +
     "</service-binding>\n" +
-    "<div ng-if=\"!$ctrl.refApiObject.metadata.deletionTimestamp && (($ctrl.refApiObject.kind === 'ServiceInstance') || ($ctrl.bindableServiceInstances | size)) && ({resource: 'servicebindings', group: 'servicecatalog.k8s.io'} | canI : 'create')\">\n" +
+    "<div ng-if=\"!$ctrl.refApiObject.metadata.deletionTimestamp && ($ctrl.bindableServiceInstances | size) && ({resource: 'servicebindings', group: 'servicecatalog.k8s.io'} | canI : 'create')\">\n" +
     "<a href=\"\" ng-click=\"$ctrl.createBinding()\" role=\"button\">\n" +
     "<span class=\"pficon pficon-add-circle-o\" aria-hidden=\"true\"></span>\n" +
     "Create Binding\n" +
@@ -12470,8 +12491,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<overview-service-bindings ng-if=\"row.isBindable || row.bindings\" section-title=\"Bindings\" ref-api-object=\"row.apiObject\" namespace=\"row.apiObject.metadata.namespace\" bindings=\"row.bindings\" bindable-service-instances=\"row.state.bindableServiceInstances\" service-classes=\"row.state.serviceClasses\" create-binding=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">\n" +
-    "</overview-service-bindings>\n" +
+    "<div ng-if=\"row.isBindable || (row.bindings | size)\">\n" +
+    "<div class=\"section-title\">Bindings</div>\n" +
+    "<service-instance-bindings project=\"row.state.project\" bindings=\"row.bindings\" service-instance=\"row.apiObject\" service-class=\"row.serviceClass\" service-plan=\"row.servicePlan\">\n" +
+    "</service-instance-bindings>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
