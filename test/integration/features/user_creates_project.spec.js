@@ -40,6 +40,11 @@ describe('Authenticated user creates a new project', () => {
       // click through Application menu
       menus.leftNav.clickDeployments();
       matchers.expectHeadingContainsText('Deployments');
+
+      matchers.expectHeading('Ponies flying flaming kittens');
+      matchers.expectHeading('Deliberately broken test to force an output');
+      matchers.expectHeading('Video of failed tests only');
+
       menus.leftNav.clickStatefulSets();
       matchers.expectHeadingContainsText('Stateful Sets');
       menus.leftNav.clickPods();

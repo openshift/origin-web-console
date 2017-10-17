@@ -1,14 +1,27 @@
 'use strict';
 
+const path = require('path');
 let isMac = /^darwin/.test(process.platform);
 let SpecReporter = require('jasmine-spec-reporter').SpecReporter;
 let HtmlScreenshotReporter = require('protractor-jasmine2-screenshot-reporter');
+var VideoReporter = require('protractor-video-reporter');
 let jasmineReporters = require('jasmine-reporters');
+
+let reportDirs = {
+  screenshot: './test/reports/screenshot',
+  junit: './test/reports/junit',
+  video: './reports/videos/'
+};
+
+let reportFilenames = {
+  screenshot: 'protractor-screenshot-report.html',
+  junit: 'protractor-junit-report'
+};
 
 let screenshotReporter = new HtmlScreenshotReporter({
   cleanDestination: isMac ? true : false,
-  dest: './test/tmp/screenshots',
-  filename: 'protractor-e2e-report.html',
+  dest: reportDirs.screenshot,
+  filename: reportFilenames.screenshot,
   takeScreenShotsOnlyForFailedSpecs: true,
   pathBuilder: function(currentSpec, suites, browserCapabilities) {
    return browserCapabilities.get('browserName') + '/' + currentSpec.fullName;
@@ -17,9 +30,35 @@ let screenshotReporter = new HtmlScreenshotReporter({
 
 let junitReporter = new jasmineReporters.JUnitXmlReporter({
    consolidateAll: true,
-   savePath: 'test/junit',
-   filePrefix: 'e2e-results'
+   savePath: reportDirs.junit,
+   filePrefix: reportFilenames.junit
 });
+
+let videoReporter = new VideoReporter({
+  baseDirectory: path.join(__dirname, reportDirs.video),
+  // single video does not appear to work:
+  //singleVideo: false,
+  // args to ffmpeg configure video recording
+  // oddly it is an array, even though they are clearly key-value pairs
+  // to see what config you can use, run:
+  //   ffmpeg -codecs
+  ffmpegArgs: [
+    '-y',
+    '-r', '30',
+    '-f', 'avfoundation',
+    '-i', '1',
+    '-g', '300',
+    '-vcodec', 'mpeg4',
+    '-s', '1024x768'
+  ]
+});
+
+let specReporter = new SpecReporter({
+  displayStacktrace: true,
+  displaySuccessfulSpec: false,
+  displayFailedSpec: true
+});
+
 
 // https://github.com/angular/protractor/blob/master/docs/browser-setup.md
 exports.config = {
@@ -76,11 +115,9 @@ exports.config = {
   onPrepare: function() {
     jasmine.getEnv().addReporter(screenshotReporter);
 
-    jasmine.getEnv().addReporter(new SpecReporter({
-      displayStacktrace: true,
-      displaySuccessfulSpec: false,
-      displayFailedSpec: true
-    }));
+    jasmine.getEnv().addReporter(specReporter);
+
+    jasmine.getEnv().addReporter(videoReporter);
 
     jasmine.getEnv().addReporter(junitReporter);
   },

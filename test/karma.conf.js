@@ -4,6 +4,12 @@
 // generator-karma 0.8.3
 let isMac = /^darwin/.test(process.platform);
 
+let reportDirs = {
+  junit: './test/reports/junit',
+  coverage: 'test/reports/coverage/'  
+};
+
+
 module.exports = function(config) {
   'use strict';
 
@@ -168,7 +174,7 @@ module.exports = function(config) {
     coverageReporter: {
       type: 'text',
       // outputs the results of coverage reporter to this dir
-      dir: 'test-results/coverage/'
+      dir: reportDirs.coverage
     },
 
     jasmineDiffReporter: {
@@ -178,7 +184,7 @@ module.exports = function(config) {
 
     junitReporter: {
       // will be resolved to basePath (in the same way as files/exclude patterns)
-      outputDir: 'test/junit/'
+      outputDir: reportDirs.junit
     },
 
     nightmareOptions: {
