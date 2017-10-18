@@ -53,11 +53,11 @@
                        id="mountVolume"
                        placeholder="Enter a mount path"
                        type="text"
-                       required
                        ng-pattern="/^\/.*$/"
                        osc-unique="ctrl.existingMountPaths"
                        aria-describedby="mount-path-help"
                        ng-disabled="ctrl.addType !== 'volume' || ctrl.disableInputs || !ctrl.application"
+                       ng-required="ctrl.addType === 'volume'"
                        ng-model="ctrl.mountVolume"
                        autocorrect="off"
                        autocapitalize="off"
