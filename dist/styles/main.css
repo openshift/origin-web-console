@@ -5898,6 +5898,7 @@ notification-drawer-wrapper .drawer-pf.drawer-pf-expanded{left:270px}
 }
 notification-drawer-wrapper .drawer-pf.hide{opacity:0;top:38px}
 notification-drawer-wrapper .drawer-pf.hide-add,notification-drawer-wrapper .drawer-pf.hide-remove{display:block!important}
+notification-drawer-wrapper .drawer-pf-action{border-bottom:1px solid #d1d1d1}
 notification-drawer-wrapper .drawer-pf-notification,notification-drawer-wrapper .drawer-pf-notification-info,notification-drawer-wrapper .drawer-pf-notification-message{cursor:pointer}
 notification-drawer-wrapper .drawer-pf-notification{padding:0}
 notification-drawer-wrapper .drawer-pf-notification.ng-leave{transition:.25s linear all;opacity:1}
