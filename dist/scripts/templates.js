@@ -7860,7 +7860,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/notifications/notification-body.html',
-    "<div class=\"drawer-pf-notification-inner\" tabindex=\"0\" ng-click=\"$ctrl.customScope.markRead(notification)\">\n" +
+    "<div class=\"drawer-pf-notification-inner\" ng-class=\"{ 'is-clickable': notification.unread }\" ng-click=\"notification.unread && $ctrl.customScope.markRead(notification)\">\n" +
     "<button class=\"btn btn-link pull-right drawer-pf-notification-close\" type=\"button\" ng-if=\"!notification.actions.length\" ng-click=\"$ctrl.customScope.clear(notification, $index, notificationGroup)\">\n" +
     "<span class=\"sr-only\">Clear notification</span>\n" +
     "<span aria-hidden=\"true\" class=\"pficon pficon-close\"></span>\n" +
@@ -7900,6 +7900,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"!$last\" class=\"toast-action-divider\">|</span>\n" +
     "</span>\n" +
     "</span>\n" +
+    "<span class=\"sr-only\">Message Unread. </span>\n" +
+    "<a ng-if=\"notification.unread\" href=\"\" class=\"sr-only sr-only-focusable\" ng-click=\"$ctrl.customScope.markRead(notification)\">\n" +
+    "<span>Mark Read</span>\n" +
+    "</a>\n" +
     "</div>\n" +
     "<div ng-if=\"notification.event.count > 1\" class=\"text-muted small\">\n" +
     "{{notification.event.count}} times in the last\n" +

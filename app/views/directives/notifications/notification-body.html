@@ -1,7 +1,7 @@
 <div
   class="drawer-pf-notification-inner"
-  tabindex="0"
-  ng-click="$ctrl.customScope.markRead(notification)">
+  ng-class="{ 'is-clickable': notification.unread }"
+  ng-click="notification.unread && $ctrl.customScope.markRead(notification)">
   <button
     class="btn btn-link pull-right drawer-pf-notification-close"
     type="button"
@@ -88,7 +88,14 @@
             <span ng-if="!$last" class="toast-action-divider">|</span>
           </span>
         </span>
-
+        <span class="sr-only">Message Unread. </span>
+        <a
+          ng-if="notification.unread"
+          href=""
+          class="sr-only sr-only-focusable"
+          ng-click="$ctrl.customScope.markRead(notification)">
+          <span>Mark Read</span>
+        </a>
       </div>
       <div
         ng-if="notification.event.count > 1"
