@@ -1,0 +1,11 @@
+//
+// Toast notifications
+// --------------------------------------------------
+
+// so that expanded text isn't unbounded
+// fixes https://github.com/openshift/origin-web-console/issues/2284
+.toast-notification-details {
+  margin-right: -15px;
+  max-height: 300px;
+  overflow-y: auto;
+}
