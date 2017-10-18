@@ -31,10 +31,12 @@ exports.expectElementToExist = (elem) => {
 };
 
 exports.expectElementToBeVisible = (elem) => {
+  wait.forElem(elem);
   expect(elem.isDisplayed()).toBeTruthy();
 };
 
 exports.expectElementToBeHidden = (elem) => {
+  wait.forElem(elem);
   expect(elem.isDisplayed()).toBeFalsy();
 };
 
