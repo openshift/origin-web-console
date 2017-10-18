@@ -9,8 +9,10 @@ angular.module('openshiftConsole')
                        LabelFilter,
                        PodsService) {
     $scope.projectName = $routeParams.project;
-    $scope.alerts = $scope.alerts || {};
     $scope.labelSuggestions = {};
+    $scope.clearFilter = function() {
+      LabelFilter.clear();
+    };
 
     var watches = [];
     ProjectsService
@@ -30,7 +32,7 @@ angular.module('openshiftConsole')
           $scope.statefulSets = LabelFilter.getLabelSelector().select($scope.unfilteredStatefulSets);
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredStatefulSets, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
-          updateFilterWarning();
+          updateFilterMessage();
         }));
 
         // TODO: 1.6 eliminate this block, we dont actually need pods on this page,
@@ -40,23 +42,15 @@ angular.module('openshiftConsole')
           $scope.podsByOwnerUID = PodsService.groupByOwnerUID($scope.pods);
         }));
 
-        function updateFilterWarning() {
-          if (!LabelFilter.getLabelSelector().isEmpty() && $.isEmptyObject($scope.statefulSets) && !$.isEmptyObject($scope.unfilteredStatefulSets)) {
-            $scope.alerts["statefulsets"] = {
-              type: "warning",
-              details: "The active filters are hiding all stateful sets."
-            };
-          }
-          else {
-            delete $scope.alerts["statefulsets"];
-          }
+        function updateFilterMessage() {
+          $scope.filterWithZeroResults = !LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.statefulSets) && !_.isEmpty($scope.unfilteredStatefulSets);
         }
 
         LabelFilter.onActiveFiltersChanged(function(labelSelector) {
           // trigger a digest loop
-          $scope.$apply(function() {
+          $scope.$evalAsync(function() {
             $scope.statefulSets = labelSelector.select($scope.unfilteredStatefulSets);
-            updateFilterWarning();
+            updateFilterMessage();
           });
         });
 

@@ -24,9 +24,10 @@ angular.module('openshiftConsole')
     $scope.unfilteredBuildConfigs = {};
     $scope.buildConfigs = undefined;
     $scope.labelSuggestions = {};
-    $scope.alerts = $scope.alerts || {};
-    $scope.emptyMessage = "Loading...";
     $scope.latestByConfig = {};
+    $scope.clearFilter = function() {
+      LabelFilter.clear();
+    };
 
     var buildConfigForBuild = $filter('buildConfigForBuild');
 
@@ -43,9 +44,9 @@ angular.module('openshiftConsole')
         var isPipeline = $filter('isJenkinsPipelineStrategy');
 
         watches.push(DataService.watch(buildsVersion, context, function(builds) {
+          $scope.buildsLoaded = true;
           // Filter out pipeline builds, which have a separate page.
           $scope.builds = _.omitBy(builds.by("metadata.name"), isPipeline);
-          $scope.emptyMessage = "No builds to show";
           associateBuildsToBuildConfig();
           LabelFilter.addLabelSuggestionsFromResources($scope.builds, $scope.labelSuggestions);
 
@@ -59,7 +60,7 @@ angular.module('openshiftConsole')
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
           $scope.buildConfigs = LabelFilter.getLabelSelector().select($scope.unfilteredBuildConfigs);
           associateBuildsToBuildConfig();
-          updateFilterWarning();
+          updateFilterMessage();
           Logger.log("buildconfigs (subscribe)", $scope.buildConfigs);
         }));
 
@@ -113,27 +114,17 @@ angular.module('openshiftConsole')
           });
         }
 
-        function updateFilterWarning() {
+        function updateFilterMessage() {
           var visibleBuilds = _.omitBy($scope.latestByConfig, _.isNull);
-          if (!LabelFilter.getLabelSelector().isEmpty() &&
-              _.isEmpty($scope.buildConfigs) &&
-              _.isEmpty(visibleBuilds)) {
-            $scope.alerts["builds"] = {
-              type: "warning",
-              details: "The active filters are hiding all builds."
-            };
-          }
-          else {
-            delete $scope.alerts["builds"];
-          }
+          $scope.filterWithZeroResults = !LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.buildConfigs) && _.isEmpty(visibleBuilds);
         }
 
         LabelFilter.onActiveFiltersChanged(function(labelSelector) {
           // trigger a digest loop
-          $scope.$apply(function() {
+          $scope.$evalAsync(function() {
             $scope.buildConfigs = labelSelector.select($scope.unfilteredBuildConfigs);
             associateBuildsToBuildConfig();
-            updateFilterWarning();
+            updateFilterMessage();
           });
         });
 

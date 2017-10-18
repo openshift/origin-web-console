@@ -31,6 +31,9 @@ angular.module("openshiftConsole")
         var containers = getContainers(object);
         _.each(containers, function(container) {
           container.env = keyValueEditorUtils.compactEntries(container.env);
+          container.envFrom = _.reject(container.envFrom, function(envFromEntry) {
+            return !_.get(envFromEntry, 'configMapRef.name') && !_.get(envFromEntry, 'secretRef.name');
+          });
         });
       },
 

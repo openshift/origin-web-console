@@ -15,9 +15,9 @@ angular.module('openshiftConsole')
     $scope.routesByService = {};
     $scope.routes = {};
     $scope.labelSuggestions = {};
-    $scope.alerts = $scope.alerts || {};
-    $scope.emptyMessage = "Loading...";
-    $scope.emptyMessageRoutes = "Loading...";
+    $scope.clearFilter = function() {
+      LabelFilter.clear();
+    };
 
     var watches = [];
 
@@ -26,33 +26,25 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
          watches.push(DataService.watch("services", context, function(services) {
+          $scope.servicesLoaded = true;
           $scope.unfilteredServices = services.by("metadata.name");
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredServices, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
           $scope.services = LabelFilter.getLabelSelector().select($scope.unfilteredServices);
-          $scope.emptyMessage = "No services to show";
-          updateFilterWarning();
+          updateFilterMessage();
 
           Logger.log("services (subscribe)", $scope.unfilteredServices);
         }));
 
-        function updateFilterWarning() {
-          if (!LabelFilter.getLabelSelector().isEmpty() && $.isEmptyObject($scope.services)  && !$.isEmptyObject($scope.unfilteredServices)) {
-            $scope.alerts["services"] = {
-              type: "warning",
-              details: "The active filters are hiding all services."
-            };
-          }
-          else {
-            delete $scope.alerts["services"];
-          }
+        function updateFilterMessage() {
+          $scope.filterWithZeroResults = !LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.services)  && !_.isEmpty($scope.unfilteredServices);
         }
 
         LabelFilter.onActiveFiltersChanged(function(labelSelector) {
           // trigger a digest loop
-          $scope.$apply(function() {
+          $scope.$evalAsync(function() {
             $scope.services = labelSelector.select($scope.unfilteredServices);
-            updateFilterWarning();
+            updateFilterMessage();
           });
         });
 

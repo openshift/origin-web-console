@@ -16,24 +16,17 @@ angular.module('openshiftConsole')
                         LabelFilter,
                         ProjectsService) {
     $scope.projectName = $routeParams.project;
-    $scope.alerts = $scope.alerts || {};
     $scope.loaded = false;
     $scope.labelSuggestions = {};
     $scope.configMapsVersion = APIService.getPreferredVersion('configmaps');
+    $scope.clearFilter = function () {
+      LabelFilter.clear();
+    };
     var watches = [];
     var configMaps;
 
-    var updateFilterWarning = function() {
-      if (!LabelFilter.getLabelSelector().isEmpty() &&
-          _.isEmpty($scope.configMaps) &&
-          !_.isEmpty(configMaps)) {
-        $scope.alerts["config-maps"] = {
-          type: "warning",
-          details: "The active filters are hiding all config maps."
-        };
-      } else {
-        delete $scope.alerts["config-maps"];
-      }
+    var updateFilterMessage = function() {
+      $scope.filterWithZeroResults = !LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.configMaps) && !_.isEmpty(configMaps);
     };
 
     var updateLabelSuggestions = function() {
@@ -44,7 +37,7 @@ angular.module('openshiftConsole')
     var updateConfigMaps = function() {
       var filteredConfigMaps = LabelFilter.getLabelSelector().select(configMaps);
       $scope.configMaps = _.sortBy(filteredConfigMaps, 'metadata.name');
-      updateFilterWarning();
+      updateFilterMessage();
     };
 
     ProjectsService
@@ -60,7 +53,7 @@ angular.module('openshiftConsole')
         }));
 
         LabelFilter.onActiveFiltersChanged(function() {
-          $scope.$apply(updateConfigMaps);
+          $scope.$evalAsync(updateConfigMaps);
         });
 
         $scope.$on('$destroy', function(){

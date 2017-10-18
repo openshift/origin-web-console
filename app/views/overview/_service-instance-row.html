@@ -149,16 +149,16 @@
               </div>
             </div>
           </div>
-          <overview-service-bindings
-            ng-if="row.isBindable || row.bindings"
-            section-title="Bindings"
-            ref-api-object="row.apiObject"
-            namespace="row.apiObject.metadata.namespace"
-            bindings="row.bindings"
-            bindable-service-instances="row.state.bindableServiceInstances"
-            service-classes="row.state.serviceClasses"
-            create-binding="row.showOverlayPanel('bindService', {target: row.apiObject})">
-          </overview-service-bindings>
+          <div ng-if="row.isBindable || (row.bindings | size)">
+            <div class="section-title">Bindings</div>
+            <service-instance-bindings
+              project="row.state.project"
+              bindings="row.bindings"
+              service-instance="row.apiObject"
+              service-class="row.serviceClass"
+              service-plan="row.servicePlan">
+            </service-instance-bindings>
+          </div>
         </div>
       </div>
     </div>

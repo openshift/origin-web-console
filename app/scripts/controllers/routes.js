@@ -13,8 +13,9 @@ angular.module('openshiftConsole')
     $scope.unfilteredRoutes = {};
     $scope.routes = {};
     $scope.labelSuggestions = {};
-    $scope.alerts = $scope.alerts || {};
-    $scope.emptyMessage = "Loading...";
+    $scope.clearFilter = function() {
+      LabelFilter.clear();
+    };
 
     var watches = [];
 
@@ -23,12 +24,12 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
         watches.push(DataService.watch("routes", context, function(routes) {
+          $scope.routesLoaded = true;
           $scope.unfilteredRoutes = routes.by("metadata.name");
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredRoutes, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
           $scope.routes = LabelFilter.getLabelSelector().select($scope.unfilteredRoutes);
-          $scope.emptyMessage = "No routes to show";
-          updateFilterWarning();
+          updateFilterMessage();
         }));
 
         // Watch services to display route warnings.
@@ -36,23 +37,15 @@ angular.module('openshiftConsole')
           $scope.services = services.by("metadata.name");
         }));
 
-        function updateFilterWarning() {
-          if (!LabelFilter.getLabelSelector().isEmpty() && $.isEmptyObject($scope.routes)  && !$.isEmptyObject($scope.unfilteredRoutes)) {
-            $scope.alerts["routes"] = {
-              type: "warning",
-              details: "The active filters are hiding all routes."
-            };
-          }
-          else {
-            delete $scope.alerts["routes"];
-          }
+        function updateFilterMessage() {
+          $scope.filterWithZeroResults = !LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.routes)  && !_.isEmpty($scope.unfilteredRoutes);
         }
 
         LabelFilter.onActiveFiltersChanged(function(labelSelector) {
           // trigger a digest loop
-          $scope.$apply(function() {
+          $scope.$evalAsync(function() {
             $scope.routes = labelSelector.select($scope.unfilteredRoutes);
-            updateFilterWarning();
+            updateFilterMessage();
           });
         });
 

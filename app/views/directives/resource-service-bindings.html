@@ -8,7 +8,7 @@
     service-classes="$ctrl.serviceClasses"
     service-instances="$ctrl.serviceInstances">
   </service-binding>
-  <div ng-if="(($ctrl.apiObject.kind === 'ServiceInstance') || ($ctrl.bindableServiceInstances | size)) &&
+  <div ng-if="($ctrl.bindableServiceInstances | size) &&
               ($ctrl.serviceBindingsVersion | canI : 'create') &&
               !$ctrl.apiObject.metadata.deletionTimestamp">
     <a href="" ng-click="$ctrl.createBinding()" role="button">
@@ -16,13 +16,13 @@
       Create Binding
     </a>
   </div>
-  <div ng-if="!$ctrl.apiObject.metadata.deletionTimestamp && ($ctrl.apiObject.kind !== 'ServiceInstance') && !($ctrl.bindableServiceInstances | size)">
+  <div ng-if="!$ctrl.apiObject.metadata.deletionTimestamp && !($ctrl.bindableServiceInstances | size)">
     <span>You must have a bindable service in your namespace in order to create bindings.</span>
     <div>
       <a href="./">Browse Catalog</a>
     </div>
   </div>
-  <div ng-if="($ctrl.apiObject.kind !== 'ServiceInstance') && !($ctrl.bindings | size) && ($ctrl.bindableServiceInstances | size) && !($ctrl.serviceBindingsVersion | canI : 'create')">
+  <div ng-if="!($ctrl.bindings | size) && ($ctrl.bindableServiceInstances | size) && !($ctrl.serviceBindingsVersion | canI : 'create')">
     <span>There are no service bindings.</span>
   </div>
 </div>
