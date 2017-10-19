@@ -27,6 +27,15 @@
 
     ctrl.setFocusClass = 'edit-environment-from-set-focus-' + uniqueId;
 
+    ctrl.viewOverlayPanel = function(entry) {
+      ctrl.overlayPaneEntryDetails = entry;
+      ctrl.overlayPanelVisible = true;
+    };
+
+    ctrl.closeOverlayPanel = function() {
+      ctrl.overlayPanelVisible = false;
+    };
+
     var addEntry = function(entries, entry) {
       entries && entries.push(entry || {});
     };
@@ -61,7 +70,6 @@
       return humanizeKind(object.kind);
     };
 
-    //ctrl.uniqueForValue = utils.uniqueForValue;
     ctrl.dragControlListeners = {
       accept: function (sourceItemHandleScope, destSortableScope) {
         return sourceItemHandleScope.itemScope.sortableScope.$id === destSortableScope.$id;

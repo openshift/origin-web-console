@@ -35,7 +35,7 @@ function ResourceServiceBindings($filter,
   ctrl.serviceInstances = [];
   ctrl.showBindings = CatalogService.SERVICE_CATALOG_ENABLED && enableTechPreviewFeature('pod_presets');
 
-  var limitWatches = $filter('isIE')() || $filter('isEdge')();
+  var limitWatches = $filter('isIE')();
   var DEFAULT_POLL_INTERVAL = 60 * 1000; // milliseconds
   var watches = [];
   var canI = $filter('canI');
