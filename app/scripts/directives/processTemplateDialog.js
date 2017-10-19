@@ -88,13 +88,11 @@
       listProjects();
 
       ctrl.projectEmptyState = {
-        icon: 'pficon pficon-info',
         title: 'No Project Selected',
         info: 'Please select a project from the dropdown to load Templates from that project.'
       };
 
       ctrl.templatesEmptyState = {
-        icon: 'pficon pficon-info',
         title: 'No Templates',
         info: 'The selected project has no templates available to import.'
       };

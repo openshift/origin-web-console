@@ -13173,11 +13173,9 @@ b.infoStep.selected = !1, b.selectStep.selected = !1, b.configStep.selected = !1
 }
 }, b.$onInit = function() {
 b.loginBaseUrl = r.openshiftAPIBaseUrl(), b.preSelectedProject = b.selectedProject = b.project, h(), b.projectEmptyState = {
-icon: "pficon pficon-info",
 title: "No Project Selected",
 info: "Please select a project from the dropdown to load Templates from that project."
 }, b.templatesEmptyState = {
-icon: "pficon pficon-info",
 title: "No Templates",
 info: "The selected project has no templates available to import."
 }, b.filterConfig = {
