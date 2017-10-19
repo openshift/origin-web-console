@@ -86,7 +86,6 @@
         return _.filter(notifications, 'unread');
       };
 
-
       var countUnreadNotifications = function() {
         _.each(drawer.notificationGroups, function(group) {
           group.totalUnread = unread(group.notifications).length;
@@ -99,12 +98,29 @@
         _.each(drawer.notificationGroups, function(group) {
           _.remove(group.notifications, { uid: notification.uid, namespace: notification.namespace });
         });
-        delete notificationsMap[$routeParams.project][notification.uid];
+      };
+
+      var remove = function(notification) {
+        // remove the notification from the underlying maps.
+        // this ensures no ghost notifications linger.
+        if(notificationsMap[$routeParams.project]) {
+          delete notificationsMap[$routeParams.project][notification.uid];
+        }
+        if(apiEventsMap[$routeParams.project]) {
+          delete apiEventsMap[$routeParams.project][notification.uid];
+        }
+        // then remove it from the map that is rendered to UI.
+        removeNotificationFromGroup(notification);
+      };
+
+      var removeAllForProject = function() {
+        apiEventsMap[$routeParams.project] = {};
+        notificationsMap[$routeParams.project] = {};
       };
 
       var formatAPIEvents = function(apiEvents) {
-        return _.map(apiEvents, function(event) {
-          return {
+        return _.reduce(apiEvents, function(result, event) {
+          result[event.metadata.uid] = {
             actions: null,
             uid: event.metadata.uid,
             trackByID: event.metadata.uid,
@@ -114,7 +130,8 @@
             firstTimestamp: event.firstTimestamp,
             event: event
           };
-        });
+          return result;
+        }, {});
       };
 
       var filterAPIEvents = function(events) {
@@ -246,9 +263,9 @@
             notification.unread = false;
             EventsService.markRead(notification.uid);
             EventsService.markCleared(notification.uid);
+
           });
-          apiEventsMap[$routeParams.project] = {};
-          notificationsMap[$routeParams.project] = {};
+          removeAllForProject();
           render();
           $rootScope.$emit('NotificationDrawerWrapper.onMarkAllRead');
         },
@@ -257,14 +274,16 @@
         notificationBodyInclude: 'views/directives/notifications/notification-body.html',
         customScope: {
           clear: function(notification, index, group) {
+            EventsService.markRead(notification.uid);
             EventsService.markCleared(notification.uid);
             group.notifications.splice(index, 1);
-            countUnreadNotifications();
+            remove(notification);
+            render();
           },
           markRead: function(notification) {
             notification.unread = false;
             EventsService.markRead(notification.uid);
-            countUnreadNotifications();
+            render();
           },
           close: function() {
             drawer.drawerHidden = true;
@@ -276,7 +295,6 @@
           countUnreadNotifications: countUnreadNotifications
         }
       });
-
 
       var initWatches = function() {
         if($routeParams.project) {
@@ -307,7 +325,7 @@
         // event to signal the drawer to clear a notification
         rootScopeWatches.push($rootScope.$on('NotificationDrawerWrapper.clear', function(event, notification) {
           EventsService.markCleared(notification.uid);
-          removeNotificationFromGroup(notification);
+          remove(notification);
           drawer.countUnreadNotifications();
         }));
       };
