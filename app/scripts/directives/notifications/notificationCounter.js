@@ -19,7 +19,7 @@
 
       var counter = this;
       var DISABLE_GLOBAL_EVENT_WATCH = _.get(Constants, 'DISABLE_GLOBAL_EVENT_WATCH');
-      var LIMIT_WATCHES = $filter('isIE')() || $filter('isEdge')();
+      var LIMIT_WATCHES = $filter('isIE')();
 
       counter.hide = true;
 
