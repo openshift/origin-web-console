@@ -6340,15 +6340,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</fieldset>\n" +
     "</fieldset>\n" +
     "</ng-form>\n" +
-    "<div ng-if=\"loading || !import\" class=\"empty-state-message text-muted text-center\">\n" +
-    "<span class=\"fa fa-cube icon-lg hero-icon\" aria-hidden=\"true\"></span>\n" +
-    "<div ng-if=\"!loading\" class=\"h2\">Select an image stream tag or enter an image name.</div>\n" +
-    "<div ng-if=\"loading\" class=\"h2\">Loading image metadata for <span class=\"word-break\">{{imageName | stripSHA}}</span>...</div>\n" +
-    "</div>\n" +
-    "<div class=\"row mar-bottom-md\" ng-if-start=\"!loading && import.image\">\n" +
-    "<div class=\"col-sm-12 mar-top-lg mar-bottom-lg\">\n" +
+    "<div class=\"mar-top-lg mar-bottom-lg\">\n" +
     "<div class=\"separator\"></div>\n" +
     "</div>\n" +
+    "<div ng-if=\"loading || !import\" class=\"empty-state-message text-center\">\n" +
+    "<h2 ng-if=\"!loading\" class=\"h2\">Select an image stream tag or enter an image name.</h2>\n" +
+    "<h2 ng-if=\"loading\" class=\"h2\">Loading image metadata for <span class=\"word-break\">{{imageName | stripSHA}}</span>...</h2>\n" +
+    "</div>\n" +
+    "<div class=\"row mar-bottom-md\" ng-if-start=\"!loading && import.image\">\n" +
     "<div class=\"col-sm-2 hidden-xs text-right h2\">\n" +
     "<span class=\"fa fa-cube text-muted\" style=\"font-size: 100px\" aria-hidden=\"true\"></span>\n" +
     "</div>\n" +

@@ -4530,7 +4530,7 @@ body{padding-right:0px!important}
 .nav-tabs>li:first-child>a:before{left:0!important}
 .nav-tabs>li>a{border:0;line-height:1;margin-right:0;padding-bottom:10px;padding-top:10px}
 .nav-tabs>li>a:active:before,.nav-tabs>li>a:focus:before,.nav-tabs>li>a:hover:before{background:#bbb;bottom:-1px;content:"";display:block;height:2px;left:15px;position:absolute;right:15px}
-.empty-state-message .hero-icon,.hide-tabs .nav-tabs{display:none}
+.hide-tabs .nav-tabs,registry-image-listing .listing-ct-toggle{display:none}
 .nav-tabs>li>.dropdown-menu{left:15px;margin-top:1px}
 .nav-tabs>li>.dropdown-menu.pull-right{left:auto;right:15px}
 .nav-tabs .open>a,.nav-tabs .open>a:focus,.nav-tabs .open>a:hover{background-color:transparent}
@@ -4553,12 +4553,6 @@ alerts+.empty-state-message{margin-top:130px}
 }
 .empty-state-message .btn{margin:10px 0 20px}
 .empty-state-message .h2,.empty-state-message h2{line-height:1.4}
-@media (min-height:600px){.empty-state-message .hero-icon{display:inline-block;font-size:90px}
-}
-@media (min-height:800px){.empty-state-message .hero-icon{font-size:100px}
-}
-@media (min-height:1024px){.empty-state-message .hero-icon{font-size:120px}
-}
 mark{padding:0;background-color:rgba(252,248,160,.5)}
 .ui-select-choices-row.active>span mark{background-color:rgba(252,248,160,.75)}
 .service-table{max-width:650px}
@@ -4572,7 +4566,6 @@ mark{padding:0;background-color:rgba(252,248,160,.5)}
 .deployment-config-summary.gutter-bottom-2x{padding-bottom:40px}
 registry-image-pull{margin-bottom:20px}
 registry-imagestream-push{margin-top:40px}
-registry-image-listing .listing-ct-toggle{display:none}
 registry-image-listing .registry-image-tag{max-width:115px}
 registry-image-listing table{width:100%}
 registry-image-body dt:after,registry-image-config dt:after,registry-image-meta dt:after,registry-imagestream-body dt:after,registry-imagestream-meta dt:after{content:':'}
@@ -4956,7 +4949,7 @@ h2+.list-view-pf{margin-top:20px}
 .navbar-toggle:focus{color:#fff;outline:dotted thin!important;outline:-webkit-focus-ring-color auto 5px!important;outline-offset:-2px!important}
 .wizard-pf-main .ace_editor.editor{height:265px}
 .landing-page .wizard-pf-main .ace_editor.editor{height:200px}
-.wizard-pf-main .deploy-image .empty-state-message{margin:30px auto 0}
+.wizard-pf-main .deploy-image .empty-state-message{margin:60px auto 0}
 .build-count .icon-count,.builds-label{margin-right:5px;display:inline-block}
 .build-count .builds,.build-count .pipelines{display:block}
 .build-count .running-stage{font-size:84%;color:#9c9c9c}
@@ -5640,13 +5633,6 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .log-header .log-actions .btn-link,.log-view{padding:0}
 .chromeless .log-loading-msg .btn{margin:10px 0 20px}
 .chromeless .log-loading-msg .h2,.chromeless .log-loading-msg h2{line-height:1.4}
-.chromeless .log-loading-msg .hero-icon{display:none}
-@media (min-height:600px){.chromeless .log-loading-msg .hero-icon{display:inline-block;font-size:90px}
-}
-@media (min-height:800px){.chromeless .log-loading-msg .hero-icon{font-size:100px}
-}
-@media (min-height:1024px){.chromeless .log-loading-msg .hero-icon{font-size:120px}
-}
 .log-title{margin-top:0}
 .log-header{margin-bottom:3px}
 .log-header label{margin-bottom:0}
