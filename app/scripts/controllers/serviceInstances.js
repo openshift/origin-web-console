@@ -32,7 +32,7 @@ angular.module('openshiftConsole')
     };
 
     $scope.getServiceClass = function(serviceInstance) {
-      var serviceClassName = _.get(serviceInstance, 'spec.serviceClassRef.name');
+      var serviceClassName = _.get(serviceInstance, 'spec.clusterServiceClassRef.name');
       return _.get($scope, ['serviceClasses', serviceClassName]);
     };
 

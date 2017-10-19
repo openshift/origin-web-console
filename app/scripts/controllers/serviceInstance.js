@@ -6,13 +6,19 @@ angular.module('openshiftConsole')
                                                      $routeParams,
                                                      APIService,
                                                      BindingService,
+                                                     AuthorizationService,
+                                                     Catalog,
                                                      DataService,
+                                                     Logger,
                                                      ProjectsService,
+                                                     SecretsService,
                                                      ServiceInstancesService) {
     $scope.alerts = {};
     $scope.projectName = $routeParams.project;
     $scope.serviceInstance = null;
     $scope.serviceClass = null;
+    $scope.serviceClasses = null;
+    $scope.editDialogShown = false;
 
     $scope.breadcrumbs = [
       {
@@ -28,9 +34,26 @@ angular.module('openshiftConsole')
       ServiceInstancesService.deprovision($scope.serviceInstance, $scope.bindings);
     };
 
+    $scope.showEditDialog = function() {
+      $scope.editDialogShown = true;
+    };
+
+    $scope.showParameterValues = false;
+
+    $scope.toggleShowParameterValues = function() {
+      $scope.showParameterValues = !$scope.showParameterValues;
+    };
+
+    $scope.closeEditDialog = function() {
+      $scope.editDialogShown = false;
+    };
+
     var watches = [];
+    var secretWatchers = [];
+    var serviceClassPromise;
 
     var serviceInstanceDisplayName = $filter('serviceInstanceDisplayName');
+    var serviceInstanceReady = $filter('isServiceInstanceReady');
 
     // API Versions
     var serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
@@ -42,28 +65,76 @@ angular.module('openshiftConsole')
       });
     };
 
-    var serviceClassPromise;
-    var updateServiceClass = function() {
-      // If we've previously loaded the service class or a request is in flight, don't do anything.
-      if ($scope.serviceClass || serviceClassPromise) {
+    var updateParameterData = function() {
+      if (!$scope.serviceInstance || !$scope.parameterSchema) {
         return;
       }
 
-      serviceClassPromise = ServiceInstancesService.fetchServiceClassForInstance($scope.serviceInstance).then(function(serviceClass) {
-        $scope.serviceClass = serviceClass;
-        $scope.displayName = serviceInstanceDisplayName($scope.serviceInstance, serviceClass);
-        updateBreadcrumbs();
-        serviceClassPromise = null;
+      DataService.unwatchAll(secretWatchers);
+      secretWatchers = [];
+
+      $scope.parameterData = {};
+      _.each(_.keys(_.get($scope.parameterSchema, 'properties')), function(key) {
+        $scope.parameterData[key] = $scope.parameterSchema.properties[key].default;
       });
+
+      $scope.parameterData = angular.extend($scope.parameterData, _.get($scope.serviceInstance, 'spec.parameters', {}));
+
+      if (AuthorizationService.canI('secrets', 'get', $scope.projectName)) {
+        _.each(_.get($scope.serviceInstance, 'spec.parametersFrom'), function (parametersSource) {
+          secretWatchers.push(DataService.watchObject("secrets", _.get(parametersSource, 'secretKeyRef.name'), $scope.projectContext, function (secret) {
+            try {
+              _.extend($scope.parameterData, JSON.parse(SecretsService.decodeSecretData(secret.data)[parametersSource.secretKeyRef.key]));
+            } catch (e) {
+              Logger.warn('Unable to load parameters from secret ' + _.get(parametersSource, 'secretKeyRef.name'), e);
+            }
+          }));
+        });
+      }
     };
 
-    var updatePlan = function() {
-      if (ServiceInstancesService.isCurrentPlan($scope.serviceInstance, $scope.plan)) {
+    var updateEditable = function() {
+      if (!$scope.plan || !$scope.serviceClass || !$scope.serviceInstance) {
         return;
       }
 
-      ServiceInstancesService.fetchServicePlanForInstance($scope.serviceInstance).then(function(plan) {
-        $scope.plan = plan;
+      var updateSchema = _.get($scope.plan, 'spec.instanceUpdateParameterSchema');
+      var planUpdatable = (_.size(_.get(updateSchema, 'properties')) > 0) || (_.get($scope.serviceClass, 'spec.planUpdatable') && (_.size($scope.servicePlans) > 1));
+
+      $scope.editAvailable = planUpdatable && serviceInstanceReady($scope.serviceInstance) && !_.get($scope.serviceInstance, 'metadata.deletionTimestamp');
+    };
+
+    var updateParameterSchema = function() {
+      $scope.parameterFormDefinition = angular.copy(_.get($scope.plan, 'spec.externalMetadata.schemas.service_instance.update.openshift_form_definition'));
+      $scope.parameterSchema = _.get($scope.plan, 'spec.instanceCreateParameterSchema');
+    };
+
+    var updateServiceClass = function() {
+      // If we've previously loaded the service class or a request is in flight, don't do anything.
+      if (!$scope.serviceInstance || $scope.serviceClass || serviceClassPromise) {
+        return;
+      }
+
+      serviceClassPromise = ServiceInstancesService.fetchServiceClassForInstance($scope.serviceInstance).then(function (serviceClass) {
+        $scope.serviceClass = serviceClass;
+        $scope.displayName = serviceInstanceDisplayName($scope.serviceInstance, $scope.serviceClass);
+
+        updateBreadcrumbs();
+        serviceClassPromise = null;
+
+        Catalog.getServicePlans().then(function (plans) {
+          plans = plans.by('metadata.name');
+
+          var plansByServiceClassName = Catalog.groupPlansByServiceClassName(plans);
+          $scope.servicePlans = plansByServiceClassName[$scope.serviceClass.metadata.name];
+
+          var servicePlanName = _.get($scope.serviceInstance, 'spec.clusterServicePlanRef.name');
+          $scope.plan = plans[servicePlanName];
+
+          updateParameterSchema();
+          updateParameterData();
+          updateEditable();
+        });
       });
     };
 
@@ -79,7 +150,8 @@ angular.module('openshiftConsole')
       }
 
       updateServiceClass();
-      updatePlan();
+      updateParameterData();
+      updateEditable();
     };
 
     ProjectsService
@@ -106,9 +178,17 @@ angular.module('openshiftConsole')
               details: $filter('getErrorDetails')(error)
             };
           });
+      }, function(error) {
+        $scope.loaded = true;
+        $scope.alerts["load"] = {
+          type: "error",
+          message: "The service details could not be loaded.",
+          details: $filter('getErrorDetails')(error)
+        };
+      }));
 
-        $scope.$on('$destroy', function(){
-          DataService.unwatchAll(watches);
-        });
-    }));
+    $scope.$on('$destroy', function(){
+      DataService.unwatchAll(watches);
+      DataService.unwatchAll(secretWatchers);
+    });
   });
