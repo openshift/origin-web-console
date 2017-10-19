@@ -24,13 +24,13 @@
         ng-mouseleave="onMouseLeave(primaryItem)"
         class="list-group-item">
         <a ng-if="primaryItem.href" ng-href="{{navURL(primaryItem.href)}}" ng-click="itemClicked(primaryItem)">
-          <span class="{{primaryItem.iconClass}}"></span> <span class="list-group-item-value">{{primaryItem.label}}</span>
+          <span alt="{{primaryItem.label}}" aria-hidden="true" class="{{primaryItem.iconClass}}"></span> <span class="list-group-item-value">{{primaryItem.label}}</span>
         </a>
         <a
           ng-if="!primaryItem.href"
           href=""
           ng-click="itemClicked(primaryItem)">
-          <span class="{{primaryItem.iconClass}}"></span> <span class="list-group-item-value">{{primaryItem.label}}</span>
+          <span alt="{{primaryItem.label}}" aria-hidden="true" class="{{primaryItem.iconClass}}"></span> <span class="list-group-item-value">{{primaryItem.label}}</span>
         </a>
 
         <!-- Secondary Nav -->

@@ -490,10 +490,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "          'secondary-nav-item-pf': primaryItem.secondaryNavSections.length\n" +
     "        }\" ng-if=\"show(primaryItem)\" ng-mouseenter=\"onMouseEnter(primaryItem)\" ng-mouseleave=\"onMouseLeave(primaryItem)\" class=\"list-group-item\">\n" +
     "<a ng-if=\"primaryItem.href\" ng-href=\"{{navURL(primaryItem.href)}}\" ng-click=\"itemClicked(primaryItem)\">\n" +
-    "<span class=\"{{primaryItem.iconClass}}\"></span> <span class=\"list-group-item-value\">{{primaryItem.label}}</span>\n" +
+    "<span alt=\"{{primaryItem.label}}\" aria-hidden=\"true\" class=\"{{primaryItem.iconClass}}\"></span> <span class=\"list-group-item-value\">{{primaryItem.label}}</span>\n" +
     "</a>\n" +
     "<a ng-if=\"!primaryItem.href\" href=\"\" ng-click=\"itemClicked(primaryItem)\">\n" +
-    "<span class=\"{{primaryItem.iconClass}}\"></span> <span class=\"list-group-item-value\">{{primaryItem.label}}</span>\n" +
+    "<span alt=\"{{primaryItem.label}}\" aria-hidden=\"true\" class=\"{{primaryItem.iconClass}}\"></span> <span class=\"list-group-item-value\">{{primaryItem.label}}</span>\n" +
     "</a>\n" +
     "\n" +
     "<div ng-if=\"primaryItem.secondaryNavSections.length\" class=\"secondary-nav-item-pf\" ng-class=\"{\n" +
