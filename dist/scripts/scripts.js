@@ -4370,7 +4370,11 @@ namespace: t.metadata.namespace
 }, l = a.getPreferredVersion("servicebindings");
 p(t, n).then(function(t) {
 _.each(t, function(t) {
-t.metadata.deletionTimestamp || i.delete(l, t.metadata.name, r).then(function() {
+if (!t.metadata.deletionTimestamp) {
+var n = {
+propagationPolicy: null
+};
+i.delete(l, t.metadata.name, r, n).then(function() {
 c.addNotification({
 type: "success",
 message: "Binding " + t.metadata.name + "' was marked for deletion."
@@ -4382,6 +4386,7 @@ message: "Binding " + t.metadata.name + "' could not be deleted.",
 details: e("getErrorDetails")(n)
 }), s.error("Binding " + t.metadata.name + "' could not be deleted.", n);
 });
+}
 });
 });
 }

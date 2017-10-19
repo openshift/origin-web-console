@@ -91,7 +91,12 @@ angular.module("openshiftConsole")
             return;
           }
 
-          DataService.delete(resource, binding.metadata.name, context)
+          // TODO - remove once this is resolved https://github.com/kubernetes-incubator/service-catalog/issues/942
+          var opts = {
+            propagationPolicy: null
+          };
+
+          DataService.delete(resource, binding.metadata.name, context, opts)
             .then(function () {
               NotificationsService.addNotification({
                 type: "success",
