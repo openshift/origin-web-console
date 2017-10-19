@@ -57,7 +57,7 @@ function OverviewController($scope,
                             RoutesService,
                             ServiceInstancesService) {
   var overview = this;
-  var limitWatches = $filter('isIE')() || $filter('isEdge')();
+  var limitWatches = $filter('isIE')();
   var DEFAULT_POLL_INTERVAL = 60 * 1000; // milliseconds
 
   $scope.projectName = $routeParams.project;
