@@ -955,7 +955,6 @@ select[multiple].input-group-sm>.form-control,select[multiple].input-group-sm>.i
 .carousel-inner,.embed-responsive,.modal,.modal-open,.progress{overflow:hidden}
 @media (max-device-width:480px) and (orientation:landscape){.navbar-fixed-bottom .navbar-collapse,.navbar-fixed-top .navbar-collapse{max-height:200px}
 }
-.membership .ui-select-bootstrap>.ui-select-choices,.typeahead-long{max-height:300px}
 .container-fluid>.navbar-collapse,.container-fluid>.navbar-header,.container>.navbar-collapse,.container>.navbar-header{margin-right:-20px;margin-left:-20px}
 .navbar-static-top{z-index:1000;border-width:0 0 1px}
 .navbar-fixed-bottom,.navbar-fixed-top{position:fixed;right:0;left:0;z-index:1030}
@@ -2352,7 +2351,7 @@ td>.progress:first-child:last-child{margin-bottom:0;margin-top:3px}
 .form-inline .combobox-container .input-group-addon,.form-search .combobox-container .input-group-addon{width:auto}
 }
 .combobox-container:not(.combobox-selected) .glyphicon-remove,.combobox-selected .caret{display:none}
-.typeahead-long{overflow-y:auto}
+.typeahead-long{max-height:300px;overflow-y:auto}
 .control-group.error .combobox-container .add-on{color:#B94A48;border-color:#B94A48}
 .control-group.error .combobox-container .caret{border-top-color:#B94A48}
 .control-group.warning .combobox-container .add-on{color:#C09853;border-color:#C09853}
@@ -4029,6 +4028,7 @@ div.hopscotch-bubble .hopscotch-nav-button.prev{color:#030303}
 .origin-modal-popup .origin-modal-popup-title{background:#f5f5f5;margin-left:-20px;margin-right:-20px;margin-top:0;padding:10px 40px 10px 20px}
 .origin-modal-popup-backdrop.modal-backdrop{background-color:transparent;cursor:not-allowed;z-index:1031}
 .toast-action-divider{color:#9c9c9c}
+.toast-notification-details{margin-right:-15px;max-height:300px;overflow-y:auto}
 .toast-notification-details .truncated-content{white-space:pre-line}
 .toast-notification-message{font-weight:700;margin-right:5px}
 .toast-notifications-list-pf{top:28px;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0;z-index:1055}
@@ -5865,6 +5865,7 @@ kubernetes-container-terminal .terminal-actions .spinner{top:5px}
 .membership .content-pane .select-role small{color:#999;display:inline-block;line-height:1.4;white-space:pre-line}
 .membership .content-pane .select-role .active small{color:#c0e0f0}
 .membership .content-pane .col-add-role,.membership .content-pane .col-heading,.membership .content-pane .col-name,.membership .content-pane .col-roles,.membership .content-pane .item-row,.membership .content-pane [flex-collapse-fix],.membership .content-pane [flex]{flex-shrink:0;flex-basis:auto}
+.membership .ui-select-bootstrap>.ui-select-choices{max-height:300px}
 @media (min-width:480px){.membership .content-pane .col-heading .col-add-role h3,.membership .content-pane .form-new-role .col-roles{display:block}
 .membership .content-pane .col-add-role{padding:0;min-width:245px}
 .membership .content-pane .col-heading,.membership .content-pane .item-row{border-bottom:none;margin-bottom:none}
