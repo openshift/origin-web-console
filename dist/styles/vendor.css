@@ -5,7 +5,6 @@
  */
 .dataTables_length select:focus,table.dataTable th:active{outline:0}
 .dataTables_wrapper,ul.DTTT_dropdown.dropdown-menu li{position:relative}
-.dragging-connection,.wizard-pf-footer .tooltip-wrapper .btn[disabled]{pointer-events:none}
 table.dataTable,table.dataTable.no-footer{margin:1rem 0;width:100%!important;border-top:1px solid #DDD;border-bottom:1px solid #DDD}
 .dataTables_length{margin:.2rem 0 .8rem 1rem}
 .dataTables_length select{border:none}
@@ -56,8 +55,8 @@ div.DTFC_LeftBodyWrapper tbody tr:first-child td,div.DTFC_LeftBodyWrapper tbody 
 ul.ColVis_collection{width:auto!important}
 .dataTables_wrapper .dataTables_processing{position:absolute;top:50%;left:50%;width:100%;height:40px;margin-left:-50%;margin-top:-25px;padding-top:20px;text-align:center;font-size:1.2em;background:-webkit-gradient(linear,left top,right top,color-stop(0%,rgba(255,255,255,0)),color-stop(25%,rgba(255,255,255,.9)),color-stop(75%,rgba(255,255,255,.9)),color-stop(100%,rgba(255,255,255,0)));background:-webkit-linear-gradient(left,rgba(255,255,255,0) 0,rgba(255,255,255,.9) 25%,rgba(255,255,255,.9) 75%,rgba(255,255,255,0) 100%);background:-moz-linear-gradient(left,rgba(255,255,255,0) 0,rgba(255,255,255,.9) 25%,rgba(255,255,255,.9) 75%,rgba(255,255,255,0) 100%);background:-ms-linear-gradient(left,rgba(255,255,255,0) 0,rgba(255,255,255,.9) 25%,rgba(255,255,255,.9) 75%,rgba(255,255,255,0) 100%);background:-o-linear-gradient(left,rgba(255,255,255,0) 0,rgba(255,255,255,.9) 25%,rgba(255,255,255,.9) 75%,rgba(255,255,255,0) 100%);background:linear-gradient(to right,rgba(255,255,255,0) 0,rgba(255,255,255,.9) 25%,rgba(255,255,255,.9) 75%,rgba(255,255,255,0) 100%);color:#333}
 .navbar-brand-txt{line-height:34px}
-accordion>.panel-group .panel-default .panel-title>a:before{content:"\f105"}
-accordion>.panel-group .panel-open .panel-title>a:before{content:"\f107"}
+accordion>.panel-group .panel-default .panel-title>a:before,uib-accordion>.panel-group .panel-default .panel-title>a:before{content:"\f105"}
+accordion>.panel-group .panel-open .panel-title>a:before,uib-accordion>.panel-group .panel-open .panel-title>a:before{content:"\f107"}
 .card-pf-aggregate-status-alt .card-pf-body{padding-bottom:20px}
 .card-pf-aggregate-status-alt .card-pf-title{font-weight:300;line-height:22px;margin:20px 0 10px}
 .card-pf-aggregate-status-alt .card-pf-aggregate-status-count{font-size:24px}
@@ -72,6 +71,12 @@ accordion>.panel-group .panel-open .panel-title>a:before{content:"\f107"}
 .trend-card-small-pf .trend-header-pf{display:block;font-size:12px;font-weight:400;margin-left:10px}
 .trend-card-small-pf .trend-title-big-pf{font-size:17px;font-weight:400;margin-left:10px}
 .trend-card-small-pf .trend-title-small-pf{font-size:10px;font-weight:400}
+.card-pf-info-status{display:flex;margin:0 10px}
+.card-pf-info-status .card-pf-info-image{display:flex;align-items:center;justify-content:center;flex-direction:column;margin-right:15px}
+.card-pf-info-status .card-pf-info-image .info-icon{font-size:50px}
+.card-pf-info-status .card-pf-info-image .info-img{max-height:50px}
+.card-pf-info-status .card-pf-info-content{margin:10px 0}
+.card-pf-info-status .card-pf-info-content .card-pf-title{margin-top:10px;margin-bottom:15px}
 pf-c3-chart{display:block}
 .empty-chart-content{text-align:center}
 .empty-chart-content .pficon{font-size:24px}
@@ -201,7 +206,6 @@ table.dataTable{margin:0}
 table.dataTable tbody tr.selected span a{color:#fff}
 table.dataTable tbody td,table.dataTable tbody th{padding:2px 10px 3px}
 .table-view-pf-select{width:13px}
-.wizard-pf-footer .tooltip-wrapper{border:none;box-shadow:none;display:inline-block;margin-left:5px;padding:0;text-align:center}
 .wizard-pf-footer .btn-cancel.wizard-pf-cancel-no-back{margin-right:0}
 .wizard-pf-singlestep{margin-left:0}
 .wizard-pf-position-override{position:relative}
@@ -243,6 +247,7 @@ table.dataTable tbody td,table.dataTable tbody th{padding:2px 10px 3px}
 .connection-name{fill:#030303}
 .selected-connection-name{fill:#c00}
 .mouseover-connection-name{fill:#030303}
+.dragging-connection{pointer-events:none}
 .dragging-connection-line{fill:transparent;stroke-width:3;stroke:#8b8d8f}
 .dragging-connection-endpoint{fill:#8b8d8f}
 .draggable-container{border:1px solid #d1d1d1}
