@@ -5404,7 +5404,7 @@ dl.secret-data pre{margin-bottom:0}
 .events-sidebar .events-sidebar-collapse a{text-decoration:none}
 .events-sidebar .sidebar-header.right-header{align-items:center;display:flex;justify-content:space-between;margin-top:17.5px}
 .events-sidebar .sidebar-header.right-header h2{font-family:inherit;font-weight:500;line-height:1.1;color:inherit;margin-top:10.5px;margin-bottom:10.5px;font-size:14px;display:inline-block}
-.config-map-table .key,.config-map-table .truncated-content,.log-view{font-family:Menlo,Monaco,Consolas,monospace}
+.config-map-table .key,.config-map-table .truncated-content,.edit-yaml .ace_editor.editor,.log-view{font-family:Menlo,Monaco,Consolas,monospace}
 .events-sidebar .sidebar-header.right-header h2 .small,.events-sidebar .sidebar-header.right-header h2 small{font-weight:400;line-height:1;color:#9c9c9c;font-size:75%}
 .events-sidebar .sidebar-header.right-header .warning-count{white-space:nowrap;margin-left:2px}
 .events-sidebar .sidebar-header.right-header .warning-count .pficon{vertical-align:-1px}
@@ -5686,14 +5686,13 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .log-line-number:before{content:attr(data-line-number)}
 .log-line-number{-ms-user-select:none;border-right:1px #272b30 solid;padding-right:10px;vertical-align:top;white-space:nowrap;width:60px;color:#72767b}
 .log-line-text{padding:0 10px;white-space:pre-wrap;width:100%}
-.appended-icon,.project-date [am-time-ago],.projects-list [am-time-ago]{white-space:nowrap}
 .log-line-text::-moz-selection{color:#101214;background:#e5e5e5}
 .table-log-pods{background-color:#fff;border:1px solid #D1D1D1}
 .table-log-pods>tbody+tbody{border-top-width:1px}
 .log-fixed-height.empty-state-message{margin-top:0}
 .settings-item{margin:4px 8px 4px 0}
 .hide-if-empty:empty{display:none!important}
-.appended-icon{display:inline-block}
+.appended-icon{display:inline-block;white-space:nowrap}
 .block{display:block}
 .text-prepended-icon{align-items:baseline;display:flex}
 .nav-pf-vertical{background-color:#292e34;top:41px;transition:width .1s ease-in-out,left .1s ease-in-out;z-index:990}
@@ -5735,6 +5734,7 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 @media (min-width:992px){.project-additional-info.list-view-pf-additional-info{width:55%}
 }
 .project-description.list-group-item-text,.project-info .list-view-pf-description{width:100%}
+.project-date [am-time-ago],.projects-list [am-time-ago]{white-space:nowrap}
 .project-description.list-group-item-text .highlighted-content,.project-description.list-group-item-text .truncated-content{display:block;white-space:pre-line;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .project-info.list-group-item{border-bottom:0;border-color:#e0e0e0;padding:10px 20px}
 @media (min-width:992px){.project-name-item.list-group-item-heading{white-space:normal;width:45%}
@@ -5832,18 +5832,19 @@ kubernetes-container-terminal .terminal-actions .spinner{top:5px}
 .environment-from-editor .faux-input-group,.key-value-editor .faux-input-group{border-collapse:separate;display:table;position:relative}
 .environment-from-editor .faux-input-group.faux-input-single-input,.key-value-editor .faux-input-group.faux-input-single-input{width:100%}
 .environment-from-editor .environment-from-editor-button,.environment-from-editor .key-value-editor-buttons,.key-value-editor .environment-from-editor-button,.key-value-editor .key-value-editor-buttons{position:absolute;right:0;top:0;width:52px}
-.environment-from-editor .environment-from-entry,.environment-from-editor .key-value-editor-entry,.key-value-editor .environment-from-entry,.key-value-editor .key-value-editor-entry{display:table;padding-right:52px;position:relative;table-layout:fixed;width:100%}
-@media (min-width:992px){.environment-from-editor .environment-from-entry .environment-from-editor-button,.environment-from-editor .key-value-editor-entry .environment-from-editor-button,.key-value-editor .environment-from-entry .environment-from-editor-button,.key-value-editor .key-value-editor-entry .environment-from-editor-button{float:left;padding-right:5px;position:relative;width:50%}
+.environment-from-editor .environment-from-entry,.environment-from-editor .key-value-editor-entry,.key-value-editor .environment-from-entry,.key-value-editor .key-value-editor-entry{display:table;margin-bottom:15px;padding-right:52px;position:relative;table-layout:fixed;width:100%}
+@media (min-width:992px){.environment-from-editor .environment-from-entry .environment-from-editor-button,.environment-from-editor .key-value-editor-entry .environment-from-editor-button,.key-value-editor .environment-from-entry .environment-from-editor-button,.key-value-editor .key-value-editor-entry .environment-from-editor-button{float:left;padding-right:5px;position:relative;width:auto}
 }
-.environment-from-editor .environment-from-entry .environment-from-input,.environment-from-editor .key-value-editor-entry .environment-from-input,.key-value-editor .environment-from-entry .environment-from-input,.key-value-editor .key-value-editor-entry .environment-from-input{float:left;padding-right:5px;width:100%}
+.environment-from-editor .environment-from-entry .environment-from-input,.environment-from-editor .key-value-editor-entry .environment-from-input,.key-value-editor .environment-from-entry .environment-from-input,.key-value-editor .key-value-editor-entry .environment-from-input{float:left;margin-bottom:0;padding-right:5px;width:100%}
 @media (min-width:992px){.environment-from-editor .environment-from-entry .environment-from-input,.environment-from-editor .key-value-editor-entry .environment-from-input,.key-value-editor .environment-from-entry .environment-from-input,.key-value-editor .key-value-editor-entry .environment-from-input{width:50%}
 }
 .environment-from-editor .environment-from-entry .environment-from-input .faux-input-group,.environment-from-editor .environment-from-entry .environment-from-input .ui-select,.environment-from-editor .key-value-editor-entry .environment-from-input .faux-input-group,.environment-from-editor .key-value-editor-entry .environment-from-input .ui-select,.key-value-editor .environment-from-entry .environment-from-input .faux-input-group,.key-value-editor .environment-from-entry .environment-from-input .ui-select,.key-value-editor .key-value-editor-entry .environment-from-input .faux-input-group,.key-value-editor .key-value-editor-entry .environment-from-input .ui-select{float:left;width:100%}
+.environment-from-editor .environment-from-entry .environment-from-view-details,.key-value-editor .environment-from-entry .environment-from-view-details{float:left;line-height:1;padding:6px 0 0}
 .environment-from-editor .key-value-editor-input .ui-select+.ui-select,.key-value-editor .key-value-editor-input .ui-select+.ui-select{padding-top:5px}
 @media (min-width:992px){.environment-from-editor .key-value-editor-input .ui-select,.key-value-editor .key-value-editor-input .ui-select{float:left;width:50%}
 .environment-from-editor .key-value-editor-input .ui-select+.ui-select,.key-value-editor .key-value-editor-input .ui-select+.ui-select{padding-top:0;padding-left:5px}
 }
-.key-value-editor .key-value-editor-input,.key-value-editor-header{float:left;padding-right:5px;width:50%}
+.key-value-editor .key-value-editor-input,.key-value-editor-header{float:left;margin-bottom:0;padding-right:5px;width:50%}
 .environment-from-editor-entry-header,.key-value-editor-entry-header{padding-right:52px}
 .environment-from-editor-header,.key-value-editor-header{margin-bottom:5px}
 .membership h1 .learn-more-inline{white-space:nowrap;margin-right:10px;margin-left:0px;display:inline-block}
@@ -5931,7 +5932,7 @@ notification-drawer-wrapper .expanded-notification.unread .drawer-pf-notificatio
 .ace-inline{height:300px}
 .ace-inline-small{height:200px}
 .ace_editor.dockerfile-mode .ace_constant.ace_numeric,.editor.yaml-mode .ace_constant.ace_numeric{color:inherit}
-.edit-yaml .ace_editor.editor{font-family:Menlo,Monaco,Consolas,monospace;line-height:1.5;width:100%;min-height:140px;height:50vh}
+.edit-yaml .ace_editor.editor{line-height:1.5;width:100%;min-height:140px;height:50vh}
 @media (min-height:700px){.edit-yaml .ace_editor.editor{height:60vh}
 }
 .edit-yaml .ace_editor.editor .ace_gutter{color:#8b8d8f}

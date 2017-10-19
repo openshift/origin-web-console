@@ -118,6 +118,7 @@
   .key-value-editor-entry,
   .environment-from-entry {
     display: table;
+    margin-bottom: 15px;
     padding-right: (@as-sortable-item-button-width * 2);
     position: relative;
     table-layout: fixed;
@@ -127,11 +128,12 @@
         float: left;
         padding-right: 5px;
         position: relative;
-        width: 50%;
+        width: auto;
       }
     }
     .environment-from-input {
       float: left;
+      margin-bottom: 0;
       padding-right: 5px;
       width: 100%;
       @media(min-width: @screen-md-min) {
@@ -142,6 +144,13 @@
         float: left;
         width: 100%;
       }
+    }
+  }
+  .environment-from-entry {
+    .environment-from-view-details {
+      float: left;
+      line-height: 1;
+      padding: 6px 0 0;
     }
   }
 
@@ -163,6 +172,7 @@
 .key-value-editor .key-value-editor-input,
 .key-value-editor-header {
   float: left;
+  margin-bottom: 0;
   padding-right: 5px;
   width: 50%;
 }

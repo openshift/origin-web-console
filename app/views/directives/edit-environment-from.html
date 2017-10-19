@@ -68,6 +68,12 @@
           aria-label="Delete row"
           ng-click="$ctrl.deleteEntry($index, 1)"></a>
       </div>
+      <div class="environment-from-view-details">
+        <a
+          ng-if="entry.selectedEnvFrom"
+          href=""
+          ng-click="$ctrl.viewOverlayPanel(entry.selectedEnvFrom)">View Details</a>
+      </div>
     </div>
 
     <div class="environment-from-entry form-group" ng-if="!$ctrl.cannotAdd">
@@ -78,4 +84,44 @@
         ng-click="$ctrl.onAddRow()">{{ $ctrl.addRowLink }}</a>
     </div>
   </div>
+
+  <overlay-panel class="add-config-to-application" show-panel="$ctrl.overlayPanelVisible" show-close="true" handle-close="$ctrl.closeOverlayPanel">
+    <div class="dialog-title">
+      <h3>Value Details</h3>
+    </div>
+    <div class="modal-body">
+      <h4>{{$ctrl.overlayPaneEntryDetails.metadata.name}}
+        <small class="muted">&ndash; {{$ctrl.overlayPaneEntryDetails.kind | humanizeKind : true}}</small></h4>
+
+      <div ng-if="!($ctrl.overlayPaneEntryDetails.data | size)" class="empty-state-message text-center">
+        The {{$ctrl.overlayPaneEntryDetails.kind | humanizeKind}} has no properties.
+      </div>
+
+      <div ng-if="$ctrl.overlayPaneEntryDetails.data | size" class="table-responsive scroll-shadows-horizontal">
+        <table class="table table-bordered table-bordered-columns config-map-table key-value-table">
+          <tbody>
+            <tr ng-repeat="(prop, value) in $ctrl.overlayPaneEntryDetails.data">
+              <td class="key">{{prop}}</td>
+              <td class="value">
+                <truncate-long-text
+                  ng-if="$ctrl.overlayPaneEntryDetails.kind === 'ConfigMap'"
+                  content="value"
+                  limit="50"
+                  newline-limit="2"
+                  expandable="true">
+                </truncate-long-text>
+
+                <span ng-if="$ctrl.overlayPaneEntryDetails.kind === 'Secret'">&#42;&#42;&#42;&#42;&#42;</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button ng-click="$ctrl.closeOverlayPanel()"
+              type="button"
+              class="btn btn-primary pull-right">Close</button>
+    </div>
+  </overlay-panel>
 </ng-form>
