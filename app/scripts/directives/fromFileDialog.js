@@ -56,9 +56,9 @@
       ctrl.template = message.template;
       ctrl.iconClass = getIconClass();
       ctrl.image = getImage();
-      ctrl.vendor = annotation(message.template, "template.openshift.io/provider-display-name");
-      ctrl.docUrl = annotation(ctrl.template, "template.openshift.io/documentation-url");
-      ctrl.supportUrl = annotation(ctrl.template, "template.openshift.io/support-url");
+      ctrl.vendor = annotation(message.template, "openshift.io/provider-display-name");
+      ctrl.docUrl = annotation(ctrl.template, "openshift.io/documentation-url");
+      ctrl.supportUrl = annotation(ctrl.template, "openshift.io/support-url");
       ctrl.name = "YAML / JSON";
       // Need to let the current digest loop finish so the template config step becomes visible or the wizard will throw an error
       // from the change to currentStep
