@@ -2,6 +2,7 @@
   <h3 ng-if="$ctrl.showHeader">Bindings</h3>
   <service-binding
     ng-repeat="binding in $ctrl.bindings track by (binding | uid)"
+    is-overview="$ctrl.isOverview"
     namespace="binding.metadata.namespace"
     binding="binding"
     ref-api-object="$ctrl.serviceInstance">
