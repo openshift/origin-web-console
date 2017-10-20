@@ -5493,10 +5493,10 @@ dl.secret-data pre{margin-bottom:0}
 .events-table th#reason{width:150px}
 .events-table th#severity{padding:0;width:10px}
 .events-table th#time{width:90px}
-.key-value-table>tbody>tr>td.key{padding-right:10px;vertical-align:top}
-.key-value-table>tbody>tr>td.value{width:100%}
-.key-value-table>tbody>tr>td.value .truncated-content{white-space:pre}
 .table{background-color:#fff}
+.table.key-value-table>tbody>tr>td.key{padding-right:10px;vertical-align:top}
+.table.key-value-table>tbody>tr>td.value{width:100%}
+.table.key-value-table>tbody>tr>td.value .truncated-content{white-space:pre}
 .table.table-bordered>tbody>tr td,.table.table-bordered>tbody>tr th,.table.table-bordered>thead>tr td,.table.table-bordered>thead>tr th{border-left:0;border-right:0;padding-bottom:8px;padding-top:8px;vertical-align:middle}
 .table-filter-extension,.table.table-bordered-columns tbody>tr td,.table.table-bordered-columns tbody>tr th,.table.table-bordered-columns thead>tr td,.table.table-bordered-columns thead>tr th{border-left:1px solid #d1d1d1;border-right:1px solid #d1d1d1}
 .table.table-layout-fixed{table-layout:fixed}
