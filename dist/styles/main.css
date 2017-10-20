@@ -4135,7 +4135,7 @@ div.hopscotch-bubble .hopscotch-nav-button.prev{color:#030303}
 }
 @media (min-width:1600px){.landing-side-bar{width:475px}
 }
-.catalog-parameters input.form-control[disabled]{background-color:transparent;border:0;color:#363636;cursor:default;margin-top:-3px}
+.catalog-parameters input.form-control[disabled]{background-color:transparent;border:0;color:#363636;cursor:default;margin-top:-3px;padding-left:0}
 .catalog-parameters.readonly fieldset,.catalog-parameters.readonly fieldset>div{padding-left:20px}
 .catalog-parameters.readonly legend{border:0;font-size:13px;font-weight:600;margin-bottom:5px}
 .catalog-parameters.readonly .schema-form-array{margin-left:0}
@@ -4254,7 +4254,7 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .catalog-projects-summary-panel .services-view .services-item .fa-question,.catalog-projects-summary-panel .services-view .services-item .icon-ruby{right:1px}
 .catalog-projects-summary-panel .services-view .services-item .services-item-icon{color:#363636;font-size:30px;height:90px}
 .catalog-projects-summary-panel .services-view .services-item .services-item-icon:after{background:#fff;border-color:#292e34;height:60px;margin:-30px 0 0 -30px;width:60px}
-.catalog-projects-summary-panel .services-view .services-item .services-item-icon img{max-height:30%;max-width:30%}
+.catalog-projects-summary-panel .services-view .services-item .services-item-icon img{max-height:32px;max-width:32px}
 .catalog-projects-summary-panel .services-view .services-item .services-item-name{color:#fff;font-size:12px;font-weight:300;padding:0 5px}
 .catalog-projects-summary-panel .summary-title{margin-top:5px}
 .catalog-projects-summary-panel .summary-title a{color:#fff}
@@ -4314,6 +4314,8 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .saas-offerings-container .spinner-container{padding-top:60px;padding-bottom:60px}
 .services-view,services-view{display:flex;flex:1 1 auto}
 .services-view .vendor-info-icon,services-view .vendor-info-icon{font-size:10px;padding-left:2px;vertical-align:middle}
+.services-view .blank-slate-pf{background-color:transparent;border:none}
+.services-view .pf-empty-state{margin:0 20px;width:100%}
 .services-view .services-item{animation:catalogItemFade .2s ease-out;color:#363636;min-height:140px;overflow:hidden;padding:0 10px 20px;position:relative;text-align:center;width:50%;word-break:break-word;z-index:99}
 @media (min-width:480px){.services-view .services-item{width:33.3333%}
 }
