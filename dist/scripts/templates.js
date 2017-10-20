@@ -12620,7 +12620,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">info</span>\n" +
     "<span class=\"strong\">The service is not yet ready.</span>\n" +
-    "<truncate-long-text content=\"row.pendingMessage\" limit=\"265\"></truncate-long-text>\n" +
+    "<truncate-long-text content=\"row.apiObject | serviceInstanceReadyMessage\" limit=\"265\"></truncate-long-text>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
