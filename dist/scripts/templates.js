@@ -349,7 +349,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div row ng-if=\"container.ports.length > 0\" class=\"pod-template-ports icon-row\">\n" +
     "<div class=\"icon-wrap\">\n" +
-    "<span data-icon=\"\" aria-hidden=\"true\" style=\"font-size:16px;line-height:normal\"></span>\n" +
+    "<span aria-hidden=\"true\" class=\"pficon pficon-port\"></span>\n" +
     "</div>\n" +
     "<div flex class=\"word-break\">\n" +
     "<span class=\"pod-template-key\">Ports:</span>\n" +
@@ -7921,7 +7921,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/notifications/notification-counter.html',
     "<li class=\"drawer-pf-trigger\" ng-if=\"!$ctrl.hide\">\n" +
     "\n" +
-    "<a href=\"\" class=\"nav-item-iconic\" ng-click=\"$ctrl.onClick()\"><span class=\"fa fa-bell\" title=\"Notifications\" aria-hidden=\"true\"></span><span ng-if=\"$ctrl.showUnreadNotificationsIndicator\" class=\"badge\"> </span><span class=\"sr-only\">Notifications</span></a>\n" +
+    "<a href=\"\" class=\"nav-item-iconic\" ng-click=\"$ctrl.onClick()\"><span class=\"fa fa-bell\" title=\"Notifications\" aria-hidden=\"true\"></span><span ng-if=\"$ctrl.showUnreadNotificationsIndicator\" class=\"badge badge-pf-bordered\"> </span><span class=\"sr-only\">Notifications</span></a>\n" +
     "</li>"
   );
 
@@ -8965,7 +8965,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<pf-wizard wizard-title=\"{{!$ctrl.useProjectTemplate && ($ctrl.template | displayName) || 'Select from Project'}}\" hide-sidebar=\"true\" step-class=\"order-service-wizard-step\" wizard-ready=\"$ctrl.wizardReady\" next-title=\"$ctrl.nextTitle\" next-callback=\"$ctrl.next\" on-finish=\"$ctrl.close()\" on-cancel=\"$ctrl.close()\" wizard-done=\"$ctrl.wizardDone\" current-step=\"$ctrl.currentStep\">\n" +
     "<pf-wizard-step ng-repeat=\"step in $ctrl.steps track by step.id\" step-title=\"{{step.label}}\" wz-disabled=\"{{step.hidden}}\" allow-click-nav=\"step.allowClickNav\" next-enabled=\"step.valid\" prev-enabled=\"step.prevEnabled\" on-show=\"step.onShow\" step-id=\"{{step.id}}\" step-priority=\"{{$index}}\">\n" +
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
-    "<div ng-if=\"step.selected\" ng-include=\"step.view\" class=\"wizard-pf-main-form-contents\"></div>\n" +
+    "<div ng-show=\"step.selected\" ng-include=\"step.view\" class=\"wizard-pf-main-form-contents\"></div>\n" +
     "</div>\n" +
     "</pf-wizard-step>\n" +
     "</pf-wizard>\n" +
@@ -9070,7 +9070,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/process-template.html',
-    "<fieldset ng-disabled=\"disableInputs\">\n" +
+    "<fieldset ng-if=\"$ctrl.template\" ng-disabled=\"disableInputs\">\n" +
     "<ng-form name=\"$ctrl.templateForm\">\n" +
     "<template-options is-dialog=\"$ctrl.isDialog\" parameters=\"$ctrl.template.parameters\" expand=\"true\" can-toggle=\"false\">\n" +
     "<select-project ng-if=\"!$ctrl.project\" on-project-selected=\"$ctrl.onProjectSelected\" available-projects=\"$ctrl.availableProjects\" selected-project=\"$ctrl.selectedProject\" name-taken=\"$ctrl.projectNameTaken\"></select-project>\n" +
