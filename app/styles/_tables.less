@@ -84,21 +84,20 @@
   }
 }
 
-.key-value-table > tbody > tr > td {
-  &.key {
-    padding-right: 10px;
-    vertical-align: top;
-  }
-  &.value {
-    width: 100%;
-    .truncated-content {
-      white-space: pre;
-    }
-  }
-}
-
 .table {
   background-color: #fff;
+  &.key-value-table > tbody > tr > td {
+    &.key {
+      padding-right: 10px;
+      vertical-align: top;
+    }
+    &.value {
+      width: 100%;
+      .truncated-content {
+        white-space: pre;
+      }
+    }
+  }
   &.table-bordered {
     > tbody, > thead {
       > tr > {
