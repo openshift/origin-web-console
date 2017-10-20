@@ -349,7 +349,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div row ng-if=\"container.ports.length > 0\" class=\"pod-template-ports icon-row\">\n" +
     "<div class=\"icon-wrap\">\n" +
-    "<span data-icon=\"\" aria-hidden=\"true\" style=\"font-size:16px;line-height:normal\"></span>\n" +
+    "<span aria-hidden=\"true\" class=\"pficon pficon-port\"></span>\n" +
     "</div>\n" +
     "<div flex class=\"word-break\">\n" +
     "<span class=\"pod-template-key\">Ports:</span>\n" +
