@@ -3667,12 +3667,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"serviceInstance\">\n" +
     "<h1 class=\"contains-actions\">\n" +
     "<div class=\"pull-right dropdown\" ng-hide=\"!('serviceInstances' | canIDoAny)\">\n" +
+    "\n" +
+    "<button ng-if=\"editAvailable && ({resource: 'serviceinstances', group: 'servicecatalog.k8s.io'} | canI : 'update')\" class=\"btn btn-default hidden-xs\" ng-click=\"showEditDialog()\">\n" +
+    "Edit\n" +
+    "</button>\n" +
+    "\n" +
     "<button type=\"button\" class=\"dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs\" data-toggle=\"dropdown\">\n" +
     "Actions\n" +
     "<span class=\"caret\"></span>\n" +
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
+    "<li class=\"visible-xs-inline\" ng-if=\"editAvailable && (serviceInstancesVersion  | canI : 'update')\">\n" +
+    "<a href=\"\" role=\"button\" ng-click=\"showEditDialog()\">Edit</a>\n" +
+    "</li>\n" +
     "<li ng-if=\"serviceInstancesVersion | canI : 'update'\">\n" +
     "<a ng-href=\"{{serviceInstance | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
@@ -3709,7 +3717,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"resource-details\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-lg-6\">\n" +
-    "<p ng-bind-html=\"plan.spec.description | linkify : '_blank'\"></p>\n" +
+    "<h3>Status</h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<dt>Status:</dt>\n" +
     "<dd>\n" +
@@ -3720,16 +3728,37 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd ng-if-end>\n" +
     "{{serviceInstance | serviceInstanceConditionMessage}}\n" +
     "</dd>\n" +
-    "<dt ng-if-start=\"serviceClass.spec.description || serviceClass.spec.externalMetadata.longDescription\">Description:</dt>\n" +
-    "<dd ng-if-end>\n" +
+    "</dl>\n" +
+    "<div class=\"hidden-lg\">\n" +
+    "<h3 ng-if-start=\"serviceClass.spec.description || serviceClass.spec.externalMetadata.longDescription\">Description</h3>\n" +
     "<p class=\"service-description\"><truncate-long-text limit=\"500\" content=\"serviceClass.spec.description\" use-word-boundary=\"true\" expandable=\"true\" linkify=\"true\">\n" +
     "</truncate-long-text></p>\n" +
-    "<p class=\"service-description\"><truncate-long-text limit=\"500\" content=\"serviceClass.spec.externalMetadata.longDescription\" use-word-boundary=\"true\" expandable=\"true\" linkify=\"true\">\n" +
+    "<p ng-if-end class=\"service-description\"><truncate-long-text limit=\"500\" content=\"serviceClass.spec.externalMetadata.longDescription\" use-word-boundary=\"true\" expandable=\"true\" linkify=\"true\">\n" +
     "</truncate-long-text></p>\n" +
-    "</dd>\n" +
-    "</dl>\n" +
     "</div>\n" +
-    "<div class=\"col-lg-6 mar-bottom-xl\">\n" +
+    "<h3>Plan</h3>\n" +
+    "<p ng-bind-html=\"plan.spec.description | linkify : '_blank'\"></p>\n" +
+    "<div ng-if=\"parameterSchema.properties\" class=\"config-parameters-form\">\n" +
+    "<h3>\n" +
+    "<span>Configuration</span>\n" +
+    "<a href=\"\" class=\"hide-show-link\" ng-click=\"toggleShowParameterValues()\" role=\"button\">\n" +
+    "{{showParameterValues ? 'Hide Values' : 'Reveal Values'}}\n" +
+    "</a>\n" +
+    "</h3>\n" +
+    "<form name=\"forms.orderConfigureForm\">\n" +
+    "<catalog-parameters hide-values=\"!showParameterValues\" model=\"parameterData\" parameter-schema=\"parameterSchema\" parameter-form-definition=\"parameterFormDefinition\" is-horizontal=\"true\" read-only=\"true\">\n" +
+    "</catalog-parameters>\n" +
+    "</form>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"col-lg-6\">\n" +
+    "<div class=\"hidden-xs hidden-sm hidden-md\">\n" +
+    "<h3 ng-if-start=\"serviceClass.spec.description || serviceClass.spec.externalMetadata.longDescription\">Description</h3>\n" +
+    "<p class=\"service-description\"><truncate-long-text limit=\"500\" content=\"serviceClass.spec.description\" use-word-boundary=\"true\" expandable=\"true\" linkify=\"true\">\n" +
+    "</truncate-long-text></p>\n" +
+    "<p ng-if-end class=\"service-description\"><truncate-long-text limit=\"500\" content=\"serviceClass.spec.externalMetadata.longDescription\" use-word-boundary=\"true\" expandable=\"true\" linkify=\"true\">\n" +
+    "</truncate-long-text></p>\n" +
+    "</div>\n" +
     "<service-instance-bindings show-header=\"true\" project=\"project\" bindings=\"bindings\" service-instance=\"serviceInstance\" service-class=\"serviceClass\" service-plan=\"plan\">\n" +
     "</service-instance-bindings>\n" +
     "</div>\n" +
@@ -3745,6 +3774,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<overlay-panel show-panel=\"editDialogShown\" handle-close=\"closeEditDialog\">\n" +
+    "<update-service service-instance=\"serviceInstance\" project=\"project\" base-project-url=\"project\" service-class=\"serviceClass\" service-plans=\"servicePlans\" handle-close=\"closeEditDialog\">\n" +
+    "</update-service>\n" +
+    "</overlay-panel>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -5645,6 +5678,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-if=\"('secrets' | canI : 'get') && ($ctrl.binding | isBindingReady)\" ng-href=\"{{$ctrl.binding.spec.secretName | navigateResourceURL : 'Secret' : $ctrl.namespace}}\">\n" +
     "View Secret\n" +
     "</a>\n" +
+    "</div>\n" +
+    "<div class=\"service-binding-parameters\" ng-if=\"$ctrl.bindParameterSchema.properties\">\n" +
+    "<span class=\"parameters-heading\">Parameters</span>\n" +
+    "<a href=\"\" ng-click=\"$ctrl.toggleShowParameterValues()\" role=\"button\">\n" +
+    "{{$ctrl.showParameterValues ? 'Hide Values' : 'Reveal Values'}}\n" +
+    "</a>\n" +
+    "<form name=\"ctrl.parametersForm\">\n" +
+    "<catalog-parameters hide-values=\"!$ctrl.showParameterValues\" model=\"$ctrl.parameterData\" parameter-form-definition=\"$ctrl.bindParameterFormDefinition\" parameter-schema=\"$ctrl.bindParameterSchema\" is-horizontal=\"true\" read-only=\"true\">\n" +
+    "</catalog-parameters>\n" +
+    "</form>\n" +
     "</div>\n" +
     "</div>"
   );
