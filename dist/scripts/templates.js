@@ -7921,7 +7921,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/notifications/notification-counter.html',
     "<li class=\"drawer-pf-trigger\" ng-if=\"!$ctrl.hide\">\n" +
     "\n" +
-    "<a href=\"\" class=\"nav-item-iconic\" ng-click=\"$ctrl.onClick()\"><span class=\"fa fa-bell\" title=\"Notifications\" aria-hidden=\"true\"></span><span ng-if=\"$ctrl.showUnreadNotificationsIndicator\" class=\"badge\"> </span><span class=\"sr-only\">Notifications</span></a>\n" +
+    "<a href=\"\" class=\"nav-item-iconic\" ng-click=\"$ctrl.onClick()\"><span class=\"fa fa-bell\" title=\"Notifications\" aria-hidden=\"true\"></span><span ng-if=\"$ctrl.showUnreadNotificationsIndicator\" class=\"badge badge-pf-bordered\"> </span><span class=\"sr-only\">Notifications</span></a>\n" +
     "</li>"
   );
 
