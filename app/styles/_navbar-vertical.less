@@ -53,13 +53,14 @@
     @media(min-width: @screen-sm-min) {
       margin-right: @navbar-header-right-margin;
     }
+    // adjust positioning of notification drawer badge as our header
+    // heights are different, as is the bell icon size
     .badge {
-      margin: 0 !important;
-      position: absolute;
-      right: 13px;
-      top: 9px;
+      left: 14px !important;
+      top: 7px !important;
       @media(min-width: @screen-sm-min) {
-        top: 20px;
+        left: 21px !important;
+        top: 18px !important;
       }
     }
 
