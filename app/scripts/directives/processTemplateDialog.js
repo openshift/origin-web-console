@@ -91,6 +91,11 @@
       }
       listProjects();
 
+      ctrl.noProjectsCantCreate = false;
+      $scope.$on('no-projects-cannot-create', function() {
+        ctrl.noProjectsCantCreate = true;
+      });
+
       ctrl.projectEmptyState = {
         title: 'No Project Selected',
         info: 'Please select a project from the dropdown to load Templates from that project.'
@@ -272,7 +277,7 @@
       ctrl.resultsStep.allowed = ctrl.configStep.valid;
 
       validityWatcher = $scope.$watch("$ctrl.form.$valid", function(isValid) {
-        ctrl.configStep.valid = isValid && ctrl.selectedProject;
+        ctrl.configStep.valid = isValid && !ctrl.noProjectsCantCreate && ctrl.selectedProject;
         ctrl.resultsStep.allowed = isValid;
       });
     }

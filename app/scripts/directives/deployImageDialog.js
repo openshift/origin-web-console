@@ -27,6 +27,10 @@
       if (!$routeParams.project) {
         ctrl.showProjectName = true;
       }
+      $scope.$on('no-projects-cannot-create', function() {
+        ctrl.deployForm.$setValidity('required', false);
+        ctrl.deployImageNewAppCreated = false;
+      });
     };
 
     ctrl.deployImage = function() {
