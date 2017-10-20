@@ -20,7 +20,7 @@
          step-id="{{step.id}}"
          step-priority="{{$index}}">
       <div class="wizard-pf-main-inner-shadow-covers">
-        <div ng-if="step.selected" ng-include="step.view" class="wizard-pf-main-form-contents"></div>
+        <div ng-show="step.selected" ng-include="step.view" class="wizard-pf-main-form-contents"></div>
       </div>
     </pf-wizard-step>
   </pf-wizard>
