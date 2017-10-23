@@ -1,70 +1,100 @@
 .membership {
-  // TODO: make generic?
-  h1 {
-    .learn-more-inline {
-      white-space: nowrap;
-      margin-right: 10px;
-      margin-left: 0px;
-      display: inline-block;
+  .action-set {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    @media(min-width: @screen-sm-min) {
+      flex-wrap: nowrap;
+    }
+    @media(min-width: @screen-md-min) {
+      flex-direction: row;
     }
   }
   .content-pane {
     width: 100%;
-    .col-add-role {
-      padding: 10px 0;
-      min-width: 150px;
-    }
     .add-role-to {
       margin-left: -1px;
     }
-    .item-row,
+    .col-add-role {
+      width: 100%;
+      @media(min-width: @screen-xs-min) {
+        min-width: 245px;
+        width: auto;
+      }
+    }
     .col-heading {
       border-bottom: 1px solid #ededed;
-      h3 {
+      display: none;
+      @media(min-width: @screen-xs-min) {
+        display: flex;
         margin: 0;
       }
     }
-    .item-row {
-      padding: 5px 10px 5px 5px;
-      margin-bottom: 20px;
-    }
-    .col-heading {
-      margin-bottom: 20px;
-      .col-add-role {
-        h3 {
-          display: none;
+    .col-name {
+      @media(min-width: @screen-xs-min) {
+        max-width: 30%;
+        .container-pf-nav-pf-vertical.collapsed-nav & {
+          max-width: 40%;
+        }
+        padding: 0 5px 0 0;
+        input {
+          max-width: 225px;
         }
       }
-    }
-    .col-name {
       &.half-width {
-        min-width: 50%;
+        max-width: 50%;
       }
       .word-break-all;
-      width: 100%;
-      padding: 0 0px 10px 0;
-      input {
-        max-width: 150px;
-      }
+        padding: 0 0px 10px 0;
+        width: 100%;
       .new-project {
         margin-top: 2px;
       }
+    }
+    .col-roles {
+      display: flex;
+      flex-wrap: wrap;
+      padding-bottom: 5px;
+      @media(min-width: @screen-md-min) {
+        padding: 0;
+      }
+    }
+    .content-serviceaccount .form-new-role .col-roles {
+      display: block;
     }
     .form-new-role {
       .col-roles {
         display: none;
       }
-    }
-    .content-serviceaccount {
-      .form-new-role {
-        .col-roles {
-          display: block;
+      @media(min-width: @screen-md-min) {
+        .action-set {
+          flex-direction: column;
+          .col-add-role {
+            align-self: flex-end;
+          }
         }
       }
     }
     .input-name {
-      width: 150px;
       margin-bottom: 5px;
+    }
+    .item-row {
+      border-bottom: 1px solid #ededed;
+      padding: 10px 10px 10px 5px;
+      @media(min-width: @screen-xs-min) {
+        &.highlight-hover:hover {
+          background-color: #fafafa;
+        }
+      }
+    }
+    .membership-empty {
+      margin-top: 20px;
+    }
+    .show-hidden-roles .action-set {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
     }
     .select-project {
       width: 150px;
@@ -82,68 +112,33 @@
         }
       }
     }
+    .service-account {
+      @media(max-width: @screen-sm-max) {
+        flex-direction: column; // stack inputs because lack of horizontal space
+      }
+      .select-role {
+        padding-bottom: 5px;
+        width: auto;
+        @media(min-width: @screen-md-min) {
+          width: 150px;
+        }
+      }
+    }
     // FIXME (bpeterse): to update in layout.attrs & eliminate the workaround here
     // fix for collapse of flex items in IE
     // https://github.com/philipwalton/flexbugs#1-minimum-content-sizing-of-flex-items-not-honored
     [flex-collapse-fix],
     [flex], // fixes ie flex-direction: column collapse issue
-    .item-row,
+    .col-add-role,
     .col-heading,
     .col-name,
-    .col-roles,
-    .col-add-role {
+    .item-row {
       flex-shrink: 0;
       flex-basis: auto;
     }
   }
+  // allow for taller select due to role help text
   .ui-select-bootstrap > .ui-select-choices {
-    // allow for taller select due to role help text
     max-height: 300px;
-  }
-}
-
-@media(min-width: @screen-xs-min) {
-  .membership {
-    .content-pane {
-      .col-add-role {
-        padding: 0;
-        min-width: 245px;
-      }
-      .item-row,
-      .col-heading {
-        border-bottom: none;
-        margin-bottom: none;
-      }
-      .item-row.highlight-hover:hover {
-        background-color: #fafafa;
-      }
-      .col-heading {
-        .col-add-role {
-          h3 {
-            display: block;
-          }
-          a {
-            display: block;
-            padding-left: 10px;
-          }
-        }
-      }
-      .col-name {
-        min-width: 225px;
-        max-width: 30%;
-        padding: 0 5px 10px 0;
-        input {
-          max-width: 175px;
-        }
-      }
-      .form-new-role {
-        .col-roles {
-          display: block;
-        }
-      }
-      .select-role {
-        width: 150px;
-      }
-    }
   }
 }
