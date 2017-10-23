@@ -247,6 +247,39 @@
                       <span class="action-divider" aria-hidden="true">|</span>
                       <a ng-href="project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}">Add Config Files</a>
                     </p>
+                    <h3>Triggers</h3>
+                    <dl class="dl-horizontal left">
+                      <dt>Manual (CLI):
+                        <a href="{{'deployment-operations' | helpLink}}" target="_blank">
+                          <span class="learn-more-block">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span>
+                        </a>
+                      </dt>
+                      <dd>
+                        <copy-to-clipboard clipboard-text="'oc rollout latest dc/' + deploymentConfig.metadata.name + ' -n ' + project.metadata.name"></copy-to-clipboard>
+                      </dd>
+                      <div ng-repeat="trigger in deploymentConfig.spec.triggers">
+                        <span ng-switch="trigger.type">
+                          <span ng-switch-default>{{trigger.type}}</span>
+                          <span ng-switch-when="ImageChange" ng-if="trigger.imageChangeParams.from">
+                            <dt>New Image For:</dt>
+                            <dd>
+                              {{trigger.imageChangeParams.from | imageObjectRef : deploymentConfig.metadata.namespace}}
+                              <small ng-if="!trigger.imageChangeParams.automatic" class="text-muted">(disabled)</small>
+                            </dd>
+                          </span>
+                          <span ng-switch-when="ConfigChange">
+                            <dt>Change Of:</dt>
+                            <dd>Config</dd>
+                          </span>
+                        </span>
+                      </div>
+                    </dl>
+                    <!-- Service Bindings -->
+                    <resource-service-bindings
+                        project="project"
+                        project-context="projectContext"
+                        api-object="deploymentConfig">
+                      </resource-service-bindings>
                   </div>
 
                   <!-- Autoscaling -->
@@ -277,68 +310,28 @@
                     <div ng-repeat="hpa in autoscalers">
                       <hpa hpa="hpa" project="project" show-scale-target="false" alerts="alerts"></hpa>
                     </div>
-                  </div>
 
-                  <div class="col-lg-6" ng-if="deploymentConfig.spec.strategy.type !== 'Custom'">
-                    <h3>
-                      Hooks
-                      <span class="learn-more-inline">
-                        <a ng-href="{{'lifecycle_hooks' | helpLink}}" target="_blank">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
-                      </span>
-                    </h3>
-                    <div ng-if="strategyParams.pre">
-                      <lifecycle-hook deployment-config="deploymentConfig" type="pre"></lifecycle-hook>
-                    </div>
-                    <div ng-if="strategyParams.mid">
-                      <lifecycle-hook deployment-config="deploymentConfig" type="mid"></lifecycle-hook>
-                    </div>
-                    <div ng-if="strategyParams.post">
-                      <lifecycle-hook deployment-config="deploymentConfig" type="post"></lifecycle-hook>
-                    </div>
-                    <div ng-if="!strategyParams.pre && !strategyParams.mid && !strategyParams.post">
-                      none
-                    </div>
-                  </div>
-
-                  <div class="col-lg-6">
-                    <h3>Triggers</h3>
-                    <dl class="dl-horizontal left">
-                      <dt>Manual (CLI):
-                        <a href="{{'deployment-operations' | helpLink}}" target="_blank">
-                          <span class="learn-more-block">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span>
-                        </a>
-                      </dt>
-                      <dd>
-                        <copy-to-clipboard clipboard-text="'oc rollout latest dc/' + deploymentConfig.metadata.name + ' -n ' + project.metadata.name"></copy-to-clipboard>
-                      </dd>
-                      <div ng-repeat="trigger in deploymentConfig.spec.triggers">
-                        <span ng-switch="trigger.type">
-                          <span ng-switch-default>{{trigger.type}}</span>
-                          <span ng-switch-when="ImageChange" ng-if="trigger.imageChangeParams.from">
-                            <dt>New Image For:</dt>
-                            <dd>
-                              {{trigger.imageChangeParams.from | imageObjectRef : deploymentConfig.metadata.namespace}}
-                              <small ng-if="!trigger.imageChangeParams.automatic" class="text-muted">(disabled)</small>
-                            </dd>
-                          </span>
-                          <span ng-switch-when="ConfigChange">
-                            <dt>Change Of:</dt>
-                            <dd>Config</dd>
-                          </span>
+                    <div ng-if="deploymentConfig.spec.strategy.type !== 'Custom'">
+                      <h3>
+                        Hooks
+                        <span class="learn-more-inline">
+                          <a ng-href="{{'lifecycle_hooks' | helpLink}}" target="_blank">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
                         </span>
+                      </h3>
+                      <div ng-if="strategyParams.pre">
+                        <lifecycle-hook deployment-config="deploymentConfig" type="pre"></lifecycle-hook>
                       </div>
-                    </dl>
+                      <div ng-if="strategyParams.mid">
+                        <lifecycle-hook deployment-config="deploymentConfig" type="mid"></lifecycle-hook>
+                      </div>
+                      <div ng-if="strategyParams.post">
+                        <lifecycle-hook deployment-config="deploymentConfig" type="post"></lifecycle-hook>
+                      </div>
+                      <p ng-if="!strategyParams.pre && !strategyParams.mid && !strategyParams.post">
+                        none
+                      </p>
+                    </div>
                   </div>
-
-                  <!-- Service Bindings -->
-                  <div class="col-lg-6">
-                    <resource-service-bindings
-                      project="project"
-                      project-context="projectContext"
-                      api-object="deploymentConfig">
-                    </resource-service-bindings>
-                  </div>
-
                 </div>
                 <annotations annotations="deploymentConfig.metadata.annotations"></annotations>
               </div>
