@@ -5437,13 +5437,13 @@ dl.secret-data pre{margin-bottom:0}
 @media (min-width:1600px){.show-sidebar-right .sidebar-right{flex:0 0 480px}
 .show-sidebar-right .sidebar-right .right-section{width:480px}
 }
-.events-badge{font-size:14px}
+.events-badge{font-size:14px;margin-top:9px}
 .events-badge:hover{text-decoration:none}
 .events-badge:hover .event-label{text-decoration:underline}
 .events-badge .event-count{color:#363636}
-.events-badge .pficon-info{color:#9c9c9c}
+.events-badge .pficon-info,.events-sidebar .pficon.pficon-info{color:#4d5258}
 .events-sidebar .pficon{vertical-align:middle}
-.events-sidebar .events-sidebar-collapse{font-size:16px;margin-right:12px}
+.events-sidebar .events-sidebar-collapse{font-size:16px;margin-right:10px}
 .events-sidebar .events-sidebar-collapse a{text-decoration:none}
 .events-sidebar .sidebar-header.right-header{align-items:center;display:flex;justify-content:space-between;margin-top:17.5px}
 .events-sidebar .sidebar-header.right-header h2{font-family:inherit;font-weight:500;line-height:1.1;color:inherit;margin-top:10.5px;margin-bottom:10.5px;font-size:14px;display:inline-block}
