@@ -56,8 +56,13 @@
   h2 + & {
     margin-top: 20px;
   }
-  .list-group-item:first-child {
-    border-top-color: #eaeaea;
+  .list-group-item {
+    &:first-child {
+      border-top-color: #eaeaea;
+    }
+    &:hover {
+      background-color: @list-pf-hover-background-color;
+    }
   }
   .list-group-item-expandable {
     cursor: pointer;
@@ -67,7 +72,7 @@
     &.expanded {
       border-color: @table-border-color;
       &, &:hover {
-        background-color: @list-view-expanded-bg;
+        background-color: @list-pf-header-background-color;
       }
       .list-view-pf-checkbox {
         border-right-color: @table-border-color;
