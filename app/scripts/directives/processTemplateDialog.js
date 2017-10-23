@@ -208,6 +208,15 @@
       }));
     };
 
+    // TODO: Update the select-project component in the origin-web-catalog to optionally
+    // disable creating new projects, so we can reuse it.
+    ctrl.groupChoicesBy = function (item) {
+      if (RecentlyViewedProjectsService.isRecentlyViewed(item.metadata.uid)) {
+        return "Recently Viewed";
+      }
+      return "Other Projects";
+    };
+
     function getIconClass() {
       var iconClass = _.get(ctrl, 'template.metadata.annotations.iconClass', 'fa fa-clone');
       return (iconClass.indexOf('icon-') !== -1) ? 'font-icon ' + iconClass : iconClass;
