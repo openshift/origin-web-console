@@ -14582,44 +14582,48 @@ _.remove(t.notifications, {
 uid: e.uid,
 namespace: e.namespace
 });
-}), delete v[r.project][e.uid];
-}, P = function(e) {
-return _.map(e, function(e) {
-return {
-actions: null,
-uid: e.metadata.uid,
-trackByID: e.metadata.uid,
-unread: !c.isRead(e.metadata.uid),
-type: e.type,
-lastTimestamp: e.lastTimestamp,
-firstTimestamp: e.firstTimestamp,
-event: e
-};
 });
-}, R = function(e) {
+}, P = function(e) {
+v[r.project] && delete v[r.project][e.uid], g[r.project] && delete g[r.project][e.uid], j(e);
+}, R = function() {
+g[r.project] = {}, v[r.project] = {};
+}, I = function(e) {
+return _.reduce(e, function(e, t) {
+return e[t.metadata.uid] = {
+actions: null,
+uid: t.metadata.uid,
+trackByID: t.metadata.uid,
+unread: !c.isRead(t.metadata.uid),
+type: t.type,
+lastTimestamp: t.lastTimestamp,
+firstTimestamp: t.firstTimestamp,
+event: t
+}, e;
+}, {});
+}, E = function(e) {
 return _.reduce(e, function(e, t) {
 return c.isImportantAPIEvent(t) && !c.isCleared(t.metadata.uid) && (e[t.metadata.uid] = t), e;
 }, {});
-}, I = function(e, t) {
+}, T = function(e, t) {
 var n = r.project;
 return _.assign({}, e[n], t[n]);
-}, E = function(e) {
+}, N = function(e) {
 return _.orderBy(e, [ "event.lastTimestamp", "event.firstTimestamp" ], [ "desc", "desc" ]);
-}, T = function() {
+}, D = function() {
 o.$evalAsync(function() {
-p.notificationGroups = [ C(r.project, E(I(g, v))) ], k();
+p.notificationGroups = [ C(r.project, N(T(g, v))) ], k();
 });
-}, N = function() {
+}, A = function() {
 _.each(f, function(e) {
 e();
 }), f = [];
-}, D = function() {
+}, $ = function() {
 u && (s.unwatch(u), u = null);
-}, A = function() {
+}, B = function() {
 l && l(), l = null;
-}, $ = function(e) {
-g[r.project] = P(R(e.by("metadata.name"))), T();
-}, B = function(e, t) {
+}, L = function(e) {
+g[r.project] = I(E(e.by("metadata.name"))), D();
+}, U = function(e, t) {
 var n = t.namespace || r.project, a = t.id ? n + "/" + t.id : _.uniqueId("notification_") + Date.now();
 t.showInDrawer && !c.isCleared(a) && (v[n] = v[n] || {}, v[n][a] = {
 actions: t.actions,
@@ -14633,18 +14637,18 @@ isHTML: t.isHTML,
 details: t.details,
 namespace: n,
 links: t.links
-}, T());
-}, L = function(e, t) {
-D(), e && (u = s.watch("events", {
+}, D());
+}, O = function(e, t) {
+$(), e && (u = s.watch("events", {
 namespace: e
 }, _.debounce(t, 400), {
 skipDigest: !0
 }));
-}, U = _.once(function(e, t) {
-A(), l = o.$on("NotificationsService.onNotificationAdded", t);
-}), O = function() {
+}, F = _.once(function(e, t) {
+B(), l = o.$on("NotificationsService.onNotificationAdded", t);
+}), x = function() {
 S(r.project).then(function() {
-L(r.project, $), U(r.project, B), y(r.project), T();
+O(r.project, L), F(r.project, U), y(r.project), D();
 });
 };
 angular.extend(p, {
@@ -14661,22 +14665,22 @@ p.drawerHidden = !0;
 onMarkAllRead: function(e) {
 _.each(e.notifications, function(e) {
 e.unread = !1, c.markRead(e.uid);
-}), T(), o.$emit("NotificationDrawerWrapper.onMarkAllRead");
+}), D(), o.$emit("NotificationDrawerWrapper.onMarkAllRead");
 },
 onClearAll: function(e) {
 _.each(e.notifications, function(e) {
 e.unread = !1, c.markRead(e.uid), c.markCleared(e.uid);
-}), g[r.project] = {}, v[r.project] = {}, T(), o.$emit("NotificationDrawerWrapper.onMarkAllRead");
+}), R(), D(), o.$emit("NotificationDrawerWrapper.onMarkAllRead");
 },
 notificationGroups: [],
 headingInclude: "views/directives/notifications/header.html",
 notificationBodyInclude: "views/directives/notifications/notification-body.html",
 customScope: {
 clear: function(e, t, n) {
-c.markCleared(e.uid), n.notifications.splice(t, 1), k();
+c.markRead(e.uid), c.markCleared(e.uid), n.notifications.splice(t, 1), P(e), D();
 },
 markRead: function(e) {
-e.unread = !1, c.markRead(e.uid), k();
+e.unread = !1, c.markRead(e.uid), D();
 },
 close: function() {
 p.drawerHidden = !0;
@@ -14687,21 +14691,21 @@ e.onClick(), p.drawerHidden = !0;
 countUnreadNotifications: k
 }
 });
-var F = function() {
-r.project && O(), f.push(o.$on("$routeChangeSuccess", function(e, t, n) {
-b(t, n) && (p.customScope.projectName = r.project, O());
+var V = function() {
+r.project && x(), f.push(o.$on("$routeChangeSuccess", function(e, t, n) {
+b(t, n) && (p.customScope.projectName = r.project, x());
 })), f.push(o.$on("NotificationDrawerWrapper.toggle", function() {
 p.drawerHidden = !p.drawerHidden;
 })), f.push(o.$on("NotificationDrawerWrapper.hide", function() {
 p.drawerHidden = !0;
 })), f.push(o.$on("NotificationDrawerWrapper.clear", function(e, t) {
-c.markCleared(t.uid), j(t), p.countUnreadNotifications();
+c.markCleared(t.uid), P(t), p.countUnreadNotifications();
 }));
 };
 p.$onInit = function() {
-d || m || F();
+d || m || V();
 }, p.$onDestroy = function() {
-A(), D(), N();
+B(), $(), A();
 };
 } ]
 });
