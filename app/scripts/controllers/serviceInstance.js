@@ -73,18 +73,36 @@ angular.module('openshiftConsole')
       DataService.unwatchAll(secretWatchers);
       secretWatchers = [];
 
+      $scope.allowParametersReveal = AuthorizationService.canI('secrets', 'get', $scope.projectName);
       $scope.parameterData = {};
-      _.each(_.keys(_.get($scope.parameterSchema, 'properties')), function(key) {
-        $scope.parameterData[key] = $scope.parameterSchema.properties[key].default;
+      $scope.opaqueParameterKeys = [];
+
+      // Set defaults for schema values
+      var defaultValue = $scope.allowParametersReveal ? '' : '*****';
+      _.each(_.keys(_.get($scope.parameterSchema, 'properties')), function (key) {
+        $scope.parameterData[key] = defaultValue;
       });
 
-      $scope.parameterData = angular.extend($scope.parameterData, _.get($scope.serviceInstance, 'spec.parameters', {}));
+      // Get the current status's parameter values
+      var statusParameters = _.get($scope.serviceInstance, 'status.externalProperties.parameters', {});
+      _.each(_.keys(statusParameters), function(key) {
+        if (statusParameters[key] === '<redacted>') {
+          $scope.parameterData[key] = '*****';
+        } else {
+          $scope.parameterData[key] = statusParameters[key];
+          $scope.opaqueParameterKeys.push(key);
+        }
+      });
 
-      if (AuthorizationService.canI('secrets', 'get', $scope.projectName)) {
+      // Fill in the secret values if they are available to the user
+      if ($scope.allowParametersReveal) {
+        // Get the data from each secret
         _.each(_.get($scope.serviceInstance, 'spec.parametersFrom'), function (parametersSource) {
           secretWatchers.push(DataService.watchObject("secrets", _.get(parametersSource, 'secretKeyRef.name'), $scope.projectContext, function (secret) {
             try {
-              _.extend($scope.parameterData, JSON.parse(SecretsService.decodeSecretData(secret.data)[parametersSource.secretKeyRef.key]));
+              var secretData = JSON.parse(SecretsService.decodeSecretData(secret.data)[parametersSource.secretKeyRef.key]);
+              // TODO: Only include fields from the secret that are part of the schema
+              _.extend($scope.parameterData, secretData);
             } catch (e) {
               Logger.warn('Unable to load parameters from secret ' + _.get(parametersSource, 'secretKeyRef.name'), e);
             }
@@ -107,6 +125,7 @@ angular.module('openshiftConsole')
     var updateParameterSchema = function() {
       $scope.parameterFormDefinition = angular.copy(_.get($scope.plan, 'spec.externalMetadata.schemas.service_instance.update.openshift_form_definition'));
       $scope.parameterSchema = _.get($scope.plan, 'spec.instanceCreateParameterSchema');
+      updateParameterData();
     };
 
     var updateServiceClass = function() {
@@ -132,7 +151,6 @@ angular.module('openshiftConsole')
           $scope.plan = plans[servicePlanName];
 
           updateParameterSchema();
-          updateParameterData();
           updateEditable();
         });
       });

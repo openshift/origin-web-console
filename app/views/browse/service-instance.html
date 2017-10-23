@@ -104,13 +104,14 @@
                         <div ng-if="parameterSchema.properties" class="config-parameters-form">
                           <h3>
                             <span>Configuration</span>
-                            <a href="" class="hide-show-link" ng-click="toggleShowParameterValues()" role="button">
+                            <a ng-if="allowParametersReveal" href="" class="hide-show-link" ng-click="toggleShowParameterValues()" role="button">
                               {{showParameterValues ? 'Hide Values' : 'Reveal Values'}}
                             </a>
                           </h3>
                           <form name="forms.orderConfigureForm" >
                             <catalog-parameters
                               hide-values="!showParameterValues"
+                              opaque-keys="opaqueParameterKeys"
                               model="parameterData"
                               parameter-schema="parameterSchema"
                               parameter-form-definition="parameterFormDefinition"
