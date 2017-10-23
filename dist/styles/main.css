@@ -3433,7 +3433,7 @@ a.disabled{color:#8b8d8f;cursor:not-allowed;text-decoration:none}
 .drawer-pf-toggle-expand:before{content:"\f100";font-family:FontAwesome}
 .drawer-pf-toggle-expand:hover{color:#0088ce}
 .drawer-pf-close{right:0}
-.drawer-pf-action{display:flex}
+.drawer-pf-action{display:flex;border-bottom:1px solid #d1d1d1}
 .drawer-pf-action .btn-link{color:#0088ce;padding:10px 0}
 .drawer-pf-action .btn-link .fa,.drawer-pf-action .btn-link .pficon{margin-right:3px}
 .drawer-pf-action .btn-link:hover{color:#00659c}
@@ -3584,7 +3584,7 @@ table.dataTable thead .sorting_asc:after{content:"\f106";top:-3px}
 .timepicker-picker button[data-action]{padding-bottom:0;padding-top:0}
 .timepicker-picker .separator{display:none}
 .timepicker-picker tr:nth-child(2) td{background-color:#def3ff;border-color:#bee1f4;border-style:solid;border-width:1px;border-left:0;border-right:0}
-.toast-pf{background-color:#fff;border-color:#bbb;box-shadow:0 2px 6px rgba(3,3,3,.2);padding-left:68px}
+.toast-pf{background-color:#fff;border-color:#bbb;box-shadow:0 2px 6px rgba(3,3,3,.2);padding-left:68px;margin-bottom:5px}
 .toast-pf.alert-danger>.pficon{background-color:#c00}
 .toast-pf.alert-info>.pficon{background-color:#8b8d8f}
 .toast-pf.alert-success>.pficon{background-color:#3f9c35}
