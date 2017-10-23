@@ -2476,50 +2476,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\">Add Config Files</a>\n" +
     "</p>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div class=\"col-lg-6\">\n" +
-    "<h3>Autoscaling</h3>\n" +
-    "\n" +
-    "<div ng-repeat=\"warning in hpaWarnings\" class=\"alert alert-warning\">\n" +
-    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"sr-only\">Warning:</span>\n" +
-    "{{warning.message}}\n" +
-    "\n" +
-    "<a ng-href=\"project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" ng-if=\"warning.reason === 'NoCPURequest' && (deploymentConfigsVersion | canI : 'update')\" role=\"button\">Edit Resource\n" +
-    "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">Requests and</span> Limits</a>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div ng-if=\"!autoscalers.length\">\n" +
-    "<a ng-if=\"horizontalPodAutoscalersVersion | canI : 'create'\" ng-href=\"project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" role=\"button\">Add Autoscaler</a>\n" +
-    "<span ng-if=\"!(horizontalPodAutoscalersVersion | canI : 'create')\">Autoscaling is not enabled. There are no autoscalers for this deployment config.</span>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div ng-repeat=\"hpa in autoscalers\">\n" +
-    "<hpa hpa=\"hpa\" project=\"project\" show-scale-target=\"false\" alerts=\"alerts\"></hpa>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-lg-6\" ng-if=\"deploymentConfig.spec.strategy.type !== 'Custom'\">\n" +
-    "<h3>\n" +
-    "Hooks\n" +
-    "<span class=\"learn-more-inline\">\n" +
-    "<a ng-href=\"{{'lifecycle_hooks' | helpLink}}\" target=\"_blank\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
-    "</span>\n" +
-    "</h3>\n" +
-    "<div ng-if=\"strategyParams.pre\">\n" +
-    "<lifecycle-hook deployment-config=\"deploymentConfig\" type=\"pre\"></lifecycle-hook>\n" +
-    "</div>\n" +
-    "<div ng-if=\"strategyParams.mid\">\n" +
-    "<lifecycle-hook deployment-config=\"deploymentConfig\" type=\"mid\"></lifecycle-hook>\n" +
-    "</div>\n" +
-    "<div ng-if=\"strategyParams.post\">\n" +
-    "<lifecycle-hook deployment-config=\"deploymentConfig\" type=\"post\"></lifecycle-hook>\n" +
-    "</div>\n" +
-    "<div ng-if=\"!strategyParams.pre && !strategyParams.mid && !strategyParams.post\">\n" +
-    "none\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-lg-6\">\n" +
     "<h3>Triggers</h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<dt>Manual (CLI):\n" +
@@ -2547,11 +2503,51 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "</dl>\n" +
+    "\n" +
+    "<resource-service-bindings project=\"project\" project-context=\"projectContext\" api-object=\"deploymentConfig\">\n" +
+    "</resource-service-bindings>\n" +
     "</div>\n" +
     "\n" +
     "<div class=\"col-lg-6\">\n" +
-    "<resource-service-bindings project=\"project\" project-context=\"projectContext\" api-object=\"deploymentConfig\">\n" +
-    "</resource-service-bindings>\n" +
+    "<h3>Autoscaling</h3>\n" +
+    "\n" +
+    "<div ng-repeat=\"warning in hpaWarnings\" class=\"alert alert-warning\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Warning:</span>\n" +
+    "{{warning.message}}\n" +
+    "\n" +
+    "<a ng-href=\"project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" ng-if=\"warning.reason === 'NoCPURequest' && (deploymentConfigsVersion | canI : 'update')\" role=\"button\">Edit Resource\n" +
+    "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">Requests and</span> Limits</a>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div ng-if=\"!autoscalers.length\">\n" +
+    "<a ng-if=\"horizontalPodAutoscalersVersion | canI : 'create'\" ng-href=\"project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" role=\"button\">Add Autoscaler</a>\n" +
+    "<span ng-if=\"!(horizontalPodAutoscalersVersion | canI : 'create')\">Autoscaling is not enabled. There are no autoscalers for this deployment config.</span>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div ng-repeat=\"hpa in autoscalers\">\n" +
+    "<hpa hpa=\"hpa\" project=\"project\" show-scale-target=\"false\" alerts=\"alerts\"></hpa>\n" +
+    "</div>\n" +
+    "<div ng-if=\"deploymentConfig.spec.strategy.type !== 'Custom'\">\n" +
+    "<h3>\n" +
+    "Hooks\n" +
+    "<span class=\"learn-more-inline\">\n" +
+    "<a ng-href=\"{{'lifecycle_hooks' | helpLink}}\" target=\"_blank\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
+    "</span>\n" +
+    "</h3>\n" +
+    "<div ng-if=\"strategyParams.pre\">\n" +
+    "<lifecycle-hook deployment-config=\"deploymentConfig\" type=\"pre\"></lifecycle-hook>\n" +
+    "</div>\n" +
+    "<div ng-if=\"strategyParams.mid\">\n" +
+    "<lifecycle-hook deployment-config=\"deploymentConfig\" type=\"mid\"></lifecycle-hook>\n" +
+    "</div>\n" +
+    "<div ng-if=\"strategyParams.post\">\n" +
+    "<lifecycle-hook deployment-config=\"deploymentConfig\" type=\"post\"></lifecycle-hook>\n" +
+    "</div>\n" +
+    "<p ng-if=\"!strategyParams.pre && !strategyParams.mid && !strategyParams.post\">\n" +
+    "none\n" +
+    "</p>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<annotations annotations=\"deploymentConfig.metadata.annotations\"></annotations>\n" +
