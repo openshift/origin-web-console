@@ -104,6 +104,7 @@
 
 .events-badge {
   font-size: 14px;
+  margin-top: 9px;
   &:hover {
     text-decoration: none;
     .event-label {
@@ -114,17 +115,20 @@
     color: @text-color;
   }
   .pficon-info {
-    color: @text-muted;
+    color: @gray-pf;
   }
 }
 
 .events-sidebar {
   .pficon {
     vertical-align: middle;
+    &.pficon-info {
+      color: @gray-pf;
+    }
   }
   .events-sidebar-collapse {
     font-size: 16px;
-    margin-right: 12px;
+    margin-right: 10px;
 
     a {
       text-decoration: none;
