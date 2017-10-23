@@ -18,7 +18,7 @@
     "uri.js": "1.18.12",
     "moment": "2.14.2",
     "moment-timezone": "0.5.3",
-    "patternfly": "3.29.3",
+    "patternfly": "3.29.5",
     "hawtio-core": "2.0.37",
     "hawtio-extension-service": "2.0.2",
     "jquery": "3.2.1",
