@@ -32,14 +32,19 @@
               Loading...
             </p>
             <div ng-if="pvcsLoaded" class="empty-state-message text-center">
-              <h2>No persistent volume claims.</h2>
-              <p ng-if="!filterWithZeroResults">
-                No persistent volume claims have been added to project {{projectName}}.
-              </p>
-              <p ng-if="project && ('persistentvolumeclaims' | canI : 'create') && !filterWithZeroResults">
-                <a ng-if="!outOfClaims" ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-primary">Create Storage</a>
-                <a ng-if="outOfClaims" href="" class="btn btn-primary disabled" aria-disabled="true">Create Storage</a>
-              </p>
+              <div ng-if="!filterWithZeroResults">
+                <h2>No persistent volume claims.</h2>
+                <p>
+                  No persistent volume claims have been added to project {{projectName}}.
+                </p>
+                <p ng-if="project && ('persistentvolumeclaims' | canI : 'create') && !filterWithZeroResults">
+                  <a ng-if="!outOfClaims" ng-href="project/{{project.metadata.name}}/create-pvc" class="btn btn-primary">Create Storage</a>
+                  <a ng-if="outOfClaims" href="" class="btn btn-primary disabled" aria-disabled="true">Create Storage</a>
+                </p>
+              </div>
+              <div ng-if="filterWithZeroResults">
+                <h2>The filter is hiding all persistent volume claims. <a href="" ng-click="clearFilter()">Clear Filter</a></h2>
+              </div>
             </div>
           </div>
           <table ng-if="(pvcs | hashSize) > 0" class="table table-bordered table-mobile table-layout-fixed">
