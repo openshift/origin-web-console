@@ -151,6 +151,7 @@
           <div ng-if="row.isBindable || (row.bindings | size)">
             <div class="section-title">Bindings</div>
             <service-instance-bindings
+              is-overview="true"
               project="row.state.project"
               bindings="row.bindings"
               service-instance="row.apiObject"

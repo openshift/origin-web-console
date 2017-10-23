@@ -10450,6 +10450,7 @@ templateUrl: "views/directives/resource-service-bindings.html"
 controller: [ "$filter", "APIService", "BindingService", ServiceInstanceBindings ],
 controllerAs: "$ctrl",
 bindings: {
+isOverview: "<?",
 showHeader: "<?",
 project: "<",
 bindings: "<",

@@ -5679,9 +5679,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "View Secret\n" +
     "</a>\n" +
     "</div>\n" +
-    "<div class=\"service-binding-parameters\" ng-if=\"$ctrl.bindParameterSchema.properties\">\n" +
-    "<span class=\"parameters-heading\">Parameters</span>\n" +
-    "<a href=\"\" ng-click=\"$ctrl.toggleShowParameterValues()\" role=\"button\">\n" +
+    "<div class=\"service-binding-parameters\" ng-if=\"!$ctrl.isOverview && $ctrl.bindParameterSchema.properties\">\n" +
+    "<span class=\"component-label\">Parameters</span>\n" +
+    "<a href=\"\" class=\"hide-show-link\" ng-click=\"$ctrl.toggleShowParameterValues()\" role=\"button\">\n" +
     "{{$ctrl.showParameterValues ? 'Hide Values' : 'Reveal Values'}}\n" +
     "</a>\n" +
     "<form name=\"ctrl.parametersForm\">\n" +
@@ -9227,7 +9227,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/service-instance-bindings.html',
     "<div ng-if=\"$ctrl.bindable || ($ctrl.bindings | size)\">\n" +
     "<h3 ng-if=\"$ctrl.showHeader\">Bindings</h3>\n" +
-    "<service-binding ng-repeat=\"binding in $ctrl.bindings track by (binding | uid)\" namespace=\"binding.metadata.namespace\" binding=\"binding\" ref-api-object=\"$ctrl.serviceInstance\">\n" +
+    "<service-binding ng-repeat=\"binding in $ctrl.bindings track by (binding | uid)\" is-overview=\"$ctrl.isOverview\" namespace=\"binding.metadata.namespace\" binding=\"binding\" ref-api-object=\"$ctrl.serviceInstance\">\n" +
     "</service-binding>\n" +
     "<div ng-if=\"$ctrl.bindable\">\n" +
     "<a href=\"\" ng-click=\"$ctrl.createBinding()\" role=\"button\">\n" +
@@ -12642,7 +12642,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"row.isBindable || (row.bindings | size)\">\n" +
     "<div class=\"section-title\">Bindings</div>\n" +
-    "<service-instance-bindings project=\"row.state.project\" bindings=\"row.bindings\" service-instance=\"row.apiObject\" service-class=\"row.serviceClass\" service-plan=\"row.servicePlan\">\n" +
+    "<service-instance-bindings is-overview=\"true\" project=\"row.state.project\" bindings=\"row.bindings\" service-instance=\"row.apiObject\" service-class=\"row.serviceClass\" service-plan=\"row.servicePlan\">\n" +
     "</service-instance-bindings>\n" +
     "</div>\n" +
     "</div>\n" +
