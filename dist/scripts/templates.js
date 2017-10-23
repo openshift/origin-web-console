@@ -8000,7 +8000,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"help-block\" ng-if=\"form.maxReplicas.$error.min\">\n" +
     "Max pods must be greater than or equal to\n" +
     "<span ng-if=\"autoscaling.minReplicas\">min pods, which is</span>\n" +
-    "{{autoscaling.minReplicas || 1}.\n" +
+    "{{autoscaling.minReplicas || 1}}.\n" +
     "</span>\n" +
     "<span class=\"help-block\" ng-if=\"form.maxReplicas.$error.required\">\n" +
     "Max pods is a required field.\n" +
