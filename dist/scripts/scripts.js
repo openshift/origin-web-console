@@ -7358,7 +7358,7 @@ errorNotification: !1
 }).then(function(t) {
 b = g(t.by("metadata.name")), e.availableConfigMaps = b, e.valueFromObjects = b.concat(S);
 }, function(e) {
-403 !== e.code && h("Could not load config maps", v(e));
+403 !== e.status && h("Could not load config maps", v(e));
 }), c.list("secrets", r, null, {
 errorNotification: !1
 }).then(function(t) {
@@ -7370,7 +7370,7 @@ e.secretsByType = _.each(a, function(e) {
 e.unshift("");
 });
 }, function(e) {
-403 !== e.code && h("Could not load secrets", v(e));
+403 !== e.status && h("Could not load secrets", v(e));
 }), y.push(c.watchObject("deploymentconfigs", a.deploymentconfig, r, function(t, n) {
 "MODIFIED" === n && (e.alerts["updated/deleted"] = {
 type: "warning",
@@ -8674,13 +8674,13 @@ errorNotification: !1
 }).then(function(e) {
 a.configMaps = o(e.by("metadata.name"));
 }, function(e) {
-403 !== e.code ? b("Could not load config maps", d(e)) : a.configMaps = [];
+403 !== e.status ? b("Could not load config maps", d(e)) : a.configMaps = [];
 }), c.list(a.secretVersion, r, null, {
 errorNotification: !1
 }).then(function(e) {
 a.secrets = o(e.by("metadata.name"));
 }, function(e) {
-403 !== e.code ? b("Could not load secrets", d(e)) : a.secrets = [];
+403 !== e.status ? b("Could not load secrets", d(e)) : a.secrets = [];
 });
 var f = function(e) {
 return a.attach.allContainers || a.attach.containers[e.name];
@@ -14041,7 +14041,7 @@ errorNotification: !1
 }).then(function(r) {
 t = f(r.by("metadata.name")), n.valueFromNamespace[e.metadata.name] = t.concat(a);
 }, function(e) {
-403 !== e.code && c.addNotification({
+403 !== e.status && c.addNotification({
 id: "deploy-image-list-config-maps-error",
 type: "error",
 message: "Could not load config maps.",
@@ -14054,7 +14054,7 @@ errorNotification: !1
 }).then(function(r) {
 a = f(r.by("metadata.name")), n.valueFromNamespace[e.metadata.name] = a.concat(t);
 }, function(e) {
-403 !== e.code && c.addNotification({
+403 !== e.status && c.addNotification({
 id: "deploy-image-list-secrets-error",
 type: "error",
 message: "Could not load secrets.",
