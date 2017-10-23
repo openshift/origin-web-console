@@ -6604,7 +6604,9 @@ r.unwatchAll(c);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("StorageController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "ProjectsService", "QuotaService", "$filter", "LabelFilter", "Logger", function(e, t, n, a, r, o, i, s, c) {
-t.projectName = e.project, t.pvcs = {}, t.unfilteredPVCs = {}, t.labelSuggestions = {}, t.alerts = t.alerts || {}, t.outOfClaims = !1;
+t.projectName = e.project, t.pvcs = {}, t.unfilteredPVCs = {}, t.labelSuggestions = {}, t.alerts = t.alerts || {}, t.outOfClaims = !1, t.clearFilter = function() {
+s.clear();
+};
 var l = function() {
 var e = n.isAlertPermanentlyHidden("storage-quota-limit-reached", t.projectName);
 if (t.outOfClaims = o.isAnyStorageQuotaExceeded(t.quotas, t.clusterQuotas), !e && t.outOfClaims) {
@@ -6627,15 +6629,12 @@ return n.permanentlyHideAlert("storage-quota-limit-reached", t.projectName), !0;
 }, u = [];
 r.get(e.project).then(_.spread(function(e, n) {
 function r() {
-s.getLabelSelector().isEmpty() || !$.isEmptyObject(t.pvcs) || $.isEmptyObject(t.unfilteredPVCs) ? (delete t.alerts.storage, t.filterWithZeroResults = !1) : (t.alerts.storage = {
-type: "warning",
-details: "The active filters are hiding all persistent volume claims."
-}, t.filterWithZeroResults = !0);
+t.filterWithZeroResults = !s.getLabelSelector().isEmpty() && $.isEmptyObject(t.pvcs) && !$.isEmptyObject(t.unfilteredPVCs);
 }
 t.project = e, u.push(a.watch("persistentvolumeclaims", n, function(e) {
 t.pvcsLoaded = !0, t.unfilteredPVCs = e.by("metadata.name"), s.addLabelSuggestionsFromResources(t.unfilteredPVCs, t.labelSuggestions), s.setLabelSuggestions(t.labelSuggestions), t.pvcs = s.getLabelSelector().select(t.unfilteredPVCs), r(), c.log("pvcs (subscribe)", t.unfilteredPVCs);
 })), s.onActiveFiltersChanged(function(e) {
-t.$apply(function() {
+t.$evalAsync(function() {
 t.pvcs = e.select(t.unfilteredPVCs), r();
 });
 }), t.$on("$destroy", function() {
