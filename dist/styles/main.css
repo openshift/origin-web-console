@@ -4945,7 +4945,7 @@ pre.clipped.scroll{max-height:150px;overflow:auto;width:100%}
 h2+.list-view-pf{margin-top:20px}
 .list-view-pf .list-group-item:first-child{border-top-color:#eaeaea}
 .list-view-pf .list-group-item-expandable{cursor:pointer;border:1px solid #eaeaea;border-left-color:transparent;border-right-color:transparent}
-.build-count .icon-count,.build-count .icon-count [data-toggle=tooltip],.notification-icon-count [data-toggle=tooltip]{cursor:help}
+.build-count .icon-count,.build-count .icon-count [data-toggle=tooltip],.instance-status-notification [data-toggle=tooltip],.notification-icon-count [data-toggle=tooltip]{cursor:help}
 .list-view-pf .list-group-item-expandable.expanded{border-color:#d1d1d1}
 .list-view-pf .list-group-item-expandable.expanded,.list-view-pf .list-group-item-expandable.expanded:hover{background-color:#f5f5f5}
 .list-view-pf .list-group-item-expandable.expanded .list-view-pf-checkbox{border-right-color:#d1d1d1}
@@ -5001,15 +5001,15 @@ h2+.list-view-pf{margin-top:20px}
 .build-count .running-stage{font-size:84%;color:#9c9c9c}
 @media (max-width:991px){.builds-label{margin-top:5px}
 }
+.instance-status-notification,.notification-icon-count{display:inline-block;margin:5px 5px 0 0}
+@media (min-width:992px){.instance-status-notification,.notification-icon-count{margin-top:0}
+}
 .mini-donut-link{color:#252525}
 .mini-donut-link:active,.mini-donut-link:focus,.mini-donut-link:hover{color:#0088ce;text-decoration:none}
 .mini-donut-link.disabled-link,.mini-donut-link.disabled-link:active,.mini-donut-link.disabled-link:focus,.mini-donut-link.disabled-link:hover{color:#252525;opacity:1}
 .mini-log{background-color:#fafafa;border:1px solid #d1d1d1;color:#4d5258;font-family:Menlo,Monaco,Consolas,monospace;font-size:11px;margin-bottom:5px;margin-top:5px;padding:5px}
 .mini-log .mini-log-content{line-height:13px;min-height:91px}
 .mini-log .mini-log-content .mini-log-line{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;white-space:pre}
-.notification-icon-count{display:inline-block;margin:5px 5px 0 0}
-@media (min-width:992px){.notification-icon-count{margin-top:0}
-}
 .overview .app-heading{display:flex;justify-content:space-between}
 @media (max-width:991px){.overview .app-heading{flex-direction:column;justify-content:flex-start}
 .overview .app-heading .overview-route{font-family:inherit;font-weight:500;line-height:1.1;color:inherit;font-size:14px;margin-top:-5px;margin-bottom:15px}

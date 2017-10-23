@@ -12521,10 +12521,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h3>\n" +
     "<div class=\"status-icons\" ng-if=\"!row.expanded\">\n" +
     "<notification-icon alerts=\"row.notifications\"></notification-icon>\n" +
-    "<div ng-switch=\"row.instanceStatus\">\n" +
-    "<span ng-switch-when=\"failed\" dynamic-content=\"{{row.apiObject | serviceInstanceFailedMessage}}\" data-toggle=\"tooltip\" data-trigger=\"hover\" class=\"notification-icon-count\">\n" +
+    "<div ng-switch=\"row.instanceStatus\" class=\"instance-status-notification\">\n" +
+    "<span ng-switch-when=\"failed\" dynamic-content=\"{{row.apiObject | serviceInstanceFailedMessage}}\" data-toggle=\"tooltip\" data-trigger=\"hover\">\n" +
     "<span class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></span>\n" +
-    "<span>Error</span>\n" +
+    "Error\n" +
     "</span>\n" +
     "<span ng-switch-when=\"deleted\" class=\"notification-icon-count\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +

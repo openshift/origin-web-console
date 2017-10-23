@@ -11,14 +11,13 @@
         </h3>
         <div class="status-icons" ng-if="!row.expanded">
           <notification-icon alerts="row.notifications"></notification-icon>
-          <div ng-switch="row.instanceStatus">
+          <div ng-switch="row.instanceStatus" class="instance-status-notification">
             <span ng-switch-when="failed"
                   dynamic-content="{{row.apiObject | serviceInstanceFailedMessage}}"
                   data-toggle="tooltip"
-                  data-trigger="hover"
-                  class="notification-icon-count">
+                  data-trigger="hover">
               <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
-              <span>Error</span>
+              Error
             </span>
             <span ng-switch-when="deleted" class="notification-icon-count">
               <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
