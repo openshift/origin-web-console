@@ -10,7 +10,7 @@
         <ui-select-match placeholder="Select a Project">
           {{$select.selected | displayName}}
         </ui-select-match>
-        <ui-select-choices repeat="project in $ctrl.templateProjects | searchProjects : $select.search track by (project | uid)">
+        <ui-select-choices repeat="project in $ctrl.templateProjects | searchProjects : $select.search track by (project | uid)" group-by="$ctrl.groupChoicesBy">
           <span ng-bind-html="project | displayName | highlightKeywords : $select.search"></span>
           <span ng-if="project | displayName : true" class="small text-muted">
             <span ng-if="project.metadata.name">&ndash;</span>

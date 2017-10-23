@@ -13274,6 +13274,8 @@ type: "error",
 message: t
 });
 }));
+}, b.groupChoicesBy = function(e) {
+return c.isRecentlyViewed(e.metadata.uid) ? "Recently Viewed" : "Other Projects";
 };
 var w = function() {
 var e = _.reject(b.unfilteredProjects, "metadata.deletionTimestamp"), n = _.sortBy(e, t("displayName"));

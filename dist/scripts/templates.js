@@ -9041,7 +9041,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ui-select-match placeholder=\"Select a Project\">\n" +
     "{{$select.selected | displayName}}\n" +
     "</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"project in $ctrl.templateProjects | searchProjects : $select.search track by (project | uid)\">\n" +
+    "<ui-select-choices repeat=\"project in $ctrl.templateProjects | searchProjects : $select.search track by (project | uid)\" group-by=\"$ctrl.groupChoicesBy\">\n" +
     "<span ng-bind-html=\"project | displayName | highlightKeywords : $select.search\"></span>\n" +
     "<span ng-if=\"project | displayName : true\" class=\"small text-muted\">\n" +
     "<span ng-if=\"project.metadata.name\">&ndash;</span>\n" +
