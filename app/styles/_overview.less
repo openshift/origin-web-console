@@ -29,6 +29,17 @@
     margin-top: 5px;
   }
 }
+.instance-status-notification,
+.notification-icon-count {
+  display: inline-block;
+  margin: 5px 5px 0 0;
+  @media (min-width: @screen-md-min) {
+    margin-top: 0;
+  }
+  [data-toggle="tooltip"] {
+    cursor: help;
+  }
+}
 .mini-donut-link {
   color: @gray-darker;
   &:active,
@@ -61,16 +72,6 @@
       .truncate();
       white-space: pre;
     }
-  }
-}
-.notification-icon-count {
-  display: inline-block;
-  margin: 5px 5px 0 0;
-  @media (min-width: @screen-md-min) {
-    margin-top: 0;
-  }
-  [data-toggle="tooltip"] {
-    cursor: help;
   }
 }
 
