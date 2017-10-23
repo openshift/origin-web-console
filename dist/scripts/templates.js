@@ -784,9 +784,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>{{error | getErrorDetails}}</p>\n" +
     "</div>\n" +
     "<div ng-if=\"targetObject && configMaps && secrets\">\n" +
-    "<div ng-if=\"!configMaps.length && !secrets.length && !(configMapVersion | canI : 'create') && !(secretVersion | canI : 'create')\" class=\"empty-state-message empty-state-full-page\">\n" +
-    "<h2 class=\"text-center\">No config maps or secrets.</h2>\n" +
-    "<p class=\"gutter-top\">\n" +
+    "<div ng-if=\"!configMaps.length && !secrets.length && !(configMapVersion | canI : 'create') && !(secretVersion | canI : 'create')\" class=\"empty-state-message empty-state-full-page text-center\">\n" +
+    "<h2>No config maps or secrets.</h2>\n" +
+    "<p>\n" +
     "There are no config maps or secrets in project {{project | displayName}} to use as a volume for this {{kind | humanizeKind}}.\n" +
     "</p>\n" +
     "<p ng-if=\"targetObject\"><a ng-href=\"{{targetObject | navigateResourceURL}}\">Back to {{kind | humanizeKind}} {{name}}</a></p>\n" +
