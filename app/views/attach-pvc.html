@@ -6,15 +6,15 @@
           <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
           <div ng-show="!pvcs || !attach.resource">Loading...</div>
 
-          <div ng-show="pvcs && !pvcs.length && attach.resource" class="empty-state-message empty-state-full-page">
-            <h2 class="text-center">No persistent volume claims.</h2>
+          <div ng-show="pvcs && !pvcs.length && attach.resource" class="empty-state-message empty-state-full-page text-center">
+            <h2>No persistent volume claims.</h2>
 
-            <p class="gutter-top">
+            <p>
               A <b>persistent volume claim</b> is required to attach to this {{kind | humanizeKind}},
               but none are loaded on this project.
             </p>
 
-            <div ng-if="project && (pvcVersion | canI : 'create')" class="text-center">
+            <div ng-if="project && (pvcVersion | canI : 'create')">
               <a ng-href="project/{{project.metadata.name}}/create-pvc"
                  class="btn btn-primary">Create Storage</a>
             </div>
