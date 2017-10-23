@@ -73580,7 +73580,7 @@ return t || _.get(e, "spec.externalName");
 }).filter("serviceInstanceDisplayName", [ "serviceClassDisplayNameFilter", function(e) {
 return function(t, n) {
 if (n) return e(n);
-var i = _.get(t, "spec.externalClusterServiceClassName");
+var i = _.get(t, "spec.clusterServiceClassExternalName");
 return i || _.get(t, "metadata.name");
 };
 } ]).filter("serviceInstanceStatus", [ "isServiceInstanceReadyFilter", function(e) {
@@ -74165,7 +74165,7 @@ return d(e, t[i], n[r]);
 sortServiceInstances: function(e, t) {
 return e || t ? _.sortBy(e, function(e) {
 var n = _.get(e, "spec.clusterServiceClassRef.name");
-return _.get(t, [ n, "spec", "externalMetadata", "displayName" ]) || e.spec.externalClusterServiceClassName;
+return _.get(t, [ n, "spec", "externalMetadata", "displayName" ]) || e.spec.clusterServiceClassExternalName;
 }, function(e) {
 return _.get(e, "metadata.name", "");
 }) : null;
@@ -78840,7 +78840,7 @@ t !== n && (e.updateBindParametersStepVisibility(), e.ctrl.nextTitle = e.bindPar
 e.ctrl.noProjectsCantCreate = !0;
 });
 }, e.prototype.createService = function() {
-var e = this, t = this.getParameters(), n = r.isEmpty(t) ? null : this.BindingService.generateSecretName(this.getExternalClusterServiceClassName() + "-parameters"), i = this.makeServiceInstance(n), o = {
+var e = this, t = this.getParameters(), n = r.isEmpty(t) ? null : this.BindingService.generateSecretName(this.getClusterServiceClassExternalName() + "-parameters"), i = this.makeServiceInstance(n), o = {
 group: "servicecatalog.k8s.io",
 resource: "serviceinstances"
 }, a = {
@@ -78887,10 +78887,10 @@ this.ctrl.parameterSchema = r.get(e, "spec.instanceCreateParameterSchema"), this
 return r.omitBy(this.ctrl.parameterData, function(e) {
 return "" === e;
 });
-}, e.prototype.getExternalClusterServiceClassName = function() {
+}, e.prototype.getClusterServiceClassExternalName = function() {
 return r.get(this, "ctrl.serviceClass.resource.spec.externalName");
 }, e.prototype.makeServiceInstance = function(e) {
-var t = this.getExternalClusterServiceClassName(), n = {
+var t = this.getClusterServiceClassExternalName(), n = {
 kind: "ServiceInstance",
 apiVersion: "servicecatalog.k8s.io/v1beta1",
 metadata: {
@@ -78898,8 +78898,8 @@ namespace: this.ctrl.selectedProject.metadata.name,
 generateName: t + "-"
 },
 spec: {
-externalClusterServiceClassName: t,
-externalClusterServicePlanName: this.ctrl.selectedPlan.spec.externalName
+clusterServiceClassExternalName: t,
+clusterServicePlanExternalName: this.ctrl.selectedPlan.spec.externalName
 }
 };
 return e && (n.spec.parametersFrom = [ {
@@ -79295,7 +79295,7 @@ u.ctrl.orderComplete = !1, u.ctrl.error = null;
 var e = u.getParameters(u.ctrl.parameterData), t = r.get(u.ctrl.serviceInstance, "spec.parameters"), n = r.map(t, function(e, t) {
 return [ t ];
 }), o = r.pick(e, n), a = r.omit(e, n), s = i.copy(u.ctrl.serviceInstance);
-r.get(s, "spec.externalClusterServicePlanName") !== r.get(u.ctrl.selectedPlan, "spec.externalName") && (r.set(s, "spec.clusterServicePlanRef", void 0), r.set(s, "spec.externalClusterServicePlanName", r.get(u.ctrl.selectedPlan, "spec.externalName"))), i.equals(o, t) || r.set(s, "spec.parameters", o);
+r.get(s, "spec.clusterServicePlanExternalName") !== r.get(u.ctrl.selectedPlan, "spec.externalName") && (r.unset(s, "spec.clusterServicePlanRef"), r.set(s, "spec.clusterServicePlanExternalName", r.get(u.ctrl.selectedPlan, "spec.externalName"))), i.equals(o, t) || r.set(s, "spec.parameters", o);
 var l = {};
 if (r.each(u.secrets, function(t) {
 var n = JSON.parse(u.SecretsService.decodeSecretData(t.data).parameters), o = r.map(n, function(e, t) {

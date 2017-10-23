@@ -4333,6 +4333,7 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .services-view,services-view{display:flex;flex:1 1 auto}
 .services-view .vendor-info-icon,services-view .vendor-info-icon{font-size:10px;padding-left:2px;vertical-align:middle}
 .services-view .blank-slate-pf{background-color:transparent;border:none}
+.services-view .filter-panel-container ul{margin-bottom:10px}
 .services-view .pf-empty-state{margin:0 20px;width:100%}
 .services-view .services-item{animation:catalogItemFade .2s ease-out;color:#363636;min-height:140px;overflow:hidden;padding:0 10px 20px;position:relative;text-align:center;width:50%;word-break:break-word;z-index:99}
 @media (min-width:480px){.services-view .services-item{width:33.3333%}
