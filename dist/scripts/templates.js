@@ -3737,12 +3737,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"parameterSchema.properties\" class=\"config-parameters-form\">\n" +
     "<h3>\n" +
     "<span>Configuration</span>\n" +
-    "<a href=\"\" class=\"hide-show-link\" ng-click=\"toggleShowParameterValues()\" role=\"button\">\n" +
+    "<a ng-if=\"allowParametersReveal\" href=\"\" class=\"hide-show-link\" ng-click=\"toggleShowParameterValues()\" role=\"button\">\n" +
     "{{showParameterValues ? 'Hide Values' : 'Reveal Values'}}\n" +
     "</a>\n" +
     "</h3>\n" +
     "<form name=\"forms.orderConfigureForm\">\n" +
-    "<catalog-parameters hide-values=\"!showParameterValues\" model=\"parameterData\" parameter-schema=\"parameterSchema\" parameter-form-definition=\"parameterFormDefinition\" is-horizontal=\"true\" read-only=\"true\">\n" +
+    "<catalog-parameters hide-values=\"!showParameterValues\" opaque-keys=\"opaqueParameterKeys\" model=\"parameterData\" parameter-schema=\"parameterSchema\" parameter-form-definition=\"parameterFormDefinition\" is-horizontal=\"true\" read-only=\"true\">\n" +
     "</catalog-parameters>\n" +
     "</form>\n" +
     "</div>\n" +
@@ -5677,11 +5677,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"service-binding-parameters\" ng-if=\"!$ctrl.isOverview && $ctrl.bindParameterSchema.properties\">\n" +
     "<span class=\"component-label\">Parameters</span>\n" +
-    "<a href=\"\" class=\"hide-show-link\" ng-click=\"$ctrl.toggleShowParameterValues()\" role=\"button\">\n" +
+    "<a ng-if=\"$ctrl.allowParametersReveal\" href=\"\" class=\"hide-show-link\" ng-click=\"$ctrl.toggleShowParameterValues()\" role=\"button\">\n" +
     "{{$ctrl.showParameterValues ? 'Hide Values' : 'Reveal Values'}}\n" +
     "</a>\n" +
     "<form name=\"ctrl.parametersForm\">\n" +
-    "<catalog-parameters hide-values=\"!$ctrl.showParameterValues\" model=\"$ctrl.parameterData\" parameter-form-definition=\"$ctrl.bindParameterFormDefinition\" parameter-schema=\"$ctrl.bindParameterSchema\" is-horizontal=\"true\" read-only=\"true\">\n" +
+    "<catalog-parameters hide-values=\"!$ctrl.showParameterValues\" opaque-keys=\"$ctrl.opaqueParameterKeys\" model=\"$ctrl.parameterData\" parameter-form-definition=\"$ctrl.bindParameterFormDefinition\" parameter-schema=\"$ctrl.bindParameterSchema\" is-horizontal=\"true\" read-only=\"true\">\n" +
     "</catalog-parameters>\n" +
     "</form>\n" +
     "</div>\n" +

@@ -50,12 +50,13 @@
   </div>
   <div class="service-binding-parameters" ng-if="!$ctrl.isOverview && $ctrl.bindParameterSchema.properties">
     <span class="component-label">Parameters</span>
-    <a href="" class="hide-show-link" ng-click="$ctrl.toggleShowParameterValues()" role="button">
+    <a ng-if="$ctrl.allowParametersReveal" href="" class="hide-show-link" ng-click="$ctrl.toggleShowParameterValues()" role="button">
       {{$ctrl.showParameterValues ? 'Hide Values' : 'Reveal Values'}}
     </a>
     <form name="ctrl.parametersForm">
       <catalog-parameters
         hide-values="!$ctrl.showParameterValues"
+        opaque-keys="$ctrl.opaqueParameterKeys"
         model="$ctrl.parameterData"
         parameter-form-definition="$ctrl.bindParameterFormDefinition"
         parameter-schema="$ctrl.bindParameterSchema"
