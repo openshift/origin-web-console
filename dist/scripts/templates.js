@@ -6705,9 +6705,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-model=\"$ctrl.entries\" class=\"environment-from-editor\" as-sortable=\"$ctrl.dragControlListeners\">\n" +
     "<div class=\"environment-from-entry\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\" ng-repeat=\"entry in $ctrl.envFromEntries\" as-sortable-item>\n" +
     "<div class=\"form-group environment-from-input\">\n" +
-    "<div ng-if=\"$ctrl.isEnvFromReadonly(entry)\" class=\"faux-input-group\">\n" +
+    "<div ng-if=\"$ctrl.isEnvFromReadonly(entry) || !$ctrl.hasOptions()\" class=\"faux-input-group\">\n" +
     "<div ng-if=\"!entry.configMapRef.name && !entry.secretRef.name\">\n" +
-    "No secrets or config maps have been added as Environment From.\n" +
+    "No config maps or secrets have been added as Environment From.\n" +
     "</div>\n" +
     "<div ng-if=\"entry.configMapRef.name || entry.secretRef.name\" class=\"faux-form-control readonly\">\n" +
     "Use all keys and values from\n" +
@@ -6715,7 +6715,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"entry.secretRef.name\">secret {{entry.secretRef.name}}</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"!$ctrl.isEnvFromReadonly(entry)\">\n" +
+    "<div ng-if=\"!$ctrl.isEnvFromReadonly(entry) && $ctrl.hasOptions()\">\n" +
     "<div class=\"ui-select\">\n" +
     "<ui-select ng-model=\"entry.selectedEnvFrom\" ng-required=\"entry.selectedEnvFrom\" on-select=\"$ctrl.envFromObjectSelected($index, entry, $select.selected)\" ng-class=\"{'{{$ctrl.setFocusClass}}' : $last}\">\n" +
     "<ui-select-match placeholder=\"Select a resource\">\n" +
@@ -6724,23 +6724,23 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<small class=\"text-muted\">&ndash; {{$select.selected.kind | humanizeKind : true}}</small>\n" +
     "</span>\n" +
     "</ui-select-match>\n" +
-    "<ui-select-choices ui-disable-choice=\"$ctrl.checkEntries(source, entry.selectedEnvFrom)\" repeat=\"source in $ctrl.envFromSelectorOptions | filter : { metadata: { name: $select.search } } track by (source | uid)\" group-by=\"$ctrl.groupByKind\">\n" +
+    "<ui-select-choices repeat=\"source in $ctrl.envFromSelectorOptions | filter : { metadata: { name: $select.search } } track by (source | uid)\" group-by=\"$ctrl.groupByKind\">\n" +
     "<span ng-bind-html=\"source.metadata.name | highlight : $select.search\"></span>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"!$ctrl.isReadonlyAny && !entry.isReadonlyValue\" class=\"environment-from-editor-button\">\n" +
+    "<div ng-if=\"!$ctrl.isEnvFromReadonly(entry) && $ctrl.hasEntries()\" class=\"environment-from-editor-button\">\n" +
     "<span ng-if=\"!$ctrl.cannotSort && $ctrl.entries.length > 1\" class=\"fa fa-bars sort-row\" role=\"button\" aria-label=\"Move row\" aria-grabbed=\"false\" as-sortable-item-handle></span>\n" +
     "<a ng-if=\"!$ctrl.cannotDeleteAny\" href=\"\" class=\"pficon pficon-close delete-row as-sortable-item-delete\" role=\"button\" aria-label=\"Delete row\" ng-click=\"$ctrl.deleteEntry($index, 1)\"></a>\n" +
     "</div>\n" +
     "<div class=\"environment-from-view-details\">\n" +
-    "<a ng-if=\"entry.selectedEnvFrom\" href=\"\" ng-click=\"$ctrl.viewOverlayPanel(entry.selectedEnvFrom)\">View Details</a>\n" +
+    "<a href=\"\" ng-if=\"entry.selectedEnvFrom\" ng-click=\"$ctrl.viewOverlayPanel(entry.selectedEnvFrom)\">View Details</a>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"environment-from-entry form-group\" ng-if=\"!$ctrl.cannotAdd\">\n" +
-    "<a href=\"\" class=\"add-row-link\" role=\"button\" ng-click=\"$ctrl.onAddRow()\">{{ $ctrl.addRowLink }}</a>\n" +
+    "<div class=\"environment-from-entry form-group\" ng-if=\"!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()\">\n" +
+    "<a href=\"\" class=\"add-row-link\" role=\"button\" ng-click=\"$ctrl.onAddRow()\">{{$ctrl.addRowLink}}</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "<overlay-panel class=\"add-config-to-application\" show-panel=\"$ctrl.overlayPanelVisible\" show-close=\"true\" handle-close=\"$ctrl.closeOverlayPanel\">\n" +
@@ -6794,7 +6794,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Environment From\n" +
     "<span class=\"pficon pficon-help\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Environment From lets you add all key-value pairs from a config map or secret as environment variables.\"></span>\n" +
     "</h4>\n" +
-    "<edit-environment-from entries=\"container.envFrom\" selector-placeholder=\"Config Map/Secret\" env-from-selector-options=\"$ctrl.valueFromObjects\" add-row-link=\"Add ALL Values from Config Map or Secret\" show-header>\n" +
+    "<edit-environment-from entries=\"container.envFrom\" selector-placeholder=\"Config Map/Secret\" env-from-selector-options=\"$ctrl.valueFromObjects\" add-row-link=\"Add ALL Values from Config Map or Secret\" is-readonly=\"$ctrl.ngReadonly\" show-header>\n" +
     "</edit-environment-from>\n" +
     "</div>\n" +
     "<button class=\"btn btn-default\" ng-if=\"$ctrl.canIUpdate && !$ctrl.ngReadonly\" ng-click=\"$ctrl.save()\" ng-disabled=\"$ctrl.form.$pristine || $ctrl.form.$invalid\">Save</button>\n" +
