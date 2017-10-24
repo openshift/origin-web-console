@@ -85,6 +85,10 @@
     ctrl.$onInit = function() {
       ctrl.loginBaseUrl = DataService.openshiftAPIBaseUrl();
       ctrl.preSelectedProject = ctrl.selectedProject = ctrl.project;
+      if (ctrl.project) {
+        ctrl.templateProject = ctrl.project;
+        ctrl.templateProjectChange();
+      }
       listProjects();
 
       ctrl.projectEmptyState = {

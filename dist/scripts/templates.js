@@ -7306,7 +7306,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<overlay-panel show-panel=\"ordering.panelName\" handle-close=\"closeOrderingPanel\">\n" +
     "<deploy-image-dialog ng-if=\"ordering.panelName === 'deployImage'\" project=\"currentProject\" context=\"context\" on-dialog-closed=\"closeOrderingPanel\"></deploy-image-dialog>\n" +
     "<from-file-dialog ng-if=\"ordering.panelName === 'fromFile'\" project=\"currentProject\" context=\"context\" on-dialog-closed=\"closeOrderingPanel\"></from-file-dialog>\n" +
-    "<process-template-dialog ng-if=\"ordering.panelName === 'fromProject'\" project=\"project\" use-project-template=\"true\" on-dialog-closed=\"closeOrderingPanel\"></process-template-dialog>\n" +
+    "<process-template-dialog ng-if=\"ordering.panelName === 'fromProject'\" project=\"currentProject\" use-project-template=\"true\" on-dialog-closed=\"closeOrderingPanel\"></process-template-dialog>\n" +
     "</overlay-panel>"
   );
 

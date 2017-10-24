@@ -13231,7 +13231,7 @@ onShow: function() {
 b.infoStep.selected = !1, b.selectStep.selected = !1, b.configStep.selected = !1, b.resultsStep.selected = !0, b.nextTitle = "Close", m(), b.wizardDone = !0;
 }
 }, b.$onInit = function() {
-b.loginBaseUrl = r.openshiftAPIBaseUrl(), b.preSelectedProject = b.selectedProject = b.project, h(), b.projectEmptyState = {
+b.loginBaseUrl = r.openshiftAPIBaseUrl(), b.preSelectedProject = b.selectedProject = b.project, b.project && (b.templateProject = b.project, b.templateProjectChange()), h(), b.projectEmptyState = {
 title: "No Project Selected",
 info: "Please select a project from the dropdown to load Templates from that project."
 }, b.templatesEmptyState = {
