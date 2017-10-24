@@ -3436,6 +3436,7 @@ a.disabled{color:#8b8d8f;cursor:not-allowed;text-decoration:none}
 .drawer-pf-action{display:flex;border-bottom:1px solid #d1d1d1}
 .drawer-pf-action .btn-link{color:#0088ce;padding:10px 0}
 .drawer-pf-action .btn-link .fa,.drawer-pf-action .btn-link .pficon{margin-right:3px}
+.drawer-pf-action .btn-link .pficon-close{position:relative;top:1px}
 .drawer-pf-action .btn-link:hover{color:#00659c}
 .drawer-pf-action-link{border-left:solid 1px #d1d1d1;flex:1 1 0%;margin:10px 0;text-align:center}
 .drawer-pf-action-link:first-of-type{border-left-width:0}
