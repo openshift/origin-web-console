@@ -4667,8 +4667,6 @@ label.checkbox{font-weight:400}
 .deploy-image h2 small{display:block;margin-top:5px}
 @media (min-width:992px){.deploy-image h2 small{display:inline-block;margin-top:0}
 }
-@media (min-height:800px){.deploy-image .empty-state-message{margin-top:100px}
-}
 .icon-xl{font-size:128px}
 .istag-separator{color:#9c9c9c;position:absolute;top:2px;right:-3px}
 @media (max-width:767px){.istag-separator{display:none!important}
@@ -4999,11 +4997,14 @@ h2+.list-view-pf{margin-top:20px}
 @media (min-width:768px){.navbar-pf-vertical .navbar-toggle{margin:13px 15px}
 .navbar-pf-vertical .navbar-toggle .icon-bar{width:22px}
 }
+.build-count .icon-count,.builds-label{margin-right:5px;display:inline-block}
 .navbar-toggle:focus{color:#fff;outline:dotted thin!important;outline:-webkit-focus-ring-color auto 5px!important;outline-offset:-2px!important}
 .wizard-pf-main .ace_editor.editor{height:265px}
-.landing-page .wizard-pf-main .ace_editor.editor{height:200px}
-.wizard-pf-main .deploy-image .empty-state-message{margin:60px auto 0}
-.build-count .icon-count,.builds-label{margin-right:5px;display:inline-block}
+.landing-page .wizard-pf-main .ace_editor.editor{height:175px}
+.wizard-pf-main .deploy-image .empty-state-message{margin-bottom:0;margin-top:35px}
+@media (min-width:768px){.wizard-pf-main .deploy-image .empty-state-message{margin-top:90px}
+.landing-page .wizard-pf-main .deploy-image .empty-state-message{margin-top:50px}
+}
 .build-count .builds,.build-count .pipelines{display:block}
 .build-count .running-stage{font-size:84%;color:#9c9c9c}
 @media (max-width:991px){.builds-label{margin-top:5px}
