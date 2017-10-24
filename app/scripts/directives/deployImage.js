@@ -234,7 +234,7 @@ angular.module("openshiftConsole")
               configMapDataOrdered = orderByDisplayName(configMapData.by("metadata.name"));
               $scope.valueFromNamespace[project.metadata.name] = configMapDataOrdered.concat(secretDataOrdered);
             }, function(e) {
-              if (e.code === 403) {
+              if (e.status === 403) {
                return;
               }
 
@@ -250,7 +250,7 @@ angular.module("openshiftConsole")
               secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
               $scope.valueFromNamespace[project.metadata.name] = secretDataOrdered.concat(configMapDataOrdered);
             }, function(e) {
-              if (e.code === 403) {
+              if (e.status === 403) {
                 return;
               }
 

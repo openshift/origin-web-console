@@ -155,7 +155,7 @@ angular.module('openshiftConsole')
               $scope.availableConfigMaps = configMapDataOrdered;
               $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
             }, function(e) {
-              if (e.code === 403) {
+              if (e.status === 403) {
                 return;
               }
 
@@ -173,7 +173,7 @@ angular.module('openshiftConsole')
                 secretsArray.unshift("");
               });
             }, function(e) {
-              if (e.code === 403) {
+              if (e.status === 403) {
                 return;
               }
 
