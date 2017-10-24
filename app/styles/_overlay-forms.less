@@ -2,11 +2,18 @@
   .ace_editor.editor {
     height: 265px;
     .landing-page & {
-      height: 200px;
+      height: 175px;
     }
   }
 
   .deploy-image .empty-state-message {
-    margin: 60px auto 0;
+    margin-bottom: 0;
+    margin-top: 35px;
+    @media(min-width: @screen-sm-min) {
+      margin-top: 90px;
+      .landing-page & {
+        margin-top: 50px;
+      }
+    }
   }
 }
