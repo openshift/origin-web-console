@@ -11,10 +11,10 @@
         </div>
 
         <div ng-if="targetObject && configMaps && secrets">
-          <div ng-if="!configMaps.length && !secrets.length && !(configMapVersion | canI : 'create') && !(secretVersion | canI : 'create')" class="empty-state-message empty-state-full-page">
-            <h2 class="text-center">No config maps or secrets.</h2>
+          <div ng-if="!configMaps.length && !secrets.length && !(configMapVersion | canI : 'create') && !(secretVersion | canI : 'create')" class="empty-state-message empty-state-full-page text-center">
+            <h2>No config maps or secrets.</h2>
 
-            <p class="gutter-top">
+            <p>
               There are no config maps or secrets in project {{project | displayName}} to use
               as a volume for this {{kind | humanizeKind}}.
             </p>

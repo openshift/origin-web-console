@@ -490,10 +490,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "          'secondary-nav-item-pf': primaryItem.secondaryNavSections.length\n" +
     "        }\" ng-if=\"show(primaryItem)\" ng-mouseenter=\"onMouseEnter(primaryItem)\" ng-mouseleave=\"onMouseLeave(primaryItem)\" class=\"list-group-item\">\n" +
     "<a ng-if=\"primaryItem.href\" ng-href=\"{{navURL(primaryItem.href)}}\" ng-click=\"itemClicked(primaryItem)\">\n" +
-    "<span class=\"{{primaryItem.iconClass}}\"></span> <span class=\"list-group-item-value\">{{primaryItem.label}}</span>\n" +
+    "<span title=\"{{primaryItem.label}}\" class=\"{{primaryItem.iconClass}}\" aria-hidden=\"true\"></span> <span class=\"list-group-item-value\">{{primaryItem.label}}</span> <span ng-if=\"nav.collapsed && !isMobile\" class=\"sr-only\">{{primaryItem.label}}</span>\n" +
     "</a>\n" +
     "<a ng-if=\"!primaryItem.href\" href=\"\" ng-click=\"itemClicked(primaryItem)\">\n" +
-    "<span class=\"{{primaryItem.iconClass}}\"></span> <span class=\"list-group-item-value\">{{primaryItem.label}}</span>\n" +
+    "<span title=\"{{primaryItem.label}}\" class=\"{{primaryItem.iconClass}}\" aria-hidden=\"true\"></span> <span class=\"list-group-item-value\">{{primaryItem.label}}</span> <span ng-if=\"nav.collapsed && !isMobile\" class=\"sr-only\">{{primaryItem.label}}</span>\n" +
     "</a>\n" +
     "\n" +
     "<div ng-if=\"primaryItem.secondaryNavSections.length\" class=\"secondary-nav-item-pf\" ng-class=\"{\n" +
@@ -784,9 +784,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>{{error | getErrorDetails}}</p>\n" +
     "</div>\n" +
     "<div ng-if=\"targetObject && configMaps && secrets\">\n" +
-    "<div ng-if=\"!configMaps.length && !secrets.length && !(configMapVersion | canI : 'create') && !(secretVersion | canI : 'create')\" class=\"empty-state-message empty-state-full-page\">\n" +
-    "<h2 class=\"text-center\">No config maps or secrets.</h2>\n" +
-    "<p class=\"gutter-top\">\n" +
+    "<div ng-if=\"!configMaps.length && !secrets.length && !(configMapVersion | canI : 'create') && !(secretVersion | canI : 'create')\" class=\"empty-state-message empty-state-full-page text-center\">\n" +
+    "<h2>No config maps or secrets.</h2>\n" +
+    "<p>\n" +
     "There are no config maps or secrets in project {{project | displayName}} to use as a volume for this {{kind | humanizeKind}}.\n" +
     "</p>\n" +
     "<p ng-if=\"targetObject\"><a ng-href=\"{{targetObject | navigateResourceURL}}\">Back to {{kind | humanizeKind}} {{name}}</a></p>\n" +
@@ -935,12 +935,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-md-10\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<div ng-show=\"!pvcs || !attach.resource\">Loading...</div>\n" +
-    "<div ng-show=\"pvcs && !pvcs.length && attach.resource\" class=\"empty-state-message empty-state-full-page\">\n" +
-    "<h2 class=\"text-center\">No persistent volume claims.</h2>\n" +
-    "<p class=\"gutter-top\">\n" +
+    "<div ng-show=\"pvcs && !pvcs.length && attach.resource\" class=\"empty-state-message empty-state-full-page text-center\">\n" +
+    "<h2>No persistent volume claims.</h2>\n" +
+    "<p>\n" +
     "A <b>persistent volume claim</b> is required to attach to this {{kind | humanizeKind}}, but none are loaded on this project.\n" +
     "</p>\n" +
-    "<div ng-if=\"project && (pvcVersion | canI : 'create')\" class=\"text-center\">\n" +
+    "<div ng-if=\"project && (pvcVersion | canI : 'create')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-primary\">Create Storage</a>\n" +
     "</div>\n" +
     "<p ng-if=\"project && !(pvcVersion | canI : 'create')\">\n" +
@@ -2476,50 +2476,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\">Add Config Files</a>\n" +
     "</p>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div class=\"col-lg-6\">\n" +
-    "<h3>Autoscaling</h3>\n" +
-    "\n" +
-    "<div ng-repeat=\"warning in hpaWarnings\" class=\"alert alert-warning\">\n" +
-    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"sr-only\">Warning:</span>\n" +
-    "{{warning.message}}\n" +
-    "\n" +
-    "<a ng-href=\"project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" ng-if=\"warning.reason === 'NoCPURequest' && (deploymentConfigsVersion | canI : 'update')\" role=\"button\">Edit Resource\n" +
-    "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">Requests and</span> Limits</a>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div ng-if=\"!autoscalers.length\">\n" +
-    "<a ng-if=\"horizontalPodAutoscalersVersion | canI : 'create'\" ng-href=\"project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" role=\"button\">Add Autoscaler</a>\n" +
-    "<span ng-if=\"!(horizontalPodAutoscalersVersion | canI : 'create')\">Autoscaling is not enabled. There are no autoscalers for this deployment config.</span>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div ng-repeat=\"hpa in autoscalers\">\n" +
-    "<hpa hpa=\"hpa\" project=\"project\" show-scale-target=\"false\" alerts=\"alerts\"></hpa>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-lg-6\" ng-if=\"deploymentConfig.spec.strategy.type !== 'Custom'\">\n" +
-    "<h3>\n" +
-    "Hooks\n" +
-    "<span class=\"learn-more-inline\">\n" +
-    "<a ng-href=\"{{'lifecycle_hooks' | helpLink}}\" target=\"_blank\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
-    "</span>\n" +
-    "</h3>\n" +
-    "<div ng-if=\"strategyParams.pre\">\n" +
-    "<lifecycle-hook deployment-config=\"deploymentConfig\" type=\"pre\"></lifecycle-hook>\n" +
-    "</div>\n" +
-    "<div ng-if=\"strategyParams.mid\">\n" +
-    "<lifecycle-hook deployment-config=\"deploymentConfig\" type=\"mid\"></lifecycle-hook>\n" +
-    "</div>\n" +
-    "<div ng-if=\"strategyParams.post\">\n" +
-    "<lifecycle-hook deployment-config=\"deploymentConfig\" type=\"post\"></lifecycle-hook>\n" +
-    "</div>\n" +
-    "<div ng-if=\"!strategyParams.pre && !strategyParams.mid && !strategyParams.post\">\n" +
-    "none\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"col-lg-6\">\n" +
     "<h3>Triggers</h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<dt>Manual (CLI):\n" +
@@ -2547,11 +2503,51 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "</dl>\n" +
+    "\n" +
+    "<resource-service-bindings project=\"project\" project-context=\"projectContext\" api-object=\"deploymentConfig\">\n" +
+    "</resource-service-bindings>\n" +
     "</div>\n" +
     "\n" +
     "<div class=\"col-lg-6\">\n" +
-    "<resource-service-bindings project=\"project\" project-context=\"projectContext\" api-object=\"deploymentConfig\">\n" +
-    "</resource-service-bindings>\n" +
+    "<h3>Autoscaling</h3>\n" +
+    "\n" +
+    "<div ng-repeat=\"warning in hpaWarnings\" class=\"alert alert-warning\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Warning:</span>\n" +
+    "{{warning.message}}\n" +
+    "\n" +
+    "<a ng-href=\"project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" ng-if=\"warning.reason === 'NoCPURequest' && (deploymentConfigsVersion | canI : 'update')\" role=\"button\">Edit Resource\n" +
+    "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">Requests and</span> Limits</a>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div ng-if=\"!autoscalers.length\">\n" +
+    "<a ng-if=\"horizontalPodAutoscalersVersion | canI : 'create'\" ng-href=\"project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" role=\"button\">Add Autoscaler</a>\n" +
+    "<span ng-if=\"!(horizontalPodAutoscalersVersion | canI : 'create')\">Autoscaling is not enabled. There are no autoscalers for this deployment config.</span>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div ng-repeat=\"hpa in autoscalers\">\n" +
+    "<hpa hpa=\"hpa\" project=\"project\" show-scale-target=\"false\" alerts=\"alerts\"></hpa>\n" +
+    "</div>\n" +
+    "<div ng-if=\"deploymentConfig.spec.strategy.type !== 'Custom'\">\n" +
+    "<h3>\n" +
+    "Hooks\n" +
+    "<span class=\"learn-more-inline\">\n" +
+    "<a ng-href=\"{{'lifecycle_hooks' | helpLink}}\" target=\"_blank\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
+    "</span>\n" +
+    "</h3>\n" +
+    "<div ng-if=\"strategyParams.pre\">\n" +
+    "<lifecycle-hook deployment-config=\"deploymentConfig\" type=\"pre\"></lifecycle-hook>\n" +
+    "</div>\n" +
+    "<div ng-if=\"strategyParams.mid\">\n" +
+    "<lifecycle-hook deployment-config=\"deploymentConfig\" type=\"mid\"></lifecycle-hook>\n" +
+    "</div>\n" +
+    "<div ng-if=\"strategyParams.post\">\n" +
+    "<lifecycle-hook deployment-config=\"deploymentConfig\" type=\"post\"></lifecycle-hook>\n" +
+    "</div>\n" +
+    "<p ng-if=\"!strategyParams.pre && !strategyParams.mid && !strategyParams.post\">\n" +
+    "none\n" +
+    "</p>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<annotations annotations=\"deploymentConfig.metadata.annotations\"></annotations>\n" +
@@ -5679,9 +5675,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "View Secret\n" +
     "</a>\n" +
     "</div>\n" +
-    "<div class=\"service-binding-parameters\" ng-if=\"$ctrl.bindParameterSchema.properties\">\n" +
-    "<span class=\"parameters-heading\">Parameters</span>\n" +
-    "<a href=\"\" ng-click=\"$ctrl.toggleShowParameterValues()\" role=\"button\">\n" +
+    "<div class=\"service-binding-parameters\" ng-if=\"!$ctrl.isOverview && $ctrl.bindParameterSchema.properties\">\n" +
+    "<span class=\"component-label\">Parameters</span>\n" +
+    "<a href=\"\" class=\"hide-show-link\" ng-click=\"$ctrl.toggleShowParameterValues()\" role=\"button\">\n" +
     "{{$ctrl.showParameterValues ? 'Hide Values' : 'Reveal Values'}}\n" +
     "</a>\n" +
     "<form name=\"ctrl.parametersForm\">\n" +
@@ -6955,8 +6951,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/events-badge.html',
-    "<a ng-href=\"project/{{projectContext.projectName}}/browse/events\" class=\"events-badge visible-xs\"><span class=\"event-label\">Events</span><span ng-if=\"warningCount\" class=\"mar-left-md\"><span class=\"pficon pficon-warning-triangle-o mar-right-sm\" aria-hidden=\"true\"></span><span class=\"sr-only\">Warning</span><span class=\"event-count\">{{warningCount}}</span></span><span ng-if=\"normalCount\" class=\"mar-left-sm\"><span class=\"pficon pficon-info mar-right-sm\" aria-hidden=\"true\"></span><span class=\"sr-only\">Normal</span><span class=\"event-count\">{{normalCount}}</span></span></a>\n" +
-    "<a href=\"\" ng-click=\"expandSidebar()\" ng-if=\"sidebarCollapsed\" class=\"events-badge hidden-xs\"><span class=\"events-sidebar-expand fa fa-arrow-circle-o-left mar-right-md\"><span class=\"sr-only\">Expand event sidebar</span></span><span class=\"event-label\">Events</span><span ng-if=\"warningCount\" class=\"mar-left-md\"><span class=\"pficon pficon-warning-triangle-o mar-right-sm\" aria-hidden=\"true\"></span><span class=\"sr-only\">Warning</span><span class=\"event-count\">{{warningCount}}</span></span><span ng-if=\"normalCount\" class=\"mar-left-sm\"><span class=\"pficon pficon-info mar-right-sm\" aria-hidden=\"true\"></span><span class=\"sr-only\">Normal</span><span class=\"event-count\">{{normalCount}}</span></span></a>"
+    "<a ng-href=\"project/{{projectContext.projectName}}/browse/events\" class=\"events-badge visible-xs\"><span class=\"event-label\">Events</span><span ng-if=\"warningCount\" class=\"mar-left-md\"><span class=\"pficon pficon-warning-triangle-o mar-right-sm\" aria-hidden=\"true\"></span><span class=\"sr-only\">Warning</span><span class=\"event-count\">{{warningCount}}</span></span><span ng-if=\"normalCount\" class=\"mar-left-md\"><span class=\"pficon pficon-info mar-right-sm\" aria-hidden=\"true\"></span><span class=\"sr-only\">Normal</span><span class=\"event-count\">{{normalCount}}</span></span></a>\n" +
+    "<a href=\"\" ng-click=\"expandSidebar()\" ng-if=\"sidebarCollapsed\" class=\"events-badge hidden-xs\"><span class=\"events-sidebar-expand fa fa-arrow-circle-o-left mar-right-md\"><span class=\"sr-only\">Expand event sidebar</span></span><span class=\"event-label\">Events</span><span ng-if=\"warningCount\" class=\"mar-left-md\"><span class=\"pficon pficon-warning-triangle-o mar-right-sm\" aria-hidden=\"true\"></span><span class=\"sr-only\">Warning</span><span class=\"event-count\">{{warningCount}}</span></span><span ng-if=\"normalCount\" class=\"mar-left-md\"><span class=\"pficon pficon-info mar-right-sm\" aria-hidden=\"true\"></span><span class=\"sr-only\">Normal</span><span class=\"event-count\">{{normalCount}}</span></span></a>"
   );
 
 
@@ -6992,7 +6988,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"event-icon\" aria-hidden=\"true\">\n" +
     "<div ng-switch=\"event.type\" class=\"hide-ng-leave\">\n" +
     "<span ng-switch-when=\"Warning\" class=\"pficon pficon-warning-triangle-o\"></span>\n" +
-    "<span ng-switch-when=\"Normal\" class=\"pficon pficon-info text-muted\"></span>\n" +
+    "<span ng-switch-when=\"Normal\" class=\"pficon pficon-info\"></span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"event-details\">\n" +
@@ -7182,7 +7178,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"osc-form\">\n" +
     "<alerts alerts=\"$ctrl.alerts\"></alerts>\n" +
     "<form name=\"$ctrl.templateForm\">\n" +
-    "<process-template project=\"$ctrl.selectedProject\" template=\"$ctrl.template\" alerts=\"$ctrl.alerts\" is-dialog=\"true\"></process-template>\n" +
+    "<process-template ng-if=\"$ctrl.template\" project=\"$ctrl.selectedProject\" template=\"$ctrl.template\" alerts=\"$ctrl.alerts\" is-dialog=\"true\"></process-template>\n" +
     "</form>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8000,7 +7996,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"help-block\" ng-if=\"form.maxReplicas.$error.min\">\n" +
     "Max pods must be greater than or equal to\n" +
     "<span ng-if=\"autoscaling.minReplicas\">min pods, which is</span>\n" +
-    "{{autoscaling.minReplicas || 1}.\n" +
+    "{{autoscaling.minReplicas || 1}}.\n" +
     "</span>\n" +
     "<span class=\"help-block\" ng-if=\"form.maxReplicas.$error.required\">\n" +
     "Max pods is a required field.\n" +
@@ -8981,7 +8977,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"order-service-config\">\n" +
     "<div class=\"osc-form\">\n" +
     "<form name=\"$ctrl.form\">\n" +
-    "<process-template template=\"$ctrl.template\" project=\"$ctrl.preSelectedProject\" on-project-selected=\"$ctrl.onProjectSelected\" available-projects=\"$ctrl.unfilteredProjects\" is-dialog=\"true\"></process-template>\n" +
+    "<process-template ng-if=\"$ctrl.template\" template=\"$ctrl.template\" project=\"$ctrl.preSelectedProject\" on-project-selected=\"$ctrl.onProjectSelected\" available-projects=\"$ctrl.unfilteredProjects\" is-dialog=\"true\"></process-template>\n" +
     "</form>\n" +
     "</div>\n" +
     "</div>"
@@ -9041,7 +9037,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ui-select-match placeholder=\"Select a Project\">\n" +
     "{{$select.selected | displayName}}\n" +
     "</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"project in $ctrl.templateProjects | searchProjects : $select.search track by (project | uid)\">\n" +
+    "<ui-select-choices repeat=\"project in $ctrl.templateProjects | searchProjects : $select.search track by (project | uid)\" group-by=\"$ctrl.groupChoicesBy\">\n" +
     "<span ng-bind-html=\"project | displayName | highlightKeywords : $select.search\"></span>\n" +
     "<span ng-if=\"project | displayName : true\" class=\"small text-muted\">\n" +
     "<span ng-if=\"project.metadata.name\">&ndash;</span>\n" +
@@ -9227,7 +9223,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/service-instance-bindings.html',
     "<div ng-if=\"$ctrl.bindable || ($ctrl.bindings | size)\">\n" +
     "<h3 ng-if=\"$ctrl.showHeader\">Bindings</h3>\n" +
-    "<service-binding ng-repeat=\"binding in $ctrl.bindings track by (binding | uid)\" namespace=\"binding.metadata.namespace\" binding=\"binding\" ref-api-object=\"$ctrl.serviceInstance\">\n" +
+    "<service-binding ng-repeat=\"binding in $ctrl.bindings track by (binding | uid)\" is-overview=\"$ctrl.isOverview\" namespace=\"binding.metadata.namespace\" binding=\"binding\" ref-api-object=\"$ctrl.serviceInstance\">\n" +
     "</service-binding>\n" +
     "<div ng-if=\"$ctrl.bindable\">\n" +
     "<a href=\"\" ng-click=\"$ctrl.createBinding()\" role=\"button\">\n" +
@@ -10630,20 +10626,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "<div column class=\"content-pane\" ng-class=\"'content-' + subjectKind.name.toLowerCase()\">\n" +
-    "<div class=\"col-heading item-row\" row mobile=\"column\" flex-collapse-fix>\n" +
-    "<div class=\"col-name\" flex conceal=\"mobile\" ng-class=\"{ 'half-width': !mode.edit }\">\n" +
+    "<div class=\"col-heading\" flex-collapse-fix>\n" +
+    "<div class=\"col-name\" flex ng-class=\"{ 'half-width': !mode.edit }\">\n" +
     "<h3>Name</h3>\n" +
     "</div>\n" +
-    "<div class=\"col-roles\" flex conceal=\"mobile\">\n" +
+    "<div class=\"col-roles\" flex>\n" +
     "<h3>Roles</h3>\n" +
     "</div>\n" +
-    "<div ng-if=\"mode.edit\" class=\"col-add-role\" conceal=\"tablet\" flex-collapse-fix>\n" +
+    "<div ng-if=\"mode.edit\" class=\"col-add-role visible-md-block visible-lg-block\" flex-collapse-fix>\n" +
     "<h3>\n" +
     "Add Another Role\n" +
     "</h3>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"(subjectKind.subjects | hashSize) === 0\">\n" +
+    "<div ng-if=\"(subjectKind.subjects | hashSize) === 0\" class=\"membership-empty\">\n" +
     "<p>\n" +
     "<em>There are no {{ subjectKind.name | humanizeKind }}s with access to this project.</em>\n" +
     "</p>\n" +
@@ -10667,8 +10663,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div class=\"action-set\" flex row tablet=\"column\" mobile=\"column\">\n" +
-    "<div class=\"col-roles\" row tablet=\"column\" flex wrap axis=\"start\">\n" +
+    "<div class=\"action-set\">\n" +
+    "<div class=\"col-roles\">\n" +
     "<action-chip ng-repeat=\"role in subject.roles\" key=\"role.metadata.name\" key-help=\"roleHelp(role)\" show-action=\"mode.edit\" action=\"confirmRemove(subject.name, subjectKind.name, role.metadata.name)\" action-title=\"Remove role {{role.metadata.name}} from {{subject.name}}\"></action-chip>\n" +
     "</div>\n" +
     "<div ng-if=\"mode.edit\" class=\"col-add-role\">\n" +
@@ -10693,7 +10689,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<ng-form class=\"new-binding\" novalidate name=\"forms.newBindingForm\" ng-if=\"newBinding\">\n" +
     "<div ng-if=\"mode.edit\" class=\"item-row form-new-role\" row mobile=\"column\">\n" +
-    "<div class=\"col-name pad-bottom-none\" row mobile=\"column\" tablet=\"column\">\n" +
+    "<div class=\"col-name service-account\" row mobile=\"column\" tablet=\"column\">\n" +
     "<label ng-attr-for=\"newBindingName\" class=\"sr-only\">\n" +
     "Name\n" +
     "</label>\n" +
@@ -10701,7 +10697,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input ng-if=\"newBinding.kind !== 'ServiceAccount'\" type=\"text\" class=\"form-control input-name\" placeholder=\"Name\" ng-model=\"newBinding.name\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
     "\n" +
     "<div ng-if=\"newBinding.kind === 'ServiceAccount'\" class=\"service-account-namespace\" aria-hidden=\"true\">\n" +
-    "<ui-select ng-model=\"newBinding.namespace\" on-select=\"selectProject($item, $model)\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a project\" class=\"select-role pad-bottom-sm\">\n" +
+    "<ui-select ng-model=\"newBinding.namespace\" on-select=\"selectProject($item, $model)\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a project\" class=\"select-role\">\n" +
     "<ui-select-match placeholder=\"Select a project\">\n" +
     "<span>{{newBinding.namespace}}</span>\n" +
     "</ui-select-match>\n" +
@@ -10710,7 +10706,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
-    "<span ng-if=\"newBinding.kind === 'ServiceAccount'\" class=\"mar-left-md mar-right-md hidden-xs\">/</span>\n" +
+    "<span ng-if=\"newBinding.kind === 'ServiceAccount'\" class=\"mar-left-md mar-right-md hidden-xs hidden-sm\">/</span>\n" +
     "\n" +
     "<div ng-if=\"newBinding.kind === 'ServiceAccount'\" class=\"service-account-name\">\n" +
     "<ui-select ng-model=\"newBinding.name\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a service account\" class=\"select-role\">\n" +
@@ -10723,8 +10719,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"action-set\" flex row tablet=\"column\" mobile=\"column\">\n" +
-    "<div class=\"col-roles\" flex row tablet=\"column\">&nbsp;</div>\n" +
+    "<div class=\"action-set\">\n" +
     "<div class=\"col-add-role\">\n" +
     "<div ng-show=\"mode.edit\" row>\n" +
     "<ui-select ng-if=\"filteredRoles.length\" ng-model=\"newBinding.newRole\" theme=\"bootstrap\" search-enabled=\"true\" title=\"new {{subjectKind.name}} role\" class=\"select-role\" flex>\n" +
@@ -10746,11 +10741,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</ng-form>\n" +
-    "<div ng-if=\"mode.edit\" row mobile=\"column\">\n" +
-    "<div class=\"col-name hidden-xs\">&nbsp;</div>\n" +
-    "<div class=\"action-set\" flex row tablet=\"column\" mobile=\"column\">\n" +
-    "<div class=\"col-roles hidden-xs\" flex>&nbsp;</div>\n" +
-    "<div class=\"col-add-role\" row>\n" +
+    "<div ng-if=\"mode.edit\" class=\"show-hidden-roles\">\n" +
+    "<div class=\"action-set\">\n" +
+    "<div class=\"col-add-role\">\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +
     "<input type=\"checkbox\" class=\"toggle-hidden\" ng-click=\"toggleRoles($event)\" ng-checked=\"toggle.roles\">\n" +
@@ -12642,7 +12635,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"row.isBindable || (row.bindings | size)\">\n" +
     "<div class=\"section-title\">Bindings</div>\n" +
-    "<service-instance-bindings project=\"row.state.project\" bindings=\"row.bindings\" service-instance=\"row.apiObject\" service-class=\"row.serviceClass\" service-plan=\"row.servicePlan\">\n" +
+    "<service-instance-bindings is-overview=\"true\" project=\"row.state.project\" bindings=\"row.bindings\" service-instance=\"row.apiObject\" service-class=\"row.serviceClass\" service-plan=\"row.servicePlan\">\n" +
     "</service-instance-bindings>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -13589,14 +13582,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Loading...\n" +
     "</p>\n" +
     "<div ng-if=\"pvcsLoaded\" class=\"empty-state-message text-center\">\n" +
+    "<div ng-if=\"!filterWithZeroResults\">\n" +
     "<h2>No persistent volume claims.</h2>\n" +
-    "<p ng-if=\"!filterWithZeroResults\">\n" +
+    "<p>\n" +
     "No persistent volume claims have been added to project {{projectName}}.\n" +
     "</p>\n" +
     "<p ng-if=\"project && ('persistentvolumeclaims' | canI : 'create') && !filterWithZeroResults\">\n" +
     "<a ng-if=\"!outOfClaims\" ng-href=\"project/{{project.metadata.name}}/create-pvc\" class=\"btn btn-primary\">Create Storage</a>\n" +
     "<a ng-if=\"outOfClaims\" href=\"\" class=\"btn btn-primary disabled\" aria-disabled=\"true\">Create Storage</a>\n" +
     "</p>\n" +
+    "</div>\n" +
+    "<div ng-if=\"filterWithZeroResults\">\n" +
+    "<h2>The filter is hiding all persistent volume claims. <a href=\"\" ng-click=\"clearFilter()\">Clear Filter</a></h2>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<table ng-if=\"(pvcs | hashSize) > 0\" class=\"table table-bordered table-mobile table-layout-fixed\">\n" +
