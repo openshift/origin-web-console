@@ -59,6 +59,7 @@ angular.module('openshiftConsole')
         var clearHover = function() {
           _.each($scope.navItems, function(navItem) {
             navItem.isHover = false;
+            navItem.fakeHover = false;
           });
         };
 
@@ -101,6 +102,8 @@ angular.module('openshiftConsole')
           // activated using the keyboard.
           clearHover();
 
+          primaryItem.fakeHover = true;
+
           // Open the item regardless of whether the mouse is really over it
           // for keyboard and screen reader accessibility.
           primaryItem.isHover = true;
@@ -136,6 +139,7 @@ angular.module('openshiftConsole')
             primaryItem.mouseEnterTimeout = null;
           }
 
+          primaryItem.fakeHover = false;
           primaryItem.mouseLeaveTimeout = $timeout(function() {
             primaryItem.isHover = false;
             primaryItem.mouseLeaveTimeout = null;
