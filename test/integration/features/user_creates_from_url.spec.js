@@ -45,12 +45,14 @@ describe('authenticated e2e-user', function() {
   // NOTE: beforeAll vs beforeEach.
   // these tests only do the setup once.
   beforeAll(() => {
+    common.beforeAll();
     common.beforeEach();
     setupEnv();
   });
 
   afterAll(() => {
     common.afterEach();
+    common.afterAll();
     resetExtensions();
   });
 

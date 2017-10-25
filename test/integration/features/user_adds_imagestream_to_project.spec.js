@@ -20,6 +20,14 @@ describe('User adds an image stream to a project', () => {
     common.afterEach();
   });
 
+  beforeAll(() => {
+    common.beforeAll();
+  });
+
+  afterAll(() => {
+    common.afterAll();
+  });
+  
   describe('after creating a new project', () => {
     describe('using the Import YAML tab', () => {
       it('should process and create the images in the image stream', () => {

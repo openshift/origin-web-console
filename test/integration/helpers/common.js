@@ -1,5 +1,6 @@
 'use strict';
 
+const environment = require('../environment');
 const windowHelper = require('../helpers/window');
 const projectHelpers = require('../helpers/project');
 const timing = require('../helpers/timing');
@@ -9,6 +10,17 @@ const LoginPage = require('../page-objects/login').LoginPage;
 
 exports.beforeAll = () => {
   windowHelper.setSize();
+  if(environment.isMac) {
+    logger.log('local env: deleting all projects...');
+    projectHelpers.deleteAllProjects();
+  }
+};
+
+exports.afterAll = () => {
+  if(environment.isMac) {
+    logger.log('local env: deleting all projects...');
+    projectHelpers.deleteAllProjects();
+  }
 };
 
 exports.beforeEach = () => {
@@ -19,7 +31,6 @@ exports.beforeEach = () => {
   let loginPage = new LoginPage();
   loginPage.login();
   browser.driver.sleep(timing.standardDelay);
-  projectHelpers.deleteAllProjects();
 };
 
 

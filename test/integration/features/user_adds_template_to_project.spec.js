@@ -22,6 +22,14 @@ describe('User adds a template to a project', () => {
     common.afterEach();
   });
 
+  beforeAll(() => {
+    common.beforeAll();
+  });
+
+  afterAll(() => {
+    common.afterAll();
+  });
+
   // TODO: the expect() statements below are using hard-coded values
   // rather than testing against the fixture itself.  This is fine for
   // now, but if we ever update the fixture the tests will likely break.

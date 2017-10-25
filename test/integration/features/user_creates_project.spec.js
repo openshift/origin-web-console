@@ -21,6 +21,17 @@ describe('Authenticated user creates a new project', () => {
     common.afterEach();
   });
 
+  // NOTE: beforeAll vs beforeEach.
+  // these tests only do the setup once.
+  beforeAll(() => {
+    common.beforeAll();
+  });
+
+  afterAll(() => {
+    common.afterAll();
+  });
+
+
   it('should be able to create a new project', () => {
 
     let project = projectHelpers.projectDetails();
