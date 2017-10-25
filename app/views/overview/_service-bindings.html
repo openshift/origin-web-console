@@ -10,16 +10,16 @@
     service-instances="$ctrl.serviceInstances"
     secrets="$ctrl.secrets">
   </service-binding>
-  <div ng-if="!$ctrl.refApiObject.metadata.deletionTimestamp && ($ctrl.bindableServiceInstances | size) && ({resource: 'servicebindings', group: 'servicecatalog.k8s.io'} | canI : 'create')">
+  <p ng-if="!$ctrl.refApiObject.metadata.deletionTimestamp && ($ctrl.bindableServiceInstances | size) && ({resource: 'servicebindings', group: 'servicecatalog.k8s.io'} | canI : 'create')">
     <a href="" ng-click="$ctrl.createBinding()" role="button">
       <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>
       Create Binding
     </a>
-  </div>
-  <div ng-if="($ctrl.refApiObject.kind !== 'ServiceInstance')  && !($ctrl.bindableServiceInstances | size)">
+  </p>
+  <p ng-if="($ctrl.refApiObject.kind !== 'ServiceInstance')  && !($ctrl.bindableServiceInstances | size)">
     <span>You must have a bindable service in your namespace in order to create bindings.</span>
     <div>
       <a href="./">Browse Catalog</a>
     </div>
-  </div>
+  </p>
 </div>

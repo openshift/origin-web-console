@@ -3737,12 +3737,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"parameterSchema.properties\" class=\"config-parameters-form\">\n" +
     "<h3>\n" +
     "<span>Configuration</span>\n" +
-    "<a href=\"\" class=\"hide-show-link\" ng-click=\"toggleShowParameterValues()\" role=\"button\">\n" +
+    "<a ng-if=\"allowParametersReveal\" href=\"\" class=\"hide-show-link\" ng-click=\"toggleShowParameterValues()\" role=\"button\">\n" +
     "{{showParameterValues ? 'Hide Values' : 'Reveal Values'}}\n" +
     "</a>\n" +
     "</h3>\n" +
     "<form name=\"forms.orderConfigureForm\">\n" +
-    "<catalog-parameters hide-values=\"!showParameterValues\" model=\"parameterData\" parameter-schema=\"parameterSchema\" parameter-form-definition=\"parameterFormDefinition\" is-horizontal=\"true\" read-only=\"true\">\n" +
+    "<catalog-parameters hide-values=\"!showParameterValues\" opaque-keys=\"opaqueParameterKeys\" model=\"parameterData\" parameter-schema=\"parameterSchema\" parameter-form-definition=\"parameterFormDefinition\" is-horizontal=\"true\" read-only=\"true\">\n" +
     "</catalog-parameters>\n" +
     "</form>\n" +
     "</div>\n" +
@@ -5677,11 +5677,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"service-binding-parameters\" ng-if=\"!$ctrl.isOverview && $ctrl.bindParameterSchema.properties\">\n" +
     "<span class=\"component-label\">Parameters</span>\n" +
-    "<a href=\"\" class=\"hide-show-link\" ng-click=\"$ctrl.toggleShowParameterValues()\" role=\"button\">\n" +
+    "<a ng-if=\"$ctrl.allowParametersReveal\" href=\"\" class=\"hide-show-link\" ng-click=\"$ctrl.toggleShowParameterValues()\" role=\"button\">\n" +
     "{{$ctrl.showParameterValues ? 'Hide Values' : 'Reveal Values'}}\n" +
     "</a>\n" +
     "<form name=\"ctrl.parametersForm\">\n" +
-    "<catalog-parameters hide-values=\"!$ctrl.showParameterValues\" model=\"$ctrl.parameterData\" parameter-form-definition=\"$ctrl.bindParameterFormDefinition\" parameter-schema=\"$ctrl.bindParameterSchema\" is-horizontal=\"true\" read-only=\"true\">\n" +
+    "<catalog-parameters hide-values=\"!$ctrl.showParameterValues\" opaque-keys=\"$ctrl.opaqueParameterKeys\" model=\"$ctrl.parameterData\" parameter-form-definition=\"$ctrl.bindParameterFormDefinition\" parameter-schema=\"$ctrl.bindParameterSchema\" is-horizontal=\"true\" read-only=\"true\">\n" +
     "</catalog-parameters>\n" +
     "</form>\n" +
     "</div>\n" +
@@ -6705,9 +6705,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-model=\"$ctrl.entries\" class=\"environment-from-editor\" as-sortable=\"$ctrl.dragControlListeners\">\n" +
     "<div class=\"environment-from-entry\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\" ng-repeat=\"entry in $ctrl.envFromEntries\" as-sortable-item>\n" +
     "<div class=\"form-group environment-from-input\">\n" +
-    "<div ng-if=\"$ctrl.isEnvFromReadonly(entry)\" class=\"faux-input-group\">\n" +
+    "<div ng-if=\"$ctrl.isEnvFromReadonly(entry) || !$ctrl.hasOptions()\" class=\"faux-input-group\">\n" +
     "<div ng-if=\"!entry.configMapRef.name && !entry.secretRef.name\">\n" +
-    "No secrets or config maps have been added as Environment From.\n" +
+    "No config maps or secrets have been added as Environment From.\n" +
     "</div>\n" +
     "<div ng-if=\"entry.configMapRef.name || entry.secretRef.name\" class=\"faux-form-control readonly\">\n" +
     "Use all keys and values from\n" +
@@ -6715,7 +6715,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"entry.secretRef.name\">secret {{entry.secretRef.name}}</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"!$ctrl.isEnvFromReadonly(entry)\">\n" +
+    "<div ng-if=\"!$ctrl.isEnvFromReadonly(entry) && $ctrl.hasOptions()\">\n" +
     "<div class=\"ui-select\">\n" +
     "<ui-select ng-model=\"entry.selectedEnvFrom\" ng-required=\"entry.selectedEnvFrom\" on-select=\"$ctrl.envFromObjectSelected($index, entry, $select.selected)\" ng-class=\"{'{{$ctrl.setFocusClass}}' : $last}\">\n" +
     "<ui-select-match placeholder=\"Select a resource\">\n" +
@@ -6724,23 +6724,23 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<small class=\"text-muted\">&ndash; {{$select.selected.kind | humanizeKind : true}}</small>\n" +
     "</span>\n" +
     "</ui-select-match>\n" +
-    "<ui-select-choices ui-disable-choice=\"$ctrl.checkEntries(source, entry.selectedEnvFrom)\" repeat=\"source in $ctrl.envFromSelectorOptions | filter : { metadata: { name: $select.search } } track by (source | uid)\" group-by=\"$ctrl.groupByKind\">\n" +
+    "<ui-select-choices repeat=\"source in $ctrl.envFromSelectorOptions | filter : { metadata: { name: $select.search } } track by (source | uid)\" group-by=\"$ctrl.groupByKind\">\n" +
     "<span ng-bind-html=\"source.metadata.name | highlight : $select.search\"></span>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"!$ctrl.isReadonlyAny && !entry.isReadonlyValue\" class=\"environment-from-editor-button\">\n" +
+    "<div ng-if=\"!$ctrl.isEnvFromReadonly(entry) && $ctrl.hasEntries()\" class=\"environment-from-editor-button\">\n" +
     "<span ng-if=\"!$ctrl.cannotSort && $ctrl.entries.length > 1\" class=\"fa fa-bars sort-row\" role=\"button\" aria-label=\"Move row\" aria-grabbed=\"false\" as-sortable-item-handle></span>\n" +
     "<a ng-if=\"!$ctrl.cannotDeleteAny\" href=\"\" class=\"pficon pficon-close delete-row as-sortable-item-delete\" role=\"button\" aria-label=\"Delete row\" ng-click=\"$ctrl.deleteEntry($index, 1)\"></a>\n" +
     "</div>\n" +
     "<div class=\"environment-from-view-details\">\n" +
-    "<a ng-if=\"entry.selectedEnvFrom\" href=\"\" ng-click=\"$ctrl.viewOverlayPanel(entry.selectedEnvFrom)\">View Details</a>\n" +
+    "<a href=\"\" ng-if=\"entry.selectedEnvFrom\" ng-click=\"$ctrl.viewOverlayPanel(entry.selectedEnvFrom)\">View Details</a>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"environment-from-entry form-group\" ng-if=\"!$ctrl.cannotAdd\">\n" +
-    "<a href=\"\" class=\"add-row-link\" role=\"button\" ng-click=\"$ctrl.onAddRow()\">{{ $ctrl.addRowLink }}</a>\n" +
+    "<div class=\"environment-from-entry form-group\" ng-if=\"!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()\">\n" +
+    "<a href=\"\" class=\"add-row-link\" role=\"button\" ng-click=\"$ctrl.onAddRow()\">{{$ctrl.addRowLink}}</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "<overlay-panel class=\"add-config-to-application\" show-panel=\"$ctrl.overlayPanelVisible\" show-close=\"true\" handle-close=\"$ctrl.closeOverlayPanel\">\n" +
@@ -6794,7 +6794,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Environment From\n" +
     "<span class=\"pficon pficon-help\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Environment From lets you add all key-value pairs from a config map or secret as environment variables.\"></span>\n" +
     "</h4>\n" +
-    "<edit-environment-from entries=\"container.envFrom\" selector-placeholder=\"Config Map/Secret\" env-from-selector-options=\"$ctrl.valueFromObjects\" add-row-link=\"Add ALL Values from Config Map or Secret\" show-header>\n" +
+    "<edit-environment-from entries=\"container.envFrom\" selector-placeholder=\"Config Map/Secret\" env-from-selector-options=\"$ctrl.valueFromObjects\" add-row-link=\"Add ALL Values from Config Map or Secret\" is-readonly=\"$ctrl.ngReadonly\" show-header>\n" +
     "</edit-environment-from>\n" +
     "</div>\n" +
     "<button class=\"btn btn-default\" ng-if=\"$ctrl.canIUpdate && !$ctrl.ngReadonly\" ng-click=\"$ctrl.save()\" ng-disabled=\"$ctrl.form.$pristine || $ctrl.form.$invalid\">Save</button>\n" +
@@ -7306,7 +7306,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<overlay-panel show-panel=\"ordering.panelName\" handle-close=\"closeOrderingPanel\">\n" +
     "<deploy-image-dialog ng-if=\"ordering.panelName === 'deployImage'\" project=\"currentProject\" context=\"context\" on-dialog-closed=\"closeOrderingPanel\"></deploy-image-dialog>\n" +
     "<from-file-dialog ng-if=\"ordering.panelName === 'fromFile'\" project=\"currentProject\" context=\"context\" on-dialog-closed=\"closeOrderingPanel\"></from-file-dialog>\n" +
-    "<process-template-dialog ng-if=\"ordering.panelName === 'fromProject'\" project=\"project\" use-project-template=\"true\" on-dialog-closed=\"closeOrderingPanel\"></process-template-dialog>\n" +
+    "<process-template-dialog ng-if=\"ordering.panelName === 'fromProject'\" project=\"currentProject\" use-project-template=\"true\" on-dialog-closed=\"closeOrderingPanel\"></process-template-dialog>\n" +
     "</overlay-panel>"
   );
 
@@ -9225,15 +9225,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h3 ng-if=\"$ctrl.showHeader\">Bindings</h3>\n" +
     "<service-binding ng-repeat=\"binding in $ctrl.bindings track by (binding | uid)\" is-overview=\"$ctrl.isOverview\" namespace=\"binding.metadata.namespace\" binding=\"binding\" ref-api-object=\"$ctrl.serviceInstance\">\n" +
     "</service-binding>\n" +
-    "<div ng-if=\"$ctrl.bindable\">\n" +
+    "<p ng-if=\"$ctrl.bindable\">\n" +
     "<a href=\"\" ng-click=\"$ctrl.createBinding()\" role=\"button\">\n" +
     "<span class=\"pficon pficon-add-circle-o\" aria-hidden=\"true\"></span>\n" +
     "Create Binding\n" +
     "</a>\n" +
-    "</div>\n" +
-    "<div ng-if=\"!$ctrl.bindable && !($ctrl.bindings | size)\">\n" +
+    "</p>\n" +
+    "<p ng-if=\"!$ctrl.bindable && !($ctrl.bindings | size)\">\n" +
     "<span>There are no service bindings.</span>\n" +
-    "</div>\n" +
+    "</p>\n" +
     "</div>\n" +
     "<overlay-panel show-panel=\"$ctrl.overlayPanelVisible\" handle-close=\"$ctrl.closeOverlayPanel\">\n" +
     "<bind-service target=\"$ctrl.serviceInstance\" project=\"$ctrl.project\" on-close=\"$ctrl.closeOverlayPanel\"></bind-service>\n" +
@@ -12462,18 +12462,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"section-title hidden-xs\">{{$ctrl.sectionTitle}}</div>\n" +
     "<service-binding ng-repeat=\"binding in $ctrl.bindings track by (binding | uid)\" is-overview=\"true\" namespace=\"$ctrl.namespace\" ref-api-object=\"$ctrl.refApiObject\" binding=\"binding\" service-classes=\"$ctrl.serviceClasses\" service-instances=\"$ctrl.serviceInstances\" secrets=\"$ctrl.secrets\">\n" +
     "</service-binding>\n" +
-    "<div ng-if=\"!$ctrl.refApiObject.metadata.deletionTimestamp && ($ctrl.bindableServiceInstances | size) && ({resource: 'servicebindings', group: 'servicecatalog.k8s.io'} | canI : 'create')\">\n" +
+    "<p ng-if=\"!$ctrl.refApiObject.metadata.deletionTimestamp && ($ctrl.bindableServiceInstances | size) && ({resource: 'servicebindings', group: 'servicecatalog.k8s.io'} | canI : 'create')\">\n" +
     "<a href=\"\" ng-click=\"$ctrl.createBinding()\" role=\"button\">\n" +
     "<span class=\"pficon pficon-add-circle-o\" aria-hidden=\"true\"></span>\n" +
     "Create Binding\n" +
     "</a>\n" +
-    "</div>\n" +
-    "<div ng-if=\"($ctrl.refApiObject.kind !== 'ServiceInstance')  && !($ctrl.bindableServiceInstances | size)\">\n" +
+    "</p>\n" +
+    "<p ng-if=\"($ctrl.refApiObject.kind !== 'ServiceInstance')  && !($ctrl.bindableServiceInstances | size)\">\n" +
     "<span>You must have a bindable service in your namespace in order to create bindings.</span>\n" +
     "<div>\n" +
     "<a href=\"./\">Browse Catalog</a>\n" +
     "</div>\n" +
-    "</div>\n" +
+    "</p>\n" +
     "</div>"
   );
 

@@ -8,7 +8,6 @@
       </div>
     </div>
   </div>
-
   <div ng-model="$ctrl.entries" class="environment-from-editor" as-sortable="$ctrl.dragControlListeners">
     <div
       class="environment-from-entry"
@@ -18,9 +17,9 @@
       as-sortable-item>
 
       <div class="form-group environment-from-input">
-        <div ng-if="$ctrl.isEnvFromReadonly(entry)" class="faux-input-group">
+        <div ng-if="$ctrl.isEnvFromReadonly(entry) || !$ctrl.hasOptions()" class="faux-input-group">
           <div ng-if="!entry.configMapRef.name && !entry.secretRef.name">
-            No secrets or config maps have been added as Environment From.
+            No config maps or secrets have been added as Environment From.
           </div>
           <div ng-if="entry.configMapRef.name || entry.secretRef.name" class="faux-form-control readonly">
             Use all keys and values from
@@ -29,7 +28,7 @@
           </div>
         </div>
 
-        <div ng-if="!$ctrl.isEnvFromReadonly(entry)">
+        <div ng-if="!$ctrl.isEnvFromReadonly(entry) && $ctrl.hasOptions()">
           <div class="ui-select">
             <ui-select ng-model="entry.selectedEnvFrom"
                        ng-required="entry.selectedEnvFrom"
@@ -42,7 +41,6 @@
                 </span>
               </ui-select-match>
               <ui-select-choices
-                ui-disable-choice="$ctrl.checkEntries(source, entry.selectedEnvFrom)"
                 repeat="source in $ctrl.envFromSelectorOptions | filter : { metadata: { name: $select.search } } track by (source | uid)"
                 group-by="$ctrl.groupByKind">
                 <span ng-bind-html="source.metadata.name | highlight : $select.search"></span>
@@ -52,7 +50,7 @@
         </div>
       </div>
 
-      <div ng-if="!$ctrl.isReadonlyAny && !entry.isReadonlyValue" class="environment-from-editor-button">
+      <div ng-if="!$ctrl.isEnvFromReadonly(entry) && $ctrl.hasEntries()" class="environment-from-editor-button">
         <span
           ng-if="!$ctrl.cannotSort && $ctrl.entries.length > 1"
           class="fa fa-bars sort-row"
@@ -70,18 +68,18 @@
       </div>
       <div class="environment-from-view-details">
         <a
-          ng-if="entry.selectedEnvFrom"
           href=""
+          ng-if="entry.selectedEnvFrom"
           ng-click="$ctrl.viewOverlayPanel(entry.selectedEnvFrom)">View Details</a>
       </div>
     </div>
 
-    <div class="environment-from-entry form-group" ng-if="!$ctrl.cannotAdd">
+    <div class="environment-from-entry form-group" ng-if="!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()">
       <a
         href=""
         class="add-row-link"
         role="button"
-        ng-click="$ctrl.onAddRow()">{{ $ctrl.addRowLink }}</a>
+        ng-click="$ctrl.onAddRow()">{{$ctrl.addRowLink}}</a>
     </div>
   </div>
 
