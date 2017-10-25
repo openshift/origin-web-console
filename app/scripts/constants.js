@@ -64,6 +64,33 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
   CLI: {
     "Latest Release":          "https://access.redhat.com/downloads/content/290"
   },
+
+  // Change the minishift link to the CDK for enterprise.
+  CATALOG_HELP_RESOURCES: {
+    links: [
+      {
+        title: 'Documentation',
+        help: ''
+      },
+      {
+        title: 'Interactive Learning Portal',
+        href: 'https://learn.openshift.com'
+      },
+      {
+        title: 'Container Development Kit',
+        href: 'https://developers.redhat.com/products/cdk/overview/'
+      },
+      {
+        title: 'YouTube',
+        href: 'https://www.youtube.com/user/rhopenshift'
+      },
+      {
+        title: 'Blog',
+        href: 'https://blog.openshift.com'
+      }
+    ]
+  },
+
   // The default CPU target percentage for horizontal pod autoscalers created or edited in the web console.
   // This value is set in the HPA when the input is left blank.
   DEFAULT_HPA_CPU_TARGET_PERCENT: 80,

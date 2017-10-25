@@ -590,6 +590,24 @@ default: "welcome/index.html"
 CLI: {
 "Latest Release": "https://access.redhat.com/downloads/content/290"
 },
+CATALOG_HELP_RESOURCES: {
+links: [ {
+title: "Documentation",
+help: ""
+}, {
+title: "Interactive Learning Portal",
+href: "https://learn.openshift.com"
+}, {
+title: "Container Development Kit",
+href: "https://developers.redhat.com/products/cdk/overview/"
+}, {
+title: "YouTube",
+href: "https://www.youtube.com/user/rhopenshift"
+}, {
+title: "Blog",
+href: "https://blog.openshift.com"
+} ]
+},
 DEFAULT_HPA_CPU_TARGET_PERCENT: 80,
 DISABLE_OVERVIEW_METRICS: !1,
 DISABLE_CUSTOM_METRICS: !1,
