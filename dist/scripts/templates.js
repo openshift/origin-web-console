@@ -12591,8 +12591,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"alert word-break alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">warning</span>\n" +
-    "<span class=\"strong\">The service was marked for deletion</span>\n" +
-    "<span class=\"strong\" am-time-ago=\"row.apiObject.metadata.deletionTimestamp\"></span>.\n" +
+    "<span class=\"strong\">The service was marked for deletion.</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
