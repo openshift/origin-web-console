@@ -5,13 +5,13 @@
 .nav-pf-vertical {
   background-color: @nav-pf-vertical-bg-color;
   top: @navbar-os-header-height-mobile;
-  transition: width .1s ease-in-out, left .1s ease-in-out;
   z-index: 990;
   @media(min-width: @screen-sm-min) {
     // Hide at wider screen widths unless there is a project.
     display: none;
   }
   .has-project-bar & {
+    transition: width .1s ease-in-out, left .1s ease-in-out;
     top: (@navbar-os-header-height-mobile + @project-bar-height-mobile);
     @media(min-width: @screen-sm-min) {
       display: block;
