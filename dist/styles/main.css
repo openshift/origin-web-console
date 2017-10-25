@@ -4910,6 +4910,7 @@ pre.clipped.scroll{max-height:150px;overflow:auto;width:100%}
 }
 .layout-pf.layout-pf-fixed{height:1px}
 .layout-pf.layout-pf-fixed body{height:1px;padding-top:41px}
+.layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical,.layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical .view{height:100%}
 @media (min-width:768px){.data-toolbar .data-toolbar-filter{flex:1 1 0%}
 .data-toolbar .vertical-divider+.data-toolbar-filter{margin-top:0}
 .layout-pf.layout-pf-fixed body{padding-top:61px}
@@ -4919,10 +4920,9 @@ pre.clipped.scroll{max-height:150px;overflow:auto;width:100%}
 .layout-pf.layout-pf-fixed body.has-project-bar .container-pf-nav-pf-vertical{margin-left:220px}
 .layout-pf.layout-pf-fixed body.has-project-bar .container-pf-nav-pf-vertical.collapsed-nav{margin-left:75px}
 }
-.layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical{height:100%;transition:margin-left .1s ease-in-out}
 .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical,.layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.collapsed-nav{margin-left:0}
 .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical .middle-header{margin-bottom:20px}
-.layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical .view{height:100%}
+.layout-pf.layout-pf-fixed .has-project-bar .container-pf-nav-pf-vertical{transition:margin-left .1s ease-in-out}
 .surface-shaded{background-color:#ededed;min-height:100%}
 .list-pf-actions .actions-dropdown-kebab{font-size:18px;margin-right:-5px}
 .list-pf-actions .dropdown .btn-link{color:#252525;font-size:17px;line-height:1;padding:4px 10px;margin-left:-10px;margin-right:-10px}
@@ -5759,8 +5759,8 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .appended-icon{display:inline-block}
 .block{display:block}
 .text-prepended-icon{align-items:baseline;display:flex}
-.nav-pf-vertical{background-color:#292e34;top:41px;transition:width .1s ease-in-out,left .1s ease-in-out;z-index:990}
-.has-project-bar .nav-pf-vertical{top:69px}
+.nav-pf-vertical{background-color:#292e34;top:41px;z-index:990}
+.has-project-bar .nav-pf-vertical{transition:width .1s ease-in-out,left .1s ease-in-out;top:69px}
 @media (min-width:768px){.nav-pf-vertical{display:none}
 .has-project-bar .nav-pf-vertical{display:block;top:101px}
 }
