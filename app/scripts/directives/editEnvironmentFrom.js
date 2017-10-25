@@ -8,11 +8,9 @@
       EditEnvironmentFrom
     ],
     bindings: {
-      addRowLink: '@',              // creates a link to "add row" and sets its text label
-      entries: '=',                 // an array of objects containing configmaps and secrets
-      envFromSelectorOptions: '<',  // dropdown selector options, an array of objects
-      selectorPlaceholder: '@',     // placeholder copy for dropdown selector
-      isReadonly: '<?'              // display as read only values
+      entries: '=',                         // an array of objects containing configmaps and secrets
+      envFromSelectorOptions: '<',          // dropdown selector options, an array of objects
+      isReadonly: '<?'                      // display as read only values
     },
     templateUrl: 'views/directives/edit-environment-from.html'
   });
@@ -52,7 +50,7 @@
 
       ctrl.envFromEntries.splice(start, deleteCount);
 
-      if(!ctrl.envFromEntries.length && ctrl.addRowLink) {
+      if(!ctrl.envFromEntries.length) {
         addEntry(ctrl.envFromEntries);
       }
 
@@ -105,6 +103,10 @@
           break;
       }
 
+      if (entry.prefix) {
+        newEnvFrom.prefix = entry.prefix;
+      }
+
       _.assign(ctrl.envFromEntries[index], newEnvFrom);
       ctrl.updateEntries(ctrl.envFromEntries);
     };
@@ -121,7 +123,7 @@
 
       ctrl.envFromEntries = ctrl.entries || [];
 
-      if(!ctrl.envFromEntries.length) {
+      if (!ctrl.envFromEntries.length) {
         addEntry(ctrl.envFromEntries);
       }
 

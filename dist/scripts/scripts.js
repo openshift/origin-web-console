@@ -9232,7 +9232,7 @@ e && e.push(t || {});
 a.onAddRow = function() {
 s(a.envFromEntries), n.setFocusOn("." + a.setFocusClass);
 }, a.deleteEntry = function(e, t) {
-a.envFromEntries && !a.envFromEntries.length || (a.envFromEntries.splice(e, t), !a.envFromEntries.length && a.addRowLink && s(a.envFromEntries), a.updateEntries(a.envFromEntries), a.editEnvironmentFromForm.$setDirty());
+a.envFromEntries && !a.envFromEntries.length || (a.envFromEntries.splice(e, t), a.envFromEntries.length || s(a.envFromEntries), a.updateEntries(a.envFromEntries), a.editEnvironmentFromForm.$setDirty());
 }, a.hasOptions = function() {
 return !_.isEmpty(a.envFromSelectorOptions);
 }, a.hasEntries = function() {
@@ -9264,7 +9264,7 @@ r.configMapRef = {
 name: n.metadata.name
 }, delete a.envFromEntries[e].secretRef;
 }
-_.assign(a.envFromEntries[e], r), a.updateEntries(a.envFromEntries);
+t.prefix && (r.prefix = t.prefix), _.assign(a.envFromEntries[e], r), a.updateEntries(a.envFromEntries);
 }, a.updateEntries = function(e) {
 a.entries = _.filter(e, function(e) {
 return e.secretRef || e.configMapRef;
@@ -9296,10 +9296,8 @@ c(), "cannotDelete" in e && (a.cannotDeleteAny = !0), "cannotSort" in e && (a.ca
 };
 } ],
 bindings: {
-addRowLink: "@",
 entries: "=",
 envFromSelectorOptions: "<",
-selectorPlaceholder: "@",
 isReadonly: "<?"
 },
 templateUrl: "views/directives/edit-environment-from.html"
