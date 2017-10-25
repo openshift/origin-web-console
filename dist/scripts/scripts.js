@@ -101,7 +101,7 @@ R.deploymentConfigsNoPipeline = _.sortBy(e, "metadata.name"), R.pipelineViewHasO
 R.disableFilter = "pipeline" === R.viewBy && _.isEmpty(R.pipelineBuildConfigs);
 }, se = function(e) {
 return v.getLabelSelector().select(e);
-}, ce = [ "metadata.name", "spec.externalClusterServiceClassName" ], le = function(e) {
+}, ce = [ "metadata.name", "spec.clusterServiceClassExternalName" ], le = function(e) {
 return g.filterForKeywords(e, ce, W.filterKeywords);
 }, ue = function(e) {
 switch (R.filterBy) {
