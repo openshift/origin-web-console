@@ -4443,48 +4443,48 @@ g(e, t), f(e);
 };
 } ]), angular.module("openshiftConsole").controller("LandingPageController", [ "$scope", "$rootScope", "AuthService", "Catalog", "Constants", "DataService", "Navigate", "NotificationsService", "RecentlyViewedServiceItems", "GuidedTourService", "HTMLService", "$timeout", "$q", "$routeParams", "$location", function(e, t, n, a, r, o, i, s, c, l, u, d, m, p, f) {
 function g() {
-var n = f.search().serviceClass;
-if (n) {
-var a = _.find(e.catalogItems, {
+var t = f.search();
+return t.serviceExternalName ? _.find(e.catalogItems, {
 resource: {
-metadata: {
-name: n
+spec: {
+externalName: t.serviceExternalName
 }
 }
-});
-if (a) return void e.$broadcast("open-overlay-panel", a);
+}) : null;
 }
-if (h) if (p.startTour) d(function() {
+function v() {
+var n = g();
+if (n) e.$broadcast("open-overlay-panel", n); else if (y) if (p.startTour) d(function() {
 f.replace(), f.search("startTour", null), e.startGuidedTour();
-}, 500); else if (_.get(v, "auto_launch")) {
-var r = "openshift/viewedHomePage/" + t.user.metadata.name;
-"true" !== localStorage.getItem(r) && d(function() {
-e.startGuidedTour() && localStorage.setItem(r, "true");
+}, 500); else if (_.get(h, "auto_launch")) {
+var a = "openshift/viewedHomePage/" + t.user.metadata.name;
+"true" !== localStorage.getItem(a) && d(function() {
+e.startGuidedTour() && localStorage.setItem(a, "true");
 }, 500);
 }
 }
-var v = _.get(r, "GUIDED_TOURS.landing_page_tour"), h = v && v.enabled && v.steps;
+var h = _.get(r, "GUIDED_TOURS.landing_page_tour"), y = h && h.enabled && h.steps;
 e.saasOfferings = r.SAAS_OFFERINGS, e.viewMembership = function(e) {
 i.toProjectMembership(e.metadata.name);
-}, h && (e.startGuidedTour = function() {
-return !u.isWindowBelowBreakpoint(u.WINDOW_SIZE_SM) && (l.startTour(v.steps), !0);
+}, y && (e.startGuidedTour = function() {
+return !u.isWindowBelowBreakpoint(u.WINDOW_SIZE_SM) && (l.startTour(h.steps), !0);
 }), s.clearNotifications();
-var y = function() {
+var b = function() {
 var t = _.get(e, "template.metadata.uid");
 t && c.addItem(t);
-}, b = function(e) {
-return "PartialObjectMetadata" === e.kind;
 }, S = function(e) {
-return b(e) ? o.get("templates", e.metadata.name, {
+return "PartialObjectMetadata" === e.kind;
+}, C = function(e) {
+return S(e) ? o.get("templates", e.metadata.name, {
 namespace: e.metadata.namespace
 }) : m.when(e);
 };
 e.templateSelected = function(t) {
-S(t).then(function(t) {
+C(t).then(function(t) {
 _.set(e, "ordering.panelName", "template"), e.template = t;
 });
 }, e.closeOrderingPanel = function() {
-e.template && (y(), e.template = null), _.set(e, "ordering.panelName", "");
+e.template && (b(), e.template = null), _.set(e, "ordering.panelName", "");
 }, e.deployImageSelected = function() {
 _.set(e, "ordering.panelName", "deployImage");
 }, e.fromFileSelected = function() {
@@ -4501,11 +4501,11 @@ message: n
 };
 s.addNotification(a);
 }
-e.catalogItems = t, g();
+e.catalogItems = t, v();
 }));
 }), e.$on("$destroy", function() {
-y();
-}), h && e.$on("$locationChangeStart", function(t) {
+b();
+}), y && e.$on("$locationChangeStart", function(t) {
 f.search().startTour && (e.startGuidedTour(), t.preventDefault());
 });
 } ]), angular.module("openshiftConsole").factory("EventsService", [ "BrowserStore", function(e) {

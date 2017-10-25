@@ -110,23 +110,29 @@ angular.module('openshiftConsole')
       addTemplateToRecentlyViewed();
     });
 
-    function dataLoaded() {
-      // Check for a service class param to launch the catalog flow for
-      var paramClass = $location.search()['serviceClass'];
-      if (paramClass) {
-        // Search by class name e.g. cakephp-mysql-persistent
-        var paramItem = _.find($scope.catalogItems, {
+    function findParamServiceItem() {
+      var queryParams = $location.search();
+      if (queryParams.serviceExternalName) {
+        return _.find($scope.catalogItems, {
           resource: {
-            metadata: {
-              name: paramClass
+            spec: {
+              externalName: queryParams.serviceExternalName
             }
           }
         });
-        // If a catalog item matches, lauch the catalog flow
-        if (paramItem) {
-          $scope.$broadcast('open-overlay-panel', paramItem);
-          return;
-        }
+      }
+
+      return null;
+    }
+
+    function dataLoaded() {
+      // Check for a service to immediately launch the catalog flow for. The
+      // service external name can be passed as a query parameter. Service
+      // external name is unique for each cluster.
+      var serviceItem = findParamServiceItem();
+      if (serviceItem) {
+        $scope.$broadcast('open-overlay-panel', serviceItem);
+        return;
       }
 
       if (!tourEnabled) {
