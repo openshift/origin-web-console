@@ -37,6 +37,13 @@ notification-drawer-wrapper {
       display: block !important;
     }
   }
+  // override .drawer-pf-notification bg when not clickable
+  .drawer-pf-notification-inner {
+    background-color: #fff;
+  }
+  .drawer-pf-notification-inner.is-clickable:hover {
+    background-color: #def3ff;
+  }
   // the whole block is clickable, need to set pointer on all of these
   // for the correct visual
   .drawer-pf-notification-inner.is-clickable,
