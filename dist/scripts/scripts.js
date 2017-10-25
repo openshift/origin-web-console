@@ -6387,12 +6387,12 @@ e.editAvailable = n && v(e.serviceInstance) && !_.get(e.serviceInstance, "metada
 e.parameterFormDefinition = angular.copy(_.get(e.plan, "spec.externalMetadata.schemas.service_instance.update.openshift_form_definition")), e.parameterSchema = _.get(e.plan, "spec.instanceCreateParameterSchema"), b();
 }, w = function() {
 !e.serviceInstance || e.serviceClass || m || (m = d.fetchServiceClassForInstance(e.serviceInstance).then(function(t) {
-e.serviceClass = t, e.displayName = g(e.serviceInstance, e.serviceClass), y(), m = null, i.getServicePlans().then(function(t) {
+e.serviceClass = t, e.displayName = g(e.serviceInstance, e.serviceClass), y(), m = null, i.getServicePlansForServiceClass(e.serviceClass).then(function(t) {
 t = t.by("metadata.name");
-var n = i.groupPlansByServiceClassName(t);
-e.servicePlans = n[e.serviceClass.metadata.name];
-var a = _.get(e.serviceInstance, "spec.clusterServicePlanRef.name");
-e.plan = t[a], C(), S();
+var n = _.get(e.serviceInstance, "spec.clusterServicePlanRef.name");
+e.servicePlans = _.reject(t, function(e) {
+return _.get(e, "status.removedFromBrokerCatalog") && e.metadata.name !== n;
+}), e.plan = t[n], C(), S();
 });
 }));
 }, k = function(t, n) {
