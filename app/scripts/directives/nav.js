@@ -21,8 +21,8 @@ angular.module('openshiftConsole')
       templateUrl: 'views/_sidebar.html',
       controller: function($scope) {
         var path;
-        var hoverDelay = 300;
-        var hideDelay = hoverDelay + 200;
+        var hoverDelay = 200;
+        var hideDelay = hoverDelay + 100;
 
         $scope.navItems = Constants.PROJECT_NAVIGATION;
         $scope.sidebar = {};
@@ -89,6 +89,10 @@ angular.module('openshiftConsole')
         };
 
         $scope.itemClicked = function(primaryItem) {
+          // Remove `isHover` from any of the items if another primary item was
+          // activated using the keyboard.
+          clearHover();
+
           if (primaryItem.href) {
             // Make sure any secondary nav closes if a primary item with an
             // href was activated using the keyboard.
@@ -96,10 +100,6 @@ angular.module('openshiftConsole')
             $scope.sidebar.secondaryOpen = false;
             return;
           }
-
-          // Remove `isHover` from any of the items if another primary item was
-          // activated using the keyboard.
-          clearHover();
 
           // Open the item regardless of whether the mouse is really over it
           // for keyboard and screen reader accessibility.
@@ -110,10 +110,6 @@ angular.module('openshiftConsole')
         };
 
         $scope.onMouseEnter = function(primaryItem) {
-          if (_.isEmpty(primaryItem.secondaryNavSections)) {
-            return;
-          }
-
           if (primaryItem.mouseLeaveTimeout) {
             $timeout.cancel(primaryItem.mouseLeaveTimeout);
             primaryItem.mouseLeaveTimeout = null;
@@ -122,15 +118,11 @@ angular.module('openshiftConsole')
           primaryItem.mouseEnterTimeout = $timeout(function() {
             primaryItem.isHover = true;
             primaryItem.mouseEnterTimeout = null;
-            $scope.sidebar.secondaryOpen = true;
+            $scope.sidebar.secondaryOpen = !_.isEmpty(primaryItem.secondaryNavSections);
           }, hoverDelay);
         };
 
         $scope.onMouseLeave = function(primaryItem) {
-          if (_.isEmpty(primaryItem.secondaryNavSections)) {
-            return;
-          }
-
           if (primaryItem.mouseEnterTimeout) {
             $timeout.cancel(primaryItem.mouseEnterTimeout);
             primaryItem.mouseEnterTimeout = null;

@@ -11,7 +11,6 @@
     display: none;
   }
   .has-project-bar & {
-    transition: width .1s ease-in-out;
     top: (@navbar-os-header-height-mobile + @project-bar-height-mobile);
     @media(min-width: @screen-sm-min) {
       display: block;
@@ -29,29 +28,31 @@
       top: 0px;
       width: 100%;
     }
-    &.active > a,
-    &:focus > a,
-    &:hover > a,
-    > a:focus,
-    > a:hover {
-      background-color: @nav-pf-vertical-active-bg-color;
-      color: @nav-pf-vertical-active-color;
-      font-weight: 300;
-      &:after,
+    // override PatternFly :hover as we don't want :hover changes
+    &:hover > a {
+      background-color: transparent;
+      color: @nav-pf-vertical-color;
       .fa,
       .pficon {
-        color: @nav-pf-vertical-active-color;
+        color: @nav-pf-vertical-icon-color;
       }
     }
-    &.active > a {
+    > a:focus,
+    &.active > a,
+    &.is-hover > a {
+      background-color: @nav-pf-vertical-active-bg-color;
+      color: @nav-pf-vertical-active-color !important;
+      &:after {
+        color: @nav-pf-vertical-active-color !important;
+      }
       .fa,
       .pficon {
-        color: @nav-pf-vertical-active-icon-color !important;
+        color: @nav-pf-vertical-active-icon-color;
       }
     }
     > a {
       font-size: @font-size-base;
-      font-weight: 300;
+      font-weight: 300 !important;
       text-decoration: none;
       @media(max-width: @screen-xs-max) {
         height: auto;
@@ -70,23 +71,35 @@
         text-decoration: none !important;
       }
     }
-    // padding aligns arrow vertically
-    &.secondary-nav-item-pf > a:after {
-      padding: 16px 0;
-      @media(max-width: @screen-xs-max) {
-        padding: 8px 0;
+    &.secondary-nav-item-pf {
+      > a:after {
+        font-size: 14px; // make right arrow size consistent with project-bar arrows
+        padding: 16px 0; // padding aligns arrow vertically
+        @media(max-width: @screen-xs-max) {
+          padding: 8px 0;
+        }
       }
-    }
-    // make right arrow size consistent with project-bar arrows
-    &.secondary-nav-item-pf > a:after {
-      font-size: 14px;
+      &.is-hover > a {
+        width: @nav-pf-vertical-width + 1; // cover .nav-pf-vertical border-right
+        z-index: @zindex-navbar-fixed + 1; // raise z-index to overlay
+        &:after {
+          color: @nav-pf-vertical-active-color;
+          right: 21px; // move 1px to offset parent width 1px increase onHover due to pf rules
+        }
+      }
     }
   }
   &.collapsed {
-    .list-group-item.secondary-nav-item-pf:hover,
-    .list-group-item.secondary-nav-item-pf.active {
-      > a:after {
-        right: 12px !important; // prevent arrow moving onHover due to pf rules
+    .list-group-item.secondary-nav-item-pf {
+      &.is-hover > a {
+        width: @nav-pf-vertical-collapsed-width + 2; // cover .nav-pf-vertical.collapsed border-right
+      }
+      &.is-hover,
+      &:hover,
+      &.active {
+        > a:after {
+          right: 12px !important; // prevent arrow moving onHover due to pf rules
+        }
       }
     }
     .nav-pf-secondary-nav {

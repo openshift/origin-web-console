@@ -10507,18 +10507,18 @@ resource: e.canI.resource,
 group: e.canI.group
 }, e.canI.verb, l.projectName));
 }, l.itemClicked = function(e) {
-if (e.href) return l.nav.showMobileNav = !1, void (l.sidebar.secondaryOpen = !1);
-m(), e.isHover = !0, e.mobileSecondary = l.isMobile, l.sidebar.showMobileSecondary = l.isMobile, l.sidebar.secondaryOpen = !0;
+if (m(), e.href) return l.nav.showMobileNav = !1, void (l.sidebar.secondaryOpen = !1);
+e.isHover = !0, e.mobileSecondary = l.isMobile, l.sidebar.showMobileSecondary = l.isMobile, l.sidebar.secondaryOpen = !0;
 }, l.onMouseEnter = function(e) {
-_.isEmpty(e.secondaryNavSections) || (e.mouseLeaveTimeout && (n.cancel(e.mouseLeaveTimeout), e.mouseLeaveTimeout = null), e.mouseEnterTimeout = n(function() {
-e.isHover = !0, e.mouseEnterTimeout = null, l.sidebar.secondaryOpen = !0;
-}, 300));
+e.mouseLeaveTimeout && (n.cancel(e.mouseLeaveTimeout), e.mouseLeaveTimeout = null), e.mouseEnterTimeout = n(function() {
+e.isHover = !0, e.mouseEnterTimeout = null, l.sidebar.secondaryOpen = !_.isEmpty(e.secondaryNavSections);
+}, 200);
 }, l.onMouseLeave = function(e) {
-_.isEmpty(e.secondaryNavSections) || (e.mouseEnterTimeout && (n.cancel(e.mouseEnterTimeout), e.mouseEnterTimeout = null), e.mouseLeaveTimeout = n(function() {
+e.mouseEnterTimeout && (n.cancel(e.mouseEnterTimeout), e.mouseEnterTimeout = null), e.mouseLeaveTimeout = n(function() {
 e.isHover = !1, e.mouseLeaveTimeout = null, l.sidebar.secondaryOpen = _.some(l.navItems, function(e) {
 return e.isHover && !_.isEmpty(e.secondaryNavSections);
 });
-}, 500));
+}, 300);
 }, l.closeNav = function() {
 m(), l.nav.showMobileNav = !1, l.sidebar.secondaryOpen = !1;
 }, l.collapseMobileSecondary = function(e, t) {
