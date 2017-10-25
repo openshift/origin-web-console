@@ -11,7 +11,7 @@
     display: none;
   }
   .has-project-bar & {
-    transition: width .1s ease-in-out, left .1s ease-in-out;
+    transition: width .1s ease-in-out;
     top: (@navbar-os-header-height-mobile + @project-bar-height-mobile);
     @media(min-width: @screen-sm-min) {
       display: block;
@@ -99,6 +99,7 @@
   &.show-mobile-nav {
     box-shadow: 2px 0 3px rgba(3,3,3,.15);
     left: 0;
+    transition: left .1s ease-in-out;
   }
   .nav-pf-secondary-nav {
     background: @nav-pf-vertical-active-bg-color;
