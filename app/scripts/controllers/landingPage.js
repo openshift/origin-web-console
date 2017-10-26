@@ -6,6 +6,7 @@ angular.module('openshiftConsole')
                        $rootScope,
                        AuthService,
                        Catalog,
+                       CatalogService,
                        Constants,
                        DataService,
                        Navigate,
@@ -90,7 +91,7 @@ angular.module('openshiftConsole')
     };
 
     AuthService.withUser().then(function() {
-      var includeTemplates = !_.get(Constants, 'ENABLE_TECH_PREVIEW_FEATURE.template_service_broker');
+      var includeTemplates = !CatalogService.isTemplateServiceBrokerEnabled();
       Catalog.getCatalogItems(includeTemplates).then(_.spread(function(items, errorMessage) {
         if (errorMessage) {
           var alertData = {

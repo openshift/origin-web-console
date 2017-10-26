@@ -7880,7 +7880,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"pull-left {{notification.type | alertIcon}}\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">{{notification.event.type}}</span>\n" +
     "<div class=\"drawer-pf-notification-content\">\n" +
-    "<div class=\"drawer-pf-notification-message\" ng-attr-title=\"{{notification.event.message}}\">\n" +
+    "<div class=\"drawer-pf-notification-message word-break\" ng-attr-title=\"{{notification.event.message}}\">\n" +
     "<div>\n" +
     "<span ng-if=\"notification.event.reason\">\n" +
     "{{notification.event.reason | humanize}} &mdash; <span ng-if=\"notification.event.involvedObject\">{{notification.event.involvedObject.kind | humanize}}</span>\n" +
