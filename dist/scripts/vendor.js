@@ -74163,12 +74163,10 @@ return d(e, t[i], n[r]);
 }) : null;
 },
 sortServiceInstances: function(e, t) {
-return e || t ? _.sortBy(e, function(e) {
+return _.sortBy(e, [ function(e) {
 var n = _.get(e, "spec.clusterServiceClassRef.name");
 return _.get(t, [ n, "spec", "externalMetadata", "displayName" ]) || e.spec.clusterServiceClassExternalName;
-}, function(e) {
-return _.get(e, "metadata.name", "");
-}) : null;
+}, "metadata.name" ]);
 }
 };
 } ]), angular.module("openshiftCommonServices").factory("Constants", function() {
@@ -75010,6 +75008,24 @@ delete: function(e) {
 return o.delete("projects", e.metadata.name, {}).then(function(t) {
 return c && c.update(e, "DELETED"), t;
 });
+}
+};
+} ]), angular.module("openshiftCommonServices").factory("PromiseUtils", [ "$q", function(e) {
+return {
+waitForAll: function(t) {
+var n = _.size(t);
+if (!n) return e.when();
+var i = e.defer(), r = 0, o = !1, a = function() {
+r < n || (o ? i.reject() : i.resolve());
+};
+return _.each(t, function(e) {
+if (!e) return r++, void a();
+e.catch(function() {
+o = !0;
+}).finally(function() {
+r++, a();
+});
+}), i.promise;
 }
 };
 } ]), angular.module("openshiftCommonServices").service("RecentlyViewedProjectsService", [ "$filter", function(e) {
