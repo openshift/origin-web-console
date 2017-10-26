@@ -6333,6 +6333,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/deploy-image.html',
     "<div class=\"deploy-image\">\n" +
     "<select-project ng-if=\"!project\" selected-project=\"input.selectedProject\" name-taken=\"projectNameTaken\"></select-project>\n" +
+    "<span ng-show=\"!noProjectsCantCreate\">\n" +
     "<p>\n" +
     "Deploy an existing image from an image stream tag or docker pull spec.\n" +
     "</p>\n" +
@@ -6477,6 +6478,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h2>\n" +
     "<p>Could not find any images for {{import.name | stripTag}}:{{import.tag}}.</p>\n" +
     "</div>\n" +
+    "</span>\n" +
     "</div>"
   );
 
@@ -7202,6 +7204,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/from-file.html',
     "<select-project ng-if=\"!project\" selected-project=\"input.selectedProject\" name-taken=\"projectNameTaken\"></select-project>\n" +
+    "<span ng-show=\"!noProjectsCantCreate\">\n" +
     "<p>\n" +
     "Create or replace resources from their YAML or JSON definitions. If adding a template, you'll have the option to process the template.\n" +
     "</p>\n" +
@@ -7220,7 +7223,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</form>\n" +
     "</div>\n" +
-    "</div>"
+    "</div>\n" +
+    "</span>"
   );
 
 
@@ -9072,8 +9076,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/process-template.html',
     "<fieldset ng-if=\"$ctrl.template\" ng-disabled=\"disableInputs\">\n" +
     "<ng-form name=\"$ctrl.templateForm\">\n" +
-    "<template-options is-dialog=\"$ctrl.isDialog\" parameters=\"$ctrl.template.parameters\" expand=\"true\" can-toggle=\"false\">\n" +
     "<select-project ng-if=\"!$ctrl.project\" on-project-selected=\"$ctrl.onProjectSelected\" available-projects=\"$ctrl.availableProjects\" selected-project=\"$ctrl.selectedProject\" name-taken=\"$ctrl.projectNameTaken\"></select-project>\n" +
+    "<span ng-show=\"!$ctrl.noProjectsCantCreate\">\n" +
+    "<template-options is-dialog=\"$ctrl.isDialog\" parameters=\"$ctrl.template.parameters\" expand=\"true\" can-toggle=\"false\">\n" +
     "</template-options>\n" +
     "<label-editor labels=\"$ctrl.labels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +
@@ -9081,6 +9086,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<button class=\"btn btn-primary btn-lg\" ng-click=\"$ctrl.createFromTemplate()\" ng-disabled=\"$ctrl.templateForm.$invalid || $ctrl.disableInputs\">Create</button>\n" +
     "<a class=\"btn btn-default btn-lg\" href=\"\" ng-click=\"$ctrl.cancel()\" role=\"button\">Cancel</a>\n" +
     "</div>\n" +
+    "</span>\n" +
     "</ng-form>\n" +
     "</fieldset>"
   );
@@ -12591,8 +12597,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"alert word-break alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">warning</span>\n" +
-    "<span class=\"strong\">The service was marked for deletion</span>\n" +
-    "<span class=\"strong\" am-time-ago=\"row.apiObject.metadata.deletionTimestamp\"></span>.\n" +
+    "<span class=\"strong\">The service was marked for deletion.</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

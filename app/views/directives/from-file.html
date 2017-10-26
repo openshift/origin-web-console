@@ -1,28 +1,30 @@
 <select-project ng-if="!project" selected-project="input.selectedProject" name-taken="projectNameTaken"></select-project>
-<p>
-  Create or replace resources from their YAML or JSON definitions. If adding a template, you'll have
-  the option to process the template.
-</p>
-<parse-error error="error" ng-show="error"></parse-error>
-<div class="row">
-  <div class="col-sm-12 pod-bottom-xl">
-    <form name="form" id="from-file">
-      <ui-ace-yaml resource="resource" ng-required="true" show-file-input="true"></ui-ace-yaml>
-      <div ng-if="!isDialog" class="buttons gutter-bottom">
-        <button
-          type="submit"
-          ng-click="create()"
-          ng-disabled="form.$invalid"
-          class="btn btn-primary btn-lg">
-          Create
-        </button>
-        <a class="btn btn-default btn-lg"
-          href=""
-          role="button"
-          ng-click="cancel()">
-          Cancel
-        </a>
-      </div>
-    </form>
+<span ng-show="!noProjectsCantCreate">
+  <p>
+    Create or replace resources from their YAML or JSON definitions. If adding a template, you'll have
+    the option to process the template.
+  </p>
+  <parse-error error="error" ng-show="error"></parse-error>
+  <div class="row">
+    <div class="col-sm-12 pod-bottom-xl">
+      <form name="form" id="from-file">
+        <ui-ace-yaml resource="resource" ng-required="true" show-file-input="true"></ui-ace-yaml>
+        <div ng-if="!isDialog" class="buttons gutter-bottom">
+          <button
+            type="submit"
+            ng-click="create()"
+            ng-disabled="form.$invalid"
+            class="btn btn-primary btn-lg">
+            Create
+          </button>
+          <a class="btn btn-default btn-lg"
+            href=""
+            role="button"
+            ng-click="cancel()">
+            Cancel
+          </a>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
+</span>

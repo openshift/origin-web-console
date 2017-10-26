@@ -25,7 +25,6 @@
   }
   .container-pf-nav-pf-vertical {
     height: 100%;
-    transition: margin-left .1s ease-in-out;
     &,
     &.collapsed-nav {
       margin-left: 0; // override PatternFly default
@@ -36,6 +35,9 @@
     .view {
       height: 100%;
     }
+  }
+  .has-project-bar .container-pf-nav-pf-vertical {
+    transition: margin-left .1s ease-in-out;
   }
 }
 .surface-shaded {

@@ -23,9 +23,15 @@ angular.module("openshiftConsole")
       templateUrl: "views/directives/from-file.html",
       controller: function($scope) {
         var aceEditorSession;
+        $scope.noProjectsCantCreate = false;
+
         var humanizeKind = $filter('humanizeKind');
         var getErrorDetails = $filter('getErrorDetails');
         TaskList.clear();
+
+        $scope.$on('no-projects-cannot-create', function() {
+          $scope.noProjectsCantCreate = true;
+        });
 
         $scope.input = {
           selectedProject: $scope.project

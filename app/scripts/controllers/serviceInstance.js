@@ -141,13 +141,14 @@ angular.module('openshiftConsole')
         updateBreadcrumbs();
         serviceClassPromise = null;
 
-        Catalog.getServicePlans().then(function (plans) {
+        Catalog.getServicePlansForServiceClass($scope.serviceClass).then(function (plans) {
           plans = plans.by('metadata.name');
 
-          var plansByServiceClassName = Catalog.groupPlansByServiceClassName(plans);
-          $scope.servicePlans = plansByServiceClassName[$scope.serviceClass.metadata.name];
-
           var servicePlanName = _.get($scope.serviceInstance, 'spec.clusterServicePlanRef.name');
+          $scope.servicePlans = _.reject(plans, function(plan) {
+            return _.get(plan, 'status.removedFromBrokerCatalog') && (plan.metadata.name !== servicePlanName);
+          });
+
           $scope.plan = plans[servicePlanName];
 
           updateParameterSchema();
