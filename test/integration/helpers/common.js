@@ -9,6 +9,7 @@ const menus = require('../page-objects/menus').menus;
 const LoginPage = require('../page-objects/login').LoginPage;
 
 exports.beforeAll = () => {
+
   windowHelper.setSize();
   if(environment.isMac) {
     logger.log('local env: deleting all projects...');
@@ -21,6 +22,7 @@ exports.afterAll = () => {
     logger.log('local env: deleting all projects...');
     projectHelpers.deleteAllProjects();
   }
+  browser.sleep(timing.pauseBetweenTests);
 };
 
 exports.beforeEach = () => {

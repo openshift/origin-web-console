@@ -33,9 +33,11 @@ exports.config = {
     'integration/features/user_adds_imagestream_to_project.spec.js',
     'integration/features/user_creates_from_url.spec.js'
   ],
-  // this test is for debugging the login flow only.  since all the
-  // tests exercise the login flow, it should not need to be run regularly.
-  exclude: ['integration/features/user_logs_in.spec.js'],
+  // helper tests for local debuggin, these should not need to be run in CI
+  exclude: [
+    'integration/features/user_logs_in.spec.js',
+    'integration/features/user_deletes_all_projects.spec.js'
+  ],
   // usage:
   //   grunt test-e2e
   //   grunt test-integration
@@ -48,6 +50,7 @@ exports.config = {
     'add-template-to-project': 'integration/features/user_adds_template_to_project.spec.js',
     'add-imagestream-to-project': 'integration/features/user_adds_imagestream_to_project.spec.js',
     'create-from-url': 'integration/features/user_creates_from_url.spec.js',
+    'delete-all-projects': 'integration/features/user_deletes_all_projects.spec.js',
     // simple test to ensure we can get past OAuth
     'login': 'integration/features/user_logs_in.spec.js'
   },

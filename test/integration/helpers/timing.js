@@ -20,5 +20,6 @@ module.exports = {
   //    timing.waitForElement,
   //    'Elem did not appear')
   waitForElement: 1000,
-  maxWaitForElement: 15000
+  maxWaitForElement: 15 * 1000,
+  pauseBetweenTests: 5 * 1000
 };
