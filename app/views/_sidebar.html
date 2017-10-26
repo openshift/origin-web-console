@@ -17,6 +17,7 @@
         ng-class="{
           active: primaryItem === activePrimary,
           'is-hover': primaryItem.isHover,
+          'fake-hover': primaryItem.fakeHover,
           'secondary-nav-item-pf': primaryItem.secondaryNavSections.length
         }"
         ng-if="show(primaryItem)"
