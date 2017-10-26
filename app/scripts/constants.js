@@ -96,9 +96,10 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
   // Disables the copy login command option from the user menu and CLI page.
   DISABLE_COPY_LOGIN_COMMAND: false,
 
+  // Set to true when the template service broker is enabled for the cluster.
+  TEMPLATE_SERVICE_BROKER_ENABLED: false,
+
   ENABLE_TECH_PREVIEW_FEATURE: {
-    // Set to true when the template service broker is enabled for the cluster in master-config.yaml.
-    template_service_broker: false,
     // Set to true if the service catalog supports pod presets for binding services to applications.
     pod_presets: false
   },

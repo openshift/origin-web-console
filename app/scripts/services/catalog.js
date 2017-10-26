@@ -21,6 +21,10 @@ angular.module("openshiftConsole")
                                   APIService.apiInfo(serviceInstancesVersion) &&
                                   APIService.apiInfo(servicePlansVersion);
 
+    var isTemplateServiceBrokerEnabled = function() {
+      return !!Constants.TEMPLATE_SERVICE_BROKER_ENABLED;
+    };
+
     var categoryItemByID = {};
     _.each(Constants.CATALOG_CATEGORIES, function(category) {
       _.each(category.items, function(categoryItem) {
@@ -255,6 +259,7 @@ angular.module("openshiftConsole")
 
     return {
       SERVICE_CATALOG_ENABLED: SERVICE_CATALOG_ENABLED,
+      isTemplateServiceBrokerEnabled: isTemplateServiceBrokerEnabled,
       getCategoryItem: getCategoryItem,
       categorizeImageStreams: categorizeImageStreams,
       categorizeTemplates: categorizeTemplates,
