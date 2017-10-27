@@ -2,30 +2,15 @@
 
 const environment = require('../environment');
 const windowHelper = require('../helpers/window');
-const projectHelpers = require('../helpers/project');
 const timing = require('../helpers/timing');
 const logger = require('../helpers/logger');
 const menus = require('../page-objects/menus').menus;
 const LoginPage = require('../page-objects/login').LoginPage;
+const ProjectListPage = require('../page-objects/projectList').ProjectListPage;
 
 exports.beforeAll = () => {
-
   windowHelper.setSize();
-  if(environment.isMac) {
-    logger.log('local env: deleting all projects...');
-    projectHelpers.deleteAllProjects();
-  }
-};
 
-exports.afterAll = () => {
-  if(environment.isMac) {
-    logger.log('local env: deleting all projects...');
-    projectHelpers.deleteAllProjects();
-  }
-  browser.sleep(timing.pauseBetweenTests);
-};
-
-exports.beforeEach = () => {
   logger.log('login');
   // we manually bootstrap angular, so it is suggested to do this
   // call up front, however it has not been needed thus far.
@@ -35,10 +20,29 @@ exports.beforeEach = () => {
   browser.driver.sleep(timing.standardDelay);
 };
 
+exports.afterAll = () => {
 
-exports.afterEach = () => {
+  // easier in the afterAll as we have done the login flow by this point.
+  if(environment.isMac) {
+    logger.log('cleanup: deleting all projects');
+    menus.clickLogo();
+    menus.clickViewAllProjects();
+    let projectList = new ProjectListPage();
+    projectList.deleteAllProjects();
+  }
+  browser.sleep(timing.pauseBetweenTests);
+
   menus.topNav.clickLogout();
   browser.sleep(timing.standardDelay);
   logger.log('logout');
   windowHelper.clearStorage();
+};
+
+exports.beforeEach = () => {
+
+};
+
+
+exports.afterEach = () => {
+
 };

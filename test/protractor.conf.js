@@ -35,8 +35,8 @@ exports.config = {
   ],
   // helper tests for local debuggin, these should not need to be run in CI
   exclude: [
-    'integration/features/user_logs_in.spec.js',
-    'integration/features/user_deletes_all_projects.spec.js'
+    // 'integration/features/user_logs_in.spec.js',
+    // 'integration/features/user_deletes_all_projects.spec.js'
   ],
   // usage:
   //   grunt test-e2e
@@ -46,16 +46,16 @@ exports.config = {
   // set of suites:
   //   grunt test-integration --suite=create-projct,add-template-to-project
   suites: {
-    'create-project': 'integration/features/user_creates_project.spec.js',
-    'add-template-to-project': 'integration/features/user_adds_template_to_project.spec.js',
+    'create-project':             'integration/features/user_creates_project.spec.js',
+    'add-template-to-project':    'integration/features/user_adds_template_to_project.spec.js',
     'add-imagestream-to-project': 'integration/features/user_adds_imagestream_to_project.spec.js',
-    'create-from-url': 'integration/features/user_creates_from_url.spec.js',
-    'delete-all-projects': 'integration/features/user_deletes_all_projects.spec.js',
+    'create-from-url':            'integration/features/user_creates_from_url.spec.js',
+    'delete-all-projects':        'integration/features/user_deletes_all_projects.spec.js',
     // simple test to ensure we can get past OAuth
-    'login': 'integration/features/user_logs_in.spec.js'
+    'login':                      'integration/features/user_logs_in.spec.js'
   },
   framework: 'jasmine2',
-  allScriptsTimeout: 30 * 1000,
+  allScriptsTimeout: 60 * 1000,
   getPageTimeout: 30 * 1000,
   jasmineNodeOpts: {
     defaultTimeoutInterval: 60 * 1000,

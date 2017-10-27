@@ -3,7 +3,7 @@
 const forms = require('../helpers/forms');
 const timing = require('../helpers/timing');
 const Page = require('./page').Page;
-const ProjectList = require('./projectList').ProjectList;
+const ProjectListPage = require('./projectList').ProjectListPage;
 
 class CreateProjectPage extends Page {
   constructor(project, menu) {
@@ -17,7 +17,7 @@ class CreateProjectPage extends Page {
   createProject() {
     return forms.submitNewProjectForm(this.project).then(() => {
       return browser.sleep(timing.implicitRedirect).then(() => {
-        return new ProjectList();
+        return new ProjectListPage();
       });
     });
   }

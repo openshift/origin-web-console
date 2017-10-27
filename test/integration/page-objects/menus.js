@@ -25,6 +25,9 @@ let clickNestedMenuItem = function(mainMenuSelector, childMenuSelector) {
 };
 
 exports.menus = {
+  clickLogo: () => {
+    return element(by.id('openshift-logo')).click();
+  },
   topNav: {
     // NOTE: this links out of the console
     clickDocumentation: () => {
@@ -141,5 +144,15 @@ exports.menus = {
     clickMonitoring: () => {
       return element(by.cssContainingText(selectors.sidePrimary, 'Monitoring')).click();
     }
+  },
+  // TODO: once we get a new CatalogPage, migrate this to
+  // that page-object:
+  clickViewAllProjects: () => {
+    return element(by.css('.projects-view-all')).click();
+  },
+  // ATM seems to be the most sensible place to put this, even
+  // though it is not an actual menu item.
+  backToPreviousPage: () => {
+    return browser.navigate().back();
   }
 };

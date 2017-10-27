@@ -14,16 +14,17 @@ const nodeMongoTemplate = require('../fixtures/nodejs-mongodb');
 
 describe('User adds a template to a project', () => {
 
+
+  beforeAll(() => {
+    common.beforeAll();  
+  });
+
   beforeEach(() => {
     common.beforeEach();
   });
 
   afterEach(() => {
     common.afterEach();
-  });
-
-  beforeAll(() => {
-    common.beforeAll();
   });
 
   afterAll(() => {

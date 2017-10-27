@@ -8,10 +8,15 @@ const matchers = require('../helpers/matchers');
 
 const CreateProjectPage = require('../page-objects/createProject').CreateProjectPage;
 const OverviewPage = require('../page-objects/overview').OverviewPage;
+const ProjectListPage = require('../page-objects/projectList').ProjectListPage;
 
 const menus = require('../page-objects/menus').menus;
 
 describe('Authenticated user creates a new project', () => {
+
+  beforeAll(() => {
+    common.beforeAll();
+  });
 
   beforeEach(() => {
     common.beforeEach();
@@ -19,12 +24,6 @@ describe('Authenticated user creates a new project', () => {
 
   afterEach(() => {
     common.afterEach();
-  });
-
-  // NOTE: beforeAll vs beforeEach.
-  // these tests only do the setup once.
-  beforeAll(() => {
-    common.beforeAll();
   });
 
   afterAll(() => {
@@ -101,6 +100,27 @@ describe('Authenticated user creates a new project', () => {
       matchers.expectHeadingContainsText('Red Hat Openshift');
       // Documentation link leaves console
       // Copy Login should also just have its own test
+
+      // go to the project list page
+      menus.clickLogo();
+      browser.sleep(timing.navToPage);
+      menus.clickViewAllProjects();
+      browser.sleep(timing.navToPage);
+      let projectList2 = new ProjectListPage();
+
+      projectList2.clickTile(project);
+      browser.sleep(timing.navToPage);
+      menus.backToPreviousPage();
+
+      // projectList2.editProject(project);
+      // browser.sleep(1000);
+      // menus.backToPreviousPage();
+
+      projectList2.viewMembership(project);
+      browser.sleep(1000);
+      menus.backToPreviousPage();
+
+      projectList2.deleteProject(project);
 
     });
   });
