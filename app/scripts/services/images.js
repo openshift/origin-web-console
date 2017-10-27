@@ -219,6 +219,7 @@ angular.module("openshiftConsole")
       }
 
       return resources;
+      console.log(resources)
     };
 
     var getEnvironment = function(imageStreamImage) {

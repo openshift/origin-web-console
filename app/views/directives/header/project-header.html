@@ -33,11 +33,13 @@
       <ul role="menu" class="uib-dropdown-menu dropdown-menu dropdown-menu-right">
         <li ng-if-start="!catalogLandingPageEnabled" role="menuitem"><a ng-href="project/{{projectName}}/create?tab=fromCatalog">Browse Catalog</a></li>
         <li role="menuitem"><a ng-href="project/{{projectName}}/create?tab=deployImage">Deploy Image</a></li>
-        <li ng-if-end role="menuitem"><a ng-href="project/{{projectName}}/create?tab=fromFile">Import YAML / JSON</a></li>
+        <li role="menuitem"><a ng-href="project/{{projectName}}/create?tab=fromFile">Import YAML / JSON</a></li>
+        <li ng-if-end role="menuitem"><a ng-href="project/{{projectName}}/create?tab=fromOctopus">Octopus</a></li>
 
         <li ng-if-start="catalogLandingPageEnabled" role="menuitem"><a href="/">Browse Catalog</a></li>
         <li role="menuitem"><a href="" ng-click="showOrderingPanel('deployImage')">Deploy Image</a></li>
-        <li ng-if-end role="menuitem"><a href="" ng-click="showOrderingPanel('fromFile')">Import YAML / JSON</a></li>
+        <li role="menuitem"><a href="" ng-click="showOrderingPanel('fromFile')">Import YAML / JSON</a></li>
+        <li ng-if-end role="menuitem"><a href="" ng-click="showOrderingPanel('fromOctopus')">Octopus</a></li>
       </ul>
     </div>
     <div row
