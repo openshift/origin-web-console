@@ -1,8 +1,8 @@
 'use strict';
 
 const deprecatedHelpers = require('../helpers');
-// const wait = require('./wait');
-// const logger = require('./logger');
+const wait = require('./wait');
+const logger = require('./logger');
 
 // TODO: factor this out into a proper page object
 exports.visitCreatePage = () => {
