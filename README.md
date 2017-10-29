@@ -17,7 +17,7 @@ Contributing
 
     Note: If you see an ENOSPC error, you may need to increase the number of files your user can watch by running this command:
 
-    ```
+    ```shell
     echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
     ```
 1. Accept the self-signed certificate for the web console. (For Chrome on OS X, import `server.crt` into Keychain Access or accept the web console certificate in Safari.)
@@ -26,7 +26,7 @@ Contributing
 
 Debug logging can be enabled by opening your browser's JavaScript console, running the commands below, and then refreshing the page.
 
-```
+```shell
 localStorage["OpenShiftLogLevel.main"] = "<log level>";
 localStorage["OpenShiftLogLevel.auth"] = "<log level>";
 ```
@@ -141,13 +141,13 @@ The v3 console supports a custom context root.  When running as part of the `ope
 
 For example if you want to specify a URL directly in an HTML template to go to the project overview it would look like
 
-```
+```html
 <a href="project/foo/overview">
 ```
 
 and would actually resolve to be `/contextroot/project/foo/overview` by the browser.  Similarly, if you want to use JavaScript to change the current page location, you should use the $location service from angular like
 
-```
+```javascript
 $location.url("project/foo/overview")
 ```
 
