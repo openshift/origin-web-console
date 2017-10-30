@@ -13838,21 +13838,21 @@ templateUrl: "views/overview/_list-row.html"
 }(), function() {
 angular.module("openshiftConsole").component("serviceInstanceRow", {
 controller: [ "$filter", "APIService", "AuthorizationService", "BindingService", "ListRowUtils", "ServiceInstancesService", function(e, t, n, a, r, o) {
-var i = this, s = e("isBindingFailed"), c = e("isBindingReady");
+var i = this, s = e("isBindingFailed"), c = e("isBindingReady"), l = e("serviceInstanceFailedMessage"), u = e("truncate");
 _.extend(i, r.ui);
-var l = e("serviceInstanceDisplayName");
+var d = e("serviceInstanceDisplayName");
 i.serviceBindingsVersion = t.getPreferredVersion("servicebindings"), i.serviceInstancesVersion = t.getPreferredVersion("serviceinstances");
-var u = function() {
+var m = function() {
 var e = o.getServiceClassNameForInstance(i.apiObject);
 return _.get(i, [ "state", "serviceClasses", e ]);
-}, d = function() {
+}, p = function() {
 var e = o.getServicePlanNameForInstance(i.apiObject);
 return _.get(i, [ "state", "servicePlans", e ]);
-}, m = function() {
+}, f = function() {
 _.get(i.apiObject, "metadata.deletionTimestamp") ? i.instanceStatus = "deleted" : s(i.apiObject) ? i.instanceStatus = "failed" : c(i.apiObject) ? i.instanceStatus = "ready" : i.instanceStatus = "pending";
 };
 i.$doCheck = function() {
-m(), i.notifications = r.getNotifications(i.apiObject, i.state), i.serviceClass = u(), i.servicePlan = d(), i.displayName = l(i.apiObject, i.serviceClass), i.isBindable = a.isServiceBindable(i.apiObject, i.serviceClass, i.servicePlan);
+f(), i.notifications = r.getNotifications(i.apiObject, i.state), i.serviceClass = m(), i.servicePlan = p(), i.displayName = d(i.apiObject, i.serviceClass), i.isBindable = a.isServiceBindable(i.apiObject, i.serviceClass, i.servicePlan);
 }, i.$onChanges = function(e) {
 e.bindings && (i.deleteableBindings = _.reject(i.bindings, "metadata.deletionTimestamp"));
 }, i.getSecretForBinding = function(e) {
@@ -13863,6 +13863,11 @@ return !(_.get(i.apiObject, "metadata.deletionTimestamp") || (!i.isBindable || !
 _.set(i, "overlay.panelVisible", !1);
 }, i.showOverlayPanel = function(e, t) {
 _.set(i, "overlay.panelVisible", !0), _.set(i, "overlay.panelName", e), _.set(i, "overlay.state", t);
+}, i.getFailedTooltipText = function() {
+var e = l(i.apiObject);
+if (!e) return "";
+var t = u(e, 128);
+return e.length !== t.length && (t += "..."), t;
 }, i.deprovision = function() {
 o.deprovision(i.apiObject, i.deleteableBindings);
 };

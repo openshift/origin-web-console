@@ -3697,7 +3697,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"middle-content\" persist-tab-state>\n" +
+    "<div class=\"middle-content service-instance-details\" persist-tab-state>\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\" ng-if=\"serviceInstance\">\n" +
     "<div class=\"col-md-12\">\n" +
@@ -3721,9 +3721,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span flex>{{serviceInstance | serviceInstanceStatus | sentenceCase}}</span>\n" +
     "</dd>\n" +
     "<dt ng-if-start=\"serviceInstance | serviceInstanceConditionMessage\">Status Reason:</dt>\n" +
-    "<dd ng-if-end>\n" +
-    "{{serviceInstance | serviceInstanceConditionMessage}}\n" +
-    "</dd>\n" +
+    "<dd ng-if-end class=\"instance-status-message\">{{serviceInstance | serviceInstanceConditionMessage}}</dd>\n" +
     "</dl>\n" +
     "<div class=\"hidden-lg\">\n" +
     "<h3 ng-if-start=\"serviceClass.spec.description || serviceClass.spec.externalMetadata.longDescription\">Description</h3>\n" +
@@ -12551,10 +12549,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{row.apiObject | navigateResourceURL}}\" ng-bind-html=\"row.displayName | highlightKeywords : row.state.filterKeywords\"></a>\n" +
     "<div ng-bind-html=\"row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords\" class=\"list-row-longname\"></div>\n" +
     "</h3>\n" +
-    "<div class=\"status-icons\" ng-if=\"!row.expanded\">\n" +
+    "<div class=\"status-icons\" ng-if=\"!row.expanded\" ng-init=\"tooltipID = 'instance-status-tooltip-' + $id\">\n" +
     "<notification-icon alerts=\"row.notifications\"></notification-icon>\n" +
-    "<div ng-switch=\"row.instanceStatus\" class=\"instance-status-notification\">\n" +
-    "<span ng-switch-when=\"failed\" dynamic-content=\"{{row.apiObject | serviceInstanceFailedMessage}}\" data-toggle=\"tooltip\" data-trigger=\"hover\">\n" +
+    "<div ng-switch=\"row.instanceStatus\" class=\"instance-status-notification\" id=\"{{tooltipID}}\">\n" +
+    "\n" +
+    "<span ng-switch-when=\"failed\" dynamic-content=\"{{row.getFailedTooltipText()}}\" data-toggle=\"tooltip\" data-trigger=\"hover\" data-container=\"#{{tooltipID}}\">\n" +
     "<span class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></span>\n" +
     "Error\n" +
     "</span>\n" +
@@ -12640,12 +12639,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">error</span>\n" +
     "<span class=\"strong\">The service failed.</span>\n" +
-    "<span class=\"mar-right-md\">\n" +
-    "<truncate-long-text content=\"row.apiObject | serviceInstanceFailedMessage\" limit=\"265\"></truncate-long-text>\n" +
+    "<span class=\"instance-status-message\">\n" +
+    "<truncate-long-text content=\"row.apiObject | serviceInstanceFailedMessage\" expandable=\"true\" limit=\"265\" newline-limit=\"4\"></truncate-long-text>\n" +
     "</span>\n" +
-    "<span ng-if=\"row.serviceInstancesVersion | canI : 'delete'\" class=\"nowrap\">\n" +
+    "<div ng-if=\"row.serviceInstancesVersion | canI : 'delete'\">\n" +
     "<a href=\"\" ng-click=\"row.deprovision()\">Delete This Service</a>\n" +
-    "</span>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -12655,7 +12654,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">info</span>\n" +
     "<span class=\"strong\">The service is not yet ready.</span>\n" +
-    "<truncate-long-text content=\"row.apiObject | serviceInstanceReadyMessage\" limit=\"265\"></truncate-long-text>\n" +
+    "<span class=\"instance-status-message\">\n" +
+    "<truncate-long-text content=\"row.apiObject | serviceInstanceReadyMessage\" expandable=\"true\" limit=\"265\" newline-limit=\"4\"></truncate-long-text>\n" +
+    "</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

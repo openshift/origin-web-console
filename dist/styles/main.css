@@ -404,7 +404,7 @@ dd{margin-left:0}
 @media (min-width:415px){.dl-horizontal dt{float:left;width:160px;clear:left;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dl-horizontal dd{margin-left:180px}
 }
-.btn-group-vertical>.btn-group:after,.btn-toolbar:after,.clearfix:after,.container-fluid:after,.container:after,.dl-horizontal dd:after,.form-horizontal .form-group:after,.list-view-pf .list-group-item:after,.modal-footer:after,.modal-header:after,.nav:after,.navbar-collapse:after,.navbar-header:after,.navbar:after,.pager:after,.panel-body:after,.row:after{clear:both}
+.btn-group-vertical>.btn-group:after,.btn-toolbar:after,.clearfix:after,.container-fluid:after,.container:after,.dl-horizontal dd:after,.dropdown-menu>li>a,.form-horizontal .form-group:after,.list-view-pf .list-group-item:after,.log-view,.modal-footer:after,.modal-header:after,.nav:after,.navbar-collapse:after,.navbar-header:after,.navbar:after,.pager:after,.panel-body:after,.row:after{clear:both}
 abbr[data-original-title],abbr[title]{cursor:help;border-bottom:1px dotted #9c9c9c}
 .initialism{font-size:90%;text-transform:uppercase}
 blockquote{padding:10.5px 21px;margin:0 0 21px;font-size:16.25px;border-left:5px solid #f1f1f1}
@@ -829,7 +829,7 @@ tbody.collapse.in{display:table-row-group}
 .btn-group>.btn-group:first-child:not(:last-child)>.btn:last-child,.btn-group>.btn-group:first-child:not(:last-child)>.dropdown-toggle,.btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle){border-bottom-right-radius:0;border-top-right-radius:0}
 .btn-group>.btn-group:last-child:not(:first-child)>.btn:first-child,.btn-group>.btn:last-child:not(:first-child),.btn-group>.dropdown-toggle:not(:first-child){border-bottom-left-radius:0;border-top-left-radius:0}
 .btn-group-vertical>.btn:not(:first-child):not(:last-child),.btn-group>.btn-group:not(:first-child):not(:last-child)>.btn,.btn-group>.btn:not(:first-child):not(:last-child):not(.dropdown-toggle){border-radius:0}
-.dropdown-menu>li>a{display:block;clear:both;font-weight:400;color:#363636}
+.dropdown-menu>li>a{display:block;font-weight:400;color:#363636}
 .dropdown-menu>li>a:focus,.dropdown-menu>li>a:hover{text-decoration:none;color:#4d5258;background-color:#def3ff}
 .dropdown-menu>.active>a,.dropdown-menu>.active>a:focus,.dropdown-menu>.active>a:hover{color:#fff;text-decoration:none;outline:0}
 .dropdown-menu>.disabled>a,.dropdown-menu>.disabled>a:focus,.dropdown-menu>.disabled>a:hover{color:#9c9c9c}
@@ -5019,6 +5019,7 @@ h2+.list-view-pf{margin-top:20px}
 .build-count .running-stage{font-size:84%;color:#9c9c9c}
 @media (max-width:991px){.builds-label{margin-top:5px}
 }
+.instance-status-message .truncated-content,.instance-status-notification .tooltip{white-space:pre-line}
 .instance-status-notification,.notification-icon-count{display:inline-block;margin:5px 5px 0 0}
 @media (min-width:992px){.instance-status-notification,.notification-icon-count{margin-top:0}
 }
@@ -5468,7 +5469,7 @@ dl.secret-data pre{margin-bottom:0}
 .events-sidebar .events-sidebar-collapse a{text-decoration:none}
 .events-sidebar .sidebar-header.right-header{align-items:center;display:flex;justify-content:space-between;margin-top:17.5px}
 .events-sidebar .sidebar-header.right-header h2{font-family:inherit;font-weight:500;line-height:1.1;color:inherit;margin-top:10.5px;margin-bottom:10.5px;font-size:14px;display:inline-block}
-.config-map-table .key,.config-map-table .truncated-content,.log-view{font-family:Menlo,Monaco,Consolas,monospace}
+.config-map-table .key,.config-map-table .truncated-content,.edit-yaml .ace_editor.editor,.log-view{font-family:Menlo,Monaco,Consolas,monospace}
 .events-sidebar .sidebar-header.right-header h2 .small,.events-sidebar .sidebar-header.right-header h2 small{font-weight:400;line-height:1;color:#9c9c9c;font-size:75%}
 .events-sidebar .sidebar-header.right-header .warning-count{white-space:nowrap;margin-left:2px}
 .events-sidebar .sidebar-header.right-header .warning-count .pficon{vertical-align:-1px}
@@ -5718,7 +5719,7 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .log-size-warning{margin:0}
 @media (max-width:991px){.log-size-warning{margin-top:20px}
 }
-.log-view{clear:both;margin-bottom:20px;position:relative}
+.log-view{margin-bottom:20px;position:relative}
 .log-end-msg,.log-view .log-scroll a{font-family:"Open Sans",Helvetica,Arial,sans-serif}
 .chromeless .log-view{margin-bottom:0}
 .log-view pre,.log-view pre code{background-color:transparent;border:0;margin-bottom:0;overflow:visible;padding:0 10px}
@@ -6020,7 +6021,7 @@ notification-drawer-wrapper .expanded-notification.unread .drawer-pf-notificatio
 .ace-inline{height:300px}
 .ace-inline-small{height:200px}
 .ace_editor.dockerfile-mode .ace_constant.ace_numeric,.editor.yaml-mode .ace_constant.ace_numeric{color:inherit}
-.edit-yaml .ace_editor.editor{font-family:Menlo,Monaco,Consolas,monospace;line-height:1.5;width:100%;min-height:140px;height:50vh}
+.edit-yaml .ace_editor.editor{line-height:1.5;width:100%;min-height:140px;height:50vh}
 @media (min-height:700px){.edit-yaml .ace_editor.editor{height:60vh}
 }
 .edit-yaml .ace_editor.editor .ace_gutter{color:#8b8d8f}
@@ -6040,3 +6041,4 @@ notification-drawer-wrapper .expanded-notification.unread .drawer-pf-notificatio
 .add-config-to-application .dialog-body .radio{margin-top:0}
 .add-config-to-application .updating{background-color:#fff;bottom:55px;left:0;padding-top:60px;position:absolute;right:0;top:55px;z-index:1000}
 .add-config-to-application .volume-options{margin-left:20px}
+.service-instance-details .instance-status-message{white-space:pre-line}

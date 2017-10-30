@@ -29,6 +29,8 @@
     var row = this;
     var isBindingFailed = $filter('isBindingFailed');
     var isBindingReady = $filter('isBindingReady');
+    var serviceInstanceFailedMessage = $filter('serviceInstanceFailedMessage');
+    var truncate = $filter('truncate');
 
     _.extend(row, ListRowUtils.ui);
 
@@ -109,6 +111,20 @@
       _.set(row, 'overlay.panelVisible', true);
       _.set(row, 'overlay.panelName', panelName);
       _.set(row, 'overlay.state', state);
+    };
+
+    row.getFailedTooltipText = function() {
+      var message = serviceInstanceFailedMessage(row.apiObject);
+      if (!message) {
+        return '';
+      }
+
+      var truncated = truncate(message, 128);
+      if (message.length !== truncated.length) {
+        truncated += '...';
+      }
+
+      return truncated;
     };
 
     row.deprovision = function() {
