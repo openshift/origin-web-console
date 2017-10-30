@@ -57688,7 +57688,7 @@ case "2":
 case "3":
 m.write(i(t));
 }
-c && (c = !1, h.addClass("hidden"), f.addClass("hidden"), m.cursorHidden = !1, m.showCursor(), m.refresh(m.y, m.y), a.autofocus && m.element && m.focus());
+c && (c = !1, h.addClass("hidden"), f.addClass("hidden"), m.cursorHidden = !1, m.showCursor(), a.autofocus && m.element && m.focus());
 }, g.onclose = function(t) {
 a.status = "disconnected", e(t.reason);
 };
@@ -57697,7 +57697,7 @@ e(t.message);
 }), a.status = "connected";
 }
 function u() {
-a.status = "disconnected", h.addClass("hidden"), f.removeClass("hidden"), m && (m.cursorHidden = !0, m.refresh(m.x, m.y)), g && (g.onopen = g.onmessage = g.onerror = g.onclose = null, g.readyState < 2 && g.close(), g = null), window.clearInterval(p), p = null;
+a.status = "disconnected", h.addClass("hidden"), f.removeClass("hidden"), m && (m.cursorHidden = !0, m.refresh(m.buffer.y, m.buffer.y)), g && (g.onopen = g.onmessage = g.onerror = g.onclose = null, g.readyState < 2 && g.close(), g = null), window.clearInterval(p), p = null;
 }
 a.status = "disconnected";
 var d = e.element("<div class='terminal-wrapper'>");
@@ -57712,7 +57712,7 @@ screenKeys: a.screenKeys || !0,
 applicationCursor: !0,
 mouseEvents: !0
 });
-d.empty(), m.open(d[0]), m.cursorHidden = !0, m.refresh(m.x, m.y), m.on("data", function(e) {
+d.empty(), m.open(d[0]), m.cursorHidden = !0, m.refresh(m.buffer.y, m.buffer.y), m.on("data", function(e) {
 g && 1 === g.readyState && g.send("0" + n(e));
 });
 var v = function() {
