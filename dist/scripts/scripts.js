@@ -5527,7 +5527,7 @@ e.eventObjects = l ? [ e.build, l ] : [ e.build ];
 }, f = function(t, n) {
 e.loaded = !0, e.build = t, m(t), c();
 var a = u(t, "buildNumber");
-a && (e.breadcrumbs[2].title = "#" + a), "DELETED" === n && (e.alerts.deleted = {
+a && e.breadcrumbs[2] && (e.breadcrumbs[2].title = "#" + a), "DELETED" === n && (e.alerts.deleted = {
 type: "warning",
 message: "This build has been deleted."
 });
