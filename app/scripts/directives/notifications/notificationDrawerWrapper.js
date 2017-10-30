@@ -153,7 +153,11 @@
       };
 
       var sortMap = function(map) {
-        return _.orderBy(map, ['event.lastTimestamp', 'event.firstTimestamp'], ['desc', 'desc']);
+        // Use `metadata.resourceVersion` as a secondary sort so that the sort
+        // is stable. In practice, this makes sure that the events with the
+        // same `lastTimestamp` appear in the correct order since events only
+        // have second granularity.
+        return _.orderBy(map, ['event.lastTimestamp', 'event.metadata.resourceVersion'], ['desc', 'desc']);
       };
 
       var render = function() {

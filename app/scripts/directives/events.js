@@ -43,7 +43,11 @@ angular.module('openshiftConsole')
             $scope.sortConfig.isAscending = !(defaultIsReversed[currentID]);
           }
           var order = $scope.sortConfig.isAscending ? 'asc' : 'desc';
-          sortedEvents = _.orderBy($scope.events, [sortID], [order]);
+          // Use `metadata.resourceVersion` as a secondary sort so that the
+          // sort is stable. In practice, this makes sure that the events with
+          // the same `lastTimestamp` appear in the correct order since events
+          // only have second granularity.
+          sortedEvents = _.orderBy($scope.events, [sortID, 'metadata.resourceVersion'], [order, order]);
         };
 
         var filterExpressions = [];
