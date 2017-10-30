@@ -2,20 +2,17 @@
   <div
     ng-if="$ctrl.showHeader"
     class="environment-from-entry environment-from-editor-entry-header">
-    <div class="form-group environment-from-editor-header value-header">
-      <div class="input-group">
+    <div class="environment-from-editor-header config-map-header">
         Config Map/Secret
-      </div>
     </div>
-    <div class="form-group environment-from-editor-header value-header">
-      <div class="input-group"
-           ng-if="!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()">
+    <div
+      class="environment-from-editor-header prefix-header"
+      ng-if="!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()">
         Prefix
-        <small class="pficon pficon-help"
+        <small class="pficon pficon-help tooltip-default-icon"
                aria-hidden="true"
                data-toggle="tooltip"
-               data-original-title="Optional prefix added to each environment variable name."></small>
-      </div>
+               data-original-title="Optional prefix added to each environment variable name. A valid prefix is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."></small>
     </div>
   </div>
 
@@ -27,7 +24,12 @@
       ng-repeat="entry in $ctrl.envFromEntries"
       as-sortable-item>
 
-      <div class="form-group environment-from-input">
+      <div class="environment-from-input">
+        <div class="environment-from-editor-entry-header">
+          <div class="environment-from-editor-header config-map-header config-map-header-mobile">
+            Config Map/Secret
+          </div>
+        </div>
         <div ng-if="$ctrl.isEnvFromReadonly(entry) || !$ctrl.hasOptions()" class="faux-input-group">
           <div ng-if="!entry.configMapRef.name && !entry.secretRef.name">
             No config maps or secrets have been added as Environment From.
@@ -62,7 +64,16 @@
         </div>
       </div>
 
-      <div class="form-group environment-from-input prefix">
+      <div class="environment-from-input prefix">
+        <div
+          class="environment-from-editor-header prefix-header prefix-header-mobile"
+          ng-if="!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()">
+            Prefix
+            <small class="pficon pficon-help tooltip-default-icon"
+                   aria-hidden="true"
+                   data-toggle="tooltip"
+                   data-original-title="Optional prefix added to each environment variable name. A valid prefix is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."></small>
+        </div>
         <div class="environment-from-input"
              ng-if="!$ctrl.isEnvFromReadonly(entry) && $ctrl.hasOptions()"
              ng-class="{ 'has-error': ($ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$invalid && $ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$touched) }">
@@ -79,15 +90,6 @@
             <span class="help-block key-validation-error"
                   ng-show="$ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$error.pattern">
               <span class="validation-text">Please enter a valid prefix.</span>
-              <span class="help action-inline">
-                <a
-                  aria-hidden="true"
-                  data-toggle="tooltip"
-                  data-placement="top"
-                  data-original-title="A valid prefix is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.">
-                  <span class="pficon pficon-help"></span>
-                </a>
-              </span>
             </span>
           </span>
         </div>
@@ -118,7 +120,7 @@
       </div>
     </div>
 
-    <div class="environment-from-entry form-group" ng-if="!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()">
+    <div class="environment-from-entry" ng-if="!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()">
       <a
         href=""
         class="add-row-link"

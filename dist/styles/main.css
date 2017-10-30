@@ -5570,6 +5570,7 @@ td[role=presentation].arrow:after{content:"\2192"}
 .chromeless,.log-view{background-color:#101214}
 .tile-row .tile-title{text-align:center}
 .tile-row .tile-title h3{margin:0 20px}
+.tooltip-default-icon{cursor:help;font-size:12px}
 .console-os .page-header{border-color:#e4e4e4;padding:18px 20px 19px;margin:0 -20px}
 .console-os .page-header .actions{margin-top:0}
 .console-os .page-header h1{margin:0}
@@ -5907,7 +5908,8 @@ kubernetes-container-terminal .terminal-actions .spinner{top:5px}
 .environment-from-editor .environment-from-entry,.key-value-editor .environment-from-entry{display:table;margin-bottom:15px;padding-right:0;position:relative;table-layout:fixed;width:100%}
 @media (max-width:479px){.environment-from-editor .environment-from-entry,.key-value-editor .environment-from-entry{padding-right:52px}
 }
-@media (min-width:480px){.environment-from-editor .environment-from-entry .environment-from-editor-button,.key-value-editor .environment-from-entry .environment-from-editor-button{float:left;padding:0 5px;position:relative;width:auto}
+.environment-from-editor .environment-from-entry .environment-from-editor-button,.key-value-editor .environment-from-entry .environment-from-editor-button{top:26px}
+@media (min-width:480px){.environment-from-editor .environment-from-entry .environment-from-editor-button,.key-value-editor .environment-from-entry .environment-from-editor-button{float:left;padding:0 5px;position:relative;top:0;width:auto}
 }
 .environment-from-editor .environment-from-entry .environment-from-input,.key-value-editor .environment-from-entry .environment-from-input{float:left;margin-bottom:0;padding-right:5px;width:100%}
 @media (min-width:480px){.environment-from-editor .environment-from-entry .environment-from-input,.key-value-editor .environment-from-entry .environment-from-input{width:calc(50% - 26px)}
@@ -5921,6 +5923,11 @@ kubernetes-container-terminal .terminal-actions .spinner{top:5px}
 .environment-from-editor .key-value-editor-input .ui-select+.ui-select,.key-value-editor .key-value-editor-input .ui-select+.ui-select{padding-top:5px}
 @media (min-width:992px){.environment-from-editor .key-value-editor-input .ui-select,.key-value-editor .key-value-editor-input .ui-select{float:left;width:50%}
 .environment-from-editor .key-value-editor-input .ui-select+.ui-select,.key-value-editor .key-value-editor-input .ui-select+.ui-select{padding-top:0;padding-left:5px}
+}
+@media (max-width:479px){.environment-from-editor-header.config-map-header,.environment-from-editor-header.prefix-header{display:none;width:100%}
+}
+.environment-from-editor-header.config-map-header.config-map-header-mobile,.environment-from-editor-header.config-map-header.prefix-header-mobile,.environment-from-editor-header.prefix-header.config-map-header-mobile,.environment-from-editor-header.prefix-header.prefix-header-mobile{display:block;margin-bottom:0;margin-top:5px}
+@media (min-width:480px){.environment-from-editor-header.config-map-header.config-map-header-mobile,.environment-from-editor-header.config-map-header.prefix-header-mobile,.environment-from-editor-header.prefix-header.config-map-header-mobile,.environment-from-editor-header.prefix-header.prefix-header-mobile{display:none}
 }
 .environment-from-editor-header,.key-value-editor .key-value-editor-input,.key-value-editor-header{float:left;margin-bottom:0;padding-right:5px;width:50%}
 .membership .content-pane,.membership .content-pane .col-add-role{width:100%}

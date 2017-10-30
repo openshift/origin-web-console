@@ -125,11 +125,13 @@
     position: relative;
     table-layout: fixed;
     width: 100%;
-    @media(min-width: @screen-xs-min)  {
-      .environment-from-editor-button {
+    .environment-from-editor-button {
+      top: 26px; // position to align with config-map ui-select when stacked
+      @media(min-width: @screen-xs-min)  {
         float: left;
         padding: 0 5px;
         position: relative;
+        top: 0; // position when not stacked
         width: auto;
       }
     }
@@ -180,6 +182,25 @@
       @media(min-width: @screen-md-min) {
         padding-top: 0;
         padding-left: 5px;
+      }
+    }
+  }
+}
+
+.environment-from-editor-header {
+  &.config-map-header,
+  &.prefix-header {
+    @media(max-width: @screen-xxs-max) {
+      display: none;
+      width: 100%;
+    }
+    &.config-map-header-mobile,
+    &.prefix-header-mobile {
+      display: block;
+      margin-bottom: 0;
+      margin-top: 5px;
+      @media(min-width: @screen-xs-min) {
+        display: none;
       }
     }
   }

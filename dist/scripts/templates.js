@@ -6696,21 +6696,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/edit-environment-from.html',
     "<ng-form name=\"$ctrl.editEnvironmentFromForm\" novalidate>\n" +
     "<div ng-if=\"$ctrl.showHeader\" class=\"environment-from-entry environment-from-editor-entry-header\">\n" +
-    "<div class=\"form-group environment-from-editor-header value-header\">\n" +
-    "<div class=\"input-group\">\n" +
+    "<div class=\"environment-from-editor-header config-map-header\">\n" +
     "Config Map/Secret\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group environment-from-editor-header value-header\">\n" +
-    "<div class=\"input-group\" ng-if=\"!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()\">\n" +
+    "<div class=\"environment-from-editor-header prefix-header\" ng-if=\"!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()\">\n" +
     "Prefix\n" +
-    "<small class=\"pficon pficon-help\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Optional prefix added to each environment variable name.\"></small>\n" +
-    "</div>\n" +
+    "<small class=\"pficon pficon-help tooltip-default-icon\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Optional prefix added to each environment variable name. A valid prefix is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></small>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-model=\"$ctrl.entries\" class=\"environment-from-editor\" as-sortable=\"$ctrl.dragControlListeners\">\n" +
     "<div class=\"environment-from-entry\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\" ng-repeat=\"entry in $ctrl.envFromEntries\" as-sortable-item>\n" +
-    "<div class=\"form-group environment-from-input\">\n" +
+    "<div class=\"environment-from-input\">\n" +
+    "<div class=\"environment-from-editor-entry-header\">\n" +
+    "<div class=\"environment-from-editor-header config-map-header config-map-header-mobile\">\n" +
+    "Config Map/Secret\n" +
+    "</div>\n" +
+    "</div>\n" +
     "<div ng-if=\"$ctrl.isEnvFromReadonly(entry) || !$ctrl.hasOptions()\" class=\"faux-input-group\">\n" +
     "<div ng-if=\"!entry.configMapRef.name && !entry.secretRef.name\">\n" +
     "No config maps or secrets have been added as Environment From.\n" +
@@ -6738,18 +6739,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"form-group environment-from-input prefix\">\n" +
+    "<div class=\"environment-from-input prefix\">\n" +
+    "<div class=\"environment-from-editor-header prefix-header prefix-header-mobile\" ng-if=\"!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()\">\n" +
+    "Prefix\n" +
+    "<small class=\"pficon pficon-help tooltip-default-icon\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Optional prefix added to each environment variable name. A valid prefix is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></small>\n" +
+    "</div>\n" +
     "<div class=\"environment-from-input\" ng-if=\"!$ctrl.isEnvFromReadonly(entry) && $ctrl.hasOptions()\" ng-class=\"{ 'has-error': ($ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$invalid && $ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$touched) }\">\n" +
     "<label for=\"envfrom-prefix-{{$index}}\" class=\"sr-only\">Prefix</label>\n" +
     "<input type=\"text\" class=\"form-control\" placeholder=\"Add prefix\" id=\"envfrom-prefix-{{$index}}\" name=\"envfrom-prefix-{{$index}}\" ng-model=\"entry.prefix\" ng-pattern=\"/^[a-zA-Z0-9_]+$/\">\n" +
     "<span ng-show=\"$ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$touched\">\n" +
     "<span class=\"help-block key-validation-error\" ng-show=\"$ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$error.pattern\">\n" +
     "<span class=\"validation-text\">Please enter a valid prefix.</span>\n" +
-    "<span class=\"help action-inline\">\n" +
-    "<a aria-hidden=\"true\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"A valid prefix is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\">\n" +
-    "<span class=\"pficon pficon-help\"></span>\n" +
-    "</a>\n" +
-    "</span>\n" +
     "</span>\n" +
     "</span>\n" +
     "</div>\n" +
@@ -6762,7 +6762,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"environment-from-entry form-group\" ng-if=\"!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()\">\n" +
+    "<div class=\"environment-from-entry\" ng-if=\"!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()\">\n" +
     "<a href=\"\" class=\"add-row-link\" role=\"button\" ng-click=\"$ctrl.onAddRow()\">Add ALL Values from Config Map or Secret</a>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6823,9 +6823,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<key-value-editor ng-if=\"$ctrl.canIUpdate && !$ctrl.ngReadonly\" entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" value-from-selector-options=\"$ctrl.valueFromObjects\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key.\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\" show-header>\n" +
     "</key-value-editor>\n" +
-    "<h4 class=\"section-label\">\n" +
+    "<h4>\n" +
     "Environment From\n" +
-    "<span class=\"pficon pficon-help\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Environment From lets you add all key-value pairs from a config map or secret as environment variables.\"></span>\n" +
+    "<span class=\"pficon pficon-help tooltip-default-icon\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Environment From lets you add all key-value pairs from a config map or secret as environment variables.\"></span>\n" +
     "</h4>\n" +
     "<edit-environment-from entries=\"container.envFrom\" env-from-selector-options=\"$ctrl.valueFromObjects\" is-readonly=\"$ctrl.ngReadonly\" show-header>\n" +
     "</edit-environment-from>\n" +
@@ -7430,15 +7430,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/key-value-editor.html',
     "<ng-form name=\"forms.keyValueEditor\" novalidate ng-if=\"entries\">\n" +
     "<div ng-if=\"showHeader\" class=\"key-value-editor-entry key-value-editor-entry-header\">\n" +
-    "<div class=\"form-group key-value-editor-header key-header\">\n" +
-    "<div class=\"input-group\">\n" +
-    "<span class=\"help-block\">{{keyPlaceholder}}</span>\n" +
+    "<div class=\"key-value-editor-header key-header\">\n" +
+    "{{keyPlaceholder}}\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group key-value-editor-header value-header\">\n" +
-    "<div class=\"input-group\">\n" +
-    "<span class=\"help-block\">{{valuePlaceholder}}</span>\n" +
-    "</div>\n" +
+    "<div class=\"key-value-editor-header value-header\">\n" +
+    "{{valuePlaceholder}}\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-model=\"entries\" class=\"key-value-editor\" as-sortable=\"dragControlListeners\">\n" +
