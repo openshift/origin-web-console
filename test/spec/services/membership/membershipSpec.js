@@ -84,28 +84,21 @@ describe('MembershipService', function() {
   });
 
   describe('#filterRoles', function() {
-    it('should filter out system-only roles', function() {
+    // constants.js window.OPENSHIFT_CONSTANTS.MEMBERSHIP_WHITELIST
+    it('should filter out roles that do not exist in MEMBERSHIP_WHITELIST', function() {
       var fakeList = [
-        // the string 'true' is the only acceptable value for 'authorization.openshift.io/system-only'
-        {metadata: {name: 'system-only-role', annotations: {'authorization.openshift.io/system-only': 'true'}}},
-        // the rest of these will not be filtered
-        {metadata: {name: 'system-only-role2', annotations: {'authorization.openshift.io/system-only': 'false'}}},
-        {metadata: {name: 'system-only-role3', annotations: {'authorization.openshift.io/system-only': 'show'}}},
-        {metadata: {name: 'system-only-role4', annotations: {'authorization.openshift.io/system-only': ''}}},
-        {metadata: {name: 'system-only-role5', annotations: {'authorization.openshift.io/system-only': undefined}}},
-        {metadata: {name: 'system-only-role6', annotations: {'authorization.openshift.io/system-only': null}}},
-        {metadata : {name : 'not-system-only'}},
-        {metadata : {name : 'the-other-not-system-only' }}
+        {metadata: {name: 'admin'}},
+        {metadata: {name: 'basic-user'}},
+        {metadata: {name: 'edit'}},
+        {metadata: {name: 'not-an-admin'}},
+        {metadata: {name: 'not-a-basic-user'}},
+        {metadata: {name: 'system-only-thing-that-does-secret-stuff'}}
       ];
 
       expect(MembershipService.filterRoles(fakeList)).toEqual([
-        {metadata: {name: 'system-only-role2', annotations: {'authorization.openshift.io/system-only': 'false'}}},
-        {metadata: {name: 'system-only-role3', annotations: {'authorization.openshift.io/system-only': 'show'}}},
-        {metadata: {name: 'system-only-role4', annotations: {'authorization.openshift.io/system-only': ''}}},
-        {metadata: {name: 'system-only-role5', annotations: {'authorization.openshift.io/system-only': undefined}}},
-        {metadata: {name: 'system-only-role6', annotations: {'authorization.openshift.io/system-only': null}}},
-        {metadata : {name : 'not-system-only'}},
-        {metadata : {name : 'the-other-not-system-only' }}
+          {metadata: {name: 'admin'}},
+          {metadata: {name: 'basic-user'}},
+          {metadata: {name: 'edit'}}
       ]);
     });
   });

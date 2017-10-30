@@ -2,7 +2,7 @@
 
 angular
   .module('openshiftConsole')
-  .factory('MembershipService', function($filter) {
+  .factory('MembershipService', function($filter, Constants) {
 
     var annotation = $filter('annotation');
 
@@ -120,8 +120,7 @@ angular
 
     var filterRoles = function(roles) {
       return _.filter(roles, function(item) {
-        // system-only must be explicitly <string> 'true' to hide the annotation
-        return annotation(item, 'systemOnly') !== 'true';
+        return _.includes(Constants.MEMBERSHIP_WHITELIST, item.metadata.name);
       });
     };
 

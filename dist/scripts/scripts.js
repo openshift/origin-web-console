@@ -712,6 +712,7 @@ group: ""
 resource: "statefulsets",
 group: "apps"
 } ],
+MEMBERSHIP_WHITELIST: [ "admin", "basic-user", "edit", "system:deployer", "system:image-builder", "system:image-puller", "system:image-pusher", "view" ],
 EVENTS_TO_SHOW: {
 FailedCreate: !0,
 FailedDelete: !0,
@@ -2343,8 +2344,9 @@ t[e.tag] = t[e.tag] || {}, t[e.tag].name = e.tag, t[e.tag].status = angular.copy
 }), t;
 }
 };
-}), angular.module("openshiftConsole").factory("MembershipService", [ "$filter", function(e) {
-var t = e("annotation"), n = function() {
+}), angular.module("openshiftConsole").factory("MembershipService", [ "$filter", "Constants", function(e, t) {
+e("annotation");
+var n = function() {
 return _.reduce(_.slice(arguments), function(e, t, n) {
 return t ? _.isEqual(n, 0) ? t : e + "-" + t : e;
 }, "");
@@ -2398,7 +2400,7 @@ return _.sortBy(e, "metadata.name");
 },
 filterRoles: function(e) {
 return _.filter(e, function(e) {
-return "true" !== t(e, "systemOnly");
+return _.includes(t.MEMBERSHIP_WHITELIST, e.metadata.name);
 });
 },
 mapRolesForUI: function(e, t) {
