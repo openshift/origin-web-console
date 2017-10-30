@@ -115,18 +115,20 @@
     width: (@as-sortable-item-button-width * 2);
   }
 
-  .key-value-editor-entry,
   .environment-from-entry {
     display: table;
     margin-bottom: 15px;
-    padding-right: (@as-sortable-item-button-width * 2);
+    padding-right: 0;
+    @media(max-width: @screen-xxs-max) {
+      padding-right: (@as-sortable-item-button-width * 2);
+    }
     position: relative;
     table-layout: fixed;
     width: 100%;
-    @media(min-width: @screen-md-min)  {
+    @media(min-width: @screen-xs-min)  {
       .environment-from-editor-button {
         float: left;
-        padding-right: 5px;
+        padding: 0 5px;
         position: relative;
         width: auto;
       }
@@ -136,8 +138,16 @@
       margin-bottom: 0;
       padding-right: 5px;
       width: 100%;
-      @media(min-width: @screen-md-min) {
-        width: 50%;
+      @media(min-width: @screen-xs-min) {
+        width: calc(~"50% - 26px"); // Adjust env-from width to match kve input, when env-from row doesn't have padding-right;
+      }
+      &.prefix {
+        padding-right: 0;
+        width: calc(~"50% + 26px"); // Adjust prefix width to match kve input, when env-from row doesn't have padding-right;
+        @media(max-width: @screen-xxs-max) {
+          margin-top: 5px;
+          width: 100%;
+        }
       }
       .faux-input-group,
       .ui-select {
@@ -145,8 +155,6 @@
         width: 100%;
       }
     }
-  }
-  .environment-from-entry {
     .environment-from-view-details {
       float: left;
       line-height: 1;
@@ -154,6 +162,14 @@
     }
   }
 
+  .key-value-editor-entry {
+    display: table;
+    margin-bottom: 15px;
+    padding-right: (@as-sortable-item-button-width * 2);
+    position: relative;
+    table-layout: fixed;
+    width: 100%;
+  }
   .key-value-editor-input .ui-select {
     @media(min-width: @screen-md-min) {
       float: left;
@@ -170,7 +186,8 @@
 }
 
 .key-value-editor .key-value-editor-input,
-.key-value-editor-header {
+.key-value-editor-header,
+.environment-from-editor-header {
   float: left;
   margin-bottom: 0;
   padding-right: 5px;

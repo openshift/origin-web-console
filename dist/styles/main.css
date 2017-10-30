@@ -404,7 +404,7 @@ dd{margin-left:0}
 @media (min-width:415px){.dl-horizontal dt{float:left;width:160px;clear:left;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dl-horizontal dd{margin-left:180px}
 }
-.btn-group-vertical>.btn-group:after,.btn-toolbar:after,.clearfix:after,.container-fluid:after,.container:after,.dl-horizontal dd:after,.dropdown-menu>li>a,.form-horizontal .form-group:after,.list-view-pf .list-group-item:after,.log-view,.modal-footer:after,.modal-header:after,.nav:after,.navbar-collapse:after,.navbar-header:after,.navbar:after,.pager:after,.panel-body:after,.row:after{clear:both}
+.btn-group-vertical>.btn-group:after,.btn-toolbar:after,.clearfix:after,.container-fluid:after,.container:after,.dl-horizontal dd:after,.form-horizontal .form-group:after,.list-view-pf .list-group-item:after,.modal-footer:after,.modal-header:after,.nav:after,.navbar-collapse:after,.navbar-header:after,.navbar:after,.pager:after,.panel-body:after,.row:after{clear:both}
 abbr[data-original-title],abbr[title]{cursor:help;border-bottom:1px dotted #9c9c9c}
 .initialism{font-size:90%;text-transform:uppercase}
 blockquote{padding:10.5px 21px;margin:0 0 21px;font-size:16.25px;border-left:5px solid #f1f1f1}
@@ -829,7 +829,7 @@ tbody.collapse.in{display:table-row-group}
 .btn-group>.btn-group:first-child:not(:last-child)>.btn:last-child,.btn-group>.btn-group:first-child:not(:last-child)>.dropdown-toggle,.btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle){border-bottom-right-radius:0;border-top-right-radius:0}
 .btn-group>.btn-group:last-child:not(:first-child)>.btn:first-child,.btn-group>.btn:last-child:not(:first-child),.btn-group>.dropdown-toggle:not(:first-child){border-bottom-left-radius:0;border-top-left-radius:0}
 .btn-group-vertical>.btn:not(:first-child):not(:last-child),.btn-group>.btn-group:not(:first-child):not(:last-child)>.btn,.btn-group>.btn:not(:first-child):not(:last-child):not(.dropdown-toggle){border-radius:0}
-.dropdown-menu>li>a{display:block;font-weight:400;color:#363636}
+.dropdown-menu>li>a{display:block;clear:both;font-weight:400;color:#363636}
 .dropdown-menu>li>a:focus,.dropdown-menu>li>a:hover{text-decoration:none;color:#4d5258;background-color:#def3ff}
 .dropdown-menu>.active>a,.dropdown-menu>.active>a:focus,.dropdown-menu>.active>a:hover{color:#fff;text-decoration:none;outline:0}
 .dropdown-menu>.disabled>a,.dropdown-menu>.disabled>a:focus,.dropdown-menu>.disabled>a:hover{color:#9c9c9c}
@@ -5718,7 +5718,7 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .log-size-warning{margin:0}
 @media (max-width:991px){.log-size-warning{margin-top:20px}
 }
-.log-view{margin-bottom:20px;position:relative}
+.log-view{clear:both;margin-bottom:20px;position:relative}
 .log-end-msg,.log-view .log-scroll a{font-family:"Open Sans",Helvetica,Arial,sans-serif}
 .chromeless .log-view{margin-bottom:0}
 .log-view pre,.log-view pre code{background-color:transparent;border:0;margin-bottom:0;overflow:visible;padding:0 10px}
@@ -5903,19 +5903,25 @@ kubernetes-container-terminal .terminal-actions .spinner{top:5px}
 .environment-from-editor .faux-input-group,.key-value-editor .faux-input-group{border-collapse:separate;display:table;position:relative}
 .environment-from-editor .faux-input-group.faux-input-single-input,.key-value-editor .faux-input-group.faux-input-single-input{width:100%}
 .environment-from-editor .environment-from-editor-button,.environment-from-editor .key-value-editor-buttons,.key-value-editor .environment-from-editor-button,.key-value-editor .key-value-editor-buttons{position:absolute;right:0;top:0;width:52px}
-.environment-from-editor .environment-from-entry,.environment-from-editor .key-value-editor-entry,.key-value-editor .environment-from-entry,.key-value-editor .key-value-editor-entry{display:table;margin-bottom:15px;padding-right:52px;position:relative;table-layout:fixed;width:100%}
-@media (min-width:992px){.environment-from-editor .environment-from-entry .environment-from-editor-button,.environment-from-editor .key-value-editor-entry .environment-from-editor-button,.key-value-editor .environment-from-entry .environment-from-editor-button,.key-value-editor .key-value-editor-entry .environment-from-editor-button{float:left;padding-right:5px;position:relative;width:auto}
+.environment-from-editor .environment-from-entry,.key-value-editor .environment-from-entry{display:table;margin-bottom:15px;padding-right:0;position:relative;table-layout:fixed;width:100%}
+@media (max-width:479px){.environment-from-editor .environment-from-entry,.key-value-editor .environment-from-entry{padding-right:52px}
 }
-.environment-from-editor .environment-from-entry .environment-from-input,.environment-from-editor .key-value-editor-entry .environment-from-input,.key-value-editor .environment-from-entry .environment-from-input,.key-value-editor .key-value-editor-entry .environment-from-input{float:left;margin-bottom:0;padding-right:5px;width:100%}
-@media (min-width:992px){.environment-from-editor .environment-from-entry .environment-from-input,.environment-from-editor .key-value-editor-entry .environment-from-input,.key-value-editor .environment-from-entry .environment-from-input,.key-value-editor .key-value-editor-entry .environment-from-input{width:50%}
+@media (min-width:480px){.environment-from-editor .environment-from-entry .environment-from-editor-button,.key-value-editor .environment-from-entry .environment-from-editor-button{float:left;padding:0 5px;position:relative;width:auto}
 }
-.environment-from-editor .environment-from-entry .environment-from-input .faux-input-group,.environment-from-editor .environment-from-entry .environment-from-input .ui-select,.environment-from-editor .key-value-editor-entry .environment-from-input .faux-input-group,.environment-from-editor .key-value-editor-entry .environment-from-input .ui-select,.key-value-editor .environment-from-entry .environment-from-input .faux-input-group,.key-value-editor .environment-from-entry .environment-from-input .ui-select,.key-value-editor .key-value-editor-entry .environment-from-input .faux-input-group,.key-value-editor .key-value-editor-entry .environment-from-input .ui-select{float:left;width:100%}
+.environment-from-editor .environment-from-entry .environment-from-input,.key-value-editor .environment-from-entry .environment-from-input{float:left;margin-bottom:0;padding-right:5px;width:100%}
+@media (min-width:480px){.environment-from-editor .environment-from-entry .environment-from-input,.key-value-editor .environment-from-entry .environment-from-input{width:calc(50% - 26px)}
+}
+.environment-from-editor .environment-from-entry .environment-from-input.prefix,.key-value-editor .environment-from-entry .environment-from-input.prefix{padding-right:0;width:calc(50% + 26px)}
+@media (max-width:479px){.environment-from-editor .environment-from-entry .environment-from-input.prefix,.key-value-editor .environment-from-entry .environment-from-input.prefix{margin-top:5px;width:100%}
+}
+.environment-from-editor .environment-from-entry .environment-from-input .faux-input-group,.environment-from-editor .environment-from-entry .environment-from-input .ui-select,.key-value-editor .environment-from-entry .environment-from-input .faux-input-group,.key-value-editor .environment-from-entry .environment-from-input .ui-select{float:left;width:100%}
 .environment-from-editor .environment-from-entry .environment-from-view-details,.key-value-editor .environment-from-entry .environment-from-view-details{float:left;line-height:1;padding:6px 0 0}
+.environment-from-editor .key-value-editor-entry,.key-value-editor .key-value-editor-entry{display:table;margin-bottom:15px;padding-right:52px;position:relative;table-layout:fixed;width:100%}
 .environment-from-editor .key-value-editor-input .ui-select+.ui-select,.key-value-editor .key-value-editor-input .ui-select+.ui-select{padding-top:5px}
 @media (min-width:992px){.environment-from-editor .key-value-editor-input .ui-select,.key-value-editor .key-value-editor-input .ui-select{float:left;width:50%}
 .environment-from-editor .key-value-editor-input .ui-select+.ui-select,.key-value-editor .key-value-editor-input .ui-select+.ui-select{padding-top:0;padding-left:5px}
 }
-.key-value-editor .key-value-editor-input,.key-value-editor-header{float:left;margin-bottom:0;padding-right:5px;width:50%}
+.environment-from-editor-header,.key-value-editor .key-value-editor-input,.key-value-editor-header{float:left;margin-bottom:0;padding-right:5px;width:50%}
 .membership .content-pane,.membership .content-pane .col-add-role{width:100%}
 .environment-from-editor-entry-header,.key-value-editor-entry-header{padding-right:52px}
 .environment-from-editor-header,.key-value-editor-header{margin-bottom:5px}

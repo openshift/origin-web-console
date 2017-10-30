@@ -6700,7 +6700,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"$ctrl.showHeader\" class=\"environment-from-entry environment-from-editor-entry-header\">\n" +
     "<div class=\"form-group environment-from-editor-header value-header\">\n" +
     "<div class=\"input-group\">\n" +
-    "<span class=\"help-block\">{{$ctrl.selectorPlaceholder}}</span>\n" +
+    "Config Map/Secret\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group environment-from-editor-header value-header\">\n" +
+    "<div class=\"input-group\" ng-if=\"!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()\">\n" +
+    "Prefix\n" +
+    "<small class=\"pficon pficon-help\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Optional prefix added to each environment variable name.\"></small>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6713,8 +6719,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"entry.configMapRef.name || entry.secretRef.name\" class=\"faux-form-control readonly\">\n" +
     "Use all keys and values from\n" +
-    "<span ng-if=\"entry.configMapRef.name\">config map {{entry.configMapRef.name}}</span>\n" +
-    "<span ng-if=\"entry.secretRef.name\">secret {{entry.secretRef.name}}</span>\n" +
+    "<span ng-if=\"entry.configMapRef.name\">config map {{entry.configMapRef.name}}.</span>\n" +
+    "<span ng-if=\"entry.secretRef.name\">secret {{entry.secretRef.name}}.</span>\n" +
+    "<span ng-if=\"entry.prefix\">Names will be prefixed with \"{{entry.prefix}}\"</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!$ctrl.isEnvFromReadonly(entry) && $ctrl.hasOptions()\">\n" +
@@ -6733,16 +6740,32 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div class=\"form-group environment-from-input prefix\">\n" +
+    "<div class=\"environment-from-input\" ng-if=\"!$ctrl.isEnvFromReadonly(entry) && $ctrl.hasOptions()\" ng-class=\"{ 'has-error': ($ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$invalid && $ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$touched) }\">\n" +
+    "<label for=\"envfrom-prefix-{{$index}}\" class=\"sr-only\">Prefix</label>\n" +
+    "<input type=\"text\" class=\"form-control\" placeholder=\"Add prefix\" id=\"envfrom-prefix-{{$index}}\" name=\"envfrom-prefix-{{$index}}\" ng-model=\"entry.prefix\" ng-pattern=\"/^[a-zA-Z0-9_]+$/\">\n" +
+    "<span ng-show=\"$ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$touched\">\n" +
+    "<span class=\"help-block key-validation-error\" ng-show=\"$ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$error.pattern\">\n" +
+    "<span class=\"validation-text\">Please enter a valid prefix.</span>\n" +
+    "<span class=\"help action-inline\">\n" +
+    "<a aria-hidden=\"true\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"A valid prefix is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\">\n" +
+    "<span class=\"pficon pficon-help\"></span>\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</div>\n" +
     "<div ng-if=\"!$ctrl.isEnvFromReadonly(entry) && $ctrl.hasEntries()\" class=\"environment-from-editor-button\">\n" +
     "<span ng-if=\"!$ctrl.cannotSort && $ctrl.entries.length > 1\" class=\"fa fa-bars sort-row\" role=\"button\" aria-label=\"Move row\" aria-grabbed=\"false\" as-sortable-item-handle></span>\n" +
     "<a ng-if=\"!$ctrl.cannotDeleteAny\" href=\"\" class=\"pficon pficon-close delete-row as-sortable-item-delete\" role=\"button\" aria-label=\"Delete row\" ng-click=\"$ctrl.deleteEntry($index, 1)\"></a>\n" +
     "</div>\n" +
     "<div class=\"environment-from-view-details\">\n" +
-    "<a href=\"\" ng-if=\"entry.selectedEnvFrom\" ng-click=\"$ctrl.viewOverlayPanel(entry.selectedEnvFrom)\">View Details</a>\n" +
+    "<a ng-if=\"entry.selectedEnvFrom\" href=\"\" ng-click=\"$ctrl.viewOverlayPanel(entry.selectedEnvFrom)\">View Details</a>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"environment-from-entry form-group\" ng-if=\"!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()\">\n" +
-    "<a href=\"\" class=\"add-row-link\" role=\"button\" ng-click=\"$ctrl.onAddRow()\">{{$ctrl.addRowLink}}</a>\n" +
+    "<a href=\"\" class=\"add-row-link\" role=\"button\" ng-click=\"$ctrl.onAddRow()\">Add ALL Values from Config Map or Secret</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "<overlay-panel class=\"add-config-to-application\" show-panel=\"$ctrl.overlayPanelVisible\" show-close=\"true\" handle-close=\"$ctrl.closeOverlayPanel\">\n" +
@@ -6796,7 +6819,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Environment From\n" +
     "<span class=\"pficon pficon-help\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Environment From lets you add all key-value pairs from a config map or secret as environment variables.\"></span>\n" +
     "</h4>\n" +
-    "<edit-environment-from entries=\"container.envFrom\" selector-placeholder=\"Config Map/Secret\" env-from-selector-options=\"$ctrl.valueFromObjects\" add-row-link=\"Add ALL Values from Config Map or Secret\" is-readonly=\"$ctrl.ngReadonly\" show-header>\n" +
+    "<edit-environment-from entries=\"container.envFrom\" env-from-selector-options=\"$ctrl.valueFromObjects\" is-readonly=\"$ctrl.ngReadonly\" show-header>\n" +
     "</edit-environment-from>\n" +
     "</div>\n" +
     "<button class=\"btn btn-default\" ng-if=\"$ctrl.canIUpdate && !$ctrl.ngReadonly\" ng-click=\"$ctrl.save()\" ng-disabled=\"$ctrl.form.$pristine || $ctrl.form.$invalid\">Save</button>\n" +
