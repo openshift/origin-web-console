@@ -129,11 +129,16 @@
 
   <overlay-panel class="add-config-to-application" show-panel="$ctrl.overlayPanelVisible" show-close="true" handle-close="$ctrl.closeOverlayPanel">
     <div class="dialog-title">
-      <h3>Value Details</h3>
+      <h3>{{$ctrl.overlayPaneEntryDetails.kind | humanizeKind : true}} Details</h3>
     </div>
     <div class="modal-body">
       <h4>{{$ctrl.overlayPaneEntryDetails.metadata.name}}
-        <small class="muted">&ndash; {{$ctrl.overlayPaneEntryDetails.kind | humanizeKind : true}}</small></h4>
+        <small ng-if="$ctrl.overlayPaneEntryDetails.kind === 'Secret'" class="mar-left-sm">
+          <a href=""
+             role="button"
+             ng-click="$ctrl.showSecret = !$ctrl.showSecret">{{$ctrl.showSecret ? "Hide" : "Reveal"}} Secret</a>
+        </small>
+      </h4>
 
       <div ng-if="!($ctrl.overlayPaneEntryDetails.data | size)" class="empty-state-message text-center">
         The {{$ctrl.overlayPaneEntryDetails.kind | humanizeKind}} has no properties.
@@ -142,7 +147,7 @@
       <div ng-if="$ctrl.overlayPaneEntryDetails.data | size" class="table-responsive scroll-shadows-horizontal">
         <table class="table table-bordered table-bordered-columns config-map-table key-value-table">
           <tbody>
-            <tr ng-repeat="(prop, value) in $ctrl.overlayPaneEntryDetails.data">
+            <tr ng-repeat="(prop, value) in $ctrl.decodedData">
               <td class="key">{{prop}}</td>
               <td class="value">
                 <truncate-long-text
@@ -153,7 +158,18 @@
                   expandable="true">
                 </truncate-long-text>
 
-                <span ng-if="$ctrl.overlayPaneEntryDetails.kind === 'Secret'">&#42;&#42;&#42;&#42;&#42;</span>
+                <span ng-if="!$ctrl.showSecret && $ctrl.overlayPaneEntryDetails.kind === 'Secret'">&#42;&#42;&#42;&#42;&#42;</span>
+                <div ng-if="$ctrl.showSecret && $ctrl.overlayPaneEntryDetails.kind === 'Secret'">
+                  <truncate-long-text
+                    content="value"
+                    limit="50"
+                    newline-limit="2"
+                    expandable="true">
+                  </truncate-long-text>
+                  <div ng-if="decodedData.$$nonprintable[prop]" class="help-block">
+                    This secret value contains non-printable characters and is displayed as a Base64-encoded string.
+                  </div>
+                </div>
               </td>
             </tr>
           </tbody>

@@ -5,6 +5,7 @@
       '$attrs',
       '$filter',
       'keyValueEditorUtils',
+      'SecretsService',
       EditEnvironmentFrom
     ],
     bindings: {
@@ -17,7 +18,8 @@
 
   function EditEnvironmentFrom($attrs,
                                $filter,
-                               utils) {
+                               utils,
+                               SecretsService) {
     var ctrl = this;
     var canI = $filter('canI');
     var humanizeKind = $filter('humanizeKind');
@@ -26,11 +28,18 @@
     ctrl.setFocusClass = 'edit-environment-from-set-focus-' + uniqueId;
 
     ctrl.viewOverlayPanel = function(entry) {
+      ctrl.decodedData = entry.data;
       ctrl.overlayPaneEntryDetails = entry;
+
+      if (entry.kind === 'Secret') {
+        ctrl.decodedData = SecretsService.decodeSecretData(entry.data);
+      }
+
       ctrl.overlayPanelVisible = true;
     };
 
     ctrl.closeOverlayPanel = function() {
+      ctrl.showSecret = false;
       ctrl.overlayPanelVisible = false;
     };
 
