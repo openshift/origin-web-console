@@ -9325,7 +9325,7 @@ lastTimestamp: !0
 var t = _.get(e, "sortConfig.currentField.id", "lastTimestamp");
 l !== t && (l = t, e.sortConfig.isAscending = !u[l]);
 var n = e.sortConfig.isAscending ? "asc" : "desc";
-c = _.orderBy(e.events, [ t ], [ n ]);
+c = _.orderBy(e.events, [ t, "metadata.resourceVersion" ], [ n, n ]);
 }, m = [], p = function() {
 e.filterExpressions = m = a.generateKeywords(_.get(e, "filter.text"));
 }, f = [ "reason", "message", "type" ];
@@ -14638,7 +14638,7 @@ return c.isImportantAPIEvent(t) && !c.isCleared(t.metadata.uid) && (e[t.metadata
 var n = r.project;
 return _.assign({}, e[n], t[n]);
 }, N = function(e) {
-return _.orderBy(e, [ "event.lastTimestamp", "event.firstTimestamp" ], [ "desc", "desc" ]);
+return _.orderBy(e, [ "event.lastTimestamp", "event.metadata.resourceVersion" ], [ "desc", "desc" ]);
 }, D = function() {
 o.$evalAsync(function() {
 p.notificationGroups = [ S(r.project, N(T(g, v))) ], k();
