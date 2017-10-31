@@ -142,7 +142,7 @@
                     </ui-select>
                     <button
                       ng-disabled="disableAddForm || (!subject.newRole)"
-                      ng-click="addRoleTo(subject.name, subjectKind.name, subject.newRole)"
+                      ng-click="addRoleTo(subject.name, subjectKind.name, subject.newRole, subject.namespace)"
                       class="btn btn-default add-role-to">
                       Add
                     </button>
