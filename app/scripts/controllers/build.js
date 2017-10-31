@@ -107,7 +107,10 @@ angular.module('openshiftConsole')
 
           var buildNumber = annotation(build, "buildNumber");
           if (buildNumber) {
-            $scope.breadcrumbs[2].title = "#" + buildNumber;
+            // tmp fix for issue #1942 
+            if($scope.breadcrumbs[2]) {
+              $scope.breadcrumbs[2].title = "#" + buildNumber;
+            }
           }
           if (action === "DELETED") {
             $scope.alerts["deleted"] = {
