@@ -14,9 +14,8 @@
             ng-repeat="appForBinding in ctrl.appsForBinding(binding.metadata.name)">
             {{appForBinding.metadata.name}} <small class="text-muted">&ndash; {{ appForBinding.kind | humanizeKind : true}}</small>
           </div>
-          <div ng-if="!(ctrl.appsForBinding(binding.metadata.name)  | size)">
-            {{binding.spec.secretName}}
-            <small class="text-muted">&ndash; Secret</small>
+          <div ng-if="!(ctrl.appsForBinding(binding.metadata.name) | size)">
+            {{binding.metadata.name}}
           </div>
           <div>
             <small class="text-muted">Created <span am-time-ago="binding.metadata.creationTimestamp"></span></small>

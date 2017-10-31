@@ -12989,7 +12989,7 @@ i.nextTitle = "Close", i.wizardComplete = !0, u(), m();
 };
 i.$onInit = function() {
 var e;
-e = "ServiceInstance" === i.target.kind ? s("pod_presets") ? "Applications" : "Bindings" : "Services", i.displayName = c(i.target), i.steps = [ {
+e = "ServiceInstance" === i.target.kind ? s("pod_presets") ? "Applications" : "Bindings" : "Services", i.displayName = c(i.target, i.serviceClass), i.steps = [ {
 id: "deleteForm",
 label: e,
 view: "views/directives/bind-service/delete-binding-select-form.html",
@@ -13015,7 +13015,8 @@ bindings: {
 target: "<",
 bindings: "<",
 applicationsByBinding: "<",
-onClose: "<"
+onClose: "<",
+serviceClass: "<"
 },
 templateUrl: "views/directives/unbind-service.html"
 });

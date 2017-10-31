@@ -15,7 +15,8 @@
       target: '<',
       bindings: '<',
       applicationsByBinding: '<',
-      onClose: '<'
+      onClose: '<',
+      serviceClass: '<'
     },
     templateUrl: 'views/directives/unbind-service.html'
   });
@@ -87,7 +88,7 @@
       } else {
         formStepLabel = 'Services';
       }
-      ctrl.displayName = serviceInstanceDisplayName(ctrl.target);
+      ctrl.displayName = serviceInstanceDisplayName(ctrl.target, ctrl.serviceClass);
       ctrl.steps = [{
         id: 'deleteForm',
         label: formStepLabel,
