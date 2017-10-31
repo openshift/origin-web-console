@@ -9066,9 +9066,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/process-template-dialog/process-template-select.html',
     "<div class=\"order-service-config\">\n" +
     "<div class=\"config-top\">\n" +
-    "<div class=\"select-project-for-template\">\n" +
+    "<div ng-if=\"$ctrl.numTemplateProjects\" class=\"select-project-for-template\">\n" +
     "<h2>Select from Project</h2>\n" +
-    "<ui-select name=\"selectProject\" ng-model=\"$ctrl.templateProject\" ng-change=\"$ctrl.templateProjectChange()\" search-enabled=\"$ctrl.searchEnabled\">\n" +
+    "<label ng-if=\"$ctrl.numTemplateProjects === 1\">{{$ctrl.templateProject | displayName}}</label>\n" +
+    "<ui-select ng-if=\"$ctrl.numTemplateProjects > 1\" name=\"selectProject\" ng-model=\"$ctrl.templateProject\" ng-change=\"$ctrl.templateProjectChange()\" search-enabled=\"$ctrl.searchEnabled\">\n" +
     "<ui-select-match placeholder=\"Select a Project\">\n" +
     "{{$select.selected | displayName}}\n" +
     "</ui-select-match>\n" +
@@ -9081,7 +9082,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
-    "<pf-empty-state ng-if=\"!$ctrl.templateProject\" config=\"$ctrl.projectEmptyState\"></pf-empty-state>\n" +
+    "<pf-empty-state ng-if=\"!$ctrl.numTemplateProjects\" config=\"$ctrl.noProjectsEmptyState\"></pf-empty-state>\n" +
+    "<pf-empty-state ng-if=\"!$ctrl.templateProject && $ctrl.numTemplateProjects\" config=\"$ctrl.projectEmptyState\"></pf-empty-state>\n" +
     "<pf-empty-state ng-if=\"$ctrl.templateProject && !$ctrl.catalogItems.length\" config=\"$ctrl.templatesEmptyState\"></pf-empty-state>\n" +
     "<div class=\"services-view\">\n" +
     "<div ng-if=\"$ctrl.templateProject && $ctrl.catalogItems.length\" class=\"services-items\">\n" +
