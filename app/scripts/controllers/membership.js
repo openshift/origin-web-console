@@ -274,7 +274,8 @@ angular
             project: project,
             subjectKinds: subjectKinds,
             canUpdateRolebindings: canI('rolebindings', 'update', projectName),
-            confirmRemove: function(subjectName, kindName, roleName) {
+            confirmRemove: function(subjectName, kindName, roleName, namespace) {
+
               var redirectToProjectList = null;
               var modalScope = createModalScope(subjectName, kindName, roleName, $scope.user.metadata.name);
               if(_.isEqual(subjectName, $scope.user.metadata.name)) {
@@ -294,7 +295,7 @@ angular
               })
               .result.then(function() {
                 RoleBindingsService
-                  .removeSubject(subjectName, roleName, $scope.roleBindings, requestContext)
+                  .removeSubject(subjectName, roleName, namespace, $scope.roleBindings, requestContext)
                   .then(function(updateRolebinding) {
                     if(redirectToProjectList) {
                       $location.url("./");

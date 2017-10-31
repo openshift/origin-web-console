@@ -2514,17 +2514,19 @@ l.subjects.push(n);
 } else l.subjects = [ n ];
 return i(l), t.update("rolebindings", l.metadata.name, l, s);
 },
-removeSubject: function(n, a, o, s) {
-var c = _.filter(o, {
+removeSubject: function(n, a, o, s, c) {
+var l = _.filter(s, {
 roleRef: {
 name: a
 }
 });
-return e.all(_.map(c, function(e) {
+return e.all(_.map(l, function(e) {
 var a = r();
-return e = _.extend(a, e), i(e), e.subjects = _.reject(e.subjects, {
+e = _.extend(a, e), i(e);
+var s = {
 name: n
-}), e.subjects.length ? t.update("rolebindings", e.metadata.name, e, s) : t.delete("rolebindings", e.metadata.name, s).then(function() {
+};
+return o && (s.namespace = o), e.subjects = _.reject(e.subjects, s), e.subjects.length ? t.update("rolebindings", e.metadata.name, e, c) : t.delete("rolebindings", e.metadata.name, c).then(function() {
 return e;
 });
 }));
@@ -5222,20 +5224,20 @@ f = r, P(), k(f), angular.extend(a, {
 project: n,
 subjectKinds: E,
 canUpdateRolebindings: y("rolebindings", "update", g),
-confirmRemove: function(n, r, i) {
-var c = null, l = T(n, r, i, a.user.metadata.name);
-_.isEqual(n, a.user.metadata.name) && u.isLastRole(a.user.metadata.name, a.roleBindings) && (c = !0), o.open({
+confirmRemove: function(n, r, i, c) {
+var l = null, d = T(n, r, i, a.user.metadata.name);
+_.isEqual(n, a.user.metadata.name) && u.isLastRole(a.user.metadata.name, a.roleBindings) && (l = !0), o.open({
 animation: !0,
 templateUrl: "views/modals/confirm.html",
 controller: "ConfirmModalController",
 resolve: {
 modalConfig: function() {
-return l;
+return d;
 }
 }
 }).result.then(function() {
-m.removeSubject(n, i, a.roleBindings, f).then(function(e) {
-c ? t.url("./") : (s.getProjectRules(g, !0).then(function() {
+m.removeSubject(n, i, c, a.roleBindings, f).then(function(e) {
+l ? t.url("./") : (s.getProjectRules(g, !0).then(function() {
 P(e[0]);
 var t = y("rolebindings", "update", g);
 angular.extend(a, {
