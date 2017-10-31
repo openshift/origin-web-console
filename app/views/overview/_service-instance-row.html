@@ -9,13 +9,15 @@
           <a ng-href="{{row.apiObject | navigateResourceURL}}" ng-bind-html="row.displayName | highlightKeywords : row.state.filterKeywords"></a>
           <div ng-bind-html="row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords" class="list-row-longname"></div>
         </h3>
-        <div class="status-icons" ng-if="!row.expanded">
+        <div class="status-icons" ng-if="!row.expanded" ng-init="tooltipID = 'instance-status-tooltip-' + $id">
           <notification-icon alerts="row.notifications"></notification-icon>
-          <div ng-switch="row.instanceStatus" class="instance-status-notification">
+          <div ng-switch="row.instanceStatus" class="instance-status-notification" id="{{tooltipID}}">
+            <!-- Set the tooltip container so we can add write CSS rules that target the message. -->
             <span ng-switch-when="failed"
-                  dynamic-content="{{row.apiObject | serviceInstanceFailedMessage}}"
+                  dynamic-content="{{row.getFailedTooltipText()}}"
                   data-toggle="tooltip"
-                  data-trigger="hover">
+                  data-trigger="hover"
+                  data-container="#{{tooltipID}}">
               <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
               Error
             </span>
@@ -111,12 +113,16 @@
                 <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
                 <span class="sr-only">error</span>
                 <span class="strong">The service failed.</span>
-                <span class="mar-right-md">
-                  <truncate-long-text content="row.apiObject | serviceInstanceFailedMessage" limit="265"></truncate-long-text>
+                <span class="instance-status-message">
+                  <truncate-long-text
+                    content="row.apiObject | serviceInstanceFailedMessage"
+                    expandable="true"
+                    limit="265"
+                    newline-limit="4"></truncate-long-text>
                 </span>
-                <span ng-if="row.serviceInstancesVersion | canI : 'delete'" class="nowrap">
+                <div ng-if="row.serviceInstancesVersion | canI : 'delete'">
                   <a href="" ng-click="row.deprovision()">Delete This Service</a>
-                </span>
+                </div>
               </div>
             </div>
           </div>
@@ -126,7 +132,13 @@
                 <span class="pficon pficon-info" aria-hidden="true"></span>
                 <span class="sr-only">info</span>
                 <span class="strong">The service is not yet ready.</span>
-                <truncate-long-text content="row.apiObject | serviceInstanceReadyMessage" limit="265"></truncate-long-text>
+                <span class="instance-status-message">
+                  <truncate-long-text
+                    content="row.apiObject | serviceInstanceReadyMessage"
+                    expandable="true"
+                    limit="265"
+                    newline-limit="4"></truncate-long-text>
+                </span>
               </div>
             </div>
           </div>
