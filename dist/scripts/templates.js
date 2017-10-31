@@ -10718,7 +10718,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
-    "<button ng-disabled=\"disableAddForm || (!subject.newRole)\" ng-click=\"addRoleTo(subject.name, subjectKind.name, subject.newRole)\" class=\"btn btn-default add-role-to\">\n" +
+    "<button ng-disabled=\"disableAddForm || (!subject.newRole)\" ng-click=\"addRoleTo(subject.name, subjectKind.name, subject.newRole, subject.namespace)\" class=\"btn btn-default add-role-to\">\n" +
     "Add\n" +
     "</button>\n" +
     "</div>\n" +
