@@ -730,6 +730,7 @@ group: ""
 resource: "statefulsets",
 group: "apps"
 } ],
+MEMBERSHIP_WHITELIST: [ "admin", "basic-user", "edit", "system:deployer", "system:image-builder", "system:image-puller", "system:image-pusher", "view" ],
 EVENTS_TO_SHOW: {
 FailedCreate: !0,
 FailedDelete: !0,
@@ -2361,8 +2362,9 @@ t[e.tag] = t[e.tag] || {}, t[e.tag].name = e.tag, t[e.tag].status = angular.copy
 }), t;
 }
 };
-}), angular.module("openshiftConsole").factory("MembershipService", [ "$filter", function(e) {
-var t = e("annotation"), n = function() {
+}), angular.module("openshiftConsole").factory("MembershipService", [ "$filter", "Constants", function(e, t) {
+e("annotation");
+var n = function() {
 return _.reduce(_.slice(arguments), function(e, t, n) {
 return t ? _.isEqual(n, 0) ? t : e + "-" + t : e;
 }, "");
@@ -2416,7 +2418,7 @@ return _.sortBy(e, "metadata.name");
 },
 filterRoles: function(e) {
 return _.filter(e, function(e) {
-return "true" !== t(e, "systemOnly");
+return _.includes(t.MEMBERSHIP_WHITELIST, e.metadata.name);
 });
 },
 mapRolesForUI: function(e, t) {
@@ -9237,60 +9239,60 @@ n[e.key] = e.value;
 };
 } ]), function() {
 angular.module("openshiftConsole").component("editEnvironmentFrom", {
-controller: [ "$attrs", "$filter", "keyValueEditorUtils", function(e, t, n) {
-var a = this, r = t("canI"), o = t("humanizeKind"), i = _.uniqueId();
-a.setFocusClass = "edit-environment-from-set-focus-" + i, a.viewOverlayPanel = function(e) {
-a.overlayPaneEntryDetails = e, a.overlayPanelVisible = !0;
-}, a.closeOverlayPanel = function() {
-a.overlayPanelVisible = !1;
+controller: [ "$attrs", "$filter", "keyValueEditorUtils", "SecretsService", function(e, t, n, a) {
+var r = this, o = t("canI"), i = t("humanizeKind"), s = _.uniqueId();
+r.setFocusClass = "edit-environment-from-set-focus-" + s, r.viewOverlayPanel = function(e) {
+r.decodedData = e.data, r.overlayPaneEntryDetails = e, "Secret" === e.kind && (r.decodedData = a.decodeSecretData(e.data)), r.overlayPanelVisible = !0;
+}, r.closeOverlayPanel = function() {
+r.showSecret = !1, r.overlayPanelVisible = !1;
 };
-var s = function(e, t) {
+var c = function(e, t) {
 e && e.push(t || {});
 };
-a.onAddRow = function() {
-s(a.envFromEntries), n.setFocusOn("." + a.setFocusClass);
-}, a.deleteEntry = function(e, t) {
-a.envFromEntries && !a.envFromEntries.length || (a.envFromEntries.splice(e, t), !a.envFromEntries.length && a.addRowLink && s(a.envFromEntries), a.updateEntries(a.envFromEntries), a.editEnvironmentFromForm.$setDirty());
-}, a.hasOptions = function() {
-return !_.isEmpty(a.envFromSelectorOptions);
-}, a.hasEntries = function() {
-return _.some(a.entries, function(e) {
+r.onAddRow = function() {
+c(r.envFromEntries), n.setFocusOn("." + r.setFocusClass);
+}, r.deleteEntry = function(e, t) {
+r.envFromEntries && !r.envFromEntries.length || (r.envFromEntries.splice(e, t), r.envFromEntries.length || c(r.envFromEntries), r.updateEntries(r.envFromEntries), r.editEnvironmentFromForm.$setDirty());
+}, r.hasOptions = function() {
+return !_.isEmpty(r.envFromSelectorOptions);
+}, r.hasEntries = function() {
+return _.some(r.entries, function(e) {
 return _.get(e, "configMapRef.name") || _.get(e, "secretRef.name");
 });
-}, a.isEnvFromReadonly = function(e) {
-return !0 === a.isReadonly || e && !0 === e.isReadonly;
-}, a.groupByKind = function(e) {
-return o(e.kind);
-}, a.dragControlListeners = {
+}, r.isEnvFromReadonly = function(e) {
+return !0 === r.isReadonly || e && !0 === e.isReadonly;
+}, r.groupByKind = function(e) {
+return i(e.kind);
+}, r.dragControlListeners = {
 accept: function(e, t) {
 return e.itemScope.sortableScope.$id === t.$id;
 },
 orderChanged: function() {
-a.editEnvironmentFromForm.$setDirty();
+r.editEnvironmentFromForm.$setDirty();
 }
-}, a.envFromObjectSelected = function(e, t, n) {
-var r = {};
+}, r.envFromObjectSelected = function(e, t, n) {
+var a = {};
 switch (n.kind) {
 case "Secret":
-r.secretRef = {
+a.secretRef = {
 name: n.metadata.name
-}, delete a.envFromEntries[e].configMapRef;
+}, delete r.envFromEntries[e].configMapRef;
 break;
 
 case "ConfigMap":
-r.configMapRef = {
+a.configMapRef = {
 name: n.metadata.name
-}, delete a.envFromEntries[e].secretRef;
+}, delete r.envFromEntries[e].secretRef;
 }
-_.assign(a.envFromEntries[e], r), a.updateEntries(a.envFromEntries);
-}, a.updateEntries = function(e) {
-a.entries = _.filter(e, function(e) {
+t.prefix && (a.prefix = t.prefix), _.assign(r.envFromEntries[e], a), r.updateEntries(r.envFromEntries);
+}, r.updateEntries = function(e) {
+r.entries = _.filter(e, function(e) {
 return e.secretRef || e.configMapRef;
 });
 };
-var c = function() {
+var l = function() {
 var e = {}, t = {};
-a.envFromEntries = a.entries || [], a.envFromEntries.length || s(a.envFromEntries), _.each(a.envFromSelectorOptions, function(n) {
+r.envFromEntries = r.entries || [], r.envFromEntries.length || c(r.envFromEntries), _.each(r.envFromSelectorOptions, function(n) {
 switch (n.kind) {
 case "ConfigMap":
 e[n.metadata.name] = n;
@@ -9299,25 +9301,23 @@ break;
 case "Secret":
 t[n.metadata.name] = n;
 }
-}), _.each(a.envFromEntries, function(n) {
-var a, o;
-if (n.configMapRef && (a = "configMapRef", o = "configmaps"), n.secretRef && (a = "secretRef", o = "secrets"), a && o) {
+}), _.each(r.envFromEntries, function(n) {
+var a, r;
+if (n.configMapRef && (a = "configMapRef", r = "configmaps"), n.secretRef && (a = "secretRef", r = "secrets"), a && r) {
 var i = n[a].name;
-n.configMapRef && i in e && (n.selectedEnvFrom = e[i]), n.secretRef && i in t && (n.selectedEnvFrom = t[i]), r(o, "get") || (n.isReadonly = !0);
+n.configMapRef && i in e && (n.selectedEnvFrom = e[i]), n.secretRef && i in t && (n.selectedEnvFrom = t[i]), o(r, "get") || (n.isReadonly = !0);
 }
 });
 };
-a.$onInit = function() {
-c(), "cannotDelete" in e && (a.cannotDeleteAny = !0), "cannotSort" in e && (a.cannotSort = !0), "showHeader" in e && (a.showHeader = !0), a.envFromEntries && !a.envFromEntries.length && s(a.envFromEntries);
-}, a.$onChanges = function(e) {
-(e.entries || e.envFromSelectorOptions) && c();
+r.$onInit = function() {
+l(), "cannotDelete" in e && (r.cannotDeleteAny = !0), "cannotSort" in e && (r.cannotSort = !0), "showHeader" in e && (r.showHeader = !0), r.envFromEntries && !r.envFromEntries.length && c(r.envFromEntries);
+}, r.$onChanges = function(e) {
+(e.entries || e.envFromSelectorOptions) && l();
 };
 } ],
 bindings: {
-addRowLink: "@",
 entries: "=",
 envFromSelectorOptions: "<",
-selectorPlaceholder: "@",
 isReadonly: "<?"
 },
 templateUrl: "views/directives/edit-environment-from.html"
@@ -9345,7 +9345,7 @@ lastTimestamp: !0
 var t = _.get(e, "sortConfig.currentField.id", "lastTimestamp");
 l !== t && (l = t, e.sortConfig.isAscending = !u[l]);
 var n = e.sortConfig.isAscending ? "asc" : "desc";
-c = _.orderBy(e.events, [ t ], [ n ]);
+c = _.orderBy(e.events, [ t, "metadata.resourceVersion" ], [ n, n ]);
 }, m = [], p = function() {
 e.filterExpressions = m = a.generateKeywords(_.get(e, "filter.text"));
 }, f = [ "reason", "message", "type" ];
@@ -13856,21 +13856,21 @@ templateUrl: "views/overview/_list-row.html"
 }(), function() {
 angular.module("openshiftConsole").component("serviceInstanceRow", {
 controller: [ "$filter", "APIService", "AuthorizationService", "BindingService", "ListRowUtils", "ServiceInstancesService", function(e, t, n, a, r, o) {
-var i = this, s = e("isBindingFailed"), c = e("isBindingReady");
+var i = this, s = e("isBindingFailed"), c = e("isBindingReady"), l = e("serviceInstanceFailedMessage"), u = e("truncate");
 _.extend(i, r.ui);
-var l = e("serviceInstanceDisplayName");
+var d = e("serviceInstanceDisplayName");
 i.serviceBindingsVersion = t.getPreferredVersion("servicebindings"), i.serviceInstancesVersion = t.getPreferredVersion("serviceinstances");
-var u = function() {
+var m = function() {
 var e = o.getServiceClassNameForInstance(i.apiObject);
 return _.get(i, [ "state", "serviceClasses", e ]);
-}, d = function() {
+}, p = function() {
 var e = o.getServicePlanNameForInstance(i.apiObject);
 return _.get(i, [ "state", "servicePlans", e ]);
-}, m = function() {
+}, f = function() {
 _.get(i.apiObject, "metadata.deletionTimestamp") ? i.instanceStatus = "deleted" : s(i.apiObject) ? i.instanceStatus = "failed" : c(i.apiObject) ? i.instanceStatus = "ready" : i.instanceStatus = "pending";
 };
 i.$doCheck = function() {
-m(), i.notifications = r.getNotifications(i.apiObject, i.state), i.serviceClass = u(), i.servicePlan = d(), i.displayName = l(i.apiObject, i.serviceClass), i.isBindable = a.isServiceBindable(i.apiObject, i.serviceClass, i.servicePlan);
+f(), i.notifications = r.getNotifications(i.apiObject, i.state), i.serviceClass = m(), i.servicePlan = p(), i.displayName = d(i.apiObject, i.serviceClass), i.isBindable = a.isServiceBindable(i.apiObject, i.serviceClass, i.servicePlan);
 }, i.$onChanges = function(e) {
 e.bindings && (i.deleteableBindings = _.reject(i.bindings, "metadata.deletionTimestamp"));
 }, i.getSecretForBinding = function(e) {
@@ -13881,6 +13881,11 @@ return !(_.get(i.apiObject, "metadata.deletionTimestamp") || (!i.isBindable || !
 _.set(i, "overlay.panelVisible", !1);
 }, i.showOverlayPanel = function(e, t) {
 _.set(i, "overlay.panelVisible", !0), _.set(i, "overlay.panelName", e), _.set(i, "overlay.state", t);
+}, i.getFailedTooltipText = function() {
+var e = l(i.apiObject);
+if (!e) return "";
+var t = u(e, 128);
+return e.length !== t.length && (t += "..."), t;
 }, i.deprovision = function() {
 o.deprovision(i.apiObject, i.deleteableBindings);
 };
@@ -14658,7 +14663,7 @@ return c.isImportantAPIEvent(t) && !c.isCleared(t.metadata.uid) && (e[t.metadata
 var n = r.project;
 return _.assign({}, e[n], t[n]);
 }, N = function(e) {
-return _.orderBy(e, [ "event.lastTimestamp", "event.firstTimestamp" ], [ "desc", "desc" ]);
+return _.orderBy(e, [ "event.lastTimestamp", "event.metadata.resourceVersion" ], [ "desc", "desc" ]);
 }, D = function() {
 o.$evalAsync(function() {
 p.notificationGroups = [ S(r.project, N(T(g, v))) ], k();

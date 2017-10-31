@@ -177,6 +177,16 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     {resource: 'services', group: ''},
     {resource: 'statefulsets', group: 'apps'}
   ],
+  MEMBERSHIP_WHITELIST: [
+    "admin",
+    "basic-user",
+    "edit",
+    "system:deployer",
+    "system:image-builder",
+    "system:image-puller",
+    "system:image-pusher",
+    "view",
+  ],
   // TODO:
   // This map can drive both the drawer & toast messages by
   // updating it to the following format:

@@ -5019,6 +5019,7 @@ h2+.list-view-pf{margin-top:20px}
 .build-count .running-stage{font-size:84%;color:#9c9c9c}
 @media (max-width:991px){.builds-label{margin-top:5px}
 }
+.instance-status-message .truncated-content,.instance-status-notification .tooltip{white-space:pre-line}
 .instance-status-notification,.notification-icon-count{display:inline-block;margin:5px 5px 0 0}
 @media (min-width:992px){.instance-status-notification,.notification-icon-count{margin-top:0}
 }
@@ -5468,7 +5469,7 @@ dl.secret-data pre{margin-bottom:0}
 .events-sidebar .events-sidebar-collapse a{text-decoration:none}
 .events-sidebar .sidebar-header.right-header{align-items:center;display:flex;justify-content:space-between;margin-top:17.5px}
 .events-sidebar .sidebar-header.right-header h2{font-family:inherit;font-weight:500;line-height:1.1;color:inherit;margin-top:10.5px;margin-bottom:10.5px;font-size:14px;display:inline-block}
-.config-map-table .key,.config-map-table .truncated-content,.log-view{font-family:Menlo,Monaco,Consolas,monospace}
+.config-map-table .key,.config-map-table .truncated-content,.edit-yaml .ace_editor.editor,.log-view{font-family:Menlo,Monaco,Consolas,monospace}
 .events-sidebar .sidebar-header.right-header h2 .small,.events-sidebar .sidebar-header.right-header h2 small{font-weight:400;line-height:1;color:#9c9c9c;font-size:75%}
 .events-sidebar .sidebar-header.right-header .warning-count{white-space:nowrap;margin-left:2px}
 .events-sidebar .sidebar-header.right-header .warning-count .pficon{vertical-align:-1px}
@@ -5903,19 +5904,25 @@ kubernetes-container-terminal .terminal-actions .spinner{top:5px}
 .environment-from-editor .faux-input-group,.key-value-editor .faux-input-group{border-collapse:separate;display:table;position:relative}
 .environment-from-editor .faux-input-group.faux-input-single-input,.key-value-editor .faux-input-group.faux-input-single-input{width:100%}
 .environment-from-editor .environment-from-editor-button,.environment-from-editor .key-value-editor-buttons,.key-value-editor .environment-from-editor-button,.key-value-editor .key-value-editor-buttons{position:absolute;right:0;top:0;width:52px}
-.environment-from-editor .environment-from-entry,.environment-from-editor .key-value-editor-entry,.key-value-editor .environment-from-entry,.key-value-editor .key-value-editor-entry{display:table;margin-bottom:15px;padding-right:52px;position:relative;table-layout:fixed;width:100%}
-@media (min-width:992px){.environment-from-editor .environment-from-entry .environment-from-editor-button,.environment-from-editor .key-value-editor-entry .environment-from-editor-button,.key-value-editor .environment-from-entry .environment-from-editor-button,.key-value-editor .key-value-editor-entry .environment-from-editor-button{float:left;padding-right:5px;position:relative;width:auto}
+.environment-from-editor .environment-from-entry,.key-value-editor .environment-from-entry{display:table;margin-bottom:15px;padding-right:0;position:relative;table-layout:fixed;width:100%}
+@media (max-width:479px){.environment-from-editor .environment-from-entry,.key-value-editor .environment-from-entry{padding-right:52px}
 }
-.environment-from-editor .environment-from-entry .environment-from-input,.environment-from-editor .key-value-editor-entry .environment-from-input,.key-value-editor .environment-from-entry .environment-from-input,.key-value-editor .key-value-editor-entry .environment-from-input{float:left;margin-bottom:0;padding-right:5px;width:100%}
-@media (min-width:992px){.environment-from-editor .environment-from-entry .environment-from-input,.environment-from-editor .key-value-editor-entry .environment-from-input,.key-value-editor .environment-from-entry .environment-from-input,.key-value-editor .key-value-editor-entry .environment-from-input{width:50%}
+@media (min-width:480px){.environment-from-editor .environment-from-entry .environment-from-editor-button,.key-value-editor .environment-from-entry .environment-from-editor-button{float:left;padding:0 5px;position:relative;width:auto}
 }
-.environment-from-editor .environment-from-entry .environment-from-input .faux-input-group,.environment-from-editor .environment-from-entry .environment-from-input .ui-select,.environment-from-editor .key-value-editor-entry .environment-from-input .faux-input-group,.environment-from-editor .key-value-editor-entry .environment-from-input .ui-select,.key-value-editor .environment-from-entry .environment-from-input .faux-input-group,.key-value-editor .environment-from-entry .environment-from-input .ui-select,.key-value-editor .key-value-editor-entry .environment-from-input .faux-input-group,.key-value-editor .key-value-editor-entry .environment-from-input .ui-select{float:left;width:100%}
+.environment-from-editor .environment-from-entry .environment-from-input,.key-value-editor .environment-from-entry .environment-from-input{float:left;margin-bottom:0;padding-right:5px;width:100%}
+@media (min-width:480px){.environment-from-editor .environment-from-entry .environment-from-input,.key-value-editor .environment-from-entry .environment-from-input{width:calc(50% - 26px)}
+}
+.environment-from-editor .environment-from-entry .environment-from-input.prefix,.key-value-editor .environment-from-entry .environment-from-input.prefix{padding-right:0;width:calc(50% + 26px)}
+@media (max-width:479px){.environment-from-editor .environment-from-entry .environment-from-input.prefix,.key-value-editor .environment-from-entry .environment-from-input.prefix{margin-top:5px;width:100%}
+}
+.environment-from-editor .environment-from-entry .environment-from-input .faux-input-group,.environment-from-editor .environment-from-entry .environment-from-input .ui-select,.key-value-editor .environment-from-entry .environment-from-input .faux-input-group,.key-value-editor .environment-from-entry .environment-from-input .ui-select{float:left;width:100%}
 .environment-from-editor .environment-from-entry .environment-from-view-details,.key-value-editor .environment-from-entry .environment-from-view-details{float:left;line-height:1;padding:6px 0 0}
+.environment-from-editor .key-value-editor-entry,.key-value-editor .key-value-editor-entry{display:table;margin-bottom:15px;padding-right:52px;position:relative;table-layout:fixed;width:100%}
 .environment-from-editor .key-value-editor-input .ui-select+.ui-select,.key-value-editor .key-value-editor-input .ui-select+.ui-select{padding-top:5px}
 @media (min-width:992px){.environment-from-editor .key-value-editor-input .ui-select,.key-value-editor .key-value-editor-input .ui-select{float:left;width:50%}
 .environment-from-editor .key-value-editor-input .ui-select+.ui-select,.key-value-editor .key-value-editor-input .ui-select+.ui-select{padding-top:0;padding-left:5px}
 }
-.key-value-editor .key-value-editor-input,.key-value-editor-header{float:left;margin-bottom:0;padding-right:5px;width:50%}
+.environment-from-editor-header,.key-value-editor .key-value-editor-input,.key-value-editor-header{float:left;margin-bottom:0;padding-right:5px;width:50%}
 .membership .content-pane,.membership .content-pane .col-add-role{width:100%}
 .environment-from-editor-entry-header,.key-value-editor-entry-header{padding-right:52px}
 .environment-from-editor-header,.key-value-editor-header{margin-bottom:5px}
@@ -6014,7 +6021,7 @@ notification-drawer-wrapper .expanded-notification.unread .drawer-pf-notificatio
 .ace-inline{height:300px}
 .ace-inline-small{height:200px}
 .ace_editor.dockerfile-mode .ace_constant.ace_numeric,.editor.yaml-mode .ace_constant.ace_numeric{color:inherit}
-.edit-yaml .ace_editor.editor{font-family:Menlo,Monaco,Consolas,monospace;line-height:1.5;width:100%;min-height:140px;height:50vh}
+.edit-yaml .ace_editor.editor{line-height:1.5;width:100%;min-height:140px;height:50vh}
 @media (min-height:700px){.edit-yaml .ace_editor.editor{height:60vh}
 }
 .edit-yaml .ace_editor.editor .ace_gutter{color:#8b8d8f}
@@ -6034,3 +6041,4 @@ notification-drawer-wrapper .expanded-notification.unread .drawer-pf-notificatio
 .add-config-to-application .dialog-body .radio{margin-top:0}
 .add-config-to-application .updating{background-color:#fff;bottom:55px;left:0;padding-top:60px;position:absolute;right:0;top:55px;z-index:1000}
 .add-config-to-application .volume-options{margin-left:20px}
+.service-instance-details .instance-status-message{white-space:pre-line}

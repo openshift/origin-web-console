@@ -3697,7 +3697,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"middle-content\" persist-tab-state>\n" +
+    "<div class=\"middle-content service-instance-details\" persist-tab-state>\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\" ng-if=\"serviceInstance\">\n" +
     "<div class=\"col-md-12\">\n" +
@@ -3721,9 +3721,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span flex>{{serviceInstance | serviceInstanceStatus | sentenceCase}}</span>\n" +
     "</dd>\n" +
     "<dt ng-if-start=\"serviceInstance | serviceInstanceConditionMessage\">Status Reason:</dt>\n" +
-    "<dd ng-if-end>\n" +
-    "{{serviceInstance | serviceInstanceConditionMessage}}\n" +
-    "</dd>\n" +
+    "<dd ng-if-end class=\"instance-status-message\">{{serviceInstance | serviceInstanceConditionMessage}}</dd>\n" +
     "</dl>\n" +
     "<div class=\"hidden-lg\">\n" +
     "<h3 ng-if-start=\"serviceClass.spec.description || serviceClass.spec.externalMetadata.longDescription\">Description</h3>\n" +
@@ -6700,7 +6698,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"$ctrl.showHeader\" class=\"environment-from-entry environment-from-editor-entry-header\">\n" +
     "<div class=\"form-group environment-from-editor-header value-header\">\n" +
     "<div class=\"input-group\">\n" +
-    "<span class=\"help-block\">{{$ctrl.selectorPlaceholder}}</span>\n" +
+    "Config Map/Secret\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group environment-from-editor-header value-header\">\n" +
+    "<div class=\"input-group\" ng-if=\"!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()\">\n" +
+    "Prefix\n" +
+    "<small class=\"pficon pficon-help\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Optional prefix added to each environment variable name.\"></small>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6713,8 +6717,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"entry.configMapRef.name || entry.secretRef.name\" class=\"faux-form-control readonly\">\n" +
     "Use all keys and values from\n" +
-    "<span ng-if=\"entry.configMapRef.name\">config map {{entry.configMapRef.name}}</span>\n" +
-    "<span ng-if=\"entry.secretRef.name\">secret {{entry.secretRef.name}}</span>\n" +
+    "<span ng-if=\"entry.configMapRef.name\">config map {{entry.configMapRef.name}}.</span>\n" +
+    "<span ng-if=\"entry.secretRef.name\">secret {{entry.secretRef.name}}.</span>\n" +
+    "<span ng-if=\"entry.prefix\">Names will be prefixed with \"{{entry.prefix}}\"</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!$ctrl.isEnvFromReadonly(entry) && $ctrl.hasOptions()\">\n" +
@@ -6733,37 +6738,63 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div class=\"form-group environment-from-input prefix\">\n" +
+    "<div class=\"environment-from-input\" ng-if=\"!$ctrl.isEnvFromReadonly(entry) && $ctrl.hasOptions()\" ng-class=\"{ 'has-error': ($ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$invalid && $ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$touched) }\">\n" +
+    "<label for=\"envfrom-prefix-{{$index}}\" class=\"sr-only\">Prefix</label>\n" +
+    "<input type=\"text\" class=\"form-control\" placeholder=\"Add prefix\" id=\"envfrom-prefix-{{$index}}\" name=\"envfrom-prefix-{{$index}}\" ng-model=\"entry.prefix\" ng-pattern=\"/^[a-zA-Z0-9_]+$/\">\n" +
+    "<span ng-show=\"$ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$touched\">\n" +
+    "<span class=\"help-block key-validation-error\" ng-show=\"$ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$error.pattern\">\n" +
+    "<span class=\"validation-text\">Please enter a valid prefix.</span>\n" +
+    "<span class=\"help action-inline\">\n" +
+    "<a aria-hidden=\"true\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"A valid prefix is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\">\n" +
+    "<span class=\"pficon pficon-help\"></span>\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</div>\n" +
     "<div ng-if=\"!$ctrl.isEnvFromReadonly(entry) && $ctrl.hasEntries()\" class=\"environment-from-editor-button\">\n" +
     "<span ng-if=\"!$ctrl.cannotSort && $ctrl.entries.length > 1\" class=\"fa fa-bars sort-row\" role=\"button\" aria-label=\"Move row\" aria-grabbed=\"false\" as-sortable-item-handle></span>\n" +
     "<a ng-if=\"!$ctrl.cannotDeleteAny\" href=\"\" class=\"pficon pficon-close delete-row as-sortable-item-delete\" role=\"button\" aria-label=\"Delete row\" ng-click=\"$ctrl.deleteEntry($index, 1)\"></a>\n" +
     "</div>\n" +
     "<div class=\"environment-from-view-details\">\n" +
-    "<a href=\"\" ng-if=\"entry.selectedEnvFrom\" ng-click=\"$ctrl.viewOverlayPanel(entry.selectedEnvFrom)\">View Details</a>\n" +
+    "<a ng-if=\"entry.selectedEnvFrom\" href=\"\" ng-click=\"$ctrl.viewOverlayPanel(entry.selectedEnvFrom)\">View Details</a>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"environment-from-entry form-group\" ng-if=\"!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()\">\n" +
-    "<a href=\"\" class=\"add-row-link\" role=\"button\" ng-click=\"$ctrl.onAddRow()\">{{$ctrl.addRowLink}}</a>\n" +
+    "<a href=\"\" class=\"add-row-link\" role=\"button\" ng-click=\"$ctrl.onAddRow()\">Add ALL Values from Config Map or Secret</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "<overlay-panel class=\"add-config-to-application\" show-panel=\"$ctrl.overlayPanelVisible\" show-close=\"true\" handle-close=\"$ctrl.closeOverlayPanel\">\n" +
     "<div class=\"dialog-title\">\n" +
-    "<h3>Value Details</h3>\n" +
+    "<h3>{{$ctrl.overlayPaneEntryDetails.kind | humanizeKind : true}} Details</h3>\n" +
     "</div>\n" +
     "<div class=\"modal-body\">\n" +
     "<h4>{{$ctrl.overlayPaneEntryDetails.metadata.name}}\n" +
-    "<small class=\"muted\">&ndash; {{$ctrl.overlayPaneEntryDetails.kind | humanizeKind : true}}</small></h4>\n" +
+    "<small ng-if=\"$ctrl.overlayPaneEntryDetails.kind === 'Secret'\" class=\"mar-left-sm\">\n" +
+    "<a href=\"\" role=\"button\" ng-click=\"$ctrl.showSecret = !$ctrl.showSecret\">{{$ctrl.showSecret ? \"Hide\" : \"Reveal\"}} Secret</a>\n" +
+    "</small>\n" +
+    "</h4>\n" +
     "<div ng-if=\"!($ctrl.overlayPaneEntryDetails.data | size)\" class=\"empty-state-message text-center\">\n" +
     "The {{$ctrl.overlayPaneEntryDetails.kind | humanizeKind}} has no properties.\n" +
     "</div>\n" +
     "<div ng-if=\"$ctrl.overlayPaneEntryDetails.data | size\" class=\"table-responsive scroll-shadows-horizontal\">\n" +
     "<table class=\"table table-bordered table-bordered-columns config-map-table key-value-table\">\n" +
     "<tbody>\n" +
-    "<tr ng-repeat=\"(prop, value) in $ctrl.overlayPaneEntryDetails.data\">\n" +
+    "<tr ng-repeat=\"(prop, value) in $ctrl.decodedData\">\n" +
     "<td class=\"key\">{{prop}}</td>\n" +
     "<td class=\"value\">\n" +
     "<truncate-long-text ng-if=\"$ctrl.overlayPaneEntryDetails.kind === 'ConfigMap'\" content=\"value\" limit=\"50\" newline-limit=\"2\" expandable=\"true\">\n" +
     "</truncate-long-text>\n" +
-    "<span ng-if=\"$ctrl.overlayPaneEntryDetails.kind === 'Secret'\">&#42;&#42;&#42;&#42;&#42;</span>\n" +
+    "<span ng-if=\"!$ctrl.showSecret && $ctrl.overlayPaneEntryDetails.kind === 'Secret'\">&#42;&#42;&#42;&#42;&#42;</span>\n" +
+    "<div ng-if=\"$ctrl.showSecret && $ctrl.overlayPaneEntryDetails.kind === 'Secret'\">\n" +
+    "<truncate-long-text content=\"value\" limit=\"50\" newline-limit=\"2\" expandable=\"true\">\n" +
+    "</truncate-long-text>\n" +
+    "<div ng-if=\"decodedData.$$nonprintable[prop]\" class=\"help-block\">\n" +
+    "This secret value contains non-printable characters and is displayed as a Base64-encoded string.\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</td>\n" +
     "</tr>\n" +
     "</tbody>\n" +
@@ -6796,7 +6827,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Environment From\n" +
     "<span class=\"pficon pficon-help\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Environment From lets you add all key-value pairs from a config map or secret as environment variables.\"></span>\n" +
     "</h4>\n" +
-    "<edit-environment-from entries=\"container.envFrom\" selector-placeholder=\"Config Map/Secret\" env-from-selector-options=\"$ctrl.valueFromObjects\" add-row-link=\"Add ALL Values from Config Map or Secret\" is-readonly=\"$ctrl.ngReadonly\" show-header>\n" +
+    "<edit-environment-from entries=\"container.envFrom\" env-from-selector-options=\"$ctrl.valueFromObjects\" is-readonly=\"$ctrl.ngReadonly\" show-header>\n" +
     "</edit-environment-from>\n" +
     "</div>\n" +
     "<button class=\"btn btn-default\" ng-if=\"$ctrl.canIUpdate && !$ctrl.ngReadonly\" ng-click=\"$ctrl.save()\" ng-disabled=\"$ctrl.form.$pristine || $ctrl.form.$invalid\">Save</button>\n" +
@@ -12518,10 +12549,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{row.apiObject | navigateResourceURL}}\" ng-bind-html=\"row.displayName | highlightKeywords : row.state.filterKeywords\"></a>\n" +
     "<div ng-bind-html=\"row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords\" class=\"list-row-longname\"></div>\n" +
     "</h3>\n" +
-    "<div class=\"status-icons\" ng-if=\"!row.expanded\">\n" +
+    "<div class=\"status-icons\" ng-if=\"!row.expanded\" ng-init=\"tooltipID = 'instance-status-tooltip-' + $id\">\n" +
     "<notification-icon alerts=\"row.notifications\"></notification-icon>\n" +
-    "<div ng-switch=\"row.instanceStatus\" class=\"instance-status-notification\">\n" +
-    "<span ng-switch-when=\"failed\" dynamic-content=\"{{row.apiObject | serviceInstanceFailedMessage}}\" data-toggle=\"tooltip\" data-trigger=\"hover\">\n" +
+    "<div ng-switch=\"row.instanceStatus\" class=\"instance-status-notification\" id=\"{{tooltipID}}\">\n" +
+    "\n" +
+    "<span ng-switch-when=\"failed\" dynamic-content=\"{{row.getFailedTooltipText()}}\" data-toggle=\"tooltip\" data-trigger=\"hover\" data-container=\"#{{tooltipID}}\">\n" +
     "<span class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></span>\n" +
     "Error\n" +
     "</span>\n" +
@@ -12607,12 +12639,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">error</span>\n" +
     "<span class=\"strong\">The service failed.</span>\n" +
-    "<span class=\"mar-right-md\">\n" +
-    "<truncate-long-text content=\"row.apiObject | serviceInstanceFailedMessage\" limit=\"265\"></truncate-long-text>\n" +
+    "<span class=\"instance-status-message\">\n" +
+    "<truncate-long-text content=\"row.apiObject | serviceInstanceFailedMessage\" expandable=\"true\" limit=\"265\" newline-limit=\"4\"></truncate-long-text>\n" +
     "</span>\n" +
-    "<span ng-if=\"row.serviceInstancesVersion | canI : 'delete'\" class=\"nowrap\">\n" +
+    "<div ng-if=\"row.serviceInstancesVersion | canI : 'delete'\">\n" +
     "<a href=\"\" ng-click=\"row.deprovision()\">Delete This Service</a>\n" +
-    "</span>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -12622,7 +12654,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">info</span>\n" +
     "<span class=\"strong\">The service is not yet ready.</span>\n" +
-    "<truncate-long-text content=\"row.apiObject | serviceInstanceReadyMessage\" limit=\"265\"></truncate-long-text>\n" +
+    "<span class=\"instance-status-message\">\n" +
+    "<truncate-long-text content=\"row.apiObject | serviceInstanceReadyMessage\" expandable=\"true\" limit=\"265\" newline-limit=\"4\"></truncate-long-text>\n" +
+    "</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

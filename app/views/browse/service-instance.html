@@ -54,7 +54,7 @@
           </div>
         </div>
       </div><!-- /middle-header-->
-      <div class="middle-content" persist-tab-state>
+      <div class="middle-content service-instance-details" persist-tab-state>
         <div class="container-fluid">
           <div class="row" ng-if="serviceInstance">
             <div class="col-md-12">
@@ -78,9 +78,7 @@
                             <span flex>{{serviceInstance | serviceInstanceStatus | sentenceCase}}</span>
                           </dd>
                           <dt ng-if-start="serviceInstance | serviceInstanceConditionMessage">Status Reason:</dt>
-                          <dd ng-if-end>
-                            {{serviceInstance | serviceInstanceConditionMessage}}
-                          </dd>
+                          <dd ng-if-end class="instance-status-message">{{serviceInstance | serviceInstanceConditionMessage}}</dd>
                         </dl>
                         <div class="hidden-lg">
                           <h3 ng-if-start="serviceClass.spec.description || serviceClass.spec.externalMetadata.longDescription">Description</h3>

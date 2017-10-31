@@ -5,21 +5,21 @@
       '$attrs',
       '$filter',
       'keyValueEditorUtils',
+      'SecretsService',
       EditEnvironmentFrom
     ],
     bindings: {
-      addRowLink: '@',              // creates a link to "add row" and sets its text label
-      entries: '=',                 // an array of objects containing configmaps and secrets
-      envFromSelectorOptions: '<',  // dropdown selector options, an array of objects
-      selectorPlaceholder: '@',     // placeholder copy for dropdown selector
-      isReadonly: '<?'              // display as read only values
+      entries: '=',                         // an array of objects containing configmaps and secrets
+      envFromSelectorOptions: '<',          // dropdown selector options, an array of objects
+      isReadonly: '<?'                      // display as read only values
     },
     templateUrl: 'views/directives/edit-environment-from.html'
   });
 
   function EditEnvironmentFrom($attrs,
                                $filter,
-                               utils) {
+                               utils,
+                               SecretsService) {
     var ctrl = this;
     var canI = $filter('canI');
     var humanizeKind = $filter('humanizeKind');
@@ -28,11 +28,18 @@
     ctrl.setFocusClass = 'edit-environment-from-set-focus-' + uniqueId;
 
     ctrl.viewOverlayPanel = function(entry) {
+      ctrl.decodedData = entry.data;
       ctrl.overlayPaneEntryDetails = entry;
+
+      if (entry.kind === 'Secret') {
+        ctrl.decodedData = SecretsService.decodeSecretData(entry.data);
+      }
+
       ctrl.overlayPanelVisible = true;
     };
 
     ctrl.closeOverlayPanel = function() {
+      ctrl.showSecret = false;
       ctrl.overlayPanelVisible = false;
     };
 
@@ -52,7 +59,7 @@
 
       ctrl.envFromEntries.splice(start, deleteCount);
 
-      if(!ctrl.envFromEntries.length && ctrl.addRowLink) {
+      if(!ctrl.envFromEntries.length) {
         addEntry(ctrl.envFromEntries);
       }
 
@@ -105,6 +112,10 @@
           break;
       }
 
+      if (entry.prefix) {
+        newEnvFrom.prefix = entry.prefix;
+      }
+
       _.assign(ctrl.envFromEntries[index], newEnvFrom);
       ctrl.updateEntries(ctrl.envFromEntries);
     };
@@ -121,7 +132,7 @@
 
       ctrl.envFromEntries = ctrl.entries || [];
 
-      if(!ctrl.envFromEntries.length) {
+      if (!ctrl.envFromEntries.length) {
         addEntry(ctrl.envFromEntries);
       }
 
