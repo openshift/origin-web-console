@@ -87,20 +87,27 @@ angular
     };
 
     // has to handle multiple bindings or multiple reference to a subject within a single binding
-    var removeSubject = function(subjectName, role, roleBindings, context) {
-      var matches = _.filter(roleBindings, {roleRef: {name: role}});
+    var removeSubject = function(subjectName, role, namespace, roleBindings, context) {
+      var matchingBindings = _.filter(roleBindings, {roleRef: {name: role}});
+
       return $q.all(
-        _.map(matches, function(binding) {
+        _.map(matchingBindings, function(binding) {
           var tpl = bindingTPL();
           binding = _.extend(tpl, binding);
           cleanBinding(binding);
-          binding.subjects = _.reject(binding.subjects, {name: subjectName});
+          var toMatch = { name: subjectName };
+          if(namespace) {
+            toMatch.namespace = namespace;
+          }
+
+          binding.subjects = _.reject(binding.subjects, toMatch);
+
           return binding.subjects.length ?
                   DataService.update('rolebindings', binding.metadata.name, binding, context) :
                   DataService.delete('rolebindings', binding.metadata.name, context)
                   // For a delete, resp is simply a 201 or less useful object.
                   // Instead, this intercepts the response & returns the binding object
-                  // with the empty .subjects[] list. 
+                  // with the empty .subjects[] list.
                   .then(function() {
                     return binding;
                   });
