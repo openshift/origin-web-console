@@ -13244,9 +13244,12 @@ b.infoStep.selected = !1, b.selectStep.selected = !1, b.configStep.selected = !1
 }, b.$onInit = function() {
 b.loginBaseUrl = r.openshiftAPIBaseUrl(), b.preSelectedProject = b.selectedProject = b.project, b.project && (b.templateProject = b.project, b.templateProjectChange()), h(), b.noProjectsCantCreate = !1, e.$on("no-projects-cannot-create", function() {
 b.noProjectsCantCreate = !0;
-}), b.projectEmptyState = {
+}), b.noProjectsEmptyState = {
+title: "No Available Projects",
+info: "There are no projects available from which to load templates."
+}, b.projectEmptyState = {
 title: "No Project Selected",
-info: "Please select a project from the dropdown to load Templates from that project."
+info: "Please select a project from the dropdown to load templates from that project."
 }, b.templatesEmptyState = {
 title: "No Templates",
 info: "The selected project has no templates available to import."
@@ -13292,7 +13295,7 @@ return c.isRecentlyViewed(e.metadata.uid) ? "Recently Viewed" : "Other Projects"
 };
 var w = function() {
 var e = _.reject(b.unfilteredProjects, "metadata.deletionTimestamp"), n = _.sortBy(e, t("displayName"));
-b.searchEnabled = !_.isEmpty(e), b.templateProjects = c.orderByMostRecentlyViewed(n);
+b.searchEnabled = !_.isEmpty(e), b.templateProjects = c.orderByMostRecentlyViewed(n), b.numTemplateProjects = _.size(b.templateProjects), 1 === b.numTemplateProjects && (b.templateProject = _.head(b.templateProjects), b.templateProjectChange());
 };
 } ],
 controllerAs: "$ctrl",
