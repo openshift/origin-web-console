@@ -96,9 +96,14 @@
         ctrl.noProjectsCantCreate = true;
       });
 
+      ctrl.noProjectsEmptyState = {
+        title: 'No Available Projects',
+        info: 'There are no projects available from which to load templates.'
+      };
+
       ctrl.projectEmptyState = {
         title: 'No Project Selected',
-        info: 'Please select a project from the dropdown to load Templates from that project.'
+        info: 'Please select a project from the dropdown to load templates from that project.'
       };
 
       ctrl.templatesEmptyState = {
@@ -326,6 +331,12 @@
       ctrl.searchEnabled = !_.isEmpty(filteredProjects);
 
       ctrl.templateProjects = RecentlyViewedProjectsService.orderByMostRecentlyViewed(projects);
+      ctrl.numTemplateProjects = _.size(ctrl.templateProjects);
+
+      if (ctrl.numTemplateProjects === 1) {
+        ctrl.templateProject = _.head(ctrl.templateProjects);
+        ctrl.templateProjectChange();
+      }
     };
 
     function listProjects() {

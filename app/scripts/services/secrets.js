@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("SecretsService", function(){
+  .factory("SecretsService", function($filter, Logger, NotificationsService){
 
     var groupSecretsByType = function(secrets) {
       var secretsByType = {
@@ -28,67 +28,104 @@ angular.module("openshiftConsole")
       return secretsByType;
     };
 
-    var decodeDockercfg = function(encodedData) {
-      var decodedSecretData = {
-        auths: {}
-      };
-      var decodedData = JSON.parse(window.atob(encodedData));
-      _.each(decodedData, function(data, serverName) {
-        decodedSecretData.auths[serverName] = {
-          username: data.username,
-          password: data.password,
-          email: data.email
-        };
+    var handleDecodeException = function(error, encodedStringType) {
+      NotificationsService.addNotification({
+        type: "error",
+        message: 'Base64-encoded ' + encodedStringType + ' string could not be decoded.',
+        details: $filter('getErrorDetails')(error)
       });
-      return decodedSecretData;
+      Logger.error('Base64-encoded ' + encodedStringType + ' string could not be decoded.', error);
     };
 
-    var decodeDockerconfigjson = function(encodedData) {
+    var getServerParams = function(serverData) {
+      var params = _.pick(serverData, ['email', 'username', 'password']);
+      if (serverData.auth) {
+        try {
+          // Decode Base64-encoded username:password string.
+          var setParams = _.spread(function(username, password) {
+            params.username = username;
+            params.password = password;
+          });
+          setParams(_.split(window.atob(serverData.auth), ':', 2));
+        } catch(e) {
+          handleDecodeException(e, 'username:password');
+          return;
+        }
+      }
+      return params;
+    };
+
+    // decodeDockerConfig handles both Docker configuration file formats, which are:
+    //  - .dockercfg
+    //    {
+    //      "auths": {
+    //        "https://index.docker.io/v1/": {
+    //          "auth": "dGVzdHVzZXI6dGVzdHB3",
+    //          "email": "jhadvig@test.com"
+    //        }
+    //      }
+    //    }
+    //
+    //  - .dockerconfigjson
+    //    {
+    //      "auths": {
+    //        "https://index.docker.io/v1/": {
+    //          "auth": "dGVzdHVzZXI6dGVzdHB3",
+    //          "email": "mail@test.com"
+    //        }
+    //      }
+    //    }
+    //
+    var decodeDockerConfig = function(encodedData, configType) {
+      var decodedData;
       var decodedSecretData = {
         auths: {}
       };
-      var decodedData = JSON.parse(window.atob(encodedData));
-      _.each(decodedData.auths, function(data, serverName) {
-        if (!data.auth) {
-          decodedSecretData.auths[serverName] = data;
-          return;
+
+      try {
+        decodedData = JSON.parse(window.atob(encodedData));
+      } catch(e) {
+        handleDecodeException(e, configType);
+      }
+
+      if (configType === ".dockercfg") {
+        _.each(decodedData, function(serverData, serverName) {
+          decodedSecretData.auths[serverName] = getServerParams(serverData);
+        });
+      } else {
+        _.each(decodedData.auths, function(serverData, serverName) {
+          if (!serverData.auth) {
+            decodedSecretData.auths[serverName] = serverData;
+            return;
+          }
+          decodedSecretData.auths[serverName] = getServerParams(serverData);
+        });
+
+        if (decodedData.credsStore) {
+          decodedSecretData.credsStore = decodedData.credsStore;
         }
-
-        var usernamePassword = window.atob(data.auth).split(":");
-        decodedSecretData.auths[serverName] = {
-          username: usernamePassword[0],
-          password: usernamePassword[1],
-          email: data.email
-        };
-      });
-
-      if (decodedData.credsStore) {
-        decodedSecretData.credsStore = decodedData.credsStore;
       }
 
       return decodedSecretData;
     };
 
+
     var decodeSecretData = function(secretData) {
       var nonPrintable = {};
-      var decodedSecret = _.mapValues(secretData, function(data, paramName) {
+      var decodedSecret = _.mapValues(secretData, function(data, configType) {
         var decoded, isNonPrintable;
-        switch (paramName) {
-        case ".dockercfg":
-          return decodeDockercfg(data);
-        case ".dockerconfigjson":
-          return decodeDockerconfigjson(data);
-        default:
+        if (configType === ".dockercfg" || configType === ".dockerconfigjson") {
+          return decodeDockerConfig(data, configType);
+        } else {
           decoded = window.atob(data);
           // Allow whitespace like newlines and tabs, but detect other
           // non-printable characters in the unencoded data.
           // http://stackoverflow.com/questions/1677644/detect-non-printable-characters-in-javascript
           isNonPrintable = /[\x00-\x09\x0E-\x1F]/.test(decoded);
           if (isNonPrintable) {
-            nonPrintable[paramName] = true;
+            nonPrintable[configType] = true;
             return data;
           }
-
           return decoded;
         }
       });

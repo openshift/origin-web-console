@@ -238,6 +238,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     Deprovisioning: true,
     ErrorCallingProvision: true,
     ErrorInjectingBindResult: true,
+    ProvisionCallFailed: true,
     Provisioning: true,
     ReferencesNonexistentServiceClass: true,
     ReferencesNonexistentServicePlan: true,

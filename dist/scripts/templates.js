@@ -4985,7 +4985,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<key-value-editor entries=\"DCEnvVarsFromImage\" is-readonly cannot-add cannot-sort cannot-delete></key-value-editor>\n" +
     "</div>\n" +
-    "<key-value-editor entries=\"DCEnvVarsFromUser\" key-placeholder=\"name\" value-placeholder=\"value\" value-from-selector-options=\"valueFromObjects\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Environment Variable\" add-row-with-selectors-link=\"Add Environment Variable Using a Config Map or Secret\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"DCEnvVarsFromUser\" key-placeholder=\"name\" value-placeholder=\"value\" value-from-selector-options=\"valueFromObjects\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "</osc-form-section>\n" +
@@ -5925,7 +5925,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{appForBinding.metadata.name}} <small class=\"text-muted\">&ndash; {{ appForBinding.kind | humanizeKind : true}}</small>\n" +
     "</div>\n" +
     "<div ng-if=\"!(ctrl.unboundApps | size)\">\n" +
-    "{{ctrl.selectedBinding.spec.secretName}} <small class=\"text-muted\">&ndash; Secret</small>\n" +
+    "{{ctrl.selectedBinding.metadata.name}}\n" +
     "</div>\n" +
     "\n" +
     "<p ng-if=\"ctrl.unboundApps | size\" class=\"mar-top-lg\">\n" +
@@ -5960,9 +5960,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"ctrl.appsForBinding(binding.metadata.name) | size\" ng-repeat=\"appForBinding in ctrl.appsForBinding(binding.metadata.name)\">\n" +
     "{{appForBinding.metadata.name}} <small class=\"text-muted\">&ndash; {{ appForBinding.kind | humanizeKind : true}}</small>\n" +
     "</div>\n" +
-    "<div ng-if=\"!(ctrl.appsForBinding(binding.metadata.name)  | size)\">\n" +
-    "{{binding.spec.secretName}}\n" +
-    "<small class=\"text-muted\">&ndash; Secret</small>\n" +
+    "<div ng-if=\"!(ctrl.appsForBinding(binding.metadata.name) | size)\">\n" +
+    "{{binding.metadata.name}}\n" +
     "</div>\n" +
     "<div>\n" +
     "<small class=\"text-muted\">Created <span am-time-ago=\"binding.metadata.creationTimestamp\"></span></small>\n" +
@@ -6452,7 +6451,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<osc-form-section header=\"Environment Variables\" about-title=\"Environment Variables\" about=\"Environment variables are used to configure and pass information to running containers.\" expand=\"true\" can-toggle=\"false\" class=\"first-section\">\n" +
-    "<key-value-editor entries=\"env\" key-placeholder=\"Name\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" value-placeholder=\"Value\" value-from-selector-options=\"input.selectedProject.metadata.uid && valueFromNamespace[input.selectedProject.metadata.name]\" add-row-link=\"Add Environment Variable\" add-row-with-selectors-link=\"Add Environment Variable Using a Config Map or Secret\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"env\" key-placeholder=\"Name\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" value-placeholder=\"Value\" value-from-selector-options=\"input.selectedProject.metadata.uid && valueFromNamespace[input.selectedProject.metadata.name]\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\"></key-value-editor>\n" +
     "</osc-form-section>\n" +
     "<label-editor labels=\"labels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +
@@ -6877,7 +6876,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<label>Environment Variables</label>\n" +
-    "<key-value-editor entries=\"hookParams.execNewPod.env\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" value-from-selector-options=\"valueFromObjects\" add-row-with-selectors-link=\"Add Environment Variable Using a Config Map or Secret\" add-row-link=\"Add Environment Variable\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"hookParams.execNewPod.env\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" value-from-selector-options=\"valueFromObjects\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\" add-row-link=\"Add Value\"></key-value-editor>\n" +
     "<div class=\"help-block\">\n" +
     "Environment variables to supply to the hook pod's container.\n" +
     "</div>\n" +
@@ -7914,7 +7913,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"drawer-pf-notification-message word-break\" ng-attr-title=\"{{notification.event.message}}\">\n" +
     "<div>\n" +
     "<span ng-if=\"notification.event.reason\">\n" +
-    "{{notification.event.reason | humanize}} &mdash; <span ng-if=\"notification.event.involvedObject\">{{notification.event.involvedObject.kind | humanize}}</span>\n" +
+    "{{notification.event.reason | humanize}} &mdash; <span ng-if=\"notification.event.involvedObject\">{{notification.event.involvedObject.kind | humanizeKind : true}}</span>\n" +
     "</span>\n" +
     "<span ng-if=\"notification.event.involvedObject\" ng-init=\"eventObjUrl = (notification.event | navigateEventInvolvedObjectURL)\">\n" +
     "<a ng-if=\"eventObjUrl\" ng-attr-title=\"Navigate to {{notification.event.involvedObject.name}}\" href=\"{{eventObjUrl}}\" ng-click=\"$ctrl.customScope.close()\">\n" +
@@ -9066,9 +9065,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/process-template-dialog/process-template-select.html',
     "<div class=\"order-service-config\">\n" +
     "<div class=\"config-top\">\n" +
-    "<div class=\"select-project-for-template\">\n" +
+    "<div ng-if=\"$ctrl.numTemplateProjects\" class=\"select-project-for-template\">\n" +
     "<h2>Select from Project</h2>\n" +
-    "<ui-select name=\"selectProject\" ng-model=\"$ctrl.templateProject\" ng-change=\"$ctrl.templateProjectChange()\" search-enabled=\"$ctrl.searchEnabled\">\n" +
+    "<label ng-if=\"$ctrl.numTemplateProjects === 1\">{{$ctrl.templateProject | displayName}}</label>\n" +
+    "<ui-select ng-if=\"$ctrl.numTemplateProjects > 1\" name=\"selectProject\" ng-model=\"$ctrl.templateProject\" ng-change=\"$ctrl.templateProjectChange()\" search-enabled=\"$ctrl.searchEnabled\">\n" +
     "<ui-select-match placeholder=\"Select a Project\">\n" +
     "{{$select.selected | displayName}}\n" +
     "</ui-select-match>\n" +
@@ -9081,7 +9081,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
-    "<pf-empty-state ng-if=\"!$ctrl.templateProject\" config=\"$ctrl.projectEmptyState\"></pf-empty-state>\n" +
+    "<pf-empty-state ng-if=\"!$ctrl.numTemplateProjects\" config=\"$ctrl.noProjectsEmptyState\"></pf-empty-state>\n" +
+    "<pf-empty-state ng-if=\"!$ctrl.templateProject && $ctrl.numTemplateProjects\" config=\"$ctrl.projectEmptyState\"></pf-empty-state>\n" +
     "<pf-empty-state ng-if=\"$ctrl.templateProject && !$ctrl.catalogItems.length\" config=\"$ctrl.templatesEmptyState\"></pf-empty-state>\n" +
     "<div class=\"services-view\">\n" +
     "<div ng-if=\"$ctrl.templateProject && $ctrl.catalogItems.length\" class=\"services-items\">\n" +
@@ -10026,7 +10027,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<label>Environment Variables</label>\n" +
-    "<key-value-editor entries=\"strategyData.customParams.environment\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" value-from-selector-options=\"valueFromObjects\" add-row-link=\"Add Environment Variable\" add-row-with-selectors-link=\"Add Environment Variable Using a Config Map or Secret\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"strategyData.customParams.environment\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" value-from-selector-options=\"valueFromObjects\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"strategyData.type !== 'Custom'\">\n" +
@@ -10206,7 +10207,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-name\">\n" +
     "<h4>Container {{containerName}}</h4>\n" +
     "</div>\n" +
-    "<key-value-editor ng-if=\"containerConfig\" entries=\"containerConfig.env\" value-from-selector-options=\"valueFromObjects\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Environment Variable\" add-row-with-selectors-link=\"Add Environment Variable Using a Config Map or Secret\"></key-value-editor>\n" +
+    "<key-value-editor ng-if=\"containerConfig\" entries=\"containerConfig.env\" value-from-selector-options=\"valueFromObjects\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "<pause-rollouts-checkbox deployment=\"updatedDeploymentConfig\" always-visible=\"true\">\n" +
@@ -10702,7 +10703,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"action-set\">\n" +
     "<div class=\"col-roles\">\n" +
-    "<action-chip ng-repeat=\"role in subject.roles\" key=\"role.metadata.name\" key-help=\"roleHelp(role)\" show-action=\"mode.edit\" action=\"confirmRemove(subject.name, subjectKind.name, role.metadata.name)\" action-title=\"Remove role {{role.metadata.name}} from {{subject.name}}\"></action-chip>\n" +
+    "<action-chip ng-repeat=\"role in subject.roles\" key=\"role.metadata.name\" key-help=\"roleHelp(role)\" show-action=\"mode.edit\" action=\"confirmRemove(subject.name, subjectKind.name, role.metadata.name, subject.namespace)\" action-title=\"Remove role {{role.metadata.name}} from {{subject.name}}\"></action-chip>\n" +
     "</div>\n" +
     "<div ng-if=\"mode.edit\" class=\"col-add-role\">\n" +
     "<div row>\n" +
@@ -10717,7 +10718,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
-    "<button ng-disabled=\"disableAddForm || (!subject.newRole)\" ng-click=\"addRoleTo(subject.name, subjectKind.name, subject.newRole)\" class=\"btn btn-default add-role-to\">\n" +
+    "<button ng-disabled=\"disableAddForm || (!subject.newRole)\" ng-click=\"addRoleTo(subject.name, subjectKind.name, subject.newRole, subject.namespace)\" class=\"btn btn-default add-role-to\">\n" +
     "Add\n" +
     "</button>\n" +
     "</div>\n" +
@@ -12687,7 +12688,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<bind-service target=\"row.overlay.state.target\" project=\"row.state.project\" on-close=\"row.closeOverlayPanel\"></bind-service>\n" +
     "</div>\n" +
     "<div ng-if=\"row.overlay.panelName === 'unbindService'\">\n" +
-    "<unbind-service target=\"row.overlay.state.target\" bindings=\"row.deleteableBindings\" applications-by-binding=\"row.state.applicationsByBinding\" on-close=\"row.closeOverlayPanel\"></unbind-service>\n" +
+    "<unbind-service target=\"row.overlay.state.target\" bindings=\"row.deleteableBindings\" applications-by-binding=\"row.state.applicationsByBinding\" on-close=\"row.closeOverlayPanel\" service-class=\"row.serviceClass\"></unbind-service>\n" +
     "</div>\n" +
     "</overlay-panel>"
   );

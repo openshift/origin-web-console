@@ -1,8 +1,10 @@
 <div class="order-service-config">
   <div class="config-top">
-    <div class="select-project-for-template">
+    <div ng-if="$ctrl.numTemplateProjects" class="select-project-for-template">
       <h2>Select from Project</h2>
+      <label ng-if="$ctrl.numTemplateProjects === 1">{{$ctrl.templateProject | displayName}}</label>
       <ui-select
+        ng-if="$ctrl.numTemplateProjects > 1"
         name="selectProject"
         ng-model="$ctrl.templateProject"
         ng-change="$ctrl.templateProjectChange()"
@@ -19,7 +21,8 @@
         </ui-select-choices>
       </ui-select>
     </div>
-    <pf-empty-state ng-if="!$ctrl.templateProject" config="$ctrl.projectEmptyState"></pf-empty-state>
+    <pf-empty-state ng-if="!$ctrl.numTemplateProjects" config="$ctrl.noProjectsEmptyState"></pf-empty-state>
+    <pf-empty-state ng-if="!$ctrl.templateProject && $ctrl.numTemplateProjects" config="$ctrl.projectEmptyState"></pf-empty-state>
     <pf-empty-state ng-if="$ctrl.templateProject && !$ctrl.catalogItems.length" config="$ctrl.templatesEmptyState"></pf-empty-state>
     <div class="services-view">
       <div ng-if="$ctrl.templateProject && $ctrl.catalogItems.length" class="services-items">

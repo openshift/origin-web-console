@@ -758,6 +758,7 @@ LoadBalancerUpdateFailed: !0,
 Deprovisioning: !0,
 ErrorCallingProvision: !0,
 ErrorInjectingBindResult: !0,
+ProvisionCallFailed: !0,
 Provisioning: !0,
 ReferencesNonexistentServiceClass: !0,
 ReferencesNonexistentServicePlan: !0,
@@ -2532,17 +2533,19 @@ l.subjects.push(n);
 } else l.subjects = [ n ];
 return i(l), t.update("rolebindings", l.metadata.name, l, s);
 },
-removeSubject: function(n, a, o, s) {
-var c = _.filter(o, {
+removeSubject: function(n, a, o, s, c) {
+var l = _.filter(s, {
 roleRef: {
 name: a
 }
 });
-return e.all(_.map(c, function(e) {
+return e.all(_.map(l, function(e) {
 var a = r();
-return e = _.extend(a, e), i(e), e.subjects = _.reject(e.subjects, {
+e = _.extend(a, e), i(e);
+var s = {
 name: n
-}), e.subjects.length ? t.update("rolebindings", e.metadata.name, e, s) : t.delete("rolebindings", e.metadata.name, s).then(function() {
+};
+return o && (s.namespace = o), e.subjects = _.reject(e.subjects, s), e.subjects.length ? t.update("rolebindings", e.metadata.name, e, c) : t.delete("rolebindings", e.metadata.name, c).then(function() {
 return e;
 });
 }));
@@ -3186,32 +3189,37 @@ message: null
 };
 }
 };
-}), angular.module("openshiftConsole").factory("SecretsService", function() {
-var e = function(e) {
-var t = {
+}), angular.module("openshiftConsole").factory("SecretsService", [ "$filter", "Logger", "NotificationsService", function(e, t, n) {
+var a = function(a, r) {
+n.addNotification({
+type: "error",
+message: "Base64-encoded " + r + " string could not be decoded.",
+details: e("getErrorDetails")(a)
+}), t.error("Base64-encoded " + r + " string could not be decoded.", a);
+}, r = function(e) {
+var t = _.pick(e, [ "email", "username", "password" ]);
+if (e.auth) try {
+_.spread(function(e, n) {
+t.username = e, t.password = n;
+})(_.split(window.atob(e.auth), ":", 2));
+} catch (e) {
+return void a(e, "username:password");
+}
+return t;
+}, o = function(e, t) {
+var n, o = {
 auths: {}
-}, n = JSON.parse(window.atob(e));
-return _.each(n, function(e, n) {
-t.auths[n] = {
-username: e.username,
-password: e.password,
-email: e.email
 };
-}), t;
-}, t = function(e) {
-var t = {
-auths: {}
-}, n = JSON.parse(window.atob(e));
-return _.each(n.auths, function(e, n) {
-if (e.auth) {
-var a = window.atob(e.auth).split(":");
-t.auths[n] = {
-username: a[0],
-password: a[1],
-email: e.email
-};
-} else t.auths[n] = e;
-}), n.credsStore && (t.credsStore = n.credsStore), t;
+try {
+n = JSON.parse(window.atob(e));
+} catch (e) {
+a(e, t);
+}
+return ".dockercfg" === t ? _.each(n, function(e, t) {
+o.auths[t] = r(e);
+}) : (_.each(n.auths, function(e, t) {
+e.auth ? o.auths[t] = r(e) : o.auths[t] = e;
+}), n.credsStore && (o.credsStore = n.credsStore)), o;
 };
 return {
 groupSecretsByType: function(e) {
@@ -3238,24 +3246,15 @@ t.other.push(e);
 }
 }), t;
 },
-decodeSecretData: function(n) {
-var a = {}, r = _.mapValues(n, function(n, r) {
-var o;
-switch (r) {
-case ".dockercfg":
-return e(n);
-
-case ".dockerconfigjson":
-return t(n);
-
-default:
-return o = window.atob(n), /[\x00-\x09\x0E-\x1F]/.test(o) ? (a[r] = !0, n) : o;
-}
+decodeSecretData: function(e) {
+var t = {}, n = _.mapValues(e, function(e, n) {
+var a;
+return ".dockercfg" === n || ".dockerconfigjson" === n ? o(e, n) : (a = window.atob(e), /[\x00-\x09\x0E-\x1F]/.test(a) ? (t[n] = !0, e) : a);
 });
-return r.$$nonprintable = a, r;
+return n.$$nonprintable = t, n;
 }
 };
-}), angular.module("openshiftConsole").factory("ServicesService", [ "$filter", "$q", "DataService", function(e, t, n) {
+} ]), angular.module("openshiftConsole").factory("ServicesService", [ "$filter", "$q", "DataService", function(e, t, n) {
 var a = "service.alpha.openshift.io/dependencies", r = e("annotation"), o = function(e) {
 var t = r(e, a);
 if (!t) return null;
@@ -5240,20 +5239,20 @@ f = r, P(), k(f), angular.extend(a, {
 project: n,
 subjectKinds: E,
 canUpdateRolebindings: y("rolebindings", "update", g),
-confirmRemove: function(n, r, i) {
-var c = null, l = T(n, r, i, a.user.metadata.name);
-_.isEqual(n, a.user.metadata.name) && u.isLastRole(a.user.metadata.name, a.roleBindings) && (c = !0), o.open({
+confirmRemove: function(n, r, i, c) {
+var l = null, d = T(n, r, i, a.user.metadata.name);
+_.isEqual(n, a.user.metadata.name) && u.isLastRole(a.user.metadata.name, a.roleBindings) && (l = !0), o.open({
 animation: !0,
 templateUrl: "views/modals/confirm.html",
 controller: "ConfirmModalController",
 resolve: {
 modalConfig: function() {
-return l;
+return d;
 }
 }
 }).result.then(function() {
-m.removeSubject(n, i, a.roleBindings, f).then(function(e) {
-c ? t.url("./") : (s.getProjectRules(g, !0).then(function() {
+m.removeSubject(n, i, c, a.roleBindings, f).then(function(e) {
+l ? t.url("./") : (s.getProjectRules(g, !0).then(function() {
 P(e[0]);
 var t = y("rolebindings", "update", g);
 angular.extend(a, {
@@ -5547,7 +5546,7 @@ e.eventObjects = l ? [ e.build, l ] : [ e.build ];
 }, f = function(t, n) {
 e.loaded = !0, e.build = t, m(t), c();
 var a = u(t, "buildNumber");
-a && (e.breadcrumbs[2].title = "#" + a), "DELETED" === n && (e.alerts.deleted = {
+a && e.breadcrumbs[2] && (e.breadcrumbs[2].title = "#" + a), "DELETED" === n && (e.alerts.deleted = {
 type: "warning",
 message: "This build has been deleted."
 });
@@ -6378,15 +6377,15 @@ e.showParameterValues = !e.showParameterValues;
 }, e.closeEditDialog = function() {
 e.editDialogShown = !1;
 };
-var m, p = [], f = [], g = t("serviceInstanceDisplayName"), v = t("isServiceInstanceReady"), h = a.getPreferredVersion("servicebindings");
+var m, p, f = [], g = [], v = t("serviceInstanceDisplayName"), h = t("isServiceInstanceReady"), y = a.getPreferredVersion("servicebindings");
 e.serviceInstancesVersion = a.getPreferredVersion("serviceinstances");
-var y = function() {
+var b = function() {
 e.breadcrumbs.push({
 title: e.displayName
 });
-}, b = function() {
+}, C = function() {
 if (e.serviceInstance && e.parameterSchema) {
-s.unwatchAll(f), f = [], e.allowParametersReveal = o.canI("secrets", "get", e.projectName), e.parameterData = {}, e.opaqueParameterKeys = [];
+s.unwatchAll(g), g = [], e.allowParametersReveal = o.canI("secrets", "get", e.projectName), e.parameterData = {}, e.opaqueParameterKeys = [];
 var t = e.allowParametersReveal ? "" : "*****";
 _.each(_.keys(_.get(e.parameterSchema, "properties")), function(n) {
 e.parameterData[n] = t;
@@ -6395,7 +6394,7 @@ var n = _.get(e.serviceInstance, "status.externalProperties.parameters", {});
 _.each(_.keys(n), function(t) {
 "<redacted>" === n[t] ? e.parameterData[t] = "*****" : (e.parameterData[t] = n[t], e.opaqueParameterKeys.push(t));
 }), e.allowParametersReveal && _.each(_.get(e.serviceInstance, "spec.parametersFrom"), function(t) {
-f.push(s.watchObject("secrets", _.get(t, "secretKeyRef.name"), e.projectContext, function(n) {
+g.push(s.watchObject("secrets", _.get(t, "secretKeyRef.name"), e.projectContext, function(n) {
 try {
 var a = JSON.parse(u.decodeSecretData(n.data)[t.secretKeyRef.key]);
 _.extend(e.parameterData, a);
@@ -6405,34 +6404,42 @@ c.warn("Unable to load parameters from secret " + _.get(t, "secretKeyRef.name"),
 }));
 });
 }
-}, C = function() {
+}, S = function() {
 if (e.plan && e.serviceClass && e.serviceInstance) {
 var t = _.get(e.plan, "spec.instanceUpdateParameterSchema"), n = _.size(_.get(t, "properties")) > 0 || _.get(e.serviceClass, "spec.planUpdatable") && _.size(e.servicePlans) > 1;
-e.editAvailable = n && v(e.serviceInstance) && !_.get(e.serviceInstance, "metadata.deletionTimestamp");
+e.editAvailable = n && h(e.serviceInstance) && !_.get(e.serviceInstance, "metadata.deletionTimestamp");
 }
-}, S = function() {
-e.parameterFormDefinition = angular.copy(_.get(e.plan, "spec.externalMetadata.schemas.service_instance.update.openshift_form_definition")), e.parameterSchema = _.get(e.plan, "spec.instanceCreateParameterSchema"), b();
 }, w = function() {
-!e.serviceInstance || e.serviceClass || m || (m = d.fetchServiceClassForInstance(e.serviceInstance).then(function(t) {
-e.serviceClass = t, e.displayName = g(e.serviceInstance, e.serviceClass), y(), m = null, i.getServicePlansForServiceClass(e.serviceClass).then(function(t) {
-t = t.by("metadata.name");
+e.parameterFormDefinition = angular.copy(_.get(e.plan, "spec.externalMetadata.schemas.service_instance.update.openshift_form_definition")), e.parameterSchema = _.get(e.plan, "spec.instanceCreateParameterSchema"), C();
+}, k = function() {
+var t = _.get(e.serviceInstance, "spec.clusterServicePlanRef.name");
+e.plan = _.find(e.servicePlans, {
+metadata: {
+name: t
+}
+}), w(), S();
+}, P = function() {
+e.serviceClass && !p && (e.servicePlans ? k() : p = i.getServicePlansForServiceClass(e.serviceClass).then(function(t) {
 var n = _.get(e.serviceInstance, "spec.clusterServicePlanRef.name");
-e.servicePlans = _.reject(t, function(e) {
+e.servicePlans = _.reject(t.by("metadata.name"), function(e) {
 return _.get(e, "status.removedFromBrokerCatalog") && e.metadata.name !== n;
-}), e.plan = t[n], S(), C();
-});
+}), k(), p = null;
 }));
-}, k = function(t, n) {
+}, j = function() {
+e.serviceInstance && !m && (e.serviceClass ? P() : m = d.fetchServiceClassForInstance(e.serviceInstance).then(function(t) {
+e.serviceClass = t, e.displayName = v(e.serviceInstance, e.serviceClass), b(), m = null, P();
+}));
+}, R = function(t, n) {
 e.loaded = !0, e.serviceInstance = t, "DELETED" === n && (e.alerts.deleted = {
 type: "warning",
 message: "This provisioned service has been deleted."
-}), w(), b(), C();
+}), j(), C(), S();
 };
 l.get(n.project).then(_.spread(function(a, o) {
 e.project = a, e.projectContext = o, s.get(e.serviceInstancesVersion, n.instance, o, {
 errorNotification: !1
 }).then(function(t) {
-k(t), p.push(s.watchObject(e.serviceInstancesVersion, n.instance, o, k)), p.push(s.watch(h, o, function(n) {
+R(t), f.push(s.watchObject(e.serviceInstancesVersion, n.instance, o, R)), f.push(s.watch(y, o, function(n) {
 var a = n.by("metadata.name");
 e.bindings = r.getBindingsForResource(a, t);
 }));
@@ -6450,7 +6457,7 @@ message: "The service details could not be loaded.",
 details: t("getErrorDetails")(n)
 };
 })), e.$on("$destroy", function() {
-s.unwatchAll(p), s.unwatchAll(f);
+s.unwatchAll(f), s.unwatchAll(g);
 });
 } ]), angular.module("openshiftConsole").controller("SecretsController", [ "$routeParams", "$scope", "DataService", "ProjectsService", function(e, t, n, a) {
 t.projectName = e.project, t.secretsByType = {}, a.get(e.project).then(_.spread(function(e, a) {
@@ -13007,7 +13014,7 @@ i.nextTitle = "Close", i.wizardComplete = !0, u(), m();
 };
 i.$onInit = function() {
 var e;
-e = "ServiceInstance" === i.target.kind ? s("pod_presets") ? "Applications" : "Bindings" : "Services", i.displayName = c(i.target), i.steps = [ {
+e = "ServiceInstance" === i.target.kind ? s("pod_presets") ? "Applications" : "Bindings" : "Services", i.displayName = c(i.target, i.serviceClass), i.steps = [ {
 id: "deleteForm",
 label: e,
 view: "views/directives/bind-service/delete-binding-select-form.html",
@@ -13033,7 +13040,8 @@ bindings: {
 target: "<",
 bindings: "<",
 applicationsByBinding: "<",
-onClose: "<"
+onClose: "<",
+serviceClass: "<"
 },
 templateUrl: "views/directives/unbind-service.html"
 });
@@ -13266,9 +13274,12 @@ b.infoStep.selected = !1, b.selectStep.selected = !1, b.configStep.selected = !1
 }, b.$onInit = function() {
 b.loginBaseUrl = r.openshiftAPIBaseUrl(), b.preSelectedProject = b.selectedProject = b.project, b.project && (b.templateProject = b.project, b.templateProjectChange()), h(), b.noProjectsCantCreate = !1, e.$on("no-projects-cannot-create", function() {
 b.noProjectsCantCreate = !0;
-}), b.projectEmptyState = {
+}), b.noProjectsEmptyState = {
+title: "No Available Projects",
+info: "There are no projects available from which to load templates."
+}, b.projectEmptyState = {
 title: "No Project Selected",
-info: "Please select a project from the dropdown to load Templates from that project."
+info: "Please select a project from the dropdown to load templates from that project."
 }, b.templatesEmptyState = {
 title: "No Templates",
 info: "The selected project has no templates available to import."
@@ -13314,7 +13325,7 @@ return c.isRecentlyViewed(e.metadata.uid) ? "Recently Viewed" : "Other Projects"
 };
 var w = function() {
 var e = _.reject(b.unfilteredProjects, "metadata.deletionTimestamp"), n = _.sortBy(e, t("displayName"));
-b.searchEnabled = !_.isEmpty(e), b.templateProjects = c.orderByMostRecentlyViewed(n);
+b.searchEnabled = !_.isEmpty(e), b.templateProjects = c.orderByMostRecentlyViewed(n), b.numTemplateProjects = _.size(b.templateProjects), 1 === b.numTemplateProjects && (b.templateProject = _.head(b.templateProjects), b.templateProjectChange());
 };
 } ],
 controllerAs: "$ctrl",
@@ -14485,7 +14496,7 @@ bottom: n.offsetBottom
 angular.module("openshiftConsole").component("editEnvironmentVariables", {
 controller: [ "$filter", "APIService", "DataService", "EnvironmentService", "NotificationsService", function(e, t, n, a, r) {
 var o, i, s, c, l = this, u = !1, d = [], m = [], p = !1, f = e("canI"), g = e("getErrorDetails"), v = e("humanizeKind"), h = e("orderByDisplayName"), y = function(e, t) {
-u || (l.form && !l.form.$pristine && l.updatedObject ? a.isEnvironmentEqual(e, t) ? l.updatedObject = a.mergeEdits(e, t) : (u = !0, r.addNotification({
+u || (l.form && !l.form.$pristine && l.updatedObject ? a.isEnvironmentEqual(e, t) ? l.updatedObject = a.mergeEdits(l.updatedObject, e) : (u = !0, r.addNotification({
 type: "warning",
 message: "The environment variables for the " + o + " have been updated in the background.",
 details: "Saving your changes may create a conflict or cause loss of data."

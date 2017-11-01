@@ -51,6 +51,7 @@ angular.module('openshiftConsole')
     var watches = [];
     var secretWatchers = [];
     var serviceClassPromise;
+    var servicePlansPromise;
 
     var serviceInstanceDisplayName = $filter('serviceInstanceDisplayName');
     var serviceInstanceReady = $filter('isServiceInstanceReady');
@@ -128,33 +129,50 @@ angular.module('openshiftConsole')
       updateParameterData();
     };
 
-    var updateServiceClass = function() {
-      // If we've previously loaded the service class or a request is in flight, don't do anything.
-      if (!$scope.serviceInstance || $scope.serviceClass || serviceClassPromise) {
+    var updateServicePlan = function() {
+      var servicePlanName = _.get($scope.serviceInstance, 'spec.clusterServicePlanRef.name');
+      $scope.plan = _.find($scope.servicePlans, { metadata: { name: servicePlanName } });
+      updateParameterSchema();
+      updateEditable();
+    };
+
+    var updateServicePlans = function() {
+      if (!$scope.serviceClass || servicePlansPromise) {
         return;
       }
 
-      serviceClassPromise = ServiceInstancesService.fetchServiceClassForInstance($scope.serviceInstance).then(function (serviceClass) {
-        $scope.serviceClass = serviceClass;
-        $scope.displayName = serviceInstanceDisplayName($scope.serviceInstance, $scope.serviceClass);
-
-        updateBreadcrumbs();
-        serviceClassPromise = null;
-
-        Catalog.getServicePlansForServiceClass($scope.serviceClass).then(function (plans) {
-          plans = plans.by('metadata.name');
-
+      if (!$scope.servicePlans) {
+        servicePlansPromise = Catalog.getServicePlansForServiceClass($scope.serviceClass).then(function (plans) {
           var servicePlanName = _.get($scope.serviceInstance, 'spec.clusterServicePlanRef.name');
-          $scope.servicePlans = _.reject(plans, function(plan) {
+          $scope.servicePlans = _.reject(plans.by('metadata.name'), function(plan) {
             return _.get(plan, 'status.removedFromBrokerCatalog') && (plan.metadata.name !== servicePlanName);
           });
 
-          $scope.plan = plans[servicePlanName];
-
-          updateParameterSchema();
-          updateEditable();
+          updateServicePlan();
+          servicePlansPromise = null;
         });
-      });
+      } else {
+        updateServicePlan();
+      }
+    };
+
+    var updateServiceClass = function() {
+      if (!$scope.serviceInstance || serviceClassPromise) {
+        return;
+      }
+
+      if ($scope.serviceClass) {
+        updateServicePlans();
+      } else {
+        serviceClassPromise = ServiceInstancesService.fetchServiceClassForInstance($scope.serviceInstance).then(function (serviceClass) {
+          $scope.serviceClass = serviceClass;
+          $scope.displayName = serviceInstanceDisplayName($scope.serviceInstance, $scope.serviceClass);
+
+          updateBreadcrumbs();
+          serviceClassPromise = null;
+          updateServicePlans();
+        });
+      }
     };
 
     var serviceResolved = function(serviceInstance, action) {

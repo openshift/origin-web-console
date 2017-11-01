@@ -88,10 +88,13 @@ describe('RoleBindingsService', function() {
     it('should update the rolebinding by removing the subject from the subject list', function() {
       var bindings = [{
         roleRef: { name: 'admin'},
-        subjects: [{name: 'jane', kind: 'user'}, {name: 'jack', kind: 'user'}]
+        subjects: [
+          {name: 'jane', kind: 'user'},
+          {name: 'jack', kind: 'user'}
+        ]
       }];
       RoleBindingsService
-        .removeSubject('jane', 'admin', bindings)
+        .removeSubject('jane', 'admin', null, bindings)
         .then(function(resp) {
           expect(resp[0].subjects).toEqual([{
               name: 'jack',
@@ -102,13 +105,61 @@ describe('RoleBindingsService', function() {
       $rootScope.$digest();
     });
 
+    it('should honor the namespace of a subject if provided', function() {
+      var bindings = [{
+        roleRef: { name: 'admin'},
+        subjects: [
+          // multiple jim, only one should be removed in test 1
+          {name: 'jim',  kind: 'user'},
+          {name: 'jim',  kind: 'user', namespace: 'yourproject'},
+          {name: 'jim',  kind: 'user', namespace: 'myproject'},
+          {name: 'jack', kind: 'user'}
+        ]
+      }, {
+        roleRef: { name: 'view'},
+        subjects: [
+          // multiple jane, only one should be removed in test 2
+          {name: 'jane', kind: 'user', namespace: 'myproject'},
+          {name: 'jack', kind: 'user', namespace: 'yourproject'},
+          {name: 'jane', kind: 'user', namespace: 'herproject'},
+          {name: 'jack', kind: 'user', namespace: 'hisproject'}
+        ]
+      }];
+
+      // test 1
+      RoleBindingsService
+        .removeSubject('jim', 'admin', 'myproject', bindings)
+        .then(function(resp) {
+          expect(resp[0].subjects).toEqual([
+            {name: 'jim',  kind: 'user'},
+            {name: 'jim',  kind: 'user', namespace: 'yourproject'},
+            {name: 'jack', kind: 'user'}
+          ]);
+
+        });
+
+      // test 2
+      RoleBindingsService
+        .removeSubject('jane', 'view', 'herproject', bindings)
+        .then(function(resp) {
+          expect(resp[0].subjects).toEqual([
+            {name: 'jane', kind: 'user', namespace: 'myproject'},
+            {name: 'jack', kind: 'user', namespace: 'yourproject'},
+            {name: 'jack', kind: 'user', namespace: 'hisproject'}
+          ]);
+        });
+      // resolve $q.all() via digest loop
+      $rootScope.$digest();
+
+    });
+
     it('should delete the rolebinding if the removed subject was the only subject', function() {
       var bindings = [{
         roleRef: { name: 'admin'},
         subjects: [{name: 'jane', kind: 'user'}]
       }];
       RoleBindingsService
-        .removeSubject('jane', 'admin', bindings)
+        .removeSubject('jane', 'admin', null, bindings)
         .then(function(resp) {
           expect(resp[0]).toBe(undefined);
         });
@@ -130,7 +181,7 @@ describe('RoleBindingsService', function() {
         subjects: [{name: 'jane', kind: 'user'}, {name: 'jack', kind: 'user'}]
       }];
       RoleBindingsService
-        .removeSubject('jane', 'admin', bindings)
+        .removeSubject('jane', 'admin', null, bindings)
         .then(function(resp) {
           _.each(resp, function(roleBinding) {
             expect(roleBinding.subjects).toEqual([ {name: 'jack', kind: 'user'}]);
@@ -154,7 +205,7 @@ describe('RoleBindingsService', function() {
         subjects: [{name: 'jane', kind: 'user'}]
       }];
       RoleBindingsService
-        .removeSubject('jane', 'admin', bindings)
+        .removeSubject('jane', 'admin', null, bindings)
         .then(function(resp) {
           expect(resp[0]).toBe(undefined);
           expect(resp[1].subjects).toEqual([ {name: 'jack', kind: 'user'}]);

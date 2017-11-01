@@ -52,7 +52,7 @@
       // variables. If not, merge the environment edits into the updated
       // deployment config object.
       if (EnvironmentService.isEnvironmentEqual(currentValue, previousValue)) {
-        ctrl.updatedObject = EnvironmentService.mergeEdits(currentValue, previousValue);
+        ctrl.updatedObject = EnvironmentService.mergeEdits(ctrl.updatedObject, currentValue);
         return;
       }
 
