@@ -45,6 +45,21 @@ angular.module("openshiftConsole")
         }];
         scope.claim.selectedLabels = [];
 
+        var previousLabels = [];
+        scope.$watch('useLabels', function(useLabels, previousValue) {
+          if (useLabels === previousValue) {
+            return;
+          }
+
+          // Prefill the previous values if the checkbox was unchecked and checked again.
+          if (useLabels) {
+            scope.claim.selectedLabels = previousLabels;
+          } else {
+            previousLabels = scope.claim.selectedLabels;
+            scope.claim.selectedLabels = [];
+          }
+        });
+
         scope.groupUnits = function(unit) {
           switch (unit.value) {
           case 'Mi':

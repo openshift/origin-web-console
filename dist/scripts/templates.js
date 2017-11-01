@@ -8187,13 +8187,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"claim-name\" class=\"required\">Name</label>\n" +
-    "<span ng-class=\"{ 'has-error': persistentVolumeClaimForm.name.$invalid && persistentVolumeClaimForm.name.$touched && !claimDisabled }\">\n" +
+    "<span ng-class=\"{ 'has-error': persistentVolumeClaimForm.name.$invalid && persistentVolumeClaimForm.name.$dirty && !claimDisabled }\">\n" +
     "<input id=\"claim-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"claim.name\" ng-required=\"true\" ng-pattern=\"nameValidation.pattern\" ng-maxlength=\"nameValidation.maxlength\" placeholder=\"my-storage-claim\" take-focus select-on-focus autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"claim-name-help\">\n" +
     "</span>\n" +
     "<div>\n" +
     "<span id=\"claim-name-help\" class=\"help-block\">A unique name for the storage claim within the project.</span>\n" +
     "</div>\n" +
-    "<div class=\"has-error\" ng-show=\"persistentVolumeClaimForm.name.$error.required && persistentVolumeClaimForm.name.$touched && !claimDisabled\">\n" +
+    "<div class=\"has-error\" ng-show=\"persistentVolumeClaimForm.name.$error.required && persistentVolumeClaimForm.name.$dirty && !claimDisabled\">\n" +
     "<span class=\"help-block\">\n" +
     "Name is required.\n" +
     "</span>\n" +
@@ -8304,23 +8304,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</fieldset>\n" +
     "</div>\n" +
-    "\n" +
-    "<div ng-show=\"!showAdvancedOptions\" class=\"mar-bottom-xl\">\n" +
-    "Use\n" +
-    "<a href=\"\" ng-click=\"showAdvancedOptions = true\">label selectors</a>\n" +
-    "to request storage.\n" +
-    "</div>\n" +
-    "<div ng-show=\"showAdvancedOptions\" class=\"form-group\">\n" +
-    "<fieldset class=\"compute-resource\">\n" +
-    "<label>Label Selector</label>\n" +
-    "<div class=\"help-block mar-bottom-lg\">\n" +
-    "Enter a label and value to use for your storage.\n" +
-    "<div class=\"learn-more-block\">\n" +
+    "<div class=\"checkbox\">\n" +
+    "<label>\n" +
+    "<input type=\"checkbox\" ng-model=\"useLabels\">\n" +
+    "Use label selectors to request storage\n" +
+    "</label>\n" +
+    "<div class=\"help-block learn-more-block mar-bottom-xl\">\n" +
     "<a ng-href=\"{{'selector_label' | helpLink}}\" target=\"_blank\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<key-value-editor entries=\"claim.selectedLabels\" key-placeholder=\"label\" value-placeholder=\"value\" key-validator=\"[a-zA-Z][a-zA-Z0-9_-]*\" key-validator-error-tooltip=\"A valid label name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores and dashes.\" add-row-link=\"Add Label\"></key-value-editor>\n" +
-    "</fieldset>\n" +
+    "<div ng-show=\"useLabels\" class=\"form-group osc-form\">\n" +
+    "<label-editor labels=\"claim.selectedLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"Enter a label and value to use for your storage.\">\n" +
+    "</label-editor>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</ng-form>"

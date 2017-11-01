@@ -10037,7 +10037,11 @@ label: "GB"
 }, {
 value: "T",
 label: "TB"
-} ], i.claim.selectedLabels = [], i.groupUnits = function(e) {
+} ], i.claim.selectedLabels = [];
+var l = [];
+i.$watch("useLabels", function(e, t) {
+e !== t && (e ? i.claim.selectedLabels = l : (l = i.claim.selectedLabels, i.claim.selectedLabels = []));
+}), i.groupUnits = function(e) {
 switch (e.value) {
 case "Mi":
 case "Gi":
@@ -10053,10 +10057,10 @@ return "";
 }, i.showComputeUnitsHelp = function() {
 r.showComputeUnitsHelp();
 };
-var l = function() {
+var u = function() {
 var e = i.claim.amount && c(i.claim.amount + i.claim.unit), t = _.has(i, "limits.min") && c(i.limits.min), n = _.has(i, "limits.max") && c(i.limits.max), a = !0, r = !0;
 e && t && (a = e >= t), e && n && (r = e <= n), i.persistentVolumeClaimForm.capacity.$setValidity("limitRangeMin", a), i.persistentVolumeClaimForm.capacity.$setValidity("limitRangeMax", r);
-}, u = function() {
+}, d = function() {
 var e = a.isAnyStorageQuotaExceeded(i.quotas, i.clusterQuotas), t = a.willRequestExceedQuota(i.quotas, i.clusterQuotas, "requests.storage", i.claim.amount + i.claim.unit);
 i.persistentVolumeClaimForm.capacity.$setValidity("willExceedStorage", !t), i.persistentVolumeClaimForm.capacity.$setValidity("outOfClaims", !e);
 };
@@ -10092,12 +10096,12 @@ var t = e.by("metadata.name");
 if (!_.isEmpty(t)) {
 i.limits = n.getEffectiveLimitRange(t, "storage", "PersistentVolumeClaim");
 var a;
-i.limits.min && i.limits.max && c(i.limits.min) === c(i.limits.max) && (a = s(i.limits.max), i.claim.amount = Number(a[0]), i.claim.unit = a[1], i.capacityReadOnly = !0), i.$watchGroup([ "claim.amount", "claim.unit" ], l);
+i.limits.min && i.limits.max && c(i.limits.min) === c(i.limits.max) && (a = s(i.limits.max), i.claim.amount = Number(a[0]), i.claim.unit = a[1], i.capacityReadOnly = !0), i.$watchGroup([ "claim.amount", "claim.unit" ], u);
 }
 }), t.list("resourcequotas", {
 namespace: i.projectName
 }, function(e) {
-i.quotas = e.by("metadata.name"), i.$watchGroup([ "claim.amount", "claim.unit" ], u);
+i.quotas = e.by("metadata.name"), i.$watchGroup([ "claim.amount", "claim.unit" ], d);
 }), t.list("appliedclusterresourcequotas", {
 namespace: i.projectName
 }, function(e) {
