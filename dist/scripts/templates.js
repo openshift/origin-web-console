@@ -4753,11 +4753,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"add-to-project middle surface-shaded\">\n" +
     "<div class=\"middle-content\" persist-tab-state>\n" +
     "<div class=\"container-fluid\">\n" +
-    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<alerts alerts=\"alerts\" class=\"mar-top-md\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<uib-tabset class=\"mar-top-none\" ng-if=\"project\">\n" +
+    "<uib-tabset class=\"mar-top-md\" ng-if=\"project\">\n" +
     "<uib-tab active=\"selectedTab.fromCatalog\">\n" +
     "<uib-tab-heading>Browse Catalog</uib-tab-heading>\n" +
     "<catalog project-name=\"projectName\" project-image-streams=\"projectImageStreams\" openshift-image-streams=\"openshiftImageStreams\" project-templates=\"projectTemplates\" openshift-templates=\"openshiftTemplates\">\n" +
@@ -4811,8 +4810,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
-    "<div ng-hide=\"imageStream\">\n" +
+    "<div ng-hide=\"imageStream\" class=\"mar-top-lg\">\n" +
     "Loading...\n" +
     "</div>\n" +
     "<div class=\"osc-form\" ng-show=\"imageStream\">\n" +
@@ -5077,8 +5075,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/create/next-steps.html',
     "<div class=\"middle surface-shaded\">\n" +
     "<div class=\"middle-content\">\n" +
-    "<div class=\"container-fluid next-steps\">\n" +
-    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<div class=\"container-fluid next-steps pad-top-xl\">\n" +
     "<next-steps project=\"project\" project-name=\"projectName\" login-base-url=\"loginBaseUrl\" from-sample-repo=\"fromSampleRepo\" created-build-config=\"createdBuildConfig\" name=\"name\"></next-steps>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -11479,8 +11476,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
-    "<div ng-hide=\"template\">\n" +
+    "<div ng-hide=\"template\" class=\"mar-top-lg\">\n" +
     "Loading...\n" +
     "</div>\n" +
     "<div ng-if=\"template\" class=\"row osc-form\">\n" +

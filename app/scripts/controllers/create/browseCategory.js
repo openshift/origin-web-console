@@ -59,28 +59,6 @@ angular.module('openshiftConsole')
 
     $scope.alerts = $scope.alerts || {};
 
-    $scope.breadcrumbs = [
-      {
-        title: "Add to Project",
-        link: "project/" + $scope.projectName + "/create"
-      },
-      {
-        title: "Catalog",
-        link: "project/" + $scope.projectName + "/create?tab=fromCatalog"
-      }
-    ];
-
-    if (parentCategory) {
-      $scope.breadcrumbs.push({
-        title: parentCategory.label,
-        link: "project/" + $scope.projectName + "/create/category/" + parentCategory.id
-      });
-    }
-
-    $scope.breadcrumbs.push({
-      title: $scope.category.label
-    });
-
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
