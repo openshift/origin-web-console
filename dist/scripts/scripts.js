@@ -14478,7 +14478,7 @@ bottom: n.offsetBottom
 angular.module("openshiftConsole").component("editEnvironmentVariables", {
 controller: [ "$filter", "APIService", "DataService", "EnvironmentService", "NotificationsService", function(e, t, n, a, r) {
 var o, i, s, c, l = this, u = !1, d = [], m = [], p = !1, f = e("canI"), g = e("getErrorDetails"), v = e("humanizeKind"), h = e("orderByDisplayName"), y = function(e, t) {
-u || (l.form && !l.form.$pristine && l.updatedObject ? a.isEnvironmentEqual(e, t) ? l.updatedObject = a.mergeEdits(e, t) : (u = !0, r.addNotification({
+u || (l.form && !l.form.$pristine && l.updatedObject ? a.isEnvironmentEqual(e, t) ? l.updatedObject = a.mergeEdits(l.updatedObject, e) : (u = !0, r.addNotification({
 type: "warning",
 message: "The environment variables for the " + o + " have been updated in the background.",
 details: "Saving your changes may create a conflict or cause loss of data."
