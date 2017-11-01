@@ -62,7 +62,6 @@ angular.module("openshiftConsole")
         openshiftList()
         var displayName = $filter('displayName');
         var humanizeKind = $filter('humanizeKind');
-        var processedResources;
         var createResources = function () {
           var titles = {
             started: "Deploying image " + $scope.app.APP_NAME + " to project " + displayName($scope.project),

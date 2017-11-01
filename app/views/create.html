@@ -21,7 +21,8 @@
                         project-image-streams="projectImageStreams"
                         openshift-image-streams="openshiftImageStreams"
                         project-templates="projectTemplates"
-                        openshift-templates="openshiftTemplates">
+                        openshift-templates="openshiftTemplates"
+                        squid-tab="squidTab">
                     </catalog>
                   </uib-tab>
 
@@ -41,6 +42,13 @@
                     <uib-tab-heading>Octopus</uib-tab-heading>
                     <from>
                       <open-shift project="project" context="context"></open-shift>
+                    </from>
+                  </uib-tab>
+
+                  <uib-tab active="selectedTab.fromSquid">
+                    <uib-tab-heading>Squid</uib-tab-heading>
+                    <from>
+                      <open-squid project="project" context="context"></open-squid>
                     </from>
                   </uib-tab>
 

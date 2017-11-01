@@ -1,0 +1,92 @@
+<div class="open-squid">
+  <p>
+    Create Squid
+  </p>
+  <ng-form name="$ctrl.squidForm">
+    <div class="form-group">
+      <label for="SECRET_NAME" class="required">{{ $ctrl.appParams['SECRET_NAME'].displayName }}</label>
+      <div ng-class="{'has-error': form.SECRET_NAME.$invalid}">
+        <input type="text" required select-on-focus placeholder="Name" ng-model="$ctrl.appParams['SECRET_NAME'].value"
+               id="SECRET_NAME" name="SECRET_NAME" class="form-control" autocorrect="off" autocapitalize="off" spellcheck="false">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="SECRET_KEY" class="required">{{ $ctrl.appParams['SECRET_KEY'].displayName }}</label>
+      <div ng-class="{'has-error': form.SECRET_KEY.$invalid}">
+        <input type="text" required select-on-focus placeholder="Name" ng-model="$ctrl.appParams['SECRET_KEY'].value"
+               id="SECRET_KEY" name="SECRET_KEY" class="form-control" autocorrect="off" autocapitalize="off" spellcheck="false">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="Config" class="required">{{ $ctrl.appParams['SQUID_CONFIG_NAME'].displayName }}</label>
+      <div ng-class="{'has-error': form.SQUID_CONFIG_NAME.$invalid}">
+        <input type="text" required select-on-focus placeholder="Squid Config Name" ng-model="$ctrl.appParams['SQUID_CONFIG_NAME'].value"
+               id="Config" name="SQUID_CONFIG_NAME" class="form-control" autocorrect="off" autocapitalize="off" spellcheck="false">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="Console" class="required">{{ $ctrl.appParams['SQUID_CONSOLE_NAME'].displayName }}</label>
+      <div ng-class="{'has-error': form.SQUID_CONSOLE_NAME.$invalid}">
+        <input type="text" required select-on-focus placeholder="Squid Console Name" ng-model="$ctrl.appParams['SQUID_CONSOLE_NAME'].value"
+               id="Console" name="SQUID_CONSOLE_NAME" class="form-control" autocorrect="off" autocapitalize="off" spellcheck="false">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="UE" class="required">{{ $ctrl.appParams['SQUID_UE_NAME'].displayName }}</label>
+      <div ng-class="{'has-error': form.SQUID_UE_NAME.$invalid}">
+        <input type="text" required select-on-focus placeholder="Squid UE Name" ng-model="$ctrl.appParams['SQUID_UE_NAME'].value"
+               id="UE" name="SQUID_UE_NAME" class="form-control" autocorrect="off" autocapitalize="off" spellcheck="false">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="demoClient" class="required">{{ $ctrl.appParams['SQUID_DEMO_CLIENT_NAME'].displayName }}</label>
+      <div ng-class="{'has-error': form.SQUID_DEMO_CLIENT_NAME.$invalid}">
+        <input type="text" required select-on-focus placeholder="Squid Demo Client Name" ng-model="$ctrl.appParams['SQUID_DEMO_CLIENT_NAME'].value"
+               id="demoClient" name="SQUID_DEMO_CLIENT_NAME" class="form-control" autocorrect="off" autocapitalize="off" spellcheck="false">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="demoServer" class="required">{{ $ctrl.appParams['SQUID_DEMO_SERVER_NAME'].displayName }}</label>
+      <div ng-class="{'has-error': form.SQUID_DEMO_SERVER_NAME.$invalid}">
+        <input type="text" required select-on-focus placeholder="Squid Demo Server Name" ng-model="$ctrl.appParams['SQUID_DEMO_SERVER_NAME'].value"
+               id="demoServer" name="SQUID_DEMO_SERVER_NAME" class="form-control" autocorrect="off" autocapitalize="off" spellcheck="false">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="address" class="required">{{ $ctrl.appParams['ZOOKEEPER_ADDRESS'].displayName }}</label>
+      <div ng-class="{'has-error': form.ZOOKEEPER_ADDRESS.$invalid}">
+        <input type="text" required select-on-focus placeholder="Zookeeper Address" ng-model="$ctrl.appParams['ZOOKEEPER_ADDRESS'].value"
+               id="address" name="ZOOKEEPER_ADDRESS" class="form-control" autocorrect="off" autocapitalize="off" spellcheck="false">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="DBAddress" class="required">{{ $ctrl.appParams['SQUID_DB_SERVICE_ADDRESS'].displayName }}</label>
+      <div ng-class="{'has-error': form.SQUID_DB_SERVICE_ADDRESS.$invalid}">
+        <input type="text" required select-on-focus placeholder="Squid DB Address" ng-model="$ctrl.appParams['SQUID_DB_SERVICE_ADDRESS'].value"
+               id="DBAddress" name="SQUID_DB_SERVICE_ADDRESS" class="form-control" autocorrect="off" autocapitalize="off" spellcheck="false">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="registry" class="required">{{ $ctrl.appParams['SQUID_REGISTRY_URI'].displayName }}</label>
+      <div ng-class="{'has-error': form.SQUID_REGISTRY_URI.$invalid}">
+        <input type="text" required select-on-focus placeholder="Squid Registry URI" ng-model="$ctrl.appParams['SQUID_REGISTRY_URI'].value"
+               id="registry" name="SQUID_REGISTRY_URI" class="form-control" autocorrect="off" autocapitalize="off" spellcheck="false">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="k8sUrl" class="required">{{ $ctrl.appParams['K8S_BASE_PATH'].displayName }}</label>
+      <div ng-class="{'has-error': form.K8S_BASE_PATH.$invalid}">
+        <input type="text" required select-on-focus placeholder="Squid Registry URI" ng-model="$ctrl.appParams['K8S_BASE_PATH'].value"
+               id="k8sUrl" name="K8S_BASE_PATH" class="form-control" autocorrect="off" autocapitalize="off" spellcheck="false">
+      </div>
+    </div>
+    <div ng-if="!isDialog" class="button-group gutter-bottom" ng-class="{'gutter-top': !alerts.length}">
+      <button type="submit"
+              class="btn btn-primary btn-lg"
+              ng-click="$ctrl.createFromSquid()"
+              value=""
+              ng-disabled="form.squidForm.$invalid">Create</button>
+      <a class="btn btn-default btn-lg" href="#" back>Cancel</a>
+    </div>
+  </ng-form>
+</div>
