@@ -9053,7 +9053,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/process-template-dialog/process-template-results.html',
     "<div class=\"order-service-config\">\n" +
-    "<next-steps project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\" on-continue=\"$ctrl.close\" show-project-name=\"$ctrl.showProjectName\" name=\"$ctrl.template | displayName\">\n" +
+    "\n" +
+    "<next-steps ng-if=\"$ctrl.wizardDone\" project=\"$ctrl.selectedProject\" project-name=\"$ctrl.selectedProject.metadata.name\" login-base-url=\"$ctrl.loginBaseUrl\" on-continue=\"$ctrl.close\" show-project-name=\"$ctrl.showProjectName\" name=\"$ctrl.template | displayName\">\n" +
     "</next-steps>\n" +
     "</div>"
   );
