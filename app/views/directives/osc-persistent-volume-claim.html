@@ -58,7 +58,7 @@
     <!-- Name -->
     <div class="form-group">
       <label for="claim-name" class="required">Name</label>
-      <span ng-class="{ 'has-error': persistentVolumeClaimForm.name.$invalid && persistentVolumeClaimForm.name.$touched && !claimDisabled }">
+      <span ng-class="{ 'has-error': persistentVolumeClaimForm.name.$invalid && persistentVolumeClaimForm.name.$dirty && !claimDisabled }">
         <input
           id="claim-name"
           class="form-control"
@@ -79,7 +79,7 @@
       <div>
         <span id="claim-name-help" class="help-block">A unique name for the storage claim within the project.</span>
       </div>
-      <div class="has-error" ng-show="persistentVolumeClaimForm.name.$error.required && persistentVolumeClaimForm.name.$touched && !claimDisabled">
+      <div class="has-error" ng-show="persistentVolumeClaimForm.name.$error.required && persistentVolumeClaimForm.name.$dirty && !claimDisabled">
         <span class="help-block">
           Name is required.
         </span>
@@ -201,30 +201,22 @@
          </div>
       </fieldset>
     </div>
-    <!--advanced options-->
-    <div ng-show="!showAdvancedOptions" class="mar-bottom-xl">
-      Use
-      <a href="" ng-click="showAdvancedOptions = true">label selectors</a>
-      to request storage.
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="useLabels">
+        Use label selectors to request storage
+      </label>
+      <div class="help-block learn-more-block mar-bottom-xl">
+        <a ng-href="{{'selector_label' | helpLink}}" target="_blank">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
+      </div>
     </div>
-
-    <div ng-show="showAdvancedOptions" class="form-group">
-      <fieldset class="compute-resource">
-        <label>Label Selector</label>
-        <div class="help-block mar-bottom-lg">
-          Enter a label and value to use for your storage.
-          <div class="learn-more-block">
-            <a ng-href="{{'selector_label' | helpLink}}" target="_blank">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
-          </div>
-        </div>
-        <key-value-editor
-          entries="claim.selectedLabels"
-          key-placeholder="label"
-          value-placeholder="value"
-          key-validator="[a-zA-Z][a-zA-Z0-9_-]*"
-          key-validator-error-tooltip="A valid label name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores and dashes."
-          add-row-link="Add Label"></key-value-editor>
-      </fieldset>
+    <div ng-show="useLabels" class="form-group osc-form">
+      <label-editor
+          labels="claim.selectedLabels"
+          expand="true"
+          can-toggle="false"
+          help-text="Enter a label and value to use for your storage.">
+      </label-editor>
     </div>
   </fieldset>
 </ng-form>
