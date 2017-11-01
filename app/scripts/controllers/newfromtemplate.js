@@ -34,20 +34,6 @@ angular.module('openshiftConsole')
       return;
     }
 
-    $scope.breadcrumbs = [
-      {
-        title: "Add to Project",
-        link: "project/" + $routeParams.project + "/create"
-      },
-      {
-        title: "Catalog",
-        link: "project/" + $routeParams.project + "/create?tab=fromCatalog"
-      },
-      {
-        title: name
-      }
-    ];
-
     var getValidTemplateParamsMap = function() {
       try {
         return JSON.parse($routeParams.templateParamsMap);
@@ -195,7 +181,6 @@ angular.module('openshiftConsole')
           DataService.get("templates", name, {namespace: (namespace || $scope.project.metadata.name)}).then(
             function(template) {
               $scope.template = template;
-              $scope.breadcrumbs[2].title = $filter('displayName')(template);
               findTemplateImages(template);
               var imageUsesParameters = function(image) {
                 return !_.isEmpty(image.usesParameters);
