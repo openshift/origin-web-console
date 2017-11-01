@@ -1,6 +1,6 @@
 <form ng-if="$ctrl.apiObject" name="$ctrl.form" class="mar-bottom-xl">
   <confirm-on-exit ng-if="$ctrl.canIUpdate && !$ctrl.ngReadonly" dirty="$ctrl.form.$dirty"></confirm-on-exit>
-  <div ng-repeat="container in $ctrl.containers">
+  <div ng-repeat="container in $ctrl.containers track by container.name">
     <h3>Container {{container.name}}</h3>
 
     <div ng-if="!$ctrl.canIUpdate || $ctrl.ngReadonly">

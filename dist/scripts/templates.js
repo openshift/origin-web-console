@@ -6811,7 +6811,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/edit-environment-variables.html',
     "<form ng-if=\"$ctrl.apiObject\" name=\"$ctrl.form\" class=\"mar-bottom-xl\">\n" +
     "<confirm-on-exit ng-if=\"$ctrl.canIUpdate && !$ctrl.ngReadonly\" dirty=\"$ctrl.form.$dirty\"></confirm-on-exit>\n" +
-    "<div ng-repeat=\"container in $ctrl.containers\">\n" +
+    "<div ng-repeat=\"container in $ctrl.containers track by container.name\">\n" +
     "<h3>Container {{container.name}}</h3>\n" +
     "<div ng-if=\"!$ctrl.canIUpdate || $ctrl.ngReadonly\">\n" +
     "<span ng-if=\"!container.env.length\">\n" +
