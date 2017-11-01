@@ -4473,7 +4473,9 @@ copy-to-clipboard .input-group.limit-width{max-width:300px}
 .health-checks-form .pause-rollouts-checkbox,.set-limits-form .pause-rollouts-checkbox{margin-top:21px}
 .checkbox-inline,.checkbox-inline+.checkbox-inline,.radio-inline,.radio-inline+.radio-inline{margin-left:0;margin-right:10px}
 .ui-select-dropdown{z-index:1031}
-.card-pf .image-icon{font-size:28px;line-height:1;margin-right:15px;opacity:.38}
+.card-pf .image-icon{font-size:28px;line-height:1;margin-right:15px}
+.card-pf .image-icon img{width:30px}
+.card-pf .image-icon span{opacity:.38}
 .card-pf-badge{color:#999;font-size:11px;text-transform:uppercase}
 .card-pf-body{margin-bottom:0}
 .card-pf-title-with-icon{align-items:center;display:flex;margin-bottom:15px}
