@@ -6442,9 +6442,13 @@ details: t("getErrorDetails")(n)
 s.unwatchAll(f), s.unwatchAll(g);
 });
 } ]), angular.module("openshiftConsole").controller("SecretsController", [ "$routeParams", "$scope", "DataService", "ProjectsService", function(e, t, n, a) {
-t.projectName = e.project, t.secretsByType = {}, a.get(e.project).then(_.spread(function(e, a) {
-t.project = e, t.context = a, n.list("secrets", a).then(function(e) {
-t.secrets = _.sortBy(e.by("metadata.name"), [ "type", "metadata.name" ]), t.loaded = !0;
+t.projectName = e.project, t.secretsByType = {};
+var r = [];
+a.get(e.project).then(_.spread(function(e, a) {
+t.project = e, t.context = a, r.push(n.watch("secrets", a, function(e) {
+t.secrets = _.sortBy(e.by("metadata.name"), [ "type", "metadata.name" ]), t.secretsLoaded = !0;
+})), t.$on("$destroy", function() {
+n.unwatchAll(r);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("SecretController", [ "$routeParams", "$filter", "$scope", "DataService", "ProjectsService", "SecretsService", function(e, t, n, a, r, o) {
