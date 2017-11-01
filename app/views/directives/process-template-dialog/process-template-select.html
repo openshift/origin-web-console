@@ -8,7 +8,8 @@
         name="selectProject"
         ng-model="$ctrl.templateProject"
         ng-change="$ctrl.templateProjectChange()"
-        search-enabled="$ctrl.searchEnabled">
+        search-enabled="$ctrl.searchEnabled"
+        append-to-body="true">
         <ui-select-match placeholder="Select a Project">
           {{$select.selected | displayName}}
         </ui-select-match>
