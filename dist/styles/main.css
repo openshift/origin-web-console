@@ -5278,6 +5278,7 @@ to{background-color:transparent}
 .pipeline-status-bar .pipeline-line:before{content:'';position:absolute;height:100%;animation:progress-line .35s ease-in forwards}
 .pipeline-circle{background:#d1d1d1;width:18px;height:18px;border-radius:9px;margin-top:-11px;position:relative;transform:rotate(-90deg)}
 .pipeline-circle:after{position:absolute;color:#fff;font-family:FontAwesome;font-size:12px;transform:translate(-50%,-50%) rotate(90deg);top:50%;left:50%;opacity:0;animation:fadeIn .1s 875ms linear forwards}
+.config-map-table .key,.config-map-table .truncated-content,.edit-yaml .ace_editor.editor,.log-view,dl.secret-data dd .copy-to-clipboard{font-family:Menlo,Monaco,Consolas,monospace}
 .pipeline-circle .clip1:before,.pipeline-circle .clip2:before{width:18px;height:18px;transform:rotate(360deg);border-radius:9px;position:absolute;content:''}
 .pipeline-circle .clip1{position:absolute;clip:rect(0,18px,18px,9px);z-index:-9}
 .pipeline-circle .clip1:before{clip:rect(0,9px,18px,0);animation:progress 175ms .35s linear forwards}
@@ -5419,7 +5420,6 @@ td.visible-print,th.visible-print{display:table-cell!important}
 .osc-secrets-form .advanced-secrets .secret-row .destination-dir,.osc-secrets-form .advanced-secrets .secret-row .secret-name{width:50%;display:inline-block}
 .osc-secrets-form .advanced-secrets .secret-row .destination-dir{padding-left:5px}
 dl.secret-data dd{margin-bottom:10px}
-dl.secret-data dd .copy-to-clipboard{font-family:Menlo,Monaco,Consolas,monospace}
 dl.secret-data dt{margin-bottom:5px}
 @media (min-width:992px){dl.secret-data dd{margin-left:180px}
 dl.secret-data dt{clear:left;float:left;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:160px}
@@ -5468,10 +5468,8 @@ dl.secret-data pre{margin-bottom:0}
 .events-sidebar .pficon{vertical-align:middle}
 .events-sidebar .events-sidebar-collapse{font-size:16px;margin-right:10px}
 .events-sidebar .events-sidebar-collapse a{text-decoration:none}
-.events-sidebar .sidebar-header.right-header{align-items:center;display:flex;justify-content:space-between;margin-top:17.5px}
-.events-sidebar .sidebar-header.right-header h2{font-family:inherit;font-weight:500;line-height:1.1;color:inherit;margin-top:10.5px;margin-bottom:10.5px;font-size:14px;display:inline-block}
-.config-map-table .key,.config-map-table .truncated-content,.edit-yaml .ace_editor.editor,.log-view{font-family:Menlo,Monaco,Consolas,monospace}
-.events-sidebar .sidebar-header.right-header h2 .small,.events-sidebar .sidebar-header.right-header h2 small{font-weight:400;line-height:1;color:#9c9c9c;font-size:75%}
+.events-sidebar .sidebar-header.right-header{align-items:center;display:flex;justify-content:space-between;margin-top:0;padding-bottom:21px;padding-top:24px}
+.events-sidebar .sidebar-header.right-header h2{font-size:14px;margin-bottom:0;margin-top:0}
 .events-sidebar .sidebar-header.right-header .warning-count{white-space:nowrap;margin-left:2px}
 .events-sidebar .sidebar-header.right-header .warning-count .pficon{vertical-align:-1px}
 .events-sidebar .sidebar-header.right-header .event-details-link{font-size:84%;margin-right:20px}
