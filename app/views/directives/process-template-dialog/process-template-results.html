@@ -1,5 +1,11 @@
 <div class="order-service-config">
+  <!--
+    Make sure we don't initialize the next-steps component until the wizard is
+    complete. Otherwise it tries to set and clear the template message too soon
+    (when the dialog is displayed, before the template is instantiated).
+  -->
   <next-steps
+    ng-if="$ctrl.wizardDone"
     project="$ctrl.selectedProject"
     project-name="$ctrl.selectedProject.metadata.name"
     login-base-url="$ctrl.loginBaseUrl"
