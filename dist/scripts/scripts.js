@@ -9525,7 +9525,8 @@ template: p.resource
 }) : (n = p.templateOptions.add || p.updateResources.length > 0 ? p.input.selectedProject.metadata.name : "", e = s.createFromTemplateURL(p.resource, p.input.selectedProject.metadata.name, {
 namespace: n
 }), t.url(e)) : p.isDialog ? p.$emit("fileImportedFromYAMLOrJSON", {
-project: p.input.selectedProject
+project: p.input.selectedProject,
+resource: p.resource
 }) : (e = s.projectOverviewURL(p.input.selectedProject.metadata.name), t.url(e));
 }
 function C(e) {
@@ -13369,7 +13370,7 @@ e.$broadcast("importFileFromYAMLOrJSON");
 }, s.instantiateTemplate = function() {
 e.$broadcast("instantiateTemplate");
 }, e.$on("fileImportedFromYAMLOrJSON", function(e, n) {
-s.selectedProject = n.project, s.template = n.template, s.iconClass = o(), s.image = i(), s.vendor = c(n.template, "openshift.io/provider-display-name"), s.docUrl = c(s.template, "openshift.io/documentation-url"), s.supportUrl = c(s.template, "openshift.io/support-url"), s.name = "YAML / JSON", t(function() {
+s.selectedProject = n.project, s.template = n.template, s.iconClass = o(), s.image = i(), s.vendor = c(n.template, "openshift.io/provider-display-name"), s.docUrl = c(s.template, "openshift.io/documentation-url"), s.supportUrl = c(s.template, "openshift.io/support-url"), s.name = n.resource ? a("humanizeKind")(n.resource.kind, !0) : "YAML / JSON", t(function() {
 s.currentStep = s.template ? "Template Configuration" : "Results";
 }, 0);
 }), e.$on("templateInstantiated", function(e, t) {

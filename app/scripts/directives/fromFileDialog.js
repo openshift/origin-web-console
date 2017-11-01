@@ -62,7 +62,7 @@
       ctrl.vendor = annotation(message.template, "openshift.io/provider-display-name");
       ctrl.docUrl = annotation(ctrl.template, "openshift.io/documentation-url");
       ctrl.supportUrl = annotation(ctrl.template, "openshift.io/support-url");
-      ctrl.name = "YAML / JSON";
+      ctrl.name = message.resource ? $filter('humanizeKind')(message.resource.kind, true) : "YAML / JSON";
       // Need to let the current digest loop finish so the template config step becomes visible or the wizard will throw an error
       // from the change to currentStep
       $timeout(function() {
