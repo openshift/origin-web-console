@@ -6021,6 +6021,8 @@ notification-drawer-wrapper .expanded-notification.unread .drawer-pf-notificatio
 .applauncher-pf.open>a,.applauncher-pf.open>a:focus,.applauncher-pf.open>a:hover{background:0 0}
 .applauncher-pf .dropdown-toggle{color:#d1d1d1;display:block;font-size:16px;padding:17px 15px 15px 12px!important}
 .applauncher-pf .dropdown-toggle:focus,.applauncher-pf .dropdown-toggle:hover{color:#fff}
+@media (min-width:768px){.wizard-pf-steps-indicator li a .wizard-pf-step-title{margin-left:0}
+}
 .wizard-pf-steps-indicator .wizard-pf-step-number{font-size:12px}
 .build-triggers .copy-to-clipboard{margin-bottom:10px}
 .ace-bordered{border:1px solid #8b8d8f}
