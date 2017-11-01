@@ -302,7 +302,8 @@ angular.module("openshiftConsole")
           }
           else if ($scope.isDialog) {
             $scope.$emit('fileImportedFromYAMLOrJSON', {
-              project: $scope.input.selectedProject
+              project: $scope.input.selectedProject,
+              resource: $scope.resource
             });
           }
           else {
