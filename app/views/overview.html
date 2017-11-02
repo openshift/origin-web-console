@@ -105,7 +105,7 @@
           <div ng-if="overview.everythingFiltered && overview.viewBy !== 'pipeline'">
             <div class="empty-state-message text-center h2">
               The filter is hiding all resources.
-              <a href="" ng-click="overview.clearFilter()">Clear Filter</a>
+              <a href="" ng-click="overview.clearFilter()" role="button" class="nowrap">Clear Filter</a>
             </div>
           </div>
           <div ng-if="!overview.everythingFiltered || overview.viewBy === 'pipeline'">
@@ -269,7 +269,7 @@
               <div ng-if="(overview.pipelineBuildConfigs | hashSize) && !(overview.filteredPipelineBuildConfigs | hashSize)">
                 <div class="empty-state-message text-center h2">
                   All pipelines are filtered.
-                  <a href="" ng-click="overview.clearFilter()">Clear Filter</a>
+                  <a href="" ng-click="overview.clearFilter()" role="button" class="nowrap">Clear Filter</a>
                 </div>
               </div>
               <div ng-repeat="pipeline in overview.filteredPipelineBuildConfigs track by (pipeline | uid)">
