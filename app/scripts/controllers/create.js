@@ -26,12 +26,6 @@ angular.module('openshiftConsole')
 
     $scope.alerts = $scope.alerts || {};
 
-    $scope.breadcrumbs = [
-      {
-        title: "Add to Project"
-      }
-    ];
-
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {

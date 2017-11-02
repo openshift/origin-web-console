@@ -4473,7 +4473,9 @@ copy-to-clipboard .input-group.limit-width{max-width:300px}
 .health-checks-form .pause-rollouts-checkbox,.set-limits-form .pause-rollouts-checkbox{margin-top:21px}
 .checkbox-inline,.checkbox-inline+.checkbox-inline,.radio-inline,.radio-inline+.radio-inline{margin-left:0;margin-right:10px}
 .ui-select-dropdown{z-index:1031}
-.card-pf .image-icon{font-size:28px;line-height:1;margin-right:15px;opacity:.38}
+.card-pf .image-icon{font-size:28px;line-height:1;margin-right:15px}
+.card-pf .image-icon img{width:30px}
+.card-pf .image-icon span{opacity:.38}
 .card-pf-badge{color:#999;font-size:11px;text-transform:uppercase}
 .card-pf-body{margin-bottom:0}
 .card-pf-title-with-icon{align-items:center;display:flex;margin-bottom:15px}
@@ -5278,6 +5280,7 @@ to{background-color:transparent}
 .pipeline-status-bar .pipeline-line:before{content:'';position:absolute;height:100%;animation:progress-line .35s ease-in forwards}
 .pipeline-circle{background:#d1d1d1;width:18px;height:18px;border-radius:9px;margin-top:-11px;position:relative;transform:rotate(-90deg)}
 .pipeline-circle:after{position:absolute;color:#fff;font-family:FontAwesome;font-size:12px;transform:translate(-50%,-50%) rotate(90deg);top:50%;left:50%;opacity:0;animation:fadeIn .1s 875ms linear forwards}
+.config-map-table .key,.config-map-table .truncated-content,.edit-yaml .ace_editor.editor,.log-view,dl.secret-data dd .copy-to-clipboard{font-family:Menlo,Monaco,Consolas,monospace}
 .pipeline-circle .clip1:before,.pipeline-circle .clip2:before{width:18px;height:18px;transform:rotate(360deg);border-radius:9px;position:absolute;content:''}
 .pipeline-circle .clip1{position:absolute;clip:rect(0,18px,18px,9px);z-index:-9}
 .pipeline-circle .clip1:before{clip:rect(0,9px,18px,0);animation:progress 175ms .35s linear forwards}
@@ -5419,7 +5422,6 @@ td.visible-print,th.visible-print{display:table-cell!important}
 .osc-secrets-form .advanced-secrets .secret-row .destination-dir,.osc-secrets-form .advanced-secrets .secret-row .secret-name{width:50%;display:inline-block}
 .osc-secrets-form .advanced-secrets .secret-row .destination-dir{padding-left:5px}
 dl.secret-data dd{margin-bottom:10px}
-dl.secret-data dd .copy-to-clipboard{font-family:Menlo,Monaco,Consolas,monospace}
 dl.secret-data dt{margin-bottom:5px}
 @media (min-width:992px){dl.secret-data dd{margin-left:180px}
 dl.secret-data dt{clear:left;float:left;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;width:160px}
@@ -5468,13 +5470,11 @@ dl.secret-data pre{margin-bottom:0}
 .events-sidebar .pficon{vertical-align:middle}
 .events-sidebar .events-sidebar-collapse{font-size:16px;margin-right:10px}
 .events-sidebar .events-sidebar-collapse a{text-decoration:none}
-.events-sidebar .sidebar-header.right-header{align-items:center;display:flex;justify-content:space-between;margin-top:17.5px}
-.events-sidebar .sidebar-header.right-header h2{font-family:inherit;font-weight:500;line-height:1.1;color:inherit;margin-top:10.5px;margin-bottom:10.5px;font-size:14px;display:inline-block}
-.config-map-table .key,.config-map-table .truncated-content,.edit-yaml .ace_editor.editor,.log-view{font-family:Menlo,Monaco,Consolas,monospace}
-.events-sidebar .sidebar-header.right-header h2 .small,.events-sidebar .sidebar-header.right-header h2 small{font-weight:400;line-height:1;color:#9c9c9c;font-size:75%}
+.events-sidebar .sidebar-header.right-header{align-items:baseline;display:flex;justify-content:space-between;margin-top:0;padding-bottom:21px;padding-top:24px}
+.events-sidebar .sidebar-header.right-header h2{font-size:14px;margin-bottom:0;margin-top:0}
 .events-sidebar .sidebar-header.right-header .warning-count{white-space:nowrap;margin-left:2px}
 .events-sidebar .sidebar-header.right-header .warning-count .pficon{vertical-align:-1px}
-.events-sidebar .sidebar-header.right-header .event-details-link{font-size:84%;margin-right:20px}
+.events-sidebar .sidebar-header.right-header .event-details-link{font-size:84%;line-height:1;margin-right:20px}
 .events-sidebar .right-content .event{display:flex;align-items:center;padding:10px 20px}
 .events-sidebar .right-content .event.highlight{background-color:#f5f5f5;border-bottom-width:0;border-color:#d1d1d1!important}
 .events-sidebar .right-content .event+.event{border-top:1px solid #ededed}
@@ -5571,6 +5571,7 @@ td[role=presentation].arrow:after{content:"\2192"}
 .chromeless,.log-view{background-color:#101214}
 .tile-row .tile-title{text-align:center}
 .tile-row .tile-title h3{margin:0 20px}
+.tooltip-default-icon{cursor:help;font-size:12px}
 .console-os .page-header{border-color:#e4e4e4;padding:18px 20px 19px;margin:0 -20px}
 .console-os .page-header .actions{margin-top:0}
 .console-os .page-header h1{margin:0}
@@ -5908,7 +5909,8 @@ kubernetes-container-terminal .terminal-actions .spinner{top:5px}
 .environment-from-editor .environment-from-entry,.key-value-editor .environment-from-entry{display:table;margin-bottom:15px;padding-right:0;position:relative;table-layout:fixed;width:100%}
 @media (max-width:479px){.environment-from-editor .environment-from-entry,.key-value-editor .environment-from-entry{padding-right:52px}
 }
-@media (min-width:480px){.environment-from-editor .environment-from-entry .environment-from-editor-button,.key-value-editor .environment-from-entry .environment-from-editor-button{float:left;padding:0 5px;position:relative;width:auto}
+.environment-from-editor .environment-from-entry .environment-from-editor-button,.key-value-editor .environment-from-entry .environment-from-editor-button{top:26px}
+@media (min-width:480px){.environment-from-editor .environment-from-entry .environment-from-editor-button,.key-value-editor .environment-from-entry .environment-from-editor-button{float:left;padding:0 5px;position:relative;top:0;width:auto}
 }
 .environment-from-editor .environment-from-entry .environment-from-input,.key-value-editor .environment-from-entry .environment-from-input{float:left;margin-bottom:0;padding-right:5px;width:100%}
 @media (min-width:480px){.environment-from-editor .environment-from-entry .environment-from-input,.key-value-editor .environment-from-entry .environment-from-input{width:calc(50% - 26px)}
@@ -5922,6 +5924,11 @@ kubernetes-container-terminal .terminal-actions .spinner{top:5px}
 .environment-from-editor .key-value-editor-input .ui-select+.ui-select,.key-value-editor .key-value-editor-input .ui-select+.ui-select{padding-top:5px}
 @media (min-width:992px){.environment-from-editor .key-value-editor-input .ui-select,.key-value-editor .key-value-editor-input .ui-select{float:left;width:50%}
 .environment-from-editor .key-value-editor-input .ui-select+.ui-select,.key-value-editor .key-value-editor-input .ui-select+.ui-select{padding-top:0;padding-left:5px}
+}
+@media (max-width:479px){.environment-from-editor-header.config-map-header,.environment-from-editor-header.prefix-header{display:none;width:100%}
+}
+.environment-from-editor-header.config-map-header.config-map-header-mobile,.environment-from-editor-header.config-map-header.prefix-header-mobile,.environment-from-editor-header.prefix-header.config-map-header-mobile,.environment-from-editor-header.prefix-header.prefix-header-mobile{display:block;margin-bottom:0;margin-top:5px}
+@media (min-width:480px){.environment-from-editor-header.config-map-header.config-map-header-mobile,.environment-from-editor-header.config-map-header.prefix-header-mobile,.environment-from-editor-header.prefix-header.config-map-header-mobile,.environment-from-editor-header.prefix-header.prefix-header-mobile{display:none}
 }
 .environment-from-editor-header,.key-value-editor .key-value-editor-input,.key-value-editor-header{float:left;margin-bottom:0;padding-right:5px;width:50%}
 .membership .content-pane,.membership .content-pane .col-add-role{width:100%}
@@ -6014,6 +6021,8 @@ notification-drawer-wrapper .expanded-notification.unread .drawer-pf-notificatio
 .applauncher-pf.open>a,.applauncher-pf.open>a:focus,.applauncher-pf.open>a:hover{background:0 0}
 .applauncher-pf .dropdown-toggle{color:#d1d1d1;display:block;font-size:16px;padding:17px 15px 15px 12px!important}
 .applauncher-pf .dropdown-toggle:focus,.applauncher-pf .dropdown-toggle:hover{color:#fff}
+@media (min-width:768px){.wizard-pf-steps-indicator li a .wizard-pf-step-title{margin-left:0}
+}
 .wizard-pf-steps-indicator .wizard-pf-step-number{font-size:12px}
 .build-triggers .copy-to-clipboard{margin-bottom:10px}
 .ace-bordered{border:1px solid #8b8d8f}

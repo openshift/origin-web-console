@@ -33,21 +33,7 @@ angular.module("openshiftConsole")
 
     $scope.projectName = $routeParams.project;
     $scope.fromSampleRepo = $routeParams.fromSample;
-    $scope.name = $routeParams.breadcrumbTitle || $routeParams.name;
-
-    $scope.breadcrumbs = [
-      {
-        title: "Add to Project",
-        link: "project/" + $scope.projectName + "/create"
-      },
-      {
-        // Make history back the default by leaving off the link.
-        title: $routeParams.breadcrumbTitle || $routeParams.name
-      },
-      {
-        title: "Next Steps"
-      }
-    ];
+    $scope.name = $routeParams.name;
 
     ProjectsService
       .get($routeParams.project)

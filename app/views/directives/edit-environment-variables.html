@@ -1,6 +1,6 @@
 <form ng-if="$ctrl.apiObject" name="$ctrl.form" class="mar-bottom-xl">
   <confirm-on-exit ng-if="$ctrl.canIUpdate && !$ctrl.ngReadonly" dirty="$ctrl.form.$dirty"></confirm-on-exit>
-  <div ng-repeat="container in $ctrl.containers">
+  <div ng-repeat="container in $ctrl.containers track by container.name">
     <h3>Container {{container.name}}</h3>
 
     <div ng-if="!$ctrl.canIUpdate || $ctrl.ngReadonly">
@@ -34,9 +34,9 @@
       show-header>
     </key-value-editor>
 
-    <h4 class="section-label">
+    <h4>
       Environment From
-      <span class="pficon pficon-help"
+      <span class="pficon pficon-help tooltip-default-icon"
             aria-hidden="true"
             data-toggle="tooltip"
             data-original-title="Environment From lets you add all key-value pairs from a config map or secret as environment variables."></span>

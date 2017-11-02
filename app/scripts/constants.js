@@ -215,11 +215,11 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     // BuildConfig
     BuildConfigInstantiateFailed: true,
     // Deployment
-    DeploymentCancelled: true,
     Failed: true,
     // DeploymentConfig
     DeploymentCreated: true,
     DeploymentCreationFailed: true,
+    RolloutCancelled: true,
     // HorizontalPodAutoscaler
     FailedRescale: true,
     SuccessfulRescale: true,

@@ -5,7 +5,8 @@
       <span class="sr-only">Pending</span>
       <div class="results-message">
         <h1 class="h3">
-          <strong>{{$ctrl.name}}</strong> is being created<span ng-if="$ctrl.showProjectName && $ctrl.projectName"> in <strong>{{$ctrl.projectName}}</strong></span>.
+          <span ng-if="$ctrl.kind">{{$ctrl.kind | humanizeKind | upperFirst}}</span>
+          <strong>{{$ctrl.name}}</strong> is being {{$ctrl.actionLabel}}<span ng-if="$ctrl.showProjectName && $ctrl.projectName"> in <strong>{{$ctrl.projectName}}</strong></span>.
         </h1>
       </div>
     </div>
@@ -16,17 +17,21 @@
       <span class="sr-only">Error</span>
       <div class="results-message">
         <h1 class="h3">
-          <strong>{{$ctrl.name}}</strong> failed to be created<span ng-if="$ctrl.showProjectName && $ctrl.projectName"> in <strong>{{$ctrl.projectName}}</strong></span>.
+          <span ng-if="$ctrl.kind">{{$ctrl.kind | humanizeKind | upperFirst}}</span>
+          <strong>{{$ctrl.name}}</strong> failed to be {{$ctrl.actionLabel}}<span ng-if="$ctrl.showProjectName && $ctrl.projectName"> in <strong>{{$ctrl.projectName}}</strong></span>.
         </h1>
       </div>
     </div>
   </div>
-  <!-- if the user refreshes the next steps page -->
+  <!-- Import YAML of a single resource. -->
   <div ng-if="!tasks().length">
-    <div class="results-status results-status-unknown">
+    <div class="results-status">
+      <span class="pficon pficon-ok" aria-hidden="true"></span>
+      <span class="sr-only">Success</span>
       <div class="results-message">
         <h1 class="h3">
-          <strong>{{$ctrl.name}}</strong> completed.
+          <span ng-if="$ctrl.kind">{{$ctrl.kind | humanizeKind | upperFirst}}</span>
+          <strong>{{$ctrl.name}}</strong> has been {{$ctrl.actionLabel}}<span ng-if="$ctrl.showProjectName && $ctrl.projectName"> in <strong>{{$ctrl.projectName}}</strong> successfully</span>.
         </h1>
       </div>
     </div>
@@ -37,7 +42,8 @@
       <span class="sr-only">Success</span>
       <div class="results-message">
         <h1 class="h3">
-          <strong>{{$ctrl.name}}</strong> has been created<span ng-if="$ctrl.showProjectName && $ctrl.projectName"> in <strong>{{$ctrl.projectName}}</strong> successfully</span>.
+          <span ng-if="$ctrl.kind">{{$ctrl.kind | humanizeKind | upperFirst}}</span>
+          <strong>{{$ctrl.name}}</strong> has been {{$ctrl.actionLabel}}<span ng-if="$ctrl.showProjectName && $ctrl.projectName"> in <strong>{{$ctrl.projectName}}</strong> successfully</span>.
         </h1>
       </div>
     </div>

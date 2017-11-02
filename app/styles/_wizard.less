@@ -1,5 +1,13 @@
-.wizard-pf-steps-indicator .wizard-pf-step-number {
-  // The numbers do not center inside the step indicator bubble otherwise since
-  // the console changes the base font size.
-  font-size: 12px;
+.wizard-pf-steps-indicator {
+  // Fixes https://github.com/patternfly/patternfly/issues/818 until it can be addressed upstream
+  li a .wizard-pf-step-title {
+    @media(min-width: @screen-sm-min) {
+      margin-left: 0;
+    }
+  }
+  .wizard-pf-step-number {
+    // The numbers do not center inside the step indicator bubble otherwise since
+    // the console changes the base font size.
+    font-size: 12px;
+  }
 }
