@@ -8,7 +8,12 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('SecretController', function ($routeParams, $filter, $scope, DataService, ProjectsService, SecretsService) {
+  .controller('SecretController', function ($routeParams,
+                                            $filter,
+                                            $scope,
+                                            DataService,
+                                            ProjectsService,
+                                            SecretsService) {
     $scope.projectName = $routeParams.project;
     $scope.secretName = $routeParams.secret;
     $scope.view = {
@@ -26,6 +31,20 @@ angular.module('openshiftConsole')
         title: $scope.secretName
       }
     ];
+
+    var watches = [];
+
+    var secretResolved = function(secret, action) {
+      $scope.secret = secret;
+      if (action === "DELETED") {
+        $scope.alerts["deleted"] = {
+          type: "warning",
+          message: "This secret has been deleted."
+        };
+        return;
+      }
+      $scope.decodedSecretData = SecretsService.decodeSecretData($scope.secret.data);
+    };
 
     $scope.addToApplicationVisible = false;
 
@@ -48,13 +67,21 @@ angular.module('openshiftConsole')
 
         DataService.get("secrets", $scope.secretName, context, { errorNotification: false }).then(
           function(secret) {
-            $scope.secret = secret;
-            $scope.decodedSecretData = SecretsService.decodeSecretData($scope.secret.data);
             $scope.loaded = true;
+            secretResolved(secret);
+            watches.push(DataService.watchObject("secrets", $scope.secretName, context, secretResolved));
           },
           function(e) {
             $scope.loaded = true;
-            $scope.error = e;
+            $scope.alerts["load"] = {
+              type: "error",
+              message: "The secret details could not be loaded.",
+              details: $filter('getErrorDetails')(e)
+            };
           });
+
+        $scope.$on('$destroy', function(){
+          DataService.unwatchAll(watches);
+        });
     }));
   });
