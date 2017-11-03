@@ -6460,7 +6460,7 @@ link: "project/" + e.project + "/browse/secrets"
 }, {
 title: n.secretName
 } ], n.addToApplicationVisible = !1, n.addToApplication = function() {
-n.addToApplicationVisible = !0;
+n.secret.data && (n.addToApplicationVisible = !0);
 }, n.closeAddToApplication = function() {
 n.addToApplicationVisible = !1;
 }, r.get(e.project).then(_.spread(function(e, t) {

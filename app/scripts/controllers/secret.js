@@ -30,6 +30,9 @@ angular.module('openshiftConsole')
     $scope.addToApplicationVisible = false;
 
     $scope.addToApplication = function() {
+      if (!$scope.secret.data) {
+        return;
+      }
       $scope.addToApplicationVisible = true;
     };
 
