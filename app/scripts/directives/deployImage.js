@@ -26,12 +26,16 @@ angular.module("openshiftConsole")
         // Must be initialized the controller. The link function is too late.
         $scope.forms = {};
         $scope.noProjectsCantCreate = false;
-      },
-      link: function($scope) {
+
         $scope.input = {
           selectedProject: $scope.project
         };
 
+        $scope.$watch('input.selectedProject.metadata.name', function() {
+          $scope.projectNameTaken = false;
+        });
+      },
+      link: function($scope) {
         // Pick from an image stream tag or Docker image name.
         $scope.mode = "istag"; // "istag" or "dockerImage"
 
@@ -378,13 +382,17 @@ angular.module("openshiftConsole")
               };
               nameTakenPromise.then(setNameTaken, setNameTaken).then(showWarningsOrCreate, showWarningsOrCreate);
             }, function(e) {
-              NotificationsService.addNotification({
-                id: "deploy-image-create-project-error",
-                type: "error",
-                message: "An error occurred creating project",
-                details: getErrorDetails(e)
-              });
               $scope.disableInputs = false;
+              if (e.data.reason === 'AlreadyExists') {
+                $scope.projectNameTaken = true;
+              } else {
+                NotificationsService.addNotification({
+                  id: "deploy-image-create-project-error",
+                  type: "error",
+                  message: "An error occurred creating project.",
+                  details: getErrorDetails(e)
+                });
+              }
             });
           };
 
