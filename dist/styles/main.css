@@ -5468,13 +5468,13 @@ dl.secret-data pre{margin-bottom:0}
 .events-badge .event-count{color:#363636}
 .events-badge .pficon-info,.events-sidebar .pficon.pficon-info{color:#4d5258}
 .events-sidebar .pficon{vertical-align:middle}
-.events-sidebar .events-sidebar-collapse{font-size:16px;margin-right:10px}
+.events-sidebar .events-sidebar-collapse{margin-left:3px;margin-right:8px}
 .events-sidebar .events-sidebar-collapse a{text-decoration:none}
-.events-sidebar .sidebar-header.right-header{align-items:baseline;display:flex;justify-content:space-between;margin-top:0;padding-bottom:21px;padding-top:24px}
-.events-sidebar .sidebar-header.right-header h2{font-size:14px;margin-bottom:0;margin-top:0}
+.events-sidebar .sidebar-header.right-header{align-items:baseline;display:flex;justify-content:space-between;margin-top:0;padding-bottom:22px;padding-top:27px}
+.events-sidebar .sidebar-header.right-header h2{font-size:14px;line-height:1;margin-bottom:0;margin-top:0}
 .events-sidebar .sidebar-header.right-header .warning-count{white-space:nowrap;margin-left:2px}
 .events-sidebar .sidebar-header.right-header .warning-count .pficon{vertical-align:-1px}
-.events-sidebar .sidebar-header.right-header .event-details-link{font-size:84%;line-height:1;margin-right:20px}
+.events-sidebar .sidebar-header.right-header .event-details-link{font-size:11px;line-height:1;margin-right:20px}
 .events-sidebar .right-content .event{display:flex;align-items:center;padding:10px 20px}
 .events-sidebar .right-content .event.highlight{background-color:#f5f5f5;border-bottom-width:0;border-color:#d1d1d1!important}
 .events-sidebar .right-content .event+.event{border-top:1px solid #ededed}
@@ -5489,7 +5489,6 @@ dl.secret-data pre{margin-bottom:0}
 .events-sidebar .right-content .event .event-details .event-timestamp{text-align:right;margin-left:5px;min-width:100px}
 }
 .events-sidebar .right-content .event.highlight+.event{border-top:1px solid #d1d1d1}
-.events-sidebar-expand{font-size:16px}
 .events-sidebar-expand a{text-decoration:none}
 [extension-name=nav-system-status]{display:inline-block!important}
 @media (max-width:350px){.nav-item-iconic.system-status{padding-right:5px!important}
@@ -5572,6 +5571,7 @@ td[role=presentation].arrow:after{content:"\2192"}
 .tile-row .tile-title{text-align:center}
 .tile-row .tile-title h3{margin:0 20px}
 .tooltip-default-icon{cursor:help;font-size:12px}
+.console-os breadcrumbs+.page-header{padding-top:0}
 .console-os .page-header{border-color:#e4e4e4;padding:18px 20px 19px;margin:0 -20px}
 .console-os .page-header .actions{margin-top:0}
 .console-os .page-header h1{margin:0}
