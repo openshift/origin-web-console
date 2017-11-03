@@ -22,7 +22,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     "new_app":                 "dev_guide/application_lifecycle/new_app.html",
     "start-build":             "dev_guide/builds/basic_build_operations.html#starting-a-build",
     "deployment-operations":   "cli_reference/basic_cli_operations.html#build-and-deployment-cli-operations",
-    "route-types":             "architecture/core_concepts/routes.html#route-types",
+    "route-types":             "architecture/networking/routes.html#route-types",
     "persistent_volumes":      "dev_guide/persistent_volumes.html",
     "compute_resources":       "dev_guide/compute_resources.html",
     "pod_autoscaling":         "dev_guide/pod_autoscaling.html",
@@ -52,7 +52,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     //"stateful-sets":           "", // TODO: docs are in progress
     "pods":                    "architecture/core_concepts/pods_and_services.html#pods",
     "services":                "architecture/core_concepts/pods_and_services.html#services",
-    "routes":                  "architecture/core_concepts/routes.html",
+    "routes":                  "architecture/networking/routes.html",
     "builds":                  "architecture/core_concepts/builds_and_image_streams.html#builds",
     "image-streams":           "architecture/core_concepts/builds_and_image_streams.html#image-streams",
     "storage":                 "architecture/additional_concepts/storage.html",
