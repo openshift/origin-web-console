@@ -6459,17 +6459,30 @@ title: "Secrets",
 link: "project/" + e.project + "/browse/secrets"
 }, {
 title: n.secretName
-} ], n.addToApplicationVisible = !1, n.addToApplication = function() {
+} ];
+var i = [], s = function(e, t) {
+n.secret = e, "DELETED" !== t ? n.decodedSecretData = o.decodeSecretData(n.secret.data) : n.alerts.deleted = {
+type: "warning",
+message: "This secret has been deleted."
+};
+};
+n.addToApplicationVisible = !1, n.addToApplication = function() {
 n.secret.data && (n.addToApplicationVisible = !0);
 }, n.closeAddToApplication = function() {
 n.addToApplicationVisible = !1;
-}, r.get(e.project).then(_.spread(function(e, t) {
-n.project = e, n.context = t, a.get("secrets", n.secretName, t, {
+}, r.get(e.project).then(_.spread(function(e, r) {
+n.project = e, n.context = r, a.get("secrets", n.secretName, r, {
 errorNotification: !1
 }).then(function(e) {
-n.secret = e, n.decodedSecretData = o.decodeSecretData(n.secret.data), n.loaded = !0;
+n.loaded = !0, s(e), i.push(a.watchObject("secrets", n.secretName, r, s));
 }, function(e) {
-n.loaded = !0, n.error = e;
+n.loaded = !0, n.alerts.load = {
+type: "error",
+message: "The secret details could not be loaded.",
+details: t("getErrorDetails")(e)
+};
+}), n.$on("$destroy", function() {
+a.unwatchAll(i);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("CreateSecretController", [ "$filter", "$location", "$routeParams", "$scope", "$window", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "ProjectsService", function(e, t, n, a, r, o, i, s, c, l) {
