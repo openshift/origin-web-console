@@ -7,38 +7,46 @@
   display: none !important;
 }
 
-// Prevent zooming when focusing input fields in mobile Safari. Try to only
-// target mobile devices to avoid larger-than-wanted fonts elsewhere.
-@media only screen and (max-device-width: 736px) and (-webkit-min-device-pixel-ratio: 0) {
-  input[type="text"],
-  input[type="number"],
-  input[type="search"],
-  input[type="url"],
-  select,
-  select.form-control,
-  textarea,
-  textarea.form-control,
-  .console-os .ace_editor {
-    font-size: 16px;
-  }
+@media only screen and (max-device-width: 736px) {
+  body.ios {
+    // Fix Bootstrap modal dialog zoom on the iPhone
+    // See http://stackoverflow.com/questions/32675849/screen-zooms-in-when-a-bootstrap-modal-is-opened-on-ios-9-safari
+    padding-right: 0px !important;
 
-  // Fix Bootstrap modal dialog zoom on the iPhone
-  // See http://stackoverflow.com/questions/32675849/screen-zooms-in-when-a-bootstrap-modal-is-opened-on-ios-9-safari
-  body {
-    padding-right: 0px !important
-  }
-  .modal-open {
-    overflow-y: auto;
-  }
-}
+    // Prevent page from scrolling underneath modals and wizard overlays.
+    &.modal-open, &.overlay-open {
+      overflow-y: auto;
+      position: fixed;
+    }
 
-// Prevent having to tap tabs twice on iOS.
-.ios .nav-tabs > {
-  li > a:hover:before {
-    content: none;
-  }
-  li.active > a:before {
-    content: '';
+    // Prevent zooming when focusing input fields in mobile Safari. Only
+    // target iPhones to avoid larger-than-wanted fonts elsewhere.
+    input[type="text"],
+    input[type="number"],
+    input[type="search"],
+    input[type="url"],
+    select,
+    select.form-control,
+    textarea,
+    textarea.form-control,
+    .console-os .ace_editor {
+      font-size: 16px;
+    }
+
+    // Make sure buttons are visible always on iPhone X.
+    .catalogs-overlay-panel .wizard-pf-main {
+      max-height: calc(100vh ~"-" 275px);
+    }
+
+    // Prevent having to tap tabs twice on iOS.
+    .nav-tabs > {
+      li > a:hover:before {
+        content: none;
+      }
+      li.active > a:before {
+        content: '';
+      }
+    }
   }
 }
 

@@ -555,7 +555,7 @@ webhooks: "dev_guide/builds/triggering_builds.html#webhook-triggers",
 new_app: "dev_guide/application_lifecycle/new_app.html",
 "start-build": "dev_guide/builds/basic_build_operations.html#starting-a-build",
 "deployment-operations": "cli_reference/basic_cli_operations.html#build-and-deployment-cli-operations",
-"route-types": "architecture/core_concepts/routes.html#route-types",
+"route-types": "architecture/networking/routes.html#route-types",
 persistent_volumes: "dev_guide/persistent_volumes.html",
 compute_resources: "dev_guide/compute_resources.html",
 pod_autoscaling: "dev_guide/pod_autoscaling.html",
@@ -584,7 +584,7 @@ secrets: "dev_guide/secrets.html",
 deployments: "dev_guide/deployments/how_deployments_work.html",
 pods: "architecture/core_concepts/pods_and_services.html#pods",
 services: "architecture/core_concepts/pods_and_services.html#services",
-routes: "architecture/core_concepts/routes.html",
+routes: "architecture/networking/routes.html",
 builds: "architecture/core_concepts/builds_and_image_streams.html#builds",
 "image-streams": "architecture/core_concepts/builds_and_image_streams.html#image-streams",
 storage: "architecture/additional_concepts/storage.html",
@@ -6477,17 +6477,30 @@ title: "Secrets",
 link: "project/" + e.project + "/browse/secrets"
 }, {
 title: n.secretName
-} ], n.addToApplicationVisible = !1, n.addToApplication = function() {
-n.addToApplicationVisible = !0;
+} ];
+var i = [], s = function(e, t) {
+n.secret = e, "DELETED" !== t ? n.decodedSecretData = o.decodeSecretData(n.secret.data) : n.alerts.deleted = {
+type: "warning",
+message: "This secret has been deleted."
+};
+};
+n.addToApplicationVisible = !1, n.addToApplication = function() {
+n.secret.data && (n.addToApplicationVisible = !0);
 }, n.closeAddToApplication = function() {
 n.addToApplicationVisible = !1;
-}, r.get(e.project).then(_.spread(function(e, t) {
-n.project = e, n.context = t, a.get("secrets", n.secretName, t, {
+}, r.get(e.project).then(_.spread(function(e, r) {
+n.project = e, n.context = r, a.get("secrets", n.secretName, r, {
 errorNotification: !1
 }).then(function(e) {
-n.secret = e, n.decodedSecretData = o.decodeSecretData(n.secret.data), n.loaded = !0;
+n.loaded = !0, s(e), i.push(a.watchObject("secrets", n.secretName, r, s));
 }, function(e) {
-n.loaded = !0, n.error = e;
+n.loaded = !0, n.alerts.load = {
+type: "error",
+message: "The secret details could not be loaded.",
+details: t("getErrorDetails")(e)
+};
+}), n.$on("$destroy", function() {
+a.unwatchAll(i);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("CreateSecretController", [ "$filter", "$location", "$routeParams", "$scope", "$window", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "ProjectsService", function(e, t, n, a, r, o, i, s, c, l) {

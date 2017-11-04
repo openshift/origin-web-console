@@ -2228,7 +2228,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all config maps. <a href=\"\" ng-click=\"clearFilter()\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all config maps. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -3485,7 +3485,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all routes. <a href=\"\" ng-click=\"clearFilter()\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all routes. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -3568,15 +3568,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!loaded\" class=\"mar-top-xl\">Loading...</div>\n" +
-    "<div ng-if=\"loaded && error\" class=\"empty-state-message text-center\">\n" +
-    "<h2>The secret details could not be loaded.</h2>\n" +
-    "<p>{{error | getErrorDetails}}</p>\n" +
-    "</div>\n" +
-    "<div ng-if=\"loaded && !error\">\n" +
+    "<div ng-if=\"secret\">\n" +
     "<h1 class=\"contains-actions\">\n" +
     "<div class=\"pull-right dropdown\">\n" +
     "\n" +
-    "<button ng-if=\"project.metadata.name | canIAddToProject\" type=\"button\" class=\"btn btn-default hidden-xs\" ng-click=\"addToApplication()\">\n" +
+    "<button ng-if=\"project.metadata.name | canIAddToProject\" type=\"button\" class=\"btn btn-default hidden-xs\" ng-disabled=\"!secret.data\" ng-click=\"addToApplication()\">\n" +
     "Add to Application\n" +
     "</button>\n" +
     "<button type=\"button\" class=\"dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs\" data-toggle=\"dropdown\" ng-hide=\"!('secrets' | canIDoAny)\">\n" +
@@ -3586,8 +3582,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<a href=\"\" ng-if=\"project.metadata.name | canIAddToProject\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
-    "<li ng-if=\"project.metadata.name | canIAddToProject\" class=\"visible-xs\">\n" +
-    "<a href=\"\" role=\"button\" ng-click=\"addToApplication()\">Add to Application</a>\n" +
+    "<li ng-if=\"(project.metadata.name | canIAddToProject)\" class=\"visible-xs\">\n" +
+    "<a href=\"\" role=\"button\" ng-class=\"{ 'disabled-link': !secret.data }\" ng-attr-aria-disabled=\"{{!secret.data ? 'true' : undefined}}\" ng-click=\"addToApplication()\">Add to Application</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'secrets' | canI : 'update'\">\n" +
     "<a ng-href=\"{{secret | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
@@ -3611,7 +3607,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"resource-details\">\n" +
     "<h2 class=\"mar-top-none\">\n" +
     "{{secret.type}}\n" +
-    "<small class=\"mar-left-sm\"><a href=\"\" ng-click=\"view.showSecret = !view.showSecret\">{{view.showSecret ? \"Hide\" : \"Reveal\"}} Secret</a></small>\n" +
+    "<small class=\"mar-left-sm\"><a href=\"\" ng-if=\"secret.data\" ng-click=\"view.showSecret = !view.showSecret\">{{view.showSecret ? \"Hide\" : \"Reveal\"}} Secret</a></small>\n" +
     "</h2>\n" +
     "<dl class=\"secret-data left\">\n" +
     "<div ng-repeat=\"(secretDataName, secretData) in decodedSecretData\" class=\"image-source-item\">\n" +
@@ -3636,6 +3632,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</dl>\n" +
+    "<div ng-if=\"!secret.data\" class=\"empty-state-message text-center\">\n" +
+    "<h2>No data.</h2>\n" +
+    "<p>This secret has no data.</p>\n" +
+    "</div>\n" +
     "<annotations annotations=\"secret.metadata.annotations\"></annotations>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -4030,7 +4030,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>No stateful sets have been added to project {{projectName}}.</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all stateful sets. <a href=\"\" ng-click=\"clearFilter()\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all stateful sets. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -4103,7 +4103,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>No builds have been added to project {{projectName}}.</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all builds. <a href=\"\" ng-click=\"clearFilter()\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all builds. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -4367,7 +4367,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</form>\n" +
     "<div ng-if=\"allContentHidden\" class=\"empty-state-message text-center h2\">\n" +
     "All content is hidden by the current filter.\n" +
-    "<a href=\"\" ng-click=\"filter.keyword = ''\">Clear Filter</a>\n" +
+    "<a href=\"\" ng-click=\"filter.keyword = ''\" role=\"button\" class=\"nowrap\">Clear Filter</a>\n" +
     "</div>\n" +
     "<div ng-if=\"!filterActive\">\n" +
     "<div ng-repeat=\"category in categories\" ng-if=\"hasContent[category.id]\">\n" +
@@ -4471,7 +4471,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</form>\n" +
     "<div ng-if=\"!filteredBuilderImages.length && !filteredTemplates.length && loaded\" class=\"empty-state-message text-center h2\">\n" +
     "All content is hidden by the current filter.\n" +
-    "<a href=\"\" ng-click=\"filter.keyword = ''\">Clear Filter</a>\n" +
+    "<a href=\"\" ng-click=\"filter.keyword = ''\" role=\"button\" class=\"nowrap\">Clear Filter</a>\n" +
     "</div>\n" +
     "<div class=\"row row-cards-pf row-cards-pf-flex mar-top-xl\">\n" +
     "<catalog-image image-stream=\"builder\" project=\"{{projectName}}\" is-builder=\"true\" keywords=\"keywords\" ng-repeat=\"builder in filteredBuilderImages track by (builder | uid)\">\n" +
@@ -5118,7 +5118,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>No deployments have been added to project {{projectName}}.</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all deployments. <a href=\"\" ng-click=\"clearFilter()\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all deployments. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7102,14 +7102,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"(events | hashSize) === 0\"><em>No events to show.</em></span>\n" +
     "<span ng-if=\"(events | hashSize) > 0\">\n" +
     "All events hidden by filter.\n" +
-    "<a href=\"\" ng-click=\"filter.text = ''\" role=\"button\">Clear Filter</a>\n" +
+    "<a href=\"\" ng-click=\"filter.text = ''\" role=\"button\" class=\"nowrap\">Clear Filter</a>\n" +
     "</span>\n" +
     "</td>\n" +
     "<td class=\"hidden-xs hidden-sm hidden-md\" colspan=\"{{showKindAndName ? 6 : 4}}\">\n" +
     "<span ng-if=\"(events | hashSize) === 0\"><em>No events to show.</em></span>\n" +
     "<span ng-if=\"(events | hashSize) > 0\">\n" +
     "All events hidden by filter.\n" +
-    "<a href=\"\" ng-click=\"filter.text = ''\" role=\"button\">Clear Filter</a>\n" +
+    "<a href=\"\" ng-click=\"filter.text = ''\" role=\"button\" class=\"nowrap\">Clear Filter</a>\n" +
     "</span>\n" +
     "</td>\n" +
     "</tr>\n" +
@@ -8615,12 +8615,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\" id=\"ca-certificate-file\">\n" +
     "<label>CA Certificate</label>\n" +
-    "<osc-file-input model=\"route.tls.caCertificate\" drop-zone-id=\"ca-certificate-file\" show-text-area=\"true\" help-text=\"The PEM format CA certificate. Upload file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-readonly=\"areCertificateInputsReadOnly()\" ng-disabled=\"areCertificateInputsDisabled()\">\n" +
+    "<osc-file-input model=\"route.tls.caCertificate\" drop-zone-id=\"ca-certificate-file\" show-text-area=\"true\" help-text=\"The PEM format CA certificate chain. Upload file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-readonly=\"areCertificateInputsReadOnly()\" ng-disabled=\"areCertificateInputsDisabled()\">\n" +
     "</osc-file-input>\n" +
     "</div>\n" +
     "<div class=\"form-group\" id=\"dest-ca-certificate-file\">\n" +
     "<label>Destination CA Certificate</label>\n" +
-    "<osc-file-input model=\"route.tls.destinationCACertificate\" show-text-area=\"true\" drop-zone-id=\"dest-ca-certificate-file\" help-text=\"The PEM format CA certificate to validate the endpoint certificate for re-encrypt termination. Upload file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-readonly=\"areCertificateInputsReadOnly()\" ng-disabled=\"isDestinationCACertInputDisabled()\">\n" +
+    "<osc-file-input model=\"route.tls.destinationCACertificate\" show-text-area=\"true\" drop-zone-id=\"dest-ca-certificate-file\" help-text=\"The PEM format CA certificate chain to validate the endpoint certificate for re-encrypt termination. Upload file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-readonly=\"areCertificateInputsReadOnly()\" ng-disabled=\"isDestinationCACertInputDisabled()\">\n" +
     "</osc-file-input>\n" +
     "\n" +
     "<div ng-if=\"route.tls.destinationCACertificate && route.tls.termination !== 'reencrypt' && !showCertificatesNotUsedWarning\" class=\"has-warning\">\n" +
@@ -10497,7 +10497,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>No image streams have been added to project {{projectName}}.</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all image streams. <a href=\"\" ng-click=\"clearFilter()\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all image streams. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -11555,7 +11555,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all {{resourceName}}. <a href=\"\" ng-click=\"clearFilter()\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all {{resourceName}}. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -11698,7 +11698,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"overview.everythingFiltered && overview.viewBy !== 'pipeline'\">\n" +
     "<div class=\"empty-state-message text-center h2\">\n" +
     "The filter is hiding all resources.\n" +
-    "<a href=\"\" ng-click=\"overview.clearFilter()\">Clear Filter</a>\n" +
+    "<a href=\"\" ng-click=\"overview.clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!overview.everythingFiltered || overview.viewBy === 'pipeline'\">\n" +
@@ -11815,7 +11815,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"(overview.pipelineBuildConfigs | hashSize) && !(overview.filteredPipelineBuildConfigs | hashSize)\">\n" +
     "<div class=\"empty-state-message text-center h2\">\n" +
     "All pipelines are filtered.\n" +
-    "<a href=\"\" ng-click=\"overview.clearFilter()\">Clear Filter</a>\n" +
+    "<a href=\"\" ng-click=\"overview.clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-repeat=\"pipeline in overview.filteredPipelineBuildConfigs track by (pipeline | uid)\">\n" +
@@ -12869,7 +12869,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>No pods have been added to project {{projectName}}.</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all pods. <a href=\"\" ng-click=\"clearFilter()\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all pods. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -12953,7 +12953,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"!projects.length && !isProjectListIncomplete\" class=\"h3\">\n" +
     "The current filter is hiding all projects.\n" +
-    "<a href=\"\" ng-click=\"search.text = ''\" role=\"button\">Clear Filter</a>\n" +
+    "<a href=\"\" ng-click=\"search.text = ''\" role=\"button\" class=\"nowrap\">Clear Filter</a>\n" +
     "</div>\n" +
     "<div class=\"list-group list-view-pf projects-list\">\n" +
     "<div ng-repeat=\"project in projects | limitTo: limitListTo track by (project | uid)\" class=\"list-group-item project-info tile-click\">\n" +
@@ -13383,7 +13383,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>No provisioned services have been added to project {{projectName}}.</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all provisioned services. <a href=\"\" ng-click=\"clearFilter()\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all provisioned services. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -13480,7 +13480,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>No services have been added to project {{projectName}}.</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all services. <a href=\"\" ng-click=\"clearFilter()\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all services. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -13624,7 +13624,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all persistent volume claims. <a href=\"\" ng-click=\"clearFilter()\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all persistent volume claims. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
