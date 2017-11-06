@@ -2,6 +2,11 @@
 // Notification drawer
 // -----------------------------------------------
 
+// so that .uib-dropdown-menu inside drawer-pf render above the drawer pf
+body > .uib-dropdown-menu {
+  z-index: @zindex-navbar-fixed - 2; // two less than navbar, one less than project-bar, same as drawer-pf
+}
+
 notification-drawer-wrapper {
   .blank-state-pf-title {
     font-size: @font-size-h4;
