@@ -165,7 +165,7 @@ angular.module('openshiftConsole')
             DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
               secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
               $scope.availableSecrets = secretDataOrdered;
-              $scope.valueFromObjects = secretDataOrdered.concat(configMapDataOrdered);
+              $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
               var secretsByType = SecretsService.groupSecretsByType(secretData);
               var secretNamesByType =_.mapValues(secretsByType, function(secretData) {return _.map(secretData, 'metadata.name');});
               // Add empty option to the image/source secrets

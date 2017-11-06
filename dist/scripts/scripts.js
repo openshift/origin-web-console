@@ -7395,7 +7395,7 @@ b = g(t.by("metadata.name")), e.availableConfigMaps = b, e.valueFromObjects = b.
 }), c.list("secrets", r, null, {
 errorNotification: !1
 }).then(function(t) {
-C = g(t.by("metadata.name")), e.availableSecrets = C, e.valueFromObjects = C.concat(b);
+C = g(t.by("metadata.name")), e.availableSecrets = C, e.valueFromObjects = b.concat(C);
 var n = p.groupSecretsByType(t), a = _.mapValues(n, function(e) {
 return _.map(e, "metadata.name");
 });
@@ -11040,7 +11040,8 @@ e.removedHookParams = e.hookParams, delete e.hookParams, e.editForm.$setDirty();
 e.$watchGroup([ "hookParams", "action.type" ], function() {
 e.hookParams && ("execNewPod" === e.action.type ? (e.hookParams.tagImages && (e.removedHookParams.tagImages = e.hookParams.tagImages, delete e.hookParams.tagImages), r()) : "tagImages" === e.action.type && (e.hookParams.execNewPod && (e.removedHookParams.execNewPod = e.hookParams.execNewPod, delete e.hookParams.execNewPod), r()));
 }), e.valueFromObjects = [], e.$watchGroup([ "availableSecrets", "availableConfigMaps" ], function() {
-e.valueFromObjects = (e.availableSecrets || []).concat(e.availableConfigMaps);
+var t = e.availableConfigMaps || [], n = e.availableSecrets || [];
+e.valueFromObjects = t.concat(n);
 }), e.$watch("istagHook.tagObject.tag", function() {
 _.has(e.istagHook, [ "tagObject", "tag" ]) && (_.set(e.hookParams, "tagImages[0].to.kind", "ImageStreamTag"), _.set(e.hookParams, "tagImages[0].to.namespace", e.istagHook.namespace), _.set(e.hookParams, "tagImages[0].to.name", e.istagHook.imageStream + ":" + e.istagHook.tagObject.tag));
 });

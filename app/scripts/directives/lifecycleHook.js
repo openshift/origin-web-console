@@ -123,7 +123,9 @@ angular.module("openshiftConsole")
 
         $scope.valueFromObjects = [];
         $scope.$watchGroup(['availableSecrets', 'availableConfigMaps'], function() {
-          $scope.valueFromObjects = ($scope.availableSecrets || []).concat($scope.availableConfigMaps);
+          var configMaps = $scope.availableConfigMaps || [];
+          var secrets = $scope.availableSecrets || [];
+          $scope.valueFromObjects = configMaps.concat(secrets);
         });
 
         $scope.$watch("istagHook.tagObject.tag", function() {
