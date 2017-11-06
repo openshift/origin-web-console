@@ -3197,11 +3197,11 @@ n = JSON.parse(window.atob(e));
 } catch (e) {
 a(e, t);
 }
-return ".dockercfg" === t ? _.each(n, function(e, t) {
-o.auths[t] = r(e);
-}) : (_.each(n.auths, function(e, t) {
+return n.auths ? (_.each(n.auths, function(e, t) {
 e.auth ? o.auths[t] = r(e) : o.auths[t] = e;
-}), n.credsStore && (o.credsStore = n.credsStore)), o;
+}), n.credsStore && (o.credsStore = n.credsStore)) : _.each(n, function(e, t) {
+o.auths[t] = r(e);
+}), o;
 };
 return {
 groupSecretsByType: function(e) {
