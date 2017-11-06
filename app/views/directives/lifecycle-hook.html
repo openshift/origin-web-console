@@ -33,7 +33,36 @@
       <dt ng-if-start="strategyParams[type].execNewPod.env">Environment Variables:</dt>
       <dd ng-if-end>
         <div ng-repeat="env in strategyParams[type].execNewPod.env">
-          <div class="truncate" ng-attr-title="{{env.value}}">{{env.name}}={{env.value}}</div>
+          <div ng-if="env.valueFrom.configMapKeyRef || env.valueFrom.secretKeyRef">
+            {{env.name}} set to key
+            <span ng-if="env.valueFrom.configMapKeyRef">
+              {{env.valueFrom.configMapKeyRef.key}} in config map
+              <span
+                ng-if="!('configmaps' | canI : 'get')">
+                {{env.valueFrom.configMapKeyRef.name}}
+              </span>
+              <a
+                ng-if="'configmaps' | canI : 'get'"
+                ng-href="{{env.valueFrom.configMapKeyRef.name | navigateResourceURL : 'ConfigMap' : deploymentConfig.metadata.namespace}}">
+                {{env.valueFrom.configMapKeyRef.name}}
+              </a>
+            </span>
+            <span ng-if="env.valueFrom.secretKeyRef">
+              {{env.valueFrom.secretKeyRef.key}} in secret
+              <span
+                ng-if="!('secrets' | canI : 'get')">
+                {{env.valueFrom.secretKeyRef.name}}
+              </span>
+              <a
+                ng-if="'secrets' | canI : 'get'"
+                ng-href="{{env.valueFrom.secretKeyRef.name | navigateResourceURL : 'Secret' : deploymentConfig.metadata.namespace}}">
+                {{env.valueFrom.secretKeyRef.name}}
+              </a>
+            </span>
+          </div>
+          <div ng-if="!env.valueFrom" class="truncate" ng-attr-title="{{env.value}}">
+            {{env.name}}={{env.value}}
+          </div>
         </div>
       </dd>
       <dt ng-if-start="strategyParams[type].execNewPod.volumes">Volumes:</dt>
