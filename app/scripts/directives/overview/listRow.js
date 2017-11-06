@@ -346,12 +346,12 @@
       return Navigate.resourceURL(imageStreamName, 'ImageStream', imageStreamNamespace);
     };
 
-    row.navigateToPods = function() {
+    row.navigateToPodsURL = function() {
       var pods = row.getPods(row.current);
       if (_.isEmpty(pods)) {
-        return;
+        return "";
       }
-      Navigate.toPodsForDeployment(row.current, pods);
+      return Navigate.podsForDeploymentURL(row.current, pods);
     };
 
     row.closeOverlayPanel = function() {

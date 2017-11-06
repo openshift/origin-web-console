@@ -1,21 +1,14 @@
 <div column class="deployment-donut">
   <div row>
     <div column>
-      <pod-donut
-          pods="pods"
-          desired="getDesiredReplicas()"
-          idled="isIdled"
-          ng-click="viewPodsForDeployment(rc)"
-          ng-class="{ clickable: (pods | hashSize) > 0 }">
-      </pod-donut>
-
       <!-- Add a link for screen readers. -->
-      <a href=""
-         class="sr-only"
-         ng-click="viewPodsForDeployment(rc)"
-         ng-if="(pods | hashSize) > 0"
-         role="button">
-         View pods for {{rc | displayName}}
+      <a ng-href="{{viewPodsForDeployment(rc)}}">
+        <pod-donut
+            pods="pods"
+            desired="getDesiredReplicas()"
+            idled="isIdled">
+        </pod-donut>
+        <span class="sr-only">View pods for {{rc | displayName}}</span>
       </a>
     </div>
 

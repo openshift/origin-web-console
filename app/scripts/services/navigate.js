@@ -128,6 +128,16 @@ angular.module("openshiftConsole")
         $location.path("project/" + encodeURIComponent(projectName) + "/create/next").search(search);
       },
 
+      podsForDeploymentURL: function(deployment, pods) {
+        if (_.size(pods) === 1) {
+          return this.resourceURL(_.sample(pods));
+        }
+
+        var url = URI("project/" + deployment.metadata.namespace + "/browse/pods");
+        url.search(LabelFilter.persistedStateForSelector(new LabelSelector(deployment.spec.selector, true)));
+        return url.toString();
+      },
+
       toPodsForDeployment: function(deployment, pods) {
         if (_.size(pods) === 1) {
           this.toResourceURL(_.sample(pods));

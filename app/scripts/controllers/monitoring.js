@@ -270,10 +270,10 @@ angular.module('openshiftConsole')
     $scope.viewPodsForSet = function(set) {
       var pods = _.get($scope, ['podsByOwnerUID', set.metadata.uid], []);
       if (_.isEmpty(pods)) {
-        return;
+        return "";
       }
 
-      Navigate.toPodsForDeployment(set, pods);
+      return Navigate.podsForDeploymentURL(set, pods);
     };
 
     ProjectsService

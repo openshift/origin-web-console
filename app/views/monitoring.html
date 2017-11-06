@@ -175,8 +175,7 @@
                           <small>created <span am-time-ago="replicationController.metadata.creationTimestamp"></span></small>
                         </div>
                         <div class="list-group-item-text">
-                          <a href=""
-                             ng-click="viewPodsForSet(replicationController)"
+                          <a ng-href="{{viewPodsForSet(replicationController)}}"
                              class="mini-donut-link"
                              ng-class="{ 'disabled-link': !(podsByOwnerUID[replicationController.metadata.uid] | size) }">
                             <pod-donut pods="podsByOwnerUID[replicationController.metadata.uid]" mini="true"></pod-donut>
@@ -236,8 +235,7 @@
                           <small>created <span am-time-ago="replicaSet.metadata.creationTimestamp"></span></small>
                         </div>
                         <div class="list-group-item-text">
-                          <a href=""
-                             ng-click="viewPodsForSet(replicaSet)"
+                          <a ng-href="{{viewPodsForSet(replicaSet)}}"
                              class="mini-donut-link"
                              ng-class="{ 'disabled-link': !(podsByOwnerUID[replicaSet.metadata.uid] | size) }">
                             <pod-donut pods="podsByOwnerUID[replicaSet.metadata.uid]" mini="true"></pod-donut>
@@ -259,7 +257,7 @@
                   Logs are not available for replica sets.
                   <span ng-if="podsByOwnerUID[replicaSet.metadata.uid] | hashSize">
                     To see application logs, view the logs for one of the replica set's
-                    <a href="" ng-click="viewPodsForSet(replicaSet)">pods</a>.
+                    <a ng-href="{{viewPodsForSet(replicaSet)}}">pods</a>.
                   </span>
                   <div class="mar-top-lg" ng-if="metricsAvailable">
                     <deployment-metrics
@@ -306,8 +304,7 @@
                           <small>created <span am-time-ago="set.metadata.creationTimestamp"></span></small>
                         </div>
                         <div class="list-group-item-text">
-                          <a href=""
-                             ng-click="viewPodsForSet(set)"
+                          <a ng-href="{{viewPodsForSet(set)}}"
                              class="mini-donut-link"
                              ng-class="{ 'disabled-link': !(podsByOwnerUID[set.metadata.uid] | size) }">
                             <pod-donut pods="podsByOwnerUID[set.metadata.uid]" mini="true"></pod-donut>
@@ -326,7 +323,7 @@
                   Logs are not available for stateful sets.
                   <span ng-if="podsByOwnerUID[set.metadata.uid] | hashSize">
                     To see application logs, view the logs for one of the stateful sets's
-                    <a href="" ng-click="viewPodsForSet(set)">pods</a>.
+                    <a ng-href="{{viewPodsForSet(set)}}">pods</a>.
                   </span>
                   <div class="mar-top-lg" ng-if="metricsAvailable">
                     <deployment-metrics

@@ -102,10 +102,10 @@ angular.module('openshiftConsole')
 
         $scope.viewPodsForDeployment = function(deployment) {
           if (_.isEmpty($scope.pods)) {
-            return;
+            return null;
           }
 
-          Navigate.toPodsForDeployment(deployment, $scope.pods);
+          return Navigate.podsForDeploymentURL(deployment, $scope.pods);
         };
 
         $scope.scaleUp = function() {
