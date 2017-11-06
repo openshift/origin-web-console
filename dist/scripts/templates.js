@@ -7622,7 +7622,30 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt ng-if-start=\"strategyParams[type].execNewPod.env\">Environment Variables:</dt>\n" +
     "<dd ng-if-end>\n" +
     "<div ng-repeat=\"env in strategyParams[type].execNewPod.env\">\n" +
-    "<div class=\"truncate\" ng-attr-title=\"{{env.value}}\">{{env.name}}={{env.value}}</div>\n" +
+    "<div ng-if=\"env.valueFrom.configMapKeyRef || env.valueFrom.secretKeyRef\">\n" +
+    "{{env.name}} set to key\n" +
+    "<span ng-if=\"env.valueFrom.configMapKeyRef\">\n" +
+    "{{env.valueFrom.configMapKeyRef.key}} in config map\n" +
+    "<span ng-if=\"!('configmaps' | canI : 'get')\">\n" +
+    "{{env.valueFrom.configMapKeyRef.name}}\n" +
+    "</span>\n" +
+    "<a ng-if=\"'configmaps' | canI : 'get'\" ng-href=\"{{env.valueFrom.configMapKeyRef.name | navigateResourceURL : 'ConfigMap' : deploymentConfig.metadata.namespace}}\">\n" +
+    "{{env.valueFrom.configMapKeyRef.name}}\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "<span ng-if=\"env.valueFrom.secretKeyRef\">\n" +
+    "{{env.valueFrom.secretKeyRef.key}} in secret\n" +
+    "<span ng-if=\"!('secrets' | canI : 'get')\">\n" +
+    "{{env.valueFrom.secretKeyRef.name}}\n" +
+    "</span>\n" +
+    "<a ng-if=\"'secrets' | canI : 'get'\" ng-href=\"{{env.valueFrom.secretKeyRef.name | navigateResourceURL : 'Secret' : deploymentConfig.metadata.namespace}}\">\n" +
+    "{{env.valueFrom.secretKeyRef.name}}\n" +
+    "</a>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!env.valueFrom\" class=\"truncate\" ng-attr-title=\"{{env.value}}\">\n" +
+    "{{env.name}}={{env.value}}\n" +
+    "</div>\n" +
     "</div>\n" +
     "</dd>\n" +
     "<dt ng-if-start=\"strategyParams[type].execNewPod.volumes\">Volumes:</dt>\n" +
@@ -10127,17 +10150,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"lifecycle-hooks\">\n" +
     "<div class=\"lifecycle-hook\" id=\"pre-lifecycle-hook\">\n" +
     "<h3>Pre Lifecycle Hook</h3>\n" +
-    "<edit-lifecycle-hook model=\"strategyData[strategyParamsPropertyName].pre\" type=\"pre\" available-volumes=\"volumeNames\" available-containers=\"containerNames\" available-secrets=\"availableSecrets\" available-configmaps=\"availableConfigMaps\" namespace=\"projectName\">\n" +
+    "<edit-lifecycle-hook model=\"strategyData[strategyParamsPropertyName].pre\" type=\"pre\" available-volumes=\"volumeNames\" available-containers=\"containerNames\" available-secrets=\"availableSecrets\" available-config-maps=\"availableConfigMaps\" namespace=\"projectName\">\n" +
     "</edit-lifecycle-hook>\n" +
     "</div>\n" +
     "<div ng-if=\"strategyData.type !== 'Rolling'\" class=\"lifecycle-hook\" id=\"mid-lifecycle-hook\">\n" +
     "<h3>Mid Lifecycle Hook</h3>\n" +
-    "<edit-lifecycle-hook model=\"strategyData[strategyParamsPropertyName].mid\" type=\"mid\" available-volumes=\"volumeNames\" available-containers=\"containerNames\" available-secrets=\"availableSecrets\" available-configmaps=\"availableConfigMaps\" namespace=\"projectName\">\n" +
+    "<edit-lifecycle-hook model=\"strategyData[strategyParamsPropertyName].mid\" type=\"mid\" available-volumes=\"volumeNames\" available-containers=\"containerNames\" available-secrets=\"availableSecrets\" available-config-maps=\"availableConfigMaps\" namespace=\"projectName\">\n" +
     "</edit-lifecycle-hook>\n" +
     "</div>\n" +
     "<div class=\"lifecycle-hook\" id=\"post-lifecycle-hook\">\n" +
     "<h3>Post Lifecycle Hook</h3>\n" +
-    "<edit-lifecycle-hook model=\"strategyData[strategyParamsPropertyName].post\" type=\"post\" available-volumes=\"volumeNames\" available-containers=\"containerNames\" available-secrets=\"availableSecrets\" available-configmaps=\"availableConfigMaps\" namespace=\"projectName\">\n" +
+    "<edit-lifecycle-hook model=\"strategyData[strategyParamsPropertyName].post\" type=\"post\" available-volumes=\"volumeNames\" available-containers=\"containerNames\" available-secrets=\"availableSecrets\" available-config-maps=\"availableConfigMaps\" namespace=\"projectName\">\n" +
     "</edit-lifecycle-hook>\n" +
     "</div>\n" +
     "</div>\n" +
