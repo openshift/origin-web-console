@@ -113,6 +113,9 @@ angular.module("openshiftConsole")
     var decodeSecretData = function(secretData) {
       var nonPrintable = {};
       var decodedSecret = _.mapValues(secretData, function(data, configType) {
+        if (!data) {
+          return '';
+        }
         var decoded, isNonPrintable;
         if (configType === ".dockercfg" || configType === ".dockerconfigjson") {
           return decodeDockerConfig(data, configType);
