@@ -4075,6 +4075,7 @@ div.hopscotch-bubble .hopscotch-nav-button.prev{color:#030303}
 .tile-click{cursor:pointer;position:relative}
 .tile-click:hover .tile-target{color:#00659c}
 .tile-click:hover .tile-target:hover{text-decoration:none}
+body>.ui-select-bootstrap.open{z-index:1050}
 .ui-select-bootstrap .ui-select-choices-row>span{border-color:transparent;border-style:solid;border-width:1px 0;line-height:1.66666667;padding:1px 10px}
 .ui-select-bootstrap .ui-select-choices-row>span:focus,.ui-select-bootstrap .ui-select-choices-row>span:hover{background-color:#def3ff;border-color:#bee1f4;color:#4d5258}
 .ui-select-bootstrap .ui-select-choices-row.active>span{background-color:#0088ce!important;border-color:#0088ce!important;color:#fff}

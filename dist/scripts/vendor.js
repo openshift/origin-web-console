@@ -73708,7 +73708,19 @@ group: t[0],
 version: t[1]
 } : void o.warn('Invalid apiVersion "' + e + '"');
 }
-}, g = function(n) {
+}, g = [ {
+group: "authorization.openshift.io"
+} ], m = [ {
+group: "extensions",
+kind: "HorizontalPodAutoscaler"
+} ], v = function(e, t) {
+return !(!_.find(m, {
+group: e,
+kind: t
+}) && !_.find(g, {
+group: e
+}));
+}, b = function(n) {
 var i = [], o = _.map(r.AVAILABLE_KINDS_BLACKLIST, function(e) {
 return _.isString(e) ? {
 kind: e,
@@ -73736,7 +73748,7 @@ _.each(e.versions[t].resources, function(t) {
 _.includes(t.name, "/") || _.find(o, {
 kind: t.kind,
 group: e.name
-}) || "extensions" === e.name && "HorizontalPodAutoscaler" === t.kind || (t.namespaced || n) && i.push({
+}) || v(e.name, t.kind) || (t.namespaced || n) && i.push({
 kind: t.kind,
 group: e.name
 });
@@ -73744,7 +73756,7 @@ group: e.name
 }), _.uniqBy(i, function(e) {
 return e.group + "/" + e.kind;
 });
-}, m = g(!1), v = g(!0);
+}, y = b(!1), w = b(!0);
 return {
 toResourceGroupVersion: f,
 parseGroupVersion: p,
@@ -73818,7 +73830,7 @@ var t = "<none>", n = "<none>";
 return e && e.kind && (t = e.kind), e && e.apiVersion && (n = e.apiVersion), "The API version " + n + " for kind " + t + " is not supported by this server";
 },
 availableKinds: function(e) {
-return e ? v : m;
+return e ? w : y;
 },
 getPreferredVersion: function(e) {
 var t = n[e];
