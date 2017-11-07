@@ -54,7 +54,7 @@ angular.module('openshiftConsole')
     var servicePlansPromise;
 
     var serviceInstanceDisplayName = $filter('serviceInstanceDisplayName');
-    var serviceInstanceReady = $filter('isServiceInstanceReady');
+    var isServiceInstanceFailed = $filter('isServiceInstanceFailed');
 
     // API Versions
     var serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
@@ -118,9 +118,16 @@ angular.module('openshiftConsole')
       }
 
       var updateSchema = _.get($scope.plan, 'spec.instanceUpdateParameterSchema');
-      var planUpdatable = (_.size(_.get(updateSchema, 'properties')) > 0) || (_.get($scope.serviceClass, 'spec.planUpdatable') && (_.size($scope.servicePlans) > 1));
+      var updatable = (_.size(_.get(updateSchema, 'properties')) > 0) || (_.get($scope.serviceClass, 'spec.planUpdatable') && (_.size($scope.servicePlans) > 1));
 
-      $scope.editAvailable = planUpdatable && serviceInstanceReady($scope.serviceInstance) && !_.get($scope.serviceInstance, 'metadata.deletionTimestamp');
+      $scope.editAvailable =
+        updatable &&
+        // Instances in failed state are considered permanently failed and shouldn't be updated.
+        !isServiceInstanceFailed($scope.serviceInstance) &&
+        // Wait until either the provision or other async operation completes before letting the user edit.
+        !_.get($scope.serviceInstance, 'status.asyncOpInProgress') &&
+        // Don't allow editing deleted instances.
+        !_.get($scope.serviceInstance, 'metadata.deletionTimestamp');
     };
 
     var updateParameterSchema = function() {
