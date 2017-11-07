@@ -94,64 +94,69 @@
                 The current filter is hiding all projects.
                 <a href="" ng-click="search.text = ''" role="button" class="nowrap">Clear Filter</a>
               </div>
-              <div class="list-group list-view-pf projects-list">
-                <div ng-repeat="project in projects | limitTo: limitListTo track by (project | uid)" class="list-group-item project-info tile-click">
-                  <div class="list-view-pf-main-info">
-                    <div class="list-view-pf-description project-names">
-                      <div class="list-group-item-heading project-name-item">
-                        <h2 class="h1">
-                          <a class="tile-target" ng-href="project/{{project.metadata.name}}" title="{{project | displayName}}"><span ng-bind-html="project | displayName | highlightKeywords : keywords"></span></a>
-                          <span ng-if="project.status.phase != 'Active'"
-                            data-toggle="tooltip"
-                            title="This project has been marked for deletion."
-                            class="pficon pficon-warning-triangle-o"></span>
-                        </h2>
-                        <small>
-                          <span ng-if="project | displayName : true"><span ng-bind-html="project.metadata.name | highlightKeywords : keywords"></span> &ndash;</span>
-                          created
-                          <span ng-if="project | annotation : 'openshift.io/requester'">by <span ng-bind-html="project | annotation : 'openshift.io/requester' | highlightKeywords : keywords"></span></span>
-                          <span am-time-ago="project.metadata.creationTimestamp"></span>
-                        </small>
+              <div class="list-pf list-group projects-list">
+                <div ng-repeat="project in projects | limitTo: limitListTo track by (project | uid)" class="list-pf-item list-group-item project-info tile-click">
+                  <div class="list-pf-container">
+                    <div class="list-pf-content list-pf-content-flex">
+                      <div class="list-pf-content-wrapper">
+                        <div class="list-pf-main-content">
+                          <div class="list-pf-title project-name-item">
+                              <h2 class="h3">
+                                <a class="tile-target" ng-href="project/{{project.metadata.name}}" title="{{project | displayName}}">
+                                  <span ng-bind-html="project | displayName | highlightKeywords : keywords"></span>
+                                </a>
+                                <span ng-if="project.status.phase != 'Active'"
+                                      data-toggle="tooltip"
+                                      title="This project has been marked for deletion."
+                                      class="pficon pficon-warning-triangle-o"></span>
+                              </h2>
+                              <small class="project-date">
+                                <span ng-if="project | displayName : true"><span ng-bind-html="project.metadata.name | highlightKeywords : keywords"></span> &ndash;</span>
+                                created
+                                <span ng-if="project | annotation : 'openshift.io/requester'">by <span ng-bind-html="project | annotation : 'openshift.io/requester' | highlightKeywords : keywords"></span></span>
+                                <span am-time-ago="project.metadata.creationTimestamp"></span>
+                              </small>
+                          </div>
+                          <div class="list-pf-description project-description">
+                            <truncate-long-text ng-if="!keywords.length" content="project | description" limit="265" newline-limit="10" use-word-boundary="true"></truncate-long-text>
+                            <span class="highlighted-content" ng-if="keywords.length" ng-bind-html="project | description | truncate : 1000 | highlightKeywords : keywords"></span>
+                          </div>
+                        </div>
                       </div>
-                      <div class="list-view-pf-additional-info project-additional-info">
-                        <span class="list-group-item-text project-description">
-                          <truncate-long-text ng-if="!keywords.length" content="project | description" limit="265" newline-limit="10" use-word-boundary="true"></truncate-long-text>
-                          <span class="highlighted-content" ng-if="keywords.length" ng-bind-html="project | description | truncate : 1000 | highlightKeywords : keywords"></span>
-                        </span>
+                      <div class="list-pf-actions" ng-if="project.status.phase == 'Active'">
+                        <div uib-dropdown class="dropdown pull-right dropdown-kebab-pf">
+                          <button uib-dropdown-toggle class="btn btn-link dropdown-toggle"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span></button>
+                          <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
+                            <li role="menuitem">
+                              <a ng-href="project/{{project.metadata.name}}/membership">
+                                View Membership
+                              </a>
+                            </li>
+                            <li role="menuitem">
+                              <a href="" ng-click="editProject(project)">
+                                Edit Project
+                              </a>
+                            </li>
+                            <li role="menuitem">
+                              <delete-project
+                                label="Delete Project"
+                                project="project"
+                                type-name-to-confirm="true"
+                                stay-on-current-page="true"
+                                success="onDeleteProject">
+                              </delete-project>
+                            </li>
+                          </ul>
+                        </div>
+
                       </div>
+                      <origin-modal-popup shown="editProjectPanelShown && editingProject === project"
+                                          ng-class="{'with-description': (project | description | size)}"
+                                          modal-title="Edit Project" on-close="closeEditProjectPanel">
+                        <edit-project project="project" is-dialog="true" redirect-action="onEditProject" on-cancel="closeEditProjectPanel"></edit-project>
+                      </origin-modal-popup>
                     </div>
                   </div>
-                  <div row class="list-view-pf-actions list-pf-actions" ng-if="project.status.phase == 'Active'">
-                    <div uib-dropdown>
-                      <a href="" uib-dropdown-toggle class="actions-dropdown-kebab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span></a>
-                      <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
-                        <li role="menuitem">
-                          <a ng-href="project/{{project.metadata.name}}/membership">
-                            View Membership
-                          </a>
-                        </li>
-                        <li role="menuitem">
-                          <a href="" ng-click="editProject(project)">
-                            Edit Project
-                          </a>
-                        </li>
-                        <li role="menuitem">
-                          <delete-project
-                            label="Delete Project"
-                            project="project"
-                            type-name-to-confirm="true"
-                            stay-on-current-page="true"
-                            success="onDeleteProject">
-                          </delete-project>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <origin-modal-popup shown="editProjectPanelShown && editingProject === project"
-                                      ng-class="{'with-description': (project | description | size)}"
-                                      modal-title="Edit Project" on-close="closeEditProjectPanel">
-                    <edit-project project="project" is-dialog="true" redirect-action="onEditProject" on-cancel="closeEditProjectPanel"></edit-project>
-                  </origin-modal-popup>
                 </div>
               </div>
               <p ng-if="projects.length > limitListTo">
