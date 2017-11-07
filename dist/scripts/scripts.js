@@ -3230,6 +3230,7 @@ t.other.push(e);
 },
 decodeSecretData: function(e) {
 var t = {}, n = _.mapValues(e, function(e, n) {
+if (!e) return "";
 var a;
 return ".dockercfg" === n || ".dockerconfigjson" === n ? o(e, n) : (a = window.atob(e), /[\x00-\x09\x0E-\x1F]/.test(a) ? (t[n] = !0, e) : a);
 });
