@@ -10,6 +10,7 @@
      on-step-changed="$ctrl.stepChanged(step)"
      step-class="order-service-wizard-step"
      wizard-done="$ctrl.wizardDone">
+  <!-- Make sure next-enabled evaluates as a boolean since angular-patternfly will enable the button on undefined. -->
   <pf-wizard-step
        step-title="Image"
        step-id="image"
@@ -17,7 +18,7 @@
        substeps="false"
        ok-to-nav-away="true"
        allow-click-nav="false"
-       next-enabled="$ctrl.deployForm.$valid || $ctrl.deployImageNewAppCreated">
+       next-enabled="!!($ctrl.deployForm.$valid || $ctrl.deployImageNewAppCreated)">
     <div class="wizard-pf-main-inner-shadow-covers">
       <div class="order-service-config">
         <div class="wizard-pf-main-form-contents">
