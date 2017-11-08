@@ -84,7 +84,7 @@
                  id="envfrom-prefix-{{$index}}"
                  name="envfrom-prefix-{{$index}}"
                  ng-model="entry.prefix"
-                 ng-pattern="/^[a-zA-Z0-9_]+$/">
+                 ng-pattern="/^[A-Za-z_][A-Za-z0-9_]*$/">
 
           <span ng-show="$ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$touched">
             <span class="help-block key-validation-error"

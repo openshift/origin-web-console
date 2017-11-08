@@ -6744,7 +6744,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"environment-from-input\" ng-if=\"!$ctrl.isEnvFromReadonly(entry) && $ctrl.hasOptions()\" ng-class=\"{ 'has-error': ($ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$invalid && $ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$touched) }\">\n" +
     "<label for=\"envfrom-prefix-{{$index}}\" class=\"sr-only\">Prefix</label>\n" +
-    "<input type=\"text\" class=\"form-control\" placeholder=\"Add prefix\" id=\"envfrom-prefix-{{$index}}\" name=\"envfrom-prefix-{{$index}}\" ng-model=\"entry.prefix\" ng-pattern=\"/^[a-zA-Z0-9_]+$/\">\n" +
+    "<input type=\"text\" class=\"form-control\" placeholder=\"Add prefix\" id=\"envfrom-prefix-{{$index}}\" name=\"envfrom-prefix-{{$index}}\" ng-model=\"entry.prefix\" ng-pattern=\"/^[A-Za-z_][A-Za-z0-9_]*$/\">\n" +
     "<span ng-show=\"$ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$touched\">\n" +
     "<span class=\"help-block key-validation-error\" ng-show=\"$ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$error.pattern\">\n" +
     "<span class=\"validation-text\">Please enter a valid prefix.</span>\n" +
