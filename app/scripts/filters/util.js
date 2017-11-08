@@ -10,20 +10,6 @@ angular.module('openshiftConsole')
       return value.replace(/\./g, '_');
     };
   })
-  .filter("defaultIfBlank", function(){
-    return function(input, defaultValue){
-      if(input === null) {
-        return defaultValue;
-      }
-      if(typeof input !== "string"){
-        input = String(input);
-      }
-      if(input.trim().length === 0){
-        return defaultValue;
-      }
-      return input;
-    };
-  })
   .filter('keys', function() {
     return _.keys;
   })
