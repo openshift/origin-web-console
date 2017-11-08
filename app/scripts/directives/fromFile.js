@@ -37,6 +37,10 @@ angular.module("openshiftConsole")
           selectedProject: $scope.project
         };
 
+        $scope.$watch('input.selectedProject.metadata.name', function() {
+          $scope.projectNameTaken = false;
+        });
+
         $scope.aceLoaded = function(editor) {
           aceEditorSession = editor.getSession();
           aceEditorSession.setOption('tabSize', 2);
@@ -181,14 +185,17 @@ angular.module("openshiftConsole")
               }
             });
           }, function(e) {
-            NotificationsService.addNotification({
-              id: "import-create-project-error",
-              type: "error",
-              message: "An error occurred creating project",
-              details: getErrorDetails(e)
-            });
+            if (e.data.reason === 'AlreadyExists') {
+              $scope.projectNameTaken = true;
+            } else {
+              NotificationsService.addNotification({
+                id: "import-create-project-error",
+                type: "error",
+                message: "An error occurred creating project.",
+                details: getErrorDetails(e)
+              });
+            }
           });
-
         };
 
         $scope.cancel = function() {

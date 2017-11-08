@@ -83,6 +83,10 @@
       ctrl.templateDisplayName = displayName(ctrl.template);
       ctrl.selectedProject = ctrl.project;
 
+      $scope.$watch('$ctrl.selectedProject.metadata.name', function() {
+        ctrl.projectNameTaken = false;
+      });
+
       $scope.$on('no-projects-cannot-create', function() {
         ctrl.noProjectsCantCreate = true;
       });
@@ -245,16 +249,20 @@
         );
       }, function(result) {
         ctrl.disableInputs = false;
-        var details;
-        if (result.data && result.data.message) {
-          details = result.data.message;
+        if (result.data.reason === 'AlreadyExists') {
+          ctrl.projectNameTaken = true;
+        } else {
+          var details;
+          if (result.data && result.data.message) {
+            details = result.data.message;
+          }
+          NotificationsService.addNotification({
+            id: "process-template-error",
+            type: "error",
+            message: "An error occurred creating the project.",
+            details: details
+          });
         }
-        NotificationsService.addNotification({
-          id: "process-template-error",
-          type: "error",
-          message: "An error occurred creating the project.",
-          details: details
-        });
       });
     };
 
