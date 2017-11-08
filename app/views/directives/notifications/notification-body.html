@@ -55,7 +55,7 @@
       <div>
 
         <span ng-if="notification.event.reason">
-          {{notification.event.reason | humanize}} &mdash; <span ng-if="notification.event.involvedObject">{{notification.event.involvedObject.kind | humanizeKind : true}}</span>
+          {{notification.event.reason | humanize}}&nbsp;&mdash; <span ng-if="notification.event.involvedObject">{{notification.event.involvedObject.kind | humanizeKind : true}}</span>
         </span>
 
         <span

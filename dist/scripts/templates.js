@@ -7937,7 +7937,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"drawer-pf-notification-message word-break\" ng-attr-title=\"{{notification.event.message}}\">\n" +
     "<div>\n" +
     "<span ng-if=\"notification.event.reason\">\n" +
-    "{{notification.event.reason | humanize}} &mdash; <span ng-if=\"notification.event.involvedObject\">{{notification.event.involvedObject.kind | humanizeKind : true}}</span>\n" +
+    "{{notification.event.reason | humanize}}&nbsp;&mdash; <span ng-if=\"notification.event.involvedObject\">{{notification.event.involvedObject.kind | humanizeKind : true}}</span>\n" +
     "</span>\n" +
     "<span ng-if=\"notification.event.involvedObject\" ng-init=\"eventObjUrl = (notification.event | navigateEventInvolvedObjectURL)\">\n" +
     "<a ng-if=\"eventObjUrl\" ng-attr-title=\"Navigate to {{notification.event.involvedObject.name}}\" href=\"{{eventObjUrl}}\" ng-click=\"$ctrl.customScope.close()\">\n" +

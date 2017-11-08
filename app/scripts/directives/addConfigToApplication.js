@@ -56,6 +56,10 @@
 
       getApplications();
 
+      // Initialize to true to avoid the error message flickering when an
+      // application is first selected.
+      ctrl.canAddRefToApplication = true;
+
       var keyValidator = new RegExp("^[A-Za-z_][A-Za-z0-9_]*$");
       ctrl.hasInvalidEnvVars = _.some(ctrl.apiObject.data, function(value, key) {
         return !keyValidator.test(key);
