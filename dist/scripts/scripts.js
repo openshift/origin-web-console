@@ -15609,11 +15609,7 @@ return function(t) {
 var a = n.getScaleResource(t);
 return e(a, "update");
 };
-} ]), angular.module("openshiftConsole").filter("underscore", function() {
-return function(e) {
-return e.replace(/\./g, "_");
-};
-}).filter("defaultIfBlank", function() {
+} ]), angular.module("openshiftConsole").filter("defaultIfBlank", function() {
 return function(e, t) {
 return null === e ? t : ("string" != typeof e && (e = String(e)), 0 === e.trim().length ? t : e);
 };
@@ -15901,7 +15897,11 @@ return window.encodeURIComponent;
 return function(t) {
 return _.get(e, [ "ENABLE_TECH_PREVIEW_FEATURE", t ], !1);
 };
-} ]), angular.module("openshiftConsole").factory("logLinks", [ "$anchorScroll", "$document", "$location", "$window", function(e, t, n, a) {
+} ]), angular.module("openshiftConsole").filter("underscore", function() {
+return function(e) {
+return e.replace(/\./g, "_");
+};
+}), angular.module("openshiftConsole").factory("logLinks", [ "$anchorScroll", "$document", "$location", "$window", function(e, t, n, a) {
 var r = _.template([ "/#/discover?", "_g=(", "time:(", "from:now-1w,", "mode:relative,", "to:now", ")", ")", "&_a=(", "columns:!(kubernetes.container_name,message),", "index:'project.<%= namespace %>.<%= namespaceUid %>.*',", "query:(", "query_string:(", "analyze_wildcard:!t,", 'query:\'kubernetes.pod_name:"<%= podname %>" AND kubernetes.namespace_name:"<%= namespace %>"\'', ")", "),", "sort:!('@timestamp',desc)", ")", "#console_container_name=<%= containername %>", "&console_back_url=<%= backlink %>" ].join(""));
 return {
 scrollTop: function(e) {
