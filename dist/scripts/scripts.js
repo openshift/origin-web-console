@@ -11108,7 +11108,7 @@ c.applications = e, c.updating = !1;
 });
 };
 c.$onInit = function() {
-c.addType = "env", c.disableInputs = !1, d();
+c.addType = "env", c.disableInputs = !1, d(), c.canAddRefToApplication = !0;
 var e = new RegExp("^[A-Za-z_][A-Za-z0-9_]*$");
 c.hasInvalidEnvVars = _.some(c.apiObject.data, function(t, n) {
 return !e.test(n);
