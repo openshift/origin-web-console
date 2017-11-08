@@ -12154,7 +12154,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"row.apiObject.kind !== 'Pod'\">\n" +
     "<a href=\"\" ng-click=\"row.navigateToPods()\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(row.getPods(row.current) | size) }\">\n" +
-    "<pod-donut pods=\"row.getPods(row.current)\" mini=\"true\"></pod-donut>\n" +
+    "<pod-donut pods=\"row.getPods(row.current)\" idled=\"!(row.getPods(row.current) | size) && (row.apiObject | annotation : 'idledAt')\" mini=\"true\">\n" +
+    "</pod-donut>\n" +
     "</a>\n" +
     "</div>\n" +
     "</div>\n" +
