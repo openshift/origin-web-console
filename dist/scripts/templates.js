@@ -13322,28 +13322,39 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</h1>\n" +
     "</div>\n" +
+    "<div ng-if=\"unfilteredSecrets\" class=\"data-toolbar\">\n" +
+    "<div class=\"data-toolbar-filter\">\n" +
+    "<project-filter></project-filter>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
-    "<div ng-if=\"!secretsLoaded\" class=\"mar-top-xl\">Loading...</div>\n" +
-    "<div ng-if=\"secretsLoaded\" class=\"row\">\n" +
+    "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
-    "<div ng-if=\"!secrets.length\">\n" +
-    "<div class=\"empty-state-message text-center\">\n" +
+    "<div ng-if=\"(secrets | size) === 0\">\n" +
+    "<p ng-if=\"!secretsLoaded\">\n" +
+    "Loading...\n" +
+    "</p>\n" +
+    "<div ng-if=\"secretsLoaded\" class=\"empty-state-message text-center\">\n" +
+    "<div ng-if=\"!filterWithZeroResults\">\n" +
     "<h2>No secrets.</h2>\n" +
-    "<p>\n" +
-    "No secrets have been added to project {{projectName}}.\n" +
-    "</p>\n" +
-    "<p ng-if=\"project && ('secrets' | canI : 'create') && !secrets.length\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/create-secret\" class=\"btn btn-primary\">Create Secret</a>\n" +
+    "<p>No secrets have been added to project {{projectName}}.</p>\n" +
+    "<p ng-if=\"project && ('secrets' | canI : 'create')\">\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/create-secret\" class=\"btn btn-primary btn-lg\">Create Secret</a>\n" +
     "</p>\n" +
     "</div>\n" +
+    "<div ng-if=\"filterWithZeroResults\">\n" +
+    "<h2>The filter is hiding all secrets. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
     "</div>\n" +
-    "<table ng-if=\"secrets.length\" class=\"table table-bordered table-mobile secrets-table table-layout-fixed\">\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<table ng-if=\"(secrets | size) > 0\" class=\"table table-bordered table-mobile secrets-table table-layout-fixed\">\n" +
     "<colgroup>\n" +
     "<col class=\"col-sm-5\">\n" +
     "<col class=\"col-sm-5\">\n" +
+    "<col class=\"col-sm-2\">\n" +
     "</colgroup>\n" +
     "<thead>\n" +
     "<tr>\n" +

@@ -8,9 +8,13 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('SecretsController', function ($routeParams, $scope, DataService, ProjectsService) {
+  .controller('SecretsController', function ($routeParams, $scope, DataService, LabelFilter, ProjectsService) {
     $scope.projectName = $routeParams.project;
-    $scope.secretsByType = {};
+    $scope.labelSuggestions = {};
+    $scope.clearFilter = function() {
+      LabelFilter.clear();
+    };
+
     var watches = [];
 
     ProjectsService
@@ -19,9 +23,25 @@ angular.module('openshiftConsole')
         $scope.project = project;
         $scope.context = context;
         watches.push(DataService.watch("secrets", context, function(secrets) {
-          $scope.secrets = _.sortBy(secrets.by("metadata.name"), ["type", "metadata.name"]);
+          $scope.unfilteredSecrets = _.sortBy(secrets.by("metadata.name"), ["type", "metadata.name"]);
           $scope.secretsLoaded = true;
+          LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredSecrets, $scope.labelSuggestions);
+          LabelFilter.setLabelSuggestions($scope.labelSuggestions);
+          $scope.secrets = LabelFilter.getLabelSelector().select($scope.unfilteredSecrets);
+          updateFilterMessage();
         }));
+
+        function updateFilterMessage() {
+          $scope.filterWithZeroResults = !LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.secrets) && !_.isEmpty($scope.unfilteredSecrets);
+        }
+
+        LabelFilter.onActiveFiltersChanged(function(labelSelector) {
+          // trigger a digest loop
+          $scope.$evalAsync(function() {
+            $scope.secrets = labelSelector.select($scope.unfilteredSecrets);
+            updateFilterMessage();
+          });
+        });
 
         $scope.$on('$destroy', function(){
           DataService.unwatchAll(watches);
