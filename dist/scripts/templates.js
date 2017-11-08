@@ -3620,7 +3620,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-switch-default>\n" +
     "<dt ng-attr-title=\"{{secretDataName}}\">{{secretDataName}}</dt>\n" +
-    "<dd ng-if=\"view.showSecret\">\n" +
+    "<dd ng-if=\"view.showSecret && !secretData\"><em>No value</em></dd>\n" +
+    "<dd ng-if=\"view.showSecret && secretData\">\n" +
     "<copy-to-clipboard clipboard-text=\"secretData\" multiline=\"secretData | isMultiline : true\" display-wide=\"true\">\n" +
     "</copy-to-clipboard>\n" +
     "<div ng-if=\"decodedSecretData.$$nonprintable[secretDataName]\" class=\"help-block\">\n" +
