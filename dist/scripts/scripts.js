@@ -3248,6 +3248,7 @@ t.other.push(e);
 },
 decodeSecretData: function(e) {
 var t = {}, n = _.mapValues(e, function(e, n) {
+if (!e) return "";
 var a;
 return ".dockercfg" === n || ".dockerconfigjson" === n ? o(e, n) : (a = window.atob(e), /[\x00-\x09\x0E-\x1F]/.test(a) ? (t[n] = !0, e) : a);
 });
@@ -6377,7 +6378,7 @@ e.showParameterValues = !e.showParameterValues;
 }, e.closeEditDialog = function() {
 e.editDialogShown = !1;
 };
-var m, p, f = [], g = [], v = t("serviceInstanceDisplayName"), h = t("isServiceInstanceReady"), y = a.getPreferredVersion("servicebindings");
+var m, p, f = [], g = [], v = t("serviceInstanceDisplayName"), h = t("isServiceInstanceFailed"), y = a.getPreferredVersion("servicebindings");
 e.serviceInstancesVersion = a.getPreferredVersion("serviceinstances");
 var b = function() {
 e.breadcrumbs.push({
@@ -6407,7 +6408,7 @@ c.warn("Unable to load parameters from secret " + _.get(t, "secretKeyRef.name"),
 }, S = function() {
 if (e.plan && e.serviceClass && e.serviceInstance) {
 var t = _.get(e.plan, "spec.instanceUpdateParameterSchema"), n = _.size(_.get(t, "properties")) > 0 || _.get(e.serviceClass, "spec.planUpdatable") && _.size(e.servicePlans) > 1;
-e.editAvailable = n && h(e.serviceInstance) && !_.get(e.serviceInstance, "metadata.deletionTimestamp");
+e.editAvailable = n && !h(e.serviceInstance) && !_.get(e.serviceInstance, "status.asyncOpInProgress") && !_.get(e.serviceInstance, "metadata.deletionTimestamp");
 }
 }, w = function() {
 e.parameterFormDefinition = angular.copy(_.get(e.plan, "spec.externalMetadata.schemas.service_instance.update.openshift_form_definition")), e.parameterSchema = _.get(e.plan, "spec.instanceCreateParameterSchema"), C();
