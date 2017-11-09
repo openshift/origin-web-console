@@ -38,7 +38,7 @@ angular.module('openshiftConsole')
         }));
 
         function updateFilterMessage() {
-          $scope.filterWithZeroResults = !LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.routes)  && !_.isEmpty($scope.unfilteredRoutes);
+          $scope.filterWithZeroResults = !LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.routes) && !_.isEmpty($scope.unfilteredRoutes);
         }
 
         LabelFilter.onActiveFiltersChanged(function(labelSelector) {

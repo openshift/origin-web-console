@@ -127,7 +127,7 @@ angular.module('openshiftConsole')
       }));
 
     function updateFilterMessage() {
-      $scope.filterWithZeroResults = !LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.resources)  && !_.isEmpty($scope.unfilteredResources);
+      $scope.filterWithZeroResults = !LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.resources) && !_.isEmpty($scope.unfilteredResources);
     }
 
     function loadKind() {

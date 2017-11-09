@@ -71,7 +71,7 @@ angular.module('openshiftConsole')
         });
 
         function updateFilterMessage() {
-          $scope.filterWithZeroResults = !LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.serviceInstances)  && !_.isEmpty($scope.unfilteredServiceInstances);
+          $scope.filterWithZeroResults = !LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.serviceInstances) && !_.isEmpty($scope.unfilteredServiceInstances);
         }
 
         LabelFilter.onActiveFiltersChanged(function(labelSelector) {
