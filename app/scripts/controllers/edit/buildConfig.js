@@ -268,6 +268,9 @@ angular.module('openshiftConsole')
             $scope.triggers = getTriggerMap($scope.triggers, $scope.buildConfig.spec.triggers);
             $scope.sources = getSourceMap($scope.sources, $scope.buildConfig.spec.source);
 
+            var gitRef = _.get(buildConfig, 'spec.source.git.ref');
+            $scope.view.showGitReference = gitRef && gitRef !== 'master';
+
             if (_.has(buildConfig, 'spec.strategy.jenkinsPipelineStrategy.jenkinsfile')) {
               $scope.jenkinsfileOptions.type = 'inline';
             }
