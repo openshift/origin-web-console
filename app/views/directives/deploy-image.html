@@ -35,10 +35,14 @@
           <div class="form-group">
             <label for="imageName" class="sr-only">Image name or pull spec</label>
             <div class="input-group">
+              <!--
+                Find the image when enter is pressed in this input, but only this input.
+              -->
               <input type="search"
                      id="imageName"
                      name="imageName"
                      ng-model="imageName"
+                     on-enter="imageName && findImage()"
                      ng-required="mode === 'dockerImage'"
                      select-on-focus
                      ng-disabled="mode !== 'dockerImage'"
@@ -48,8 +52,12 @@
                      autocapitalize="none"
                      spellcheck="false">
               <span class="input-group-btn">
+                <!--
+                  Use type="button" to prevent the button from being considered a
+                  form submit button and triggering on the enter key in any field.
+                -->
                 <button class="btn btn-default"
-                        type="submit"
+                        type="button"
                         ng-disabled="!imageName"
                         ng-click="findImage()">
                   <i class="fa fa-search" aria-hidden="true"></i>

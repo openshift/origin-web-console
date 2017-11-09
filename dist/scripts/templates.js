@@ -6305,7 +6305,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"wizard-pf-main-inner-shadow-covers\">\n" +
     "<div class=\"order-service-config\">\n" +
     "<div class=\"wizard-pf-main-form-contents\">\n" +
-    "<form name=\"$ctrl.deployForm\">\n" +
+    "<form name=\"$ctrl.deployForm\" on-enter=\"$ctrl.deployForm.$valid && $ctrl.deployImage()\" novalidate>\n" +
     "<deploy-image is-dialog=\"true\" project=\"$ctrl.project\" context=\"$ctrl.context\"></deploy-image>\n" +
     "</form>\n" +
     "</div>\n" +
@@ -6362,9 +6362,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<label for=\"imageName\" class=\"sr-only\">Image name or pull spec</label>\n" +
     "<div class=\"input-group\">\n" +
-    "<input type=\"search\" id=\"imageName\" name=\"imageName\" ng-model=\"imageName\" ng-required=\"mode === 'dockerImage'\" select-on-focus ng-disabled=\"mode !== 'dockerImage'\" placeholder=\"Image name or pull spec\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
+    "\n" +
+    "<input type=\"search\" id=\"imageName\" name=\"imageName\" ng-model=\"imageName\" on-enter=\"imageName && findImage()\" ng-required=\"mode === 'dockerImage'\" select-on-focus ng-disabled=\"mode !== 'dockerImage'\" placeholder=\"Image name or pull spec\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
     "<span class=\"input-group-btn\">\n" +
-    "<button class=\"btn btn-default\" type=\"submit\" ng-disabled=\"!imageName\" ng-click=\"findImage()\">\n" +
+    "\n" +
+    "<button class=\"btn btn-default\" type=\"button\" ng-disabled=\"!imageName\" ng-click=\"findImage()\">\n" +
     "<i class=\"fa fa-search\" aria-hidden=\"true\"></i>\n" +
     "<span class=\"sr-only\">Find</span>\n" +
     "</button>\n" +
