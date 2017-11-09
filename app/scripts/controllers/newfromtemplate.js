@@ -14,6 +14,7 @@ angular.module('openshiftConsole')
                        $parse,
                        $routeParams,
                        $scope,
+                       AuthorizationService,
                        CachedTemplateService,
                        DataService,
                        Navigate,
@@ -162,6 +163,11 @@ angular.module('openshiftConsole')
       .get($routeParams.project)
       .then(_.spread(function(project) {
         $scope.project = project;
+
+        if (!AuthorizationService.canI('processedtemplates', 'create', $routeParams.project)) {
+          Navigate.toErrorPage('You do not have authority to process templates in project ' + $routeParams.project + '.', 'access_denied');
+          return;
+        }
 
         // Missing namespace indicates that the template should be received from from the 'CachedTemplateService'.
         // Otherwise get it via GET call.
