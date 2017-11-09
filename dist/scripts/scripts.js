@@ -6443,14 +6443,23 @@ details: t("getErrorDetails")(n)
 })), e.$on("$destroy", function() {
 s.unwatchAll(f), s.unwatchAll(g);
 });
-} ]), angular.module("openshiftConsole").controller("SecretsController", [ "$routeParams", "$scope", "DataService", "ProjectsService", function(e, t, n, a) {
-t.projectName = e.project, t.secretsByType = {};
-var r = [];
-a.get(e.project).then(_.spread(function(e, a) {
-t.project = e, t.context = a, r.push(n.watch("secrets", a, function(e) {
-t.secrets = _.sortBy(e.by("metadata.name"), [ "type", "metadata.name" ]), t.secretsLoaded = !0;
-})), t.$on("$destroy", function() {
-n.unwatchAll(r);
+} ]), angular.module("openshiftConsole").controller("SecretsController", [ "$routeParams", "$scope", "DataService", "LabelFilter", "ProjectsService", function(e, t, n, a, r) {
+t.projectName = e.project, t.labelSuggestions = {}, t.clearFilter = function() {
+a.clear();
+};
+var o = [];
+r.get(e.project).then(_.spread(function(e, r) {
+function i() {
+t.filterWithZeroResults = !a.getLabelSelector().isEmpty() && _.isEmpty(t.secrets) && !_.isEmpty(t.unfilteredSecrets);
+}
+t.project = e, t.context = r, o.push(n.watch("secrets", r, function(e) {
+t.unfilteredSecrets = _.sortBy(e.by("metadata.name"), [ "type", "metadata.name" ]), t.secretsLoaded = !0, a.addLabelSuggestionsFromResources(t.unfilteredSecrets, t.labelSuggestions), a.setLabelSuggestions(t.labelSuggestions), t.secrets = a.getLabelSelector().select(t.unfilteredSecrets), i();
+})), a.onActiveFiltersChanged(function(e) {
+t.$evalAsync(function() {
+t.secrets = e.select(t.unfilteredSecrets), i();
+});
+}), t.$on("$destroy", function() {
+n.unwatchAll(o);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("SecretController", [ "$routeParams", "$filter", "$scope", "DataService", "ProjectsService", "SecretsService", function(e, t, n, a, r, o) {
