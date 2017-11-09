@@ -78280,7 +78280,7 @@ e.exports = '\x3c!-- Use angular-schema-form to show a form based on the paramet
 }, function(e, t) {
 e.exports = '<div class="catalog-search">\n  <form role="form" class="landing-search-form search-pf has-button">\n    <div class="form-group has-clear">\n      <div class="search-pf-input-group">\n        <label for="search-input" class="sr-only">Search Catalog</label>\n        <span class="fa fa-search catalog-search-icon" aria-hidden="true"></span>\n        <input\n            id="search-input"\n            type="search"\n            autocomplete="off"\n            ng-keypress="$ctrl.onKeyPress($event)"\n            class="form-control catalog-search-input"\n            placeholder="Search Catalog"\n            ng-model="$ctrl.searchText"\n            uib-typeahead="item.name for item in $ctrl.search($viewValue)"\n            typeahead-on-select="$ctrl.itemSelected($item)"\n            typeahead-focus-first="false"\n            typeahead-template-url="catalog-search/catalog-search-result.html"\n            autocorrect="off"\n            autocapitalize="off"\n            spellcheck="false">\n        <button\n            type="button"\n            ng-if="$ctrl.searchText"\n            ng-click="$ctrl.searchText = \'\'"\n            class="clear">\n          <span class="sr-only">Clear Search Input</span>\n          <span class="pficon pficon-close" aria-hidden="true"></span>\n        </button>\n      </div>\n    </div>\n  </form>\n</div>\n';
 }, function(e, t) {
-e.exports = '<div class="order-service">\n  <pf-wizard\n       wizard-title="{{$ctrl.imageStream.name}} {{$ctrl.istag.name}}"\n       hide-sidebar="true"\n       step-class="order-service-wizard-step"\n       current-step="$ctrl.currentStep"\n       wizard-ready="$ctrl.wizardReady"\n       next-title="$ctrl.nextTitle"\n       on-finish="$ctrl.closePanel()"\n       on-cancel="$ctrl.closePanel()"\n       wizard-done="$ctrl.wizardDone">\n    <pf-wizard-step ng-repeat="step in $ctrl.steps track by $index"\n         step-title="{{step.label}}"\n         wz-disabled="{{step.hidden}}"\n         allow-click-nav="step.allowClickNav"\n         next-enabled="step.valid && !$ctrl.updating"\n         prev-enabled="step.prevEnabled"\n         on-show="step.onShow"\n         step-id="{{step.id}}"\n         step-priority="{{$index}}">\n      <div class="wizard-pf-main-inner-shadow-covers">\n        <div class="order-service-config">\n          <div ng-include="step.view" class="wizard-pf-main-form-contents"></div>\n        </div>\n      </div>\n    </>\n  </>\n</div>\n';
+e.exports = '<div class="order-service">\n  <pf-wizard\n       wizard-title="{{$ctrl.imageStream.name}} {{$ctrl.istag.name}}"\n       hide-sidebar="true"\n       step-class="order-service-wizard-step"\n       current-step="$ctrl.currentStep"\n       wizard-ready="$ctrl.wizardReady"\n       next-title="$ctrl.nextTitle"\n       on-finish="$ctrl.closePanel()"\n       on-cancel="$ctrl.closePanel()"\n       wizard-done="$ctrl.wizardDone">\n    <pf-wizard-step ng-repeat="step in $ctrl.steps track by $index"\n         step-title="{{step.label}}"\n         wz-disabled="{{step.hidden}}"\n         allow-click-nav="step.allowClickNav"\n         next-enabled="step.valid && !$ctrl.updating"\n         prev-enabled="step.prevEnabled"\n         on-show="step.onShow"\n         step-id="{{step.id}}"\n         step-priority="{{$index}}">\n      <div class="wizard-pf-main-inner-shadow-covers">\n        <div class="order-service-config">\n          <div ng-include="step.view" class="wizard-pf-main-form-contents"></div>\n        </div>\n      </div>\n    </pf-wizard-step>\n  </pf-wizard>\n</div>\n';
 }, function(e, t) {
 e.exports = '<div class="landing-search-area" ng-transclude="landingsearch"></div>\n<div class="landing">\n  <overlay-panel show-panel="$ctrl.orderingPanelVisible" handle-close="$ctrl.closeOrderingPanel">\n    <order-service\n        ng-if="$ctrl.selectedItem.resource.kind === \'ClusterServiceClass\'"\n        base-project-url="{{$ctrl.baseProjectUrl}}"\n        service-class="$ctrl.selectedItem"\n        service-plans="$ctrl.servicePlansForItem"\n        handle-close="$ctrl.closeOrderingPanel">\n    </order-service>\n    <create-from-builder\n        ng-if="$ctrl.selectedItem.resource.kind === \'ImageStream\'"\n        base-project-url="{{$ctrl.baseProjectUrl}}"\n        image-stream="$ctrl.selectedItem"\n        handle-close="$ctrl.closeOrderingPanel">\n    </create-from-builder>\n  </overlay-panel>\n  <div class="landing-main-area">\n    <div class="landing-header-area" ng-transclude="landingheader"></div>\n    <div class="landing-body-area">\n      <div class="landing-body" ng-transclude="landingbody"></div>\n    </div>\n  </div>\n  <div class="landing-side-bar" ng-transclude="landingside"></div>\n</div>\n';
 }, function(e, t) {
@@ -78596,7 +78596,7 @@ return e.ctrl.selectedProject;
 e.ctrl.projectNameTaken = !1;
 }), this.ctrl.showPodPresets ? (this.getServiceClassesAndPlans(), this.instancesSupported = !!this.APIService.apiInfo(this.APIService.getPreferredVersion("serviceinstances"))) : this.instancesSupported = !1, this.noProjectsCantCreateWatch = this.$scope.$on("no-projects-cannot-create", function() {
 e.ctrl.noProjectsCantCreate = !0;
-}), this.getServiceClassesAndPlans(), this.instancesSupported = !!this.APIService.apiInfo(this.APIService.getPreferredVersion("serviceinstances"));
+});
 }, e.prototype.closePanel = function() {
 i.isFunction(this.ctrl.handleClose) && this.ctrl.handleClose();
 }, e.prototype.$onDestroy = function() {
@@ -78978,9 +78978,9 @@ t.__esModule = !0;
 var i = n(1), r = n(0), o = function() {
 function e(t, n, o, a, s, l, c, u, d, h, f) {
 var p = this;
-this.ctrl = this, this.newProjectPanelShown = !1, this.editProjectPanelShown = !1, this.projects = [], this.watches = [], this.maxDisplayProjects = 5, this.watchingProjects = !1, this.init = function() {
+this.ctrl = this, this.newProjectPanelShown = !1, this.editProjectPanelShown = !1, this.watches = [], this.maxDisplayProjects = 5, this.watchingProjects = !1, this.init = function() {
 p.ProjectsService.list().then(function(t) {
-p.onProjectsUpdate(t), p.ctrl.isProjectListIncomplete = p.ProjectsService.isProjectListIncomplete(), !p.ctrl.isProjectListIncomplete && r.size(p.projects) <= e.MAX_PROJETS_TO_WATCH && (p.watches.push(p.ProjectsService.watch(p.$scope, p.onProjectsUpdate)), p.watchingProjects = !0);
+p.onProjectsUpdate(t), p.ctrl.isProjectListIncomplete = p.ProjectsService.isProjectListIncomplete(), !p.ctrl.isProjectListIncomplete && p.ctrl.totalProjects <= e.MAX_PROJETS_TO_WATCH && (p.watches.push(p.ProjectsService.watch(p.$scope, p.onProjectsUpdate)), p.watchingProjects = !0);
 }, function() {
 p.ctrl.isProjectListIncomplete = !0;
 }), p.ctrl.resourceLinks = r.clone(p.Constants.CATALOG_HELP_RESOURCES.links), r.forEach(p.ctrl.resourceLinks, function(e) {
@@ -79217,7 +79217,7 @@ this.debounceResize = i.debounce(function() {
 return e.resizeExpansion(!1);
 }, 50, {
 maxWait: 250
-}), r(window).on("resize.services", this.debounceResize), this.removeFilterListener = this.$rootScope.$on("filter-catalog-items", function(t, n) {
+}), r(window).on("resize.services", this.debounceResize), this.ctrl.currentFilter = this.ctrl.currentSubFilter = "all", this.removeFilterListener = this.$rootScope.$on("filter-catalog-items", function(t, n) {
 e.ctrl.keywordFilterValue = n.searchText, e.ctrl.currentFilter = e.ctrl.currentSubFilter = "all", e.ctrl.mobileView = "subcategories";
 }), this.ctrl.filterConfig = {
 resultsLabel: "Items",
@@ -79231,7 +79231,7 @@ urlAction: this.clearAppliedFilters
 }
 };
 }, e.prototype.$onChanges = function(e) {
-e.catalogItems && this.ctrl.catalogItems && (this.ctrl.categories = this.catalog.categories, this.filterByCategory("all", "all", !0), this.ctrl.isEmpty = i.isEmpty(this.ctrl.catalogItems), this.ctrl.loaded = !0);
+e.catalogItems && e.catalogItems.currentValue && (this.ctrl.isEmpty = i.isEmpty(this.ctrl.catalogItems), this.ctrl.isEmpty || (this.ctrl.categories = this.catalog.categories, this.filterByCategory("all", "all", !0)), this.ctrl.loaded = !0);
 }, e.prototype.$postLink = function() {
 this.scrollParent = this.getScrollParent(this.element), this.scrollParent && this.htmlService.isWindowAboveBreakpoint(this.htmlService.WINDOW_SIZE_SM) && (this.ctrl.viewStyle = {
 "min-height": "calc(100vh - " + this.scrollParent.getBoundingClientRect().top + "px)"
