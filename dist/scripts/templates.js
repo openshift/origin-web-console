@@ -1397,7 +1397,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</li>\n" +
     "<li ng-if=\"{ group: 'extensions', resource: 'replicasets' } | canI : 'delete'\">\n" +
     "\n" +
-    "<delete-link kind=\"ReplicaSet\" group=\"extensions\" resource-name=\"{{replicaSet.metadata.name}}\" project-name=\"{{replicaSet.metadata.namespace}}\" hpa-list=\"hpaForRS\" alerts=\"alerts\">\n" +
+    "<delete-link kind=\"ReplicaSet\" group=\"extensions\" resource-name=\"{{replicaSet.metadata.name}}\" project-name=\"{{replicaSet.metadata.namespace}}\" hpa-list=\"hpaForRS\" alerts=\"alerts\" translate>\n" +
+    "Delete\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -1609,7 +1610,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{replicaSet | editYamlURL}}\" role=\"button\" translate>Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'replicationcontrollers' | canI : 'delete'\">\n" +
-    "<delete-link kind=\"ReplicationController\" type-display-name=\"{{deploymentConfigName ? 'deployment' : 'replication controller'}}\" resource-name=\"{{replicaSet.metadata.name}}\" project-name=\"{{replicaSet.metadata.namespace}}\" alerts=\"alerts\" hpa-list=\"hpaForRS\" redirect-url=\"{{replicaSet | configURLForResource}}\">\n" +
+    "<delete-link kind=\"ReplicationController\" type-display-name=\"{{deploymentConfigName ? 'deployment' : 'replication controller'}}\" resource-name=\"{{replicaSet.metadata.name}}\" project-name=\"{{replicaSet.metadata.namespace}}\" alerts=\"alerts\" hpa-list=\"hpaForRS\" redirect-url=\"{{replicaSet | configURLForResource}}\" translate>\n" +
+    "Delete\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -1662,7 +1664,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{buildConfig | editYamlURL}}\" role=\"button\" translate>Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'buildconfigs' | canI : 'delete'\">\n" +
-    "<delete-link kind=\"BuildConfig\" resource-name=\"{{buildConfig.metadata.name}}\" project-name=\"{{buildConfig.metadata.namespace}}\" alerts=\"alerts\">\n" +
+    "<delete-link kind=\"BuildConfig\" resource-name=\"{{buildConfig.metadata.name}}\" project-name=\"{{buildConfig.metadata.namespace}}\" alerts=\"alerts\" translate>Delete\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -2101,7 +2103,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{build | editYamlURL}}\" role=\"button\" translate>Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"('builds' | canI : 'delete')\">\n" +
-    "<delete-link kind=\"Build\" resource-name=\"{{build.metadata.name}}\" project-name=\"{{build.metadata.namespace}}\" alerts=\"alerts\" redirect-url=\"{{build | configURLForResource}}\">\n" +
+    "<delete-link kind=\"Build\" resource-name=\"{{build.metadata.name}}\" project-name=\"{{build.metadata.namespace}}\" alerts=\"alerts\" redirect-url=\"{{build | configURLForResource}}\" translate>Delete\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -2196,7 +2198,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{configMap | editYamlURL}}\" role=\"button\" translate>Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'configmaps' | canI : 'delete'\">\n" +
-    "<delete-link kind=\"ConfigMap\" resource-name=\"{{configMap.metadata.name}}\" project-name=\"{{configMap.metadata.namespace}}\" alerts=\"alerts\">\n" +
+    "<delete-link kind=\"ConfigMap\" resource-name=\"{{configMap.metadata.name}}\" project-name=\"{{configMap.metadata.namespace}}\" alerts=\"alerts\" translate>Delete\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -2373,7 +2375,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</li>\n" +
     "<li class=\"divider\" ng-if=\"'deploymentconfigs' | canI : 'update'\"></li>\n" +
     "<li ng-if=\"'deploymentconfigs' | canI : 'delete'\">\n" +
-    "<delete-link kind=\"DeploymentConfig\" resource-name=\"{{deploymentConfig.metadata.name}}\" project-name=\"{{deploymentConfig.metadata.namespace}}\" alerts=\"alerts\" hpa-list=\"autoscalers\">\n" +
+    "<delete-link kind=\"DeploymentConfig\" resource-name=\"{{deploymentConfig.metadata.name}}\" project-name=\"{{deploymentConfig.metadata.namespace}}\" alerts=\"alerts\" hpa-list=\"autoscalers\" translate>Delete\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -2677,7 +2679,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</li>\n" +
     "<li class=\"divider\" ng-if=\"{ group: 'extensions', resource: 'deployments' } | canI : 'update'\"></li>\n" +
     "<li ng-if=\"{ group: 'extensions', resource: 'deployments' } | canI : 'delete'\">\n" +
-    "<delete-link kind=\"Deployment\" group=\"extensions\" resource-name=\"{{deployment.metadata.name}}\" project-name=\"{{deployment.metadata.namespace}}\" alerts=\"alerts\" hpa-list=\"autoscalers\">\n" +
+    "<delete-link kind=\"Deployment\" group=\"extensions\" resource-name=\"{{deployment.metadata.name}}\" project-name=\"{{deployment.metadata.namespace}}\" alerts=\"alerts\" hpa-list=\"autoscalers\" translate>Delete\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -2943,7 +2945,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{imageStream | editYamlURL}}\" role=\"button\" translate>Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'imagestreams' | canI : 'delete'\">\n" +
-    "<delete-link kind=\"ImageStream\" resource-name=\"{{imageStream.metadata.name}}\" project-name=\"{{imageStream.metadata.namespace}}\" alerts=\"alerts\">\n" +
+    "<delete-link kind=\"ImageStream\" resource-name=\"{{imageStream.metadata.name}}\" project-name=\"{{imageStream.metadata.namespace}}\" alerts=\"alerts\" translate>Delete\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -3001,7 +3003,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{pvc | editYamlURL}}\" role=\"button\" translate>Edit YAML</a>\n" +
     "</li>\n" +
     "<li>\n" +
-    "<delete-link ng-if=\"'persistentvolumeclaims' | canI : 'delete'\" kind=\"PersistentVolumeClaim\" resource-name=\"{{pvc.metadata.name}}\" project-name=\"{{pvc.metadata.namespace}}\" alerts=\"alerts\">\n" +
+    "<delete-link ng-if=\"'persistentvolumeclaims' | canI : 'delete'\" kind=\"PersistentVolumeClaim\" resource-name=\"{{pvc.metadata.name}}\" project-name=\"{{pvc.metadata.namespace}}\" alerts=\"alerts\" translate>Delete\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -3095,7 +3097,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{pod | editYamlURL}}\" role=\"button\" translate>Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'pods' | canI : 'delete'\">\n" +
-    "<delete-link kind=\"Pod\" resource-name=\"{{pod.metadata.name}}\" project-name=\"{{pod.metadata.namespace}}\" alerts=\"alerts\">\n" +
+    "<delete-link kind=\"Pod\" resource-name=\"{{pod.metadata.name}}\" project-name=\"{{pod.metadata.namespace}}\" alerts=\"alerts\" translate>Delete\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -3361,7 +3363,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{route | editYamlURL}}\" role=\"button\" translate>Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'routes' | canI : 'delete'\">\n" +
-    "<delete-link kind=\"Route\" resource-name=\"{{route.metadata.name}}\" project-name=\"{{route.metadata.namespace}}\" alerts=\"alerts\">\n" +
+    "<delete-link kind=\"Route\" resource-name=\"{{route.metadata.name}}\" project-name=\"{{route.metadata.namespace}}\" alerts=\"alerts\" translate>Delete\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -3682,7 +3684,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{secret | editYamlURL}}\" role=\"button\" translate>Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'secrets' | canI : 'delete'\">\n" +
-    "<delete-link kind=\"Secret\" resource-name=\"{{secret.metadata.name}}\" project-name=\"{{secret.metadata.namespace}}\" alerts=\"alerts\">\n" +
+    "<delete-link kind=\"Secret\" resource-name=\"{{secret.metadata.name}}\" project-name=\"{{secret.metadata.namespace}}\" alerts=\"alerts\" translate>Delete\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -3764,7 +3766,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{service | editYamlURL}}\" role=\"button\" translate>Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"'services' | canI : 'delete'\">\n" +
-    "<delete-link kind=\"Service\" resource-name=\"{{service.metadata.name}}\" project-name=\"{{service.metadata.namespace}}\" alerts=\"alerts\">\n" +
+    "<delete-link kind=\"Service\" resource-name=\"{{service.metadata.name}}\" project-name=\"{{service.metadata.namespace}}\" alerts=\"alerts\" translate>Delete\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -3880,7 +3882,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{statefulSet | editYamlURL}}\" role=\"button\" translate>Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"resourceGroupVersion | canI : 'delete'\">\n" +
-    "<delete-link kind=\"StatefulSet\" group=\"apps\" resource-name=\"{{statefulSet.metadata.name}}\" project-name=\"{{statefulSet.metadata.namespace}}\" alerts=\"alerts\">\n" +
+    "<delete-link kind=\"StatefulSet\" group=\"apps\" resource-name=\"{{statefulSet.metadata.name}}\" project-name=\"{{statefulSet.metadata.namespace}}\" alerts=\"alerts\" translate>Delete\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -6197,7 +6199,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/delete-link.html',
-    "<a href=\"javascript:void(0)\" ng-click=\"openDeleteModal()\" role=\"button\" ng-attr-aria-disabled=\"{{disableDelete ? 'true' : undefined}}\" ng-class=\"{ 'disabled-link': disableDelete }\">{{label || 'Delete'}}</a>"
+    "<a href=\"javascript:void(0)\" ng-click=\"openDeleteModal()\" role=\"button\" ng-attr-aria-disabled=\"{{disableDelete ? 'true' : undefined}}\" ng-class=\"{ 'disabled-link': disableDelete }\">{{label || ('Delete'|translate)}}</a>"
   );
 
 
@@ -7131,7 +7133,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"'horizontalPodAutoscalers' | canIDoAny\" class=\"header-actions\">\n" +
     "<a ng-if=\"{resource: 'horizontalpodautoscalers', group: 'autoscaling'} | canI : 'update'\" ng-href=\"project/{{hpa.metadata.namespace}}/edit/autoscaler?kind=HorizontalPodAutoscaler&group=autoscaling&name={{hpa.metadata.name}}\" role=\"button\">Edit</a>\n" +
     "<span class=\"action-divider\">|</span>\n" +
-    "<delete-link ng-if=\"{resource: 'horizontalpodautoscalers', group: 'autoscaling'} | canI : 'delete'\" kind=\"HorizontalPodAutoscaler\" group=\"autoscaling\" resource-name=\"{{hpa.metadata.name}}\" project-name=\"{{hpa.metadata.namespace}}\" label=\"Remove\" alerts=\"alerts\" stay-on-current-page=\"true\">\n" +
+    "<delete-link ng-if=\"{resource: 'horizontalpodautoscalers', group: 'autoscaling'} | canI : 'delete'\" kind=\"HorizontalPodAutoscaler\" group=\"autoscaling\" resource-name=\"{{hpa.metadata.name}}\" project-name=\"{{hpa.metadata.namespace}}\" label=\"Remove\" alerts=\"alerts\" stay-on-current-page=\"true\" translate>Delete\n" +
     "</delete-link>\n" +
     "</span>\n" +
     "</h4>\n" +
@@ -11453,6 +11455,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</li>\n" +
     "<li ng-if=\"selectedResource | canI : 'delete'\">\n" +
     "<delete-link kind=\"{{kindSelector.selected.kind}}\" group=\"{{kindSelector.selected.group}}\" resource-name=\"{{resource.metadata.name}}\" project-name=\"{{resource.metadata.namespace}}\" alerts=\"alerts\" stay-on-current-page=\"true\" success=\"loadKind\">\n" +
+    "<translate>Delete</translate>\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -12838,6 +12841,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li role=\"menuitem\">\n" +
     "<delete-link kind=\"Project\" label=\"{{'Delete Project'|translate}}\" resource-name=\"{{project.metadata.name}}\" project-name=\"{{project.metadata.name}}\" display-name=\"{{(project | displayName)}}\" type-name-to-confirm=\"true\" stay-on-current-page=\"true\" alerts=\"alerts\">\n" +
     "</delete-link>\n" +
+    "<translate>Delete</translate>\n" +
     "</li>\n" +
     "</ul>\n" +
     "</div>\n" +
