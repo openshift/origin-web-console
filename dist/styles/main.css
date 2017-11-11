@@ -4797,7 +4797,7 @@ h2+.list-view-pf{margin-top:20px}
 .list-view-pf-additional-info{width:40%}
 .list-view-pf-description{width:60%}
 }
-#header-logo{background-image:url(../images/logo-origin-thin.svg);background-repeat:no-repeat;background-position:center left;background-size:initial;height:46px;width:230px}
+#header-logo{background-image:url(../images/logo-origin-thin.png);background-repeat:no-repeat;background-position:center left;background-size:100%;height:46px;width:230px}
 .navbar-pf-alt{background:#1b2d3e;border-bottom:1px solid #050505;border-left:1px solid transparent;border-right:1px solid transparent;border-top:0;min-height:inherit}
 .layout-pf-alt-fixed .navbar-pf-alt{left:0;position:fixed;right:0;top:0;z-index:1030}
 .layout-pf-alt-fixed .tech-preview .navbar-pf-alt{top:20px}
