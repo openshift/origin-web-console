@@ -780,7 +780,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<img src=\"images/openshift-logo.svg\"/>\n" +
     "</div>\n" +
     "<div class=\"col-md-9\">\n" +
-    "<h1 translate>Red Hat OpenShift <span class=\"about-reg\">&reg;</span></h1>\n" +
+    "<h1 translate>Red Hat DataMan OS <span class=\"about-reg\">&reg;</span></h1>\n" +
     "<h2 translate>About</h2>\n" +
     "<p translate><a target=\"_blank\" href=\"https://openshift.com\">OpenShift</a> is Red Hat's Platform-as-a-Service (PaaS) that allows developers to quickly develop, host, and scale applications in a cloud environment.</p>\n" +
     "<h2 id=\"version\" translate>Version</h2>\n" +
@@ -4282,7 +4282,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"emptyCatalog && loaded\" class=\"empty-state-message empty-state-full-page\">\n" +
     "<h2 class=\"text-center\" translate>No images or templates.</h2>\n" +
     "<p class=\"gutter-top\" translate>\n" +
-    "No images or templates are loaded for this project or the shared <code>openshift</code> namespace. An image or template is required to add content.\n" +
+    "No images or templates are loaded for this project or the shared <code>DataMan OS</code> namespace. An image or template is required to add content.\n" +
     "</p>\n" +
     "<p>\n" +
     "<translate>To add an image stream or template from a file, use the editor in the <strong>Import YAML / JSON</strong> tab, or run the following command:</translate>\n" +
@@ -4438,7 +4438,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"command-line\">\n" +
     "<h1 id=\"cli\" translate>Command Line Tools</h1>\n" +
     "<p>\n" +
-    "<translate>With the OpenShift command line interface (CLI), you can create applications and manage OpenShift projects from a terminal.</translate>\n" +
+    "<translate>With the DataMan OS command line interface (CLI), you can create applications and manage DataMan OS projects from a terminal.</translate>\n" +
     "<span ng-if=\"cliDownloadURLPresent\" translate>\n" +
     "You can download the <code>oc</code> client tool using the links below. For more information about downloading and installing it, please refer to the <a target=\"_blank\" href=\"{{'get_started_cli' | helpLink}}\">Get Started with the CLI</a> documentation.\n" +
     "</span>\n" +
@@ -7612,7 +7612,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"$ctrl.createdBuildConfig\" class=\"col-md-6\">\n" +
     "<h2 translate>Making code changes</h2>\n" +
     "<p ng-if=\"$ctrl.fromSampleRepo\">\n" +
-    "<translate>You are set up to use the example git repository. If you would like to modify the source code, fork the <osc-git-link uri=\"$ctrl.createdBuildConfig.spec.source.git.uri\">{{$ctrl.createdBuildConfig.spec.source.git.uri}}</osc-git-link> repository to an OpenShift-visible git account and <a href=\"{{$ctrl.createdBuildConfig | editResourceURL}}\">edit the <strong>{{$ctrl.createdBuildConfig.metadata.name}}</strong> build config</a> to point to your fork.</translate>\n" +
+    "<translate>You are set up to use the example git repository. If you would like to modify the source code, fork the <osc-git-link uri=\"$ctrl.createdBuildConfig.spec.source.git.uri\">{{$ctrl.createdBuildConfig.spec.source.git.uri}}</osc-git-link> repository to an DataMan OS-visible git account and <a href=\"{{$ctrl.createdBuildConfig | editResourceURL}}\">edit the <strong>{{$ctrl.createdBuildConfig.metadata.name}}</strong> build config</a> to point to your fork.</translate>\n" +
     "<span ng-if=\"$ctrl.createdBuildConfigWithConfigChangeTrigger()\" translate>Note that this will start a new build.</span>\n" +
     "</p>\n" +
     "<div ng-repeat=\"trigger in $ctrl.createdBuildConfig.spec.triggers\" ng-if=\"trigger.type == 'GitHub'\">\n" +
@@ -7651,7 +7651,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/open-shift.html',
     "<div class=\"open-shift\">\n" +
     "<p>\n" +
-    "Create OpenShift\n" +
+    "Create Octopus\n" +
     "</p>\n" +
     "<ng-form name=\"$ctrl.templateForm\">\n" +
     "\n" +
@@ -10058,7 +10058,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "A Jenkinsfile is a Groovy script that defines your pipeline. In the Jenkinsfile, you can declare pipeline stages and run one or more steps within each stage. Here are some examples you can use in your pipelines.\n" +
     "</p>\n" +
     "<p>\n" +
-    "<translate>Run an OpenShift build and deployment:</translate>\n" +
+    "<translate>Run an DataMan OS build and deployment:</translate>\n" +
     "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'node {\n" +
     "  stage(\\'Build\\') {\n" +
     "    openshiftBuild(buildConfig: \\'my-build-config\\', showBuildLogs: \\'true\\')\n" +
@@ -10100,7 +10100,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<translate>Learn more about</translate>\n" +
     "<a ng-href=\"{{ 'pipeline-builds' | helpLink}}\" target=\"_blank\" translate>Pipeline Builds</a>\n" +
     "<translate>and the</translate>\n" +
-    "<a ng-href=\"{{ 'pipeline-plugin' | helpLink}}\" target=\"_blank\" translate>OpenShift Pipeline Plugin</a>.\n" +
+    "<a ng-href=\"{{ 'pipeline-plugin' | helpLink}}\" target=\"_blank\" translate>DataMan OS Pipeline Plugin</a>.\n" +
     "</p>\n" +
     "</div>"
   );
@@ -11666,7 +11666,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<translate>Learn more about</translate>\n" +
     "<a ng-href=\"{{ 'pipeline-builds' | helpLink}}\" target=\"_blank\" translate>Pipeline Builds</a>\n" +
     "<translate>and the</translate>\n" +
-    "<a ng-href=\"{{ 'pipeline-plugin' | helpLink}}\" target=\"_blank\" translate>OpenShift Pipeline Plugin</a>.\n" +
+    "<a ng-href=\"{{ 'pipeline-plugin' | helpLink}}\" target=\"_blank\" translate>DataMan OS Pipeline Plugin</a>.\n" +
     "</p>\n" +
     "<p ng-if=\"(project.metadata.name | canIAddToProject) && overview.samplePipelineURL\">\n" +
     "<a ng-href=\"{{overview.samplePipelineURL}}\" class=\"btn btn-lg btn-primary\" translate>\n" +
@@ -12613,7 +12613,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<translate>Learn more about</translate>\n" +
     "<a ng-href=\"{{ 'pipeline-builds' | helpLink}}\" target=\"_blank\" translate>Pipeline Builds</a>\n" +
     "<translate>and the</translate>\n" +
-    "<a ng-href=\"{{ 'pipeline-plugin' | helpLink}}\" target=\"_blank\" translate>OpenShift Pipeline Plugin</a>.\n" +
+    "<a ng-href=\"{{ 'pipeline-plugin' | helpLink}}\" target=\"_blank\" translate>DataMan OS Pipeline Plugin</a>.\n" +
     "</p>\n" +
     "<p ng-if=\"(project.metadata.name | canIAddToProject) && createSampleURL\">\n" +
     "<a ng-href=\"{{createSampleURL}}\" class=\"btn btn-lg btn-primary\" translate>\n" +
@@ -12849,13 +12849,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"showGetStarted\">\n" +
     "<div class=\"empty-state-message empty-state-full-page text-center\">\n" +
-    "<h1 translate>Welcome to OpenShift.</h1>\n" +
+    "<h1 translate>Welcome to DataMan OS.</h1>\n" +
     "<p>\n" +
-    "<translate>OpenShift helps you quickly develop, host, and scale applications.</translate><br>\n" +
+    "<translate>DataMan OS helps you quickly develop, host, and scale applications.</translate><br>\n" +
     "<span ng-if=\"canCreate\" translate>Create a project for your application.</span>\n" +
     "</p>\n" +
     "<a ng-if=\"canCreate\" href=\"create-project\" class=\"btn btn-lg btn-primary\" translate>Create Project</a>\n" +
-    "<p translate>To learn more, visit the OpenShift <a target=\"_blank\" ng-href=\"{{'' | helpLink}}\">documentation</a>.</p>\n" +
+    "<p translate>To learn more, visit the DataMan OS <a target=\"_blank\" ng-href=\"{{'' | helpLink}}\">documentation</a>.</p>\n" +
     "<p class=\"projects-instructions\" ng-if=\"canCreate === false\" ng-include=\"'views/_cannot-create-project.html'\"></p>\n" +
     "</div>\n" +
     "</div>\n" +

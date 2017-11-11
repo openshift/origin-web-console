@@ -70,7 +70,7 @@ oc status</pre>
   <div ng-if="$ctrl.createdBuildConfig" class="col-md-6">
     <h2 translate>Making code changes</h2>
     <p ng-if="$ctrl.fromSampleRepo">
-      <translate>You are set up to use the example git repository. If you would like to modify the source code, fork the <osc-git-link uri="$ctrl.createdBuildConfig.spec.source.git.uri">{{$ctrl.createdBuildConfig.spec.source.git.uri}}</osc-git-link> repository to an OpenShift-visible git account and <a href="{{$ctrl.createdBuildConfig | editResourceURL}}">edit the <strong>{{$ctrl.createdBuildConfig.metadata.name}}</strong> build config</a> to point to your fork.</translate>
+      <translate>You are set up to use the example git repository. If you would like to modify the source code, fork the <osc-git-link uri="$ctrl.createdBuildConfig.spec.source.git.uri">{{$ctrl.createdBuildConfig.spec.source.git.uri}}</osc-git-link> repository to an DataMan OS-visible git account and <a href="{{$ctrl.createdBuildConfig | editResourceURL}}">edit the <strong>{{$ctrl.createdBuildConfig.metadata.name}}</strong> build config</a> to point to your fork.</translate>
       <span ng-if="$ctrl.createdBuildConfigWithConfigChangeTrigger()" translate>Note that this will start a new build.</span>
     </p>
     <div ng-repeat="trigger in $ctrl.createdBuildConfig.spec.triggers" ng-if="trigger.type == 'GitHub'">
