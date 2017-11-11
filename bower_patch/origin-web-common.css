@@ -1,0 +1,369 @@
+@keyframes toastSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateX(150px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes toastSlideOut {
+  0% {
+    opacity: .75;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(150px);
+  }
+}
+.bind-form h3 {
+  margin-top: 0;
+}
+.bind-form .application-select {
+  margin-top: 10px;
+  padding-left: 20px;
+}
+.bind-form .bind-description {
+  padding-left: 20px;
+}
+.bind-form .bind-choice {
+  margin-top: 10px;
+}
+.bind-form .bind-choice:first-of-type {
+  margin-top: 0;
+}
+.bind-form .help-block.service-instance-name {
+  display: inline-block;
+  margin-top: 0;
+}
+.bind-form .radio label[disabled] {
+  cursor: not-allowed;
+}
+.bind-info {
+  margin-bottom: 20px;
+  margin-top: 30px;
+}
+.bind-service-selection {
+  margin-bottom: 5px;
+}
+.bind-status {
+  display: flex;
+  font-size: 16px;
+  margin-top: 0;
+}
+.bind-status .bind-message {
+  flex: 1;
+  line-height: 1.4;
+  margin-top: 0;
+  padding-left: 10px;
+}
+.bind-status .pficon {
+  margin-top: 3px;
+}
+.bind-status.show-progress {
+  display: block;
+}
+.bind-status.show-progress .bind-message {
+  padding-left: 0;
+}
+.bind-status .spinner.spinner-sm {
+  height: 16px;
+  margin-right: 0;
+  margin-top: 3px;
+  width: 16px;
+}
+.bind-pending-message {
+  margin-top: 15px;
+}
+.bind-pending-message.progress-inline {
+  margin-top: 0;
+}
+.delete-resource-modal {
+  background-color: #f1f1f1;
+}
+.delete-resource-modal h1 {
+  font-size: 21px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+.delete-resource-modal p {
+  font-size: 15px;
+}
+.delete-resource-modal .help-block {
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
+.dialog-btn {
+  float: right !important;
+  margin-right: 10px;
+}
+.dialog-btn:first-of-type {
+  margin-right: 0;
+}
+mark {
+  padding: 0;
+  background-color: rgba(252, 248, 160, 0.5);
+}
+.ui-select-choices-row.active > span mark {
+  background-color: rgba(252, 248, 160, 0.75);
+}
+.truncation-block {
+  margin-right: 10px;
+}
+.truncation-collapse-link {
+  margin-left: 10px;
+  white-space: nowrap;
+}
+.pretty-json {
+  font-family: Menlo, Monaco, Consolas, monospace;
+  white-space: pre-wrap;
+}
+label.required:before {
+  content: '*';
+  position: absolute;
+  left: 10px;
+}
+@media (min-width: 768px) {
+  .form-horizontal label.required:before {
+    position: relative;
+    left: -3px;
+  }
+}
+.guided-tour-backdrop {
+  z-index: 1052;
+}
+div.hopscotch-bubble {
+  border-color: #bbb;
+  border-width: 1px;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+div.hopscotch-bubble .hopscotch-actions {
+  background-color: #fff;
+  margin: -5px;
+  padding: 20px;
+}
+div.hopscotch-bubble .hopscotch-bubble-arrow-container .hopscotch-bubble-arrow-border:after {
+  content: " ";
+  border-color: transparent;
+  border-style: solid;
+  position: absolute;
+}
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.down .hopscotch-bubble-arrow,
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.left .hopscotch-bubble-arrow,
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-arrow,
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.up .hopscotch-bubble-arrow {
+  display: none;
+}
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.down .hopscotch-bubble-arrow-border {
+  border-top-color: #bbb;
+  border-width: 10px;
+  margin-top: -5px;
+}
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.down .hopscotch-bubble-arrow-border:after {
+  border-color: #fff transparent transparent;
+  border-width: 10px 10px 0;
+  margin-left: -10px;
+  margin-top: -12px;
+}
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.left {
+  top: 48px;
+}
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.left .hopscotch-bubble-arrow-border {
+  border-right-color: #bbb;
+  border-width: 10px;
+  margin-left: 11px;
+}
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.left .hopscotch-bubble-arrow-border:after {
+  border-color: transparent #fff transparent transparent;
+  border-width: 10px 10px 10px 0;
+  margin-left: 2px;
+  margin-top: -10px;
+}
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.right {
+  top: 48px;
+}
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-arrow-border {
+  border-left-color: #bbb;
+  border-width: 10px;
+  margin-left: -5px;
+}
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-arrow-border:after {
+  border-color: transparent transparent transparent #fff;
+  border-width: 10px 0 10px 10px;
+  margin-left: -12px;
+  margin-top: -10px;
+}
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.up .hopscotch-bubble-arrow-border {
+  border-bottom-color: #bbb;
+  border-width: 10px;
+  margin-top: 11px;
+}
+div.hopscotch-bubble .hopscotch-bubble-arrow-container.up .hopscotch-bubble-arrow-border:after {
+  border-color: transparent transparent #f5f5f5;
+  border-width: 0 10px 10px;
+  margin-left: -10px;
+  margin-top: 2px;
+}
+div.hopscotch-bubble .hopscotch-bubble-close {
+  right: 8px;
+  top: 7px;
+}
+div.hopscotch-bubble .hopscotch-bubble-container {
+  background-color: #f5f5f5;
+}
+div.hopscotch-bubble .hopscotch-content {
+  color: #4d5258;
+  background-color: #fff;
+  font-family: "Open Sans";
+  font-size: 12px;
+  margin: 11px -5px 0 -45px;
+  padding: 15px 20px 5px;
+}
+div.hopscotch-bubble h3 {
+  margin-top: 6px;
+  color: #4d5258;
+  font-family: "Open Sans";
+  padding-left: 10px;
+}
+div.hopscotch-bubble .hopscotch-bubble-number {
+  background: none;
+  background-color: #0088ce;
+  border-radius: 15px;
+  font-family: "Open Sans";
+  font-size: 16px;
+  margin-left: 10px;
+  padding: 0;
+}
+div.hopscotch-bubble .hopscotch-nav-button {
+  border-radius: 0;
+  font-family: "Open Sans";
+  font-size: 12px;
+}
+div.hopscotch-bubble .hopscotch-nav-button.next {
+  background-color: #0088ce;
+  background-image: none;
+  margin-left: 5px;
+}
+div.hopscotch-bubble .hopscotch-nav-button.prev {
+  color: #030303;
+}
+.word-break {
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+.word-break-all {
+  word-break: break-all;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+.toast-action-divider {
+  color: #9c9c9c;
+}
+.toast-notification-message {
+  font-weight: 700;
+  margin-right: 5px;
+}
+.toast-notifications-list-pf {
+  top: 28px;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  min-width: 0;
+  z-index: 1055;
+}
+@media (max-width: 767px) {
+  .toast-notifications-list-pf {
+    max-width: calc(100% - 40px);
+  }
+}
+.toast-notifications-list-pf > div.ng-enter {
+  animation: toastSlideIn 0.2s ease-out;
+}
+.toast-notifications-list-pf > div.ng-leave {
+  animation: toastSlideOut 0.2s ease-in;
+}
+.toast-notifications-list-pf > div .toast-pf {
+  border-color: #fff;
+  margin-bottom: 5px;
+  width: 100%;
+}
+.tile-click {
+  cursor: pointer;
+  position: relative;
+}
+.tile-click:hover .tile-target {
+  color: #00659c;
+}
+.tile-click:hover .tile-target:hover {
+  text-decoration: none;
+}
+/* Fix some styles with the angular-ui-select bootstrap theme that isn't right when combined with all of our styles */
+.ui-select-bootstrap {
+  /* Fixes ui-select's input box extending to 100% page width if the page has been resized after page-load
+  * https://github.com/angular-ui/ui-select/issues/1678
+  */
+}
+.ui-select-bootstrap .ui-select-choices-row > span {
+  border-color: transparent;
+  border-style: solid;
+  border-width: 1px 0;
+  line-height: 1.66666667;
+  padding: 1px 10px;
+}
+.ui-select-bootstrap .ui-select-choices-row > span:hover,
+.ui-select-bootstrap .ui-select-choices-row > span:focus {
+  background-color: #def3ff;
+  border-color: #bee1f4;
+  color: #4d5258;
+}
+.ui-select-bootstrap .ui-select-choices-row.active > span {
+  background-color: #0088ce !important;
+  border-color: #0088ce !important;
+  color: #fff;
+}
+.ui-select-bootstrap .ui-select-choices-row.active .text-muted {
+  color: #f5f5f5;
+}
+.ui-select-bootstrap .ui-select-choices-row-inner {
+  min-height: 24px;
+  cursor: pointer;
+}
+.ui-select-bootstrap .ui-select-choices-group-label:empty {
+  padding: 0;
+}
+.ui-select-bootstrap .ui-select-match-text,
+.ui-select-bootstrap .ui-select-placeholder {
+  font-weight: normal;
+  padding-right: 20px;
+}
+.ui-select-bootstrap .ui-select-match-text span {
+  display: block;
+  text-overflow: ellipsis;
+}
+.ui-select-bootstrap .ui-select-match-text span span {
+  display: inline;
+}
+.ui-select-bootstrap .ui-select-placeholder {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+.ui-select-bootstrap .ui-select-toggle > .caret {
+  font-size: 11px;
+  font-style: normal;
+  right: 6px;
+  top: 10px;
+  pointer-events: none;
+}
+.ui-select-bootstrap .ui-select-search {
+  width: 100% !important;
+}
