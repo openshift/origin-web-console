@@ -11454,8 +11454,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{resource | editYamlURL : getReturnURL()}}\" role=\"button\" translate>Edit YAML</a>\n" +
     "</li>\n" +
     "<li ng-if=\"selectedResource | canI : 'delete'\">\n" +
-    "<delete-link kind=\"{{kindSelector.selected.kind}}\" group=\"{{kindSelector.selected.group}}\" resource-name=\"{{resource.metadata.name}}\" project-name=\"{{resource.metadata.namespace}}\" alerts=\"alerts\" stay-on-current-page=\"true\" success=\"loadKind\">\n" +
-    "<translate>Delete</translate>\n" +
+    "<delete-link kind=\"{{kindSelector.selected.kind}}\" group=\"{{kindSelector.selected.group}}\" resource-name=\"{{resource.metadata.name}}\" project-name=\"{{resource.metadata.namespace}}\" alerts=\"alerts\" stay-on-current-page=\"true\" success=\"loadKind\" translate>Delete\n" +
     "</delete-link>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -12839,9 +12838,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</li>\n" +
     "<li role=\"menuitem\">\n" +
-    "<delete-link kind=\"Project\" label=\"{{'Delete Project'|translate}}\" resource-name=\"{{project.metadata.name}}\" project-name=\"{{project.metadata.name}}\" display-name=\"{{(project | displayName)}}\" type-name-to-confirm=\"true\" stay-on-current-page=\"true\" alerts=\"alerts\">\n" +
+    "<delete-link kind=\"Project\" label=\"{{'Delete Project'|translate}}\" resource-name=\"{{project.metadata.name}}\" project-name=\"{{project.metadata.name}}\" display-name=\"{{(project | displayName)}}\" type-name-to-confirm=\"true\" stay-on-current-page=\"true\" alerts=\"alerts\" translate>Delete\n" +
     "</delete-link>\n" +
-    "<translate>Delete</translate>\n" +
     "</li>\n" +
     "</ul>\n" +
     "</div>\n" +
