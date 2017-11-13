@@ -8,7 +8,13 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('PersistentVolumeClaimController', function ($scope, $routeParams, DataService, ProjectsService, $filter) {
+  .controller('PersistentVolumeClaimController', function (
+    $filter,
+    $scope,
+    $routeParams,
+    APIService,
+    DataService,
+    ProjectsService) {
     $scope.projectName = $routeParams.project;
     $scope.pvc = null;
     $scope.alerts = {};
@@ -23,6 +29,9 @@ angular.module('openshiftConsole')
         title: $routeParams.pvc
       }
     ];
+
+    $scope.pvcVersion = APIService.getPreferredVersion('persistentvolumeclaims');
+    $scope.eventsVersion = APIService.getPreferredVersion('events');
 
     var watches = [];
 
@@ -43,10 +52,10 @@ angular.module('openshiftConsole')
       $scope.project = project;
       $scope.projectContext = context;
       DataService
-        .get("persistentvolumeclaims", $routeParams.pvc, context, { errorNotification: false })
+        .get($scope.pvcVersion, $routeParams.pvc, context, { errorNotification: false })
         .then(function(pvc) {
           pvcResolved(pvc);
-          watches.push(DataService.watchObject("persistentvolumeclaims", $routeParams.pvc, context, pvcResolved));
+          watches.push(DataService.watchObject($scope.pvcVersion, $routeParams.pvc, context, pvcResolved));
         }, function(e) {
           $scope.loaded = true;
           $scope.alerts["load"] = {

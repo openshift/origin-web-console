@@ -6787,32 +6787,32 @@ n.$evalAsync(function() {
 n.resources = e.select(n.unfilteredResources), u();
 });
 });
-} ]), angular.module("openshiftConsole").controller("PersistentVolumeClaimController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", function(e, t, n, a, r) {
-e.projectName = t.project, e.pvc = null, e.alerts = {}, e.renderOptions = e.renderOptions || {}, e.renderOptions.hideFilterWidget = !0, e.breadcrumbs = [ {
+} ]), angular.module("openshiftConsole").controller("PersistentVolumeClaimController", [ "$filter", "$scope", "$routeParams", "APIService", "DataService", "ProjectsService", function(e, t, n, a, r, o) {
+t.projectName = n.project, t.pvc = null, t.alerts = {}, t.renderOptions = t.renderOptions || {}, t.renderOptions.hideFilterWidget = !0, t.breadcrumbs = [ {
 title: "Persistent Volume Claims",
-link: "project/" + t.project + "/browse/storage"
+link: "project/" + n.project + "/browse/storage"
 }, {
-title: t.pvc
-} ];
-var o = [], i = function(t, n) {
-e.pvc = t, e.loaded = !0, "DELETED" === n && (e.alerts.deleted = {
+title: n.pvc
+} ], t.pvcVersion = a.getPreferredVersion("persistentvolumeclaims"), t.eventsVersion = a.getPreferredVersion("events");
+var i = [], s = function(e, n) {
+t.pvc = e, t.loaded = !0, "DELETED" === n && (t.alerts.deleted = {
 type: "warning",
 message: "This persistent volume claim has been deleted."
 });
 };
-a.get(t.project).then(_.spread(function(a, s) {
-e.project = a, e.projectContext = s, n.get("persistentvolumeclaims", t.pvc, s, {
+o.get(n.project).then(_.spread(function(a, o) {
+t.project = a, t.projectContext = o, r.get(t.pvcVersion, n.pvc, o, {
 errorNotification: !1
 }).then(function(e) {
-i(e), o.push(n.watchObject("persistentvolumeclaims", t.pvc, s, i));
-}, function(t) {
-e.loaded = !0, e.alerts.load = {
+s(e), i.push(r.watchObject(t.pvcVersion, n.pvc, o, s));
+}, function(n) {
+t.loaded = !0, t.alerts.load = {
 type: "error",
 message: "The persistent volume claim details could not be loaded.",
-details: r("getErrorDetails")(t)
+details: e("getErrorDetails")(n)
 };
-}), e.$on("$destroy", function() {
-n.unwatchAll(o);
+}), t.$on("$destroy", function() {
+r.unwatchAll(i);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("SetLimitsController", [ "$filter", "$location", "$parse", "$routeParams", "$scope", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "LimitRangesService", "Navigate", "NotificationsService", "ProjectsService", function(e, t, n, a, r, o, i, s, c, l, u, d, m) {
