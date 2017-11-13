@@ -51,7 +51,7 @@
               <div class="pull-right">
                 <button
                     class="btn btn-default"
-                    ng-if="'buildconfigs/instantiate' | canI : 'create'"
+                    ng-if="buildConfigsInstantiateVersion | canI : 'create'"
                     ng-click="startBuild(buildConfig)">
                   Start Pipeline
                 </button>
@@ -110,7 +110,7 @@
               </div>
               <div ng-if="buildConfig" class="mar-top-sm mar-bottom-xl">
                 <a ng-href="{{buildConfigs[buildConfigName] | navigateResourceURL}}">View Pipeline Runs</a>
-                <span ng-if="'buildconfigs' | canI : 'update'">
+                <span ng-if="buildConfigsVersion | canI : 'update'">
                   <span class="action-divider">|</span>
                   <a ng-href="{{buildConfig | editResourceURL}}" role="button">Edit Pipeline</a>
                 </span>

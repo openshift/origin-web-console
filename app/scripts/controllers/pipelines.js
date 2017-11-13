@@ -11,15 +11,21 @@ angular.module('openshiftConsole')
   .controller('PipelinesController', function ($filter,
                                                $routeParams,
                                                $scope,
-                                               Constants,
-                                               Navigate,
+                                               APIService,
                                                BuildsService,
+                                               Constants,
                                                DataService,
                                                Logger,
+                                               Navigate,
                                                ProjectsService) {
     $scope.projectName = $routeParams.project;
     $scope.alerts = $scope.alerts || {};
     $scope.buildConfigs = {};
+
+    var buildsVersion = APIService.getPreferredVersion('builds');
+    var templatesVersion = APIService.getPreferredVersion('templates');
+    $scope.buildConfigsVersion = APIService.getPreferredVersion('buildconfigs');
+    $scope.buildConfigsInstantiateVersion = APIService.getPreferredVersion('buildconfigs/instantiate');
 
     var watches = [];
 
@@ -95,14 +101,14 @@ angular.module('openshiftConsole')
         //   }
         // };
 
-        watches.push(DataService.watch("builds", context, function(buildsData) {
+        watches.push(DataService.watch(buildsVersion, context, function(buildsData) {
           $scope.buildsLoaded = true;
           builds = buildsData.by("metadata.name");
           update();
         }));
 
         var checkedForSampleTemplate = false;
-        watches.push(DataService.watch("buildconfigs", context, function(buildConfigData) {
+        watches.push(DataService.watch($scope.buildConfigsVersion, context, function(buildConfigData) {
           $scope.buildConfigsLoaded = true;
           // Filter on the client until the server supports fieldSelector on spec.strategy.type.
           // Use _.pickBy instead of _.filter to keep $scope.buildConfigs a map
@@ -112,7 +118,7 @@ angular.module('openshiftConsole')
             if (Constants.SAMPLE_PIPELINE_TEMPLATE) {
               var sampleName = Constants.SAMPLE_PIPELINE_TEMPLATE.name;
               var sampleNamespace = Constants.SAMPLE_PIPELINE_TEMPLATE.namespace;
-              DataService.get("templates", sampleName, {namespace: sampleNamespace}, {errorNotification: false}).then(
+              DataService.get(templatesVersion, sampleName, {namespace: sampleNamespace}, {errorNotification: false}).then(
                 function(template) {
                   $scope.createSampleURL = Navigate.createFromTemplateURL(template, $scope.projectName);
                 });
