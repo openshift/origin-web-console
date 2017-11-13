@@ -67,7 +67,7 @@ angular.module('openshiftConsole')
         }));
 
         function updateFilterWarning() {
-          $scope.filterWithZeroResults = !LabelFilter.getLabelSelector().isEmpty() && $.isEmptyObject($scope.pvcs)  && !$.isEmptyObject($scope.unfilteredPVCs);
+          $scope.filterWithZeroResults = !LabelFilter.getLabelSelector().isEmpty() && $.isEmptyObject($scope.pvcs) && !$.isEmptyObject($scope.unfilteredPVCs);
         }
 
         LabelFilter.onActiveFiltersChanged(function(labelSelector) {
