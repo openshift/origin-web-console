@@ -12,9 +12,10 @@ angular.module('openshiftConsole')
   .controller('QuotaController', function ($filter,
                                            $routeParams,
                                            $scope,
+                                           APIService,
                                            DataService,
-                                           ProjectsService,
-                                           Logger) {
+                                           Logger,
+                                           ProjectsService) {
     $scope.projectName = $routeParams.project;
     $scope.limitRanges = {};
     $scope.limitsByType = {};
@@ -25,6 +26,10 @@ angular.module('openshiftConsole')
     $scope.limitRangeHelp = "Defines minimum and maximum constraints for runtime resources such as memory and CPU.";
     $scope.renderOptions = $scope.renderOptions || {};
     $scope.renderOptions.hideFilterWidget = true;
+
+    var appliedClusterResourceQuotasVersion = APIService.getPreferredVersion('appliedclusterresourcequotas');
+    var resourceQuotasVersion = APIService.getPreferredVersion('resourcequotas');
+    var limitRangesVersion = APIService.getPreferredVersion('limitranges');
 
     var watches = [];
 
@@ -101,13 +106,13 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
 
-        DataService.list("resourcequotas", context).then(function(resp) {
+        DataService.list(resourceQuotasVersion, context).then(function(resp) {
           $scope.quotas = _.sortBy(resp.by("metadata.name"), "metadata.name");
           $scope.orderedTypesByQuota = orderTypes($scope.quotas);
           Logger.log("quotas", $scope.quotas);
         });
 
-        DataService.list("appliedclusterresourcequotas", context).then(function(resp) {
+        DataService.list(appliedClusterResourceQuotasVersion, context).then(function(resp) {
           $scope.clusterQuotas = _.sortBy(resp.by("metadata.name"), "metadata.name");
           $scope.orderedTypesByClusterQuota = orderTypes($scope.clusterQuotas);
           $scope.namespaceUsageByClusterQuota = {};
@@ -120,7 +125,7 @@ angular.module('openshiftConsole')
           Logger.log("cluster quotas", $scope.clusterQuotas);
         });
 
-        DataService.list("limitranges", context).then(function(resp) {
+        DataService.list(limitRangesVersion, context).then(function(resp) {
           $scope.limitRanges = _.sortBy(resp.by("metadata.name"), "metadata.name");
           $scope.emptyMessageLimitRanges = "There are no limit ranges set on this project.";
           // Convert to a sane format for a view to a build a table with rows per resource type
