@@ -8062,7 +8062,7 @@ delete c[b.id], delete d[a];
 http:80,
 https:443,
 ftp:21
-}, sf = b("$location"), tf = /^\s*[\\/]{2,}/, uf = {
+}, sf = b("$location"), tf = /^\s*[\\\/]{2,}/, uf = {
 $$absUrl:"",
 $$html5:!1,
 $$replace:!1,
