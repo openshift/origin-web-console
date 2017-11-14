@@ -10882,14 +10882,14 @@ i[b.metadata.name] = b, n();
 });
 }
 };
-} ]).directive("projectFilter", [ "LabelFilter", "gettext", function(a, b) {
+} ]).directive("projectFilter", [ "LabelFilter", "gettext", "gettextCatalog", function(a, b, c) {
 return {
 restrict:"E",
 templateUrl:"views/directives/_project-filter.html",
-link:function(c, d) {
-a.setupFilterWidget(d.find(".navbar-filter-widget"), d.find(".active-filters"), {
-addButtonText:b("Add")
-}), a.toggleFilterWidget(!c.renderOptions || !c.renderOptions.hideFilterWidget), c.$watch("renderOptions", function(b) {
+link:function(d, e) {
+a.setupFilterWidget(e.find(".navbar-filter-widget"), e.find(".active-filters"), {
+addButtonText:c.getString(b("Add"))
+}), a.toggleFilterWidget(!d.renderOptions || !d.renderOptions.hideFilterWidget), d.$watch("renderOptions", function(b) {
 a.toggleFilterWidget(!b || !b.hideFilterWidget);
 });
 }

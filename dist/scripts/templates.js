@@ -12857,7 +12857,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"canCreate\" translate>Create a project for your application.</span>\n" +
     "</p>\n" +
     "<a ng-if=\"canCreate\" href=\"create-project\" class=\"btn btn-lg btn-primary\" translate>Create Project</a>\n" +
-    "<p translate>To learn more, visit the DataMan OS <a target=\"_blank\" ng-href=\"{{'' | helpLink}}\">documentation</a>.</p>\n" +
+    "\n" +
     "<p class=\"projects-instructions\" ng-if=\"canCreate === false\" ng-include=\"'views/_cannot-create-project.html'\"></p>\n" +
     "</div>\n" +
     "</div>\n" +
