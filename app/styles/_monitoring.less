@@ -1,0 +1,78 @@
+//
+// Monitoring page
+// --------------------------------------------------
+
+.monitoring-page {
+  .list-pf-content {
+    // Make consistent with .pod-donut.mini max-height
+    min-height: 45px;
+  }
+  .list-pf-expansion {
+    .list-pf-container {
+      display: block;
+    }
+    .log-fixed-height.empty-state-message,
+    .metrics .empty-state-message {
+      margin: 10px 0 0;
+      padding: 0;
+      text-align: left;
+      h2 {
+        margin-top: 0;
+      }
+    }
+    .metrics .empty-state-message .pficon-error-circle-o {
+      // Hide the icon so the message is consistent with logs, which doesn't have an error icon.
+      display: none;
+    }
+  }
+  .list-pf-main-content {
+    @media(min-width: @screen-md-min) {
+      flex-basis: 30%;
+    }
+    font-size: @font-size-base;
+    .word-break();
+    .list-pf-title {
+      width: 100%;
+      h3 {
+        font-size: @font-size-base;
+        font-weight: bold;
+        line-height: inherit;
+        margin-bottom: 0;
+        margin-top: 0;
+      }
+      small {
+        display: block;
+        font-size: @font-size-small;
+        font-weight: normal;
+        line-height: normal; // prevent descender from being clipped
+        overflow: hidden;
+        text-overflow: ellipsis;
+        .text-muted();
+      }
+    }
+  }
+  .list-pf-additional-content {
+    @media(min-width: @screen-md-min) {
+      flex-basis: 70%;
+    }
+    small {
+      white-space: nowrap;
+    }
+    .list-pf-additional-content-item {
+      align-self: center;
+      width: 100%;
+      @media(min-width: @screen-md-min) {
+        width: 40%; // provides spacing so status and image content don't run together
+        &+.list-pf-additional-content-item {
+          width: 50%;
+        }
+      }
+    }
+  }
+  .text-prepended-icon {
+    .fa,
+    .pficon {
+      margin-right: 7px; // so space btw icon & text matches that of status-icon & text
+    }
+  }
+}

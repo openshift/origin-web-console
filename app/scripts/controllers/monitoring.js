@@ -204,9 +204,9 @@ angular.module('openshiftConsole')
       $scope.filteredReplicaSets = KeywordService.filterForKeywords(ageFilteredReplicaSets, filterFields, filterKeywords);
     };
 
-    $scope.toggleItem = function(evt, element, resource) {
+    $scope.toggleItem = function(evt, element, resource, always) {
       var t = $(evt.target);
-      if (t && t.closest("a", element).length) {
+      if (!always && t && t.closest("a", element).length) {
         return;
       }
 
