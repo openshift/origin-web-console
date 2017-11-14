@@ -10,3 +10,20 @@
  *
  * You can modify this file to test extensions in a development environment.
  */
+.icon-octopus,.icon-hawk,.icon-squid{
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+}
+.icon-octopus{
+  background: url("../images/icon-octopus.png");
+  background-size: 100%;
+}
+.icon-hawk{
+  background: url("../images/icon-hawk.png");
+  background-size: 100%;
+}
+.icon-squid{
+  background: url("../images/icon-squid.png");
+  background-size: 100%;
+}
