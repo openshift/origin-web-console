@@ -238,23 +238,22 @@ angular.module('openshiftConsole')
       restrict: 'A',
       scope: false,
       link: function(scope) {
-        scope.selectedTab = scope.selectedTab || {};
+        scope.selectTab = function(tab){
+          scope.selectedTab = tab;
+        };
         scope.$watch(function() {
           return $routeParams.tab;
         }, function(tab) {
           if (!tab) {
             return;
           }
-
-          scope.selectedTab[tab] = true;
+          scope.selectedTab = tab;
         });
 
         scope.$watch('selectedTab', function() {
-          var selected = _.keys(_.pickBy(scope.selectedTab, function(active) {return active;}));
-          // When the tabs are transitioning we briefly see two tabs set to true
-          if (selected.length === 1) {
+          if (scope.selectedTab !== '') {
             var search = $location.search();
-            search.tab = selected[0];
+            search.tab = scope.selectedTab;
             $location.replace().search(search);
           }
         }, true);
