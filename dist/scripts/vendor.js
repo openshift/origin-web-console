@@ -77644,7 +77644,7 @@ tags: [ "mongodb" ],
 icon: "icon-mongodb"
 }, {
 id: "mysql",
-label: "mySQL",
+label: "MySQL",
 tags: [ "mysql" ],
 icon: "icon-mysql-database"
 }, {
