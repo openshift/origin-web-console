@@ -12,6 +12,7 @@ angular.module('openshiftConsole')
                        $filter,
                        $routeParams,
                        AlertMessageService,
+                       APIService,
                        DataService,
                        ProjectsService,
                        RoutesService) {
@@ -29,6 +30,9 @@ angular.module('openshiftConsole')
         title: $routeParams.route
       }
     ];
+
+    var servicesVersion = APIService.getPreferredVersion('services');
+    $scope.routesVersion = APIService.getPreferredVersion('routes');
 
     var watches = [];
 
@@ -78,10 +82,10 @@ angular.module('openshiftConsole')
         $scope.project = project;
 
         DataService
-          .get("routes", $routeParams.route, context, { errorNotification: false })
+          .get($scope.routesVersion, $routeParams.route, context, { errorNotification: false })
           .then(function(route) {
             routeResolved(route);
-            watches.push(DataService.watchObject("routes", $routeParams.route, context, routeResolved));
+            watches.push(DataService.watchObject($scope.routesVersion, $routeParams.route, context, routeResolved));
           }, function(e) {
             $scope.loaded = true;
             $scope.alerts["load"] = {
@@ -92,7 +96,7 @@ angular.module('openshiftConsole')
           });
 
         // Watch services to display route warnings.
-        watches.push(DataService.watch("services", context, function(services) {
+        watches.push(DataService.watch(servicesVersion, context, function(services) {
           $scope.services = services.by("metadata.name");
         }));
 
