@@ -1,5 +1,5 @@
 server {
-    listen       443 ssl;
+    listen       {{PORT}} ssl;
     server_name  localhost;
     ssl_certificate     /tls/tls.crt;
     ssl_certificate_key /tls/tls.key;
@@ -9,12 +9,12 @@ server {
     #charset koi8-r;
     #access_log  /var/log/nginx/host.access.log  main;
 
-    location ~ /console/(config.js|(java|bower_components|scripts|images|styles|views|languages)(/.*)?)$ { 
+    location ~ /console/(config.js|(java|bower_components|scripts|images|styles|views|languages)(/.*)?)$ {
         root   /usr/share/nginx/html;
-    } 
+    }
 
     location = / {
-      return 301 $scheme://$host:9000/console/;
+      return 301 $scheme://$host:{{PORT}}/console/;
     }
 
     location / {
@@ -53,3 +53,4 @@ server {
     #    deny  all;
     #}
 }
+

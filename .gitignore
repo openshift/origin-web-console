@@ -8,3 +8,5 @@ phantomjsdriver.log
 openshift-jvm
 /app/config.local.js
 .DS_Store
+
+deploy/.tls
