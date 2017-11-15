@@ -4633,23 +4633,23 @@ e.message && r.push(e.message);
 }), e.$on("$destroy", function() {
 i.unwatchAll(p);
 });
-} ]), angular.module("openshiftConsole").controller("PodsController", [ "$routeParams", "$scope", "DataService", "ProjectsService", "$filter", "LabelFilter", "Logger", function(e, t, n, a, r, o, i) {
-t.projectName = e.project, t.pods = {}, t.unfilteredPods = {}, t.labelSuggestions = {}, t.clearFilter = function() {
-o.clear();
+} ]), angular.module("openshiftConsole").controller("PodsController", [ "$filter", "$routeParams", "$scope", "APIService", "DataService", "ProjectsService", "LabelFilter", "Logger", function(e, t, n, a, r, o, i, s) {
+n.projectName = t.project, n.pods = {}, n.unfilteredPods = {}, n.labelSuggestions = {}, n.clearFilter = function() {
+i.clear();
 };
-var s = [];
-a.get(e.project).then(_.spread(function(e, a) {
-function r() {
-t.filterWithZeroResults = !o.getLabelSelector().isEmpty() && _.isEmpty(t.pods) && !_.isEmpty(t.unfilteredPods);
+var c = a.getPreferredVersion("pods"), l = [];
+o.get(t.project).then(_.spread(function(e, t) {
+function a() {
+n.filterWithZeroResults = !i.getLabelSelector().isEmpty() && _.isEmpty(n.pods) && !_.isEmpty(n.unfilteredPods);
 }
-t.project = e, s.push(n.watch("pods", a, function(e) {
-t.podsLoaded = !0, t.unfilteredPods = e.by("metadata.name"), t.pods = o.getLabelSelector().select(t.unfilteredPods), o.addLabelSuggestionsFromResources(t.unfilteredPods, t.labelSuggestions), o.setLabelSuggestions(t.labelSuggestions), r(), i.log("pods (subscribe)", t.unfilteredPods);
-})), o.onActiveFiltersChanged(function(e) {
-t.$evalAsync(function() {
-t.pods = e.select(t.unfilteredPods), r();
+n.project = e, l.push(r.watch(c, t, function(e) {
+n.podsLoaded = !0, n.unfilteredPods = e.by("metadata.name"), n.pods = i.getLabelSelector().select(n.unfilteredPods), i.addLabelSuggestionsFromResources(n.unfilteredPods, n.labelSuggestions), i.setLabelSuggestions(n.labelSuggestions), a(), s.log("pods (subscribe)", n.unfilteredPods);
+})), i.onActiveFiltersChanged(function(e) {
+n.$evalAsync(function() {
+n.pods = e.select(n.unfilteredPods), a();
 });
-}), t.$on("$destroy", function() {
-n.unwatchAll(s);
+}), n.$on("$destroy", function() {
+r.unwatchAll(l);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("PodController", [ "$scope", "$filter", "$routeParams", "$timeout", "$uibModal", "Logger", "DataService", "FullscreenService", "ImageStreamResolver", "MetricsService", "OwnerReferencesService", "PodsService", "ProjectsService", function(e, t, n, a, r, o, i, s, c, l, u, d, m) {
