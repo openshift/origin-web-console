@@ -2,7 +2,7 @@
   <div class="middle-header header-toolbar">
     <div class="container-fluid">
       <div class="page-header page-header-bleed-right page-header-bleed-left">
-        <div class="pull-right" ng-if="project && ('routes' | canI : 'create') && ((routes | hashSize) > 0 || filterWithZeroResults)">
+        <div class="pull-right" ng-if="project && (routesVersion | canI : 'create') && ((routes | hashSize) > 0 || filterWithZeroResults)">
           <a ng-href="project/{{project.metadata.name}}/create-route" class="btn btn-default">Create Route</a>
         </div>
         <h1>
@@ -33,7 +33,7 @@
               <div ng-if="!filterWithZeroResults">
                 <h2>No routes.</h2>
                 <p>No routes have been added to project {{projectName}}.</p>
-                <p ng-if="project && ('routes' | canI : 'create') && !filterWithZeroResults">
+                <p ng-if="project && (routesVersion | canI : 'create') && !filterWithZeroResults">
                   <a ng-href="project/{{project.metadata.name}}/create-route" class="btn btn-primary btn-lg">Create Route</a>
                 </p>
               </div>
