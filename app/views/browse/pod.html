@@ -15,14 +15,14 @@
                class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
             <ul class="dropdown-menu dropdown-menu-right actions action-button">
-              <li ng-if="(pod | annotation:'deploymentConfig') && ('deploymentconfigs' | canI : 'update')">
+              <li ng-if="(pod | annotation:'deploymentConfig') && (deploymentConfigsVersion | canI : 'update')">
                 <a ng-href="project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{pod | annotation:'deploymentConfig'}}"
                    role="button">Add Storage</a>
               </li>
-              <li ng-if="'pods' | canI : 'update'">
+              <li ng-if="podsVersion | canI : 'update'">
                 <a ng-href="{{pod | editYamlURL}}" role="button">Edit YAML</a>
               </li>
-              <li ng-if="'pods' | canI : 'delete'">
+              <li ng-if="podsVersion | canI : 'delete'">
                 <delete-link
                   kind="Pod"
                   resource-name="{{pod.metadata.name}}"
@@ -65,7 +65,7 @@
               </pod-metrics>
             </uib-tab>
 
-            <uib-tab active="selectedTab.logs" ng-if="'pods/log' | canI : 'get'">
+            <uib-tab active="selectedTab.logs" ng-if="podsLogVersion | canI : 'get'">
               <uib-tab-heading>Logs</uib-tab-heading>
               <log-viewer
                 ng-if="selectedTab.logs"
@@ -203,7 +203,7 @@
                 </div>
             </uib-tab>
 
-            <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">
+            <uib-tab active="selectedTab.events" ng-if="eventsVersion | canI : 'watch'">
               <uib-tab-heading>Events</uib-tab-heading>
               <events api-objects="[ pod ]" project-context="projectContext" ng-if="selectedTab.events"></events>
             </uib-tab>

@@ -3019,13 +3019,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
-    "<li ng-if=\"(pod | annotation:'deploymentConfig') && ('deploymentconfigs' | canI : 'update')\">\n" +
+    "<li ng-if=\"(pod | annotation:'deploymentConfig') && (deploymentConfigsVersion | canI : 'update')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{pod | annotation:'deploymentConfig'}}\" role=\"button\">Add Storage</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"'pods' | canI : 'update'\">\n" +
+    "<li ng-if=\"podsVersion | canI : 'update'\">\n" +
     "<a ng-href=\"{{pod | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"'pods' | canI : 'delete'\">\n" +
+    "<li ng-if=\"podsVersion | canI : 'delete'\">\n" +
     "<delete-link kind=\"Pod\" resource-name=\"{{pod.metadata.name}}\" project-name=\"{{pod.metadata.namespace}}\" alerts=\"alerts\">\n" +
     "</delete-link>\n" +
     "</li>\n" +
@@ -3059,7 +3059,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<pod-metrics ng-if=\"selectedTab.metrics\" pod=\"pod\" alerts=\"alerts\">\n" +
     "</pod-metrics>\n" +
     "</uib-tab>\n" +
-    "<uib-tab active=\"selectedTab.logs\" ng-if=\"'pods/log' | canI : 'get'\">\n" +
+    "<uib-tab active=\"selectedTab.logs\" ng-if=\"podsLogVersion | canI : 'get'\">\n" +
     "<uib-tab-heading>Logs</uib-tab-heading>\n" +
     "<log-viewer ng-if=\"selectedTab.logs\" follow-affix-top=\"390\" object=\"pod\" context=\"projectContext\" options=\"logOptions\" empty=\"logEmpty\" run=\"logCanRun\" ng-class=\"{'log-viewer-select': pod.spec.containers.length > 1}\">\n" +
     "<span class=\"container-details\">\n" +
@@ -3142,7 +3142,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</uib-tab>\n" +
-    "<uib-tab active=\"selectedTab.events\" ng-if=\"'events' | canI : 'watch'\">\n" +
+    "<uib-tab active=\"selectedTab.events\" ng-if=\"eventsVersion | canI : 'watch'\">\n" +
     "<uib-tab-heading>Events</uib-tab-heading>\n" +
     "<events api-objects=\"[ pod ]\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
     "</uib-tab>\n" +

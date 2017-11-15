@@ -7,15 +7,16 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('PodController', function ($scope,
-                                         $filter,
+  .controller('PodController', function ($filter,
                                          $routeParams,
+                                         $scope,
                                          $timeout,
                                          $uibModal,
-                                         Logger,
+                                         APIService,
                                          DataService,
                                          FullscreenService,
                                          ImageStreamResolver,
+                                         Logger,
                                          MetricsService,
                                          OwnerReferencesService,
                                          PodsService,
@@ -50,6 +51,13 @@ angular.module('openshiftConsole')
 
     // Must always be initialized so we can watch selectedTab
     $scope.selectedTab = {};
+
+    var imageStreamsVersion = APIService.getPreferredVersion('imagestreams');
+    var buildsVersion = APIService.getPreferredVersion('builds');
+    $scope.podsVersion = APIService.getPreferredVersion('pods');
+    $scope.podsLogVersion = APIService.getPreferredVersion('pods/log');
+    $scope.eventsVersion = APIService.getPreferredVersion('events');
+    $scope.deploymentConfigsVersion = APIService.getPreferredVersion('deploymentconfigs');
 
     var watches = [];
     var requestContext = null;
@@ -258,7 +266,7 @@ angular.module('openshiftConsole')
         // context into the log-viewer directive.
         $scope.projectContext = context;
         DataService
-          .get("pods", $routeParams.pod, context, { errorNotification: false })
+          .get($scope.podsVersion, $routeParams.pod, context, { errorNotification: false })
           .then(function(pod) {
             podResolved(pod);
             var pods = {};
@@ -267,7 +275,7 @@ angular.module('openshiftConsole')
             $scope.containerTerminals = makeTerminals();
             updateContainersYet(pod);
             ImageStreamResolver.fetchReferencedImageStreamImages(pods, $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, requestContext);
-            watches.push(DataService.watchObject("pods", $routeParams.pod, context, function(pod, action) {
+            watches.push(DataService.watchObject($scope.podsVersion, $routeParams.pod, context, function(pod, action) {
               podResolved(pod, action);
               updateTerminals($scope.containerTerminals);
               updateContainersYet(pod);
@@ -286,14 +294,14 @@ angular.module('openshiftConsole')
         $scope.$watch('logOptions.container', setContainerVars);
 
         // Sets up subscription for imageStreams
-        watches.push(DataService.watch("imagestreams", context, function(imageStreams) {
+        watches.push(DataService.watch(imageStreamsVersion, context, function(imageStreams) {
           $scope.imageStreams = imageStreams.by("metadata.name");
           ImageStreamResolver.buildDockerRefMapForImageStreams($scope.imageStreams, $scope.imageStreamImageRefByDockerReference);
           ImageStreamResolver.fetchReferencedImageStreamImages($scope.pods, $scope.imagesByDockerReference, $scope.imageStreamImageRefByDockerReference, context);
           Logger.log("imagestreams (subscribe)", $scope.imageStreams);
         }));
 
-        watches.push(DataService.watch("builds", context, function(builds) {
+        watches.push(DataService.watch(buildsVersion, context, function(builds) {
           $scope.builds = builds.by("metadata.name");
           Logger.log("builds (subscribe)", $scope.builds);
         }));
@@ -312,7 +320,7 @@ angular.module('openshiftConsole')
           $(window).off('beforeunload.debugPod');
 
           if (debugPod) {
-            DataService.delete("pods", debugPod.metadata.name, context, {
+            DataService.delete($scope.podsVersion, debugPod.metadata.name, context, {
               gracePeriodSeconds: 0
             }).then(
               // success
@@ -355,7 +363,7 @@ angular.module('openshiftConsole')
           }
 
           // Create the debug pod.
-          DataService.create("pods", null, debugPod, context).then(
+          DataService.create($scope.podsVersion, null, debugPod, context).then(
             function(pod) {
               var container = _.find($scope.pod.spec.containers, { name: containerName });
               $scope.debugPod = pod;
@@ -368,7 +376,7 @@ angular.module('openshiftConsole')
               // Watch the pod so we know when it's running to connect.
               // Keep the watch handle in a var outside the watches array so we
               // can unwatch immediately when the terminal is closed.
-              debugPodWatch = DataService.watchObject("pods",
+              debugPodWatch = DataService.watchObject($scope.podsVersion,
                                                       debugPod.metadata.name,
                                                       context,
                                                       function(pod) {
