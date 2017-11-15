@@ -24,13 +24,23 @@
     var canI = $filter('canI');
     var humanizeKind = $filter('humanizeKind');
     var uniqueId = _.uniqueId();
+    var keyValidator = /^[A-Za-z_][A-Za-z0-9_]*$/;
 
     ctrl.setFocusClass = 'edit-environment-from-set-focus-' + uniqueId;
+
+    ctrl.isEnvVarInvalid = function(keyName) {
+      return !keyValidator.test(keyName);
+    };
+
+    ctrl.hasInvalidEnvVar = function(secret) {
+      return _.some(secret, function(value, key) {
+        return ctrl.isEnvVarInvalid(key);
+      });
+    };
 
     ctrl.viewOverlayPanel = function(entry) {
       ctrl.decodedData = entry.data;
       ctrl.overlayPaneEntryDetails = entry;
-
       if (entry.kind === 'Secret') {
         ctrl.decodedData = SecretsService.decodeSecretData(entry.data);
       }
