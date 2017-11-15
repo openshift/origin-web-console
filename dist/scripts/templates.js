@@ -3665,7 +3665,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h1 class=\"contains-actions\">\n" +
     "<div class=\"pull-right dropdown\" ng-hide=\"!('serviceInstances' | canIDoAny)\">\n" +
     "\n" +
-    "<button ng-if=\"editAvailable && ({resource: 'serviceinstances', group: 'servicecatalog.k8s.io'} | canI : 'update')\" class=\"btn btn-default hidden-xs\" ng-click=\"showEditDialog()\">\n" +
+    "<button ng-if=\"editAvailable && (serviceInstancesVersion | canI : 'update')\" class=\"btn btn-default hidden-xs\" ng-click=\"showEditDialog()\">\n" +
     "Edit\n" +
     "</button>\n" +
     "\n" +
@@ -3761,7 +3761,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<annotations annotations=\"serviceInstance.metadata.annotations\"></annotations>\n" +
     "</div>\n" +
     "</uib-tab>\n" +
-    "<uib-tab active=\"selectedTab.events\" ng-if=\"'events' | canI : 'watch'\">\n" +
+    "<uib-tab active=\"selectedTab.events\" ng-if=\"eventsVersion | canI : 'watch'\">\n" +
     "<uib-tab-heading>Events</uib-tab-heading>\n" +
     "<events api-objects=\"[ serviceInstance ]\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
     "</uib-tab>\n" +

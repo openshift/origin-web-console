@@ -21,6 +21,10 @@ angular.module('openshiftConsole')
       LabelFilter.clear();
     };
 
+    var serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
+    var serviceClassesVersion = APIService.getPreferredVersion('clusterserviceclasses');
+    $scope.serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
+
     var watches = [];
 
     var updateFilter = function() {
@@ -42,14 +46,12 @@ angular.module('openshiftConsole')
         $scope.project = project;
         $scope.projectContext = context;
 
-        var serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
         watches.push(DataService.watch(serviceBindingsVersion, context, function(bindings) {
           var bindingsByName = bindings.by('metadata.name');
           $scope.bindingsByInstanceRef = _.groupBy(bindingsByName, 'spec.instanceRef.name');
         }));
 
-        var serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
-        watches.push(DataService.watch(serviceInstancesVersion, context, function(serviceInstances) {
+        watches.push(DataService.watch($scope.serviceInstancesVersion, context, function(serviceInstances) {
           $scope.serviceInstancesLoaded = true;
           $scope.unfilteredServiceInstances = serviceInstances.by('metadata.name');
 
@@ -63,7 +65,6 @@ angular.module('openshiftConsole')
           Logger.log("provisioned services (subscribe)", $scope.unfilteredServiceInstances);
         }));
 
-        var serviceClassesVersion = APIService.getPreferredVersion('clusterserviceclasses');
         DataService.list(serviceClassesVersion, {}, function(serviceClasses) {
           $scope.serviceClasses = serviceClasses.by('metadata.name');
           sortServiceInstances();
