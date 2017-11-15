@@ -1,0 +1,221 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: octopus-dependencies
+message: |-
+  Octopus has been deployed.
+
+  For more information about using this template, see https://github.com/Dataman-Cloud/octopus.
+metadata:
+  annotations:
+    description: 数人云分布式任务调度平台 Octopus 针对业务类应用和运维类任务，提供分布式定时作业、消息调度作业以及本地作业的统一管理。Octopus
+      基于数人云 DataMan OS 容器云平台，传统的定时作业程序可以无缝迁移到容器云上运行，通过取代传统的Linux Cron/Spring Batch
+      Job/Quartz，做到分布式环境下批量作业任务的全域统一配置，统一监控，任务高可用以及分片并行。
+    iconClass: icon-octopus
+    openshift.io/display-name: Octopus Dependencies
+    tags: quickstart,octopus,dataman
+    template.openshift.io/documentation-url: https://github.com/Dataman-Cloud/octopus
+    template.openshift.io/long-description: This template is a octopus application.  The
+      database is stored in non-persistent storage, so this configuration should be
+      used for experimental purposes only.
+    template.openshift.io/provider-display-name: Dataman, Inc.
+    template.openshift.io/support-url: https://github.com/Dataman-Cloud/octopus
+  creationTimestamp: 2017-11-10T02:23:30Z
+  name: octopus-dependencies
+  namespace: openshift
+  resourceVersion: "591835"
+  selfLink: /oapi/v1/namespaces/openshift/templates/octopus-dependencies
+  uid: 24b60c22-c5be-11e7-91ea-005056856489
+objects:
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: ${NAME}
+  stringData:
+    database-root-password: ${DATABASE_ROOT_PASSWORD}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the zookeeper server
+    name: ${ZOOKEEPER_SERVICE_NAME}
+  spec:
+    ports:
+    - name: zookeeper
+      port: 2181
+      targetPort: 2181
+    selector:
+      name: ${ZOOKEEPER_SERVICE_NAME}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the zookeeper
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: ${ZOOKEEPER_SERVICE_NAME}
+  spec:
+    replicas: 1
+    selector:
+      name: ${ZOOKEEPER_SERVICE_NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: ${ZOOKEEPER_SERVICE_NAME}
+        name: ${ZOOKEEPER_SERVICE_NAME}
+      spec:
+        containers:
+        - image: ' '
+          name: zookeeper
+          ports:
+          - containerPort: 2181
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - zookeeper
+        from:
+          kind: ImageStreamTag
+          name: zookeeper:3.4.10
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the kafka server
+    name: ${KAFKA_SERVICE_NAME}
+  spec:
+    ports:
+    - name: kafka1
+      port: 9092
+      targetPort: 9092
+    - name: kafka2
+      port: 1099
+      targetPort: 1099
+    selector:
+      name: ${KAFKA_SERVICE_NAME}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the kafka
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: ${KAFKA_SERVICE_NAME}
+  spec:
+    replicas: 1
+    selector:
+      name: ${KAFKA_SERVICE_NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: ${KAFKA_SERVICE_NAME}
+        name: ${KAFKA_SERVICE_NAME}
+      spec:
+        containers:
+        - env:
+          - name: KAFKA_ADVERTISED_HOST_NAME
+            value: ""
+          - name: KAFKA_ADVERTISED_PORT
+            value: "9092"
+          - name: KAFKA_ZOOKEEPER_CONNECT
+            value: ${ZOOKEEPER_SERVICE_NAME}:2181
+          image: ' '
+          name: octopus-kafka
+          ports:
+          - containerPort: 9092
+          - containerPort: 1099
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - octopus-kafka
+        from:
+          kind: ImageStreamTag
+          name: kafka:0.11.0.1
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the db
+    name: ${OCTOPUS_DB_SERVICE_NAME}
+  spec:
+    ports:
+    - name: db
+      port: 3306
+      targetPort: 3306
+    selector:
+      name: ${OCTOPUS_DB_SERVICE_NAME}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the Octopus DB
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: ${OCTOPUS_DB_SERVICE_NAME}
+  spec:
+    replicas: 1
+    selector:
+      name: ${OCTOPUS_DB_SERVICE_NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: ${OCTOPUS_DB_SERVICE_NAME}
+        name: ${OCTOPUS_DB_SERVICE_NAME}
+      spec:
+        containers:
+        - env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-root-password
+                name: ${NAME}
+          - name: OCTOPUS_DEFAULT_ZK_CONNECTION
+            value: ${ZOOKEEPER_SERVICE_NAME}:2181
+          image: ' '
+          name: octopus-db
+          ports:
+          - containerPort: 3306
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - octopus-db
+        from:
+          kind: ImageStreamTag
+          name: octopus-db:1.3.0-RC1
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+parameters:
+- description: The name assigned to all of the frontend objects defined in this template.
+  displayName: Name
+  name: NAME
+  required: true
+  value: octopus
+- displayName: Zookeeper Name
+  name: ZOOKEEPER_SERVICE_NAME
+  required: true
+  value: zookeeper
+- description: 'Attention: It Must not be ''kafka''.'
+  displayName: Kafka Name
+  name: KAFKA_SERVICE_NAME
+  required: true
+  value: kafka-service
+- displayName: Octopus DB Name
+  name: OCTOPUS_DB_SERVICE_NAME
+  required: true
+  value: octopus-db
+- displayName: Database Root Password
+  name: DATABASE_ROOT_PASSWORD
+  required: true
+  value: "123456"
