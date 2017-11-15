@@ -8,12 +8,20 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('SecretsController', function ($routeParams, $scope, DataService, LabelFilter, ProjectsService) {
+  .controller('SecretsController', function (
+    $routeParams,
+    $scope,
+    APIService,
+    DataService,
+    LabelFilter,
+    ProjectsService) {
     $scope.projectName = $routeParams.project;
     $scope.labelSuggestions = {};
     $scope.clearFilter = function() {
       LabelFilter.clear();
     };
+
+    $scope.secretsVersion = APIService.getPreferredVersion('secrets');
 
     var watches = [];
 
@@ -22,7 +30,7 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
         $scope.context = context;
-        watches.push(DataService.watch("secrets", context, function(secrets) {
+        watches.push(DataService.watch($scope.secretsVersion, context, function(secrets) {
           $scope.unfilteredSecrets = _.sortBy(secrets.by("metadata.name"), ["type", "metadata.name"]);
           $scope.secretsLoaded = true;
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredSecrets, $scope.labelSuggestions);

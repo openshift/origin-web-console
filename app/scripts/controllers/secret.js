@@ -11,6 +11,7 @@ angular.module('openshiftConsole')
   .controller('SecretController', function ($routeParams,
                                             $filter,
                                             $scope,
+                                            APIService,
                                             DataService,
                                             ProjectsService,
                                             SecretsService) {
@@ -31,6 +32,9 @@ angular.module('openshiftConsole')
         title: $scope.secretName
       }
     ];
+
+
+    $scope.secretsVersion = APIService.getPreferredVersion('secrets');
 
     var watches = [];
 
@@ -65,11 +69,11 @@ angular.module('openshiftConsole')
         $scope.project = project;
         $scope.context = context;
 
-        DataService.get("secrets", $scope.secretName, context, { errorNotification: false }).then(
+        DataService.get($scope.secretsVersion, $scope.secretName, context, { errorNotification: false }).then(
           function(secret) {
             $scope.loaded = true;
             secretResolved(secret);
-            watches.push(DataService.watchObject("secrets", $scope.secretName, context, secretResolved));
+            watches.push(DataService.watchObject($scope.secretsVersion, $scope.secretName, context, secretResolved));
           },
           function(e) {
             $scope.loaded = true;

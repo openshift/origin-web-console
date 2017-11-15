@@ -6445,26 +6445,26 @@ details: t("getErrorDetails")(n)
 })), e.$on("$destroy", function() {
 s.unwatchAll(f), s.unwatchAll(g);
 });
-} ]), angular.module("openshiftConsole").controller("SecretsController", [ "$routeParams", "$scope", "DataService", "LabelFilter", "ProjectsService", function(e, t, n, a, r) {
+} ]), angular.module("openshiftConsole").controller("SecretsController", [ "$routeParams", "$scope", "APIService", "DataService", "LabelFilter", "ProjectsService", function(e, t, n, a, r, o) {
 t.projectName = e.project, t.labelSuggestions = {}, t.clearFilter = function() {
-a.clear();
-};
-var o = [];
-r.get(e.project).then(_.spread(function(e, r) {
-function i() {
-t.filterWithZeroResults = !a.getLabelSelector().isEmpty() && _.isEmpty(t.secrets) && !_.isEmpty(t.unfilteredSecrets);
+r.clear();
+}, t.secretsVersion = n.getPreferredVersion("secrets");
+var i = [];
+o.get(e.project).then(_.spread(function(e, n) {
+function o() {
+t.filterWithZeroResults = !r.getLabelSelector().isEmpty() && _.isEmpty(t.secrets) && !_.isEmpty(t.unfilteredSecrets);
 }
-t.project = e, t.context = r, o.push(n.watch("secrets", r, function(e) {
-t.unfilteredSecrets = _.sortBy(e.by("metadata.name"), [ "type", "metadata.name" ]), t.secretsLoaded = !0, a.addLabelSuggestionsFromResources(t.unfilteredSecrets, t.labelSuggestions), a.setLabelSuggestions(t.labelSuggestions), t.secrets = a.getLabelSelector().select(t.unfilteredSecrets), i();
-})), a.onActiveFiltersChanged(function(e) {
+t.project = e, t.context = n, i.push(a.watch(t.secretsVersion, n, function(e) {
+t.unfilteredSecrets = _.sortBy(e.by("metadata.name"), [ "type", "metadata.name" ]), t.secretsLoaded = !0, r.addLabelSuggestionsFromResources(t.unfilteredSecrets, t.labelSuggestions), r.setLabelSuggestions(t.labelSuggestions), t.secrets = r.getLabelSelector().select(t.unfilteredSecrets), o();
+})), r.onActiveFiltersChanged(function(e) {
 t.$evalAsync(function() {
-t.secrets = e.select(t.unfilteredSecrets), i();
+t.secrets = e.select(t.unfilteredSecrets), o();
 });
 }), t.$on("$destroy", function() {
-n.unwatchAll(o);
+a.unwatchAll(i);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("SecretController", [ "$routeParams", "$filter", "$scope", "DataService", "ProjectsService", "SecretsService", function(e, t, n, a, r, o) {
+} ]), angular.module("openshiftConsole").controller("SecretController", [ "$routeParams", "$filter", "$scope", "APIService", "DataService", "ProjectsService", "SecretsService", function(e, t, n, a, r, o, i) {
 n.projectName = e.project, n.secretName = e.secret, n.view = {
 showSecret: !1
 }, n.alerts = n.alerts || {}, n.breadcrumbs = [ {
@@ -6472,9 +6472,9 @@ title: "Secrets",
 link: "project/" + e.project + "/browse/secrets"
 }, {
 title: n.secretName
-} ];
-var i = [], s = function(e, t) {
-n.secret = e, "DELETED" !== t ? n.decodedSecretData = o.decodeSecretData(n.secret.data) : n.alerts.deleted = {
+} ], n.secretsVersion = a.getPreferredVersion("secrets");
+var s = [], c = function(e, t) {
+n.secret = e, "DELETED" !== t ? n.decodedSecretData = i.decodeSecretData(n.secret.data) : n.alerts.deleted = {
 type: "warning",
 message: "This secret has been deleted."
 };
@@ -6483,11 +6483,11 @@ n.addToApplicationVisible = !1, n.addToApplication = function() {
 n.secret.data && (n.addToApplicationVisible = !0);
 }, n.closeAddToApplication = function() {
 n.addToApplicationVisible = !1;
-}, r.get(e.project).then(_.spread(function(e, r) {
-n.project = e, n.context = r, a.get("secrets", n.secretName, r, {
+}, o.get(e.project).then(_.spread(function(e, a) {
+n.project = e, n.context = a, r.get(n.secretsVersion, n.secretName, a, {
 errorNotification: !1
 }).then(function(e) {
-n.loaded = !0, s(e), i.push(a.watchObject("secrets", n.secretName, r, s));
+n.loaded = !0, c(e), s.push(r.watchObject(n.secretsVersion, n.secretName, a, c));
 }, function(e) {
 n.loaded = !0, n.alerts.load = {
 type: "error",
@@ -6495,7 +6495,7 @@ message: "The secret details could not be loaded.",
 details: t("getErrorDetails")(e)
 };
 }), n.$on("$destroy", function() {
-a.unwatchAll(i);
+r.unwatchAll(s);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("CreateSecretController", [ "$filter", "$location", "$routeParams", "$scope", "$window", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "ProjectsService", function(e, t, n, a, r, o, i, s, c, l) {
