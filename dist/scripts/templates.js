@@ -3585,10 +3585,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li ng-if=\"(project.metadata.name | canIAddToProject)\" class=\"visible-xs\">\n" +
     "<a href=\"\" role=\"button\" ng-class=\"{ 'disabled-link': !secret.data }\" ng-attr-aria-disabled=\"{{!secret.data ? 'true' : undefined}}\" ng-click=\"addToApplication()\">Add to Application</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"'secrets' | canI : 'update'\">\n" +
+    "<li ng-if=\"secretsVersion | canI : 'update'\">\n" +
     "<a ng-href=\"{{secret | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"'secrets' | canI : 'delete'\">\n" +
+    "<li ng-if=\"secretsVersion | canI : 'delete'\">\n" +
     "<delete-link kind=\"Secret\" resource-name=\"{{secret.metadata.name}}\" project-name=\"{{secret.metadata.namespace}}\" alerts=\"alerts\">\n" +
     "</delete-link>\n" +
     "</li>\n" +
@@ -13317,7 +13317,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-header\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<div class=\"pull-right\" ng-if=\"project && ('secrets' | canI : 'create') && secrets.length\">\n" +
+    "<div class=\"pull-right\" ng-if=\"project && (secretsVersion | canI : 'create') && secrets.length\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-secret\" class=\"btn btn-default\">Create Secret</a>\n" +
     "</div>\n" +
     "<h1>\n" +
@@ -13348,7 +13348,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!filterWithZeroResults\">\n" +
     "<h2>No secrets.</h2>\n" +
     "<p>No secrets have been added to project {{projectName}}.</p>\n" +
-    "<p ng-if=\"project && ('secrets' | canI : 'create')\">\n" +
+    "<p ng-if=\"project && (secretsVersion | canI : 'create')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-secret\" class=\"btn btn-primary btn-lg\">Create Secret</a>\n" +
     "</p>\n" +
     "</div>\n" +
