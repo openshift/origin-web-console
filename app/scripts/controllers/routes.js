@@ -8,7 +8,14 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('RoutesController', function ($routeParams, $scope, DataService, $filter, LabelFilter, ProjectsService) {
+  .controller('RoutesController', function (
+    $filter,
+    $routeParams,
+    $scope,
+    APIService,
+    DataService,
+    LabelFilter,
+    ProjectsService) {
     $scope.projectName = $routeParams.project;
     $scope.unfilteredRoutes = {};
     $scope.routes = {};
@@ -17,13 +24,16 @@ angular.module('openshiftConsole')
       LabelFilter.clear();
     };
 
+    var servicesVersion = APIService.getPreferredVersion('services');
+    $scope.routesVersion = APIService.getPreferredVersion('routes');
+
     var watches = [];
 
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
-        watches.push(DataService.watch("routes", context, function(routes) {
+        watches.push(DataService.watch($scope.routesVersion, context, function(routes) {
           $scope.routesLoaded = true;
           $scope.unfilteredRoutes = routes.by("metadata.name");
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredRoutes, $scope.labelSuggestions);
@@ -33,7 +43,7 @@ angular.module('openshiftConsole')
         }));
 
         // Watch services to display route warnings.
-        watches.push(DataService.watch("services", context, function(services) {
+        watches.push(DataService.watch(servicesVersion, context, function(services) {
           $scope.services = services.by("metadata.name");
         }));
 
