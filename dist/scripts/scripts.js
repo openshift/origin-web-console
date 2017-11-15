@@ -6620,42 +6620,44 @@ t.routes = e.select(t.unfilteredRoutes), o();
 n.unwatchAll(i);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("RouteController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "DataService", "ProjectsService", "RoutesService", function(e, t, n, a, r, o, i) {
+} ]), angular.module("openshiftConsole").controller("RouteController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "APIService", "DataService", "ProjectsService", "RoutesService", function(e, t, n, a, r, o, i, s) {
 e.projectName = n.project, e.route = null, e.alerts = {}, e.renderOptions = e.renderOptions || {}, e.renderOptions.hideFilterWidget = !0, e.breadcrumbs = [ {
 title: "Routes",
 link: "project/" + n.project + "/browse/routes"
 }, {
 title: n.route
 } ];
-var s, c = [], l = function(t, n) {
-e.loaded = !0, e.route = t, s = i.isCustomHost(t), "DELETED" === n && (e.alerts.deleted = {
+var c = r.getPreferredVersion("services");
+e.routesVersion = r.getPreferredVersion("routes");
+var l, u = [], d = function(t, n) {
+e.loaded = !0, e.route = t, l = s.isCustomHost(t), "DELETED" === n && (e.alerts.deleted = {
 type: "warning",
 message: "This route has been deleted."
 });
-}, u = function(t) {
+}, m = function(t) {
 return "router-host-" + _.get(e, "route.metadata.uid") + "-" + t.host + "-" + t.routerCanonicalHostname;
 };
 e.showRouterHostnameAlert = function(t, n) {
-if (!s) return !1;
+if (!l) return !1;
 if (!t || !t.host || !t.routerCanonicalHostname) return !1;
 if (!n || "True" !== n.status) return !1;
-var r = u(t);
+var r = m(t);
 return !a.isAlertPermanentlyHidden(r, e.projectName);
-}, o.get(n.project).then(_.spread(function(a, o) {
-e.project = a, r.get("routes", n.route, o, {
+}, i.get(n.project).then(_.spread(function(a, r) {
+e.project = a, o.get(e.routesVersion, n.route, r, {
 errorNotification: !1
-}).then(function(e) {
-l(e), c.push(r.watchObject("routes", n.route, o, l));
+}).then(function(t) {
+d(t), u.push(o.watchObject(e.routesVersion, n.route, r, d));
 }, function(n) {
 e.loaded = !0, e.alerts.load = {
 type: "error",
 message: "The route details could not be loaded.",
 details: t("getErrorDetails")(n)
 };
-}), c.push(r.watch("services", o, function(t) {
+}), u.push(o.watch(c, r, function(t) {
 e.services = t.by("metadata.name");
 })), e.$on("$destroy", function() {
-r.unwatchAll(c);
+o.unwatchAll(u);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("StorageController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "ProjectsService", "QuotaService", "$filter", "LabelFilter", "Logger", function(e, t, n, a, r, o, i, s, c) {

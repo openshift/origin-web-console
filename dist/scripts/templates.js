@@ -3251,13 +3251,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
-    "<li ng-if=\"'routes' | canI : 'update'\">\n" +
+    "<li ng-if=\"routesVersion | canI : 'update'\">\n" +
     "<a ng-href=\"{{route | editResourceURL}}\" role=\"button\">Edit</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"'routes' | canI : 'update'\">\n" +
+    "<li ng-if=\"routesVersion | canI : 'update'\">\n" +
     "<a ng-href=\"{{route | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"'routes' | canI : 'delete'\">\n" +
+    "<li ng-if=\"routesVersion | canI : 'delete'\">\n" +
     "<delete-link kind=\"Route\" resource-name=\"{{route.metadata.name}}\" project-name=\"{{route.metadata.namespace}}\" alerts=\"alerts\">\n" +
     "</delete-link>\n" +
     "</li>\n" +
@@ -3429,7 +3429,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dl>\n" +
     "<p ng-if=\"!route.spec.tls\">\n" +
     "TLS is not enabled.\n" +
-    "<span ng-if=\"'routes' | canI : 'update'\">\n" +
+    "<span ng-if=\"routesVersion | canI : 'update'\">\n" +
     "<a ng-href=\"{{route | editResourceURL}}\" role=\"button\">Edit</a> this route to enable secure network traffic.\n" +
     "</span>\n" +
     "</p>\n" +
