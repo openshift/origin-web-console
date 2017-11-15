@@ -44,12 +44,12 @@
             </uib-tab>
             <uib-tab heading="Environment" active="selectedTab.environment">
               <uib-tab-heading>Environment</uib-tab-heading>
-              <p ng-if="deployment && ({ group: 'extensions', resource: 'deployments' } | canI : 'update')">
+              <p ng-if="deployment && (deploymentsVersion | canI : 'update')">
                 <span class="pficon pficon-info" aria-hidden="true"></span>
                 Environment variables can be edited on the deployment
                 <a ng-href="{{deployment | navigateResourceURL}}?tab=environment">{{deployment.metadata.name}}</a>.
               </p>
-              <p ng-if="deploymentConfigName && ('deploymentconfigs' | canI : 'update')">
+              <p ng-if="deploymentConfigName && (deploymentConfigsVersion | canI : 'update')">
                 <span class="pficon pficon-info" aria-hidden="true"></span>
                 Environment variables can be edited on deployment config
                 <a ng-href="{{replicaSet | configURLForResource}}?tab=environment">{{deploymentConfigName}}</a>.
@@ -74,7 +74,7 @@
                   alerts="alerts">
               </deployment-metrics>
             </uib-tab>
-            <uib-tab ng-if="deploymentConfigName && logOptions.version && ('deploymentconfigs/log' | canI : 'get')" active="selectedTab.logs">
+            <uib-tab ng-if="deploymentConfigName && logOptions.version && (deploymentConfigsLogVersion | canI : 'get')" active="selectedTab.logs">
               <uib-tab-heading>Logs</uib-tab-heading>
               <log-viewer
                 ng-if="selectedTab.logs"
@@ -92,7 +92,7 @@
                 </span>
               </log-viewer>
             </uib-tab>
-            <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">
+            <uib-tab active="selectedTab.events" ng-if="eventsVersion | canI : 'watch'">
               <uib-tab-heading>Events</uib-tab-heading>
               <events api-objects="[ replicaSet ]" project-context="projectContext" ng-if="selectedTab.events"></events>
             </uib-tab>

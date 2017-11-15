@@ -11,12 +11,15 @@ angular.module('openshiftConsole')
               function ($scope,
                         $filter,
                         $routeParams,
+                        APIService,
                         AuthorizationService,
                         BreadcrumbsService,
                         DataService,
                         DeploymentsService,
                         HPAService,
                         ImageStreamResolver,
+                        keyValueEditorUtils,
+                        kind,
                         Logger,
                         MetricsService,
                         ModalsService,
@@ -24,9 +27,7 @@ angular.module('openshiftConsole')
                         OwnerReferencesService,
                         PodsService,
                         ProjectsService,
-                        StorageService,
-                        keyValueEditorUtils,
-                        kind) {
+                        StorageService) {
     var hasDC = false;
 
     var annotation = $filter('annotation');
@@ -68,6 +69,21 @@ angular.module('openshiftConsole')
     $scope.renderOptions.hideFilterWidget = true;
     $scope.forms = {};
     $scope.logOptions = {};
+
+    var buildsVersion = APIService.getPreferredVersion('builds');
+    var imageStreamsVersion = APIService.getPreferredVersion('imagestreams');
+    var horizontalPodAutoscalersVersion = APIService.getPreferredVersion('horizontalpodautoscalers');
+    var limitRangesVersion = APIService.getPreferredVersion('limitranges');
+    var podsVersion = APIService.getPreferredVersion('pods');
+    var replicaSetsVersion = APIService.getPreferredVersion('replicasets');
+    var resourceQuotasVersion = APIService.getPreferredVersion('resourcequotas');
+    var appliedClusterResourceQuotasVersion = APIService.getPreferredVersion('appliedclusterresourcequotas');
+
+    $scope.deploymentsVersion = APIService.getPreferredVersion('deployments');
+    $scope.deploymentConfigsVersion = APIService.getPreferredVersion('deploymentconfigs');
+    $scope.eventsVersion = APIService.getPreferredVersion('events');
+    // TODO: update common/constants/apiPreferredVersions for this
+    $scope.deploymentConfigsLogVersion = 'deploymentconfigs/log';
 
     var watches = [];
 
@@ -150,7 +166,7 @@ angular.module('openshiftConsole')
           $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
                                                           "DeploymentConfig",
                                                           dcName);
-          DataService.get("deploymentconfigs", dcName, context, {
+          DataService.get($scope.deploymentConfigsVersion, dcName, context, {
             errorNotification: false
           }).then(
             // success
@@ -204,20 +220,14 @@ angular.module('openshiftConsole')
             return;
           }
 
-          DataService.get({
-            group: 'apps',
-            resource: 'deployments'
-          }, deploymentRef.name, context).then(function(deployment) {
+          DataService.get($scope.deploymentsVersion, deploymentRef.name, context).then(function(deployment) {
             $scope.deployment = deployment;
             $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
                                                             "Deployment",
                                                             deployment.metadata.name,
                                                             "apps");
 
-            watches.push(DataService.watchObject({
-              group: 'apps',
-              resource: 'deployments'
-            }, deployment.metadata.name, context, function(deployment, action) {
+            watches.push(DataService.watchObject($scope.deploymentsVersion, deployment.metadata.name, context, function(deployment, action) {
               if (action === "DELETED") {
                 $scope.alerts['deployment-deleted'] = {
                   type: "warning",
@@ -248,10 +258,7 @@ angular.module('openshiftConsole')
             }));
 
             // Watch the replica sets to know if there is a deployment in progress.
-            watches.push(DataService.watch({
-              group: 'extensions',
-              resource: 'replicasets'
-            }, context, function(replicaSetData) {
+            watches.push(DataService.watch(replicaSetsVersion, context, function(replicaSetData) {
               var replicaSets = replicaSetData.by('metadata.name');
               rolloutInProgress = hasInProgressRollout(replicaSets);
             }));
@@ -317,7 +324,7 @@ angular.module('openshiftConsole')
               watchActiveDeployment();
             }
 
-            watches.push(DataService.watch("pods", context, function(podData) {
+            watches.push(DataService.watch(podsVersion, context, function(podData) {
               var pods = podData.by('metadata.name');
               $scope.podsForDeployment = PodsService.filterForOwner(pods, $scope.replicaSet);
             }));
@@ -377,23 +384,19 @@ angular.module('openshiftConsole')
         }));
 
         // Sets up subscription for imageStreams
-        watches.push(DataService.watch("imagestreams", context, function(imageStreamData) {
+        watches.push(DataService.watch(imageStreamsVersion, context, function(imageStreamData) {
           var imageStreams = imageStreamData.by('metadata.name');
           ImageStreamResolver.buildDockerRefMapForImageStreams(imageStreams, imageStreamImageRefByDockerReference);
           getImageStreamImage();
           Logger.log("imagestreams (subscribe)", imageStreams);
         }));
 
-        watches.push(DataService.watch("builds", context, function(builds) {
+        watches.push(DataService.watch(buildsVersion, context, function(builds) {
           $scope.builds = builds.by("metadata.name");
           Logger.log("builds (subscribe)", $scope.builds);
         }));
 
-        watches.push(DataService.watch({
-          group: "autoscaling",
-          resource: "horizontalpodautoscalers",
-          version: "v1"
-        }, context, function(data) {
+        watches.push(DataService.watch(horizontalPodAutoscalersVersion, context, function(data) {
           allHPA = data.by("metadata.name");
           updateHPA();
           updateHPAWarnings();
@@ -401,18 +404,18 @@ angular.module('openshiftConsole')
 
         // List limit ranges in this project to determine if there is a default
         // CPU request for autoscaling.
-        DataService.list("limitranges", context).then(function(resp) {
+        DataService.list(limitRangesVersion, context).then(function(resp) {
           $scope.limitRanges = resp.by("metadata.name");
           updateHPAWarnings();
         });
 
         // Watch quotas and cluster quotas to warn about problems in the deployment donut.
         var QUOTA_POLL_INTERVAL = 60 * 1000;
-        watches.push(DataService.watch('resourcequotas', context, function(quotaData) {
+        watches.push(DataService.watch(resourceQuotasVersion, context, function(quotaData) {
           $scope.quotas = quotaData.by("metadata.name");
         }, {poll: true, pollInterval: QUOTA_POLL_INTERVAL}));
 
-        watches.push(DataService.watch('appliedclusterresourcequotas', context, function(clusterQuotaData) {
+        watches.push(DataService.watch(appliedClusterResourceQuotasVersion, context, function(clusterQuotaData) {
           $scope.clusterQuotas = clusterQuotaData.by("metadata.name");
         }, {poll: true, pollInterval: QUOTA_POLL_INTERVAL}));
 
