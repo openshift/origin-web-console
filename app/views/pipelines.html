@@ -9,11 +9,11 @@
         <div class="page-header page-header-bleed-right page-header-bleed-left">
           <h1>
             <translate>Pipelines</translate>
-            <span class="page-header-link">
-              <a ng-href="{{'pipeline-builds' | helpLink}}" target="_blank">
-                <translate>Learn More</translate> <i class="fa fa-external-link" aria-hidden="true"></i>
-              </a>
-            </span>
+            <!--<span class="page-header-link">-->
+              <!--<a ng-href="{{'pipeline-builds' | helpLink}}" target="_blank">-->
+                <!--<translate>Learn More</translate> <i class="fa fa-external-link" aria-hidden="true"></i>-->
+              <!--</a>-->
+            <!--</span>-->
           </h1>
         </div>
       </div>
@@ -30,14 +30,13 @@
               <div ng-if="buildConfigsLoaded" class="empty-state-message text-center">
                 <h2 translate>No pipelines.</h2>
                 <div ng-if="project.metadata.name | canIAddToProject">
-                  <p>
-                    <translate>No pipelines have been added to project {{projectName}}.</translate>
-                    <br>
-                    <translate>Learn more about</translate>
-                    <a ng-href="{{ 'pipeline-builds' | helpLink}}" target="_blank" translate>Pipeline Builds</a>
-                    <translate>and the</translate>
-                      <a ng-href="{{ 'pipeline-plugin' | helpLink}}" target="_blank" translate>DataMan OS Pipeline Plugin</a>.
-                  </p>
+                  <!--<p>-->
+                    <!--<br>-->
+                    <!--<translate>Learn more about</translate>-->
+                    <!--<a ng-href="{{ 'pipeline-builds' | helpLink}}" target="_blank" translate>Pipeline Builds</a>-->
+                    <!--<translate>and the</translate>-->
+                      <!--<a ng-href="{{ 'pipeline-plugin' | helpLink}}" target="_blank" translate>DataMan OS Pipeline Plugin</a>.-->
+                  <!--</p>-->
                   <p ng-if="(project.metadata.name | canIAddToProject) && createSampleURL">
                     <a ng-href="{{createSampleURL}}" class="btn btn-lg btn-primary" translate>
                       Create Sample Pipeline

@@ -1,7 +1,4 @@
 <div class="open-squid">
-  <p>
-    Create Squid
-  </p>
   <ng-form name="$ctrl.squidForm">
     <div class="form-group">
       <label for="SECRET_NAME" class="required">{{ $ctrl.appParams['SECRET_NAME'].displayName }}</label>
@@ -85,8 +82,8 @@
               class="btn btn-primary btn-lg"
               ng-click="$ctrl.createFromSquid()"
               value=""
-              ng-disabled="form.squidForm.$invalid">Create</button>
-      <a class="btn btn-default btn-lg" href="#" back>Cancel</a>
+              ng-disabled="form.squidForm.$invalid" translate>Create</button>
+      <a class="btn btn-default btn-lg" href="#" back translate>Cancel</a>
     </div>
   </ng-form>
 </div>

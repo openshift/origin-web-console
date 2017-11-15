@@ -42,9 +42,9 @@
                   search-enabled="false"
                   append-to-body="true"
                   ng-disabled="overview.disableFilter">
-                  <ui-select-match>{{$select.selected.label}}</ui-select-match>
+                  <ui-select-match>{{$select.selected.label | translate}}</ui-select-match>
                   <ui-select-choices repeat="option.id as option in overview.filterByOptions">
-                    {{option.label}}
+                    {{option.label | translate}}
                   </ui-select-choices>
                 </ui-select>
                 <div ng-if="overview.filterBy === 'label'" class="label-filter">

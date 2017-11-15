@@ -863,8 +863,10 @@ msgstr ""
 #: app/views/directives/create-secret.html:321
 #: app/views/directives/deploy-image.html:189
 #: app/views/directives/from-file.html:35
+#: app/views/directives/open-shift.html:99
 #: app/views/directives/process-template.html:15
 #: app/views/directives/replicas.html:37
+#: app/views/directives/squid-form.html:86
 #: app/views/edit/autoscaler.html:68
 #: app/views/edit/build-config.html:679
 #: app/views/edit/deployment-config.html:381
@@ -1235,7 +1237,9 @@ msgstr ""
 #: app/views/directives/create-secret.html:317
 #: app/views/directives/deploy-image.html:184
 #: app/views/directives/from-file.html:28
+#: app/views/directives/open-shift.html:94
 #: app/views/directives/process-template.html:14
+#: app/views/directives/squid-form.html:81
 msgid "Create"
 msgstr ""
 
@@ -1258,7 +1262,7 @@ msgid "Create New Secret"
 msgstr ""
 
 #: app/views/create-project.html:13
-#: app/views/projects.html:137
+#: app/views/projects.html:136
 #: app/views/projects.html:28
 msgid "Create Project"
 msgstr ""
@@ -1294,7 +1298,7 @@ msgstr ""
 msgid "Create a New Project"
 msgstr ""
 
-#: app/views/projects.html:135
+#: app/views/projects.html:134
 msgid "Create a project for your application."
 msgstr ""
 
@@ -1368,7 +1372,7 @@ msgstr ""
 msgid "DataMan OS Pipeline Plugin"
 msgstr ""
 
-#: app/views/projects.html:134
+#: app/views/projects.html:133
 msgid "DataMan OS helps you quickly develop, host, and scale applications."
 msgstr ""
 
@@ -1423,9 +1427,9 @@ msgstr ""
 #: app/views/directives/hpa.html:8
 #: app/views/modals/delete-resource.html:75
 #: app/views/modals/delete-resource.html:88
-#: app/views/other-resources.html:76
+#: app/views/other-resources.html:68
 #: app/views/overview/_service-instance-row.html:64
-#: app/views/projects.html:119
+#: app/views/projects.html:109
 msgid "Delete"
 msgstr ""
 
@@ -2004,10 +2008,6 @@ msgstr ""
 
 #: app/views/edit/health-checks.html:17
 msgid "Health Checks: {{name}}"
-msgstr ""
-
-#: app/views/directives/header/_navbar-utility.html:12
-msgid "Help"
 msgstr ""
 
 #: app/views/_container-statuses.html:20
@@ -4146,6 +4146,7 @@ msgstr ""
 msgid "Some items already exist:"
 msgstr ""
 
+#: app/views/directives/events.html:31
 #: app/views/projects.html:55
 msgid "Sort by"
 msgstr ""
@@ -4905,10 +4906,6 @@ msgstr ""
 msgid "To get the complete log, run the command"
 msgstr ""
 
-#: app/views/projects.html:138
-msgid "To learn more, visit the DataMan OS <a target=\"_blank\" ng-href=\"{{'' | helpLink}}\">documentation</a>."
-msgstr ""
-
 #: app/views/monitoring.html:255
 msgid "To see application logs, view the logs for one of the replica set's <a href=\"\" ng-click=\"viewPodsForReplicaSet(replicaSet)\">pods</a>."
 msgstr ""
@@ -5246,7 +5243,7 @@ msgstr ""
 msgid "Weight is a number between 0 and 256 that specifies the relative weight against other route services."
 msgstr ""
 
-#: app/views/projects.html:132
+#: app/views/projects.html:131
 msgid "Welcome to DataMan OS."
 msgstr ""
 
