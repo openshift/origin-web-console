@@ -9,6 +9,7 @@
 angular.module('openshiftConsole')
   .controller('ServiceController', function ($scope,
                                              $routeParams,
+                                             APIService,
                                              DataService,
                                              ProjectsService,
                                              $filter) {
@@ -31,6 +32,12 @@ angular.module('openshiftConsole')
     $scope.podFailureReasons = {
       "Pending": "This pod will not receive traffic until all of its containers have been created."
     };
+
+    var podsVersion = APIService.getPreferredVersion('pods');
+    var endpointsVersion = APIService.getPreferredVersion('endpoints');
+    $scope.eventsVersion = APIService.getPreferredVersion('events');
+    $scope.routesVersion = APIService.getPreferredVersion('routes');
+    $scope.servicesVersion = APIService.getPreferredVersion('services');
 
     var allPods = {};
     var watches = [];
@@ -96,10 +103,10 @@ angular.module('openshiftConsole')
         $scope.project = project;
         $scope.projectContext = context;
         DataService
-          .get("services", $routeParams.service, context, { errorNotification: false })
+          .get($scope.servicesVersion, $routeParams.service, context, { errorNotification: false })
           .then(function(service) {
             serviceResolved(service);
-            watches.push(DataService.watchObject("services", $routeParams.service, context, serviceResolved));
+            watches.push(DataService.watchObject($scope.servicesVersion, $routeParams.service, context, serviceResolved));
           }, function(e) {
             $scope.loaded = true;
             $scope.alerts["load"] = {
@@ -110,16 +117,16 @@ angular.module('openshiftConsole')
           }
         );
 
-        watches.push(DataService.watch("services", context, function(services) {
+        watches.push(DataService.watch($scope.servicesVersion, context, function(services) {
           $scope.services = services.by("metadata.name");
         }));
 
-        watches.push(DataService.watch("pods", context, function(pods) {
+        watches.push(DataService.watch(podsVersion, context, function(pods) {
           allPods = pods.by("metadata.name");
           getPodsForService();
         }));
 
-        watches.push(DataService.watch("endpoints", context, function(endpoints) {
+        watches.push(DataService.watch(endpointsVersion, context, function(endpoints) {
           $scope.podsWithEndpoints = {};
           var svcEndpoint = endpoints.by("metadata.name")[$routeParams.service];
           if (!svcEndpoint) {
@@ -135,7 +142,7 @@ angular.module('openshiftConsole')
           });
         }));
 
-        watches.push(DataService.watch("routes", context, function(routes) {
+        watches.push(DataService.watch($scope.routesVersion, context, function(routes) {
           $scope.routesForService = {};
           angular.forEach(routes.by("metadata.name"), function(route) {
             if (route.spec.to.kind === "Service" &&

@@ -3796,13 +3796,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span></a>\n" +
     "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
-    "<li ng-if=\"'routes' | canI : 'create'\">\n" +
+    "<li ng-if=\"routesVersion | canI : 'create'\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}\" role=\"button\">Create Route</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"'services' | canI : 'update'\">\n" +
+    "<li ng-if=\"servicesVersion | canI : 'update'\">\n" +
     "<a ng-href=\"{{service | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"'services' | canI : 'delete'\">\n" +
+    "<li ng-if=\"servicesVersion | canI : 'delete'\">\n" +
     "<delete-link kind=\"Service\" resource-name=\"{{service.metadata.name}}\" project-name=\"{{service.metadata.namespace}}\" alerts=\"alerts\">\n" +
     "</delete-link>\n" +
     "</li>\n" +
@@ -3855,8 +3855,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt ng-if-start=\"(routesForService | hashSize) == 0\">Routes:</dt>\n" +
     "<dd ng-if-end>\n" +
     "<span>\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}\" ng-if=\"'routes' | canI : 'create'\">Create route</a>\n" +
-    "<span ng-if=\"!('routes' | canI : 'create')\"><em>None</em></span>\n" +
+    "<a ng-href=\"project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}\" ng-if=\"routesVersion | canI : 'create'\">Create route</a>\n" +
+    "<span ng-if=\"!(routesVersion | canI : 'create')\"><em>None</em></span>\n" +
     "</span>\n" +
     "</dd>\n" +
     "</dl>\n" +
@@ -3874,7 +3874,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<annotations annotations=\"service.metadata.annotations\"></annotations>\n" +
     "</div>\n" +
     "</uib-tab>\n" +
-    "<uib-tab active=\"selectedTab.events\" ng-if=\"'events' | canI : 'watch'\">\n" +
+    "<uib-tab active=\"selectedTab.events\" ng-if=\"eventsVersion | canI : 'watch'\">\n" +
     "<uib-tab-heading>Events</uib-tab-heading>\n" +
     "<events api-objects=\"[ service ]\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
     "</uib-tab>\n" +
