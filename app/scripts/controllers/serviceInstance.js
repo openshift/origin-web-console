@@ -48,6 +48,10 @@ angular.module('openshiftConsole')
       $scope.editDialogShown = false;
     };
 
+    var serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
+    $scope.eventsVersion = APIService.getPreferredVersion('events');
+    $scope.serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
+
     var watches = [];
     var secretWatchers = [];
     var serviceClassPromise;
@@ -55,10 +59,6 @@ angular.module('openshiftConsole')
 
     var serviceInstanceDisplayName = $filter('serviceInstanceDisplayName');
     var isServiceInstanceFailed = $filter('isServiceInstanceFailed');
-
-    // API Versions
-    var serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
-    $scope.serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
 
     var updateBreadcrumbs = function() {
       $scope.breadcrumbs.push({
