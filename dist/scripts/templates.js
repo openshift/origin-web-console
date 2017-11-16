@@ -3897,7 +3897,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div>\n" +
     "<h1>\n" +
     "{{statefulSet.metadata.name}}\n" +
-    "<div class=\"pull-right dropdown\" ng-if=\"statefulSet\" ng-show=\"resourceGroupVersion.resource | canIDoAny\">\n" +
+    "<div class=\"pull-right dropdown\" ng-if=\"statefulSet\" ng-show=\"'statefulsets' | canIDoAny\">\n" +
     "<button type=\"button\" class=\"dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs\" data-toggle=\"dropdown\">\n" +
     "Actions\n" +
     "<span class=\"caret\" aria-hidden=\"true\"></span>\n" +
@@ -3906,10 +3906,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<i class=\"fa fa-ellipsis-v\"></i><span class=\"sr-only\">Actions</span>\n" +
     "</a>\n" +
     "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
-    "<li ng-if=\"resourceGroupVersion | canI : 'update'\">\n" +
+    "<li ng-if=\"statefulSetsVersion | canI : 'update'\">\n" +
     "<a ng-href=\"{{statefulSet | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"resourceGroupVersion | canI : 'delete'\">\n" +
+    "<li ng-if=\"statefulSetsVersion | canI : 'delete'\">\n" +
     "<delete-link kind=\"StatefulSet\" group=\"apps\" resource-name=\"{{statefulSet.metadata.name}}\" project-name=\"{{statefulSet.metadata.namespace}}\" alerts=\"alerts\">\n" +
     "</delete-link>\n" +
     "</li>\n" +

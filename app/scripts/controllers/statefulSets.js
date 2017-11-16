@@ -4,6 +4,7 @@ angular.module('openshiftConsole')
   .controller('StatefulSetsController',
               function($scope,
                        $routeParams,
+                       APIService,
                        DataService,
                        ProjectsService,
                        LabelFilter,
@@ -14,17 +15,16 @@ angular.module('openshiftConsole')
       LabelFilter.clear();
     };
 
+    var podsVersion = APIService.getPreferredVersion('pods');
+    var statefulSetsVersion = APIService.getPreferredVersion('statefulsets');
+
     var watches = [];
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
 
-        watches.push(DataService.watch({
-          resource: 'statefulsets',
-          group: 'apps',
-          version: 'v1beta1'
-        }, context, function(statefulSets) {
+        watches.push(DataService.watch(statefulSetsVersion, context, function(statefulSets) {
           angular.extend($scope, {
             loaded: true,
             unfilteredStatefulSets: statefulSets.by('metadata.name')
@@ -37,7 +37,7 @@ angular.module('openshiftConsole')
 
         // TODO: 1.6 eliminate this block, we dont actually need pods on this page,
         // we are just using to fix the fact that the replicas count in inaccurate
-        watches.push(DataService.watch('pods', context, function(podData) {
+        watches.push(DataService.watch(podsVersion, context, function(podData) {
           $scope.pods = podData.by('metadata.name');
           $scope.podsByOwnerUID = PodsService.groupByOwnerUID($scope.pods);
         }));
