@@ -6,6 +6,7 @@ angular
               function($filter,
                        $scope,
                        $routeParams,
+                       APIService,
                        BreadcrumbsService,
                        DataService,
                        MetricsService,
@@ -22,14 +23,13 @@ angular
       namespace: $routeParams.project
     });
 
+    var podsVersion = APIService.getPreferredVersion('pods');
+    var resourceQuotasVersion = APIService.getPreferredVersion('resourcequotas');
+    var appliedClusterResourceQuotasVersion = APIService.getPreferredVersion('appliedclusterresourcequotas');
+    $scope.statefulSetsVersion = APIService.getPreferredVersion('statefulsets');
+
     var watches = [];
     var projectContext;
-
-    var resourceGroupVersion = $scope.resourceGroupVersion = {
-      resource: 'statefulsets',
-      group: 'apps',
-      version: 'v1beta1'
-    };
 
     MetricsService.isAvailable().then(function(available) {
       $scope.metricsAvailable = available;
@@ -41,7 +41,7 @@ angular
         projectContext = context;
 
         DataService
-          .get(resourceGroupVersion, $scope.statefulSetName, context, { errorNotification: false })
+          .get($scope.statefulSetsVersion, $scope.statefulSetName, context, { errorNotification: false })
           .then(function(statefulSet) {
 
             angular.extend($scope, {
@@ -56,22 +56,22 @@ angular
               scale: function() {}
             });
 
-            watches.push(DataService.watchObject(resourceGroupVersion, $scope.statefulSetName, context, function(statefulSet) {
+            watches.push(DataService.watchObject($scope.statefulSetsVersion, $scope.statefulSetName, context, function(statefulSet) {
               $scope.statefulSet = statefulSet;
             }));
 
-            watches.push(DataService.watch('pods', context, function(podData) {
+            watches.push(DataService.watch(podsVersion, context, function(podData) {
               var pods = podData.by('metadata.name');
               $scope.podsForStatefulSet = PodsService.filterForOwner(pods, statefulSet);
             }));
 
             // Watch quotas and cluster quotas to warn about problems in the deployment donut.
             var QUOTA_POLL_INTERVAL = 60 * 1000;
-            watches.push(DataService.watch('resourcequotas', context, function(quotaData) {
+            watches.push(DataService.watch(resourceQuotasVersion, context, function(quotaData) {
               $scope.quotas = quotaData.by("metadata.name");
             }, {poll: true, pollInterval: QUOTA_POLL_INTERVAL}));
 
-            watches.push(DataService.watch('appliedclusterresourcequotas', context, function(clusterQuotaData) {
+            watches.push(DataService.watch(appliedClusterResourceQuotasVersion, context, function(clusterQuotaData) {
               $scope.clusterQuotas = clusterQuotaData.by("metadata.name");
             }, {poll: true, pollInterval: QUOTA_POLL_INTERVAL}));
           }, function(e) {

@@ -6144,49 +6144,43 @@ b.removeVolume(e.replicaSet, n, u);
 i.unwatchAll($);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("StatefulSetsController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "LabelFilter", "PodsService", function(e, t, n, a, r, o) {
+} ]), angular.module("openshiftConsole").controller("StatefulSetsController", [ "$scope", "$routeParams", "APIService", "DataService", "ProjectsService", "LabelFilter", "PodsService", function(e, t, n, a, r, o, i) {
 e.projectName = t.project, e.labelSuggestions = {}, e.clearFilter = function() {
-r.clear();
+o.clear();
 };
-var i = [];
-a.get(t.project).then(_.spread(function(t, a) {
-function s() {
-e.filterWithZeroResults = !r.getLabelSelector().isEmpty() && _.isEmpty(e.statefulSets) && !_.isEmpty(e.unfilteredStatefulSets);
+var s = n.getPreferredVersion("pods"), c = n.getPreferredVersion("statefulsets"), l = [];
+r.get(t.project).then(_.spread(function(t, n) {
+function r() {
+e.filterWithZeroResults = !o.getLabelSelector().isEmpty() && _.isEmpty(e.statefulSets) && !_.isEmpty(e.unfilteredStatefulSets);
 }
-e.project = t, i.push(n.watch({
-resource: "statefulsets",
-group: "apps",
-version: "v1beta1"
-}, a, function(t) {
+e.project = t, l.push(a.watch(c, n, function(t) {
 angular.extend(e, {
 loaded: !0,
 unfilteredStatefulSets: t.by("metadata.name")
-}), e.statefulSets = r.getLabelSelector().select(e.unfilteredStatefulSets), r.addLabelSuggestionsFromResources(e.unfilteredStatefulSets, e.labelSuggestions), r.setLabelSuggestions(e.labelSuggestions), s();
-})), i.push(n.watch("pods", a, function(t) {
-e.pods = t.by("metadata.name"), e.podsByOwnerUID = o.groupByOwnerUID(e.pods);
-})), r.onActiveFiltersChanged(function(t) {
+}), e.statefulSets = o.getLabelSelector().select(e.unfilteredStatefulSets), o.addLabelSuggestionsFromResources(e.unfilteredStatefulSets, e.labelSuggestions), o.setLabelSuggestions(e.labelSuggestions), r();
+})), l.push(a.watch(s, n, function(t) {
+e.pods = t.by("metadata.name"), e.podsByOwnerUID = i.groupByOwnerUID(e.pods);
+})), o.onActiveFiltersChanged(function(t) {
 e.$evalAsync(function() {
-e.statefulSets = t.select(e.unfilteredStatefulSets), s();
+e.statefulSets = t.select(e.unfilteredStatefulSets), r();
 });
 }), e.$on("$destroy", function() {
-n.unwatchAll(i);
+a.unwatchAll(l);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("StatefulSetController", [ "$filter", "$scope", "$routeParams", "BreadcrumbsService", "DataService", "MetricsService", "ProjectsService", "PodsService", function(e, t, n, a, r, o, i, s) {
-t.projectName = n.project, t.statefulSetName = n.statefulset, t.forms = {}, t.alerts = {}, t.breadcrumbs = a.getBreadcrumbs({
+} ]), angular.module("openshiftConsole").controller("StatefulSetController", [ "$filter", "$scope", "$routeParams", "APIService", "BreadcrumbsService", "DataService", "MetricsService", "ProjectsService", "PodsService", function(e, t, n, a, r, o, i, s, c) {
+t.projectName = n.project, t.statefulSetName = n.statefulset, t.forms = {}, t.alerts = {}, t.breadcrumbs = r.getBreadcrumbs({
 name: t.statefulSetName,
 kind: "StatefulSet",
 namespace: n.project
 });
-var c, l = [], u = t.resourceGroupVersion = {
-resource: "statefulsets",
-group: "apps",
-version: "v1beta1"
-};
-o.isAvailable().then(function(e) {
+var l = a.getPreferredVersion("pods"), u = a.getPreferredVersion("resourcequotas"), d = a.getPreferredVersion("appliedclusterresourcequotas");
+t.statefulSetsVersion = a.getPreferredVersion("statefulsets");
+var m, p = [];
+i.isAvailable().then(function(e) {
 t.metricsAvailable = e;
-}), i.get(n.project).then(_.spread(function(n, a) {
-c = a, r.get(u, t.statefulSetName, a, {
+}), s.get(n.project).then(_.spread(function(n, a) {
+m = a, o.get(t.statefulSetsVersion, t.statefulSetName, a, {
 errorNotification: !1
 }).then(function(e) {
 angular.extend(t, {
@@ -6198,18 +6192,18 @@ isScalable: function() {
 return !1;
 },
 scale: function() {}
-}), l.push(r.watchObject(u, t.statefulSetName, a, function(e) {
+}), p.push(o.watchObject(t.statefulSetsVersion, t.statefulSetName, a, function(e) {
 t.statefulSet = e;
-})), l.push(r.watch("pods", a, function(n) {
+})), p.push(o.watch(l, a, function(n) {
 var a = n.by("metadata.name");
-t.podsForStatefulSet = s.filterForOwner(a, e);
+t.podsForStatefulSet = c.filterForOwner(a, e);
 }));
-l.push(r.watch("resourcequotas", a, function(e) {
+p.push(o.watch(u, a, function(e) {
 t.quotas = e.by("metadata.name");
 }, {
 poll: !0,
 pollInterval: 6e4
-})), l.push(r.watch("appliedclusterresourcequotas", a, function(e) {
+})), p.push(o.watch(d, a, function(e) {
 t.clusterQuotas = e.by("metadata.name");
 }, {
 poll: !0,
@@ -6223,7 +6217,7 @@ details: e("getErrorDetails")(n)
 };
 });
 })), t.$on("$destroy", function() {
-r.unwatchAll(l);
+o.unwatchAll(p);
 });
 } ]), angular.module("openshiftConsole").controller("ServicesController", [ "$routeParams", "$scope", "DataService", "ProjectsService", "$filter", "LabelFilter", "Logger", function(e, t, n, a, r, o, i) {
 t.projectName = e.project, t.services = {}, t.unfilteredServices = {}, t.routesByService = {}, t.routes = {}, t.labelSuggestions = {}, t.clearFilter = function() {

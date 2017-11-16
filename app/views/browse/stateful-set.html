@@ -10,7 +10,7 @@
           <div
             class="pull-right dropdown"
             ng-if="statefulSet"
-            ng-show="resourceGroupVersion.resource | canIDoAny">
+            ng-show="'statefulsets' | canIDoAny">
             <button
               type="button"
               class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs"
@@ -25,10 +25,10 @@
               <i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-right actions action-button">
-              <li ng-if="resourceGroupVersion | canI : 'update'">
+              <li ng-if="statefulSetsVersion | canI : 'update'">
                 <a ng-href="{{statefulSet | editYamlURL}}" role="button">Edit YAML</a>
               </li>
-              <li ng-if="resourceGroupVersion | canI : 'delete'">
+              <li ng-if="statefulSetsVersion | canI : 'delete'">
                 <delete-link
                   kind="StatefulSet"
                   group="apps"
