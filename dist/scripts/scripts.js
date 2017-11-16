@@ -6842,7 +6842,9 @@ t.url(r.resourceURL);
 }, b = function() {
 d.hideNotification("set-compute-limits-error");
 };
-r.cancel = y, r.$on("$destroy", b), m.get(a.project).then(_.spread(function(e, t) {
+r.cancel = y, r.$on("$destroy", b);
+var S = o.getPreferredVersion("limitranges");
+m.get(a.project).then(_.spread(function(e, t) {
 var n = {
 resource: o.kindToResource(a.kind),
 group: a.group
@@ -6870,7 +6872,7 @@ h(g + " could not be loaded.", v(e));
 var m = function() {
 r.hideCPU || (r.cpuProblems = l.validatePodLimits(r.limitRanges, "cpu", r.containers, e)), r.memoryProblems = l.validatePodLimits(r.limitRanges, "memory", r.containers, e);
 };
-c.list("limitranges", t).then(function(e) {
+c.list(S, t).then(function(e) {
 r.limitRanges = e.by("metadata.name"), _.isEmpty(r.limitRanges) || r.$watch("containers", m, !0);
 });
 } else u.toErrorPage("You do not have authority to update " + f(a.kind) + " " + a.name + ".", "access_denied");

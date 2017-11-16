@@ -80,6 +80,8 @@ angular.module('openshiftConsole')
     $scope.cancel = navigateBack;
     $scope.$on('$destroy', hideErrorNotifications);
 
+    var limitRangesVersion = APIService.getPreferredVersion('limitranges');
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -134,7 +136,7 @@ angular.module('openshiftConsole')
           $scope.memoryProblems = LimitRangesService.validatePodLimits($scope.limitRanges, 'memory', $scope.containers, project);
         };
 
-        DataService.list("limitranges", context).then(function(resp) {
+        DataService.list(limitRangesVersion, context).then(function(resp) {
           $scope.limitRanges = resp.by("metadata.name");
           if (!_.isEmpty($scope.limitRanges)) {
             $scope.$watch('containers', validatePodLimits, true);
