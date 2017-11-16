@@ -8,7 +8,17 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('StorageController', function ($routeParams, $scope, AlertMessageService, DataService, ProjectsService, QuotaService, $filter, LabelFilter, Logger) {
+  .controller('StorageController', function (
+    $filter,
+    $routeParams,
+    $scope,
+    APIService,
+    AlertMessageService,
+    DataService,
+    LabelFilter,
+    Logger,
+    ProjectsService,
+    QuotaService) {
     $scope.projectName = $routeParams.project;
     $scope.pvcs = {};
     $scope.unfilteredPVCs = {};
@@ -50,13 +60,18 @@ angular.module('openshiftConsole')
         delete $scope.alerts['quotaExceeded'];
       }
     };
+
+    var resourceQuotasVersion = APIService.getPreferredVersion('resourcequotas');
+    var appliedClusterResourceQuotasVersion = APIService.getPreferredVersion('appliedclusterresourcequotas');
+    $scope.persistentVolumeClaimsVersion = APIService.getPreferredVersion('persistentvolumeclaims');
+
     var watches = [];
 
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
-         watches.push(DataService.watch("persistentvolumeclaims", context, function(pvcs) {
+         watches.push(DataService.watch($scope.persistentVolumeClaimsVersion, context, function(pvcs) {
           $scope.pvcsLoaded = true;
           $scope.unfilteredPVCs = pvcs.by("metadata.name");
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredPVCs, $scope.labelSuggestions);
@@ -82,11 +97,11 @@ angular.module('openshiftConsole')
           DataService.unwatchAll(watches);
         });
 
-        DataService.list('resourcequotas', { namespace: $scope.projectName }, function(quotaData) {
+        DataService.list(resourceQuotasVersion, { namespace: $scope.projectName }, function(quotaData) {
           $scope.quotas = quotaData.by('metadata.name');
           setOutOfClaimsWarning();
         });
-        DataService.list('appliedclusterresourcequotas', { namespace: $scope.projectName }, function(quotaData) {
+        DataService.list(appliedClusterResourceQuotasVersion, { namespace: $scope.projectName }, function(quotaData) {
           $scope.clusterQuotas = quotaData.by('metadata.name');
           setOutOfClaimsWarning();
         });

@@ -6647,50 +6647,52 @@ e.services = t.by("metadata.name");
 o.unwatchAll(u);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("StorageController", [ "$routeParams", "$scope", "AlertMessageService", "DataService", "ProjectsService", "QuotaService", "$filter", "LabelFilter", "Logger", function(e, t, n, a, r, o, i, s, c) {
-t.projectName = e.project, t.pvcs = {}, t.unfilteredPVCs = {}, t.labelSuggestions = {}, t.alerts = t.alerts || {}, t.outOfClaims = !1, t.clearFilter = function() {
-s.clear();
+} ]), angular.module("openshiftConsole").controller("StorageController", [ "$filter", "$routeParams", "$scope", "APIService", "AlertMessageService", "DataService", "LabelFilter", "Logger", "ProjectsService", "QuotaService", function(e, t, n, a, r, o, i, s, c, l) {
+n.projectName = t.project, n.pvcs = {}, n.unfilteredPVCs = {}, n.labelSuggestions = {}, n.alerts = n.alerts || {}, n.outOfClaims = !1, n.clearFilter = function() {
+i.clear();
 };
-var l = function() {
-var e = n.isAlertPermanentlyHidden("storage-quota-limit-reached", t.projectName);
-if (t.outOfClaims = o.isAnyStorageQuotaExceeded(t.quotas, t.clusterQuotas), !e && t.outOfClaims) {
-if (t.alerts.quotaExceeded) return;
-t.alerts.quotaExceeded = {
+var u = function() {
+var e = r.isAlertPermanentlyHidden("storage-quota-limit-reached", n.projectName);
+if (n.outOfClaims = l.isAnyStorageQuotaExceeded(n.quotas, n.clusterQuotas), !e && n.outOfClaims) {
+if (n.alerts.quotaExceeded) return;
+n.alerts.quotaExceeded = {
 type: "warning",
 message: "Storage quota limit has been reached. You will not be able to create any new storage.",
 links: [ {
-href: "project/" + t.projectName + "/quota",
+href: "project/" + n.projectName + "/quota",
 label: "View Quota"
 }, {
 href: "",
 label: "Don't Show Me Again",
 onClick: function() {
-return n.permanentlyHideAlert("storage-quota-limit-reached", t.projectName), !0;
+return r.permanentlyHideAlert("storage-quota-limit-reached", n.projectName), !0;
 }
 } ]
 };
-} else delete t.alerts.quotaExceeded;
-}, u = [];
-r.get(e.project).then(_.spread(function(e, n) {
-function r() {
-t.filterWithZeroResults = !s.getLabelSelector().isEmpty() && $.isEmptyObject(t.pvcs) && !$.isEmptyObject(t.unfilteredPVCs);
+} else delete n.alerts.quotaExceeded;
+}, d = a.getPreferredVersion("resourcequotas"), m = a.getPreferredVersion("appliedclusterresourcequotas");
+n.persistentVolumeClaimsVersion = a.getPreferredVersion("persistentvolumeclaims");
+var p = [];
+c.get(t.project).then(_.spread(function(e, t) {
+function a() {
+n.filterWithZeroResults = !i.getLabelSelector().isEmpty() && $.isEmptyObject(n.pvcs) && !$.isEmptyObject(n.unfilteredPVCs);
 }
-t.project = e, u.push(a.watch("persistentvolumeclaims", n, function(e) {
-t.pvcsLoaded = !0, t.unfilteredPVCs = e.by("metadata.name"), s.addLabelSuggestionsFromResources(t.unfilteredPVCs, t.labelSuggestions), s.setLabelSuggestions(t.labelSuggestions), t.pvcs = s.getLabelSelector().select(t.unfilteredPVCs), r(), c.log("pvcs (subscribe)", t.unfilteredPVCs);
-})), s.onActiveFiltersChanged(function(e) {
-t.$evalAsync(function() {
-t.pvcs = e.select(t.unfilteredPVCs), r();
+n.project = e, p.push(o.watch(n.persistentVolumeClaimsVersion, t, function(e) {
+n.pvcsLoaded = !0, n.unfilteredPVCs = e.by("metadata.name"), i.addLabelSuggestionsFromResources(n.unfilteredPVCs, n.labelSuggestions), i.setLabelSuggestions(n.labelSuggestions), n.pvcs = i.getLabelSelector().select(n.unfilteredPVCs), a(), s.log("pvcs (subscribe)", n.unfilteredPVCs);
+})), i.onActiveFiltersChanged(function(e) {
+n.$evalAsync(function() {
+n.pvcs = e.select(n.unfilteredPVCs), a();
 });
-}), t.$on("$destroy", function() {
-a.unwatchAll(u);
-}), a.list("resourcequotas", {
-namespace: t.projectName
+}), n.$on("$destroy", function() {
+o.unwatchAll(p);
+}), o.list(d, {
+namespace: n.projectName
 }, function(e) {
-t.quotas = e.by("metadata.name"), l();
-}), a.list("appliedclusterresourcequotas", {
-namespace: t.projectName
+n.quotas = e.by("metadata.name"), u();
+}), o.list(m, {
+namespace: n.projectName
 }, function(e) {
-t.clusterQuotas = e.by("metadata.name"), l();
+n.clusterQuotas = e.by("metadata.name"), u();
 });
 }));
 } ]), angular.module("openshiftConsole").controller("OtherResourcesController", [ "$routeParams", "$location", "$scope", "AuthorizationService", "DataService", "ProjectsService", "$filter", "LabelFilter", "Logger", "APIService", function(e, t, n, a, r, o, i, s, c, l) {
