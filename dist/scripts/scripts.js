@@ -7849,9 +7849,9 @@ c.unwatchAll(f);
 })) : l.toErrorPage("You do not have authority to update " + m(a.kind) + " " + a.name + ".", "access_denied");
 }));
 } else l.toErrorPage("Kind or name parameter missing.");
-} ]), angular.module("openshiftConsole").controller("BrowseCategoryController", [ "$scope", "$filter", "$location", "$q", "$routeParams", "$uibModal", "Constants", "DataService", "LabelFilter", "Navigate", "ProjectsService", function(e, t, n, a, r, o, i, s, c, l, u) {
+} ]), angular.module("openshiftConsole").controller("BrowseCategoryController", [ "$scope", "$filter", "$location", "$q", "$routeParams", "$uibModal", "APIService", "Constants", "DataService", "LabelFilter", "Navigate", "ProjectsService", function(e, t, n, a, r, o, i, s, c, l, u, d) {
 e.projectName = r.project;
-var d = function(t, n) {
+var m = function(t, n) {
 var a;
 return _.some(t, function(t) {
 if (a = _.find(t.items, {
@@ -7866,29 +7866,32 @@ label: ""
 }
 return !1;
 }), a;
-}, m = i.CATALOG_CATEGORIES, p = "none" === r.category ? "" : r.category;
-if (e.category = d(m, p), e.category) {
-var f;
-!r.subcategory || (e.category, p = "none" === r.subcategory ? "" : r.subcategory, f = _.get(e.category, "subcategories", []), e.category = d(f, p), e.category) ? (e.alerts = e.alerts || {}, u.get(r.project).then(_.spread(function(t, n) {
-e.project = t, e.context = n, s.list("imagestreams", {
+}, p = s.CATALOG_CATEGORIES, f = "none" === r.category ? "" : r.category;
+if (e.category = m(p, f), e.category) {
+var g;
+if (!r.subcategory || (e.category, f = "none" === r.subcategory ? "" : r.subcategory, g = _.get(e.category, "subcategories", []), e.category = m(g, f), e.category)) {
+var v = i.getPreferredVersion("imagestreams"), h = i.getElementsByClassName("templates");
+e.alerts = e.alerts || {}, d.get(r.project).then(_.spread(function(t, n) {
+e.project = t, e.context = n, c.list(v, {
 namespace: "openshift"
 }).then(function(t) {
 e.openshiftImageStreams = t.by("metadata.name");
-}), s.list("templates", {
+}), c.list(h, {
 namespace: "openshift"
 }, null, {
 partialObjectMetadataList: !0
 }).then(function(t) {
 e.openshiftTemplates = t.by("metadata.name");
-}), "openshift" === r.project ? (e.projectImageStreams = [], e.projectTemplates = []) : (s.list("imagestreams", n).then(function(t) {
+}), "openshift" === r.project ? (e.projectImageStreams = [], e.projectTemplates = []) : (c.list(v, n).then(function(t) {
 e.projectImageStreams = t.by("metadata.name");
-}), s.list("templates", n, null, {
+}), c.list(h, n, null, {
 partialObjectMetadataList: !0
 }).then(function(t) {
 e.projectTemplates = t.by("metadata.name");
 }));
-}))) : l.toErrorPage("Catalog category " + r.category + "/" + r.subcategory + " not found.");
-} else l.toErrorPage("Catalog category " + r.category + " not found.");
+}));
+} else u.toErrorPage("Catalog category " + r.category + "/" + r.subcategory + " not found.");
+} else u.toErrorPage("Catalog category " + r.category + " not found.");
 } ]), angular.module("openshiftConsole").controller("CreateFromImageController", [ "$scope", "$filter", "$parse", "$q", "$routeParams", "$uibModal", "APIService", "ApplicationGenerator", "DataService", "HPAService", "ImagesService", "LimitRangesService", "Logger", "MetricsService", "Navigate", "NotificationsService", "ProjectsService", "QuotaService", "SOURCE_URL_PATTERN", "SecretsService", "TaskList", "failureObjectNameFilter", "keyValueEditorUtils", function(e, t, n, a, r, o, i, s, c, l, u, d, m, p, f, g, v, h, y, b, S, C, w) {
 var P = t("displayName"), k = t("humanize");
 e.projectName = r.project, e.sourceURLPattern = y;
