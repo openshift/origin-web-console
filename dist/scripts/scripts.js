@@ -7535,7 +7535,9 @@ e.cancel = v;
 var h = function() {
 d.hideNotification("edit-hpa-error");
 };
-e.$on("$destroy", h), m.get(n.project).then(_.spread(function(t, a) {
+e.$on("$destroy", h);
+var y = r.getPreferredVersion("horizontalpodautoscalers"), b = r.getPreferredVersion("limitranges");
+m.get(n.project).then(_.spread(function(t, a) {
 e.project = t;
 var l = "HorizontalPodAutoscaler" === n.kind ? "update" : "create";
 if (o.canI({
@@ -7563,10 +7565,7 @@ maxReplicas: e.autoscaling.maxReplicas,
 targetCPUUtilizationPercentage: e.autoscaling.targetCPU || e.autoscaling.defaultTargetCPU || null
 }
 };
-s.create({
-resource: "horizontalpodautoscalers",
-group: "autoscaling"
-}, null, t, a).then(function(e) {
+s.create(y, null, t, a).then(function(e) {
 d.addNotification({
 type: "success",
 message: "Horizontal pod autoscaler " + e.metadata.name + " successfully created."
@@ -7580,10 +7579,7 @@ details: g(t)
 });
 });
 }, f = function(t) {
-e.disableInputs = !0, (t = angular.copy(t)).metadata.labels = p.mapEntries(p.compactEntries(e.labels)), t.spec.minReplicas = e.autoscaling.minReplicas, t.spec.maxReplicas = e.autoscaling.maxReplicas, t.spec.targetCPUUtilizationPercentage = e.autoscaling.targetCPU || e.autoscaling.defaultTargetCPU || null, s.update({
-resource: "horizontalpodautoscalers",
-group: "autoscaling"
-}, t.metadata.name, t, a).then(function(e) {
+e.disableInputs = !0, (t = angular.copy(t)).metadata.labels = p.mapEntries(p.compactEntries(e.labels)), t.spec.minReplicas = e.autoscaling.minReplicas, t.spec.maxReplicas = e.autoscaling.maxReplicas, t.spec.targetCPUUtilizationPercentage = e.autoscaling.targetCPU || e.autoscaling.defaultTargetCPU || null, s.update(y, t.metadata.name, t, a).then(function(e) {
 d.addNotification({
 type: "success",
 message: "Horizontal pod autoscaler " + e.metadata.name + " successfully updated."
@@ -7596,15 +7592,15 @@ message: "An error occurred creating the horizontal pod autoscaler.",
 details: g(t)
 });
 });
-}, y = {};
-y = "HorizontalPodAutoscaler" === n.kind ? {
+}, S = {};
+S = "HorizontalPodAutoscaler" === n.kind ? {
 resource: "horizontalpodautoscalers",
 group: "autoscaling",
 version: "v1"
 } : {
 resource: r.kindToResource(n.kind),
 group: n.group
-}, s.get(y, n.name, a).then(function(r) {
+}, s.get(S, n.name, a).then(function(r) {
 if (e.labels = _.map(_.get(r, "metadata.labels", {}), function(e, t) {
 return {
 name: t,
@@ -7632,7 +7628,7 @@ var o = {}, l = function() {
 var n = _.get(r, "spec.template.spec.containers", []);
 e.showCPURequestWarning = !c.hasCPURequest(n, o, t);
 };
-s.list("limitranges", a).then(function(e) {
+s.list(b, a).then(function(e) {
 o = e.by("metadata.name"), l();
 });
 }

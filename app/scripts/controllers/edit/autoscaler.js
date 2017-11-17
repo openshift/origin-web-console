@@ -75,6 +75,9 @@ angular.module('openshiftConsole')
     };
     $scope.$on('$destroy', hideErrorNotifications);
 
+    var horizontalPodAutoscalerVersion = APIService.getPreferredVersion('horizontalpodautoscalers');
+    var limitRangesVersion = APIService.getPreferredVersion('limitranges');
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -110,10 +113,7 @@ angular.module('openshiftConsole')
             }
           };
 
-          DataService.create({
-            resource: 'horizontalpodautoscalers',
-            group: 'autoscaling'
-          }, null, hpa, context)
+          DataService.create(horizontalPodAutoscalerVersion, null, hpa, context)
             .then(function(hpa) { // Success
               NotificationsService.addNotification({
                 type: 'success',
@@ -141,10 +141,7 @@ angular.module('openshiftConsole')
           hpa.spec.maxReplicas = $scope.autoscaling.maxReplicas;
           hpa.spec.targetCPUUtilizationPercentage = $scope.autoscaling.targetCPU || $scope.autoscaling.defaultTargetCPU || null;
 
-          DataService.update({
-            resource: 'horizontalpodautoscalers',
-            group: 'autoscaling'
-          }, hpa.metadata.name, hpa, context)
+          DataService.update(horizontalPodAutoscalerVersion, hpa.metadata.name, hpa, context)
             .then(function(hpa) { // Success
               NotificationsService.addNotification({
                 type: 'success',
@@ -231,7 +228,7 @@ angular.module('openshiftConsole')
 
             // List limit ranges in this project to determine if there is a default
             // CPU request for autoscaling.
-            DataService.list("limitranges", context).then(function(resp) {
+            DataService.list(limitRangesVersion, context).then(function(resp) {
               limitRanges = resp.by("metadata.name");
               checkCPURequest();
             });
