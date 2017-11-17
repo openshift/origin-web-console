@@ -14,6 +14,7 @@ angular.module('openshiftConsole')
                        $routeParams,
                        $uibModal,
                        $window,
+                       APIService,
                        AuthorizationService,
                        BreadcrumbsService,
                        DataService,
@@ -55,6 +56,10 @@ angular.module('openshiftConsole')
       };
     };
 
+    var deploymentConfigsVersion = APIService.getPreferredVersion('deploymentconfigs');
+    var configMapsVersion = APIService.getPreferredVersion('configmaps');
+    var secretsVersion = APIService.getPreferredVersion('secrets');
+
     var watches = [];
 
     var configMapDataOrdered = [];
@@ -87,7 +92,7 @@ angular.module('openshiftConsole')
           return;
         }
 
-        DataService.get("deploymentconfigs", $routeParams.deploymentconfig, context, { errorNotification: false }).then(
+        DataService.get(deploymentConfigsVersion, $routeParams.deploymentconfig, context, { errorNotification: false }).then(
           // success
           function(deploymentConfig) {
             $scope.deploymentConfig = deploymentConfig;
@@ -150,7 +155,7 @@ angular.module('openshiftConsole')
               $scope.strategyData.customParams.environment = [];
             }
 
-            DataService.list("configmaps", context, null, { errorNotification: false }).then(function(configMapData) {
+            DataService.list(configMapsVersion, context, null, { errorNotification: false }).then(function(configMapData) {
               configMapDataOrdered = orderByDisplayName(configMapData.by("metadata.name"));
               $scope.availableConfigMaps = configMapDataOrdered;
               $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
@@ -162,7 +167,7 @@ angular.module('openshiftConsole')
               displayError('Could not load config maps', getErrorDetails(e));
             });
 
-            DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
+            DataService.list(secretsVersion, context, null, { errorNotification: false }).then(function(secretData) {
               secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
               $scope.availableSecrets = secretDataOrdered;
               $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
@@ -181,7 +186,7 @@ angular.module('openshiftConsole')
             });
 
             // If we found the item successfully, watch for changes on it
-            watches.push(DataService.watchObject("deploymentconfigs", $routeParams.deploymentconfig, context, function(deploymentConfig, action) {
+            watches.push(DataService.watchObject(deploymentConfigsVersion, $routeParams.deploymentconfig, context, function(deploymentConfig, action) {
               if (action === 'MODIFIED') {
                 $scope.alerts["updated/deleted"] = {
                   type: "warning",
@@ -368,7 +373,7 @@ angular.module('openshiftConsole')
       $scope.updatedDeploymentConfig.spec.triggers = updateTriggers();
 
       hideErrorNotifications();
-      DataService.update("deploymentconfigs", $scope.updatedDeploymentConfig.metadata.name, $scope.updatedDeploymentConfig, $scope.context).then(
+      DataService.update(deploymentConfigsVersion, $scope.updatedDeploymentConfig.metadata.name, $scope.updatedDeploymentConfig, $scope.context).then(
         function() {
           NotificationsService.addNotification({
             type: "success",
