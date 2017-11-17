@@ -4,23 +4,35 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/_alerts.html',
     "<div ng-attr-row=\"{{toast}}\" ng-attr-wrap=\"{{toast}}\">\n" +
     "<div ng-repeat=\"(alertID, alert) in (alerts | filterCollection : filter) track by (alertID + (alert.message || alert.details))\" ng-if=\"!alert.hidden\" class=\"alert-wrapper animate-repeat\" ng-class=\"{'animate-slide': animateSlide}\">\n" +
-    "<div class=\"alert word-break\" ng-class=\"{\n" +
-    "      'alert-danger': alert.type === 'error',\n" +
-    "      'alert-warning': alert.type === 'warning',\n" +
-    "      'alert-success': alert.type === 'success',\n" +
-    "      'alert-info': !alert.type || alert.type === 'info',\n" +
-    "      'toast-pf': toast,\n" +
-    "      'mar-left-sm': toast\n" +
+    "<div class=\"alert word-break\" ng-class=\"{\r" +
+    "\n" +
+    "      'alert-danger': alert.type === 'error',\r" +
+    "\n" +
+    "      'alert-warning': alert.type === 'warning',\r" +
+    "\n" +
+    "      'alert-success': alert.type === 'success',\r" +
+    "\n" +
+    "      'alert-info': !alert.type || alert.type === 'info',\r" +
+    "\n" +
+    "      'toast-pf': toast,\r" +
+    "\n" +
+    "      'mar-left-sm': toast\r" +
+    "\n" +
     "    }\">\n" +
     "<button ng-if=\"!hideCloseButton\" ng-click=\"close(alert)\" type=\"button\" class=\"close\">\n" +
     "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\" translate>Close</span>\n" +
     "</button>\n" +
-    "<span class=\"pficon\" aria-hidden=\"true\" ng-class=\"{\n" +
-    "        'pficon-error-circle-o': alert.type === 'error',\n" +
-    "        'pficon-warning-triangle-o': alert.type === 'warning',\n" +
-    "        'pficon-ok': alert.type === 'success',\n" +
-    "        'pficon-info': !alert.type || alert.type === 'info'\n" +
+    "<span class=\"pficon\" aria-hidden=\"true\" ng-class=\"{\r" +
+    "\n" +
+    "        'pficon-error-circle-o': alert.type === 'error',\r" +
+    "\n" +
+    "        'pficon-warning-triangle-o': alert.type === 'warning',\r" +
+    "\n" +
+    "        'pficon-ok': alert.type === 'success',\r" +
+    "\n" +
+    "        'pficon-info': !alert.type || alert.type === 'info'\r" +
+    "\n" +
     "      }\"></span>\n" +
     "<span class=\"sr-only\">{{alert.type}}</span>\n" +
     "<span ng-if=\"alert.message\" style=\"margin-right: 5px\" ng-class=\"{'strong': !toast}\">{{alert.message}}</span><span ng-if=\"alert.details\">{{alert.details}}</span>\n" +
@@ -566,9 +578,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-transclude></div>\n" +
     "<div class=\"form-group options\" ng-repeat=\"parameter in parameters\" ng-show=\"expand\" ng-init=\"paramID = 'param-' + $index\">\n" +
     "<label ng-attr-for=\"{{paramID}}\" ng-attr-title=\"{{parameter.name}}\" ng-class=\"{required: parameter.required}\">{{parameter.displayName || parameter.name}}</label>\n" +
-    "<div class=\"parameter-input-wrapper\" ng-class=\"{\n" +
-    "          'has-error': (paramForm[paramID].$error.required && paramForm[paramID].$touched && !cleared),\n" +
-    "          'has-warning': isOnlyWhitespace(parameter.value)\n" +
+    "<div class=\"parameter-input-wrapper\" ng-class=\"{\r" +
+    "\n" +
+    "          'has-error': (paramForm[paramID].$error.required && paramForm[paramID].$touched && !cleared),\r" +
+    "\n" +
+    "          'has-warning': isOnlyWhitespace(parameter.value)\r" +
+    "\n" +
     "        }\">\n" +
     "<input ng-if=\"!expandedParameter\" ng-attr-id=\"{{paramID}}\" ng-attr-name=\"{{paramID}}\" class=\"form-control hide-ng-leave\" type=\"text\" placeholder=\"{{ parameter | parameterPlaceholder }}\" ng-model=\"parameter.value\" ng-required=\"parameter.required && !parameter.generate\" ng-blur=\"cleared = false\" ng-trim=\"false\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" ng-attr-aria-describedby=\"{{parameter.description ? (paramID + '-description') : undefined}}\">\n" +
     "<a href=\"\" ng-click=\"expandedParameter = !expandedParameter\" class=\"resize-input action-button\" data-toggle=\"tooltip\" data-trigger=\"hover\" dynamic-content=\"{{expandedParameter ? singleText : multiText|translate}}\"><i class=\"fa\" ng-class=\"{'fa-expand': !expandedParemeter, 'fa-compress': expandedParameter}\" aria-hidden=\"true\" role=\"presentation\"/><span class=\"sr-only\" ng-if=\"expandedParameter\" translate>Collapse to a single line input</span><span class=\"sr-only\" ng-if=\"!expandedParameter\" translate>Expand to enter multiline input</span></a>\n" +
@@ -1254,18 +1269,30 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Jenkinsfile:\n" +
     "</dt>\n" +
     "<dd></dd>\n" +
-    "<div ng-if-end ui-ace=\"{\n" +
-    "          mode: 'groovy',\n" +
-    "          theme: 'eclipse',\n" +
-    "          showGutter: false,\n" +
-    "          rendererOptions: {\n" +
-    "            fadeFoldWidgets: true,\n" +
-    "            highlightActiveLine: false,\n" +
-    "            showPrintMargin: false\n" +
-    "          },\n" +
-    "          advanced: {\n" +
-    "            highlightActiveLine: false\n" +
-    "          }\n" +
+    "<div ng-if-end ui-ace=\"{\r" +
+    "\n" +
+    "          mode: 'groovy',\r" +
+    "\n" +
+    "          theme: 'eclipse',\r" +
+    "\n" +
+    "          showGutter: false,\r" +
+    "\n" +
+    "          rendererOptions: {\r" +
+    "\n" +
+    "            fadeFoldWidgets: true,\r" +
+    "\n" +
+    "            highlightActiveLine: false,\r" +
+    "\n" +
+    "            showPrintMargin: false\r" +
+    "\n" +
+    "          },\r" +
+    "\n" +
+    "          advanced: {\r" +
+    "\n" +
+    "            highlightActiveLine: false\r" +
+    "\n" +
+    "          }\r" +
+    "\n" +
     "        }\" readonly=\"readonly\" ng-model=\"build.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline ace-read-only\"></div>\n" +
     "</dl>\n" +
     "<div ng-if=\"build | hasPostCommitHook\">\n" +
@@ -1918,20 +1945,34 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div ng-if=\"buildConfig.spec.source.dockerfile\">\n" +
     "<dt>Dockerfile:</dt><dd></dd>\n" +
-    "<div ui-ace=\"{\n" +
-    "                                mode: 'dockerfile',\n" +
-    "                                theme: 'dreamweaver',\n" +
-    "                                onLoad: aceLoaded,\n" +
-    "                                highlightActiveLine: false,\n" +
-    "                                showGutter: false,\n" +
-    "                                rendererOptions: {\n" +
-    "                                  fadeFoldWidgets: true,\n" +
-    "                                  highlightActiveLine: false,\n" +
-    "                                  showPrintMargin: false\n" +
-    "                                },\n" +
-    "                                advanced: {\n" +
-    "                                  highlightActiveLine: false\n" +
-    "                                }\n" +
+    "<div ui-ace=\"{\r" +
+    "\n" +
+    "                                mode: 'dockerfile',\r" +
+    "\n" +
+    "                                theme: 'dreamweaver',\r" +
+    "\n" +
+    "                                onLoad: aceLoaded,\r" +
+    "\n" +
+    "                                highlightActiveLine: false,\r" +
+    "\n" +
+    "                                showGutter: false,\r" +
+    "\n" +
+    "                                rendererOptions: {\r" +
+    "\n" +
+    "                                  fadeFoldWidgets: true,\r" +
+    "\n" +
+    "                                  highlightActiveLine: false,\r" +
+    "\n" +
+    "                                  showPrintMargin: false\r" +
+    "\n" +
+    "                                },\r" +
+    "\n" +
+    "                                advanced: {\r" +
+    "\n" +
+    "                                  highlightActiveLine: false\r" +
+    "\n" +
+    "                                }\r" +
+    "\n" +
     "                              }\" readonly=\"readonly\" ng-model=\"buildConfig.spec.source.dockerfile\" class=\"ace-bordered ace-read-only ace-inline dockerfile-mode mar-top-md\"></div>\n" +
     "</div>\n" +
     "<div ng-if=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\">\n" +
@@ -1941,18 +1982,30 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>\n" +
     "Jenkinsfile:\n" +
     "</dt><dd></dd>\n" +
-    "<div ui-ace=\"{\n" +
-    "                                mode: 'groovy',\n" +
-    "                                theme: 'eclipse',\n" +
-    "                                showGutter: false,\n" +
-    "                                rendererOptions: {\n" +
-    "                                  fadeFoldWidgets: true,\n" +
-    "                                  highlightActiveLine: false,\n" +
-    "                                  showPrintMargin: false\n" +
-    "                                },\n" +
-    "                                advanced: {\n" +
-    "                                  highlightActiveLine: false\n" +
-    "                                }\n" +
+    "<div ui-ace=\"{\r" +
+    "\n" +
+    "                                mode: 'groovy',\r" +
+    "\n" +
+    "                                theme: 'eclipse',\r" +
+    "\n" +
+    "                                showGutter: false,\r" +
+    "\n" +
+    "                                rendererOptions: {\r" +
+    "\n" +
+    "                                  fadeFoldWidgets: true,\r" +
+    "\n" +
+    "                                  highlightActiveLine: false,\r" +
+    "\n" +
+    "                                  showPrintMargin: false\r" +
+    "\n" +
+    "                                },\r" +
+    "\n" +
+    "                                advanced: {\r" +
+    "\n" +
+    "                                  highlightActiveLine: false\r" +
+    "\n" +
+    "                                }\r" +
+    "\n" +
     "                              }\" readonly=\"readonly\" ng-model=\"buildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline ace-read-only\"></div>\n" +
     "</div>\n" +
     "</dl>\n" +
@@ -4461,8 +4514,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>\n" +
     "After downloading and installing it, you can start by logging in. You are currently logged into this console as <strong>{{user.metadata.name}}</strong>. If you want to log into the CLI using the same session token:\n" +
     "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'oc login ' + loginBaseURL + ' --token=' + sessionToken\" input-text=\"'oc login ' + loginBaseURL + ' --token=<hidden>'\"></copy-to-clipboard>\n" +
-    "<pre class=\"code prettyprint ng-binding\" ng-if=\"!sessionToken\">\n" +
-    "                      oc login {{loginBaseURL}}\n" +
+    "<pre class=\"code prettyprint ng-binding\" ng-if=\"!sessionToken\">\r" +
+    "\n" +
+    "                      oc login {{loginBaseURL}}\r" +
+    "\n" +
     "                    </pre>\n" +
     "</p>\n" +
     "<div class=\"alert alert-warning\">\n" +
@@ -4917,15 +4972,21 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"row\">\n" +
-    "<div ng-class=\"{\n" +
-    "                              'col-md-8': advancedOptions || advancedSourceOptions,\n" +
-    "                              'col-lg-12': !advancedOptions && !advancedSourceOptions\n" +
+    "<div ng-class=\"{\r" +
+    "\n" +
+    "                              'col-md-8': advancedOptions || advancedSourceOptions,\r" +
+    "\n" +
+    "                              'col-lg-12': !advancedOptions && !advancedSourceOptions\r" +
+    "\n" +
     "                            }\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"sourceUrl\" class=\"required\" translate>Git Repository URL</label>\n" +
-    "<div ng-class=\"{\n" +
-    "                                  'has-warning': buildConfig.sourceUrl && form.sourceUrl.$touched && !sourceURLPattern.test(buildConfig.sourceUrl),\n" +
-    "                                  'has-error': (form.sourceUrl.$error.required && form.sourceUrl.$dirty)\n" +
+    "<div ng-class=\"{\r" +
+    "\n" +
+    "                                  'has-warning': buildConfig.sourceUrl && form.sourceUrl.$touched && !sourceURLPattern.test(buildConfig.sourceUrl),\r" +
+    "\n" +
+    "                                  'has-error': (form.sourceUrl.$error.required && form.sourceUrl.$dirty)\r" +
+    "\n" +
     "                                }\">\n" +
     "\n" +
     "<input class=\"form-control\" id=\"sourceUrl\" name=\"sourceUrl\" type=\"text\" required aria-describedby=\"from_source_help\" ng-model=\"buildConfig.sourceUrl\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
@@ -5519,7 +5580,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<input type=\"text\" ng-model=\"arg.value\" ng-if=\"!arg.multiline\" required class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
     "\n" +
-    "<textarea ng-model=\"arg.value\" ng-if=\"arg.multiline\" rows=\"5\" required class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
+    "<textarea ng-model=\"arg.value\" ng-if=\"arg.multiline\" rows=\"5\" required class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\r" +
+    "\n" +
     "        </textarea>\n" +
     "<span as-sortable-item-handle class=\"input-group-addon action-button drag-handle\">\n" +
     "<i class=\"fa fa-bars\" aria-hidden=\"true\"></i>\n" +
@@ -5546,7 +5608,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "\n" +
     "<span ng-show=\"multiline\">\n" +
-    "<textarea ng-model=\"nextArg\" name=\"nextArg\" rows=\"10\" ng-attr-id=\"{{id}}-add-arg\" ng-attr-placeholder=\"{{placeholder || 'Add argument'}}\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
+    "<textarea ng-model=\"nextArg\" name=\"nextArg\" rows=\"10\" ng-attr-id=\"{{id}}-add-arg\" ng-attr-placeholder=\"{{placeholder || 'Add argument'}}\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\r" +
+    "\n" +
     "      </textarea>\n" +
     "<div class=\"mar-top-md\">\n" +
     "<a class=\"btn btn-default\" href=\"\" ng-click=\"addArg()\" ng-disabled=\"!nextArg\" ng-attr-aria-disabled=\"!nextArg\" role=\"button\" translate>Add</a>\n" +
@@ -5917,13 +5980,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<truncate-long-text content=\"build.spec.postCommit.script\" limit=\"80\" expandable=\"true\" use-word-boundary=\"false\">\n" +
     "</truncate-long-text>\n" +
     "</code>\n" +
-    "<div ng-if=\"build.spec.postCommit.script | isMultiline\" ui-ace=\"{\n" +
-    "        mode: 'sh',\n" +
-    "        theme: 'eclipse',\n" +
-    "        rendererOptions: {\n" +
-    "          fadeFoldWidgets: true,\n" +
-    "          showPrintMargin: false\n" +
-    "        }\n" +
+    "<div ng-if=\"build.spec.postCommit.script | isMultiline\" ui-ace=\"{\r" +
+    "\n" +
+    "        mode: 'sh',\r" +
+    "\n" +
+    "        theme: 'eclipse',\r" +
+    "\n" +
+    "        rendererOptions: {\r" +
+    "\n" +
+    "          fadeFoldWidgets: true,\r" +
+    "\n" +
+    "          showPrintMargin: false\r" +
+    "\n" +
+    "        }\r" +
+    "\n" +
     "      }\" ng-model=\"build.spec.postCommit.script\" readonly=\"readonly\" class=\"ace-bordered ace-read-only ace-inline mar-top-md mar-bottom-md\">\n" +
     "</div>\n" +
     "</dd>\n" +
@@ -6039,13 +6109,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\" ng-if=\"add.cacert\" id=\"cacert\">\n" +
     "<label class=\"required\" for=\"cacert\" translate>CA Certificate File</label>\n" +
     "<osc-file-input id=\"cacert-file-input\" model=\"newSecret.data.cacert\" drop-zone-id=\"cacert\" help-text=\"Upload your ca.crt file.\" required=\"true\"></osc-file-input>\n" +
-    "<div ui-ace=\"{\n" +
-    "          mode: 'txt',\n" +
-    "          theme: 'eclipse',\n" +
-    "          rendererOptions: {\n" +
-    "            fadeFoldWidgets: true,\n" +
-    "            showPrintMargin: false\n" +
-    "          }\n" +
+    "<div ui-ace=\"{\r" +
+    "\n" +
+    "          mode: 'txt',\r" +
+    "\n" +
+    "          theme: 'eclipse',\r" +
+    "\n" +
+    "          rendererOptions: {\r" +
+    "\n" +
+    "            fadeFoldWidgets: true,\r" +
+    "\n" +
+    "            showPrintMargin: false\r" +
+    "\n" +
+    "          }\r" +
+    "\n" +
     "        }\" ng-model=\"newSecret.data.cacert\" class=\"create-secret-editor ace-bordered\" id=\"cacert-editor\" required></div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6053,12 +6130,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\" id=\"private-key\">\n" +
     "<label for=\"privateKey\" class=\"required\" translate>SSH Private Key</label>\n" +
     "<osc-file-input id=\"private-key-file-input\" model=\"newSecret.data.privateKey\" drop-zone-id=\"private-key\" help-text=\"Upload your private SSH key file.\"></osc-file-input>\n" +
-    "<div ui-ace=\"{\n" +
-    "          theme: 'eclipse',\n" +
-    "          rendererOptions: {\n" +
-    "            fadeFoldWidgets: true,\n" +
-    "            showPrintMargin: false\n" +
-    "          }\n" +
+    "<div ui-ace=\"{\r" +
+    "\n" +
+    "          theme: 'eclipse',\r" +
+    "\n" +
+    "          rendererOptions: {\r" +
+    "\n" +
+    "            fadeFoldWidgets: true,\r" +
+    "\n" +
+    "            showPrintMargin: false\r" +
+    "\n" +
+    "          }\r" +
+    "\n" +
     "        }\" ng-model=\"newSecret.data.privateKey\" class=\"create-secret-editor ace-bordered\" id=\"private-key-editor\" required></div>\n" +
     "<div class=\"help-block\" translate>\n" +
     "Private SSH key file for Git authentication.\n" +
@@ -6077,13 +6160,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\" ng-if=\"add.gitconfig\" id=\"gitconfig\">\n" +
     "<label class=\"required\" for=\"gitconfig\" translate>Git Configuration File</label>\n" +
     "<osc-file-input id=\"gitconfig-file-input\" model=\"newSecret.data.gitconfig\" drop-zone-id=\"gitconfig\" help-text=\"Upload your .gitconfig or  file.\" required=\"true\"></osc-file-input>\n" +
-    "<div ui-ace=\"{\n" +
-    "          mode: 'ini',\n" +
-    "          theme: 'eclipse',\n" +
-    "          rendererOptions: {\n" +
-    "            fadeFoldWidgets: true,\n" +
-    "            showPrintMargin: false\n" +
-    "          }\n" +
+    "<div ui-ace=\"{\r" +
+    "\n" +
+    "          mode: 'ini',\r" +
+    "\n" +
+    "          theme: 'eclipse',\r" +
+    "\n" +
+    "          rendererOptions: {\r" +
+    "\n" +
+    "            fadeFoldWidgets: true,\r" +
+    "\n" +
+    "            showPrintMargin: false\r" +
+    "\n" +
+    "          }\r" +
+    "\n" +
     "        }\" ng-model=\"newSecret.data.gitconfig\" class=\"create-secret-editor ace-bordered\" id=\"gitconfig-editor\" required></div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6140,14 +6230,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\" id=\"docker-config\">\n" +
     "<label for=\"dockerConfig\" class=\"required\" translate>Configuration File</label>\n" +
     "<osc-file-input id=\"dockercfg-file-input\" model=\"newSecret.data.dockerConfig\" drop-zone-id=\"docker-config\" help-text=\"Upload a .dockercfg or .docker/config.json file\" required=\"true\"></osc-file-input>\n" +
-    "<div ui-ace=\"{\n" +
-    "          mode: 'json',\n" +
-    "          theme: 'eclipse',\n" +
-    "          onChange: aceChanged,\n" +
-    "          rendererOptions: {\n" +
-    "            fadeFoldWidgets: true,\n" +
-    "            showPrintMargin: false\n" +
-    "          }\n" +
+    "<div ui-ace=\"{\r" +
+    "\n" +
+    "          mode: 'json',\r" +
+    "\n" +
+    "          theme: 'eclipse',\r" +
+    "\n" +
+    "          onChange: aceChanged,\r" +
+    "\n" +
+    "          rendererOptions: {\r" +
+    "\n" +
+    "            fadeFoldWidgets: true,\r" +
+    "\n" +
+    "            showPrintMargin: false\r" +
+    "\n" +
+    "          }\r" +
+    "\n" +
     "        }\" ng-model=\"newSecret.data.dockerConfig\" class=\"create-secret-editor ace-bordered\" id=\"dockerconfig-editor\" required></div>\n" +
     "<div class=\"help-block\" translate>\n" +
     "File with credentials and other configuration for connecting to a secured image registry.\n" +
@@ -6569,11 +6667,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\" ng-attr-id=\"drop-zone-{{$id}}\">\n" +
     "<label ng-attr-for=\"name-{{$id}}\" translate>Value</label>\n" +
     "<osc-file-input model=\"item.value\" drop-zone-id=\"drop-zone-{{$id}}\" help-text=\"{{'Enter a value for the config map entry or use the contents of a file.'|translate}}\"></osc-file-input>\n" +
-    "<div ui-ace=\"{\n" +
-    "          theme: 'eclipse',\n" +
-    "          rendererOptions: {\n" +
-    "            showPrintMargin: false\n" +
-    "          }\n" +
+    "<div ui-ace=\"{\r" +
+    "\n" +
+    "          theme: 'eclipse',\r" +
+    "\n" +
+    "          rendererOptions: {\r" +
+    "\n" +
+    "            showPrintMargin: false\r" +
+    "\n" +
+    "          }\r" +
+    "\n" +
     "        }\" ng-model=\"item.value\" class=\"ace-bordered ace-inline-small mar-top-sm\" ng-attr-id=\"value-{{$id}}\"></div>\n" +
     "</div>\n" +
     "<div class=\"mar-bottom-md\">\n" +
@@ -6984,15 +7087,24 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<form name=\"form\">\n" +
     "<div class=\"form-group\" id=\"from-file\">\n" +
     "<osc-file-input model=\"editorContent\" drop-zone-id=\"from-file\" help-text=\"Upload file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-disabled=\"false\"></osc-file-input>\n" +
-    "<div ui-ace=\"{\n" +
-    "          mode: 'yaml',\n" +
-    "          theme: 'eclipse',\n" +
-    "          onLoad: aceLoaded,\n" +
-    "          onChange: aceChanged,\n" +
-    "          rendererOptions: {\n" +
-    "            fadeFoldWidgets: true,\n" +
-    "            showPrintMargin: false\n" +
-    "          }\n" +
+    "<div ui-ace=\"{\r" +
+    "\n" +
+    "          mode: 'yaml',\r" +
+    "\n" +
+    "          theme: 'eclipse',\r" +
+    "\n" +
+    "          onLoad: aceLoaded,\r" +
+    "\n" +
+    "          onChange: aceChanged,\r" +
+    "\n" +
+    "          rendererOptions: {\r" +
+    "\n" +
+    "            fadeFoldWidgets: true,\r" +
+    "\n" +
+    "            showPrintMargin: false\r" +
+    "\n" +
+    "          }\r" +
+    "\n" +
     "        }\" ng-model=\"editorContent\" class=\"editor ace-bordered yaml-mode\" id=\"add-component-editor\" required></div>\n" +
     "</div>\n" +
     "<div ng-if=\"!isDialog\" class=\"buttons gutter-bottom\">\n" +
@@ -7439,10 +7551,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/logs/_log-raw.html',
-    "<pre>\n" +
-    "<code>\n" +
-    "{{::log}}\n" +
-    "</code>\n" +
+    "<pre>\r" +
+    "\n" +
+    "<code>\r" +
+    "\n" +
+    "{{::log}}\r" +
+    "\n" +
+    "</code>\r" +
+    "\n" +
     "</pre>"
   );
 
@@ -7601,8 +7717,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p translate>Go to the <a href=\"\" ng-click=\"$ctrl.goToOverview()\">overview page</a> to see more details about this project. Make sure you don't already have <a href=\"project/{{$ctrl.projectName}}/browse/services\">services</a>, <a href=\"project/{{$ctrl.projectName}}/browse/builds\">build configs</a>, <a href=\"project/{{$ctrl.projectName}}/browse/deployments\">deployment configs</a>, or other resources with the same names you are trying to create. Refer to the <a target=\"_blank\" href=\"{{'new_app' | helpLink}}\">documentation for creating new applications</a> for more information.</p>\n" +
     "<h3 translate>Command line tools</h3>\n" +
     "<p translate>You may want to use the <code>oc</code> command line tool to help with troubleshooting. After <a target=\"_blank\" href=\"command-line\">downloading and installing</a> it, you can log in, switch to this particular project, and try some commands :</p>\n" +
-    "<pre class=\"code prettyprint\">oc login {{$ctrl.loginBaseUrl}}\n" +
-    "oc project {{$ctrl.projectName}}\n" +
+    "<pre class=\"code prettyprint\">oc login {{$ctrl.loginBaseUrl}}\r" +
+    "\n" +
+    "oc project {{$ctrl.projectName}}\r" +
+    "\n" +
     "oc logs -h</pre>\n" +
     "<p translate>For more information about the command line tools, check the <a target=\"_blank\" href=\"{{'cli' | helpLink}}\">CLI Reference</a> and <a target=\"_blank\" href=\"{{'basic_cli_operations' | helpLink}}\">Basic CLI Operations</a>.</p>\n" +
     "</div>\n" +
@@ -7611,8 +7729,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p translate>The web console is convenient, but if you need deeper control you may want to try our command line tools.</p>\n" +
     "<h3 translate>Command line tools</h3>\n" +
     "<p translate><a target=\"_blank\" href=\"command-line\">Download and install</a> the <code>oc</code> command line tool. After that, you can start by logging in, switching to this particular project, and displaying an overview of it, by doing:</p>\n" +
-    "<pre class=\"code prettyprint\">oc login {{$ctrl.loginBaseUrl}}\n" +
-    "oc project {{$ctrl.projectName}}\n" +
+    "<pre class=\"code prettyprint\">oc login {{$ctrl.loginBaseUrl}}\r" +
+    "\n" +
+    "oc project {{$ctrl.projectName}}\r" +
+    "\n" +
     "oc status</pre>\n" +
     "<p translate>For more information about the command line tools, check the <a target=\"_blank\" href=\"{{'cli' | helpLink}}\">CLI Reference</a> and <a target=\"_blank\" href=\"{{'basic_cli_operations' | helpLink}}\">Basic CLI Operations</a>.</p>\n" +
     "</div>\n" +
@@ -7872,7 +7992,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"has-error\" ng-show=\"uploadError\">\n" +
     "<span class=\"help-block\" translate>There was an error reading the file. Please copy the file content into the text area.</span>\n" +
     "</div>\n" +
-    "<textarea class=\"form-control\" rows=\"5\" ng-show=\"showTextArea || !supportsFileUpload\" ng-model=\"model\" ng-required=\"required\" ng-disabled=\"disabled\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" ng-attr-aria-describedby=\"{{helpText ? helpID : undefined}}\">\n" +
+    "<textarea class=\"form-control\" rows=\"5\" ng-show=\"showTextArea || !supportsFileUpload\" ng-model=\"model\" ng-required=\"required\" ng-disabled=\"disabled\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" ng-attr-aria-describedby=\"{{helpText ? helpID : undefined}}\">\r" +
+    "\n" +
     "  </textarea>\n" +
     "<a href=\"\" ng-show=\"(model || fileName) && !disabled\" ng-click=\"cleanInputValues()\" translate>Clear Value</a>\n" +
     "</div>"
@@ -9207,14 +9328,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dl class=\"dl-horizontal left\">\n" +
     "<div ng-if=\"sources.git\">\n" +
     "<div class=\"row\">\n" +
-    "<div ng-class=\"{\n" +
-    "                              'col-lg-8': view.advancedOptions,\n" +
+    "<div ng-class=\"{\r" +
+    "\n" +
+    "                              'col-lg-8': view.advancedOptions,\r" +
+    "\n" +
     "                              'col-lg-12': !view.advancedOptions}\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"sourceUrl\" class=\"required\" translate>Git Repository URL</label>\n" +
-    "<div ng-class=\"{\n" +
-    "                                  'has-warning': form.sourceUrl.$touched && !sourceURLPattern.test(updatedBuildConfig.spec.source.git.uri),\n" +
-    "                                  'has-error': form.sourceUrl.$touched && form.sourceUrl.$error.required\n" +
+    "<div ng-class=\"{\r" +
+    "\n" +
+    "                                  'has-warning': form.sourceUrl.$touched && !sourceURLPattern.test(updatedBuildConfig.spec.source.git.uri),\r" +
+    "\n" +
+    "                                  'has-error': form.sourceUrl.$touched && form.sourceUrl.$error.required\r" +
+    "\n" +
     "                                }\">\n" +
     "\n" +
     "<input class=\"form-control\" id=\"sourceUrl\" name=\"sourceUrl\" ng-model=\"updatedBuildConfig.spec.source.git.uri\" type=\"text\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-describedby=\"source-url-help\" required>\n" +
@@ -9258,13 +9384,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"sources.dockerfile\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"buildFrom\" translate>Dockerfile</label>\n" +
-    "<div ui-ace=\"{\n" +
-    "                              mode: 'dockerfile',\n" +
-    "                              theme: 'dreamweaver',\n" +
-    "                              rendererOptions: {\n" +
-    "                                fadeFoldWidgets: true,\n" +
-    "                                showPrintMargin: false\n" +
-    "                              }\n" +
+    "<div ui-ace=\"{\r" +
+    "\n" +
+    "                              mode: 'dockerfile',\r" +
+    "\n" +
+    "                              theme: 'dreamweaver',\r" +
+    "\n" +
+    "                              rendererOptions: {\r" +
+    "\n" +
+    "                                fadeFoldWidgets: true,\r" +
+    "\n" +
+    "                                showPrintMargin: false\r" +
+    "\n" +
+    "                              }\r" +
+    "\n" +
     "                            }\" ng-model=\"updatedBuildConfig.spec.source.dockerfile\" class=\"ace-bordered ace-inline dockerfile-mode\"></div>\n" +
     "</div>\n" +
     "<div class=\"form-group\" ng-if=\"updatedBuildConfig.spec.strategy.dockerStrategy.dockerfilePath && view.advancedOptions\">\n" +
@@ -9364,13 +9497,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"jenkinsfileOptions.type === 'inline'\">\n" +
     "<label translate>Jenkinsfile</label>\n" +
-    "<div ui-ace=\"{\n" +
-    "                          mode: 'groovy',\n" +
-    "                          theme: 'eclipse',\n" +
-    "                          rendererOptions: {\n" +
-    "                            fadeFoldWidgets: true,\n" +
-    "                            showPrintMargin: false\n" +
-    "                          }\n" +
+    "<div ui-ace=\"{\r" +
+    "\n" +
+    "                          mode: 'groovy',\r" +
+    "\n" +
+    "                          theme: 'eclipse',\r" +
+    "\n" +
+    "                          rendererOptions: {\r" +
+    "\n" +
+    "                            fadeFoldWidgets: true,\r" +
+    "\n" +
+    "                            showPrintMargin: false\r" +
+    "\n" +
+    "                          }\r" +
+    "\n" +
     "                        }\" ng-model=\"updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile\" class=\"ace-bordered ace-inline\"></div>\n" +
     "</div>\n" +
     "<div class=\"mar-top-md mar-bottom-md\">\n" +
@@ -9606,13 +9746,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<fieldset>\n" +
     "<div ng-if=\"buildHookSelection.type.id === 'script' || buildHookSelection.type.id === 'scriptArgs'\">\n" +
     "<label class=\"required\" translate>Script</label>\n" +
-    "<div ui-ace=\"{\n" +
-    "                                  mode: 'sh',\n" +
-    "                                  theme: 'eclipse',\n" +
-    "                                  rendererOptions: {\n" +
-    "                                    fadeFoldWidgets: true,\n" +
-    "                                    showPrintMargin: false\n" +
-    "                                  }\n" +
+    "<div ui-ace=\"{\r" +
+    "\n" +
+    "                                  mode: 'sh',\r" +
+    "\n" +
+    "                                  theme: 'eclipse',\r" +
+    "\n" +
+    "                                  rendererOptions: {\r" +
+    "\n" +
+    "                                    fadeFoldWidgets: true,\r" +
+    "\n" +
+    "                                    showPrintMargin: false\r" +
+    "\n" +
+    "                                  }\r" +
+    "\n" +
     "                                }\" ng-model=\"updatedBuildConfig.spec.postCommit.script\" required class=\"ace-bordered ace-inline\">\n" +
     "</div>\n" +
     "</div>\n" +
@@ -10060,40 +10207,64 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "<p>\n" +
     "<translate>Run an DataMan OS build and deployment:</translate>\n" +
-    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'node {\n" +
-    "  stage(\\'Build\\') {\n" +
-    "    openshiftBuild(buildConfig: \\'my-build-config\\', showBuildLogs: \\'true\\')\n" +
-    "  }\n" +
-    "  stage(\\'Deploy\\') {\n" +
-    "    openshiftDeploy(deploymentConfig: \\'my-deployment-config\\')\n" +
-    "  }\n" +
-    "}\n" +
+    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'node {\r" +
+    "\n" +
+    "  stage(\\'Build\\') {\r" +
+    "\n" +
+    "    openshiftBuild(buildConfig: \\'my-build-config\\', showBuildLogs: \\'true\\')\r" +
+    "\n" +
+    "  }\r" +
+    "\n" +
+    "  stage(\\'Deploy\\') {\r" +
+    "\n" +
+    "    openshiftDeploy(deploymentConfig: \\'my-deployment-config\\')\r" +
+    "\n" +
+    "  }\r" +
+    "\n" +
+    "}\r" +
+    "\n" +
     "'\" multiline=\"true\">\n" +
     "</copy-to-clipboard>\n" +
     "</p>\n" +
     "<p>\n" +
     "<translate>Checkout source code and run shell commands on a node labelled <var>maven:</var></translate>\n" +
-    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'node(\\'maven\\') {\n" +
-    "  stage(\\'Checkout\\') {\n" +
-    "    checkout scm\n" +
-    "  }\n" +
-    "  stage(\\'Build\\') {\n" +
-    "    sh \\'mvn install\\'\n" +
-    "  }\n" +
-    "  stage(\\'Unit Test\\') {\n" +
-    "    sh \\'mvn test\\'\n" +
-    "  }\n" +
-    "}\n" +
+    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'node(\\'maven\\') {\r" +
+    "\n" +
+    "  stage(\\'Checkout\\') {\r" +
+    "\n" +
+    "    checkout scm\r" +
+    "\n" +
+    "  }\r" +
+    "\n" +
+    "  stage(\\'Build\\') {\r" +
+    "\n" +
+    "    sh \\'mvn install\\'\r" +
+    "\n" +
+    "  }\r" +
+    "\n" +
+    "  stage(\\'Unit Test\\') {\r" +
+    "\n" +
+    "    sh \\'mvn test\\'\r" +
+    "\n" +
+    "  }\r" +
+    "\n" +
+    "}\r" +
+    "\n" +
     "'\" multiline=\"true\">\n" +
     "</copy-to-clipboard>\n" +
     "</p>\n" +
     "<p>\n" +
     "<translate>Prompt for manual input:</translate>\n" +
-    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'node {\n" +
-    "  stage(\\'Approve\\') {\n" +
-    "    input \\'Promote to production?\\'\n" +
-    "  }\n" +
-    "}\n" +
+    "<copy-to-clipboard display-wide=\"true\" clipboard-text=\"'node {\r" +
+    "\n" +
+    "  stage(\\'Approve\\') {\r" +
+    "\n" +
+    "    input \\'Promote to production?\\'\r" +
+    "\n" +
+    "  }\r" +
+    "\n" +
+    "}\r" +
+    "\n" +
     "'\" multiline=\"true\">\n" +
     "</copy-to-clipboard>\n" +
     "</p>\n" +
@@ -10219,13 +10390,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<confirm-on-exit dirty=\"modified\"></confirm-on-exit>\n" +
     "\n" +
-    "<div ui-ace=\"{\n" +
-    "                mode: 'yaml',\n" +
-    "                theme: 'eclipse',\n" +
-    "                onLoad: aceLoaded,\n" +
-    "                rendererOptions: {\n" +
-    "                  showPrintMargin: false\n" +
-    "                }\n" +
+    "<div ui-ace=\"{\r" +
+    "\n" +
+    "                mode: 'yaml',\r" +
+    "\n" +
+    "                theme: 'eclipse',\r" +
+    "\n" +
+    "                onLoad: aceLoaded,\r" +
+    "\n" +
+    "                rendererOptions: {\r" +
+    "\n" +
+    "                  showPrintMargin: false\r" +
+    "\n" +
+    "                }\r" +
+    "\n" +
     "              }\" ng-model=\"editor.model\" class=\"editor ace-bordered yaml-mode\"></div>\n" +
     "<div class=\"button-group mar-top-xl\">\n" +
     "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-click=\"save()\" ng-disabled=\"!modified || resourceChanged || resourceDeleted || updatingNow\" translate>Save</button>\n" +
@@ -10669,8 +10847,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p translate>\n" +
     "CPU is often measured in units called <var>millicores</var>. Each millicore is equivalent to <sup>1</sup>&frasl;<sub>1000</sub> of a CPU&nbsp;core.\n" +
     "</p>\n" +
-    "<pre translate>\n" +
-    "1000 millcores  =  1 core\n" +
+    "<pre translate>\r" +
+    "\n" +
+    "1000 millcores  =  1 core\r" +
+    "\n" +
     "</pre>\n" +
     "<h3 translate>Memory and Storage</h3>\n" +
     "<p translate>\n" +
@@ -10679,20 +10859,30 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-sm-6\">\n" +
     "<h4 translate>Binary Units</h4>\n" +
-    "<pre>\n" +
-    "1024 bytes  =  1 KiB\n" +
-    "1024 KiB    =  1 MiB\n" +
-    "1024 MiB    =  1 GiB\n" +
-    "1024 GiB    =  1 TiB\n" +
+    "<pre>\r" +
+    "\n" +
+    "1024 bytes  =  1 KiB\r" +
+    "\n" +
+    "1024 KiB    =  1 MiB\r" +
+    "\n" +
+    "1024 MiB    =  1 GiB\r" +
+    "\n" +
+    "1024 GiB    =  1 TiB\r" +
+    "\n" +
     "</pre>\n" +
     "</div>\n" +
     "<div class=\"col-sm-6\">\n" +
     "<h4 translate>Decimal Units</h4>\n" +
-    "<pre>\n" +
-    "1000 bytes  =  1 kB\n" +
-    "1000 kB     =  1 MB\n" +
-    "1000 MB     =  1 GB\n" +
-    "1000 GB     =  1 TB\n" +
+    "<pre>\r" +
+    "\n" +
+    "1000 bytes  =  1 kB\r" +
+    "\n" +
+    "1000 kB     =  1 MB\r" +
+    "\n" +
+    "1000 MB     =  1 GB\r" +
+    "\n" +
+    "1000 GB     =  1 TB\r" +
+    "\n" +
     "</pre>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -11845,13 +12035,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li ng-if=\"'deploymentconfigs' | canI : 'update'\" role=\"menuitem\">\n" +
     "<a ng-href=\"{{row.apiObject | editResourceURL}}\" translate>Edit</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"('pod_presets' | enableTechPreviewFeature)\n" +
-    "                      && row.state.bindableServiceInstances.length\n" +
+    "<li ng-if=\"('pod_presets' | enableTechPreviewFeature)\r" +
+    "\n" +
+    "                      && row.state.bindableServiceInstances.length\r" +
+    "\n" +
     "                      && ({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create')\" role=\"menuitem\">\n" +
     "<a href=\"\" ng-click=\"row.showOverlayPanel('bindService', {target: row.apiObject})\" translate>Create Binding</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"('pod_presets' | enableTechPreviewFeature)\n" +
-    "                      && row.state.deleteableBindingsByApplicationUID[row.apiObject.metadata.uid].length\n" +
+    "<li ng-if=\"('pod_presets' | enableTechPreviewFeature)\r" +
+    "\n" +
+    "                      && row.state.deleteableBindingsByApplicationUID[row.apiObject.metadata.uid].length\r" +
+    "\n" +
     "                      && ({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'delete')\" role=\"menuitem\">\n" +
     "<a href=\"\" ng-click=\"row.showOverlayPanel('unbindService', {target: row.apiObject})\" translate>Delete Binding</a>\n" +
     "</li>\n" +
@@ -11881,13 +12075,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li role=\"menuitem\" ng-if=\"row.rgv | canI : 'update'\">\n" +
     "<a ng-href=\"{{row.apiObject | editYamlURL}}\" translate>Edit YAML</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"('pod_presets' | enableTechPreviewFeature)\n" +
-    "                      && row.state.bindableServiceInstances.length\n" +
+    "<li ng-if=\"('pod_presets' | enableTechPreviewFeature)\r" +
+    "\n" +
+    "                      && row.state.bindableServiceInstances.length\r" +
+    "\n" +
     "                      && ({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create')\" role=\"menuitem\">\n" +
     "<a href=\"\" ng-click=\"row.showOverlayPanel('bindService', {target: row.apiObject})\" translate>Create Binding</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"('pod_presets' | enableTechPreviewFeature)\n" +
-    "                      && row.state.deleteableBindingsByApplicationUID[row.apiObject.metadata.uid].length\n" +
+    "<li ng-if=\"('pod_presets' | enableTechPreviewFeature)\r" +
+    "\n" +
+    "                      && row.state.deleteableBindingsByApplicationUID[row.apiObject.metadata.uid].length\r" +
+    "\n" +
     "                      && ({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'delete')\" role=\"menuitem\">\n" +
     "<a href=\"\" ng-click=\"row.showOverlayPanel('unbindService', {target: row.apiObject})\" translate>Delete Binding</a>\n" +
     "</li>\n" +
@@ -12050,23 +12248,33 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-content\">\n" +
     "<alerts alerts=\"row.notifications\"></alerts>\n" +
     "<div ng-if=\"row.current\">\n" +
-    "<div class=\"row-expanded-top\" ng-class=\"{\n" +
-    "        'metrics-active': row.state.showMetrics,\n" +
-    "        'metrics-not-active': !row.state.showMetrics\n" +
+    "<div class=\"row-expanded-top\" ng-class=\"{\r" +
+    "\n" +
+    "        'metrics-active': row.state.showMetrics,\r" +
+    "\n" +
+    "        'metrics-not-active': !row.state.showMetrics\r" +
+    "\n" +
     "      }\">\n" +
-    "<div ng-if=\"row.state.breakpoint !== 'xxs' && row.state.breakpoint !== 'xs'\" class=\"overview-pod-template\" ng-class=\"{\n" +
-    "          'ng-enter': row.previous,\n" +
-    "          'hidden-sm hidden-md': row.previous\n" +
+    "<div ng-if=\"row.state.breakpoint !== 'xxs' && row.state.breakpoint !== 'xs'\" class=\"overview-pod-template\" ng-class=\"{\r" +
+    "\n" +
+    "          'ng-enter': row.previous,\r" +
+    "\n" +
+    "          'hidden-sm hidden-md': row.previous\r" +
+    "\n" +
     "        }\">\n" +
     "\n" +
     "<pod-template pod-template=\"row.current | podTemplate\" images-by-docker-reference=\"row.state.imagesByDockerReference\" builds=\"row.state.builds\" class=\"hide-ng-leave\">\n" +
     "</pod-template>\n" +
     "</div>\n" +
-    "<div class=\"overview-animation-block\" ng-class=\"{\n" +
-    "        'animation-in-progress': row.previous\n" +
+    "<div class=\"overview-animation-block\" ng-class=\"{\r" +
+    "\n" +
+    "        'animation-in-progress': row.previous\r" +
+    "\n" +
     "      }\">\n" +
-    "<div ng-if=\"row.state.showMetrics && !row.previous\" class=\"overview-metrics\" ng-class=\"{\n" +
-    "          'ng-enter': row.previous\n" +
+    "<div ng-if=\"row.state.showMetrics && !row.previous\" class=\"overview-metrics\" ng-class=\"{\r" +
+    "\n" +
+    "          'ng-enter': row.previous\r" +
+    "\n" +
     "        }\">\n" +
     "<div ng-if=\"row.apiObject.kind === 'Pod'\">\n" +
     "<deployment-metrics pods=\"[row.apiObject]\" containers=\"row.apiObject.spec.containers\" profile=\"compact\" alerts=\"row.state.alerts\" class=\"overview-metrics\">\n" +
@@ -12079,9 +12287,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h4 class=\"h5\" translate>Average Usage <small>Last 15 Minutes</small></h4>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"overview-deployment-donut\" ng-class=\"{\n" +
-    "            'ng-enter': row.previous,\n" +
-    "            'stacked-template': row.state.breakpoint !== 'lg'\n" +
+    "<div class=\"overview-deployment-donut\" ng-class=\"{\r" +
+    "\n" +
+    "            'ng-enter': row.previous,\r" +
+    "\n" +
+    "            'stacked-template': row.state.breakpoint !== 'lg'\r" +
+    "\n" +
     "        }\">\n" +
     "<div ng-if=\"row.previous\" class=\"previous-donut\">\n" +
     "<deployment-donut rc=\"row.previous\" deployment-config=\"row.apiObject\" pods=\"row.getPods(row.previous)\" hpa=\"row.hpa\" limit-ranges=\"row.state.limitRanges\" project=\"row.state.project\" quotas=\"row.state.quotas\" cluster-quotas=\"row.state.clusterQuotas\" scalable=\"false\">\n" +
@@ -12187,9 +12398,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/overview/_list-row.html',
-    "<div class=\"list-pf-item\" ng-class=\"{\n" +
-    "  'active': row.expanded,\n" +
-    "  'deployment-in-progress': row.previous\n" +
+    "<div class=\"list-pf-item\" ng-class=\"{\r" +
+    "\n" +
+    "  'active': row.expanded,\r" +
+    "\n" +
+    "  'deployment-in-progress': row.previous\r" +
+    "\n" +
     "}\">\n" +
     "<div class=\"list-pf-container\" ng-click=\"row.toggleExpand($event)\">\n" +
     "<div class=\"list-pf-chevron\">\n" +
@@ -12426,8 +12640,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-details\">\n" +
     "<div ng-if=\"!row.expanded\">\n" +
     "<div class=\"hidden-xs hidden-sm\">\n" +
-    "<span ng-if=\"!row.bindings.length\n" +
-    "                        && row.isBindable\n" +
+    "<span ng-if=\"!row.bindings.length\r" +
+    "\n" +
+    "                        && row.isBindable\r" +
+    "\n" +
     "                        && ({resource: 'bindings', group: 'servicecatalog.k8s.io'} | canI : 'create')\">\n" +
     "<a href=\"\" ng-click=\"row.showOverlayPanel('bindService', {target: row.apiObject})\" translate>Create Binding</a>\n" +
     "</span>\n" +
@@ -12949,9 +13165,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "</tr>\n" +
     "\n" +
-    "<tr ng-repeat=\"resourceType in orderedTypesByClusterQuota[quota.metadata.name]\" ng-if=\"resourceType !== 'resourcequotas'\" ng-class=\"{\n" +
-    "                              warning: isAtLimit(quota, resourceType),\n" +
-    "                              disabled: (quota.status.total.hard[resourceType] || quota.spec.quota.hard[resourceType]) === '0'\n" +
+    "<tr ng-repeat=\"resourceType in orderedTypesByClusterQuota[quota.metadata.name]\" ng-if=\"resourceType !== 'resourcequotas'\" ng-class=\"{\r" +
+    "\n" +
+    "                              warning: isAtLimit(quota, resourceType),\r" +
+    "\n" +
+    "                              disabled: (quota.status.total.hard[resourceType] || quota.spec.quota.hard[resourceType]) === '0'\r" +
+    "\n" +
     "                            }\">\n" +
     "<td>\n" +
     "{{resourceType | humanizeQuotaResource : true}}\n" +
@@ -13031,9 +13250,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "</tr>\n" +
     "\n" +
-    "<tr ng-repeat=\"resourceType in orderedTypesByQuota[quota.metadata.name]\" ng-if=\"resourceType !== 'resourcequotas'\" ng-class=\"{\n" +
-    "                              warning: isAtLimit(quota, resourceType),\n" +
-    "                              disabled: (quota.status.hard[resourceType] || quota.spec.hard[resourceType]) === '0'\n" +
+    "<tr ng-repeat=\"resourceType in orderedTypesByQuota[quota.metadata.name]\" ng-if=\"resourceType !== 'resourcequotas'\" ng-class=\"{\r" +
+    "\n" +
+    "                              warning: isAtLimit(quota, resourceType),\r" +
+    "\n" +
+    "                              disabled: (quota.status.hard[resourceType] || quota.spec.hard[resourceType]) === '0'\r" +
+    "\n" +
     "                            }\">\n" +
     "<td>\n" +
     "{{resourceType | humanizeQuotaResource : true}}\n" +
