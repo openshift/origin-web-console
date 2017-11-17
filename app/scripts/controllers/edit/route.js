@@ -13,6 +13,7 @@ angular.module('openshiftConsole')
                        $location,
                        $routeParams,
                        $scope,
+                       APIService,
                        AuthorizationService,
                        DataService,
                        Navigate,
@@ -47,6 +48,10 @@ angular.module('openshiftConsole')
     };
     $scope.cancel = navigateBack;
 
+    var routesVersion = APIService.getPreferredVersion('routes');
+    var servicesVersion = APIService.getPreferredVersion('services');
+
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -64,7 +69,7 @@ angular.module('openshiftConsole')
         };
 
         var route;
-        DataService.get("routes", $scope.routeName, context).then(
+        DataService.get(routesVersion, $scope.routeName, context).then(
           function(original) {
             if (original.spec.to.kind !== 'Service') {
               showNonServiceTargetError();
@@ -86,7 +91,7 @@ angular.module('openshiftConsole')
               tls: angular.copy(_.get(route, 'spec.tls'))
             };
 
-            DataService.list("services", context).then(function(resp) {
+            DataService.list(servicesVersion, context).then(function(resp) {
               $scope.loading = false;
 
               var servicesByName = resp.by("metadata.name");
@@ -168,7 +173,7 @@ angular.module('openshiftConsole')
             hideErrorNotifications();
             $scope.disableInputs = true;
             var updated = updateRouteFields();
-            DataService.update('routes', $scope.routeName, updated, context)
+            DataService.update(routesVersion, $scope.routeName, updated, context)
               .then(function() { // Success
                 NotificationsService.addNotification({
                   type: "success",
