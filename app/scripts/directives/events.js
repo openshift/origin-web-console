@@ -1,7 +1,13 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('events', function($routeParams, $filter, DataService, KeywordService, ProjectsService, Logger) {
+  .directive('events', function(
+    $routeParams,
+    $filter,
+    APIService,
+    DataService,
+    KeywordService,
+    Logger) {
     return {
       restrict: 'E',
       scope: {
@@ -13,7 +19,7 @@ angular.module('openshiftConsole')
         var allEvents;
         var uids = {};
         var watches = [];
-
+        var eventsVersion = APIService.getPreferredVersion('events');
         $scope.filter = {
           text: ''
         };
@@ -157,7 +163,7 @@ angular.module('openshiftConsole')
           }
         });
 
-        watches.push(DataService.watch("events", $scope.projectContext, function(events) {
+        watches.push(DataService.watch(eventsVersion, $scope.projectContext, function(events) {
           allEvents = events.by("metadata.name");
           debounceUpdate();
           Logger.log("events (subscribe)", $scope.filteredEvents);
