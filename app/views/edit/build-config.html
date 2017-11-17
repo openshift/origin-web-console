@@ -18,8 +18,9 @@
                   <div ng-if="sources.git">
                     <div class="row">
                       <div ng-class="{
-                        'col-lg-8': view.advancedOptions,
-                        'col-lg-12': !view.advancedOptions}">
+                        'col-lg-8': view.advancedOptions || view.showGitReference,
+                        'col-lg-12': !view.advancedOptions && !view.showGitReference
+                      }">
                         <div class="form-group">
                           <label for="sourceUrl" class="required">Git Repository URL</label>
                           <div ng-class="{
@@ -40,7 +41,11 @@
                           </div>
                           <div class="help-block" id="source-url-help">
                             Git URL of the source code to build.
-                            <span ng-if="!view.advancedOptions">If your Git repository is private, view the <a href="" ng-click="view.advancedOptions = true">advanced options</a> to set up authentication.</span>
+                            <span ng-if="!view.advancedOptions && !buildConfig.spec.source.sourceSecret">
+                              If your Git repository is private, view the
+                              <a href="" ng-click="view.advancedOptions = true">advanced options</a>
+                              to set up authentication.
+                            </span>
                           </div>
                           <div class="has-error" ng-if="form.sourceUrl.$touched && form.sourceUrl.$error.required">
                             <span class="help-block">A Git repository URL is required.</span>
@@ -51,7 +56,7 @@
                         </div>
 
                       </div>
-                      <div class="col-lg-4" ng-if="view.advancedOptions">
+                      <div class="col-lg-4" ng-if="view.advancedOptions || view.showGitReference">
                         <div class="form-group editor">
                           <label for="sourceRef">Git Reference</label>
                           <div>
@@ -71,33 +76,31 @@
                       </div>
                     </div>
 
-                    <div ng-if="view.advancedOptions">
-                      <div class="form-group">
-                        <label for="sourceContextDir">Context Dir</label>
-                        <div>
-                          <input class="form-control"
-                            id="sourceContextDir"
-                            name="sourceContextDir"
-                            type="text"
-                            ng-model="updatedBuildConfig.spec.source.contextDir"
-                            placeholder="/"
-                            autocorrect="off"
-                            autocapitalize="none"
-                            spellcheck="false"
-                            aria-describedby="context-dir-help">
-                        </div>
-                        <div class="help-block" id="context-dir-help">Optional subdirectory for the application source code, used as the context directory for the build.</div>
+                    <div class="form-group" ng-if="view.advancedOptions || buildConfig.spec.source.contextDir">
+                      <label for="sourceContextDir">Context Dir</label>
+                      <div>
+                        <input class="form-control"
+                          id="sourceContextDir"
+                          name="sourceContextDir"
+                          type="text"
+                          ng-model="updatedBuildConfig.spec.source.contextDir"
+                          placeholder="/"
+                          autocorrect="off"
+                          autocapitalize="none"
+                          spellcheck="false"
+                          aria-describedby="context-dir-help">
                       </div>
-                      <div class="form-group">
-                        <osc-secrets model="secrets.picked.gitSecret"
-                                    namespace="projectName"
-                                    display-type="source"
-                                    type="source"
-                                    service-account-to-link="builder"
-                                    secrets-by-type="secrets.secretsByType"
-                                    alerts="alerts">
-                        </osc-secrets>
-                      </div>
+                      <div class="help-block" id="context-dir-help">Optional subdirectory for the application source code, used as the context directory for the build.</div>
+                    </div>
+                    <div class="form-group" ng-if="view.advancedOptions || buildConfig.spec.source.sourceSecret">
+                      <osc-secrets model="secrets.picked.gitSecret"
+                                  namespace="projectName"
+                                  display-type="source"
+                                  type="source"
+                                  service-account-to-link="builder"
+                                  secrets-by-type="secrets.secretsByType"
+                                  alerts="alerts">
+                      </osc-secrets>
                     </div>
                   </div>
 

@@ -9512,8 +9512,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"sources.git\">\n" +
     "<div class=\"row\">\n" +
     "<div ng-class=\"{\n" +
-    "                        'col-lg-8': view.advancedOptions,\n" +
-    "                        'col-lg-12': !view.advancedOptions}\">\n" +
+    "                        'col-lg-8': view.advancedOptions || view.showGitReference,\n" +
+    "                        'col-lg-12': !view.advancedOptions && !view.showGitReference\n" +
+    "                      }\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"sourceUrl\" class=\"required\">Git Repository URL</label>\n" +
     "<div ng-class=\"{\n" +
@@ -9525,7 +9526,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"help-block\" id=\"source-url-help\">\n" +
     "Git URL of the source code to build.\n" +
-    "<span ng-if=\"!view.advancedOptions\">If your Git repository is private, view the <a href=\"\" ng-click=\"view.advancedOptions = true\">advanced options</a> to set up authentication.</span>\n" +
+    "<span ng-if=\"!view.advancedOptions && !buildConfig.spec.source.sourceSecret\">\n" +
+    "If your Git repository is private, view the\n" +
+    "<a href=\"\" ng-click=\"view.advancedOptions = true\">advanced options</a>\n" +
+    "to set up authentication.\n" +
+    "</span>\n" +
     "</div>\n" +
     "<div class=\"has-error\" ng-if=\"form.sourceUrl.$touched && form.sourceUrl.$error.required\">\n" +
     "<span class=\"help-block\">A Git repository URL is required.</span>\n" +
@@ -9535,7 +9540,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"col-lg-4\" ng-if=\"view.advancedOptions\">\n" +
+    "<div class=\"col-lg-4\" ng-if=\"view.advancedOptions || view.showGitReference\">\n" +
     "<div class=\"form-group editor\">\n" +
     "<label for=\"sourceRef\">Git Reference</label>\n" +
     "<div>\n" +
@@ -9545,18 +9550,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"view.advancedOptions\">\n" +
-    "<div class=\"form-group\">\n" +
+    "<div class=\"form-group\" ng-if=\"view.advancedOptions || buildConfig.spec.source.contextDir\">\n" +
     "<label for=\"sourceContextDir\">Context Dir</label>\n" +
     "<div>\n" +
     "<input class=\"form-control\" id=\"sourceContextDir\" name=\"sourceContextDir\" type=\"text\" ng-model=\"updatedBuildConfig.spec.source.contextDir\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"context-dir-help\">\n" +
     "</div>\n" +
     "<div class=\"help-block\" id=\"context-dir-help\">Optional subdirectory for the application source code, used as the context directory for the build.</div>\n" +
     "</div>\n" +
-    "<div class=\"form-group\">\n" +
+    "<div class=\"form-group\" ng-if=\"view.advancedOptions || buildConfig.spec.source.sourceSecret\">\n" +
     "<osc-secrets model=\"secrets.picked.gitSecret\" namespace=\"projectName\" display-type=\"source\" type=\"source\" service-account-to-link=\"builder\" secrets-by-type=\"secrets.secretsByType\" alerts=\"alerts\">\n" +
     "</osc-secrets>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"sources.dockerfile\">\n" +
