@@ -10,19 +10,12 @@
  */
 angular.module("openshiftConsole")
   .controller("NextStepsController", function(
-    $scope,
-    $http,
-    $routeParams,
-    DataService,
-    $q,
-    $location,
-    TaskList,
-    $parse,
-    Navigate,
-    Logger,
     $filter,
-    imageObjectRefFilter,
-    failureObjectNameFilter,
+    $routeParams,
+    $scope,
+    APIService,
+    DataService,
+    Logger,
     ProjectsService) {
     var displayNameFilter = $filter('displayName');
     var watches = [];
@@ -35,11 +28,13 @@ angular.module("openshiftConsole")
     $scope.fromSampleRepo = $routeParams.fromSample;
     $scope.name = $routeParams.name;
 
+    var buildConfigsVersion = APIService.getPreferredVersion('buildconfigs');
+    
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
-        watches.push(DataService.watch("buildconfigs", context, function(buildconfigs) {
+        watches.push(DataService.watch(buildConfigsVersion, context, function(buildconfigs) {
           $scope.buildConfigs = buildconfigs.by("metadata.name");
           $scope.createdBuildConfig = $scope.buildConfigs[$routeParams.name];
           Logger.log("buildconfigs (subscribe)", $scope.buildConfigs);
