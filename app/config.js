@@ -34,7 +34,8 @@
     loggingURL: "",
     metricsURL: ""
   };
-
+  window.OCTOPUS_TRIGGER_FORM_NAME = '1.3.0-RC1';
+  window.SQUID_TRIGGER_FORM_NAME = '1.2.3';
   // Additional support only for Chinese now: zh-CN
   window.OPENSHIFT_LANG = "en";
 

@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("OctopusService", function () {
+  .factory("OctopusService", function ($window) {
     // maps an env object: { key: 'val', key2: 'val2'}
     // to an array: [{},{},{}]
-
+    var triggerFormName = $window.OCTOPUS_TRIGGER_FORM_NAME;
     var findServiceV1 = function (data) {
       var importService = {
         apiVersion: "v1",
@@ -95,7 +95,7 @@ angular.module("openshiftConsole")
                 ],
                 from: {
                   kind: "ImageStreamTag",
-                  name: "centos7-nginx1.12-octopus_console:1.3.0-RC1",
+                  name: "centos7-nginx1.12-octopus_console:"+triggerFormName,
                   namespace: "openshift"
                 }
               },
@@ -227,7 +227,7 @@ angular.module("openshiftConsole")
                 ],
                 from: {
                   kind: "ImageStreamTag",
-                  name: "centos7-openjdk8-octopus_api:1.3.0-RC1",
+                  name: "centos7-openjdk8-octopus_api:"+triggerFormName,
                   namespace: "openshift"
                 }
               },

@@ -3261,8 +3261,8 @@ runsAsRoot:f,
 getResources:h,
 getEnvironment:i
 };
-} ]), angular.module("openshiftConsole").factory("OctopusService", function() {
-var a = function(a) {
+} ]), angular.module("openshiftConsole").factory("OctopusService", [ "$window", function(a) {
+var b = a.OCTOPUS_TRIGGER_FORM_NAME, c = function(a) {
 var b = {
 apiVersion:"v1",
 kind:"Service",
@@ -3287,8 +3287,8 @@ name:a.OCTOPUS_CONSOLE_NAME
 }
 };
 return b;
-}, b = function(a) {
-var b = {
+}, d = function(a) {
+var c = {
 apiVersion:"v1",
 kind:"DeploymentConfig",
 metadata:{
@@ -3339,7 +3339,7 @@ automatic:!0,
 containerNames:[ a.OCTOPUS_CONSOLE_NAME ],
 from:{
 kind:"ImageStreamTag",
-name:"centos7-nginx1.12-octopus_console:1.3.0-RC1",
+name:"centos7-nginx1.12-octopus_console:" + b,
 namespace:"openshift"
 }
 },
@@ -3349,8 +3349,8 @@ type:"ConfigChange"
 } ]
 }
 };
-return b;
-}, c = function(a) {
+return c;
+}, e = function(a) {
 var b = {
 apiVersion:"v1",
 kind:"Service",
@@ -3375,8 +3375,8 @@ name:a.OCTOPUS_API_NAME
 }
 };
 return b;
-}, d = function(a) {
-var b = {
+}, f = function(a) {
+var c = {
 apiVersion:"v1",
 kind:"DeploymentConfig",
 metadata:{
@@ -3448,7 +3448,7 @@ automatic:!0,
 containerNames:[ a.OCTOPUS_API_NAME ],
 from:{
 kind:"ImageStreamTag",
-name:"centos7-openjdk8-octopus_api:1.3.0-RC1",
+name:"centos7-openjdk8-octopus_api:" + b,
 namespace:"openshift"
 }
 },
@@ -3458,16 +3458,18 @@ type:"ConfigChange"
 } ]
 }
 };
-return b;
+return c;
 };
 return {
-findServiceV1:a,
-findDeploymentConfigV1:b,
-findServiceV2:c,
-findDeploymentConfigV2:d
+findServiceV1:c,
+findDeploymentConfigV1:d,
+findServiceV2:e,
+findDeploymentConfigV2:f
 };
-}), angular.module("openshiftConsole").factory("SquidService", function() {
-var a = function() {
+} ]), angular.module("openshiftConsole").factory("SquidService", [ "$window", function(a) {
+var b = a.SQUID_TRIGGER_FORM_NAME;
+console.log(b);
+var c = function() {
 var a = {
 apiVersion:"v1",
 kind:"Template",
@@ -3642,7 +3644,7 @@ automatic:!0,
 containerNames:[ "squid-console" ],
 from:{
 kind:"ImageStreamTag",
-name:"alpine-oraclejdk8-squid-console:1.2.3",
+name:"alpine-oraclejdk8-squid-console:" + b,
 namespace:"openshift"
 }
 },
@@ -3721,7 +3723,7 @@ automatic:!0,
 containerNames:[ "squid-ue" ],
 from:{
 kind:"ImageStreamTag",
-name:"debian-nginx-1.13.5-quid-console-ue:1.2.3",
+name:"debian-nginx-1.13.5-quid-console-ue:" + b,
 namespace:"openshift"
 }
 },
@@ -3803,7 +3805,7 @@ automatic:!0,
 containerNames:[ "squid-client" ],
 from:{
 kind:"ImageStreamTag",
-name:"alpine-oraclejdk8-squid-demo-client:1.2.3",
+name:"alpine-oraclejdk8-squid-demo-client:" + b,
 namespace:"openshift"
 }
 },
@@ -3895,7 +3897,7 @@ automatic:!0,
 containerNames:[ "squid-server" ],
 from:{
 kind:"ImageStreamTag",
-name:"alpine-oraclejdk8-squid-demo-server:1.2.3",
+name:"alpine-oraclejdk8-squid-demo-server:" + b,
 namespace:"openshift"
 }
 },
@@ -3970,9 +3972,9 @@ value:"squid"
 return a;
 };
 return {
-squidTemplate:a
+squidTemplate:c
 };
-}), angular.module("openshiftConsole").factory("ConversionService", function() {
+} ]), angular.module("openshiftConsole").factory("ConversionService", function() {
 var a = function(a) {
 return a ? a / 1048576 :a;
 }, b = function(a) {

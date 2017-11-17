@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("SquidService", function () {
+  .factory("SquidService", function ($window) {
+    var triggerFormName = $window.SQUID_TRIGGER_FORM_NAME;
     var squidTemplate = function () {
       var importSquid = {
         "apiVersion": "v1",
@@ -214,7 +215,7 @@ angular.module("openshiftConsole")
                     ],
                     "from": {
                       "kind": "ImageStreamTag",
-                      "name": "alpine-oraclejdk8-squid-console:1.2.3",
+                      "name": "alpine-oraclejdk8-squid-console:"+triggerFormName,
                       "namespace": "openshift"
                     }
                   },
@@ -309,7 +310,7 @@ angular.module("openshiftConsole")
                     ],
                     "from": {
                       "kind": "ImageStreamTag",
-                      "name": "debian-nginx-1.13.5-quid-console-ue:1.2.3",
+                      "name": "debian-nginx-1.13.5-quid-console-ue:"+triggerFormName,
                       "namespace": "openshift"
                     }
                   },
@@ -408,7 +409,7 @@ angular.module("openshiftConsole")
                     ],
                     "from": {
                       "kind": "ImageStreamTag",
-                      "name": "alpine-oraclejdk8-squid-demo-client:1.2.3",
+                      "name": "alpine-oraclejdk8-squid-demo-client:"+triggerFormName,
                       "namespace": "openshift"
                     }
                   },
@@ -532,7 +533,7 @@ angular.module("openshiftConsole")
                     ],
                     "from": {
                       "kind": "ImageStreamTag",
-                      "name": "alpine-oraclejdk8-squid-demo-server:1.2.3",
+                      "name": "alpine-oraclejdk8-squid-demo-server:"+triggerFormName,
                       "namespace": "openshift"
                     }
                   },
