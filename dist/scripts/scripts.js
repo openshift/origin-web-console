@@ -3467,9 +3467,7 @@ findServiceV2:e,
 findDeploymentConfigV2:f
 };
 } ]), angular.module("openshiftConsole").factory("SquidService", [ "$window", function(a) {
-var b = a.SQUID_TRIGGER_FORM_NAME;
-console.log(b);
-var c = function() {
+var b = a.SQUID_TRIGGER_FORM_NAME, c = function() {
 var a = {
 apiVersion:"v1",
 kind:"Template",

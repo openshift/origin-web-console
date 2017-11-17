@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-11-15 11:58+0800\n"
+"PO-Revision-Date: 2017-11-17 20:30+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: zh_CN\n"
@@ -73,8 +73,10 @@ msgstr "绑定创建这个包含应用程序使用服务的必要信息的秘密
 #: app/views/directives/create-secret.html:321
 #: app/views/directives/deploy-image.html:189
 #: app/views/directives/from-file.html:35
+#: app/views/directives/open-shift.html:99
 #: app/views/directives/process-template.html:15
-#: app/views/directives/replicas.html:37 app/views/edit/autoscaler.html:68
+#: app/views/directives/replicas.html:37
+#: app/views/directives/squid-form.html:86 app/views/edit/autoscaler.html:68
 #: app/views/edit/build-config.html:679
 #: app/views/edit/deployment-config.html:381
 #: app/views/edit/health-checks.html:73 app/views/edit/project.html:43
@@ -106,7 +108,9 @@ msgstr "折叠"
 #: app/views/directives/create-secret.html:317
 #: app/views/directives/deploy-image.html:184
 #: app/views/directives/from-file.html:28
+#: app/views/directives/open-shift.html:94
 #: app/views/directives/process-template.html:14
+#: app/views/directives/squid-form.html:81
 msgid "Create"
 msgstr "创建"
 
@@ -136,8 +140,8 @@ msgstr "创建一个秘密并将其注入应用程序"
 #: app/views/browse/stateful-set.html:40
 #: app/views/directives/delete-button.html:10 app/views/directives/hpa.html:8
 #: app/views/modals/delete-resource.html:75
-#: app/views/modals/delete-resource.html:88 app/views/other-resources.html:76
-#: app/views/overview/_service-instance-row.html:64 app/views/projects.html:119
+#: app/views/modals/delete-resource.html:88 app/views/other-resources.html:68
+#: app/views/overview/_service-instance-row.html:64 app/views/projects.html:109
 msgid "Delete"
 msgstr "删除"
 
@@ -1635,7 +1639,7 @@ msgstr "创建配置映射"
 msgid "Create New Secret"
 msgstr "创建新的秘密"
 
-#: app/views/create-project.html:13 app/views/projects.html:137
+#: app/views/create-project.html:13 app/views/projects.html:136
 #: app/views/projects.html:28
 msgid "Create Project"
 msgstr "创建项目"
@@ -1665,7 +1669,7 @@ msgstr "创建存储"
 msgid "Create a New Project"
 msgstr "创建一个新项目"
 
-#: app/views/projects.html:135
+#: app/views/projects.html:134
 msgid "Create a project for your application."
 msgstr "为您的应用程序创建一个项目。"
 
@@ -1736,7 +1740,7 @@ msgstr "数据存储"
 msgid "DataMan OS Pipeline Plugin"
 msgstr "DataMan OS管道插件"
 
-#: app/views/projects.html:134
+#: app/views/projects.html:133
 msgid "DataMan OS helps you quickly develop, host, and scale applications."
 msgstr "DataMan OS可以帮助您快速开发、托管和扩展应用程序。"
 
@@ -2373,10 +2377,6 @@ msgstr "宽限期:"
 #: app/views/edit/health-checks.html:17
 msgid "Health Checks: {{name}}"
 msgstr "健康检查: {{name}}"
-
-#: app/views/directives/header/_navbar-utility.html:12
-msgid "Help"
-msgstr "帮助"
 
 #: app/views/_container-statuses.html:20 app/views/create/fromimage.html:407
 msgid "Hide"
@@ -4542,7 +4542,7 @@ msgstr "大小是必需的。"
 msgid "Some items already exist:"
 msgstr "一些项目已经存在:"
 
-#: app/views/projects.html:55
+#: app/views/directives/events.html:31 app/views/projects.html:55
 msgid "Sort by"
 msgstr "排序根据"
 
@@ -5451,14 +5451,6 @@ msgstr ""
 msgid "To get the complete log, run the command"
 msgstr "要获得完整的日志，请运行以下命令"
 
-#: app/views/projects.html:138
-msgid ""
-"To learn more, visit the DataMan OS <a target=\"_blank\" ng-href=\"{{'' | "
-"helpLink}}\">documentation</a>."
-msgstr ""
-"了解更多, 请访问DataMan OS <a target=\"_blank\" ng-href=\"{{'' | "
-"helpLink}}\">文档</a>."
-
 #: app/views/monitoring.html:255
 msgid ""
 "To see application logs, view the logs for one of the replica set's <a href="
@@ -5818,7 +5810,7 @@ msgid ""
 "against other route services."
 msgstr "权重是介于0和256之间的数字，用于指定与其他路由服务的相对权重。"
 
-#: app/views/projects.html:132
+#: app/views/projects.html:131
 msgid "Welcome to DataMan OS."
 msgstr "欢迎来到DataMan OS。"
 
@@ -6679,6 +6671,23 @@ msgstr "{{view.advancedOptions ? '隐藏' : '显示'}}高级选项"
 #: app/views/browse/secret.html:52
 msgid "{{view.showSecret ? \"Hide\" : \"Reveal\"}} Secret"
 msgstr "{{view.showSecret ? \"隐藏\" : \"显示\"}}Secret"
+
+#: labelFilter.js:140
+msgid "Filter by label"
+msgstr "根据标签过滤"
+
+#~ msgid "Help"
+#~ msgstr "帮助"
+
+#~ msgid "Show hidden roles"
+#~ msgstr "显示隐藏角色"
+
+#~ msgid ""
+#~ "To learn more, visit the DataMan OS <a target=\"_blank\" ng-href=\"{{'' | "
+#~ "helpLink}}\">documentation</a>."
+#~ msgstr ""
+#~ "了解更多, 请访问DataMan OS <a target=\"_blank\" ng-href=\"{{'' | "
+#~ "helpLink}}\">文档</a>."
 
 #~ msgid "Add Config Files to {{name}}"
 #~ msgstr "添加配置文件到{{name}}"
