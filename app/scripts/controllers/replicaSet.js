@@ -35,22 +35,22 @@ angular.module('openshiftConsole')
     var hasDeployment = $filter('hasDeployment');
 
     switch (kind) {
-    case 'ReplicaSet':
-      $scope.resource = {
-        group: "extensions",
-        resource: "replicasets"
-      };
-      $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
-                                                      "ReplicaSet",
-                                                      $routeParams.replicaSet,
-                                                      "extensions");
-      break;
-    case 'ReplicationController':
-      $scope.resource = 'replicationcontrollers';
-      $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
-                                                      "ReplicationController",
-                                                      $routeParams.replicaSet);
-      break;
+      case 'ReplicaSet':
+        $scope.resource = {
+          group: "extensions",
+          resource: "replicasets"
+        };
+        $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
+                                                        "ReplicaSet",
+                                                        $routeParams.replicaSet,
+                                                        "extensions");
+        break;
+      case 'ReplicationController':
+        $scope.resource = 'replicationcontrollers';
+        $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
+                                                        "ReplicationController",
+                                                        $routeParams.replicaSet);
+        break;
     }
 
     // lets us determine if a particular container's docker image reference belongs to an imageStream
