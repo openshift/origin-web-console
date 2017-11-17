@@ -9297,7 +9297,7 @@ isReadonly: "<?"
 },
 templateUrl: "views/directives/edit-environment-from.html"
 });
-}(), angular.module("openshiftConsole").directive("events", [ "$routeParams", "$filter", "DataService", "KeywordService", "ProjectsService", "Logger", function(e, t, n, a, r, o) {
+}(), angular.module("openshiftConsole").directive("events", [ "$routeParams", "$filter", "APIService", "DataService", "KeywordService", "Logger", function(e, t, n, a, r, o) {
 return {
 restrict: "E",
 scope: {
@@ -9306,38 +9306,38 @@ projectContext: "="
 },
 templateUrl: "views/directives/events.html",
 controller: [ "$scope", function(e) {
-var t, r = {}, i = [];
+var t, i = {}, s = [], c = n.getPreferredVersion("events");
 e.filter = {
 text: ""
 };
-var s = function(e) {
-return _.isEmpty(r) ? e : _.filter(e, function(e) {
-return r[e.involvedObject.uid];
+var l = function(e) {
+return _.isEmpty(i) ? e : _.filter(e, function(e) {
+return i[e.involvedObject.uid];
 });
-}, c = [], l = _.get(e, "sortConfig.currentField.id"), u = {
+}, u = [], d = _.get(e, "sortConfig.currentField.id"), m = {
 lastTimestamp: !0
-}, d = function() {
+}, p = function() {
 var t = _.get(e, "sortConfig.currentField.id", "lastTimestamp");
-l !== t && (l = t, e.sortConfig.isAscending = !u[l]);
+d !== t && (d = t, e.sortConfig.isAscending = !m[d]);
 var n = e.sortConfig.isAscending ? "asc" : "desc";
-c = _.orderBy(e.events, [ t, "metadata.resourceVersion" ], [ n, n ]);
-}, m = [], p = function() {
-e.filterExpressions = m = a.generateKeywords(_.get(e, "filter.text"));
-}, f = [ "reason", "message", "type" ];
-e.resourceKind && e.resourceName || f.splice(0, 0, "involvedObject.name", "involvedObject.kind");
-var g = function() {
-e.filteredEvents = a.filterForKeywords(c, f, m);
+u = _.orderBy(e.events, [ t, "metadata.resourceVersion" ], [ n, n ]);
+}, f = [], g = function() {
+e.filterExpressions = f = r.generateKeywords(_.get(e, "filter.text"));
+}, v = [ "reason", "message", "type" ];
+e.resourceKind && e.resourceName || v.splice(0, 0, "involvedObject.name", "involvedObject.kind");
+var h = function() {
+e.filteredEvents = r.filterForKeywords(u, v, f);
 };
 e.$watch("filter.text", _.debounce(function() {
-p(), e.$evalAsync(g);
+g(), e.$evalAsync(h);
 }, 50, {
 maxWait: 250
 }));
-var v = function() {
-d(), g();
-}, h = _.debounce(function() {
+var y = function() {
+p(), h();
+}, b = _.debounce(function() {
 t && e.$evalAsync(function() {
-e.events = s(t), v();
+e.events = l(t), y();
 });
 }, 250, {
 leading: !0,
@@ -9345,9 +9345,9 @@ trailing: !0,
 maxWait: 1e3
 });
 e.$watch("apiObjects", function(n) {
-r = {}, _.each(n, function(e) {
-_.get(e, "metadata.uid") && (r[e.metadata.uid] = !0);
-}), e.showKindAndName = 1 !== _.size(r), t && h();
+i = {}, _.each(n, function(e) {
+_.get(e, "metadata.uid") && (i[e.metadata.uid] = !0);
+}), e.showKindAndName = 1 !== _.size(i), t && b();
 }), e.$watch("showKindAndName", function(t) {
 e.sortConfig = {
 fields: [ {
@@ -9372,7 +9372,7 @@ title: "Count",
 sortType: "numeric"
 } ],
 isAscending: !0,
-onSortChange: v
+onSortChange: y
 }, t && e.sortConfig.fields.splice(1, 0, {
 id: "involvedObject.name",
 title: "Name",
@@ -9382,12 +9382,12 @@ id: "involvedObject.kind",
 title: "Kind",
 sortType: "alpha"
 });
-}), i.push(n.watch("events", e.projectContext, function(n) {
-t = n.by("metadata.name"), h(), o.log("events (subscribe)", e.filteredEvents);
+}), s.push(a.watch(c, e.projectContext, function(n) {
+t = n.by("metadata.name"), b(), o.log("events (subscribe)", e.filteredEvents);
 }, {
 skipDigest: !0
 })), e.$on("$destroy", function() {
-n.unwatchAll(i);
+a.unwatchAll(s);
 });
 } ]
 };
