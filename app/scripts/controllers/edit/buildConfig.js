@@ -13,6 +13,7 @@ angular.module('openshiftConsole')
                        $location,
                        $routeParams,
                        $window,
+                       APIService,
                        ApplicationGenerator,
                        AuthorizationService,
                        DataService,
@@ -221,6 +222,9 @@ angular.module('openshiftConsole')
     };
 
     $scope.secrets = {};
+
+    var buildConfigsVersion = APIService.getPreferredVersion('buildconfigs');
+    var secretsVersion = APIService.getPreferredVersion('secrets');
     var watches = [];
     var buildStrategy = $filter('buildStrategy');
 
@@ -255,7 +259,7 @@ angular.module('openshiftConsole')
           return;
         }
 
-        DataService.get("buildconfigs", $routeParams.buildconfig, context, { errorNotification: false }).then(
+        DataService.get(buildConfigsVersion, $routeParams.buildconfig, context, { errorNotification: false }).then(
           // success
           function(buildConfig) {
             $scope.buildConfig = buildConfig;
@@ -272,7 +276,7 @@ angular.module('openshiftConsole')
               $scope.jenkinsfileOptions.type = 'inline';
             }
 
-            DataService.list("secrets", context).then(function(secrets) {
+            DataService.list(secretsVersion, context).then(function(secrets) {
               var secretsByType = SecretsService.groupSecretsByType(secrets);
               var secretNamesByType =_.mapValues(secretsByType, function(secrets) {return _.map(secrets, 'metadata.name');});
               // Add empty option to the image/source secrets
@@ -338,7 +342,7 @@ angular.module('openshiftConsole')
             }
 
             // If we found the item successfully, watch for changes on it
-            watches.push(DataService.watchObject("buildconfigs", $routeParams.buildconfig, context, function(buildConfig, action) {
+            watches.push(DataService.watchObject(buildConfigsVersion, $routeParams.buildconfig, context, function(buildConfig, action) {
               if (action === 'MODIFIED') {
                 NotificationsService.addNotification({
                   id: "edit-build-config-conflict",
@@ -617,7 +621,7 @@ angular.module('openshiftConsole')
       // Update triggers
       $scope.updatedBuildConfig.spec.triggers = updateTriggers();
       hideErrorNotifications();
-      DataService.update("buildconfigs", $scope.updatedBuildConfig.metadata.name, $scope.updatedBuildConfig, $scope.context).then(
+      DataService.update(buildConfigsVersion, $scope.updatedBuildConfig.metadata.name, $scope.updatedBuildConfig, $scope.context).then(
         function() {
           NotificationsService.addNotification({
             type: "success",
