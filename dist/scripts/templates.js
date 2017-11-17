@@ -12799,7 +12799,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"(buildConfigName, buildConfig) in buildConfigs\" ng-if=\"!buildConfig || (buildConfig | isJenkinsPipelineStrategy)\" class=\"animate-repeat\">\n" +
     "<div ng-if=\"buildConfig\">\n" +
     "<div class=\"pull-right\">\n" +
-    "<button class=\"btn btn-default\" ng-if=\"'buildconfigs/instantiate' | canI : 'create'\" ng-click=\"startBuild(buildConfig)\">\n" +
+    "<button class=\"btn btn-default\" ng-if=\"buildConfigsInstantiateVersion | canI : 'create'\" ng-click=\"startBuild(buildConfig)\">\n" +
     "Start Pipeline\n" +
     "</button>\n" +
     "</div>\n" +
@@ -12851,7 +12851,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"buildConfig\" class=\"mar-top-sm mar-bottom-xl\">\n" +
     "<a ng-href=\"{{buildConfigs[buildConfigName] | navigateResourceURL}}\">View Pipeline Runs</a>\n" +
-    "<span ng-if=\"'buildconfigs' | canI : 'update'\">\n" +
+    "<span ng-if=\"buildConfigsVersion | canI : 'update'\">\n" +
     "<span class=\"action-divider\">|</span>\n" +
     "<a ng-href=\"{{buildConfig | editResourceURL}}\" role=\"button\">Edit Pipeline</a>\n" +
     "</span>\n" +
