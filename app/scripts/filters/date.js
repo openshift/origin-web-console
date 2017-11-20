@@ -95,6 +95,12 @@ angular.module('openshiftConsole')
       return timeOnlyDurationFilter(moment(timestampRhs).diff(timestampLhs));
     };
   })
+  .filter('countdownToTimestamp', function() {
+    return function(endTimestamp) {
+      var timeRemaining = moment(new Date(endTimestamp)).diff(moment(), 'seconds');
+      return timeRemaining < 0 ? 0 : timeRemaining;
+    };
+  })
   .filter('timeOnlyDuration', function(){
     return function(value) {
       var result = [];
