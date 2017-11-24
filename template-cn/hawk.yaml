@@ -233,6 +233,16 @@ objects:
           - name: HAWK_ETCD_ENDPOINTS
             value: http://${ETCD_NAME}:2379
           image: ' '
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /application/health
+              port: 8082
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
           name: hawk-server
           ports:
           - containerPort: 8082
