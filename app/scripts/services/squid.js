@@ -178,6 +178,19 @@ angular.module("openshiftConsole")
                         }
                       ],
                       "image": " ",
+                      "livenessProbe": {
+                        "failureThreshold": 3,
+                        "httpGet": {
+                          "path": "/health",
+                          "port": 9088,
+                          "scheme": "HTTP"
+                        },
+                        "initialDelaySeconds": 60,
+                        "periodSeconds": 10,
+                        "successThreshold": 1,
+                        "timeoutSeconds": 1
+                      },
+
                       "name": "squid-console",
                       "ports": [
                         {
@@ -310,7 +323,7 @@ angular.module("openshiftConsole")
                     ],
                     "from": {
                       "kind": "ImageStreamTag",
-                      "name": "debian-nginx-1.13.5-quid-console-ue:"+triggerFormName,
+                      "name": "debian-nginx-1.13.5-quid-console-ue:" + triggerFormName,
                       "namespace": "openshift"
                     }
                   },
@@ -409,7 +422,7 @@ angular.module("openshiftConsole")
                     ],
                     "from": {
                       "kind": "ImageStreamTag",
-                      "name": "alpine-oraclejdk8-squid-demo-client:"+triggerFormName,
+                      "name": "alpine-oraclejdk8-squid-demo-client:" + triggerFormName,
                       "namespace": "openshift"
                     }
                   },
@@ -533,7 +546,7 @@ angular.module("openshiftConsole")
                     ],
                     "from": {
                       "kind": "ImageStreamTag",
-                      "name": "alpine-oraclejdk8-squid-demo-server:"+triggerFormName,
+                      "name": "alpine-oraclejdk8-squid-demo-server:" + triggerFormName,
                       "namespace": "openshift"
                     }
                   },

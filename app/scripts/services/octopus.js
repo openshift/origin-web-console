@@ -208,6 +208,18 @@ angular.module("openshiftConsole")
                   ],
                   command: ["java", "-Dkubernetes.auth.tryKubeConfig=false", "-Dkubernetes.auth.tryServiceAccount=false", "-Dkubernetes.tryNamespacePath=false", "-Dlogging.level.io.fabric8=DEBUG", "-Djava.security.egd=file:/dev/./urandom" , "-jar", "octopus-api.jar"],
                   image: " ",
+                  livenessProbe:{
+                    failureThreshold: 3,
+                    httpGet:{
+                      path: "/health",
+                      port: 9088,
+                      scheme: "HTTP"
+                    },
+                    initialDelaySeconds: 60,
+                    periodSeconds: 10,
+                    successThreshold: 1,
+                    timeoutSeconds: 1
+                   },
                   name: data.OCTOPUS_API_NAME,
                   ports: [
                     {
