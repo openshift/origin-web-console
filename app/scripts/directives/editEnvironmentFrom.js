@@ -4,6 +4,7 @@
     controller: [
       '$attrs',
       '$filter',
+      '$scope',
       'keyValueEditorUtils',
       'SecretsService',
       EditEnvironmentFrom
@@ -18,6 +19,7 @@
 
   function EditEnvironmentFrom($attrs,
                                $filter,
+                               $scope,
                                utils,
                                SecretsService) {
     var ctrl = this;
@@ -25,6 +27,10 @@
     var humanizeKind = $filter('humanizeKind');
     var uniqueId = _.uniqueId();
     var keyValidator = /^[A-Za-z_][A-Za-z0-9_]*$/;
+
+    // Flag to track when we're updating `ctrl.entries` internally. This lets
+    // us detect when a change happens to entries outside the component.
+    var updatingEntries = false;
 
     ctrl.setFocusClass = 'edit-environment-from-set-focus-' + uniqueId;
 
@@ -131,6 +137,7 @@
     };
 
     ctrl.updateEntries = function(entries) {
+      updatingEntries = true;
       ctrl.entries = _.filter(entries, function (val) {
         return val.secretRef || val.configMapRef;
       });
@@ -209,8 +216,18 @@
       }
     };
 
+    // $onChanges doesn't work with `=` bindings, so use $scope.$watch()
+    $scope.$watch('$ctrl.entries', function() {
+      if (updatingEntries) {
+        updatingEntries = false;
+        return;
+      }
+
+      updateEnvFromEntries();
+    });
+
     ctrl.$onChanges = function(changes) {
-      if(changes.entries || changes.envFromSelectorOptions) {
+      if(changes.envFromSelectorOptions) {
         updateEnvFromEntries();
       }
     };
