@@ -51,6 +51,7 @@
   },
   "appPath": "app",
   "resolutions": {
+    "jquery": "2.1.4",
     "lodash": "3.10.1",
     "angular-bootstrap": "0.14.3",
     "moment": "2.10.6",
