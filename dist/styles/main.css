@@ -4142,7 +4142,6 @@ body>.ui-select-bootstrap.open{z-index:1050}
 .landing-search-form .search-pf-input-group .pficon-close{font-size:17px;padding-top:.3em}
 .landing-search-form .dropdown-menu{margin-top:0;width:100%}
 .landing-search-form .dropdown-menu>li>a.catalog-search-match{display:flex;line-height:1.5;padding:3px 10px 3px 5px;white-space:normal}
-.order-service-details .order-service-description-block .description,.pre-wrap{white-space:pre-wrap}
 .landing-search-form .dropdown-menu .active>a.catalog-search-match,.landing-search-form .dropdown-menu :focus{background-color:#def3ff!important;border-color:#bee1f4!important;color:inherit!important}
 .landing-search-form .dropdown-menu .active>a.catalog-search-match.no-matches{background-color:transparent!important;border-color:transparent!important}
 .landing-side-bar{background-color:#292e34;color:#fff;z-index:1029}
@@ -4178,6 +4177,7 @@ body>.ui-select-bootstrap.open{z-index:1050}
 .order-service-details .order-service-details-top .service-vendor{margin-top:5px}
 .order-service-details .order-service-details-top .sub-title{color:#72767b;font-size:20px;font-weight:600}
 .order-service-details .order-service-description-block{margin-top:15px}
+.order-service-details .order-service-description-block .description{white-space:pre-wrap}
 .order-service-details .order-service-description-block .learn-more-link{font-size:11px;white-space:nowrap}
 .order-service-details .order-service-description-block .order-service-dependent-image{margin-bottom:5px;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .order-service-details .order-service-description-block .order-service-dependent-image .pficon{margin-right:5px;vertical-align:-1px}
@@ -4215,21 +4215,28 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .catalogs-overlay-modal{display:block}
 .catalogs-overlay-modal .modal-backdrop.ng-enter{animation:modalBackdropIn .15s ease-out forwards}
 .catalogs-overlay-modal .modal-backdrop.ng-leave{animation:modalBackdropOut .45s ease-out forwards}
-.catalogs-overlay-panel{margin:0 auto;max-width:900px;position:relative}
+.catalogs-overlay-panel{bottom:0;left:0;position:fixed;right:0;top:0}
+@media (min-width:768px){.catalogs-overlay-panel{margin:0 auto;max-width:900px;position:relative}
+}
+@media (min-width:768px) and (min-height:732px){.catalogs-overlay-panel{margin-top:60px}
+}
+.catalogs-overlay-panel .modal-header .close{font-size:18px}
+.catalogs-overlay-panel .modal-title{line-height:21px}
 .catalogs-overlay-panel .wizard-pf-contents{flex:1 1 auto}
+.catalogs-overlay-panel .wizard-pf-footer{bottom:0;left:0;position:absolute;right:0}
+@media (min-width:768px){.catalogs-overlay-panel .wizard-pf-footer{position:relative}
+}
+.catalogs-overlay-panel .wizard-pf-footer .btn{font-size:12px}
 .catalogs-overlay-panel .wizard-pf-main{display:flex;overflow-y:auto;padding:0;background-attachment:scroll;background-image:radial-gradient(ellipse at top,rgba(0,0,0,.2) 0%,rgba(0,0,0,0) 75%),radial-gradient(ellipse at bottom,rgba(0,0,0,.2) 0%,rgba(0,0,0,0) 75%);background-position:0 0,0 100%;background-repeat:no-repeat;background-size:100% 6px}
 .catalogs-overlay-panel .wizard-pf-main _::-webkit-full-page-media,.catalogs-overlay-panel .wizard-pf-main _:future,:root .catalogs-overlay-panel .wizard-pf-main{background-attachment:local,local,scroll,scroll;background-image:linear-gradient(#fff 30%,rgba(255,255,255,0)),linear-gradient(rgba(255,255,255,0),#fff 70%),radial-gradient(ellipse at top,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 65%),radial-gradient(ellipse at bottom,rgba(0,0,0,.25) 0%,rgba(0,0,0,0) 65%);background-position:0 0,0 100%;background-repeat:no-repeat;background-size:100% 12px,100% 12px,100% 6px,100% 6px}
-@media (max-width:767px){.catalogs-overlay-panel .wizard-pf-main{max-height:calc(100vh - 234px)}
+@media (max-width:767px){.catalogs-overlay-panel .wizard-pf-main{bottom:58px;height:auto;left:1px;position:fixed;right:1px;top:99px;width:auto}
 }
-@media (min-width:768px){.catalogs-overlay-panel .wizard-pf-main{height:450px;max-height:calc(100vh - 300px);min-height:200px;overflow-y:auto}
+@media (min-width:768px){.catalogs-overlay-panel .wizard-pf-main{height:450px;max-height:calc(100vh - 222px);min-height:200px}
 }
 .catalogs-overlay-panel .wizard-pf-main-form-contents{position:relative}
 .catalogs-overlay-panel .wizard-pf-main-form-contents label.required:before{left:-10px}
 .catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers{min-height:100%;padding:20px;background-attachment:local;background-image:linear-gradient(#fff 30%,rgba(255,255,255,0)),linear-gradient(rgba(255,255,255,0),#fff 70%);background-position:0 0,0 100%;background-repeat:no-repeat;background-size:100% 12px}
 .catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers _::-webkit-full-page-media,.catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers _:future,:root .catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers{background:0 0}
-@media (min-width:768px){.catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers{padding-left:40px;padding-right:40px}
-.catalog-edit-project .origin-modal-popup{margin-left:5px;margin-top:-25px}
-}
 .catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers input.form-control,.catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers textarea.form-control{background-color:transparent}
 .catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers input.form-control[disabled],.catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers input.form-control[readonly],.catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers textarea.form-control[disabled],.catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers textarea.form-control[readonly]{background-color:rgba(234,234,234,.5)}
 .catalogs-overlay-panel .wizard-pf-row{max-height:none}
@@ -4237,12 +4244,12 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .catalogs-overlay-panel-close.pficon-close{color:#72767b;cursor:pointer}
 .catalogs-overlay-panel-close .pficon-close:hover.disabled,.catalogs-overlay-panel-close.pficon-close.disabled{color:#bbb;cursor:not-allowed}
 .catalogs-overlay-panel-close.pficon-close:hover{color:#393f44}
-@media (min-height:545px) and (min-width:768px){.catalogs-overlay-panel-grow-height{padding:60px 0 20px}
-}
 .catalogs-overlay-panel-wrapper{bottom:0;left:0;overflow-x:hidden;overflow-y:auto;position:fixed;right:0;top:0;z-index:1050}
 .catalogs-overlay-panel-wrapper.ng-enter{animation:modalSlideDown .3s ease-out forwards}
 .catalogs-overlay-panel-wrapper.ng-leave{animation:modalSlideUp .2s ease-out forwards}
-@media (min-width:768px){.catalog-edit-project .origin-modal-popup.position-above{margin-top:0}
+@media (min-width:768px){.catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers{padding-left:40px;padding-right:40px}
+.catalog-edit-project .origin-modal-popup{margin-left:5px;margin-top:-25px}
+.catalog-edit-project .origin-modal-popup.position-above{margin-top:0}
 }
 .catalog-projects-summary-panel{padding:20px;position:relative}
 @media (min-width:1200px){.catalog-projects-summary-panel{padding-left:40px;padding-right:40px}
@@ -4294,7 +4301,8 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .catalog-project-summary-list .dropdown-kebab-pf .dropdown-menu.dropdown-menu-right{margin-top:5px;right:-14px}
 .catalog-project-summary-list .project-date{color:#8b8d8f;margin-bottom:0}
 .catalog-project-summary-list .project-date+.project-description{margin-top:7px}
-.catalog-project-summary-list .project-date+.project-description .truncated-content{white-space:pre-line;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
+.catalog-project-summary-list .project-date+.project-description .truncation-block{margin-right:0}
+.catalog-project-summary-list .project-date+.project-description .truncated-content{display:block;white-space:pre-line;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .catalog-project-summary-list .project-tile{border-bottom:solid 1px #4d5258;border-top:solid 1px #4d5258;margin:-1px 0 0;padding:10px;position:relative}
 .catalog-project-summary-list .project-tile.tile-click:hover{background:rgba(255,255,255,.03)}
 .catalog-project-summary-list .project-tile.tile-click:hover .tile-target{color:#64b9e4}
@@ -4430,6 +4438,7 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .services-view .services-view-container .services-categories>li>a .services-sub-category-tab-icon,.services-view .services-view-container .services-categories>li>a .services-sub-category-tab-image,.services-view .services-view-container .services-sub-categories>li>a .services-sub-category-tab-icon,.services-view .services-view-container .services-sub-categories>li>a .services-sub-category-tab-image{display:none!important}
 }
 .services-view .spinner-container{background:#fff;display:flex;flex:1 1 auto;padding-top:100px;padding-bottom:100px}
+.pre-wrap{white-space:pre-wrap}
 .visible-xlg-inline-block{display:none!important}
 @media (max-width:767px){.td-long-string{word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 }
@@ -4573,7 +4582,6 @@ code.command{display:inline-block;line-height:1.3;margin-right:2px}
 @media only screen and (max-device-width:736px){body.ios{padding-right:0px!important}
 body.ios.modal-open,body.ios.overlay-open{overflow-y:auto;position:fixed}
 body.ios .console-os .ace_editor,body.ios input[type=text],body.ios input[type=url],body.ios input[type=number],body.ios input[type=search],body.ios select,body.ios select.form-control,body.ios textarea,body.ios textarea.form-control{font-size:16px}
-body.ios .catalogs-overlay-panel .wizard-pf-main{max-height:calc(100vh - 275px)}
 body.ios .nav-tabs li>a:hover:before{content:none}
 body.ios .nav-tabs li.active>a:before{content:''}
 }
