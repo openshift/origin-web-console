@@ -9208,66 +9208,66 @@ n[e.key] = e.value;
 };
 } ]), function() {
 angular.module("openshiftConsole").component("editEnvironmentFrom", {
-controller: [ "$attrs", "$filter", "keyValueEditorUtils", "SecretsService", function(e, t, n, a) {
-var r = this, o = t("canI"), i = t("humanizeKind"), s = _.uniqueId(), c = /^[A-Za-z_][A-Za-z0-9_]*$/;
-r.setFocusClass = "edit-environment-from-set-focus-" + s, r.isEnvVarInvalid = function(e) {
-return !c.test(e);
-}, r.hasInvalidEnvVar = function(e) {
+controller: [ "$attrs", "$filter", "$scope", "keyValueEditorUtils", "SecretsService", function(e, t, n, a, r) {
+var o = this, i = t("canI"), s = t("humanizeKind"), c = _.uniqueId(), l = /^[A-Za-z_][A-Za-z0-9_]*$/, u = !1;
+o.setFocusClass = "edit-environment-from-set-focus-" + c, o.isEnvVarInvalid = function(e) {
+return !l.test(e);
+}, o.hasInvalidEnvVar = function(e) {
 return _.some(e, function(e, t) {
-return r.isEnvVarInvalid(t);
+return o.isEnvVarInvalid(t);
 });
-}, r.viewOverlayPanel = function(e) {
-r.decodedData = e.data, r.overlayPaneEntryDetails = e, "Secret" === e.kind && (r.decodedData = a.decodeSecretData(e.data)), r.overlayPanelVisible = !0;
-}, r.closeOverlayPanel = function() {
-r.showSecret = !1, r.overlayPanelVisible = !1;
+}, o.viewOverlayPanel = function(e) {
+o.decodedData = e.data, o.overlayPaneEntryDetails = e, "Secret" === e.kind && (o.decodedData = r.decodeSecretData(e.data)), o.overlayPanelVisible = !0;
+}, o.closeOverlayPanel = function() {
+o.showSecret = !1, o.overlayPanelVisible = !1;
 };
-var l = function(e, t) {
+var d = function(e, t) {
 e && e.push(t || {});
 };
-r.onAddRow = function() {
-l(r.envFromEntries), n.setFocusOn("." + r.setFocusClass);
-}, r.deleteEntry = function(e, t) {
-r.envFromEntries && !r.envFromEntries.length || (r.envFromEntries.splice(e, t), r.envFromEntries.length || l(r.envFromEntries), r.updateEntries(r.envFromEntries), r.editEnvironmentFromForm.$setDirty());
-}, r.hasOptions = function() {
-return !_.isEmpty(r.envFromSelectorOptions);
-}, r.hasEntries = function() {
-return _.some(r.entries, function(e) {
+o.onAddRow = function() {
+d(o.envFromEntries), a.setFocusOn("." + o.setFocusClass);
+}, o.deleteEntry = function(e, t) {
+o.envFromEntries && !o.envFromEntries.length || (o.envFromEntries.splice(e, t), o.envFromEntries.length || d(o.envFromEntries), o.updateEntries(o.envFromEntries), o.editEnvironmentFromForm.$setDirty());
+}, o.hasOptions = function() {
+return !_.isEmpty(o.envFromSelectorOptions);
+}, o.hasEntries = function() {
+return _.some(o.entries, function(e) {
 return _.get(e, "configMapRef.name") || _.get(e, "secretRef.name");
 });
-}, r.isEnvFromReadonly = function(e) {
-return !0 === r.isReadonly || e && !0 === e.isReadonly;
-}, r.groupByKind = function(e) {
-return i(e.kind);
-}, r.dragControlListeners = {
+}, o.isEnvFromReadonly = function(e) {
+return !0 === o.isReadonly || e && !0 === e.isReadonly;
+}, o.groupByKind = function(e) {
+return s(e.kind);
+}, o.dragControlListeners = {
 accept: function(e, t) {
 return e.itemScope.sortableScope.$id === t.$id;
 },
 orderChanged: function() {
-r.editEnvironmentFromForm.$setDirty();
+o.editEnvironmentFromForm.$setDirty();
 }
-}, r.envFromObjectSelected = function(e, t, n) {
+}, o.envFromObjectSelected = function(e, t, n) {
 var a = {};
 switch (n.kind) {
 case "Secret":
 a.secretRef = {
 name: n.metadata.name
-}, delete r.envFromEntries[e].configMapRef;
+}, delete o.envFromEntries[e].configMapRef;
 break;
 
 case "ConfigMap":
 a.configMapRef = {
 name: n.metadata.name
-}, delete r.envFromEntries[e].secretRef;
+}, delete o.envFromEntries[e].secretRef;
 }
-t.prefix && (a.prefix = t.prefix), _.assign(r.envFromEntries[e], a), r.updateEntries(r.envFromEntries);
-}, r.updateEntries = function(e) {
-r.entries = _.filter(e, function(e) {
+t.prefix && (a.prefix = t.prefix), _.assign(o.envFromEntries[e], a), o.updateEntries(o.envFromEntries);
+}, o.updateEntries = function(e) {
+u = !0, o.entries = _.filter(e, function(e) {
 return e.secretRef || e.configMapRef;
 });
 };
-var u = function() {
+var m = function() {
 var e = {}, t = {};
-r.envFromEntries = r.entries || [], r.envFromEntries.length || l(r.envFromEntries), _.each(r.envFromSelectorOptions, function(n) {
+o.envFromEntries = o.entries || [], o.envFromEntries.length || d(o.envFromEntries), _.each(o.envFromSelectorOptions, function(n) {
 switch (n.kind) {
 case "ConfigMap":
 e[n.metadata.name] = n;
@@ -9276,18 +9276,20 @@ break;
 case "Secret":
 t[n.metadata.name] = n;
 }
-}), _.each(r.envFromEntries, function(n) {
+}), _.each(o.envFromEntries, function(n) {
 var a, r;
 if (n.configMapRef && (a = "configMapRef", r = "configmaps"), n.secretRef && (a = "secretRef", r = "secrets"), a && r) {
-var i = n[a].name;
-n.configMapRef && i in e && (n.selectedEnvFrom = e[i]), n.secretRef && i in t && (n.selectedEnvFrom = t[i]), o(r, "get") || (n.isReadonly = !0);
+var o = n[a].name;
+n.configMapRef && o in e && (n.selectedEnvFrom = e[o]), n.secretRef && o in t && (n.selectedEnvFrom = t[o]), i(r, "get") || (n.isReadonly = !0);
 }
 });
 };
-r.$onInit = function() {
-u(), "cannotDelete" in e && (r.cannotDeleteAny = !0), "cannotSort" in e && (r.cannotSort = !0), "showHeader" in e && (r.showHeader = !0), r.envFromEntries && !r.envFromEntries.length && l(r.envFromEntries);
-}, r.$onChanges = function(e) {
-(e.entries || e.envFromSelectorOptions) && u();
+o.$onInit = function() {
+m(), "cannotDelete" in e && (o.cannotDeleteAny = !0), "cannotSort" in e && (o.cannotSort = !0), "showHeader" in e && (o.showHeader = !0), o.envFromEntries && !o.envFromEntries.length && d(o.envFromEntries);
+}, n.$watch("$ctrl.entries", function() {
+u ? u = !1 : m();
+}), o.$onChanges = function(e) {
+e.envFromSelectorOptions && m();
 };
 } ],
 bindings: {
