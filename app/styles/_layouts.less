@@ -12,8 +12,14 @@
     }
     &.has-project-bar {
       padding-top: (@navbar-os-header-height-mobile + @project-bar-height-mobile);
+      &.has-project-search {
+        padding-top: (@navbar-os-header-height-mobile + @project-bar-height-mobile + @project-search-height-mobile);
+      }
       @media(min-width: @screen-sm-min) {
         padding-top: (@navbar-os-header-height-desktop + @project-bar-height-desktop);
+        &.has-project-search {
+          padding-top: (@navbar-os-header-height-desktop + @project-bar-height-desktop);
+        }
         .container-pf-nav-pf-vertical {
           margin-left: @nav-pf-vertical-width;
           &.collapsed-nav {

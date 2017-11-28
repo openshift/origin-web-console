@@ -5,7 +5,6 @@ angular.module('openshiftConsole')
               function($scope,
                        $rootScope,
                        AuthService,
-                       Catalog,
                        CatalogService,
                        Constants,
                        DataService,
@@ -91,18 +90,10 @@ angular.module('openshiftConsole')
     };
 
     AuthService.withUser().then(function() {
-      var includeTemplates = !CatalogService.isTemplateServiceBrokerEnabled();
-      Catalog.getCatalogItems(includeTemplates).then(_.spread(function(items, errorMessage) {
-        if (errorMessage) {
-          var alertData = {
-            type: 'error',
-            message: errorMessage
-          };
-          NotificationsService.addNotification(alertData);
-        }
+      CatalogService.getCatalogItems().then(function(items) {
         $scope.catalogItems = items;
         dataLoaded();
-      }));
+      });
     });
 
     $scope.$on('$destroy', function() {

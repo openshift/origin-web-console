@@ -7325,11 +7325,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<select class=\"selectpicker form-control\" data-selected-text-format=\"count>3\" id=\"boostrapSelect\" title=\"\"></select>\n" +
     "</div>\n" +
+    "<catalog-search ng-if=\"canIAddToProject\" catalog-items=\"catalogItems\" base-project-url=\"project\" toggle-at-mobile=\"true\" search-toggle-callback=\"onSearchToggle\"></catalog-search>\n" +
     "\n" +
     "<div class=\"dropdown add-to-project\" ng-if=\"canIAddToProject\" uib-dropdown>\n" +
-    "<a class=\"dropdown-toggle\" href=\"\" ng-disabled=\"currentProject.status.phase != 'Active'\" title=\"Add to Project\" uib-dropdown-toggle>\n" +
-    "<i class=\"fa fa-plus visible-xs-inline-block\" aria-hidden=\"true\" title=\"Add to Project\"></i><span class=\"hidden-xs\">Add to Project</span><span class=\"hidden-xs caret\" aria-hidden=\"true\" title=\"Add to Project\"></span>\n" +
-    "</a>\n" +
+    "<button class=\"dropdown-toggle btn btn-link\" ng-disabled=\"currentProject.status.phase != 'Active'\" title=\"Add to Project\" uib-dropdown-toggle>\n" +
+    "<i class=\"fa fa-plus visible-xs-inline-block\" aria-hidden=\"true\" title=\"Add to Project\"></i>\n" +
+    "<span class=\"hidden-xs\">Add to Project</span>\n" +
+    "<span class=\"hidden-xs caret\" aria-hidden=\"true\" title=\"Add to Project\"></span>\n" +
+    "</button>\n" +
     "<ul role=\"menu\" uib-dropdown-menu class=\"dropdown-menu dropdown-menu-right\">\n" +
     "<li ng-if-start=\"!catalogLandingPageEnabled\" role=\"menuitem\"><a ng-href=\"project/{{currentProjectName}}/create?tab=fromCatalog\">Browse Catalog</a></li>\n" +
     "<li role=\"menuitem\"><a ng-href=\"project/{{currentProjectName}}/create?tab=deployImage\">Deploy Image</a></li>\n" +
@@ -7342,10 +7345,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div> \n" +
     "<sidebar></sidebar>\n" +
-    "<overlay-panel show-panel=\"ordering.panelName\" handle-close=\"closeOrderingPanel\">\n" +
-    "<deploy-image-dialog ng-if=\"ordering.panelName === 'deployImage'\" project=\"currentProject\" context=\"context\" on-dialog-closed=\"closeOrderingPanel\"></deploy-image-dialog>\n" +
-    "<from-file-dialog ng-if=\"ordering.panelName === 'fromFile'\" project=\"currentProject\" context=\"context\" on-dialog-closed=\"closeOrderingPanel\"></from-file-dialog>\n" +
-    "<process-template-dialog ng-if=\"ordering.panelName === 'fromProject'\" project=\"currentProject\" use-project-template=\"true\" on-dialog-closed=\"closeOrderingPanel\"></process-template-dialog>\n" +
+    "<overlay-panel show-panel=\"orderingPanelVisible\" handle-close=\"closeOrderingPanel\">\n" +
+    "<deploy-image-dialog ng-if=\"orderKind === 'deployImage'\" project=\"currentProject\" context=\"context\" on-dialog-closed=\"closeOrderingPanel\"></deploy-image-dialog>\n" +
+    "<from-file-dialog ng-if=\"orderKind === 'fromFile'\" project=\"currentProject\" context=\"context\" on-dialog-closed=\"closeOrderingPanel\"></from-file-dialog>\n" +
+    "<process-template-dialog ng-if=\"orderKind === 'fromProject'\" project=\"currentProject\" use-project-template=\"true\" on-dialog-closed=\"closeOrderingPanel\"></process-template-dialog>\n" +
+    "<process-template-dialog ng-if=\"orderKind === 'Template'\" project=\"currentProject\" template=\"selectedItem\" on-dialog-closed=\"closeOrderingPanel\"></process-template-dialog>\n" +
+    "<order-service ng-if=\"orderKind === 'ClusterServiceClass'\" add-to-project=\"currentProject\" base-project-url=\"project\" service-class=\"selectedItem\" service-plans=\"servicePlansForItem\" handle-close=\"closeOrderingPanel\"></order-service>\n" +
+    "<create-from-builder ng-if=\"orderKind === 'ImageStream'\" add-to-project=\"currentProject\" base-project-url=\"project\" image-stream=\"selectedItem\" handle-close=\"closeOrderingPanel\"></create-from-builder>\n" +
     "</overlay-panel>"
   );
 
