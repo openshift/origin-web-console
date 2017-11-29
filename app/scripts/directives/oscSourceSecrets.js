@@ -2,7 +2,13 @@
 
 angular.module("openshiftConsole")
 
-  .directive("oscSourceSecrets", function($uibModal, $filter, DataService, SecretsService) {
+  .directive("oscSourceSecrets", function(
+    $uibModal,
+    $filter,
+    APIService,
+    DataService,
+    SecretsService) {
+
     return {
       restrict: 'E',
       scope: {
@@ -17,6 +23,9 @@ angular.module("openshiftConsole")
       },
       templateUrl: 'views/directives/osc-source-secrets.html',
       link: function($scope) {
+
+        $scope.secretsVersion = APIService.getPreferredVersion('secrets');
+
         $scope.canAddSourceSecret = function() {
           var lastSecret = _.last($scope.pickedSecrets);
           switch ($scope.strategyType) {
@@ -61,7 +70,7 @@ angular.module("openshiftConsole")
             }
           } else {
             $scope.pickedSecrets.splice(index,1);
-          }          
+          }
           $scope.secretsForm.$setDirty();
         };
 
@@ -74,7 +83,7 @@ angular.module("openshiftConsole")
           });
 
           modalInstance.result.then(function(newSecret) {
-            DataService.list("secrets", {namespace: $scope.namespace}, function(secrets) {
+            DataService.list($scope.secretsVersion, {namespace: $scope.namespace}, function(secrets) {
               var secretsByType = SecretsService.groupSecretsByType(secrets);
               var secretNamesByType =_.mapValues(secretsByType, function(secrets) {return _.map(secrets, 'metadata.name');});
               // Add empty option to the image/source secrets
