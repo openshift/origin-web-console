@@ -20,7 +20,7 @@
               </li>
               <li>
                 <delete-link
-                  ng-if="'persistentvolumeclaims' | canI : 'delete'"
+                  ng-if="pvcVersion | canI : 'delete'"
                   kind="PersistentVolumeClaim"
                   resource-name="{{pvc.metadata.name}}"
                   project-name="{{pvc.metadata.namespace}}"
@@ -76,7 +76,7 @@
                 </dl>
               </div>
             </uib-tab>
-            <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">
+            <uib-tab active="selectedTab.events" ng-if="eventsVersion | canI : 'watch'">
               <uib-tab-heading>Events</uib-tab-heading>
               <events api-objects="[ pvc ] " project-context="projectContext" ng-if="selectedTab.events"></events>
             </uib-tab>
