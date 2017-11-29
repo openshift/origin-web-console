@@ -46,7 +46,7 @@
     "angular-moment": "1.0.0",
     "angular-utf8-base64": "0.0.5",
     "file-saver": "1.3.3",
-    "origin-web-common": "0.0.75",
+    "origin-web-common": "3.9.0-alpha.0",
     "origin-web-catalog": "0.0.68"
   },
   "devDependencies": {
@@ -64,7 +64,8 @@
     "font-awesome": "4.7.0",
     "jquery": "3.2.1",
     "lodash": "4.17.4",
-    "matchHeight": "0.7.0"
+    "matchHeight": "0.7.2",
+    "origin-web-common": "3.9.0-alpha.0"
   },
   "overrides": {
     "angular": {

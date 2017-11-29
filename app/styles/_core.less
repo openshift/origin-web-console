@@ -67,7 +67,6 @@
 }
 
 .breadcrumb {
-  font-size: @font-size-base - 1;
   padding-bottom: 0;
   strong {
     font-weight: 600;
@@ -709,7 +708,7 @@ label.checkbox {
   .resource-description {
     font-family: @font-family-monospace;
     // Consistent font-size with the CLI examples in code blocks below the template message.
-    font-size: (@font-size-base - 1);
+    font-size: @font-size-base;
     margin-bottom: 0;
   }
 }
@@ -1236,6 +1235,7 @@ pre.clipped {
 
 .label-tech-preview {
   display: inline-block;
+  line-height: normal; // so that label height is adjusted and text vertically aligned within
   margin-top: 7px;
   @media(min-width: @screen-xs-min) {
     float: right;

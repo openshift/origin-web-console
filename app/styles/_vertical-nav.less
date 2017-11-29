@@ -51,7 +51,7 @@
       }
     }
     > a {
-      font-size: @font-size-base;
+      font-size: (@font-size-base + 1);
       font-weight: 300 !important;
       text-decoration: none;
       @media(max-width: @screen-xs-max) {
@@ -61,9 +61,9 @@
       .fa,
       .pficon {
         color: @nav-pf-vertical-icon-color;
-        font-size: (@font-size-base + 2);
+        font-size: (@font-size-base + 3);
         @media(min-width: @screen-sm-min) {
-          font-size: (@font-size-base + 5);
+          font-size: (@font-size-base + 6);
         }
       }
       .list-group-item-value {
@@ -74,7 +74,7 @@
     }
     &.secondary-nav-item-pf {
       > a:after {
-        font-size: 14px; // make right arrow size consistent with project-bar arrows
+        font-size: @font-size-large; // make right arrow size consistent with project-bar arrows
         padding: 16px 0; // padding aligns arrow vertically
         @media(max-width: @screen-xs-max) {
           padding: 8px 0;

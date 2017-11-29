@@ -45926,7 +45926,7 @@ elements: this,
 options: n
 }), a._apply(this, n), this);
 };
-a.version = "0.7.0", a._groups = [], a._throttle = 80, a._maintainScroll = !1, a._beforeUpdate = null, a._afterUpdate = null, a._rows = r, a._parse = i, a._parseOptions = o, a._apply = function(t, n) {
+a.version = "0.7.2", a._groups = [], a._throttle = 80, a._maintainScroll = !1, a._beforeUpdate = null, a._afterUpdate = null, a._rows = r, a._parse = i, a._parseOptions = o, a._apply = function(t, n) {
 var s = o(n), l = e(t), c = [ l ], u = e(window).scrollTop(), d = e("html").outerHeight(!0), h = l.parents().filter(":hidden");
 return h.each(function() {
 var t = e(this);
@@ -45991,9 +45991,11 @@ t = o;
 i ? -1 === n && (n = setTimeout(function() {
 s(r), n = -1;
 }, a._throttle)) : s(r);
-}, e(a._applyDataApi), e(window).bind("load", function(e) {
+}, e(a._applyDataApi);
+var l = e.fn.on ? "on" : "bind";
+e(window)[l]("load", function(e) {
 a._update(!1, e);
-}), e(window).bind("resize orientationchange", function(e) {
+}), e(window)[l]("resize orientationchange", function(e) {
 a._update(!0, e);
 });
 }), function(e, t) {
@@ -73332,6 +73334,11 @@ statefulsets: {
 group: "apps",
 version: "v1beta1",
 resource: "statefulsets"
+},
+storageclasses: {
+group: "storage.k8s.io",
+version: "v1",
+resource: "storageclasses"
 },
 templates: {
 group: "template.openshift.io",
