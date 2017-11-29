@@ -13983,7 +13983,8 @@ return n.allowCustomTag ? e.items ? "Current Tags" : "New Tag" : "";
 };
 } ]
 };
-} ]), angular.module("openshiftConsole").directive("deployImage", [ "$filter", "$q", "$window", "$uibModal", "ApplicationGenerator", "DataService", "ImagesService", "Navigate", "NotificationsService", "ProjectsService", "QuotaService", "TaskList", "SecretsService", "keyValueEditorUtils", function(e, t, n, a, r, o, i, s, c, l, u, d, m, p) {
+} ]), angular.module("openshiftConsole").directive("deployImage", [ "$filter", "$q", "$window", "$uibModal", "APIService", "ApplicationGenerator", "DataService", "ImagesService", "Navigate", "NotificationsService", "ProjectsService", "QuotaService", "TaskList", "SecretsService", "keyValueEditorUtils", function(e, t, n, a, r, o, i, s, c, l, u, d, m, p, f) {
+var g = r.getPreferredVersion("configmaps"), v = r.getPreferredVersion("secrets");
 return {
 restrict: "E",
 scope: {
@@ -13999,16 +14000,16 @@ e.projectNameTaken = !1;
 });
 } ],
 link: function(n) {
-function m() {
-var e = p.mapEntries(p.compactEntries(n.labels));
-return i.getResources({
+function r() {
+var e = f.mapEntries(f.compactEntries(n.labels));
+return s.getResources({
 name: n.app.name,
 image: n.import.name,
 namespace: n.import.namespace,
 tag: n.import.tag || "latest",
 ports: n.ports,
 volumes: n.volumes,
-env: p.compactEntries(n.env),
+env: f.compactEntries(n.env),
 labels: e
 });
 }
@@ -14018,30 +14019,30 @@ value: ""
 } ], n.$on("no-projects-cannot-create", function() {
 n.noProjectsCantCreate = !0;
 });
-var f = e("orderByDisplayName"), g = e("getErrorDetails"), v = {}, h = function() {
-c.hideNotification("deploy-image-list-config-maps-error"), c.hideNotification("deploy-image-list-secrets-error"), _.each(v, function(e) {
-!e.id || "error" !== e.type && "warning" !== e.type || c.hideNotification(e.id);
+var p = e("orderByDisplayName"), h = e("getErrorDetails"), y = {}, b = function() {
+l.hideNotification("deploy-image-list-config-maps-error"), l.hideNotification("deploy-image-list-secrets-error"), _.each(y, function(e) {
+!e.id || "error" !== e.type && "warning" !== e.type || l.hideNotification(e.id);
 });
 };
 n.valueFromNamespace = {};
-var y = function() {
+var S = function() {
 if (_.has(n.input.selectedProject, "metadata.uid")) return t.when(n.input.selectedProject);
 var a = n.input.selectedProject.metadata.name, r = n.input.selectedProject.metadata.annotations["new-display-name"], o = e("description")(n.input.selectedProject);
-return l.create(a, r, o);
-}, b = e("stripTag"), S = e("stripSHA"), C = e("humanizeKind"), w = function(e) {
+return u.create(a, r, o);
+}, C = e("stripTag"), w = e("stripSHA"), P = e("humanizeKind"), k = function(e) {
 return e.length > 24 ? e.substring(0, 24) : e;
-}, P = function() {
+}, j = function() {
 var e = _.last(n.import.name.split("/"));
-return e = S(e), e = b(e), e = w(e);
+return e = w(e), e = C(e), e = k(e);
 };
 n.findImage = function() {
-n.loading = !0, i.findImage(n.imageName, {
+n.loading = !0, s.findImage(n.imageName, {
 namespace: n.input.selectedProject.metadata.name
 }).then(function(e) {
 if (n.import = e, n.loading = !1, "Success" === _.get(e, "result.status")) {
 n.forms.imageSelection.imageName.$setValidity("imageLoaded", !0);
 var t = n.import.image;
-t && (n.app.name = P(), n.runsAsRoot = i.runsAsRoot(t), n.ports = r.parsePorts(t), n.volumes = i.getVolumes(t), n.createImageStream = !0);
+t && (n.app.name = j(), n.runsAsRoot = s.runsAsRoot(t), n.ports = o.parsePorts(t), n.volumes = s.getVolumes(t), n.createImageStream = !0);
 } else n.import.error = _.get(e, "result.message", "An error occurred finding the image.");
 }, function(t) {
 n.import.error = e("getErrorDetails")(t) || "An error occurred finding the image.", n.loading = !1;
@@ -14058,15 +14059,15 @@ e !== t && (delete n.import, n.istag = {}, "dockerImage" === e ? n.forms.imageSe
 "dockerImage" === n.mode && n.forms.imageSelection.imageName.$setValidity("imageLoaded", !1);
 }), n.$watch("istag", function(t, a) {
 if (t !== a) if (t.namespace && t.imageStream && t.tagObject) {
-var s, c = _.get(t, "tagObject.items[0].image");
-n.app.name = w(t.imageStream), n.import = {
+var r, c = _.get(t, "tagObject.items[0].image");
+n.app.name = k(t.imageStream), n.import = {
 name: t.imageStream,
 tag: t.tagObject.tag,
 namespace: t.namespace
-}, c && (s = t.imageStream + "@" + c, n.loading = !0, o.get("imagestreamimages", s, {
+}, c && (r = t.imageStream + "@" + c, n.loading = !0, i.get("imagestreamimages", r, {
 namespace: t.namespace
 }).then(function(e) {
-n.loading = !1, n.import.image = e.image, n.ports = r.parsePorts(e.image), n.volumes = i.getVolumes(e.image), n.runsAsRoot = !1;
+n.loading = !1, n.import.image = e.image, n.ports = o.parsePorts(e.image), n.volumes = s.getVolumes(e.image), n.runsAsRoot = !1;
 }, function(t) {
 n.import.error = e("getErrorDetails")(t) || "An error occurred.", n.loading = !1;
 }));
@@ -14075,58 +14076,58 @@ n.import.error = e("getErrorDetails")(t) || "An error occurred.", n.loading = !1
 if (n.env = _.reject(n.env, "valueFrom"), _.get(e, "metadata.uid")) {
 if (!n.valueFromNamespace[e.metadata.name]) {
 var t = [], a = [];
-o.list("configmaps", {
+i.list(g, {
 namespace: n.input.selectedProject.metadata.name
 }, null, {
 errorNotification: !1
 }).then(function(r) {
-t = f(r.by("metadata.name")), n.valueFromNamespace[e.metadata.name] = t.concat(a);
+t = p(r.by("metadata.name")), n.valueFromNamespace[e.metadata.name] = t.concat(a);
 }, function(e) {
-403 !== e.status && c.addNotification({
+403 !== e.status && l.addNotification({
 id: "deploy-image-list-config-maps-error",
 type: "error",
 message: "Could not load config maps.",
-details: g(e)
+details: h(e)
 });
-}), o.list("secrets", {
+}), i.list(v, {
 namespace: n.input.selectedProject.metadata.name
 }, null, {
 errorNotification: !1
 }).then(function(r) {
-a = f(r.by("metadata.name")), n.valueFromNamespace[e.metadata.name] = a.concat(t);
+a = p(r.by("metadata.name")), n.valueFromNamespace[e.metadata.name] = a.concat(t);
 }, function(e) {
-403 !== e.status && c.addNotification({
+403 !== e.status && l.addNotification({
 id: "deploy-image-list-secrets-error",
 type: "error",
 message: "Could not load secrets.",
-details: g(e)
+details: h(e)
 });
 });
 }
 } else n.mode = "istag";
 });
-var k, j = e("displayName"), R = function() {
+var R, I = e("displayName"), E = function() {
 var e = {
-started: "Deploying image " + n.app.name + " to project " + j(n.input.selectedProject),
-success: "Deployed image " + n.app.name + " to project " + j(n.input.selectedProject),
-failure: "Failed to deploy image " + n.app.name + " to project " + j(n.input.selectedProject)
+started: "Deploying image " + n.app.name + " to project " + I(n.input.selectedProject),
+success: "Deployed image " + n.app.name + " to project " + I(n.input.selectedProject),
+failure: "Failed to deploy image " + n.app.name + " to project " + I(n.input.selectedProject)
 };
-d.clear(), d.add(e, {}, n.input.selectedProject.metadata.name, function() {
+m.clear(), m.add(e, {}, n.input.selectedProject.metadata.name, function() {
 var e = t.defer();
-return o.batch(k, {
+return i.batch(R, {
 namespace: n.input.selectedProject.metadata.name
 }).then(function(t) {
 var a, r = !_.isEmpty(t.failure);
 a = r ? (a = _.map(t.failure, function(e) {
 return {
 type: "error",
-message: "Cannot create " + C(e.object.kind).toLowerCase() + ' "' + e.object.metadata.name + '". ',
+message: "Cannot create " + P(e.object.kind).toLowerCase() + ' "' + e.object.metadata.name + '". ',
 details: e.data.message
 };
 })).concat(_.map(t.success, function(e) {
 return {
 type: "success",
-message: "Created " + C(e.kind).toLowerCase() + ' "' + e.metadata.name + '" successfully. '
+message: "Created " + P(e.kind).toLowerCase() + ' "' + e.metadata.name + '" successfully. '
 };
 })) : [ {
 type: "success",
@@ -14139,8 +14140,8 @@ hasErrors: r
 }), n.isDialog ? n.$emit("deployImageNewAppCreated", {
 project: n.input.selectedProject,
 appName: n.app.name
-}) : s.toNextSteps(n.app.name, n.input.selectedProject.metadata.name);
-}, I = function(e) {
+}) : c.toNextSteps(n.app.name, n.input.selectedProject.metadata.name);
+}, T = function(e) {
 a.open({
 animation: !0,
 templateUrl: "views/modals/confirm.html",
@@ -14156,34 +14157,34 @@ cancelButtonText: "Cancel"
 };
 }
 }
-}).result.then(R);
-}, E = function(e) {
-v = e.quotaAlerts || [];
-var t = _.filter(v, {
+}).result.then(E);
+}, N = function(e) {
+y = e.quotaAlerts || [];
+var t = _.filter(y, {
 type: "error"
 });
-n.nameTaken || t.length ? (n.disableInputs = !1, _.each(v, function(e) {
-e.id = _.uniqueId("deploy-image-alert-"), c.addNotification(e);
-})) : v.length ? (I(v), n.disableInputs = !1) : R();
+n.nameTaken || t.length ? (n.disableInputs = !1, _.each(y, function(e) {
+e.id = _.uniqueId("deploy-image-alert-"), l.addNotification(e);
+})) : y.length ? (T(y), n.disableInputs = !1) : E();
 };
 n.create = function() {
-n.disableInputs = !0, h(), y().then(function(e) {
-n.input.selectedProject = e, k = m();
-var t = r.ifResourcesDontExist(k, n.input.selectedProject.metadata.name), a = u.getLatestQuotaAlerts(k, {
+n.disableInputs = !0, b(), S().then(function(e) {
+n.input.selectedProject = e, R = r();
+var t = o.ifResourcesDontExist(R, n.input.selectedProject.metadata.name), a = d.getLatestQuotaAlerts(R, {
 namespace: n.input.selectedProject.metadata.name
-}), o = function(e) {
+}), i = function(e) {
 return n.nameTaken = e.nameTaken, a;
 };
-t.then(o, o).then(E, E);
+t.then(i, i).then(N, N);
 }, function(e) {
-n.disableInputs = !1, "AlreadyExists" === e.data.reason ? n.projectNameTaken = !0 : c.addNotification({
+n.disableInputs = !1, "AlreadyExists" === e.data.reason ? n.projectNameTaken = !0 : l.addNotification({
 id: "deploy-image-create-project-error",
 type: "error",
 message: "An error occurred creating project.",
-details: g(e)
+details: h(e)
 });
 });
-}, n.$on("newAppFromDeployImage", n.create), n.$on("$destroy", h);
+}, n.$on("newAppFromDeployImage", n.create), n.$on("$destroy", b);
 }
 };
 } ]), angular.module("openshiftConsole").directive("selector", function() {

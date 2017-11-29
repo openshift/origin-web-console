@@ -5,6 +5,7 @@ angular.module("openshiftConsole")
                                      $q,
                                      $window,
                                      $uibModal,
+                                     APIService,
                                      ApplicationGenerator,
                                      DataService,
                                      ImagesService,
@@ -15,6 +16,12 @@ angular.module("openshiftConsole")
                                      TaskList,
                                      SecretsService,
                                      keyValueEditorUtils) {
+
+    // TODO: depends on https://github.com/openshift/origin-web-common/pull/251
+    var imageStreamImagesVersion = 'imagestreamimages';
+    var configMapsVersion = APIService.getPreferredVersion('configmaps');
+    var secretsVersion = APIService.getPreferredVersion('secrets');
+
     return {
       restrict: 'E',
       scope: {
@@ -209,7 +216,7 @@ angular.module("openshiftConsole")
 
             dockerRef = istag.imageStream + "@" + image;
             $scope.loading = true;
-            DataService.get('imagestreamimages', dockerRef, { namespace: istag.namespace }).then(function(response) {
+            DataService.get(imageStreamImagesVersion, dockerRef, { namespace: istag.namespace }).then(function(response) {
               $scope.loading = false;
               $scope.import.image = response.image;
               $scope.ports = ApplicationGenerator.parsePorts(response.image);
@@ -239,7 +246,7 @@ angular.module("openshiftConsole")
             var configMapDataOrdered = [];
             var secretDataOrdered = [];
 
-            DataService.list("configmaps", {namespace: $scope.input.selectedProject.metadata.name}, null, { errorNotification: false }).then(function(configMapData) {
+            DataService.list(configMapsVersion, {namespace: $scope.input.selectedProject.metadata.name}, null, { errorNotification: false }).then(function(configMapData) {
               configMapDataOrdered = orderByDisplayName(configMapData.by("metadata.name"));
               $scope.valueFromNamespace[project.metadata.name] = configMapDataOrdered.concat(secretDataOrdered);
             }, function(e) {
@@ -255,7 +262,7 @@ angular.module("openshiftConsole")
               });
             });
 
-            DataService.list("secrets", {namespace: $scope.input.selectedProject.metadata.name}, null, { errorNotification: false }).then(function(secretData) {
+            DataService.list(secretsVersion, {namespace: $scope.input.selectedProject.metadata.name}, null, { errorNotification: false }).then(function(secretData) {
               secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
               $scope.valueFromNamespace[project.metadata.name] = secretDataOrdered.concat(configMapDataOrdered);
             }, function(e) {
