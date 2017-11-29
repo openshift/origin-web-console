@@ -6,13 +6,12 @@
       <!-- Getting started -->
       <div class="empty-state-message text-center">
         <div ng-if="project.metadata.name | canIAddToProject">
-          <h2>Get started with your project.</h2>
-          <p class="gutter-top">
-            Use your source or an example repository to build an application
-            image, or add components like databases and message queues.
+          <h2 translate>Get started with your project.</h2>
+          <p class="gutter-top" translate>
+            Use your source or an example repository to build an application image, or add components like databases and message queues.
           </p>
           <p class="gutter-top">
-            <button class="btn btn-lg btn-primary" ng-click="browseCatalog()">
+            <button class="btn btn-lg btn-primary" ng-click="browseCatalog()" translate>
               Add to Project
             </button>
           </p>

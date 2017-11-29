@@ -27,13 +27,13 @@
           ng-if="primaryItem.href"
           ng-href="{{navURL(primaryItem.href)}}"
           ng-click="itemClicked(primaryItem)">
-          <span title="{{primaryItem.label}}" class="{{primaryItem.iconClass}}" aria-hidden="true"></span> <span class="list-group-item-value">{{primaryItem.label}}</span> <span ng-if="nav.collapsed && !isMobile" class="sr-only">{{primaryItem.label}}</span>
+          <span title="{{primaryItem.label}}" class="{{primaryItem.iconClass}}" aria-hidden="true"></span> <span class="list-group-item-value">{{primaryItem.label|translate}}</span> <span ng-if="nav.collapsed && !isMobile" class="sr-only">{{primaryItem.label}}</span>
         </a>
         <a
           ng-if="!primaryItem.href"
           href=""
           ng-click="itemClicked(primaryItem)">
-          <span title="{{primaryItem.label}}" class="{{primaryItem.iconClass}}" aria-hidden="true"></span> <span class="list-group-item-value">{{primaryItem.label}}</span> <span ng-if="nav.collapsed && !isMobile" class="sr-only">{{primaryItem.label}}</span>
+          <span title="{{primaryItem.label}}" class="{{primaryItem.iconClass}}" aria-hidden="true"></span> <span class="list-group-item-value">{{primaryItem.label|translate}}</span> <span ng-if="nav.collapsed && !isMobile" class="sr-only">{{primaryItem.label}}</span>
         </a>
 
         <!-- Secondary Nav -->
@@ -50,7 +50,7 @@
                 class="secondary-collapse-toggle-pf"
                 ng-click="collapseMobileSecondary(primaryItem, $event)"
                 role="button"><span class="sr-only">Back</span></a>
-              <span>{{primaryItem.label}}</span>
+              <span>{{primaryItem.label|translate}}</span>
             </div>
             <ul class="list-group">
               <li
@@ -65,7 +65,7 @@
                 ng-if="show(secondaryItem)"
                 class="list-group-item">
                 <a ng-href="{{navURL(secondaryItem.href)}}" ng-click="primaryItem.mobileSecondary = false;">
-                  <span class="list-group-item-value">{{secondaryItem.label}}</span>
+                  <span class="list-group-item-value">{{secondaryItem.label|translate}}</span>
                 </a>
               </li>
               <li ng-repeat-end style="display:none;"></li>

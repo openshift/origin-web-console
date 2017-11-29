@@ -1,0 +1,152 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.5\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: app/views/overview.html:14
+msgid "Add to Project"
+msgstr "添加到项目"
+
+#: app/scripts/constants.js:235
+msgid "Applications"
+msgstr "应用程序"
+
+#: app/scripts/constants.js:303 app/scripts/constants.js:309
+msgid "Builds"
+msgstr "构建"
+
+#: app/scripts/constants.js:422
+msgid "Catalog"
+msgstr "目录"
+
+#: app/scripts/constants.js:356
+msgid "Config Maps"
+msgstr "配置映射"
+
+#: app/scripts/constants.js:241 app/views/deployments.html:6
+msgid "Deployments"
+msgstr "部署"
+
+#: app/views/overview.html:9
+msgid "Get started with your project."
+msgstr "从你的项目开始。"
+
+#: app/scripts/constants.js:326
+msgid "Images"
+msgstr "镜像"
+
+#: app/views/deployments.html:9
+msgid "Learn More"
+msgstr "了解更多"
+
+#: app/scripts/constants.js:347
+msgid "Membership"
+msgstr "成员"
+
+#: app/scripts/constants.js:395
+msgid "Monitoring"
+msgstr "监控"
+
+#: app/views/deployments.html:32
+msgid "No deployments have been added to project {{projectName}}."
+msgstr "没有部署被添加到项目 {{projectName}}。"
+
+#: app/views/deployments.html:31
+msgid "No deployments."
+msgstr "没有部署。"
+
+#: app/scripts/constants.js:377
+msgid "Other Resources"
+msgstr "其他资源"
+
+#: app/scripts/constants.js:230
+msgid "Overview"
+msgstr "概览"
+
+#: app/scripts/constants.js:318
+msgid "Pipelines"
+msgstr "管道"
+
+#: app/scripts/constants.js:264
+msgid "Pods"
+msgstr "Pods"
+
+#: app/scripts/constants.js:343
+msgid "Quota"
+msgstr "配额"
+
+#: app/scripts/constants.js:337
+msgid "Resources"
+msgstr "资源"
+
+#: app/scripts/constants.js:278
+msgid "Routes"
+msgstr "路由"
+
+#: app/scripts/constants.js:365
+msgid "Secrets"
+msgstr "密钥"
+
+#: app/scripts/constants.js:271
+msgid "Services"
+msgstr "服务"
+
+#: app/scripts/constants.js:257
+msgid "Stateful Sets"
+msgstr "有状态集"
+
+#: app/scripts/constants.js:385
+msgid "Storage"
+msgstr "存储"
+
+#: app/views/overview.html:10
+msgid ""
+"Use your source or an example repository to build an application image, or "
+"add components like databases and message queues."
+msgstr ""
+"使用您的源代码或示例资源库构建一个应用镜像，或添加数据库和消息队列等组件"
+
+#~ msgid "image, or add components like databases and message queues."
+#~ msgstr "镜像，或添加数据库和消息队列等组件。"
+
+#~ msgid "Age"
+#~ msgstr "年龄"
+
+#~ msgid "Loading..."
+#~ msgstr "加载中..."
+
+#~ msgid "No pods have been added to project {{projectName}}."
+#~ msgstr "没有pods被添加到项目 {{projectName}}。"
+
+#~ msgid "No pods."
+#~ msgstr "没有pods。"
+
+#, fuzzy
+#~| msgid "No pods have been added to project {{projectName}}."
+#~ msgid "No services have been added to project {{projectName}}."
+#~ msgstr "没有pods被添加到项目 {{projectName}}。"
+
+#, fuzzy
+#~| msgid "Services"
+#~ msgid "No services."
+#~ msgstr "服务"
+
+#~ msgid "No stateful sets have been added to project {{projectName}}."
+#~ msgstr "没有状态集被添加到项目 {{projectName}}。"
+
+#~ msgid "No stateful sets."
+#~ msgstr "没有状态集。"
+
+#, fuzzy
+#~| msgid "Stateful Sets"
+#~ msgid "Status"
+#~ msgstr "有状态集"

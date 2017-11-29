@@ -3,10 +3,10 @@
     <div class="container-fluid">
       <div class="page-header page-header-bleed-right page-header-bleed-left">
         <h1>
-          Deployments
+          <translate>Deployments</translate>
           <span class="page-header-link">
             <a ng-href="{{'deployments' | helpLink}}" target="_blank">
-              Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
+              <translate>Learn More</translate><i class="fa fa-external-link" aria-hidden="true"></i>
             </a>
           </span>
         </h1>
@@ -28,8 +28,8 @@
           <div ng-if="(showEmptyState || filterWithZeroResults) && deploymentConfigsLoaded">
             <div class="empty-state-message text-center">
               <div ng-if="showEmptyState">
-                <h2>No deployments.</h2>
-                <p>No deployments have been added to project {{projectName}}.</p>
+                <h2 translate>No deployments.</h2>
+                <p translate>No deployments have been added to project {{projectName}}.</p>
               </div>
               <div ng-if="filterWithZeroResults">
                 <h2>The filter is hiding all deployments. <a href="" ng-click="clearFilter()" role="button" class="nowrap">Clear Filter</a></h2>
