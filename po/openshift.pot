@@ -1,0 +1,107 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Project-Id-Version: \n"
+
+#: app/views/overview.html:17
+msgid "Add to Project"
+msgstr ""
+
+#: app/scripts/constants.js:233
+msgid "Applications"
+msgstr ""
+
+#: app/views/overview.html:14
+msgid "Browse Catalog"
+msgstr ""
+
+#: app/scripts/constants.js:301
+#: app/scripts/constants.js:307
+msgid "Builds"
+msgstr ""
+
+#: app/scripts/constants.js:354
+msgid "Config Maps"
+msgstr ""
+
+#: app/scripts/constants.js:239
+#: app/views/deployments.html:6
+msgid "Deployments"
+msgstr ""
+
+#: app/views/overview.html:9
+msgid "Get started with your project."
+msgstr ""
+
+#: app/scripts/constants.js:324
+msgid "Images"
+msgstr ""
+
+#: app/views/deployments.html:9
+msgid "Learn More"
+msgstr ""
+
+#: app/scripts/constants.js:345
+msgid "Membership"
+msgstr ""
+
+#: app/scripts/constants.js:392
+msgid "Monitoring"
+msgstr ""
+
+#: app/views/deployments.html:32
+msgid "No deployments have been added to project {{projectName}}."
+msgstr ""
+
+#: app/views/deployments.html:31
+msgid "No deployments."
+msgstr ""
+
+#: app/scripts/constants.js:375
+msgid "Other Resources"
+msgstr ""
+
+#: app/scripts/constants.js:228
+msgid "Overview"
+msgstr ""
+
+#: app/scripts/constants.js:316
+msgid "Pipelines"
+msgstr ""
+
+#: app/scripts/constants.js:262
+msgid "Pods"
+msgstr ""
+
+#: app/scripts/constants.js:341
+msgid "Quota"
+msgstr ""
+
+#: app/scripts/constants.js:335
+msgid "Resources"
+msgstr ""
+
+#: app/scripts/constants.js:276
+msgid "Routes"
+msgstr ""
+
+#: app/scripts/constants.js:363
+msgid "Secrets"
+msgstr ""
+
+#: app/scripts/constants.js:269
+msgid "Services"
+msgstr ""
+
+#: app/scripts/constants.js:255
+msgid "Stateful Sets"
+msgstr ""
+
+#: app/scripts/constants.js:383
+msgid "Storage"
+msgstr ""
+
+#: app/views/overview.html:10
+msgid "Use your source or an example repository to build an application image, or add components like databases and message queues."
+msgstr ""

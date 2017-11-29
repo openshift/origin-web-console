@@ -5,6 +5,9 @@
 // Reference: https://docs.openshift.org/latest/install_config/web_console_customization.html#loading-custom-scripts-and-stylesheets
 
 // NOTE: Update extensions/examples/online-extensions.js if you add a new help link to this map.
+var gettext = function(s) {
+  return s;
+};
 
 if (angular.isUndefined(window.OPENSHIFT_CONSTANTS)) {
   window.OPENSHIFT_CONSTANTS = {};
@@ -222,18 +225,18 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
   // href's will be prefixed with /project/{{projectName}} unless they are absolute URLs
   PROJECT_NAVIGATION: [
     {
-      label: "Overview",
+      label: gettext("Overview"),
       iconClass: "fa fa-dashboard",
       href: "/overview"
     },
     {
-      label: "Applications",
+      label: gettext("Applications"),
       iconClass: "fa fa-cubes",
       secondaryNavSections: [
         {
           items: [
             {
-              label: "Deployments",
+              label: gettext("Deployments"),
               href: "/browse/deployments",
               prefixes: [
                 "/add-config-volume",
@@ -249,28 +252,28 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
               ]
             },
             {
-              label: "Stateful Sets",
+              label: gettext("Stateful Sets"),
               href: "/browse/stateful-sets",
               prefixes: [
                 "/browse/stateful-sets/"
               ]
             },
             {
-              label: "Pods",
+              label: gettext("Pods"),
               href: "/browse/pods",
               prefixes: [
                 "/browse/pods/"
               ]
             },
             {
-              label: "Services",
+              label: gettext("Services"),
               href: "/browse/services",
               prefixes: [
                 "/browse/services/"
               ]
             },
             {
-              label: "Routes",
+              label: gettext("Routes"),
               href: "/browse/routes",
               prefixes: [
                 "/browse/routes/",
@@ -295,13 +298,13 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
       ]
     },
     {
-      label: "Builds",
+      label: gettext("Builds"),
       iconClass: "pficon pficon-build",
       secondaryNavSections: [
         {
           items: [
             {
-              label: "Builds",
+              label: gettext("Builds"),
               href: "/browse/builds",
               prefixes: [
                 "/browse/builds/",
@@ -310,7 +313,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
               ]
             },
             {
-              label: "Pipelines",
+              label: gettext("Pipelines"),
               href: "/browse/pipelines",
               prefixes: [
                 "/browse/pipelines/",
@@ -318,7 +321,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
               ]
             },
             {
-              label: "Images",
+              label: gettext("Images"),
               href: "/browse/images",
               prefixes: [
                 "/browse/images/"
@@ -329,17 +332,17 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
       ]
     },
     {
-      label: "Resources",
+      label: gettext("Resources"),
       iconClass: "fa fa-files-o",
       secondaryNavSections: [
         {
           items: [
             {
-              label: "Quota",
+              label: gettext("Quota"),
               href: "/quota"
             },
             {
-              label: "Membership",
+              label: gettext("Membership"),
               href: "/membership",
               // supports: {resource: '', verb: '', group: '' }
               canI: {
@@ -348,7 +351,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
               }
             },
             {
-              label: "Config Maps",
+              label: gettext("Config Maps"),
               href: "/browse/config-maps",
               prefixes: [
                 "/browse/config-maps/",
@@ -357,7 +360,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
               ]
             },
             {
-              label: "Secrets",
+              label: gettext("Secrets"),
               href: "/browse/secrets",
               prefixes: [
                 "/browse/secrets/",
@@ -369,7 +372,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
               }
             },
             {
-              label: "Other Resources",
+              label: gettext("Other Resources"),
               href: "/browse/other"
             }
           ]
@@ -377,7 +380,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
       ]
     },
     {
-      label: "Storage",
+      label: gettext("Storage"),
       iconClass: "pficon pficon-container-node",
       href: "/browse/storage",
       prefixes: [
@@ -386,7 +389,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
       ]
     },
     {
-      label: "Monitoring",
+      label: gettext("Monitoring"),
       iconClass: "pficon pficon-screen",
       href: "/monitoring",
       prefixes: [

@@ -544,6 +544,10 @@ i();
 };
 }
 
+var gettext = function(e) {
+return e;
+};
+
 angular.isUndefined(window.OPENSHIFT_CONSTANTS) && (window.OPENSHIFT_CONSTANTS = {}), angular.extend(window.OPENSHIFT_CONSTANTS, {
 HELP_BASE_URL: "https://docs.openshift.org/latest/",
 HELP: {
@@ -748,31 +752,31 @@ ReferencesNonexistentServicePlan: !0,
 UnbindCallFailed: !0
 },
 PROJECT_NAVIGATION: [ {
-label: "Overview",
+label: gettext("Overview"),
 iconClass: "fa fa-dashboard",
 href: "/overview"
 }, {
-label: "Applications",
+label: gettext("Applications"),
 iconClass: "fa fa-cubes",
 secondaryNavSections: [ {
 items: [ {
-label: "Deployments",
+label: gettext("Deployments"),
 href: "/browse/deployments",
 prefixes: [ "/add-config-volume", "/attach-pvc", "/browse/deployment/", "/browse/dc/", "/browse/rs/", "/browse/rc/", "/edit/autoscaler", "/edit/dc/", "/edit/health-checks", "/set-limits" ]
 }, {
-label: "Stateful Sets",
+label: gettext("Stateful Sets"),
 href: "/browse/stateful-sets",
 prefixes: [ "/browse/stateful-sets/" ]
 }, {
-label: "Pods",
+label: gettext("Pods"),
 href: "/browse/pods",
 prefixes: [ "/browse/pods/" ]
 }, {
-label: "Services",
+label: gettext("Services"),
 href: "/browse/services",
 prefixes: [ "/browse/services/" ]
 }, {
-label: "Routes",
+label: gettext("Routes"),
 href: "/browse/routes",
 prefixes: [ "/browse/routes/", "/create-route", "/edit/routes/" ]
 }, {
@@ -787,43 +791,43 @@ verb: "list"
 } ]
 } ]
 }, {
-label: "Builds",
+label: gettext("Builds"),
 iconClass: "pficon pficon-build",
 secondaryNavSections: [ {
 items: [ {
-label: "Builds",
+label: gettext("Builds"),
 href: "/browse/builds",
 prefixes: [ "/browse/builds/", "/browse/builds-noconfig/", "/edit/builds/" ]
 }, {
-label: "Pipelines",
+label: gettext("Pipelines"),
 href: "/browse/pipelines",
 prefixes: [ "/browse/pipelines/", "/edit/pipelines/" ]
 }, {
-label: "Images",
+label: gettext("Images"),
 href: "/browse/images",
 prefixes: [ "/browse/images/" ]
 } ]
 } ]
 }, {
-label: "Resources",
+label: gettext("Resources"),
 iconClass: "fa fa-files-o",
 secondaryNavSections: [ {
 items: [ {
-label: "Quota",
+label: gettext("Quota"),
 href: "/quota"
 }, {
-label: "Membership",
+label: gettext("Membership"),
 href: "/membership",
 canI: {
 resource: "rolebindings",
 verb: "list"
 }
 }, {
-label: "Config Maps",
+label: gettext("Config Maps"),
 href: "/browse/config-maps",
 prefixes: [ "/browse/config-maps/", "/create-config-map", "/edit/config-maps/" ]
 }, {
-label: "Secrets",
+label: gettext("Secrets"),
 href: "/browse/secrets",
 prefixes: [ "/browse/secrets/", "/create-secret" ],
 canI: {
@@ -831,17 +835,17 @@ resource: "secrets",
 verb: "list"
 }
 }, {
-label: "Other Resources",
+label: gettext("Other Resources"),
 href: "/browse/other"
 } ]
 } ]
 }, {
-label: "Storage",
+label: gettext("Storage"),
 iconClass: "pficon pficon-container-node",
 href: "/browse/storage",
 prefixes: [ "/browse/storage/", "/create-pvc" ]
 }, {
-label: "Monitoring",
+label: gettext("Monitoring"),
 iconClass: "pficon pficon-screen",
 href: "/monitoring",
 prefixes: [ "/browse/events" ]
@@ -1352,6 +1356,10 @@ return $(this).data("time-only") ? t(r, null) || a : e(r, null, o, i) || a;
 }, 1e3);
 } ]).run([ "IS_IOS", function(e) {
 e && $("body").addClass("ios");
+} ]).run([ "$window", "gettextCatalog", function(e, t) {
+t.debug = !0;
+var n = e.OPENSHIFT_LANG;
+"en" !== n && (t.loadRemote("languages/" + n + ".json"), t.setCurrentLanguage(n));
 } ]), hawtioPluginLoader.addModule("openshiftConsole"), angular.module("openshiftConsole").factory("BrowserStore", [ function() {
 var e = {
 local: window.localStorage,
