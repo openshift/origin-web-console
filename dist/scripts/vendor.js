@@ -73171,6 +73171,11 @@ group: "build.openshift.io",
 version: "v1",
 resource: "builds/clone"
 },
+"builds/log": {
+group: "build.openshift.io",
+version: "v1",
+resource: "builds/log"
+},
 "buildconfigs/instantiate": {
 group: "build.openshift.io",
 version: "v1",
@@ -73215,6 +73220,15 @@ group: "apps.openshift.io",
 version: "v1",
 resource: "deploymentconfigs/rollback"
 },
+"deploymentconfigs/log": {
+group: "apps.openshift.io",
+version: "v1",
+resource: "deploymentconfigs/log"
+},
+endpoints: {
+version: "v1",
+resoource: "endpoints"
+},
 events: {
 version: "v1",
 resource: "events"
@@ -73234,6 +73248,11 @@ group: "image.openshift.io",
 version: "v1",
 resource: "imagestreamtags"
 },
+imagestreamimages: {
+group: "image.openshift.io",
+version: "v1",
+resource: "imagestreamimages"
+},
 limitranges: {
 version: "v1",
 resource: "limitranges"
@@ -73241,6 +73260,10 @@ resource: "limitranges"
 pods: {
 version: "v1",
 resource: "pods"
+},
+"pods/log": {
+version: "v1",
+resource: "pods/log"
 },
 projects: {
 group: "project.openshift.io",
@@ -73314,6 +73337,11 @@ templates: {
 group: "template.openshift.io",
 verison: "v1",
 resource: "templates"
+},
+users: {
+group: "user.openshift.io",
+version: "v1",
+resource: "users"
 }
 }), angular.module("openshiftCommonUI").filter("alertStatus", function() {
 return function(e) {
