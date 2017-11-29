@@ -13,6 +13,7 @@
     "connect-modrewrite": "0.7.9",
     "geckodriver": "1.3.0",
     "grunt": "0.4.5",
+    "grunt-angular-gettext": "^2.3.6",
     "grunt-angular-templates": "1.0.3",
     "grunt-cli": "1.1.0",
     "grunt-concurrent": "2.3.1",
