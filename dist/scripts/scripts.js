@@ -3486,16 +3486,16 @@ kind:"Template",
 labels:{
 template:"squid-up"
 },
-message:"Squid  has  been  depolyed.\n\nFor  more  information  about  using  this  template,  see  https://github.com/Dataman-Cloud/squid.",
+message:"Squid has been depolyed.\n\nFor more information about using this template, see https://github.com/Dataman-Cloud/squid.",
 metadata:{
 annotations:{
-description:"An  example  Squid  application  with  a  Database  database.  For  more  information  about  using  this  template,  see  https://github.com/Dataman-Cloud/squid.\n\nWARNING:  Any  data  stored  will  be  lost  upon  pod  destruction.  Only  use  this  template  for  testing.",
+description:"An example Squid application with a Database database. For more information about using this template, see https://github.com/Dataman-Cloud/squid.\n\nWARNING: Any data stored will be lost upon pod destruction. Only use this template for testing.",
 iconClass:"icon-git",
-"openshift.io/display-name":"Squid  Console",
+"openshift.io/display-name":"Squid Console",
 tags:"quickstart,squid,dataman",
 "template.openshift.io/documentation-url":"https://github.com/Dataman-Cloud/squid",
-"template.openshift.io/long-description":"This  template  is  a  squid  application.    The  database  is  stored  in  non-persistent  storage,  so  this  configuration  should  be  used  for  experimental  purposes  only.",
-"template.openshift.io/provider-display-name":"Dataman,  Inc.",
+"template.openshift.io/long-description":"This template is a squid application.  The database is stored in non-persistent storage, so this configuration should be used for experimental purposes only.",
+"template.openshift.io/provider-display-name":"Dataman, Inc.",
 "template.openshift.io/support-url":"https://github.com/Dataman-Cloud/squid"
 },
 creationTimestamp:"2017-11-07T05:17:23Z",
@@ -3508,7 +3508,7 @@ uid:"efc8c88a-c37a-11e7-91ea-005056856489"
 objects:[ {
 apiVersion:"v1",
 data:{
-"regcenter.json":'[\n    {\n        "nameAndNamespace":  "demo/squid.dataman.com",\n        "zkAddressList":  "${ZOOKEEPER_ADDRESS}:2181",\n        "degree":"1"\n    }\n]\n'
+"regcenter.json":'[\n  {\n    "nameAndNamespace": "demo/squid.dataman.com",\n    "zkAddressList": "${ZOOKEEPER_ADDRESS}:2181",\n    "degree":"1"\n  }\n]\n'
 },
 kind:"ConfigMap",
 metadata:{
@@ -3519,7 +3519,7 @@ apiVersion:"v1",
 kind:"Service",
 metadata:{
 annotations:{
-description:"Exposes  the  squid-console  server"
+description:"Exposes the squid-console server"
 },
 name:"${SQUID_CONSOLE_NAME}"
 },
@@ -3538,7 +3538,7 @@ apiVersion:"v1",
 kind:"DeploymentConfig",
 metadata:{
 annotations:{
-description:"Defines  how  to  deploy  the  squid-console",
+description:"Defines how to deploy the squid-console",
 "template.alpha.openshift.io/wait-for-ready":"true"
 },
 name:"${SQUID_CONSOLE_NAME}"

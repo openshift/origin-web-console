@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-tag=v0.0.6
+tag=v0.0.8
 
 # workdir deploy
 echo "Start Copying Files"
@@ -20,6 +20,8 @@ cp -rf ../dist/images .tmp/console/images
 cp -rf ../dist/languages .tmp/console/languages
 cp -rf ../dist/scripts .tmp/console/scripts
 cp -rf ../dist/styles .tmp/console/styles
+
+cp -rf ../dist.java/java .tmp/console/java
 
 cp -rf ../extensions/extensions.js .tmp/console/scripts/extensions.js
 cp -rf ../extensions/extensions.css  .tmp/console/styles/extensions.css
