@@ -12,6 +12,9 @@ angular.module("openshiftConsole")
                       Navigate,
                       NotificationsService,
                       Logger) {
+
+    var horizontalPodAutoscalersVersion = APIService.getPreferredVersion('horizontalpodautoscalers');
+
     return {
       restrict: "E",
       scope: {
@@ -75,10 +78,7 @@ angular.module("openshiftConsole")
         };
 
         var deleteHPA = function(hpa) {
-          return DataService.delete({
-            resource: 'horizontalpodautoscalers',
-            group: 'autoscaling'
-          }, hpa.metadata.name, { namespace: scope.projectName })
+          return DataService.delete(horizontalPodAutoscalersVersion, hpa.metadata.name, { namespace: scope.projectName })
           .then(function() {
             NotificationsService.addNotification({
                 type: "success",

@@ -9070,6 +9070,7 @@ precision: "=?"
 template: '<span data-timestamp="{{timestamp}}" data-omit-single="{{omitSingle}}" data-precision="{{precision}}" class="duration">{{timestamp | duration : null : omitSingle : precision}}</span>'
 };
 }), angular.module("openshiftConsole").directive("deleteLink", [ "$uibModal", "$location", "$filter", "$q", "hashSizeFilter", "APIService", "DataService", "Navigate", "NotificationsService", "Logger", function(e, t, n, a, r, o, i, s, c, l) {
+var u = o.getPreferredVersion("horizontalpodautoscalers");
 return {
 restrict: "E",
 scope: {
@@ -9093,18 +9094,15 @@ templateUrl: function(e, t) {
 return angular.isDefined(t.buttonOnly) ? "views/directives/delete-button.html" : "views/directives/delete-link.html";
 },
 replace: !0,
-link: function(a, r, u) {
-"Project" === u.kind && (a.isProject = !0), a.options = {
+link: function(a, r, d) {
+"Project" === d.kind && (a.isProject = !0), a.options = {
 deleteHPAs: !0,
 deleteImmediately: !1
 };
-var d = function(e) {
+var m = function(e) {
 a.stayOnCurrentPage && a.alerts ? a.alerts[e.name] = e.data : c.addNotification(e.data);
-}, m = function(e) {
-return i.delete({
-resource: "horizontalpodautoscalers",
-group: "autoscaling"
-}, e.metadata.name, {
+}, p = function(e) {
+return i.delete(u, e.metadata.name, {
 namespace: a.projectName
 }).then(function() {
 c.addNotification({
@@ -9112,7 +9110,7 @@ type: "success",
 message: "Horizontal pod autoscaler " + e.metadata.name + " was marked for deletion."
 });
 }).catch(function(t) {
-d({
+m({
 name: e.metadata.name,
 data: {
 type: "error",
@@ -9120,7 +9118,7 @@ message: "Horizontal pod autoscaler " + e.metadata.name + " could not be deleted
 }
 }), l.error("HPA " + e.metadata.name + " could not be deleted.", t);
 });
-}, p = function() {
+}, f = function() {
 if (!a.stayOnCurrentPage) if (a.redirectUrl) t.url(a.redirectUrl); else if ("Project" === a.kind) if ("/" !== t.path()) {
 var e = URI("/");
 t.url(e);
@@ -9135,17 +9133,17 @@ scope: a
 }).result.then(function() {
 var e = a.kind, t = a.resourceName, r = a.typeDisplayName || n("humanizeKind")(e), s = _.capitalize(r) + " '" + (a.displayName ? a.displayName : t) + "'", u = "Project" === a.kind ? {} : {
 namespace: a.projectName
-}, f = {};
-a.options.deleteImmediately && (f.gracePeriodSeconds = 0, f.propagationPolicy = null), "servicecatalog.k8s.io" === a.group && (f.propagationPolicy = null), i.delete({
+}, d = {};
+a.options.deleteImmediately && (d.gracePeriodSeconds = 0, d.propagationPolicy = null), "servicecatalog.k8s.io" === a.group && (d.propagationPolicy = null), i.delete({
 resource: o.kindToResource(e),
 group: a.group
-}, t, u, f).then(function() {
+}, t, u, d).then(function() {
 c.addNotification({
 type: "success",
 message: s + " was marked for deletion."
-}), a.success && a.success(), a.options.deleteHPAs && _.each(a.hpaList, m), p();
+}), a.success && a.success(), a.options.deleteHPAs && _.each(a.hpaList, p), f();
 }).catch(function(e) {
-d({
+m({
 name: t,
 data: {
 type: "error",
