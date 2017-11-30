@@ -19,7 +19,13 @@ angular.module("openshiftConsole")
    * selectDisabled:
    *   An expression that will disable the form (default: false)
    */
-  .directive("istagSelect", function(DataService, ProjectsService) {
+  .directive("istagSelect", function(
+    APIService,
+    DataService,
+    ProjectsService) {
+
+    var imageStreamsVersion = APIService.getPreferredVersion('imagestreams');
+
     return {
       require: '^form',
       restrict: 'E',
@@ -57,7 +63,7 @@ angular.module("openshiftConsole")
             $scope.isByNamespace[ns][$scope.istag.imageStream] = {status: {tags: [{tag: $scope.istag.tagObject.tag}]}};
             return;
           }
-          DataService.list('imagestreams', { namespace: ns }, function(isData) {
+          DataService.list(imageStreamsVersion, { namespace: ns }, function(isData) {
             // Make a copy since we modify status tags and don't want to mutate objects that are cached.
             var imageStreams = angular.copy(isData.by('metadata.name'));
             ensureStatusTags(imageStreams);
@@ -104,7 +110,7 @@ angular.module("openshiftConsole")
               shouldPrepopulate = false;
               return;
             }
-            DataService.list('imagestreams', { namespace: namespace }, function(isData) {
+            DataService.list(imageStreamsVersion, { namespace: namespace }, function(isData) {
               // Make a copy since we modify status tags and don't want to mutate objects that are cached.
               var imageStreams = angular.copy(isData.by('metadata.name'));
               ensureStatusTags(imageStreams);
