@@ -13918,7 +13918,8 @@ serviceInstances: "<",
 createBinding: "&"
 },
 templateUrl: "views/overview/_service-bindings.html"
-}), angular.module("openshiftConsole").directive("istagSelect", [ "DataService", "ProjectsService", function(e, t) {
+}), angular.module("openshiftConsole").directive("istagSelect", [ "APIService", "DataService", "ProjectsService", function(e, t, n) {
+var a = e.getPreferredVersion("imagestreams");
 return {
 require: "^form",
 restrict: "E",
@@ -13930,54 +13931,54 @@ includeSharedNamespace: "=",
 allowCustomTag: "="
 },
 templateUrl: "views/directives/istag-select.html",
-controller: [ "$scope", function(n) {
-n.isByNamespace = {}, n.isNamesByNamespace = {};
-var a = _.get(n, "istag.namespace") && _.get(n, "istag.imageStream") && _.get(n, "istag.tagObject.tag"), r = function(e) {
+controller: [ "$scope", function(e) {
+e.isByNamespace = {}, e.isNamesByNamespace = {};
+var r = _.get(e, "istag.namespace") && _.get(e, "istag.imageStream") && _.get(e, "istag.tagObject.tag"), o = function(e) {
 _.each(e, function(e) {
 _.get(e, "status.tags") || _.set(e, "status.tags", []);
 });
-}, o = function(t) {
-if (n.isByNamespace[t] = {}, n.isNamesByNamespace[t] = [], !_.includes(n.namespaces, t)) return n.namespaces.push(t), n.isNamesByNamespace[t] = n.isNamesByNamespace[t].concat(n.istag.imageStream), void (n.isByNamespace[t][n.istag.imageStream] = {
+}, i = function(n) {
+if (e.isByNamespace[n] = {}, e.isNamesByNamespace[n] = [], !_.includes(e.namespaces, n)) return e.namespaces.push(n), e.isNamesByNamespace[n] = e.isNamesByNamespace[n].concat(e.istag.imageStream), void (e.isByNamespace[n][e.istag.imageStream] = {
 status: {
 tags: [ {
-tag: n.istag.tagObject.tag
+tag: e.istag.tagObject.tag
 } ]
 }
 });
-e.list("imagestreams", {
-namespace: t
-}, function(e) {
-var a = angular.copy(e.by("metadata.name"));
-r(a), n.isByNamespace[t] = a, n.isNamesByNamespace[t] = _.keys(a).sort(), _.includes(n.isNamesByNamespace[t], n.istag.imageStream) || (n.isNamesByNamespace[t] = n.isNamesByNamespace[t].concat(n.istag.imageStream), n.isByNamespace[t][n.istag.imageStream] = {
+t.list(a, {
+namespace: n
+}, function(t) {
+var a = angular.copy(t.by("metadata.name"));
+o(a), e.isByNamespace[n] = a, e.isNamesByNamespace[n] = _.keys(a).sort(), _.includes(e.isNamesByNamespace[n], e.istag.imageStream) || (e.isNamesByNamespace[n] = e.isNamesByNamespace[n].concat(e.istag.imageStream), e.isByNamespace[n][e.istag.imageStream] = {
 status: {
 tags: {}
 }
-}), _.find(n.isByNamespace[t][n.istag.imageStream].status.tags, {
-tag: n.istag.tagObject.tag
-}) || n.isByNamespace[t][n.istag.imageStream].status.tags.push({
-tag: n.istag.tagObject.tag
+}), _.find(e.isByNamespace[n][e.istag.imageStream].status.tags, {
+tag: e.istag.tagObject.tag
+}) || e.isByNamespace[n][e.istag.imageStream].status.tags.push({
+tag: e.istag.tagObject.tag
 });
 });
 };
-t.list().then(function(t) {
-n.namespaces = _.keys(t.by("metadata.name")), n.includeSharedNamespace && (n.namespaces = _.uniq([ "openshift" ].concat(n.namespaces))), n.namespaces = n.namespaces.sort(), n.$watch("istag.namespace", function(t) {
-if (t && !n.isByNamespace[t]) return a ? (o(t), void (a = !1)) : void e.list("imagestreams", {
-namespace: t
-}, function(e) {
-var a = angular.copy(e.by("metadata.name"));
-r(a), n.isByNamespace[t] = a, n.isNamesByNamespace[t] = _.keys(a).sort();
+n.list().then(function(n) {
+e.namespaces = _.keys(n.by("metadata.name")), e.includeSharedNamespace && (e.namespaces = _.uniq([ "openshift" ].concat(e.namespaces))), e.namespaces = e.namespaces.sort(), e.$watch("istag.namespace", function(n) {
+if (n && !e.isByNamespace[n]) return r ? (i(n), void (r = !1)) : void t.list(a, {
+namespace: n
+}, function(t) {
+var a = angular.copy(t.by("metadata.name"));
+o(a), e.isByNamespace[n] = a, e.isNamesByNamespace[n] = _.keys(a).sort();
 });
 });
-}), n.getTags = function(e) {
-n.allowCustomTag && e && !_.find(n.isByNamespace[n.istag.namespace][n.istag.imageStream].status.tags, {
-tag: e
-}) && (_.remove(n.isByNamespace[n.istag.namespace][n.istag.imageStream].status.tags, function(e) {
+}), e.getTags = function(t) {
+e.allowCustomTag && t && !_.find(e.isByNamespace[e.istag.namespace][e.istag.imageStream].status.tags, {
+tag: t
+}) && (_.remove(e.isByNamespace[e.istag.namespace][e.istag.imageStream].status.tags, function(e) {
 return !e.items;
-}), n.isByNamespace[n.istag.namespace][n.istag.imageStream].status.tags.unshift({
-tag: e
+}), e.isByNamespace[e.istag.namespace][e.istag.imageStream].status.tags.unshift({
+tag: t
 }));
-}, n.groupTags = function(e) {
-return n.allowCustomTag ? e.items ? "Current Tags" : "New Tag" : "";
+}, e.groupTags = function(t) {
+return e.allowCustomTag ? t.items ? "Current Tags" : "New Tag" : "";
 };
 } ]
 };
