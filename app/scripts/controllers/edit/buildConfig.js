@@ -227,6 +227,11 @@ angular.module('openshiftConsole')
     var secretsVersion = APIService.getPreferredVersion('secrets');
     var watches = [];
     var buildStrategy = $filter('buildStrategy');
+    var orderByDisplayName = $filter('orderByDisplayName');
+    var getErrorDetails = $filter('getErrorDetails');
+    var configMapDataOrdered = [];
+    var secretDataOrdered = [];
+    $scope.valueFromObjects = [];
 
     var navigateBack = function() {
       var buildConfigURL;
@@ -284,6 +289,8 @@ angular.module('openshiftConsole')
                 secretsArray.unshift("");
               });
               loadBuildConfigSecrets();
+              secretDataOrdered = orderByDisplayName(secrets.by("metadata.name"));
+              $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
             });
 
             var setImageOptions = function(imageOptions, imageData) {
@@ -372,6 +379,22 @@ angular.module('openshiftConsole')
             };
           }
         );
+
+        DataService.list("configmaps", context, null, { errorNotification: false }).then(function(configMapData) {
+          configMapDataOrdered = orderByDisplayName(configMapData.by("metadata.name"));
+          $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
+        }, function(e) {
+          if (e.code === 403) {
+            return;
+          }
+
+          NotificationsService.addNotification({
+            id: "edit-build-config-list-config-maps-error",
+            type: "error",
+            message: "Could not load config maps.",
+            details: getErrorDetails(e)
+          });
+        });
       })
     );
 
