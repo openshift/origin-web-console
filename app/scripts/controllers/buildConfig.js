@@ -19,6 +19,7 @@ angular.module('openshiftConsole')
                        ModalsService,
                        NotificationsService,
                        ProjectsService,
+                       SecretsService,
                        keyValueEditorUtils) {
     $scope.projectName = $routeParams.project;
     $scope.buildConfigName = $routeParams.buildconfig;
@@ -59,7 +60,12 @@ angular.module('openshiftConsole')
 
     var buildConfigForBuild = $filter('buildConfigForBuild');
     var buildStrategy = $filter('buildStrategy');
+    var orderByDisplayName = $filter('orderByDisplayName');
+    var getErrorDetails = $filter('getErrorDetails');
     var watches = [];
+    var configMapDataOrdered = [];
+    var secretDataOrdered = [];
+    $scope.valueFromObjects = [];
 
     // copy buildConfig and ensure it has env so that we can edit env vars using key-value-editor
     var copyBuildConfigAndEnsureEnv = function(buildConfig) {
@@ -196,6 +202,38 @@ angular.module('openshiftConsole')
             };
           }
         );
+
+        DataService.list("configmaps", context, null, { errorNotification: false }).then(function(configMapData) {
+          configMapDataOrdered = orderByDisplayName(configMapData.by("metadata.name"));
+          $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
+        }, function(e) {
+          if (e.code === 403) {
+            return;
+          }
+
+          NotificationsService.addNotification({
+            id: "build-config-list-config-maps-error",
+            type: "error",
+            message: "Could not load config maps.",
+            details: getErrorDetails(e)
+          });
+        });
+
+        DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
+          secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
+          $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
+        }, function(e) {
+          if (e.code === 403) {
+            return;
+          }
+
+          NotificationsService.addNotification({
+            id: "build-config-list-secrets-error",
+            type: "error",
+            message: "Could not load secrets.",
+            details: getErrorDetails(e)
+          });
+        });
 
       watches.push(DataService.watch($scope.buildsVersion, context, function(builds, action, build) {
         $scope.emptyMessage = "No builds to show";

@@ -1985,7 +1985,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ng-form name=\"forms.bcEnvVars\" class=\"mar-bottom-xl block\">\n" +
     "<div ng-if=\"buildConfigsVersion | canI : 'update'\">\n" +
     "<confirm-on-exit dirty=\"forms.bcEnvVars.$dirty\"></confirm-on-exit>\n" +
-    "<key-value-editor entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Environment Variable\" show-header></key-value-editor>\n" +
+    "<key-value-editor entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" value-from-selector-options=\"valueFromObjects\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\" show-header></key-value-editor>\n" +
     "<button class=\"btn btn-default\" ng-click=\"saveEnvVars()\" ng-disabled=\"forms.bcEnvVars.$pristine || forms.bcEnvVars.$invalid\">Save</button>\n" +
     "<a ng-if=\"!forms.bcEnvVars.$pristine\" href=\"\" ng-click=\"clearEnvVarUpdates()\" class=\"mar-left-sm\" style=\"vertical-align: -2px\">Clear Changes</a>\n" +
     "</div>\n" +
@@ -4948,7 +4948,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<i class=\"pficon pficon-help\"></i>\n" +
     "</a>\n" +
     "</span></span></h3>\n" +
-    "<key-value-editor entries=\"buildConfigEnvVars\" key-placeholder=\"name\" value-placeholder=\"value\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Environment Variable\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"buildConfigEnvVars\" key-placeholder=\"name\" value-placeholder=\"value\" value-from-selector-options=\"valueFromObjects\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\"></key-value-editor>\n" +
     "</osc-form-section>\n" +
     "\n" +
     "<osc-form-section header=\"Deployment Configuration\" about-title=\"Deployment Configuration\" about=\"Deployment configurations describe how your application is configured\n" +
@@ -9774,7 +9774,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</span></h3>\n" +
     "<div>\n" +
-    "<key-value-editor ng-if=\"envVars\" entries=\"envVars\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Environment Variable\"></key-value-editor>\n" +
+    "<key-value-editor ng-if=\"envVars\" entries=\"envVars\" value-from-selector-options=\"valueFromObjects\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"sources.git || !(updatedBuildConfig | isJenkinsPipelineStrategy)\" class=\"section\">\n" +
