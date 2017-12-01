@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: registry
+message: |-
+  registry has been deployed.
+metadata:
+  annotations:
+    description: A docker-registry with persistent storage.
+    iconClass: icon-git
+    openshift.io/display-name: Persistent Docker Registry
+    tags: quickstart,registry,docker,dataman,persistent
+    template.openshift.io/documentation-url: https://hub.docker.com/r/library/registry/
+    template.openshift.io/long-description: A docker-registry with persistent storage.
+    template.openshift.io/provider-display-name: Dataman, Inc.
+    template.openshift.io/support-url: https://hub.docker.com/r/library/registry/
+  name: registry
+objects:
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      volume.beta.kubernetes.io/storage-class: ${STORAGE_CLASS}
+    name: registry
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the registry
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: registry
+  spec:
+    replicas: 1
+    selector:
+      name: registry
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: registry
+        name: registry
+      spec:
+        containers:
+        - image: ' '
+          name: registry
+          ports:
+          - containerPort: 5000
+          volumeMounts:
+          - mountPath: "/var/lib/registry"
+            name: pvol
+        volumes:
+        - name: "pvol"
+          persistentVolumeClaim:
+            claimName: "registry"
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - registry
+        from:
+          kind: ImageStreamTag
+          name: registry:2.6.2
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the registry server
+    name: registry
+  spec:
+    ports:
+    - name: registry
+      port: 5000
+      targetPort: 5000
+    selector:
+      name: registry
+parameters:
+- displayName: Storage Class
+  name: STORAGE_CLASS
+  required: true
+  value: gluster-heketi-storageclass
+

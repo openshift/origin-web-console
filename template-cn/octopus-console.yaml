@@ -162,7 +162,7 @@ objects:
           - name: KUBERNETES_AUTH_TRYKUBECONFIG
             value: 'true'
           - name: KUBERNETES_TRYNAMESPACEPATH
-            value: ‘true'
+            value: 'true'
           command:
           - java
           - "-Dlogging.level.io.fabric8=DEBUG"
@@ -223,8 +223,8 @@ parameters:
   name: K8S_URI
   required: true
   value: 'http://master:8011'
-- description: Kubernetes URI.
-  displayName: Kubernetes URI
+- description: Registry URI.
+  displayName: Registry URI
   name: REGISTRY_URI
   required: true
   value: 'http://192.168.1.140:5000'
