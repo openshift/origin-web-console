@@ -22,7 +22,7 @@ angular.module('openshiftConsole')
     $scope.renderOptions.hideFilterWidget = true;
     $scope.breadcrumbs = [
       {
-        title: "Persistent Volume Claims",
+        title: "Storage",
         link: "project/" + $routeParams.project + "/browse/storage"
       },
       {

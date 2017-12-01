@@ -382,6 +382,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
       href: "/browse/storage",
       prefixes: [
         "/browse/storage/",
+        "/browse/persistentvolumeclaims/",
         "/create-pvc"
       ]
     },

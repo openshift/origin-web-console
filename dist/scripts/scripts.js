@@ -839,7 +839,7 @@ href: "/browse/other"
 label: "Storage",
 iconClass: "pficon pficon-container-node",
 href: "/browse/storage",
-prefixes: [ "/browse/storage/", "/create-pvc" ]
+prefixes: [ "/browse/storage/", "/browse/persistentvolumeclaims/", "/create-pvc" ]
 }, {
 label: "Monitoring",
 iconClass: "pficon pficon-screen",
@@ -6824,7 +6824,7 @@ n.resources = e.select(n.unfilteredResources), u();
 });
 } ]), angular.module("openshiftConsole").controller("PersistentVolumeClaimController", [ "$filter", "$scope", "$routeParams", "APIService", "DataService", "ProjectsService", function(e, t, n, a, r, o) {
 t.projectName = n.project, t.pvc = null, t.alerts = {}, t.renderOptions = t.renderOptions || {}, t.renderOptions.hideFilterWidget = !0, t.breadcrumbs = [ {
-title: "Persistent Volume Claims",
+title: "Storage",
 link: "project/" + n.project + "/browse/storage"
 }, {
 title: n.pvc
