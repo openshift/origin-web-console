@@ -1,0 +1,245 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: octopus-console
+message: |-
+  Octopus has been deployed.
+
+  For more information about using this template, see https://github.com/Dataman-Cloud/octopus.
+metadata:
+  annotations:
+    description: 数人云分布式任务调度平台 Octopus 针对业务类应用和运维类任务，提供分布式定时作业、消息调度作业以及本地作业的统一管理。Octopus
+      基于数人云 DataMan OS 容器云平台，传统的定时作业程序可以无缝迁移到容器云上运行，通过取代传统的Linux Cron/Spring Batch
+      Job/Quartz，做到分布式环境下批量作业任务的全域统一配置，统一监控，任务高可用以及分片并行。
+    iconClass: icon-octopus
+    openshift.io/display-name: Octopus Console
+    tags: quickstart,octopus,dataman
+    template.openshift.io/documentation-url: https://github.com/Dataman-Cloud/octopus
+    template.openshift.io/long-description: This template is a octopus application.  The
+      database is stored in non-persistent storage, so this configuration should be
+      used for experimental purposes only.
+    template.openshift.io/provider-display-name: Dataman, Inc.
+    template.openshift.io/support-url: https://github.com/Dataman-Cloud/octopus
+  name: octopus-console
+objects:
+- apiVersion: v1
+  kind: RoleBinding
+  metadata:
+    name: eams
+  roleRef:
+    name: admin
+  subjects:
+  - name: eams
+    kind: ServiceAccount
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: eams
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the Octopus Console
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}-console
+  spec:
+    ports:
+    - name: octopus
+      port: 18080
+      targetPort: 18080
+    selector:
+      deploymentconfig: ${APP_NAME}-console
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the Octopus Console
+      template.alpha.openshift.io/wait-for-ready: 'true'
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}-console
+  spec:
+    replicas: 1
+    selector:
+      app: ${APP_NAME}
+      deploymentconfig: ${APP_NAME}-console
+    strategy:
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: ${APP_NAME}
+          deploymentconfig: ${APP_NAME}-console
+      spec:
+        containers:
+        - env:
+          - name: API_URL
+            value: "http://${APP_NAME}-api"
+          - name: API_PORT
+            value: '9088'
+          image: " "
+          name: octopus-console
+          ports:
+          - containerPort: 18080
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - octopus-console
+        from:
+          kind: ImageStreamTag
+          name: "centos7-nginx1.12-octopus_console:1.4.1"
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the API
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}-api
+  spec:
+    ports:
+    - name: api
+      port: 9088
+      targetPort: 9088
+    selector:
+      deploymentconfig: ${APP_NAME}-api
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the Octopus API
+      template.alpha.openshift.io/wait-for-ready: 'true'
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}-api
+  spec:
+    replicas: 1
+    selector:
+      app: ${APP_NAME}
+      deploymentconfig: ${APP_NAME}-api
+    strategy:
+      type: Rolling
+    template:
+      metadata:
+        annotations:
+          prometheus.io/path: /prometheus
+          prometheus.io/port: '9088'
+          prometheus.io/scrape: 'true'
+        labels:
+          app: ${APP_NAME}
+          deploymentconfig: ${APP_NAME}-api
+          type: octopus-api
+      spec:
+        serviceAccount: eams
+        containers:
+        - env:
+          - name: SPRING_DATASOURCE_URL
+            value: ${SPRING_DATASOURCE_JDBC}
+          - name: SPRING_DATASOURCE_USERNAME
+            value: root
+          - name: SPRING_DATASOURCE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: ${SECRET_KEY}
+                name: ${SECRET_NAME}
+          - name: OCTOPUS_CLOUD_containerType
+            value: K8S
+          - name: OCTOPUS_CLOUD_registryUri
+            value: ${REGISTRY_URI}
+          - name: OCTOPUS_CLOUD_K8S_restUri
+            value: ${K8S_URI}
+          - name: OCTOPUS_CLOUD_K8S_NAMESPACE
+            value: ${NAMESPACE}
+          - name: OCTOPUS_CLOUD_K8S_is_k8s_registry
+            value: 'false'
+          - name: KUBERNETES_AUTH_TRYSERVICEACCOUNT
+            value: 'true'
+          - name: KUBERNETES_AUTH_TRYKUBECONFIG
+            value: 'true'
+          - name: KUBERNETES_TRYNAMESPACEPATH
+            value: ‘true'
+          command:
+          - java
+          - "-Dlogging.level.io.fabric8=DEBUG"
+          - "-Djava.security.egd=file:/dev/./urandom"
+          - "-jar"
+          - octopus-api.jar
+          image: " "
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: "/health"
+              port: 9088
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: octopus-api
+          ports:
+          - containerPort: 9088
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - octopus-api
+        from:
+          kind: ImageStreamTag
+          name: "centos7-openjdk8-octopus_api:1.4.1"
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Route
+  metadata:
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}-console
+  spec:
+    port:
+      targetPort: octopus
+    to:
+      kind: Service
+      name: ${APP_NAME}-console
+      weight: 100
+parameters:
+- description: Current Project Name.
+  displayName: Current Project Name
+  name: NAMESPACE
+  required: true
+  value: ''
+- description: Application Name.
+  displayName: Application Name
+  name: APP_NAME
+  required: true
+  value: 'octopus'
+- description: Kubernetes URI.
+  displayName: Kubernetes URI
+  name: K8S_URI
+  required: true
+  value: 'http://master:8011'
+- description: Kubernetes URI.
+  displayName: Kubernetes URI
+  name: REGISTRY_URI
+  required: true
+  value: 'http://192.168.1.140:5000'
+- description: Secret Name.
+  displayName: Secret Name
+  name: SECRET_NAME
+  required: true
+  value: 'octopus'
+- description: Secret Key.
+  displayName: Secret Key
+  name: SECRET_KEY
+  required: true
+  value: 'database-root-password'
+- description: SPRING DATASOURCE JDBC.
+  displayName: SPRING DATASOURCE JDBC
+  name: SPRING_DATASOURCE_JDBC
+  required: true
+  value: 'jdbc:mysql://octopus-db:3306/octopus_console?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true'
