@@ -77330,7 +77330,7 @@ e.exports = '<a href="" class="catalog-search-match" ng-class="{\'no-matches\': 
 }, function(e, t) {
 e.exports = '<div class="order-service-config">\n  <bind-application-form application-name="$ctrl.name"\n                         form-name="$ctrl.bindForm"\n                         allow-no-binding="true"\n                         service-instances="$ctrl.serviceInstances"\n                         service-classes="$ctrl.serviceClasses"\n                         service-to-bind="$ctrl.serviceToBind">\n  </bind-application-form>\n</div>\n';
 }, function(e, t) {
-e.exports = '<div class="order-service-config">\n  <div class="config-top">\n    <form name="$ctrl.builderForm" class="config-form">\n      <select-project selected-project="$ctrl.selectedProject"\n                      name-taken="$ctrl.projectNameTaken"></select-project>\n      <span ng-if="!$ctrl.noProjectsCantCreate">\n        <div class="form-group">\n          <label class="control-label" for="version">Version</label>\n          <ui-select ng-model="$ctrl.istag" required search-enabled="false">\n            <ui-select-match>\n              {{$select.selected.name}}\n            </ui-select-match>\n            <ui-select-choices repeat="tag in $ctrl.versions track by tag.name">\n              {{tag.name}}\n              <small ng-repeat="otherTag in $ctrl.referencedBy[tag.name]">\n                <span ng-if="$first"> &mdash; </span>{{otherTag}}<span ng-if="!$last">,</span>\n              </small>\n            </ui-select-choices>\n          </ui-select>\n        </div>\n        <div class="form-group">\n          <label class="control-label required" for="app-name">Application Name</label>\n          <div ng-class="{ \'has-error\': $ctrl.builderForm.name.$dirty && $ctrl.builderForm.name.$touched && $ctrl.builderForm.name.$invalid }">\n            <input\n              class="form-control"\n              type="text"\n              id="app-name"\n              required\n              minlength="2"\n              ng-maxlength="$ctrl.nameMaxLength"\n              ng-pattern="$ctrl.namePattern"\n              ng-model="$ctrl.name"\n              name="name"\n              autocorrect="off"\n              autocapitalize="none"\n              spellcheck="false">\n            \x3c!--\n              Wait until users leave the field to avoid flashing errors as they\n              type. Check $dirty touched to avoid a usability problem where the\n              "Try Sample Repository" link moves from under the mouse cursor\n              when clicked since the error message appears.\n            --\x3e\n            <div ng-if="$ctrl.builderForm.name.$dirty && $ctrl.builderForm.name.$touched">\n              <div class="has-error" ng-show="$ctrl.builderForm.name.$error.required">\n                <span class="help-block">\n                  Application name is required.\n                </span>\n              </div>\n              <div class="has-error" ng-show="$ctrl.builderForm.name.$error.pattern">\n                <span class="help-block">\n                  Application name consists of lower-case letters, numbers, and dashes. It must start with a letter and can\'t end with a <code>-</code>.\n                </span>\n              </div>\n              <div class="has-error" ng-show="$ctrl.builderForm.name.$error.minlength">\n                <span class="help-block">\n                  Application name must be at least 2 characters.\n                </span>\n              </div>\n              <div class="has-error" ng-show="$ctrl.builderForm.name.$error.maxlength">\n                <span class="help-block">\n                  Application name can\'t be more than 24 characters.\n                </span>\n              </div>\n            </div>\n          </div>\n        </div>\n\n        <div class="form-group">\n          <label class="control-label required" for="repository">Git Repository</label>\n          <div ng-class="{ \'has-error\': $ctrl.builderForm.repository.$touched && $ctrl.builderForm.repository.$error.$required }">\n            <input class="form-control"\n              type="text"\n              id="repository"\n              name="repository"\n              required\n              ng-model="$ctrl.repository"\n              autocorrect="off"\n              autocapitalize="off"\n              spellcheck="false">\n            <div ng-if="$ctrl.istag.annotations.sampleRepo" class="help-block">\n              <a href="" ng-click="$ctrl.fillSampleRepo()">Try Sample Repository\n                <i class="fa fa-level-up" aria-hidden="true"></i></a>\n            </div>\n            <div class="has-error" ng-if="$ctrl.builderForm.repository.$touched && $ctrl.builderForm.repository.$error.$required">\n              <span class="help-block">\n                Git repository is required.\n              </span>\n            </div>\n            <div class="has-warning" ng-if="$ctrl.builderForm.repository.$touched && $ctrl.repository && !$ctrl.repositoryPattern.test($ctrl.repository)">\n              <span class="help-block">\n                This might not be a valid Git URL. Check that it is the correct URL to a remote Git repository.\n              </span>\n            </div>\n          </div>\n        </div>\n\n        \x3c!--\n          Only show the link for existing projects. It will be broken for new\n          projects.  Use class `invisible` when the project list is still loading\n          so the dialog doesn\'t resize.\n        --\x3e\n        <div ng-hide="$ctrl.selectedProject && !$ctrl.selectedProject.metadata.uid"\n             ng-class="{ invisible: !$ctrl.selectedProject || !$ctrl.istag }"\n             class="form-group">\n          If you have a private Git repository or need to change application defaults, view\n          <a href="" ng-click="$ctrl.navigateToAdvancedForm()">advanced options</a>.\n        </div>\n      </span>\n    </form>\n  </div>\n</div>\n';
+e.exports = '<div class="order-service-config">\n  <div class="config-top">\n    <form name="$ctrl.builderForm" class="config-form">\n      <select-project selected-project="$ctrl.selectedProject"\n                      name-taken="$ctrl.projectNameTaken"></select-project>\n      <span ng-if="!$ctrl.noProjectsCantCreate">\n        <div class="form-group">\n          <label class="control-label" for="version">Version</label>\n          <ui-select ng-model="$ctrl.istag" required search-enabled="false">\n            <ui-select-match>\n              <span>\n                {{$select.selected.name}}\n                <small ng-repeat="otherTag in $ctrl.referencedBy[$select.selected.name]">\n                  <span ng-if="$first"> &mdash; </span>{{otherTag}}<span ng-if="!$last">,</span>\n                </small>\n              </span>\n            </ui-select-match>\n            <ui-select-choices repeat="tag in $ctrl.versions track by tag.name">\n              {{tag.name}}\n              <small ng-repeat="otherTag in $ctrl.referencedBy[tag.name]">\n                <span ng-if="$first"> &mdash; </span>{{otherTag}}<span ng-if="!$last">,</span>\n              </small>\n            </ui-select-choices>\n          </ui-select>\n        </div>\n        <div class="form-group">\n          <label class="control-label required" for="app-name">Application Name</label>\n          <div ng-class="{ \'has-error\': $ctrl.builderForm.name.$dirty && $ctrl.builderForm.name.$touched && $ctrl.builderForm.name.$invalid }">\n            <input\n              class="form-control"\n              type="text"\n              id="app-name"\n              required\n              minlength="2"\n              ng-maxlength="$ctrl.nameMaxLength"\n              ng-pattern="$ctrl.namePattern"\n              ng-model="$ctrl.name"\n              name="name"\n              autocorrect="off"\n              autocapitalize="none"\n              spellcheck="false">\n            \x3c!--\n              Wait until users leave the field to avoid flashing errors as they\n              type. Check $dirty touched to avoid a usability problem where the\n              "Try Sample Repository" link moves from under the mouse cursor\n              when clicked since the error message appears.\n            --\x3e\n            <div ng-if="$ctrl.builderForm.name.$dirty && $ctrl.builderForm.name.$touched">\n              <div class="has-error" ng-show="$ctrl.builderForm.name.$error.required">\n                <span class="help-block">\n                  Application name is required.\n                </span>\n              </div>\n              <div class="has-error" ng-show="$ctrl.builderForm.name.$error.pattern">\n                <span class="help-block">\n                  Application name consists of lower-case letters, numbers, and dashes. It must start with a letter and can\'t end with a <code>-</code>.\n                </span>\n              </div>\n              <div class="has-error" ng-show="$ctrl.builderForm.name.$error.minlength">\n                <span class="help-block">\n                  Application name must be at least 2 characters.\n                </span>\n              </div>\n              <div class="has-error" ng-show="$ctrl.builderForm.name.$error.maxlength">\n                <span class="help-block">\n                  Application name can\'t be more than 24 characters.\n                </span>\n              </div>\n            </div>\n          </div>\n        </div>\n\n        <div class="form-group">\n          <label class="control-label required" for="repository">Git Repository</label>\n          <div ng-class="{ \'has-error\': $ctrl.builderForm.repository.$touched && $ctrl.builderForm.repository.$error.$required }">\n            <input class="form-control"\n              type="text"\n              id="repository"\n              name="repository"\n              required\n              ng-model="$ctrl.repository"\n              ng-change="$ctrl.onRepositoryChanged()"\n              autocorrect="off"\n              autocapitalize="off"\n              spellcheck="false">\n            <div ng-if="$ctrl.istag.annotations.sampleRepo" class="help-block">\n              <a href="" ng-click="$ctrl.fillSampleRepo()">Try Sample Repository\n                <i class="fa fa-level-up" aria-hidden="true"></i></a>\n            </div>\n            <div class="has-error" ng-if="$ctrl.builderForm.repository.$touched && $ctrl.builderForm.repository.$error.$required">\n              <span class="help-block">\n                Git repository is required.\n              </span>\n            </div>\n            <div class="has-warning" ng-if="$ctrl.builderForm.repository.$touched && $ctrl.repository && !$ctrl.repositoryPattern.test($ctrl.repository)">\n              <span class="help-block">\n                This might not be a valid Git URL. Check that it is the correct URL to a remote Git repository.\n              </span>\n            </div>\n          </div>\n        </div>\n\n        \x3c!--\n          Only show the link for existing projects. It will be broken for new\n          projects.  Use class `invisible` when the project list is still loading\n          so the dialog doesn\'t resize.\n        --\x3e\n        <div ng-hide="$ctrl.selectedProject && !$ctrl.selectedProject.metadata.uid"\n             ng-class="{ invisible: !$ctrl.selectedProject || !$ctrl.istag }"\n             class="form-group">\n          If you have a private Git repository or need to change application defaults, view\n          <a href="" ng-click="$ctrl.navigateToAdvancedForm()">advanced options</a>.\n        </div>\n      </span>\n    </form>\n  </div>\n</div>\n';
 }, function(e, t) {
 e.exports = '<div class="order-service-details">\n  <div class="order-service-details-top" ng-class="{\'order-service-details-top-icon-top\': $ctrl.imageStream.vendor || $ctrl.documentationUrl || $ctrl.supportUrl}">\n    <div class="service-icon">\n      <span ng-if="!$ctrl.imageStream.imageUrl" class="icon {{$ctrl.imageStream.iconClass}}" aria-hidden="true"></span>\n      <span ng-if="$ctrl.imageStream.imageUrl" class="image"><img ng-src="{{$ctrl.imageStream.imageUrl}}" alt=""></span>\n    </div>\n    <div class="service-title-area">\n      <div class="service-title">\n        {{$ctrl.imageStream.name}}\n        {{$ctrl.istag.name}}\n      </div>\n      <div ng-if="$ctrl.imageStream.vendor" class="service-vendor">\n        {{$ctrl.imageStream.vendor}}\n      </div>\n      <div class="order-service-tags">\n        <span ng-repeat="tag in $ctrl.istag.annotations.tags.split(\',\')" class="tag">\n          {{tag}}\n        </span>\n      </div>\n      <ul ng-if="$ctrl.documentationUrl || $ctrl.supportUrl" class="list-inline order-service-documentation-url">\n        <li ng-if="$ctrl.documentationUrl">\n          <a ng-href="{{$ctrl.documentationUrl}}" target="_blank" class="learn-more-link">View Documentation <i class="fa fa-external-link" aria-hidden="true"></i></a>\n        </li>\n        <li ng-if="$ctrl.supportUrl">\n          <a ng-href="{{$ctrl.supportUrl}}" target="_blank" class="learn-more-link">Get Support <i class="fa fa-external-link" aria-hidden="true"></i></a>\n        </li>\n      </ul>\n    </div>\n  </div>\n  <div class="order-service-description-block">\n    <p ng-bind-html="($ctrl.istag.annotations.description | linky : \'_blank\') || \'No description provided.\'" class="description"></p>\n    <p ng-if="$ctrl.istag.annotations.sampleRepo">\n      Sample Repository:\n      \x3c!-- TODO: Use Git link filter, needs to be added to origin-web-common --\x3e\n      <span ng-bind-html="$ctrl.istag.annotations.sampleRepo | linky : \'_blank\'"></span>\n    </p>\n  </div>\n</div>\n';
 }, function(e, t) {
@@ -77644,7 +77644,7 @@ tags: [ "mongodb" ],
 icon: "icon-mongodb"
 }, {
 id: "mysql",
-label: "mySQL",
+label: "MySQL",
 tags: [ "mysql" ],
 icon: "icon-mysql-database"
 }, {
@@ -77923,7 +77923,7 @@ env: []
 }
 };
 }, e.prototype.makeBuildConfig = function(e) {
-return {
+var t = {
 apiVersion: "v1",
 kind: "BuildConfig",
 metadata: {
@@ -77940,7 +77940,7 @@ name: e.name + ":latest"
 },
 source: {
 git: {
-ref: "master",
+ref: e.gitRef || "master",
 uri: e.repository
 },
 type: "Git"
@@ -77974,6 +77974,7 @@ type: "GitHub"
 } ]
 }
 };
+return e.contextDir && (t.spec.source.contextDir = e.contextDir), t;
 }, e.prototype.makeImageStream = function(e) {
 return {
 apiVersion: "v1",
@@ -78547,7 +78548,7 @@ h.Logger.warn("Failed to list instances in namespace " + h.ctrl.selectedProject.
 }, this.isServiceBindable = function(e) {
 var t, n = h.BindingService.getServiceClassForInstance(e, h.ctrl.serviceClasses), i = r.get(e, "spec.clusterServicePlanRef.name");
 return i && (t = h.ctrl.servicePlans[i]), h.BindingService.isServiceBindable(e, n, t);
-}, this.$scope = e, this.$filter = t, this.$location = n, this.$q = i, this.BuilderAppService = o, this.ProjectsService = a, this.DataService = s, this.APIService = l, this.BindingService = c, this.Logger = u, this.ctrl.serviceToBind = null, this.ctrl.showPodPresets = r.get(d, [ "ENABLE_TECH_PREVIEW_FEATURE", "pod_presets" ], !1);
+}, this.$scope = e, this.$filter = t, this.$location = n, this.$q = i, this.BuilderAppService = o, this.ProjectsService = a, this.DataService = s, this.APIService = l, this.BindingService = c, this.Logger = u, this.ctrl.serviceToBind = null, this.ctrl.showPodPresets = r.get(d, [ "ENABLE_TECH_PREVIEW_FEATURE", "pod_presets" ], !1), this.gitRef = "", this.contextDir = "";
 }
 return e.prototype.$onInit = function() {
 var e = this;
@@ -78596,37 +78597,47 @@ return e.ctrl.selectedProject;
 e.ctrl.projectNameTaken = !1;
 }), this.ctrl.showPodPresets ? (this.getServiceClassesAndPlans(), this.instancesSupported = !!this.APIService.apiInfo(this.APIService.getPreferredVersion("serviceinstances"))) : this.instancesSupported = !1, this.noProjectsCantCreateWatch = this.$scope.$on("no-projects-cannot-create", function() {
 e.ctrl.noProjectsCantCreate = !0;
-}), this.getServiceClassesAndPlans(), this.instancesSupported = !!this.APIService.apiInfo(this.APIService.getPreferredVersion("serviceinstances"));
+});
 }, e.prototype.closePanel = function() {
 i.isFunction(this.ctrl.handleClose) && this.ctrl.handleClose();
 }, e.prototype.$onDestroy = function() {
 this.DataService.unwatchAll(this.watches), this.selectedProjectWatch(), this.noProjectsCantCreateWatch(), this.clearValidityWatcher();
 }, e.prototype.fillSampleRepo = function() {
-if (this.ctrl.repository = r.get(this, "ctrl.istag.annotations.sampleRepo"), !this.ctrl.name && this.ctrl.repository) {
+if (this.ctrl.repository = r.get(this, "ctrl.istag.annotations.sampleRepo"), this.gitRef = r.get(this, "ctrl.istag.annotations.sampleRef", ""), this.contextDir = r.get(this, "ctrl.istag.annotations.sampleContextDir", ""), !this.ctrl.name && this.ctrl.repository) {
 var e = this.ctrl.repository.substr(this.ctrl.repository.lastIndexOf("/") + 1);
 e = e.replace(/\.git$/, ""), e = r.truncate(e, this.ctrl.nameMaxLength), e = r.kebabCase(e), this.ctrl.namePattern.test(e) && (this.ctrl.name = e);
 }
+}, e.prototype.onRepositoryChanged = function() {
+this.gitRef = "", this.contextDir = "";
 }, e.prototype.navigateToAdvancedForm = function() {
-var e = o.expand("project/{project}/create/fromimage?imageStream={imageStream}&imageTag={imageTag}&namespace={namespace}&displayName={displayName}&name={name}&sourceURI={sourceURI}&advanced=true", {
+var e = o.expand("project/{project}/create/fromimage?imageStream={imageStream}&imageTag={imageTag}&namespace={namespace}&displayName={displayName}&name={name}&sourceURI={sourceURI}&sourceRef={sourceRef}&contextDir={contextDir}&advanced=true", {
 project: this.ctrl.selectedProject.metadata.name,
 imageStream: this.ctrl.imageStream.resource.metadata.name,
 imageTag: this.ctrl.istag.name,
 namespace: this.ctrl.imageStream.resource.metadata.namespace,
 displayName: this.ctrl.imageStream.name,
 name: this.ctrl.name || "",
-sourceURI: this.ctrl.repository || ""
+sourceURI: this.ctrl.repository || "",
+sourceRef: this.gitRef || "",
+contextDir: this.contextDir || ""
 }).toString();
 this.$location.url(e);
-}, e.prototype.referencesSameImageStream = function(e) {
-return e.from && "ImageStreamTag" === e.from.kind && -1 === e.from.name.indexOf(":") && !e.from.namespace;
+}, e.prototype.getTagReference = function(e) {
+if (!e.from || "ImageStreamTag" !== e.from.kind) return null;
+var t = r.get(this, "ctrl.imageStream.resource.metadata.namespace");
+if (e.from.namespace && e.from.namespace !== t) return null;
+if (-1 === e.from.name.indexOf(":")) return e.from.name;
+var n = r.get(this, "ctrl.imageStream.resource.metadata.name"), i = e.from.name.split(":");
+return i[0] !== n ? null : i[1];
 }, e.prototype.getVersions = function() {
 var e = this;
 this.ctrl.referencedBy = {};
 var t = {}, n = {}, i = r.get(this, "ctrl.imageStream.resource.spec.tags", []);
 r.each(i, function(i) {
-if (e.referencesSameImageStream(i)) return t[i.name] = i.from.name, e.ctrl.referencedBy[i.from.name] = e.ctrl.referencedBy[i.from.name] || [], void e.ctrl.referencedBy[i.from.name].push(i.name);
-var o = r.get(i, "annotations.tags", "").split(/\s*,\s*/);
-r.includes(o, "builder") && !r.includes(o, "hidden") && (n[i.name] = i);
+var o = e.getTagReference(i);
+if (o) return t[i.name] = o, e.ctrl.referencedBy[o] = e.ctrl.referencedBy[o] || [], void e.ctrl.referencedBy[o].push(i.name);
+var a = r.get(i, "annotations.tags", "").split(/\s*,\s*/);
+r.includes(a, "builder") && !r.includes(a, "hidden") && (n[i.name] = i);
 });
 var o = [], a = r.get(this, "ctrl.imageStream.resource.status.tags", []);
 return r.each(a, function(e) {
@@ -78661,6 +78672,8 @@ e.ctrl.selectedProject = t, e.getImageStreamTag().then(function(t) {
 var n = e.BuilderAppService.makeAPIObjects({
 name: e.ctrl.name,
 repository: e.ctrl.repository,
+gitRef: e.gitRef,
+contextDir: e.contextDir,
 namespace: e.ctrl.selectedProject.metadata.name,
 imageStreamTag: t
 });
@@ -78978,9 +78991,9 @@ t.__esModule = !0;
 var i = n(1), r = n(0), o = function() {
 function e(t, n, o, a, s, l, c, u, d, h, f) {
 var p = this;
-this.ctrl = this, this.newProjectPanelShown = !1, this.editProjectPanelShown = !1, this.projects = [], this.watches = [], this.maxDisplayProjects = 5, this.watchingProjects = !1, this.init = function() {
+this.ctrl = this, this.newProjectPanelShown = !1, this.editProjectPanelShown = !1, this.watches = [], this.maxDisplayProjects = 5, this.watchingProjects = !1, this.init = function() {
 p.ProjectsService.list().then(function(t) {
-p.onProjectsUpdate(t), p.ctrl.isProjectListIncomplete = p.ProjectsService.isProjectListIncomplete(), !p.ctrl.isProjectListIncomplete && r.size(p.projects) <= e.MAX_PROJETS_TO_WATCH && (p.watches.push(p.ProjectsService.watch(p.$scope, p.onProjectsUpdate)), p.watchingProjects = !0);
+p.onProjectsUpdate(t), p.ctrl.isProjectListIncomplete = p.ProjectsService.isProjectListIncomplete(), !p.ctrl.isProjectListIncomplete && p.ctrl.totalProjects <= e.MAX_PROJETS_TO_WATCH && (p.watches.push(p.ProjectsService.watch(p.$scope, p.onProjectsUpdate)), p.watchingProjects = !0);
 }, function() {
 p.ctrl.isProjectListIncomplete = !0;
 }), p.ctrl.resourceLinks = r.clone(p.Constants.CATALOG_HELP_RESOURCES.links), r.forEach(p.ctrl.resourceLinks, function(e) {
