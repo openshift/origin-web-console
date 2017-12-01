@@ -1,7 +1,14 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('eventsBadge', function($filter, DataService, Logger) {
+  .directive('eventsBadge', function(
+    $filter,
+    APIService,
+    DataService,
+    Logger) {
+
+    var eventsVersion = APIService.getPreferredVersion('events');
+
     return {
       restrict: 'E',
       scope: {
@@ -12,7 +19,7 @@ angular.module('openshiftConsole')
       controller: function($scope) {
         var watches = [];
         var sort = $filter('orderObjectsByDate');
-        watches.push(DataService.watch("events", $scope.projectContext, function(eventData) {
+        watches.push(DataService.watch(eventsVersion, $scope.projectContext, function(eventData) {
           var events = eventData.by('metadata.name');
           $scope.events = sort(events, true);
           $scope.warningCount = _.size(_.filter(events, { type: 'Warning' }));
@@ -30,4 +37,3 @@ angular.module('openshiftConsole')
       },
     };
   });
-
