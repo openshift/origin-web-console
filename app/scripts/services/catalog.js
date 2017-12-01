@@ -2,9 +2,14 @@
 
 angular.module("openshiftConsole")
   .factory("CatalogService", function($filter,
+                                      $q,
                                       APIService,
+                                      AuthService,
+                                      Catalog,
                                       Constants,
-                                      KeywordService) {
+                                      KeywordService,
+                                      Logger,
+                                      NotificationsService) {
     var getTags = $filter('tags');
 
     // API versions
@@ -21,8 +26,39 @@ angular.module("openshiftConsole")
                                   APIService.apiInfo(serviceInstancesVersion) &&
                                   APIService.apiInfo(servicePlansVersion);
 
+    var cachedCatalogItems;
+
+    var clearCachedCatalogItems = function() {
+      Logger.debug('ProjectsService: clearing catalog items cache');
+      cachedCatalogItems = null;
+    };
+
+    AuthService.onUserChanged(clearCachedCatalogItems);
+    AuthService.onLogout(clearCachedCatalogItems);
+
     var isTemplateServiceBrokerEnabled = function() {
       return !!Constants.TEMPLATE_SERVICE_BROKER_ENABLED;
+    };
+
+    var getCatalogItems = function(forceRefresh) {
+      if (cachedCatalogItems && !forceRefresh) {
+        Logger.debug('CatalogService: returning cached catalog items');
+        return $q.when(cachedCatalogItems);
+      }
+
+      Logger.debug('CatalogService: getCatalogItems, force refresh', forceRefresh);
+      var includeTemplates = !isTemplateServiceBrokerEnabled();
+      return Catalog.getCatalogItems(includeTemplates).then(_.spread(function(items, errorMessage) {
+        if (errorMessage) {
+          var alertData = {
+            type: 'error',
+            message: errorMessage
+          };
+          NotificationsService.addNotification(alertData);
+        }
+        cachedCatalogItems = items;
+        return items;
+      }));
     };
 
     var categoryItemByID = {};
@@ -260,6 +296,7 @@ angular.module("openshiftConsole")
     return {
       SERVICE_CATALOG_ENABLED: SERVICE_CATALOG_ENABLED,
       isTemplateServiceBrokerEnabled: isTemplateServiceBrokerEnabled,
+      getCatalogItems: getCatalogItems,
       getCategoryItem: getCategoryItem,
       categorizeImageStreams: categorizeImageStreams,
       categorizeTemplates: categorizeTemplates,

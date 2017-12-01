@@ -1,6 +1,7 @@
 //
 // Project bar
 // -----------------------------------------------
+@desktop-search-width: 300px;
 
 .project-bar {
   background-color: @project-bar-bg;
@@ -19,39 +20,35 @@
   .add-to-project {
     align-items: center;
     color: @navbar-pf-vertical-color;
-    display: flex;
-    flex: 0 0 35px;
     font-weight: 300;
     justify-content: center;
-    @media (min-width: @screen-xs-max) {
-      flex: 1 0 auto;
-      margin-right: 15px;
+    margin: 0 5px 0 0;
+    @media (min-width: @screen-sm-min) {
+      margin: 5px 15px 0 5px;
     }
-    &:before {
-      background:  @navbar-os-project-menu-border-inset;
-      content: '';
-      display: block;
-      height: 100%;
-      left: 0px;
-      position: absolute;
-      top: 0;
-      width: 1px;
-      @media (min-width: @screen-xs-max) {
-        display: none;
-      }
-    }
-    > a {
+    > .btn-link {
       align-items: center;
       color: @navbar-os-project-menu-color;
       display: flex;
-      padding: 5px 0;
       flex: 1 1 auto;
       justify-content: center;
+
+      margin: 2px 2px 0;
+      padding: 0 2px;
+
+      @media (min-width: @screen-sm-min) {
+        background-color: @color-pf-black-900;
+        border: 1px solid @navbar-pf-bg-color;
+        padding: 3px 5px 0 5px;
+      }
       &:active,
       &:focus,
       &:hover {
         color: #fff;
         text-decoration: none;
+      }
+      > i {
+        padding: 4px 5px;
       }
     }
     .caret {
@@ -59,14 +56,28 @@
     }
     .dropdown-menu {
       margin-top: 0; // align top edge to project bar bottom
-      @media (min-width: @screen-xs-max) {
-        right: -7px;
+      right: -2px;
+      @media (min-width: @screen-sm-min) {
+        right: -1px;
+      }
+      &:after {
+        border: 6px solid transparent;
+        border-bottom-color: #fff;
+        border-top-width: 0;
+        content: "";
+        display: block;
+        height: 0;
+        position: absolute;
+        right: 10px;
+        top: -6px;
+        vertical-align: middle;
+        width: 0;
       }
     }
   }
   .bootstrap-select.btn-group {
     @media(min-width: @screen-sm-min) {
-      max-width: 70%;
+      max-width: 100%;
       min-width: 200px;
       width: auto;
     }
@@ -100,7 +111,7 @@
           background: @navbar-os-project-menu-border-inset;
           display: block;
           height: 100%;
-          left: 0px;
+          left: 0;
           position: absolute;
           top: 0;
           width: 1px;
@@ -197,8 +208,106 @@
       }
     }
   }
+
+  .catalog-search {
+    background: transparent;
+    border: 0;
+    margin-left: 15px;
+    padding: 5px 0;
+    position: relative;
+    width: inherit;
+    @media (min-width: @screen-sm-min) {
+      margin-top: 2px;
+      position: inherit;
+    }
+    @media (max-width: @screen-xs-max) {
+      border-right: 1px solid @navbar-pf-bg-color;
+      margin-left: 0;
+      padding: 2px 5px;
+      &.mobile-shown {
+        background: @nav-pf-vertical-bg-color;
+        padding-bottom: 10px;
+        z-index: 1000;
+      }
+    }
+    .catalog-search-icon {
+      left: 5px;
+      top: 5px;
+    }
+    .catalog-search-input {
+      text-indent: 20px;
+    }
+    .catalog-search-toggle {
+      color: @navbar-os-project-menu-color;
+      &:active,
+      &:focus,
+      &:hover {
+        color: #fff;
+        text-decoration: none;
+      }
+      &:focus {
+        .tab-focus();
+      }
+    }
+    .dropdown-menu {
+      @media (min-width: @screen-sm-min) {
+        left: auto !important;
+        right: 0;
+        width: @desktop-search-width;
+      }
+    }
+    .landing-search-form {
+      width: @desktop-search-width;
+      .search-pf-input-group {
+        button {
+          color: @navbar-os-project-menu-color;
+        }
+        .form-control {
+          background-color: @color-pf-black-900;
+          border-color: @navbar-pf-bg-color;
+          color: @navbar-os-project-menu-color;
+          font-size: @font-size-base;
+          height: 2em;
+          &:focus {
+            .tab-focus();
+          }
+        }
+        .pficon-close {
+          font-size: (@font-size-base + 2);
+          margin-top: -0.3em;
+        }
+      }
+    }
+    &.mobile-shown {
+      .catalog-search-toggle {
+        color: @color-pf-blue-300;
+        padding: 0 5px;
+        &:active,
+        &:focus,
+        &:hover {
+          color: @color-pf-blue-300;
+        }
+      }
+      .landing-search-form {
+        @media (max-width: @screen-xs-max) {
+          background-color: @nav-pf-vertical-bg-color;
+          border-top: solid 1px @project-bar-bg;
+          display: block !important;
+          left: 0;
+          padding: 10px;
+          position: fixed;
+          right: 0;
+          top: (@navbar-os-header-height-mobile + @project-bar-height-mobile);
+          width: auto;
+          .form-group {
+            display: block;
+          }
+        }
+      }
+    }
+  }
   .form-group {
-    flex-basis: 100%;
+    flex: 1 0 0%;
     margin-bottom: 0;
     min-width: 0; // so that truncation on .filter-option works
     .form-control {
@@ -206,19 +315,6 @@
       margin-bottom: 0;
       height: auto;
     }
-  }
-  .dropdown-menu:after {
-    border:6px solid transparent;
-    border-bottom-color:#fff;
-    border-top-width:0;
-    content:"";
-    display:block;
-    height:0;
-    position:absolute;
-    right:10px;
-    top:-6px;
-    vertical-align:middle;
-    width:0;
   }
   .navbar-toggle {
     border: 0;

@@ -180,13 +180,19 @@ angular.module('openshiftConsole')
     function(
       $filter,
       $location,
+      $q,
       $rootScope,
       $routeParams,
       $timeout,
       AuthorizationService,
+      Catalog,
+      CatalogService,
       Constants,
+      DataService,
+      NotificationsService,
       ProjectsService,
-      projectOverviewURLFilter) {
+      projectOverviewURLFilter,
+      RecentlyViewedServiceItems) {
 
     // cache these to eliminate flicker
     var projects = {};
@@ -201,6 +207,7 @@ angular.module('openshiftConsole')
       link: function($scope, $elem) {
         var MAX_PROJETS_TO_DISPLAY = 100;
         var NAV_COLLAPSED_STORAGE_KEY = 'openshift/vertical-nav-collapsed';
+
         $scope.currentProject = projects[ $routeParams.project ];
 
         var setCollapsed = function(collapsed, updateSavedState) {
@@ -242,11 +249,16 @@ angular.module('openshiftConsole')
         };
 
         $scope.closeOrderingPanel = function() {
-          _.set($scope, 'ordering.panelName', "");
+          $scope.orderingPanelVisible = false;
         };
 
         $scope.showOrderingPanel = function(panelName) {
-          _.set($scope, 'ordering.panelName', panelName);
+          $scope.orderingPanelVisible = true;
+          $scope.orderKind = panelName;
+        };
+
+        $scope.onSearchToggle = function(showMobileSearch) {
+          _.set($rootScope, 'view.hasProjectSearch', showMobileSearch);
         };
 
         $scope.catalogLandingPageEnabled = !Constants.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
@@ -320,6 +332,12 @@ angular.module('openshiftConsole')
               }
 
               $scope.canIAddToProject = AuthorizationService.canIAddToProject(currentProjectName);
+
+              if ($scope.canIAddToProject) {
+                CatalogService.getCatalogItems().then(function(items) {
+                  $scope.catalogItems = items;
+                });
+              }
             });
 
             updateProjects().then(function() {
@@ -347,6 +365,77 @@ angular.module('openshiftConsole')
           }
         };
 
+        var addOrderItemToRecentlyViewed = function() {
+          if ($scope.orderingPanelVisible) {
+            RecentlyViewedServiceItems.addItem(_.get($scope.selectedItem, 'resource.metadata.uid'));
+          }
+        };
+
+        var isPartialObject = function(apiObject) {
+          return apiObject.kind === 'PartialObjectMetadata';
+        };
+
+        var loadCompleteTemplate = function(template) {
+          if (isPartialObject(template)) {
+            return DataService.get("templates", template.metadata.name, { namespace: template.metadata.namespace });
+          }
+
+          return $q.when(template);
+        };
+
+        $scope.$on('open-overlay-panel', function (event, item) {
+          if (!$scope.currentProjectName) {
+            return;
+          }
+
+          $scope.servicePlansForItem = null;
+          $scope.orderKind = _.get(item, 'kind');
+
+          if ($scope.orderKind === 'Template') {
+            // `selectedTemplate` might be a partial object (metadata only). If necessary, load the complete template object.
+            loadCompleteTemplate(item.resource).then(function(template) {
+              $scope.selectedItem = template;
+              $scope.orderingPanelVisible = true;
+              $scope.orderKind = 'Template';
+            });
+            return;
+          }
+
+          if ($scope.orderKind === 'ClusterServiceClass') {
+            Catalog.getServicePlansForServiceClass(_.get(item, 'resource.metadata.name')).then(function (plans) {
+              $scope.servicePlansForItem = _.reject(plans.by('metadata.name'), {
+                status: {
+                  removedFromBrokerCatalog: true
+                }
+              });
+              $scope.selectedItem = item;
+              $scope.orderingPanelVisible = true;
+            });
+            return;
+          }
+
+          $scope.selectedItem = item;
+          $scope.orderingPanelVisible = true;
+        });
+
+        var removeFilterListener = $rootScope.$on('filter-catalog-items', function(event, searchCriteria) {
+          if (!$scope.currentProjectName) {
+            return;
+          }
+
+          var search = {
+            filter: searchCriteria.searchText
+          };
+
+          $location.path("project/" + encodeURIComponent($scope.currentProjectName) + "/project-browse-catalog").search(search);
+        });
+
+        $scope.closeOrderingPanel = function() {
+          RecentlyViewedServiceItems.addItem(_.get($scope.selectedItem, 'resource.metadata.uid'));
+          $scope.orderingPanelVisible = false;
+        };
+
+
         // Make sure `onRouteChange` gets called on page load, even if
         // `$routeChangeSuccess` doesn't fire. `onRouteChange` doesn't do any
         // work if the project name hasn't changed, so there's no penalty if it
@@ -366,6 +455,14 @@ angular.module('openshiftConsole')
               $location.url(newURL);
             });
           });
+
+        $scope.$on('$destroy', function() {
+          removeFilterListener();
+
+          // If the ordering dialog was open when the scope was destroyed, still
+          // add the item to recently-viewed. No-op if the dialog is not open.
+          addOrderItemToRecentlyViewed();
+        });
       }
     };
   })
