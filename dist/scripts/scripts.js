@@ -9475,7 +9475,8 @@ e();
 });
 } ]
 };
-} ]), angular.module("openshiftConsole").directive("eventsBadge", [ "$filter", "DataService", "Logger", function(e, t, n) {
+} ]), angular.module("openshiftConsole").directive("eventsBadge", [ "$filter", "APIService", "DataService", "Logger", function(e, t, n, a) {
+var r = t.getPreferredVersion("events");
 return {
 restrict: "E",
 scope: {
@@ -9483,19 +9484,19 @@ projectContext: "=",
 sidebarCollapsed: "="
 },
 templateUrl: "views/directives/events-badge.html",
-controller: [ "$scope", function(a) {
-var r = [], o = e("orderObjectsByDate");
-r.push(t.watch("events", a.projectContext, function(e) {
-var t = e.by("metadata.name");
-a.events = o(t, !0), a.warningCount = _.size(_.filter(t, {
+controller: [ "$scope", function(t) {
+var o = [], i = e("orderObjectsByDate");
+o.push(n.watch(r, t.projectContext, function(e) {
+var n = e.by("metadata.name");
+t.events = i(n, !0), t.warningCount = _.size(_.filter(n, {
 type: "Warning"
-})), a.normalCount = _.size(_.filter(t, {
+})), t.normalCount = _.size(_.filter(n, {
 type: "Normal"
-})), n.log("events (subscribe)", a.events);
-})), a.expandSidebar = function() {
-a.sidebarCollapsed = !1;
-}, a.$on("$destroy", function() {
-t.unwatchAll(r);
+})), a.log("events (subscribe)", t.events);
+})), t.expandSidebar = function() {
+t.sidebarCollapsed = !1;
+}, t.$on("$destroy", function() {
+n.unwatchAll(o);
 });
 } ]
 };
