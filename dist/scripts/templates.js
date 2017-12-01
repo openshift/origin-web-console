@@ -11195,54 +11195,59 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-12\">\n" +
     "<div ng-if=\"kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'Pods'\">\n" +
     "<h2>Pods</h2>\n" +
-    "<div class=\"list-view-pf\">\n" +
-    "<div class=\"list-group-item\" ng-if=\"!(filteredPods | hashSize)\">\n" +
-    "<div class=\"list-view-pf-main-info\">\n" +
+    "<div class=\"list-pf\" ng-class=\"{'list-pf-empty': !(filteredPods | size)}\">\n" +
+    "<div class=\"list-pf-item\" ng-if=\"!(filteredPods | size)\">\n" +
+    "<div class=\"list-pf-container\">\n" +
     "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading pods\" ng-if=\"!podsLoaded\"></ellipsis-pulser>\n" +
     "<em>\n" +
-    "<div ng-if=\"(pods | hashSize) > 0\">The current filters are hiding all pods.</div>\n" +
-    "<span ng-if=\"podsLoaded && (pods | hashSize) === 0\">There are no pods in this project.</span>\n" +
+    "<div ng-if=\"(pods | size) > 0\">The current filters are hiding all pods.</div>\n" +
+    "<span ng-if=\"podsLoaded && (pods | size) === 0\">There are no pods in this project.</span>\n" +
     "</em>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"pod in filteredPods track by (pod | uid)\" ng-click=\"toggleItem($event, this, pod)\" ng-class=\"{'expanded': expanded.pods[pod.metadata.name]}\">\n" +
-    "<div class=\"list-view-pf-checkbox\">\n" +
-    "<button class=\"sr-only\">{{expanded.pods[pod.metadata.name] ? 'Collapse' : 'Expand'}}</button>\n" +
+    "<div class=\"list-pf-item\" ng-repeat=\"pod in filteredPods track by (pod | uid)\" ng-class=\"{'active': expanded.pods[pod.metadata.name]}\">\n" +
+    "<div class=\"list-pf-container list-pf-container-thin\" ng-click=\"toggleItem($event, this, pod)\">\n" +
+    "<div class=\"list-pf-chevron\">\n" +
+    "<a href=\"\" ng-click=\"toggleItem($event, this, pod, true)\" role=\"button\" class=\"toggle-expand-link\">\n" +
     "<span ng-if=\"expanded.pods[pod.metadata.name]\">\n" +
-    "<span class=\"fa fa-angle-down\"></span>\n" +
+    "<span class=\"fa fa-angle-down\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Collapse</span>\n" +
     "</span>\n" +
     "<span ng-if=\"!expanded.pods[pod.metadata.name]\">\n" +
-    "<span class=\"fa fa-angle-right\"></span>\n" +
+    "<span class=\"fa fa-angle-right\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Expand</span>\n" +
     "</span>\n" +
+    "</a>\n" +
     "</div>\n" +
-    "<div class=\"list-view-pf-main-info\">\n" +
-    "<div class=\"list-view-pf-body\">\n" +
-    "<div class=\"list-view-pf-description\">\n" +
-    "<div class=\"list-group-item-heading\">\n" +
+    "<div class=\"list-pf-content list-pf-content-flex\">\n" +
+    "<div class=\"list-pf-content-wrapper\">\n" +
+    "<div class=\"list-pf-main-content\">\n" +
+    "<div class=\"list-pf-title\">\n" +
+    "<h3>\n" +
     "<a ng-href=\"{{pod | navigateResourceURL}}\"><span ng-bind-html=\"pod.metadata.name | highlightKeywords : filterKeywords\"></span></a>\n" +
     "<small>created <span am-time-ago=\"pod.metadata.creationTimestamp\"></span></small>\n" +
+    "</h3>\n" +
     "</div>\n" +
-    "<div class=\"list-group-item-text\">\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-additional-content\">\n" +
+    "<div class=\"list-pf-additional-content-item\">\n" +
     "<status-icon status=\"pod | podStatus\" disable-animation></status-icon>\n" +
     "{{pod | podStatus | humanizeReason}}\n" +
     "<small ng-if=\"(pod | podStatus) === 'Running'\" class=\"text-muted\">\n" +
     "&ndash; {{pod | numContainersReady}}/{{pod.spec.containers.length}} ready\n" +
     "</small>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"list-view-pf-additional-info\">\n" +
-    "<div class=\"list-view-pf-additional-info-item\">\n" +
+    "<div class=\"list-pf-additional-content-item\">\n" +
     "<image-names pod-template=\"pod\" pods=\"[pod]\"></image-names>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-repeat-end ng-if=\"expanded.pods[pod.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.pods[pod.metadata.name]}\">\n" +
+    "<div class=\"list-pf-expansion collapse\" ng-if=\"expanded.pods[pod.metadata.name]\" ng-class=\"{'in': expanded.pods[pod.metadata.name]}\">\n" +
+    "<div class=\"list-pf-container\">\n" +
     "<log-viewer ng-if=\"'pods/log' | canI : 'get'\" object=\"pod\" context=\"projectContext\" options=\"logOptions.pods[pod.metadata.name]\" empty=\"logEmpty.pods[pod.metadata.name]\" run=\"logCanRun.pods[pod.metadata.name]\" fixed-height=\"250\" full-log-url=\"(pod | navigateResourceURL) + '?view=chromeless'\" ng-class=\"{'log-viewer-select': pod.spec.containers.length > 1}\">\n" +
     "<span class=\"container-details\">\n" +
     "<label for=\"selectLogContainer\">Container:</label>\n" +
@@ -11264,43 +11269,51 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "<div ng-if=\"kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'ReplicationControllers'\">\n" +
     "<h2>Deployments</h2>\n" +
-    "<div class=\"list-view-pf\">\n" +
-    "<div class=\"list-group-item\" ng-if=\"!(filteredReplicationControllers | hashSize) && !(filteredReplicaSets | hashSize)\">\n" +
-    "<div class=\"list-view-pf-main-info\">\n" +
+    "<div class=\"list-pf\" ng-class=\"{'list-pf-empty': !(filteredReplicationControllers | size) && !(filteredReplicaSets | size)}\">\n" +
+    "<div class=\"list-pf-item\" ng-if=\"!(filteredReplicationControllers | size) && !(filteredReplicaSets | size)\">\n" +
+    "<div class=\"list-pf-container\">\n" +
     "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading deployments\" ng-if=\"!replicationControllersLoaded\"></ellipsis-pulser>\n" +
     "<em>\n" +
-    "<div ng-if=\"(replicationControllers | hashSize) > 0 || (replicaSets | hashSize) > 0\">The current filters are hiding all deployments.</div>\n" +
-    "<span ng-if=\"replicationControllersLoaded && !(replicationControllers | hashSize) && replicaSetsLoaded && !(replicaSets | hashSize)\">There are no deployments in this project.</span>\n" +
+    "<div ng-if=\"(replicationControllers | size) > 0 || (replicaSets | size) > 0\">The current filters are hiding all deployments.</div>\n" +
+    "<span ng-if=\"replicationControllersLoaded && !(replicationControllers | size) && replicaSetsLoaded && !(replicaSets | size)\">There are no deployments in this project.</span>\n" +
     "</em>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"replicationController in filteredReplicationControllers track by (replicationController | uid)\" ng-click=\"toggleItem($event, this, replicationController)\" ng-class=\"{'expanded': expanded.replicationControllers[replicationController.metadata.name]}\">\n" +
-    "<div class=\"list-view-pf-checkbox\">\n" +
-    "<button class=\"sr-only\">{{expanded.replicationControllers[replicationController.metadata.name] ? 'Collapse' : 'Expand'}}</button>\n" +
+    "<div class=\"list-pf-item\" ng-repeat=\"replicationController in filteredReplicationControllers track by (replicationController | uid)\" ng-class=\"{'active': expanded.replicationControllers[replicationController.metadata.name]}\">\n" +
+    "<div class=\"list-pf-container list-pf-container-thin\" ng-click=\"toggleItem($event, this, replicationController)\">\n" +
+    "<div class=\"list-pf-chevron\">\n" +
+    "<a href=\"\" role=\"button\" ng-click=\"toggleItem($event, this, replicationController, true)\" class=\"toggle-expand-link\">\n" +
     "<span ng-if=\"expanded.replicationControllers[replicationController.metadata.name]\">\n" +
-    "<span class=\"fa fa-angle-down\"></span>\n" +
+    "<span class=\"fa fa-angle-down\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Collapse</span>\n" +
     "</span>\n" +
     "<span ng-if=\"!expanded.replicationControllers[replicationController.metadata.name]\">\n" +
-    "<span class=\"fa fa-angle-right\"></span>\n" +
+    "<span class=\"fa fa-angle-right\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Expand</span>\n" +
     "</span>\n" +
+    "</a>\n" +
     "</div>\n" +
-    "<div class=\"list-view-pf-main-info\">\n" +
-    "<div class=\"list-view-pf-body\">\n" +
-    "<div class=\"list-view-pf-description\">\n" +
-    "<div class=\"list-group-item-heading\">\n" +
+    "<div class=\"list-pf-content list-pf-content-flex\">\n" +
+    "<div class=\"list-pf-content-wrapper\">\n" +
+    "<div class=\"list-pf-main-content\">\n" +
+    "<div class=\"list-pf-title\">\n" +
+    "<h3>\n" +
     "<a ng-href=\"{{replicationController | navigateResourceURL}}\"><span ng-bind-html=\"replicationController.metadata.name | highlightKeywords : filterKeywords\"></span></a>\n" +
     "<small>created <span am-time-ago=\"replicationController.metadata.creationTimestamp\"></span></small>\n" +
+    "</h3>\n" +
     "</div>\n" +
-    "<div class=\"list-group-item-text\">\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-additional-content\">\n" +
+    "<div class=\"list-pf-additional-content-item\">\n" +
     "<a href=\"\" ng-click=\"viewPodsForSet(replicationController)\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(podsByOwnerUID[replicationController.metadata.uid] | size) }\">\n" +
     "<pod-donut pods=\"podsByOwnerUID[replicationController.metadata.uid]\" mini=\"true\"></pod-donut>\n" +
     "</a>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"list-view-pf-additional-info\">\n" +
-    "<div class=\"list-view-pf-additional-info-item\">\n" +
+    "<div class=\"list-pf-additional-content-item\">\n" +
     "<image-names pod-template=\"replicationController.spec.template\" pods=\"podsByOwnerUID[replicationController.metadata.uid]\">\n" +
     "</image-names>\n" +
     "</div>\n" +
@@ -11308,7 +11321,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-repeat-end ng-if=\"expanded.replicationControllers[replicationController.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.replicationControllers[replicationController.metadata.name]}\">\n" +
+    "<div class=\"list-pf-expansion collapse\" ng-if=\"expanded.replicationControllers[replicationController.metadata.name]\" ng-class=\"{'in': expanded.replicationControllers[replicationController.metadata.name]}\">\n" +
+    "<div class=\"list-pf-container\">\n" +
     "\n" +
     "<log-viewer ng-if=\"'deploymentconfigs/log' | canI : 'get'\" object=\"replicationController\" context=\"projectContext\" options=\"logOptions.replicationControllers[replicationController.metadata.name]\" empty=\"logEmpty.replicationControllers[replicationController.metadata.name]\" run=\"logCanRun.replicationControllers[replicationController.metadata.name]\" fixed-height=\"250\" full-log-url=\"(replicationController | navigateResourceURL) + '?view=chromeless'\">\n" +
     "</log-viewer>\n" +
@@ -11317,31 +11331,39 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</deployment-metrics>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"replicaSet in filteredReplicaSets track by (replicaSet | uid)\" ng-click=\"toggleItem($event, this, replicaSet)\" ng-class=\"{'expanded': expanded.replicaSets[replicaSet.metadata.name]}\">\n" +
-    "<div class=\"list-view-pf-checkbox\">\n" +
-    "<button class=\"sr-only\">{{expanded.replicaSets[replicaSet.metadata.name] ? 'Collapse' : 'Expand'}}</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-item\" ng-repeat=\"replicaSet in filteredReplicaSets track by (replicaSet | uid)\" ng-class=\"{'active': expanded.replicaSets[replicaSet.metadata.name]}\">\n" +
+    "<div class=\"list-pf-container list-pf-container-thin\" ng-click=\"toggleItem($event, this, replicaSet)\">\n" +
+    "<div class=\"list-pf-chevron\">\n" +
+    "<a href=\"\" ng-click=\"toggleItem($event, this, replicaSet, true)\" role=\"button\" class=\"toggle-expand-link\">\n" +
     "<span ng-if=\"expanded.replicaSets[replicaSet.metadata.name]\">\n" +
-    "<span class=\"fa fa-angle-down\"></span>\n" +
+    "<span class=\"fa fa-angle-down\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Collapse</span>\n" +
     "</span>\n" +
     "<span ng-if=\"!expanded.replicaSets[replicaSet.metadata.name]\">\n" +
-    "<span class=\"fa fa-angle-right\"></span>\n" +
+    "<span class=\"fa fa-angle-right\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Expand</span>\n" +
     "</span>\n" +
+    "</a>\n" +
     "</div>\n" +
-    "<div class=\"list-view-pf-main-info\">\n" +
-    "<div class=\"list-view-pf-body\">\n" +
-    "<div class=\"list-view-pf-description\">\n" +
-    "<div class=\"list-group-item-heading\">\n" +
+    "<div class=\"list-pf-content list-pf-content-flex\">\n" +
+    "<div class=\"list-pf-content-wrapper\">\n" +
+    "<div class=\"list-pf-main-content\">\n" +
+    "<div class=\"list-pf-title\">\n" +
+    "<h3>\n" +
     "<a ng-href=\"{{replicaSet | navigateResourceURL}}\"><span ng-bind-html=\"replicaSet.metadata.name | highlightKeywords : filterKeywords\"></span></a>\n" +
     "<small>created <span am-time-ago=\"replicaSet.metadata.creationTimestamp\"></span></small>\n" +
+    "</h3>\n" +
     "</div>\n" +
-    "<div class=\"list-group-item-text\">\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-additional-content\">\n" +
+    "<div class=\"list-pf-additional-content-item\">\n" +
     "<a href=\"\" ng-click=\"viewPodsForSet(replicaSet)\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(podsByOwnerUID[replicaSet.metadata.uid] | size) }\">\n" +
     "<pod-donut pods=\"podsByOwnerUID[replicaSet.metadata.uid]\" mini=\"true\"></pod-donut>\n" +
     "</a>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"list-view-pf-additional-info\">\n" +
-    "<div class=\"list-view-pf-additional-info-item\">\n" +
+    "<div class=\"list-pf-additional-content-item\">\n" +
     "<image-names pod-template=\"replicaSet.spec.template\" pods=\"podsByOwnerUID[replicaSet.metadata.uid]\">\n" +
     "</image-names>\n" +
     "</div>\n" +
@@ -11349,9 +11371,21 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-repeat-end ng-if=\"expanded.replicaSets[replicaSet.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.replicaSets[replicaSet.metadata.name]}\">\n" +
+    "<div class=\"list-pf-expansion collapse\" ng-if=\"expanded.replicationControllers[replicationController.metadata.name]\" ng-class=\"{'in': expanded.replicationControllers[replicationController.metadata.name]}\">\n" +
+    "<div class=\"list-pf-container\">\n" +
+    "\n" +
+    "<log-viewer ng-if=\"'deploymentconfigs/log' | canI : 'get'\" object=\"replicationController\" context=\"projectContext\" options=\"logOptions.replicationControllers[replicationController.metadata.name]\" empty=\"logEmpty.replicationControllers[replicationController.metadata.name]\" run=\"logCanRun.replicationControllers[replicationController.metadata.name]\" fixed-height=\"250\" full-log-url=\"(replicationController | navigateResourceURL) + '?view=chromeless'\">\n" +
+    "</log-viewer>\n" +
+    "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
+    "<deployment-metrics pods=\"podsByOwnerUID[replicationController.metadata.uid]\" containers=\"replicationController.spec.template.spec.containers\" alerts=\"alerts\">\n" +
+    "</deployment-metrics>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-expansion collapse\" ng-if=\"expanded.replicaSets[replicaSet.metadata.name]\" ng-class=\"{'in': expanded.replicaSets[replicaSet.metadata.name]}\">\n" +
+    "<div class=\"list-pf-container\">\n" +
     "Logs are not available for replica sets.\n" +
-    "<span ng-if=\"podsByOwnerUID[replicaSet.metadata.uid] | hashSize\">\n" +
+    "<span ng-if=\"podsByOwnerUID[replicaSet.metadata.uid] | size\">\n" +
     "To see application logs, view the logs for one of the replica set's\n" +
     "<a href=\"\" ng-click=\"viewPodsForSet(replicaSet)\">pods</a>.\n" +
     "</span>\n" +
@@ -11362,52 +11396,61 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "<div ng-if=\"kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'StatefulSets'\">\n" +
     "<h2>Stateful Sets</h2>\n" +
-    "<div class=\"list-view-pf\">\n" +
-    "<div class=\"list-group-item\" ng-if=\"!(filteredStatefulSets | hashSize)\">\n" +
-    "<div class=\"list-view-pf-main-info\">\n" +
+    "<div class=\"list-pf\" ng-class=\"{'list-pf-empty': !(filteredStatefulSets | size)}\">\n" +
+    "<div class=\"list-pf-item\" ng-if=\"!(filteredStatefulSets | size)\">\n" +
+    "<div class=\"list-pf-container\">\n" +
     "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading stateful sets\" ng-if=\"!statefulSetsLoaded\"></ellipsis-pulser>\n" +
     "<em>\n" +
-    "<div ng-if=\"(statefulSets | hashSize) > 0\">The current filters are hiding all stateful sets.</div>\n" +
-    "<span ng-if=\"statefulSetsLoaded && (statefulSets | hashSize) === 0\">There are no stateful sets in this project.</span>\n" +
+    "<div ng-if=\"(statefulSets | size) > 0\">The current filters are hiding all stateful sets.</div>\n" +
+    "<span ng-if=\"statefulSetsLoaded && (statefulSets | size) === 0\">There are no stateful sets in this project.</span>\n" +
     "</em>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"set in filteredStatefulSets track by (set | uid)\" ng-click=\"toggleItem($event, this, set)\" ng-class=\"{'expanded': expanded.statefulSets[set.metadata.name]}\">\n" +
-    "<div class=\"list-view-pf-checkbox\">\n" +
-    "<button class=\"sr-only\">{{expanded.statefulSets[set.metadata.name] ? 'Collapse' : 'Expand'}}</button>\n" +
+    "<div class=\"list-pf-item\" ng-repeat=\"set in filteredStatefulSets track by (set | uid)\" ng-class=\"{'active': expanded.statefulSets[set.metadata.name]}\">\n" +
+    "<div class=\"list-pf-container list-pf-container-thin\" ng-click=\"toggleItem($event, this, set)\">\n" +
+    "<div class=\"list-pf-chevron\">\n" +
+    "<a href=\"\" ng-click=\"toggleItem($event, this, set, true)\" role=\"button\" class=\"toggle-expand-link\">\n" +
     "<span ng-if=\"expanded.statefulSets[set.metadata.name]\">\n" +
-    "<span class=\"fa fa-angle-down\"></span>\n" +
+    "<span class=\"fa fa-angle-down\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Collapse</span>\n" +
     "</span>\n" +
     "<span ng-if=\"!expanded.statefulSets[set.metadata.name]\">\n" +
-    "<span class=\"fa fa-angle-right\"></span>\n" +
+    "<span class=\"fa fa-angle-right\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Expand</span>\n" +
     "</span>\n" +
+    "</a>\n" +
     "</div>\n" +
-    "<div class=\"list-view-pf-main-info\">\n" +
-    "<div class=\"list-view-pf-body\">\n" +
-    "<div class=\"list-view-pf-description\">\n" +
-    "<div class=\"list-group-item-heading\">\n" +
+    "<div class=\"list-pf-content list-pf-content-flex\">\n" +
+    "<div class=\"list-pf-content-wrapper\">\n" +
+    "<div class=\"list-pf-main-content\">\n" +
+    "<div class=\"list-pf-title\">\n" +
+    "<h3>\n" +
     "<a ng-href=\"{{set | navigateResourceURL}}\"><span ng-bind-html=\"set.metadata.name | highlightKeywords : filterKeywords\"></span></a>\n" +
     "<small>created <span am-time-ago=\"set.metadata.creationTimestamp\"></span></small>\n" +
+    "</h3>\n" +
     "</div>\n" +
-    "<div class=\"list-group-item-text\">\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-additional-content\">\n" +
+    "<div class=\"list-pf-additional-content-item\">\n" +
     "<a href=\"\" ng-click=\"viewPodsForSet(set)\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(podsByOwnerUID[set.metadata.uid] | size) }\">\n" +
     "<pod-donut pods=\"podsByOwnerUID[set.metadata.uid]\" mini=\"true\"></pod-donut>\n" +
     "</a>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"list-view-pf-additional-info\">\n" +
-    "<div class=\"list-view-pf-additional-info-item\">\n" +
+    "<div class=\"list-pf-additional-content-item\">\n" +
     "<image-names pod-template=\"set.spec.template\" pods=\"podsByOwnerUID[set.metadata.uid]\"></image-names>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-repeat-end ng-if=\"expanded.statefulSets[set.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.statefulSets[set.metadata.name]}\">\n" +
+    "<div class=\"list-pf-expansion collapse\" ng-if=\"expanded.statefulSets[set.metadata.name]\" ng-class=\"{'in': expanded.statefulSets[set.metadata.name]}\">\n" +
+    "<div class=\"list-pf-container\">\n" +
     "Logs are not available for stateful sets.\n" +
-    "<span ng-if=\"podsByOwnerUID[set.metadata.uid] | hashSize\">\n" +
+    "<span ng-if=\"podsByOwnerUID[set.metadata.uid] | size\">\n" +
     "To see application logs, view the logs for one of the stateful sets's\n" +
     "<a href=\"\" ng-click=\"viewPodsForSet(set)\">pods</a>.\n" +
     "</span>\n" +
@@ -11418,41 +11461,49 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'Builds'\">\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"kindSelector.selected.kind === 'All' || kindSelector.selected.kind === 'Builds'\" class=\"mar-bottom-xl\">\n" +
     "<h2>Builds</h2>\n" +
-    "<div class=\"list-view-pf\">\n" +
-    "<div class=\"list-group-item\" ng-if=\"!(filteredBuilds | hashSize)\">\n" +
-    "<div class=\"list-view-pf-main-info\">\n" +
+    "<div class=\"list-pf\" ng-class=\"{'list-pf-empty': !(filteredBuilds | size)}\">\n" +
+    "<div class=\"list-pf-item\" ng-if=\"!(filteredBuilds | size)\">\n" +
+    "<div class=\"list-pf-container\">\n" +
     "<ellipsis-pulser color=\"dark\" size=\"sm\" msg=\"Loading builds\" ng-if=\"!buildsLoaded\"></ellipsis-pulser>\n" +
     "<em>\n" +
-    "<div ng-if=\"(builds | hashSize) > 0\">The current filters are hiding all builds.</div>\n" +
-    "<span ng-if=\"buildsLoaded && (builds | hashSize) === 0\">There are no builds in this project.</span>\n" +
+    "<div ng-if=\"(builds | size) > 0\">The current filters are hiding all builds.</div>\n" +
+    "<span ng-if=\"buildsLoaded && (builds | size) === 0\">There are no builds in this project.</span>\n" +
     "</em>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"list-group-item list-group-item-expandable\" ng-repeat-start=\"build in filteredBuilds track by (build | uid)\" ng-click=\"toggleItem($event, this, build)\" ng-class=\"{'expanded': expanded.builds[build.metadata.name]}\">\n" +
-    "<div class=\"list-view-pf-checkbox\">\n" +
-    "<button class=\"sr-only\">{{expanded.builds[build.metadata.name] ? 'Collapse' : 'Expand'}}</button>\n" +
+    "<div class=\"list-pf-item\" ng-repeat=\"build in filteredBuilds track by (build | uid)\" ng-class=\"{'active': expanded.builds[build.metadata.name]}\">\n" +
+    "<div class=\"list-pf-container list-pf-container-thin\" ng-click=\"toggleItem($event, this, build)\">\n" +
+    "<div class=\"list-pf-chevron\">\n" +
+    "<a href=\"\" ng-click=\"toggleItem($event, this, build, true)\" role=\"button\" class=\"toggle-expand-link\">\n" +
     "<span ng-if=\"expanded.builds[build.metadata.name]\">\n" +
-    "<span class=\"fa fa-angle-down\"></span>\n" +
+    "<span class=\"fa fa-angle-down\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Collapse</span>\n" +
     "</span>\n" +
     "<span ng-if=\"!expanded.builds[build.metadata.name]\">\n" +
-    "<span class=\"fa fa-angle-right\"></span>\n" +
+    "<span class=\"fa fa-angle-right\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Expand</span>\n" +
     "</span>\n" +
+    "</a>\n" +
     "</div>\n" +
-    "<div class=\"list-view-pf-main-info\">\n" +
-    "<div class=\"list-view-pf-body\">\n" +
-    "<div class=\"list-view-pf-description\">\n" +
-    "<div class=\"list-group-item-heading\">\n" +
+    "<div class=\"list-pf-content list-pf-content-flex\">\n" +
+    "<div class=\"list-pf-content-wrapper\">\n" +
+    "<div class=\"list-pf-main-content\">\n" +
+    "<div class=\"list-pf-title\">\n" +
+    "<h3>\n" +
     "<a ng-href=\"{{build | navigateResourceURL}}\"><span ng-bind-html=\"build.metadata.name | highlightKeywords : filterKeywords\"></span></a>\n" +
     "<small>created <span am-time-ago=\"build.metadata.creationTimestamp\"></span></small>\n" +
+    "</h3>\n" +
     "</div>\n" +
-    "<div class=\"list-group-item-text\">\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-additional-content\">\n" +
+    "<div class=\"list-pf-additional-content-item\">\n" +
     "<build-status build=\"build\"></build-status>\n" +
     "</div>\n" +
-    "</div>\n" +
-    "<div class=\"list-view-pf-additional-info\">\n" +
-    "<div class=\"list-view-pf-additional-info-item\">\n" +
+    "<div class=\"list-pf-additional-content-item\">\n" +
     "<div class=\"text-prepended-icon word-break\" ng-if=\"build.spec.source.type || build.spec.revision.git.commit || build.spec.source.git.uri\">\n" +
     "<span class=\"fa fa-code\" aria-hidden=\"true\"></span>\n" +
     "<span ng-if=\"build.spec.revision.git.commit\">\n" +
@@ -11474,7 +11525,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-repeat-end ng-if=\"expanded.builds[build.metadata.name]\" class=\"list-group-expanded-section\" ng-class=\"{'expanded': expanded.builds[build.metadata.name]}\">\n" +
+    "<div class=\"list-pf-expansion collapse\" ng-if=\"expanded.builds[build.metadata.name]\" ng-class=\"{'in': expanded.builds[build.metadata.name]}\">\n" +
+    "<div class=\"list-pf-container\">\n" +
     "\n" +
     "<log-viewer ng-if=\"'builds/log' | canI : 'get'\" object=\"build\" context=\"projectContext\" options=\"logOptions.builds[build.metadata.name]\" empty=\"logEmpty.builds[build.metadata.name]\" run=\"logCanRun.builds[build.metadata.name]\" fixed-height=\"250\" full-log-url=\"(build | navigateResourceURL) + '?view=chromeless'\">\n" +
     "<div ng-if=\"build.status.startTimestamp && !logEmpty.builds[build.metadata.name]\" class=\"log-timestamps\" style=\"margin-left: 0\">\n" +

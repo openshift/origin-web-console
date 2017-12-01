@@ -4974,42 +4974,42 @@ b = _.filter(n.replicaSets, function(e) {
 return !n.filters.hideOlderResources || _.get(e, "status.replicas");
 }), n.filteredReplicaSets = s.filterForKeywords(b, w, P);
 };
-n.toggleItem = function(e, t, r) {
-var o = $(e.target);
-if (!o || !o.closest("a", t).length) {
-var i, s;
+n.toggleItem = function(e, t, r, o) {
+var i = $(e.target);
+if (o || !i || !i.closest("a", t).length) {
+var s, c;
 switch (r.kind) {
 case "Build":
-i = !n.expanded.builds[r.metadata.name], n.expanded.builds[r.metadata.name] = i, s = i ? "event.resource.highlight" : "event.resource.clear-highlight", p.$emit(s, r);
-var c = _.get(n.podsByName, a("annotation")(r, "buildPod"));
-c && p.$emit(s, c);
+s = !n.expanded.builds[r.metadata.name], n.expanded.builds[r.metadata.name] = s, c = s ? "event.resource.highlight" : "event.resource.clear-highlight", p.$emit(c, r);
+var l = _.get(n.podsByName, a("annotation")(r, "buildPod"));
+l && p.$emit(c, l);
 break;
 
 case "ReplicationController":
-i = !n.expanded.replicationControllers[r.metadata.name], n.expanded.replicationControllers[r.metadata.name] = i, s = i ? "event.resource.highlight" : "event.resource.clear-highlight", p.$emit(s, r);
-var l = a("annotation")(r, "deployerPod");
-l && p.$emit(s, {
+s = !n.expanded.replicationControllers[r.metadata.name], n.expanded.replicationControllers[r.metadata.name] = s, c = s ? "event.resource.highlight" : "event.resource.clear-highlight", p.$emit(c, r);
+var u = a("annotation")(r, "deployerPod");
+u && p.$emit(c, {
 kind: "Pod",
 metadata: {
-name: l
+name: u
 }
 }), _.each(n.podsByOwnerUID[r.metadata.uid], function(e) {
-p.$emit(s, e);
+p.$emit(c, e);
 });
 break;
 
 case "ReplicaSet":
-i = !n.expanded.replicaSets[r.metadata.name], n.expanded.replicaSets[r.metadata.name] = i, s = i ? "event.resource.highlight" : "event.resource.clear-highlight", p.$emit(s, r), _.each(n.podsByOwnerUID[r.metadata.uid], function(e) {
-p.$emit(s, e);
+s = !n.expanded.replicaSets[r.metadata.name], n.expanded.replicaSets[r.metadata.name] = s, c = s ? "event.resource.highlight" : "event.resource.clear-highlight", p.$emit(c, r), _.each(n.podsByOwnerUID[r.metadata.uid], function(e) {
+p.$emit(c, e);
 });
 break;
 
 case "Pod":
-i = !n.expanded.pods[r.metadata.name], n.expanded.pods[r.metadata.name] = i, s = i ? "event.resource.highlight" : "event.resource.clear-highlight", p.$emit(s, r);
+s = !n.expanded.pods[r.metadata.name], n.expanded.pods[r.metadata.name] = s, c = s ? "event.resource.highlight" : "event.resource.clear-highlight", p.$emit(c, r);
 break;
 
 case "StatefulSet":
-i = !n.expanded.statefulSets[r.metadata.name], n.expanded.statefulSets[r.metadata.name] = i, s = i ? "event.resource.highlight" : "event.resource.clear-highlight", p.$emit(s, r);
+s = !n.expanded.statefulSets[r.metadata.name], n.expanded.statefulSets[r.metadata.name] = s, c = s ? "event.resource.highlight" : "event.resource.clear-highlight", p.$emit(c, r);
 }
 }
 }, n.viewPodsForSet = function(e) {

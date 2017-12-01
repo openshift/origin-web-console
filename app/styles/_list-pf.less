@@ -2,6 +2,28 @@
 // PatternFly List
 // --------------------------------------------------
 
+.list-pf {
+  &.list-pf-empty {
+    border-bottom: 0;
+    .list-pf-item {
+      &:hover {
+        background-color: transparent;
+      }
+      > .list-pf-container {
+        cursor: initial;
+      }
+    }
+  }
+  .list-pf-item {
+    > .list-pf-container {
+      cursor: pointer;
+      .toggle-expand-link {
+        color: inherit;
+      }
+    }
+  }
+}
+
 .list-pf-actions {
   .dropdown-kebab-pf {
     .dropdown-toggle{
@@ -12,6 +34,11 @@
       right: -10px;
     }
   }
+}
+
+.list-pf-container.list-pf-container-thin {
+  padding-bottom: 10px;
+  padding-top: 10px;
 }
 
 .list-pf-content {

@@ -766,7 +766,6 @@ select[multiple].input-lg,textarea.input-lg{height:auto}
 .form-horizontal .form-group-sm .control-label{padding-top:3px;font-size:11px}
 }
 .btn{display:inline-block;margin-bottom:0;font-weight:600;text-align:center;vertical-align:middle;touch-action:manipulation;cursor:pointer;border:1px solid transparent;white-space:nowrap;padding:2px 6px;font-size:13px;line-height:1.66666667;border-radius:1px;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
-.bootstrap-switch,.datepicker table{-webkit-user-select:none;-moz-user-select:none}
 .btn.active.focus,.btn.active:focus,.btn.focus,.btn:active.focus,.btn:active:focus,.btn:focus{outline:dotted thin!important;outline:-webkit-focus-ring-color auto 5px!important;outline-offset:-2px!important}
 .btn.focus,.btn:focus,.btn:hover{color:#4d5258;text-decoration:none}
 .btn.active,.btn:active{outline:0;-webkit-box-shadow:inset 0 3px 5px rgba(0,0,0,.125);box-shadow:inset 0 3px 5px rgba(0,0,0,.125)}
@@ -2374,7 +2373,7 @@ td>.progress:first-child:last-child{margin-bottom:0;margin-top:3px}
 .datepicker-dropdown.datepicker-orient-bottom:after{top:-6px}
 .datepicker-dropdown.datepicker-orient-top:before{bottom:-7px;border-bottom:0;border-top:7px solid #bbb}
 .datepicker-dropdown.datepicker-orient-top:after{bottom:-6px;border-bottom:0;border-top:6px solid #fff}
-.datepicker table{margin:0;-webkit-touch-callout:none;-khtml-user-select:none;-ms-user-select:none;user-select:none}
+.datepicker table{margin:0;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
 .datepicker table tr td,.datepicker table tr th{text-align:center;width:30px;height:30px;border:none}
 .datepicker table tr td.new,.datepicker table tr td.old{color:#9c9c9c}
 .datepicker table tr td.day:hover,.datepicker table tr td.focused{background:#f1f1f1;cursor:pointer}
@@ -2510,8 +2509,7 @@ select.bs-select-hidden,select.selectpicker{display:none!important}
 .bs-donebutton .btn-group button{width:100%}
 .bs-searchbox+.bs-actionsbox{padding:0 8px 4px}
 .bs-searchbox .form-control{margin-bottom:0;width:100%;float:none}
-.bootstrap-switch{display:inline-block;direction:ltr;cursor:pointer;border-radius:1px;border:1px solid #bbb;position:relative;text-align:left;overflow:hidden;line-height:8px;z-index:0;-ms-user-select:none;user-select:none;vertical-align:middle;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;-o-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}
-.c3 text,.log-line-number{-moz-user-select:none;-webkit-user-select:none}
+.bootstrap-switch{display:inline-block;direction:ltr;cursor:pointer;border-radius:1px;border:1px solid #bbb;position:relative;text-align:left;overflow:hidden;line-height:8px;z-index:0;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;vertical-align:middle;-webkit-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;-o-transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s;transition:border-color ease-in-out .15s,box-shadow ease-in-out .15s}
 .bootstrap-switch .bootstrap-switch-container{display:inline-block;top:0;border-radius:1px;-webkit-transform:translate3d(0,0,0);transform:translate3d(0,0,0)}
 .bootstrap-switch .bootstrap-switch-handle-off,.bootstrap-switch .bootstrap-switch-handle-on,.bootstrap-switch .bootstrap-switch-label{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;cursor:pointer;display:inline-block!important;height:100%;padding:2px 6px;font-size:13px;line-height:21px}
 .ie9.layout-pf-alt-fixed .nav-pf-vertical-alt,.ie9.layout-pf-fixed .nav-pf-secondary-nav,.ie9.layout-pf-fixed .nav-pf-tertiary-nav,.ie9.layout-pf-fixed .nav-pf-vertical,.list-group-item-header{box-sizing:content-box}
@@ -2545,7 +2543,7 @@ select.bs-select-hidden,select.selectpicker{display:none!important}
 .bootstrap-touchspin .input-group-btn-vertical i{position:absolute;font-weight:400}
 .c3 svg{font:10px sans-serif}
 .c3 line,.c3 path{fill:none;stroke:#000}
-.c3 text{user-select:none}
+.c3 text{-webkit-user-select:none;-moz-user-select:none;user-select:none}
 .c3-bars path,.c3-event-rect,.c3-legend-item-tile,.c3-xgrid-focus,.c3-ygrid{shape-rendering:crispEdges}
 .c3-chart-arc text{fill:#fff;font-size:13px}
 .c3-grid text{fill:#aaa}
@@ -4941,8 +4939,14 @@ pre.clipped.scroll{max-height:150px;overflow:auto;width:100%}
 .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical,.layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.collapsed-nav{margin-left:0}
 .layout-pf.layout-pf-fixed .has-project-bar .container-pf-nav-pf-vertical{transition:margin-left .1s ease-in-out}
 .surface-shaded{background-color:#ededed;min-height:100%}
+.list-pf.list-pf-empty{border-bottom:0}
+.list-pf.list-pf-empty .list-pf-item:hover{background-color:transparent}
+.list-pf.list-pf-empty .list-pf-item>.list-pf-container{cursor:initial}
+.list-pf .list-pf-item>.list-pf-container{cursor:pointer}
+.list-pf .list-pf-item>.list-pf-container .toggle-expand-link{color:inherit}
 .list-pf-actions .dropdown-kebab-pf .dropdown-toggle{font-size:18px;margin-right:-5px}
 .list-pf-actions .dropdown-kebab-pf .dropdown-menu.dropdown-menu-right{right:-10px}
+.list-pf-container.list-pf-container-thin{padding-bottom:10px;padding-top:10px}
 .list-pf-content .alert:first-child{margin-top:0}
 .list-pf-chevron+.list-pf-content{align-items:center;display:flex;flex-grow:1}
 .list-pf-chevron+.list-pf-content .list-pf-details,.list-pf-chevron+.list-pf-content .list-pf-name{flex-grow:1}
@@ -4972,7 +4976,7 @@ h2+.list-view-pf{margin-top:20px}
 .list-view-pf .list-group-item-heading small{overflow:hidden;text-overflow:ellipsis;color:#9c9c9c}
 .list-view-pf .list-group-item-text{margin-bottom:5px}
 .list-view-pf-additional-info-item{display:inline-block;text-align:left;width:100%}
-.list-view-pf-additional-info-item image-names{display:block}
+.list-view-pf-additional-info-item image-names,.monitoring-page .list-pf-expansion .list-pf-container{display:block}
 .list-view-pf-description{flex:1 0 55%}
 .list-view-pf-main-info{padding-bottom:10px;padding-top:10px}
 @media (max-width:991px){.list-view-pf-main-info .list-view-pf-body{display:block}
@@ -4981,7 +4985,23 @@ h2+.list-view-pf{margin-top:20px}
 .list-view-pf .list-group-item-heading,.list-view-pf .list-group-item-text{flex:1 0 auto;margin:0;padding:0 20px 0 0;width:50%}
 .list-view-pf-additional-info{width:40%}
 .list-view-pf-description{width:60%}
+.monitoring-page .list-pf-main-content{flex-basis:30%}
 }
+.monitoring-page .list-pf-content{min-height:45px}
+.monitoring-page .list-pf-expansion .log-fixed-height.empty-state-message,.monitoring-page .list-pf-expansion .metrics .empty-state-message{margin:10px 0 0;padding:0;text-align:left}
+.monitoring-page .list-pf-expansion .log-fixed-height.empty-state-message h2,.monitoring-page .list-pf-expansion .metrics .empty-state-message h2{margin-top:0}
+.monitoring-page .list-pf-expansion .metrics .empty-state-message .pficon-error-circle-o{display:none}
+.monitoring-page .list-pf-main-content{font-size:13px;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
+.monitoring-page .list-pf-main-content .list-pf-title{width:100%}
+.monitoring-page .list-pf-main-content .list-pf-title h3{font-size:13px;font-weight:700;line-height:inherit;margin-bottom:0;margin-top:0}
+.monitoring-page .list-pf-main-content .list-pf-title small{display:block;font-size:11px;font-weight:400;line-height:normal;overflow:hidden;text-overflow:ellipsis;color:#9c9c9c}
+.monitoring-page .list-pf-additional-content small{white-space:nowrap}
+.monitoring-page .list-pf-additional-content .list-pf-additional-content-item{align-self:center;width:100%}
+@media (min-width:992px){.monitoring-page .list-pf-additional-content{flex-basis:70%}
+.monitoring-page .list-pf-additional-content .list-pf-additional-content-item{width:40%}
+.monitoring-page .list-pf-additional-content .list-pf-additional-content-item+.list-pf-additional-content-item{width:50%}
+}
+.monitoring-page .text-prepended-icon .fa,.monitoring-page .text-prepended-icon .pficon{margin-right:7px}
 #header-logo{background-image:url(../images/logo-origin-thin.svg);background-position:left center;background-repeat:no-repeat;height:40px;width:196px}
 @media (min-width:768px){#header-logo{width:230px}
 }
@@ -5756,7 +5776,7 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .log-line{color:#d1d1d1}
 .log-line:hover{background-color:#22262b;color:#ededed}
 .log-line-number:before{content:attr(data-line-number)}
-.log-line-number{-ms-user-select:none;border-right:1px #272b30 solid;padding-right:10px;vertical-align:top;white-space:nowrap;width:60px;color:#72767b}
+.log-line-number{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none;border-right:1px #272b30 solid;padding-right:10px;vertical-align:top;white-space:nowrap;width:60px;color:#72767b}
 .log-line-text{padding:0 10px;white-space:pre-wrap;width:100%}
 .appended-icon,.project-date [am-time-ago],.projects-list [am-time-ago]{white-space:nowrap}
 .log-line-text::-moz-selection{color:#101214;background:#e5e5e5}
