@@ -8938,7 +8938,8 @@ e.hideBuild = n(t);
 },
 templateUrl: "views/directives/_build-close.html"
 };
-} ]), angular.module("openshiftConsole").directive("createSecret", [ "$filter", "AuthorizationService", "DataService", "NotificationsService", "DNS1123_SUBDOMAIN_VALIDATION", function(e, t, n, a, r) {
+} ]), angular.module("openshiftConsole").directive("createSecret", [ "$filter", "AuthorizationService", "APIService", "DataService", "NotificationsService", "DNS1123_SUBDOMAIN_VALIDATION", function(e, t, n, a, r, o) {
+var i = n.getPreferredVersion("serviceaccounts"), s = n.getPreferredVersion("secrets");
 return {
 restrict: "E",
 scope: {
@@ -8949,8 +8950,8 @@ onCreate: "&",
 onCancel: "&"
 },
 templateUrl: "views/directives/create-secret.html",
-link: function(o) {
-o.nameValidation = r, o.secretAuthTypeMap = {
+link: function(n) {
+n.nameValidation = o, n.secretAuthTypeMap = {
 image: {
 label: "Image Secret",
 authTypes: [ {
@@ -8971,129 +8972,129 @@ id: "kubernetes.io/ssh-auth",
 label: "SSH Key"
 } ]
 }
-}, o.secretTypes = _.keys(o.secretAuthTypeMap), o.type ? o.newSecret = {
-type: o.type,
-authType: o.secretAuthTypeMap[o.type].authTypes[0].id,
+}, n.secretTypes = _.keys(n.secretAuthTypeMap), n.type ? n.newSecret = {
+type: n.type,
+authType: n.secretAuthTypeMap[n.type].authTypes[0].id,
 data: {},
-linkSecret: !_.isEmpty(o.serviceAccountToLink),
-pickedServiceAccountToLink: o.serviceAccountToLink || ""
-} : o.newSecret = {
+linkSecret: !_.isEmpty(n.serviceAccountToLink),
+pickedServiceAccountToLink: n.serviceAccountToLink || ""
+} : n.newSecret = {
 type: "source",
 authType: "kubernetes.io/basic-auth",
 data: {},
 linkSecret: !1,
 pickedServiceAccountToLink: ""
-}, o.add = {
+}, n.add = {
 gitconfig: !1,
 cacert: !1
-}, t.canI("serviceaccounts", "list") && t.canI("serviceaccounts", "update") && n.list("serviceaccounts", o, function(e) {
-o.serviceAccounts = e.by("metadata.name"), o.serviceAccountsNames = _.keys(o.serviceAccounts);
+}, t.canI("serviceaccounts", "list") && t.canI("serviceaccounts", "update") && a.list(i, n, function(e) {
+n.serviceAccounts = e.by("metadata.name"), n.serviceAccountsNames = _.keys(n.serviceAccounts);
 });
-var i = function(e, t) {
-var n = {
+var c = function(e, t) {
+var a = {
 apiVersion: "v1",
 kind: "Secret",
 metadata: {
-name: o.newSecret.data.secretName
+name: n.newSecret.data.secretName
 },
 type: t,
 data: {}
 };
 switch (t) {
 case "kubernetes.io/basic-auth":
-e.passwordToken ? n.data = {
+e.passwordToken ? a.data = {
 password: window.btoa(e.passwordToken)
-} : n.type = "Opaque", e.username && (n.data.username = window.btoa(e.username)), e.gitconfig && (n.data[".gitconfig"] = window.btoa(e.gitconfig)), e.cacert && (n.data["ca.crt"] = window.btoa(e.cacert));
+} : a.type = "Opaque", e.username && (a.data.username = window.btoa(e.username)), e.gitconfig && (a.data[".gitconfig"] = window.btoa(e.gitconfig)), e.cacert && (a.data["ca.crt"] = window.btoa(e.cacert));
 break;
 
 case "kubernetes.io/ssh-auth":
-n.data = {
+a.data = {
 "ssh-privatekey": window.btoa(e.privateKey)
-}, e.gitconfig && (n.data[".gitconfig"] = window.btoa(e.gitconfig));
+}, e.gitconfig && (a.data[".gitconfig"] = window.btoa(e.gitconfig));
 break;
 
 case "kubernetes.io/dockerconfigjson":
-var a = window.btoa(e.dockerConfig);
-JSON.parse(e.dockerConfig).auths ? n.data[".dockerconfigjson"] = a : (n.type = "kubernetes.io/dockercfg", n.data[".dockercfg"] = a);
+var r = window.btoa(e.dockerConfig);
+JSON.parse(e.dockerConfig).auths ? a.data[".dockerconfigjson"] = r : (a.type = "kubernetes.io/dockercfg", a.data[".dockercfg"] = r);
 break;
 
 case "kubernetes.io/dockercfg":
-var r = window.btoa(e.dockerUsername + ":" + e.dockerPassword), i = {};
+var o = window.btoa(e.dockerUsername + ":" + e.dockerPassword), i = {};
 i[e.dockerServer] = {
 username: e.dockerUsername,
 password: e.dockerPassword,
 email: e.dockerMail,
-auth: r
-}, n.data[".dockercfg"] = window.btoa(JSON.stringify(i));
+auth: o
+}, a.data[".dockercfg"] = window.btoa(JSON.stringify(i));
 }
-return n;
-}, s = function() {
-a.hideNotification("create-secret-error");
-}, c = function(t) {
-var r = angular.copy(o.serviceAccounts[o.newSecret.pickedServiceAccountToLink]);
-switch (o.newSecret.type) {
+return a;
+}, l = function() {
+r.hideNotification("create-secret-error");
+}, u = function(t) {
+var o = angular.copy(n.serviceAccounts[n.newSecret.pickedServiceAccountToLink]);
+switch (n.newSecret.type) {
 case "source":
-r.secrets.push({
+o.secrets.push({
 name: t.metadata.name
 });
 break;
 
 case "image":
-r.imagePullSecrets.push({
+o.imagePullSecrets.push({
 name: t.metadata.name
 });
 }
-n.update("serviceaccounts", o.newSecret.pickedServiceAccountToLink, r, o).then(function(e) {
-a.addNotification({
+a.update(i, n.newSecret.pickedServiceAccountToLink, o, n).then(function(e) {
+r.addNotification({
 type: "success",
 message: "Secret " + t.metadata.name + " was created and linked with service account " + e.metadata.name + "."
-}), o.onCreate({
+}), n.onCreate({
 newSecret: t
 });
-}, function(n) {
-a.addNotification({
+}, function(a) {
+r.addNotification({
 type: "success",
 message: "Secret " + t.metadata.name + " was created."
-}), o.serviceAccountToLink || a.addNotification({
+}), n.serviceAccountToLink || r.addNotification({
 id: "secret-sa-link-error",
 type: "error",
-message: "An error occurred while linking the secret with service account " + o.newSecret.pickedServiceAccountToLink + ".",
-details: e("getErrorDetails")(n)
-}), o.onCreate({
+message: "An error occurred while linking the secret with service account " + n.newSecret.pickedServiceAccountToLink + ".",
+details: e("getErrorDetails")(a)
+}), n.onCreate({
 newSecret: t
 });
 });
-}, l = _.debounce(function() {
+}, d = _.debounce(function() {
 try {
-JSON.parse(o.newSecret.data.dockerConfig), o.invalidConfigFormat = !1;
+JSON.parse(n.newSecret.data.dockerConfig), n.invalidConfigFormat = !1;
 } catch (e) {
-o.invalidConfigFormat = !0;
+n.invalidConfigFormat = !0;
 }
 }, 300, {
 leading: !0
 });
-o.aceChanged = l, o.nameChanged = function() {
-o.nameTaken = !1;
-}, o.create = function() {
-s();
-var r = i(o.newSecret.data, o.newSecret.authType);
-n.create("secrets", null, r, o).then(function(e) {
-o.newSecret.linkSecret && o.serviceAccountsNames.contains(o.newSecret.pickedServiceAccountToLink) && t.canI("serviceaccounts", "update") ? c(e) : (a.addNotification({
+n.aceChanged = d, n.nameChanged = function() {
+n.nameTaken = !1;
+}, n.create = function() {
+l();
+var o = c(n.newSecret.data, n.newSecret.authType);
+a.create(s, null, o, n).then(function(e) {
+n.newSecret.linkSecret && n.serviceAccountsNames.contains(n.newSecret.pickedServiceAccountToLink) && t.canI("serviceaccounts", "update") ? u(e) : (r.addNotification({
 type: "success",
-message: "Secret " + r.metadata.name + " was created."
-}), o.onCreate({
+message: "Secret " + o.metadata.name + " was created."
+}), n.onCreate({
 newSecret: e
 }));
 }, function(t) {
-"AlreadyExists" !== (t.data || {}).reason ? a.addNotification({
+"AlreadyExists" !== (t.data || {}).reason ? r.addNotification({
 id: "create-secret-error",
 type: "error",
 message: "An error occurred while creating the secret.",
 details: e("getErrorDetails")(t)
-}) : o.nameTaken = !0;
+}) : n.nameTaken = !0;
 });
-}, o.cancel = function() {
-s(), o.onCancel();
+}, n.cancel = function() {
+l(), n.onCancel();
 };
 }
 };
