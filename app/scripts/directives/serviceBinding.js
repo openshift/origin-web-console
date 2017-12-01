@@ -29,8 +29,10 @@
                           Logger,
                           SecretsService,
                           ServiceInstancesService) {
+
     var ctrl = this;
     ctrl.serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
+    ctrl.secretsVersion = APIService.getPreferredVersion('secrets');
     ctrl.showParameterValues = false;
 
     var context = {
@@ -63,7 +65,7 @@
       // Fill in the secret values if they are available to the user
       if (ctrl.allowParametersReveal) {
         _.each(_.get(ctrl.binding, 'spec.parametersFrom'), function (parametersSource) {
-          DataService.get('secrets', _.get(parametersSource, 'secretKeyRef.name'), context).then(function (secret) {
+          DataService.get(ctrl.secretsVersion, _.get(parametersSource, 'secretKeyRef.name'), context).then(function (secret) {
             try {
               var secretData = JSON.parse(SecretsService.decodeSecretData(secret.data)[parametersSource.secretKeyRef.key]);
               // TODO: Only include fields from the secret that are part of the schema
