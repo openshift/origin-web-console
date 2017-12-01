@@ -4801,18 +4801,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tab-heading translate>Import YAML / JSON</uib-tab-heading>\n" +
     "<from-file project=\"project\" context=\"context\"></from-file>\n" +
     "</uib-tab>\n" +
-    "<uib-tab active=\"selectedTab.fromOctopus\">\n" +
-    "<uib-tab-heading>Octopus</uib-tab-heading>\n" +
-    "<from>\n" +
-    "<open-shift project=\"project\" context=\"context\"></open-shift>\n" +
-    "</from>\n" +
-    "</uib-tab>\n" +
-    "<uib-tab active=\"selectedTab.fromSquid\">\n" +
-    "<uib-tab-heading>Squid</uib-tab-heading>\n" +
-    "<from>\n" +
-    "<open-squid project=\"project\" context=\"context\"></open-squid>\n" +
-    "</from>\n" +
-    "</uib-tab>\n" +
     "</uib-tabset>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7112,14 +7100,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ul role=\"menu\" class=\"uib-dropdown-menu dropdown-menu dropdown-menu-right\">\n" +
     "<li ng-if-start=\"!catalogLandingPageEnabled\" role=\"menuitem\"><a ng-href=\"project/{{projectName}}/create?tab=fromCatalog\" translate>Browse Catalog</a></li>\n" +
     "<li role=\"menuitem\"><a ng-href=\"project/{{projectName}}/create?tab=deployImage\" translate>Deploy Image</a></li>\n" +
-    "<li role=\"menuitem\"><a ng-href=\"project/{{projectName}}/create?tab=fromFile\" translate>Import YAML / JSON</a></li>\n" +
-    "<li role=\"menuitem\"><a ng-href=\"project/{{projectName}}/create?tab=fromOctopus\">Octopus</a></li>\n" +
-    "<li ng-if-end role=\"menuitem\"><a ng-href=\"project/{{projectName}}/create?tab=fromSquid\">Squid</a></li>\n" +
+    "<li ng-if-end role=\"menuitem\"><a ng-href=\"project/{{projectName}}/create?tab=fromFile\" translate>Import YAML / JSON</a></li>\n" +
     "<li ng-if-start=\"catalogLandingPageEnabled\" role=\"menuitem\"><a href=\"/\" translate>Browse Catalog</a></li>\n" +
     "<li role=\"menuitem\"><a href=\"\" ng-click=\"showOrderingPanel('deployImage')\" translate>Deploy Image</a></li>\n" +
-    "<li role=\"menuitem\"><a href=\"\" ng-click=\"showOrderingPanel('fromFile')\" translate>Import YAML / JSON</a></li>\n" +
-    "<li role=\"menuitem\"><a href=\"\" ng-click=\"showOrderingPanel('fromOctopus')\">Octopus</a></li>\n" +
-    "<li ng-if-end role=\"menuitem\"><a href=\"\" ng-click=\"showOrderingPanel('fromSquid')\">Squid</a></li>\n" +
+    "<li ng-if-end role=\"menuitem\"><a href=\"\" ng-click=\"showOrderingPanel('fromFile')\" translate>Import YAML / JSON</a></li>\n" +
     "</ul>\n" +
     "</div>\n" +
     "<div row extension-point extension-name=\"nav-system-status-mobile\" extension-types=\"dom\" class=\"navbar-flex-btn hide-if-empty\"></div>\n" +
@@ -7651,91 +7635,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" ng-click=\"$ctrl.toggleParamsTable()\" translate>Show parameter values</a>\n" +
     "</div>\n" +
     "<key-value-editor ng-if=\"$ctrl.showParamsTable\" entries=\"$ctrl.parameters.all\" key-placeholder=\"{{'Name'|translate}}\" value-placeholder=\"{{'Value'|translate}}\" cannot-add cannot-delete cannot-sort show-header is-readonly></key-value-editor>\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('views/directives/open-shift.html',
-    "<div class=\"open-shift\">\n" +
-    "<ng-form name=\"$ctrl.templateForm\">\n" +
-    "\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"App_name\" class=\"required\">App_name</label>\n" +
-    "<div ng-class=\"{'has-error': form.APP_NAME.$invalid}\">\n" +
-    "<input type=\"text\" required select-on-focus placeholder=\"应用组名称\" ng-model=\"app.APP_NAME\" id=\"APP_NAME\" name=\"APP_NAME\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "<div class=\"help-block\">\n" +
-    "应用组名称\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"Octopus_api_name\" class=\"required\">Octopus_api_name</label>\n" +
-    "<div ng-class=\"{'has-error': form.OCTOPUS_API_NAME.$invalid}\">\n" +
-    "<input type=\"text\" required select-on-focus placeholder=\"octopus_api\" ng-model=\"app.OCTOPUS_API_NAME\" id=\"OCTOPUS_API_NAME\" name=\"OCTOPUS_API_NAME\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "<div class=\"help-block\">\n" +
-    "Octopus API组件的名称\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"OCTOPUS_CONSOLE_NAME\" class=\"required\">Octopus_console_name</label>\n" +
-    "<div ng-class=\"{'has-error': form.OCTOPUS_CONSOLE_NAME.$invalid}\">\n" +
-    "<input type=\"text\" required select-on-focus placeholder=\"octopus_console\" ng-model=\"app.OCTOPUS_CONSOLE_NAME\" id=\"OCTOPUS_CONSOLE_NAME\" name=\"OCTOPUS_CONSOLE_NAME\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "<div class=\"help-block\">\n" +
-    "Octopus console组件的名称\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"K8s_uri\" class=\"required\">K8s_uri</label>\n" +
-    "<div ng-class=\"{'has-error': form.K8S_URI.$invalid}\">\n" +
-    "<input type=\"text\" required select-on-focus placeholder=\"http://k8s.uri\" ng-model=\"app.K8S_URI\" id=\"K8S_URI\" name=\"K8S_URI\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "<div class=\"help-block\">\n" +
-    "K8s的url路径\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"REGISTRY_URI\" class=\"required\">Registry_uri</label>\n" +
-    "<div ng-class=\"{'has-error': form.REGISTRY_URI.$invalid}\">\n" +
-    "<input type=\"text\" required select-on-focus placeholder=\"http://registry.uri\" ng-model=\"app.REGISTRY_URI\" id=\"REGISTRY_URI\" name=\"REGISTRY_URI\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "<div class=\"help-block\">\n" +
-    "Registry的url路径\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"SECRET_NAME\" class=\"required\">Secret_name</label>\n" +
-    "<div ng-class=\"{'has-error': form.SECRET_NAME.$invalid}\">\n" +
-    "<input type=\"text\" required select-on-focus placeholder=\"secret_name\" ng-model=\"app.SECRET_NAME\" id=\"SECRET_NAME\" name=\"SECRET_NAME\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "<div class=\"help-block\">\n" +
-    "Secret的名称，用来保存Mysql的密码\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"SECRET_KEY\" class=\"required\">Secret_key</label>\n" +
-    "<div ng-class=\"{'has-error': form.SECRET_KEY.$invalid}\">\n" +
-    "<input type=\"text\" required select-on-focus placeholder=\"sercret_key\" ng-model=\"app.SECRET_KEY\" id=\"SECRET_KEY\" name=\"SECRET_KEY\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "<div class=\"help-block\">\n" +
-    "Secret的key值，用来保存Mysql的密码\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"SPRING_DATASOURCE_JDBC\" class=\"required\">Spring_datasource_jdbc</label>\n" +
-    "<div ng-class=\"{'has-error': form.SPRING_DATASOURCE_JDBC.$invalid}\">\n" +
-    "<input type=\"text\" required select-on-focus placeholder=\"jdbc:mysql://${OCTOPUS_DB_SERVICE_NAME}:3306/saturn_console?useUnicode=true\\u0026characterEncoding=utf-8\\u0026allowMultiQueries=true\" ng-model=\"app.SPRING_DATASOURCE_JDBC\" id=\"SPRING_DATASOURCE_JDBC\" name=\"SPRING_DATASOURCE_JDBC\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "<div class=\"help-block\">\n" +
-    "Mysql的地址\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"!isDialog\" class=\"button-group gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
-    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"create()\" value=\"\" ng-disabled=\"form.$invalid\" translate>Create</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"#\" back translate>Cancel</a>\n" +
-    "</div>\n" +
-    "</ng-form>\n" +
     "</div>"
   );
 
@@ -8935,84 +8834,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{selectorLabel}}={{selectorValue}}\n" +
     "</div>\n" +
     "</div>\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('views/directives/squid-form.html',
-    "<div class=\"open-squid\">\n" +
-    "<ng-form name=\"$ctrl.squidForm\">\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"SECRET_NAME\" class=\"required\">{{ $ctrl.appParams['SECRET_NAME'].displayName }}</label>\n" +
-    "<div ng-class=\"{'has-error': form.SECRET_NAME.$invalid}\">\n" +
-    "<input type=\"text\" required select-on-focus placeholder=\"Name\" ng-model=\"$ctrl.appParams['SECRET_NAME'].value\" id=\"SECRET_NAME\" name=\"SECRET_NAME\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"SECRET_KEY\" class=\"required\">{{ $ctrl.appParams['SECRET_KEY'].displayName }}</label>\n" +
-    "<div ng-class=\"{'has-error': form.SECRET_KEY.$invalid}\">\n" +
-    "<input type=\"text\" required select-on-focus placeholder=\"Name\" ng-model=\"$ctrl.appParams['SECRET_KEY'].value\" id=\"SECRET_KEY\" name=\"SECRET_KEY\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"Config\" class=\"required\">{{ $ctrl.appParams['SQUID_CONFIG_NAME'].displayName }}</label>\n" +
-    "<div ng-class=\"{'has-error': form.SQUID_CONFIG_NAME.$invalid}\">\n" +
-    "<input type=\"text\" required select-on-focus placeholder=\"Squid Config Name\" ng-model=\"$ctrl.appParams['SQUID_CONFIG_NAME'].value\" id=\"Config\" name=\"SQUID_CONFIG_NAME\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"Console\" class=\"required\">{{ $ctrl.appParams['SQUID_CONSOLE_NAME'].displayName }}</label>\n" +
-    "<div ng-class=\"{'has-error': form.SQUID_CONSOLE_NAME.$invalid}\">\n" +
-    "<input type=\"text\" required select-on-focus placeholder=\"Squid Console Name\" ng-model=\"$ctrl.appParams['SQUID_CONSOLE_NAME'].value\" id=\"Console\" name=\"SQUID_CONSOLE_NAME\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"UE\" class=\"required\">{{ $ctrl.appParams['SQUID_UE_NAME'].displayName }}</label>\n" +
-    "<div ng-class=\"{'has-error': form.SQUID_UE_NAME.$invalid}\">\n" +
-    "<input type=\"text\" required select-on-focus placeholder=\"Squid UE Name\" ng-model=\"$ctrl.appParams['SQUID_UE_NAME'].value\" id=\"UE\" name=\"SQUID_UE_NAME\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"demoClient\" class=\"required\">{{ $ctrl.appParams['SQUID_DEMO_CLIENT_NAME'].displayName }}</label>\n" +
-    "<div ng-class=\"{'has-error': form.SQUID_DEMO_CLIENT_NAME.$invalid}\">\n" +
-    "<input type=\"text\" required select-on-focus placeholder=\"Squid Demo Client Name\" ng-model=\"$ctrl.appParams['SQUID_DEMO_CLIENT_NAME'].value\" id=\"demoClient\" name=\"SQUID_DEMO_CLIENT_NAME\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"demoServer\" class=\"required\">{{ $ctrl.appParams['SQUID_DEMO_SERVER_NAME'].displayName }}</label>\n" +
-    "<div ng-class=\"{'has-error': form.SQUID_DEMO_SERVER_NAME.$invalid}\">\n" +
-    "<input type=\"text\" required select-on-focus placeholder=\"Squid Demo Server Name\" ng-model=\"$ctrl.appParams['SQUID_DEMO_SERVER_NAME'].value\" id=\"demoServer\" name=\"SQUID_DEMO_SERVER_NAME\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"address\" class=\"required\">{{ $ctrl.appParams['ZOOKEEPER_ADDRESS'].displayName }}</label>\n" +
-    "<div ng-class=\"{'has-error': form.ZOOKEEPER_ADDRESS.$invalid}\">\n" +
-    "<input type=\"text\" required select-on-focus placeholder=\"Zookeeper Address\" ng-model=\"$ctrl.appParams['ZOOKEEPER_ADDRESS'].value\" id=\"address\" name=\"ZOOKEEPER_ADDRESS\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"DBAddress\" class=\"required\">{{ $ctrl.appParams['SQUID_DB_SERVICE_ADDRESS'].displayName }}</label>\n" +
-    "<div ng-class=\"{'has-error': form.SQUID_DB_SERVICE_ADDRESS.$invalid}\">\n" +
-    "<input type=\"text\" required select-on-focus placeholder=\"Squid DB Address\" ng-model=\"$ctrl.appParams['SQUID_DB_SERVICE_ADDRESS'].value\" id=\"DBAddress\" name=\"SQUID_DB_SERVICE_ADDRESS\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"registry\" class=\"required\">{{ $ctrl.appParams['SQUID_REGISTRY_URI'].displayName }}</label>\n" +
-    "<div ng-class=\"{'has-error': form.SQUID_REGISTRY_URI.$invalid}\">\n" +
-    "<input type=\"text\" required select-on-focus placeholder=\"Squid Registry URI\" ng-model=\"$ctrl.appParams['SQUID_REGISTRY_URI'].value\" id=\"registry\" name=\"SQUID_REGISTRY_URI\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label for=\"k8sUrl\" class=\"required\">{{ $ctrl.appParams['K8S_BASE_PATH'].displayName }}</label>\n" +
-    "<div ng-class=\"{'has-error': form.K8S_BASE_PATH.$invalid}\">\n" +
-    "<input type=\"text\" required select-on-focus placeholder=\"Squid Registry URI\" ng-model=\"$ctrl.appParams['K8S_BASE_PATH'].value\" id=\"k8sUrl\" name=\"K8S_BASE_PATH\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\">\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div ng-if=\"!isDialog\" class=\"button-group gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
-    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"$ctrl.createFromSquid()\" value=\"\" ng-disabled=\"form.squidForm.$invalid\" translate>Create</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"#\" back translate>Cancel</a>\n" +
-    "</div>\n" +
-    "</ng-form>\n" +
     "</div>"
   );
 
