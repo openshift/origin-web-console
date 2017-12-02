@@ -7931,11 +7931,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"sr-only\">Clear notification</span>\n" +
     "<span aria-hidden=\"true\" class=\"pficon pficon-close\"></span>\n" +
     "</button>\n" +
-    "<div uib-dropdown class=\"dropdown pull-right dropdown-kebab-pf\" ng-if=\"notification.actions.length\">\n" +
+    "<div uib-dropdown dropdown-append-to-body class=\"dropdown pull-right dropdown-kebab-pf\" ng-if=\"notification.actions.length\">\n" +
     "<button uib-dropdown-toggle class=\"btn btn-link dropdown-toggle\" type=\"button\" id=\"dropdownKebabRight-{{$id}}\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"true\">\n" +
     "<span class=\"fa fa-ellipsis-v\"></span>\n" +
     "</button>\n" +
-    "<ul class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"dropdownKebabRight\">\n" +
+    "<ul class=\"uib-dropdown-menu dropdown-menu dropdown-menu-right\" aria-labelledby=\"dropdownKebabRight\">\n" +
     "<li ng-repeat=\"action in notification.actions\" role=\"{{action.isSeparator === true ? 'separator' : 'menuitem'}}\" ng-class=\"{'divider': action.isSeparator === true, 'disabled': action.isDisabled === true}\">\n" +
     "<a ng-if=\"!action.isSeparator\" href=\"\" class=\"secondary-action\" title=\"{{action.title}}\" ng-click=\"action.onClick(notification)\">\n" +
     "{{action.name}}\n" +
