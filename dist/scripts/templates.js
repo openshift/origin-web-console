@@ -8720,9 +8720,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"osc-secret-actions\" ng-if=\"!disableInput\">\n" +
     "<span ng-if=\"canAddSourceSecret()\">\n" +
     "<a href=\"\" role=\"button\" ng-click=\"addSourceSecret()\">Add Another Secret</a>\n" +
-    "<span ng-if=\"'secrets' | canI : 'create'\" class=\"action-divider\">|</span>\n" +
+    "<span ng-if=\"secretsVersion | canI : 'create'\" class=\"action-divider\">|</span>\n" +
     "</span>\n" +
-    "<a href=\"\" ng-if=\"'secrets' | canI : 'create'\" role=\"button\" ng-click=\"openCreateSecretModal()\">Create New Secret</a>\n" +
+    "<a href=\"\" ng-if=\"secretsVersion | canI : 'create'\" role=\"button\" ng-click=\"openCreateSecretModal()\">Create New Secret</a>\n" +
     "</div>\n" +
     "</ng-form>"
   );

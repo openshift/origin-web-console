@@ -10178,7 +10178,7 @@ e !== t && o(e);
 });
 }
 };
-} ]), angular.module("openshiftConsole").directive("oscSecrets", [ "$uibModal", "$filter", "DataService", "SecretsService", function(e, t, n, a) {
+} ]), angular.module("openshiftConsole").directive("oscSecrets", [ "$uibModal", "$filter", "APIService", "DataService", "SecretsService", function(e, t, n, a, r) {
 return {
 restrict: "E",
 scope: {
@@ -10194,7 +10194,7 @@ allowMultipleSecrets: "=?"
 },
 templateUrl: "views/directives/osc-secrets.html",
 link: function(t) {
-t.canAddSourceSecret = function() {
+t.secretsVersion = n.getPreferredVersion("secrets"), t.canAddSourceSecret = function() {
 if (!t.allowMultipleSecrets) return !1;
 var e = _.last(t.pickedSecrets);
 return !!e && e.name;
@@ -10216,10 +10216,10 @@ templateUrl: "views/modals/create-secret.html",
 controller: "CreateSecretModalController",
 scope: t
 }).result.then(function(e) {
-n.list("secrets", {
+a.list(t.secretsVersion, {
 namespace: t.namespace
 }, function(n) {
-var r = a.groupSecretsByType(n), o = _.mapValues(r, function(e) {
+var a = r.groupSecretsByType(n), o = _.mapValues(a, function(e) {
 return _.map(e, "metadata.name");
 });
 t.secretsByType = _.each(o, function(e) {
