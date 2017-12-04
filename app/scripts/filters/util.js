@@ -1,15 +1,6 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  /**
-   * Replace special chars with underscore (e.g. '.')
-   * @returns {Function}
-   */
-  .filter("underscore", function(){
-    return function(value){
-      return value.replace(/\./g, '_');
-    };
-  })
   .filter("defaultIfBlank", function(){
     return function(input, defaultValue){
       if(input === null) {
