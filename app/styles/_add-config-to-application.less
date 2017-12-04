@@ -1,6 +1,18 @@
 .add-config-to-application {
+  .application-select {
+    width: 100%;
+  }
   .catalogs-overlay-panel {
     max-width: 600px;
+  }
+
+  .choice-contents {
+    margin-bottom: 10px;
+    margin-left: @grid-gutter-width / 2;
+
+    .has-warning {
+      margin-bottom: 10px;
+    }
   }
 
   .container-options {
@@ -26,9 +38,6 @@
   .dialog-body {
     padding: 20px;
 
-    .add-choice {
-      margin-bottom: 10px;
-    }
     .button-group {
       .btn {
         margin-left: 10px;
@@ -48,8 +57,26 @@
     }
   }
 
-  .help-block {
+  .field-help {
+    position: relative;
+    text-decoration: none;
+    top: 1px;
+  }
+
+  .form-group {
+    display: flex;
     margin-bottom: 10px;
+    .control-label {
+      margin-bottom: 0;
+      margin-right:  @grid-gutter-width / 2;
+      padding-top: 3px;
+      label.required:before {
+        left: (@grid-gutter-width / 2) + 10px;
+      }
+    }
+    .control-input {
+      flex: 1 0 0%;
+    }
   }
 
   .updating {
@@ -61,9 +88,5 @@
     right: 0;
     top: 55px;
     z-index: 1000;
-  }
-
-  .volume-options {
-    margin-left: 20px;
   }
 }

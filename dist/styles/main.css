@@ -5307,7 +5307,7 @@ to{background-color:transparent}
 .pipeline-status-bar .pipeline-line:before{content:'';position:absolute;height:100%;animation:progress-line .35s ease-in forwards}
 .pipeline-circle{background:#d1d1d1;width:18px;height:18px;border-radius:9px;margin-top:-11px;position:relative;transform:rotate(-90deg)}
 .pipeline-circle:after{position:absolute;color:#fff;font-family:FontAwesome;font-size:12px;transform:translate(-50%,-50%) rotate(90deg);top:50%;left:50%;opacity:0;animation:fadeIn .1s 875ms linear forwards}
-.config-map-table .key,.config-map-table .truncated-content,.edit-yaml .ace_editor.editor,.log-view,dl.secret-data dd .copy-to-clipboard{font-family:Menlo,Monaco,Consolas,monospace}
+.config-map-table .key,.config-map-table .truncated-content,.log-view,dl.secret-data dd .copy-to-clipboard{font-family:Menlo,Monaco,Consolas,monospace}
 .pipeline-circle .clip1:before,.pipeline-circle .clip2:before{content:'';width:18px;height:18px;transform:rotate(360deg);border-radius:9px;position:absolute}
 .pipeline-circle .clip1{position:absolute;clip:rect(0,18px,18px,9px);z-index:-9}
 .pipeline-circle .clip1:before{clip:rect(0,9px,18px,0);animation:progress 175ms .35s linear forwards}
@@ -6051,6 +6051,7 @@ notification-drawer-wrapper .expanded-notification.unread .drawer-pf-notificatio
 .panel-heading .panel-title .panel-counter{font-size:11px;font-weight:400;padding:0}
 .panel-heading .panel-title .panel-counter a{display:inline-block;font-style:normal}
 .action-chip{margin:0 5px 2px 0;font-size:12px;display:flex;flex-direction:row}
+.add-config-to-application .choice-contents .has-warning,.build-triggers .copy-to-clipboard{margin-bottom:10px}
 .action-chip .item{padding:.2em .6em .3em}
 .action-chip .item:first-child{border-top-left-radius:2px;border-bottom-left-radius:2px}
 .action-chip .item:last-child{border-top-right-radius:2px;border-bottom-right-radius:2px}
@@ -6073,31 +6074,35 @@ notification-drawer-wrapper .expanded-notification.unread .drawer-pf-notificatio
 @media (min-width:768px){.wizard-pf-steps-indicator li a .wizard-pf-step-title{margin-left:0}
 }
 .wizard-pf-steps-indicator .wizard-pf-step-number{font-size:12px}
-.build-triggers .copy-to-clipboard{margin-bottom:10px}
 .ace-bordered{border:1px solid #8b8d8f}
 .ace-bordered.ace-read-only{border-color:#d1d1d1;background-color:#fafafa}
 .ace_editor.editor{height:350px}
 .ace-inline{height:300px}
 .ace-inline-small{height:200px}
 .ace_editor.dockerfile-mode .ace_constant.ace_numeric,.editor.yaml-mode .ace_constant.ace_numeric{color:inherit}
-.edit-yaml .ace_editor.editor{line-height:1.5;width:100%;min-height:140px;height:50vh}
+.edit-yaml .ace_editor.editor{font-family:Menlo,Monaco,Consolas,monospace;line-height:1.5;width:100%;min-height:140px;height:50vh}
 @media (min-height:700px){.edit-yaml .ace_editor.editor{height:60vh}
 }
 .edit-yaml .ace_editor.editor .ace_gutter{color:#8b8d8f}
 .edit-yaml h1{line-height:1.3}
 .edit-yaml-errors{font-size:84%;height:2em;text-align:right}
+.add-config-to-application .application-select{width:100%}
 .add-config-to-application .catalogs-overlay-panel{max-width:600px}
+.add-config-to-application .choice-contents{margin-bottom:10px;margin-left:20px}
 .add-config-to-application .container-options{margin-left:20px}
 .add-config-to-application .container-options .select-container{max-height:200px;overflow-y:auto}
 .add-config-to-application .container-options .select-container .checkbox:first-of-type{margin-top:0}
 .add-config-to-application .dialog-title{border-bottom:1px solid #d1d1d1}
 .add-config-to-application .dialog-title h3{margin:18px 0;padding-left:15px}
-.add-config-to-application .dialog-body .add-choice,.add-config-to-application .help-block{margin-bottom:10px}
 .add-config-to-application .dialog-body{padding:20px}
 .add-config-to-application .dialog-body .button-group .btn{margin-left:10px}
 .add-config-to-application .dialog-body .button-group .btn:first-of-type{margin-left:0}
 .add-config-to-application .dialog-body legend{border-bottom:0;font-size:14px;font-weight:600;margin-bottom:10px}
 .add-config-to-application .dialog-body .radio{margin-top:0}
+.add-config-to-application .field-help{position:relative;text-decoration:none;top:1px}
+.add-config-to-application .form-group{display:flex;margin-bottom:10px}
+.add-config-to-application .form-group .control-label{margin-bottom:0;margin-right:20px;padding-top:3px}
+.add-config-to-application .form-group .control-label label.required:before{left:30px}
+.add-config-to-application .form-group .control-input{flex:1 0 0%}
 .add-config-to-application .updating{background-color:#fff;bottom:55px;left:0;padding-top:60px;position:absolute;right:0;top:55px;z-index:1000}
-.add-config-to-application .volume-options{margin-left:20px}
 .service-instance-details .instance-status-message{white-space:pre-line}
