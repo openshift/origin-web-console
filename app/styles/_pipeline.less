@@ -173,13 +173,12 @@
 }
 
 .pipeline-stage-name, .pipeline-time, .pipeline-actions {
-  font-size: (@font-size-base - 1);
+  font-size: @font-size-base;
   text-align: center;
 }
 .pipeline-stage-name {
   .truncate();
-  line-height: initial;
-  margin-bottom: @pipeline-padding + 5px;
+  margin-bottom: @pipeline-padding + 3px;
 }
 .pipeline-time, .pipeline-actions {
   margin-top: 12px;
@@ -439,7 +438,7 @@
     position: absolute;
     color: @inner-circle-color;
     font-family: 'FontAwesome';
-    font-size: (@font-size-base - 1);
+    font-size: @font-size-base;
     transform: translate(-50%, -50%) rotate(90deg);
     top: 50%;
     left: 50%;

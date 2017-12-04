@@ -31,6 +31,7 @@
       color: @navbar-os-project-menu-color;
       display: flex;
       flex: 1 1 auto;
+      font-size: (@font-size-base + 1); // 13px
       justify-content: center;
 
       margin: 2px 2px 0;
@@ -93,16 +94,13 @@
       border-top: 0;
       box-shadow: none;
       color: @navbar-os-project-menu-color;
-      font-size: @font-size-large - 1;
+      font-size: @font-size-large;
       font-weight: 300;
       line-height: @line-height-base;
       padding: 1px 40px 1px 15px; // padding so truncated name with ellipsis doesn't extend into down icon
-      @media(min-width: @screen-sm-min) {
-        padding-left: 25px;
-      }
       transition: none;
       @media (min-width: @screen-sm-min) {
-        font-size: @font-size-large + 3;
+        font-size: @font-size-large + 4; // 18px
         padding: 4px 40px 4px 20px;
       }
       @media(min-width: @screen-sm-min) {
