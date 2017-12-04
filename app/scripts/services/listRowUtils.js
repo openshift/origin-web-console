@@ -41,7 +41,7 @@ angular.module('openshiftConsole')
       ui: {
         toggleExpand: function(e, always) {
           // Don't toggle if clicking on a link inside the row unless `always` is set.
-          if (!always && $(e.target).closest("a").length > 0) {
+          if (!always && ($(e.target).closest("a").length > 0 || $(e.target).closest("button").length > 0)) {
             return;
           }
 
