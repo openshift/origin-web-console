@@ -13550,7 +13550,7 @@ n.imageIDs = r ? [ r ] : t.getImageIDs(n.pods, e.name);
 angular.module("openshiftConsole").component("serviceBinding", {
 controller: [ "APIService", "AuthorizationService", "DataService", "Logger", "SecretsService", "ServiceInstancesService", function(e, t, n, a, r, o) {
 var i = this;
-i.serviceBindingsVersion = e.getPreferredVersion("servicebindings"), i.showParameterValues = !1;
+i.serviceBindingsVersion = e.getPreferredVersion("servicebindings"), i.secretsVersion = e.getPreferredVersion("secrets"), i.showParameterValues = !1;
 var s = {
 namespace: i.namespace
 }, c = function() {
@@ -13563,7 +13563,7 @@ var o = _.get(i.binding, "status.externalProperties.parameters", {});
 _.each(_.keys(o), function(e) {
 "<redacted>" === o[e] ? i.parameterData[e] = "*****" : (i.parameterData[e] = o[e], i.opaqueParameterKeys.push(e));
 }), i.allowParametersReveal && _.each(_.get(i.binding, "spec.parametersFrom"), function(e) {
-n.get("secrets", _.get(e, "secretKeyRef.name"), s).then(function(t) {
+n.get(i.secretsVersion, _.get(e, "secretKeyRef.name"), s).then(function(t) {
 try {
 var n = JSON.parse(r.decodeSecretData(t.data)[e.secretKeyRef.key]);
 _.extend(i.parameterData, n);
