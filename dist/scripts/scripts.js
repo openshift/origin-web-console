@@ -10598,90 +10598,90 @@ $(window).off(".verticalnav");
 });
 } ]
 };
-} ]).directive("oscHeader", [ "$filter", "$location", "$q", "$rootScope", "$routeParams", "$timeout", "AuthorizationService", "Catalog", "CatalogService", "Constants", "DataService", "NotificationsService", "ProjectsService", "projectOverviewURLFilter", "RecentlyViewedServiceItems", function(e, t, n, a, r, o, i, s, c, l, u, d, m, p, f) {
-var g = {}, v = [], h = e("displayName"), y = e("uniqueDisplayName");
+} ]).directive("oscHeader", [ "$filter", "$location", "$q", "$rootScope", "$routeParams", "$timeout", "APIService", "AuthorizationService", "Catalog", "CatalogService", "Constants", "DataService", "NotificationsService", "ProjectsService", "projectOverviewURLFilter", "RecentlyViewedServiceItems", function(e, t, n, a, r, o, i, s, c, l, u, d, m, p, f, g) {
+var v = {}, h = [], y = e("displayName"), b = e("uniqueDisplayName"), S = i.getPreferredVersion("templates");
 return {
 restrict: "EA",
 templateUrl: "views/directives/header/header.html",
-link: function(o, d) {
-o.currentProject = g[r.project];
-var b = function(e, t) {
+link: function(o, i) {
+o.currentProject = v[r.project];
+var m = function(e, t) {
 var n;
 _.set(a, "nav.collapsed", e), t && (n = e ? "true" : "false", localStorage.setItem("openshift/vertical-nav-collapsed", n));
 };
 !function() {
 var e = "true" === localStorage.getItem("openshift/vertical-nav-collapsed");
-b(e);
+m(e);
 }();
-var S = function() {
+var C = function() {
 return _.get(a, "nav.collapsed", !1);
-}, C = function(e) {
+}, w = function(e) {
 _.set(a, "nav.showMobileNav", e);
 };
 o.toggleNav = function() {
-var e = S();
-b(!e, !0);
+var e = C();
+m(!e, !0);
 }, o.toggleMobileNav = function() {
 var e = _.get(a, "nav.showMobileNav");
-C(!e);
+w(!e);
 }, o.closeMobileNav = function() {
-C(!1);
+w(!1);
 }, o.closeOrderingPanel = function() {
 o.orderingPanelVisible = !1;
 }, o.showOrderingPanel = function(e) {
 o.orderingPanelVisible = !0, o.orderKind = e;
 }, o.onSearchToggle = function(e) {
 _.set(a, "view.hasProjectSearch", e);
-}, o.catalogLandingPageEnabled = !l.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
-var w = d.find(".selectpicker"), P = [], k = function() {
+}, o.catalogLandingPageEnabled = !u.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
+var P = i.find(".selectpicker"), k = [], j = function() {
 var t = o.currentProjectName;
 if (t) {
 var n = function(e, n) {
 var a = $("<option>").attr("value", e.metadata.name).attr("selected", e.metadata.name === t);
-return n ? a.text(h(e)) : a.text(y(e, v)), a;
+return n ? a.text(y(e)) : a.text(b(e, h)), a;
 };
-_.size(g) <= 100 ? (v = e("orderByDisplayName")(g), P = _.map(v, function(e) {
+_.size(v) <= 100 ? (h = e("orderByDisplayName")(v), k = _.map(h, function(e) {
 return n(e, !1);
-})) : P = [ n(g[t], !0) ], w.empty(), w.append(P), w.append($('<option data-divider="true"></option>')), w.append($('<option value="">View All Projects</option>')), w.selectpicker("refresh");
+})) : k = [ n(v[t], !0) ], P.empty(), P.append(k), P.append($('<option data-divider="true"></option>')), P.append($('<option value="">View All Projects</option>')), P.selectpicker("refresh");
 }
-}, j = function() {
-return m.list().then(function(e) {
-g = e.by("metadata.name");
-});
 }, I = function() {
+return p.list().then(function(e) {
+v = e.by("metadata.name");
+});
+}, R = function() {
 var e = r.project;
-o.currentProjectName !== e && (o.currentProjectName = e, o.chromeless = "chromeless" === r.view, e && !o.chromeless ? (_.set(a, "view.hasProject", !0), o.canIAddToProject = !1, i.getProjectRules(e).then(function() {
-o.currentProjectName === e && (o.canIAddToProject = i.canIAddToProject(e), o.canIAddToProject && c.getCatalogItems().then(function(e) {
+o.currentProjectName !== e && (o.currentProjectName = e, o.chromeless = "chromeless" === r.view, e && !o.chromeless ? (_.set(a, "view.hasProject", !0), o.canIAddToProject = !1, s.getProjectRules(e).then(function() {
+o.currentProjectName === e && (o.canIAddToProject = s.canIAddToProject(e), o.canIAddToProject && l.getCatalogItems().then(function(e) {
 o.catalogItems = e;
 }));
-}), j().then(function() {
-o.currentProjectName && g && (g[o.currentProjectName] || (g[o.currentProjectName] = {
+}), I().then(function() {
+o.currentProjectName && v && (v[o.currentProjectName] || (v[o.currentProjectName] = {
 metadata: {
 name: o.currentProjectName
 }
-}), o.currentProject = g[o.currentProjectName], k());
+}), o.currentProject = v[o.currentProjectName], j());
 })) : _.set(a, "view.hasProject", !1));
-}, R = function() {
-o.orderingPanelVisible && f.addItem(_.get(o.selectedItem, "resource.metadata.uid"));
-}, E = function(e) {
-return "PartialObjectMetadata" === e.kind;
+}, E = function() {
+o.orderingPanelVisible && g.addItem(_.get(o.selectedItem, "resource.metadata.uid"));
 }, T = function(e) {
-return E(e) ? u.get("templates", e.metadata.name, {
+return "PartialObjectMetadata" === e.kind;
+}, N = function(e) {
+return T(e) ? d.get(S, e.metadata.name, {
 namespace: e.metadata.namespace
 }) : n.when(e);
 };
 o.$on("open-overlay-panel", function(e, t) {
-o.currentProjectName && (o.servicePlansForItem = null, o.orderKind = _.get(t, "kind"), "Template" !== o.orderKind ? "ClusterServiceClass" !== o.orderKind ? (o.selectedItem = t, o.orderingPanelVisible = !0) : s.getServicePlansForServiceClass(_.get(t, "resource.metadata.name")).then(function(e) {
+o.currentProjectName && (o.servicePlansForItem = null, o.orderKind = _.get(t, "kind"), "Template" !== o.orderKind ? "ClusterServiceClass" !== o.orderKind ? (o.selectedItem = t, o.orderingPanelVisible = !0) : c.getServicePlansForServiceClass(_.get(t, "resource.metadata.name")).then(function(e) {
 o.servicePlansForItem = _.reject(e.by("metadata.name"), {
 status: {
 removedFromBrokerCatalog: !0
 }
 }), o.selectedItem = t, o.orderingPanelVisible = !0;
-}) : T(t.resource).then(function(e) {
+}) : N(t.resource).then(function(e) {
 o.selectedItem = e, o.orderingPanelVisible = !0, o.orderKind = "Template";
 }));
 });
-var N = a.$on("filter-catalog-items", function(e, n) {
+var D = a.$on("filter-catalog-items", function(e, n) {
 if (o.currentProjectName) {
 var a = {
 filter: n.searchText
@@ -10690,17 +10690,17 @@ t.path("project/" + encodeURIComponent(o.currentProjectName) + "/project-browse-
 }
 });
 o.closeOrderingPanel = function() {
-f.addItem(_.get(o.selectedItem, "resource.metadata.uid")), o.orderingPanelVisible = !1;
-}, I(), o.$on("$routeChangeSuccess", I), w.selectpicker({
+g.addItem(_.get(o.selectedItem, "resource.metadata.uid")), o.orderingPanelVisible = !1;
+}, R(), o.$on("$routeChangeSuccess", R), P.selectpicker({
 iconBase: "fa",
 tickIcon: "fa-check"
 }).change(function() {
-var e = $(this).val(), n = "" === e ? "projects" : p(e);
+var e = $(this).val(), n = "" === e ? "projects" : f(e);
 o.$apply(function() {
 t.url(n);
 });
 }), o.$on("$destroy", function() {
-N(), R();
+D(), E();
 });
 }
 };
