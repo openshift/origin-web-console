@@ -43,7 +43,11 @@ module.exports = function (grunt) {
         tasks: ['wiredep']
       },
       js: {
-        files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
+        files: [
+          '<%= yeoman.app %>/scripts/{,*/}*.js',
+          '<%= yeoman.app %>/components/{,*}*.js',
+          '!<%= yeoman.app %>/components/{,*}*.spec.js'
+        ],
         tasks: ['newer:jshint:all'],
         options: {
           livereload: grunt.option('disable-live-reload') ? false : {
@@ -117,7 +121,7 @@ module.exports = function (grunt) {
               modRewrite([
                 '^/$ /' + contextRoot + '/ [R=302]',
                 '^/' + contextRoot + '(.*)$ $1',
-                '!^/(config.js|(java|bower_components|scripts|images|styles|views)(/.*)?)$ /index.html [L]'
+                '!^/(config.js|(java|bower_components|scripts|images|styles|views|components)(/.*)?)$ /index.html [L]'
               ]),
               serveStatic('.tmp'),
               connect().use(
@@ -140,7 +144,7 @@ module.exports = function (grunt) {
               modRewrite([
                 '^/$ /' + contextRoot + '/ [R=302]',
                 '^/' + contextRoot + '(.*)$ $1',
-                '!^/(config.js|(bower_components|scripts|images|styles|views)(/.*)?)$ /index.html [L]'
+                '!^/(config.js|(bower_components|scripts|images|styles|views|components)(/.*)?)$ /index.html [L]'
               ]),
               serveStatic('.tmp'),
               serveStatic('test'),
@@ -163,7 +167,7 @@ module.exports = function (grunt) {
               '^/scripts/extensions\.js$ /' + contextRoot + '/extensions/extensions.js [R]',
               '^/$ /' + contextRoot + '/ [R=302]',
               '^/' + contextRoot + '(.*)$ $1',
-              '!^/(config.js|(bower_components|scripts|images|styles|views|extensions)(/.*)?)$ /index.html [L]'
+              '!^/(config.js|(bower_components|scripts|images|styles|views|extensions|components)(/.*)?)$ /index.html [L]'
             ];
 
             // If config.local.js exists, use that instead of config.js.
@@ -198,14 +202,19 @@ module.exports = function (grunt) {
       all: {
         src: [
           'Gruntfile.js',
-          '<%= yeoman.app %>/scripts/{,*/}*.js'
+          '<%= yeoman.app %>/scripts/{,*/}*.js',
+          '<%= yeoman.app %>/components/{,*/}*.component.js'
         ]
       },
       test: {
         options: {
           jshintrc: 'test/.jshintrc'
         },
-        src: ['test/spec/{,*/}*.js','test/integration/**/*.js']
+        src: [
+          'test/spec/{,*/}*.js',
+          'test/integration/**/*.js',
+          '<%= yeoman.app %>/**/*.spec.js'
+        ]
       }
     },
 
@@ -441,7 +450,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: '<%= yeoman.dist %>',
-          src: ['*.html', 'views/{,*/}*.html'],
+          src: ['*.html', 'views/{,*/}*.html', 'components/{,*/}*.html'],
           dest: '<%= yeoman.dist %>'
         }]
       }
@@ -463,7 +472,7 @@ module.exports = function (grunt) {
     ngtemplates: {
       dist: {
         cwd: '<%= yeoman.app %>',
-        src: 'views/**/*.html',
+        src: ['views/**/*.html', 'components/**/*.html'],
         dest: 'dist/scripts/templates.js',
         options: {
           module: 'openshiftConsoleTemplates',
