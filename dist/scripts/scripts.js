@@ -10052,7 +10052,8 @@ e.optionNames = [], e.selectedExists = !1, e.optionNames = _.map(e.serviceOption
 });
 }
 };
-}), angular.module("openshiftConsole").directive("oscPersistentVolumeClaim", [ "$filter", "DataService", "LimitRangesService", "QuotaService", "ModalsService", "DNS1123_SUBDOMAIN_VALIDATION", function(e, t, n, a, r, o) {
+}), angular.module("openshiftConsole").directive("oscPersistentVolumeClaim", [ "$filter", "APIService", "DataService", "LimitRangesService", "QuotaService", "ModalsService", "DNS1123_SUBDOMAIN_VALIDATION", function(e, t, n, a, r, o, i) {
+var s = t.getPreferredVersion("storageclasses"), c = t.getPreferredVersion("limitranges"), l = t.getPreferredVersion("resourcequotas"), u = t.getPreferredVersion("appliedclusterresourcequotas");
 return {
 restrict: "E",
 scope: {
@@ -10060,9 +10061,9 @@ claim: "=model",
 projectName: "="
 },
 templateUrl: "views/directives/osc-persistent-volume-claim.html",
-link: function(i) {
-var s = e("amountAndUnit"), c = e("usageValue");
-i.nameValidation = o, i.storageClasses = [], i.defaultStorageClass = "", i.claim.unit = "Gi", i.units = [ {
+link: function(t) {
+var d = e("amountAndUnit"), m = e("usageValue");
+t.nameValidation = i, t.storageClasses = [], t.defaultStorageClass = "", t.claim.unit = "Gi", t.units = [ {
 value: "Mi",
 label: "MiB"
 }, {
@@ -10080,11 +10081,11 @@ label: "GB"
 }, {
 value: "T",
 label: "TB"
-} ], i.claim.selectedLabels = [];
-var l = [];
-i.$watch("useLabels", function(e, t) {
-e !== t && (e ? i.claim.selectedLabels = l : (l = i.claim.selectedLabels, i.claim.selectedLabels = []));
-}), i.groupUnits = function(e) {
+} ], t.claim.selectedLabels = [];
+var p = [];
+t.$watch("useLabels", function(e, n) {
+e !== n && (e ? t.claim.selectedLabels = p : (p = t.claim.selectedLabels, t.claim.selectedLabels = []));
+}), t.groupUnits = function(e) {
 switch (e.value) {
 case "Mi":
 case "Gi":
@@ -10097,28 +10098,25 @@ case "T":
 return "Decimal Units";
 }
 return "";
-}, i.showComputeUnitsHelp = function() {
-r.showComputeUnitsHelp();
+}, t.showComputeUnitsHelp = function() {
+o.showComputeUnitsHelp();
 };
-var u = function() {
-var e = i.claim.amount && c(i.claim.amount + i.claim.unit), t = _.has(i, "limits.min") && c(i.limits.min), n = _.has(i, "limits.max") && c(i.limits.max), a = !0, r = !0;
-e && t && (a = e >= t), e && n && (r = e <= n), i.persistentVolumeClaimForm.capacity.$setValidity("limitRangeMin", a), i.persistentVolumeClaimForm.capacity.$setValidity("limitRangeMax", r);
-}, d = function() {
-var e = a.isAnyStorageQuotaExceeded(i.quotas, i.clusterQuotas), t = a.willRequestExceedQuota(i.quotas, i.clusterQuotas, "requests.storage", i.claim.amount + i.claim.unit);
-i.persistentVolumeClaimForm.capacity.$setValidity("willExceedStorage", !t), i.persistentVolumeClaimForm.capacity.$setValidity("outOfClaims", !e);
+var f = function() {
+var e = t.claim.amount && m(t.claim.amount + t.claim.unit), n = _.has(t, "limits.min") && m(t.limits.min), a = _.has(t, "limits.max") && m(t.limits.max), r = !0, o = !0;
+e && n && (r = e >= n), e && a && (o = e <= a), t.persistentVolumeClaimForm.capacity.$setValidity("limitRangeMin", r), t.persistentVolumeClaimForm.capacity.$setValidity("limitRangeMax", o);
+}, g = function() {
+var e = r.isAnyStorageQuotaExceeded(t.quotas, t.clusterQuotas), n = r.willRequestExceedQuota(t.quotas, t.clusterQuotas, "requests.storage", t.claim.amount + t.claim.unit);
+t.persistentVolumeClaimForm.capacity.$setValidity("willExceedStorage", !n), t.persistentVolumeClaimForm.capacity.$setValidity("outOfClaims", !e);
 };
-t.list({
-group: "storage.k8s.io",
-resource: "storageclasses"
-}, {}, function(t) {
-var n = t.by("metadata.name");
-if (!_.isEmpty(n)) {
-i.storageClasses = _.sortBy(n, "metadata.name");
-var a = e("annotation");
-if (i.defaultStorageClass = _.find(i.storageClasses, function(e) {
-return "true" === a(e, "storageclass.beta.kubernetes.io/is-default-class");
-}), i.defaultStorageClass) i.claim.storageClass = i.defaultStorageClass; else {
-var r = {
+n.list(s, {}, function(n) {
+var a = n.by("metadata.name");
+if (!_.isEmpty(a)) {
+t.storageClasses = _.sortBy(a, "metadata.name");
+var r = e("annotation");
+if (t.defaultStorageClass = _.find(t.storageClasses, function(e) {
+return "true" === r(e, "storageclass.beta.kubernetes.io/is-default-class");
+}), t.defaultStorageClass) t.claim.storageClass = t.defaultStorageClass; else {
+var o = {
 metadata: {
 name: "No Storage Class",
 labels: {},
@@ -10127,28 +10125,28 @@ description: "No storage class will be assigned"
 }
 }
 };
-i.storageClasses.unshift(r);
+t.storageClasses.unshift(o);
 }
 }
 }, {
 errorNotification: !1
-}), t.list("limitranges", {
-namespace: i.projectName
+}), n.list(c, {
+namespace: t.projectName
 }, function(e) {
-var t = e.by("metadata.name");
-if (!_.isEmpty(t)) {
-i.limits = n.getEffectiveLimitRange(t, "storage", "PersistentVolumeClaim");
-var a;
-i.limits.min && i.limits.max && c(i.limits.min) === c(i.limits.max) && (a = s(i.limits.max), i.claim.amount = Number(a[0]), i.claim.unit = a[1], i.capacityReadOnly = !0), i.$watchGroup([ "claim.amount", "claim.unit" ], u);
+var n = e.by("metadata.name");
+if (!_.isEmpty(n)) {
+t.limits = a.getEffectiveLimitRange(n, "storage", "PersistentVolumeClaim");
+var r;
+t.limits.min && t.limits.max && m(t.limits.min) === m(t.limits.max) && (r = d(t.limits.max), t.claim.amount = Number(r[0]), t.claim.unit = r[1], t.capacityReadOnly = !0), t.$watchGroup([ "claim.amount", "claim.unit" ], f);
 }
-}), t.list("resourcequotas", {
-namespace: i.projectName
+}), n.list(l, {
+namespace: t.projectName
 }, function(e) {
-i.quotas = e.by("metadata.name"), i.$watchGroup([ "claim.amount", "claim.unit" ], d);
-}), t.list("appliedclusterresourcequotas", {
-namespace: i.projectName
+t.quotas = e.by("metadata.name"), t.$watchGroup([ "claim.amount", "claim.unit" ], g);
+}), n.list(u, {
+namespace: t.projectName
 }, function(e) {
-i.clusterQuotas = e.by("metadata.name");
+t.clusterQuotas = e.by("metadata.name");
 });
 }
 };
