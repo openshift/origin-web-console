@@ -7951,20 +7951,22 @@ g.hideNotification("create-builder-list-config-maps-error"), g.hideNotification(
 !e.id || "error" !== e.type && "warning" !== e.type || g.hideNotification(e.id);
 });
 };
-e.$on("$destroy", N), v.get(r.project).then(_.spread(function(t, n) {
+e.$on("$destroy", N);
+var D = i.getPreferredVersion("configmaps"), A = i.getPreferredVersion("limitranges"), $ = i.getPreferredVersion("imagestreams"), B = i.getPreferredVersion("imagestreamtags"), L = i.getPreferredVersion("secrets"), U = i.getPreferredVersion("resourcequotas"), O = i.getPreferredVersion("appliedclusterresourcequotas");
+v.get(r.project).then(_.spread(function(t, n) {
 e.project = t, r.sourceURI && (e.sourceURIinParams = !0);
 var i = function() {
 e.hideCPU || (e.cpuProblems = d.validatePodLimits(e.limitRanges, "cpu", [ e.container ], t)), e.memoryProblems = d.validatePodLimits(e.limitRanges, "memory", [ e.container ], t);
 };
-c.list("limitranges", n).then(function(t) {
+c.list(A, n).then(function(t) {
 e.limitRanges = t.by("metadata.name"), _.isEmpty(e.limitRanges) || e.$watch("container", i, !0);
 });
 var v, y, C = function() {
 e.scaling.autoscale ? e.showCPURequestWarning = !l.hasCPURequest([ e.container ], e.limitRanges, t) : e.showCPURequestWarning = !1;
 };
-c.list("resourcequotas", n).then(function(e) {
+c.list(U, n).then(function(e) {
 v = e.by("metadata.name"), m.log("quotas", v);
-}), c.list("appliedclusterresourcequotas", n).then(function(e) {
+}), c.list(O, n).then(function(e) {
 y = e.by("metadata.name"), m.log("cluster quotas", y);
 }), e.$watch("scaling.autoscale", C), e.$watch("container", C, !0), e.$watch("name", function(e, t) {
 I.value && I.value !== t || (I.value = e);
@@ -8008,7 +8010,7 @@ return a.buildConfig.sourceUrl === _.get(a, "image.metadata.annotations.sampleRe
 e.metricsWarning = !t;
 });
 var o = [], i = [];
-e.valueFromObjects = [], c.list("configmaps", n, null, {
+e.valueFromObjects = [], c.list(D, n, null, {
 errorNotification: !1
 }).then(function(t) {
 o = R(t.by("metadata.name")), e.valueFromObjects = o.concat(i);
@@ -8019,7 +8021,7 @@ type: "error",
 message: "Could not load config maps.",
 details: E(e)
 });
-}), c.list("secrets", n, null, {
+}), c.list(L, n, null, {
 errorNotification: !1
 }).then(function(t) {
 i = R(t.by("metadata.name")), e.valueFromObjects = o.concat(i);
@@ -8036,12 +8038,12 @@ type: "error",
 message: "Could not load secrets.",
 details: E(e)
 });
-}), c.get("imagestreams", a.imageName, {
+}), c.get($, a.imageName, {
 namespace: a.namespace || r.project
 }).then(function(e) {
 a.imageStream = e;
 var t = a.imageTag;
-c.get("imagestreamtags", e.metadata.name + ":" + t, {
+c.get(B, e.metadata.name + ":" + t, {
 namespace: a.namespace
 }).then(function(e) {
 a.image = e.image, a.DCEnvVarsFromImage = u.getEnvironment(e);
@@ -8060,7 +8062,7 @@ f.toErrorPage("Cannot create from source: the specified image could not be retri
 f.toErrorPage("Cannot create from source: the specified image could not be retrieved.");
 });
 }(e);
-var D, A = function() {
+var V, F = function() {
 var t = {
 started: "Creating application " + e.name + " in project " + e.projectDisplayName(),
 success: "Created application " + e.name + " in project " + e.projectDisplayName(),
@@ -8068,7 +8070,7 @@ failure: "Failed to create " + e.name + " in project " + e.projectDisplayName()
 }, o = {};
 S.clear(), S.add(t, o, r.project, function() {
 var t = a.defer();
-return c.batch(D, n).then(function(n) {
+return c.batch(V, n).then(function(n) {
 var a = [], r = !1;
 _.isEmpty(n.failure) ? a.push({
 type: "success",
@@ -8092,7 +8094,7 @@ hasErrors: r
 }), f.toNextSteps(e.name, e.projectName, {
 usingSampleRepo: e.usingSampleRepo()
 });
-}, $ = function(e) {
+}, x = function(e) {
 o.open({
 animation: !0,
 templateUrl: "views/modals/confirm.html",
@@ -8108,26 +8110,26 @@ cancelButtonText: "Cancel"
 };
 }
 }
-}).result.then(A);
-}, B = function(t) {
+}).result.then(F);
+}, M = function(t) {
 N(), T = t.quotaAlerts || [], e.nameTaken || _.some(T, {
 type: "error"
 }) ? (e.disableInputs = !1, _.each(T, function(e) {
 e.id = _.uniqueId("create-builder-alert-"), g.addNotification(e);
-})) : _.isEmpty(T) ? A() : ($(T), e.disableInputs = !1);
+})) : _.isEmpty(T) ? F() : (x(T), e.disableInputs = !1);
 };
 e.projectDisplayName = function() {
 return P(this.project) || this.projectName;
 }, e.createApp = function() {
 e.disableInputs = !0, N(), e.buildConfig.envVars = w.compactEntries(e.buildConfigEnvVars), e.deploymentConfig.envVars = w.compactEntries(e.DCEnvVarsFromUser), e.labels = w.mapEntries(w.compactEntries(e.labelArray));
 var t = s.generate(e);
-D = [], angular.forEach(t, function(e) {
-null !== e && (m.debug("Generated resource definition:", e), D.push(e));
+V = [], angular.forEach(t, function(e) {
+null !== e && (m.debug("Generated resource definition:", e), V.push(e));
 });
-var a = s.ifResourcesDontExist(D, e.projectName), r = h.getLatestQuotaAlerts(D, n), o = function(t) {
+var a = s.ifResourcesDontExist(V, e.projectName), r = h.getLatestQuotaAlerts(V, n), o = function(t) {
 return e.nameTaken = t.nameTaken, r;
 };
-a.then(o, o).then(B, B);
+a.then(o, o).then(M, M);
 };
 })), e.cancel = function() {
 f.toProjectOverview(e.projectName);
