@@ -34,7 +34,8 @@ angular.module("openshiftConsole")
         selectDisabled: '=',
         selectRequired: '=',
         includeSharedNamespace: '=',
-        allowCustomTag: '='
+        allowCustomTag: '=',
+        appendToBody: '='
       },
       templateUrl: 'views/directives/istag-select.html',
       controller: function($scope){
