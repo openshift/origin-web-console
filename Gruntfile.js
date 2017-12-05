@@ -117,7 +117,7 @@ module.exports = function (grunt) {
               modRewrite([
                 '^/$ /' + contextRoot + '/ [R=302]',
                 '^/' + contextRoot + '(.*)$ $1',
-                '!^/(config.js|(java|bower_components|scripts|images|styles|views)(/.*)?)$ /index.html [L]'
+                '!^/(config.js|(java|bower_components|scripts|images|styles|views|languages)(/.*)?)$ /index.html [L]'
               ]),
               serveStatic('.tmp'),
               connect().use(
@@ -127,6 +127,10 @@ module.exports = function (grunt) {
               connect().use(
                 '/bower_components',
                 serveStatic('./bower_components')
+              ),
+              connect().use(
+                '/languages',
+                serveStatic('./languages')
               ),
               serveStatic(appConfig.app)
             ];
@@ -163,7 +167,7 @@ module.exports = function (grunt) {
               '^/scripts/extensions\.js$ /' + contextRoot + '/extensions/extensions.js [R]',
               '^/$ /' + contextRoot + '/ [R=302]',
               '^/' + contextRoot + '(.*)$ $1',
-              '!^/(config.js|(bower_components|scripts|images|styles|views|extensions)(/.*)?)$ /index.html [L]'
+              '!^/(config.js|(bower_components|scripts|images|styles|views|extensions|languages)(/.*)?)$ /index.html [L]'
             ];
 
             // If config.local.js exists, use that instead of config.js.
@@ -181,6 +185,10 @@ module.exports = function (grunt) {
               connect().use(
                 '/extensions',
                 serveStatic('./extensions')
+              ),
+              connect().use(
+                '/languages',
+                serveStatic('./languages')
               ),
               serveStatic(appConfig.app)
             ];
@@ -508,6 +516,11 @@ module.exports = function (grunt) {
           cwd: 'bower_components/openshift-logos-icon',
           src: 'fonts/*',
           dest: '<%= yeoman.dist %>/styles'
+        },{
+          expand: true,
+          cwd: 'languages',
+          src: '*.json',
+          dest: '<%= yeoman.dist %>/languages'
         },
         // Copy separate components
         {
@@ -668,6 +681,31 @@ module.exports = function (grunt) {
         dir: 'coverage',
         root: 'test'
       }
+    },
+    nggettext_extract: {
+      pot: {
+        files: {
+          'po/openshift.pot': ['app/index.html', 'app/views/**/*.html', 'app/scripts/**/*.js']
+        }
+      }
+    },
+
+    nggettext_compile: {
+      all: {
+        options: {
+          format: "json"
+        },
+        files: [
+          {
+            expand: true,
+            dot: true,
+            cwd: "po",
+            dest: "languages",
+            src: ["*.po"],
+            ext: ".json"
+          }
+        ]
+      }
     }
   });
 
@@ -694,7 +732,9 @@ module.exports = function (grunt) {
       'watch'
     ]);
   });
-
+  grunt.registerTask('read-po', [
+    'nggettext_compile'
+  ]);
   grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function (target) {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
     grunt.task.run(['serve:' + target]);
@@ -734,7 +774,12 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-htmlhint');
 
   grunt.loadNpmTasks('grunt-angular-templates');
+  grunt.loadNpmTasks('grunt-angular-gettext');
 
+  // alias for compatibility to GNU autotools
+  grunt.registerTask('update-pot', [
+    'nggettext_extract'
+  ]);
   // karma must run prior to coverage since karma will generate the coverage results
   grunt.registerTask('test-unit', [
     'clean:server',
@@ -775,6 +820,7 @@ module.exports = function (grunt) {
     'postcss',
     'concat',
     'ngAnnotate',
+    'nggettext_compile',
     'copy:dist',
     'less',
     'cssmin',

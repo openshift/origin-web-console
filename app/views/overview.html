@@ -6,16 +6,15 @@
       <!-- Getting started -->
       <div class="empty-state-message text-center">
         <div ng-if="project.metadata.name | canIAddToProject">
-          <h2>Get started with your project.</h2>
-          <p class="gutter-top">
-            Use your source or an example repository to build an application
-            image, or add components like databases and message queues.
+          <h2 translate>Get started with your project.</h2>
+          <p class="gutter-top" translate>
+            Use your source or an example repository to build an application image, or add components like databases and message queues.
           </p>
           <p class="gutter-top">
-            <a ng-if="overview.catalogLandingPageEnabled" href="./" class="btn btn-lg btn-primary">
+            <a ng-if="overview.catalogLandingPageEnabled" href="./" class="btn btn-lg btn-primary" translate>
               Browse Catalog
             </a>
-            <a ng-if="!overview.catalogLandingPageEnabled" ng-href="project/{{projectName}}/create" class="btn btn-lg btn-primary">
+            <a ng-if="!overview.catalogLandingPageEnabled" ng-href="project/{{projectName}}/create" class="btn btn-lg btn-primary" translate>
               Add to Project
             </a>
           </p>
