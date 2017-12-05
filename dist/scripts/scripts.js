@@ -8135,14 +8135,16 @@ a.then(o, o).then(M, M);
 f.toProjectOverview(e.projectName);
 };
 } else f.toErrorPage("Cannot create from source: a base image tag was not specified"); else f.toErrorPage("Cannot create from source: a base image was not specified");
-} ]), angular.module("openshiftConsole").controller("NextStepsController", [ "$scope", "$http", "$routeParams", "DataService", "$q", "$location", "TaskList", "$parse", "Navigate", "Logger", "$filter", "imageObjectRefFilter", "failureObjectNameFilter", "ProjectsService", function(e, t, n, a, r, o, i, s, c, l, u, d, m, p) {
-u("displayName");
-var f = [];
-e.alerts = [], e.loginBaseUrl = a.openshiftAPIBaseUrl(), e.buildConfigs = {}, e.projectName = n.project, e.fromSampleRepo = n.fromSample, e.name = n.name, p.get(n.project).then(_.spread(function(t, r) {
-e.project = t, f.push(a.watch("buildconfigs", r, function(t) {
-e.buildConfigs = t.by("metadata.name"), e.createdBuildConfig = e.buildConfigs[n.name], l.log("buildconfigs (subscribe)", e.buildConfigs);
-})), e.$on("$destroy", function() {
-a.unwatchAll(f);
+} ]), angular.module("openshiftConsole").controller("NextStepsController", [ "$filter", "$routeParams", "$scope", "APIService", "DataService", "Logger", "ProjectsService", function(e, t, n, a, r, o, i) {
+e("displayName");
+var s = [];
+n.alerts = [], n.loginBaseUrl = r.openshiftAPIBaseUrl(), n.buildConfigs = {}, n.projectName = t.project, n.fromSampleRepo = t.fromSample, n.name = t.name;
+var c = a.getPreferredVersion("buildconfigs");
+i.get(t.project).then(_.spread(function(e, a) {
+n.project = e, s.push(r.watch(c, a, function(e) {
+n.buildConfigs = e.by("metadata.name"), n.createdBuildConfig = n.buildConfigs[t.name], o.log("buildconfigs (subscribe)", n.buildConfigs);
+})), n.$on("$destroy", function() {
+r.unwatchAll(s);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("NewFromTemplateController", [ "$filter", "$location", "$parse", "$routeParams", "$scope", "AuthorizationService", "CachedTemplateService", "DataService", "Navigate", "NotificationsService", "ProjectsService", function(e, t, n, a, r, o, i, s, c, l, u) {
