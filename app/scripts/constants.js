@@ -624,6 +624,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     'icon-nginx': 'nginx.svg',
     'icon-nodejs': 'nodejs.svg',
     'icon-openjdk': 'openjdk.svg',
+    'icon-openshift': 'openshift.svg',
     'icon-openstack': 'openstack.svg',
     'icon-perl': 'perl.svg',
     'icon-phalcon': 'phalcon.svg',

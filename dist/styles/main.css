@@ -3976,6 +3976,7 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.left,div.hopscotch-bubble
 .icon-rh-integration:before{content:"\e907"}
 .icon-rh-tomcat:before{content:"\e908"}
 .icon-sso:before{content:"\e909"}
+.icon-openshift:before{content:"\e90a"}
 @keyframes toastSlideIn{0%{opacity:0;transform:translateX(150px)}
 100%{opacity:1;transform:translateX(0)}
 }
