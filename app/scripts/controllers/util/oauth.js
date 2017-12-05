@@ -8,16 +8,26 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('OAuthController', function ($scope, $location, $q, RedirectLoginService, DataService, AuthService, Logger) {
+  .controller('OAuthController', function (
+    $scope,
+    $location,
+    $q,
+    APIService,
+    AuthService,
+    DataService,
+    Logger,
+    RedirectLoginService) {
     var authLogger = Logger.get("auth");
 
     // Initialize to a no-op function.
-    // Needed to let the view confirm a login when the state is unverified. 
+    // Needed to let the view confirm a login when the state is unverified.
     $scope.completeLogin = function(){};
     $scope.cancelLogin = function() {
       $location.replace();
       $location.url("./");
     };
+
+    var usersVersion = APIService.getPreferredVersion('users');
 
     RedirectLoginService.finish()
     .then(function(data) {
@@ -30,7 +40,7 @@ angular.module('openshiftConsole')
       var opts = {errorNotification: false, http: {auth: {token: token, triggerLogin: false}}};
       authLogger.log("OAuthController, got token, fetching user", opts);
 
-      DataService.get("users", "~", {}, opts)
+      DataService.get(usersVersion, "~", {}, opts)
       .then(function(user) {
         // Set the new user and token in the auth service
         authLogger.log("OAuthController, got user", user);
@@ -38,7 +48,7 @@ angular.module('openshiftConsole')
         $scope.completeLogin = function() {
           // Persist the user
           AuthService.setUser(user, token, ttl);
-          
+
           // Redirect to original destination (or default to './')
           var destination = then || './';
           if (URI(destination).is('absolute')) {
@@ -49,14 +59,14 @@ angular.module('openshiftConsole')
           $location.replace();
           $location.url(destination);
         };
-        
+
         if (verified) {
           // Automatically complete
           $scope.completeLogin();
         } else {
           // Require the UI to prompt
           $scope.confirmUser = user;
-          
+
           // Additionally, give the UI info about the user being overridden
           var currentUser = AuthService.UserStore().getUser();
           if (currentUser && currentUser.metadata.name !== user.metadata.name) {

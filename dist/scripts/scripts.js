@@ -8276,12 +8276,14 @@ title: "Events"
 } ], n.get(e.project).then(_.spread(function(e, n) {
 t.project = e, t.projectContext = n;
 }));
-} ]), angular.module("openshiftConsole").controller("OAuthController", [ "$scope", "$location", "$q", "RedirectLoginService", "DataService", "AuthService", "Logger", function(e, t, n, a, r, o, i) {
-var s = i.get("auth");
+} ]), angular.module("openshiftConsole").controller("OAuthController", [ "$scope", "$location", "$q", "APIService", "AuthService", "DataService", "Logger", "RedirectLoginService", function(e, t, n, a, r, o, i, s) {
+var c = i.get("auth");
 e.completeLogin = function() {}, e.cancelLogin = function() {
 t.replace(), t.url("./");
-}, a.finish().then(function(n) {
-var a = n.token, i = n.then, c = n.verified, l = n.ttl, u = {
+};
+var l = a.getPreferredVersion("users");
+s.finish().then(function(n) {
+var a = n.token, i = n.then, s = n.verified, u = n.ttl, d = {
 errorNotification: !1,
 http: {
 auth: {
@@ -8290,21 +8292,21 @@ triggerLogin: !1
 }
 }
 };
-s.log("OAuthController, got token, fetching user", u), r.get("users", "~", {}, u).then(function(n) {
-if (s.log("OAuthController, got user", n), e.completeLogin = function() {
-o.setUser(n, a, l);
+c.log("OAuthController, got token, fetching user", d), o.get(l, "~", {}, d).then(function(n) {
+if (c.log("OAuthController, got user", n), e.completeLogin = function() {
+r.setUser(n, a, u);
 var e = i || "./";
-URI(e).is("absolute") && (s.log("OAuthController, invalid absolute redirect", e), e = "./"), s.log("OAuthController, redirecting", e), t.replace(), t.url(e);
-}, c) e.completeLogin(); else {
+URI(e).is("absolute") && (c.log("OAuthController, invalid absolute redirect", e), e = "./"), c.log("OAuthController, redirecting", e), t.replace(), t.url(e);
+}, s) e.completeLogin(); else {
 e.confirmUser = n;
-var r = o.UserStore().getUser();
-r && r.metadata.name !== n.metadata.name && (e.overriddenUser = r);
+var o = r.UserStore().getUser();
+o && o.metadata.name !== n.metadata.name && (e.overriddenUser = o);
 }
 }).catch(function(e) {
 var n = URI("error").query({
 error: "user_fetch_failed"
 }).toString();
-s.error("OAuthController, error fetching user", e, "redirecting", n), t.replace(), t.url(n);
+c.error("OAuthController, error fetching user", e, "redirecting", n), t.replace(), t.url(n);
 });
 }).catch(function(e) {
 var n = URI("error").query({
@@ -8312,7 +8314,7 @@ error: e.error || "",
 error_description: e.error_description || "",
 error_uri: e.error_uri || ""
 }).toString();
-s.error("OAuthController, error", e, "redirecting", n), t.replace(), t.url(n);
+c.error("OAuthController, error", e, "redirecting", n), t.replace(), t.url(n);
 });
 } ]), angular.module("openshiftConsole").controller("ErrorController", [ "$scope", "$window", function(e, t) {
 var n = URI(window.location.href).query(!0);
