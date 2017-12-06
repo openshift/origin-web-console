@@ -2105,141 +2105,138 @@ var t = C(e), n = _.get(t, "stages", []);
 return _.last(n);
 }
 };
-} ]), angular.module("openshiftConsole").factory("DeploymentsService", [ "APIService", "NotificationsService", "DataService", "$filter", "$q", "LabelFilter", function(e, t, n, r, a, o) {
+} ]), angular.module("openshiftConsole").factory("DeploymentsService", [ "$filter", "$q", "APIService", "DataService", "LabelFilter", "NotificationsService", function(e, t, n, r, a, o) {
 function i() {}
-var s = r("annotation");
-i.prototype.startLatestDeployment = function(e, a) {
-var o = {
+var s = n.getPreferredVersion("deploymentconfigs/instantiate"), c = n.getPreferredVersion("deploymentconfigs/rollback"), l = n.getPreferredVersion("pods"), u = n.getPreferredVersion("replicationcontrollers"), d = e("annotation");
+i.prototype.startLatestDeployment = function(t, n) {
+var a = {
 kind: "DeploymentRequest",
 apiVersion: "v1",
-name: e.metadata.name,
+name: t.metadata.name,
 latest: !0,
 force: !0
 };
-n.create("deploymentconfigs/instantiate", e.metadata.name, o, a).then(function(n) {
-t.addNotification({
+r.create(s, t.metadata.name, a, n).then(function(e) {
+o.addNotification({
 type: "success",
-message: "Deployment #" + n.status.latestVersion + " of " + e.metadata.name + " has started."
+message: "Deployment #" + e.status.latestVersion + " of " + t.metadata.name + " has started."
 });
-}, function(e) {
-t.addNotification({
+}, function(t) {
+o.addNotification({
 type: "error",
 message: "An error occurred while starting the deployment.",
-details: r("getErrorDetails")(e)
+details: e("getErrorDetails")(t)
 });
 });
-}, i.prototype.retryFailedDeployment = function(e, a, o) {
-var i = angular.copy(e), c = e.metadata.name, l = s(e, "deploymentConfig");
-n.list("pods", a, function(e) {
-var t = e.by("metadata.name");
-angular.forEach(t, function(e) {
-var t = r("annotationName")("deployerPodFor");
-e.metadata.labels[t] === c && n.delete("pods", e.metadata.name, o).then(function() {
-Logger.info("Deployer pod " + e.metadata.name + " deleted");
-}, function(e) {
-o.alerts = o.alerts || {}, o.alerts.retrydeployer = {
+}, i.prototype.retryFailedDeployment = function(t, n, a) {
+var i = angular.copy(t), s = t.metadata.name, c = d(t, "deploymentConfig");
+r.list(l, n, function(t) {
+var n = t.by("metadata.name");
+angular.forEach(n, function(t) {
+var n = e("annotationName")("deployerPodFor");
+t.metadata.labels[n] === s && r.delete(l, t.metadata.name, a).then(function() {
+Logger.info("Deployer pod " + t.metadata.name + " deleted");
+}, function(t) {
+a.alerts = a.alerts || {}, a.alerts.retrydeployer = {
 type: "error",
 message: "An error occurred while deleting the deployer pod.",
-details: r("getErrorDetails")(e)
+details: e("getErrorDetails")(t)
 };
 });
 });
 });
-var u = r("annotationName")("deploymentStatus"), d = r("annotationName")("deploymentStatusReason"), m = r("annotationName")("deploymentCancelled");
-i.metadata.annotations[u] = "New", delete i.metadata.annotations[d], delete i.metadata.annotations[m], n.update("replicationcontrollers", c, i, a).then(function() {
-t.addNotification({
+var m = e("annotationName")("deploymentStatus"), p = e("annotationName")("deploymentStatusReason"), f = e("annotationName")("deploymentCancelled");
+i.metadata.annotations[m] = "New", delete i.metadata.annotations[p], delete i.metadata.annotations[f], r.update(u, s, i, n).then(function() {
+o.addNotification({
 type: "success",
-message: "Retrying deployment " + c + " of " + l + "."
+message: "Retrying deployment " + s + " of " + c + "."
 });
-}, function(e) {
-t.addNotification({
+}, function(t) {
+o.addNotification({
 type: "error",
 message: "An error occurred while retrying the deployment.",
-details: r("getErrorDetails")(e)
+details: e("getErrorDetails")(t)
 });
 });
-}, i.prototype.rollbackToDeployment = function(a, o, i, c, l) {
-var u = a.metadata.name, d = s(a, "deploymentConfig"), m = {
+}, i.prototype.rollbackToDeployment = function(t, a, i, s, l) {
+var u = t.metadata.name, m = d(t, "deploymentConfig"), p = {
 apiVersion: "apps.openshift.io/v1",
 kind: "DeploymentConfigRollback",
-name: d,
+name: m,
 spec: {
 from: {
 name: u
 },
 includeTemplate: !0,
-includeReplicationMeta: o,
+includeReplicationMeta: a,
 includeStrategy: i,
-includeTriggers: c
+includeTriggers: s
 }
 };
-n.create({
-group: "apps.openshift.io",
-resource: "deploymentconfigs/rollback"
-}, d, m, l).then(function(a) {
-var o = e.objectToResourceGroupVersion(a);
-n.update(o, d, a, l).then(function(e) {
-t.addNotification({
+r.create(c, m, p, l).then(function(t) {
+var a = n.objectToResourceGroupVersion(t);
+r.update(a, m, t, l).then(function(e) {
+o.addNotification({
 type: "success",
-message: "Deployment #" + e.status.latestVersion + " is rolling back " + d + " to " + u + "."
+message: "Deployment #" + e.status.latestVersion + " is rolling back " + m + " to " + u + "."
 });
-}, function(e) {
-t.addNotification({
+}, function(t) {
+o.addNotification({
 id: "rollback-deployment-error",
 type: "error",
 message: "An error occurred while rolling back the deployment.",
-details: r("getErrorDetails")(e)
+details: e("getErrorDetails")(t)
 });
 });
-}, function(e) {
-t.addNotification({
+}, function(t) {
+o.addNotification({
 id: "rollback-deployment-error",
 type: "error",
 message: "An error occurred while rolling back the deployment.",
-details: r("getErrorDetails")(e)
+details: e("getErrorDetails")(t)
 });
 });
-}, i.prototype.cancelRunningDeployment = function(e, a) {
-var o = e.metadata.name, i = r("annotation")(e, "deploymentConfig"), s = angular.copy(e), c = r("annotationName")("deploymentCancelled"), l = r("annotationName")("deploymentStatusReason");
-s.metadata.annotations[c] = "true", s.metadata.annotations[l] = "The deployment was cancelled by the user", n.update("replicationcontrollers", o, s, a).then(function() {
-t.addNotification({
+}, i.prototype.cancelRunningDeployment = function(t, n) {
+var a = t.metadata.name, i = e("annotation")(t, "deploymentConfig"), s = angular.copy(t), c = e("annotationName")("deploymentCancelled"), l = e("annotationName")("deploymentStatusReason");
+s.metadata.annotations[c] = "true", s.metadata.annotations[l] = "The deployment was cancelled by the user", r.update(u, a, s, n).then(function() {
+o.addNotification({
 type: "success",
-message: "Cancelled deployment " + o + " of " + i + "."
+message: "Cancelled deployment " + a + " of " + i + "."
 });
-}, function(e) {
-t.addNotification({
+}, function(t) {
+o.addNotification({
 id: "cancel-deployment-error",
 type: "error",
 message: "An error occurred while cancelling the deployment.",
-details: r("getErrorDetails")(e)
+details: e("getErrorDetails")(t)
 });
 });
-}, i.prototype.associateDeploymentsToDeploymentConfig = function(e, t, n) {
-var a = {}, i = o.getLabelSelector();
-return angular.forEach(e, function(e, o) {
-var s = r("annotation")(e, "deploymentConfig");
-(!n || t && t[s] || i.matches(e)) && (a[s = s || ""] = a[s] || {}, a[s][o] = e);
-}), angular.forEach(t, function(e, t) {
-a[t] = a[t] || {};
-}), a;
-}, i.prototype.deploymentBelongsToConfig = function(e, t) {
-return !(!e || !t) && t === r("annotation")(e, "deploymentConfig");
-}, i.prototype.associateRunningDeploymentToDeploymentConfig = function(e) {
-var t = {};
-return angular.forEach(e, function(e, n) {
-t[n] = {}, angular.forEach(e, function(e, a) {
-var o = r("deploymentStatus")(e);
-"New" !== o && "Pending" !== o && "Running" !== o || (t[n][a] = e);
+}, i.prototype.associateDeploymentsToDeploymentConfig = function(t, n, r) {
+var o = {}, i = a.getLabelSelector();
+return angular.forEach(t, function(t, a) {
+var s = e("annotation")(t, "deploymentConfig");
+(!r || n && n[s] || i.matches(t)) && (o[s = s || ""] = o[s] || {}, o[s][a] = t);
+}), angular.forEach(n, function(e, t) {
+o[t] = o[t] || {};
+}), o;
+}, i.prototype.deploymentBelongsToConfig = function(t, n) {
+return !(!t || !n) && n === e("annotation")(t, "deploymentConfig");
+}, i.prototype.associateRunningDeploymentToDeploymentConfig = function(t) {
+var n = {};
+return angular.forEach(t, function(t, r) {
+n[r] = {}, angular.forEach(t, function(t, a) {
+var o = e("deploymentStatus")(t);
+"New" !== o && "Pending" !== o && "Running" !== o || (n[r][a] = t);
 });
-}), t;
-}, i.prototype.getActiveDeployment = function(e) {
-var t = r("deploymentIsInProgress"), n = r("annotation"), a = null;
-return _.each(e, function(e) {
-if (t(e)) return a = null, !1;
-"Complete" === n(e, "deploymentStatus") && (!a || a.metadata.creationTimestamp < e.metadata.creationTimestamp) && (a = e);
+}), n;
+}, i.prototype.getActiveDeployment = function(t) {
+var n = e("deploymentIsInProgress"), r = e("annotation"), a = null;
+return _.each(t, function(e) {
+if (n(e)) return a = null, !1;
+"Complete" === r(e, "deploymentStatus") && (!a || a.metadata.creationTimestamp < e.metadata.creationTimestamp) && (a = e);
 }), a;
 }, i.prototype.getRevision = function(e) {
-return s(e, "deployment.kubernetes.io/revision");
+return d(e, "deployment.kubernetes.io/revision");
 }, i.prototype.isActiveReplicaSet = function(e, t) {
 var n = this.getRevision(e), r = this.getRevision(t);
 return !(!n || !r) && n === r;
@@ -2250,27 +2247,27 @@ var r = this;
 return _.find(e, function(e) {
 return r.getRevision(e) === n;
 });
-}, i.prototype.getScaleResource = function(t) {
-var n = {
-resource: e.kindToResource(t.kind) + "/scale"
+}, i.prototype.getScaleResource = function(e) {
+var t = {
+resource: n.kindToResource(e.kind) + "/scale"
 };
-switch (t.kind) {
+switch (e.kind) {
 case "DeploymentConfig":
 break;
 
 case "Deployment":
 case "ReplicaSet":
 case "ReplicationController":
-n.group = "extensions";
+t.group = "extensions";
 break;
 
 default:
 return null;
 }
-return n;
-}, i.prototype.scale = function(e, t) {
-var r = this.getScaleResource(e);
-if (!r) return a.reject({
+return t;
+}, i.prototype.scale = function(e, n) {
+var a = this.getScaleResource(e);
+if (!a) return t.reject({
 data: {
 message: "Cannot scale kind " + e.kind + "."
 }
@@ -2284,33 +2281,33 @@ namespace: e.metadata.namespace,
 creationTimestamp: e.metadata.creationTimestamp
 },
 spec: {
-replicas: t
+replicas: n
 }
 };
-return n.update(r, e.metadata.name, o, {
+return r.update(a, e.metadata.name, o, {
 namespace: e.metadata.namespace
 });
 };
-var c = function(e, t) {
+var m = function(e, t) {
 var n = _.get(t, [ e ]);
 return !_.isEmpty(n);
-}, l = function(e, t) {
+}, p = function(e, t) {
 var n = _.get(t, [ e ]);
 return !_.isEmpty(n);
 };
 return i.prototype.isScalable = function(e, t, n, r, a) {
-if (l(e.metadata.name, r)) return !1;
-var o = s(e, "deploymentConfig");
-return !o || !!t && (!t[o] || !c(o, n) && _.get(a, [ o, "metadata", "name" ]) === e.metadata.name);
-}, i.prototype.groupByDeploymentConfig = function(e) {
-var t = {};
-return _.each(e, function(e) {
-var n = r("annotation")(e, "deploymentConfig") || "";
-_.set(t, [ n, e.metadata.name ], e);
-}), t;
+if (p(e.metadata.name, r)) return !1;
+var o = d(e, "deploymentConfig");
+return !o || !!t && (!t[o] || !m(o, n) && _.get(a, [ o, "metadata", "name" ]) === e.metadata.name);
+}, i.prototype.groupByDeploymentConfig = function(t) {
+var n = {};
+return _.each(t, function(t) {
+var r = e("annotation")(t, "deploymentConfig") || "";
+_.set(n, [ r, t.metadata.name ], t);
+}), n;
 }, i.prototype.sortByDeploymentVersion = function(e, t) {
 return _.toArray(e).sort(function(e, n) {
-var r, a, o = parseInt(s(e, "deploymentVersion"), 10), i = parseInt(s(n, "deploymentVersion"), 10);
+var r, a, o = parseInt(d(e, "deploymentVersion"), 10), i = parseInt(d(n, "deploymentVersion"), 10);
 return _.isFinite(o) || _.isFinite(i) ? o ? i ? t ? i - o : o - i : t ? -1 : 1 : t ? 1 : -1 : (r = _.get(e, "metadata.name", ""), a = _.get(n, "metadata.name", ""), t ? a.localeCompare(r) : r.localeCompare(a));
 });
 }, i.prototype.sortByRevision = function(e) {
@@ -2324,9 +2321,9 @@ return _.toArray(e).sort(function(e, t) {
 var r = n(e), a = n(t);
 return r || a ? r ? a ? a - r : -1 : 1 : e.metadata.name.localeCompare(t.metadata.name);
 });
-}, i.prototype.setPaused = function(t, r, a) {
-var o = angular.copy(t), i = e.objectToResourceGroupVersion(t);
-return _.set(o, "spec.paused", r), n.update(i, t.metadata.name, o, a);
+}, i.prototype.setPaused = function(e, t, a) {
+var o = angular.copy(e), i = n.objectToResourceGroupVersion(e);
+return _.set(o, "spec.paused", t), r.update(i, e.metadata.name, o, a);
 }, new i();
 } ]), angular.module("openshiftConsole").factory("ImageStreamsService", function() {
 return {
