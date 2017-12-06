@@ -4,9 +4,15 @@ angular.module("openshiftConsole")
   .factory("BuildsService",
            function($filter,
                     $q,
+                    APIService,
                     DataService,
                     Navigate,
                     NotificationsService) {
+
+    var buildsVersion = APIService.getPreferredVersion('builds');
+    var buildConfigsInstantiateVersion = APIService.getPreferredVersion('buildconfigs/instantiate');
+    var buildsCloneVersion = APIService.getPreferredVersion('builds/clone');
+
     var annotation = $filter('annotation');
     var buildConfigForBuild = $filter('buildConfigForBuild');
     var getErrorDetails = $filter('getErrorDetails');
@@ -44,7 +50,7 @@ angular.module("openshiftConsole")
       var context = {
         namespace: buildConfig.metadata.namespace
       };
-      return DataService.create("buildconfigs/instantiate", buildConfig.metadata.name, req, context).then(function(build) {
+      return DataService.create(buildConfigsInstantiateVersion, buildConfig.metadata.name, req, context).then(function(build) {
         var message, details;
         var displayName = getBuildDisplayName(build, buildConfig.metadata.name);
         var runPolicy = _.get(buildConfig, 'spec.runPolicy');
@@ -82,7 +88,7 @@ angular.module("openshiftConsole")
       };
       var canceledBuild = angular.copy(build);
       canceledBuild.status.cancelled = true;
-      return DataService.update("builds", canceledBuild.metadata.name, canceledBuild, context).then(function() {
+      return DataService.update(buildsVersion, canceledBuild.metadata.name, canceledBuild, context).then(function() {
         NotificationsService.addNotification({
           type: "success",
           message: _.capitalize(buildType) + " " + displayName + " successfully cancelled."
@@ -111,7 +117,7 @@ angular.module("openshiftConsole")
       var context = {
         namespace: originalBuild.metadata.namespace
       };
-      return DataService.create("builds/clone", originalBuild.metadata.name, req, context).then(function(clonedBuild) {
+      return DataService.create(buildsCloneVersion, originalBuild.metadata.name, req, context).then(function(clonedBuild) {
         var clonedDisplayName = getBuildDisplayName(clonedBuild, buildConfigName);
         NotificationsService.addNotification({
           type: "success",
