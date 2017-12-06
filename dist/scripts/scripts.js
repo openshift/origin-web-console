@@ -6257,26 +6257,26 @@ details: e("getErrorDetails")(n)
 })), t.$on("$destroy", function() {
 o.unwatchAll(p);
 });
-} ]), angular.module("openshiftConsole").controller("ServicesController", [ "$routeParams", "$scope", "DataService", "ProjectsService", "$filter", "LabelFilter", "Logger", function(e, t, n, r, a, o, i) {
-t.projectName = e.project, t.services = {}, t.unfilteredServices = {}, t.routesByService = {}, t.routes = {}, t.labelSuggestions = {}, t.clearFilter = function() {
-o.clear();
+} ]), angular.module("openshiftConsole").controller("ServicesController", [ "$filter", "$routeParams", "$scope", "APIService", "DataService", "ProjectsService", "LabelFilter", "Logger", function(e, t, n, r, a, o, i, s) {
+n.projectName = t.project, n.services = {}, n.unfilteredServices = {}, n.routesByService = {}, n.routes = {}, n.labelSuggestions = {}, n.clearFilter = function() {
+i.clear();
 };
-var s = [];
-r.get(e.project).then(_.spread(function(e, r) {
-function a() {
-t.filterWithZeroResults = !o.getLabelSelector().isEmpty() && _.isEmpty(t.services) && !_.isEmpty(t.unfilteredServices);
+var c = r.getPreferredVersion("services"), l = [];
+o.get(t.project).then(_.spread(function(e, t) {
+function r() {
+n.filterWithZeroResults = !i.getLabelSelector().isEmpty() && _.isEmpty(n.services) && !_.isEmpty(n.unfilteredServices);
 }
-t.project = e, s.push(n.watch("services", r, function(e) {
-t.servicesLoaded = !0, t.unfilteredServices = e.by("metadata.name"), o.addLabelSuggestionsFromResources(t.unfilteredServices, t.labelSuggestions), o.setLabelSuggestions(t.labelSuggestions), t.services = o.getLabelSelector().select(t.unfilteredServices), a(), i.log("services (subscribe)", t.unfilteredServices);
-})), o.onActiveFiltersChanged(function(e) {
-t.$evalAsync(function() {
-t.services = e.select(t.unfilteredServices), a();
+n.project = e, l.push(a.watch(c, t, function(e) {
+n.servicesLoaded = !0, n.unfilteredServices = e.by("metadata.name"), i.addLabelSuggestionsFromResources(n.unfilteredServices, n.labelSuggestions), i.setLabelSuggestions(n.labelSuggestions), n.services = i.getLabelSelector().select(n.unfilteredServices), r(), s.log("services (subscribe)", n.unfilteredServices);
+})), i.onActiveFiltersChanged(function(e) {
+n.$evalAsync(function() {
+n.services = e.select(n.unfilteredServices), r();
 });
-}), t.$on("$destroy", function() {
-n.unwatchAll(s);
+}), n.$on("$destroy", function() {
+a.unwatchAll(l);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("ServiceController", [ "$scope", "$routeParams", "DataService", "ProjectsService", "$filter", function(e, t, n, r, a) {
+} ]), angular.module("openshiftConsole").controller("ServiceController", [ "$scope", "$routeParams", "APIService", "DataService", "ProjectsService", "$filter", function(e, t, n, r, a, o) {
 e.projectName = t.project, e.service = null, e.services = null, e.alerts = {}, e.renderOptions = e.renderOptions || {}, e.renderOptions.hideFilterWidget = !0, e.breadcrumbs = [ {
 title: "Services",
 link: "project/" + t.project + "/browse/services"
@@ -6285,40 +6285,42 @@ title: t.service
 } ], e.podFailureReasons = {
 Pending: "This pod will not receive traffic until all of its containers have been created."
 };
-var o = {}, i = [], s = function() {
+var i = n.getPreferredVersion("pods"), s = n.getPreferredVersion("endpoints");
+e.eventsVersion = n.getPreferredVersion("events"), e.routesVersion = n.getPreferredVersion("routes"), e.servicesVersion = n.getPreferredVersion("services");
+var c = {}, l = [], u = function() {
 e.service && (e.portsByRoute = {}, _.each(e.service.spec.ports, function(t) {
 var n = !1;
 t.nodePort && (e.showNodePorts = !0), _.each(e.routesForService, function(r) {
 r.spec.port && r.spec.port.targetPort !== t.name && r.spec.port.targetPort !== t.targetPort || (e.portsByRoute[r.metadata.name] = e.portsByRoute[r.metadata.name] || [], e.portsByRoute[r.metadata.name].push(t), n = !0);
 }), n || (e.portsByRoute[""] = e.portsByRoute[""] || [], e.portsByRoute[""].push(t));
 }));
-}, c = function() {
+}, d = function() {
 if (e.podsForService = {}, e.service) {
 var t = new LabelSelector(e.service.spec.selector);
-e.podsForService = t.select(o);
+e.podsForService = t.select(c);
 }
-}, l = function(t, n) {
-e.loaded = !0, e.service = t, c(), s(), "DELETED" === n && (e.alerts.deleted = {
+}, m = function(t, n) {
+e.loaded = !0, e.service = t, d(), u(), "DELETED" === n && (e.alerts.deleted = {
 type: "warning",
 message: "This service has been deleted."
 });
 };
-r.get(t.project).then(_.spread(function(r, u) {
-e.project = r, e.projectContext = u, n.get("services", t.service, u, {
+a.get(t.project).then(_.spread(function(n, a) {
+e.project = n, e.projectContext = a, r.get(e.servicesVersion, t.service, a, {
 errorNotification: !1
-}).then(function(e) {
-l(e), i.push(n.watchObject("services", t.service, u, l));
+}).then(function(n) {
+m(n), l.push(r.watchObject(e.servicesVersion, t.service, a, m));
 }, function(t) {
 e.loaded = !0, e.alerts.load = {
 type: "error",
 message: "The service details could not be loaded.",
-details: a("getErrorDetails")(t)
+details: o("getErrorDetails")(t)
 };
-}), i.push(n.watch("services", u, function(t) {
+}), l.push(r.watch(e.servicesVersion, a, function(t) {
 e.services = t.by("metadata.name");
-})), i.push(n.watch("pods", u, function(e) {
-o = e.by("metadata.name"), c();
-})), i.push(n.watch("endpoints", u, function(n) {
+})), l.push(r.watch(i, a, function(e) {
+c = e.by("metadata.name"), d();
+})), l.push(r.watch(s, a, function(n) {
 e.podsWithEndpoints = {};
 var r = n.by("metadata.name")[t.service];
 r && _.each(r.subsets, function(t) {
@@ -6326,12 +6328,12 @@ _.each(t.addresses, function(t) {
 "Pod" === _.get(t, "targetRef.kind") && (e.podsWithEndpoints[t.targetRef.name] = !0);
 });
 });
-})), i.push(n.watch("routes", u, function(n) {
+})), l.push(r.watch(e.routesVersion, a, function(n) {
 e.routesForService = {}, angular.forEach(n.by("metadata.name"), function(n) {
 "Service" === n.spec.to.kind && n.spec.to.name === t.service && (e.routesForService[n.metadata.name] = n);
-}), s(), Logger.log("routes (subscribe)", e.routesByService);
+}), u(), Logger.log("routes (subscribe)", e.routesByService);
 })), e.$on("$destroy", function() {
-n.unwatchAll(i);
+r.unwatchAll(l);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("ServiceInstancesController", [ "$scope", "$filter", "$routeParams", "APIService", "BindingService", "Constants", "DataService", "LabelFilter", "Logger", "ProjectsService", function(e, t, n, r, a, o, i, s, c, l) {
