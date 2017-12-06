@@ -1877,28 +1877,29 @@ t >= 0 && this.tasks.splice(t, 1);
 }, t.prototype.clear = function() {
 n.tasks = [];
 }, n;
-} ]), angular.module("openshiftConsole").factory("ImageStreamResolver", [ "$q", "DataService", function(e, t) {
-function n() {}
-return n.prototype.fetchReferencedImageStreamImages = function(n, r, a, o) {
-var i = {};
-return angular.forEach(n, function(e) {
+} ]), angular.module("openshiftConsole").factory("ImageStreamResolver", [ "$q", "APIService", "DataService", function(e, t, n) {
+function r() {}
+var a = t.getPreferredVersion("imagestreamimages");
+return r.prototype.fetchReferencedImageStreamImages = function(t, r, o, i) {
+var s = {};
+return angular.forEach(t, function(e) {
 angular.forEach(e.spec.containers, function(e) {
-var n = e.image;
-if (n && !r[n] && !i[n]) {
-var s = a[n];
-if (s) {
-var c = s.split("@"), l = t.get("imagestreamimages", s, o);
-l.then(function(e) {
+var t = e.image;
+if (t && !r[t] && !s[t]) {
+var c = o[t];
+if (c) {
+var l = c.split("@"), u = n.get(a, c, i);
+u.then(function(e) {
 if (e && e.image) {
-var t = angular.copy(e.image);
-t.imageStreamName = c[0], t.imageStreamNamespace = o.project.metadata.name, r[n] = t;
+var n = angular.copy(e.image);
+n.imageStreamName = l[0], n.imageStreamNamespace = i.project.metadata.name, r[t] = n;
 }
-}), i[n] = l;
+}), s[t] = u;
 }
 }
 });
-}), e.all(i);
-}, n.prototype.buildDockerRefMapForImageStreams = function(e, t) {
+}), e.all(s);
+}, r.prototype.buildDockerRefMapForImageStreams = function(e, t) {
 angular.forEach(e, function(e) {
 angular.forEach(e.status.tags, function(n) {
 angular.forEach(n.items, function(n) {
@@ -1906,7 +1907,7 @@ n.image && (t[n.dockerImageReference] = e.metadata.name + "@" + n.image);
 });
 });
 });
-}, new n();
+}, new r();
 } ]), angular.module("openshiftConsole").factory("ContainerWebSocket", [ "API_CFG", "$ws", function(e, t) {
 return function(n, r) {
 return 0 === n.indexOf("/") && (n = ("http:" === window.location.protocol ? "ws://" : "wss://") + e.openshift.hostPort + n), t({
