@@ -5325,16 +5325,15 @@ to{background-color:transparent}
 .build-pipeline-collapsed .close{color:#8b8d8f;font-size:16px;opacity:.85;position:absolute;right:10px;top:7px}
 .build-pipeline-collapsed .close:hover{opacity:1}
 .project-bar{background-color:#292e34;border-bottom:1px solid #050505;display:flex;height:28px;left:0;position:fixed;right:0;top:41px;z-index:1029}
-.project-bar .add-to-project{align-items:center;color:#d1d1d1;font-weight:300;justify-content:center;margin:0 5px 0 0}
+.project-bar .add-to-project{align-items:center;color:#d1d1d1;justify-content:center;margin:0 5px 0 0}
+.project-bar .add-to-project>.btn-link{align-items:center;color:#d1d1d1;display:flex;flex:1 1 auto;font-weight:300;justify-content:center}
 @media (min-width:768px){.project-bar{height:40px;top:61px}
-.project-bar .add-to-project{margin:5px 15px 0 5px}
-}
-.project-bar .add-to-project>.btn-link{align-items:center;color:#d1d1d1;display:flex;flex:1 1 auto;font-size:13px;justify-content:center;margin:2px 2px 0;padding:0 2px}
-@media (min-width:768px){.project-bar .add-to-project>.btn-link{background-color:#292e34;border:1px solid #030303;padding:3px 5px 0}
+.project-bar .add-to-project{margin:7px 10px 0 5px}
+.project-bar .add-to-project>.btn-link{background-color:#292e34;border:1px solid #030303}
 }
 .project-bar .add-to-project>.btn-link:active,.project-bar .add-to-project>.btn-link:focus,.project-bar .add-to-project>.btn-link:hover{color:#fff;text-decoration:none}
 .project-bar .add-to-project>.btn-link>i{padding:4px 5px}
-.project-bar .add-to-project .caret{padding-left:20px}
+.project-bar .add-to-project .caret{padding-left:18px}
 .project-bar .add-to-project .dropdown-menu{margin-top:0;right:-2px}
 @media (min-width:768px){.project-bar .add-to-project .dropdown-menu{right:-1px}
 }
@@ -5365,21 +5364,22 @@ to{background-color:transparent}
 }
 .project-bar .bootstrap-select.btn-group .dropdown-menu li a:focus,.project-bar .bootstrap-select.btn-group .dropdown-menu li a:hover{background-color:#3b424b;border-color:transparent;color:#fff}
 .project-bar .catalog-search{background:0 0;border:0;margin-left:15px;padding:5px 0;position:relative;width:inherit}
+@media (min-width:768px){.project-bar .catalog-search{padding-top:7px;position:inherit}
+}
 @media (max-width:767px){.project-bar .bootstrap-select.btn-group .dropdown-menu li a span.text{word-break:break-all;word-break:break-word;overflow-wrap:break-word}
 .project-bar .catalog-search{border-right:1px solid #030303;margin-left:0;padding:2px 5px}
 .project-bar .catalog-search.mobile-shown{background:#292e34;padding-bottom:10px;z-index:1000}
 }
-.project-bar .catalog-search .catalog-search-icon{left:5px;top:5px}
+.project-bar .catalog-search .catalog-search-icon{left:5px;top:4px}
 .project-bar .catalog-search .catalog-search-input{text-indent:20px}
 .project-bar .catalog-search .catalog-search-toggle{color:#d1d1d1}
 .project-bar .catalog-search .catalog-search-toggle:active,.project-bar .catalog-search .catalog-search-toggle:focus,.project-bar .catalog-search .catalog-search-toggle:hover{color:#fff;text-decoration:none}
 .project-bar .catalog-search .catalog-search-toggle:focus{outline:dotted thin!important;outline:-webkit-focus-ring-color auto 5px!important;outline-offset:-2px!important}
-@media (min-width:768px){.project-bar .catalog-search{margin-top:2px;position:inherit}
-.project-bar .catalog-search .dropdown-menu{left:auto!important;right:0;width:300px}
+@media (min-width:768px){.project-bar .catalog-search .dropdown-menu{left:auto!important;right:0;width:300px}
 }
 .project-bar .catalog-search .landing-search-form{width:300px}
 .project-bar .catalog-search .landing-search-form .search-pf-input-group button{color:#d1d1d1}
-.project-bar .catalog-search .landing-search-form .search-pf-input-group .form-control{background-color:#292e34;border-color:#030303;color:#d1d1d1;font-size:12px;height:2em}
+.project-bar .catalog-search .landing-search-form .search-pf-input-group .form-control{background-color:#292e34;border-color:#030303;color:#d1d1d1;font-size:12px}
 .project-bar .catalog-search .landing-search-form .search-pf-input-group .form-control:focus{outline:dotted thin!important;outline:-webkit-focus-ring-color auto 5px!important;outline-offset:-2px!important}
 .project-bar .catalog-search .landing-search-form .search-pf-input-group .pficon-close{font-size:14px;margin-top:-.3em}
 .project-bar .catalog-search.mobile-shown .catalog-search-toggle{color:#39a5dc;padding:0 5px}
@@ -5388,7 +5388,7 @@ to{background-color:transparent}
 .project-bar .catalog-search.mobile-shown .landing-search-form .form-group{display:block}
 }
 .project-bar .form-group{flex:1 0 0%;margin-bottom:0;min-width:0}
-.project-bar .form-group .form-control{background-color:transparent;margin-bottom:0;height:auto}
+.project-bar .form-group .form-control{background-color:transparent}
 .project-bar .navbar-toggle{border:0;display:block;float:left;margin:0 10px;padding:12px 16px}
 @media (max-width:767px){.project-bar .navbar-toggle{display:none}
 }

@@ -20,27 +20,22 @@
   .add-to-project {
     align-items: center;
     color: @navbar-pf-vertical-color;
-    font-weight: 300;
     justify-content: center;
     margin: 0 5px 0 0;
     @media (min-width: @screen-sm-min) {
-      margin: 5px 15px 0 5px;
+      margin: 7px 10px 0 5px;
     }
     > .btn-link {
       align-items: center;
       color: @navbar-os-project-menu-color;
       display: flex;
       flex: 1 1 auto;
-      font-size: (@font-size-base + 1); // 13px
+      font-weight: 300;
       justify-content: center;
-
-      margin: 2px 2px 0;
-      padding: 0 2px;
 
       @media (min-width: @screen-sm-min) {
         background-color: @color-pf-black-900;
         border: 1px solid @navbar-pf-bg-color;
-        padding: 3px 5px 0 5px;
       }
       &:active,
       &:focus,
@@ -53,7 +48,7 @@
       }
     }
     .caret {
-      padding-left: 20px;
+      padding-left: 18px;
     }
     .dropdown-menu {
       margin-top: 0; // align top edge to project bar bottom
@@ -215,7 +210,7 @@
     position: relative;
     width: inherit;
     @media (min-width: @screen-sm-min) {
-      margin-top: 2px;
+      padding-top: 7px;
       position: inherit;
     }
     @media (max-width: @screen-xs-max) {
@@ -230,7 +225,7 @@
     }
     .catalog-search-icon {
       left: 5px;
-      top: 5px;
+      top: 4px;
     }
     .catalog-search-input {
       text-indent: 20px;
@@ -265,7 +260,6 @@
           border-color: @navbar-pf-bg-color;
           color: @navbar-os-project-menu-color;
           font-size: @font-size-base;
-          height: 2em;
           &:focus {
             .tab-focus();
           }
@@ -310,8 +304,6 @@
     min-width: 0; // so that truncation on .filter-option works
     .form-control {
       background-color: transparent;
-      margin-bottom: 0;
-      height: auto;
     }
   }
   .navbar-toggle {
