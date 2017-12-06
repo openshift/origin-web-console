@@ -14,6 +14,7 @@ mkdir -p .tmp
 cp -rf ../dist/404.html .tmp/404.html
 cp -rf ../dist/index.html .tmp/index.html
 sed -i 's/<base href="\/">/<base href="\/console\/">/g' .tmp/index.html
+sed -i "s#<script src=\"scripts/extensions.js\"></script>#<script src=\"scripts/extensions.js\"></script>\n<input type=\"hidden\" name=\"openshift-version\" value=\"v3.6.1\"/>\n<input type=\"hidden\" name=\"dmos-version\" value=\"$tag\">#g" .tmp/index.html
 
 mkdir -p .tmp/console
 cp -rf ../dist/images .tmp/console/images
