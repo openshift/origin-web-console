@@ -1,17 +1,20 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("QuotaService", function(APIService,
-                                    $filter,
+  .factory("QuotaService", function($filter,
                                     $location,
                                     $rootScope,
                                     $routeParams,
                                     $q,
+                                    APIService,
                                     Constants,
                                     DataService,
                                     EventsService,
                                     Logger,
                                     NotificationsService) {
+
+    var resourceQuotasVersion = APIService.getPreferredVersion('resourcequotas');
+    var appliedClusterResourceQuotasVersion = APIService.getPreferredVersion('appliedclusterresourcequotas');
 
     var isNil = $filter('isNil');
     var usageValue = $filter('usageValue');
@@ -248,12 +251,12 @@ angular.module("openshiftConsole")
       var quotas, clusterQuotas, promises = [];
 
       // double check using the latest quotas
-      promises.push(DataService.list("resourcequotas", context).then(function(quotaData) {
+      promises.push(DataService.list(resourceQuotasVersion, context).then(function(quotaData) {
         quotas = quotaData.by("metadata.name");
         Logger.log("quotas", quotas);
       }));
 
-      promises.push(DataService.list("appliedclusterresourcequotas", context).then(function(clusterQuotaData) {
+      promises.push(DataService.list(appliedClusterResourceQuotasVersion, context).then(function(clusterQuotaData) {
         clusterQuotas = clusterQuotaData.by("metadata.name");
         Logger.log("cluster quotas", clusterQuotas);
       }));
