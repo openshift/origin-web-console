@@ -6,7 +6,7 @@
 
 // NOTE: Update extensions/examples/online-extensions.js if you add a new help link to this map.
 
-var gettext = function(s) {
+var gettext = function (s) {
   return s;
 };
 
@@ -18,55 +18,55 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
   // Maps links to specific topics in external documentation.
   HELP_BASE_URL: "https://docs.openshift.org/latest/",
   HELP: {
-    "cli":                     "cli_reference/index.html",
-    "get_started_cli":         "cli_reference/get_started_cli.html",
-    "basic_cli_operations":    "cli_reference/basic_cli_operations.html",
-    "build-triggers":          "dev_guide/builds/triggering_builds.html",
-    "webhooks":                "dev_guide/builds/triggering_builds.html#webhook-triggers",
-    "new_app":                 "dev_guide/application_lifecycle/new_app.html",
-    "start-build":             "dev_guide/builds/basic_build_operations.html#starting-a-build",
-    "deployment-operations":   "cli_reference/basic_cli_operations.html#build-and-deployment-cli-operations",
-    "route-types":             "architecture/core_concepts/routes.html#route-types",
-    "persistent_volumes":      "dev_guide/persistent_volumes.html",
-    "compute_resources":       "dev_guide/compute_resources.html",
-    "pod_autoscaling":         "dev_guide/pod_autoscaling.html",
-    "application_health":      "dev_guide/application_health.html",
-    "source_secrets":          "dev_guide/builds/build_inputs.html#using-secrets-during-build",
-    "git_secret":              "dev_guide/builds/build_inputs.html#source-clone-secrets",
-    "pull_secret":             "dev_guide/managing_images.html#using-image-pull-secrets",
-    "managing_secrets":        "dev_guide/service_accounts.html#managing-allowed-secrets",
-    "creating_secrets":        "dev_guide/secrets.html#creating-secrets",
-    "storage_classes":         "install_config/persistent_storage/dynamically_provisioning_pvs.html",
-    "selector_label":          "install_config/persistent_storage/selector_label_binding.html",
-    "rolling_strategy":        "dev_guide/deployments/deployment_strategies.html#rolling-strategy",
-    "recreate_strategy":       "dev_guide/deployments/deployment_strategies.html#recreate-strategy",
-    "custom_strategy":         "dev_guide/deployments/deployment_strategies.html#custom-strategy",
-    "lifecycle_hooks":         "dev_guide/deployments/deployment_strategies.html#lifecycle-hooks",
-    "new_pod_exec":            "dev_guide/deployments/deployment_strategies.html#pod-based-lifecycle-hook",
-    "authorization":           "architecture/additional_concepts/authorization.html",
-    "roles":                   "architecture/additional_concepts/authorization.html#roles",
-    "service_accounts":        "dev_guide/service_accounts.html",
-    "users_and_groups":        "architecture/additional_concepts/authentication.html#users-and-groups",
-    "pipeline-builds":         "architecture/core_concepts/builds_and_image_streams.html#pipeline-build",
-    "pipeline-plugin":         "using_images/other_images/jenkins.html#openshift-origin-pipeline-plug-in",
-    "quota":                   "dev_guide/compute_resources.html",
-    "config-maps":             "dev_guide/configmaps.html",
-    "secrets":                 "dev_guide/secrets.html",
-    "deployments":             "dev_guide/deployments/how_deployments_work.html",
+    "cli": "cli_reference/index.html",
+    "get_started_cli": "cli_reference/get_started_cli.html",
+    "basic_cli_operations": "cli_reference/basic_cli_operations.html",
+    "build-triggers": "dev_guide/builds/triggering_builds.html",
+    "webhooks": "dev_guide/builds/triggering_builds.html#webhook-triggers",
+    "new_app": "dev_guide/application_lifecycle/new_app.html",
+    "start-build": "dev_guide/builds/basic_build_operations.html#starting-a-build",
+    "deployment-operations": "cli_reference/basic_cli_operations.html#build-and-deployment-cli-operations",
+    "route-types": "architecture/core_concepts/routes.html#route-types",
+    "persistent_volumes": "dev_guide/persistent_volumes.html",
+    "compute_resources": "dev_guide/compute_resources.html",
+    "pod_autoscaling": "dev_guide/pod_autoscaling.html",
+    "application_health": "dev_guide/application_health.html",
+    "source_secrets": "dev_guide/builds/build_inputs.html#using-secrets-during-build",
+    "git_secret": "dev_guide/builds/build_inputs.html#source-clone-secrets",
+    "pull_secret": "dev_guide/managing_images.html#using-image-pull-secrets",
+    "managing_secrets": "dev_guide/service_accounts.html#managing-allowed-secrets",
+    "creating_secrets": "dev_guide/secrets.html#creating-secrets",
+    "storage_classes": "install_config/persistent_storage/dynamically_provisioning_pvs.html",
+    "selector_label": "install_config/persistent_storage/selector_label_binding.html",
+    "rolling_strategy": "dev_guide/deployments/deployment_strategies.html#rolling-strategy",
+    "recreate_strategy": "dev_guide/deployments/deployment_strategies.html#recreate-strategy",
+    "custom_strategy": "dev_guide/deployments/deployment_strategies.html#custom-strategy",
+    "lifecycle_hooks": "dev_guide/deployments/deployment_strategies.html#lifecycle-hooks",
+    "new_pod_exec": "dev_guide/deployments/deployment_strategies.html#pod-based-lifecycle-hook",
+    "authorization": "architecture/additional_concepts/authorization.html",
+    "roles": "architecture/additional_concepts/authorization.html#roles",
+    "service_accounts": "dev_guide/service_accounts.html",
+    "users_and_groups": "architecture/additional_concepts/authentication.html#users-and-groups",
+    "pipeline-builds": "architecture/core_concepts/builds_and_image_streams.html#pipeline-build",
+    "pipeline-plugin": "using_images/other_images/jenkins.html#openshift-origin-pipeline-plug-in",
+    "quota": "dev_guide/compute_resources.html",
+    "config-maps": "dev_guide/configmaps.html",
+    "secrets": "dev_guide/secrets.html",
+    "deployments": "dev_guide/deployments/how_deployments_work.html",
     //"stateful-sets":           "", // TODO: docs are in progress
-    "pods":                    "architecture/core_concepts/pods_and_services.html#pods",
-    "services":                "architecture/core_concepts/pods_and_services.html#services",
-    "routes":                  "architecture/core_concepts/routes.html",
-    "builds":                  "architecture/core_concepts/builds_and_image_streams.html#builds",
-    "image-streams":           "architecture/core_concepts/builds_and_image_streams.html#image-streams",
-    "storage":                 "architecture/additional_concepts/storage.html",
-    "build-hooks":             "dev_guide/builds/build_hooks.html",
+    "pods": "architecture/core_concepts/pods_and_services.html#pods",
+    "services": "architecture/core_concepts/pods_and_services.html#services",
+    "routes": "architecture/core_concepts/routes.html",
+    "builds": "architecture/core_concepts/builds_and_image_streams.html#builds",
+    "image-streams": "architecture/core_concepts/builds_and_image_streams.html#image-streams",
+    "storage": "architecture/additional_concepts/storage.html",
+    "build-hooks": "dev_guide/builds/build_hooks.html",
     // default should remain last, add new links above
-    "default":                 "welcome/index.html"
+    "default": "welcome/index.html"
   },
   // Maps links names to URL's where the CLI tools can be downloaded, may point directly to files or to external pages in a CDN, for example.
   CLI: {
-    "Latest Release":          "https://github.com/openshift/origin/releases/latest"
+    "Latest Release": "https://github.com/openshift/origin/releases/latest"
   },
   // The default CPU target percentage for horizontal pod autoscalers created or edited in the web console.
   // This value is set in the HPA when the input is left blank.
@@ -314,6 +314,33 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
   ],
   CATALOG_CATEGORIES: [
     {
+      id: 'eams',
+      label: "DataManOS微服务治理",
+      items: [
+          {
+          id: "octopus",
+          categoryAliases: ["octopus"],
+          label: "Octopus",
+          iconClass: "font-icon icon-octopus-m",
+          description: gettext("")
+        },
+        {
+          id: "squid",
+          categoryAliases: ["squid"],
+          label: "Squid",
+          iconClass: "font-icon icon-squid-m",
+          description: gettext("")
+        },
+        {
+          id: "hawk",
+          categoryAliases: ["hawk"],
+          label: "Hawk",
+          iconClass: "font-icon icon-hawk-m",
+          description: gettext("")
+        }
+      ]
+    },
+    {
       id: 'languages',
       label: gettext("Languages"),
       iconClassDefault: "fa fa-code",
@@ -366,7 +393,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
         },
         {
           id: "javascript",
-          categoryAliases: ["nodejs","js"],
+          categoryAliases: ["nodejs", "js"],
           label: gettext("JavaScript"),
           iconClass: "font-icon icon-js"
         },
@@ -409,19 +436,19 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
       items: [
         {
           id: "business-process-services",
-          categoryAliases: ["decisionserver","processserver"],
+          categoryAliases: ["decisionserver", "processserver"],
           label: gettext("Business Process Services"),
           description: gettext("Model, automate, and orchestrate business processes across applications, services, and data.")
         },
         {
           id: "ci-cd",
-          categoryAliases:["jenkins"],
+          categoryAliases: ["jenkins"],
           label: gettext("Continuous Integration & Deployment"),
           description: gettext("Automate the build, test, and deployment of your application with each new code revision.")
         },
         {
           id: "datastore",
-          categoryAliases: ["database","datagrid"],
+          categoryAliases: ["database", "datagrid"],
           label: gettext("Data Stores"),
           description: gettext("Store and manage collections of data.")
         },

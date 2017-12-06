@@ -8,9 +8,7 @@ message: |-
   For more information about using this template, see https://github.com/Dataman-Cloud/hawk.
 metadata:
   annotations:
-    description: 基于微服务体系理念打造的分布式统一配置中心Hawk支持多种类型配置：如Spring Cloud、 Dubbo、Kubernetes
-      Configmap、Logback、Linux Environment，具有完善的配置管理流程、配置实施推送、支持多集群多环境、多版本控制，更提供配置细粒度的管理如灰度管理、任意版本重置等丰富功能。整个体系兼容开源社区的
-      Spring Cloud Config以及Kubernetes的Configmap，极大降低使用者的学习门开以及业务对平台的耦合。相应的管理流程也规范了配置的使用，降低配置带来的发布错误等。
+    description: 数人云统一配置管理中心 Hawk，为分布式系统中的基础设施和微服务应用提供集中化的外部配置中心，实现了对服务端和客户端中环境变量，配置文件，动态属性配置的抽象映射，并支持配置的灰度下发，历史版本控制等先进功能。配置接口完全兼容 Spring Cloud Config，后台管理功能则通过 open API的形式对外开放，满足企业多样化的定制需求。数人云配置中心能够管理 Springcloud的微服务框架的业务配置，服务治理配置以及kubernetes的configmap和secrets的配置，同时也能通过插件的方式对流行的第三方类库提供特别支持，比如与 sharding-jdbc 的深度集成。
     iconClass: icon-hawk
     openshift.io/display-name: Hawk
     tags: quickstart,hawk,dataman

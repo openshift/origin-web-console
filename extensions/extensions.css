@@ -27,3 +27,38 @@
   background: url("../images/icon-squid.png");
   background-size: 100%;
 }
+.icon-octopus-m,.icon-hawk-m,.icon-squid-m{
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+}
+.icon-octopus-m{
+  background: url("../images/icon-octopus.png");
+  background-size: 100%;
+}
+.icon-hawk-m{
+  background: url("../images/icon-hawk.png");
+  background-size: 100%;
+}
+.icon-squid-m{
+  background: url("../images/icon-squid.png");
+  background-size: 100%;
+}
+
+.icon-octopus-b,.icon-hawk-b,.icon-squid-b{
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+}
+.icon-octopus-b{
+  background: url("../images/icon-octopus.png");
+  background-size: 100%;
+}
+.icon-hawk-b{
+  background: url("../images/icon-hawk.png");
+  background-size: 100%;
+}
+.icon-squid-b{
+  background: url("../images/icon-squid.png");
+  background-size: 100%;
+}
