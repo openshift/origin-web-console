@@ -1,8 +1,21 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("DeploymentsService", function(APIService, NotificationsService, DataService, $filter, $q, LabelFilter){
+  .factory("DeploymentsService", function(
+    $filter,
+    $q,
+    APIService,
+    DataService,
+    LabelFilter,
+    NotificationsService) {
+
     function DeploymentsService() {}
+
+    var deploymentConfigsInstantiateVersion = APIService.getPreferredVersion('deploymentconfigs/instantiate');
+    var deploymentConfigsRollbackVersion = APIService.getPreferredVersion('deploymentconfigs/rollback');
+    var podsVersion = APIService.getPreferredVersion('pods');
+    var replicationControllersVersion = APIService.getPreferredVersion('replicationcontrollers');
+
     var annotation = $filter('annotation');
 
     DeploymentsService.prototype.startLatestDeployment = function(deploymentConfig, context) {
@@ -15,7 +28,7 @@ angular.module("openshiftConsole")
         force: true
       };
 
-      DataService.create("deploymentconfigs/instantiate", deploymentConfig.metadata.name, req, context).then(
+      DataService.create(deploymentConfigsInstantiateVersion, deploymentConfig.metadata.name, req, context).then(
         function(updatedDC) {
           NotificationsService.addNotification({
               type: "success",
@@ -39,12 +52,12 @@ angular.module("openshiftConsole")
       // TODO: we need a "retry" api endpoint so we don't have to do this manually
 
       // delete the deployer pod as well as the deployment hooks pods, if any
-      DataService.list("pods", context, function(list) {
+      DataService.list(podsVersion, context, function(list) {
         var pods = list.by("metadata.name");
         var deleteDeployerPod = function(pod) {
           var deployerPodForAnnotation = $filter('annotationName')('deployerPodFor');
           if (pod.metadata.labels[deployerPodForAnnotation] === deploymentName) {
-            DataService.delete("pods", pod.metadata.name, $scope).then(
+            DataService.delete(podsVersion, pod.metadata.name, $scope).then(
               function() {
                 Logger.info("Deployer pod " + pod.metadata.name + " deleted");
               },
@@ -72,7 +85,7 @@ angular.module("openshiftConsole")
       delete req.metadata.annotations[deploymentCancelledAnnotation];
 
       // update the deployment
-      DataService.update("replicationcontrollers", deploymentName, req, context).then(
+      DataService.update(replicationControllersVersion, deploymentName, req, context).then(
         function() {
           NotificationsService.addNotification({
               type: "success",
@@ -109,10 +122,7 @@ angular.module("openshiftConsole")
       };
 
       // create the deployment config rollback
-      DataService.create({
-        group: 'apps.openshift.io',
-        resource: 'deploymentconfigs/rollback'
-      }, deploymentConfigName, req, context).then(
+      DataService.create(deploymentConfigsRollbackVersion, deploymentConfigName, req, context).then(
         function(newDeploymentConfig) {
           var rgv = APIService.objectToResourceGroupVersion(newDeploymentConfig);
           // update the deployment config based on the one returned by the rollback
@@ -157,7 +167,7 @@ angular.module("openshiftConsole")
       req.metadata.annotations[deploymentStatusReasonAnnotation] = "The deployment was cancelled by the user";
 
       // update the deployment with cancellation annotations
-      DataService.update("replicationcontrollers", deploymentName, req, context).then(
+      DataService.update(replicationControllersVersion, deploymentName, req, context).then(
         function() {
           NotificationsService.addNotification({
               type: "success",
