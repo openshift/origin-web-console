@@ -3239,21 +3239,21 @@ return ".dockercfg" === n || ".dockerconfigjson" === n ? o(e, n) : (r = window.a
 return n.$$nonprintable = t, n;
 }
 };
-} ]), angular.module("openshiftConsole").factory("ServicesService", [ "$filter", "$q", "DataService", function(e, t, n) {
-var r = "service.alpha.openshift.io/dependencies", a = e("annotation"), o = function(e) {
-var t = a(e, r);
+} ]), angular.module("openshiftConsole").factory("ServicesService", [ "$filter", "$q", "APIService", "DataService", function(e, t, n, r) {
+var a = n.getPreferredVersion("services"), o = "service.alpha.openshift.io/dependencies", i = e("annotation"), s = function(e) {
+var t = i(e, o);
 if (!t) return null;
 try {
 return JSON.parse(t);
 } catch (e) {
 return Logger.warn('Could not parse "service.alpha.openshift.io/dependencies" annotation', e), null;
 }
-}, i = function(e, t) {
-t.length ? _.set(e, [ "metadata", "annotations", r ], JSON.stringify(t)) : _.has(e, [ "metadata", "annotations", r ]) && delete e.metadata.annotations[r];
+}, c = function(e, t) {
+t.length ? _.set(e, [ "metadata", "annotations", o ], JSON.stringify(t)) : _.has(e, [ "metadata", "annotations", o ]) && delete e.metadata.annotations[o];
 };
 return {
 getDependentServices: function(e) {
-var t, n = o(e);
+var t, n = s(e);
 if (!n) return [];
 t = _.get(e, "metadata.namespace");
 return _.chain(n).filter(function(e) {
@@ -3263,25 +3263,25 @@ return e.name;
 }).value();
 },
 linkService: function(e, t) {
-var r = angular.copy(e), a = o(r) || [];
-return a.push({
+var n = angular.copy(e), o = s(n) || [];
+return o.push({
 name: t.metadata.name,
 namespace: e.metadata.namespace === t.metadata.namespace ? "" : t.metadata.namespace,
 kind: t.kind
-}), i(r, a), n.update("services", r.metadata.name, r, {
-namespace: r.metadata.namespace
+}), c(n, o), r.update(a, n.metadata.name, n, {
+namespace: n.metadata.namespace
 });
 },
-removeServiceLink: function(e, r) {
-var a = angular.copy(e), s = o(a) || [], c = _.reject(s, function(t) {
-return t.kind === r.kind && (t.namespace || e.metadata.namespace) === r.metadata.namespace && t.name === r.metadata.name;
+removeServiceLink: function(e, n) {
+var o = angular.copy(e), i = s(o) || [], l = _.reject(i, function(t) {
+return t.kind === n.kind && (t.namespace || e.metadata.namespace) === n.metadata.namespace && t.name === n.metadata.name;
 });
-return c.length === s.length ? t.when(!0) : (i(a, c), n.update("services", a.metadata.name, a, {
-namespace: a.metadata.namespace
+return l.length === i.length ? t.when(!0) : (c(o, l), r.update(a, o.metadata.name, o, {
+namespace: o.metadata.namespace
 }));
 },
 isInfrastructure: function(e) {
-return "true" === a(e, "service.openshift.io/infrastructure");
+return "true" === i(e, "service.openshift.io/infrastructure");
 }
 };
 } ]), angular.module("openshiftConsole").factory("ImagesService", [ "$filter", "ApplicationGenerator", "DataService", function(e, t, n) {
