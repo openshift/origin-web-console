@@ -3293,8 +3293,8 @@ isInfrastructure: function(e) {
 return "true" === i(e, "service.openshift.io/infrastructure");
 }
 };
-} ]), angular.module("openshiftConsole").factory("ImagesService", [ "$filter", "ApplicationGenerator", "DataService", function(e, t, n) {
-var r = function(e) {
+} ]), angular.module("openshiftConsole").factory("ImagesService", [ "$filter", "APIService", "ApplicationGenerator", "DataService", function(e, t, n, r) {
+var a = t.getPreferredVersion("imagestreamimports"), o = function(e) {
 return _.isArray(e) ? e : _.map(e, function(e, t) {
 return {
 name: t,
@@ -3304,7 +3304,7 @@ value: e
 };
 return {
 findImage: function(e, t) {
-var r = {
+var n = {
 kind: "ImageStreamImport",
 apiVersion: "v1",
 metadata: {
@@ -3322,7 +3322,7 @@ name: e
 },
 status: {}
 };
-return n.create("imagestreamimports", null, r, t).then(function(e) {
+return r.create(a, null, n, t).then(function(e) {
 return {
 name: _.get(e, "spec.images[0].from.name"),
 image: _.get(e, "status.images[0].image"),
@@ -3339,9 +3339,9 @@ var t = _.get(e, "dockerImageMetadata.Config.User");
 return !t || "0" === t || "root" === t;
 },
 getResources: function(e) {
-var n = [], a = {
+var t = [], r = {
 "openshift.io/generated-by": "OpenShiftWebConsole"
-}, o = r(e.env), i = [], s = [], c = 0;
+}, a = o(e.env), i = [], s = [], c = 0;
 if (_.forEach(e.volumes, function(t, n) {
 c++;
 var r = e.name + "-" + c;
@@ -3365,7 +3365,7 @@ tags: [ {
 name: e.tag,
 annotations: _.assign({
 "openshift.io/imported-from": e.image
-}, a),
+}, r),
 from: {
 kind: "DockerImage",
 name: e.image
@@ -3374,7 +3374,7 @@ importPolicy: {}
 } ]
 }
 };
-n.push(l);
+t.push(l);
 }
 var u = _.assign({
 deploymentconfig: e.name
@@ -3384,7 +3384,7 @@ apiVersion: "v1",
 metadata: {
 name: e.name,
 labels: e.labels,
-annotations: a
+annotations: r
 },
 spec: {
 strategy: {
@@ -3410,7 +3410,7 @@ selector: u,
 template: {
 metadata: {
 labels: u,
-annotations: a
+annotations: r
 },
 spec: {
 volumes: i,
@@ -3418,7 +3418,7 @@ containers: [ {
 name: e.name,
 image: e.image,
 ports: e.ports,
-env: o,
+env: a,
 volumeMounts: s
 } ],
 resources: {}
@@ -3427,7 +3427,7 @@ resources: {}
 },
 status: {}
 };
-n.push(d);
+t.push(d);
 var m;
 return _.isEmpty(e.ports) || (m = {
 kind: "Service",
@@ -3435,17 +3435,17 @@ apiVersion: "v1",
 metadata: {
 name: e.name,
 labels: e.labels,
-annotations: a
+annotations: r
 },
 spec: {
 selector: {
 deploymentconfig: e.name
 },
 ports: _.map(e.ports, function(e) {
-return t.getServicePort(e);
+return n.getServicePort(e);
 })
 }
-}, n.push(m)), n;
+}, t.push(m)), t;
 },
 getEnvironment: function(e) {
 return _.map(_.get(e, "image.dockerImageMetadata.Config.Env"), function(e) {
