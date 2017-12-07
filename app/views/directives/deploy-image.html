@@ -13,7 +13,7 @@
           </label>
         </div>
         <fieldset>
-          <istag-select model="istag" select-required="mode === 'istag'" select-disabled="mode !== 'istag'" include-shared-namespace="true"></istag-select>
+          <istag-select model="istag" select-required="mode === 'istag'" select-disabled="mode !== 'istag'" include-shared-namespace="true" append-to-body="isDialog"></istag-select>
           <div ng-if="mode == 'istag' && istag.namespace && istag.namespace !== 'openshift' && istag.namespace !== input.selectedProject.metadata.name" class="alert alert-warning">
             <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
             Service account <strong>default</strong> will need image pull authority to deploy images

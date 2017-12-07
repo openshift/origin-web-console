@@ -14019,7 +14019,8 @@ istag: "=model",
 selectDisabled: "=",
 selectRequired: "=",
 includeSharedNamespace: "=",
-allowCustomTag: "="
+allowCustomTag: "=",
+appendToBody: "="
 },
 templateUrl: "views/directives/istag-select.html",
 controller: [ "$scope", function(e) {
