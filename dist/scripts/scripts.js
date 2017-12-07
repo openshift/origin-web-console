@@ -14697,81 +14697,81 @@ u(), d();
 }(), function() {
 angular.module("openshiftConsole").component("notificationDrawerWrapper", {
 templateUrl: "views/directives/notifications/notification-drawer-wrapper.html",
-controller: [ "$filter", "$interval", "$location", "$rootScope", "$routeParams", "$scope", "$timeout", "Constants", "DataService", "EventsService", "NotificationsService", function(e, t, n, r, a, o, i, s, c, l) {
-var u, d, m = _.get(s, "DISABLE_GLOBAL_EVENT_WATCH"), p = e("isIE")(), f = this, g = [], v = {}, h = {}, y = {}, b = function(e) {
-e || (f.drawerHidden = !0);
-}, S = function(e, t) {
+controller: [ "$filter", "$interval", "$location", "$rootScope", "$routeParams", "$scope", "$timeout", "APIService", "Constants", "DataService", "EventsService", "NotificationsService", function(e, t, n, r, a, o, i, s, c, l, u) {
+var d, m, p = s.getPreferredVersion("events"), f = s.getPreferredVersion("projects"), g = _.get(c, "DISABLE_GLOBAL_EVENT_WATCH"), v = e("isIE")(), h = this, y = [], b = {}, S = {}, C = {}, w = function(e) {
+e || (h.drawerHidden = !0);
+}, P = function(e, t) {
 return _.get(e, "params.project") !== _.get(t, "params.project");
-}, C = function(e) {
-return c.get("projects", e, {}, {
+}, k = function(e) {
+return l.get(f, e, {}, {
 errorNotification: !1
 }).then(function(e) {
-return y[e.metadata.name] = e, e;
+return C[e.metadata.name] = e, e;
 });
-}, w = function(t, n) {
+}, j = function(t, n) {
 return {
-heading: e("displayName")(y[t]),
-project: y[t],
+heading: e("displayName")(C[t]),
+project: C[t],
 notifications: n
 };
-}, P = function(e) {
+}, I = function(e) {
 return _.filter(e, "unread");
-}, k = function() {
-_.each(f.notificationGroups, function(e) {
-e.totalUnread = P(e.notifications).length, e.hasUnread = !!e.totalUnread, r.$emit("NotificationDrawerWrapper.onUnreadNotifications", e.totalUnread);
+}, R = function() {
+_.each(h.notificationGroups, function(e) {
+e.totalUnread = I(e.notifications).length, e.hasUnread = !!e.totalUnread, r.$emit("NotificationDrawerWrapper.onUnreadNotifications", e.totalUnread);
 });
-}, j = function(e) {
-_.each(f.notificationGroups, function(t) {
+}, E = function(e) {
+_.each(h.notificationGroups, function(t) {
 _.remove(t.notifications, {
 uid: e.uid,
 namespace: e.namespace
 });
 });
-}, I = function(e) {
-h[a.project] && delete h[a.project][e.uid], v[a.project] && delete v[a.project][e.uid], j(e);
-}, R = function() {
-v[a.project] = {}, h[a.project] = {};
-}, E = function(e) {
+}, T = function(e) {
+S[a.project] && delete S[a.project][e.uid], b[a.project] && delete b[a.project][e.uid], E(e);
+}, N = function() {
+b[a.project] = {}, S[a.project] = {};
+}, D = function(e) {
 return _.reduce(e, function(e, t) {
 return e[t.metadata.uid] = {
 actions: null,
 uid: t.metadata.uid,
 trackByID: t.metadata.uid,
-unread: !l.isRead(t.metadata.uid),
+unread: !u.isRead(t.metadata.uid),
 type: t.type,
 lastTimestamp: t.lastTimestamp,
 firstTimestamp: t.firstTimestamp,
 event: t
 }, e;
 }, {});
-}, T = function(e) {
+}, A = function(e) {
 return _.reduce(e, function(e, t) {
-return l.isImportantAPIEvent(t) && !l.isCleared(t.metadata.uid) && (e[t.metadata.uid] = t), e;
+return u.isImportantAPIEvent(t) && !u.isCleared(t.metadata.uid) && (e[t.metadata.uid] = t), e;
 }, {});
-}, N = function(e, t) {
+}, $ = function(e, t) {
 var n = a.project;
 return _.assign({}, e[n], t[n]);
-}, D = function(e) {
+}, B = function(e) {
 return _.orderBy(e, [ "event.lastTimestamp", "event.metadata.resourceVersion" ], [ "desc", "desc" ]);
-}, A = function() {
-r.$evalAsync(function() {
-f.notificationGroups = [ w(a.project, D(N(v, h))) ], k();
-});
-}, $ = function() {
-_.each(g, function(e) {
-e();
-}), g = [];
-}, B = function() {
-d && (c.unwatch(d), d = null);
 }, L = function() {
-u && u(), u = null;
-}, U = function(e) {
-v[a.project] = E(T(e.by("metadata.name"))), A();
-}, O = function(e, t) {
+r.$evalAsync(function() {
+h.notificationGroups = [ j(a.project, B($(b, S))) ], R();
+});
+}, U = function() {
+_.each(y, function(e) {
+e();
+}), y = [];
+}, O = function() {
+m && (l.unwatch(m), m = null);
+}, V = function() {
+d && d(), d = null;
+}, F = function(e) {
+b[a.project] = D(A(e.by("metadata.name"))), L();
+}, x = function(e, t) {
 var n = t.namespace || a.project, r = t.id ? n + "/" + t.id : _.uniqueId("notification_") + Date.now();
-t.showInDrawer && !l.isCleared(r) && (h[n] = h[n] || {}, h[n][r] = {
+t.showInDrawer && !u.isCleared(r) && (S[n] = S[n] || {}, S[n][r] = {
 actions: t.actions,
-unread: !l.isRead(r),
+unread: !u.isRead(r),
 trackByID: t.trackByID,
 uid: r,
 type: t.type,
@@ -14781,21 +14781,21 @@ isHTML: t.isHTML,
 details: t.details,
 namespace: n,
 links: t.links
-}, A());
-}, V = function(e, t) {
-B(), e && (d = c.watch("events", {
+}, L());
+}, M = function(e, t) {
+O(), e && (m = l.watch(p, {
 namespace: e
 }, _.debounce(t, 400), {
 skipDigest: !0
 }));
-}, F = _.once(function(e, t) {
-L(), u = r.$on("NotificationsService.onNotificationAdded", t);
-}), x = function() {
-C(a.project).then(function() {
-V(a.project, U), F(a.project, O), b(a.project), A();
+}, q = _.once(function(e, t) {
+V(), d = r.$on("NotificationsService.onNotificationAdded", t);
+}), z = function() {
+k(a.project).then(function() {
+M(a.project, F), q(a.project, x), w(a.project), L();
 });
 };
-angular.extend(f, {
+angular.extend(h, {
 drawerHidden: !0,
 allowExpand: !0,
 drawerExpanded: "true" === localStorage.getItem("openshift/notification-drawer-expanded"),
@@ -14804,54 +14804,54 @@ hasUnread: !1,
 showClearAll: !0,
 showMarkAllRead: !0,
 onClose: function() {
-f.drawerHidden = !0;
+h.drawerHidden = !0;
 },
 onMarkAllRead: function(e) {
 _.each(e.notifications, function(e) {
-e.unread = !1, l.markRead(e.uid);
-}), A(), r.$emit("NotificationDrawerWrapper.onMarkAllRead");
+e.unread = !1, u.markRead(e.uid);
+}), L(), r.$emit("NotificationDrawerWrapper.onMarkAllRead");
 },
 onClearAll: function(e) {
 _.each(e.notifications, function(e) {
-e.unread = !1, l.markRead(e.uid), l.markCleared(e.uid);
-}), R(), A(), r.$emit("NotificationDrawerWrapper.onMarkAllRead");
+e.unread = !1, u.markRead(e.uid), u.markCleared(e.uid);
+}), N(), L(), r.$emit("NotificationDrawerWrapper.onMarkAllRead");
 },
 notificationGroups: [],
 headingInclude: "views/directives/notifications/header.html",
 notificationBodyInclude: "views/directives/notifications/notification-body.html",
 customScope: {
 clear: function(e, t, n) {
-l.markRead(e.uid), l.markCleared(e.uid), n.notifications.splice(t, 1), I(e), A();
+u.markRead(e.uid), u.markCleared(e.uid), n.notifications.splice(t, 1), T(e), L();
 },
 markRead: function(e) {
-e.unread = !1, l.markRead(e.uid), A();
+e.unread = !1, u.markRead(e.uid), L();
 },
 close: function() {
-f.drawerHidden = !0;
+h.drawerHidden = !0;
 },
 onLinkClick: function(e) {
-e.onClick(), f.drawerHidden = !0;
+e.onClick(), h.drawerHidden = !0;
 },
-countUnreadNotifications: k
+countUnreadNotifications: R
 }
 }), o.$watch("$ctrl.drawerExpanded", function(e) {
 localStorage.setItem("openshift/notification-drawer-expanded", e ? "true" : "false");
 });
-var M = function() {
-a.project && x(), g.push(r.$on("$routeChangeSuccess", function(e, t, n) {
-S(t, n) && (f.customScope.projectName = a.project, x());
-})), g.push(r.$on("NotificationDrawerWrapper.toggle", function() {
-f.drawerHidden = !f.drawerHidden;
-})), g.push(r.$on("NotificationDrawerWrapper.hide", function() {
-f.drawerHidden = !0;
-})), g.push(r.$on("NotificationDrawerWrapper.clear", function(e, t) {
-l.markCleared(t.uid), I(t), f.countUnreadNotifications();
+var H = function() {
+a.project && z(), y.push(r.$on("$routeChangeSuccess", function(e, t, n) {
+P(t, n) && (h.customScope.projectName = a.project, z());
+})), y.push(r.$on("NotificationDrawerWrapper.toggle", function() {
+h.drawerHidden = !h.drawerHidden;
+})), y.push(r.$on("NotificationDrawerWrapper.hide", function() {
+h.drawerHidden = !0;
+})), y.push(r.$on("NotificationDrawerWrapper.clear", function(e, t) {
+u.markCleared(t.uid), T(t), h.countUnreadNotifications();
 }));
 };
-f.$onInit = function() {
-m || p || M();
-}, f.$onDestroy = function() {
-L(), B(), $();
+h.$onInit = function() {
+g || v || H();
+}, h.$onDestroy = function() {
+V(), O(), U();
 };
 } ]
 });
