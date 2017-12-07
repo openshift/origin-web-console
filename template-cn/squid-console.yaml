@@ -32,38 +32,43 @@ objects:
       ]
   kind: ConfigMap
   metadata:
-    name: ${SQUID_CONFIG_NAME}
+    name: ${APP_NAME}-config
 - apiVersion: v1
   kind: Service
   metadata:
     annotations:
       description: Exposes the squid-console server
-    name: ${SQUID_CONSOLE_NAME}
+    name: ${APP_NAME}-console
   spec:
     ports:
     - name: squid-console
       port: 9088
       targetPort: 9088
     selector:
-      name: ${SQUID_CONSOLE_NAME}
+      name: ${APP_NAME}-console
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     annotations:
       description: Defines how to deploy the squid-console
       template.alpha.openshift.io/wait-for-ready: "true"
-    name: ${SQUID_CONSOLE_NAME}
+    name: ${APP_NAME}-console
   spec:
     replicas: 1
     selector:
-      name: ${SQUID_CONSOLE_NAME}
+      name: ${APP_NAME}-console
     strategy:
       type: Recreate
     template:
       metadata:
+        annotations:
+          prometheus.io/path: /prometheus
+          prometheus.io/port: '9088'
+          prometheus.io/scrape: 'true'
         labels:
-          name: ${SQUID_CONSOLE_NAME}
-        name: ${SQUID_CONSOLE_NAME}
+          name: ${APP_NAME}-console
+          type: "squid-console"
+        name: ${APP_NAME}-console
       spec:
         containers:
         - image: ' '
@@ -71,6 +76,10 @@ objects:
           ports:
           - containerPort: 9088
           env:
+          - name: SQUID_DASHBORD_INTERVAL_DELTA_IN_SECOND
+            value: "10"
+          - name: SQUID_DASHBORD_REFRESH_INTERVAL_IN_MINUTE
+            value: "1"
           - name: SQUID_LOG_LEVEL
             value: "DEBUG"
           - name: SQUID_CONSOLE_DB_URL
@@ -81,7 +90,7 @@ objects:
             valueFrom:
               secretKeyRef:
                 key: database-root-password
-                name: ${NAME}
+                name: ${APP_NAME}
           - name: ORCHESTRATION_TYPE
             value: K8S
           - name: SQUID_DCOS_REGISTRY_URI
@@ -89,7 +98,7 @@ objects:
           - name: K8S_BASE_PATH
             value: "${K8S_BASE_PATH}"
           - name: K8S_NAMESPACE
-            value: "${K8S_NAMESPACE}"
+            value: "${NAMESPACE}"
           - name: SQUID_CONSOLE_PORT
             value: '9088'
           - name: OCTOPUS_SWAN_REST_URI
@@ -120,10 +129,20 @@ objects:
               subPath: regcenter.json
           securityContext:
             runAsUser: 0
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 9088
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
         volumes:
           - name: config-volume
             configMap:
-              name: ${SQUID_CONFIG_NAME}
+              name: ${APP_NAME}-config
     triggers:
     - imageChangeParams:
         automatic: true
@@ -131,7 +150,7 @@ objects:
         - squid-console
         from:
           kind: ImageStreamTag
-          name: alpine-oraclejdk8-squid-console:1.2.3
+          name: centos7-openjdk8-squid-console:1.4.1
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
@@ -140,41 +159,41 @@ objects:
   metadata:
     annotations:
       description: Exposes the squid-console-ue server
-    name: ${SQUID_UE_NAME}
+    name: ${APP_NAME}-ue
   spec:
     ports:
     - name: squid-ue
-      port: 80
-      targetPort: 80
+      port: 18080
+      targetPort: 18080
     selector:
-      name: ${SQUID_UE_NAME}
+      name: ${APP_NAME}-ue
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     annotations:
       description: Defines how to deploy the squid-console-ue
       template.alpha.openshift.io/wait-for-ready: "true"
-    name: ${SQUID_UE_NAME}
+    name: ${APP_NAME}-ue
   spec:
     replicas: 1
     selector:
-      name: ${SQUID_UE_NAME}
+      name: ${APP_NAME}-ue
     strategy:
       type: Recreate
     template:
       metadata:
         labels:
-          name: ${SQUID_UE_NAME}
-        name: ${SQUID_UE_NAME}
+          name: ${APP_NAME}-ue
+        name: ${APP_NAME}-ue
       spec:
         containers:
         - image: ' '
           name: squid-ue
           ports:
-          - containerPort: 80
+          - containerPort: 18080
           env:
           - name: API_URL
-            value: "http://${SQUID_CONSOLE_NAME}"
+            value: "http://${APP_NAME}-console"
           - name: API_PORT
             value: "9088"
           securityContext:
@@ -186,7 +205,7 @@ objects:
         - squid-ue
         from:
           kind: ImageStreamTag
-          name: debian-nginx-1.13.5-quid-console-ue:1.2.3
+          name: centos7-nginx1.12-squid-console-ue:1.4.1
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
@@ -195,32 +214,32 @@ objects:
   metadata:
     annotations:
       description: Exposes the squid-client server
-    name: ${SQUID_DEMO_CLIENT_NAME}
+    name: ${APP_NAME}-demo-client
   spec:
     ports:
     - name: squid-client
       port: 8081
       targetPort: 8081
     selector:
-      name: ${SQUID_DEMO_CLIENT_NAME}
+      name: ${APP_NAME}-demo-client
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     annotations:
       description: Defines how to deploy the squid-client
       template.alpha.openshift.io/wait-for-ready: "true"
-    name: ${SQUID_DEMO_CLIENT_NAME}
+    name: ${APP_NAME}-demo-client
   spec:
     replicas: 1
     selector:
-      name: ${SQUID_DEMO_CLIENT_NAME}
+      name: ${APP_NAME}-demo-client
     strategy:
       type: Recreate
     template:
       metadata:
         labels:
-          name: ${SQUID_DEMO_CLIENT_NAME}
-        name: ${SQUID_DEMO_CLIENT_NAME}
+          name: ${APP_NAME}-demo-client
+        name: ${APP_NAME}-demo-client
       spec:
         containers:
         - image: ' '
@@ -243,7 +262,7 @@ objects:
         - squid-client
         from:
           kind: ImageStreamTag
-          name: alpine-oraclejdk8-squid-demo-client:1.2.3
+          name: centos7-openjdk8-squid-demo-client:1.4.1
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
@@ -252,32 +271,32 @@ objects:
   metadata:
     annotations:
       description: Exposes the squid-server server
-    name: ${SQUID_DEMO_SERVER_NAME}
+    name: ${APP_NAME}-demo-server
   spec:
     ports:
     - name: squid-server
       port: 39011
       targetPort: 39011
     selector:
-      name: ${SQUID_DEMO_SERVER_NAME}
+      name: ${APP_NAME}-demo-server
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     annotations:
       description: Defines how to deploy the squid-server
       template.alpha.openshift.io/wait-for-ready: "true"
-    name: ${SQUID_DEMO_SERVER_NAME}
+    name: ${APP_NAME}-demo-server
   spec:
     replicas: 1
     selector:
-      name: ${SQUID_DEMO_SERVER_NAME}
+      name: ${APP_NAME}-demo-server
     strategy:
       type: Recreate
     template:
       metadata:
         labels:
-          name: ${SQUID_DEMO_SERVER_NAME}
-        name: ${SQUID_DEMO_SERVER_NAME}
+          name: ${APP_NAME}-demo-server
+        name: ${APP_NAME}-demo-server
       spec:
         containers:
         - image: ' '
@@ -297,6 +316,8 @@ objects:
             value: "false"
           - name: AUTH_SECRET
             value: "123457"
+          - name: SQUID_SERVICE_NAME
+            value: "demoServiceOne"
           command: ["/bin/sh", "/squid-executor/bin/squid-executor.sh", "start", "-n", "squid.dataman.com", "-r" ,"foreground", "-env", "docker", "-d", "/squid-executor/apps/app"]
           securityContext:
             runAsUser: 0
@@ -307,41 +328,43 @@ objects:
         - squid-server
         from:
           kind: ImageStreamTag
-          name: alpine-oraclejdk8-squid-demo-server:1.2.3
+          name: centos7-openjdk8-squid-demo-server:1.4.1
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: ${APP_NAME}-demo-client
+  spec:
+    port:
+      targetPort: squid-client
+    to:
+      kind: Service
+      name: ${APP_NAME}-demo-client
+      weight: 100
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: ${APP_NAME}-ue
+  spec:
+    port:
+      targetPort: squid-ue
+    to:
+      kind: Service
+      name: ${APP_NAME}-ue
+      weight: 100
 parameters:
 - description: Current Project Name.
   displayName: Current Project Name
   name: NAMESPACE
   required: true
   value: ''
-- description: The name assigned to all of the frontend objects defined in this template.
-  displayName: Name
-  name: NAME
+- description: Application Name.
+  displayName: Application Name
+  name: APP_NAME
   required: true
-  value: squid
-- displayName: Squid Config Name
-  name: SQUID_CONFIG_NAME
-  required: true
-  value: squid-config
-- displayName: Squid Console Name
-  name: SQUID_CONSOLE_NAME
-  required: true
-  value: squid-console
-- displayName: Squid UE Name
-  name: SQUID_UE_NAME
-  required: true
-  value: squid-ue
-- displayName: Squid Demo Client Name
-  name: SQUID_DEMO_CLIENT_NAME
-  required: true
-  value: squid-demo-client
-- displayName: Squid Demo Server Name
-  name: SQUID_DEMO_SERVER_NAME
-  required: true
-  value: squid-demo-server
+  value: 'squid'
 - displayName: Zookeeper Address
   name: ZOOKEEPER_ADDRESS
   required: true

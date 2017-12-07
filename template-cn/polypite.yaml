@@ -1,0 +1,126 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: polypite
+message: |-
+  Polypite has been deployed.
+
+  For more information about using this template, see https://github.com/Dataman-Cloud/origin-web-console.
+metadata:
+  annotations:
+    description: 数人云前端。
+    iconClass: icon-git
+    openshift.io/display-name: Polypite
+    tags: quickstart,polypite,dataman
+    template.openshift.io/documentation-url: https://github.com/Dataman-Cloud/origin-web-console
+    template.openshift.io/long-description: This template is a polypite console application.
+    template.openshift.io/provider-display-name: Dataman, Inc.
+    template.openshift.io/support-url: https://github.com/Dataman-Cloud/origin-web-console
+  name: polypite
+objects:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}
+  spec:
+    replicas: 1
+    selector:
+      app: ${APP_NAME}
+      deploymentconfig: ${APP_NAME}
+    strategy:
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: ${APP_NAME}
+          deploymentconfig: ${APP_NAME}
+      spec:
+        containers:
+          - env:
+              - name: MASTER_HOST
+                value: '${MASTER_HOST}'
+              - name: CONSOLE_HOST
+                value: '${CONSOLE_HOST}'
+              - name: LISTEN_PORT
+                value: '${LISTEN_PORT}'
+              - name: LOGGING_URL
+                value: '${LOGGING_URL}'
+              - name: METRICS_URL
+                value: '${METRICS_URL}'
+            image: ' '
+            imagePullPolicy: Always
+            name: polypite-console
+            ports:
+              - containerPort: ${{LISTEN_PORT}}
+                protocol: TCP
+    triggers:
+      - type: ConfigChange
+      - imageChangeParams:
+          automatic: true
+          containerNames:
+            - polypite-console
+          from:
+            kind: ImageStreamTag
+            name: 'origin-dm-web:deploy'
+            namespace: openshift
+        type: ImageChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the Polypite Console
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}
+  spec:
+    ports:
+    - name: polypite
+      port: ${{LISTEN_PORT}}
+      targetPort: ${{LISTEN_PORT}}
+    selector:
+      deploymentconfig: ${APP_NAME}
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: ${APP_NAME}
+  spec:
+    host: ${CONSOLE_HOST}
+    port:
+      targetPort: polypite
+    tls:
+      termination: passthrough
+    to:
+      kind: Service
+      name: ${APP_NAME}
+      weight: 100
+parameters:
+- description: Application Name.
+  displayName: Application Name
+  name: APP_NAME
+  required: true
+  value: 'polypite'
+- description: API Host.
+  displayName: Master Host
+  name: MASTER_HOST
+  required: true
+  value: ''
+- description: Console Host.
+  displayName: Console Host
+  name: CONSOLE_HOST
+  required: true
+  value: ''
+- description: Console Listen Port.
+  displayName: Console Listen Port
+  name: LISTEN_PORT
+  required: true
+  value: '443'
+- description: Same with origin master config yaml.
+  displayName: Logging Url
+  name: LOGGING_URL
+  value: ''
+- description: Same with origin master config yaml.
+  displayName: Metrics Url
+  name: METRICS_URL
+  value: ''
