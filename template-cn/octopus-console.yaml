@@ -147,14 +147,10 @@ objects:
                 name: ${SECRET_NAME}
           - name: OCTOPUS_CLOUD_containerType
             value: K8S
-          - name: OCTOPUS_CLOUD_registryUri
-            value: ${REGISTRY_URI}
           - name: OCTOPUS_CLOUD_K8S_restUri
             value: ${K8S_URI}
           - name: OCTOPUS_CLOUD_K8S_NAMESPACE
             value: ${NAMESPACE}
-          - name: OCTOPUS_CLOUD_K8S_is_k8s_registry
-            value: 'false'
           - name: KUBERNETES_AUTH_TRYSERVICEACCOUNT
             value: 'true'
           - name: KUBERNETES_AUTH_TRYKUBECONFIG
@@ -220,12 +216,7 @@ parameters:
   displayName: Kubernetes URI
   name: K8S_URI
   required: true
-  value: 'http://master:8011'
-- description: Registry URI.
-  displayName: Registry URI
-  name: REGISTRY_URI
-  required: true
-  value: 'http://192.168.1.140:5000'
+  value: 'https://master:8443'
 - description: Secret Name.
   displayName: Secret Name
   name: SECRET_NAME
