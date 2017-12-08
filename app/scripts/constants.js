@@ -341,6 +341,19 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
       ]
     },
     {
+      id: 'dmos',
+      label: "DataManOS基础服务",
+      items: [
+        {
+          id: "monitor",
+          categoryAliases: ["monitor"],
+          label: "Monitor",
+          iconClass: "font-icon icon-monitor-m",
+          description: gettext("")
+        }
+      ]
+    },
+    {
       id: 'languages',
       label: gettext("Languages"),
       iconClassDefault: "fa fa-code",
