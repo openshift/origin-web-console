@@ -7,7 +7,7 @@ message: |-
 metadata:
   annotations:
     description: A monitoring solution for an OpenShift cluster - collect and gather metrics and alerts from nodes, services, and the infrastructure. This is a tech preview feature.
-    iconClass: icon-git
+    iconClass: icon-monitor
     openshift.io/display-name: dmos-monitor
     tags: quickstart,promethus,grafana,monitor,dataman
     template.openshift.io/documentation-url: https://hub.docker.com/r/prom/prometheus/
