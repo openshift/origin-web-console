@@ -783,6 +783,28 @@ href:"/monitoring",
 prefixes:[ "/browse/events" ]
 } ],
 CATALOG_CATEGORIES:[ {
+id:"eams",
+label:"DataManOS微服务治理",
+items:[ {
+id:"octopus",
+categoryAliases:[ "octopus" ],
+label:"Octopus",
+iconClass:"font-icon icon-octopus-m",
+description:gettext("")
+}, {
+id:"squid",
+categoryAliases:[ "squid" ],
+label:"Squid",
+iconClass:"font-icon icon-squid-m",
+description:gettext("")
+}, {
+id:"hawk",
+categoryAliases:[ "hawk" ],
+label:"Hawk",
+iconClass:"font-icon icon-hawk-m",
+description:gettext("")
+} ]
+}, {
 id:"languages",
 label:gettext("Languages"),
 iconClassDefault:"fa fa-code",
