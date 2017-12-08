@@ -335,17 +335,6 @@ objects:
 - apiVersion: v1
   kind: Route
   metadata:
-    name: ${APP_NAME}-demo-client
-  spec:
-    port:
-      targetPort: squid-client
-    to:
-      kind: Service
-      name: ${APP_NAME}-demo-client
-      weight: 100
-- apiVersion: v1
-  kind: Route
-  metadata:
     name: ${APP_NAME}-ue
   spec:
     port:
