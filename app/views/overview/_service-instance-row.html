@@ -70,10 +70,10 @@
       </div>
     </div>
     <div class="list-pf-actions">
-      <div uib-dropdown ng-if="row.actionsDropdownVisible()">
-        <a href=""
-        uib-dropdown-toggle
-        class="actions-dropdown-kebab"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
+      <div class="dropdown-kebab-pf" uib-dropdown ng-if="row.actionsDropdownVisible()">
+        <button uib-dropdown-toggle class="btn btn-link dropdown-toggle">
+          <i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span>
+        </button>
         <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
           <li role="menuitem" ng-if="row.isBindable && (row.serviceBindingsVersion | canI : 'create')">
             <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">
