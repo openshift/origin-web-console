@@ -1,0 +1,487 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: hawk
+message: |-
+  Hawk has been depolyed.
+
+  For more information about using this template, see https://github.com/Dataman-Cloud/hawk.
+metadata:
+  annotations:
+    description: 数人云统一配置管理中心 Hawk，为分布式系统中的基础设施和微服务应用提供集中化的外部配置中心，实现了对服务端和客户端中环境变量，配置文件，动态属性配置的抽象映射，并支持配置的灰度下发，历史版本控制等先进功能。配置接口完全兼容 Spring Cloud Config，后台管理功能则通过 open API的形式对外开放，满足企业多样化的定制需求。数人云配置中心能够管理 Springcloud的微服务框架的业务配置，服务治理配置以及kubernetes的configmap和secrets的配置，同时也能通过插件的方式对流行的第三方类库提供特别支持，比如与 sharding-jdbc 的深度集成。
+    iconClass: icon-hawk
+    openshift.io/display-name: Hawk
+    tags: quickstart,hawk,dataman
+    template.openshift.io/documentation-url: https://github.com/Dataman-Cloud/hawk
+    template.openshift.io/long-description: This template is a hawk application.  The
+      database is stored in non-persistent storage, so this configuration should be
+      used for experimental purposes only.
+    template.openshift.io/provider-display-name: Dataman, Inc.
+    template.openshift.io/support-url: https://github.com/Dataman-Cloud/hawk
+  creationTimestamp: 2017-11-08T09:23:17Z
+  name: hawk
+  namespace: openshift
+  resourceVersion: "591707"
+  selfLink: /oapi/v1/namespaces/openshift/templates/hawk
+  uid: 748af64f-c466-11e7-91ea-005056856489
+objects:
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: ${SECRET_NAME}
+  stringData:
+    database-root-password: ${DATABASE_ROOT_PASSWORD}
+    database-root-user: ${DATABASE_ROOT_USER}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the hawk-gateway
+    name: ${HAWK_GATEWAY_NAME}
+  spec:
+    ports:
+    - name: hawk-gateway
+      port: 8080
+      targetPort: 8080
+    selector:
+      name: ${HAWK_GATEWAY_NAME}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the hawk-gateway
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: ${HAWK_GATEWAY_NAME}
+  spec:
+    replicas: 1
+    selector:
+      name: ${HAWK_GATEWAY_NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: ${HAWK_GATEWAY_NAME}
+        name: ${HAWK_GATEWAY_NAME}
+      spec:
+        containers:
+        - env:
+          - name: SERVER_PORT
+            value: "8080"
+          - name: HAWK_ETCD_ENDPOINTS
+            value: http://${ETCD_NAME}:2379
+          image: ' '
+          name: hawk-gateway
+          ports:
+          - containerPort: 8080
+          securityContext:
+            runAsUser: 0
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - hawk-gateway
+        from:
+          kind: ImageStreamTag
+          name: hawk-gateway:1.2.0-RC-1
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the hawk-portal-gateway
+    name: ${HAWK_PORTAL_GATEWAY_NAME}
+  spec:
+    ports:
+    - name: hawk-portal-gateway
+      port: 8081
+      targetPort: 8081
+    selector:
+      name: ${HAWK_PORTAL_GATEWAY_NAME}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the hawk-portal-gateway
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: ${HAWK_PORTAL_GATEWAY_NAME}
+  spec:
+    replicas: 1
+    selector:
+      name: ${HAWK_PORTAL_GATEWAY_NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: ${HAWK_PORTAL_GATEWAY_NAME}
+        name: ${HAWK_PORTAL_GATEWAY_NAME}
+      spec:
+        containers:
+        - image: ' '
+          name: hawk-portal-gateway
+          ports:
+          - containerPort: 8081
+          securityContext:
+            runAsUser: 0
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - hawk-portal-gateway
+        from:
+          kind: ImageStreamTag
+          name: hawk-portal-gateway:1.2.0-RC-1
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the hawk-ui
+    name: ${HAWK_UI_NAME}
+  spec:
+    ports:
+    - name: hawk-ui
+      port: 8083
+      targetPort: 8083
+    selector:
+      name: ${HAWK_UI_NAME}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the hawk-ui
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: ${HAWK_UI_NAME}
+  spec:
+    replicas: 1
+    selector:
+      name: ${HAWK_UI_NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: ${HAWK_UI_NAME}
+        name: ${HAWK_UI_NAME}
+      spec:
+        containers:
+        - env:
+          - name: API_URL
+            value: ${HAWK_PORTAL_URL}
+          - name: API_PORT
+            value: "8084"
+          image: ' '
+          name: hawk-ui
+          ports:
+          - containerPort: 8084
+          securityContext:
+            runAsUser: 0
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - hawk-ui
+        from:
+          kind: ImageStreamTag
+          name: hawk-ui:1.2.0-RC-1
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the hawk-server
+    name: ${HAWK_SERVER_NAME}
+  spec:
+    ports:
+    - name: hawk-server
+      port: 8082
+      targetPort: 8082
+    selector:
+      name: ${HAWK_SERVER_NAME}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the hawk-server
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: ${HAWK_SERVER_NAME}
+  spec:
+    replicas: 1
+    selector:
+      name: ${HAWK_SERVER_NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: ${HAWK_SERVER_NAME}
+        name: ${HAWK_SERVER_NAME}
+      spec:
+        containers:
+        - env:
+          - name: SERVER_PORT
+            value: "8082"
+          - name: HAWK_ETCD_ENDPOINTS
+            value: http://${ETCD_NAME}:2379
+          image: ' '
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /application/health
+              port: 8082
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: hawk-server
+          ports:
+          - containerPort: 8082
+          securityContext:
+            runAsUser: 0
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - hawk-server
+        from:
+          kind: ImageStreamTag
+          name: hawk-server:1.2.0-RC-1
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the hawk-portal
+    name: ${HAWK_PORTAL_NAME}
+  spec:
+    ports:
+    - name: hawk-portal
+      port: 8084
+      targetPort: 8084
+    selector:
+      name: ${HAWK_PORTAL_NAME}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the hawk-portal
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: ${HAWK_PORTAL_NAME}
+  spec:
+    replicas: 1
+    selector:
+      name: ${HAWK_PORTAL_NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: ${HAWK_PORTAL_NAME}
+        name: ${HAWK_PORTAL_NAME}
+      spec:
+        containers:
+        - env:
+          - name: SERVER_PORT
+            value: "8084"
+          - name: HAWK_ETCD_ENDPOINTS
+            value: http://${ETCD_NAME}:2379
+          - name: SPRING_DATASOURCE_URL
+            value: ${SPRING_DATASOURCE_URL}
+          - name: SPRING_DATASOURCE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: database-root-user
+                name: ${SECRET_NAME}
+          - name: SPRING_DATASOURCE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-root-password
+                name: ${SECRET_NAME}
+          image: ' '
+          name: hawk-portal
+          ports:
+          - containerPort: 8084
+          securityContext:
+            runAsUser: 0
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - hawk-portal
+        from:
+          kind: ImageStreamTag
+          name: hawk-portal:1.2.0-RC-1
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the bootstrap-etcd
+    name: ${ETCD_NAME}
+  spec:
+    ports:
+    - name: etcd1
+      port: 2379
+      targetPort: 2379
+    - name: etcd2
+      port: 2380
+      targetPort: 2380
+    selector:
+      name: ${ETCD_NAME}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the bootstrap-etcd
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: ${ETCD_NAME}
+  spec:
+    replicas: 1
+    selector:
+      name: ${ETCD_NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: ${ETCD_NAME}
+        name: ${ETCD_NAME}
+      spec:
+        containers:
+        - image: ' '
+          name: etcd
+          ports:
+          - containerPort: 2379
+          - containerPort: 2380
+          securityContext:
+            runAsUser: 0
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - etcd
+        from:
+          kind: ImageStreamTag
+          name: bootstrap-etcd:1.2.0-RC-1
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the portal-db
+    name: ${DB_NAME}
+  spec:
+    ports:
+    - name: portal-db
+      port: 3306
+      targetPort: 3306
+    selector:
+      name: ${DB_NAME}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the portal-db
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: ${DB_NAME}
+  spec:
+    replicas: 1
+    selector:
+      name: ${DB_NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: ${DB_NAME}
+        name: ${DB_NAME}
+      spec:
+        containers:
+        - env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-root-password
+                name: ${SECRET_NAME}
+          image: ' '
+          name: portal-db
+          ports:
+          - containerPort: 3306
+          securityContext:
+            runAsUser: 0
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - portal-db
+        from:
+          kind: ImageStreamTag
+          name: portal-db:1.2.0-RC-1
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+parameters:
+- displayName: Hawk Gateway Name
+  name: HAWK_GATEWAY_NAME
+  required: true
+  value: hawk-gateway
+- displayName: Hawk Portal Gateway
+  name: HAWK_PORTAL_GATEWAY_NAME
+  required: true
+  value: hawk-portal-gateway
+- description: Optional
+  displayName: Hawk Portal Url
+  name: HAWK_PORTAL_URL
+  required: true
+  value: http://hawk-portal
+- displayName: Hawk UI Name
+  name: HAWK_UI_NAME
+  required: true
+  value: hawk-ui
+- displayName: Hawk Server Name
+  name: HAWK_SERVER_NAME
+  required: true
+  value: hawk-server
+- description: Store DB user and password.
+  displayName: Secret Name
+  name: SECRET_NAME
+  required: true
+  value: hawk
+- displayName: DB Root User
+  name: DATABASE_ROOT_USER
+  required: true
+  value: root
+- displayName: DB Root Password
+  name: DATABASE_ROOT_PASSWORD
+  required: true
+  value: dataman123
+- displayName: Hawk Portal Name
+  name: HAWK_PORTAL_NAME
+  required: true
+  value: hawk-portal
+- displayName: Etcd Name
+  name: ETCD_NAME
+  required: true
+  value: bootstrap-etcd
+- displayName: Database Name
+  name: DB_NAME
+  required: true
+  value: portal-db
+- displayName: DB Data Source Url
+  name: SPRING_DATASOURCE_URL
+  required: true
+  value: jdbc:mysql://portal-db:3306/HawkPortalDB?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true
