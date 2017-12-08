@@ -247,12 +247,38 @@ objects:
           ports:
           - containerPort: 8081
           env:
+          - name: LOG_LEVEL
+            value: INFO
+          - name: SQUID_ZK_CONNECTION
+            value: 'kafka-zk:2181'
           - name: SQUID_ZK_ADDRESS
-            value: "${ZOOKEEPER_ADDRESS}:2181"
+            value: 'kafka-zk:2181'
           - name: SQUID_SERVICE_NAMESPACE
             value: "squid.dataman.com"
-          - name: SQUID_KAFKA_CLUSTER_NAME
-            value: "kafka"
+          - name: SQUID_DEMO_CLIENT_SERVICE_NAME
+            value: "demoServiceOneClient"
+          - name: SQUID_SERVICE_NAME
+            value: "demoServiceOne"
+          - name: SQUID_DEMO_CLIENT_DEPENDENCY_SERVICE_NAME
+            value: "demoServiceOne"
+          - name: SQUID_DEMO_CLIENT_DEPENDENCY_SERVICE_NAMESPACE
+            value: "squid.dataman.com"
+          - name: SQUID_DEMO_CLIENT_SLEEPTIME_MS
+            value: "10"
+          - name: SQUID_DEMO_CLIENT_SERVER_SLEEPTIME_MS
+            value: "0"
+          - name: SQUID_DEMO_RUNNING_S
+            value: "604800"
+          - name: SQUID_CLIENT_ASYNC_MODE
+            value: "false"
+          - name: SQUID_DEMO_RUNNING_THREADS
+            value: "1"
+          - name: SQUID_LOG_DIR
+            value: "/home/apps"
+          - name: CLIENT_DUPLICATE
+            value: "true"
+          - name: LOOP_COUNT
+            value: "1000000000"
           securityContext:
             runAsUser: 0
     triggers:
