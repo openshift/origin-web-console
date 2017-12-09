@@ -61,6 +61,14 @@ angular.module("openshiftConsole")
     };
     $scope.$on('$destroy', hideErrorNotifications);
 
+    var configMapsVersion = APIService.getPreferredVersion('configmaps');
+    var limitRangesVersion = APIService.getPreferredVersion('limitranges');
+    var imageStreamsVersion = APIService.getPreferredVersion('imagestreams');
+    var imageStreamTagsVersion = APIService.getPreferredVersion('imagestreamtags');
+    var secretsVersion = APIService.getPreferredVersion('secrets');
+    var resourceQuotasVersion = APIService.getPreferredVersion('resourcequotas');
+    var appliedClusterResourceQuotasVersion = APIService.getPreferredVersion('appliedclusterresourcequotas');
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -148,7 +156,7 @@ angular.module("openshiftConsole")
            var secretDataOrdered = [];
            $scope.valueFromObjects = [];
 
-           DataService.list("configmaps", context, null, { errorNotification: false }).then(function(configMapData) {
+           DataService.list(configMapsVersion, context, null, { errorNotification: false }).then(function(configMapData) {
              configMapDataOrdered = orderByDisplayName(configMapData.by("metadata.name"));
              $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
            }, function(e) {
@@ -164,7 +172,7 @@ angular.module("openshiftConsole")
              });
            });
 
-           DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
+           DataService.list(secretsVersion, context, null, { errorNotification: false }).then(function(secretData) {
              secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
              $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
              var secretsByType = SecretsService.groupSecretsByType(secretData);
@@ -186,10 +194,10 @@ angular.module("openshiftConsole")
              });
            });
 
-          DataService.get("imagestreams", scope.imageName, {namespace: (scope.namespace || $routeParams.project)}).then(function(imageStream){
+          DataService.get(imageStreamsVersion, scope.imageName, {namespace: (scope.namespace || $routeParams.project)}).then(function(imageStream){
               scope.imageStream = imageStream;
               var imageName = scope.imageTag;
-              DataService.get("imagestreamtags", imageStream.metadata.name + ":" + imageName, {namespace: scope.namespace}).then(function(imageStreamTag){
+              DataService.get(imageStreamTagsVersion, imageStream.metadata.name + ":" + imageName, {namespace: scope.namespace}).then(function(imageStreamTag){
                   scope.image = imageStreamTag.image;
                   scope.DCEnvVarsFromImage = ImagesService.getEnvironment(imageStreamTag);
                   var ports = ApplicationGenerator.parsePorts(imageStreamTag.image);
@@ -223,7 +231,7 @@ angular.module("openshiftConsole")
           $scope.memoryProblems = LimitRangesService.validatePodLimits($scope.limitRanges, 'memory', [$scope.container], project);
         };
 
-        DataService.list("limitranges", context).then(function(resp) {
+        DataService.list(limitRangesVersion, context).then(function(resp) {
           $scope.limitRanges = resp.by("metadata.name");
           if (!_.isEmpty($scope.limitRanges)) {
             $scope.$watch('container', validatePodLimits, true);
@@ -242,13 +250,13 @@ angular.module("openshiftConsole")
 
         var quotas, clusterQuotas;
 
-        DataService.list("resourcequotas", context).then(function(resp) {
+        DataService.list(resourceQuotasVersion, context).then(function(resp) {
           quotas = resp.by("metadata.name");
           Logger.log("quotas", quotas);
         });
 
         // TODO clean up anything not needed here
-        DataService.list("appliedclusterresourcequotas", context).then(function(clusterQuotaData) {
+        DataService.list(appliedClusterResourceQuotasVersion, context).then(function(clusterQuotaData) {
           clusterQuotas = clusterQuotaData.by("metadata.name");
           Logger.log("cluster quotas", clusterQuotas);
         });

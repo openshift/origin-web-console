@@ -3,10 +3,10 @@
   <div ng-if="row.canIDoAny()">
     <div ng-switch="row.apiObject.kind">
       <div ng-switch-when="DeploymentConfig">
-        <div uib-dropdown>
-          <a href=""
-          uib-dropdown-toggle
-          class="actions-dropdown-kebab"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span></a>
+        <div uib-dropdown class="dropdown-kebab-pf">
+          <button uib-dropdown-toggle class="btn btn-link dropdown-toggle">
+            <i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span>
+          </button>
           <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
             <li ng-if="row.showStartPipelineAction()" role="menuitem">
               <a href="" ng-click="row.startBuild(row.pipelines[0])">Start Pipeline</a>
@@ -40,10 +40,10 @@
         </div>
       </div>
       <div ng-switch-when="Pod">
-        <div uib-dropdown>
-          <a href=""
-          uib-dropdown-toggle
-          class="actions-dropdown-kebab"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
+        <div uib-dropdown class="dropdown-kebab-pf">
+          <button uib-dropdown-toggle class="btn btn-link dropdown-toggle">
+            <i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span>
+          </button>
           <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
             <li role="menuitem" ng-if="'pods' | canI : 'update'">
               <a ng-href="{{row.apiObject | editYamlURL}}">Edit YAML</a>
@@ -55,10 +55,10 @@
         </div>
       </div>
       <div ng-switch-default>
-        <div uib-dropdown>
-          <a href=""
-          uib-dropdown-toggle
-          class="actions-dropdown-kebab"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
+        <div uib-dropdown class="dropdown-kebab-pf">
+          <button uib-dropdown-toggle class="btn btn-link dropdown-toggle">
+            <i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span>
+          </button>
           <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
             <li role="menuitem" ng-if="row.rgv | canI : 'update'">
               <a ng-href="{{row.apiObject | editYamlURL}}">Edit YAML</a>

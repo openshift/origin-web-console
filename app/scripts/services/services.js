@@ -1,7 +1,14 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("ServicesService", function($filter, $q, DataService) {
+  .factory("ServicesService", function(
+    $filter,
+    $q,
+    APIService,
+    DataService) {
+
+    var servicesVersion = APIService.getPreferredVersion('services');
+
     var DEPENDENCIES = 'service.alpha.openshift.io/dependencies';
     var INFRASTRUCTURE = 'service.openshift.io/infrastructure';
     var annotation = $filter('annotation');
@@ -76,7 +83,7 @@ angular.module("openshiftConsole")
       });
 
       setDependencies(updatedService, dependencies);
-      return DataService.update("services", updatedService.metadata.name, updatedService, {
+      return DataService.update(servicesVersion, updatedService.metadata.name, updatedService, {
         namespace: updatedService.metadata.namespace
       });
     };
@@ -105,7 +112,7 @@ angular.module("openshiftConsole")
       }
 
       setDependencies(updatedService, updatedDependencies);
-      return DataService.update("services", updatedService.metadata.name, updatedService, {
+      return DataService.update(servicesVersion, updatedService.metadata.name, updatedService, {
         namespace: updatedService.metadata.namespace
       });
     };

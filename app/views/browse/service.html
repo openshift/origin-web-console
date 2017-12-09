@@ -15,14 +15,14 @@
                class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
             <ul class="dropdown-menu dropdown-menu-right actions action-button">
-              <li ng-if="'routes' | canI : 'create'">
+              <li ng-if="routesVersion | canI : 'create'">
                 <a ng-href="project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}"
                    role="button">Create Route</a>
               </li>
-              <li ng-if="'services' | canI : 'update'">
+              <li ng-if="servicesVersion | canI : 'update'">
                 <a ng-href="{{service | editYamlURL}}" role="button">Edit YAML</a>
               </li>
-              <li ng-if="'services' | canI : 'delete'">
+              <li ng-if="servicesVersion | canI : 'delete'">
                 <delete-link
                   kind="Service"
                   resource-name="{{service.metadata.name}}"
@@ -81,8 +81,8 @@
                   <dt ng-if-start="(routesForService | hashSize) == 0">Routes:</dt>
                   <dd ng-if-end>
                     <span>
-                      <a ng-href="project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}"  ng-if="'routes' | canI : 'create'">Create route</a>
-                      <span ng-if="!('routes' | canI : 'create')"><em>None</em></span>
+                      <a ng-href="project/{{project.metadata.name}}/create-route?service={{service.metadata.name}}"  ng-if="routesVersion | canI : 'create'">Create route</a>
+                      <span ng-if="!(routesVersion | canI : 'create')"><em>None</em></span>
                     </span>
                   </dd>
                 </dl>
@@ -100,7 +100,7 @@
                 <annotations annotations="service.metadata.annotations"></annotations>
               </div>
             </uib-tab>
-            <uib-tab active="selectedTab.events" ng-if="'events' | canI : 'watch'">
+            <uib-tab active="selectedTab.events" ng-if="eventsVersion | canI : 'watch'">
               <uib-tab-heading>Events</uib-tab-heading>
               <events api-objects="[ service ]" project-context="projectContext" ng-if="selectedTab.events"></events>
             </uib-tab>

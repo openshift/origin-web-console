@@ -1,7 +1,14 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('eventsSidebar', function(DataService, Logger, $rootScope) {
+  .directive('eventsSidebar', function(
+    $rootScope,
+    APIService,
+    DataService,
+    Logger) {
+
+    var eventsVersion = APIService.getPreferredVersion('events');
+
     return {
       restrict: 'E',
       scope: {
@@ -11,7 +18,7 @@ angular.module('openshiftConsole')
       templateUrl: 'views/directives/events-sidebar.html',
       controller: function($scope) {
         var watches = [];
-        watches.push(DataService.watch("events", $scope.projectContext, function(eventData) {
+        watches.push(DataService.watch(eventsVersion, $scope.projectContext, function(eventData) {
           var events = eventData.by('metadata.name');
           $scope.events = _.orderBy(events, ['lastTimestamp'], ['desc']);
           $scope.warningCount = _.size(_.filter(events, { type: 'Warning' }));
@@ -61,4 +68,3 @@ angular.module('openshiftConsole')
       },
     };
   });
-

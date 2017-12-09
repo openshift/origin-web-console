@@ -26,6 +26,9 @@
                                     NotificationsService) {
     var ctrl = this;
 
+    var configMapsVersion = APIService.getPreferredVersion('configmaps');
+    var secretsVersion = APIService.getPreferredVersion('secrets');
+
     var displayKind, name, rgv, saveEnvPromise;
     var previousEnvConflict = false;
     var configMapDataOrdered = [];
@@ -65,7 +68,7 @@
     };
 
     var loadConfigMaps = function() {
-      DataService.list("configmaps", {
+      DataService.list(configMapsVersion, {
         namespace: ctrl.apiObject.metadata.namespace
       }).then(function(resp) {
         configMapDataOrdered = orderByDisplayName(resp.by("metadata.name"));
@@ -78,7 +81,7 @@
         return;
       }
 
-      DataService.list("secrets", {
+      DataService.list(secretsVersion, {
         namespace: ctrl.apiObject.metadata.namespace
       }).then(function(resp) {
         secretDataOrdered = orderByDisplayName(resp.by("metadata.name"));

@@ -1,7 +1,13 @@
 'use strict';
 
 angular.module('openshiftConsole')
-.factory('ImageStreamResolver', function($q, DataService) {
+.factory('ImageStreamResolver', function(
+  $q,
+  APIService,
+  DataService) {
+
+  var imageStreamImagesVersion = APIService.getPreferredVersion('imagestreamimages');
+
   function ImageStreamResolver() {
   }
 
@@ -32,7 +38,7 @@ angular.module('openshiftConsole')
 
         var parts = imageStreamImageRef.split("@");
 
-        var imageStreamImagePromise = DataService.get("imagestreamimages", imageStreamImageRef, context);
+        var imageStreamImagePromise = DataService.get(imageStreamImagesVersion, imageStreamImageRef, context);
         imageStreamImagePromise.then(function(imageStreamImage) {
           if (imageStreamImage && imageStreamImage.image) {
             var image = angular.copy(imageStreamImage.image);
