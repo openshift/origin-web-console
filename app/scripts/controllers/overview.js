@@ -4,6 +4,7 @@ angular.module('openshiftConsole').controller('OverviewController', [
   '$scope',
   '$filter',
   '$q',
+  '$location',
   '$routeParams',
   'AlertMessageService',
   'APIService',
@@ -35,6 +36,7 @@ angular.module('openshiftConsole').controller('OverviewController', [
 function OverviewController($scope,
                             $filter,
                             $q,
+                            $location,
                             $routeParams,
                             AlertMessageService,
                             APIService,
@@ -1089,6 +1091,10 @@ function OverviewController($scope,
     overview.clearFilter();
     updateFilter();
   });
+
+  $scope.browseCatalog = function() {
+    Navigate.toProjectCatalog($scope.projectName);
+  };
 
   LabelFilter.onActiveFiltersChanged(function() {
     $scope.$evalAsync(updateFilter);

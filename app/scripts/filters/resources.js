@@ -475,6 +475,9 @@ angular.module('openshiftConsole')
                 Navigate.projectOverviewURL(''); // fail case will invoke default route (projects list)
     };
   })
+  .filter('catalogURL', function(Navigate) {
+    return Navigate.catalogURL;
+  })
   .filter('createFromSourceURL', function() {
     return function(projectName, sourceURL) {
       var createURI = URI.expand("project/{project}/catalog/images{?q*}", {

@@ -82,6 +82,10 @@ angular.module('openshiftConsole')
             return true;
           }
 
+          if (item.canI.addToProject) {
+            return $scope.canIAddToProject;
+          }
+
           return AuthorizationService.canI({
             resource: item.canI.resource,
             group: item.canI.group
@@ -190,6 +194,7 @@ angular.module('openshiftConsole')
       CatalogService,
       Constants,
       DataService,
+      Navigate,
       NotificationsService,
       ProjectsService,
       projectOverviewURLFilter,
@@ -430,7 +435,7 @@ angular.module('openshiftConsole')
             filter: searchCriteria.searchText
           };
 
-          $location.path("project/" + encodeURIComponent($scope.currentProjectName) + "/project-browse-catalog").search(search);
+          Navigate.toProjectCatalog($scope.currentProjectName, search);
         });
 
         $scope.closeOrderingPanel = function() {
