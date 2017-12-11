@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-tag=v0.0.9
+tag=v1.0.5
 
 # workdir deploy
 echo "Start Copying Files"

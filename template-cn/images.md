@@ -14,6 +14,21 @@
 * demoregistry.dataman-inc.com/octopus/centos7-openjdk8-octopus_api:1.4.1
 * demoregistry.dataman-inc.com/octopus/centos7-openjdk8-octopus_executor:1.4.1
 
+## hawk
+* demoregistry.dataman-inc.com/hawk/bootstrap-etcd:1.2.1-RC-2
+* demoregistry.dataman-inc.com/hawk/portal-db:1.2.1-RC-2
+* demoregistry.dataman-inc.com/hawk/hawk-gateway:1.2.1-RC-2
+* demoregistry.dataman-inc.com/hawk/hawk-portal-gateway:1.2.1-RC-2
+* demoregistry.dataman-inc.com/hawk/hawk-ui:1.2.1-RC-2
+* demoregistry.dataman-inc.com/hawk/hawk-server:1.2.1-RC-2
+* demoregistry.dataman-inc.com/hawk/hawk-portal:1.2.1-RC-2
+
+
+# monitor
+* demoregistry.dataman-inc.com/library/prometheus:openshift3.6
+* demoregistry.dataman-inc.com/library/grafana:openshift3.6
+
+
 ## push_image.sh
 
 ```
