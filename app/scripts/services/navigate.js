@@ -82,6 +82,35 @@ angular.module("openshiftConsole")
         $location.path(this.membershipURL(projectName));
       },
 
+      /**
+       * Return the URL for the project catalog browse page
+       *
+       * @param {Object|String}     project - Can be a project object or the project's name (string)
+       * @returns {String} a URL string for the project catalog browse page
+       */
+      catalogURL: function(project) {
+        var projectName = angular.isString(project) ? project : _.get(project, 'metadata.name');
+        if (!projectName) {
+          return './';
+        }
+
+        return "project/" + encodeURIComponent(projectName) + "/catalog";
+      },
+
+      /**
+       * Navigate and display the project catalog browse page.
+       *
+       * @param {Object|String} project - Can be a project object or the project's name (string)
+       * @param {Object} search - optional search object (supports initial filters via a filter field)
+       * @returns {undefined}
+       */
+      toProjectCatalog: function(project, search) {
+        var loc = $location.path(this.catalogURL(project));
+        if (search) {
+          loc.search(search);
+        }
+      },
+
       quotaURL: function(projectName) {
         return "project/" + encodeURIComponent(projectName) + "/quota";
       },

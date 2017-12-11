@@ -5886,8 +5886,6 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 }
 .projects-bar .projects-sort{flex:1 0 auto}
 .projects-bar .projects-sort .form-group{margin:0}
-@media (max-width:479px){.projects-bar .projects-sort .dropdown-menu{left:auto;right:0}
-}
 .projects-bar .vertical-divider{border-left:1px solid #bbb;display:inline-block;height:27px;margin:0 7px;vertical-align:middle;width:1px}
 .projects-header{margin-top:21px}
 .projects-instructions-link{white-space:pre}
@@ -5898,6 +5896,19 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .projects-list .with-description .origin-modal-popup{margin-top:-45px}
 }
 @media (min-width:992px){.projects-list .with-description .origin-modal-popup{margin-top:-25px}
+}
+.project-browse-catalog .services-view-container{background:#ededed;min-height:calc(100% - 101px)}
+.project-browse-catalog .services-view-container .add-methods{background:#fff;border-bottom:1px solid #bbb}
+.project-browse-catalog .services-view-container .add-other>li>a{color:#292e34}
+.project-browse-catalog .services-view-container h1{color:#292e34;padding:21px 0 21px 20px;text-shadow:none}
+.project-browse-catalog .services-view-container .nav-tabs{margin-bottom:0}
+@media (min-width:480px){.project-browse-catalog .services-view-container .services-categories{background:#ededed}
+.project-browse-catalog .services-view-container .services-categories li>a{color:#292e34}
+.project-browse-catalog .services-view-container .services-inner-container{background:0 0}
+}
+@media (max-width:479px){.projects-bar .projects-sort .dropdown-menu{left:auto;right:0}
+.project-browse-catalog .services-view-container.mobile-items-view .services-sub-categories>li.active>a.services-back-link,.project-browse-catalog .services-view-container.mobile-items-view .services-sub-categories>li.active>a.services-back-link:after,.project-browse-catalog .services-view-container.mobile-items-view .services-sub-categories>li.active>a.services-category-heading,.project-browse-catalog .services-view-container.mobile-items-view .services-sub-categories>li.active>a.services-category-heading:focus,.project-browse-catalog .services-view-container.mobile-items-view .services-sub-categories>li.active>a.services-category-heading:hover,.project-browse-catalog .services-view-container.mobile-items-view .services-sub-categories>li.active>a.services-sub-category-tab,.project-browse-catalog .services-view-container.mobile-items-view .services-sub-categories>li.active>a.services-sub-category-tab:focus,.project-browse-catalog .services-view-container.mobile-items-view .services-sub-categories>li.active>a.services-sub-category-tab:hover,.project-browse-catalog .services-view-container.mobile-subcategories-view .services-categories>li.active>a.services-back-link,.project-browse-catalog .services-view-container.mobile-subcategories-view .services-categories>li.active>a.services-back-link:after,.project-browse-catalog .services-view-container.mobile-subcategories-view .services-categories>li.active>a.services-category-heading,.project-browse-catalog .services-view-container.mobile-subcategories-view .services-categories>li.active>a.services-category-heading:focus,.project-browse-catalog .services-view-container.mobile-subcategories-view .services-categories>li.active>a.services-category-heading:hover,.project-browse-catalog .services-view-container.mobile-subcategories-view .services-categories>li.active>a.services-sub-category-tab,.project-browse-catalog .services-view-container.mobile-subcategories-view .services-categories>li.active>a.services-sub-category-tab:focus,.project-browse-catalog .services-view-container.mobile-subcategories-view .services-categories>li.active>a.services-sub-category-tab:hover{color:#292e34}
+.project-browse-catalog .services-view-container.mobile-items-view .services-sub-categories>li.active>a.services-back-link:focus,.project-browse-catalog .services-view-container.mobile-items-view .services-sub-categories>li.active>a.services-back-link:focus:after,.project-browse-catalog .services-view-container.mobile-items-view .services-sub-categories>li.active>a.services-back-link:hover,.project-browse-catalog .services-view-container.mobile-items-view .services-sub-categories>li.active>a.services-back-link:hover:after,.project-browse-catalog .services-view-container.mobile-subcategories-view .services-categories>li.active>a.services-back-link:focus,.project-browse-catalog .services-view-container.mobile-subcategories-view .services-categories>li.active>a.services-back-link:focus:after,.project-browse-catalog .services-view-container.mobile-subcategories-view .services-categories>li.active>a.services-back-link:hover,.project-browse-catalog .services-view-container.mobile-subcategories-view .services-categories>li.active>a.services-back-link:hover:after{color:#0088ce}
 }
 .container-terminal-wrapper{position:relative}
 @media (min-width:768px){.projects-list .with-description .origin-modal-popup.position-above{margin-top:20px}
