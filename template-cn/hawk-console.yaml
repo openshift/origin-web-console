@@ -10,7 +10,7 @@ metadata:
   annotations:
     description: 数人云统一配置管理中心 Hawk，为分布式系统中的基础设施和微服务应用提供集中化的外部配置中心，实现了对服务端和客户端中环境变量，配置文件，动态属性配置的抽象映射，并支持配置的灰度下发，历史版本控制等先进功能。配置接口完全兼容 Spring Cloud Config，后台管理功能则通过 open API的形式对外开放，满足企业多样化的定制需求。数人云配置中心能够管理 Springcloud的微服务框架的业务配置，服务治理配置以及kubernetes的configmap和secrets的配置，同时也能通过插件的方式对流行的第三方类库提供特别支持，比如与 sharding-jdbc 的深度集成。
     iconClass: icon-hawk
-    openshift.io/display-name: Hawk产品（技术预览）
+    openshift.io/display-name: Hawk 产品(技术预览)
     tags: quickstart,hawk,dataman
     template.openshift.io/documentation-url: https://github.com/Dataman-Cloud/hawk
     template.openshift.io/long-description: This template is a hawk application.  The
