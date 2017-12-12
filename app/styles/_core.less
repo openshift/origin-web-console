@@ -900,7 +900,9 @@ select:invalid {
     // alerts have a clashing background color. Inherit the background and
     // remove padding, which looks strange without the background color.
     background-color: inherit;
+    display: inline-block; // So Firefox will break-word
     padding: 0;
+    .word-break-all();
   }
   .close {
     margin-left: 5px;

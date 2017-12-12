@@ -10815,25 +10815,21 @@ e.history.back();
 });
 }
 };
-} ]), angular.module("openshiftConsole").directive("alerts", function() {
-return {
-restrict: "E",
-scope: {
+} ]), angular.module("openshiftConsole").component("alerts", {
+bindings: {
 alerts: "=",
-filter: "=?",
-animateSlide: "=?",
-hideCloseButton: "=?",
-toast: "=?"
+filter: "<?",
+hideCloseButton: "<?"
 },
-templateUrl: "views/_alerts.html",
-link: function(e) {
+templateUrl: "components/alerts/alerts.html",
+controller: function() {
+var e = this;
 e.close = function(e) {
 e.hidden = !0, _.isFunction(e.onClose) && e.onClose();
-}, e.onClick = function(e, t) {
-_.isFunction(t.onClick) && t.onClick() && (e.hidden = !0);
+}, e.onClick = function(t, n) {
+_.isFunction(n.onClick) && n.onClick() && e.close(t);
 };
 }
-};
 }), angular.module("openshiftConsole").directive("parseError", function() {
 return {
 restrict: "E",

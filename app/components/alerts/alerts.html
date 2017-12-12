@@ -1,0 +1,18 @@
+<div ng-attr-row="{{$ctrl.toast}}"  ng-attr-wrap="{{$ctrl.toast}}">
+  <div ng-repeat="(alertID, alert) in ($ctrl.alerts | filterCollection : $ctrl.filter) track by (alertID + (alert.message || alert.details))" ng-if="!alert.hidden" class="alert-wrapper animate-repeat" ng-class="{'animate-slide': $ctrl.animateSlide}">
+    <div class="alert word-break" ng-class="{ 'alert-danger': alert.type === 'error', 'alert-warning': alert.type === 'warning', 'alert-success': alert.type === 'success', 'alert-info': !alert.type || alert.type === 'info', 'toast-pf': $ctrl.toast, 'mar-left-sm': $ctrl.toast}">
+      <button ng-if="!$ctrl.hideCloseButton" ng-click="$ctrl.close(alert)" type="button" class="close">
+        <span class="pficon pficon-close" aria-hidden="true"></span>
+        <span class="sr-only">Close</span>
+      </button>
+      <span class="pficon" aria-hidden="true" ng-class="{'pficon-error-circle-o': alert.type === 'error', 'pficon-warning-triangle-o': alert.type === 'warning', 'pficon-ok': alert.type === 'success','pficon-info': !alert.type || alert.type === 'info'}"></span>
+      <span class="sr-only">{{alert.type}}</span>
+      <span ng-if="alert.message" style="margin-right: 5px;" ng-class="{'strong': !$ctrl.toast}">{{alert.message}}</span><span ng-if="alert.details">{{alert.details}}</span>
+      <span ng-repeat="link in alert.links">
+        <a ng-if="!link.href" href="" ng-click="$ctrl.onClick(alert, link)" role="button" ng-attr-target="{{link.target}}">{{link.label}}</a>
+        <a ng-if="link.href" href="{{link.href}}" ng-click="$ctrl.onClick(alert, link)" ng-attr-target="{{link.target}}">{{link.label}}</a>
+        <span ng-if="!$last" class="action-divider">|</span>
+      </span>
+    </div>
+  </div>
+</div>
