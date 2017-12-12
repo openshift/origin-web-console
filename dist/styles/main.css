@@ -6124,3 +6124,6 @@ notification-drawer-wrapper .expanded-notification.unread .drawer-pf-notificatio
 .add-config-to-application .form-group .control-input{flex:1 0 0%}
 .add-config-to-application .updating{background-color:#fff;bottom:55px;left:0;padding-top:60px;position:absolute;right:0;top:55px;z-index:1000}
 .service-instance-details .instance-status-message{white-space:pre-line}
+.set-home-page .modal-body-indent{padding-left:48px}
+.set-home-page .modal-body-indent .title{font-weight:600}
+.set-home-page .select-project-container{padding-left:20px;max-width:360px}

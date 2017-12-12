@@ -73594,6 +73594,7 @@ jenkinsBuildURL: [ "openshift.io/jenkins-build-uri" ],
 jenkinsLogURL: [ "openshift.io/jenkins-log-url" ],
 jenkinsStatus: [ "openshift.io/jenkins-status-json" ],
 loggingUIHostname: [ "openshift.io/logging.ui.hostname" ],
+loggingDataPrefix: [ "openshift.io/logging.data.prefix" ],
 idledAt: [ "idling.alpha.openshift.io/idled-at" ],
 idledPreviousScale: [ "idling.alpha.openshift.io/previous-scale" ],
 systemOnly: [ "authorization.openshift.io/system-only" ]
@@ -74294,13 +74295,13 @@ return e;
 }
 };
 }), angular.module("openshiftCommonServices").service("BindingService", [ "$filter", "$q", "APIService", "AuthService", "DataService", "DNS1123_SUBDOMAIN_VALIDATION", function(e, t, n, i, r, o) {
-var a = n.getPreferredVersion("servicebindings"), s = e("generateName"), l = function(e) {
+var a = n.getPreferredVersion("servicebindings"), s = n.getPreferredVersion("secrets"), l = e("generateName"), c = function(e) {
 var t = _.truncate(e, {
 length: o.maxlength - 5 - 1,
 omission: ""
 });
-return s(t, 5);
-}, c = function(e, t, n) {
+return l(t, 5);
+}, u = function(e, t, n) {
 var i = {
 apiVersion: "v1",
 kind: "Secret",
@@ -74319,8 +74320,8 @@ type: "Opaque",
 stringData: {}
 };
 return i.stringData.parameters = JSON.stringify(t), i;
-}, u = function(e, t, n) {
-var i = e.metadata.name, r = l(e.metadata.name + "-credentials-"), o = {
+}, d = function(e, t, n) {
+var i = e.metadata.name, r = c(e.metadata.name + "-credentials-"), o = {
 kind: "ServiceBinding",
 apiVersion: "servicecatalog.k8s.io/v1beta1",
 metadata: {
@@ -74346,13 +74347,13 @@ matchLabels: a
 name: r,
 selector: a
 }), o;
-}, d = function(t, n, i) {
+}, h = function(t, n, i) {
 if (!t || !n || !i) return !1;
 if (_.get(t, "metadata.deletionTimestamp")) return !1;
 if (e("isServiceInstanceFailed")(t, "Failed")) return !1;
 var r = _.get(i, "spec.bindable");
 return !0 === r || !1 !== r && n.spec.bindable;
-}, h = function(e) {
+}, f = function(e) {
 var t = {};
 return _.each(e, function(e) {
 var n = _.get(e, "spec.alphaPodPresetTemplate.selector");
@@ -74366,26 +74367,26 @@ if (!t) return null;
 var n = _.get(e, "spec.clusterServiceClassRef.name");
 return n ? t[n] : null;
 },
-makeParametersSecret: c,
-generateSecretName: l,
+makeParametersSecret: u,
+generateSecretName: c,
 bindService: function(e, t, n, i) {
 var o;
-_.isEmpty(i) || (o = l(e.metadata.name + "-bind-parameters-"));
-var s = u(e, t, o), d = {
+_.isEmpty(i) || (o = c(e.metadata.name + "-bind-parameters-"));
+var l = d(e, t, o), h = {
 namespace: e.metadata.namespace
-}, h = r.create(a, null, s, d);
-return o ? h.then(function(e) {
-var t = c(o, i, e);
-return r.create("secrets", null, t, d).then(function() {
+}, f = r.create(a, null, l, h);
+return o ? f.then(function(e) {
+var t = u(o, i, e);
+return r.create(s, null, t, h).then(function() {
 return e;
 });
-}) : h;
+}) : f;
 },
-isServiceBindable: d,
-getPodPresetSelectorsForBindings: h,
+isServiceBindable: h,
+getPodPresetSelectorsForBindings: f,
 getBindingsForResource: function(e, t) {
 if ("ServiceInstance" === _.get(t, "kind")) return _.filter(e, [ "spec.instanceRef.name", _.get(t, "metadata.name") ]);
-var n = h(e), i = new LabelSelector(_.get(t, "spec.selector")), r = [];
+var n = f(e), i = new LabelSelector(_.get(t, "spec.selector")), r = [];
 return _.each(n, function(t, n) {
 t.covers(i) && r.push(e[n]);
 }), r;
@@ -74393,7 +74394,7 @@ t.covers(i) && r.push(e[n]);
 filterBindableServiceInstances: function(e, t, n) {
 return e && t && n ? _.filter(e, function(e) {
 var i = _.get(e, "spec.clusterServiceClassRef.name"), r = _.get(e, "spec.clusterServicePlanRef.name");
-return d(e, t[i], n[r]);
+return h(e, t[i], n[r]);
 }) : null;
 },
 sortServiceInstances: function(e, t) {
@@ -75160,63 +75161,65 @@ e ? (t.log("LocalStorageUserStore.setToken", e, n), localStorage[i] = e, o(i, n)
 }
 };
 } ];
-}), angular.module("openshiftCommonServices").factory("ProjectsService", [ "$location", "$q", "$rootScope", "AuthService", "AuthorizationService", "DataService", "Logger", "RecentlyViewedProjectsService", "annotationNameFilter", function(e, t, n, i, r, o, a, s, l) {
-var c, u = !1, d = function() {
-a.debug("ProjectsService: clearing project cache"), c = null, u = !1;
+}), angular.module("openshiftCommonServices").factory("ProjectsService", [ "$location", "$q", "$rootScope", "APIService", "AuthService", "AuthorizationService", "DataService", "Logger", "RecentlyViewedProjectsService", "annotationNameFilter", function(e, t, n, i, r, o, a, s, l, c) {
+var u, d = !1, h = i.getPreferredVersion("projects"), f = i.getPreferredVersion("projectrequests"), p = function() {
+s.debug("ProjectsService: clearing project cache"), u = null, d = !1;
 };
-i.onUserChanged(d), i.onLogout(d);
-var h = function(e) {
-var t = [ l("description"), l("displayName") ];
+r.onUserChanged(p), r.onLogout(p);
+var g = function(e) {
+var t = [ c("description"), c("displayName") ];
 return _.each(t, function(t) {
 e.metadata.annotations[t] || delete e.metadata.annotations[t];
 }), e;
 };
 return {
-get: function(n) {
-return i.withUser().then(function() {
-var i = {
+get: function(n, i) {
+return r.withUser().then(function() {
+var r = {
 projectPromise: $.Deferred(),
 projectName: n,
 project: void 0
 };
-return o.get("projects", n, i, {
+return a.get(h, n, r, {
 errorNotification: !1
 }).then(function(e) {
-return r.getProjectRules(n).then(function() {
-return i.project = e, i.projectPromise.resolve(e), s.addProjectUID(e.metadata.uid), c && c.update(e, "MODIFIED"), [ e, i ];
+return o.getProjectRules(n).then(function() {
+return r.project = e, r.projectPromise.resolve(e), l.addProjectUID(e.metadata.uid), u && u.update(e, "MODIFIED"), [ e, r ];
 });
 }, function(n) {
-i.projectPromise.reject(n);
-var r = "The project could not be loaded.", o = "error";
-return 403 === n.status ? (r = "The project " + i.projectName + " does not exist or you are not authorized to view it.", o = "access_denied") : 404 === n.status && (r = "The project " + i.projectName + " does not exist.", o = "not_found"), e.url(URI("error").query({
-error: o,
-error_description: r
+if (r.projectPromise.reject(n), (403 === n.status || 404 === n.status) && _.get(i, "skipErrorNotFound")) return t.reject({
+notFound: !0
+});
+var o = "The project could not be loaded.", a = "error";
+return 403 === n.status ? (o = "The project " + r.projectName + " does not exist or you are not authorized to view it.", a = "access_denied") : 404 === n.status && (o = "The project " + r.projectName + " does not exist.", a = "not_found"), e.url(URI("error").query({
+error: a,
+error_description: o
 }).toString()), t.reject();
 });
 });
 },
 list: function(e) {
-return c && !e ? (a.debug("ProjectsService: returning cached project data"), t.when(c)) : (a.debug("ProjectsService: listing projects, force refresh", e), o.list("projects", {}).then(function(e) {
-return c = e, e;
+return u && !e ? (s.debug("ProjectsService: returning cached project data"), t.when(u)) : (s.debug("ProjectsService: listing projects, force refresh", e), a.list(h, {}).then(function(e) {
+return u = e, e;
 }, function(e) {
-return c = o.createData([]), u = !0, t.reject();
+return u = a.createData([]), d = !0, t.reject();
 }));
 },
 isProjectListIncomplete: function() {
-return u;
+return d;
 },
 watch: function(e, t) {
-return o.watch("projects", e, function(e) {
-c = e, t(e);
+return a.watch(h, e, function(e) {
+u = e, t(e);
 });
 },
 update: function(e, t) {
-return o.update("projects", e, h(t), {
+return a.update(h, e, g(t), {
 projectName: e
 }, {
 errorNotification: !1
 }).then(function(e) {
-return c && c.update(e, "MODIFIED"), e;
+return u && u.update(e, "MODIFIED"), e;
 });
 },
 create: function(e, t, n) {
@@ -75229,18 +75232,18 @@ name: e
 displayName: t,
 description: n
 };
-return o.create("projectrequests", null, i, {}).then(function(e) {
-return s.addProjectUID(e.metadata.uid), c && c.update(e, "ADDED"), e;
+return a.create(f, null, i, {}).then(function(e) {
+return l.addProjectUID(e.metadata.uid), u && u.update(e, "ADDED"), e;
 });
 },
 canCreate: function() {
-return o.get("projectrequests", null, {}, {
+return a.get(f, null, {}, {
 errorNotification: !1
 });
 },
 delete: function(e) {
-return o.delete("projects", e.metadata.name, {}).then(function(t) {
-return c && c.update(e, "DELETED"), t;
+return a.delete(h, e.metadata.name, {}).then(function(t) {
+return u && u.update(e, "DELETED"), t;
 });
 }
 };
