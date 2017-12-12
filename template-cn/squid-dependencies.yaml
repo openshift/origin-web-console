@@ -8,7 +8,7 @@ metadata:
   annotations:
     description: 数人云一体化异步微服务平台 Squid 的依赖服务。请在部署 Squid 前，请先部署这个模版。
     iconClass: icon-squid-dependence
-    openshift.io/display-name: Squid产品依赖服务(技术预览)
+    openshift.io/display-name: Squid 产品依赖服务(技术预览)
     tags: quickstart,squid,dataman
     template.openshift.io/documentation-url: https://github.com/Dataman-Cloud/squid
     template.openshift.io/long-description: This template is a squid application.  The
