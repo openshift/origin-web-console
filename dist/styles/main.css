@@ -3976,7 +3976,6 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.left,div.hopscotch-bubble
 .icon-rh-integration:before{content:"\e907"}
 .icon-rh-tomcat:before{content:"\e908"}
 .icon-sso:before{content:"\e909"}
-.icon-openshift:before{content:"\e90a"}
 @keyframes toastSlideIn{0%{opacity:0;transform:translateX(150px)}
 100%{opacity:1;transform:translateX(0)}
 }
@@ -4823,6 +4822,9 @@ a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;te
 .modal-resource-action h1{font-size:21px;font-weight:500;margin-bottom:20px;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .modal-resource-action p{font-size:14px}
 .modal-resource-action .help-block{margin-top:0px;margin-bottom:10px}
+.modal-resource-action .indent{padding-left:48px}
+.modal-resource-action .indent .title{font-weight:600}
+.modal-resource-action .select-project-container{padding-left:20px;width:70%}
 .debug-pod-action{margin-top:5px}
 .modal-debug-terminal .modal-header{padding:0 18px 5px}
 .modal-debug-terminal .modal-header h2{margin-bottom:5px}

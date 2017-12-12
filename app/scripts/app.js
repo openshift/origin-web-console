@@ -35,6 +35,16 @@ angular
     'openshiftCommonUI',
     'webCatalog'
   ])
+  .run(function(AuthService, HomePagePreference, $location) {
+    if ($location.$$url === "/") {
+      HomePagePreference.gotoHomePage();
+    }
+    AuthService.onUserChanged(function(user) {
+      if (user) {
+        HomePagePreference.gotoHomePage();
+      }
+    });
+  })
   .config(function ($routeProvider) {
     var landingPageRoute;
     var projectsPageRoute = {
