@@ -4,13 +4,11 @@ labels:
   template: squid-dependencies
 message: |-
   Squid Dependencies has been depolyed.
-
-  For more information about using this template, see https://github.com/Dataman-Cloud/squid.
 metadata:
   annotations:
-    description: 数人云的Squid是一体化异步微服务平台，基于容器云平台打造，支持同步和异步模式。它具有高可用、高并发、无侵入性扩展业务、服务依赖实时跟踪以及自动伸缩等特性，无缝融合物理机、虚拟机及容器，从而实现微服务统一管理、配置、监控。
+    description: 数人云一体化异步微服务平台 Squid 的依赖服务。请在部署 Squid 前，请先部署这个模版。
     iconClass: icon-squid-dependence
-    openshift.io/display-name: Squid产品依赖服务（技术预览）
+    openshift.io/display-name: Squid产品依赖服务(技术预览)
     tags: quickstart,squid,dataman
     template.openshift.io/documentation-url: https://github.com/Dataman-Cloud/squid
     template.openshift.io/long-description: This template is a squid application.  The

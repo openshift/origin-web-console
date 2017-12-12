@@ -315,7 +315,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
   CATALOG_CATEGORIES: [
     {
       id: 'eams',
-      label: "DataManOS微服务治理",
+      label: "数人云微服务治理",
       items: [
           {
           id: "octopus",
@@ -342,7 +342,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     },
     {
       id: 'dmos',
-      label: "DataManOS基础服务",
+      label: "数人云基础服务",
       items: [
         {
           id: "monitor",
