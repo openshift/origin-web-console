@@ -784,7 +784,7 @@ prefixes:[ "/browse/events" ]
 } ],
 CATALOG_CATEGORIES:[ {
 id:"eams",
-label:"DataManOS微服务治理",
+label:"数人云微服务治理",
 items:[ {
 id:"octopus",
 categoryAliases:[ "octopus" ],
@@ -806,7 +806,7 @@ description:gettext("")
 } ]
 }, {
 id:"dmos",
-label:"DataManOS基础服务",
+label:"数人云基础服务",
 items:[ {
 id:"monitor",
 categoryAliases:[ "monitor" ],
