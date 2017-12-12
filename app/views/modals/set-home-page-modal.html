@@ -1,0 +1,49 @@
+<div class="modal-resource-action set-home-page">
+  <div class="modal-header">
+    <h1>Set Home Page</h1>
+  </div>
+  <div class="modal-body modal-body-indent">
+    <p>
+      <div class="title">Set your preferred home page.</div>
+      Note: This setting is browser specific and will not be maintained across browsers.
+    </p>
+    <form name="homePageForm">
+      <fieldset ng-disabled="loading">
+        <div class="radio">
+          <label>
+            <input type="radio" ng-model="homePagePreference" value="catalog-home">
+            Catalog Home (Default)
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input type="radio" ng-model="homePagePreference" value="project-list">
+            My Projects List
+          </label>
+        </div>
+        <div class="radio" ng-show="availableProjects.length >= 1">
+          <label>
+            <input type="radio" ng-model="homePagePreference" value="project-overview">
+            Overview Page for{{availableProjects.length === 1 ? ' ' + (selectedProject | displayName) : ':'}}
+          </label>
+          <div class="select-project-container" ng-if="availableProjects.length > 1">
+            <select-project ng-required="homePagePreference === 'project-overview'"
+                            on-project-selected="onProjectSelected"
+                            on-open="onOpen"
+                            available-projects="availableProjects"
+                            selected-project="selectedProject"
+                            hide-create-project="true"
+                            hide-label="true">
+            </select-project>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+      <button class="btn btn-lg btn-primary" type="button"
+              ng-disabled="homePageForm.$invalid || homePageForm.$pristine"
+              ng-click="setHomePage()">Save</button>
+      <button class="btn btn-lg btn-default" type="button" ng-click="cancel()">Cancel</button>
+  </div>
+</div>

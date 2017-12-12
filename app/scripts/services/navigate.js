@@ -91,7 +91,7 @@ angular.module("openshiftConsole")
       catalogURL: function(project) {
         var projectName = angular.isString(project) ? project : _.get(project, 'metadata.name');
         if (!projectName) {
-          return './';
+          return 'catalog';
         }
 
         return "project/" + encodeURIComponent(projectName) + "/catalog";

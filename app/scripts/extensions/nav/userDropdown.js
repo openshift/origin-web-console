@@ -15,6 +15,11 @@ angular.module('openshiftConsole')
           });
         }
 
+        items.push({
+          type: 'dom',
+          node: '<li><set-home-page></set-home-page></li>'
+        });
+
         var msg = 'Log Out';
         if ($rootScope.user.fullName && $rootScope.user.fullName !== $rootScope.user.metadata.name) {
           msg += ' (' + $rootScope.user.metadata.name + ')';
