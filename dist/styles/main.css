@@ -4797,7 +4797,7 @@ select:invalid{box-shadow:none}
 .input-number{width:60px}
 .alert{margin-bottom:14px;margin-top:7px}
 .alert.toast-pf{margin-top:0}
-.alert code{background-color:inherit;padding:0}
+.alert code{background-color:inherit;display:inline-block;padding:0;word-break:break-all;word-break:break-word;overflow-wrap:break-word}
 .action-button{color:#9c9c9c}
 .action-button:active,.action-button:focus,.action-button:hover{color:#000}
 a.action-button:active,a.action-button:focus,a.action-button:hover{text-decoration:none}
