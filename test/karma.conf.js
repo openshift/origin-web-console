@@ -102,11 +102,13 @@ module.exports = function(config) {
       "bower_components/origin-web-catalog/dist/vendor-bundle.js",
       "bower_components/origin-web-catalog/dist/origin-web-catalogs.js",
       'app/scripts/**/*.js',
-      'app/views/directives/**/*.html',
+      'app/**/*.component.js',
+      'app/components/**/*.html',
       //'test/mock/**/*.js',
       'test/spec/spec-helper.js',
       'test/spec/fixtures/api-discovery.js',
-      'test/spec/**/*.js'
+      'test/spec/**/*.js',
+      'app/**/*.spec.js',
     ],
 
     // list of files / patterns to exclude
@@ -153,12 +155,15 @@ module.exports = function(config) {
       // do not include tests or libraries
       // (these files will be instrumented by Istanbul)
       'app/**/*.js': ['coverage'],
-      'app/views/directives/**/*.html': ['ng-html2js']
+
+      // Generate javascript modules for external templates so that they can be
+      // loaded without http requests.
+      'app/components/**/*.html': ['ng-html2js']
     },
 
     ngHtml2JsPreprocessor: {
       moduleName: 'openshiftConsoleTemplates',
-      stripPrefix: '/app',
+      stripPrefix: 'app/'
     },
 
     // order of reporters matters, input/output may break

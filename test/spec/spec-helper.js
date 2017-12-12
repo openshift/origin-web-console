@@ -1,5 +1,5 @@
 "use strict";
- beforeEach(module(function ($provide) {
+beforeEach(module(function ($provide) {
   $provide.factory("HawtioExtension", function() {
     return {
       add: function() {}
@@ -19,3 +19,6 @@
 
  //load the module
 beforeEach(module('openshiftConsole'));
+
+// Load the precompiled templates
+beforeEach(module('openshiftConsoleTemplates'));
