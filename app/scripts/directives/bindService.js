@@ -8,6 +8,7 @@
       'APIService',
       'ApplicationsService',
       'BindingService',
+      'Catalog',
       'DataService',
       'ServiceInstancesService',
       BindService
@@ -26,6 +27,7 @@
                        APIService,
                        ApplicationsService,
                        BindingService,
+                       Catalog,
                        DataService,
                        ServiceInstancesService) {
     var ctrl = this;
@@ -37,6 +39,9 @@
     var bindingWatch;
     var statusCondition = $filter('statusCondition');
     var enableTechPreviewFeature = $filter('enableTechPreviewFeature');
+    var serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
+    var serviceClassesVersion = APIService.getPreferredVersion('clusterserviceclasses');
+    var servicePlansVersion = APIService.getPreferredVersion('clusterserviceplans');
 
     var preselectService = function(){
       var newestReady;
@@ -56,7 +61,7 @@
     var sortServiceInstances = function() {
       // wait till both service instances and service classes are available so
       // that the sort is stable and items dont jump around
-      if (ctrl.serviceClasses && ctrl.serviceInstances) {
+      if (ctrl.serviceClasses && ctrl.serviceInstances && ctrl.servicePlans) {
         ctrl.serviceInstances =
           BindingService.filterBindableServiceInstances(ctrl.serviceInstances,
                                                         ctrl.serviceClasses,
@@ -118,9 +123,18 @@
         namespace: _.get(ctrl.target, 'metadata.namespace')
       };
 
-      var serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
       DataService.list(serviceInstancesVersion, context).then(function(instances) {
         ctrl.serviceInstances = instances.by('metadata.name');
+        sortServiceInstances();
+      });
+
+      DataService.list(serviceClassesVersion, {}).then(function (serviceClasses) {
+        ctrl.serviceClasses = serviceClasses.by('metadata.name');
+        sortServiceInstances();
+      });
+
+      DataService.list(servicePlansVersion, {}).then(function(plans) {
+        ctrl.servicePlans = plans.by('metadata.name');
         sortServiceInstances();
       });
     };
@@ -129,7 +143,7 @@
       id: 'bindForm',
       label: 'Binding',
       view: 'views/directives/bind-service/bind-service-form.html',
-      valid: true,
+      valid: false,
       allowClickNav: true,
       onShow: showBind
     };
@@ -152,28 +166,28 @@
       onShow: showResults
     };
 
-    var updateInstance = function() {
-      if (!ctrl.serviceClasses || !ctrl.servicePlans) {
+    var updateServiceInstance = function() {
+      if (!ctrl.serviceToBind) {
         return;
       }
 
-      var instance = ctrl.target.kind === 'ServiceInstance' ? ctrl.target : ctrl.serviceToBind;
-      if (!instance) {
-        return;
-      }
+      ServiceInstancesService.fetchServiceClassForInstance(ctrl.serviceToBind).then(function(serviceClass) {
+        ctrl.serviceClass = serviceClass;
+        var servicePlanName = ServiceInstancesService.getServicePlanNameForInstance(ctrl.serviceToBind);
+        DataService.get(servicePlansVersion, servicePlanName, {}).then(function(plan) {
+          ctrl.plan = plan;
+          ctrl.parameterSchema = _.get(ctrl.plan, 'spec.serviceBindingCreateParameterSchema');
+          ctrl.parameterFormDefinition = _.get(ctrl.plan, 'spec.externalMetadata.schemas.service_binding.create.openshift_form_definition');
 
-      var serviceClassName = ServiceInstancesService.getServiceClassNameForInstance(instance);
-      ctrl.serviceClass = ctrl.serviceClasses[serviceClassName];
-      var servicePlanName = ServiceInstancesService.getServicePlanNameForInstance(instance);
-      ctrl.plan = ctrl.servicePlans[servicePlanName];
-      ctrl.parameterSchema = _.get(ctrl.plan, 'spec.serviceBindingCreateParameterSchema');
-      ctrl.parameterFormDefinition = _.get(ctrl.plan, 'spec.externalMetadata.schemas.service_binding.create.openshift_form_definition');
-      bindParametersStep.hidden = !_.has(ctrl.parameterSchema, 'properties');
-      ctrl.nextTitle = bindParametersStep.hidden ? 'Bind' : 'Next >';
-      ctrl.hideBack = bindParametersStep.hidden;
+          bindParametersStep.hidden = !_.has(ctrl.parameterSchema, 'properties');
+          ctrl.nextTitle = bindParametersStep.hidden ? 'Bind' : 'Next >';
+          ctrl.hideBack = bindParametersStep.hidden;
+          bindFormStep.valid = true;
+        });
+      });
     };
 
-    $scope.$watch("ctrl.serviceToBind", updateInstance);
+    $scope.$watch("ctrl.serviceToBind", updateServiceInstance);
 
     ctrl.$onInit = function() {
       ctrl.serviceSelection = {};
@@ -183,22 +197,6 @@
 
       ctrl.steps = [ bindFormStep, bindParametersStep, resultsStep ];
       ctrl.hideBack = bindParametersStep.hidden;
-
-      // We will want ServiceClasses either way for display purposes
-      var serviceClassesVersion = APIService.getPreferredVersion('clusterserviceclasses');
-      DataService.list(serviceClassesVersion, {}).then(function(serviceClasses) {
-        ctrl.serviceClasses = serviceClasses.by('metadata.name');
-        updateInstance();
-        sortServiceInstances();
-      });
-
-      // We'll need service plans for binding parameters.
-      // TODO: Only load plans for selected instance.
-      var servicePlansVersion = APIService.getPreferredVersion('clusterserviceplans');
-      DataService.list(servicePlansVersion, {}).then(function(plans) {
-        ctrl.servicePlans = plans.by('metadata.name');
-        updateInstance();
-      });
 
       if (ctrl.target.kind === 'ServiceInstance') {
         ctrl.bindType = "secret-only";
