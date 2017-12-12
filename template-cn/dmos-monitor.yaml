@@ -6,9 +6,9 @@ message: |-
   dmos-monitor has been deployed.
 metadata:
   annotations:
-    description: A monitoring solution for an OpenShift cluster - collect and gather metrics and alerts from nodes, services, and the infrastructure. This is a tech preview feature.
+    description: 数人云微服务治理服务提供的统一监控服务，请在部署完所需的微服务后，再进行部署。
     iconClass: icon-monitor
-    openshift.io/display-name: dmos-monitor
+    openshift.io/display-name: 数人云微服务治理监控服务
     tags: quickstart,promethus,grafana,monitor,dataman
     template.openshift.io/documentation-url: https://hub.docker.com/r/prom/prometheus/
     template.openshift.io/long-description: Prometheus.

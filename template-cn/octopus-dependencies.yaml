@@ -4,13 +4,11 @@ labels:
   template: octopus-dependencies
 message: |-
   Octopus has been deployed.
-
-  For more information about using this template, see https://github.com/Dataman-Cloud/octopus.
 metadata:
   annotations:
-    description: 数人云分布式任务调度平台 Octopus 针对业务应用和运维类任务，提供分布式定时作业、消息调度作业以及本地作业的统一管理。Octopus 基于数人云 DataMan OS 容器云平台，传统的定时作业程序可以无缝迁移到容器上运行，通过取代传统的Linux Cron/Spring Batch Job/Quartz,做到分布式环境下批量作业任务的全域统一配置，统一监控，任务高可用以及分片并行。
+    description: 数人云分布式任务调度平台 Octopus 的依赖服务。请在部署 Octopus 前，请先部署这个模版。
     iconClass: icon-octopus-dependence
-    openshift.io/display-name: Octopus产品依赖服务（技术预览）
+    openshift.io/display-name: Octopus产品依赖服务(技术预览)
     tags: quickstart,octopus,dataman
     template.openshift.io/documentation-url: https://github.com/Dataman-Cloud/octopus
     template.openshift.io/long-description: This template is a octopus application.  The
