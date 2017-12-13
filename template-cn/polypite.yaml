@@ -39,12 +39,12 @@ objects:
       spec:
         containers:
           - env:
-              - name: MASTER_HOST
-                value: '${MASTER_HOST}'
-              - name: CONSOLE_HOST
-                value: '${CONSOLE_HOST}'
+              - name: LISTEN_HOST
+                value: '${LISTEN_HOST}'
               - name: LISTEN_PORT
                 value: '${LISTEN_PORT}'
+              - name: MASTER_HOST
+                value: '${MASTER_HOST}'
               - name: LOGGING_URL
                 value: '${LOGGING_URL}'
               - name: METRICS_URL
@@ -86,7 +86,7 @@ objects:
   metadata:
     name: ${APP_NAME}
   spec:
-    host: ${CONSOLE_HOST}
+    host: ${LISTEN_HOST}
     port:
       targetPort: polypite
     tls:
@@ -101,21 +101,21 @@ parameters:
   name: APP_NAME
   required: true
   value: 'polypite'
-- description: API Host.
-  displayName: Master Host
-  name: MASTER_HOST
+- description: Listen Host.
+  displayName: Listen Host
+  name: LISTEN_HOST
   required: true
-  value: ''
-- description: Console Host.
-  displayName: Console Host
-  name: CONSOLE_HOST
-  required: true
-  value: ''
+  value: '192.168.1.140:443'
 - description: Console Listen Port.
   displayName: Console Listen Port
   name: LISTEN_PORT
   required: true
   value: '443'
+- description: API Host.
+  displayName: Master Host
+  name: MASTER_HOST
+  required: true
+  value: '192.168.1.140:8443;192.168.1.140:8442'
 - description: Same with origin master config yaml.
   displayName: Logging Url
   name: LOGGING_URL
