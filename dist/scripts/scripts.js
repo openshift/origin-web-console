@@ -10642,104 +10642,106 @@ var h = {}, y = [], b = e("displayName"), S = e("uniqueDisplayName"), C = i.getP
 return {
 restrict: "EA",
 templateUrl: "views/directives/header/header.html",
-link: function(o, i) {
-o.currentProject = h[a.project];
-var p = function(e, t) {
+link: function(i, p) {
+i.currentProject = h[a.project];
+var w = function(e, t) {
 var n;
 _.set(r, "nav.collapsed", e), t && (n = e ? "true" : "false", localStorage.setItem("openshift/vertical-nav-collapsed", n));
 };
 !function() {
 var e = "true" === localStorage.getItem("openshift/vertical-nav-collapsed");
-p(e);
+w(e);
 }();
-var w = function() {
+var P = function() {
 return _.get(r, "nav.collapsed", !1);
-}, P = function(e) {
+}, j = function(e) {
 _.set(r, "nav.showMobileNav", e);
 };
-o.toggleNav = function() {
-var e = w();
-p(!e, !0);
-}, o.toggleMobileNav = function() {
+i.toggleNav = function() {
+var e = P();
+w(!e, !0);
+}, i.toggleMobileNav = function() {
 var e = _.get(r, "nav.showMobileNav");
-P(!e);
-}, o.closeMobileNav = function() {
-P(!1);
-}, o.closeOrderingPanel = function() {
-o.orderingPanelVisible = !1;
-}, o.showOrderingPanel = function(e) {
-o.orderingPanelVisible = !0, o.orderKind = e;
-}, o.onSearchToggle = function(e) {
+j(!e);
+}, i.closeMobileNav = function() {
+j(!1);
+}, i.closeOrderingPanel = function() {
+i.orderingPanelVisible = !1;
+}, i.showOrderingPanel = function(e) {
+i.orderingPanelVisible = !0, i.orderKind = e;
+}, i.onSearchToggle = function(e) {
 _.set(r, "view.hasProjectSearch", e);
-}, o.catalogLandingPageEnabled = !u.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
-var j = i.find(".selectpicker"), k = [], I = function() {
-var t = o.currentProjectName;
+}, i.catalogLandingPageEnabled = !u.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
+var k = p.find(".selectpicker"), I = [], R = function() {
+var t = i.currentProjectName;
 if (t) {
 var n = function(e, n) {
 var r = $("<option>").attr("value", e.metadata.name).attr("selected", e.metadata.name === t);
 return n ? r.text(b(e)) : r.text(S(e, y)), r;
 };
-_.size(h) <= 100 ? (y = e("orderByDisplayName")(h), k = _.map(y, function(e) {
+_.size(h) <= 100 ? (y = e("orderByDisplayName")(h), I = _.map(y, function(e) {
 return n(e, !1);
-})) : k = [ n(h[t], !0) ], j.empty(), j.append(k), j.append($('<option data-divider="true"></option>')), j.append($('<option value="">View All Projects</option>')), j.selectpicker("refresh");
+})) : I = [ n(h[t], !0) ], k.empty(), k.append(I), k.append($('<option data-divider="true"></option>')), k.append($('<option value="">View All Projects</option>')), k.selectpicker("refresh");
 }
-}, R = function() {
+}, E = function() {
 return f.list().then(function(e) {
 h = e.by("metadata.name");
 });
-}, E = function() {
-var e = a.project;
-o.currentProjectName !== e && (o.currentProjectName = e, o.chromeless = "chromeless" === a.view, e && !o.chromeless ? (_.set(r, "view.hasProject", !0), o.canIAddToProject = !1, s.getProjectRules(e).then(function() {
-o.currentProjectName === e && (o.canIAddToProject = s.canIAddToProject(e), o.canIAddToProject && l.getCatalogItems().then(function(e) {
-o.catalogItems = e;
-}));
-}), R().then(function() {
-o.currentProjectName && h && (h[o.currentProjectName] || (h[o.currentProjectName] = {
-metadata: {
-name: o.currentProjectName
-}
-}), o.currentProject = h[o.currentProjectName], I());
-})) : _.set(r, "view.hasProject", !1));
 }, T = function() {
-o.orderingPanelVisible && v.addItem(_.get(o.selectedItem, "resource.metadata.uid"));
-}, N = function(e) {
-return "PartialObjectMetadata" === e.kind;
+var e = a.project;
+i.currentProjectName !== e && (i.currentProjectName = e, i.chromeless = "chromeless" === a.view, e && !i.chromeless ? (_.set(r, "view.hasProject", !0), i.canIAddToProject = !1, s.getProjectRules(e).then(function() {
+i.currentProjectName === e && (i.canIAddToProject = s.canIAddToProject(e), i.canIAddToProject && l.getCatalogItems().then(function(e) {
+i.catalogItems = e;
+}));
+}), E().then(function() {
+i.currentProjectName && h && (h[i.currentProjectName] || (h[i.currentProjectName] = {
+metadata: {
+name: i.currentProjectName
+}
+}), i.currentProject = h[i.currentProjectName], R());
+})) : _.set(r, "view.hasProject", !1));
+}, N = function() {
+i.orderingPanelVisible && v.addItem(_.get(i.selectedItem, "resource.metadata.uid"));
 }, D = function(e) {
-return N(e) ? d.get(C, e.metadata.name, {
+return "PartialObjectMetadata" === e.kind;
+}, A = function(e) {
+return D(e) ? d.get(C, e.metadata.name, {
 namespace: e.metadata.namespace
 }) : n.when(e);
 };
-o.$on("open-overlay-panel", function(e, t) {
-o.currentProjectName && (o.servicePlansForItem = null, o.orderKind = _.get(t, "kind"), "Template" !== o.orderKind ? "ClusterServiceClass" !== o.orderKind ? (o.selectedItem = t, o.orderingPanelVisible = !0) : c.getServicePlansForServiceClass(_.get(t, "resource.metadata.name")).then(function(e) {
-o.servicePlansForItem = _.reject(e.by("metadata.name"), {
+i.$on("open-overlay-panel", function(e, t) {
+i.currentProjectName && (i.servicePlansForItem = null, i.orderKind = _.get(t, "kind"), "Template" !== i.orderKind ? "ClusterServiceClass" !== i.orderKind ? o(function() {
+i.selectedItem = t, i.orderingPanelVisible = !0;
+}) : c.getServicePlansForServiceClass(_.get(t, "resource.metadata.name")).then(function(e) {
+i.servicePlansForItem = _.reject(e.by("metadata.name"), {
 status: {
 removedFromBrokerCatalog: !0
 }
-}), o.selectedItem = t, o.orderingPanelVisible = !0;
-}) : D(t.resource).then(function(e) {
-o.selectedItem = e, o.orderingPanelVisible = !0, o.orderKind = "Template";
+}), i.selectedItem = t, i.orderingPanelVisible = !0;
+}) : A(t.resource).then(function(e) {
+i.selectedItem = e, i.orderingPanelVisible = !0, i.orderKind = "Template";
 }));
 });
-var A = r.$on("filter-catalog-items", function(e, t) {
-if (o.currentProjectName) {
+var B = r.$on("filter-catalog-items", function(e, t) {
+if (i.currentProjectName) {
 var n = {
 filter: t.searchText
 };
-m.toProjectCatalog(o.currentProjectName, n);
+m.toProjectCatalog(i.currentProjectName, n);
 }
 });
-o.closeOrderingPanel = function() {
-v.addItem(_.get(o.selectedItem, "resource.metadata.uid")), o.orderingPanelVisible = !1;
-}, E(), o.$on("$routeChangeSuccess", E), j.selectpicker({
+i.closeOrderingPanel = function() {
+v.addItem(_.get(i.selectedItem, "resource.metadata.uid")), i.orderingPanelVisible = !1;
+}, T(), i.$on("$routeChangeSuccess", T), k.selectpicker({
 iconBase: "fa",
 tickIcon: "fa-check"
 }).change(function() {
 var e = $(this).val(), n = "" === e ? "projects" : g(e);
-o.$apply(function() {
+i.$apply(function() {
 t.url(n);
 });
-}), o.$on("$destroy", function() {
-A(), T();
+}), i.$on("$destroy", function() {
+B(), N();
 });
 }
 };

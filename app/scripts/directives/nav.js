@@ -422,8 +422,12 @@ angular.module('openshiftConsole')
             return;
           }
 
-          $scope.selectedItem = item;
-          $scope.orderingPanelVisible = true;
+          // $timeout needed to prevent animation flicker when showing the dialog.
+          // https://github.com/openshift/origin-web-console/issues/2589
+          $timeout(function() {
+            $scope.selectedItem = item;
+            $scope.orderingPanelVisible = true;
+          });
         });
 
         var removeFilterListener = $rootScope.$on('filter-catalog-items', function(event, searchCriteria) {
