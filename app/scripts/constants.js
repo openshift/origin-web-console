@@ -12,7 +12,7 @@ if (angular.isUndefined(window.OPENSHIFT_CONSTANTS)) {
 
 angular.extend(window.OPENSHIFT_CONSTANTS, {
   // Maps links to specific topics in external documentation.
-  HELP_BASE_URL: "https://docs.openshift.org/latest/",
+  HELP_BASE_URL: "https://docs.openshift.com/container-platform/3.9/",
   HELP: {
     "cli":                     "cli_reference/index.html",
     "get_started_cli":         "cli_reference/get_started_cli.html",
@@ -62,8 +62,35 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
   },
   // Maps links names to URL's where the CLI tools can be downloaded, may point directly to files or to external pages in a CDN, for example.
   CLI: {
-    "Latest Release":          "https://github.com/openshift/origin/releases/latest"
+    "Latest Release":          "https://access.redhat.com/downloads/content/290"
   },
+
+  // Change the minishift link to the CDK for enterprise.
+  CATALOG_HELP_RESOURCES: {
+    links: [
+      {
+        title: 'Documentation',
+        help: ''
+      },
+      {
+        title: 'Interactive Learning Portal',
+        href: 'https://learn.openshift.com'
+      },
+      {
+        title: 'Container Development Kit',
+        href: 'https://developers.redhat.com/products/cdk/overview/'
+      },
+      {
+        title: 'YouTube',
+        href: 'https://www.youtube.com/user/rhopenshift'
+      },
+      {
+        title: 'Blog',
+        href: 'https://blog.openshift.com'
+      }
+    ]
+  },
+
   // The default CPU target percentage for horizontal pod autoscalers created or edited in the web console.
   // This value is set in the HPA when the input is left blank.
   DEFAULT_HPA_CPU_TARGET_PERCENT: 80,

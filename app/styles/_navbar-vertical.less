@@ -3,15 +3,16 @@
 //  -----------------------------------------------
 
 #header-logo {
-  background-image: url('@{image-path}/logo-origin-thin.svg');
+  background-image: url('@{image-path}/logo-OCP-console-hdr-stacked.svg');
   background-position: left center;
   background-repeat: no-repeat;
-  // Max logo dimensions width 196px / height 40px
+  // Max logo dimensions width 128px / height 40px
   height: @navbar-os-header-height-mobile - 1; // 1px border-bottom on navbar-os-mobile
-  width: 196px;
-  @media(min-width: @screen-sm-min) {
-    // Max logo dimensions width 230px / height 40px
-    width: 230px;
+  width: 128px;
+  @media (min-width: 475px) {
+    background-image: url('@{image-path}/logo-OCP-console-hdr-thin.svg');
+    // Max logo dimensions width 320px / height 40px
+    width: 320px;
   }
 }
 
