@@ -189,12 +189,14 @@
                     </div>
                     <div class="list-pf-additional-content">
                       <div class="list-pf-additional-content-item">
-                        <a href=""
-                          ng-click="viewPodsForSet(replicationController)"
-                          class="mini-donut-link"
-                          ng-class="{ 'disabled-link': !(podsByOwnerUID[replicationController.metadata.uid] | size) }">
-                          <pod-donut pods="podsByOwnerUID[replicationController.metadata.uid]" mini="true"></pod-donut>
-                        </a>
+                        <div class="pods">
+                          <a href=""
+                            ng-click="viewPodsForSet(replicationController)"
+                            class="mini-donut-link"
+                            ng-class="{ 'disabled-link': !(podsByOwnerUID[replicationController.metadata.uid] | size) }">
+                            <pod-donut pods="podsByOwnerUID[replicationController.metadata.uid]" mini="true"></pod-donut>
+                          </a>
+                        </div>
                       </div>
                       <div class="list-pf-additional-content-item">
                         <image-names
@@ -258,12 +260,14 @@
                     </div>
                     <div class="list-pf-additional-content">
                       <div class="list-pf-additional-content-item">
-                        <a href=""
-                           ng-click="viewPodsForSet(replicaSet)"
-                           class="mini-donut-link"
-                           ng-class="{ 'disabled-link': !(podsByOwnerUID[replicaSet.metadata.uid] | size) }">
-                          <pod-donut pods="podsByOwnerUID[replicaSet.metadata.uid]" mini="true"></pod-donut>
-                        </a>
+                        <div class="pods">
+                          <a href=""
+                            ng-click="viewPodsForSet(replicaSet)"
+                            class="mini-donut-link"
+                            ng-class="{ 'disabled-link': !(podsByOwnerUID[replicaSet.metadata.uid] | size) }">
+                            <pod-donut pods="podsByOwnerUID[replicaSet.metadata.uid]" mini="true"></pod-donut>
+                          </a>
+                        </div>
                       </div>
                       <div class="list-pf-additional-content-item">
                         <image-names
@@ -360,12 +364,14 @@
                     </div>
                     <div class="list-pf-additional-content">
                       <div class="list-pf-additional-content-item">
-                        <a href=""
-                           ng-click="viewPodsForSet(set)"
-                           class="mini-donut-link"
-                           ng-class="{ 'disabled-link': !(podsByOwnerUID[set.metadata.uid] | size) }">
-                          <pod-donut pods="podsByOwnerUID[set.metadata.uid]" mini="true"></pod-donut>
-                        </a>
+                        <div class="pods">
+                          <a href=""
+                            ng-click="viewPodsForSet(set)"
+                            class="mini-donut-link"
+                            ng-class="{ 'disabled-link': !(podsByOwnerUID[set.metadata.uid] | size) }">
+                            <pod-donut pods="podsByOwnerUID[set.metadata.uid]" mini="true"></pod-donut>
+                          </a>
+                        </div>
                       </div>
                       <div class="list-pf-additional-content-item">
                         <image-names pod-template="set.spec.template" pods="podsByOwnerUID[set.metadata.uid]"></image-names>

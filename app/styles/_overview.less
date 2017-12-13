@@ -12,7 +12,6 @@
   }
   .icon-count {
     display: inline-block;
-    margin-right: 5px;
     &, [data-toggle="tooltip"] {
       cursor: help;
     }
@@ -107,18 +106,6 @@
   .c3-line {
     stroke-width: 1px;
   }
-  .component-label {
-    font-size: @component-label;
-    font-weight: 500;
-    padding: 0 0 4px 0;
-    .text-muted();
-    text-transform: uppercase;
-    .sublabel {
-      font-size: (@component-label - 1);
-      margin-left: 2px;
-      text-transform: none;
-    }
-  }
   .data-toolbar-dropdown {
     display: inline-block;
   }
@@ -191,6 +178,9 @@
   }
   .expanded-section {
     margin-top: 20px;
+    &.no-margin {
+      margin: 0; // when expanded-section is first within list-pf-container
+    }
     .row > [class^=col-] {
       margin-bottom: 10px;
       @media (min-width: @screen-lg-min) {
@@ -208,15 +198,6 @@
       width: 100%; // IE
       .word-break();
     }
-    .section-title {
-      .h4();
-      border-bottom: 1px solid @list-pf-border-color;
-      padding-bottom: 10px;
-      &.no-border {
-        border-bottom: 0;
-        padding-bottom: 0;
-      }
-    }
   }
   .filter-status {
     margin-bottom: 5px;
@@ -230,6 +211,7 @@
   h2 {
     margin-top: 0;
     > .component-label {
+      font-weight: 500;
       padding-bottom: 0;
     }
   }
@@ -239,7 +221,8 @@
   }
   .list-pf-actions {
     // if no actions-dropdown-kebab is present, still take up space
-    min-width: 19px;
+    justify-content: flex-end;
+    min-width: 35px;
   }
   .list-pf-details {
     .fade-in();
@@ -290,6 +273,16 @@
     &.active {
       border-top-color: @list-pf-item-active-border-color;
     }
+    &:not(.active) {
+      build-counts,
+      notification-icon,
+      status-icon {
+        .fa, .pficon {
+          font-size: 14px;
+        }
+      }
+    }
+
     &.deployment-in-progress {
       // So animation offsets are hidden when sliding in horizontally
       // Only use this style when a deployment is in progress so that chart
@@ -346,7 +339,7 @@
   }
   .list-row-longname {
     .text-muted();
-    font-size: @component-label;
+    font-size: @font-size-small;
     margin-top: 3px;
   }
   .list-row-tabset {
@@ -422,14 +415,7 @@
   .overview-row-inline-actions {
     .mar-left-md();
   }
-  pod-donut[mini] {
-    align-items: center;
-    display: flex;
-  }
   .provisioned-service {
-    .expanded-section {
-      margin-top: 0;
-    }
     .list-pf-details {
       @media (min-width: @screen-sm-min) {
         justify-content: space-between;
