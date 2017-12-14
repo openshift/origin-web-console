@@ -2131,7 +2131,7 @@ var s = n.getPreferredVersion("deploymentconfigs/instantiate"), c = n.getPreferr
 i.prototype.startLatestDeployment = function(t, n) {
 var a = {
 kind: "DeploymentRequest",
-apiVersion: "v1",
+apiVersion: t.apiVersion,
 name: t.metadata.name,
 latest: !0,
 force: !0
