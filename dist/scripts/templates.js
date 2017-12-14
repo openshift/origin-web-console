@@ -8628,7 +8628,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div>\n" +
     "<div class=\"form-group\" id=\"certificate-file\">\n" +
     "<label>Certificate</label>\n" +
-    "<osc-file-input model=\"route.tls.certificate\" drop-zone-id=\"certificate-file\" show-text-area=\"true\" help-text=\"The PEM format certificate. Upload file by dragging & dropping, selecting it, or pasting from the clipbard.\" ng-readonly=\"areCertificateInputsReadOnly()\" ng-disabled=\"areCertificateInputsDisabled()\">\n" +
+    "<osc-file-input model=\"route.tls.certificate\" drop-zone-id=\"certificate-file\" show-text-area=\"true\" help-text=\"The PEM format certificate. Upload file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-readonly=\"areCertificateInputsReadOnly()\" ng-disabled=\"areCertificateInputsDisabled()\">\n" +
     "</osc-file-input>\n" +
     "</div>\n" +
     "<div class=\"form-group\" id=\"private-key-file\">\n" +
