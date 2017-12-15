@@ -96,15 +96,12 @@
 
     };
 
-    $scope.$watch(function() {
-      return ctrl.fileUpload;
-    }, function(content, previous) {
-      if (content === previous) {
-        return;
-      }
-
+    // Use a file added callback instead of just watching for `fileUpload`
+    // changes so that we can replace the editor contents if the user has made
+    // changes when the same file is added again.
+    ctrl.onFileAdded = function(content) {
       ctrl.model = content;
-    });
+    };
 
     ctrl.$onInit = function() {
       if (ctrl.resource) {
