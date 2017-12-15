@@ -1175,8 +1175,7 @@ return "ReplicationController";
 controller: "ReplicaSetController",
 reloadOnSearch: !1
 }).when("/project/:project/browse/events", {
-templateUrl: "views/events.html",
-controller: "EventsController"
+template: "<events-page></events-page>"
 }).when("/project/:project/browse/images", {
 templateUrl: "views/images.html",
 controller: "ImagesController",
@@ -8296,17 +8295,6 @@ return _.some(e, {
 hasErrors: !0
 });
 };
-} ]), angular.module("openshiftConsole").controller("EventsController", [ "$routeParams", "$scope", "ProjectsService", function(e, t, n) {
-t.projectName = e.project, t.renderOptions = {
-hideFilterWidget: !0
-}, t.breadcrumbs = [ {
-title: "Monitoring",
-link: "project/" + e.project + "/monitoring"
-}, {
-title: "Events"
-} ], n.get(e.project).then(_.spread(function(e, n) {
-t.project = e, t.projectContext = n;
-}));
 } ]), angular.module("openshiftConsole").controller("OAuthController", [ "$scope", "$location", "$q", "APIService", "AuthService", "DataService", "Logger", "RedirectLoginService", function(e, t, n, r, a, o, i, s) {
 var c = i.get("auth");
 e.completeLogin = function() {}, e.cancelLogin = function() {
@@ -10820,6 +10808,22 @@ e.hidden = !0, _.isFunction(e.onClose) && e.onClose();
 }, e.onClick = function(t, n) {
 _.isFunction(n.onClick) && n.onClick() && e.close(t);
 };
+}
+}), angular.module("openshiftConsole").component("eventsPage", {
+bindings: {},
+templateUrl: "components/pages/events/events.html",
+controller: function(e, t, n) {
+var r = this;
+r.projectName = e.project, r.renderOptions = {
+hideFilterWidget: !0
+}, r.breadcrumbs = [ {
+title: "Monitoring",
+link: "project/" + e.project + "/monitoring"
+}, {
+title: "Events"
+} ], n.get(e.project).then(_.spread(function(e, t) {
+r.project = e, r.projectContext = t;
+}));
 }
 }), angular.module("openshiftConsole").directive("parseError", function() {
 return {

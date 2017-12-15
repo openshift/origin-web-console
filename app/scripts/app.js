@@ -233,8 +233,7 @@ angular
         reloadOnSearch: false
       })
       .when('/project/:project/browse/events', {
-        templateUrl: 'views/events.html',
-        controller: 'EventsController'
+        template: '<events-page></events-page>'
       })
       .when('/project/:project/browse/images', {
         templateUrl: 'views/images.html',

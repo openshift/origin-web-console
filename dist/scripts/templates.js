@@ -10461,30 +10461,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/events.html',
-    "<div class=\"middle\">\n" +
-    "<div class=\"middle-header\">\n" +
-    "<div class=\"container-fluid\">\n" +
-    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
-    "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
-    "<h1>Events</h1>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"middle-content\">\n" +
-    "<div class=\"container-fluid\">\n" +
-    "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-12\" ng-if=\"projectContext\">\n" +
-    "<events project-context=\"projectContext\" ng-if=\"projectContext\"></events>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>"
-  );
-
-
   $templateCache.put('views/images.html',
     "<div class=\"middle\">\n" +
     "<div class=\"middle-header header-toolbar\">\n" +
@@ -13851,6 +13827,30 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-if=\"link.href\" href=\"{{link.href}}\" ng-click=\"$ctrl.onClick(alert, link)\" ng-attr-target=\"{{link.target}}\">{{link.label}}</a>\n" +
     "<span ng-if=\"!$last\" class=\"action-divider\">|</span>\n" +
     "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('components/pages/events/events.html',
+    "<div class=\"middle\">\n" +
+    "<div class=\"middle-header\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<breadcrumbs breadcrumbs=\"$ctrl.breadcrumbs\"></breadcrumbs>\n" +
+    "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
+    "<h1>Events</h1>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"middle-content\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<alerts alerts=\"$ctrl.alerts\"></alerts>\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-12\" ng-if=\"$ctrl.projectContext\">\n" +
+    "<events project-context=\"$ctrl.projectContext\" ng-if=\"$ctrl.projectContext\"></events>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>"

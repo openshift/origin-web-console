@@ -1,7 +1,7 @@
 <div class="middle">
   <div class="middle-header">
     <div class="container-fluid">
-      <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+      <breadcrumbs breadcrumbs="$ctrl.breadcrumbs"></breadcrumbs>
       <div class="page-header page-header-bleed-right page-header-bleed-left">
         <h1>Events</h1>
       </div>
@@ -9,10 +9,10 @@
   </div><!-- /middle-header-->
   <div class="middle-content">
     <div class="container-fluid">
-      <alerts alerts="alerts"></alerts>
+      <alerts alerts="$ctrl.alerts"></alerts>
       <div class="row">
-        <div class="col-md-12" ng-if="projectContext">
-          <events project-context="projectContext" ng-if="projectContext"></events>
+        <div class="col-md-12" ng-if="$ctrl.projectContext">
+          <events project-context="$ctrl.projectContext" ng-if="$ctrl.projectContext"></events>
         </div>
       </div>
     </div>
