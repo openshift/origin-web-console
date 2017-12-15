@@ -11891,8 +11891,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-repeat=\"pipeline in overview.filteredPipelineBuildConfigs track by (pipeline | uid)\">\n" +
-    "<div ng-if=\"'buildconfigs/instantiate' | canI : 'create'\" class=\"pull-right\">\n" +
-    "<button class=\"btn btn-default\" ng-if=\"'buildconfigs/instantiate' | canI : 'create'\" ng-click=\"overview.startBuild(pipeline)\">\n" +
+    "<div ng-if=\"overview.buildConfigsInstantiateVersion | canI : 'create'\" class=\"pull-right\">\n" +
+    "<button class=\"btn btn-default\" ng-if=\"overview.buildConfigsInstantiateVersion | canI : 'create'\" ng-click=\"overview.startBuild(pipeline)\">\n" +
     "Start Pipeline\n" +
     "</button>\n" +
     "</div>\n" +
