@@ -96,6 +96,10 @@
     };
 
     ctrl.stepChanged = function(step) {
+      // Make sure current step is accurate when the back button is clicked.
+      // Otherwise setting it again later to advanced the wizard does nothing
+      // since the value hasn't changed.
+      ctrl.currentStep = step.title;
       if (step.stepId === 'results') {
         ctrl.nextButtonTitle = "Close";
         ctrl.wizardDone = true;
