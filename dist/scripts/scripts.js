@@ -13389,7 +13389,7 @@ s.template = null;
 var e = s.onDialogClosed();
 return _.isFunction(e) && e(), s.wizardDone = !1, !0;
 }, s.stepChanged = function(e) {
-"results" === e.stepId ? (s.nextButtonTitle = "Close", s.wizardDone = !0) : s.nextButtonTitle = "Create";
+s.currentStep = e.title, "results" === e.stepId ? (s.nextButtonTitle = "Close", s.wizardDone = !0) : s.nextButtonTitle = "Create";
 }, s.currentStep = "YAML / JSON", s.nextCallback = function(e) {
 return "file" === e.stepId ? (s.importFile(), !1) : "template" === e.stepId ? (s.instantiateTemplate(), !1) : "results" !== e.stepId || (s.close(), !1);
 };
