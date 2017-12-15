@@ -9836,13 +9836,14 @@ return {
 restrict: "E",
 scope: {
 model: "=",
-required: "=",
-disabled: "=ngDisabled",
-readonly: "=ngReadonly",
-showTextArea: "=",
-hideClear: "=?",
+required: "<",
+disabled: "<ngDisabled",
+readonly: "<ngReadonly",
+showTextArea: "<",
+hideClear: "<?",
 helpText: "@?",
-dropZoneId: "@?"
+dropZoneId: "@?",
+onFileAdded: "<?"
 },
 templateUrl: "views/directives/osc-file-input.html",
 link: function(t, n) {
@@ -9851,6 +9852,8 @@ var r = new FileReader();
 r.onloadend = function() {
 t.$apply(function() {
 t.fileName = n.name, t.model = r.result;
+var e = t.onFileAdded;
+_.isFunction(e) && e(r.result);
 });
 }, r.onerror = function(n) {
 t.supportsFileUpload = !1, t.uploadError = !0, e.error("Could not read file", n);
@@ -9910,7 +9913,7 @@ c || n.find(".drag-and-drop-zone").removeClass("show-drag-and-drop-zone");
 }), t.cleanInputValues = function() {
 t.model = "", t.fileName = "", l[0].value = "";
 }, l.change(function() {
-r(l[0].files[0]);
+r(l[0].files[0]), l[0].value = "";
 }), t.$on("$destroy", function() {
 $(i).off(), $(document).off("drop." + o).off("dragenter." + o).off("dragover." + o).off("dragleave." + o);
 });
@@ -14546,11 +14549,9 @@ e.$evalAsync(function() {
 n.form.$setValidity("yamlValid", t);
 });
 };
-e.$watch(function() {
-return n.fileUpload;
-}, function(e, t) {
-e !== t && (n.model = e);
-}), n.$onInit = function() {
+n.onFileAdded = function(e) {
+n.model = e;
+}, n.$onInit = function() {
 n.resource && (n.model = jsyaml.safeDump(n.resource, {
 sortKeys: !0
 }));
