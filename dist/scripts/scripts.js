@@ -1028,7 +1028,11 @@ LOGOS: {
 "icon-wordpress": "wordpress.svg",
 "icon-zend": "zend.svg"
 }
-}), angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.navigation", "patternfly.sort", "patternfly.notification", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64", "openshiftCommonServices", "openshiftCommonUI", "webCatalog" ]).config([ "$routeProvider", function(e) {
+}), angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.navigation", "patternfly.sort", "patternfly.notification", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64", "openshiftCommonServices", "openshiftCommonUI", "webCatalog" ]).run([ "AuthService", "HomePagePreference", "$location", function(e, t, n) {
+"/" === n.$$url && t.gotoHomePage(), e.onUserChanged(function(e) {
+e && t.gotoHomePage();
+});
+} ]).config([ "$routeProvider", function(e) {
 var t, n = {
 templateUrl: "views/projects.html",
 controller: "ProjectsController"
@@ -3030,6 +3034,80 @@ updateDonutCenterText: function(t, n, r) {
 var a = d3.select(t).select("text.c3-chart-arcs-title");
 a ? (a.selectAll("*").remove(), a.insert("tspan").text(n).classed(r ? "donut-title-big-pf" : "donut-title-med-pf", !0).attr("dy", r ? 0 : 5).attr("x", 0), r && a.insert("tspan").text(r).classed("donut-title-small-pf", !0).attr("dy", 20).attr("x", 0)) : e.warn("Can't select donut title element");
 }
+};
+} ]), angular.module("openshiftConsole").service("HomePagePreference", [ "$location", "$timeout", "$q", "$uibModal", "AuthService", "Logger", "Navigate", "NotificationsService", "ProjectsService", function(e, t, n, r, a, o, i, s, c) {
+function l() {
+var e = a.getUser();
+return e ? u + e.metadata.name : null;
+}
+var u = "openshift/home-page-pref/", d = function() {
+var e = l();
+e && localStorage.removeItem(e);
+}, m = function(e) {
+d(), s.addNotification({
+id: "invalid-home-page-preference",
+type: "warning",
+message: "Home page project not found.",
+details: "Project " + e + " no longer exists or you do not have access to it.",
+links: [ {
+href: "",
+label: "Set Home Page",
+onClick: function() {
+return r.open({
+animation: !0,
+templateUrl: "views/modals/set-home-page-modal.html",
+controller: "SetHomePageModalController"
+}), !0;
+}
+} ]
+});
+};
+return {
+getHomePagePreference: function() {
+var e, t = l();
+if (!t) return "catalog-home";
+try {
+e = JSON.parse(localStorage.getItem(t));
+} catch (e) {
+return o.error("Could not parse homePagePref as JSON"), "catalog-home";
+}
+return _.get(e, "type", "catalog-home");
+},
+setHomePagePreference: function(e) {
+var t = l();
+t && localStorage.setItem(t, JSON.stringify(e));
+},
+verifyProjectOverviewPage: function(e) {
+var t = n.defer();
+return c.get(e).then(function() {
+t.resolve(!0);
+}, function() {
+t.resolve(!1);
+}), t.promise;
+},
+notifyInvalidProjectHomePage: m,
+getProjectOverviewPage: function() {
+var e, t = l();
+if (!t) return null;
+try {
+e = JSON.parse(localStorage.getItem(t));
+} catch (e) {
+return o.error("Could not parse homePagePref as JSON"), null;
+}
+return e && "project-overview" === e.type ? e.project : null;
+},
+gotoHomePage: function() {
+var e = this.getHomePagePreference();
+if ("project-overview" === e) {
+var n = this.getProjectOverviewPage();
+this.verifyProjectOverviewPage(n).then(function(e) {
+e ? i.toProjectOverview(n) : (m(n), i.toProjectList());
+});
+} else "project-list" === e && t(function() {
+i.toProjectList();
+});
+},
+clear: d
 };
 } ]), angular.module("openshiftConsole").factory("HPAService", [ "$filter", "$q", "LimitRangesService", "MetricsService", "Logger", function(e, t, n, r, a) {
 var o = function(e) {
@@ -8880,6 +8958,25 @@ t.close("ok");
 e.ok = function() {
 t.close("ok");
 };
+} ]), angular.module("openshiftConsole").controller("SetHomePageModalController", [ "$scope", "$uibModalInstance", "HomePagePreference", "ProjectsService", function(e, t, n, r) {
+e.preferredHomePage = n.getHomePagePreference(), e.availableProjects = [], e.selectedProject = null, e.onProjectSelected = function(t) {
+e.selectedProject = t;
+}, e.onOpen = function() {
+e.preferredHomePage = "project-overview";
+}, e.preselectedProjectName = n.getProjectOverviewPage(), r.list().then(function(t) {
+e.availableProjects = _.toArray(t.by("metadata.name")), e.availableProjects = _.reject(e.availableProjects, "metadata.deletionTimestamp"), 1 === e.availableProjects.length ? e.selectedProject = e.availableProjects[0] : e.preselectedProjectName && (e.selectedProject = _.find(e.availableProjects, {
+metadata: {
+name: e.preselectedProjectName
+}
+}));
+}), e.setHomePage = function() {
+var r = {
+type: e.preferredHomePage
+};
+"project-overview" === e.preferredHomePage && e.selectedProject && (r.project = e.selectedProject.metadata.name), n.setHomePagePreference(r), t.close("setHomePage");
+}, e.cancel = function() {
+t.dismiss("cancel");
+};
 } ]), angular.module("openshiftConsole").controller("AboutController", [ "$scope", "AuthService", "Constants", function(e, t, n) {
 t.withUser(), e.version = {
 master: {
@@ -10972,6 +11069,21 @@ message: "Unable to copy the login command."
 });
 }), n.on("$destroy", function() {
 r.destroy();
+});
+}
+};
+} ]).directive("setHomePage", [ "$uibModal", function(e) {
+return {
+restrict: "E",
+replace: !0,
+template: '<a href="">Set Home Page</a>',
+link: function(t, n) {
+n.bind("click", function() {
+e.open({
+animation: !0,
+templateUrl: "views/modals/set-home-page-modal.html",
+controller: "SetHomePageModalController"
+});
 });
 }
 };
@@ -16119,6 +16231,9 @@ var e = [];
 _.get(window, "OPENSHIFT_CONSTANTS.DISABLE_COPY_LOGIN_COMMAND") || e.push({
 type: "dom",
 node: '<li><copy-login-to-clipboard clipboard-text="oc login ' + _.escape(n.openshiftAPIBaseUrl()) + " --token=" + _.escape(r.UserStore().getToken()) + '"></copy-login-to-clipboard></li>'
+}), e.push({
+type: "dom",
+node: "<li><set-home-page></set-home-page></li>"
 });
 var a = "Log Out";
 return t.user.fullName && t.user.fullName !== t.user.metadata.name && (a += " (" + t.user.metadata.name + ")"), e.push({

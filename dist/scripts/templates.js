@@ -9196,7 +9196,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!$ctrl.apiObject.metadata.deletionTimestamp && !($ctrl.bindableServiceInstances | size)\">\n" +
     "<span>You must have a bindable service in your namespace in order to create bindings.</span>\n" +
     "<div>\n" +
-    "<a href=\"./\">Browse Catalog</a>\n" +
+    "<a ng-href=\"{{project | catalogURL}}\">Browse Catalog</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!($ctrl.bindings | size) && ($ctrl.bindableServiceInstances | size) && !($ctrl.serviceBindingsVersion | canI : 'create')\">\n" +
@@ -11139,6 +11139,51 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"modal-footer\">\n" +
     "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-click=\"continue();\" ng-disabled=\"!templateOptions.process && !templateOptions.add\">Continue</button>\n" +
     "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel();\">Cancel</button>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/modals/set-home-page-modal.html',
+    "<div class=\"modal-resource-action\">\n" +
+    "<div class=\"modal-header\">\n" +
+    "<h1>Set Home Page</h1>\n" +
+    "</div>\n" +
+    "<div class=\"modal-body indent\">\n" +
+    "<p>\n" +
+    "<div class=\"title\">Set your preferred home page.</div>\n" +
+    "Note: This setting is browser specific and will not be maintained across browsers.\n" +
+    "</p>\n" +
+    "<ng-form name=\"homePageForm\">\n" +
+    "<fieldset ng-disabled=\"loading\">\n" +
+    "<div class=\"radio\">\n" +
+    "<label>\n" +
+    "<input type=\"radio\" ng-model=\"preferredHomePage\" value=\"catalog-home\">\n" +
+    "Catalog Home (Default)\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "<div class=\"radio\">\n" +
+    "<label>\n" +
+    "<input type=\"radio\" ng-model=\"preferredHomePage\" value=\"project-list\">\n" +
+    "My Projects List\n" +
+    "</label>\n" +
+    "</div>\n" +
+    "<div class=\"radio\" ng-show=\"availableProjects.length >= 1\">\n" +
+    "<label>\n" +
+    "<input type=\"radio\" ng-model=\"preferredHomePage\" value=\"project-overview\">\n" +
+    "Overview Page for {{availableProjects.length === 1 ? (selectedProject | displayName) : ':'}}\n" +
+    "</label>\n" +
+    "<div class=\"select-project-container\">\n" +
+    "<select-project ng-if=\"availableProjects.length > 1\" class=\"select-project\" on-project-selected=\"onProjectSelected\" on-open=\"onOpen\" available-projects=\"availableProjects\" selected-project=\"selectedProject\" hide-create-project=\"true\" hide-label=\"true\">\n" +
+    "</select-project>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</ng-form>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-disabled=\"(preferredHomePage === 'project-overview' && homePageForm.$invalid) || homePageForm.$pristine\" ng-click=\"setHomePage()\">Save</button>\n" +
+    "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel()\">Cancel</button>\n" +
     "</div>\n" +
     "</div>"
   );
