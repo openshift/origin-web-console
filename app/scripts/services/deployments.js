@@ -22,7 +22,7 @@ angular.module("openshiftConsole")
       // increase latest version by one so starts new deployment based on latest
       var req = {
         kind: "DeploymentRequest",
-        apiVersion: "v1",
+        apiVersion: APIService.toAPIVersion(deploymentConfigsInstantiateVersion),
         name: deploymentConfig.metadata.name,
         latest: true,
         force: true
@@ -47,6 +47,7 @@ angular.module("openshiftConsole")
 
     DeploymentsService.prototype.retryFailedDeployment = function(deployment, context, $scope) {
       var req = angular.copy(deployment);
+      var rgv = APIService.objectToResourceGroupVersion(deployment);
       var deploymentName = deployment.metadata.name;
       var deploymentConfigName = annotation(deployment, 'deploymentConfig');
       // TODO: we need a "retry" api endpoint so we don't have to do this manually
@@ -85,7 +86,7 @@ angular.module("openshiftConsole")
       delete req.metadata.annotations[deploymentCancelledAnnotation];
 
       // update the deployment
-      DataService.update(replicationControllersVersion, deploymentName, req, context).then(
+      DataService.update(rgv, deploymentName, req, context).then(
         function() {
           NotificationsService.addNotification({
               type: "success",
@@ -107,7 +108,7 @@ angular.module("openshiftConsole")
       var deploymentConfigName = annotation(deployment, 'deploymentConfig');
       // put together a new rollback request
       var req = {
-        apiVersion: "apps.openshift.io/v1",
+        apiVersion: APIService.toAPIVersion(deploymentConfigsRollbackVersion),
         kind: "DeploymentConfigRollback",
         name: deploymentConfigName,
         spec: {

@@ -161,6 +161,7 @@ angular.module("openshiftConsole")
 
         var linkSecretToServiceAccount = function(secret) {
           var updatedSA = angular.copy($scope.serviceAccounts[$scope.newSecret.pickedServiceAccountToLink]);
+          var rgv = APIService.objectToResourceGroupVersion(updatedSA);
           switch ($scope.newSecret.type) {
           case 'source':
             updatedSA.secrets.push({name: secret.metadata.name});
@@ -170,7 +171,7 @@ angular.module("openshiftConsole")
             break;
           }
 
-          DataService.update(serviceAccountsVersion, $scope.newSecret.pickedServiceAccountToLink, updatedSA, $scope).then(function(sa) {
+          DataService.update(rgv, $scope.newSecret.pickedServiceAccountToLink, updatedSA, $scope).then(function(sa) {
             // Show a single success message saying the secret was both created and linked.
             NotificationsService.addNotification({
               type: "success",

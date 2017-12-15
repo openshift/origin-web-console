@@ -42,11 +42,12 @@ angular.module("openshiftConsole")
       var buildType = isJenkinsPipelineStrategy(buildConfig) ? 'pipeline' : 'build';
       var req = {
         kind: "BuildRequest",
-        apiVersion: "v1",
+        apiVersion: APIService.toAPIVersion(buildConfigsInstantiateVersion),
         metadata: {
           name: buildConfig.metadata.name
         }
       };
+
       var context = {
         namespace: buildConfig.metadata.namespace
       };
