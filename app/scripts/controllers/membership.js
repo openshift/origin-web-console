@@ -10,6 +10,7 @@ angular
       $scope,
       $timeout,
       $uibModal,
+      APIService,
       AuthService,
       AuthorizationService,
       DataService,
@@ -24,6 +25,9 @@ angular
       var humanizeKind = $filter('humanizeKind');
       var annotation = $filter('annotation');
       var canI = $filter('canI');
+
+      var serviceAccountVersion = APIService.getPreferredVersion('serviceaccounts');
+      $scope.roleBindingsVersion = APIService.getPreferredVersion('rolebindings');
 
       var allRoles = [];
 
@@ -71,7 +75,7 @@ angular
 
       var refreshServiceAccountsList = function(ctx) {
         DataService
-          .list('serviceaccounts', ctx)
+          .list(serviceAccountVersion, ctx)
           .then(function(resp) {
             var serviceAccounts = _.keys(resp.by('metadata.name')).sort();
             angular.extend($scope, {
@@ -89,7 +93,7 @@ angular
 
       var refreshRoleBindingList = function(toUpdateOnError) {
         DataService
-          .list('rolebindings', requestContext, null , {
+          .list($scope.roleBindingsVersion, requestContext, null , {
             errorNotification: false
           })
           .then(function(resp) {
@@ -270,6 +274,7 @@ angular
           requestContext = context;
           refreshRoleBindingList();
           refreshServiceAccountsList(requestContext);
+
           angular.extend($scope, {
             project: project,
             subjectKinds: subjectKinds,
