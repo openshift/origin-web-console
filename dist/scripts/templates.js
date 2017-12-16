@@ -10665,10 +10665,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-md-12\">\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"!('rolebindings' | canI : 'list')\">\n" +
+    "<div ng-if=\"!(roleBindingsVersion | canI : 'list')\">\n" +
     "<p>You do not have permission to view roles in this project.</p>\n" +
     "</div>\n" +
-    "<uib-tabset ng-if=\"'rolebindings' | canI : 'list'\">\n" +
+    "<uib-tabset ng-if=\"roleBindingsVersion | canI : 'list'\">\n" +
     "<uib-tab ng-repeat=\"subjectKind in subjectKindsForUI | orderBy: 'sortOrder'\" active=\"selectedTab[subjectKind.name]\" select=\"selectTab(subjectKind.name)\">\n" +
     "<uib-tab-heading>\n" +
     "{{subjectKind.name | startCase}}s&nbsp;({{subjectKind.subjects | hashSize}})\n" +

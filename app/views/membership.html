@@ -29,11 +29,11 @@
 
         </div>
       </div>
-      <div  ng-if="!('rolebindings' | canI : 'list')">
+      <div  ng-if="!(roleBindingsVersion | canI : 'list')">
         <p>You do not have permission to view roles in this project.</p>
       </div>
       <uib-tabset
-        ng-if="'rolebindings' | canI : 'list'">
+        ng-if="roleBindingsVersion | canI : 'list'">
         <uib-tab
           ng-repeat="subjectKind in subjectKindsForUI | orderBy: 'sortOrder'"
           active="selectedTab[subjectKind.name]"
