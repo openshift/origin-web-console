@@ -13286,8 +13286,7 @@ templateUrl: "views/directives/process-template.html"
 angular.module("openshiftConsole").component("processTemplateDialog", {
 controller: [ "$scope", "$filter", "$routeParams", "Catalog", "DataService", "KeywordService", "NotificationsService", "ProjectsService", "RecentlyViewedProjectsService", function(e, t, n, r, a, o, i, s, c) {
 function l() {
-var e = _.get(b, "template.metadata.annotations.iconClass", "fa fa-clone");
-return -1 !== e.indexOf("icon-") ? "font-icon " + e : e;
+return w(_.get(b, "template.metadata.annotations.iconClass", "fa fa-clone"));
 }
 function u() {
 var e = _.get(b, "template.metadata.annotations.iconClass", "fa fa-clone");
@@ -13319,10 +13318,10 @@ b.unfilteredProjects = _.toArray(e.by("metadata.name"));
 }, function() {
 b.unfilteredProjects = [];
 }).finally(function() {
-w();
+P();
 });
 }
-var y, b = this, S = t("imageForIconClass"), C = t("annotation");
+var y, b = this, S = t("imageForIconClass"), C = t("annotation"), w = t("normalizeIconClass");
 b.selectStep = {
 id: "projectTemplates",
 label: "Selection",
@@ -13419,7 +13418,7 @@ message: t
 }, b.groupChoicesBy = function(e) {
 return c.isRecentlyViewed(e.metadata.uid) ? "Recently Viewed" : "Other Projects";
 };
-var w = function() {
+var P = function() {
 var e = _.reject(b.unfilteredProjects, "metadata.deletionTimestamp"), n = _.sortBy(e, t("displayName"));
 b.searchEnabled = !_.isEmpty(e), b.templateProjects = c.orderByMostRecentlyViewed(n), b.numTemplateProjects = _.size(b.templateProjects), 1 === b.numTemplateProjects && (b.templateProject = _.head(b.templateProjects), b.templateProjectChange());
 };
@@ -13466,14 +13465,13 @@ templateUrl: "views/directives/deploy-image-dialog.html"
 angular.module("openshiftConsole").component("fromFileDialog", {
 controller: [ "$scope", "$timeout", "$routeParams", "$filter", "DataService", function(e, t, n, r, a) {
 function o() {
-var e = _.get(s, "template.metadata.annotations.iconClass", "fa fa-clone");
-return -1 !== e.indexOf("icon-") ? "font-icon " + e : e;
+return u(_.get(s, "template.metadata.annotations.iconClass", "fa fa-clone"));
 }
 function i() {
 var e = _.get(s, "template.metadata.annotations.iconClass", "fa fa-clone");
 return l(e);
 }
-var s = this, c = r("annotation"), l = r("imageForIconClass");
+var s = this, c = r("annotation"), l = r("imageForIconClass"), u = r("normalizeIconClass");
 s.$onInit = function() {
 s.alerts = {}, s.loginBaseUrl = a.openshiftAPIBaseUrl(), n.project || (s.showProjectName = !0), e.$on("no-projects-cannot-create", function() {
 s.importForm.$setValidity("required", !1);

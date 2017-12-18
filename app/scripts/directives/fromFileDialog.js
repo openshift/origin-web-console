@@ -23,6 +23,7 @@
     var ctrl = this;
     var annotation = $filter('annotation');
     var imageForIconClass = $filter('imageForIconClass');
+    var normalizeIconClass = $filter('normalizeIconClass');
 
     ctrl.$onInit = function() {
       ctrl.alerts = {};
@@ -37,8 +38,7 @@
     };
 
     function getIconClass() {
-      var icon = _.get(ctrl, 'template.metadata.annotations.iconClass', 'fa fa-clone');
-      return (icon.indexOf('icon-') !== -1) ? 'font-icon ' + icon : icon;
+      return normalizeIconClass(_.get(ctrl, 'template.metadata.annotations.iconClass', 'fa fa-clone'));
     }
 
     function getImage() {

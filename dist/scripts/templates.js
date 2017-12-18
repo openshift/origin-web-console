@@ -5391,7 +5391,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/_custom-icon.html',
     "<img ng-if=\"image\" alt=\"\" ng-src=\"{{image}}\">\n" +
-    "<span ng-if=\"!image\" aria-hidden=\"true\" ng-class=\"icon.contains('fa ') ? icon : 'font-icon ' + icon\"></span>"
+    "<span ng-if=\"!image\" aria-hidden=\"true\" ng-class=\"icon | normalizeIconClass\"></span>"
   );
 
 
