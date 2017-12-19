@@ -98,8 +98,8 @@
               <a href="" ng-click="setPaused(false)" role="button">Resume Rollouts</a>
             </span>
           </div>
-          <uib-tabset>
-            <uib-tab active="selectedTab.history">
+          <uib-tabset active="selectedTab">
+            <uib-tab index="'history'" select="selectTab('history')">
               <uib-tab-heading>History</uib-tab-heading>
               <div ng-if="mostRecent" class="deployment-config-summary">
                 <!-- Show the latest deployment status first. -->
@@ -183,7 +183,7 @@
               </tbody>
               </table>
             </uib-tab>
-            <uib-tab active="selectedTab.configuration">
+            <uib-tab index="'configuration'" select="selectTab('configuration')">
               <uib-tab-heading>Configuration</uib-tab-heading>
               <div class="resource-details" ng-if="deploymentConfig">
                 <div class="row">
@@ -336,13 +336,13 @@
                 <annotations annotations="deploymentConfig.metadata.annotations"></annotations>
               </div>
             </uib-tab>
-            <uib-tab heading="Environment" active="selectedTab.environment" ng-if="deploymentConfig">
+            <uib-tab index="'environment'" select="selectTab('environment')" ng-if="deploymentConfig">
               <uib-tab-heading>Environment</uib-tab-heading>
               <edit-environment-variables api-object="deploymentConfig"></edit-environment-variables>
             </uib-tab>
-            <uib-tab active="selectedTab.events" ng-if="eventsVersion | canI : 'watch'">
+            <uib-tab index="'events'" select="selectTab('events')" ng-if="eventsVersion | canI : 'watch'">
               <uib-tab-heading>Events</uib-tab-heading>
-              <events api-objects="[ deploymentConfig ]" project-context="projectContext" ng-if="selectedTab.events"></events>
+              <events api-objects="[ deploymentConfig ]" project-context="projectContext" ng-if="selectedTab === 'events'"></events>
             </uib-tab>
           </uib-tabset>
         </div><!-- /col-* -->
