@@ -1,10 +1,10 @@
 ## squid
 * demoregistry.dataman-inc.com/squid/openshift-kafka:0.10.1.1
-* demoregistry.dataman-inc.com/squid/mysql-5.7-squid-db:1.4.1
-* demoregistry.dataman-inc.com/squid/centos7-nginx1.12-squid-console-ue:1.4.1
-* demoregistry.dataman-inc.com/squid/centos7-openjdk8-squid-demo-client:1.4.1
-* demoregistry.dataman-inc.com/squid/centos7-openjdk8-squid-demo-server:1.4.1
-* demoregistry.dataman-inc.com/squid/centos7-openjdk8-squid-console:1.4.1
+* demoregistry.dataman-inc.com/squid/mysql-5.7-squid-db:1.4.5
+* demoregistry.dataman-inc.com/squid/centos7-nginx1.12-squid-console-ue:1.4.5
+* demoregistry.dataman-inc.com/squid/centos7-openjdk8-squid-demo-client:1.4.5
+* demoregistry.dataman-inc.com/squid/centos7-openjdk8-squid-demo-server:1.4.5
+* demoregistry.dataman-inc.com/squid/centos7-openjdk8-squid-console:1.4.5
  
 ## octopus
 * zookeeper:3.4.10
