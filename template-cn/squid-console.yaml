@@ -76,12 +76,8 @@ objects:
           ports:
           - containerPort: 9088
           env:
-          - name: SQUID_DASHBORD_INTERVAL_DELTA_IN_SECOND
-            value: "10"
-          - name: SQUID_DASHBORD_REFRESH_INTERVAL_IN_MINUTE
-            value: "1"
           - name: SQUID_LOG_LEVEL
-            value: "DEBUG"
+            value: "INFO"
           - name: SQUID_CONSOLE_DB_URL
             value: "${SQUID_DB_SERVICE_ADDRESS}"
           - name: SQUID_CONSOLE_DB_USERNAME
@@ -91,38 +87,16 @@ objects:
               secretKeyRef:
                 key: database-root-password
                 name: ${APP_NAME}
-          - name: ORCHESTRATION_TYPE
-            value: K8S
           - name: SQUID_DCOS_REGISTRY_URI
             value: "${SQUID_REGISTRY_URI}"
-          - name: K8S_BASE_PATH
-            value: "${K8S_BASE_PATH}"
           - name: K8S_NAMESPACE
             value: "${NAMESPACE}"
           - name: SQUID_CONSOLE_PORT
             value: '9088'
-          - name: OCTOPUS_SWAN_REST_URI
-            value: 'http://10.3.8.29:5016'
-          - name: OCTOPUS_SWAN_REST_PATH
-            value: /v1/apps
-          - name: OCTOPUS_DCOS_USERNAME
-            value: dev
-          - name: OCTOPUS_DCOS_PASSWORD
-            value: Admin123
-          - name: DM_GROUP_ID
-            value: '4'
-          - name: DM_TENANT_ID
-            value: '3'
-          - name: DM_USER_ID
-            value: '9'
-          - name: DM_USER_NAME
-            value: dataman
-          - name: DM_VCLUSTER
-            value: dataman
-          - name: DM_VCLUSTER_ID
-            value: '1'
-          - name: DM_GROUP_NAME
-            value: dataman
+          - name: K8S_REGISTRY
+            value: 'true'
+          - name: SQUID_METRICS_PORT
+            value: '9091'
           volumeMounts:
             - name: config-volume
               mountPath: /squid-console/regcenter.json
