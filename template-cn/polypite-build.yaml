@@ -1,0 +1,70 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: polypite
+  annotations:
+    openshift.io/display-name: Polypite
+    description: 'polypite'
+    tags: polypite,dataman
+    iconClass: icon-nodejs
+    openshift.io/provider-display-name: f0x11
+    openshift.io/documentation-url: https://github.com/Dataman-Cloud/origin-web-console
+    openshift.io/support-url: https://github.com/Dataman-Cloud/origin-web-console
+labels:
+  application: polypite
+
+objects:
+- kind: BuildConfig
+  apiVersion: v1
+  metadata:
+    name: ${APP_NAME}
+    labels:
+      app: ${APP_NAME}
+      name: ${APP_NAME}
+  spec:
+    output:
+      to:
+        kind: ImageStreamTag
+        name: ${APP_NAME}:${VERSION}
+    postCommit: {}
+    resources: {}
+    runPolicy: SerialLatestOnly
+    source:
+      dockerfile: |-
+        FROM nginx:1.13.6-alpine
+
+        ENV VERSION ${VERSION}
+
+        RUN apk add --update bash \
+          && touch /root/.bashrc
+
+        COPY tls /tls
+
+        COPY dist /usr/share/nginx/html
+        COPY dist.java /usr/share/nginx/html/console/java
+
+        COPY extensions /usr/share/nginx/html/extensions
+
+        COPY deploy /deploy
+
+        RUN bash /deploy/init.sh
+
+        CMD ["bash", "/deploy/start.sh"]
+      git:
+        ref: poc
+        uri: https://github.com/Dataman-Cloud/origin-web-console
+      type: Git
+    strategy:
+      dockerStrategy:
+        from:
+          kind: ImageStreamTag
+          name: 'nginx:1.13.6-alpine'
+      type: Docker
+    # 保留失败build的数量
+    failedBuildsHistoryLimit: 2
+    # 保留成功build的数量
+    successfulBuildsHistoryLimit: 10
+    triggers:
+    - imageChange: {}
+      type: ImageChange
+    - type: ConfigChange
