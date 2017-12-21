@@ -10,7 +10,7 @@ metadata:
   annotations:
     description: 数人云的Squid是一体化异步微服务平台，基于容器云平台打造，支持同步和异步模式。它具有高可用、高并发、无侵入性扩展业务、服务依赖实时跟踪以及自动伸缩等特性，无缝融合物理机、虚拟机及容器，从而实现微服务统一管理、配置、监控。
     iconClass: icon-squid
-    openshift.io/display-name: Squid Console
+    openshift.io/display-name: Squid 产品(技术预览)
     tags: quickstart,squid,dataman
     template.openshift.io/documentation-url: https://github.com/Dataman-Cloud/squid
     template.openshift.io/long-description: This template is a squid application.  The
@@ -21,12 +21,25 @@ metadata:
   name: squid-console
 objects:
 - apiVersion: v1
+  kind: RoleBinding
+  metadata:
+    name: eams
+  roleRef:
+    name: admin
+  subjects:
+  - name: eams
+    kind: ServiceAccount
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: eams
+- apiVersion: v1
   data:
     regcenter.json: |
       [
         {
           "nameAndNamespace": "demo/squid.dataman.com",
-          "zkAddressList": "${ZOOKEEPER_ADDRESS}:2181",
+          "zkAddressList": "${ZOOKEEPER_ADDRESS_LIST}",
           "degree":"1"
         }
       ]
@@ -58,7 +71,7 @@ objects:
     selector:
       name: ${APP_NAME}-console
     strategy:
-      type: Recreate
+      type: Rolling
     template:
       metadata:
         annotations:
@@ -70,6 +83,7 @@ objects:
           type: "squid-console"
         name: ${APP_NAME}-console
       spec:
+        serviceAccount: eams
         containers:
         - image: ' '
           name: squid-console
@@ -124,7 +138,7 @@ objects:
         - squid-console
         from:
           kind: ImageStreamTag
-          name: centos7-openjdk8-squid-console:1.4.1
+          name: centos7-openjdk8-squid-console:1.4.5
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
@@ -153,7 +167,7 @@ objects:
     selector:
       name: ${APP_NAME}-ue
     strategy:
-      type: Recreate
+      type: Rolling
     template:
       metadata:
         labels:
@@ -179,7 +193,7 @@ objects:
         - squid-ue
         from:
           kind: ImageStreamTag
-          name: centos7-nginx1.12-squid-console-ue:1.4.1
+          name: centos7-nginx1.12-squid-console-ue:1.4.5
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
@@ -208,7 +222,7 @@ objects:
     selector:
       name: ${APP_NAME}-demo-client
     strategy:
-      type: Recreate
+      type: Rolling
     template:
       metadata:
         labels:
@@ -222,27 +236,23 @@ objects:
           - containerPort: 8081
           env:
           - name: LOG_LEVEL
-            value: INFO
-          - name: SQUID_ZK_CONNECTION
-            value: 'kafka-zk:2181'
+            value: ERROR
           - name: SQUID_ZK_ADDRESS
-            value: 'kafka-zk:2181'
+            value: '${ZOOKEEPER_ADDRESS_LIST}'
           - name: SQUID_SERVICE_NAMESPACE
             value: "squid.dataman.com"
           - name: SQUID_DEMO_CLIENT_SERVICE_NAME
             value: "demoServiceOneClient"
-          - name: SQUID_SERVICE_NAME
-            value: "demoServiceOne"
           - name: SQUID_DEMO_CLIENT_DEPENDENCY_SERVICE_NAME
             value: "demoServiceOne"
           - name: SQUID_DEMO_CLIENT_DEPENDENCY_SERVICE_NAMESPACE
             value: "squid.dataman.com"
           - name: SQUID_DEMO_CLIENT_SLEEPTIME_MS
-            value: "10"
+            value: "1000"
           - name: SQUID_DEMO_CLIENT_SERVER_SLEEPTIME_MS
             value: "0"
           - name: SQUID_DEMO_RUNNING_S
-            value: "604800"
+            value: "300"
           - name: SQUID_CLIENT_ASYNC_MODE
             value: "false"
           - name: SQUID_DEMO_RUNNING_THREADS
@@ -252,7 +262,7 @@ objects:
           - name: CLIENT_DUPLICATE
             value: "true"
           - name: LOOP_COUNT
-            value: "1000000000"
+            value: "10000"
           securityContext:
             runAsUser: 0
     triggers:
@@ -262,7 +272,7 @@ objects:
         - squid-client
         from:
           kind: ImageStreamTag
-          name: centos7-openjdk8-squid-demo-client:1.4.1
+          name: centos7-openjdk8-squid-demo-client:1.4.5
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
@@ -291,7 +301,7 @@ objects:
     selector:
       name: ${APP_NAME}-demo-server
     strategy:
-      type: Recreate
+      type: Rolling
     template:
       metadata:
         labels:
@@ -305,17 +315,11 @@ objects:
           - containerPort: 39011
           env:
           - name: SQUID_LOG_LEVEL
-            value: DEBUG
+            value: INFO
           - name: SQUID_ZK_CONNECTION
-            value: "${ZOOKEEPER_ADDRESS}:2181"
-          - name: AUTO_COMMIT_INTERVAL_MS
-            value: "1000"
-          - name: SQUID_METRICS_PORT
-            value: "39011"
+            value: "${ZOOKEEPER_ADDRESS_LIST}"
           - name: SQUID_DISABLE_METRICS
             value: "false"
-          - name: AUTH_SECRET
-            value: "123457"
           - name: SQUID_SERVICE_NAME
             value: "demoServiceOne"
           command: ["/bin/sh", "/squid-executor/bin/squid-executor.sh", "start", "-n", "squid.dataman.com", "-r" ,"foreground", "-env", "docker", "-d", "/squid-executor/apps/app"]
@@ -328,21 +332,10 @@ objects:
         - squid-server
         from:
           kind: ImageStreamTag
-          name: centos7-openjdk8-squid-demo-server:1.4.1
+          name: centos7-openjdk8-squid-demo-server:1.4.5
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
-- apiVersion: v1
-  kind: Route
-  metadata:
-    name: ${APP_NAME}-demo-client
-  spec:
-    port:
-      targetPort: squid-client
-    to:
-      kind: Service
-      name: ${APP_NAME}-demo-client
-      weight: 100
 - apiVersion: v1
   kind: Route
   metadata:
@@ -365,19 +358,15 @@ parameters:
   name: APP_NAME
   required: true
   value: 'squid'
-- displayName: Zookeeper Address
-  name: ZOOKEEPER_ADDRESS
+- displayName: Zookeeper Address LIST
+  name: ZOOKEEPER_ADDRESS_LIST
   required: true
-  value: kafka-zk
+  value: kafka-zk:2181
 - displayName: Squid DB Address
   name: SQUID_DB_SERVICE_ADDRESS
   required: true
   value: "jdbc:mysql://squid-db:3306/squid_console"
-- displayName: Squid Registry URI
-  name: SQUID_REGISTRY_URI
+- displayName: AUTH SECRET
+  name: AUTH_SECRET
   required: true
-  value: "http://192.168.1.140:5000"
-- displayName: K8S URI
-  name: K8S_BASE_PATH
-  required: true
-  value: "http://192.168.1.140:8001"
+  value: "789112"

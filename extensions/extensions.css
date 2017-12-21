@@ -10,7 +10,7 @@
  *
  * You can modify this file to test extensions in a development environment.
  */
-.icon-octopus,.icon-hawk,.icon-squid{
+.icon-octopus,.icon-hawk,.icon-squid,.icon-monitor,.icon-octopus-dependence,.icon-hawk-dependence,.icon-squid-dependence{
   display: inline-block;
   width: 28px;
   height: 28px;
@@ -27,7 +27,23 @@
   background: url("../images/icon-squid.png");
   background-size: 100%;
 }
-.icon-octopus-m,.icon-hawk-m,.icon-squid-m{
+.icon-monitor{
+  background: url("../images/icon-monitor.svg");
+  background-size: 100%;
+}
+.icon-octopus-dependence{
+  background: url("../images/icon-octopus-dependence.svg");
+  background-size: 100%;
+}
+.icon-hawk-dependence{
+  background: url("../images/icon-hawk-dependence.svg");
+  background-size: 100%;
+}
+.icon-squid-dependence{
+  background: url("../images/icon-squid-dependence.svg");
+  background-size: 100%;
+}
+.icon-octopus-m,.icon-hawk-m,.icon-squid-m,.icon-monitor-m{
   display: inline-block;
   width: 48px;
   height: 48px;
@@ -44,7 +60,10 @@
   background: url("../images/icon-squid.png");
   background-size: 100%;
 }
-
+.icon-monitor-m{
+  background: url("../images/icon-monitor.svg");
+  background-size: 100%;
+}
 .icon-octopus-b,.icon-hawk-b,.icon-squid-b{
   display: inline-block;
   width: 100px;

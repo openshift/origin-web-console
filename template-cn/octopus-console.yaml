@@ -10,7 +10,7 @@ metadata:
   annotations:
     description: 数人云分布式任务调度平台 Octopus 针对业务应用和运维类任务，提供分布式定时作业、消息调度作业以及本地作业的统一管理。Octopus 基于数人云 DataMan OS 容器云平台，传统的定时作业程序可以无缝迁移到容器上运行，通过取代传统的Linux Cron/Spring Batch Job/Quartz,做到分布式环境下批量作业任务的全域统一配置，统一监控，任务高可用以及分片并行。
     iconClass: icon-octopus
-    openshift.io/display-name: Octopus Console
+    openshift.io/display-name: Octopus 产品(技术预览)
     tags: quickstart,octopus,dataman
     template.openshift.io/documentation-url: https://github.com/Dataman-Cloud/octopus
     template.openshift.io/long-description: This template is a octopus application.  The
@@ -147,14 +147,10 @@ objects:
                 name: ${SECRET_NAME}
           - name: OCTOPUS_CLOUD_containerType
             value: K8S
-          - name: OCTOPUS_CLOUD_registryUri
-            value: ${REGISTRY_URI}
           - name: OCTOPUS_CLOUD_K8S_restUri
             value: ${K8S_URI}
           - name: OCTOPUS_CLOUD_K8S_NAMESPACE
             value: ${NAMESPACE}
-          - name: OCTOPUS_CLOUD_K8S_is_k8s_registry
-            value: 'false'
           - name: KUBERNETES_AUTH_TRYSERVICEACCOUNT
             value: 'true'
           - name: KUBERNETES_AUTH_TRYKUBECONFIG
@@ -220,12 +216,7 @@ parameters:
   displayName: Kubernetes URI
   name: K8S_URI
   required: true
-  value: 'http://master:8011'
-- description: Registry URI.
-  displayName: Registry URI
-  name: REGISTRY_URI
-  required: true
-  value: 'http://192.168.1.140:5000'
+  value: 'https://master:8443'
 - description: Secret Name.
   displayName: Secret Name
   name: SECRET_NAME

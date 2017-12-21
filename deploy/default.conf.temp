@@ -9,7 +9,7 @@ server {
     #charset koi8-r;
     #access_log  /var/log/nginx/host.access.log  main;
 
-    location ~ /console/(config.js|(java|bower_components|scripts|images|styles|views|languages)(/.*)?)$ {
+    location ~ ^/console/(config.js|(java|bower_components|scripts|images|styles|views|languages)(/.*)?)$ {
         root   /usr/share/nginx/html;
     }
 

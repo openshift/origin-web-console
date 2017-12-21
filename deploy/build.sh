@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-tag=v0.0.9
+tag=$(git describe)
 
 # workdir deploy
 echo "Start Copying Files"

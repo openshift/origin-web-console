@@ -1,45 +1,45 @@
 apiVersion: v1
 kind: Template
 labels:
-  template: prometheus
+  template: dmos-monitor
 message: |-
-  Prometheus has been deployed.
+  dmos-monitor has been deployed.
 metadata:
   annotations:
-    description: prometheus.
-    iconClass: icon-git
-    openshift.io/display-name: Prometheus
-    tags: quickstart,promethus,dataman
+    description: 数人云微服务治理服务提供的统一监控服务，请在部署完所需的微服务后，再进行部署。
+    iconClass: icon-monitor
+    openshift.io/display-name: 数人云微服务治理监控服务
+    tags: quickstart,promethus,grafana,monitor,dataman
     template.openshift.io/documentation-url: https://hub.docker.com/r/prom/prometheus/
     template.openshift.io/long-description: Prometheus.
     template.openshift.io/provider-display-name: Dataman, Inc.
     template.openshift.io/support-url: https://hub.docker.com/r/prom/prometheus/
-  name: prometheus
+  name: dmos-monitor
 objects:
 - apiVersion: v1
   kind: RoleBinding
   metadata:
-    name: prometheus
+    name: dmosprometheus
   roleRef:
     name: admin
   subjects:
-  - name: prometheus
+  - name: dmosprometheus
     kind: ServiceAccount
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
-    name: prometheus
+    name: dmosprometheus
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      app: ${APP_NAME}
-    name: ${APP_NAME}
+      app: ${APP_NAME}-prometheus
+    name: ${APP_NAME}-prometheus
   spec:
     replicas: 1
     selector:
-      app: ${APP_NAME}
-      deploymentconfig: ${APP_NAME}
+      app: ${APP_NAME}-prometheus
+      deploymentconfig: ${APP_NAME}-prometheus
     strategy:
       activeDeadlineSeconds: 21600
       resources: {}
@@ -53,10 +53,10 @@ objects:
     template:
       metadata:
         labels:
-          app: ${APP_NAME}
-          deploymentconfig: ${APP_NAME}
+          app: ${APP_NAME}-prometheus
+          deploymentconfig: ${APP_NAME}-prometheus
       spec:
-        serviceAccount: prometheus
+        serviceAccount: dmosprometheus
         containers:
           - image: ""
             imagePullPolicy: Always
@@ -71,9 +71,8 @@ objects:
         volumes:
           - configMap:
               defaultMode: 420
-              name: ${APP_NAME}
+              name: ${APP_NAME}-prometheus
             name: prom-config-example-volume
-    test: false
     triggers:
       - type: ConfigChange
       - imageChangeParams:
@@ -82,8 +81,8 @@ objects:
             - prometheus
           from:
             kind: ImageStreamTag
-            name: 'prometheus:latest'
-            namespace: 'openshift'
+            name: 'prometheus:openshift3.6'
+            namespace: openshift
         type: ImageChange
 
 - apiVersion: v1
@@ -101,9 +100,6 @@ objects:
         - job_name: 'octopus-api'
           kubernetes_sd_configs:
           - role: pod
-            namespaces:
-              names:
-                - ${NAMESPACE}
           relabel_configs:
           - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
             action: keep
@@ -132,9 +128,6 @@ objects:
         - job_name: 'squid-console'
           kubernetes_sd_configs:
           - role: pod
-            namespaces:
-              names:
-                - ${NAMESPACE}
           relabel_configs:
           - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
             action: keep
@@ -163,9 +156,6 @@ objects:
         - job_name: 'octopus-executor'
           kubernetes_sd_configs:
           - role: pod
-            namespaces:
-              names:
-                - ${NAMESPACE}
           relabel_configs:
           - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
             action: keep
@@ -194,9 +184,6 @@ objects:
         - job_name: 'squid-executor'
           kubernetes_sd_configs:
           - role: pod
-            namespaces:
-              names:
-                - ${NAMESPACE}
           relabel_configs:
           - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
             action: keep
@@ -221,15 +208,43 @@ objects:
           - source_labels: [__meta_kubernetes_pod_name]
             action: replace
             target_label: kubernetes_pod_name
+
+        - job_name: 'hawk-server'
+          kubernetes_sd_configs:
+          - role: pod
+          relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+            action: replace
+            target_label: __metrics_path__
+            regex: (.+)
+          - source_labels: [__meta_kubernetes_pod_label_type]
+            action: keep
+            regex: ^hawk-server$
+          - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            regex: ([^:]+)(?::\d+)?;(\d+)
+            replacement: $1:$2
+            target_label: __address__
+          - action: labelmap
+            regex: __meta_kubernetes_pod_label_(.+)
+          - source_labels: [__meta_kubernetes_namespace]
+            action: replace
+            target_label: kubernetes_namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            action: replace
+            target_label: kubernetes_pod_name
   kind: ConfigMap
   metadata:
-    name: ${APP_NAME}
+    name: ${APP_NAME}-prometheus
 - apiVersion: v1
   kind: Service
   metadata:
     labels:
-      app: ${APP_NAME}
-    name: ${APP_NAME}
+      app: ${APP_NAME}-prometheus
+    name: ${APP_NAME}-prometheus
   spec:
     ports:
       - name: 9090-tcp
@@ -237,22 +252,95 @@ objects:
         protocol: TCP
         targetPort: 9090
     selector:
-      deploymentconfig: ${APP_NAME}
+      deploymentconfig: ${APP_NAME}-prometheus
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
-      app: ${APP_NAME}
-    name: ${APP_NAME}
+      app: ${APP_NAME}-prometheus
+    name: ${APP_NAME}-prometheus
   spec:
-    host: ${APP_NAME}-${NAMESPACE}.apps.dev.dataman.com
     port:
       targetPort: 9090-tcp
     to:
       kind: Service
-      name: ${APP_NAME}
+      name: ${APP_NAME}-prometheus
       weight: 100
     wildcardPolicy: None
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}-grafana
+  spec:
+    replicas: 1
+    selector:
+      app: ${APP_NAME}-grafana
+      deploymentconfig: ${APP_NAME}-grafana
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: ${APP_NAME}-grafana
+          deploymentconfig: ${APP_NAME}-grafana
+      spec:
+        containers:
+          - image: " "
+            imagePullPolicy: Always
+            name: grafana
+            ports:
+              - containerPort: 3000
+                protocol: TCP
+            resources: {}
+        restartPolicy: Always
+    triggers:
+      - type: ConfigChange
+      - imageChangeParams:
+          automatic: true
+          containerNames:
+            - grafana
+          from:
+            kind: ImageStreamTag
+            name: 'grafana:openshift3.6'
+            namespace: openshift
+        type: ImageChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: ${APP_NAME}-grafana
+    name: ${APP_NAME}-grafana
+  spec:
+    ports:
+      - name: 3000-tcp
+        port: 3000
+        protocol: TCP
+        targetPort: 3000
+    selector:
+      deploymentconfig: ${APP_NAME}-grafana
+    type: ClusterIP
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: ${APP_NAME}-grafana
+  spec:
+    port:
+      targetPort: 3000-tcp
+    to:
+      kind: Service
+      name: ${APP_NAME}-grafana
+      weight: 100
+
 parameters:
 - description: Current Project Name.
   displayName: Current Project Name
@@ -263,7 +351,4 @@ parameters:
   displayName: Application Name
   name: APP_NAME
   required: true
-  value: 'prometheus'
-
-
-
+  value: 'dmos-monitor'

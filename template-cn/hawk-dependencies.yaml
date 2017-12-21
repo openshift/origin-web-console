@@ -1,0 +1,154 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: hawk-dependencies
+message: |-
+  Hawk has been depolyed.
+metadata:
+  annotations:
+    description: 数人云统一配置管理中心 Hawk 的依赖服务。请在部署 Hawk 前，请先部署这个模版。
+    iconClass: icon-hawk-dependence
+    openshift.io/display-name: Hawk 产品依赖服务(技术预览)
+    tags: quickstart,hawk,dataman
+    template.openshift.io/documentation-url: https://github.com/Dataman-Cloud/hawk
+    template.openshift.io/long-description: This template is a hawk application.  The
+      database is stored in non-persistent storage, so this configuration should be
+      used for experimental purposes only.
+    template.openshift.io/provider-display-name: Dataman, Inc.
+    template.openshift.io/support-url: https://github.com/Dataman-Cloud/hawk
+  name: hawk-dependencies
+objects:
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: ${SECRET_NAME}
+  stringData:
+    database-root-password: ${DATABASE_ROOT_PASSWORD}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the bootstrap-etcd
+    name: ${ETCD_NAME}
+  spec:
+    ports:
+    - name: etcd1
+      port: 2379
+      targetPort: 2379
+    - name: etcd2
+      port: 2380
+      targetPort: 2380
+    selector:
+      name: ${ETCD_NAME}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the bootstrap-etcd
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: ${ETCD_NAME}
+  spec:
+    replicas: 1
+    selector:
+      name: ${ETCD_NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: ${ETCD_NAME}
+        name: ${ETCD_NAME}
+      spec:
+        containers:
+        - image: ' '
+          name: etcd
+          ports:
+          - containerPort: 2379
+          - containerPort: 2380
+          securityContext:
+            runAsUser: 0
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - etcd
+        from:
+          kind: ImageStreamTag
+          name: bootstrap-etcd:1.2.1
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the portal-db
+    name: ${DB_NAME}
+  spec:
+    ports:
+    - name: portal-db
+      port: 3306
+      targetPort: 3306
+    selector:
+      name: ${DB_NAME}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the portal-db
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: ${DB_NAME}
+  spec:
+    replicas: 1
+    selector:
+      name: ${DB_NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: ${DB_NAME}
+        name: ${DB_NAME}
+      spec:
+        containers:
+        - env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-root-password
+                name: ${SECRET_NAME}
+          image: ' '
+          name: portal-db
+          ports:
+          - containerPort: 3306
+          securityContext:
+            runAsUser: 0
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - portal-db
+        from:
+          kind: ImageStreamTag
+          name: portal-db:1.2.1
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+parameters:
+- description: Store DB user and password.
+  displayName: Secret Name
+  name: SECRET_NAME
+  required: true
+  value: hawk
+- displayName: DB Root Password
+  name: DATABASE_ROOT_PASSWORD
+  required: true
+  value: dataman123
+- displayName: Etcd Name
+  name: ETCD_NAME
+  required: true
+  value: bootstrap-etcd
+- displayName: Database Name
+  name: DB_NAME
+  required: true
+  value: portal-db
