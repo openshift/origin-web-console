@@ -92,8 +92,6 @@ objects:
           env:
           - name: SQUID_LOG_LEVEL
             value: "INFO"
-          - name: AUTH_SECRET
-            value: "${AUTH_SECRET}"
           - name: SQUID_CONSOLE_DB_URL
             value: "${SQUID_DB_SERVICE_ADDRESS}"
           - name: SQUID_CONSOLE_DB_USERNAME
@@ -103,18 +101,16 @@ objects:
               secretKeyRef:
                 key: database-root-password
                 name: ${APP_NAME}
-          - name: ORCHESTRATION_TYPE
-            value: K8S
-          - name: SQUID_DASHBORD_INTERVAL_DELTA_IN_SECOND
-            value: "10"
-          - name: SQUID_DASHBORD_REFRESH_INTERVAL_IN_MINUTE
-            value: "1"
+          - name: SQUID_DCOS_REGISTRY_URI
+            value: "${SQUID_REGISTRY_URI}"
           - name: K8S_NAMESPACE
             value: "${NAMESPACE}"
-          - name: K8S_REGISTRY
-            value: "true"
           - name: SQUID_CONSOLE_PORT
-            value: "9088"
+            value: '9088'
+          - name: K8S_REGISTRY
+            value: 'true'
+          - name: SQUID_METRICS_PORT
+            value: '9091'
           volumeMounts:
             - name: config-volume
               mountPath: /squid-console/regcenter.json
