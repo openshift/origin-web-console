@@ -2,7 +2,7 @@
 
 const timing = require('./timing');
 
-exports.setSize = (height = 768, width = 1024) => {
+exports.setSize = (width = 1024, height = 768) => {
   browser.driver.manage().window().setSize(width, height);
 };
 

@@ -21,5 +21,11 @@ module.exports = {
   //    'Elem did not appear')
   waitForElement: 1000,
   maxWaitForElement: 15 * 1000,
-  pauseBetweenTests: 5 * 1000
+  pauseBetweenTests: 5 * 1000,
+  // longer timeouts for non-angular page interactions
+  // since we won't have protractor helping us
+  shortDelay: 1000,
+  medDelay: 3000,
+  longDelay: 5000,
+  xtraLongDelay: 10000
 };
