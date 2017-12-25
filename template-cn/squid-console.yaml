@@ -127,6 +127,13 @@ objects:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: '1'
+              memory: 1000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
         volumes:
           - name: config-volume
             configMap:
@@ -186,6 +193,13 @@ objects:
             value: "9088"
           securityContext:
             runAsUser: 0
+          resources:
+            limits:
+              cpu: '1'
+              memory: 500Mi
+            requests:
+              cpu: 500m
+              memory: 256Mi
     triggers:
     - imageChangeParams:
         automatic: true
@@ -265,6 +279,13 @@ objects:
             value: "10000"
           securityContext:
             runAsUser: 0
+          resources:
+            limits:
+              cpu: '1'
+              memory: 1000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
     triggers:
     - imageChangeParams:
         automatic: true
@@ -325,6 +346,13 @@ objects:
           command: ["/bin/sh", "/squid-executor/bin/squid-executor.sh", "start", "-n", "squid.dataman.com", "-r" ,"foreground", "-env", "docker", "-d", "/squid-executor/apps/app"]
           securityContext:
             runAsUser: 0
+          resources:
+            limits:
+              cpu: '1'
+              memory: 1000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
     triggers:
     - imageChangeParams:
         automatic: true
