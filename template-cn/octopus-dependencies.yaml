@@ -61,6 +61,13 @@ objects:
           name: zookeeper
           ports:
           - containerPort: 2181
+          resources:
+            limits:
+              cpu: '1'
+              memory: 1000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
     triggers:
     - imageChangeParams:
         automatic: true
@@ -120,6 +127,13 @@ objects:
           ports:
           - containerPort: 9092
           - containerPort: 1099
+          resources:
+            limits:
+              cpu: '1'
+              memory: 1000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
     triggers:
     - imageChangeParams:
         automatic: true
@@ -176,6 +190,13 @@ objects:
           name: octopus-db
           ports:
           - containerPort: 3306
+          resources:
+            limits:
+              cpu: '1'
+              memory: 1000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
     triggers:
     - imageChangeParams:
         automatic: true

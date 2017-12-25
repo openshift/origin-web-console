@@ -69,6 +69,13 @@ objects:
           volumeMounts:
           - mountPath: /tmp/kafka-logs
             name: kafka-logs
+          resources:
+            limits:
+              cpu: '2'
+              memory: 2000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
         - args:
           - config/zookeeper.properties
           command:
@@ -82,6 +89,13 @@ objects:
           volumeMounts:
           - mountPath: /tmp/zookeeper
             name: zookeeper
+          resources:
+            limits:
+              cpu: '2'
+              memory: 2000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
         hostname: ${KAFKA_ZK_NAME}
         volumes:
         - emptyDir: {}
@@ -145,6 +159,13 @@ objects:
           - containerPort: 3306
           securityContext:
             runAsUser: 0
+          resources:
+            limits:
+              cpu: '1'
+              memory: 1000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
     triggers:
     - imageChangeParams:
         automatic: true

@@ -80,6 +80,13 @@ objects:
           name: octopus-console
           ports:
           - containerPort: 18080
+          resources:
+            limits:
+              cpu: '1'
+              memory: 1000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
     triggers:
     - imageChangeParams:
         automatic: true
@@ -177,6 +184,13 @@ objects:
           name: octopus-api
           ports:
           - containerPort: 9088
+          resources:
+            limits:
+              cpu: '2'
+              memory: 2000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
     triggers:
     - imageChangeParams:
         automatic: true

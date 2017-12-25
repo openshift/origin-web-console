@@ -67,6 +67,13 @@ objects:
           - containerPort: 2380
           securityContext:
             runAsUser: 0
+          resources:
+            limits:
+              cpu: '1'
+              memory: 1000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
     triggers:
     - imageChangeParams:
         automatic: true
@@ -123,6 +130,13 @@ objects:
           - containerPort: 3306
           securityContext:
             runAsUser: 0
+          resources:
+            limits:
+              cpu: '1'
+              memory: 1000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
     triggers:
     - imageChangeParams:
         automatic: true
