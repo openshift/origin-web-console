@@ -10,10 +10,10 @@
 ## octopus
 * zookeeper:3.4.10
 * wurstmeister/kafka:0.11.0.1
-* demoregistry.dataman-inc.com/octopus/octopus-db:1.4.1
-* demoregistry.dataman-inc.com/octopus/centos7-nginx1.12-octopus_console:1.4.1
-* demoregistry.dataman-inc.com/octopus/centos7-openjdk8-octopus_api:1.4.1
-* demoregistry.dataman-inc.com/octopus/centos7-openjdk8-octopus_executor:1.4.1
+* demoregistry.dataman-inc.com/octopus/octopus-db:1.5.0
+* demoregistry.dataman-inc.com/octopus/centos7-nginx1.12-octopus_console:1.5.0
+* demoregistry.dataman-inc.com/octopus/centos7-openjdk8-octopus_api:1.5.0
+* demoregistry.dataman-inc.com/octopus/centos7-openjdk8-octopus_executor:1.5.0
 
 ## hawk
 * demoregistry.dataman-inc.com/hawk/bootstrap-etcd:1.2.1
