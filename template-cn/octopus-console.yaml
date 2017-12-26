@@ -94,7 +94,7 @@ objects:
         - octopus-console
         from:
           kind: ImageStreamTag
-          name: "centos7-nginx1.12-octopus_console:1.4.1"
+          name: "centos7-nginx1.12-octopus_console:1.5.0"
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
@@ -198,7 +198,7 @@ objects:
         - octopus-api
         from:
           kind: ImageStreamTag
-          name: "centos7-openjdk8-octopus_api:1.4.1"
+          name: "centos7-openjdk8-octopus_api:1.5.0"
           namespace: openshift
       type: ImageChange
     - type: ConfigChange

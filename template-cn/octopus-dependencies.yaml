@@ -204,7 +204,7 @@ objects:
         - octopus-db
         from:
           kind: ImageStreamTag
-          name: octopus-db:1.4.1
+          name: octopus-db:1.5.0
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
