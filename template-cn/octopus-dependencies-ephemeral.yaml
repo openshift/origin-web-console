@@ -1,22 +1,22 @@
 apiVersion: v1
 kind: Template
 labels:
-  template: octopus-dependencies
+  template: octopus-dependencies-ephemeral
 message: |-
   Octopus has been deployed.
 metadata:
   annotations:
     description: 数人云分布式任务调度平台 Octopus 的依赖服务。请在部署 Octopus 前，请先部署这个模版。
     iconClass: icon-octopus-dependence
-    openshift.io/display-name: Octopus 产品依赖服务(技术预览)
-    tags: quickstart,octopus,dataman
+    openshift.io/display-name: Octopus 产品依赖服务(技术预览)(非持久化)
+    tags: quickstart,octopus,dataman,ephemeral
     template.openshift.io/documentation-url: https://github.com/Dataman-Cloud/octopus
     template.openshift.io/long-description: This template is a octopus application.  The
       database is stored in non-persistent storage, so this configuration should be
       used for experimental purposes only.
     template.openshift.io/provider-display-name: Dataman, Inc.
     template.openshift.io/support-url: https://github.com/Dataman-Cloud/octopus
-  name: octopus-dependencies
+  name: octopus-dependencies-ephemeral
 objects:
 - apiVersion: v1
   kind: Secret

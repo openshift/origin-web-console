@@ -1,0 +1,297 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: octopus-dependencies-persistent
+message: |-
+  Octopus has been deployed.
+metadata:
+  annotations:
+    description: 数人云分布式任务调度平台 Octopus 的依赖服务。请在部署 Octopus 前，请先部署这个模版。
+    iconClass: icon-octopus-dependence
+    openshift.io/display-name: Octopus 产品依赖服务(技术预览)(持久化)
+    tags: quickstart,octopus,dataman,persistent
+    template.openshift.io/documentation-url: https://github.com/Dataman-Cloud/octopus
+    template.openshift.io/long-description: This template is a octopus application.  The
+      database is stored in non-persistent storage, so this configuration should be
+      used for experimental purposes only.
+    template.openshift.io/provider-display-name: Dataman, Inc.
+    template.openshift.io/support-url: https://github.com/Dataman-Cloud/octopus
+  name: octopus-dependencies-persistent
+objects:
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: ${NAME}
+  stringData:
+    database-root-password: ${DATABASE_ROOT_PASSWORD}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the zookeeper server
+    name: ${ZOOKEEPER_SERVICE_NAME}
+  spec:
+    ports:
+    - name: zookeeper
+      port: 2181
+      targetPort: 2181
+    selector:
+      name: ${ZOOKEEPER_SERVICE_NAME}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the zookeeper
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: ${ZOOKEEPER_SERVICE_NAME}
+  spec:
+    replicas: 1
+    selector:
+      name: ${ZOOKEEPER_SERVICE_NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: ${ZOOKEEPER_SERVICE_NAME}
+        name: ${ZOOKEEPER_SERVICE_NAME}
+      spec:
+        containers:
+        - image: ' '
+          name: zookeeper
+          ports:
+          - containerPort: 2181
+          resources:
+            limits:
+              cpu: '1'
+              memory: 1000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
+          volumeMounts:
+          - mountPath: "/tmp/zookeeper"
+            name: pv-zookeeper
+        volumes:
+        - name: pv-zookeeper
+          persistentVolumeClaim:
+            claimName: ${ZOOKEEPER_SERVICE_NAME}
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - zookeeper
+        from:
+          kind: ImageStreamTag
+          name: zookeeper:3.4.10
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the kafka server
+    name: ${KAFKA_SERVICE_NAME}
+  spec:
+    ports:
+    - name: kafka1
+      port: 9092
+      targetPort: 9092
+    - name: kafka2
+      port: 1099
+      targetPort: 1099
+    selector:
+      name: ${KAFKA_SERVICE_NAME}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the kafka
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: ${KAFKA_SERVICE_NAME}
+  spec:
+    replicas: 1
+    selector:
+      name: ${KAFKA_SERVICE_NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: ${KAFKA_SERVICE_NAME}
+        name: ${KAFKA_SERVICE_NAME}
+      spec:
+        containers:
+        - env:
+          - name: KAFKA_ADVERTISED_HOST_NAME
+            value: "kafka-service"
+          - name: KAFKA_ADVERTISED_PORT
+            value: "9092"
+          - name: KAFKA_ZOOKEEPER_CONNECT
+            value: ${ZOOKEEPER_SERVICE_NAME}:2181/kafka
+          image: ' '
+          name: octopus-kafka
+          ports:
+          - containerPort: 9092
+          - containerPort: 1099
+          resources:
+            limits:
+              cpu: '1'
+              memory: 1000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
+          volumeMounts:
+          - mountPath: "/tmp/kafka-logs"
+            name: pv-kafka
+        volumes:
+        - name: pv-kafka
+          persistentVolumeClaim:
+            claimName: ${KAFKA_SERVICE_NAME}
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - octopus-kafka
+        from:
+          kind: ImageStreamTag
+          name: kafka:0.11.0.1
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the db
+    name: ${OCTOPUS_DB_SERVICE_NAME}
+  spec:
+    ports:
+    - name: db
+      port: 3306
+      targetPort: 3306
+    selector:
+      name: ${OCTOPUS_DB_SERVICE_NAME}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the Octopus DB
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: ${OCTOPUS_DB_SERVICE_NAME}
+  spec:
+    replicas: 1
+    selector:
+      name: ${OCTOPUS_DB_SERVICE_NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: ${OCTOPUS_DB_SERVICE_NAME}
+        name: ${OCTOPUS_DB_SERVICE_NAME}
+      spec:
+        containers:
+        - env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-root-password
+                name: ${NAME}
+          - name: OCTOPUS_DEFAULT_ZK_CONNECTION
+            value: ${ZOOKEEPER_SERVICE_NAME}:2181
+          image: ' '
+          name: octopus-db
+          ports:
+          - containerPort: 3306
+          resources:
+            limits:
+              cpu: '1'
+              memory: 1000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
+          volumeMounts:
+          - mountPath: "/var/lib/mysql"
+            name: pv-db
+        volumes:
+        - name: pv-db
+          persistentVolumeClaim:
+            claimName: ${OCTOPUS_DB_SERVICE_NAME}
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - octopus-db
+        from:
+          kind: ImageStreamTag
+          name: octopus-db:1.5.0
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: ${OCTOPUS_DB_SERVICE_NAME}
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+    selector:
+      matchLabels:
+        dc-name: octopus-octopus-db
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: ${ZOOKEEPER_SERVICE_NAME}
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+    selector:
+      matchLabels:
+        dc-name: octopus-octopus-zookeeper
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: ${KAFKA_SERVICE_NAME}
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+    selector:
+      matchLabels:
+        dc-name: octopus-kafka-service
+
+parameters:
+- description: The name assigned to all of the frontend objects defined in this template.
+  displayName: Name
+  name: NAME
+  required: true
+  value: octopus
+- displayName: Zookeeper Name
+  name: ZOOKEEPER_SERVICE_NAME
+  required: true
+  value: zookeeper
+- description: 'Attention: It Must not be ''kafka''.'
+  displayName: Kafka Name
+  name: KAFKA_SERVICE_NAME
+  required: true
+  value: kafka-service
+- displayName: Octopus DB Name
+  name: OCTOPUS_DB_SERVICE_NAME
+  required: true
+  value: octopus-db
+- displayName: Database Root Password
+  name: DATABASE_ROOT_PASSWORD
+  required: true
+  value: "123456"
