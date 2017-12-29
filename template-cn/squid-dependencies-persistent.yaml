@@ -1,0 +1,247 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: squid-dependencies-persistent
+message: |-
+  Squid Dependencies has been depolyed.
+metadata:
+  annotations:
+    description: 数人云一体化异步微服务平台 Squid 的依赖服务。请在部署 Squid 前，请先部署这个模版。
+    iconClass: icon-squid-dependence
+    openshift.io/display-name: Squid 产品依赖服务(技术预览)(持久化)
+    tags: quickstart,squid,dataman,persistent
+    template.openshift.io/documentation-url: https://github.com/Dataman-Cloud/squid
+    template.openshift.io/long-description: This template is a squid application.  The
+      database is stored in non-persistent storage, so this configuration should be
+      used for experimental purposes only.
+    template.openshift.io/provider-display-name: Dataman, Inc.
+    template.openshift.io/support-url: https://github.com/Dataman-Cloud/squid
+  name: squid-dependencies-persistent
+objects:
+- apiVersion: v1
+  kind: Secret
+  metadata:
+    name: ${NAME}
+  stringData:
+    database-root-password: ${DATABASE_ROOT_PASSWORD}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: ${KAFKA_ZK_NAME}
+  spec:
+    ports:
+    - name: kafka
+      port: 9092
+    - name: zookeeper
+      port: 2181
+    selector:
+      deploymentconfig: ${KAFKA_ZK_NAME}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: ${KAFKA_ZK_NAME}
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: ${KAFKA_ZK_NAME}
+    template:
+      metadata:
+        labels:
+          deploymentconfig: ${KAFKA_ZK_NAME}
+      spec:
+        containers:
+        - args:
+          - config/server.properties
+          - --override
+          - advertised.host.name=${KAFKA_ZK_NAME}
+          - --override
+          - log.segment.bytes=10485760
+          - --override
+          - log.retention.bytes=10485760
+          command:
+          - bin/kafka-server-start.sh
+          image: ' '
+          name: apache-kafka
+          ports:
+          - containerPort: 9092
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+          - mountPath: /tmp/kafka-logs
+            name: kafka-logs
+          resources:
+            limits:
+              cpu: '2'
+              memory: 2000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
+        - args:
+          - config/zookeeper.properties
+          command:
+          - bin/zookeeper-server-start.sh
+          image: ' '
+          name: apache-zookeeper
+          ports:
+          - containerPort: 2181
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+          - mountPath: /tmp/zookeeper
+            name: zookeeper
+          resources:
+            limits:
+              cpu: '2'
+              memory: 2000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
+        volumes:
+        - name: kafka-logs
+          persistentVolumeClaim:
+            claimName: ${KAFKA_ZK_NAME}-kafka
+        - name: zookeeper
+          persistentVolumeClaim:
+            claimName: ${KAFKA_ZK_NAME}-zk
+        hostname: ${KAFKA_ZK_NAME}
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - apache-zookeeper
+        - apache-kafka
+        from:
+          kind: ImageStreamTag
+          name: openshift-kafka:0.10.1.1
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: Exposes the db
+    name: ${SQUID_DB_SERVICE_NAME}
+  spec:
+    ports:
+    - name: db
+      port: 3306
+      targetPort: 3306
+    selector:
+      name: ${SQUID_DB_SERVICE_NAME}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    annotations:
+      description: Defines how to deploy the Squid DB
+      template.alpha.openshift.io/wait-for-ready: "true"
+    name: ${SQUID_DB_SERVICE_NAME}
+  spec:
+    replicas: 1
+    selector:
+      name: ${SQUID_DB_SERVICE_NAME}
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          name: ${SQUID_DB_SERVICE_NAME}
+        name: ${SQUID_DB_SERVICE_NAME}
+      spec:
+        containers:
+        - env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: database-root-password
+                name: ${NAME}
+          image: ' '
+          name: squid-db
+          ports:
+          - containerPort: 3306
+          securityContext:
+            runAsUser: 0
+          resources:
+            limits:
+              cpu: '1'
+              memory: 1000Mi
+            requests:
+              cpu: 500m
+              memory: 500Mi
+          volumeMounts:
+          - mountPath: "/var/lib/mysql"
+            name: pv-db
+        volumes:
+        - name: pv-db
+          persistentVolumeClaim:
+            claimName: ${SQUID_DB_SERVICE_NAME}
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - squid-db
+        from:
+          kind: ImageStreamTag
+          name: mysql-5.7-squid-db:1.4.6
+          namespace: openshift
+      type: ImageChange
+    - type: ConfigChange
+
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: ${SQUID_DB_SERVICE_NAME}
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+    selector:
+      matchLabels:
+        dc-name: squid-squid-db
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: ${KAFKA_ZK_NAME}-zk
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+    selector:
+      matchLabels:
+        dc-name: squid-zk
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: ${KAFKA_ZK_NAME}-kafka
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+    selector:
+      matchLabels:
+        dc-name: squid-kafka
+
+parameters:
+- description: The name assigned to all of the frontend objects defined in this template.
+  displayName: Name
+  name: NAME
+  required: true
+  value: squid
+- displayName: Kafka And Zookeeper Name
+  name: KAFKA_ZK_NAME
+  required: true
+  value: kafka-zk
+- displayName: Squid DB Name
+  name: SQUID_DB_SERVICE_NAME
+  required: true
+  value: squid-db
+- displayName: Database Root Password
+  name: DATABASE_ROOT_PASSWORD
+  required: true
+  value: dataman
