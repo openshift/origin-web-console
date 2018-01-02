@@ -80,11 +80,16 @@ function OverviewController($scope,
   var label = $filter('label');
   var getPodTemplate = $filter('podTemplate');
 
-  // API versions
+  var deploymentsVersion = APIService.getPreferredVersion('deployments');
+  var horizontalPodAutoscalersVersion = APIService.getPreferredVersion('horizontalpodautoscalers');
   var serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
   var serviceClassesVersion = APIService.getPreferredVersion('clusterserviceclasses');
   var serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
   var servicePlansVersion = APIService.getPreferredVersion('clusterserviceplans');
+  var statefulSetsVersion = APIService.getPreferredVersion('statefulsets');
+  var replicaSetsVersion = APIService.getPreferredVersion('replicasets');
+  overview.buildConfigsInstantiateVersion = APIService.getPreferredVersion('buildconfigs/instantiate');
+
 
   var deploymentsByUID;
   var imageStreams;
@@ -1237,10 +1242,7 @@ function OverviewController($scope,
       Logger.log("deploymentconfigs (subscribe)", overview.deploymentConfigs);
     }));
 
-    watches.push(DataService.watch({
-      group: "extensions",
-      resource: "replicasets"
-    }, context, function(replicaSetData) {
+    watches.push(DataService.watch(replicaSetsVersion, context, function(replicaSetData) {
       overview.replicaSets = replicaSetData.by('metadata.name');
       groupReplicaSets();
       updateServicesForObjects(overview.vanillaReplicaSets);
@@ -1252,10 +1254,7 @@ function OverviewController($scope,
       Logger.log("replicasets (subscribe)", overview.replicaSets);
     }));
 
-    watches.push(DataService.watch({
-      group: "apps",
-      resource: "deployments"
-    }, context, function(deploymentData) {
+    watches.push(DataService.watch(deploymentsVersion, context, function(deploymentData) {
       deploymentsByUID = deploymentData.by('metadata.uid');
       overview.deployments = _.sortBy(deploymentsByUID, 'metadata.name');
       groupReplicaSets();
@@ -1273,10 +1272,7 @@ function OverviewController($scope,
       Logger.log("builds (subscribe)", state.builds);
     }));
 
-    watches.push(DataService.watch({
-      group: "apps",
-      resource: "statefulsets"
-    }, context, function(statefulSetData) {
+    watches.push(DataService.watch(statefulSetsVersion, context, function(statefulSetData) {
       overview.statefulSets = statefulSetData.by('metadata.name');
       updateServicesForObjects(overview.statefulSets);
       updateServicesForObjects(overview.monopods);
@@ -1308,11 +1304,7 @@ function OverviewController($scope,
       Logger.log("buildconfigs (subscribe)", overview.buildConfigs);
     }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
 
-    watches.push(DataService.watch({
-      group: "autoscaling",
-      resource: "horizontalpodautoscalers",
-      version: "v1"
-    }, context, function(hpaData) {
+    watches.push(DataService.watch(horizontalPodAutoscalersVersion, context, function(hpaData) {
       overview.horizontalPodAutoscalers = hpaData.by("metadata.name");
       groupHPAs();
       Logger.log("autoscalers (subscribe)", overview.horizontalPodAutoscalers);

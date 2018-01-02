@@ -37,6 +37,7 @@
     var validityWatcher;
     var imageForIconClass = $filter('imageForIconClass');
     var annotation = $filter('annotation');
+    var normalizeIconClass = $filter('normalizeIconClass');
 
     ctrl.selectStep = {
       id: 'projectTemplates',
@@ -234,8 +235,7 @@
     };
 
     function getIconClass() {
-      var iconClass = _.get(ctrl, 'template.metadata.annotations.iconClass', 'fa fa-clone');
-      return (iconClass.indexOf('icon-') !== -1) ? 'font-icon ' + iconClass : iconClass;
+      return normalizeIconClass(_.get(ctrl, 'template.metadata.annotations.iconClass', 'fa fa-clone'));
     }
 
     function getImage() {

@@ -6,14 +6,15 @@ angular.module('openshiftConsole')
       restrict: 'E',
       scope: {
         model: "=",
-        required: "=",
-        disabled: "=ngDisabled",
-        readonly: "=ngReadonly",
-        showTextArea: '=',
+        required: "<",
+        disabled: "<ngDisabled",
+        readonly: "<ngReadonly",
+        showTextArea: '<',
         // Hide the clear value link.
-        hideClear: '=?',
+        hideClear: '<?',
         helpText: "@?",
-        dropZoneId: "@?"
+        dropZoneId: "@?",
+        onFileAdded: "<?"
       },
       templateUrl: 'views/directives/osc-file-input.html',
       link: function(scope, element){
@@ -75,6 +76,12 @@ angular.module('openshiftConsole')
 
         inputFileField.change(function() {
           addFile(inputFileField[0].files[0]);
+          // In some cases, the user might want to load the same file twice.
+          // For instance, the user might want to replace their edits in the
+          // import YAML dialog by loading the same file again. Clear the value
+          // so that the change event is triggered again, even if the same file
+          // is added.
+          inputFileField[0].value = "";
         });
 
         // Add listeners for the dropZone element
@@ -173,6 +180,10 @@ angular.module('openshiftConsole')
             scope.$apply(function(){
               scope.fileName = file.name;
               scope.model = reader.result;
+              var cb = scope.onFileAdded;
+              if (_.isFunction(cb)) {
+                cb(reader.result);
+              }
             });
           };
           reader.onerror = function(e){

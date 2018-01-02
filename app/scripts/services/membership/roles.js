@@ -2,14 +2,20 @@
 
 angular
   .module('openshiftConsole')
-  .factory('RolesService', function($q, DataService) {
+  .factory('RolesService', function(
+    $q,
+    APIService,
+    DataService) {
+
+    var roleBindingsVersion = APIService.getPreferredVersion('rolebindings');
+    var clusterRoleBindingsVersion = APIService.getPreferredVersion('clusterroles');
 
     var listAllRoles = function(context) {
       return $q.all([
         DataService
-          .list('roles', context, null),
+          .list(roleBindingsVersion, context, null),
         DataService
-          .list('clusterroles', {}, null)
+          .list(clusterRoleBindingsVersion, {}, null)
       ]);
     };
 

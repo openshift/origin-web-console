@@ -270,10 +270,10 @@
                 </div>
               </div>
               <div ng-repeat="pipeline in overview.filteredPipelineBuildConfigs track by (pipeline | uid)">
-                <div ng-if="'buildconfigs/instantiate' | canI : 'create'" class="pull-right">
+                <div ng-if="overview.buildConfigsInstantiateVersion | canI : 'create'" class="pull-right">
                   <button
                       class="btn btn-default"
-                      ng-if="'buildconfigs/instantiate' | canI : 'create'"
+                      ng-if="overview.buildConfigsInstantiateVersion | canI : 'create'"
                       ng-click="overview.startBuild(pipeline)">
                     Start Pipeline
                   </button>

@@ -5391,7 +5391,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/_custom-icon.html',
     "<img ng-if=\"image\" alt=\"\" ng-src=\"{{image}}\">\n" +
-    "<span ng-if=\"!image\" aria-hidden=\"true\" ng-class=\"icon.contains('fa ') ? icon : 'font-icon ' + icon\"></span>"
+    "<span ng-if=\"!image\" aria-hidden=\"true\" ng-class=\"icon | normalizeIconClass\"></span>"
   );
 
 
@@ -8628,7 +8628,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div>\n" +
     "<div class=\"form-group\" id=\"certificate-file\">\n" +
     "<label>Certificate</label>\n" +
-    "<osc-file-input model=\"route.tls.certificate\" drop-zone-id=\"certificate-file\" show-text-area=\"true\" help-text=\"The PEM format certificate. Upload file by dragging & dropping, selecting it, or pasting from the clipbard.\" ng-readonly=\"areCertificateInputsReadOnly()\" ng-disabled=\"areCertificateInputsDisabled()\">\n" +
+    "<osc-file-input model=\"route.tls.certificate\" drop-zone-id=\"certificate-file\" show-text-area=\"true\" help-text=\"The PEM format certificate. Upload file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-readonly=\"areCertificateInputsReadOnly()\" ng-disabled=\"areCertificateInputsDisabled()\">\n" +
     "</osc-file-input>\n" +
     "</div>\n" +
     "<div class=\"form-group\" id=\"private-key-file\">\n" +
@@ -9382,7 +9382,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/ui-ace-yaml.html',
     "<ng-form name=\"$ctrl.form\">\n" +
     "<div class=\"form-group\" id=\"yaml-file\">\n" +
-    "<osc-file-input ng-if=\"$ctrl.showFileInput\" model=\"$ctrl.fileUpload\" drop-zone-id=\"yaml-file\" help-text=\"Upload a file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-disabled=\"false\" hide-clear=\"true\"></osc-file-input>\n" +
+    "<osc-file-input ng-if=\"$ctrl.showFileInput\" model=\"$ctrl.fileUpload\" drop-zone-id=\"yaml-file\" help-text=\"Upload a file by dragging & dropping, selecting it, or pasting from the clipboard.\" ng-disabled=\"false\" hide-clear=\"true\" on-file-added=\"$ctrl.onFileAdded\"></osc-file-input>\n" +
     "<div class=\"edit-yaml-errors\">\n" +
     "\n" +
     "<div ng-if=\"firstError = $ctrl.annotations.error[0]\">\n" +
@@ -10665,10 +10665,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-md-12\">\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"!('rolebindings' | canI : 'list')\">\n" +
+    "<div ng-if=\"!(roleBindingsVersion | canI : 'list')\">\n" +
     "<p>You do not have permission to view roles in this project.</p>\n" +
     "</div>\n" +
-    "<uib-tabset ng-if=\"'rolebindings' | canI : 'list'\">\n" +
+    "<uib-tabset ng-if=\"roleBindingsVersion | canI : 'list'\">\n" +
     "<uib-tab ng-repeat=\"subjectKind in subjectKindsForUI | orderBy: 'sortOrder'\" active=\"selectedTab[subjectKind.name]\" select=\"selectTab(subjectKind.name)\">\n" +
     "<uib-tab-heading>\n" +
     "{{subjectKind.name | startCase}}s&nbsp;({{subjectKind.subjects | hashSize}})\n" +
@@ -11891,8 +11891,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-repeat=\"pipeline in overview.filteredPipelineBuildConfigs track by (pipeline | uid)\">\n" +
-    "<div ng-if=\"'buildconfigs/instantiate' | canI : 'create'\" class=\"pull-right\">\n" +
-    "<button class=\"btn btn-default\" ng-if=\"'buildconfigs/instantiate' | canI : 'create'\" ng-click=\"overview.startBuild(pipeline)\">\n" +
+    "<div ng-if=\"overview.buildConfigsInstantiateVersion | canI : 'create'\" class=\"pull-right\">\n" +
+    "<button class=\"btn btn-default\" ng-if=\"overview.buildConfigsInstantiateVersion | canI : 'create'\" ng-click=\"overview.startBuild(pipeline)\">\n" +
     "Start Pipeline\n" +
     "</button>\n" +
     "</div>\n" +
@@ -12964,7 +12964,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/project-browse-catalog.html',
-    "<div class=\"middle project-browse-catalog\">\n" +
+    "<div class=\"middle surface-shaded project-browse-catalog\">\n" +
     "<div class=\"middle-content\">\n" +
     "<services-view catalog-items=\"catalogItems\" base-project-url=\"project\" section-title=\"Select an item to add to the current project\" keyword-filter=\"keywordFilter\">\n" +
     "</services-view>\n" +

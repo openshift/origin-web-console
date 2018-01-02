@@ -2,12 +2,17 @@
 
 angular
   .module('openshiftConsole')
-  .factory('RoleBindingsService', function($q, DataService) {
+  .factory('RoleBindingsService', function(
+    $q,
+    APIService,
+    DataService) {
     // some API constraints worth nothing:
     // ServiceAccountUsernamePrefix    = "system:serviceaccount:"
     // ServiceAccountUsernameSeparator = ":"
     // ServiceAccountGroupPrefix       = "system:serviceaccounts:"
     // AllServiceAccountsGroup         = "system:serviceaccounts"
+
+    var roleBindingsVersion = APIService.getPreferredVersion('rolebindings');
 
     var cache = {};
 
@@ -62,14 +67,16 @@ angular
 
     var create = function(role, subject, namespace, context) {
       var binding = bindingTPL(role, namespace);
+      var rgv = APIService.objectToResourceGroupVersion(binding);
       subject = qualifySubject(subject, namespace);
       binding.subjects.push(angular.copy(subject));
-      return DataService.create('rolebindings', null, binding, context);
+      return DataService.create(rgv, null, binding, context);
     };
 
     var addSubject = function(rb, subject, namespace, context) {
       var tpl = bindingTPL();
       var binding = _.extend(tpl, rb);
+      var rgv = APIService.objectToResourceGroupVersion(binding);
       if(!subject) {
         return binding;
       }
@@ -83,7 +90,7 @@ angular
         binding.subjects = [subject];
       }
       cleanBinding(binding);
-      return DataService.update('rolebindings', binding.metadata.name, binding, context);
+      return DataService.update(rgv, binding.metadata.name, binding, context);
     };
 
     // has to handle multiple bindings or multiple reference to a subject within a single binding
@@ -103,8 +110,8 @@ angular
           binding.subjects = _.reject(binding.subjects, toMatch);
 
           return binding.subjects.length ?
-                  DataService.update('rolebindings', binding.metadata.name, binding, context) :
-                  DataService.delete('rolebindings', binding.metadata.name, context)
+                  DataService.update(roleBindingsVersion, binding.metadata.name, binding, context) :
+                  DataService.delete(roleBindingsVersion, binding.metadata.name, context)
                   // For a delete, resp is simply a 201 or less useful object.
                   // Instead, this intercepts the response & returns the binding object
                   // with the empty .subjects[] list.
@@ -116,7 +123,7 @@ angular
 
     var list = function(context, fn, opts) {
       return DataService
-              .list('rolebindings', context, function(resp) {
+              .list(roleBindingsVersion, context, function(resp) {
                 cache = resp.by('metadata.name');
                 fn(resp);
               }, opts);
