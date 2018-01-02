@@ -11,6 +11,7 @@ angular.module('openshiftConsole')
                                              $routeParams,
                                              APIService,
                                              DataService,
+                                             Logger,
                                              ProjectsService,
                                              $filter) {
     $scope.projectName = $routeParams.project;
@@ -152,7 +153,7 @@ angular.module('openshiftConsole')
           });
 
           getPortsByRoute();
-          Logger.log("routes (subscribe)", $scope.routesByService);
+          Logger.log("routes (subscribe)", $scope.routesForService);
         }));
 
         $scope.$on('$destroy', function(){

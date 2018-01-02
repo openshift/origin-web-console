@@ -6323,7 +6323,7 @@ n.services = e.select(n.unfilteredServices), r();
 a.unwatchAll(l);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("ServiceController", [ "$scope", "$routeParams", "APIService", "DataService", "ProjectsService", "$filter", function(e, t, n, r, a, o) {
+} ]), angular.module("openshiftConsole").controller("ServiceController", [ "$scope", "$routeParams", "APIService", "DataService", "Logger", "ProjectsService", "$filter", function(e, t, n, r, a, o, i) {
 e.projectName = t.project, e.service = null, e.services = null, e.alerts = {}, e.renderOptions = e.renderOptions || {}, e.renderOptions.hideFilterWidget = !0, e.breadcrumbs = [ {
 title: "Services",
 link: "project/" + t.project + "/browse/services"
@@ -6332,42 +6332,42 @@ title: t.service
 } ], e.podFailureReasons = {
 Pending: "This pod will not receive traffic until all of its containers have been created."
 };
-var i = n.getPreferredVersion("pods"), s = n.getPreferredVersion("endpoints");
+var s = n.getPreferredVersion("pods"), c = n.getPreferredVersion("endpoints");
 e.eventsVersion = n.getPreferredVersion("events"), e.routesVersion = n.getPreferredVersion("routes"), e.servicesVersion = n.getPreferredVersion("services");
-var c = {}, l = [], u = function() {
+var l = {}, u = [], d = function() {
 e.service && (e.portsByRoute = {}, _.each(e.service.spec.ports, function(t) {
 var n = !1;
 t.nodePort && (e.showNodePorts = !0), _.each(e.routesForService, function(r) {
 r.spec.port && r.spec.port.targetPort !== t.name && r.spec.port.targetPort !== t.targetPort || (e.portsByRoute[r.metadata.name] = e.portsByRoute[r.metadata.name] || [], e.portsByRoute[r.metadata.name].push(t), n = !0);
 }), n || (e.portsByRoute[""] = e.portsByRoute[""] || [], e.portsByRoute[""].push(t));
 }));
-}, d = function() {
+}, m = function() {
 if (e.podsForService = {}, e.service) {
 var t = new LabelSelector(e.service.spec.selector);
-e.podsForService = t.select(c);
+e.podsForService = t.select(l);
 }
-}, m = function(t, n) {
-e.loaded = !0, e.service = t, d(), u(), "DELETED" === n && (e.alerts.deleted = {
+}, p = function(t, n) {
+e.loaded = !0, e.service = t, m(), d(), "DELETED" === n && (e.alerts.deleted = {
 type: "warning",
 message: "This service has been deleted."
 });
 };
-a.get(t.project).then(_.spread(function(n, a) {
-e.project = n, e.projectContext = a, r.get(e.servicesVersion, t.service, a, {
+o.get(t.project).then(_.spread(function(n, o) {
+e.project = n, e.projectContext = o, r.get(e.servicesVersion, t.service, o, {
 errorNotification: !1
 }).then(function(n) {
-m(n), l.push(r.watchObject(e.servicesVersion, t.service, a, m));
+p(n), u.push(r.watchObject(e.servicesVersion, t.service, o, p));
 }, function(t) {
 e.loaded = !0, e.alerts.load = {
 type: "error",
 message: "The service details could not be loaded.",
-details: o("getErrorDetails")(t)
+details: i("getErrorDetails")(t)
 };
-}), l.push(r.watch(e.servicesVersion, a, function(t) {
+}), u.push(r.watch(e.servicesVersion, o, function(t) {
 e.services = t.by("metadata.name");
-})), l.push(r.watch(i, a, function(e) {
-c = e.by("metadata.name"), d();
-})), l.push(r.watch(s, a, function(n) {
+})), u.push(r.watch(s, o, function(e) {
+l = e.by("metadata.name"), m();
+})), u.push(r.watch(c, o, function(n) {
 e.podsWithEndpoints = {};
 var r = n.by("metadata.name")[t.service];
 r && _.each(r.subsets, function(t) {
@@ -6375,12 +6375,12 @@ _.each(t.addresses, function(t) {
 "Pod" === _.get(t, "targetRef.kind") && (e.podsWithEndpoints[t.targetRef.name] = !0);
 });
 });
-})), l.push(r.watch(e.routesVersion, a, function(n) {
+})), u.push(r.watch(e.routesVersion, o, function(n) {
 e.routesForService = {}, angular.forEach(n.by("metadata.name"), function(n) {
 "Service" === n.spec.to.kind && n.spec.to.name === t.service && (e.routesForService[n.metadata.name] = n);
-}), u(), Logger.log("routes (subscribe)", e.routesByService);
+}), d(), a.log("routes (subscribe)", e.routesForService);
 })), e.$on("$destroy", function() {
-r.unwatchAll(l);
+r.unwatchAll(u);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("ServiceInstancesController", [ "$scope", "$filter", "$routeParams", "APIService", "BindingService", "Constants", "DataService", "LabelFilter", "Logger", "ProjectsService", function(e, t, n, r, a, o, i, s, c, l) {
