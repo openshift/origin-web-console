@@ -2,6 +2,7 @@
 
 const common = require('../helpers/common');
 const timing = require('../helpers/timing');
+const logger = require('../helpers/logger');
 
 const projectHelpers = require('../helpers/project');
 const matchers = require('../helpers/matchers');
@@ -15,18 +16,22 @@ const menus = require('../page-objects/menus').menus;
 describe('Authenticated user creates a new project', () => {
 
   beforeAll(() => {
+    logger.log('beforeAll()');
     common.beforeAll();
   });
 
   beforeEach(() => {
+    logger.log('beforeEach()');
     common.beforeEach();
   });
 
   afterEach(() => {
+    logger.log('afterEach()');
     common.afterEach();
   });
 
   afterAll(() => {
+    logger.log('afterAll()');
     common.afterAll();
   });
 
@@ -101,27 +106,32 @@ describe('Authenticated user creates a new project', () => {
       // Documentation link leaves console
       // Copy Login should also just have its own test
 
-      // go to the project list page
+      // go to the catalog
       menus.clickLogo();
       browser.sleep(timing.navToPage);
+      // test clicking the tile to view the project
       menus.clickViewAllProjects();
       browser.sleep(timing.navToPage);
       let projectList2 = new ProjectListPage();
-
       projectList2.clickTile(project);
       browser.sleep(timing.navToPage);
       menus.backToPreviousPage();
-
-      // projectList2.editProject(project);
-      // browser.sleep(1000);
-      // menus.backToPreviousPage();
-
-      projectList2.viewMembership(project);
-      browser.sleep(1000);
+      // test the view membership dropdown
+      logger.log('view membersip');
+      let projectList3 = new ProjectListPage();
+      projectList3.viewMembership(project);
+      browser.sleep(3000);
+      logger.log('back to previous page');
       menus.backToPreviousPage();
-
-      projectList2.deleteProject(project);
-
+      // test the delete project dropdown
+      browser.sleep(3000);
+      logger.log('click logo');
+      menus.clickLogo();
+      menus.clickViewAllProjects();
+      browser.sleep(3000);
+      logger.log('delete project');
+      let projectList4 = new ProjectListPage();
+      projectList4.deleteProject(project);
     });
   });
 });

@@ -1,6 +1,7 @@
 'use strict';
 
 const timing = require('../helpers/timing');
+const logger = require('../helpers/logger');
 
 let selectors = {
   topNav: '.dropdown-menu li a',
@@ -148,11 +149,15 @@ exports.menus = {
   // TODO: once we get a new CatalogPage, migrate this to
   // that page-object:
   clickViewAllProjects: () => {
-    return element(by.css('.projects-view-all')).click();
+    logger.log('menus:', 'clickViewAllProjects()');
+    browser.sleep(timing.standardDelay);
+    element(by.css('.projects-view-all')).click();
+    browser.sleep(timing.standardDelay);
   },
   // ATM seems to be the most sensible place to put this, even
   // though it is not an actual menu item.
   backToPreviousPage: () => {
-    return browser.navigate().back();
+    browser.navigate().back();
+    browser.sleep(timing.standardDelay);
   }
 };

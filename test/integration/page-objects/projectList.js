@@ -68,6 +68,7 @@ class ProjectTile {
     deleteButton.click();
     let alert = element(by.cssContainingText('.alert-success', 'marked for deletion'));
     wait.forElem(alert);
+    browser.sleep(timing.standardDelay);
   }
 }
 
@@ -109,8 +110,11 @@ class ProjectListPage extends Page {
     return tile.clickViewMembership();
   }
   deleteProject(project) {
+    logger.log('ProjectList.deleteProject()');
+    browser.sleep(1000);
     let tile = new ProjectTile(project);
     return tile.clickDelete().then(() => {
+      logger.log('tile.confirmDelete()');
       return tile.confirmDelete();
     });
   }
@@ -123,6 +127,12 @@ class ProjectListPage extends Page {
               return texts;
             });
   }
+  // Most PageObjects are passed a project in the constructor.
+  // The ProjectList does not receive a project, as it lists
+  // many projects.  In order to act on all projects in the
+  // list, this function loops the list & collects the
+  // project names manually, then returns a project {object}
+  // that can be used to generate ProjectTiles
   _makeDummyProjects() {
     return this._getProjectNames().then((names) => {
       return names.map((name) => {
@@ -136,21 +146,22 @@ class ProjectListPage extends Page {
     let allDeleted = protractor.promise.defer();
     let numDeleted = 0;
     let count;
-
+    logger.log('ProjectList:', '.deleteAllProjects()');
     this._makeDummyProjects()
         .then((projects) => {
           count = projects.length;
           if(count === 0) {
             allDeleted.fulfill();
           }
-          logger.log('Deleting', count, 'projects');
+          logger.log('ProjectList:', 'Deleting', count, 'project(s)', JSON.stringify(projects));
           projects.forEach((project) => {
-            logger.log('Deleting', project.displayName);
+            logger.log('ProjectList:', 'Deleting', project.displayName);
             let tile = new ProjectTile(project);
             tile.clickDelete();
             tile.confirmDelete();
             numDeleted++;
             if(numDeleted >= count) {
+              logger.log('ProjectList:', 'all projects deleted');
               allDeleted.fulfill(numDeleted);
             }
             browser.sleep(timing.standardDelay);
