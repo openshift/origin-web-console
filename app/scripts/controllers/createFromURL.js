@@ -7,7 +7,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('CreateFromURLController', function ($scope, $routeParams, $location, $filter, AuthService, DataService, Navigate, ProjectsService ) {
+  .controller('CreateFromURLController', function ($scope, $routeParams, $location, $filter, AuthService, AuthorizationService, DataService, Navigate, ProjectsService ) {
     AuthService.withUser();
 
     $scope.alerts = {};
@@ -173,5 +173,19 @@ angular.module('openshiftConsole')
       }, function() {
         $scope.canCreateProject = false;
       });
+
+    $scope.forms = {};
+    // assume the user can add to project by default
+    $scope.canIAddToProject = true;
+
+    $scope.canIAddToSelectedProject = function(selectedProject) {
+      var selectedProjectName = _.get(selectedProject, 'metadata.name');
+      AuthorizationService.getProjectRules(selectedProjectName).then(function() {
+        $scope.canIAddToProject = AuthorizationService.canIAddToProject(selectedProjectName);
+        if($scope.forms) {
+          $scope.forms.selectProjectForm.selectProject.$setValidity('cannotAddToProject', $scope.canIAddToProject);
+        }
+      });
+    };
 
   });

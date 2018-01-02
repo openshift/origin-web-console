@@ -15,24 +15,9 @@
               </div>
               <div ng-if="!noProjects && !canCreateProject">
                 <h2>Choose a Project</h2>
-                <ui-select ng-model="selected.project">
-                  <ui-select-match placeholder="Project name">
-                    {{$select.selected | displayName}}
-                  </ui-select-match>
-                  <ui-select-choices repeat="project in projects | searchProjects : $select.search">
-                    <span ng-bind-html="project | displayName | highlightKeywords : $select.search"></span>
-                    <span ng-if="project | displayName : true" class="small text-muted">
-                      &ndash;
-                      <span ng-bind-html="project.metadata.name | highlightKeywords : $select.search"></span>
-                    </span>
-                  </ui-select-choices>
-                </ui-select>
-              </div>
-              <div ng-if="!noProjects && canCreateProject">
-                <uib-tabset>
-                  <uib-tab>
-                    <uib-tab-heading>Choose Existing Project</uib-tab-heading>
-                    <ui-select ng-model="selected.project">
+                <form name="forms.selectProjectForm">
+                  <div class="form-group" ng-class="{'has-error': forms.selectProjectForm.selectProject.$error.cannotAddToProject}">
+                    <ui-select ng-model="selected.project" name="selectProject" on-select="canIAddToSelectedProject($item)">
                       <ui-select-match placeholder="Project name">
                         {{$select.selected | displayName}}
                       </ui-select-match>
@@ -44,15 +29,57 @@
                         </span>
                       </ui-select-choices>
                     </ui-select>
+                    <div ng-if="forms.selectProjectForm.selectProject.$error.cannotAddToProject">
+                      <span class="help-block">
+                        You are not authorized to add to this project.
+                      </span>
+                    </div>
                     <div class="button-group mar-bottom-lg mar-top-lg">
                       <button
-                      type="submit"
-                      class="btn btn-primary btn-lg"
-                      ng-click="createWithProject()"
-                      ng-disabled="!(selected.project)"
-                      value="">Next</button>
-                      <a class="btn btn-default btn-lg" href="#" back>Cancel</a>
+                        type="submit"
+                        class="btn btn-primary"
+                        ng-click="createWithProject()"
+                        ng-disabled="!(selected.project) || !canIAddToProject"
+                        value="">Next</button>
+                      <a class="btn btn-default" href="#" back>Cancel</a>
                     </div>
+                  </div>
+                </form>
+              </div>
+              <div ng-if="!noProjects && canCreateProject">
+                <uib-tabset>
+                  <uib-tab>
+                    <uib-tab-heading>Choose Existing Project</uib-tab-heading>
+                    <form name="forms.selectProjectForm">
+                      <div class="form-group" ng-class="{'has-error': forms.selectProjectForm.selectProject.$error.cannotAddToProject}">
+                        <ui-select ng-model="selected.project" name="selectProject" on-select="canIAddToSelectedProject($item)">
+                          <ui-select-match placeholder="Project name">
+                            {{$select.selected | displayName}}
+                          </ui-select-match>
+                          <ui-select-choices repeat="project in projects | searchProjects : $select.search">
+                            <span ng-bind-html="project | displayName | highlightKeywords : $select.search"></span>
+                            <span ng-if="project | displayName : true" class="small text-muted">
+                              &ndash;
+                              <span ng-bind-html="project.metadata.name | highlightKeywords : $select.search"></span>
+                            </span>
+                          </ui-select-choices>
+                        </ui-select>
+                        <div ng-if="forms.selectProjectForm.selectProject.$error.cannotAddToProject">
+                          <span class="help-block">
+                            You are not authorized to add to this project.
+                          </span>
+                        </div>
+                        <div class="button-group mar-bottom-lg mar-top-lg">
+                          <button
+                            type="submit"
+                            class="btn btn-primary"
+                            ng-click="createWithProject()"
+                            ng-disabled="!(selected.project) || !canIAddToProject"
+                            value="">Next</button>
+                          <a class="btn btn-default" href="#" back>Cancel</a>
+                        </div>
+                      </div>
+                    </form>
                   </uib-tab>
                   <uib-tab>
                     <uib-tab-heading>Create a New Project</uib-tab-heading>
