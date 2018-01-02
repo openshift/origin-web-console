@@ -73402,7 +73402,7 @@ resource: "deploymentconfigs/log"
 },
 endpoints: {
 version: "v1",
-resoource: "endpoints"
+resource: "endpoints"
 },
 events: {
 version: "v1",
