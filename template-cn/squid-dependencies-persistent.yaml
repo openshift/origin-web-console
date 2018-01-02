@@ -182,7 +182,7 @@ objects:
         - squid-db
         from:
           kind: ImageStreamTag
-          name: mysql-5.7-squid-db:1.4.6
+          name: mysql-5.7-squid-db:1.4.7
           namespace: openshift
       type: ImageChange
     - type: ConfigChange

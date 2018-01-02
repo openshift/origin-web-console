@@ -138,7 +138,7 @@ objects:
         - squid-console
         from:
           kind: ImageStreamTag
-          name: centos7-openjdk8-squid-console:1.4.6
+          name: centos7-openjdk8-squid-console:1.4.7
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
@@ -193,7 +193,7 @@ objects:
         - squid-ue
         from:
           kind: ImageStreamTag
-          name: centos7-nginx1.12-squid-console-ue:1.4.6
+          name: centos7-nginx1.12-squid-console-ue:1.4.7
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
@@ -272,7 +272,7 @@ objects:
         - squid-client
         from:
           kind: ImageStreamTag
-          name: centos7-openjdk8-squid-demo-client:1.4.6
+          name: centos7-openjdk8-squid-demo-client:1.4.7
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
@@ -332,7 +332,7 @@ objects:
         - squid-server
         from:
           kind: ImageStreamTag
-          name: centos7-openjdk8-squid-demo-server:1.4.6
+          name: centos7-openjdk8-squid-demo-server:1.4.7
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
