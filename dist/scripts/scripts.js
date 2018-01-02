@@ -1087,7 +1087,8 @@ resolve: {
 isPipeline: [ "$route", function(e) {
 e.current.params.isPipeline = !0;
 } ]
-}
+},
+reloadOnSearch: !1
 }).when("/project/:project/edit/yaml", {
 templateUrl: "views/edit/yaml.html",
 controller: "EditYAMLController"
