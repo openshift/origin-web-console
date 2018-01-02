@@ -39,7 +39,7 @@
           <div class="has-warning" ng-if="ctrl.hasInvalidEnvVars">
             <div class="help-block">
               <span class="pf-icon pficon-warning-triangle-o" aria-hidden="true"></span>
-              Some of the keys for {{ctrl.apiObject.kind | humanizeKind}} <strong>{{ctrl.apiObject.metadata.name}}</strong> are not valid environment variable names and will not be added.
+              {{ctrl.apiObject.kind | humanizeKind | upperFirst}} <strong>{{ctrl.apiObject.metadata.name}}</strong> contains keys that are not valid environment variable names. Only {{ctrl.apiObject.kind | humanizeKind}} keys with valid names will be added as environment variables.
             </div>
           </div>
           <div class="form-group">

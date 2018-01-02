@@ -5758,7 +5758,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"has-warning\" ng-if=\"ctrl.hasInvalidEnvVars\">\n" +
     "<div class=\"help-block\">\n" +
     "<span class=\"pf-icon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
-    "Some of the keys for {{ctrl.apiObject.kind | humanizeKind}} <strong>{{ctrl.apiObject.metadata.name}}</strong> are not valid environment variable names and will not be added.\n" +
+    "{{ctrl.apiObject.kind | humanizeKind | upperFirst}} <strong>{{ctrl.apiObject.metadata.name}}</strong> contains keys that are not valid environment variable names. Only {{ctrl.apiObject.kind | humanizeKind}} keys with valid names will be added as environment variables.\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
@@ -6722,7 +6722,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select>\n" +
     "</div>\n" +
     "<div class=\"has-warning\" ng-if=\"$ctrl.hasInvalidEnvVar(entry.selectedEnvFrom.data)\">\n" +
-    "<div class=\"help-block\">Some of the keys for {{entry.selectedEnvFrom.kind | humanizeKind}} <strong>{{entry.selectedEnvFrom.metadata.name}}</strong> are not valid environment variable names and will not be added.</div>\n" +
+    "<div class=\"help-block\">{{entry.selectedEnvFrom.kind | humanizeKind | upperFirst}} <strong>{{entry.selectedEnvFrom.metadata.name}}</strong> contains keys that are not valid environment variable names. Only {{entry.selectedEnvFrom.kind | humanizeKind}} keys with valid names will be added as environment variables.\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
