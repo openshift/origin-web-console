@@ -10747,13 +10747,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"mode.edit\" class=\"col-add-role\">\n" +
     "<div row>\n" +
-    "<ui-select ng-if=\"filteredRoles.length\" ng-model=\"subject.newRole\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a new role for {{subjectKind.name}}\" class=\"select-role\" flex>\n" +
+    "<ui-select ng-if=\"filteredRoles.length\" ng-model=\"subject.newRole\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a new role for {{subject.name}}\" class=\"select-role\" flex>\n" +
     "<ui-select-match placeholder=\"Select a role\">\n" +
     "<span ng-bind=\"subject.newRole.metadata.name\"></span>\n" +
     "</ui-select-match>\n" +
     "<ui-select-choices repeat=\"role as role in filteredRoles | filter: excludeExistingRoles(subject.roles) | filter: { metadata: { name: $select.search } } track by (role | uid)\">\n" +
-    "<div ng-bind-html=\"role.metadata.name | highlight: $select.search\"></div>\n" +
-    "<div ng-if=\"role | annotation : 'description'\">\n" +
+    "<div ng-bind-html=\"role.metadata.name | highlight: $select.search\" title=\"{{role.metadata.name}}\"></div>\n" +
+    "<div ng-if=\"role | annotation : 'description'\" title=\"{{role.metadata.name}}\">\n" +
     "<small>{{role | annotation : 'description'}}</small>\n" +
     "</div>\n" +
     "</ui-select-choices>\n" +
@@ -10805,8 +10805,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-bind=\"newBinding.newRole.metadata.name\"></span>\n" +
     "</ui-select-match>\n" +
     "<ui-select-choices repeat=\"role as role in filteredRoles | filter: { metadata: { name: $select.search } } track by (role | uid)\">\n" +
-    "<div ng-bind-html=\"role.metadata.name | highlight: $select.search\"></div>\n" +
-    "<div ng-if=\"role | annotation : 'description'\">\n" +
+    "<div ng-bind-html=\"role.metadata.name | highlight: $select.search\" title=\"{{role.metadata.name}}\"></div>\n" +
+    "<div ng-if=\"role | annotation : 'description'\" title=\"{{role.metadata.name}}\">\n" +
     "<small>{{role | annotation : 'description'}}</small>\n" +
     "</div>\n" +
     "</ui-select-choices>\n" +
