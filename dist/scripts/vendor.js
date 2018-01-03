@@ -78872,7 +78872,7 @@ sourceURI: this.ctrl.repository || "",
 sourceRef: this.gitRef || "",
 contextDir: this.contextDir || ""
 }).toString();
-this.$location.url(e);
+this.$location.url(e), this.closePanel();
 }, e.prototype.getTagReference = function(e) {
 if (!e.from || "ImageStreamTag" !== e.from.kind) return null;
 var t = r.get(this, "ctrl.imageStream.resource.metadata.namespace");

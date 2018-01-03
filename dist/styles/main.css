@@ -5413,7 +5413,7 @@ to{background-color:transparent}
 .project-bar .catalog-search.mobile-shown .landing-search-form .form-group{display:block}
 }
 .project-bar .form-group{flex:1 0 0%;margin-bottom:0;min-width:0}
-.project-bar .form-group .form-control{background-color:transparent}
+.project-bar .form-group .form-control{background-color:transparent;height:auto}
 .project-bar .navbar-toggle{border:0;display:block;float:left;margin:0 10px;padding:12px 16px}
 @media (max-width:767px){.project-bar .navbar-toggle{display:none}
 }

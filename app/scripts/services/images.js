@@ -1,7 +1,13 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("ImagesService", function($filter, ApplicationGenerator, DataService) {
+  .factory("ImagesService", function(
+    $filter,
+    APIService,
+    ApplicationGenerator,
+    DataService) {
+
+    var imageStreamImportsVersion = APIService.getPreferredVersion('imagestreamimports');
 
     // maps an env object: { key: 'val', key2: 'val2'}
     // to an array: [{},{},{}]
@@ -33,7 +39,7 @@ angular.module("openshiftConsole")
         status: {}
       };
 
-      return DataService.create('imagestreamimports',
+      return DataService.create(imageStreamImportsVersion,
                                 null,
                                 importImage,
                                 projectContext).then(function(response) {
