@@ -7,15 +7,15 @@ angular
     APIService,
     DataService) {
 
-    var roleBindingsVersion = APIService.getPreferredVersion('rolebindings');
-    var clusterRoleBindingsVersion = APIService.getPreferredVersion('clusterroles');
+    var rolesVersion = APIService.getPreferredVersion('roles');
+    var clusterRolesVersion = APIService.getPreferredVersion('clusterroles');
 
     var listAllRoles = function(context) {
       return $q.all([
         DataService
-          .list(roleBindingsVersion, context, null),
+          .list(rolesVersion, context, null),
         DataService
-          .list(clusterRoleBindingsVersion, {}, null)
+          .list(clusterRolesVersion, {}, null)
       ]);
     };
 

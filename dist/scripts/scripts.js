@@ -1105,7 +1105,8 @@ resolve: {
 isPipeline: [ "$route", function(e) {
 e.current.params.isPipeline = !0;
 } ]
-}
+},
+reloadOnSearch: !1
 }).when("/project/:project/edit/yaml", {
 templateUrl: "views/edit/yaml.html",
 controller: "EditYAMLController"
@@ -2494,7 +2495,7 @@ return _.sortBy(r, "sortOrder");
 }
 };
 } ]), angular.module("openshiftConsole").factory("RolesService", [ "$q", "APIService", "DataService", function(e, t, n) {
-var r = t.getPreferredVersion("rolebindings"), a = t.getPreferredVersion("clusterroles");
+var r = t.getPreferredVersion("roles"), a = t.getPreferredVersion("clusterroles");
 return {
 listAllRoles: function(t) {
 return e.all([ n.list(r, t, null), n.list(a, {}, null) ]);

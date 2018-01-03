@@ -116,7 +116,8 @@ angular
           isPipeline: function ($route) {
             $route.current.params.isPipeline = true;
           }
-        }
+        },
+        reloadOnSearch: false
       })
       .when('/project/:project/edit/yaml', {
         templateUrl: 'views/edit/yaml.html',
