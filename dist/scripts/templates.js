@@ -4554,7 +4554,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"!noProjects && !canCreateProject\">\n" +
     "<h2>Choose a Project</h2>\n" +
-    "<ui-select ng-model=\"selected.project\">\n" +
+    "<form name=\"forms.selectProjectForm\">\n" +
+    "<div class=\"form-group\" ng-class=\"{'has-error': forms.selectProjectForm.selectProject.$error.cannotAddToProject}\">\n" +
+    "<ui-select ng-model=\"selected.project\" name=\"selectProject\" on-select=\"canIAddToSelectedProject($item)\">\n" +
     "<ui-select-match placeholder=\"Project name\">\n" +
     "{{$select.selected | displayName}}\n" +
     "</ui-select-match>\n" +
@@ -4566,12 +4568,25 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
+    "<div ng-if=\"forms.selectProjectForm.selectProject.$error.cannotAddToProject\">\n" +
+    "<span class=\"help-block\">\n" +
+    "You are not authorized to add to this project.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"button-group mar-bottom-lg mar-top-lg\">\n" +
+    "<button type=\"submit\" class=\"btn btn-primary\" ng-click=\"createWithProject()\" ng-disabled=\"!(selected.project) || !canIAddToProject\" value=\"\">Next</button>\n" +
+    "<a class=\"btn btn-default\" href=\"#\" back>Cancel</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</form>\n" +
     "</div>\n" +
     "<div ng-if=\"!noProjects && canCreateProject\">\n" +
     "<uib-tabset>\n" +
     "<uib-tab>\n" +
     "<uib-tab-heading>Choose Existing Project</uib-tab-heading>\n" +
-    "<ui-select ng-model=\"selected.project\">\n" +
+    "<form name=\"forms.selectProjectForm\">\n" +
+    "<div class=\"form-group\" ng-class=\"{'has-error': forms.selectProjectForm.selectProject.$error.cannotAddToProject}\">\n" +
+    "<ui-select ng-model=\"selected.project\" name=\"selectProject\" on-select=\"canIAddToSelectedProject($item)\">\n" +
     "<ui-select-match placeholder=\"Project name\">\n" +
     "{{$select.selected | displayName}}\n" +
     "</ui-select-match>\n" +
@@ -4583,10 +4598,17 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
-    "<div class=\"button-group mar-bottom-lg mar-top-lg\">\n" +
-    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"createWithProject()\" ng-disabled=\"!(selected.project)\" value=\"\">Next</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
+    "<div ng-if=\"forms.selectProjectForm.selectProject.$error.cannotAddToProject\">\n" +
+    "<span class=\"help-block\">\n" +
+    "You are not authorized to add to this project.\n" +
+    "</span>\n" +
     "</div>\n" +
+    "<div class=\"button-group mar-bottom-lg mar-top-lg\">\n" +
+    "<button type=\"submit\" class=\"btn btn-primary\" ng-click=\"createWithProject()\" ng-disabled=\"!(selected.project) || !canIAddToProject\" value=\"\">Next</button>\n" +
+    "<a class=\"btn btn-default\" href=\"#\" back>Cancel</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</form>\n" +
     "</uib-tab>\n" +
     "<uib-tab>\n" +
     "<uib-tab-heading>Create a New Project</uib-tab-heading>\n" +

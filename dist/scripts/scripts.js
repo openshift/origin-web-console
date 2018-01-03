@@ -8404,24 +8404,24 @@ partialObjectMetadataList: !0
 e.projectTemplates = t.by("metadata.name");
 }));
 }));
-} ]), angular.module("openshiftConsole").controller("CreateFromURLController", [ "$scope", "$routeParams", "$location", "$filter", "AuthService", "DataService", "Navigate", "ProjectsService", function(e, t, n, r, a, o, i, s) {
+} ]), angular.module("openshiftConsole").controller("CreateFromURLController", [ "$scope", "$routeParams", "$location", "$filter", "AuthService", "AuthorizationService", "DataService", "Navigate", "ProjectsService", function(e, t, n, r, a, o, i, s, c) {
 a.withUser(), e.alerts = {}, e.selected = {};
-var c = function(t) {
+var l = function(t) {
 e.alerts.invalidImageStream = {
 type: "error",
 message: 'The requested image stream "' + t + '" could not be loaded.'
 };
-}, l = function(t) {
+}, u = function(t) {
 e.alerts.invalidImageTag = {
 type: "error",
 message: 'The requested image stream tag "' + t + '" could not be loaded.'
 };
-}, u = function(t) {
+}, d = function(t) {
 e.alerts.invalidTemplate = {
 type: "error",
 message: 'The requested template "' + t + '" could not be loaded.'
 };
-}, d = function() {
+}, m = function() {
 try {
 return t.templateParamsMap && JSON.parse(t.templateParamsMap) || {};
 } catch (t) {
@@ -8430,44 +8430,44 @@ type: "error",
 message: "The templateParamsMap is not valid JSON. " + t
 };
 }
-}, m = window.OPENSHIFT_CONSTANTS.CREATE_FROM_URL_WHITELIST, p = [ "namespace", "name", "imageStream", "imageTag", "sourceURI", "sourceRef", "contextDir", "template", "templateParamsMap" ], f = _.pickBy(t, function(e, t) {
-return _.includes(p, t) && _.isString(e);
+}, p = window.OPENSHIFT_CONSTANTS.CREATE_FROM_URL_WHITELIST, f = [ "namespace", "name", "imageStream", "imageTag", "sourceURI", "sourceRef", "contextDir", "template", "templateParamsMap" ], g = _.pickBy(t, function(e, t) {
+return _.includes(f, t) && _.isString(e);
 });
-f.namespace = f.namespace || "openshift";
-_.includes(m, f.namespace) ? f.imageStream && f.template ? e.alerts.invalidResource = {
+g.namespace = g.namespace || "openshift";
+_.includes(p, g.namespace) ? g.imageStream && g.template ? e.alerts.invalidResource = {
 type: "error",
 message: "Image streams and templates cannot be combined."
-} : f.imageStream || f.template ? f.name && !function(e) {
+} : g.imageStream || g.template ? g.name && !function(e) {
 return _.size(e) < 25 && /^[a-z]([-a-z0-9]*[a-z0-9])?$/.test(e);
-}(f.name) ? function(t) {
+}(g.name) ? function(t) {
 e.alerts.invalidImageStream = {
 type: "error",
 message: 'The app name "' + t + "\" is not valid.  An app name is an alphanumeric (a-z, and 0-9) string with a maximum length of 24 characters, where the first character is a letter (a-z), and the '-' character is allowed anywhere except the first or last character."
 };
-}(f.name) : (f.imageStream && o.get("imagestreams", f.imageStream, {
-namespace: f.namespace
+}(g.name) : (g.imageStream && i.get("imagestreams", g.imageStream, {
+namespace: g.namespace
 }, {
 errorNotification: !1
 }).then(function(t) {
-e.imageStream = t, o.get("imagestreamtags", t.metadata.name + ":" + f.imageTag, {
-namespace: f.namespace
+e.imageStream = t, i.get("imagestreamtags", t.metadata.name + ":" + g.imageTag, {
+namespace: g.namespace
 }, {
 errorNotification: !1
 }).then(function(t) {
-e.imageStreamTag = t, e.validationPassed = !0, e.resource = t, f.displayName = r("displayName")(t);
+e.imageStreamTag = t, e.validationPassed = !0, e.resource = t, g.displayName = r("displayName")(t);
 }, function() {
-l(f.imageTag);
+u(g.imageTag);
 });
 }, function() {
-c(f.imageStream);
-}), f.template && o.get("templates", f.template, {
-namespace: f.namespace
+l(g.imageStream);
+}), g.template && i.get("templates", g.template, {
+namespace: g.namespace
 }, {
 errorNotification: !1
 }).then(function(t) {
-e.template = t, d() && (e.validationPassed = !0, e.resource = t);
+e.template = t, m() && (e.validationPassed = !0, e.resource = t);
 }, function() {
-u(f.template);
+d(g.template);
 })) : e.alerts.resourceRequired = {
 type: "error",
 message: "An image stream or template is required."
@@ -8476,20 +8476,25 @@ e.alerts.invalidNamespace = {
 type: "error",
 message: 'Resources from the namespace "' + t + '" are not permitted.'
 };
-}(f.namespace), angular.extend(e, {
-createDetails: f,
+}(g.namespace), angular.extend(e, {
+createDetails: g,
 createWithProject: function(r) {
 r = r || e.selected.project.metadata.name;
-var a = t.imageStream ? i.createFromImageURL(e.imageStream, f.imageTag, r, f) : i.createFromTemplateURL(e.template, r, f);
+var a = t.imageStream ? s.createFromImageURL(e.imageStream, g.imageTag, r, g) : s.createFromTemplateURL(e.template, r, g);
 n.url(a);
 }
-}), e.projects = {}, e.canCreateProject = void 0, s.list().then(function(t) {
+}), e.projects = {}, e.canCreateProject = void 0, c.list().then(function(t) {
 e.loaded = !0, e.projects = r("orderByDisplayName")(t.by("metadata.name")), e.noProjects = _.isEmpty(e.projects);
-}), s.canCreate().then(function() {
+}), c.canCreate().then(function() {
 e.canCreateProject = !0;
 }, function() {
 e.canCreateProject = !1;
+}), e.forms = {}, e.canIAddToProject = !0, e.canIAddToSelectedProject = function(t) {
+var n = _.get(t, "metadata.name");
+o.getProjectRules(n).then(function() {
+e.canIAddToProject = o.canIAddToProject(n), e.forms && e.forms.selectProjectForm.selectProject.$setValidity("cannotAddToProject", e.canIAddToProject);
 });
+};
 } ]), angular.module("openshiftConsole").controller("CreateProjectController", [ "$scope", "$location", "$window", "AuthService", "Constants", function(e, t, n, r, a) {
 var o = !a.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
 e.onProjectCreated = function(e) {
