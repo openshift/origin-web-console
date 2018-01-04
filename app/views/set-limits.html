@@ -8,7 +8,7 @@
           <form ng-if="containers.length" name="form" class="set-limits-form" novalidate>
             <h1>Resource Limits: {{name}}</h1>
             <div class="help-block">
-              Resource limits control how much <span ng-if="!hideCPU">CPU and</span> memory a container will consume on a node.
+              Resource limits control how much CPU and memory a container will consume on a node.
               <div class="learn-more-block" ng-class="{ 'gutter-bottom': showPodWarning }">
                 <a href="{{'compute_resources' | helpLink}}" target="_blank">Learn More <i class="fa fa-external-link" aria-hidden="true"></i></a>
               </div>
@@ -24,14 +24,12 @@
                 <edit-request-limit
                     resources="container.resources"
                     type="cpu"
-                    limit-ranges="limitRanges"
-                    project="project">
+                    limit-ranges="limitRanges">
                 </edit-request-limit>
                 <edit-request-limit
                     resources="container.resources"
                     type="memory"
-                    limit-ranges="limitRanges"
-                    project="project">
+                    limit-ranges="limitRanges">
                 </edit-request-limit>
               </div>
               <div ng-repeat="problem in cpuProblems" class="has-error">

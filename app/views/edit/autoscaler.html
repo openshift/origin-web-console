@@ -30,18 +30,14 @@
             <div ng-if="showCPURequestWarning" class="alert alert-warning">
               <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
               <span class="sr-only">Warning:</span>
-              This {{targetKind | humanizeKind}} does not have any containers with a CPU
-              <span ng-if="'cpu' | isRequestCalculated : project">limit</span>
-              <span ng-if="!('cpu' | isRequestCalculated : project)">request</span>
-              set. Autoscaling will not work without a CPU
-              <span ng-if="'cpu' | isRequestCalculated : project">limit.</span>
-              <span ng-if="!('cpu' | isRequestCalculated : project)">request.</span>
+              This {{targetKind | humanizeKind}} does not have any containers
+              with a CPU request set. Autoscaling will not work without a CPU
+              request.
             </div>
 
             <fieldset ng-disabled="disableInputs" class="gutter-top">
               <osc-autoscaling
                   model="autoscaling"
-                  project="project"
                   show-name-input="true"
                   name-read-only="kind === 'HorizontalPodAutoscaler'">
               </osc-autoscaling>

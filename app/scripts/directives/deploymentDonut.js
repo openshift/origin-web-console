@@ -26,7 +26,6 @@ angular.module('openshiftConsole')
         limitRanges: '=',
         quotas: '=',
         clusterQuotas: '=',
-        project: '=',
 
         // Pods
         pods: '='
@@ -44,7 +43,7 @@ angular.module('openshiftConsole')
         });
 
         var updateHPAWarnings = function() {
-            HPAService.getHPAWarnings($scope.rc, $scope.hpa, $scope.limitRanges, $scope.project)
+            HPAService.getHPAWarnings($scope.rc, $scope.hpa, $scope.limitRanges)
                       .then(function(warnings) {
               // Create one string that we can show in a single popover.
               $scope.hpaWarnings = _.map(warnings, function(warning) {
@@ -53,7 +52,7 @@ angular.module('openshiftConsole')
             });
         };
 
-        $scope.$watchGroup(['limitRanges', 'hpa', 'project'], updateHPAWarnings);
+        $scope.$watchGroup(['limitRanges', 'hpa'], updateHPAWarnings);
         $scope.$watch('rc.spec.template.spec.containers', updateHPAWarnings, true);
 
         var updateQuotaWarning = function() {

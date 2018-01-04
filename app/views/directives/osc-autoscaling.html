@@ -101,10 +101,7 @@
   </div>
   <div class="form-group">
     <label>
-      CPU
-      <span ng-if="isRequestCalculated">Limit</span>
-      <span ng-if="!isRequestCalculated">Request</span>
-      Target
+      CPU Request Target
     </label>
     <div class="input-group" ng-class="{ 'has-error': form.targetCPU.$invalid && form.targetCPU.$touched }">
       <input type="number"
@@ -118,11 +115,9 @@
       <span class="input-group-addon">%</span>
     </div>
     <div id="target-cpu-help" class="help-block">
-      The percentage of the CPU
-      <span ng-if="isRequestCalculated">limit</span>
-      <span ng-if="!isRequestCalculated">request</span>
-      that each pod should ideally be using. Pods will be added or removed
-      periodically when CPU usage exceeds or drops below this target value.
+      The percentage of the CPU request that each pod should ideally be using.
+      Pods will be added or removed periodically when CPU usage exceeds or
+      drops below this target value.
       <span ng-if="defaultTargetCPUDisplayValue">Defaults to {{defaultTargetCPUDisplayValue}}%.</span>
     </div>
     <div class="learn-more-block">

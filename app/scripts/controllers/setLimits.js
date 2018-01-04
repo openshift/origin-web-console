@@ -130,10 +130,8 @@ angular.module('openshiftConsole')
         );
 
         var validatePodLimits = function() {
-          if (!$scope.hideCPU) {
-            $scope.cpuProblems = LimitRangesService.validatePodLimits($scope.limitRanges, 'cpu', $scope.containers, project);
-          }
-          $scope.memoryProblems = LimitRangesService.validatePodLimits($scope.limitRanges, 'memory', $scope.containers, project);
+          $scope.cpuProblems = LimitRangesService.validatePodLimits($scope.limitRanges, 'cpu', $scope.containers);
+          $scope.memoryProblems = LimitRangesService.validatePodLimits($scope.limitRanges, 'memory', $scope.containers);
         };
 
         DataService.list(limitRangesVersion, context).then(function(resp) {

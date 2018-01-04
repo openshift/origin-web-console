@@ -191,9 +191,7 @@ angular.module('openshiftConsole')
         resources: '=',
         // 'cpu' or 'memory'
         type: '@',
-        limitRanges: '=',
-        // The project, needed to determine if request is calculated from limit.
-        project: '='
+        limitRanges: '='
       },
       templateUrl: 'views/_edit-request-limit.html',
       link: function(scope) {
@@ -202,9 +200,7 @@ angular.module('openshiftConsole')
         };
 
         scope.$watch('limitRanges', function() {
-          scope.limits = LimitRangesService.getEffectiveLimitRange(scope.limitRanges, scope.type, 'Container', scope.project);
-          scope.requestCalculated = LimitRangesService.isRequestCalculated(scope.type, scope.project);
-          scope.limitCalculated = LimitRangesService.isLimitCalculated(scope.type, scope.project);
+          scope.limits = LimitRangesService.getEffectiveLimitRange(scope.limitRanges, scope.type, 'Container');
         }, true);
       }
     };

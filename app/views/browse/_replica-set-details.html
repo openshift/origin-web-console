@@ -8,7 +8,6 @@
         hpa="autoscalers"
         scalable="isScalable()"
         limit-ranges="limitRanges"
-        project="project"
         quotas="quotas"
         cluster-quotas="clusterQuotas">
     </deployment-donut>
@@ -170,18 +169,12 @@
     <span ng-if="warning.reason === 'NoCPURequest'">
       <!-- Prompt to set CPU request on the DC if this is a deployment. -->
       <a ng-href="project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfigName}}"
-         ng-if="deploymentConfigName && !deploymentConfigMissing && ('deploymentconfigs' | canI : 'update')"
-         role="button">Edit Resource
-        <span ng-if="!('cpu' | isRequestCalculated : project)">Requests and</span> Limits</a>
+         ng-if="deploymentConfigName && !deploymentConfigMissing && ('deploymentconfigs' | canI : 'update')">Edit Resource Requests and Limits</a>
       <!-- Prompt to set CPU request on the RC if not a deployment. -->
       <a ng-href="project/{{projectName}}/set-limits?kind=ReplicationController&name={{replicaSet.metadata.name}}"
-         ng-if="!deploymentConfigName && kind === 'ReplicationController' && (resource | canI : 'update')"
-         role="button">Edit Resource
-        <span ng-if="!('cpu' | isRequestCalculated : project)">Requests and</span> Limits</a>
+         ng-if="!deploymentConfigName && kind === 'ReplicationController' && (resource | canI : 'update')">Edit Resource Requests and Limits</a>
       <a ng-href="project/{{projectName}}/set-limits?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions"
-         ng-if="!deploymentConfigName && kind === 'ReplicaSet' && (resource | canI : 'update')"
-         role="button">Edit Resource
-        <span ng-if="!('cpu' | isRequestCalculated : project)">Requests and</span> Limits</a>
+         ng-if="!deploymentConfigName && kind === 'ReplicaSet' && (resource | canI : 'update')">Edit Resource Requests and Limits</a>
     </span>
   </div>
 

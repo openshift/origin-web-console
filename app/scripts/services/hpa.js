@@ -1,47 +1,7 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("HPAService", function($filter, $q, LimitRangesService, MetricsService, Logger) {
-    var getCPURequestToLimitPercent = function(project) {
-      return LimitRangesService.getRequestToLimitPercent('cpu', project);
-    };
-
-    // Converts a percentage of request to a percentage of the limit based on
-    // the request-to-limit ratio.
-    // If CPU request percent is 120% and CPU request-to-limit percent is 50%, returns 60%
-    var convertRequestPercentToLimit = function(requestPercent, project) {
-      var cpuRequestToLimitPercent = getCPURequestToLimitPercent(project);
-      if (!cpuRequestToLimitPercent) {
-        Logger.warn('convertRequestPercentToLimit called, but no request/limit ratio defined.');
-        return NaN;
-      }
-
-      if (!requestPercent) {
-        return requestPercent;
-      }
-
-      var limitPercent = (cpuRequestToLimitPercent / 100) * requestPercent;
-      return Math.round(limitPercent);
-    };
-
-    // Converts a percentage of limit to a percentage of the request based on
-    // the request-to-limit ratio.
-    // If CPU limit percent is 60% and CPU request-to-limit percent is 50%, returns 120%
-    var convertLimitPercentToRequest = function(limitPercent, project) {
-      var cpuRequestToLimitPercent = getCPURequestToLimitPercent(project);
-      if (!cpuRequestToLimitPercent) {
-        Logger.warn('convertLimitPercentToRequest called, but no request/limit ratio defined.');
-        return NaN;
-      }
-
-      if (!limitPercent) {
-        return limitPercent;
-      }
-
-      var requestPercent = limitPercent / (cpuRequestToLimitPercent / 100);
-      return Math.round(requestPercent);
-    };
-
+  .factory("HPAService", function($filter, $q, LimitRangesService, MetricsService) {
     // Checks if all containers have a value set for the compute resource request or limit.
     //
     // computeResource  - 'cpu' or 'memory'
@@ -66,17 +26,17 @@ angular.module("openshiftConsole")
     // computeResource  - 'cpu' or 'memory'
     // defaultType      - 'defaultRequest' or 'defaultLimit'
     // limitRanges     - collection of LimitRange objects (hash or array)
-    var hasDefault = function(computeResource, defaultType, limitRanges, project) {
-      var effectiveLimits = LimitRangesService.getEffectiveLimitRange(limitRanges, computeResource, 'Container', project);
+    var hasDefault = function(computeResource, defaultType, limitRanges) {
+      var effectiveLimits = LimitRangesService.getEffectiveLimitRange(limitRanges, computeResource, 'Container');
       return !!effectiveLimits[defaultType];
     };
 
-    var hasDefaultRequest = function(computeResource, limitRanges, project) {
-      return hasDefault(computeResource, 'defaultRequest', limitRanges, project);
+    var hasDefaultRequest = function(computeResource, limitRanges) {
+      return hasDefault(computeResource, 'defaultRequest', limitRanges);
     };
 
-    var hasDefaultLimit = function(computeResource, limitRanges, project) {
-      return hasDefault(computeResource, 'defaultLimit', limitRanges, project);
+    var hasDefaultLimit = function(computeResource, limitRanges) {
+      return hasDefault(computeResource, 'defaultLimit', limitRanges);
     };
 
     // Checks if a CPU request is currently set or will be defaulted for any
@@ -84,24 +44,14 @@ angular.module("openshiftConsole")
     //
     // containers       - array of containters from a deployment config or replication controller
     // limitRanges      - collection of LimitRange objects (hash or array)
-    // project          - the project to determine if a request/limit ratio is set
-    var hasCPURequest = function(containers, limitRanges, project) {
-      if (hasRequestSet('cpu', containers) ||
-          hasDefaultRequest('cpu', limitRanges, project)) {
+    var hasCPURequest = function(containers, limitRanges) {
+      if (hasRequestSet('cpu', containers) || hasDefaultRequest('cpu', limitRanges)) {
         return true;
       }
 
       // The request will be defaulted from the limit when the pod is created.
-      if (hasLimitSet('cpu', containers) ||
-          hasDefaultLimit('cpu', limitRanges, containers)) {
+      if (hasLimitSet('cpu', containers) || hasDefaultLimit('cpu', limitRanges, containers)) {
         return true;
-      }
-
-      // Even if CPU limit is not set, it might be calculated. Check if the CPU
-      // limit will be set as a ratio of the memory limit.
-      if (LimitRangesService.isLimitCalculated('cpu', project)) {
-        return hasLimitSet('memory', containers) ||
-               hasDefaultLimit('memory', limitRanges, project);
       }
 
       return false;
@@ -122,10 +72,9 @@ angular.module("openshiftConsole")
     // scaleTarget      - the object being scaled (DC or RC)
     // hpaResources     - collection of HPA resources (already filtered to this object)
     // limitRanges      - collection of LimitRange objects (hash or array)
-    // project          - the project to determine if a request/limit ratio is set
     //
     // Returns an array of warnings, each an object with `message` and `reason` properties.
-    var getHPAWarnings = function(scaleTarget, hpaResources, limitRanges, project) {
+    var getHPAWarnings = function(scaleTarget, hpaResources, limitRanges) {
       if (!scaleTarget || _.isEmpty(hpaResources)) {
         return $q.when([]);
       }
@@ -142,18 +91,10 @@ angular.module("openshiftConsole")
 
         var containers = _.get(scaleTarget, 'spec.template.spec.containers', []);
         var kind, cpuRequestMessage;
-        if (!hasCPURequest(containers, limitRanges, project)) {
+        if (!hasCPURequest(containers, limitRanges)) {
           kind = humanizeKind(scaleTarget.kind);
-          if (LimitRangesService.isRequestCalculated('cpu', project)) {
-            cpuRequestMessage = 'This ' + kind + ' does not have any containers with a CPU limit set. ' +
-                      'Autoscaling will not work without a CPU limit.';
-            if (LimitRangesService.isLimitCalculated('cpu', project)) {
-              cpuRequestMessage += ' The CPU limit will be automatically calculated from the container memory limit.';
-            }
-          } else {
-            cpuRequestMessage = 'This ' + kind + ' does not have any containers with a CPU request set. ' +
-                      'Autoscaling will not work without a CPU request.';
-          }
+          cpuRequestMessage = 'This ' + kind + ' does not have any containers with a CPU request set. ' +
+                    'Autoscaling will not work without a CPU request.';
 
           warnings.push({
             message: cpuRequestMessage,
@@ -224,8 +165,6 @@ angular.module("openshiftConsole")
     };
 
     return {
-      convertRequestPercentToLimit: convertRequestPercentToLimit,
-      convertLimitPercentToRequest: convertLimitPercentToRequest,
       hasCPURequest: hasCPURequest,
       filterHPA: filterHPA,
       getHPAWarnings: getHPAWarnings,

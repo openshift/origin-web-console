@@ -223,7 +223,7 @@ angular.module('openshiftConsole')
             var limitRanges = {};
             var checkCPURequest = function() {
               var containers = _.get(resource, 'spec.template.spec.containers', []);
-              $scope.showCPURequestWarning = !HPAService.hasCPURequest(containers, limitRanges, project);
+              $scope.showCPURequestWarning = !HPAService.hasCPURequest(containers, limitRanges);
             };
 
             // List limit ranges in this project to determine if there is a default

@@ -5,15 +5,11 @@ angular.module("openshiftConsole")
    * Widget for entering autoscaling information
    */
   .directive("oscAutoscaling",
-             function(HPAService,
-                      LimitRangesService,
-                      DNS1123_SUBDOMAIN_VALIDATION) {
+             function(DNS1123_SUBDOMAIN_VALIDATION) {
     return {
       restrict: 'E',
       scope: {
         autoscaling: "=model",
-        // Needed to determine if limit/request overrides are set. Required.
-        project: "=",
         showNameInput: "=?",
         nameReadOnly: "=?"
       },
@@ -27,17 +23,8 @@ angular.module("openshiftConsole")
             return;
           }
 
-          // The HPA targetCPU percentage always is against CPU request. If
-          // request/limit overrides are in place, we ask for the percentage
-          // against limit, however.
-          scope.isRequestCalculated = LimitRangesService.isRequestCalculated('cpu', scope.project);
-
           // Set a default value in the model to include if the HPA if the field is empty.
           var defaultTargetCPU = window.OPENSHIFT_CONSTANTS.DEFAULT_HPA_CPU_TARGET_PERCENT;
-          if (scope.isRequestCalculated) {
-            // Convert to percent of request to set in the HPA resource.
-            defaultTargetCPU = HPAService.convertLimitPercentToRequest(defaultTargetCPU, scope.project);
-          }
           _.set(scope, 'autoscaling.defaultTargetCPU', defaultTargetCPU);
 
           // Default percent for display in the view as a placeholder and in help
@@ -57,21 +44,12 @@ angular.module("openshiftConsole")
               inputValueChanged = false;
               return;
             }
-
-            if (targetCPU && scope.isRequestCalculated) {
-              // Convert this to a limit value for the target CPU input.
-              targetCPU = HPAService.convertRequestPercentToLimit(targetCPU, scope.project);
-            }
             _.set(scope, 'targetCPUInput.percent', targetCPU);
           };
           scope.$watch('autoscaling.targetCPU', updateTargetCPUInput);
 
           // Update the model with the target CPU request percentage when the input value changes.
           var updateTargetCPUModel = function(targetCPU) {
-            if (targetCPU && scope.isRequestCalculated) {
-              targetCPU = HPAService.convertLimitPercentToRequest(targetCPU, scope.project);
-            }
-
             inputValueChanged = true;
             _.set(scope, 'autoscaling.targetCPU', targetCPU);
           };
