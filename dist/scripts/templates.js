@@ -8070,12 +8070,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "CPU Request Target\n" +
     "</label>\n" +
     "<div class=\"input-group\" ng-class=\"{ 'has-error': form.targetCPU.$invalid && form.targetCPU.$touched }\">\n" +
-    "<input type=\"number\" class=\"form-control\" min=\"1\" name=\"targetCPU\" ng-model=\"targetCPUInput.percent\" pattern=\"\\d*\" select-on-focus aria-describedby=\"target-cpu-help\">\n" +
+    "<input type=\"number\" class=\"form-control\" min=\"1\" name=\"targetCPU\" ng-model=\"autoscaling.targetCPU\" pattern=\"\\d*\" select-on-focus aria-describedby=\"target-cpu-help\">\n" +
     "<span class=\"input-group-addon\">%</span>\n" +
     "</div>\n" +
     "<div id=\"target-cpu-help\" class=\"help-block\">\n" +
-    "The percentage of the CPU request that each pod should ideally be using. Pods will be added or removed periodically when CPU usage exceeds or drops below this target value.\n" +
-    "<span ng-if=\"defaultTargetCPUDisplayValue\">Defaults to {{defaultTargetCPUDisplayValue}}%.</span>\n" +
+    "The percentage of the CPU request that each pod should ideally be using. Pods will be added or removed periodically when CPU usage exceeds or drops below this target value. If not specified, a default autoscaling policy will be used.\n" +
     "</div>\n" +
     "<div class=\"learn-more-block\">\n" +
     "<a href=\"{{'compute_resources' | helpLink}}\" target=\"_blank\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +

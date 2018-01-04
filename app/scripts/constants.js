@@ -64,9 +64,6 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
   CLI: {
     "Latest Release":          "https://github.com/openshift/origin/releases/latest"
   },
-  // The default CPU target percentage for horizontal pod autoscalers created or edited in the web console.
-  // This value is set in the HPA when the input is left blank.
-  DEFAULT_HPA_CPU_TARGET_PERCENT: 80,
 
   // true indicates that deployment metrics should be disabled on the web console overview
   DISABLE_OVERVIEW_METRICS: false,
