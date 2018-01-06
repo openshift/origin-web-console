@@ -121,11 +121,6 @@ angular.module("openshiftConsole")
             resources: {}
           };
 
-          // Check if requests or limits are calculated. Memory limit is never calculated.
-          scope.cpuRequestCalculated = LimitRangesService.isRequestCalculated('cpu', project);
-          scope.cpuLimitCalculated = LimitRangesService.isLimitCalculated('cpu', project);
-          scope.memoryRequestCalculated = LimitRangesService.isRequestCalculated('memory', project);
-
           scope.fillSampleRepo = function() {
             var annotations;
             if (!scope.image && !scope.image.metadata && !scope.image.metadata.annotations) {
@@ -225,10 +220,8 @@ angular.module("openshiftConsole")
         }
 
         var validatePodLimits = function() {
-          if (!$scope.hideCPU) {
-            $scope.cpuProblems = LimitRangesService.validatePodLimits($scope.limitRanges, 'cpu', [$scope.container], project);
-          }
-          $scope.memoryProblems = LimitRangesService.validatePodLimits($scope.limitRanges, 'memory', [$scope.container], project);
+          $scope.cpuProblems = LimitRangesService.validatePodLimits($scope.limitRanges, 'cpu', [$scope.container]);
+          $scope.memoryProblems = LimitRangesService.validatePodLimits($scope.limitRanges, 'memory', [$scope.container]);
         };
 
         DataService.list(limitRangesVersion, context).then(function(resp) {
@@ -245,7 +238,7 @@ angular.module("openshiftConsole")
           }
 
           // Warn if autoscaling is set, but there won't be a CPU request for the container.
-          $scope.showCPURequestWarning = !HPAService.hasCPURequest([$scope.container], $scope.limitRanges, project);
+          $scope.showCPURequestWarning = !HPAService.hasCPURequest([$scope.container], $scope.limitRanges);
         };
 
         var quotas, clusterQuotas;

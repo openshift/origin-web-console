@@ -342,21 +342,12 @@
                             </div>
                           </div>
 
-                          <osc-autoscaling
-                              ng-if="scaling.autoscale"
-                              model="scaling"
-                              project="project">
-                          </osc-autoscaling>
+                          <osc-autoscaling ng-if="scaling.autoscale" model="scaling"></osc-autoscaling>
 
                           <div class="has-warning" ng-if="showCPURequestWarning">
                             <span class="help-block">
                               You should configure resource limits below for autoscaling.
-                              Autoscaling will not work without a CPU
-                              <span ng-if="'cpu' | isRequestCalculated : project">limit.</span>
-                              <span ng-if="!('cpu' | isRequestCalculated : project)">request.</span>
-                              <span ng-if="'cpu' | isLimitCalculated : project">
-                                The CPU limit will be automatically calculated from the container memory limit.
-                              </span>
+                              Autoscaling will not work without a CPU request.
                             </span>
                           </div>
 
@@ -374,14 +365,12 @@
                           <edit-request-limit
                               resources="container.resources"
                               type="cpu"
-                              limit-ranges="limitRanges"
-                              project="project">
+                              limit-ranges="limitRanges">
                           </edit-request-limit>
                           <edit-request-limit
                               resources="container.resources"
                               type="memory"
-                              limit-ranges="limitRanges"
-                              project="project">
+                              limit-ranges="limitRanges">
                           </edit-request-limit>
                           <div ng-repeat="problem in cpuProblems" class="has-error">
                             <span class="help-block">{{problem}}</span>

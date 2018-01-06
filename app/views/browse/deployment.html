@@ -247,9 +247,7 @@
 
                       <!-- If the CPU request is missing, add an action to set one. -->
                       <a ng-href="project/{{projectName}}/set-limits?kind=Deployment&name={{deployment.metadata.name}}&group=apps"
-                         ng-if="warning.reason === 'NoCPURequest' && (deploymentsVersion | canI : 'update')"
-                         role="button">Edit Resource
-                        <span ng-if="!('cpu' | isRequestCalculated : project)">Requests and</span> Limits</a>
+                         ng-if="warning.reason === 'NoCPURequest' && (deploymentsVersion | canI : 'update')">Edit Resource Requests and Limits</a>
                     </div>
 
                     <!-- Create autoscaler -->

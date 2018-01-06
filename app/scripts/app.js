@@ -451,7 +451,6 @@ angular
   })
   .constant("LOGGING_URL", _.get(window.OPENSHIFT_CONFIG, "loggingURL"))
   .constant("METRICS_URL", _.get(window.OPENSHIFT_CONFIG, "metricsURL"))
-  .constant("LIMIT_REQUEST_OVERRIDES", _.get(window.OPENSHIFT_CONFIG, "limitRequestOverrides"))
   // A (very) basic regex to determine if a URL is an absolute URL, enough to
   // warn the user the Git URL probably won't work. This should only be used
   // as a sanity test and shouldn't block submitting the form. Rely on the API

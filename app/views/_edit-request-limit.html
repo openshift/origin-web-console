@@ -1,4 +1,4 @@
-<ng-form name="form" ng-if="!requestCalculated || !limitCalculated">
+<ng-form name="form">
   <h3>
     {{type | computeResourceLabel : true}}
     <small ng-if="limits.min && limits.max">
@@ -11,7 +11,6 @@
       Max: {{limits.max | usageWithUnits : type}}
     </small>
   </h3>
-  <!-- Don't show the request fields if request is calculated from limit. -->
   <compute-resource
       ng-model="resources.requests[type]"
       type="{{type}}"
@@ -20,22 +19,18 @@
       default-value="limits.defaultRequest"
       limit-range-min="limits.min"
       limit-range-max="limits.max"
-      max-limit-request-ratio="limits.maxLimitRequestRatio"
-      ng-if="!requestCalculated">
+      max-limit-request-ratio="limits.maxLimitRequestRatio">
   </compute-resource>
-  <!-- Don't validate limit against request if request is calculated from the limit.
-       (Pass undefined to the compute-resource directive for request in that case.) -->
   <compute-resource
       ng-model="resources.limits[type]"
       type="{{type}}"
-      label="{{requestCalculated ? undefined : 'Limit'}}"
+      label="Limit"
       description="The maximum amount of {{type | computeResourceLabel}} the container is allowed to use when running."
       default-value="limits.defaultLimit"
       limit-range-min="limits.min"
       limit-range-max="limits.max"
-      request="requestCalculated ? undefined : resources.requests[type]"
-      max-limit-request-ratio="limits.maxLimitRequestRatio"
-      ng-if="!hideLimit">
+      request="resources.requests[type]"
+      max-limit-request-ratio="limits.maxLimitRequestRatio">
   </compute-resource>
   <div class="learn-more-block">
     <a href="" ng-click="showComputeUnitsHelp()">What are

@@ -175,7 +175,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/_edit-request-limit.html',
-    "<ng-form name=\"form\" ng-if=\"!requestCalculated || !limitCalculated\">\n" +
+    "<ng-form name=\"form\">\n" +
     "<h3>\n" +
     "{{type | computeResourceLabel : true}}\n" +
     "<small ng-if=\"limits.min && limits.max\">\n" +
@@ -188,11 +188,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Max: {{limits.max | usageWithUnits : type}}\n" +
     "</small>\n" +
     "</h3>\n" +
-    "\n" +
-    "<compute-resource ng-model=\"resources.requests[type]\" type=\"{{type}}\" label=\"Request\" description=\"The minimum amount of {{type | computeResourceLabel}} the container is guaranteed.\" default-value=\"limits.defaultRequest\" limit-range-min=\"limits.min\" limit-range-max=\"limits.max\" max-limit-request-ratio=\"limits.maxLimitRequestRatio\" ng-if=\"!requestCalculated\">\n" +
+    "<compute-resource ng-model=\"resources.requests[type]\" type=\"{{type}}\" label=\"Request\" description=\"The minimum amount of {{type | computeResourceLabel}} the container is guaranteed.\" default-value=\"limits.defaultRequest\" limit-range-min=\"limits.min\" limit-range-max=\"limits.max\" max-limit-request-ratio=\"limits.maxLimitRequestRatio\">\n" +
     "</compute-resource>\n" +
-    "\n" +
-    "<compute-resource ng-model=\"resources.limits[type]\" type=\"{{type}}\" label=\"{{requestCalculated ? undefined : 'Limit'}}\" description=\"The maximum amount of {{type | computeResourceLabel}} the container is allowed to use when running.\" default-value=\"limits.defaultLimit\" limit-range-min=\"limits.min\" limit-range-max=\"limits.max\" request=\"requestCalculated ? undefined : resources.requests[type]\" max-limit-request-ratio=\"limits.maxLimitRequestRatio\" ng-if=\"!hideLimit\">\n" +
+    "<compute-resource ng-model=\"resources.limits[type]\" type=\"{{type}}\" label=\"Limit\" description=\"The maximum amount of {{type | computeResourceLabel}} the container is allowed to use when running.\" default-value=\"limits.defaultLimit\" limit-range-min=\"limits.min\" limit-range-max=\"limits.max\" request=\"resources.requests[type]\" max-limit-request-ratio=\"limits.maxLimitRequestRatio\">\n" +
     "</compute-resource>\n" +
     "<div class=\"learn-more-block\">\n" +
     "<a href=\"\" ng-click=\"showComputeUnitsHelp()\">What are\n" +
@@ -1316,7 +1314,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/browse/_replica-set-details.html',
     "<div class=\"row\" style=\"max-width: 650px\">\n" +
     "<div class=\"col-sm-4 col-sm-push-8 browse-deployment-donut\">\n" +
-    "<deployment-donut rc=\"replicaSet\" deployment=\"deployment\" deployment-config=\"deploymentConfig\" pods=\"podsForDeployment\" hpa=\"autoscalers\" scalable=\"isScalable()\" limit-ranges=\"limitRanges\" project=\"project\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\">\n" +
+    "<deployment-donut rc=\"replicaSet\" deployment=\"deployment\" deployment-config=\"deploymentConfig\" pods=\"podsForDeployment\" hpa=\"autoscalers\" scalable=\"isScalable()\" limit-ranges=\"limitRanges\" quotas=\"quotas\" cluster-quotas=\"clusterQuotas\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "<div class=\"col-sm-8 col-sm-pull-4\">\n" +
@@ -1452,13 +1450,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<span ng-if=\"warning.reason === 'NoCPURequest'\">\n" +
     "\n" +
-    "<a ng-href=\"project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfigName}}\" ng-if=\"deploymentConfigName && !deploymentConfigMissing && ('deploymentconfigs' | canI : 'update')\" role=\"button\">Edit Resource\n" +
-    "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">Requests and</span> Limits</a>\n" +
+    "<a ng-href=\"project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfigName}}\" ng-if=\"deploymentConfigName && !deploymentConfigMissing && ('deploymentconfigs' | canI : 'update')\">Edit Resource Requests and Limits</a>\n" +
     "\n" +
-    "<a ng-href=\"project/{{projectName}}/set-limits?kind=ReplicationController&name={{replicaSet.metadata.name}}\" ng-if=\"!deploymentConfigName && kind === 'ReplicationController' && (resource | canI : 'update')\" role=\"button\">Edit Resource\n" +
-    "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">Requests and</span> Limits</a>\n" +
-    "<a ng-href=\"project/{{projectName}}/set-limits?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions\" ng-if=\"!deploymentConfigName && kind === 'ReplicaSet' && (resource | canI : 'update')\" role=\"button\">Edit Resource\n" +
-    "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">Requests and</span> Limits</a>\n" +
+    "<a ng-href=\"project/{{projectName}}/set-limits?kind=ReplicationController&name={{replicaSet.metadata.name}}\" ng-if=\"!deploymentConfigName && kind === 'ReplicationController' && (resource | canI : 'update')\">Edit Resource Requests and Limits</a>\n" +
+    "<a ng-href=\"project/{{projectName}}/set-limits?kind=ReplicaSet&name={{replicaSet.metadata.name}}&group=extensions\" ng-if=\"!deploymentConfigName && kind === 'ReplicaSet' && (resource | canI : 'update')\">Edit Resource Requests and Limits</a>\n" +
     "</span>\n" +
     "</div>\n" +
     "\n" +
@@ -2482,12 +2477,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"sr-only\">Warning:</span>\n" +
     "{{warning.message}}\n" +
     "\n" +
-    "<a ng-href=\"project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" ng-if=\"warning.reason === 'NoCPURequest' && (deploymentConfigsVersion | canI : 'update')\" role=\"button\">Edit Resource\n" +
-    "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">Requests and</span> Limits</a>\n" +
+    "<a ng-href=\"project/{{projectName}}/set-limits?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" ng-if=\"warning.reason === 'NoCPURequest' && (deploymentConfigsVersion | canI : 'update')\">Edit Resource Requests and Limits</a>\n" +
     "</div>\n" +
     "\n" +
     "<div ng-if=\"!autoscalers.length\">\n" +
-    "<a ng-if=\"horizontalPodAutoscalersVersion | canI : 'create'\" ng-href=\"project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\" role=\"button\">Add Autoscaler</a>\n" +
+    "<a ng-if=\"horizontalPodAutoscalersVersion | canI : 'create'\" ng-href=\"project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}\">Add Autoscaler</a>\n" +
     "<span ng-if=\"!(horizontalPodAutoscalersVersion | canI : 'create')\">Autoscaling is not enabled. There are no autoscalers for this deployment config.</span>\n" +
     "</div>\n" +
     "\n" +
@@ -2742,8 +2736,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"sr-only\">Warning:</span>\n" +
     "{{warning.message}}\n" +
     "\n" +
-    "<a ng-href=\"project/{{projectName}}/set-limits?kind=Deployment&name={{deployment.metadata.name}}&group=apps\" ng-if=\"warning.reason === 'NoCPURequest' && (deploymentsVersion | canI : 'update')\" role=\"button\">Edit Resource\n" +
-    "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">Requests and</span> Limits</a>\n" +
+    "<a ng-href=\"project/{{projectName}}/set-limits?kind=Deployment&name={{deployment.metadata.name}}&group=apps\" ng-if=\"warning.reason === 'NoCPURequest' && (deploymentsVersion | canI : 'update')\">Edit Resource Requests and Limits</a>\n" +
     "</div>\n" +
     "\n" +
     "<div ng-if=\"!autoscalers.length\">\n" +
@@ -5008,24 +5001,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"help-block\">Replicas must be an integer value greater than or equal to 0.</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<osc-autoscaling ng-if=\"scaling.autoscale\" model=\"scaling\" project=\"project\">\n" +
-    "</osc-autoscaling>\n" +
+    "<osc-autoscaling ng-if=\"scaling.autoscale\" model=\"scaling\"></osc-autoscaling>\n" +
     "<div class=\"has-warning\" ng-if=\"showCPURequestWarning\">\n" +
     "<span class=\"help-block\">\n" +
-    "You should configure resource limits below for autoscaling. Autoscaling will not work without a CPU\n" +
-    "<span ng-if=\"'cpu' | isRequestCalculated : project\">limit.</span>\n" +
-    "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">request.</span>\n" +
-    "<span ng-if=\"'cpu' | isLimitCalculated : project\">\n" +
-    "The CPU limit will be automatically calculated from the container memory limit.\n" +
-    "</span>\n" +
+    "You should configure resource limits below for autoscaling. Autoscaling will not work without a CPU request.\n" +
     "</span>\n" +
     "</div>\n" +
     "</osc-form-section>\n" +
     "\n" +
     "<osc-form-section header=\"Resource Limits\" about-title=\"Resource Limits\" about=\"Resource limits control compute resource usage by a container on a node.\" expand=\"true\" can-toggle=\"false\">\n" +
-    "<edit-request-limit resources=\"container.resources\" type=\"cpu\" limit-ranges=\"limitRanges\" project=\"project\">\n" +
+    "<edit-request-limit resources=\"container.resources\" type=\"cpu\" limit-ranges=\"limitRanges\">\n" +
     "</edit-request-limit>\n" +
-    "<edit-request-limit resources=\"container.resources\" type=\"memory\" limit-ranges=\"limitRanges\" project=\"project\">\n" +
+    "<edit-request-limit resources=\"container.resources\" type=\"memory\" limit-ranges=\"limitRanges\">\n" +
     "</edit-request-limit>\n" +
     "<div ng-repeat=\"problem in cpuProblems\" class=\"has-error\">\n" +
     "<span class=\"help-block\">{{problem}}</span>\n" +
@@ -7385,12 +7372,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Max Pods:</dt>\n" +
     "<dd>{{hpa.spec.maxReplicas}}</dd>\n" +
     "<dt ng-if-start=\"hpa.spec.targetCPUUtilizationPercentage\">\n" +
-    "CPU\n" +
-    "<span ng-if=\"'cpu' | isRequestCalculated : project\">Limit</span>\n" +
-    "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">Request</span>\n" +
-    "Target:\n" +
+    "CPU Request Target:\n" +
     "</dt>\n" +
-    "<dd ng-if-end>{{hpa.spec.targetCPUUtilizationPercentage | hpaCPUPercent : project}}%</dd>\n" +
+    "<dd ng-if-end>{{hpa.spec.targetCPUUtilizationPercentage}}%</dd>\n" +
     "<dt>\n" +
     "Current Usage:\n" +
     "</dt>\n" +
@@ -7398,7 +7382,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<em>Not available</em>\n" +
     "</dd>\n" +
     "<dd ng-if=\"!(hpa.status.currentCPUUtilizationPercentage | isNil)\">\n" +
-    "{{hpa.status.currentCPUUtilizationPercentage | hpaCPUPercent : project}}%\n" +
+    "{{hpa.status.currentCPUUtilizationPercentage}}%\n" +
     "</dd>\n" +
     "<dt ng-if-start=\"hpa.status.lastScaleTime\">Last Scaled:</dt>\n" +
     "<dd ng-if-end><span am-time-ago=\"hpa.status.lastScaleTime\"></span></dd>\n" +
@@ -8083,21 +8067,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<label>\n" +
-    "CPU\n" +
-    "<span ng-if=\"isRequestCalculated\">Limit</span>\n" +
-    "<span ng-if=\"!isRequestCalculated\">Request</span>\n" +
-    "Target\n" +
+    "CPU Request Target\n" +
     "</label>\n" +
     "<div class=\"input-group\" ng-class=\"{ 'has-error': form.targetCPU.$invalid && form.targetCPU.$touched }\">\n" +
-    "<input type=\"number\" class=\"form-control\" min=\"1\" name=\"targetCPU\" ng-model=\"targetCPUInput.percent\" pattern=\"\\d*\" select-on-focus aria-describedby=\"target-cpu-help\">\n" +
+    "<input type=\"number\" class=\"form-control\" min=\"1\" name=\"targetCPU\" ng-model=\"autoscaling.targetCPU\" pattern=\"\\d*\" select-on-focus aria-describedby=\"target-cpu-help\">\n" +
     "<span class=\"input-group-addon\">%</span>\n" +
     "</div>\n" +
     "<div id=\"target-cpu-help\" class=\"help-block\">\n" +
-    "The percentage of the CPU\n" +
-    "<span ng-if=\"isRequestCalculated\">limit</span>\n" +
-    "<span ng-if=\"!isRequestCalculated\">request</span>\n" +
-    "that each pod should ideally be using. Pods will be added or removed periodically when CPU usage exceeds or drops below this target value.\n" +
-    "<span ng-if=\"defaultTargetCPUDisplayValue\">Defaults to {{defaultTargetCPUDisplayValue}}%.</span>\n" +
+    "The percentage of the CPU request that each pod should ideally be using. Pods will be added or removed periodically when CPU usage exceeds or drops below this target value. If not specified, a default autoscaling policy will be used.\n" +
     "</div>\n" +
     "<div class=\"learn-more-block\">\n" +
     "<a href=\"{{'compute_resources' | helpLink}}\" target=\"_blank\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
@@ -9478,15 +9455,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"showCPURequestWarning\" class=\"alert alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Warning:</span>\n" +
-    "This {{targetKind | humanizeKind}} does not have any containers with a CPU\n" +
-    "<span ng-if=\"'cpu' | isRequestCalculated : project\">limit</span>\n" +
-    "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">request</span>\n" +
-    "set. Autoscaling will not work without a CPU\n" +
-    "<span ng-if=\"'cpu' | isRequestCalculated : project\">limit.</span>\n" +
-    "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">request.</span>\n" +
+    "This {{targetKind | humanizeKind}} does not have any containers with a CPU request set. Autoscaling will not work without a CPU request.\n" +
     "</div>\n" +
     "<fieldset ng-disabled=\"disableInputs\" class=\"gutter-top\">\n" +
-    "<osc-autoscaling model=\"autoscaling\" project=\"project\" show-name-input=\"true\" name-read-only=\"kind === 'HorizontalPodAutoscaler'\">\n" +
+    "<osc-autoscaling model=\"autoscaling\" show-name-input=\"true\" name-read-only=\"kind === 'HorizontalPodAutoscaler'\">\n" +
     "</osc-autoscaling>\n" +
     "<label-editor labels=\"labels\" expand=\"true\" can-toggle=\"false\"></label-editor>\n" +
     "<div class=\"buttons gutter-top gutter-bottom\">\n" +
@@ -12318,7 +12290,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "            'stacked-template': row.state.breakpoint !== 'lg'\n" +
     "        }\">\n" +
     "<div ng-if=\"row.previous\" class=\"previous-donut\">\n" +
-    "<deployment-donut rc=\"row.previous\" deployment-config=\"row.apiObject\" pods=\"row.getPods(row.previous)\" hpa=\"row.hpa\" limit-ranges=\"row.state.limitRanges\" project=\"row.state.project\" quotas=\"row.state.quotas\" cluster-quotas=\"row.state.clusterQuotas\" scalable=\"false\">\n" +
+    "<deployment-donut rc=\"row.previous\" deployment-config=\"row.apiObject\" pods=\"row.getPods(row.previous)\" hpa=\"row.hpa\" limit-ranges=\"row.state.limitRanges\" quotas=\"row.state.quotas\" cluster-quotas=\"row.state.clusterQuotas\" scalable=\"false\">\n" +
     "</deployment-donut>\n" +
     "<div ng-if=\"row.previous\" class=\"deployment-connector\">\n" +
     "<div class=\"deployment-connector-arrow\" aria-hidden=\"true\">\n" +
@@ -12332,7 +12304,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</div>\n" +
     "<div ng-if=\"row.apiObject.kind !== 'Pod'\">\n" +
-    "<deployment-donut rc=\"row.current\" deployment-config=\"row.apiObject\" pods=\"row.getPods(row.current)\" hpa=\"row.hpa\" limit-ranges=\"row.state.limitRanges\" project=\"row.state.project\" quotas=\"row.state.quotas\" cluster-quotas=\"row.state.clusterQuotas\" scalable=\"row.isScalable()\">\n" +
+    "<deployment-donut rc=\"row.current\" deployment-config=\"row.apiObject\" pods=\"row.getPods(row.current)\" hpa=\"row.hpa\" limit-ranges=\"row.state.limitRanges\" quotas=\"row.state.quotas\" cluster-quotas=\"row.state.clusterQuotas\" scalable=\"row.isScalable()\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -13667,7 +13639,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<form ng-if=\"containers.length\" name=\"form\" class=\"set-limits-form\" novalidate>\n" +
     "<h1>Resource Limits: {{name}}</h1>\n" +
     "<div class=\"help-block\">\n" +
-    "Resource limits control how much <span ng-if=\"!hideCPU\">CPU and</span> memory a container will consume on a node.\n" +
+    "Resource limits control how much CPU and memory a container will consume on a node.\n" +
     "<div class=\"learn-more-block\" ng-class=\"{ 'gutter-bottom': showPodWarning }\">\n" +
     "<a href=\"{{'compute_resources' | helpLink}}\" target=\"_blank\">Learn More <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
     "</div>\n" +
@@ -13679,9 +13651,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<fieldset ng-disabled=\"disableInputs\">\n" +
     "<div ng-repeat=\"container in containers\" ng-init=\"formName = container.name + '-form'\">\n" +
     "<h2 ng-if=\"containers.length > 1\">Container {{container.name}}</h2>\n" +
-    "<edit-request-limit resources=\"container.resources\" type=\"cpu\" limit-ranges=\"limitRanges\" project=\"project\">\n" +
+    "<edit-request-limit resources=\"container.resources\" type=\"cpu\" limit-ranges=\"limitRanges\">\n" +
     "</edit-request-limit>\n" +
-    "<edit-request-limit resources=\"container.resources\" type=\"memory\" limit-ranges=\"limitRanges\" project=\"project\">\n" +
+    "<edit-request-limit resources=\"container.resources\" type=\"memory\" limit-ranges=\"limitRanges\">\n" +
     "</edit-request-limit>\n" +
     "</div>\n" +
     "<div ng-repeat=\"problem in cpuProblems\" class=\"has-error\">\n" +
