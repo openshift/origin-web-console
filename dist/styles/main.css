@@ -4627,7 +4627,6 @@ body.ios .nav-tabs li.active>a:before{content:''}
 .nav-tabs>li:first-child>a:before{left:0!important}
 .nav-tabs>li>a{border:0;line-height:1;margin-right:0;padding-bottom:10px;padding-top:10px}
 .nav-tabs>li>a:active:before,.nav-tabs>li>a:focus:before,.nav-tabs>li>a:hover:before{background:#bbb;bottom:-1px;content:"";display:block;height:2px;left:15px;position:absolute;right:15px}
-.hide-tabs .nav-tabs,registry-image-listing .listing-ct-toggle{display:none}
 .nav-tabs>li>.dropdown-menu{left:15px;margin-top:1px}
 .nav-tabs>li>.dropdown-menu.pull-right{left:auto;right:15px}
 .nav-tabs .open>a,.nav-tabs .open>a:focus,.nav-tabs .open>a:hover{background-color:transparent}
@@ -4639,6 +4638,7 @@ body.ios .nav-tabs li.active>a:before{content:''}
 }
 .resource-details h3{border-bottom:1px solid #eee;padding-bottom:10px}
 .resource-details overlay-panel h3{border-bottom:0;padding-bottom:0}
+.hide-tabs .nav-tabs{display:none}
 .empty-state-message{margin:40px auto 60px;max-width:600px;padding:0}
 .empty-state-message.loading{margin:0 auto;padding:40px 0 60px}
 .empty-state-message.loading h2{margin-top:0}
@@ -4650,9 +4650,18 @@ alerts+.empty-state-message{margin-top:90px}
 alerts+.empty-state-message{margin-top:130px}
 .empty-state-message.loading{margin-top:0;padding-top:170px}
 }
-@media (min-width:480px){.empty-state-message{padding-left:20px;padding-right:20px}
-}
 .empty-state-message .btn{margin:10px 0 20px}
+.empty-state-message .empty-state-message-main-action,.empty-state-message .empty-state-message-secondary-action{margin-top:20px}
+.empty-state-message .empty-state-message-main-action .btn{margin-bottom:0}
+@media (max-width:479px){.empty-state-message .empty-state-message-secondary-action{align-items:center;flex-direction:column}
+}
+.empty-state-message .empty-state-message-secondary-action .btn{margin-bottom:8px}
+@media (min-width:480px){.empty-state-message{padding-left:20px;padding-right:20px}
+.empty-state-message .empty-state-message-secondary-action .btn{margin-right:5px}
+.empty-state-message .empty-state-message-secondary-action .btn:last-of-type{margin-right:0}
+}
+.empty-state-message .empty-state-message-main-action,.empty-state-message .empty-state-message-secondary-action{display:flex;justify-content:center}
+.empty-state-message .empty-state-message-main-action .btn,.empty-state-message .empty-state-message-secondary-action .btn{flex:0 1 auto;margin-top:0;min-width:33.333333%}
 .empty-state-message .h2,.empty-state-message h2{line-height:1.4}
 mark{padding:0;background-color:rgba(252,248,160,.5)}
 .ui-select-choices-row.active>span mark{background-color:rgba(252,248,160,.75)}
@@ -4667,6 +4676,7 @@ mark{padding:0;background-color:rgba(252,248,160,.5)}
 .deployment-config-summary.gutter-bottom-2x{padding-bottom:40px}
 registry-image-pull{margin-bottom:20px}
 registry-imagestream-push{margin-top:40px}
+registry-image-listing .listing-ct-toggle{display:none}
 registry-image-listing .registry-image-tag{max-width:115px}
 registry-image-listing table{width:100%}
 registry-image-body dt:after,registry-image-config dt:after,registry-image-meta dt:after,registry-imagestream-body dt:after,registry-imagestream-meta dt:after{content:':'}
@@ -5770,6 +5780,16 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 }
 .log-header .log-actions .btn-link,.log-view{padding:0}
 .chromeless .log-loading-msg .btn{margin:10px 0 20px}
+.chromeless .log-loading-msg .empty-state-message-main-action,.chromeless .log-loading-msg .empty-state-message-secondary-action{margin-top:20px}
+.chromeless .log-loading-msg .empty-state-message-main-action .btn{margin-bottom:0}
+@media (max-width:479px){.chromeless .log-loading-msg .empty-state-message-secondary-action{align-items:center;flex-direction:column}
+}
+.chromeless .log-loading-msg .empty-state-message-secondary-action .btn{margin-bottom:8px}
+@media (min-width:480px){.chromeless .log-loading-msg .empty-state-message-secondary-action .btn{margin-right:5px}
+.chromeless .log-loading-msg .empty-state-message-secondary-action .btn:last-of-type{margin-right:0}
+}
+.chromeless .log-loading-msg .empty-state-message-main-action,.chromeless .log-loading-msg .empty-state-message-secondary-action{display:flex;justify-content:center}
+.chromeless .log-loading-msg .empty-state-message-main-action .btn,.chromeless .log-loading-msg .empty-state-message-secondary-action .btn{flex:0 1 auto;margin-top:0;min-width:33.333333%}
 .chromeless .log-loading-msg .h2,.chromeless .log-loading-msg h2{line-height:1.4}
 .log-title{margin-top:0}
 .log-header{margin-bottom:3px}
