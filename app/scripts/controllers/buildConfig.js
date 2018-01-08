@@ -98,6 +98,7 @@ angular.module('openshiftConsole')
       NotificationsService.hideNotification("save-bc-env-error");
       $scope.envVars = _.filter($scope.envVars, 'name');
       buildStrategy($scope.updatedBuildConfig).env = keyValueEditorUtils.compactEntries(angular.copy($scope.envVars));
+      $scope.forms.bcEnvVars.$setPristine();
       DataService
         .update($scope.buildConfigsVersion, $routeParams.buildconfig, $scope.updatedBuildConfig, $scope.projectContext)
         .then(function success() {
@@ -105,8 +106,8 @@ angular.module('openshiftConsole')
             type: "success",
             message: "Environment variables for build config " + $scope.buildConfigName + " were successfully updated."
           });
-          $scope.forms.bcEnvVars.$setPristine();
         }, function error(e) {
+          $scope.forms.bcEnvVars.$setDirty();
           NotificationsService.addNotification({
             id: "save-bc-env-error",
             type: "error",

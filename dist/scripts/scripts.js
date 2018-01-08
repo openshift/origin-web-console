@@ -5451,13 +5451,13 @@ e.updatedBuildConfig = angular.copy(t), e.envVars = f(e.updatedBuildConfig).env 
 e.compareTriggers = function(e, t) {
 return _.isNumber(e.value) ? -1 : "ConfigChange" === e.value ? -1 : "ConfigChange" === t.value ? 1 : "ImageChange" === e.value ? -1 : "ImageChange" === t.value ? 1 : e.value.localeCompare(t.value);
 }, e.saveEnvVars = function() {
-l.hideNotification("save-bc-env-error"), e.envVars = _.filter(e.envVars, "name"), f(e.updatedBuildConfig).env = m.compactEntries(angular.copy(e.envVars)), i.update(e.buildConfigsVersion, n.buildconfig, e.updatedBuildConfig, e.projectContext).then(function() {
+l.hideNotification("save-bc-env-error"), e.envVars = _.filter(e.envVars, "name"), f(e.updatedBuildConfig).env = m.compactEntries(angular.copy(e.envVars)), e.forms.bcEnvVars.$setPristine(), i.update(e.buildConfigsVersion, n.buildconfig, e.updatedBuildConfig, e.projectContext).then(function() {
 l.addNotification({
 type: "success",
 message: "Environment variables for build config " + e.buildConfigName + " were successfully updated."
-}), e.forms.bcEnvVars.$setPristine();
+});
 }, function(n) {
-l.addNotification({
+e.forms.bcEnvVars.$setDirty(), l.addNotification({
 id: "save-bc-env-error",
 type: "error",
 message: "An error occurred updating environment variables for build config " + e.buildConfigName + ".",
