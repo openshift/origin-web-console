@@ -9770,6 +9770,7 @@ p.projectNameTaken = !1;
 var R = function(e) {
 r.open({
 animation: !0,
+backdrop: "static",
 templateUrl: "views/modals/confirm.html",
 controller: "ConfirmModalController",
 resolve: {
@@ -13216,6 +13217,7 @@ template: v.template
 }, C = function(e) {
 r.open({
 animation: !0,
+backdrop: "static",
 templateUrl: "views/modals/confirm.html",
 controller: "ConfirmModalController",
 resolve: {
