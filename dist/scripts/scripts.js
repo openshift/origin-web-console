@@ -701,6 +701,12 @@ group: ""
 resource: "serviceaccounts",
 group: ""
 }, {
+resource: "servicebindings",
+group: "servicecatalog.k8s.io"
+}, {
+resource: "serviceinstances",
+group: "servicecatalog.k8s.io"
+}, {
 resource: "services",
 group: ""
 }, {
