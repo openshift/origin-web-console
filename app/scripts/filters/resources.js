@@ -172,16 +172,30 @@ angular.module('openshiftConsole')
       return null;
     };
   })
-  .filter('webhookURL', function(DataService) {
-    return function(buildConfig, type, secret, project) {
-      return DataService.url({
-        // arbitrarily many subresources can be included
-        // url encoding of the segments is handled by the url() function
-        // subresource segments cannot contain '/'
-        resource: "buildconfigs/webhooks/" + secret + "/" + type.toLowerCase(),
-        name: buildConfig,
-        namespace: project
-      });
+  .filter('webhookURL', function(DataService, SecretsService) {
+    return function(buildConfig, type, secret, project, webhookSecrets) {
+      secret = SecretsService.getWebhookSecretValue(secret, webhookSecrets);
+      if (secret) {
+        return DataService.url({
+          // arbitrarily many subresources can be included
+          // url encoding of the segments is handled by the url() function
+          // subresource segments cannot contain '/'
+          resource: "buildconfigs/webhooks/" + encodeURIComponent(secret) + "/" + encodeURIComponent(type.toLowerCase()),
+          name: buildConfig,
+          namespace: project
+        });
+      } else {
+        // In case user wont have permissions to list Secrets, an incomplaete URL will be build, similar to the one from CLI:
+        //
+        // https://127.0.0.1:8443/apis/build.openshift.io/v1/namespaces/myproject/buildconfigs/test-build/webhooks/<secret>/github
+        // 
+        var webhookURL = DataService.url({
+          resource: "buildconfigs/webhooks/",
+          name: buildConfig,
+          namespace: project
+        });
+        return webhookURL + "<secret>/" + type.toLowerCase();
+      }
     };
   })
   .filter('isWebRoute', function(routeHostFilter) {

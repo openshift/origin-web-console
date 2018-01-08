@@ -4487,6 +4487,8 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .static-form-value-large .small,.static-form-value-large small{font-weight:400;line-height:1;color:#9c9c9c;font-size:65%}
 .pod-template-block .pod-template .pod-template-key,.weight-slider-values .service-name{font-weight:600}
 .clear-env-changes-link{vertical-align:-2px}
+.copy-webhook-url{display:inline-flex}
+.copy-webhook-url .webhook-secrets-warning{cursor:help;font-size:15px;padding:5px}
 copy-to-clipboard .input-group.limit-width{max-width:300px}
 .copy-to-clipboard input.form-control[readonly]{background-color:#fff;color:#363636}
 .jenkinsfile-examples .copy-to-clipboard{margin-top:3px}
@@ -4787,11 +4789,11 @@ label.checkbox{font-weight:400}
 .tasks .task-content .task-info{margin-left:45px}
 .tasks .task-content .task-title{margin-right:10px}
 .tasks .task-content .task-links{font-size:13px;font-weight:300;white-space:nowrap}
-.k8s-label:before,.list-view-pf .list-group-item-expandable .list-group-item-heading,code{white-space:normal}
 .tasks .task-expanded-details{margin-top:20px}
 .tasks .task-expanded-details .alert{margin-bottom:7px}
 .btn-group-xs>.btn,.btn-xs{padding:0 4px}
 .btn-group-lg>.btn,.btn-lg{line-height:1.334}
+code{white-space:normal}
 .nowrap,.truncate{white-space:nowrap}
 div.code,pre.code{border:none;border-left:2px solid #ccc}
 abbr[data-original-title],abbr[title]{text-decoration:none}
@@ -4805,14 +4807,16 @@ abbr[data-original-title],abbr[title]{text-decoration:none}
 .gutter-bottom.gutter-bottom-2x{padding-bottom:40px}
 select:invalid{box-shadow:none}
 .truncate{overflow:hidden;text-overflow:ellipsis}
+.k8s-label:before,.list-view-pf .list-group-item-expandable .list-group-item-heading{white-space:normal}
 .well h1:first-child,.well h2:first-child,.well h3:first-child,.well h4:first-child,.well h5:first-child{margin:5px 0 15px}
 .spinner.spinner-xs{height:12px;width:12px}
 .spinner.spinner-inverse{border-color:rgba(0,153,211,.25);border-top-color:rgba(0,153,211,.75)}
 .attention-message{border:1px solid #228bc0;position:absolute;left:50%;margin-top:100px;transform:translateX(-50%);padding:1em 1em 2em;min-width:85%}
+.modal-resource-action,.short-id{background-color:#f1f1f1}
 .attention-message h1,.attention-message p{text-align:center}
 .attention-message p{max-width:70em;margin:auto}
 .actions-dropdown-btn,.alert .close{margin-left:5px}
-.short-id{background-color:#f1f1f1;color:#666}
+.short-id{color:#666}
 .input-number{width:60px}
 .alert{margin-bottom:14px;margin-top:7px}
 .alert.toast-pf{margin-top:0}
@@ -4838,7 +4842,6 @@ a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;te
 .contains-actions .dropdown .dropdown-menu.dropdown-menu-right{right:-4px}
 }
 .header-actions{font-size:91%;margin-left:5px}
-.modal-resource-action{background-color:#f1f1f1}
 .modal-resource-action h1{font-size:21px;font-weight:500;margin-bottom:20px;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .modal-resource-action p{font-size:14px}
 .modal-resource-action .help-block{margin-top:0px;margin-bottom:10px}
@@ -4856,12 +4859,12 @@ a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;te
 .edit-form .labels .form-group{width:44%}
 .edit-form .labels .form-group .form-control{width:100%}
 .edit-form .checkbox{margin:10px 0}
-.edit-form .select-webhook-type{width:300px}
 .edit-form .add-webhook{padding-bottom:10px;padding-top:5px}
-.edit-form .trigger-info{margin:10px 0px}
-.edit-form .trigger-info .trigger-url{display:inline-block;vertical-align:middle}
-.edit-form .trigger-actions{display:inline-block;margin-left:5px}
-.edit-form .trigger-actions .action-icon,.edit-form .trigger-actions .action-icon:hover{color:#4d5258}
+.edit-form .add-webhook .add-webhook-row{display:table;margin-bottom:5px;margin-top:15px;padding-right:25px;position:relative;table-layout:fixed;width:100%}
+.edit-form .add-webhook .add-webhook-row .remove-webhook-trigger-action{position:absolute;right:0}
+.edit-form .add-webhook .add-webhook-row .remove-webhook-trigger-action .btn-remove{padding:5px 7px}
+.edit-form .add-webhook .add-webhook-row .select-secret-ref,.edit-form .add-webhook .add-webhook-row .select-webhook-type{float:left;margin-bottom:0;padding-right:5px;width:50%}
+.edit-form .add-webhook .add-webhook-action-btns{margin-top:15px}
 .edit-form .section{padding-bottom:5px}
 @media (max-width:768px){.edit-form .trigger-url{max-width:90%}
 .edit-form .labels .form-group{width:100%}

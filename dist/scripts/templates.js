@@ -1881,28 +1881,28 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Bitbucket Webhook URL:\n" +
     "</dt>\n" +
     "<dd>\n" +
-    "<copy-to-clipboard clipboard-text=\"buildConfig.metadata.name | webhookURL : trigger.type : trigger.bitbucket.secret : project.metadata.name\"></copy-to-clipboard>\n" +
+    "<copy-webhook-url build-config-name=\"buildConfig.metadata.name\" trigger-type=\"trigger.type\" project-name=\"project.metadata.name\" secret=\"trigger.bitbucket\" webhook-secrets=\"webhookSecrets\"></copy-webhook-url>\n" +
     "</dd>\n" +
     "</div>\n" +
     "<div ng-switch-when=\"GitHub\">\n" +
     "<dt>GitHub Webhook URL:\n" +
     "</dt>\n" +
     "<dd>\n" +
-    "<copy-to-clipboard clipboard-text=\"buildConfig.metadata.name | webhookURL : trigger.type : trigger.github.secret : project.metadata.name\"></copy-to-clipboard>\n" +
+    "<copy-webhook-url build-config-name=\"buildConfig.metadata.name\" trigger-type=\"trigger.type\" project-name=\"project.metadata.name\" secret=\"trigger.github\" webhook-secrets=\"webhookSecrets\"></copy-webhook-url>\n" +
     "</dd>\n" +
     "</div>\n" +
     "<div ng-switch-when=\"GitLab\">\n" +
     "<dt>GitLab Webhook URL:\n" +
     "</dt>\n" +
     "<dd>\n" +
-    "<copy-to-clipboard clipboard-text=\"buildConfig.metadata.name | webhookURL : trigger.type : trigger.gitlab.secret : project.metadata.name\"></copy-to-clipboard>\n" +
+    "<copy-webhook-url build-config-name=\"buildConfig.metadata.name\" trigger-type=\"trigger.type\" project-name=\"project.metadata.name\" secret=\"trigger.gitlab\" webhook-secrets=\"webhookSecrets\"></copy-webhook-url>\n" +
     "</dd>\n" +
     "</div>\n" +
     "<div ng-switch-when=\"Generic\">\n" +
     "<dt>Generic Webhook URL:\n" +
     "</dt>\n" +
     "<dd>\n" +
-    "<copy-to-clipboard clipboard-text=\"buildConfig.metadata.name | webhookURL : trigger.type : trigger.generic.secret : project.metadata.name\"></copy-to-clipboard>\n" +
+    "<copy-webhook-url build-config-name=\"buildConfig.metadata.name\" trigger-type=\"trigger.type\" project-name=\"project.metadata.name\" secret=\"trigger.generic\" webhook-secrets=\"webhookSecrets\"></copy-webhook-url>\n" +
     "</dd>\n" +
     "</div>\n" +
     "<div ng-switch-when=\"ImageChange\">\n" +
@@ -6065,9 +6065,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/create-secret.html',
     "<ng-form name=\"secretForm\" class=\"create-secret-form\">\n" +
-    "<div for=\"secretType\" ng-if=\"!type\" class=\"form-group mar-top-lg\">\n" +
-    "<label>Secret Type</label>\n" +
-    "<ui-select required ng-model=\"newSecret.type\" search-enabled=\"false\" ng-change=\"newSecret.authType = secretAuthTypeMap[newSecret.type].authTypes[0].id\">\n" +
+    "<div ng-if=\"!type\" class=\"form-group mar-top-lg\">\n" +
+    "<label for=\"secret-type\">Secret Type</label>\n" +
+    "<ui-select input-id=\"secret-type\" required ng-model=\"newSecret.type\" search-enabled=\"false\" ng-change=\"newSecret.authType = secretAuthTypeMap[newSecret.type].authTypes[0].id\">\n" +
     "<ui-select-match>{{$select.selected | upperFirst}} Secret</ui-select-match>\n" +
     "<ui-select-choices repeat=\"type in secretTypes\">\n" +
     "{{type | upperFirst}} Secret\n" +
@@ -6076,9 +6076,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"newSecret.type\">\n" +
     "<div class=\"form-group\">\n" +
-    "<label for=\"secretName\" class=\"required\">Secret Name</label>\n" +
+    "<label for=\"secret-name\" class=\"required\">Secret Name</label>\n" +
     "<span ng-class=\"{'has-error': nameTaken || (secretForm.secretName.$invalid && secretForm.secretName.$touched)}\">\n" +
-    "<input class=\"form-control\" id=\"secretName\" name=\"secretName\" ng-model=\"newSecret.data.secretName\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"secret-name-help\" ng-pattern=\"nameValidation.pattern\" ng-maxlength=\"nameValidation.maxlength\" ng-change=\"nameChanged()\" required>\n" +
+    "<input class=\"form-control\" id=\"secret-name\" name=\"secret-name\" ng-model=\"newSecret.data.secretName\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"secret-name-help\" ng-pattern=\"nameValidation.pattern\" ng-maxlength=\"nameValidation.maxlength\" ng-change=\"nameChanged()\" required>\n" +
     "</span>\n" +
     "<div class=\"has-error\" ng-show=\"nameTaken\">\n" +
     "<span class=\"help-block\">\n" +
@@ -6100,9 +6100,25 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Unique name of the new secret.\n" +
     "</div>\n" +
     "</div>\n" +
+    "<div ng-if=\"newSecret.type == 'webhook'\">\n" +
     "<div class=\"form-group\">\n" +
-    "<label for=\"authentificationType\">Authentication Type</label>\n" +
-    "<ui-select required ng-model=\"newSecret.authType\" search-enabled=\"false\">\n" +
+    "<label for=\"webhook-secret-key\" class=\"required\">Webhook Secret Key</label>\n" +
+    "<div class=\"input-group\">\n" +
+    "<input class=\"form-control\" id=\"webhook-secret-key\" name=\"webhook-secret-key\" ng-model=\"newSecret.data.webhookSecretKey\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"webhook-secret-key-help\" required=\"true\">\n" +
+    "<span class=\"input-group-btn\">\n" +
+    "<button type=\"button\" class=\"btn btn-default\" ng-click=\"generateWebhookSecretKey()\">Generate</button>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"help-block\" id=\"secret-name-help\">\n" +
+    "Value of the secret will be supplied when invoking the webhook.\n" +
+    "<a ng-href=\"{{'webhooks' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"newSecret.type != 'webhook'\">\n" +
+    "<div class=\"form-group\">\n" +
+    "<label for=\"authentification-type\">Authentication Type</label>\n" +
+    "<ui-select required input-id=\"authentification-type\" ng-model=\"newSecret.authType\" search-enabled=\"false\">\n" +
     "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"type.id as type in secretAuthTypeMap[newSecret.type].authTypes\">\n" +
     "{{type.label}}\n" +
@@ -6112,16 +6128,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"newSecret.authType === 'kubernetes.io/basic-auth'\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"username\">Username</label>\n" +
-    "<div>\n" +
     "<input class=\"form-control\" id=\"username\" name=\"username\" ng-model=\"newSecret.data.username\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"username-help\">\n" +
-    "</div>\n" +
     "<div class=\"help-block\" id=\"username-help\">\n" +
     "Optional username for Git authentication.\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\" ng-class=\"{ 'has-error' : secretForm.passwordToken.$invalid && secretForm.passwordToken.$touched }\">\n" +
-    "<label ng-class=\"{ required: !add.cacert && !add.gitconfig }\" for=\"passwordToken\">Password or Token</label>\n" +
-    "<input class=\"form-control\" id=\"passwordToken\" name=\"passwordToken\" ng-model=\"newSecret.data.passwordToken\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"password-token-help\" type=\"password\" ng-required=\"!add.cacert && !add.gitconfig\">\n" +
+    "<label ng-class=\"{ required: !add.cacert && !add.gitconfig }\" for=\"password-token\">Password or Token</label>\n" +
+    "<input class=\"form-control\" id=\"password-token\" name=\"password-token\" ng-model=\"newSecret.data.passwordToken\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"password-token-help\" type=\"password\" ng-required=\"!add.cacert && !add.gitconfig\">\n" +
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"secretForm.passwordToken.$error.required && secretForm.passwordToken.$touched\">\n" +
     "<div class=\"help-block\">\n" +
@@ -6143,13 +6157,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label class=\"required\" for=\"cacert\">CA Certificate File</label>\n" +
     "<osc-file-input id=\"cacert-file-input\" model=\"newSecret.data.cacert\" drop-zone-id=\"cacert\" help-text=\"Upload your ca.crt file.\" required=\"true\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
-    "          mode: 'txt',\n" +
-    "          theme: 'eclipse',\n" +
-    "          rendererOptions: {\n" +
-    "            fadeFoldWidgets: true,\n" +
-    "            showPrintMargin: false\n" +
-    "          }\n" +
-    "        }\" ng-model=\"newSecret.data.cacert\" class=\"create-secret-editor ace-bordered\" id=\"cacert-editor\" required></div>\n" +
+    "            mode: 'txt',\n" +
+    "            theme: 'eclipse',\n" +
+    "            rendererOptions: {\n" +
+    "              fadeFoldWidgets: true,\n" +
+    "              showPrintMargin: false\n" +
+    "            }\n" +
+    "          }\" ng-model=\"newSecret.data.cacert\" class=\"create-secret-editor ace-bordered\" id=\"cacert-editor\" required></div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"newSecret.authType === 'kubernetes.io/ssh-auth'\">\n" +
@@ -6157,12 +6171,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label for=\"privateKey\" class=\"required\">SSH Private Key</label>\n" +
     "<osc-file-input id=\"private-key-file-input\" model=\"newSecret.data.privateKey\" drop-zone-id=\"private-key\" help-text=\"Upload your private SSH key file.\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
-    "          theme: 'eclipse',\n" +
-    "          rendererOptions: {\n" +
-    "            fadeFoldWidgets: true,\n" +
-    "            showPrintMargin: false\n" +
-    "          }\n" +
-    "        }\" ng-model=\"newSecret.data.privateKey\" class=\"create-secret-editor ace-bordered\" id=\"private-key-editor\" required></div>\n" +
+    "            theme: 'eclipse',\n" +
+    "            rendererOptions: {\n" +
+    "              fadeFoldWidgets: true,\n" +
+    "              showPrintMargin: false\n" +
+    "            }\n" +
+    "          }\" ng-model=\"newSecret.data.privateKey\" class=\"create-secret-editor ace-bordered\" id=\"private-key-editor\" required></div>\n" +
     "<div class=\"help-block\">\n" +
     "Private SSH key file for Git authentication.\n" +
     "</div>\n" +
@@ -6181,20 +6195,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label class=\"required\" for=\"gitconfig\">Git Configuration File</label>\n" +
     "<osc-file-input id=\"gitconfig-file-input\" model=\"newSecret.data.gitconfig\" drop-zone-id=\"gitconfig\" help-text=\"Upload your .gitconfig or  file.\" required=\"true\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
-    "          mode: 'ini',\n" +
-    "          theme: 'eclipse',\n" +
-    "          rendererOptions: {\n" +
-    "            fadeFoldWidgets: true,\n" +
-    "            showPrintMargin: false\n" +
-    "          }\n" +
-    "        }\" ng-model=\"newSecret.data.gitconfig\" class=\"create-secret-editor ace-bordered\" id=\"gitconfig-editor\" required></div>\n" +
+    "            mode: 'ini',\n" +
+    "            theme: 'eclipse',\n" +
+    "            rendererOptions: {\n" +
+    "              fadeFoldWidgets: true,\n" +
+    "              showPrintMargin: false\n" +
+    "            }\n" +
+    "          }\" ng-model=\"newSecret.data.gitconfig\" class=\"create-secret-editor ace-bordered\" id=\"gitconfig-editor\" required></div>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"newSecret.authType === 'kubernetes.io/dockercfg'\">\n" +
     "<div class=\"form-group\" ng-class=\"{ 'has-error' : secretForm.dockerServer.$invalid && secretForm.dockerServer.$touched }\">\n" +
-    "<label for=\"dockerServer\" class=\"required\">Image Registry Server Address</label>\n" +
+    "<label for=\"docker-server\" class=\"required\">Image Registry Server Address</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" id=\"dockerServer\" name=\"dockerServer\" ng-model=\"newSecret.data.dockerServer\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" required>\n" +
+    "<input class=\"form-control\" id=\"docker-server\" name=\"docker-server\" ng-model=\"newSecret.data.dockerServer\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" required>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-show=\"secretForm.dockerServer.$error.required && secretForm.dockerServer.$touched\" class=\"has-error\">\n" +
@@ -6203,9 +6217,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\" ng-class=\"{ 'has-error' : secretForm.dockerUsername.$invalid && secretForm.dockerUsername.$touched }\">\n" +
-    "<label for=\"dockerUsername\" class=\"required\">Username</label>\n" +
+    "<label for=\"docker-username\" class=\"required\">Username</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" id=\"dockerUsername\" name=\"dockerUsername\" ng-model=\"newSecret.data.dockerUsername\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" required>\n" +
+    "<input class=\"form-control\" id=\"docker-username\" name=\"docker-username\" ng-model=\"newSecret.data.dockerUsername\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" required>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-show=\"secretForm.dockerUsername.$error.required && secretForm.dockerUsername.$touched\" class=\"has-error\">\n" +
@@ -6214,9 +6228,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\" ng-class=\"{ 'has-error' : secretForm.dockerPassword.$invalid && secretForm.dockerPassword.$touched }\">\n" +
-    "<label for=\"dockerPassword\" class=\"required\">Password</label>\n" +
+    "<label for=\"docker-password\" class=\"required\">Password</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" id=\"dockerPassword\" name=\"dockerPassword\" ng-model=\"newSecret.data.dockerPassword\" type=\"password\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" required>\n" +
+    "<input class=\"form-control\" id=\"docker-password\" name=\"docker-password\" ng-model=\"newSecret.data.dockerPassword\" type=\"password\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" required>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-show=\"secretForm.dockerPassword.$error.required && secretForm.dockerPassword.$touched\" class=\"has-error\">\n" +
@@ -6225,9 +6239,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\" ng-class=\"{ 'has-error' : secretForm.dockerEmail.$invalid && secretForm.dockerEmail.$touched }\">\n" +
-    "<label for=\"dockerEmail\" class=\"required\">Email</label>\n" +
+    "<label for=\"docker-email\" class=\"required\">Email</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" type=\"email\" id=\"dockerEmail\" name=\"dockerEmail\" ng-model=\"newSecret.data.dockerMail\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" required>\n" +
+    "<input class=\"form-control\" type=\"email\" id=\"docker-email\" name=\"docker-email\" ng-model=\"newSecret.data.dockerMail\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" required>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"secretForm.dockerEmail.$invalid\">\n" +
@@ -6244,14 +6258,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label for=\"dockerConfig\" class=\"required\">Configuration File</label>\n" +
     "<osc-file-input id=\"dockercfg-file-input\" model=\"newSecret.data.dockerConfig\" drop-zone-id=\"docker-config\" help-text=\"Upload a .dockercfg or .docker/config.json file\" required=\"true\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
-    "          mode: 'json',\n" +
-    "          theme: 'eclipse',\n" +
-    "          onChange: aceChanged,\n" +
-    "          rendererOptions: {\n" +
-    "            fadeFoldWidgets: true,\n" +
-    "            showPrintMargin: false\n" +
-    "          }\n" +
-    "        }\" ng-model=\"newSecret.data.dockerConfig\" class=\"create-secret-editor ace-bordered\" id=\"dockerconfig-editor\" required></div>\n" +
+    "            mode: 'json',\n" +
+    "            theme: 'eclipse',\n" +
+    "            onChange: aceChanged,\n" +
+    "            rendererOptions: {\n" +
+    "              fadeFoldWidgets: true,\n" +
+    "              showPrintMargin: false\n" +
+    "            }\n" +
+    "          }\" ng-model=\"newSecret.data.dockerConfig\" class=\"create-secret-editor ace-bordered\" id=\"dockerconfig-editor\" required></div>\n" +
     "<div class=\"help-block\">\n" +
     "File with credentials and other configuration for connecting to a secured image registry.\n" +
     "</div>\n" +
@@ -6281,6 +6295,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-bind-html=\"sa | highlight : $select.search\"></div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6957,41 +6972,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"\" role=\"button\" ng-if=\"hookParams\" ng-click=\"removeHook()\">Remove {{type | upperFirst}} Lifecycle Hook</a>\n" +
     "</span>\n" +
     "</ng-form>"
-  );
-
-
-  $templateCache.put('views/directives/edit-webhook-triggers.html',
-    "<div class=\"display-webhooks\">\n" +
-    "<h5>{{type}} Webhooks\n" +
-    "<span class=\"help action-inline\">\n" +
-    "<span class=\"sr-only\">{{typeInfo}}</span>\n" +
-    "<a href=\"\" aria-hidden=\"true\">\n" +
-    "<i class=\"pficon pficon-help\" data-toggle=\"tooltip\" aria-hidden=\"true\" data-original-title=\"{{typeInfo}}\"></i>\n" +
-    "</a>\n" +
-    "</span>\n" +
-    "</h5>\n" +
-    "<div ng-repeat=\"trigger in triggers\">\n" +
-    "<div class=\"trigger-info\">\n" +
-    "<span class=\"trigger-url\">\n" +
-    "<copy-to-clipboard is-disabled=\"trigger.disabled\" clipboard-text=\"bcName | webhookURL : trigger.data.type : trigger.data[type.toLowerCase()].secret : projectName\"></copy-to-clipboard>\n" +
-    "</span>\n" +
-    "<span class=\"visible-xs-inline trigger-actions\">\n" +
-    "<a href=\"\" ng-if=\"!trigger.disabled\" class=\"action-icon\" ng-click=\"trigger.disabled = true; form.$setDirty()\" role=\"button\">\n" +
-    "<span class=\"pficon pficon-close\" aria-hidden=\"true\" title=\"Remove\"></span>\n" +
-    "<span class=\"sr-only\">Remove</span>\n" +
-    "</a>\n" +
-    "<a href=\"\" ng-if=\"trigger.disabled\" class=\"action-icon\" ng-click=\"trigger.disabled = false\" role=\"button\">\n" +
-    "<span class=\"fa fa-repeat\" aria-hidden=\"true\" title=\"Undo\"></span>\n" +
-    "<span class=\"sr-only\">Undo</span>\n" +
-    "</a>\n" +
-    "</span>\n" +
-    "<span class=\"hidden-xs trigger-actions\">\n" +
-    "<a href=\"\" role=\"button\" ng-if=\"!trigger.disabled\" ng-click=\"trigger.disabled = true; form.$setDirty()\">Remove</a>\n" +
-    "<a href=\"\" role=\"button\" ng-if=\"trigger.disabled\" ng-click=\"trigger.disabled = false\">Undo</a>\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</div>"
   );
 
 
@@ -7897,7 +7877,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Your source does not appear to be a URL to a GitHub repository. If you have a GitHub repository that you want to trigger this build from then use the following payload URL and specifying a <i>Content type</i> of <code>application/json</code>:\n" +
     "</span>\n" +
     "</p>\n" +
-    "<copy-to-clipboard clipboard-text=\"$ctrl.createdBuildConfig.metadata.name | webhookURL : trigger.type : trigger.github.secret : $ctrl.projectName\"></copy-to-clipboard>\n" +
+    "<copy-to-clipboard clipboard-text=\"$ctrl.createdBuildConfig.metadata.name | webhookURL : trigger.type : trigger.github : $ctrl.projectName\"></copy-to-clipboard>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"$ctrl.parameters.all.length\">\n" +
@@ -9800,38 +9780,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dl class=\"dl-horizontal left\">\n" +
     "<div>\n" +
     "<div ng-if=\"sources.git\">\n" +
-    "<edit-webhook-triggers ng-if=\"triggers.githubWebhooks.length\" type=\"GitHub\" type-info=\"The GitHub source repository must be configured to use the webhook to trigger a build when source is committed.\" triggers=\"triggers.githubWebhooks\" form=\"form\" bc-name=\"buildConfig.metadata.name\" project-name=\"project.metadata.name\">\n" +
-    "</edit-webhook-triggers>\n" +
-    "<edit-webhook-triggers ng-if=\"triggers.genericWebhooks.length\" type=\"Generic\" type-info=\"A generic webhook can be triggered by any system capable of making a web request.\" triggers=\"triggers.genericWebhooks\" form=\"form\" bc-name=\"buildConfig.metadata.name\" project-name=\"project.metadata.name\">\n" +
-    "</edit-webhook-triggers>\n" +
-    "<edit-webhook-triggers ng-if=\"triggers.gitlabWebhooks.length\" type=\"GitLab\" type-info=\"The GitLab source repository must be configured to use the webhook to trigger a build when source is committed.\" triggers=\"triggers.gitlabWebhooks\" form=\"form\" bc-name=\"buildConfig.metadata.name\" project-name=\"project.metadata.name\">\n" +
-    "</edit-webhook-triggers>\n" +
-    "<edit-webhook-triggers ng-if=\"triggers.bitbucketWebhooks.length\" type=\"Bitbucket\" type-info=\"The Bitbucket source repository must be configured to use the webhook to trigger a build when source is committed.\" triggers=\"triggers.bitbucketWebhooks\" form=\"form\" bc-name=\"buildConfig.metadata.name\" project-name=\"project.metadata.name\">\n" +
-    "</edit-webhook-triggers>\n" +
-    "<div class=\"add-webhook\">\n" +
-    "<h5>Add Webhook</h5>\n" +
-    "<div class=\"trigger-info\">\n" +
-    "<span class=\"trigger-url\">\n" +
-    "<ui-select ng-model=\"createTriggerSelect.selectedType\" search-enabled=\"false\" title=\"Select a webhooke type\" class=\"select-webhook-type\" flex>\n" +
-    "<ui-select-match placeholder=\"Select a webhook type\">\n" +
-    "{{ $select.selected.label }}\n" +
-    "</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"option.label as option in createTriggerSelect.options\">\n" +
-    "{{ option.label }}\n" +
-    "</ui-select-choices>\n" +
-    "</ui-select>\n" +
-    "</span>\n" +
-    "<span class=\"visible-xs-inline trigger-actions\">\n" +
-    "<a href=\"\" ng-class=\"{disabled: !createTriggerSelect.selectedType}\" class=\"action-icon\" ng-click=\"addWebhookTrigger(createTriggerSelect.selectedType)\" role=\"button\">\n" +
-    "<span class=\"fa fa-plus\" aria-hidden=\"true\" title=\"Add\"></span>\n" +
-    "<span class=\"sr-only\">Add</span>\n" +
-    "</a>\n" +
-    "</span>\n" +
-    "<span class=\"hidden-xs trigger-actions\">\n" +
-    "<a href=\"\" ng-class=\"{disabled: !createTriggerSelect.selectedType}\" ng-click=\"addWebhookTrigger(createTriggerSelect.selectedType)\" role=\"button\">Add</a>\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "</div>\n" +
+    "<osc-webhook-triggers type=\"webhook\" form=\"form\" webhook-secrets=\"webhookSecrets\" webhook-triggers=\"triggers.webhookTriggers\" namespace=\"projectName\">\n" +
+    "</osc-webhook-triggers>\n" +
     "</div>\n" +
     "\n" +
     "\n" +
@@ -13937,6 +13887,67 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>"
+  );
+
+
+  $templateCache.put('components/copy-webhook-url/copy-webhook-url.html',
+    "<div class=\"copy-webhook-url\">\n" +
+    "<copy-to-clipboard clipboard-text=\"$ctrl.buildConfigName | webhookURL : $ctrl.triggerType : $ctrl.secret : $ctrl.projectName : $ctrl.webhookSecrets\"></copy-to-clipboard>\n" +
+    "<span ng-if=\"$ctrl.showSecretsWarning()\" class=\"pficon pficon-warning-triangle-o webhook-secrets-warning\" data-toggle=\"tooltip\" data-trigger=\"hover\" title=\"The URL for this webhook contains secret information that you do not have access to.\" aria-hidden=\"true\">\n" +
+    "</span>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('components/osc-webhook-triggers/osc-webhook-triggers.html',
+    "<ng-form name=\"secretsForm\" class=\"add-webhook\">\n" +
+    "<div ng-repeat=\"trigger in $ctrl.webhookTriggers\">\n" +
+    "{{trigger}}\n" +
+    "<div class=\"add-webhook-row\">\n" +
+    "<ui-select ng-model=\"trigger.data.type\" ng-disabled=\"isDeprecated(trigger)\" on-select=\"$ctrl.triggerTypeChange(trigger)\" search-enabled=\"false\" title=\"Select a webhook type\" class=\"select-webhook-type\" flex>\n" +
+    "<ui-select-match placeholder=\"Webhook type\">\n" +
+    "{{ $select.selected.label }}\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"option.label as option in $ctrl.webhookTypesOptions\">\n" +
+    "{{ option.label }}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<ui-select ng-if=\"!$ctrl.isDeprecated(trigger)\" ng-model=\"trigger.data[trigger.data.type.toLowerCase()].secretReference.name\" ng-disabled=\"!trigger.data.type\" ng-required=\"trigger.data.type\" on-select=\"$ctrl.triggerSecretChange(trigger)\" title=\"Select a webhook secret reference\" class=\"select-secret-ref\" flex>\n" +
+    "<ui-select-match placeholder=\"Webhook secret reference\">\n" +
+    "{{ $select.selected.metadata.name }}\n" +
+    "</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"webhookSecret.metadata.name as webhookSecret in ($ctrl.webhookSecrets | filter : $select.search) track by (webhookSecret | uid)\">\n" +
+    "<div ng-bind-html=\"webhookSecret.metadata.name | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<div class=\"select-secret-ref deprecated-secret input-group\" ng-if=\"$ctrl.isDeprecated(trigger)\">\n" +
+    "<input ng-model=\"trigger.data[trigger.data.type.toLowerCase()].secret\" class=\"form-control\" type=\"{{trigger.secretInputType}}\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" select-on-focus disabled=\"disabled\">\n" +
+    "<div class=\"input-group-btn\">\n" +
+    "<button type=\"button\" class=\"btn btn-default toggle\" title=\"Toggle Token Visibility\" aria-label=\"Toggle Token Visibility\" ng-click=\"$ctrl.toggleSecretInputType(trigger)\">\n" +
+    "<span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Toggle Token Visibility</span>\n" +
+    "</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"remove-webhook-trigger-action\">\n" +
+    "<button ng-click=\"$ctrl.removeWebhookTrigger(trigger, $index)\" type=\"button\" class=\"btn-remove close\" aria-hidden=\"true\">\n" +
+    "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Remove Webhook trigger</span>\n" +
+    "</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"has-warning\" ng-if=\"trigger.isDuplicate\">\n" +
+    "<span class=\"help-block\">A {{trigger.data.type}} webhook trigger referencing the secret {{(trigger | getWebhookSecretData).secretReference.name}} already exists.</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"add-webhook-action-btns\">\n" +
+    "<button class=\"btn btn-link\" type=\"button\" ng-click=\"$ctrl.checkLastAndAddNew()\">Add Webhook</button>\n" +
+    "<span ng-if=\"$ctrl.secretsVersion | canI : 'create'\">\n" +
+    "<span class=\"action-divider\" aria-hidden=\"true\"> | </span>\n" +
+    "<button class=\"btn btn-link\" href=\"\" type=\"button\" ng-click=\"$ctrl.openCreateWebhookSecretModal()\">Create New Webhook Secret</button>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</ng-form>"
   );
 
 }]);
