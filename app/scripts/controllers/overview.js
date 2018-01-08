@@ -1343,6 +1343,9 @@ function OverviewController($scope,
       // Get the service class for this instance. Returns a promise.
       fetchServiceClass = function(instance) {
         var serviceClassName = ServiceInstancesService.getServiceClassNameForInstance(instance);
+        if (!serviceClassName) {
+          return $q.when();
+        }
 
         var serviceClass = _.get(state, ['serviceClasses', serviceClassName]);
         if (serviceClass) {
@@ -1365,6 +1368,9 @@ function OverviewController($scope,
       // Get the service plan for this instance. Returns a promise.
       fetchServicePlan = function(instance) {
         var servicePlanName = ServiceInstancesService.getServicePlanNameForInstance(instance);
+        if (!servicePlanName) {
+          return $q.when();
+        }
 
         // Check if we already have the service plan or if a request is already in flight.
         var servicePlan = _.get(state, ['servicePlans', servicePlanName]);
