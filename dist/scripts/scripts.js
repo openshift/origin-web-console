@@ -439,14 +439,18 @@ pollInterval: 6e4
 }));
 var o, i, s = {}, c = {};
 u.SERVICE_CATALOG_ENABLED && A(G, "watch") && (o = function(e) {
-var t = E.getServiceClassNameForInstance(e), r = _.get(te, [ "serviceClasses", t ]);
+var t = E.getServiceClassNameForInstance(e);
+if (!t) return n.when();
+var r = _.get(te, [ "serviceClasses", t ]);
 return r ? n.when(r) : (s[t] || (s[t] = m.get(H, t, {}).then(function(e) {
 return te.serviceClasses[t] = e, e;
 }).finally(function() {
 delete c[t];
 })), s[t]);
 }, i = function(e) {
-var t = E.getServicePlanNameForInstance(e), r = _.get(te, [ "servicePlans", t ]);
+var t = E.getServicePlanNameForInstance(e);
+if (!t) return n.when();
+var r = _.get(te, [ "servicePlans", t ]);
 return r ? n.when(r) : (c[t] || (c[t] = m.get(K, t, {}).then(function(e) {
 return te.servicePlans[t] = e, e;
 }).finally(function() {
