@@ -342,7 +342,7 @@
         rootScopeWatches.push($rootScope.$on('NotificationDrawerWrapper.clear', function(event, notification) {
           EventsService.markCleared(notification.uid);
           remove(notification);
-          drawer.countUnreadNotifications();
+          countUnreadNotifications();
         }));
       };
 
