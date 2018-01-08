@@ -278,7 +278,7 @@ angular.module("openshiftConsole")
       "limits.memory"
     ];
 
-    var getNotificaitonMessage = function(used, usedValue, hard, hardValue, quotaKey) {
+    var getNotificationMessage = function(used, usedValue, hard, hardValue, quotaKey) {
       // Note: This function returns HTML markup, not plain text
 
       var msgPrefix = "Your project is " + (hardValue < usedValue ? 'over' : 'at') + " quota. ";
@@ -323,7 +323,7 @@ angular.module("openshiftConsole")
               id: projectName + "/quota-limit-reached-" + quotaKey,
               namespace: projectName,
               type: (hardValue < usedValue ? 'warning' : 'info'),
-              message: getNotificaitonMessage(used, usedValue, hard, hardValue, quotaKey),
+              message: getNotificationMessage(used, usedValue, hard, hardValue, quotaKey),
               isHTML: true,
               skipToast: true,
               showInDrawer: true,
