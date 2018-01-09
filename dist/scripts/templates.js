@@ -11138,6 +11138,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/modals/logout.html',
+    "<div class=\"modal-resource-action inactivity-modal\">\n" +
+    "<form>\n" +
+    "<div class=\"modal-body\">\n" +
+    "<h1>Your session is about to expire due to inactivity.</h1>\n" +
+    "<h2>You will be logged out in <strong><time-remaining-from-now end-timestamp=\"endTimestamp\" countdown-duration=\"\"></time-remaining-from-now></strong> seconds.</h2>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\">\n" +
+    "<button class=\"btn btn-lg btn-default\" type=\"submit\" ng-click=\"logout();\">Log Out</button>\n" +
+    "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-click=\"cancel();\">Continue Session</button>\n" +
+    "</div>\n" +
+    "</form>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/modals/process-or-save-template.html',
     "<div class=\"modal-resource-action\">\n" +
     "<div class=\"modal-body\">\n" +
