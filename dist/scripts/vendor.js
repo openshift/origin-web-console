@@ -73437,6 +73437,11 @@ limitranges: {
 version: "v1",
 resource: "limitranges"
 },
+oauthaccesstokens: {
+group: "oauth.openshift.io",
+version: "v1",
+resource: "oauthaccesstokens"
+},
 pods: {
 version: "v1",
 resource: "pods"
@@ -74988,7 +74993,7 @@ var i = n.get("auth");
 return {
 logout: function(n, r) {
 if (i.log("DeleteTokenLogoutService.logout()", n, r), !r) return i.log("DeleteTokenLogoutService, no token, returning immediately"), e.when({});
-var o = {
+var o = t.get("APIService"), a = t.get("DataService"), s = o.getPreferredVersion("oauthaccesstokens"), l = {
 http: {
 auth: {
 token: r,
@@ -74996,7 +75001,7 @@ triggerLogin: !1
 }
 }
 };
-return t.get("DataService").delete("oauthaccesstokens", r, {}, o);
+return a.delete(s, r, {}, l);
 }
 };
 } ];
@@ -75223,8 +75228,8 @@ return u && u.update(e, "MODIFIED"), e;
 });
 },
 create: function(e, t, n) {
-var i = {
-apiVersion: "v1",
+var r = {
+apiVersion: i.toAPIVersion(f),
 kind: "ProjectRequest",
 metadata: {
 name: e
@@ -75232,7 +75237,7 @@ name: e
 displayName: t,
 description: n
 };
-return a.create(f, null, i, {}).then(function(e) {
+return a.create(f, null, r, {}).then(function(e) {
 return l.addProjectUID(e.metadata.uid), u && u.update(e, "ADDED"), e;
 });
 },
