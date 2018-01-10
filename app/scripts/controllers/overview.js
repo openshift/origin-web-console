@@ -15,6 +15,7 @@ angular.module('openshiftConsole').controller('OverviewController', [
   'Constants',
   'DataService',
   'DeploymentsService',
+  'HomePagePreferenceService',
   'HPAService',
   'HTMLService',
   'ImageStreamResolver',
@@ -47,6 +48,7 @@ function OverviewController($scope,
                             Constants,
                             DataService,
                             DeploymentsService,
+                            HomePagePreferenceService,
                             HPAService,
                             HTMLService,
                             ImageStreamResolver,
@@ -67,6 +69,8 @@ function OverviewController($scope,
   var DEFAULT_POLL_INTERVAL = 60 * 1000; // milliseconds
 
   $scope.projectName = $routeParams.project;
+  var isHomePage = $routeParams.isHomePage;
+
   overview.catalogLandingPageEnabled = !Constants.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
 
   // Filters used by this controller.
@@ -1185,7 +1189,8 @@ function OverviewController($scope,
   };
 
   var watches = [];
-  ProjectsService.get($routeParams.project).then(_.spread(function(project, context) {
+  var opts = isHomePage ? {skipErrorNotFound: true} : {};
+  ProjectsService.get($routeParams.project, opts).then(_.spread(function(project, context) {
     // Project must be set on `$scope` for the projects dropdown.
     state.project = $scope.project = project;
     state.context = context;
@@ -1439,5 +1444,10 @@ function OverviewController($scope,
       DataService.unwatchAll(watches);
       $(window).off('.overview');
     });
-  }));
+  }),function(e) {
+    if (isHomePage && _.get(e, 'notFound')) {
+      HomePagePreferenceService.notifyInvalidProjectHomePage($scope.projectName);
+      Navigate.toProjectList();
+    }
+  });
 }
