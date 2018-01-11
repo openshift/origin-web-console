@@ -9,7 +9,6 @@ angular.module("openshiftConsole")
                     Navigate,
                     NotificationsService) {
 
-    var buildsVersion = APIService.getPreferredVersion('builds');
     var buildConfigsInstantiateVersion = APIService.getPreferredVersion('buildconfigs/instantiate');
     var buildsCloneVersion = APIService.getPreferredVersion('builds/clone');
 
@@ -88,8 +87,10 @@ angular.module("openshiftConsole")
         namespace: build.metadata.namespace
       };
       var canceledBuild = angular.copy(build);
+      var rgv = APIService.objectToResourceGroupVersion(canceledBuild);
       canceledBuild.status.cancelled = true;
-      return DataService.update(buildsVersion, canceledBuild.metadata.name, canceledBuild, context).then(function() {
+
+      return DataService.update(rgv, canceledBuild.metadata.name, canceledBuild, context).then(function() {
         NotificationsService.addNotification({
           type: "success",
           message: _.capitalize(buildType) + " " + displayName + " successfully cancelled."
@@ -108,9 +109,10 @@ angular.module("openshiftConsole")
     var cloneBuild = function(originalBuild, buildConfigName) {
       var buildType = isJenkinsPipelineStrategy(originalBuild) ? 'pipeline' : 'build';
       var originalDisplayName = getBuildDisplayName(originalBuild, buildConfigName);
+
       var req = {
         kind: "BuildRequest",
-        apiVersion: "v1",
+        apiVersion: APIService.toAPIVersion(buildsCloneVersion),
         metadata: {
           name: originalBuild.metadata.name
         }
@@ -118,6 +120,7 @@ angular.module("openshiftConsole")
       var context = {
         namespace: originalBuild.metadata.namespace
       };
+
       return DataService.create(buildsCloneVersion, originalBuild.metadata.name, req, context).then(function(clonedBuild) {
         var clonedDisplayName = getBuildDisplayName(clonedBuild, buildConfigName);
         NotificationsService.addNotification({
