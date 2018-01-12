@@ -8,6 +8,7 @@ angular.module("openshiftConsole")
                       APIService,
                       DataService,
                       NotificationsService,
+                      ApplicationGenerator,
                       DNS1123_SUBDOMAIN_VALIDATION) {
 
     var serviceAccountsVersion = APIService.getPreferredVersion('serviceaccounts');
@@ -50,6 +51,15 @@ angular.module("openshiftConsole")
               {
                 id: "kubernetes.io/ssh-auth",
                 label: "SSH Key"
+              }
+            ]
+          },
+          webhook: {
+            label: "Webhook Secret",
+            authTypes: [
+              {
+                id: "Opaque",
+                label: "Webhook Secret"
               }
             ]
           }
@@ -151,6 +161,11 @@ angular.module("openshiftConsole")
               };
               secret.data[".dockercfg"] = window.btoa(JSON.stringify(configData));
               break;
+            case "Opaque":
+              if (data.webhookSecretKey) {
+                _.set(secret, 'stringData.WebHookSecretKey', data.webhookSecretKey);
+              }
+              break;
           }
           return secret;
         };
@@ -213,6 +228,10 @@ angular.module("openshiftConsole")
 
         $scope.nameChanged = function() {
           $scope.nameTaken = false;
+        };
+
+        $scope.generateWebhookSecretKey = function() {
+          $scope.newSecret.data.webhookSecretKey = ApplicationGenerator._generateSecret();
         };
 
         $scope.create = function() {

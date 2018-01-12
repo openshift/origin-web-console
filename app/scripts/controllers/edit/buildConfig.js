@@ -14,7 +14,6 @@ angular.module('openshiftConsole')
                        $routeParams,
                        $window,
                        APIService,
-                       ApplicationGenerator,
                        AuthorizationService,
                        DataService,
                        Navigate,
@@ -102,30 +101,10 @@ angular.module('openshiftConsole')
     };
 
     $scope.triggers = {
-      githubWebhooks: [],
-      gitlabWebhooks: [],
-      bitbucketWebhooks: [],
-      genericWebhooks: [],
+      webhookTriggers: [],
       imageChangeTriggers: [],
       builderImageChangeTrigger: {},
       configChangeTrigger: {}
-    };
-
-    $scope.createTriggerSelect = {
-      selectedType: "",
-      options: [{
-        type: 'github',
-        label: 'GitHub'
-      }, {
-        type: 'gitlab',
-        label: 'GitLab'
-      }, {
-        type: 'bitbucket',
-        label: 'Bitbucket'
-      }, {
-        type: 'generic',
-        label: 'Generic'
-      }]
     };
 
     $scope.runPolicyTypes = [
@@ -281,17 +260,20 @@ angular.module('openshiftConsole')
               $scope.jenkinsfileOptions.type = 'inline';
             }
 
-            DataService.list(secretsVersion, context).then(function(secrets) {
-              var secretsByType = SecretsService.groupSecretsByType(secrets);
-              var secretNamesByType =_.mapValues(secretsByType, function(secrets) {return _.map(secrets, 'metadata.name');});
-              // Add empty option to the image/source secrets
-              $scope.secrets.secretsByType = _.each(secretNamesByType, function(secretsArray) {
-                secretsArray.unshift("");
+            if (AuthorizationService.canI(secretsVersion, 'list', $routeParams.project)) {
+              DataService.list(secretsVersion, context).then(function(secrets) {
+                var secretsByType = SecretsService.groupSecretsByType(secrets);
+                var secretNamesByType =_.mapValues(secretsByType, function(secrets) {return _.map(secrets, 'metadata.name');});
+                $scope.webhookSecrets = SecretsService.groupSecretsByType(secrets).webhook;
+                // Add empty option to the image/source secrets
+                $scope.secrets.secretsByType = _.each(secretNamesByType, function(secretsArray) {
+                  secretsArray.unshift("");
+                });
+                loadBuildConfigSecrets();
+                secretDataOrdered = orderByDisplayName(secrets.by("metadata.name"));
+                $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
               });
-              loadBuildConfigSecrets();
-              secretDataOrdered = orderByDisplayName(secrets.by("metadata.name"));
-              $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
-            });
+            }
 
             var setImageOptions = function(imageOptions, imageData) {
               imageOptions.type = (imageData && imageData.kind) ? imageData.kind : "None";
@@ -410,16 +392,22 @@ angular.module('openshiftConsole')
       triggers.forEach(function(trigger) {
         switch (trigger.type) {
           case "Generic":
-            triggerMap.genericWebhooks.push({disabled: false, data: trigger});
-            break;
           case "GitHub":
-            triggerMap.githubWebhooks.push({disabled: false, data: trigger});
-            break;
           case "GitLab":
-            triggerMap.gitlabWebhooks.push({disabled: false, data: trigger});
-            break;
           case "Bitbucket":
-            triggerMap.bitbucketWebhooks.push({disabled: false, data: trigger});
+            // Add info about last(current) trigger type, so when user changes the type, data
+            // from the previous type will be moved into the new type.
+            // Example of webhook data:
+            // {                                              {
+            //   "generic": {                                   "github": {
+            //     "secretReference": {                           "secretReference": {
+            //       "name": "webhooksecret"        ==>             "name": "webhooksecret"
+            //     }                                              }
+            //   },                                             },
+            //   "type": "Generic"                              "type": "GitHub"
+            // }                                              }
+            //
+            triggerMap.webhookTriggers.push({lastTriggerType: trigger.type, data: trigger});
             break;
           case "ImageChange":
             var imageChangeFrom = trigger.imageChange.from;
@@ -498,12 +486,9 @@ angular.module('openshiftConsole')
       return imageObject;
     };
 
+
     var updateTriggers = function() {
-      var triggers = [].concat($scope.triggers.githubWebhooks,
-                              $scope.triggers.gitlabWebhooks,
-                              $scope.triggers.bitbucketWebhooks,
-                              $scope.triggers.genericWebhooks,
-                              $scope.triggers.imageChangeTriggers,
+      var triggers = [].concat($scope.triggers.imageChangeTriggers,
                               $scope.triggers.builderImageChangeTrigger,
                               $scope.triggers.configChangeTrigger);
       // Filter webhook triggers that are not disabled or imageChange triggers that are present
@@ -511,6 +496,7 @@ angular.module('openshiftConsole')
         // The condition has to check if the value exist and  is set to 'false' in case of webhook triggers and 'true' in case of imageChange and configChange triggers.
         return (_.has(trigger, 'disabled') && !trigger.disabled) || trigger.present;
       });
+      triggers = triggers.concat($scope.triggers.webhookTriggers);
       triggers = _.map(triggers, 'data');
       return triggers;
     };
@@ -562,23 +548,6 @@ angular.module('openshiftConsole')
         sourceMap[key] = true;
       });
       return sourceMap;
-    };
-
-    $scope.addWebhookTrigger = function(webhookLabel) {
-      if (!webhookLabel) {
-        return;
-      }
-      var webhook = {
-        disabled: false,
-        data: {
-          type: webhookLabel
-        }
-      };
-      var webhookType = _.find($scope.createTriggerSelect.options, function(o) {return o.label === webhookLabel}).type
-      webhook.data[webhookType] = {
-        secret: ApplicationGenerator._generateSecret()
-      };
-      $scope.triggers[webhookType + "Webhooks"].push(webhook);
     };
 
     $scope.save = function() {

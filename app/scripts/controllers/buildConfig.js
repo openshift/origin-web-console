@@ -12,6 +12,7 @@ angular.module('openshiftConsole')
                        $filter,
                        $routeParams,
                        APIService,
+                       AuthorizationService,
                        BuildsService,
                        ImagesService,
                        DataService,
@@ -48,6 +49,7 @@ angular.module('openshiftConsole')
     $scope.buildConfigsVersion = APIService.getPreferredVersion('buildconfigs');
     $scope.buildsVersion = APIService.getPreferredVersion('builds');
     $scope.buildConfigsInstantiateVersion = APIService.getPreferredVersion('buildconfigs/instantiate');
+    $scope.secretsVersion = APIService.getPreferredVersion('secrets');
 
     $scope.emptyMessage = "Loading...";
 
@@ -219,21 +221,24 @@ angular.module('openshiftConsole')
           });
         });
 
-        DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
-          secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
-          $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
-        }, function(e) {
-          if (e.code === 403) {
-            return;
-          }
+        if (AuthorizationService.canI($scope.secretsVersion, 'list', $routeParams.project)) {
+          DataService.list("secrets", context, null, { errorNotification: false }).then(function(secretData) {
+            secretDataOrdered = orderByDisplayName(secretData.by("metadata.name"));
+            $scope.webhookSecrets = SecretsService.groupSecretsByType(secretData).webhook;
+            $scope.valueFromObjects = configMapDataOrdered.concat(secretDataOrdered);
+          }, function(e) {
+            if (e.code === 403) {
+              return;
+            }
 
-          NotificationsService.addNotification({
-            id: "build-config-list-secrets-error",
-            type: "error",
-            message: "Could not load secrets.",
-            details: getErrorDetails(e)
+            NotificationsService.addNotification({
+              id: "build-config-list-secrets-error",
+              type: "error",
+              message: "Could not load secrets.",
+              details: getErrorDetails(e)
+            });
           });
-        });
+        }
 
       watches.push(DataService.watch($scope.buildsVersion, context, function(builds, action, build) {
         $scope.emptyMessage = "No builds to show";

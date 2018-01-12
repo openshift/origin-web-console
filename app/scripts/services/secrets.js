@@ -7,6 +7,7 @@ angular.module("openshiftConsole")
       var secretsByType = {
         source: [],
         image: [],
+        webhook: [],
         other: []
       };
 
@@ -15,7 +16,11 @@ angular.module("openshiftConsole")
           case 'kubernetes.io/basic-auth':
           case 'kubernetes.io/ssh-auth':
           case 'Opaque':
-            secretsByType.source.push(secret);
+            if (secret.data.WebHookSecretKey) {
+              secretsByType.webhook.push(secret);
+            } else {
+              secretsByType.source.push(secret);
+            }
             break;
           case 'kubernetes.io/dockercfg':
           case 'kubernetes.io/dockerconfigjson':
@@ -109,7 +114,6 @@ angular.module("openshiftConsole")
       return decodedSecretData;
     };
 
-
     var decodeSecretData = function(secretData) {
       var nonPrintable = {};
       var decodedSecret = _.mapValues(secretData, function(data, configType) {
@@ -141,8 +145,22 @@ angular.module("openshiftConsole")
       return decodedSecret;
     };
 
+    var getWebhookSecretValue = function(secret, webhookSecrets) {
+      // 'secretReference' field is an indicator the the webhook is using SecretRef
+      // otherwise the secret is in the deprecated plain form.
+      // In case the 'webhookSecrets' are not provided, the user doesnt have permisions
+      // to list Secrets
+      if (_.get(secret, 'secretReference.name') && webhookSecrets) {
+        var matchingSecret = _.find(webhookSecrets, {metadata:{name: secret.secretReference.name}});
+        return decodeSecretData(matchingSecret.data).WebHookSecretKey;
+      } else {
+        return _.get(secret, 'secret');
+      }
+    };
+
     return {
       groupSecretsByType: groupSecretsByType,
-      decodeSecretData: decodeSecretData
+      decodeSecretData: decodeSecretData,
+      getWebhookSecretValue: getWebhookSecretValue
     };
   });

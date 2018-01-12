@@ -386,28 +386,28 @@
                               <dt>Bitbucket Webhook URL:
                               </dt>
                               <dd>
-                                <copy-to-clipboard clipboard-text="buildConfig.metadata.name | webhookURL : trigger.type : trigger.bitbucket.secret : project.metadata.name"></copy-to-clipboard>
+                                <copy-webhook-url build-config-name="buildConfig.metadata.name" trigger-type="trigger.type" project-name="project.metadata.name" secret="trigger.bitbucket" webhook-secrets="webhookSecrets"></copy-webhook-url>
                               </dd>
                           </div>
                           <div ng-switch-when="GitHub">
                               <dt>GitHub Webhook URL:
                               </dt>
                               <dd>
-                                <copy-to-clipboard clipboard-text="buildConfig.metadata.name | webhookURL : trigger.type : trigger.github.secret : project.metadata.name"></copy-to-clipboard>
+                                <copy-webhook-url build-config-name="buildConfig.metadata.name" trigger-type="trigger.type" project-name="project.metadata.name" secret="trigger.github" webhook-secrets="webhookSecrets"></copy-webhook-url>
                               </dd>
                           </div>
                           <div ng-switch-when="GitLab">
                               <dt>GitLab Webhook URL:
                               </dt>
                               <dd>
-                                <copy-to-clipboard clipboard-text="buildConfig.metadata.name | webhookURL : trigger.type : trigger.gitlab.secret : project.metadata.name"></copy-to-clipboard>
+                                <copy-webhook-url build-config-name="buildConfig.metadata.name" trigger-type="trigger.type" project-name="project.metadata.name" secret="trigger.gitlab" webhook-secrets="webhookSecrets"></copy-webhook-url>
                               </dd>
                           </div>
                           <div ng-switch-when="Generic">
                               <dt>Generic Webhook URL:
                               </dt>
                               <dd>
-                                <copy-to-clipboard clipboard-text="buildConfig.metadata.name | webhookURL : trigger.type : trigger.generic.secret : project.metadata.name"></copy-to-clipboard>
+                                <copy-webhook-url build-config-name="buildConfig.metadata.name" trigger-type="trigger.type" project-name="project.metadata.name" secret="trigger.generic" webhook-secrets="webhookSecrets"></copy-webhook-url>
                               </dd>
                           </div>
                           <div ng-switch-when="ImageChange">
