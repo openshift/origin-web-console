@@ -7,6 +7,15 @@
   vertical-align: -2px;
 }
 
+.copy-webhook-url {
+  display: inline-flex;
+  .webhook-secrets-warning {
+    cursor: help;
+    font-size: 15px;
+    padding: 5px;
+  }
+}
+
 // don't allow copy-to-clipboard .input-groups get bigger than 300px so Github webhook secrets aren't revealed within the input-group
 copy-to-clipboard .input-group.limit-width {
   max-width: 300px;

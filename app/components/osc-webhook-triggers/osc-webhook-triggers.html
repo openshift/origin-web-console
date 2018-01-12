@@ -1,0 +1,81 @@
+<ng-form name="secretsForm" class="add-webhook">
+  <div ng-repeat="trigger in $ctrl.webhookTriggers">
+    {{trigger}}
+    <div class="add-webhook-row">
+      <ui-select 
+        ng-model="trigger.data.type"
+        ng-disabled="isDeprecated(trigger)"
+        on-select="$ctrl.triggerTypeChange(trigger)"
+        search-enabled="false"
+        title="Select a webhook type"
+        class="select-webhook-type"
+        flex>
+        <ui-select-match placeholder="Webhook type">
+          {{ $select.selected.label }}
+        </ui-select-match>
+        <ui-select-choices repeat="option.label as option in $ctrl.webhookTypesOptions">
+          {{ option.label }}
+        </ui-select-choices>
+      </ui-select>
+
+      <ui-select
+        ng-if="!$ctrl.isDeprecated(trigger)"
+        ng-model="trigger.data[trigger.data.type.toLowerCase()].secretReference.name"
+        ng-disabled="!trigger.data.type"
+        ng-required="trigger.data.type"
+        on-select="$ctrl.triggerSecretChange(trigger)"
+        title="Select a webhook secret reference"
+        class="select-secret-ref"
+        flex>
+        <ui-select-match placeholder="Webhook secret reference">
+          {{ $select.selected.metadata.name }}
+        </ui-select-match>
+        <ui-select-choices repeat="webhookSecret.metadata.name as webhookSecret in ($ctrl.webhookSecrets | filter : $select.search) track by (webhookSecret | uid)">
+          <div ng-bind-html="webhookSecret.metadata.name | highlight : $select.search"></div>
+        </ui-select-choices>
+      </ui-select>
+
+      <div class="select-secret-ref deprecated-secret input-group" ng-if="$ctrl.isDeprecated(trigger)">
+        <input
+          ng-model="trigger.data[trigger.data.type.toLowerCase()].secret"
+          class="form-control"
+          type="{{trigger.secretInputType}}"
+          autocorrect="off"
+          autocapitalize="none"
+          spellcheck="false"
+          select-on-focus
+          disabled>
+        <div class="input-group-btn">
+          <button
+            type="button"
+            class="btn btn-default toggle"
+            title="Toggle Token Visibility"
+            aria-label="Toggle Token Visibility"
+            ng-click="$ctrl.toggleSecretInputType(trigger)">
+            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+            <span class="sr-only">Toggle Token Visibility</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="remove-webhook-trigger-action">
+        <button ng-click="$ctrl.removeWebhookTrigger(trigger, $index)" type="button" class="btn-remove close" aria-hidden="true">
+          <span class="pficon pficon-close" aria-hidden="true"></span>
+          <span class="sr-only">Remove Webhook trigger</span>
+        </button>
+      </div>
+    </div>
+    <div class="has-warning" ng-if="trigger.isDuplicate">
+      <span class="help-block">A {{trigger.data.type}} webhook trigger referencing the secret {{(trigger | getWebhookSecretData).secretReference.name}} already exists.</span>
+    </div>
+
+  </div>
+
+  <div class="add-webhook-action-btns">
+    <button class="btn btn-link" type="button" ng-click="$ctrl.checkLastAndAddNew()">Add Webhook</button>
+    <span ng-if="$ctrl.secretsVersion | canI : 'create'">
+      <span class="action-divider" aria-hidden="true"> | </span>
+      <button class="btn btn-link" href="" type="button" ng-click="$ctrl.openCreateWebhookSecretModal()">Create New Webhook Secret</button>
+    </span>
+  </div> 
+</ng-form>
