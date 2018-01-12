@@ -13,58 +13,54 @@ describe('MembershipService', function() {
       // limited sample set of roles & clusterRoles
       // reduced role.rules = {empty} in both roles sets
       clusterRoles = [
-        {"metadata":{"name":"basic-user"},"rules":{}, "kind": "ClusterRole"},
-        {"metadata":{"name":"admin"},"rules":{}, "kind": "ClusterRole"},
-        {"metadata":{"name":"view"},"rules":{}, "kind": "ClusterRole"},
-        {"metadata":{"name":"edit"},"rules":{}, "kind": "ClusterRole"}
+        {"metadata":{"name":"basic-user"},"rules":{}, "kind": "ClusterRole", apiVersion: 'rbac.authorization.k8s.io/v1'},
+        {"metadata":{"name":"admin"},"rules":{}, "kind": "ClusterRole", apiVersion: 'rbac.authorization.k8s.io/v1'},
+        {"metadata":{"name":"view"},"rules":{}, "kind": "ClusterRole", apiVersion: 'rbac.authorization.k8s.io/v1'},
+        {"metadata":{"name":"edit"},"rules":{}, "kind": "ClusterRole", apiVersion: 'rbac.authorization.k8s.io/v1'}
       ];
       roles = [{
           "metadata": { "name": "awesomeview", "namespace": "membership-test" },
           "rules": {},
-          "kind": "Role"
+          "kind": "Role",
+          apiVersion: 'rbac.authorization.k8s.io/v1'
       }, {
           "metadata": { "name": "people-who-break-things", "namespace": "membership-test" },
           "rules": {},
-          "kind": "Role"
+          "kind": "Role",
+          apiVersion: 'rbac.authorization.k8s.io/v1'
+      }, {
+          "metadata": { "name": "deleteservices", "namespace": "membership-test" },
+          "rules": {},
+          "kind": "Role",
+          apiVersion: 'rbac.authorization.k8s.io/v1'
       }];
-      keyedRoles = {
-        'ClusterRole-admin' : {
-          kind: 'ClusterRole',
-          metadata: { name:'admin' }
-        },
-        'ClusterRole-view' : {
-          kind: 'ClusterRole',
-          metadata: { name:'view' }
-        },
-        'ClusterRole-edit' : {
-          kind: 'ClusterRole',
-          metadata: { name:'edit' }
-        },
-        'Role-awesomeview' : {
-          kind: 'Role',
-          metadata: { name:'awesomeview' }
-        }
-      };
+
       roleBindings = {
         admin: {
           kind: 'RoleBinding', metadata: { name: 'admin' },
-          roleRef: { name: 'admin' },
+          roleRef: { name: 'admin', kind: 'ClusterRole', apiGroup: 'rbac.authorization.k8s.io' },
           subjects: [{kind: 'User', name: 'jill'}]
         },
         edit: {
           kind: 'RoleBinding', metadata: { name: 'edit' },
-          roleRef: { name: 'edit' },
+          roleRef: { name: 'edit', kind: 'ClusterRole', apiGroup: 'rbac.authorization.k8s.io' },
           subjects: [{kind: 'User', name: 'jack'}]
         },
         view: {
           kind: 'RoleBinding', metadata: { name: 'view' },
-          roleRef: { name: 'view' },
+          roleRef: { name: 'view', kind: 'ClusterRole', apiGroup: 'rbac.authorization.k8s.io' },
           subjects: [{kind: 'User', name: 'jill'}]
         },
         systemImagePuller: {
           kind: 'RoleBinding', metadata: { name: 'system:image-puller' },
-          roleRef: { name: 'system:image-puller' },
+          roleRef: { name: 'system:image-puller', kind: 'ClusterRole', apiGroup: 'rbac.authorization.k8s.io' },
           subjects: [{kind: 'ServiceAccount', name: 'foo', namespace: 'fake-project'}]
+        },
+        // custom rolebinding for a custom role
+        deleteservices: {
+          kind: 'RoleBinding', metadata: { name: 'deleteservices' },
+          roleRef: { name: 'deleteservices', kind: 'Role', apiGroup: 'rbac.authorization.k8s.io' },
+          subjects: [{kind: 'User', name: 'jenny'}]
         }
       };
     });
@@ -74,10 +70,10 @@ describe('MembershipService', function() {
   describe('#sortRoles', function() {
     it('should sort provided roles', function() {
       var sortedAlphabetical = [
-        {"metadata":{"name":"admin"},"rules":{}, "kind": "ClusterRole"},
-        {"metadata":{"name":"basic-user"},"rules":{},"kind": "ClusterRole"},
-        {"metadata":{"name":"edit"},"rules":{},"kind": "ClusterRole"},
-        {"metadata":{"name":"view"},"rules":{},"kind": "ClusterRole"}
+        {"metadata":{"name":"admin"},"rules":{}, "kind": "ClusterRole", apiVersion: 'rbac.authorization.k8s.io/v1'},
+        {"metadata":{"name":"basic-user"},"rules":{},"kind": "ClusterRole", apiVersion: 'rbac.authorization.k8s.io/v1'},
+        {"metadata":{"name":"edit"},"rules":{},"kind": "ClusterRole", apiVersion: 'rbac.authorization.k8s.io/v1'},
+        {"metadata":{"name":"view"},"rules":{},"kind": "ClusterRole", apiVersion: 'rbac.authorization.k8s.io/v1'}
       ];
       expect(MembershipService.sortRoles(clusterRoles)).toEqual(sortedAlphabetical);
     });
@@ -121,64 +117,101 @@ describe('MembershipService', function() {
 
   describe('#mapRolesForUI', function() {
 
+    describe('when building a map of clusterRoles and roles', function() {
+        it('should build a map of unqiue keys to ensure no collisions', function() {
+          var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
+          expect(_.keys(mappedRoles)).toEqual([
+            'rbac.authorization.k8s.io-Role-awesomeview',
+            'rbac.authorization.k8s.io-Role-people-who-break-things',
+            'rbac.authorization.k8s.io-Role-deleteservices',
+            'rbac.authorization.k8s.io-ClusterRole-basic-user',
+            'rbac.authorization.k8s.io-ClusterRole-admin',
+            'rbac.authorization.k8s.io-ClusterRole-view',
+            'rbac.authorization.k8s.io-ClusterRole-edit'
+          ]);
+        });
+    });
 
+    // last one....
     it('should build a map of clusterRoles and roles with unique keys to ensure no collisions', function() {
       var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
-      expect(_.keys(mappedRoles)).toEqual([
-        'Role-awesomeview',
-        'Role-people-who-break-things',
-        'ClusterRole-basic-user',
-        'ClusterRole-admin',
-        'ClusterRole-view',
-        'ClusterRole-edit'
-      ]);
+
       // the ugly manual JSON blob comparison
       expect(mappedRoles)
       .toEqual({
-          "Role-awesomeview": {
-              "metadata": {
-                  "name": "awesomeview",
-                  "namespace": "membership-test"
-              },
-              "rules": {},
-              "kind": "Role"
+        "rbac.authorization.k8s.io-Role-awesomeview":{
+          "metadata":{
+             "name":"awesomeview",
+             "namespace":"membership-test"
           },
-          "Role-people-who-break-things": {
-              "metadata": {
-                  "name": "people-who-break-things",
-                  "namespace": "membership-test"
-              },
-              "rules": {},
-              "kind": "Role"
+          "rules":{
+
           },
-          "ClusterRole-basic-user": {
-              "metadata": {
-                  "name": "basic-user"
-              },
-              "rules": {},
-              "kind": "ClusterRole"
+          "kind":"Role",
+          "apiVersion":"rbac.authorization.k8s.io/v1"
+        },
+        "rbac.authorization.k8s.io-Role-people-who-break-things":{
+          "metadata":{
+             "name":"people-who-break-things",
+             "namespace":"membership-test"
           },
-          "ClusterRole-admin": {
-              "metadata": {
-                  "name": "admin"
-              },
-              "rules": {},
-              "kind": "ClusterRole"
+          "rules":{
+
           },
-          "ClusterRole-view": {
-              "metadata": {
-                  "name": "view"
-              },
-              "rules": {},
-              "kind": "ClusterRole"
+          "kind":"Role",
+          "apiVersion":"rbac.authorization.k8s.io/v1"
+        },
+        "rbac.authorization.k8s.io-Role-deleteservices":{
+          "metadata":{
+             "name":"deleteservices",
+             "namespace":"membership-test"
           },
-          "ClusterRole-edit": {
-              "metadata": {
-                  "name": "edit"
-              },
-              "rules": {},
-              "kind": "ClusterRole"
-          }
+          "rules":{
+
+          },
+          "kind":"Role",
+          "apiVersion":"rbac.authorization.k8s.io/v1"
+        },
+        "rbac.authorization.k8s.io-ClusterRole-basic-user":{
+          "metadata":{
+             "name":"basic-user"
+          },
+          "rules":{
+
+          },
+          "kind":"ClusterRole",
+          "apiVersion":"rbac.authorization.k8s.io/v1"
+        },
+        "rbac.authorization.k8s.io-ClusterRole-admin":{
+          "metadata":{
+             "name":"admin"
+          },
+          "rules":{
+
+          },
+          "kind":"ClusterRole",
+          "apiVersion":"rbac.authorization.k8s.io/v1"
+        },
+        "rbac.authorization.k8s.io-ClusterRole-view":{
+          "metadata":{
+             "name":"view"
+          },
+          "rules":{
+
+          },
+          "kind":"ClusterRole",
+          "apiVersion":"rbac.authorization.k8s.io/v1"
+        },
+        "rbac.authorization.k8s.io-ClusterRole-edit":{
+          "metadata":{
+             "name":"edit"
+          },
+          "rules":{
+
+          },
+          "kind":"ClusterRole",
+          "apiVersion":"rbac.authorization.k8s.io/v1"
+        }
       });
     });
   });
@@ -214,7 +247,8 @@ describe('MembershipService', function() {
 
   describe('#mapRolebindingsForUI', function() {
     it('Should return rolebindings in the following order: User, Group, ServiceAccount, SystemUser, SystemGroup', function() {
-      var mappedRolebindings = MembershipService.mapRolebindingsForUI(roleBindings, keyedRoles);
+      var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
+      var mappedRolebindings = MembershipService.mapRolebindingsForUI(roleBindings, mappedRoles);
       var orderedKinds = _.map(mappedRolebindings, 'kind');
       expect(orderedKinds[0]).toEqual('User');
       expect(orderedKinds[1]).toEqual('Group');
@@ -224,13 +258,15 @@ describe('MembershipService', function() {
     });
 
     it('should put subjects under the appropriate kind', function() {
-      var mappedRolebindings = MembershipService.mapRolebindingsForUI(roleBindings, keyedRoles);
-      expect(_.map(mappedRolebindings[0].subjects, 'name')).toEqual(['jill', 'jack']);
+      var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
+      var mappedRolebindings = MembershipService.mapRolebindingsForUI(roleBindings, mappedRoles);
+      expect(_.map(mappedRolebindings[0].subjects, 'name')).toEqual(['jill', 'jack', 'jenny']);
       expect(_.map(mappedRolebindings[2].subjects, 'name')).toEqual(['foo']);
     });
 
     it('should list appropriate roles for a subject under a kind heading', function() {
-      var mappedRolebindings = MembershipService.mapRolebindingsForUI(roleBindings, keyedRoles);
+      var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
+      var mappedRolebindings = MembershipService.mapRolebindingsForUI(roleBindings, mappedRoles);
       var firstBinding = _.first(mappedRolebindings);
       var firstBindingSubjects = _.toArray(firstBinding.subjects);
       var firstSubject = _.first(firstBindingSubjects);
@@ -241,82 +277,166 @@ describe('MembershipService', function() {
       expect(firstRoleNames).toEqual(['admin', 'view']);
     });
 
+    describe('when given a set of rolebindings and roles', function() {
 
-    // NOTE: ideally the above tests catch any issues as they do a better job of
-    // declaring intent, if not, this test will compare raw output.
-    it('should build a map for the tabbed role list interface', function() {
-
-      // the full output tree should match
-      expect(MembershipService.mapRolebindingsForUI(roleBindings, keyedRoles))
-        .toEqual([{
-            "kind": "User",
-            "sortOrder": 1,
-            "name": "User",
-            "subjects": {
-                "-jill": {
-                    "name": "jill",
-                    "roles": {
-                        "ClusterRole-admin": {
-                            "kind": "ClusterRole",
-                            "metadata": {
-                                "name": "admin"
-                            }
+      var mockRolebindingsByKindForUI = [{
+          "kind": "User",
+          "sortOrder": 1,
+          "name": "User",
+          "subjects": {
+              "-jill": {
+                  "name": "jill",
+                  "roles": {
+                     "rbac.authorization.k8s.io-ClusterRole-admin":{
+                        "metadata":{
+                           "name":"admin"
                         },
-                        "ClusterRole-view": {
-                            "kind": "ClusterRole",
-                            "metadata": {
-                                "name": "view"
-                            }
-                        }
-                    }
-                },
-                "-jack": {
-                    "name": "jack",
-                    "roles": {
-                        "ClusterRole-edit": {
-                            "kind": "ClusterRole",
-                            "metadata": {
-                                "name": "edit"
-                            }
-                        }
-                    }
-                }
-            }
-        }, {
-            "kind": "Group",
-            "sortOrder": 2,
-            "name": "Group",
-            "subjects": {}
-        }, {
-            "kind": "ServiceAccount",
-            "sortOrder": 3,
-            "description": "Service accounts provide a flexible way to control API access without sharing a regular user’s credentials.",
-            "helpLinkKey": "service_accounts",
-            "name": "ServiceAccount",
-            "subjects": {
-                "fake-project-foo": {
-                    "name": "foo",
-                    "namespace": "fake-project",
-                    "roles": {}
-                }
-            }
-        }, {
-            "kind": "SystemUser",
-            "sortOrder": 4,
-            "description": "System users are virtual users automatically provisioned by the system.",
-            "helpLinkKey": "users_and_groups",
-            "name": "SystemUser",
-            "subjects": {}
-        }, {
-            "kind": "SystemGroup",
-            "sortOrder": 5,
-            "description": "System groups are virtual groups automatically provisioned by the system.",
-            "helpLinkKey": "users_and_groups",
-            "name": "SystemGroup",
-            "subjects": {}
-        }]);
+                        "rules":{
+
+                        },
+                        "kind":"ClusterRole",
+                        "apiVersion":"rbac.authorization.k8s.io/v1"
+                     },
+                     "rbac.authorization.k8s.io-ClusterRole-view":{
+                        "metadata":{
+                           "name":"view"
+                        },
+                        "rules":{
+
+                        },
+                        "kind":"ClusterRole",
+                        "apiVersion":"rbac.authorization.k8s.io/v1"
+                     }
+                  }
+              },
+              "-jack": {
+                  "name": "jack",
+                  "roles": {
+                     "rbac.authorization.k8s.io-ClusterRole-edit":{
+                        "metadata":{
+                           "name":"edit"
+                        },
+                        "rules":{
+
+                        },
+                        "kind":"ClusterRole",
+                        "apiVersion":"rbac.authorization.k8s.io/v1"
+                     }
+                  }
+              },
+              "-jenny": {
+                  "name": "jenny",
+                  "roles": {
+                    "rbac.authorization.k8s.io-Role-deleteservices":{
+                        "kind":"Role",
+                        "metadata":{
+                           "name":"deleteservices",
+                           namespace: 'membership-test'
+                        },
+                        rules: {},
+                        apiVersion: 'rbac.authorization.k8s.io/v1',
+                     }
+                  }
+              }
+          }
+      }, {
+          "kind": "Group",
+          "sortOrder": 2,
+          "name": "Group",
+          "subjects": {}
+      }, {
+          "kind": "ServiceAccount",
+          "sortOrder": 3,
+          "description": "Service accounts provide a flexible way to control API access without sharing a regular user’s credentials.",
+          "helpLinkKey": "service_accounts",
+          "name": "ServiceAccount",
+          "subjects": {
+              "fake-project-foo": {
+                  "name": "foo",
+                  "namespace": "fake-project",
+                  "roles": {}
+              }
+          }
+      }, {
+          "kind": "SystemUser",
+          "sortOrder": 4,
+          "description": "System users are virtual users automatically provisioned by the system.",
+          "helpLinkKey": "users_and_groups",
+          "name": "SystemUser",
+          "subjects": {}
+      }, {
+          "kind": "SystemGroup",
+          "sortOrder": 5,
+          "description": "System groups are virtual groups automatically provisioned by the system.",
+          "helpLinkKey": "users_and_groups",
+          "name": "SystemGroup",
+          "subjects": {}
+      }];
+
+      _.each(mockRolebindingsByKindForUI, function(mockRBByKind, mappedIndex) {
+
+        it('should create a map of 5 tabs according to Kinds with a kind property', function() {
+          var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
+          var allMappedKinds = MembershipService.mapRolebindingsForUI(roleBindings, mappedRoles);
+          var kind = allMappedKinds[mappedIndex];
+          expect(kind.kind).toEqual(mockRBByKind.kind);
+        });
+
+        it('should create a map of 5 tabs matching a predetermined sortOrder property', function() {
+          var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
+          var allMappedKinds = MembershipService.mapRolebindingsForUI(roleBindings, mappedRoles);
+          var kind = allMappedKinds[mappedIndex];
+          expect(kind.sortOrder).toEqual(mockRBByKind.sortOrder);
+        });
+
+        it('should create a map of 5 tabs each with a description property', function() {
+          var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
+          var allMappedKinds = MembershipService.mapRolebindingsForUI(roleBindings, mappedRoles);
+          var kind = allMappedKinds[mappedIndex];
+          expect(kind.description).toEqual(mockRBByKind.description);
+        });
+
+        it('should create a map of 5 tabs each with a helpLinkKey property', function() {
+          var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
+          var allMappedKinds = MembershipService.mapRolebindingsForUI(roleBindings, mappedRoles);
+          var kind = allMappedKinds[mappedIndex];
+          expect(kind.helpLinkKey).toEqual(mockRBByKind.helpLinkKey);
+        });
+
+        it('should create a map of 5 tabs with a correct name property', function() {
+          var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
+          var allMappedKinds = MembershipService.mapRolebindingsForUI(roleBindings, mappedRoles);
+          var kind = allMappedKinds[mappedIndex];
+          expect(kind.name).toEqual(mockRBByKind.name);
+        });
+
+        it('should create a map of 5 tabs with the correct set of subjects', function() {
+          var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
+          var allMappedKinds = MembershipService.mapRolebindingsForUI(roleBindings, mappedRoles);
+
+          var kind = allMappedKinds[mappedIndex];
+          _.each(kind.subjects, function(subject, subjectKey) {
+            expect(subject.name).toEqual(mockRBByKind.subjects[subjectKey].name);
+            expect(subject.namespace).toEqual(mockRBByKind.subjects[subjectKey].namespace);
+            expect(subject.roles).toEqual(mockRBByKind.subjects[subjectKey].roles);
+
+          });
+
+        });
+
+        it('should create a map of 5 tabs that exactly match the expected output structure', function() {
+          var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
+          var allMappedKinds = MembershipService.mapRolebindingsForUI(roleBindings, mappedRoles);
+          var kind = allMappedKinds[mappedIndex];
+          // finally, test the whole structure for anything unexpected.
+          // this is terrible for debugging, but ensures we know the objects
+          // completely match.
+          expect(kind).toEqual(mockRBByKind);
+        });
+      });
 
     });
+
   });
 
 });

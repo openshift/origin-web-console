@@ -2,7 +2,7 @@
 
 angular
   .module('openshiftConsole')
-  .factory('MembershipService', function($filter, Constants) {
+  .factory('MembershipService', function($filter, APIService, Constants) {
 
     var annotation = $filter('annotation');
 
@@ -88,8 +88,8 @@ angular
       var mapForUI = _.reduce(
                       rolebindings,
                       function(result, rolebinding) {
-                        // hmm. dont like this here
-                        var roleKey = uniqueKey(rolebinding.roleRef.namespace ? 'Role' : 'ClusterRole', rolebinding.roleRef.name);
+                        // matched keyedRoles below for lookups
+                        var roleKey = uniqueKey(rolebinding.roleRef.apiGroup, rolebinding.roleRef.kind, rolebinding.roleRef.name);
                         // each subject, (user, bob; group: hobbits)
                         _.each(rolebinding.subjects, function(subject) {
                           var subjectKey = uniqueKey(subject.namespace, subject.name);
@@ -128,7 +128,9 @@ angular
       return _.reduce(
               roles,
               function(result, role) {
-                result[uniqueKey(role.kind, role.metadata.name)] = role;
+                var group = APIService.parseGroupVersion(role.apiVersion).group;
+                var roleKey = uniqueKey(group, role.kind, role.metadata.name);
+                result[roleKey] = role;
                 return result;
               }, {});
     };
