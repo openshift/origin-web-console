@@ -8522,11 +8522,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"alternate in route.alternateServices\" class=\"form-group\">\n" +
     "<osc-routing-service model=\"alternate\" service-options=\"alternateServiceOptions\" all-services=\"servicesByName\" is-alternate=\"true\" show-weight=\"route.alternateServices.length > 1 || controls.hideSlider\">\n" +
     "</osc-routing-service>\n" +
-    "<a href=\"\" ng-click=\"route.alternateServices.splice($index, 1)\">Remove Service</a>\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-sm-6\">\n" +
+    "<button type=\"button\" class=\"btn btn-link\" ng-click=\"route.alternateServices.splice($index, 1)\">Remove Service</button>\n" +
     "<span ng-if=\"$last && route.alternateServices.length < alternateServiceOptions.length\">\n" +
     "<span class=\"action-divider\">|</span>\n" +
-    "<a href=\"\" ng-click=\"addAlternateService()\">Add Another Service</a>\n" +
+    "<button type=\"button\" class=\"btn btn-link\" ng-click=\"addAlternateService()\">Add Another Service</button>\n" +
     "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"route.alternateServices.length === 1 && controls.hideSlider\" class=\"col-sm-6\">\n" +
+    "<button type=\"button\" class=\"btn btn-link\" ng-click=\"controls.hideSlider = false\">Edit Weights Using Percentage Slider</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div ng-repeat=\"duplicate in duplicateServices\" class=\"has-error mar-bottom-lg\">\n" +
     "<span class=\"help-block\">\n" +
@@ -8560,7 +8567,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</datalist>\n" +
     "<div class=\"help-block\" id=\"weight-slider-help\">\n" +
     "Percentage of traffic sent to each service. Drag the slider to adjust the values or\n" +
-    "<a href=\"\" ng-click=\"controls.hideSlider = true\">edit weights as integers</a>.\n" +
+    "<button type=\"button\" class=\"btn btn-link\" ng-click=\"controls.hideSlider = true\">edit weights as integers</button>.\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

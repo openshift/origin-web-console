@@ -292,6 +292,13 @@ angular.module("openshiftConsole")
           }
         });
 
+        scope.$watch('controls.hideSlider', function(hideSlider){
+          if(!hideSlider && scope.route.alternateServices.length === 1){
+            initializingSlider = true;
+            scope.controls.rangeSlider = scope.weightAsPercentage(scope.route.to.weight);
+          }
+        });
+
         scope.$watch('controls.rangeSlider', function(weight, previous) {
           // Don't update the routes if we're setting the initial slider value.
           if (initializingSlider) {
