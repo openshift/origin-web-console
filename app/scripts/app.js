@@ -35,7 +35,7 @@ angular
     'openshiftCommonUI',
     'webCatalog'
   ])
-  .config(function ($routeProvider) {
+  .config(function ($routeProvider, HomePagePreferenceServiceProvider) {
     var landingPageRoute;
     var projectsPageRoute = {
       templateUrl: 'views/projects.html',
@@ -56,7 +56,12 @@ angular
     }
 
     $routeProvider
-      .when('/', landingPageRoute)
+      .when('/', {
+        redirectTo: function() {
+          return HomePagePreferenceServiceProvider.$get().getHomePagePath();
+        }
+      })
+      .when('/catalog', landingPageRoute)
       .when('/create-project', {
         templateUrl: 'views/create-project.html',
         controller: 'CreateProjectController'
@@ -486,7 +491,113 @@ angular
       LabelFilter.readPersistedState();
     });
   })
-  .run(function(durationFilter, timeOnlyDurationFromTimestampsFilter) {
+  .run(function($location, $uibModal, AuthService, Constants) {
+    if (Constants.INACTIVITY_TIMEOUT_PERIOD <= 0) {
+      return;
+    }
+    var lastInteractionKey = 'origin-web-console-last-interaction-timestamp';
+    var inactivityLogoutKey = 'origin-web-console-inactivity-logout';
+    var isLocalLogoutModalShown = false;
+    var checkInteractionInterval;
+    var modalInstance;
+    // Interval that will check for user inactivity every minute.
+    // In case the last interaction is higher then  INACTIVITY_TIMEOUT_PERIOD constant a logout modal will be shown.
+    // Also check for 'origin-web-console-inactivity-logout' object in the local storage, that indicates that the
+    // user has been already logged out, in case of multiple opened console tabs.
+    var startInteractionIntervalCheck = function () {
+      checkInteractionInterval = setInterval(function(){
+        if (!AuthService.isLoggedIn()) {
+          return;
+        }
+        var lastInteraction = Date.parse(localStorage.getItem(lastInteractionKey));
+        if (isNaN(lastInteraction)) {
+          Logger.warn("Last interaction timestamp has been corrupted. The logout timeout will be restarted.");
+          lastInteraction = new Date();
+        }
+        var currentTime = new Date();
+        // Since the INACTIVITY_TIMEOUT_PERIOD is set in minutes it needs to be converted into milliseconds.
+        if (currentTime - lastInteraction > Constants.INACTIVITY_TIMEOUT_PERIOD * 60000) {
+          showLogoutModal();
+        }
+      }, 60000);
+    };
+
+    // In case of multiple opened tabs the interval needs to be restarted everytime there is any activity in any tab,
+    // so all intervals are synced, and they start the counting at the same time.
+    var restartCheckInteractionInterval = function() {
+      // Handles cases of user activity during the opened modal, where user clicks inside the modal but not on the buttons.
+      if (modalInstance) {
+        modalInstance.dismiss("User activity");
+        modalInstance = null;
+      }
+      clearInterval(checkInteractionInterval);
+      startInteractionIntervalCheck();
+    };
+    // Updates lastInteraction date and restarts interval
+    // restartCheckInteractionInterval() has to be called, cause because the listener on the `storage` event
+    // is not fired in the tab where the event happened.
+    var updateLastInteraction = function() {
+      restartCheckInteractionInterval();
+      localStorage.setItem(lastInteractionKey, new Date().toString());
+    };
+    // Updates Local Storage variable that indicates if all opened tabs should log out current user.
+    var logoutAllTabs = function(bool) {
+      localStorage.setItem(inactivityLogoutKey, bool.toString());
+    };
+    // Logout with passing reason.
+    var logout = function() {
+      var logoutURI = URI.expand("/logout{?cause*}", {
+        cause: 'timeout'
+      });
+      $location.url(logoutURI.toString());
+    };
+    // Show inactivity logout modal.
+    // Before the the modal is shown the handler for checking the changes in local storage is detached.
+    // After the the modal is closed or dismissed the handler will be attached again. This is because of 
+    // the fact that the handler is attached 
+    function showLogoutModal() {
+      if (isLocalLogoutModalShown) {
+        return false;
+      }
+      isLocalLogoutModalShown = true;
+      modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: 'views/modals/logout.html',
+        controller: 'LogoutModalController',
+      });
+      modalInstance.result.then(function(event) {
+        if (event === 'logout') {
+          logoutAllTabs(true);
+          logout();
+        } else if (event === 'cancel') {
+          // In case of multiple tabs, when the logoutModal would be canceled, the timer has to be restarted.
+          updateLastInteraction();
+          isLocalLogoutModalShown = false;
+        }
+      }, function () {
+        updateLastInteraction();
+        isLocalLogoutModalShown = false;
+      });
+    }
+
+    // Need to check for changes in last interaction so the interval can be restarted. 
+    $(window).on('storage', function (event) {
+      if (event.originalEvent.key === lastInteractionKey) {
+        restartCheckInteractionInterval();
+      } else if (event.originalEvent.key === inactivityLogoutKey) {
+        logout();
+      }
+    });
+
+    // Reset 'origin-web-console-inactivity-logout' key on login.
+    AuthService.onUserChanged(function() {
+      logoutAllTabs(false);
+    });
+    updateLastInteraction();
+    // Bind to click and keydown events so the in last interaction timestamp is updated.
+    $(document).bind("click keydown", _.throttle(updateLastInteraction, 500));
+  })
+  .run(function(durationFilter, timeOnlyDurationFromTimestampsFilter, countdownToTimestampFilter) {
     // Use setInterval instead of $interval because we're directly manipulating the DOM and don't want scope.$apply overhead
     setInterval(function() {
       // Set by duration-until-now directive.
@@ -501,6 +612,10 @@ angular
         else {
           return durationFilter(timestamp, null, omitSingle, precision) || existing;
         }
+      });
+      $('.countdown[data-timestamp]').text(function(i, existing) {
+        var endTimestamp = $(this).data("timestamp");
+        return countdownToTimestampFilter(endTimestamp);
       });
     }, 1000);
   })

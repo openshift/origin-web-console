@@ -52,6 +52,7 @@ angular.module("openshiftConsole")
         var launchConfirmationDialog = function(alerts) {
           var modalInstance = $uibModal.open({
             animation: true,
+            backdrop: 'static',
             templateUrl: 'views/modals/confirm.html',
             controller: 'ConfirmModalController',
             resolve: {

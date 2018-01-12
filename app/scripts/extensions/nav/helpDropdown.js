@@ -20,7 +20,7 @@ angular.module('openshiftConsole')
             options.push(
               {
                 type: 'dom',
-                node: '<li><a href="./?startTour=true">Tour Home Page</a></li>'
+                node: '<li><a href="catalog?startTour=true">Tour Catalog Home</a></li>'
               }
             );
           }

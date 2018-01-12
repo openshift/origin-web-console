@@ -3796,7 +3796,7 @@ table.dataTable thead .sorting_asc:after{content:"\f106";top:-3px}
 .nav-pf-tertiary-nav .list-group-item .list-group-item-value{padding-left:5px}
 .collapsed .nav-pf-secondary-nav{left:75px}
 .collapsed .nav-pf-tertiary-nav{left:calc(295px)}
-.secondary-collapse-toggle-pf,.tertiary-collapse-toggle-pf{display:none;font-family:FontAwesome;font-size:inherit;opacity:0;pointer-events:none;-webkit-font-smoothing:antialiased}
+.secondary-collapse-toggle-pf,.tertiary-collapse-toggle-pf{display:none;font-family:FontAwesome;font-size:inherit;pointer-events:none;-webkit-font-smoothing:antialiased;opacity:0}
 .collapsed.collapsed-secondary-nav-pf,.collapsed.collapsed-tertiary-nav-pf{width:220px}
 .collapsed.collapsed-secondary-nav-pf .secondary-nav-item-pf:hover>a,.collapsed.collapsed-tertiary-nav-pf .secondary-nav-item-pf:hover>a{z-index:1030}
 .collapsed.collapsed-secondary-nav-pf .nav-pf-secondary-nav,.collapsed.collapsed-tertiary-nav-pf .nav-pf-secondary-nav{left:0}
@@ -4087,9 +4087,6 @@ body>.ui-select-bootstrap.open{z-index:1050}
 .ui-select-bootstrap .ui-select-placeholder{display:block;overflow:hidden;text-overflow:ellipsis;width:100%}
 .ui-select-bootstrap .ui-select-toggle>.caret{font-style:normal;right:6px;top:10px;pointer-events:none}
 .ui-select-bootstrap .ui-select-search{width:100%!important}
-@keyframes catalogItemFade{0%{opacity:0}
-100%{opacity:1}
-}
 @keyframes modalBackdropIn{0%{opacity:0}
 100%{opacity:.5}
 }
@@ -4353,7 +4350,7 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .services-view .blank-slate-pf{background-color:transparent;border:none}
 .services-view .filter-panel-container ul{margin-bottom:10px}
 .services-view .pf-empty-state{margin:0 20px;width:100%}
-.services-view .services-item{animation:catalogItemFade .2s ease-out;color:#363636;min-height:140px;overflow:hidden;padding:0 10px 20px;position:relative;text-align:center;width:50%;word-break:break-word;z-index:99}
+.services-view .services-item{color:#363636;min-height:140px;overflow:hidden;padding:0 10px 20px;position:relative;text-align:center;width:50%;word-break:break-word;z-index:99}
 @media (min-width:480px){.services-view .services-item{width:33.3333%}
 }
 @media (min-width:768px){.services-view .services-item{width:50%}
@@ -4429,7 +4426,6 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .landing .services-view .services-view-container .services-categories li.active>a:before{background:#39a5dc;bottom:0;display:block}
 .services-view .services-view-container .services-no-sub-categories.ng-enter,.services-view .services-view-container .services-no-sub-categories.ng-enter-prepare,.services-view .services-view-container .services-sub-categories.ng-enter,.services-view .services-view-container .services-sub-categories.ng-enter-prepare{bottom:0;display:block!important;left:0;position:absolute;right:0;top:0}
 .landing .services-view .services-view-container .services-no-sub-categories.ng-enter,.landing .services-view .services-view-container .services-no-sub-categories.ng-enter-prepare,.landing .services-view .services-view-container .services-sub-categories.ng-enter,.landing .services-view .services-view-container .services-sub-categories.ng-enter-prepare{top:80px}
-.services-view .services-view-container .services-no-sub-categories.ng-leave.ng-leave-active .services-item,.services-view .services-view-container .services-no-sub-categories.ng-leave.ng-leave-active .services-items-filter{animation:catalogItemFade 150ms ease-in reverse;opacity:0}
 .services-view .services-view-container .services-sub-categories{list-style:none}
 .services-view .services-view-container .services-sub-categories>li>a.services-back-link{display:none}
 @media (max-width:479px){.services-view .services-view-container.mobile-categories-view .services-categories .active .services-back-link{display:none!important}
@@ -6128,3 +6124,6 @@ notification-drawer-wrapper .expanded-notification.unread .drawer-pf-notificatio
 .add-config-to-application .form-group .control-input{flex:1 0 0%}
 .add-config-to-application .updating{background-color:#fff;bottom:55px;left:0;padding-top:60px;position:absolute;right:0;top:55px;z-index:1000}
 .service-instance-details .instance-status-message{white-space:pre-line}
+.set-home-page .modal-body-indent{padding-left:48px}
+.set-home-page .modal-body-indent .title{font-weight:600}
+.set-home-page .select-project-container{padding-left:20px;max-width:360px}

@@ -22,4 +22,13 @@ angular.module('openshiftConsole')
       },
       template: '<span data-timestamp="{{timestamp}}" data-omit-single="{{omitSingle}}" data-precision="{{precision}}" class="duration">{{timestamp | duration : null : omitSingle : precision}}</span>'
     };
-  });
+  })
+  .directive("timeRemainingFromNow", function() {
+    return {
+      restrict: 'E',
+      scope: {
+        endTimestamp: '='
+      },
+      template: '<span data-timestamp="{{endTimestamp}}" class="countdown">{{endTimestamp | countdownToTimestamp}}</span>'
+    };
+  })  ;

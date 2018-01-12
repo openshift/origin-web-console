@@ -149,6 +149,22 @@ angular.module('openshiftConsole')
       }
     };
   })
+  .directive('setHomePage', function($uibModal) {
+    return {
+      restrict: 'E',
+      replace: true,
+      template: '<a href="">Set Home Page</a>',
+      link: function($scope, element) {
+        element.bind('click', function() {
+          $uibModal.open({
+            animation: true,
+            templateUrl: 'views/modals/set-home-page-modal.html',
+            controller: 'SetHomePageModalController'
+          });
+        });
+      }
+    };
+  })
   .directive('shortId', function() {
     return {
       restrict:'E',
