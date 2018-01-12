@@ -13,7 +13,7 @@
     "angular-touch": "1.5.11",
     "angular-route": "1.5.11",
     "angular-bootstrap": "0.14.3",
-    "angular-patternfly": "4.11.8",
+    "angular-patternfly": "4.14.2",
     "angular-gettext": "2.3.9",
     "uri.js": "1.18.12",
     "moment": "2.14.2",
