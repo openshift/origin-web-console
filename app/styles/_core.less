@@ -165,6 +165,38 @@
   .btn {
     margin: 10px 0 20px;
   }
+  .empty-state-message-main-action {
+    margin-top: @line-height-computed;
+    .btn {
+      margin-bottom: 0;
+    }
+  }
+  .empty-state-message-secondary-action {
+    margin-top: @line-height-computed;
+    @media(max-width: (@screen-xs-min - 1)) {
+      align-items: center;
+      flex-direction: column;
+    }
+    .btn {
+      margin-bottom: 8px;
+      @media(min-width: @screen-xs-min) {
+        margin-right: 5px;
+        &:last-of-type {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+  .empty-state-message-main-action,
+  .empty-state-message-secondary-action {
+    display: flex;
+    justify-content: center;
+    .btn {
+      flex: 0 1 auto;
+      margin-top: 0;
+      min-width: 33.333333%;
+    }
+  }
   h2, .h2 {
     // Avoid clipped descenders with class truncate or overflow: hidden
     line-height: 1.4;
