@@ -55,14 +55,13 @@
     <div class="container-fluid">
      <div ng-if="!loaded">Loading...</div>
 
-      <div class="row" ng-if="loaded && statefulSet">
+      <div class="row resource-details" ng-if="loaded && statefulSet">
         <div class="col-md-12">
           <uib-tabset>
             <uib-tab active="selectedTab.details">
               <uib-tab-heading>Details</uib-tab-heading>
 
               <div class="row" style="max-width: 650px;">
-
                 <div class="col-sm-4 col-sm-push-8 browse-deployment-donut">
                   <!--
                   TODO: scale/autoscale is a follow-on PR
@@ -100,7 +99,11 @@
                       -->
                     </dd>
                   </dl>
+                </div>
+              </div>
 
+              <div class="row">
+                <div class="col-md-12">
                   <h3>Template</h3>
                   <pod-template
                     pod-template="statefulSet.spec.template"
@@ -112,12 +115,6 @@
                       namespace="project.metadata.name">
                   </volume-claim-templates>
 
-                </div>
-
-              </div>
-
-              <div class="row">
-                <div class="col-md-12">
                   <h3>Volumes</h3>
                   <p ng-if="!statefulSet.spec.template.spec.volumes.length">
                     none

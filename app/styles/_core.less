@@ -1127,6 +1127,8 @@ a.disabled-link {
   min-width: 130px;
 }
 
+build-counts,
+notification-icon,
 status-icon {
   // when status-icon is child of [row], add margin-right to the icon
   // because the space resulting from display: inline-block collapses
@@ -1144,7 +1146,6 @@ status-icon {
   }
   // fixes wobble that occurs when status-icons utilize fa-spin (see https://github.com/FortAwesome/Font-Awesome/issues/671#issuecomment-249591495)
   .fa-spin {
-    font-size: 14px;
     line-height: normal;
   }
   // so that spinners match width of .fa/.pficon (16px or 20px)

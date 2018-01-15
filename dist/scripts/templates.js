@@ -238,7 +238,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/_pod-template-container.html',
     " <div class=\"pod-template\">\n" +
-    "<div class=\"component-label\"><span ng-bind-template=\"{{labelPrefix||'Container'}}:\"></span> {{container.name}}</div>\n" +
+    "<div class=\"component-label section-label\" ng-if=\"!detailed\" ng-bind-template=\"{{labelPrefix||'Container'}}\"></div>\n" +
+    "<div class=\"pod-container-name\">{{container.name}}</div>\n" +
     "<div row ng-if=\"container.image\" class=\"pod-template-image icon-row\">\n" +
     "<div class=\"icon-wrap\">\n" +
     "<span class=\"pficon pficon-image\" aria-hidden=\"true\"></span>\n" +
@@ -3889,7 +3890,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\" persist-tab-state>\n" +
     "<div class=\"container-fluid\">\n" +
     "<div ng-if=\"!loaded\">Loading...</div>\n" +
-    "<div class=\"row\" ng-if=\"loaded && statefulSet\">\n" +
+    "<div class=\"row resource-details\" ng-if=\"loaded && statefulSet\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<uib-tabset>\n" +
     "<uib-tab active=\"selectedTab.details\">\n" +
@@ -3914,15 +3915,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "</dd>\n" +
     "</dl>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-12\">\n" +
     "<h3>Template</h3>\n" +
     "<pod-template pod-template=\"statefulSet.spec.template\" detailed=\"true\">\n" +
     "</pod-template>\n" +
     "<volume-claim-templates templates=\"statefulSet.spec.volumeClaimTemplates\" namespace=\"project.metadata.name\">\n" +
     "</volume-claim-templates>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-12\">\n" +
     "<h3>Volumes</h3>\n" +
     "<p ng-if=\"!statefulSet.spec.template.spec.volumes.length\">\n" +
     "none\n" +
@@ -5314,7 +5315,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"build-pipeline-collapsed animate-show animate-hide animate-slide\" ng-show=\"!hideBuild\">\n" +
     "<div class=\"build-summary\" ng-class=\"{'dismissible' : !(build | isIncompleteBuild)}\">\n" +
     "<div class=\"build-name\">\n" +
+    "<span class=\"component-label\">\n" +
     "Pipeline\n" +
+    "</span>\n" +
     "<a ng-href=\"{{build | configURLForResource}}\">{{buildConfigName}}</a>,\n" +
     "<a ng-href=\"{{build | navigateResourceURL}}\">#{{build | annotation : 'buildNumber'}}</a>\n" +
     "</div>\n" +
@@ -8840,15 +8843,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/directives/pod-donut.html',
     "<div ng-attr-id=\"{{chartId}}\" class=\"pod-donut\" ng-class=\"{ mini: mini }\"></div>\n" +
     "<div ng-if=\"mini\" class=\"donut-mini-text\">\n" +
-    "<span ng-if=\"!idled\">\n" +
+    "<span ng-if=\"!idled && total <= 99\">\n" +
     "{{total}}\n" +
-    "<span ng-if=\"total === 1\">pod</span>\n" +
-    "<span ng-if=\"total !== 1\">pods</span>\n" +
     "</span>\n" +
     "<span ng-if=\"idled\">\n" +
     "Idle\n" +
     "</span>\n" +
     "</div>\n" +
+    "<span ng-if=\"mini && total === 1 && !idled\" class=\"donut-mini-text-name\">pod</span>\n" +
+    "<span ng-if=\"mini && total !== 1 && !idled\" class=\"donut-mini-text-name\">\n" +
+    "<span ng-if=\"!idled && total > 99\">\n" +
+    "{{total}}\n" +
+    "</span> pods\n" +
+    "</span>\n" +
     "\n" +
     "<div class=\"sr-only\">\n" +
     "<div ng-if=\"(pods | hashSize) === 0\">No pods.</div>\n" +
@@ -11334,9 +11341,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"list-pf-additional-content\">\n" +
     "<div class=\"list-pf-additional-content-item\">\n" +
+    "<div class=\"pods\">\n" +
     "<a href=\"\" ng-click=\"viewPodsForSet(replicationController)\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(podsByOwnerUID[replicationController.metadata.uid] | size) }\">\n" +
     "<pod-donut pods=\"podsByOwnerUID[replicationController.metadata.uid]\" mini=\"true\"></pod-donut>\n" +
     "</a>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div class=\"list-pf-additional-content-item\">\n" +
     "<image-names pod-template=\"replicationController.spec.template\" pods=\"podsByOwnerUID[replicationController.metadata.uid]\">\n" +
@@ -11384,9 +11393,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"list-pf-additional-content\">\n" +
     "<div class=\"list-pf-additional-content-item\">\n" +
+    "<div class=\"pods\">\n" +
     "<a href=\"\" ng-click=\"viewPodsForSet(replicaSet)\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(podsByOwnerUID[replicaSet.metadata.uid] | size) }\">\n" +
     "<pod-donut pods=\"podsByOwnerUID[replicaSet.metadata.uid]\" mini=\"true\"></pod-donut>\n" +
     "</a>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div class=\"list-pf-additional-content-item\">\n" +
     "<image-names pod-template=\"replicaSet.spec.template\" pods=\"podsByOwnerUID[replicaSet.metadata.uid]\">\n" +
@@ -11461,9 +11472,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"list-pf-additional-content\">\n" +
     "<div class=\"list-pf-additional-content-item\">\n" +
+    "<div class=\"pods\">\n" +
     "<a href=\"\" ng-click=\"viewPodsForSet(set)\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(podsByOwnerUID[set.metadata.uid] | size) }\">\n" +
     "<pod-donut pods=\"podsByOwnerUID[set.metadata.uid]\" mini=\"true\"></pod-donut>\n" +
     "</a>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div class=\"list-pf-additional-content-item\">\n" +
     "<image-names pod-template=\"set.spec.template\" pods=\"podsByOwnerUID[set.metadata.uid]\"></image-names>\n" +
@@ -11999,9 +12012,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_build-counts.html',
     "<span ng-if=\"buildCounts.show\" class=\"animate-if\">\n" +
-    "<span ng-if=\"buildCounts.label\" class=\"builds-label\">\n" +
-    "{{buildCounts.label}}\n" +
-    "</span>\n" +
     "<span ng-repeat=\"phase in buildCounts.interestingPhases\" ng-if=\"buildCounts.countByPhase[phase]\" class=\"icon-count\">\n" +
     "<span dynamic-content=\"{{buildCounts.countByPhase[phase]}} {{phase}}\" data-toggle=\"tooltip\" data-trigger=\"hover\" aria-hidden=\"true\">\n" +
     "<span ng-switch=\"phase\" class=\"hide-ng-leave\">\n" +
@@ -12016,8 +12026,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"sr-only\">{{phase}}</span>\n" +
     "</span>\n" +
     "</span>\n" +
+    "<span>\n" +
+    "<span ng-if=\"buildCounts.label\" class=\"builds-label\">\n" +
+    "{{buildCounts.label}}\n" +
+    "</span>\n" +
     "<span ng-if=\"buildCounts.currentStage\" class=\"running-stage\">\n" +
     "Stage {{buildCounts.currentStage.name}}\n" +
+    "</span>\n" +
     "</span>\n" +
     "</span>"
   );
@@ -12025,7 +12040,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_builds.html',
     "<div ng-if=\"overviewBuilds.buildConfigs.length\" class=\"expanded-section\">\n" +
-    "<div class=\"section-title hidden-xs\">Builds</div>\n" +
+    "<div class=\"component-label section-label hidden-xs\">Builds</div>\n" +
     "<div ng-repeat=\"buildConfig in overviewBuilds.buildConfigs track by (buildConfig | uid)\" class=\"row\">\n" +
     "<div class=\"col-sm-5 col-md-6\">\n" +
     "<h3 class=\"mar-top-xs\">\n" +
@@ -12048,7 +12063,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<status-icon status=\"build.status.phase\"></status-icon>\n" +
     "</span>\n" +
     "</span>\n" +
-    "<span class=\"h5\">\n" +
+    "<span>\n" +
     "Build\n" +
     "<a ng-href=\"{{build | navigateResourceURL}}\"><span ng-if=\"build | annotation : 'buildNumber'\">#{{build | annotation : 'buildNumber'}}</span><span ng-if=\"!(build | annotation : 'buildNumber')\">{{build.metadata.name}}</span></a>\n" +
     "<span ng-switch=\"build.status.phase\" class=\"hide-ng-leave\">\n" +
@@ -12419,7 +12434,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab ng-if=\"row.showBindings && (row.bindings | size)\" active=\"row.selectedTab.bindings\">\n" +
     "<uib-tab-heading>Bindings</uib-tab-heading>\n" +
-    "<overview-service-bindings section-title=\"Service Bindings\" ref-api-object=\"row.apiObject\" namespace=\"row.apiObject.metadata.namespace\" bindings=\"row.bindings\" bindable-service-instances=\"row.state.bindableServiceInstances\" service-classes=\"row.state.serviceClasses\" service-instances=\"row.state.serviceInstances\" create-binding=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">\n" +
+    "<overview-service-bindings component-label=\"Service Bindings\" ref-api-object=\"row.apiObject\" namespace=\"row.apiObject.metadata.namespace\" bindings=\"row.bindings\" bindable-service-instances=\"row.state.bindableServiceInstances\" service-classes=\"row.state.serviceClasses\" service-instances=\"row.state.serviceInstances\" create-binding=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">\n" +
     "</overview-service-bindings>\n" +
     "</uib-tab>\n" +
     "</uib-tabset>\n" +
@@ -12435,7 +12450,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<overview-builds build-configs=\"row.buildConfigs\" recent-builds-by-build-config=\"row.state.recentBuildsByBuildConfig\" context=\"row.state.context\" hide-log=\"row.state.limitWatches\">\n" +
     "</overview-builds>\n" +
-    "<overview-service-bindings section-title=\"Service Bindings\" ng-if=\"row.showBindings && (row.bindings | size)\" ref-api-object=\"row.apiObject\" namespace=\"row.apiObject.metadata.namespace\" bindings=\"row.bindings\" bindable-service-instances=\"row.state.bindableServiceInstances\" service-classes=\"row.state.serviceClasses\" service-instances=\"row.state.serviceInstances\" create-binding=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">\n" +
+    "<overview-service-bindings component-label=\"Service Bindings\" ng-if=\"row.showBindings && (row.bindings | size)\" ref-api-object=\"row.apiObject\" namespace=\"row.apiObject.metadata.namespace\" bindings=\"row.bindings\" bindable-service-instances=\"row.state.bindableServiceInstances\" service-classes=\"row.state.serviceClasses\" service-instances=\"row.state.serviceInstances\" create-binding=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">\n" +
     "</overview-service-bindings>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -12500,12 +12515,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_networking.html',
     "<div ng-if=\"networking.rowServices | size\" class=\"expanded-section networking-section\">\n" +
-    "<div class=\"section-title hidden-xs\">Networking</div>\n" +
+    "<div class=\"component-label section-label hidden-xs\">Networking</div>\n" +
     "<div ng-repeat=\"service in networking.rowServices\" class=\"row\">\n" +
     "<div class=\"col-sm-5 col-md-6\">\n" +
-    "<div class=\"component-label\">\n" +
-    "Service\n" +
-    "<span class=\"sublabel\">Internal Traffic</span>\n" +
+    "<div class=\"resource-label\">\n" +
+    "Service - Internal Traffic\n" +
     "</div>\n" +
     "<h3>\n" +
     "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
@@ -12525,9 +12539,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "<div class=\"col-sm-7 col-md-6 overview-routes\">\n" +
-    "<div class=\"component-label\">\n" +
-    "Routes\n" +
-    "<span class=\"sublabel\">External Traffic</span>\n" +
+    "<div class=\"resource-label\">\n" +
+    "Routes - External Traffic\n" +
     "</div>\n" +
     "<div ng-if=\"networking.routesByService[service.metadata.name] | size\">\n" +
     "<div ng-repeat=\"route in networking.routesByService[service.metadata.name] | limitTo : 2 track by (route | uid)\" class=\"overview-routes\">\n" +
@@ -12604,7 +12617,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_pipelines.html',
     "<div ng-if=\"overviewPipelines.recentPipelines.length\" class=\"expanded-section\">\n" +
-    "<div class=\"section-title no-border hidden-xs\">Pipelines</div>\n" +
+    "<div class=\"component-label section-label sans-border hidden-xs\">Pipelines</div>\n" +
     "<div ng-repeat=\"pipeline in overviewPipelines.recentPipelines track by (pipeline | uid)\" class=\"build-pipeline-wrapper animate-repeat\">\n" +
     "<build-pipeline build=\"pipeline\" build-config-name-on-expanded=\"true\" collapse-pending=\"true\"></build-pipeline>\n" +
     "</div>\n" +
@@ -12614,7 +12627,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_service-bindings.html',
     "<div class=\"expanded-section\">\n" +
-    "<div class=\"section-title hidden-xs\">{{$ctrl.sectionTitle}}</div>\n" +
+    "<div class=\"component-label hidden-xs\">{{$ctrl.sectionTitle}}</div>\n" +
     "<service-binding ng-repeat=\"binding in $ctrl.bindings track by (binding | uid)\" is-overview=\"true\" namespace=\"$ctrl.namespace\" ref-api-object=\"$ctrl.refApiObject\" binding=\"binding\" service-classes=\"$ctrl.serviceClasses\" service-instances=\"$ctrl.serviceInstances\" secrets=\"$ctrl.secrets\">\n" +
     "</service-binding>\n" +
     "<p ng-if=\"!$ctrl.refApiObject.metadata.deletionTimestamp && ($ctrl.bindableServiceInstances | size) && ({resource: 'servicebindings', group: 'servicecatalog.k8s.io'} | canI : 'create')\">\n" +
@@ -12741,7 +12754,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"list-pf-expansion collapse\" ng-if=\"row.expanded\" ng-class=\"{ in: row.expanded }\">\n" +
     "<div class=\"list-pf-container\">\n" +
-    "<div class=\"expanded-section\">\n" +
     "<alerts alerts=\"row.notifications\"></alerts>\n" +
     "<div ng-switch=\"row.instanceStatus\">\n" +
     "<div ng-switch-when=\"deleted\" class=\"row\">\n" +
@@ -12781,7 +12793,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div>\n" +
+    "<div class=\"expanded-section no-margin\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-sm-12\" ng-if=\"row.serviceClass.spec.description\">\n" +
     "<p class=\"service-description\"><truncate-long-text limit=\"500\" content=\"row.serviceClass.spec.description\" use-word-boundary=\"true\" expandable=\"true\" linkify=\"true\">\n" +
@@ -12792,11 +12804,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "<div class=\"expanded-section\">\n" +
     "<div ng-if=\"row.isBindable || (row.bindings | size)\">\n" +
-    "<div class=\"section-title\">Bindings</div>\n" +
+    "<div class=\"component-label section-label\">Bindings</div>\n" +
     "<service-instance-bindings is-overview=\"true\" project=\"row.state.project\" bindings=\"row.bindings\" service-instance=\"row.apiObject\" service-class=\"row.serviceClass\" service-plan=\"row.servicePlan\">\n" +
     "</service-instance-bindings>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

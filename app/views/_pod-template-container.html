@@ -8,8 +8,8 @@
  -->
 
 <div class="pod-template">
-  <div class="component-label"><span ng-bind-template="{{labelPrefix||'Container'}}:"></span> {{container.name}}</div>
-
+  <div class="component-label section-label" ng-if="!detailed" ng-bind-template="{{labelPrefix||'Container'}}"></div>
+  <div class="pod-container-name">{{container.name}}</div>
   <div row ng-if="container.image" class="pod-template-image icon-row">
     <div class="icon-wrap">
       <span class="pficon pficon-image" aria-hidden="true"></span>

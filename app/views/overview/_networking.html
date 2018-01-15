@@ -1,10 +1,9 @@
 <div ng-if="networking.rowServices | size" class="expanded-section networking-section">
-  <div class="section-title hidden-xs">Networking</div>
+  <div class="component-label section-label hidden-xs">Networking</div>
   <div ng-repeat="service in networking.rowServices" class="row">
     <div class="col-sm-5 col-md-6">
-      <div class="component-label">
-        Service
-        <span class="sublabel">Internal Traffic</span>
+      <div class="resource-label">
+        Service - Internal Traffic
       </div>
       <h3>
         <a ng-href="{{service | navigateResourceURL}}">{{service.metadata.name}}</a>
@@ -24,9 +23,8 @@
       </span>
     </div>
     <div class="col-sm-7 col-md-6 overview-routes">
-      <div class="component-label">
-        Routes
-        <span class="sublabel">External Traffic</span>
+      <div class="resource-label">
+        Routes - External Traffic
       </div>
       <div ng-if="networking.routesByService[service.metadata.name] | size">
         <div ng-repeat="route in networking.routesByService[service.metadata.name] | limitTo : 2 track by (route | uid)" class="overview-routes">

@@ -95,81 +95,81 @@
     ng-if="row.expanded"
     ng-class="{ in: row.expanded }">
     <div class="list-pf-container">
-      <div class="expanded-section">
-        <alerts alerts="row.notifications"></alerts>
-        <div ng-switch="row.instanceStatus">
-          <div ng-switch-when="deleted" class="row">
-            <div class="col-sm-12">
-              <div class="alert word-break alert-warning">
-                <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-                <span class="sr-only">warning</span>
-                <span class="strong">The service was marked for deletion.</span>
-              </div>
+      <alerts alerts="row.notifications"></alerts>
+      <div ng-switch="row.instanceStatus">
+        <div ng-switch-when="deleted" class="row">
+          <div class="col-sm-12">
+            <div class="alert word-break alert-warning">
+              <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
+              <span class="sr-only">warning</span>
+              <span class="strong">The service was marked for deletion.</span>
             </div>
           </div>
-          <div ng-switch-when="failed" class="row">
-            <div class="col-sm-12">
-              <div class="alert word-break alert-danger">
-                <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
-                <span class="sr-only">error</span>
-                <span class="strong">The service failed.</span>
-                <span class="instance-status-message">
-                  <truncate-long-text
-                    content="row.apiObject | serviceInstanceFailedMessage"
-                    expandable="true"
-                    limit="265"
-                    newline-limit="4"></truncate-long-text>
-                </span>
-                <div ng-if="row.serviceInstancesVersion | canI : 'delete'">
-                  <a href="" ng-click="row.deprovision()">Delete This Service</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div ng-switch-when="pending" class="row">
-            <div class="col-sm-12">
-              <div class="alert word-break alert-info">
-                <span class="pficon pficon-info" aria-hidden="true"></span>
-                <span class="sr-only">info</span>
-                <span class="strong">The service is not yet ready.</span>
-                <span class="instance-status-message">
-                  <truncate-long-text
-                    content="row.apiObject | serviceInstanceReadyMessage"
-                    expandable="true"
-                    limit="265"
-                    newline-limit="4"></truncate-long-text>
-                </span>
+        </div>
+        <div ng-switch-when="failed" class="row">
+          <div class="col-sm-12">
+            <div class="alert word-break alert-danger">
+              <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
+              <span class="sr-only">error</span>
+              <span class="strong">The service failed.</span>
+              <span class="instance-status-message">
+                <truncate-long-text
+                  content="row.apiObject | serviceInstanceFailedMessage"
+                  expandable="true"
+                  limit="265"
+                  newline-limit="4"></truncate-long-text>
+              </span>
+              <div ng-if="row.serviceInstancesVersion | canI : 'delete'">
+                <a href="" ng-click="row.deprovision()">Delete This Service</a>
               </div>
             </div>
           </div>
         </div>
-        <div>
-          <div class="row">
-            <div class="col-sm-12" ng-if="row.serviceClass.spec.description">
-              <p class="service-description"><truncate-long-text
-                  limit="500"
-                  content="row.serviceClass.spec.description"
-                  use-word-boundary="true"
+        <div ng-switch-when="pending" class="row">
+          <div class="col-sm-12">
+            <div class="alert word-break alert-info">
+              <span class="pficon pficon-info" aria-hidden="true"></span>
+              <span class="sr-only">info</span>
+              <span class="strong">The service is not yet ready.</span>
+              <span class="instance-status-message">
+                <truncate-long-text
+                  content="row.apiObject | serviceInstanceReadyMessage"
                   expandable="true"
-                  linkify="true">
-                </truncate-long-text></p>
-              <div ng-if="row.serviceClass.spec.externalMetadata.documentationUrl || row.serviceClass.spec.externalMetadata.supportUrl">
-                <a ng-if="row.serviceClass.spec.externalMetadata.documentationUrl" ng-href="{{row.serviceClass.spec.externalMetadata.documentationUrl}}" target="_blank" class="learn-more-link">View Documentation <i class="fa fa-external-link" aria-hidden="true"></i></a>
-                <a ng-if="row.serviceClass.spec.externalMetadata.supportUrl" ng-href="{{row.serviceClass.spec.externalMetadata.supportUrl}}" target="_blank" class="learn-more-link">Get Support <i class="fa fa-external-link" aria-hidden="true"></i></a>
-              </div>
+                  limit="265"
+                  newline-limit="4"></truncate-long-text>
+              </span>
             </div>
           </div>
-          <div ng-if="row.isBindable || (row.bindings | size)">
-            <div class="section-title">Bindings</div>
-            <service-instance-bindings
-              is-overview="true"
-              project="row.state.project"
-              bindings="row.bindings"
-              service-instance="row.apiObject"
-              service-class="row.serviceClass"
-              service-plan="row.servicePlan">
-            </service-instance-bindings>
+        </div>
+      </div>
+      <div class="expanded-section no-margin">
+        <div class="row">
+          <div class="col-sm-12" ng-if="row.serviceClass.spec.description">
+            <p class="service-description"><truncate-long-text
+                limit="500"
+                content="row.serviceClass.spec.description"
+                use-word-boundary="true"
+                expandable="true"
+                linkify="true">
+              </truncate-long-text></p>
+            <div ng-if="row.serviceClass.spec.externalMetadata.documentationUrl || row.serviceClass.spec.externalMetadata.supportUrl">
+              <a ng-if="row.serviceClass.spec.externalMetadata.documentationUrl" ng-href="{{row.serviceClass.spec.externalMetadata.documentationUrl}}" target="_blank" class="learn-more-link">View Documentation <i class="fa fa-external-link" aria-hidden="true"></i></a>
+              <a ng-if="row.serviceClass.spec.externalMetadata.supportUrl" ng-href="{{row.serviceClass.spec.externalMetadata.supportUrl}}" target="_blank" class="learn-more-link">Get Support <i class="fa fa-external-link" aria-hidden="true"></i></a>
+            </div>
           </div>
+        </div>
+      </div>
+      <div class="expanded-section">
+        <div ng-if="row.isBindable || (row.bindings | size)">
+          <div class="component-label section-label">Bindings</div>
+          <service-instance-bindings
+            is-overview="true"
+            project="row.state.project"
+            bindings="row.bindings"
+            service-instance="row.apiObject"
+            service-class="row.serviceClass"
+            service-plan="row.servicePlan">
+          </service-instance-bindings>
         </div>
       </div>
     </div>

@@ -4,14 +4,35 @@
 
 // TODO: also using this style for a volume claim template.
 // consider a slightly more generic name that isn't limited to 'pod'
+
+.component-label {
+  align-self: center;
+  .text-muted();
+  font-size: @component-label;
+  padding: 0 10px 0 0;
+  text-transform: uppercase;
+  h3 & {
+    padding-bottom: 4px;
+  }
+  &.section-label {
+    border-bottom: 1px solid @list-pf-border-color;
+    line-height: 1;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    &.sans-border {
+      border-bottom: 0;
+      margin-bottom: 0;
+    }
+  }
+}
+
 .pod-template-block {
+  .pod-container-name {
+    font-size: @font-size-large;
+    margin-bottom: 4px;
+  }
   + .pod-template-block {
     margin-top: 15px;
-  }
-  .component-label {
-    font-size: @component-label;
-    padding: 0 10px 4px 0;
-    text-transform: uppercase;
   }
   .pod-template {
     // so that .word-break() on children works
@@ -38,6 +59,11 @@
 
 .pod-template-container {
   margin: 0 0 20px;
+  // Needed to override .resource-details h3 rule
+  h3 {
+    margin-top: 0;
+    padding-bottom: 0;
+  }
 }
 
 code.command {
@@ -57,15 +83,26 @@ code.command {
 .clickable {
   cursor: pointer;
 }
-
+.pods {
+  display: inline-block;
+  // align pod text with right outer edge of .list-pf-details text
+  margin-right: 25px;
+}
+pod-donut[mini] {
+  display:inline-block;
+  // match size setting in podDonut.js
+  min-height: 45px;
+  min-width: 45px;
+  position: relative;
+}
 .pod-donut {
   &.mini {
     display: inline-block;
-    margin: 0 0 0 -8px;
-    min-width: 45px;
+    // match size setting in podDonut.js
     min-height: 45px;
-    top: 3px;
-    vertical-align: middle;
+		min-width: 45px;
+    position: absolute !important;
+		top: 2px;
   }
   .c3-defocused {
     // Adjusting the default hover "opacity: .3" to be slightly darker
@@ -94,8 +131,19 @@ code.command {
 }
 
 .donut-mini-text {
-  display: inline-block;
-  min-width: 50px;
+  left: 51%;
+  position: absolute;
+	top: 49%;
+  transform: translate(-49%, -51%);
+}
+.donut-mini-text-name {
+  position: absolute;
+	transform: translate(45px,-51%);
+	top: 49%;
+	line-height: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .deployment-donut {
@@ -171,19 +219,6 @@ code.command {
       &:first-of-type {
         margin-top: 0;
       }
-    }
-  }
-
-  .component-label {
-    font-size: @component-label;
-    font-weight: 500;
-    padding: 0 0 4px 0;
-    .text-muted();
-    text-transform: uppercase;
-    .sublabel {
-      font-size: (@component-label - 1);
-      margin-left: 2px;
-      text-transform: none;
     }
   }
 
