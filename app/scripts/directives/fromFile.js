@@ -244,6 +244,7 @@ angular.module("openshiftConsole")
         function openTemplateProcessModal() {
           var modalInstance = $uibModal.open({
             animation: true,
+            backdrop: 'static',
             templateUrl: 'views/modals/process-or-save-template.html',
             controller: 'ProcessOrSaveTemplateModalController',
             scope: $scope

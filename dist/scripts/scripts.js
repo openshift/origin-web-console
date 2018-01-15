@@ -9689,6 +9689,7 @@ message: "Resource is missing metadata field."
 function v() {
 r.open({
 animation: !0,
+backdrop: "static",
 templateUrl: "views/modals/process-or-save-template.html",
 controller: "ProcessOrSaveTemplateModalController",
 scope: p
