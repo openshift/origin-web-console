@@ -3136,6 +3136,7 @@ label: "Set Home Page",
 onClick: function() {
 return r.open({
 animation: !0,
+backdrop: "static",
 templateUrl: "views/modals/set-home-page-modal.html",
 controller: "SetHomePageModalController"
 }), !0;
@@ -11207,6 +11208,7 @@ link: function(t, n) {
 n.bind("click", function() {
 e.open({
 animation: !0,
+backdrop: "static",
 templateUrl: "views/modals/set-home-page-modal.html",
 controller: "SetHomePageModalController"
 });
