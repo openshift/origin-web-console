@@ -114,41 +114,41 @@ angular.module("openshiftConsole")
               name: $scope.newSecret.data.secretName
             },
             type: authType,
-            data: {}
+            stringData: {}
           };
 
           switch (authType) {
             case "kubernetes.io/basic-auth":
+
               // If the password/token is not entered either .gitconfig or ca.crt has to be provided
               if (data.passwordToken) {
-                secret.data = {password: window.btoa(data.passwordToken)};
+                secret.stringData.password = data.passwordToken;
               } else {
                 secret.type = "Opaque";
               }
               if (data.username) {
-                secret.data.username = window.btoa(data.username);
+                secret.stringData.username = data.username;
               }
               if (data.gitconfig) {
-                secret.data[".gitconfig"] = window.btoa(data.gitconfig);
+                secret.stringData['.gitconfig'] = data.gitconfig;
               }
               if (data.cacert) {
-                secret.data["ca.crt"] = window.btoa(data.cacert);
+                secret.stringData['ca.crt'] = data.cacert;
               }
               break;
             case "kubernetes.io/ssh-auth":
-              secret.data = {'ssh-privatekey': window.btoa(data.privateKey)};
+              secret.stringData['ssh-privatekey'] = data.privateKey;
               if (data.gitconfig) {
-                secret.data[".gitconfig"] = window.btoa(data.gitconfig);
+                secret.stringData['.gitconfig'] = data.gitconfig;
               }
               break;
             case "kubernetes.io/dockerconfigjson":
-              var encodedConfig = window.btoa(data.dockerConfig);
-              if (JSON.parse(data.dockerConfig).auths) {
-                secret.data[".dockerconfigjson"] = encodedConfig;
-              } else {
+              var configType = ".dockerconfigjson";
+              if (!JSON.parse(data.dockerConfig).auths) {
                 secret.type = "kubernetes.io/dockercfg";
-                secret.data[".dockercfg"] = encodedConfig;
+                configType = ".dockercfg";
               }
+              secret.stringData[configType] = data.dockerConfig;
               break;
             case "kubernetes.io/dockercfg":
               var auth = window.btoa(data.dockerUsername + ":" + data.dockerPassword);
@@ -159,11 +159,11 @@ angular.module("openshiftConsole")
                 email: data.dockerMail,
                 auth: auth
               };
-              secret.data[".dockercfg"] = window.btoa(JSON.stringify(configData));
+              secret.stringData['.dockercfg'] = JSON.stringify(configData);
               break;
             case "Opaque":
               if (data.webhookSecretKey) {
-                _.set(secret, 'stringData.WebHookSecretKey', data.webhookSecretKey);
+                secret.stringData.WebHookSecretKey = data.webhookSecretKey;
               }
               break;
           }
