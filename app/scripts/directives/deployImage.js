@@ -153,7 +153,9 @@ angular.module("openshiftConsole")
               },
               // failure
               function(response) {
-                $scope.import.error = $filter('getErrorDetails')(response) || 'An error occurred finding the image.';
+                $scope.import = {
+                  error: $filter('getErrorDetails')(response) || 'An error occurred finding the image.'
+                };
                 $scope.loading = false;
               });
           };
