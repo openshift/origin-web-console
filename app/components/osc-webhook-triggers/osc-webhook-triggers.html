@@ -1,10 +1,9 @@
 <ng-form name="secretsForm" class="add-webhook">
   <div ng-repeat="trigger in $ctrl.webhookTriggers">
-    {{trigger}}
     <div class="add-webhook-row">
       <ui-select 
         ng-model="trigger.data.type"
-        ng-disabled="isDeprecated(trigger)"
+        ng-disabled="$ctrl.isDeprecated(trigger)"
         on-select="$ctrl.triggerTypeChange(trigger)"
         search-enabled="false"
         title="Select a webhook type"

@@ -13926,9 +13926,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('components/osc-webhook-triggers/osc-webhook-triggers.html',
     "<ng-form name=\"secretsForm\" class=\"add-webhook\">\n" +
     "<div ng-repeat=\"trigger in $ctrl.webhookTriggers\">\n" +
-    "{{trigger}}\n" +
     "<div class=\"add-webhook-row\">\n" +
-    "<ui-select ng-model=\"trigger.data.type\" ng-disabled=\"isDeprecated(trigger)\" on-select=\"$ctrl.triggerTypeChange(trigger)\" search-enabled=\"false\" title=\"Select a webhook type\" class=\"select-webhook-type\" flex>\n" +
+    "<ui-select ng-model=\"trigger.data.type\" ng-disabled=\"$ctrl.isDeprecated(trigger)\" on-select=\"$ctrl.triggerTypeChange(trigger)\" search-enabled=\"false\" title=\"Select a webhook type\" class=\"select-webhook-type\" flex>\n" +
     "<ui-select-match placeholder=\"Webhook type\">\n" +
     "{{ $select.selected.label }}\n" +
     "</ui-select-match>\n" +
