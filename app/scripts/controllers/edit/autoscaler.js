@@ -109,7 +109,7 @@ angular.module('openshiftConsole')
               },
               minReplicas: $scope.autoscaling.minReplicas,
               maxReplicas: $scope.autoscaling.maxReplicas,
-              targetCPUUtilizationPercentage: $scope.autoscaling.targetCPU || $scope.autoscaling.defaultTargetCPU || null
+              targetCPUUtilizationPercentage: $scope.autoscaling.targetCPU
             }
           };
 
@@ -139,7 +139,7 @@ angular.module('openshiftConsole')
           hpa.metadata.labels = keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels));
           hpa.spec.minReplicas = $scope.autoscaling.minReplicas;
           hpa.spec.maxReplicas = $scope.autoscaling.maxReplicas;
-          hpa.spec.targetCPUUtilizationPercentage = $scope.autoscaling.targetCPU || $scope.autoscaling.defaultTargetCPU || null;
+          hpa.spec.targetCPUUtilizationPercentage = $scope.autoscaling.targetCPU;
 
           DataService.update(horizontalPodAutoscalerVersion, hpa.metadata.name, hpa, context)
             .then(function(hpa) { // Success

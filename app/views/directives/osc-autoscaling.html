@@ -101,35 +101,29 @@
   </div>
   <div class="form-group">
     <label>
-      CPU
-      <span ng-if="isRequestCalculated">Limit</span>
-      <span ng-if="!isRequestCalculated">Request</span>
-      Target
+      CPU Request Target
     </label>
     <div class="input-group" ng-class="{ 'has-error': form.targetCPU.$invalid && form.targetCPU.$touched }">
       <input type="number"
              class="form-control"
              min="1"
              name="targetCPU"
-             ng-model="targetCPUInput.percent"
+             ng-model="autoscaling.targetCPU"
              pattern="\d*"
              select-on-focus
              aria-describedby="target-cpu-help">
       <span class="input-group-addon">%</span>
     </div>
     <div id="target-cpu-help" class="help-block">
-      The percentage of the CPU
-      <span ng-if="isRequestCalculated">limit</span>
-      <span ng-if="!isRequestCalculated">request</span>
-      that each pod should ideally be using. Pods will be added or removed
-      periodically when CPU usage exceeds or drops below this target value.
-      <span ng-if="defaultTargetCPUDisplayValue">Defaults to {{defaultTargetCPUDisplayValue}}%.</span>
+      The percentage of the CPU request that each pod should ideally be using.
+      Pods will be added or removed periodically when CPU usage exceeds or
+      drops below this target value.
     </div>
     <div class="learn-more-block">
-      <a href="{{'compute_resources' | helpLink}}" target="_blank">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
+      <a ng-href="{{'compute_resources' | helpLink}}" target="_blank">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
     </div>
     <!-- Add extra top margin for the learn more block -->
-    <div class="has-error" style="margin-top: 10px;" ng-show="form.targetCPU.$touched && form.targetCPU.$invalid">
+    <div class="has-error mar-top-md" ng-show="form.targetCPU.$touched && form.targetCPU.$invalid">
       <span ng-if="form.targetCPU.$error.number" class="help-block">
         Target CPU percentage must be a number.
       </span>

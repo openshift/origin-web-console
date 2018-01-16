@@ -275,7 +275,7 @@ angular.module("openshiftConsole")
           },
           minReplicas: input.scaling.minReplicas,
           maxReplicas: input.scaling.maxReplicas,
-          targetCPUUtilizationPercentage: input.scaling.targetCPU || input.scaling.defaultTargetCPU || null
+          targetCPUUtilizationPercentage: input.scaling.targetCPU
         }
       };
 
