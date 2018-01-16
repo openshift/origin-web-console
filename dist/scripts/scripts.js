@@ -9158,24 +9158,20 @@ metadata: {
 name: l.newSecret.data.secretName
 },
 type: t,
-data: {}
+stringData: {}
 };
 switch (t) {
 case "kubernetes.io/basic-auth":
-e.passwordToken ? n.data = {
-password: window.btoa(e.passwordToken)
-} : n.type = "Opaque", e.username && (n.data.username = window.btoa(e.username)), e.gitconfig && (n.data[".gitconfig"] = window.btoa(e.gitconfig)), e.cacert && (n.data["ca.crt"] = window.btoa(e.cacert));
+e.passwordToken ? n.stringData.password = e.passwordToken : n.type = "Opaque", e.username && (n.stringData.username = e.username), e.gitconfig && (n.stringData[".gitconfig"] = e.gitconfig), e.cacert && (n.stringData["ca.crt"] = e.cacert);
 break;
 
 case "kubernetes.io/ssh-auth":
-n.data = {
-"ssh-privatekey": window.btoa(e.privateKey)
-}, e.gitconfig && (n.data[".gitconfig"] = window.btoa(e.gitconfig));
+n.stringData["ssh-privatekey"] = e.privateKey, e.gitconfig && (n.stringData[".gitconfig"] = e.gitconfig);
 break;
 
 case "kubernetes.io/dockerconfigjson":
-var r = window.btoa(e.dockerConfig);
-JSON.parse(e.dockerConfig).auths ? n.data[".dockerconfigjson"] = r : (n.type = "kubernetes.io/dockercfg", n.data[".dockercfg"] = r);
+var r = ".dockerconfigjson";
+JSON.parse(e.dockerConfig).auths || (n.type = "kubernetes.io/dockercfg", r = ".dockercfg"), n.stringData[r] = e.dockerConfig;
 break;
 
 case "kubernetes.io/dockercfg":
@@ -9185,11 +9181,11 @@ username: e.dockerUsername,
 password: e.dockerPassword,
 email: e.dockerMail,
 auth: a
-}, n.data[".dockercfg"] = window.btoa(JSON.stringify(o));
+}, n.stringData[".dockercfg"] = JSON.stringify(o);
 break;
 
 case "Opaque":
-e.webhookSecretKey && _.set(n, "stringData.WebHookSecretKey", e.webhookSecretKey);
+e.webhookSecretKey && (n.stringData.WebHookSecretKey = e.webhookSecretKey);
 }
 return n;
 }, d = function() {
