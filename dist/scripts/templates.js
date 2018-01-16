@@ -12013,6 +12013,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_build-counts.html',
     "<span ng-if=\"buildCounts.show\" class=\"animate-if\">\n" +
+    "<span ng-if=\"buildCounts.label\" class=\"builds-label\">\n" +
+    "{{buildCounts.label}}\n" +
+    "</span>\n" +
     "<span ng-repeat=\"phase in buildCounts.interestingPhases\" ng-if=\"buildCounts.countByPhase[phase]\" class=\"icon-count\">\n" +
     "<span dynamic-content=\"{{buildCounts.countByPhase[phase]}} {{phase}}\" data-toggle=\"tooltip\" data-trigger=\"hover\" aria-hidden=\"true\">\n" +
     "<span ng-switch=\"phase\" class=\"hide-ng-leave\">\n" +
@@ -12027,13 +12030,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"sr-only\">{{phase}}</span>\n" +
     "</span>\n" +
     "</span>\n" +
-    "<span>\n" +
-    "<span ng-if=\"buildCounts.label\" class=\"builds-label\">\n" +
-    "{{buildCounts.label}}\n" +
-    "</span>\n" +
     "<span ng-if=\"buildCounts.currentStage\" class=\"running-stage\">\n" +
     "Stage {{buildCounts.currentStage.name}}\n" +
-    "</span>\n" +
     "</span>\n" +
     "</span>"
   );
