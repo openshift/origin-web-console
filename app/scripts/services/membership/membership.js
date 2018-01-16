@@ -119,8 +119,8 @@ angular
     };
 
     var filterRoles = function(roles) {
-      return _.filter(roles, function(item) {
-        return _.includes(Constants.MEMBERSHIP_WHITELIST, item.metadata.name);
+      return _.filter(roles, function(role) {
+        return role.kind === 'Role' || _.includes(Constants.MEMBERSHIP_WHITELIST, role.metadata.name);
       });
     };
 

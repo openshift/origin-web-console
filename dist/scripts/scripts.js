@@ -2468,7 +2468,7 @@ return _.sortBy(e, "metadata.name");
 },
 filterRoles: function(e) {
 return _.filter(e, function(e) {
-return _.includes(t.MEMBERSHIP_WHITELIST, e.metadata.name);
+return "Role" === e.kind || _.includes(t.MEMBERSHIP_WHITELIST, e.metadata.name);
 });
 },
 mapRolesForUI: function(e, t) {
