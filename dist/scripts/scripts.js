@@ -13375,8 +13375,8 @@ templateUrl: "views/directives/unbind-service.html"
 });
 }(), function() {
 angular.module("openshiftConsole").component("processTemplate", {
-controller: [ "$filter", "$q", "$scope", "$uibModal", "DataService", "Navigate", "NotificationsService", "ProcessedTemplateService", "ProjectsService", "QuotaService", "SecurityCheckService", "TaskList", "keyValueEditorUtils", function(e, t, n, r, a, o, i, s, c, l, u, d, m) {
-function p(e) {
+controller: [ "$filter", "$q", "$scope", "$uibModal", "APIService", "DataService", "Navigate", "NotificationsService", "ProcessedTemplateService", "ProjectsService", "QuotaService", "SecurityCheckService", "TaskList", "keyValueEditorUtils", function(e, t, n, r, a, o, i, s, c, l, u, d, m, p) {
+function f(e) {
 var t = /^helplink\.(.*)\.title$/, n = /^helplink\.(.*)\.url$/, r = {};
 for (var a in e.annotations) {
 var o, i = a.match(t);
@@ -13384,61 +13384,61 @@ i ? ((o = r[i[1]] || {}).title = e.annotations[a], r[i[1]] = o) : (i = a.match(n
 }
 return r;
 }
-function f() {
-v.prefillParameters && _.each(v.template.parameters, function(e) {
-v.prefillParameters[e.name] && (e.value = v.prefillParameters[e.name]);
-}), v.labels = _.map(v.template.labels, function(e, t) {
+function g() {
+h.prefillParameters && _.each(h.template.parameters, function(e) {
+h.prefillParameters[e.name] && (e.value = h.prefillParameters[e.name]);
+}), h.labels = _.map(h.template.labels, function(e, t) {
 return {
 name: t,
 value: e
 };
-}), I() && v.labels.push({
+}), T() && h.labels.push({
 name: "app",
-value: v.template.metadata.name
+value: h.template.metadata.name
 });
 }
-var g, v = this, h = e("displayName"), y = e("humanize");
-v.noProjectsCantCreate = !1, v.$onInit = function() {
-v.labels = [], v.template = angular.copy(v.template), v.templateDisplayName = h(v.template), v.selectedProject = v.project, n.$watch("$ctrl.selectedProject.metadata.name", function() {
-v.projectNameTaken = !1;
+var v, h = this, y = e("displayName"), b = e("humanize");
+h.noProjectsCantCreate = !1, h.$onInit = function() {
+h.labels = [], h.template = angular.copy(h.template), h.templateDisplayName = y(h.template), h.selectedProject = h.project, n.$watch("$ctrl.selectedProject.metadata.name", function() {
+h.projectNameTaken = !1;
 }), n.$on("no-projects-cannot-create", function() {
-v.noProjectsCantCreate = !0;
-}), f();
+h.noProjectsCantCreate = !0;
+}), g();
 };
-var b, S = function() {
+var S, C = function() {
 var e = {
-started: "Creating " + v.templateDisplayName + " in project " + h(v.selectedProject),
-success: "Created " + v.templateDisplayName + " in project " + h(v.selectedProject),
-failure: "Failed to create " + v.templateDisplayName + " in project " + h(v.selectedProject)
-}, r = p(v.template);
-d.clear(), d.add(e, r, v.selectedProject.metadata.name, function() {
+started: "Creating " + h.templateDisplayName + " in project " + y(h.selectedProject),
+success: "Created " + h.templateDisplayName + " in project " + y(h.selectedProject),
+failure: "Failed to create " + h.templateDisplayName + " in project " + y(h.selectedProject)
+}, r = f(h.template);
+m.clear(), m.add(e, r, h.selectedProject.metadata.name, function() {
 var e = t.defer();
-return a.batch(b, g).then(function(t) {
+return o.batch(S, v).then(function(t) {
 var n = [], r = !1;
 t.failure.length > 0 ? (r = !0, t.failure.forEach(function(e) {
 n.push({
 type: "error",
-message: "Cannot create " + y(e.object.kind).toLowerCase() + ' "' + e.object.metadata.name + '". ',
+message: "Cannot create " + b(e.object.kind).toLowerCase() + ' "' + e.object.metadata.name + '". ',
 details: e.data.message
 });
 }), t.success.forEach(function(e) {
 n.push({
 type: "success",
-message: "Created " + y(e.kind).toLowerCase() + ' "' + e.metadata.name + '" successfully. '
+message: "Created " + b(e.kind).toLowerCase() + ' "' + e.metadata.name + '" successfully. '
 });
 })) : n.push({
 type: "success",
-message: "All items in template " + v.templateDisplayName + " were created successfully."
+message: "All items in template " + h.templateDisplayName + " were created successfully."
 }), e.resolve({
 alerts: n,
 hasErrors: r
 });
 }), e.promise;
-}), v.isDialog ? n.$emit("templateInstantiated", {
-project: v.selectedProject,
-template: v.template
-}) : o.toNextSteps(v.templateDisplayName, v.selectedProject.metadata.name);
-}, C = function(e) {
+}), h.isDialog ? n.$emit("templateInstantiated", {
+project: h.selectedProject,
+template: h.template
+}) : i.toNextSteps(h.templateDisplayName, h.selectedProject.metadata.name);
+}, w = function(e) {
 r.open({
 animation: !0,
 backdrop: "static",
@@ -13455,34 +13455,39 @@ cancelButtonText: "Cancel"
 };
 }
 }
-}).result.then(S);
-}, w = {}, P = function() {
-i.hideNotification("process-template-error"), _.each(w, function(e) {
-!e.id || "error" !== e.type && "warning" !== e.type || i.hideNotification(e.id);
+}).result.then(C);
+}, P = {}, j = function() {
+s.hideNotification("process-template-error"), _.each(P, function(e) {
+!e.id || "error" !== e.type && "warning" !== e.type || s.hideNotification(e.id);
 });
-}, j = function(e) {
-P(), w = u.getSecurityAlerts(b, v.selectedProject.metadata.name);
+}, k = function(e) {
+j(), P = d.getSecurityAlerts(S, h.selectedProject.metadata.name);
 var t = e.quotaAlerts || [];
-w = w.concat(t), _.filter(w, {
+P = P.concat(t), _.filter(P, {
 type: "error"
-}).length ? (v.disableInputs = !1, _.each(w, function(e) {
-e.id = _.uniqueId("process-template-alert-"), i.addNotification(e);
-})) : w.length ? (C(w), v.disableInputs = !1) : S();
-}, k = function() {
-if (_.has(v.selectedProject, "metadata.uid")) return t.when(v.selectedProject);
-var n = v.selectedProject.metadata.name, r = v.selectedProject.metadata.annotations["new-display-name"], a = e("description")(v.selectedProject);
-return c.create(n, r, a);
+}).length ? (h.disableInputs = !1, _.each(P, function(e) {
+e.id = _.uniqueId("process-template-alert-"), s.addNotification(e);
+})) : P.length ? (w(P), h.disableInputs = !1) : C();
+}, I = function() {
+if (_.has(h.selectedProject, "metadata.uid")) return t.when(h.selectedProject);
+var n = h.selectedProject.metadata.name, r = h.selectedProject.metadata.annotations["new-display-name"], a = e("description")(h.selectedProject);
+return l.create(n, r, a);
+}, R = function(e) {
+var t = a.objectToResourceGroupVersion(e);
+return t.resource = "processedtemplates", t;
 };
-v.createFromTemplate = function() {
-v.disableInputs = !0, k().then(function(e) {
-v.selectedProject = e, g = {
-namespace: v.selectedProject.metadata.name
-}, v.template.labels = m.mapEntries(m.compactEntries(v.labels)), a.create("processedtemplates", null, v.template, g).then(function(e) {
-s.setTemplateData(e.parameters, v.template.parameters, e.message), b = e.objects, l.getLatestQuotaAlerts(b, g).then(j);
+h.createFromTemplate = function() {
+h.disableInputs = !0, I().then(function(e) {
+h.selectedProject = e, v = {
+namespace: h.selectedProject.metadata.name
+}, h.template.labels = p.mapEntries(p.compactEntries(h.labels));
+var t = R(h.template);
+o.create(t, null, h.template, v).then(function(e) {
+c.setTemplateData(e.parameters, h.template.parameters, e.message), S = e.objects, u.getLatestQuotaAlerts(S, v).then(k);
 }, function(e) {
-v.disableInputs = !1;
+h.disableInputs = !1;
 var t;
-e.data && e.data.message && (t = e.data.message), i.addNotification({
+e.data && e.data.message && (t = e.data.message), s.addNotification({
 id: "process-template-error",
 type: "error",
 message: "An error occurred processing the template.",
@@ -13490,9 +13495,9 @@ details: t
 });
 });
 }, function(e) {
-if (v.disableInputs = !1, "AlreadyExists" === e.data.reason) v.projectNameTaken = !0; else {
+if (h.disableInputs = !1, "AlreadyExists" === e.data.reason) h.projectNameTaken = !0; else {
 var t;
-e.data && e.data.message && (t = e.data.message), i.addNotification({
+e.data && e.data.message && (t = e.data.message), s.addNotification({
 id: "process-template-error",
 type: "error",
 message: "An error occurred creating the project.",
@@ -13500,11 +13505,11 @@ details: t
 });
 }
 });
-}, v.cancel = function() {
-P(), o.toProjectOverview(v.project.metadata.name);
-}, n.$on("instantiateTemplate", v.createFromTemplate), n.$on("$destroy", P);
-var I = function() {
-return !_.get(v.template, "labels.app") && !_.some(v.template.objects, "metadata.labels.app");
+}, h.cancel = function() {
+j(), i.toProjectOverview(h.project.metadata.name);
+}, n.$on("instantiateTemplate", h.createFromTemplate), n.$on("$destroy", j);
+var T = function() {
+return !_.get(h.template, "labels.app") && !_.some(h.template.objects, "metadata.labels.app");
 };
 } ],
 controllerAs: "$ctrl",
