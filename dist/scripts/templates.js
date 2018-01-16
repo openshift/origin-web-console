@@ -11170,7 +11170,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Overview Page for{{availableProjects.length === 1 ? ' ' + (selectedProject | displayName) : ':'}}\n" +
     "</label>\n" +
     "<div class=\"select-project-container\" ng-if=\"availableProjects.length > 1\">\n" +
-    "<select-project ng-required=\"homePagePreference === 'project-overview'\" on-project-selected=\"onProjectSelected\" on-open=\"onOpen\" available-projects=\"availableProjects\" selected-project=\"selectedProject\" hide-create-project=\"true\" hide-label=\"true\">\n" +
+    "<select-project is-required=\"homePagePreference === 'project-overview'\" on-project-selected=\"onProjectSelected\" on-open=\"onOpen\" available-projects=\"availableProjects\" selected-project=\"selectedProject\" hide-create-project=\"true\" hide-label=\"true\">\n" +
     "</select-project>\n" +
     "</div>\n" +
     "</div>\n" +
