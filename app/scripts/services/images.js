@@ -22,7 +22,7 @@ angular.module("openshiftConsole")
     var findImage = function(name, projectContext) {
       var importImage = {
         kind: "ImageStreamImport",
-        apiVersion: "v1",
+        apiVersion: APIService.toAPIVersion(imageStreamImportsVersion),
         metadata: {
           name: "newapp",
           namespace: projectContext.namespace

@@ -3154,6 +3154,7 @@ label: "Set Home Page",
 onClick: function() {
 return r.open({
 animation: !0,
+backdrop: "static",
 templateUrl: "views/modals/set-home-page-modal.html",
 controller: "SetHomePageModalController"
 }), !0;
@@ -3444,13 +3445,13 @@ value: e
 });
 };
 return {
-findImage: function(e, t) {
-var n = {
+findImage: function(e, n) {
+var o = {
 kind: "ImageStreamImport",
-apiVersion: "v1",
+apiVersion: t.toAPIVersion(a),
 metadata: {
 name: "newapp",
-namespace: t.namespace
+namespace: n.namespace
 },
 spec: {
 import: !1,
@@ -3463,7 +3464,7 @@ name: e
 },
 status: {}
 };
-return r.create(a, null, n, t).then(function(e) {
+return r.create(a, null, o, n).then(function(e) {
 return {
 name: _.get(e, "spec.images[0].from.name"),
 image: _.get(e, "status.images[0].image"),
@@ -9706,6 +9707,7 @@ message: "Resource is missing metadata field."
 function v() {
 r.open({
 animation: !0,
+backdrop: "static",
 templateUrl: "views/modals/process-or-save-template.html",
 controller: "ProcessOrSaveTemplateModalController",
 scope: p
@@ -11225,6 +11227,7 @@ link: function(t, n) {
 n.bind("click", function() {
 e.open({
 animation: !0,
+backdrop: "static",
 templateUrl: "views/modals/set-home-page-modal.html",
 controller: "SetHomePageModalController"
 });
@@ -14410,7 +14413,9 @@ var t = n.import.image;
 t && (n.app.name = I(), n.runsAsRoot = s.runsAsRoot(t), n.ports = o.parsePorts(t), n.volumes = s.getVolumes(t), n.createImageStream = !0);
 } else n.import.error = _.get(e, "result.message", "An error occurred finding the image.");
 }, function(t) {
-n.import.error = e("getErrorDetails")(t) || "An error occurred finding the image.", n.loading = !1;
+n.import = {
+error: e("getErrorDetails")(t) || "An error occurred finding the image."
+}, n.loading = !1;
 });
 }, n.$watch("app.name", function(e, t) {
 n.nameTaken = !1;
