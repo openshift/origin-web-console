@@ -490,8 +490,9 @@ angular
       LabelFilter.readPersistedState();
     });
   })
-  .run(function($location, $uibModal, AuthService, Constants) {
-    if (Constants.INACTIVITY_TIMEOUT_PERIOD <= 0) {
+  .run(function($location, $uibModal, AuthService) {
+    var INACTIVITY_TIMEOUT_MINUTES = window.OPENSHIFT_CONFIG.inactivityTimeoutMinutes;
+    if (!INACTIVITY_TIMEOUT_MINUTES) {
       return;
     }
     var lastInteractionKey = 'origin-web-console-last-interaction-timestamp';
@@ -500,7 +501,7 @@ angular
     var checkInteractionInterval;
     var modalInstance;
     // Interval that will check for user inactivity every minute.
-    // In case the last interaction is higher then  INACTIVITY_TIMEOUT_PERIOD constant a logout modal will be shown.
+    // In case the last interaction is higher than INACTIVITY_TIMEOUT_MINUTES a logout modal will be shown.
     // Also check for 'origin-web-console-inactivity-logout' object in the local storage, that indicates that the
     // user has been already logged out, in case of multiple opened console tabs.
     var startInteractionIntervalCheck = function () {
@@ -514,8 +515,8 @@ angular
           lastInteraction = new Date();
         }
         var currentTime = new Date();
-        // Since the INACTIVITY_TIMEOUT_PERIOD is set in minutes it needs to be converted into milliseconds.
-        if (currentTime - lastInteraction > Constants.INACTIVITY_TIMEOUT_PERIOD * 60000) {
+        // Since the INACTIVITY_TIMEOUT_MINUTES is set in minutes it needs to be converted into milliseconds.
+        if (currentTime - lastInteraction > INACTIVITY_TIMEOUT_MINUTES * 60000) {
           showLogoutModal();
         }
       }, 60000);
