@@ -1,12 +1,7 @@
 <div class="list-pf-name">
   <h3>
     <div class="component-label">
-      <span ng-if="row.apiObject.kind === 'DeploymentConfig'">
-        Deployment
-      </span>
-      <span ng-if="row.apiObject.kind !== 'DeploymentConfig'">
-        {{row.apiObject.kind | humanizeKind}}
-      </span>
+      {{row.apiObject.kind | humanizeKind}}
     </div>
     <a ng-href="{{row.apiObject | navigateResourceURL}}"><span ng-bind-html="row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords"></span></a><span ng-if="row.apiObject.kind === 'DeploymentConfig' && row.current">,
       <a ng-href="{{row.current | navigateResourceURL}}">#{{row.current | annotation : 'deploymentVersion'}}</a>
