@@ -15666,11 +15666,14 @@ return o ? t(o.port, o.targetPort, o.protocol) : angular.isString(a) ? t(a, null
 return function(e) {
 if (!e || !e.metadata.deletionTimestamp && !e.status) return "";
 if (e.metadata.deletionTimestamp) return "Terminating";
-var t = e.status.reason || e.status.phase;
-return angular.forEach(e.status.containerStatuses, function(e) {
+var t, n = !1;
+return _.each(e.status.initContainerStatuses, function(e) {
+var r = _.get(e, "state");
+if (!r.terminated || 0 !== r.terminated.exitCode) return r.terminated ? (t = r.terminated.reason ? "Init " + r.terminated.reason : r.terminated.signal ? "Init Signal: " + r.terminated.signal : "Init Exit Code: " + r.terminated.exitCode, n = !0, !0) : void (r.waiting && r.waiting.reason && "PodInitializing" !== r.waiting.reason && (t = "Init " + r.waiting.reason, n = !0));
+}), n || (t = e.status.reason || e.status.phase, _.each(e.status.containerStatuses, function(e) {
 var n, r, a = _.get(e, "state.waiting.reason") || _.get(e, "state.terminated.reason");
-a ? t = a : (n = _.get(e, "state.terminated.signal")) ? t = "Signal: " + n : (r = _.get(e, "state.terminated.exitCode")) && (t = "Exit Code: " + r);
-}), t;
+return a ? (t = a, !0) : (n = _.get(e, "state.terminated.signal")) ? (t = "Signal: " + n, !0) : (r = _.get(e, "state.terminated.exitCode")) ? (t = "Exit Code: " + r, !0) : void 0;
+})), t;
 };
 }).filter("podStartTime", function() {
 return function(e) {
