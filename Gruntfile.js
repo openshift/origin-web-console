@@ -73,10 +73,6 @@ module.exports = function (grunt) {
           }
         }
       },
-      extensions: {
-        files: ['extensions/extensions.js', 'extensions/extensions.css'],
-        tasks: ['copy:extensions']
-      },
       index: {
         files: ['<%= yeoman.app %>/index.html'],
         tasks: ['replace:index']
@@ -96,7 +92,6 @@ module.exports = function (grunt) {
           '<%= yeoman.app %>/{,*/}*.html',
           '.tmp/styles/{,*/}*.css',
           '.tmp/config.js',
-          '.tmp/scripts/extensions.js',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
       }
@@ -121,7 +116,7 @@ module.exports = function (grunt) {
               modRewrite([
                 '^/$ /' + contextRoot + '/ [R=302]',
                 '^/' + contextRoot + '(.*)$ $1',
-                '!^/(config.js|(java|bower_components|scripts|images|styles|views|components)(/.*)?)$ /index.html [L]'
+                '!^/(config.js|(java|bower_components|scripts|images|styles|views|components|extensions)(/.*)?)$ /index.html [L]'
               ]),
               serveStatic('.tmp'),
               connect().use(
@@ -131,6 +126,10 @@ module.exports = function (grunt) {
               connect().use(
                 '/bower_components',
                 serveStatic('./bower_components')
+              ),
+              connect().use(
+                '/extensions',
+                serveStatic('./extensions')
               ),
               serveStatic(appConfig.app)
             ];
@@ -144,13 +143,17 @@ module.exports = function (grunt) {
               modRewrite([
                 '^/$ /' + contextRoot + '/ [R=302]',
                 '^/' + contextRoot + '(.*)$ $1',
-                '!^/(config.js|(bower_components|scripts|images|styles|views|components)(/.*)?)$ /index.html [L]'
+                '!^/(config.js|(bower_components|scripts|images|styles|views|components|extensions)(/.*)?)$ /index.html [L]'
               ]),
               serveStatic('.tmp'),
               serveStatic('test'),
               connect().use(
                 '/bower_components',
                 serveStatic('./bower_components')
+              ),
+              connect().use(
+                '/extensions',
+                serveStatic('./test/extensions')
               ),
               serveStatic(appConfig.app)
             ];
@@ -163,11 +166,9 @@ module.exports = function (grunt) {
           livereload: false,
           middleware: function (connect) {
             var rewriteRules = [
-              '^/styles/extensions\.css$ /' + contextRoot + '/extensions/extensions.css [R]',
-              '^/scripts/extensions\.js$ /' + contextRoot + '/extensions/extensions.js [R]',
               '^/$ /' + contextRoot + '/ [R=302]',
               '^/' + contextRoot + '(.*)$ $1',
-              '!^/(config.js|(bower_components|scripts|images|styles|views|extensions|components)(/.*)?)$ /index.html [L]'
+              '!^/(config.js|(bower_components|scripts|images|styles|views|components)(/.*)?)$ /index.html [L]'
             ];
 
             // If config.local.js exists, use that instead of config.js.
@@ -181,10 +182,6 @@ module.exports = function (grunt) {
               connect().use(
                 '/bower_components',
                 serveStatic('./bower_components')
-              ),
-              connect().use(
-                '/extensions',
-                serveStatic('./extensions')
               ),
               serveStatic(appConfig.app)
             ];
@@ -551,20 +548,6 @@ module.exports = function (grunt) {
           dest: '.tmp/styles'
         }]
       },
-      // Copy files in the extensions dir for development, but not distribution.
-      extensions: {
-        files: [{
-          expand: true,
-          cwd: 'extensions',
-          src: 'extensions.js',
-          dest: '.tmp/scripts'
-        }, {
-          expand: true,
-          cwd: 'extensions',
-          src: 'extensions.css',
-          dest: '.tmp/styles'
-        }]
-      },
       // config.local.js is for local customizations if it exists.
       localConfig: {
         files: [{
@@ -684,7 +667,6 @@ module.exports = function (grunt) {
   grunt.registerTask('development-build', [
     'less:development',
     'copy:styles',
-    'copy:extensions',
     'copy:localConfig',
     'replace:index'
   ]);

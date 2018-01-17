@@ -1,0 +1,11 @@
+/*
+ * This is an empty extensions stylesheet file. Extensions scripts are loaded
+ * by the Web Console when set in webconsole-config config map in the
+ * openshift-web-console namespace. For example,
+ *
+ * extensions:
+ *  stylesheetURLs:
+ *   - "https://example.com/styles/custom.css"
+ *
+ * You can modify this file to test extensions in a development environment.
+ */
