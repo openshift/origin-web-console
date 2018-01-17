@@ -5107,7 +5107,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!filterWithZeroResults\">\n" +
-    "<h3 ng-if=\"showDeploymentConfigTable() && ((deployments | size) || (replicaSets | size) || (replicationControllersByDC[''] | size))\">Deployment Configurations</h3>\n" +
+    "<h3 ng-if=\"showDeploymentConfigTable() && ((deployments | size) || (replicaSets | size) || (replicationControllersByDC[''] | size))\">Deployment Configs</h3>\n" +
     "<table ng-if=\"showDeploymentConfigTable() && !showEmptyState\" class=\"table table-bordered table-mobile table-layout-fixed\">\n" +
     "<colgroup>\n" +
     "<col class=\"col-sm-3\">\n" +
@@ -12173,12 +12173,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-name\">\n" +
     "<h3>\n" +
     "<div class=\"component-label\">\n" +
-    "<span ng-if=\"row.apiObject.kind === 'DeploymentConfig'\">\n" +
-    "Deployment\n" +
-    "</span>\n" +
-    "<span ng-if=\"row.apiObject.kind !== 'DeploymentConfig'\">\n" +
     "{{row.apiObject.kind | humanizeKind}}\n" +
-    "</span>\n" +
     "</div>\n" +
     "<a ng-href=\"{{row.apiObject | navigateResourceURL}}\"><span ng-bind-html=\"row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords\"></span></a><span ng-if=\"row.apiObject.kind === 'DeploymentConfig' && row.current\">,\n" +
     "<a ng-href=\"{{row.current | navigateResourceURL}}\">#{{row.current | annotation : 'deploymentVersion'}}</a>\n" +
