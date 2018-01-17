@@ -76,6 +76,7 @@ angular.module("openshiftConsole")
         if($routeParams.sourceURI) {
           $scope.sourceURIinParams = true;
         }
+        $scope.hasClusterResourceOverrides = LimitRangesService.hasClusterResourceOverrides(project);
         function initAndValidate(scope){
 
           scope.name = $routeParams.name;
@@ -225,9 +226,7 @@ angular.module("openshiftConsole")
         }
 
         var validatePodLimits = function() {
-          if (!$scope.hideCPU) {
-            $scope.cpuProblems = LimitRangesService.validatePodLimits($scope.limitRanges, 'cpu', [$scope.container], project);
-          }
+          $scope.cpuProblems = LimitRangesService.validatePodLimits($scope.limitRanges, 'cpu', [$scope.container], project);
           $scope.memoryProblems = LimitRangesService.validatePodLimits($scope.limitRanges, 'memory', [$scope.container], project);
         };
 
@@ -239,7 +238,7 @@ angular.module("openshiftConsole")
         });
 
         var checkCPURequest = function() {
-          if (!$scope.scaling.autoscale) {
+          if (!$scope.scaling.autoscale || $scope.hasClusterResourceOverrides) {
             $scope.showCPURequestWarning = false;
             return;
           }

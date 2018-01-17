@@ -60,13 +60,17 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     // default should remain last, add new links above
     "default":                 "welcome/index.html"
   },
+
   // Maps links names to URL's where the CLI tools can be downloaded, may point directly to files or to external pages in a CDN, for example.
   CLI: {
     "Latest Release":          "https://github.com/openshift/origin/releases/latest"
   },
-  // The default CPU target percentage for horizontal pod autoscalers created or edited in the web console.
-  // This value is set in the HPA when the input is left blank.
-  DEFAULT_HPA_CPU_TARGET_PERCENT: 80,
+
+  // Optional default CPU target percentage for horizontal pod autoscalers
+  // created in the web console. This value is prefilled in the HPA form. No
+  // value is prefilled by default. Should be an integer value if specified
+  // (for instance, `80`).
+  DEFAULT_HPA_CPU_TARGET_PERCENT: null,
 
   // true indicates that deployment metrics should be disabled on the web console overview
   DISABLE_OVERVIEW_METRICS: false,
@@ -111,7 +115,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
 
 
   // Set to number of minutes after which a modal with countdown should appear.
-  // When set to anything else then positive integer the inactivity timeout won't be enable. 
+  // When set to anything else then positive integer the inactivity timeout won't be enable.
   INACTIVITY_TIMEOUT_PERIOD: 0,
 
   // only resources from the namespaces listed below can be utilized with create from url (/create)
@@ -666,5 +670,17 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     'icon-wildfly': 'wildfly.svg',
     'icon-wordpress': 'wordpress.svg',
     'icon-zend': 'zend.svg'
-  }
+  },
+
+  CLUSTER_RESOURCE_OVERRIDES_EXEMPT_PROJECT_NAMES: [
+    'openshift',
+    'kubernetes',
+    'kube'
+  ],
+
+  CLUSTER_RESOURCE_OVERRIDES_EXEMPT_PROJECT_PREFIXES: [
+    'openshift-',
+    'kubernetes-',
+    'kube-'
+  ]
 });

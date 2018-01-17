@@ -188,7 +188,7 @@ angular.module('openshiftConsole')
         // In case user wont have permissions to list Secrets, an incomplaete URL will be build, similar to the one from CLI:
         //
         // https://127.0.0.1:8443/apis/build.openshift.io/v1/namespaces/myproject/buildconfigs/test-build/webhooks/<secret>/github
-        // 
+        //
         var webhookURL = DataService.url({
           resource: "buildconfigs/webhooks/",
           name: buildConfig,
@@ -1128,22 +1128,6 @@ angular.module('openshiftConsole')
   .filter('isLimitCalculated', function(LimitRangesService) {
     return function(computeResource, project) {
       return LimitRangesService.isLimitCalculated(computeResource, project);
-    };
-  })
-  .filter('hpaCPUPercent', function(HPAService, LimitRangesService) {
-    // Convert between CPU request percentage and CPU limit percentage if
-    // necessary to display an HPA value. Values are shown as percentages
-    // of CPU limit if a request/limit override is set.
-    return function(targetCPU, project) {
-      if (!targetCPU) {
-        return targetCPU;
-      }
-
-      if (!LimitRangesService.isRequestCalculated('cpu', project)) {
-        return targetCPU;
-      }
-
-      return HPAService.convertRequestPercentToLimit(targetCPU, project);
     };
   })
   .filter('podTemplate', function() {
