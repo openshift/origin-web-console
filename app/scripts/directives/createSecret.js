@@ -26,6 +26,11 @@ angular.module("openshiftConsole")
       templateUrl: 'views/directives/create-secret.html',
       link: function($scope) {
         $scope.nameValidation = DNS1123_SUBDOMAIN_VALIDATION;
+        $scope.secretReferenceValidation = {
+          pattern: /^[a-zA-Z0-9\-_]+$/,
+          minLength: 8,
+          description: 'Secret reference key must consist of lower-case, upper-case letters, numbers, dash, and underscore.'
+        };
 
         $scope.secretAuthTypeMap = {
           image: {
