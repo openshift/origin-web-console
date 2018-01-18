@@ -3,6 +3,7 @@
 angular.module("openshiftConsole")
   .factory("CatalogService", function($filter,
                                       $q,
+                                      $window,
                                       APIService,
                                       AuthService,
                                       Catalog,
@@ -37,7 +38,7 @@ angular.module("openshiftConsole")
     AuthService.onLogout(clearCachedCatalogItems);
 
     var isTemplateServiceBrokerEnabled = function() {
-      return !!Constants.TEMPLATE_SERVICE_BROKER_ENABLED;
+      return !!$window.OPENSHIFT_CONFIG.templateServiceBrokerEnabled;
     };
 
     var getCatalogItems = function(forceRefresh) {
