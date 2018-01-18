@@ -15404,7 +15404,7 @@ case "Running":
 return !0;
 
 default:
-return !1;
+return !e.status.completionTimestamp;
 }
 };
 } ]).filter("isRecentBuild", [ "ageLessThanFilter", "isIncompleteBuildFilter", function(e, t) {
