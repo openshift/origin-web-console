@@ -37,7 +37,7 @@
             </div>
           </div>
           <div ng-if="!filterWithZeroResults">
-            <h3 ng-if="showDeploymentConfigTable() && ((deployments | size) || (replicaSets | size) || (replicationControllersByDC[''] | size))">Deployment Configurations</h3>
+            <h3 ng-if="showDeploymentConfigTable() && ((deployments | size) || (replicaSets | size) || (replicationControllersByDC[''] | size))">Deployment Configs</h3>
             <table ng-if="showDeploymentConfigTable() && !showEmptyState" class="table table-bordered table-mobile table-layout-fixed">
               <colgroup>
                 <col class="col-sm-3">

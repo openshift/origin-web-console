@@ -456,7 +456,6 @@ angular
   })
   .constant("LOGGING_URL", _.get(window.OPENSHIFT_CONFIG, "loggingURL"))
   .constant("METRICS_URL", _.get(window.OPENSHIFT_CONFIG, "metricsURL"))
-  .constant("LIMIT_REQUEST_OVERRIDES", _.get(window.OPENSHIFT_CONFIG, "limitRequestOverrides"))
   // A (very) basic regex to determine if a URL is an absolute URL, enough to
   // warn the user the Git URL probably won't work. This should only be used
   // as a sanity test and shouldn't block submitting the form. Rely on the API
@@ -553,8 +552,8 @@ angular
     };
     // Show inactivity logout modal.
     // Before the the modal is shown the handler for checking the changes in local storage is detached.
-    // After the the modal is closed or dismissed the handler will be attached again. This is because of 
-    // the fact that the handler is attached 
+    // After the the modal is closed or dismissed the handler will be attached again. This is because of
+    // the fact that the handler is attached
     function showLogoutModal() {
       if (isLocalLogoutModalShown) {
         return false;
@@ -580,7 +579,7 @@ angular
       });
     }
 
-    // Need to check for changes in last interaction so the interval can be restarted. 
+    // Need to check for changes in last interaction so the interval can be restarted.
     $(window).on('storage', function (event) {
       if (event.originalEvent.key === lastInteractionKey) {
         restartCheckInteractionInterval();

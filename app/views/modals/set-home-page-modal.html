@@ -27,7 +27,7 @@
             Overview Page for{{availableProjects.length === 1 ? ' ' + (selectedProject | displayName) : ':'}}
           </label>
           <div class="select-project-container" ng-if="availableProjects.length > 1">
-            <select-project ng-required="homePagePreference === 'project-overview'"
+            <select-project is-required="homePagePreference === 'project-overview'"
                             on-project-selected="onProjectSelected"
                             on-open="onOpen"
                             available-projects="availableProjects"

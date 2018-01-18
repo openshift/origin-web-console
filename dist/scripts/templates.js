@@ -5009,16 +5009,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"help-block\">Replicas must be an integer value greater than or equal to 0.</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<osc-autoscaling ng-if=\"scaling.autoscale\" model=\"scaling\" project=\"project\">\n" +
-    "</osc-autoscaling>\n" +
+    "<osc-autoscaling ng-if=\"scaling.autoscale\" model=\"scaling\"></osc-autoscaling>\n" +
     "<div class=\"has-warning\" ng-if=\"showCPURequestWarning\">\n" +
     "<span class=\"help-block\">\n" +
-    "You should configure resource limits below for autoscaling. Autoscaling will not work without a CPU\n" +
-    "<span ng-if=\"'cpu' | isRequestCalculated : project\">limit.</span>\n" +
-    "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">request.</span>\n" +
-    "<span ng-if=\"'cpu' | isLimitCalculated : project\">\n" +
-    "The CPU limit will be automatically calculated from the container memory limit.\n" +
-    "</span>\n" +
+    "You should configure resource limits below for autoscaling. Autoscaling will not work without a CPU request.\n" +
     "</span>\n" +
     "</div>\n" +
     "</osc-form-section>\n" +
@@ -5113,7 +5107,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!filterWithZeroResults\">\n" +
-    "<h3 ng-if=\"showDeploymentConfigTable() && ((deployments | size) || (replicaSets | size) || (replicationControllersByDC[''] | size))\">Deployment Configurations</h3>\n" +
+    "<h3 ng-if=\"showDeploymentConfigTable() && ((deployments | size) || (replicaSets | size) || (replicationControllersByDC[''] | size))\">Deployment Configs</h3>\n" +
     "<table ng-if=\"showDeploymentConfigTable() && !showEmptyState\" class=\"table table-bordered table-mobile table-layout-fixed\">\n" +
     "<colgroup>\n" +
     "<col class=\"col-sm-3\">\n" +
@@ -7359,7 +7353,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</delete-link>\n" +
     "</span>\n" +
     "</h4>\n" +
-    "<dl class=\"dl-horizontal left\" style=\"margin-bottom: 10px\">\n" +
+    "<dl class=\"dl-horizontal left mar-top-md\">\n" +
     "<dt ng-if-start=\"showScaleTarget && hpa.spec.scaleTargetRef.kind && hpa.spec.scaleTargetRef.name\">{{hpa.spec.scaleTargetRef.kind | humanizeKind : true}}:</dt>\n" +
     "<dd ng-if-end>\n" +
     "<a ng-href=\"{{hpa.spec.scaleTargetRef.name | navigateResourceURL : hpa.spec.scaleTargetRef.kind : hpa.metadata.namespace}}\">{{hpa.spec.scaleTargetRef.name}}</a>\n" +
@@ -7369,12 +7363,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Max Pods:</dt>\n" +
     "<dd>{{hpa.spec.maxReplicas}}</dd>\n" +
     "<dt ng-if-start=\"hpa.spec.targetCPUUtilizationPercentage\">\n" +
-    "CPU\n" +
-    "<span ng-if=\"'cpu' | isRequestCalculated : project\">Limit</span>\n" +
-    "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">Request</span>\n" +
-    "Target:\n" +
+    "CPU Request\n" +
     "</dt>\n" +
-    "<dd ng-if-end>{{hpa.spec.targetCPUUtilizationPercentage | hpaCPUPercent : project}}%</dd>\n" +
+    "<dd ng-if-end>{{hpa.spec.targetCPUUtilizationPercentage}}%</dd>\n" +
     "<dt>\n" +
     "Current Usage:\n" +
     "</dt>\n" +
@@ -7382,7 +7373,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<em>Not available</em>\n" +
     "</dd>\n" +
     "<dd ng-if=\"!(hpa.status.currentCPUUtilizationPercentage | isNil)\">\n" +
-    "{{hpa.status.currentCPUUtilizationPercentage | hpaCPUPercent : project}}%\n" +
+    "{{hpa.status.currentCPUUtilizationPercentage}}%\n" +
     "</dd>\n" +
     "<dt ng-if-start=\"hpa.status.lastScaleTime\">Last Scaled:</dt>\n" +
     "<dd ng-if-end><span am-time-ago=\"hpa.status.lastScaleTime\"></span></dd>\n" +
@@ -8067,27 +8058,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<label>\n" +
-    "CPU\n" +
-    "<span ng-if=\"isRequestCalculated\">Limit</span>\n" +
-    "<span ng-if=\"!isRequestCalculated\">Request</span>\n" +
-    "Target\n" +
+    "CPU Request Target\n" +
     "</label>\n" +
     "<div class=\"input-group\" ng-class=\"{ 'has-error': form.targetCPU.$invalid && form.targetCPU.$touched }\">\n" +
-    "<input type=\"number\" class=\"form-control\" min=\"1\" name=\"targetCPU\" ng-model=\"targetCPUInput.percent\" pattern=\"\\d*\" select-on-focus aria-describedby=\"target-cpu-help\">\n" +
+    "<input type=\"number\" class=\"form-control\" min=\"1\" name=\"targetCPU\" ng-model=\"autoscaling.targetCPU\" pattern=\"\\d*\" select-on-focus aria-describedby=\"target-cpu-help\">\n" +
     "<span class=\"input-group-addon\">%</span>\n" +
     "</div>\n" +
     "<div id=\"target-cpu-help\" class=\"help-block\">\n" +
-    "The percentage of the CPU\n" +
-    "<span ng-if=\"isRequestCalculated\">limit</span>\n" +
-    "<span ng-if=\"!isRequestCalculated\">request</span>\n" +
-    "that each pod should ideally be using. Pods will be added or removed periodically when CPU usage exceeds or drops below this target value.\n" +
-    "<span ng-if=\"defaultTargetCPUDisplayValue\">Defaults to {{defaultTargetCPUDisplayValue}}%.</span>\n" +
+    "The percentage of the CPU request that each pod should ideally be using. Pods will be added or removed periodically when CPU usage exceeds or drops below this target value.\n" +
     "</div>\n" +
     "<div class=\"learn-more-block\">\n" +
-    "<a href=\"{{'compute_resources' | helpLink}}\" target=\"_blank\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
+    "<a ng-href=\"{{'compute_resources' | helpLink}}\" target=\"_blank\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
     "</div>\n" +
     "\n" +
-    "<div class=\"has-error\" style=\"margin-top: 10px\" ng-show=\"form.targetCPU.$touched && form.targetCPU.$invalid\">\n" +
+    "<div class=\"has-error mar-top-md\" ng-show=\"form.targetCPU.$touched && form.targetCPU.$invalid\">\n" +
     "<span ng-if=\"form.targetCPU.$error.number\" class=\"help-block\">\n" +
     "Target CPU percentage must be a number.\n" +
     "</span>\n" +
@@ -9474,7 +9458,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">request.</span>\n" +
     "</div>\n" +
     "<fieldset ng-disabled=\"disableInputs\" class=\"gutter-top\">\n" +
-    "<osc-autoscaling model=\"autoscaling\" project=\"project\" show-name-input=\"true\" name-read-only=\"kind === 'HorizontalPodAutoscaler'\">\n" +
+    "<osc-autoscaling model=\"autoscaling\" show-name-input=\"true\" name-read-only=\"kind === 'HorizontalPodAutoscaler'\">\n" +
     "</osc-autoscaling>\n" +
     "<label-editor labels=\"labels\" expand=\"true\" can-toggle=\"false\"></label-editor>\n" +
     "<div class=\"buttons gutter-top gutter-bottom\">\n" +
@@ -11170,7 +11154,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Overview Page for{{availableProjects.length === 1 ? ' ' + (selectedProject | displayName) : ':'}}\n" +
     "</label>\n" +
     "<div class=\"select-project-container\" ng-if=\"availableProjects.length > 1\">\n" +
-    "<select-project ng-required=\"homePagePreference === 'project-overview'\" on-project-selected=\"onProjectSelected\" on-open=\"onOpen\" available-projects=\"availableProjects\" selected-project=\"selectedProject\" hide-create-project=\"true\" hide-label=\"true\">\n" +
+    "<select-project is-required=\"homePagePreference === 'project-overview'\" on-project-selected=\"onProjectSelected\" on-open=\"onOpen\" available-projects=\"availableProjects\" selected-project=\"selectedProject\" hide-create-project=\"true\" hide-label=\"true\">\n" +
     "</select-project>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -12013,6 +11997,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/overview/_build-counts.html',
     "<span ng-if=\"buildCounts.show\" class=\"animate-if\">\n" +
+    "<span ng-if=\"buildCounts.label\" class=\"builds-label\">\n" +
+    "{{buildCounts.label}}\n" +
+    "</span>\n" +
     "<span ng-repeat=\"phase in buildCounts.interestingPhases\" ng-if=\"buildCounts.countByPhase[phase]\" class=\"icon-count\">\n" +
     "<span dynamic-content=\"{{buildCounts.countByPhase[phase]}} {{phase}}\" data-toggle=\"tooltip\" data-trigger=\"hover\" aria-hidden=\"true\">\n" +
     "<span ng-switch=\"phase\" class=\"hide-ng-leave\">\n" +
@@ -12027,13 +12014,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"sr-only\">{{phase}}</span>\n" +
     "</span>\n" +
     "</span>\n" +
-    "<span>\n" +
-    "<span ng-if=\"buildCounts.label\" class=\"builds-label\">\n" +
-    "{{buildCounts.label}}\n" +
-    "</span>\n" +
     "<span ng-if=\"buildCounts.currentStage\" class=\"running-stage\">\n" +
     "Stage {{buildCounts.currentStage.name}}\n" +
-    "</span>\n" +
     "</span>\n" +
     "</span>"
   );
@@ -12191,12 +12173,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-name\">\n" +
     "<h3>\n" +
     "<div class=\"component-label\">\n" +
-    "<span ng-if=\"row.apiObject.kind === 'DeploymentConfig'\">\n" +
-    "Deployment\n" +
-    "</span>\n" +
-    "<span ng-if=\"row.apiObject.kind !== 'DeploymentConfig'\">\n" +
     "{{row.apiObject.kind | humanizeKind}}\n" +
-    "</span>\n" +
     "</div>\n" +
     "<a ng-href=\"{{row.apiObject | navigateResourceURL}}\"><span ng-bind-html=\"row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords\"></span></a><span ng-if=\"row.apiObject.kind === 'DeploymentConfig' && row.current\">,\n" +
     "<a ng-href=\"{{row.current | navigateResourceURL}}\">#{{row.current | annotation : 'deploymentVersion'}}</a>\n" +

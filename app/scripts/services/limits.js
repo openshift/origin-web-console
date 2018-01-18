@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("LimitRangesService", function($filter, LIMIT_REQUEST_OVERRIDES) {
+  .factory("LimitRangesService", function($filter, $window, Constants) {
+    var annotation = $filter('annotation');
     var usageValue = $filter('usageValue');
     var usageWithUnits = $filter('usageWithUnits');
-    var amountAndUnit = $filter('amountAndUnit');
 
     var isSmaller = function(candidate, previous) {
       if (!candidate) {
@@ -34,42 +34,39 @@ angular.module("openshiftConsole")
       return usageValue(candidate) > usageValue(previous);
     };
 
+    var isCROExemptName = function(projectName) {
+      return _.includes(Constants.CLUSTER_RESOURCE_OVERRIDES_EXEMPT_PROJECT_NAMES, projectName);
+    };
+
+    var startsWithCROExemptPrefix = function(projectName) {
+      return _.some(Constants.CLUSTER_RESOURCE_OVERRIDES_EXEMPT_PROJECT_PREFIXES, function(prefix) {
+        return _.startsWith(projectName, prefix);
+      });
+    };
+
+    var hasCROExemptAnnotation = function(project) {
+      var projectOverrideAnnotation = annotation(project, 'quota.openshift.io/cluster-resource-override-enabled');
+      return !!projectOverrideAnnotation && projectOverrideAnnotation !== 'true';
+    };
+
+    var isCROExemptProject = function(project) {
+      var name = _.get(project, 'metadata.name');
+      return isCROExemptName(name) || startsWithCROExemptPrefix(name) || hasCROExemptAnnotation(project);
+    };
+
     // Check if compute resources overrides are enabled for this project.
-    var limitRequestOverridesEnabled = function(project) {
-      // If config is absent, overrides are disabled.
-      if (!LIMIT_REQUEST_OVERRIDES) {
-        return false;
-      }
-
-      // If the project resource override annotation is unset or is set to "true", overrides are enabled.
-      var projectOverrideAnnotation =
-        $filter('annotation')(project, 'quota.openshift.io/cluster-resource-override-enabled');
-      return !projectOverrideAnnotation || projectOverrideAnnotation === 'true';
+    var hasClusterResourceOverrides = function(project) {
+      return !!_.get($window, 'OPENSHIFT_CONFIG.clusterResourceOverridesEnabled') && !isCROExemptProject(project);
     };
 
-    var getRequestToLimitPercent = function(computeResource, project) {
-      if (!limitRequestOverridesEnabled(project)) {
-        return null;
-      }
-
-      switch (computeResource) {
-      case "cpu":
-        return LIMIT_REQUEST_OVERRIDES.cpuRequestToLimitPercent;
-      case "memory":
-        return LIMIT_REQUEST_OVERRIDES.memoryRequestToLimitPercent;
-      default:
-        return null;
-      }
-    };
-
+    // Assume request is calculated if CRO is enabled.
     var isRequestCalculated = function(computeResource, project) {
-      return !!getRequestToLimitPercent(computeResource, project);
+      return hasClusterResourceOverrides(project);
     };
 
+    // Assume CPU limit is calculated if CRO is enabled.
     var isLimitCalculated = function(computeResource, project) {
-      return limitRequestOverridesEnabled(project) &&
-             computeResource === 'cpu' &&
-             !!LIMIT_REQUEST_OVERRIDES.limitCPUToMemoryPercent;
+      return computeResource === 'cpu' && hasClusterResourceOverrides(project);
     };
 
     // Reconciles multiple limit range resources for a compute resource ('cpu'
@@ -90,7 +87,7 @@ angular.module("openshiftConsole")
     //   max: "2",
     // }
 
-    var getEffectiveLimitRange = function(limitRanges, computeResource, resourceType, project) {
+    var getEffectiveLimitRange = function(limitRanges, computeResource, resourceType) {
       var effectiveRange = {};
       angular.forEach(limitRanges, function(limitRange) {
         angular.forEach(limitRange.spec.limits, function(limit) {
@@ -126,21 +123,6 @@ angular.module("openshiftConsole")
           }
         });
       });
-
-      // If request is calculated from limit, adjust the effective min.  The
-      // effective min needs to be large enough so that the calculated request
-      // value validates.
-      var requestToLimitPercent, minAmountAndUnit, minAmount, minUnit;
-      if (effectiveRange.min) {
-        requestToLimitPercent = getRequestToLimitPercent(computeResource, project);
-        if (requestToLimitPercent) {
-          // Apply the ratio, making sure to keep the same unit.
-          minAmountAndUnit = amountAndUnit(effectiveRange.min);
-          minAmount = Math.ceil(minAmountAndUnit[0] / (requestToLimitPercent / 100));
-          minUnit = minAmountAndUnit[1] || '';
-          effectiveRange.min = '' + minAmount + minUnit;
-        }
-      }
 
       return effectiveRange;
     };
@@ -205,7 +187,7 @@ angular.module("openshiftConsole")
 
     return {
       getEffectiveLimitRange: getEffectiveLimitRange,
-      getRequestToLimitPercent: getRequestToLimitPercent,
+      hasClusterResourceOverrides: hasClusterResourceOverrides,
       isRequestCalculated: isRequestCalculated,
       isLimitCalculated: isLimitCalculated,
       validatePodLimits: validatePodLimits

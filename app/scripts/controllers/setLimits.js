@@ -85,6 +85,7 @@ angular.module('openshiftConsole')
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
+        $scope.hideCPU = LimitRangesService.hasClusterResourceOverrides(project);
 
         var resourceGroupVersion = {
           resource: APIService.kindToResource($routeParams.kind),

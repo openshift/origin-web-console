@@ -101,6 +101,22 @@ describe('MembershipService', function() {
           {metadata: {name: 'edit'}}
       ]);
     });
+
+    it('should filter ClusterRoles, but allow Roles to pass through', function() {
+      var roles = [
+        {metadata: {name: 'admin'}},
+        {metadata: {name: 'basic-user'}},
+        {metadata: {name: 'edit'}},
+        {metadata: {name: 'ThisIsNotACluserRole'}, kind: 'Role'},
+        {metadata: {name: 'ThisIsAClusterRole'}, kind: 'ClusterRole'}
+      ];
+      expect(MembershipService.filterRoles(roles)).toEqual([
+          {metadata: {name: 'admin'}},
+          {metadata: {name: 'basic-user'}},
+          {metadata: {name: 'edit'}},
+          {metadata: {name: 'ThisIsNotACluserRole'}, kind: 'Role'}
+      ]);
+    });
   });
 
   describe('#mapRolesForUI', function() {
