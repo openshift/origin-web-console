@@ -6376,6 +6376,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label>\n" +
     "<input type=\"radio\" ng-model=\"mode\" value=\"dockerImage\" ng-disabled=\"!input.selectedProject.metadata.uid\">\n" +
     "Image Name\n" +
+    "<span ng-if=\"!input.selectedProject.metadata.uid\" class=\"text-warning\">\n" +
+    "&ndash; Image search is only available for existing projects.\n" +
+    "</span>\n" +
     "</label>\n" +
     "</div>\n" +
     "<fieldset ng-disabled=\"!input.selectedProject.metadata.uid\">\n" +
@@ -6389,9 +6392,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"sr-only\">Find</span>\n" +
     "</button>\n" +
     "</span>\n" +
-    "</div>\n" +
-    "<div ng-if=\"!input.selectedProject.metadata.uid\" class=\"help-block\">\n" +
-    "Image search is only available for existing projects.\n" +
     "</div>\n" +
     "</div>\n" +
     "</fieldset>\n" +
