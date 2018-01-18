@@ -13942,7 +13942,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"add-webhook-action-btns\">\n" +
-    "<button class=\"btn btn-link\" type=\"button\" ng-click=\"$ctrl.checkLastAndAddNew()\">Add Webhook</button>\n" +
+    "<button class=\"btn btn-link pad-left-none\" type=\"button\" ng-click=\"$ctrl.checkLastAndAddNew()\">Add Webhook</button>\n" +
     "<span ng-if=\"$ctrl.secretsVersion | canI : 'create'\">\n" +
     "<span class=\"action-divider\" aria-hidden=\"true\"> | </span>\n" +
     "<button class=\"btn btn-link\" href=\"\" type=\"button\" ng-click=\"$ctrl.openCreateWebhookSecretModal()\">Create New Webhook Secret</button>\n" +
