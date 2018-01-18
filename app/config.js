@@ -32,7 +32,8 @@
       logout_uri: ""
     },
     loggingURL: "",
-    metricsURL: ""
+    metricsURL: "",
+    templateServiceBrokerEnabled: false
   };
 
   window.OPENSHIFT_VERSION = {
