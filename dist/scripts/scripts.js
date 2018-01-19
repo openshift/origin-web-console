@@ -12859,6 +12859,7 @@ t.path(o);
 selection: {
 enabled: !0
 },
+order: null,
 type: "bar"
 }
 }, p = function() {

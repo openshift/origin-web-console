@@ -135,6 +135,7 @@ angular.module('openshiftConsole')
             selection: {
               enabled: true
             },
+            order: null,
             type: 'bar'
           }
         };
