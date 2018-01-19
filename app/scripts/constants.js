@@ -126,9 +126,6 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
   // Disables the copy login command option from the user menu and CLI page.
   DISABLE_COPY_LOGIN_COMMAND: false,
 
-  // Set to true when the template service broker is enabled for the cluster.
-  TEMPLATE_SERVICE_BROKER_ENABLED: false,
-
   ENABLE_TECH_PREVIEW_FEATURE: {
     // Set to true if the service catalog supports pod presets for binding services to applications.
     pod_presets: false
@@ -138,11 +135,6 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     name: "jenkins-pipeline-example",
     namespace: "openshift"
   },
-
-
-  // Set to number of minutes after which a modal with countdown should appear.
-  // When set to anything else then positive integer the inactivity timeout won't be enable.
-  INACTIVITY_TIMEOUT_PERIOD: 0,
 
   // only resources from the namespaces listed below can be utilized with create from url (/create)
   // 'openshift' should always be included

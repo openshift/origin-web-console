@@ -57,7 +57,7 @@ angular.module('openshiftConsole')
         "&_a=(",
           //"columns:!(_source),",
           "columns:!(kubernetes.container_name,message),",
-          "index:'project.<%= namespace %>.<%= namespaceUid %>.*',",
+          "index:'<%= index %>',",
           "query:(",
             "query_string:(",
               "analyze_wildcard:!t,",
@@ -73,7 +73,9 @@ angular.module('openshiftConsole')
       ].join(''));
 
 
-      var archiveUri = function(opts) {
+      var archiveUri = function(opts, prefix) {
+        prefix = prefix || 'project.' + opts.namespace + '.' + opts.namespaceUid;
+        opts.index = prefix + '.*';
         return template(opts);
       };
 

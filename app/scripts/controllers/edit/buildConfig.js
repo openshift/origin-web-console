@@ -486,6 +486,12 @@ angular.module('openshiftConsole')
       return imageObject;
     };
 
+    // Return only webhook triggers that have defined type and their type object. 
+    var filterValidWebhookTriggers = function(triggers) {
+      return _.filter(triggers, function(trigger) {
+        return (!_.isEmpty(trigger.data.type) && !_.isEmpty(trigger.data[_.toLower(trigger.data.type)]));
+      });
+    };
 
     var updateTriggers = function() {
       var triggers = [].concat($scope.triggers.imageChangeTriggers,
@@ -496,7 +502,7 @@ angular.module('openshiftConsole')
         // The condition has to check if the value exist and  is set to 'false' in case of webhook triggers and 'true' in case of imageChange and configChange triggers.
         return (_.has(trigger, 'disabled') && !trigger.disabled) || trigger.present;
       });
-      triggers = triggers.concat($scope.triggers.webhookTriggers);
+      triggers = triggers.concat(filterValidWebhookTriggers($scope.triggers.webhookTriggers));
       triggers = _.map(triggers, 'data');
       return triggers;
     };

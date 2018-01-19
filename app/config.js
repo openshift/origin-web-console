@@ -32,12 +32,15 @@
       logout_uri: ""
     },
     loggingURL: "",
-    metricsURL: ""
+    metricsURL: "",
+    templateServiceBrokerEnabled: false,
+    inactivityTimeoutMinutes: 0
   };
 
   window.OPENSHIFT_VERSION = {
     openshift: "dev-mode",
-    kubernetes: "dev-mode"
+    kubernetes: "dev-mode",
+    console: "dev-mode"
   };
 
 })();

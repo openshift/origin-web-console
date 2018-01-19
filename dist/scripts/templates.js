@@ -722,6 +722,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd>{{version.master.openshift || 'unknown'}}</dd>\n" +
     "<dt>Kubernetes Master:</dt>\n" +
     "<dd>{{version.master.kubernetes || 'unknown'}}</dd>\n" +
+    "<dt>OpenShift Web Console:</dt>\n" +
+    "<dd>{{version.console || 'unknown'}}</dd>\n" +
     "</dl>\n" +
     "<p>The <a target=\"_blank\" ng-href=\"{{'welcome' | helpLink}}\">documentation</a> helps you learn about OpenShift and start exploring its features. From getting started with creating your first application to trying out more advanced build and deployment techniques, it provides guidance on setting up and managing your OpenShift environment as an application developer.</p>\n" +
     "<p>With the OpenShift command line interface (CLI), you can create applications and manage OpenShift projects from a terminal. To get started using the CLI, visit <a href=\"command-line\">Command Line Tools</a>.\n" +
@@ -6376,6 +6378,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label>\n" +
     "<input type=\"radio\" ng-model=\"mode\" value=\"dockerImage\" ng-disabled=\"!input.selectedProject.metadata.uid\">\n" +
     "Image Name\n" +
+    "<span ng-if=\"!input.selectedProject.metadata.uid\" class=\"text-warning\">\n" +
+    "&ndash; Image search is only available for existing projects.\n" +
+    "</span>\n" +
     "</label>\n" +
     "</div>\n" +
     "<fieldset ng-disabled=\"!input.selectedProject.metadata.uid\">\n" +
@@ -6389,9 +6394,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"sr-only\">Find</span>\n" +
     "</button>\n" +
     "</span>\n" +
-    "</div>\n" +
-    "<div ng-if=\"!input.selectedProject.metadata.uid\" class=\"help-block\">\n" +
-    "Image search is only available for existing projects.\n" +
     "</div>\n" +
     "</div>\n" +
     "</fieldset>\n" +
@@ -13942,7 +13944,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"add-webhook-action-btns\">\n" +
-    "<button class=\"btn btn-link\" type=\"button\" ng-click=\"$ctrl.checkLastAndAddNew()\">Add Webhook</button>\n" +
+    "<button class=\"btn btn-link pad-left-none\" type=\"button\" ng-click=\"$ctrl.checkLastAndAddNew()\">Add Webhook</button>\n" +
     "<span ng-if=\"$ctrl.secretsVersion | canI : 'create'\">\n" +
     "<span class=\"action-divider\" aria-hidden=\"true\"> | </span>\n" +
     "<button class=\"btn btn-link\" href=\"\" type=\"button\" ng-click=\"$ctrl.openCreateWebhookSecretModal()\">Create New Webhook Secret</button>\n" +

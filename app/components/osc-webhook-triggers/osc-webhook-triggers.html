@@ -71,7 +71,7 @@
   </div>
 
   <div class="add-webhook-action-btns">
-    <button class="btn btn-link" type="button" ng-click="$ctrl.checkLastAndAddNew()">Add Webhook</button>
+    <button class="btn btn-link pad-left-none" type="button" ng-click="$ctrl.checkLastAndAddNew()">Add Webhook</button>
     <span ng-if="$ctrl.secretsVersion | canI : 'create'">
       <span class="action-divider" aria-hidden="true"> | </span>
       <button class="btn btn-link" href="" type="button" ng-click="$ctrl.openCreateWebhookSecretModal()">Create New Webhook Secret</button>

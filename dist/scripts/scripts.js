@@ -622,7 +622,6 @@ DISABLE_SERVICE_CATALOG_LANDING_PAGE: !1,
 AVAILABLE_KINDS_BLACKLIST: [],
 DISABLE_GLOBAL_EVENT_WATCH: !1,
 DISABLE_COPY_LOGIN_COMMAND: !1,
-TEMPLATE_SERVICE_BROKER_ENABLED: !1,
 ENABLE_TECH_PREVIEW_FEATURE: {
 pod_presets: !1
 },
@@ -630,7 +629,6 @@ SAMPLE_PIPELINE_TEMPLATE: {
 name: "jenkins-pipeline-example",
 namespace: "openshift"
 },
-INACTIVITY_TIMEOUT_PERIOD: 0,
 CREATE_FROM_URL_WHITELIST: [ "openshift" ],
 SECURITY_CHECK_WHITELIST: [ {
 resource: "buildconfigs",
@@ -1387,8 +1385,8 @@ e.aHrefSanitizationWhitelist(/^\s*(https?|mailto|git):/i);
 t.persistFilterState(!0), e.$on("$routeChangeSuccess", function() {
 t.readPersistedState();
 });
-} ]).run([ "$location", "$uibModal", "AuthService", "Constants", function(e, t, n, r) {
-function a() {
+} ]).run([ "$location", "$uibModal", "AuthService", function(e, t, n) {
+function r() {
 if (c) return !1;
 c = !0, (i = t.open({
 animation: !0,
@@ -1400,12 +1398,13 @@ controller: "LogoutModalController"
 d(), c = !1;
 });
 }
-if (!(r.INACTIVITY_TIMEOUT_PERIOD <= 0)) {
+var a = window.OPENSHIFT_CONFIG.inactivityTimeoutMinutes;
+if (a) {
 var o, i, s = "origin-web-console-last-interaction-timestamp", c = !1, l = function() {
 o = setInterval(function() {
 if (n.isLoggedIn()) {
 var e = Date.parse(localStorage.getItem(s));
-isNaN(e) && (Logger.warn("Last interaction timestamp has been corrupted. The logout timeout will be restarted."), e = new Date()), new Date() - e > 6e4 * r.INACTIVITY_TIMEOUT_PERIOD && a();
+isNaN(e) && (Logger.warn("Last interaction timestamp has been corrupted. The logout timeout will be restarted."), e = new Date()), new Date() - e > 6e4 * a && r();
 }
 }, 6e4);
 }, u = function() {
@@ -3939,58 +3938,58 @@ _.set(a, [ n, t.metadata.name ], t);
 }), a;
 }
 };
-}), angular.module("openshiftConsole").factory("CatalogService", [ "$filter", "$q", "APIService", "AuthService", "Catalog", "Constants", "KeywordService", "Logger", "NotificationsService", function(e, t, n, r, a, o, i, s, c) {
-var l, u = e("tags"), d = n.getPreferredVersion("servicebindings"), m = n.getPreferredVersion("clusterserviceclasses"), p = n.getPreferredVersion("serviceinstances"), f = n.getPreferredVersion("clusterserviceplans"), g = !o.DISABLE_SERVICE_CATALOG_LANDING_PAGE && n.apiInfo(d) && n.apiInfo(m) && n.apiInfo(p) && n.apiInfo(f), v = function() {
-s.debug("ProjectsService: clearing catalog items cache"), l = null;
+}), angular.module("openshiftConsole").factory("CatalogService", [ "$filter", "$q", "$window", "APIService", "AuthService", "Catalog", "Constants", "KeywordService", "Logger", "NotificationsService", function(e, t, n, r, a, o, i, s, c, l) {
+var u, d = e("tags"), m = r.getPreferredVersion("servicebindings"), p = r.getPreferredVersion("clusterserviceclasses"), f = r.getPreferredVersion("serviceinstances"), g = r.getPreferredVersion("clusterserviceplans"), v = !i.DISABLE_SERVICE_CATALOG_LANDING_PAGE && r.apiInfo(m) && r.apiInfo(p) && r.apiInfo(f) && r.apiInfo(g), h = function() {
+c.debug("ProjectsService: clearing catalog items cache"), u = null;
 };
-r.onUserChanged(v), r.onLogout(v);
-var h = function() {
-return !!o.TEMPLATE_SERVICE_BROKER_ENABLED;
-}, y = {};
-_.each(o.CATALOG_CATEGORIES, function(e) {
+a.onUserChanged(h), a.onLogout(h);
+var y = function() {
+return !!n.OPENSHIFT_CONFIG.templateServiceBrokerEnabled;
+}, b = {};
+_.each(i.CATALOG_CATEGORIES, function(e) {
 _.each(e.items, function(e) {
-y[e.id] = e;
+b[e.id] = e;
 var t = _.get(e, "subcategories", []);
 _.each(t, function(e) {
 _.each(e.items, function(e) {
-y[e.id] = e;
+b[e.id] = e;
 });
 });
 });
 });
-var b = function(e, t) {
+var S = function(e, t) {
 e = e.toLowerCase();
 var n;
 for (n = 0; n < t.length; n++) if (e === t[n].toLowerCase()) return !0;
 return !1;
-}, S = function(e, t) {
+}, C = function(e, t) {
 var n = _.get(e, "categoryAliases", []), r = [ e.id ].concat(n);
 return _.some(r, function(e) {
-return b(e, t);
+return S(e, t);
 });
-}, C = function(e) {
+}, w = function(e) {
 return e.from && "ImageStreamTag" === e.from.kind && -1 === e.from.name.indexOf(":") && !e.from.namespace;
-}, w = e("displayName"), P = [ "metadata.name", 'metadata.annotations["openshift.io/display-name"]', "metadata.annotations.description" ];
+}, P = e("displayName"), j = [ "metadata.name", 'metadata.annotations["openshift.io/display-name"]', "metadata.annotations.description" ];
 return {
-SERVICE_CATALOG_ENABLED: g,
-isTemplateServiceBrokerEnabled: h,
+SERVICE_CATALOG_ENABLED: v,
+isTemplateServiceBrokerEnabled: y,
 getCatalogItems: function(e) {
-if (l && !e) return s.debug("CatalogService: returning cached catalog items"), t.when(l);
-s.debug("CatalogService: getCatalogItems, force refresh", e);
-var n = !h();
-return a.getCatalogItems(n).then(_.spread(function(e, t) {
+if (u && !e) return c.debug("CatalogService: returning cached catalog items"), t.when(u);
+c.debug("CatalogService: getCatalogItems, force refresh", e);
+var n = !y();
+return o.getCatalogItems(n).then(_.spread(function(e, t) {
 if (t) {
 var n = {
 type: "error",
 message: t
 };
-c.addNotification(n);
+l.addNotification(n);
 }
-return l = e, e;
+return u = e, e;
 }));
 },
 getCategoryItem: function(e) {
-return y[e];
+return b[e];
 },
 categorizeImageStreams: function(e) {
 var t = {};
@@ -4002,16 +4001,16 @@ var t = _.get(e, "annotations.tags");
 t && (n[e.name] = t.split(/\s*,\s*/));
 });
 var r = !1;
-_.each(y, function(a) {
+_.each(b, function(a) {
 (function(e) {
 return _.some(e.status.tags, function(e) {
 var t = n[e.tag] || [];
-return S(a, t) && b("builder", t) && !b("hidden", t);
+return C(a, t) && S("builder", t) && !S("hidden", t);
 });
 })(e) && (t[a.id] = t[a.id] || [], t[a.id].push(e), r = !0);
 }), r || _.some(e.status.tags, function(e) {
 var t = n[e.tag] || [];
-return b("builder", t) && !b("hidden", t);
+return S("builder", t) && !S("hidden", t);
 }) && (t[""] = t[""] || [], t[""].push(e));
 }
 }), t;
@@ -4019,20 +4018,20 @@ return b("builder", t) && !b("hidden", t);
 categorizeTemplates: function(e) {
 var t = {};
 return _.each(e, function(e) {
-var n = u(e), r = !1;
-_.each(y, function(a) {
-S(a, n) && (t[a.id] = t[a.id] || [], t[a.id].push(e), r = !0);
+var n = d(e), r = !1;
+_.each(b, function(a) {
+C(a, n) && (t[a.id] = t[a.id] || [], t[a.id].push(e), r = !0);
 }), r || (t[""] = t[""] || [], t[""].push(e));
 }), t;
 },
-referencesSameImageStream: C,
+referencesSameImageStream: w,
 filterImageStreams: function(e, t) {
 if (!t.length) return e;
 var n = [];
 return _.each(e, function(e) {
-var r = _.get(e, "metadata.name", ""), a = w(e, !0), o = [], i = {}, s = {};
+var r = _.get(e, "metadata.name", ""), a = P(e, !0), o = [], i = {}, s = {};
 _.each(e.spec.tags, function(e) {
-if (C(e)) return i[e.name] = e.from.name, s[e.from.name] = s[e.from.name] || [], void s[e.from.name].push(e.name);
+if (w(e)) return i[e.name] = e.from.name, s[e.from.name] = s[e.from.name] || [], void s[e.from.name].push(e.name);
 o.push(e);
 });
 var c = _.keyBy(o, "name");
@@ -4057,7 +4056,7 @@ return t ? c[t] : c[e.tag];
 }), n;
 },
 filterTemplates: function(e, t) {
-return i.filterForKeywords(e, P, t);
+return s.filterForKeywords(e, j, t);
 }
 };
 } ]), angular.module("openshiftConsole").factory("ModalsService", [ "$uibModal", function(e) {
@@ -7196,13 +7195,13 @@ e.$on("$destroy", k), u.get(r.project).then(_.spread(function(n, a) {
 e.project = n, e.context = a, i.canI("buildconfigs", "update", r.project) ? (s.get(v, r.buildconfig, a, {
 errorNotification: !1
 }).then(function(t) {
-e.buildConfig = t, f(), e.updatedBuildConfig = angular.copy(e.buildConfig), e.buildStrategy = b(e.updatedBuildConfig), e.strategyType = e.buildConfig.spec.strategy.type, e.envVars = e.buildStrategy.env || [], e.triggers = I(e.triggers, e.buildConfig.spec.triggers), e.sources = $(e.sources, e.buildConfig.spec.source), _.has(t, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (e.jenkinsfileOptions.type = "inline"), i.canI(h, "list", r.project) && s.list(h, a).then(function(t) {
+e.buildConfig = t, f(), e.updatedBuildConfig = angular.copy(e.buildConfig), e.buildStrategy = b(e.updatedBuildConfig), e.strategyType = e.buildConfig.spec.strategy.type, e.envVars = e.buildStrategy.env || [], e.triggers = I(e.triggers, e.buildConfig.spec.triggers), e.sources = B(e.sources, e.buildConfig.spec.source), _.has(t, "spec.strategy.jenkinsPipelineStrategy.jenkinsfile") && (e.jenkinsfileOptions.type = "inline"), i.canI(h, "list", r.project) && s.list(h, a).then(function(t) {
 var n = m.groupSecretsByType(t), r = _.mapValues(n, function(e) {
 return _.map(e, "metadata.name");
 });
 e.webhookSecrets = m.groupSecretsByType(t).webhook, e.secrets.secretsByType = _.each(r, function(e) {
 e.unshift("");
-}), N(), P = S(t.by("metadata.name")), e.valueFromObjects = w.concat(P);
+}), D(), P = S(t.by("metadata.name")), e.valueFromObjects = w.concat(P);
 });
 var n = function(e, n) {
 e.type = n && n.kind ? n.kind : "None";
@@ -7340,12 +7339,16 @@ name: _.last(r)
 }).namespace = 1 !== _.size(r) ? _.head(r) : e.buildConfig.metadata.namespace;
 }
 return n;
-}, T = function() {
+}, T = function(e) {
+return _.filter(e, function(e) {
+return !_.isEmpty(e.data.type) && !_.isEmpty(e.data[_.toLower(e.data.type)]);
+});
+}, N = function() {
 var t = [].concat(e.triggers.imageChangeTriggers, e.triggers.builderImageChangeTrigger, e.triggers.configChangeTrigger);
 return t = _.filter(t, function(e) {
 return _.has(e, "disabled") && !e.disabled || e.present;
-}), t = t.concat(e.triggers.webhookTriggers), t = _.map(t, "data");
-}, N = function() {
+}), t = t.concat(T(e.triggers.webhookTriggers)), t = _.map(t, "data");
+}, D = function() {
 switch (e.secrets.picked = {
 gitSecret: e.buildConfig.spec.source.sourceSecret ? [ e.buildConfig.spec.source.sourceSecret ] : [ {
 name: ""
@@ -7375,14 +7378,14 @@ name: ""
 mountPath: ""
 } ];
 }
-}, D = function(e, t, n) {
+}, A = function(e, t, n) {
 t.name ? e[n] = t : delete e[n];
-}, A = function(t, n) {
+}, $ = function(t, n) {
 var r = "Custom" === e.strategyType ? "secretSource" : "secret", a = _.filter(n, function(e) {
 return e[r].name;
 });
 _.isEmpty(a) ? delete t.secrets : t.secrets = a;
-}, $ = function(e, t) {
+}, B = function(e, t) {
 return "None" === t.type ? e : (e.none = !1, angular.forEach(t, function(t, n) {
 e[n] = !0;
 }), e);
@@ -7396,16 +7399,16 @@ break;
 case "JenkinsPipeline":
 "path" === e.jenkinsfileOptions.type ? delete e.updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfile : delete e.updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath;
 }
-switch (e.sources.images && !_.isEmpty(e.sourceImages) && (e.updatedBuildConfig.spec.source.images[0].paths = R(e.imageSourcePaths), e.updatedBuildConfig.spec.source.images[0].from = E(e.imageOptions.fromSource)), "None" === e.imageOptions.from.type ? delete b(e.updatedBuildConfig).from : b(e.updatedBuildConfig).from = E(e.imageOptions.from), "None" === e.imageOptions.to.type ? delete e.updatedBuildConfig.spec.output.to : e.updatedBuildConfig.spec.output.to = E(e.imageOptions.to), b(e.updatedBuildConfig).env = p.compactEntries(e.envVars), D(e.updatedBuildConfig.spec.source, _.head(e.secrets.picked.gitSecret), "sourceSecret"), D(b(e.updatedBuildConfig), _.head(e.secrets.picked.pullSecret), "pullSecret"), D(e.updatedBuildConfig.spec.output, _.head(e.secrets.picked.pushSecret), "pushSecret"), e.strategyType) {
+switch (e.sources.images && !_.isEmpty(e.sourceImages) && (e.updatedBuildConfig.spec.source.images[0].paths = R(e.imageSourcePaths), e.updatedBuildConfig.spec.source.images[0].from = E(e.imageOptions.fromSource)), "None" === e.imageOptions.from.type ? delete b(e.updatedBuildConfig).from : b(e.updatedBuildConfig).from = E(e.imageOptions.from), "None" === e.imageOptions.to.type ? delete e.updatedBuildConfig.spec.output.to : e.updatedBuildConfig.spec.output.to = E(e.imageOptions.to), b(e.updatedBuildConfig).env = p.compactEntries(e.envVars), A(e.updatedBuildConfig.spec.source, _.head(e.secrets.picked.gitSecret), "sourceSecret"), A(b(e.updatedBuildConfig), _.head(e.secrets.picked.pullSecret), "pullSecret"), A(e.updatedBuildConfig.spec.output, _.head(e.secrets.picked.pushSecret), "pushSecret"), e.strategyType) {
 case "Source":
 case "Docker":
-A(e.updatedBuildConfig.spec.source, e.secrets.picked.sourceSecrets);
+$(e.updatedBuildConfig.spec.source, e.secrets.picked.sourceSecrets);
 break;
 
 case "Custom":
-A(b(e.updatedBuildConfig), e.secrets.picked.sourceSecrets);
+$(b(e.updatedBuildConfig), e.secrets.picked.sourceSecrets);
 }
-e.updatedBuildConfig.spec.triggers = T(), k(), s.update(v, e.updatedBuildConfig.metadata.name, e.updatedBuildConfig, e.context).then(function() {
+e.updatedBuildConfig.spec.triggers = N(), k(), s.update(v, e.updatedBuildConfig.metadata.name, e.updatedBuildConfig, e.context).then(function() {
 l.addNotification({
 type: "success",
 message: "Build config " + e.updatedBuildConfig.metadata.name + " was successfully updated."
@@ -9010,7 +9013,8 @@ t.withUser(), e.version = {
 master: {
 openshift: n.VERSION.openshift,
 kubernetes: n.VERSION.kubernetes
-}
+},
+console: n.VERSION.console
 };
 } ]), angular.module("openshiftConsole").controller("CommandLineController", [ "$scope", "DataService", "AuthService", "Constants", function(e, t, n, r) {
 n.withUser(), e.cliDownloadURL = r.CLI, e.cliDownloadURLPresent = e.cliDownloadURL && !_.isEmpty(e.cliDownloadURL), e.loginBaseURL = t.openshiftAPIBaseUrl(), r.DISABLE_COPY_LOGIN_COMMAND || (e.sessionToken = n.UserStore().getToken());
@@ -10940,16 +10944,9 @@ e.hidden = !0, _.isFunction(e.onClose) && e.onClose();
 _.isFunction(n.onClick) && n.onClick() && e.close(t);
 };
 }
-}), angular.module("openshiftConsole").component("oscWebhookTriggers", {
-bindings: {
-webhookSecrets: "=",
-namespace: "=",
-type: "@",
-webhookTriggers: "=",
-form: "="
-},
-templateUrl: "components/osc-webhook-triggers/osc-webhook-triggers.html",
-controller: function(e, t, n, r) {
+}), function() {
+angular.module("openshiftConsole").component("oscWebhookTriggers", {
+controller: [ "$scope", "$uibModal", "$filter", "APIService", function(e, t, n, r) {
 var a = this;
 a.$onInit = function() {
 e.namespace = a.namespace, e.type = a.type, a.secretsVersion = r.getPreferredVersion("secrets"), a.webhookTypesOptions = [ {
@@ -11018,23 +11015,36 @@ scope: e
 a.webhookSecrets.push(e);
 });
 };
-}
-}), angular.module("openshiftConsole").component("copyWebhookUrl", {
+} ],
+controllerAs: "$ctrl",
 bindings: {
-buildConfigName: "=",
-triggerType: "=",
-projectName: "=",
-secret: "=",
-webhookSecrets: "="
+webhookSecrets: "<",
+namespace: "<",
+type: "@",
+webhookTriggers: "=",
+form: "="
 },
-templateUrl: "components/copy-webhook-url/copy-webhook-url.html",
+templateUrl: "components/osc-webhook-triggers/osc-webhook-triggers.html"
+});
+}(), function() {
+angular.module("openshiftConsole").component("copyWebhookUrl", {
 controller: function() {
 var e = this;
 e.showSecretsWarning = function() {
 return _.get(e.secret, "secretReference.name") && !e.webhookSecrets;
 };
-}
-}), angular.module("openshiftConsole").directive("parseError", function() {
+},
+controllerAs: "$ctrl",
+bindings: {
+buildConfigName: "<",
+triggerType: "<",
+projectName: "<",
+secret: "<",
+webhookSecrets: "<"
+},
+templateUrl: "components/copy-webhook-url/copy-webhook-url.html"
+});
+}(), angular.module("openshiftConsole").directive("parseError", function() {
 return {
 restrict: "E",
 scope: {
@@ -12329,10 +12339,10 @@ autoScrollActive: !1
 });
 });
 };
-if (s.getLoggingURL(t.context.project).then(function(r) {
-var a = _.get(t.context, "project.metadata.name"), i = _.get(t.options, "container");
-a && i && h && r && (angular.extend(t, {
-kibanaAuthUrl: e.trustAsResourceUrl(URI(r).segment("auth").segment("token").normalizePathname().toString()),
+if (s.getLoggingURL(t.context.project).then(function(a) {
+var i = _.get(t.context, "project.metadata.name"), s = _.get(t.options, "container");
+i && s && h && a && (angular.extend(t, {
+kibanaAuthUrl: e.trustAsResourceUrl(URI(a).segment("auth").segment("token").normalizePathname().toString()),
 access_token: o.UserStore().getToken()
 }), t.$watchGroup([ "context.project.metadata.name", "options.container", "name" ], function() {
 angular.extend(t, {
@@ -12342,7 +12352,7 @@ namespaceUid: t.context.project.metadata.uid,
 podname: h,
 containername: t.options.container,
 backlink: URI.encode(n.location.href)
-}))
+}, r("annotation")(t.context.project, "loggingDataPrefix")))
 });
 }));
 }), this.cacheScrollableNode = function(e) {
@@ -12867,6 +12877,7 @@ t.path(o);
 selection: {
 enabled: !0
 },
+order: null,
 type: "bar"
 }
 }, p = function() {
@@ -15423,7 +15434,7 @@ case "Running":
 return !0;
 
 default:
-return !1;
+return !e.status.completionTimestamp;
 }
 };
 } ]).filter("isRecentBuild", [ "ageLessThanFilter", "isIncompleteBuildFilter", function(e, t) {
@@ -16276,7 +16287,7 @@ return function(t) {
 return _.get(e, [ "ENABLE_TECH_PREVIEW_FEATURE", t ], !1);
 };
 } ]), angular.module("openshiftConsole").factory("logLinks", [ "$anchorScroll", "$document", "$location", "$window", function(e, t, n, r) {
-var a = _.template([ "/#/discover?", "_g=(", "time:(", "from:now-1w,", "mode:relative,", "to:now", ")", ")", "&_a=(", "columns:!(kubernetes.container_name,message),", "index:'project.<%= namespace %>.<%= namespaceUid %>.*',", "query:(", "query_string:(", "analyze_wildcard:!t,", 'query:\'kubernetes.pod_name:"<%= podname %>" AND kubernetes.namespace_name:"<%= namespace %>"\'', ")", "),", "sort:!('@timestamp',desc)", ")", "#console_container_name=<%= containername %>", "&console_back_url=<%= backlink %>" ].join(""));
+var a = _.template([ "/#/discover?", "_g=(", "time:(", "from:now-1w,", "mode:relative,", "to:now", ")", ")", "&_a=(", "columns:!(kubernetes.container_name,message),", "index:'<%= index %>',", "query:(", "query_string:(", "analyze_wildcard:!t,", 'query:\'kubernetes.pod_name:"<%= podname %>" AND kubernetes.namespace_name:"<%= namespace %>"\'', ")", "),", "sort:!('@timestamp',desc)", ")", "#console_container_name=<%= containername %>", "&console_back_url=<%= backlink %>" ].join(""));
 return {
 scrollTop: function(e) {
 e ? e.scrollTop = 0 : window.scrollTo(null, 0);
@@ -16296,8 +16307,8 @@ a.addSearch(e);
 }), r.open(a.toString(), "_blank");
 }
 },
-archiveUri: function(e) {
-return a(e);
+archiveUri: function(e, t) {
+return t = t || "project." + e.namespace + "." + e.namespaceUid, e.index = t + ".*", a(e);
 }
 };
 } ]), angular.module("javaLinkExtension", [ "openshiftConsole" ]).run([ "AuthService", "BaseHref", "DataService", "extensionRegistry", function(e, t, n, r) {
