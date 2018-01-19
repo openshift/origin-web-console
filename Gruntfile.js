@@ -626,7 +626,7 @@ module.exports = function (grunt) {
                     // ['Nightmare'] is a good alt for a current headless
                     // FIXME: fix this, PhantomJS is deprecated
                     isMac ?
-                      ['Firefox', 'Chrome'] :
+                      ['Firefox'] :
                       ['PhantomJS']
       },
       unit: {

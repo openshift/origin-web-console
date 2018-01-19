@@ -3166,7 +3166,32 @@ return s(e, "defaultRequest", t);
 return s(e, "defaultLimit", t);
 }, u = function(e, t, r) {
 return !!n.hasClusterResourceOverrides(r) || (!(!o("cpu", e) && !c("cpu", t)) || !(!i("cpu", e) && !l("cpu", t)));
-}, d = e("humanizeKind"), m = e("hasDeploymentConfig");
+}, d = e("humanizeKind"), m = e("hasDeploymentConfig"), p = function(e) {
+if (!e) return {
+message: "Metrics might not be configured by your cluster administrator. Metrics are required for autoscaling.",
+reason: "MetricsNotAvailable"
+};
+}, f = function(e, t, n) {
+var r, a = _.get(e, "spec.template.spec.containers", []);
+if (!u(a, t, n)) return r = d(e.kind), {
+message: "This " + r + " does not have any containers with a CPU request set. Autoscaling will not work without a CPU request.",
+reason: "NoCPURequest"
+};
+}, g = function(e) {
+if (_.size(e) > 1) return {
+message: "More than one autoscaler is scaling this resource. This is not recommended because they might compete with each other. Consider removing all but one autoscaler.",
+reason: "MultipleHPA"
+};
+}, v = function(e, t) {
+if ("ReplicationController" === e.kind && m(e) && _.some(t, function() {
+return _.some(t, function(e) {
+return "ReplicationController" === _.get(e, "spec.scaleTargetRef.kind");
+});
+})) return {
+message: "This deployment is scaled by both a deployment configuration and an autoscaler. This is not recommended because they might compete with each other.",
+reason: "DeploymentHasHPA"
+};
+};
 return {
 hasCPURequest: u,
 filterHPA: function(e, t, n) {
@@ -3176,26 +3201,7 @@ return e.spec.scaleTargetRef.kind === t && e.spec.scaleTargetRef.name === n;
 },
 getHPAWarnings: function(e, n, a, o) {
 return !e || _.isEmpty(n) ? t.when([]) : r.isAvailable().then(function(t) {
-var r = [];
-t || r.push({
-message: "Metrics might not be configured by your cluster administrator. Metrics are required for autoscaling.",
-reason: "MetricsNotAvailable"
-});
-var i, s = _.get(e, "spec.template.spec.containers", []);
-return u(s, a, o) || (i = d(e.kind), r.push({
-message: "This " + i + " does not have any containers with a CPU request set. Autoscaling will not work without a CPU request.",
-reason: "NoCPURequest"
-})), _.size(n) > 1 && r.push({
-message: "More than one autoscaler is scaling this resource. This is not recommended because they might compete with each other. Consider removing all but one autoscaler.",
-reason: "MultipleHPA"
-}), "ReplicationController" === e.kind && m(e) && _.some(n, function() {
-return _.some(n, function(e) {
-return "ReplicationController" === _.get(e, "spec.scaleTargetRef.kind");
-});
-}) && r.push({
-message: "This deployment is scaled by both a deployment configuration and an autoscaler. This is not recommended because they might compete with each other.",
-reason: "DeploymentHasHPA"
-}), r;
+return _.compact([ p(t), f(e, a, o), g(n), v(e, n) ]);
 });
 },
 groupHPAs: function(e) {
