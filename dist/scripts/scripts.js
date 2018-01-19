@@ -8995,7 +8995,8 @@ t.withUser(), e.version = {
 master: {
 openshift: n.VERSION.openshift,
 kubernetes: n.VERSION.kubernetes
-}
+},
+console: n.VERSION.console
 };
 } ]), angular.module("openshiftConsole").controller("CommandLineController", [ "$scope", "DataService", "AuthService", "Constants", function(e, t, n, r) {
 n.withUser(), e.cliDownloadURL = r.CLI, e.cliDownloadURLPresent = e.cliDownloadURL && !_.isEmpty(e.cliDownloadURL), e.loginBaseURL = t.openshiftAPIBaseUrl(), r.DISABLE_COPY_LOGIN_COMMAND || (e.sessionToken = n.UserStore().getToken());

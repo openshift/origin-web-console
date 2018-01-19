@@ -39,7 +39,8 @@
 
   window.OPENSHIFT_VERSION = {
     openshift: "dev-mode",
-    kubernetes: "dev-mode"
+    kubernetes: "dev-mode",
+    console: "dev-mode"
   };
 
 })();
