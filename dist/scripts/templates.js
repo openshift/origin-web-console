@@ -13978,10 +13978,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('components/osc-webhook-triggers/osc-webhook-triggers.html',
-    "<ng-form name=\"secretsForm\" class=\"add-webhook\">\n" +
-    "<div ng-repeat=\"trigger in $ctrl.webhookTriggers\">\n" +
+    "<ng-form name=\"$ctrl.secretsForm\" class=\"add-webhook\">\n" +
+    "<div ng-repeat=\"trigger in $ctrl.webhookTriggers track by $index\" ng-init=\"secretFieldName = 'triggerSecretRef' + $index\">\n" +
     "<div class=\"add-webhook-row\">\n" +
-    "<ui-select ng-model=\"trigger.data.type\" ng-disabled=\"$ctrl.isDeprecated(trigger)\" on-select=\"$ctrl.triggerTypeChange(trigger)\" search-enabled=\"false\" title=\"Select a webhook type\" class=\"select-webhook-type\" flex>\n" +
+    "<div class=\"select-webhook-type\">\n" +
+    "<ui-select ng-model=\"trigger.data.type\" name=\"triggerType{{$index}}\" ng-disabled=\"$ctrl.isDeprecated(trigger)\" on-select=\"$ctrl.triggerTypeChange(trigger)\" search-enabled=\"false\" title=\"Select a webhook type\" ng-class=\"{'has-warning': trigger.isDuplicate }\" focus-on=\"focus-index-{{$index}}\" flex>\n" +
     "<ui-select-match placeholder=\"Webhook type\">\n" +
     "{{ $select.selected.label }}\n" +
     "</ui-select-match>\n" +
@@ -13989,7 +13990,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{ option.label }}\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
-    "<ui-select ng-if=\"!$ctrl.isDeprecated(trigger)\" ng-model=\"trigger.data[trigger.data.type.toLowerCase()].secretReference.name\" ng-disabled=\"!trigger.data.type\" ng-required=\"trigger.data.type\" on-select=\"$ctrl.triggerSecretChange(trigger)\" title=\"Select a webhook secret reference\" class=\"select-secret-ref\" flex>\n" +
+    "</div>\n" +
+    "<div class=\"select-secret-ref\" ng-if=\"!$ctrl.isDeprecated(trigger)\">\n" +
+    "<ui-select ng-model=\"trigger.data[trigger.data.type.toLowerCase()].secretReference.name\" name=\"{{secretFieldName}}\" on-select=\"$ctrl.triggerSecretChange(trigger)\" title=\"Select a webhook secret reference\" ng-class=\"{'has-error': $ctrl.secretsForm[secretFieldName].$invalid && $ctrl.secretsForm[secretFieldName].$touched}\" ng-disabled=\"!trigger.data.type\" ng-required=\"trigger.data.type\" flex>\n" +
     "<ui-select-match placeholder=\"Webhook secret reference\">\n" +
     "{{ $select.selected.metadata.name }}\n" +
     "</ui-select-match>\n" +
@@ -13997,8 +14000,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-bind-html=\"webhookSecret.metadata.name | highlight : $select.search\"></div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
+    "<div class=\"has-error select-secret-ref\" ng-show=\"$ctrl.secretsForm[secretFieldName].$invalid && $ctrl.secretsForm[secretFieldName].$touched\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Secret reference is required.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "<div class=\"select-secret-ref deprecated-secret input-group\" ng-if=\"$ctrl.isDeprecated(trigger)\">\n" +
-    "<input ng-model=\"trigger.data[trigger.data.type.toLowerCase()].secret\" class=\"form-control\" type=\"{{trigger.secretInputType}}\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" select-on-focus disabled=\"disabled\">\n" +
+    "<input ng-model=\"trigger.data[trigger.data.type.toLowerCase()].secret\" class=\"form-control\" type=\"{{trigger.secretInputType}}\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" disabled=\"disabled\">\n" +
     "<div class=\"input-group-btn\">\n" +
     "<button type=\"button\" class=\"btn btn-default toggle\" title=\"Toggle Token Visibility\" aria-label=\"Toggle Token Visibility\" ng-click=\"$ctrl.toggleSecretInputType(trigger)\">\n" +
     "<span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span>\n" +
@@ -14018,7 +14027,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"add-webhook-action-btns\">\n" +
-    "<button class=\"btn btn-link pad-left-none\" type=\"button\" ng-click=\"$ctrl.checkLastAndAddNew()\">Add Webhook</button>\n" +
+    "<button class=\"btn btn-link pad-left-none\" type=\"button\" ng-click=\"$ctrl.addEmptyWebhookTrigger()\">Add Webhook</button>\n" +
     "<span ng-if=\"$ctrl.secretsVersion | canI : 'create'\">\n" +
     "<span class=\"action-divider\" aria-hidden=\"true\"> | </span>\n" +
     "<button class=\"btn btn-link\" href=\"\" type=\"button\" ng-click=\"$ctrl.openCreateWebhookSecretModal()\">Create New Webhook Secret</button>\n" +
