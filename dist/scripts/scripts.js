@@ -12005,10 +12005,10 @@ autoScrollActive: !1
 });
 });
 };
-if (s.getLoggingURL(t.context.project).then(function(a) {
-var r = _.get(t.context, "project.metadata.name"), i = _.get(t.options, "container");
-r && i && h && a && (angular.extend(t, {
-kibanaAuthUrl: e.trustAsResourceUrl(URI(a).segment("auth").segment("token").normalizePathname().toString()),
+if (s.getLoggingURL(t.context.project).then(function(r) {
+var i = _.get(t.context, "project.metadata.name"), s = _.get(t.options, "container");
+i && s && h && r && (angular.extend(t, {
+kibanaAuthUrl: e.trustAsResourceUrl(URI(r).segment("auth").segment("token").normalizePathname().toString()),
 access_token: o.UserStore().getToken()
 }), t.$watchGroup([ "context.project.metadata.name", "options.container", "name" ], function() {
 angular.extend(t, {
@@ -12018,7 +12018,7 @@ namespaceUid: t.context.project.metadata.uid,
 podname: h,
 containername: t.options.container,
 backlink: URI.encode(n.location.href)
-}))
+}, a("annotation")(t.context.project, "openshift.io/logging.data.prefix")))
 });
 }));
 }), this.cacheScrollableNode = function(e) {
@@ -15938,7 +15938,7 @@ return function(t) {
 return _.get(e, [ "ENABLE_TECH_PREVIEW_FEATURE", t ], !1);
 };
 } ]), angular.module("openshiftConsole").factory("logLinks", [ "$anchorScroll", "$document", "$location", "$window", function(e, t, n, a) {
-var r = _.template([ "/#/discover?", "_g=(", "time:(", "from:now-1w,", "mode:relative,", "to:now", ")", ")", "&_a=(", "columns:!(kubernetes.container_name,message),", "index:'project.<%= namespace %>.<%= namespaceUid %>.*',", "query:(", "query_string:(", "analyze_wildcard:!t,", 'query:\'kubernetes.pod_name:"<%= podname %>" AND kubernetes.namespace_name:"<%= namespace %>"\'', ")", "),", "sort:!('@timestamp',desc)", ")", "#console_container_name=<%= containername %>", "&console_back_url=<%= backlink %>" ].join(""));
+var r = _.template([ "/#/discover?", "_g=(", "time:(", "from:now-1w,", "mode:relative,", "to:now", ")", ")", "&_a=(", "columns:!(kubernetes.container_name,message),", "index:'<%= index %>',", "query:(", "query_string:(", "analyze_wildcard:!t,", 'query:\'kubernetes.pod_name:"<%= podname %>" AND kubernetes.namespace_name:"<%= namespace %>"\'', ")", "),", "sort:!('@timestamp',desc)", ")", "#console_container_name=<%= containername %>", "&console_back_url=<%= backlink %>" ].join(""));
 return {
 scrollTop: function(e) {
 e ? e.scrollTop = 0 : window.scrollTo(null, 0);
@@ -15958,8 +15958,8 @@ r.addSearch(e);
 }), a.open(r.toString(), "_blank");
 }
 },
-archiveUri: function(e) {
-return r(e);
+archiveUri: function(e, t) {
+return t = t || "project." + e.namespace + "." + e.namespaceUid, e.index = t + ".*", r(e);
 }
 };
 } ]), angular.module("javaLinkExtension", [ "openshiftConsole" ]).run([ "AuthService", "BaseHref", "DataService", "extensionRegistry", function(e, t, n, a) {
