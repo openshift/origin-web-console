@@ -611,7 +611,6 @@ SAMPLE_PIPELINE_TEMPLATE: {
 name: "jenkins-pipeline-example",
 namespace: "openshift"
 },
-INACTIVITY_TIMEOUT_PERIOD: 0,
 CREATE_FROM_URL_WHITELIST: [ "openshift" ],
 SECURITY_CHECK_WHITELIST: [ {
 resource: "buildconfigs",
@@ -1368,8 +1367,8 @@ e.aHrefSanitizationWhitelist(/^\s*(https?|mailto|git):/i);
 t.persistFilterState(!0), e.$on("$routeChangeSuccess", function() {
 t.readPersistedState();
 });
-} ]).run([ "$location", "$uibModal", "AuthService", "Constants", function(e, t, n, r) {
-function a() {
+} ]).run([ "$location", "$uibModal", "AuthService", function(e, t, n) {
+function r() {
 if (c) return !1;
 c = !0, (i = t.open({
 animation: !0,
@@ -1381,12 +1380,13 @@ controller: "LogoutModalController"
 d(), c = !1;
 });
 }
-if (!(r.INACTIVITY_TIMEOUT_PERIOD <= 0)) {
+var a = window.OPENSHIFT_CONFIG.inactivityTimeoutMinutes;
+if (a) {
 var o, i, s = "origin-web-console-last-interaction-timestamp", c = !1, l = function() {
 o = setInterval(function() {
 if (n.isLoggedIn()) {
 var e = Date.parse(localStorage.getItem(s));
-isNaN(e) && (Logger.warn("Last interaction timestamp has been corrupted. The logout timeout will be restarted."), e = new Date()), new Date() - e > 6e4 * r.INACTIVITY_TIMEOUT_PERIOD && a();
+isNaN(e) && (Logger.warn("Last interaction timestamp has been corrupted. The logout timeout will be restarted."), e = new Date()), new Date() - e > 6e4 * a && r();
 }
 }, 6e4);
 }, u = function() {

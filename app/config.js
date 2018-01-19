@@ -33,7 +33,8 @@
     },
     loggingURL: "",
     metricsURL: "",
-    templateServiceBrokerEnabled: false
+    templateServiceBrokerEnabled: false,
+    inactivityTimeoutMinutes: 0
   };
 
   window.OPENSHIFT_VERSION = {
