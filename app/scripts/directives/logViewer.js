@@ -427,7 +427,7 @@ angular.module('openshiftConsole')
                                         podname: name,
                                         containername: $scope.options.container,
                                         backlink: URI.encode($window.location.href)
-                                      }))
+                                      }, $filter('annotation')($scope.context.project,'loggingDataPrefix')))
                   });
                 });
               });
