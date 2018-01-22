@@ -5235,7 +5235,7 @@ error: _.template('The role "<%= roleName %>" could not be granted to "<%= subje
 exists: _.template('The role "<%= roleName %>" has already been granted to "<%= subjectName %>".')
 }
 },
-errorReason: _.template('Reason: "<%= httpErr %>"')
+errorReason: _.template('"<%= httpErr %>"')
 }, P = function(e, t, n) {
 m.addNotification({
 type: e,

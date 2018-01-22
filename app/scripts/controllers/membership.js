@@ -55,7 +55,7 @@ angular
             exists: _.template('The role "<%= roleName %>" has already been granted to "<%= subjectName %>".')
           }
         },
-        errorReason: _.template('Reason: "<%= httpErr %>"')
+        errorReason: _.template('"<%= httpErr %>"')
       };
 
       var showToast = function(type, message, details) {
@@ -102,7 +102,7 @@ angular
               roleBindings: resp.by('metadata.name'),
               subjectKindsForUI: MembershipService.mapRolebindingsForUI(resp.by('metadata.name'), allRoles)
             });
-			      resetForm();
+            resetForm();
           }, function() {
             // if the request errors but we have an object, we can at least update in place
             if(toUpdateOnError) {
