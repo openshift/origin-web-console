@@ -48,17 +48,7 @@ describe('RoleBindingsService', function() {
           expect(_.keys(resp.roleRef)).toEqual(['name', 'namespace']);
         });
     });
-    it('should explicitly null userNames and groupNames', function() {
-      RoleBindingsService
-        .addSubject({
-          metadata: { name: 'admin'},
-          subjects: []
-        }, {name: 'jane', kind: 'user'})
-        .then(function(resp) {
-          expect(resp.userNames).toEqual(null);
-          expect(resp.groupNames).toEqual(null);
-        });
-    });
+
     it('should return the binding if no new subject provided', function() {
       // TODO: the early rejection should still be a thenable object!
       var binding = RoleBindingsService

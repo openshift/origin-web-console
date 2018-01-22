@@ -6,11 +6,6 @@ angular
     $q,
     APIService,
     DataService) {
-    // some API constraints worth nothing:
-    // ServiceAccountUsernamePrefix    = "system:serviceaccount:"
-    // ServiceAccountUsernameSeparator = ":"
-    // ServiceAccountGroupPrefix       = "system:serviceaccounts:"
-    // AllServiceAccountsGroup         = "system:serviceaccounts"
 
     var roleBindingsVersion = APIService.getPreferredVersion('rolebindings');
 
@@ -48,21 +43,10 @@ angular
     };
 
     var qualifySubject = function(subject, namespace) {
-      // NOTE: so far, SAs are the only ones that need tweaking
       if(_.isEqual(subject.kind, 'ServiceAccount')) {
         subject.namespace = subject.namespace || namespace;
-      } else if(_.isEqual(subject.kind, 'SystemUser') || _.isEqual(subject.kind, 'SystemGroup')) {
-        if(!_.startsWith(subject.name, 'system:')) {
-          subject.name = 'system:'+subject.name;
-        }
       }
       return subject;
-    };
-
-    var cleanBinding = function(binding) {
-      // These generated lists must be removed to be regenerated
-      binding.userNames = null;
-      binding.groupNames = null;
     };
 
     var create = function(role, subject, namespace, context) {
@@ -89,7 +73,6 @@ angular
       } else {
         binding.subjects = [subject];
       }
-      cleanBinding(binding);
       return DataService.update(rgv, binding.metadata.name, binding, context);
     };
 
@@ -101,7 +84,6 @@ angular
         _.map(matchingBindings, function(binding) {
           var tpl = bindingTPL();
           binding = _.extend(tpl, binding);
-          cleanBinding(binding);
           var toMatch = { name: subjectName };
           if(namespace) {
             toMatch.namespace = namespace;
