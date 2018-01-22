@@ -9,26 +9,12 @@ angular
 
     var roleBindingsVersion = APIService.getPreferredVersion('rolebindings');
 
-    var cache = {};
-
-    // recurse until we get a unique binding name compared to what is cached
-    var qualifyBindingName = function(name, suffix) {
-      var search = suffix ?
-                name + suffix :
-                name;
-      return _.some(cache, _.matchesProperty('metadata.name', search)) ?
-              qualifyBindingName(name, _.uniqueId()) :
-              search;
-    };
-
     var bindingTPL = function(role, projectNamespace) {
-      var roleName = _.get(role, 'metadata.name');
-      var bindingName = roleName ? qualifyBindingName(roleName) : null;
       return {
         kind: 'RoleBinding',
         apiVersion: 'v1',
         metadata: {
-          name: bindingName,
+          generateName: _.get(role, 'metadata.name') + '-',
           namespace: projectNamespace,
         },
         roleRef: {
@@ -103,16 +89,7 @@ angular
         }));
     };
 
-    var list = function(context, fn, opts) {
-      return DataService
-              .list(roleBindingsVersion, context, function(resp) {
-                cache = resp.by('metadata.name');
-                fn(resp);
-              }, opts);
-    };
-
     return {
-      list: list,
       create: create,
       addSubject: addSubject,
       removeSubject: removeSubject
