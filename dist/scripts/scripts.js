@@ -10438,6 +10438,7 @@ t.secretsForm.$setDirty();
 }, t.openCreateSecretModal = function() {
 e.open({
 animation: !0,
+backdrop: "static",
 templateUrl: "views/modals/create-secret.html",
 controller: "CreateSecretModalController",
 scope: t
