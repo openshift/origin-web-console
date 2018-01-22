@@ -54,8 +54,7 @@ angular
             error: _.template('The role "<%= roleName %>" could not be granted to "<%= subjectName %>".'),
             exists: _.template('The role "<%= roleName %>" has already been granted to "<%= subjectName %>".')
           }
-        },
-        errorReason: _.template('"<%= httpErr %>"')
+        }
       };
 
       var showToast = function(type, message, details) {
@@ -129,7 +128,7 @@ angular
             showToast('error', messages.update.subject.error({
               roleName: role.metadata.name,
               subjectName: newSubject.name
-            }), messages.errorReason({httpErr: $filter('getErrorDetails')(err)}));
+            }), $filter('getErrorDetails')(err));
           });
       };
 
@@ -149,7 +148,7 @@ angular
             showToast('error', messages.update.subject.error({
               roleName: rb.roleRef.name,
               subjectName: newSubject.name
-            }), messages.errorReason({httpErr: $filter('getErrorDetails')(err)}));
+            }), $filter('getErrorDetails')(err));
           });
       };
 
@@ -328,9 +327,7 @@ angular
                     showToast('error', messages.remove.error({
                       roleName: roleName,
                       subjectName: subjectName
-                    }),  messages.errorReason({
-                      httpErr: $filter('getErrorDetails')(err)
-                    }));
+                    }), $filter('getErrorDetails')(err));
                   });
               });
             },
