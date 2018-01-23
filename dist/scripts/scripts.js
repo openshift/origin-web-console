@@ -5252,8 +5252,7 @@ success: _.template('The role "<%= roleName %>" was granted to "<%= subjectName 
 error: _.template('The role "<%= roleName %>" could not be granted to "<%= subjectName %>".'),
 exists: _.template('The role "<%= roleName %>" has already been granted to "<%= subjectName %>".')
 }
-},
-errorReason: _.template('Reason: "<%= httpErr %>"')
+}
 }, P = function(e, t, n) {
 m.addNotification({
 type: e,
@@ -5294,9 +5293,7 @@ subjectName: n.name
 j(), I(), P("error", w.update.subject.error({
 roleName: t.metadata.name,
 subjectName: n.name
-}), w.errorReason({
-httpErr: e("getErrorDetails")(r)
-}));
+}), e("getErrorDetails")(r));
 });
 }, E = function(t, n, a) {
 r.disableAddForm = !0, p.addSubject(t, n, a, g).then(function() {
@@ -5308,9 +5305,7 @@ subjectName: n.name
 j(), I(), P("error", w.update.subject.error({
 roleName: t.roleRef.name,
 subjectName: n.name
-}), w.errorReason({
-httpErr: e("getErrorDetails")(r)
-}));
+}), e("getErrorDetails")(r));
 });
 }, T = {};
 n.tab && (T[n.tab] = !0);
@@ -5427,9 +5422,7 @@ subjectName: n
 P("error", w.remove.error({
 roleName: i,
 subjectName: n
-}), w.errorReason({
-httpErr: e("getErrorDetails")(t)
-}));
+}), e("getErrorDetails")(t));
 });
 });
 },
@@ -10463,6 +10456,7 @@ t.secretsForm.$setDirty();
 }, t.openCreateSecretModal = function() {
 e.open({
 animation: !0,
+backdrop: "static",
 templateUrl: "views/modals/create-secret.html",
 controller: "CreateSecretModalController",
 scope: t
