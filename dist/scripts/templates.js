@@ -2137,7 +2137,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tr ng-repeat=\"(prop, value) in configMap.data\">\n" +
     "<td class=\"key\">{{prop}}</td>\n" +
     "<td class=\"value\">\n" +
-    "<truncate-long-text content=\"value\" limit=\"1024\" newline-limit=\"20\" expandable=\"true\">\n" +
+    "<truncate-long-text content=\"value\" limit=\"1024\" newline-limit=\"20\" expandable=\"true\" linkify=\"true\">\n" +
     "</truncate-long-text>\n" +
     "</td>\n" +
     "</tr>\n" +
