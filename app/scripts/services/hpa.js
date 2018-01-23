@@ -2,6 +2,7 @@
 
 angular.module("openshiftConsole")
   .factory("HPAService", function($filter, $q, LimitRangesService, MetricsService) {
+
     // Checks if all containers have a value set for the compute resource request or limit.
     //
     // computeResource  - 'cpu' or 'memory'
@@ -99,6 +100,27 @@ angular.module("openshiftConsole")
     };
 
 
+    var hasV2HPAAnnotations = function(hpaResources) {
+      return _.some(hpaResources, function(hpa) {
+        return $filter('hpaMetrics')(hpa);
+      });
+    };
+
+
+    var hasV2HPAScaler = function(scaleTarget, hpaResources) {
+      var containers = _.get(scaleTarget, 'spec.template.spec.containers', []);
+      var hasRequest = hasCPURequest(containers);
+      var hasV2HPA = hasV2HPAAnnotations(hpaResources);
+      if(!hasRequest && hasV2HPA) {
+        return {
+          message: 'The autoscaler attached to this resource uses a newer API. ' +
+                   'Consider editing this autoscaler with the CLI.',
+          reason: 'V2Beta1HPA'
+        };
+      }
+    };
+
+
     var hasCompetingAutoscalersWarning = function(hpaResources) {
       if (_.size(hpaResources) > 1) {
         return {
@@ -146,12 +168,24 @@ angular.module("openshiftConsole")
         return $q.when([]);
       }
       return MetricsService.isAvailable().then(function(metricsAvailable) {
+        var v2HPAWarning = hasV2HPAScaler(scaleTarget, hpaResources);
         return _.compact([
           hasMetricsAvailableWarning(metricsAvailable),
-          hasCPURequestWarning(scaleTarget, limitRanges, project),
+          v2HPAWarning ? v2HPAWarning : hasCPURequestWarning(scaleTarget, limitRanges, project),
           hasCompetingAutoscalersWarning(hpaResources),
           hasCompetingDCAndAutoscalerWarning(scaleTarget, hpaResources)
         ]);
+      });
+    };
+
+    // Get HPA warnings relevant to a Resource list page.
+    //
+    // This method returns the same set as the above getHPAWarnings but
+    // filters out the warnings that don't need to be fully surfaced to
+    // each individual resource.
+    var getHPAWarningsForResource = function(scaleTarget, hpaResources, limitRanges, project) {
+      return getHPAWarnings(scaleTarget, hpaResources, limitRanges, project).then(function(warnings) {
+        return $filter('hpaWarningsForResource')(warnings);
       });
     };
 
@@ -185,10 +219,17 @@ angular.module("openshiftConsole")
       return hpaByResource;
     };
 
+    // currently unsupported by the webconsole
+    var isUnsupportedAPI = function(hpa) {
+      return hasV2HPAAnnotations([hpa]);
+    };
+
     return {
+      isUnsupportedAPI: isUnsupportedAPI,
       hasCPURequest: hasCPURequest,
       filterHPA: filterHPA,
       getHPAWarnings: getHPAWarnings,
+      getHPAWarningsForResource: getHPAWarningsForResource,
       groupHPAs: groupHPAs
     };
   });

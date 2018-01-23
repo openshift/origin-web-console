@@ -2,7 +2,6 @@
 
 describe('HPAService', function() {
   var HPAService;
-  var $rootScope;
   var $q;
   var $window;
 
@@ -22,8 +21,7 @@ describe('HPAService', function() {
   }));
 
 
-  beforeEach(inject(function(_$q_, _$rootScope_, _$window_, _HPAService_) {
-    $rootScope = _$rootScope_;
+  beforeEach(inject(function(_$q_, _$window_, _HPAService_) {
     $q = _$q_;
     $window = _$window_;
     HPAService = _HPAService_;
@@ -88,7 +86,6 @@ describe('HPAService', function() {
           .then(function(warnings) {
             expect(_.size(warnings)).toEqual(0);
           });
-        $rootScope.$digest();
       });
     });
 
@@ -101,7 +98,6 @@ describe('HPAService', function() {
           .then(function(warnings) {
             expect(_.head(warnings).reason).toEqual('MetricsNotAvailable');
           });
-        $rootScope.$digest();
       });
     });
 
@@ -130,35 +126,59 @@ describe('HPAService', function() {
     });
 
     describe('When the scale target does not have a CPU request set', function() {
-      it('should return a warning with reason ≈', function() {
-        // NOTE: if the scale target has no containers, then the
-        // hasRequestOrLimit function in HPAService will return true.
-        // This could be a potential bug, though I imagine we never
-        // pass it an object w/o containers.
-        var scaleTargetWithoutLimit = {
-          kind: '',
-          spec: {
-            template: {
-              spec: {
-                containers: [
-                  {
-                    name: 'bob',
-                    image: '',
-                    env: [],
-                  }
-                ]
-              }
+      var scaleTargetWithoutLimit = {
+        kind: '',
+        spec: {
+          template: {
+            spec: {
+              containers: [
+                {
+                  name: 'bob',
+                  image: '',
+                  env: [],
+                }
+              ]
             }
           }
-        };
-        HPAService
-          .getHPAWarnings(scaleTargetWithoutLimit, defaultHpaResources, defaultLimitRanges, defaultProject)
-          .then(function(warnings) {
-            expect(_.head(warnings).reason).toEqual('NoCPURequest');
-          });
-        $rootScope.$digest();
+        }
+      };
+
+      describe('if a v2beta1 HPA is used', function() {
+        it('should return a warning with reason V2Beta1HPA ', function() {
+          // this is a v2beta1 hpa represented as a v1 object
+          var hpaWithV2Beta1 = [{
+            metadata: {
+              annotations: {
+                'autoscaling.alpha.kubernetes.io/metrics': '[{ "type": "Pods" }]'
+              }
+            },
+            spec: {
+              scaleTargetRef: {
+                kind: 'ReplicationController'
+              }
+            }
+          }];
+          HPAService
+            .getHPAWarnings(scaleTargetWithoutLimit, hpaWithV2Beta1, defaultLimitRanges, defaultProject)
+            .then(function(warnings) {
+              expect(_.head(warnings).reason).toEqual('V2Beta1HPA');
+            });
+        });
       });
 
+      describe('if a v1 HPA is used', function() {
+        it('should return a warning with reason NoCPURequest', function() {
+          // NOTE: if the scale target has no containers, then the
+          // hasRequestOrLimit function in HPAService will return true.
+          // This could be a potential bug, though I imagine we never
+          // pass it an object w/o containers.
+          HPAService
+            .getHPAWarnings(scaleTargetWithoutLimit, defaultHpaResources, defaultLimitRanges, defaultProject)
+            .then(function(warnings) {
+              expect(_.head(warnings).reason).toEqual('NoCPURequest');
+            });
+        });
+      });
     });
 
     describe('Warn when there are competing autoscalers', function() {
@@ -169,7 +189,6 @@ describe('HPAService', function() {
           .then(function(warnings) {
             expect(_.head(warnings).reason).toEqual('MultipleHPA');
           });
-        $rootScope.$digest();
       });
     });
 
@@ -196,10 +215,8 @@ describe('HPAService', function() {
           .then(function(warnings) {
             expect(_.head(warnings).reason).toEqual('DeploymentHasHPA');
           });
-        $rootScope.$digest();
       });
     });
 
   });
-
 });

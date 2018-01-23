@@ -8068,7 +8068,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"form-group\">\n" +
+    "<div ng-show=\"showCPURequestInput\" class=\"form-group\">\n" +
     "<label>\n" +
     "CPU Request Target\n" +
     "</label>\n" +
@@ -9476,8 +9476,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"'cpu' | isRequestCalculated : project\">limit.</span>\n" +
     "<span ng-if=\"!('cpu' | isRequestCalculated : project)\">request.</span>\n" +
     "</div>\n" +
+    "\n" +
+    "<div ng-if=\"showV2Beta1Warning\" class=\"alert alert-warning\">\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Warning:</span>\n" +
+    "This autoscaler uses a newer API, consider editing it with the\n" +
+    "<a href=\"command-line\" target=\"_blank\">command line tools</a>.\n" +
+    "</div>\n" +
     "<fieldset ng-disabled=\"disableInputs\" class=\"gutter-top\">\n" +
-    "<osc-autoscaling model=\"autoscaling\" show-name-input=\"true\" name-read-only=\"kind === 'HorizontalPodAutoscaler'\">\n" +
+    "<osc-autoscaling model=\"autoscaling\" show-name-input=\"true\" name-read-only=\"kind === 'HorizontalPodAutoscaler'\" show-cpu-request-input=\"showV2Beta1Warning\">\n" +
     "</osc-autoscaling>\n" +
     "<label-editor labels=\"labels\" expand=\"true\" can-toggle=\"false\"></label-editor>\n" +
     "<div class=\"buttons gutter-top gutter-bottom\">\n" +

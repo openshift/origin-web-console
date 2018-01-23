@@ -142,7 +142,7 @@ angular.module('openshiftConsole')
         };
 
         var updateHPAWarnings = function() {
-            HPAService.getHPAWarnings($scope.replicaSet, $scope.autoscalers, $scope.limitRanges, project)
+            HPAService.getHPAWarningsForResource($scope.replicaSet, $scope.autoscalers, $scope.limitRanges, project)
                       .then(function(warnings) {
               $scope.hpaWarnings = warnings;
             });

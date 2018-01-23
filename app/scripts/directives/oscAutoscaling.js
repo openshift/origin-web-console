@@ -13,7 +13,8 @@ angular.module("openshiftConsole")
       scope: {
         autoscaling: "=model",
         showNameInput: "=?",
-        nameReadOnly: "=?"
+        nameReadOnly: "=?",
+        showCPURequestInput: "=?"
       },
       templateUrl: 'views/directives/osc-autoscaling.html',
       link: function(scope) {

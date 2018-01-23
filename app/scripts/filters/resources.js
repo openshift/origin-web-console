@@ -1355,4 +1355,9 @@ angular.module('openshiftConsole')
   })
   .filter('humanizePodStatus', function(humanizeReasonFilter) {
     return humanizeReasonFilter;
+  })
+  .filter('hpaWarningsForResource', function() {
+    return function(warnings) {
+      return _.reject(warnings, ['reason', 'V2Beta1HPA']);
+    };
   });

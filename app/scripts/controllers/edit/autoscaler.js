@@ -186,6 +186,10 @@ angular.module('openshiftConsole')
                               };
                             });
 
+
+
+          $scope.showV2Beta1Warning = HPAService.isUnsupportedAPI(resource);
+
           // Are we editing an existing HPA?
           if ($routeParams.kind === "HorizontalPodAutoscaler") {
             $scope.targetKind = _.get(resource, 'spec.scaleTargetRef.kind');

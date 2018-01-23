@@ -38,11 +38,21 @@
               <span ng-if="!('cpu' | isRequestCalculated : project)">request.</span>
             </div>
 
+            <!-- Warning: V2Beta1 HPA -->
+            <div ng-if="showV2Beta1Warning" class="alert alert-warning">
+              <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
+              <span class="sr-only">Warning:</span>
+              This autoscaler uses a newer API, consider editing it with the
+              <a href="command-line" target="_blank">command line tools</a>.
+            </div>
+
+
             <fieldset ng-disabled="disableInputs" class="gutter-top">
               <osc-autoscaling
                   model="autoscaling"
                   show-name-input="true"
-                  name-read-only="kind === 'HorizontalPodAutoscaler'">
+                  name-read-only="kind === 'HorizontalPodAutoscaler'"
+                  show-cpu-request-input="showV2Beta1Warning">
               </osc-autoscaling>
 
               <label-editor

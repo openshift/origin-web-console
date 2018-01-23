@@ -66,7 +66,7 @@ angular.module('openshiftConsole')
         var limitRanges = {};
 
         var updateHPAWarnings = function() {
-            HPAService.getHPAWarnings($scope.deployment, $scope.autoscalers, limitRanges, project)
+            HPAService.getHPAWarningsForResource($scope.deployment, $scope.autoscalers, limitRanges, project)
                       .then(function(warnings) {
               $scope.hpaWarnings = warnings;
             });

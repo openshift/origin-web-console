@@ -3135,12 +3135,22 @@ if (!u(a, t, n)) return r = d(e.kind), {
 message: "This " + r + " does not have any containers with a CPU request set. Autoscaling will not work without a CPU request.",
 reason: "NoCPURequest"
 };
-}, g = function(e) {
+}, g = function(t) {
+return _.some(t, function(t) {
+return e("hpaMetrics")(t);
+});
+}, v = function(e, t) {
+var n = _.get(e, "spec.template.spec.containers", []), r = u(n), a = g(t);
+if (!r && a) return {
+message: "The autoscaler attached to this resource uses a newer API. Consider editing this autoscaler with the CLI.",
+reason: "V2Beta1HPA"
+};
+}, h = function(e) {
 if (_.size(e) > 1) return {
 message: "More than one autoscaler is scaling this resource. This is not recommended because they might compete with each other. Consider removing all but one autoscaler.",
 reason: "MultipleHPA"
 };
-}, v = function(e, t) {
+}, y = function(e, t) {
 if ("ReplicationController" === e.kind && m(e) && _.some(t, function() {
 return _.some(t, function(e) {
 return "ReplicationController" === _.get(e, "spec.scaleTargetRef.kind");
@@ -3149,18 +3159,25 @@ return "ReplicationController" === _.get(e, "spec.scaleTargetRef.kind");
 message: "This deployment is scaled by both a deployment configuration and an autoscaler. This is not recommended because they might compete with each other.",
 reason: "DeploymentHasHPA"
 };
+}, b = function(e, n, a, o) {
+return !e || _.isEmpty(n) ? t.when([]) : r.isAvailable().then(function(t) {
+var r = v(e, n);
+return _.compact([ p(t), r || f(e, a, o), h(n), y(e, n) ]);
+});
 };
 return {
+isUnsupportedAPI: function(e) {
+return g([ e ]);
+},
 hasCPURequest: u,
 filterHPA: function(e, t, n) {
 return _.filter(e, function(e) {
 return e.spec.scaleTargetRef.kind === t && e.spec.scaleTargetRef.name === n;
 });
 },
-getHPAWarnings: function(e, n, a, o) {
-return !e || _.isEmpty(n) ? t.when([]) : r.isAvailable().then(function(t) {
-return _.compact([ p(t), f(e, a, o), g(n), v(e, n) ]);
-});
+getHPAWarnings: b,
+getHPAWarningsForResource: function(t, n, r, a) {
+return e("hpaWarningsForResource")(b(t, n, r, a));
 },
 groupHPAs: function(e) {
 var t = {};
@@ -5887,7 +5904,7 @@ details: "The active filters are hiding all rollout history."
 }
 e.project = r, e.projectContext = d;
 var C = {}, w = function() {
-i.getHPAWarnings(e.deployment, e.autoscalers, C, r).then(function(t) {
+i.getHPAWarningsForResource(e.deployment, e.autoscalers, C, r).then(function(t) {
 e.hpaWarnings = t;
 });
 };
@@ -5974,7 +5991,7 @@ details: "The active filters are hiding all deployments."
 }
 e.project = r, e.projectContext = a;
 var d = {}, p = function() {
-s.getHPAWarnings(e.deploymentConfig, e.autoscalers, d, r).then(function(t) {
+s.getHPAWarningsForResource(e.deploymentConfig, e.autoscalers, d, r).then(function(t) {
 e.hpaWarnings = t;
 });
 };
@@ -6115,7 +6132,7 @@ angular.forEach(t.by("metadata.name"), function(t) {
 }), n = s.getActiveDeployment(r), e.isActive = n && n.metadata.uid === e.replicaSet.metadata.uid, y();
 }));
 }, U = function() {
-c.getHPAWarnings(e.replicaSet, e.autoscalers, e.limitRanges, r).then(function(t) {
+c.getHPAWarningsForResource(e.replicaSet, e.autoscalers, e.limitRanges, r).then(function(t) {
 e.hpaWarnings = t;
 });
 }, F = function(r) {
@@ -7706,7 +7723,7 @@ return {
 name: t,
 value: e
 };
-}), "HorizontalPodAutoscaler" === n.kind) e.targetKind = _.get(a, "spec.scaleTargetRef.kind"), e.targetName = _.get(a, "spec.scaleTargetRef.name"), _.assign(e.autoscaling, {
+}), e.showV2Beta1Warning = c.isUnsupportedAPI(a), "HorizontalPodAutoscaler" === n.kind) e.targetKind = _.get(a, "spec.scaleTargetRef.kind"), e.targetName = _.get(a, "spec.scaleTargetRef.name"), _.assign(e.autoscaling, {
 minReplicas: _.get(a, "spec.minReplicas"),
 maxReplicas: _.get(a, "spec.maxReplicas"),
 targetCPU: _.get(a, "spec.targetCPUUtilizationPercentage")
@@ -10268,7 +10285,8 @@ restrict: "E",
 scope: {
 autoscaling: "=model",
 showNameInput: "=?",
-nameReadOnly: "=?"
+nameReadOnly: "=?",
+showCPURequestInput: "=?"
 },
 templateUrl: "views/directives/osc-autoscaling.html",
 link: function(t) {
@@ -15804,7 +15822,11 @@ return _.startCase(e).replace("Back Off", "Back-off").replace("O Auth", "OAuth")
 };
 }).filter("humanizePodStatus", [ "humanizeReasonFilter", function(e) {
 return e;
-} ]), angular.module("openshiftConsole").filter("canIDoAny", [ "APIService", "canIFilter", function(e, t) {
+} ]).filter("hpaWarningsForResource", function() {
+return function(e) {
+return _.reject(e, [ "reason", "V2Beta1HPA" ]);
+};
+}), angular.module("openshiftConsole").filter("canIDoAny", [ "APIService", "canIFilter", function(e, t) {
 var n = {
 buildConfigs: [ {
 group: "",
