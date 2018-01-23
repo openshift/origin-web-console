@@ -60,26 +60,6 @@ angular
             "subjects":{
 
             }
-         },
-         "SystemUser":{
-            "kind":"SystemUser",
-            "sortOrder":4,
-            "description":"System users are virtual users automatically provisioned by the system.",
-            "helpLinkKey":"users_and_groups",
-            "name":"SystemUser",
-            "subjects":{
-
-            }
-         },
-         "SystemGroup":{
-            "kind":"SystemGroup",
-            "sortOrder":5,
-            "description":"System groups are virtual groups automatically provisioned by the system.",
-            "helpLinkKey":"users_and_groups",
-            "name":"SystemGroup",
-            "subjects":{
-
-            }
          }
       };
     };

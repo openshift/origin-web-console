@@ -231,30 +231,21 @@ describe('MembershipService', function() {
       expect(kinds['User'].sortOrder).toEqual(1);
       expect(kinds['Group'].sortOrder).toEqual(2);
       expect(kinds['ServiceAccount'].sortOrder).toEqual(3);
-      expect(kinds['SystemUser'].sortOrder).toEqual(4);
-      expect(kinds['SystemGroup'].sortOrder).toEqual(5);
 
       expect(kinds['User'].kind).toEqual('User');
       expect(kinds['Group'].kind).toEqual('Group');
       expect(kinds['ServiceAccount'].kind).toEqual('ServiceAccount');
-      expect(kinds['SystemUser'].kind).toEqual('SystemUser');
-      expect(kinds['SystemGroup'].kind).toEqual('SystemGroup');
-
-      expect(kinds['SystemUser'].helpLinkKey).toEqual('users_and_groups');
-      expect(kinds['SystemGroup'].helpLinkKey).toEqual('users_and_groups');
     });
   });
 
   describe('#mapRolebindingsForUI', function() {
-    it('Should return rolebindings in the following order: User, Group, ServiceAccount, SystemUser, SystemGroup', function() {
+    it('Should return rolebindings in the following order: User, Group, ServiceAccount', function() {
       var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
       var mappedRolebindings = MembershipService.mapRolebindingsForUI(roleBindings, mappedRoles);
       var orderedKinds = _.map(mappedRolebindings, 'kind');
       expect(orderedKinds[0]).toEqual('User');
       expect(orderedKinds[1]).toEqual('Group');
       expect(orderedKinds[2]).toEqual('ServiceAccount');
-      expect(orderedKinds[3]).toEqual('SystemUser');
-      expect(orderedKinds[4]).toEqual('SystemGroup');
     });
 
     it('should put subjects under the appropriate kind', function() {
@@ -357,60 +348,46 @@ describe('MembershipService', function() {
                   "roles": {}
               }
           }
-      }, {
-          "kind": "SystemUser",
-          "sortOrder": 4,
-          "description": "System users are virtual users automatically provisioned by the system.",
-          "helpLinkKey": "users_and_groups",
-          "name": "SystemUser",
-          "subjects": {}
-      }, {
-          "kind": "SystemGroup",
-          "sortOrder": 5,
-          "description": "System groups are virtual groups automatically provisioned by the system.",
-          "helpLinkKey": "users_and_groups",
-          "name": "SystemGroup",
-          "subjects": {}
       }];
 
       _.each(mockRolebindingsByKindForUI, function(mockRBByKind, mappedIndex) {
 
-        it('should create a map of 5 tabs according to Kinds with a kind property', function() {
+        it('should create a map of 3 tabs according to Kinds with a kind property', function() {
           var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
           var allMappedKinds = MembershipService.mapRolebindingsForUI(roleBindings, mappedRoles);
           var kind = allMappedKinds[mappedIndex];
           expect(kind.kind).toEqual(mockRBByKind.kind);
         });
 
-        it('should create a map of 5 tabs matching a predetermined sortOrder property', function() {
+        it('should create a map of 3 tabs matching a predetermined sortOrder property', function() {
           var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
           var allMappedKinds = MembershipService.mapRolebindingsForUI(roleBindings, mappedRoles);
           var kind = allMappedKinds[mappedIndex];
           expect(kind.sortOrder).toEqual(mockRBByKind.sortOrder);
         });
 
-        it('should create a map of 5 tabs each with a description property', function() {
+        it('should create a map of 3 tabs each with a description property', function() {
           var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
           var allMappedKinds = MembershipService.mapRolebindingsForUI(roleBindings, mappedRoles);
           var kind = allMappedKinds[mappedIndex];
           expect(kind.description).toEqual(mockRBByKind.description);
         });
 
-        it('should create a map of 5 tabs each with a helpLinkKey property', function() {
+        it('should create a map of 3 tabs each with a helpLinkKey property', function() {
           var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
           var allMappedKinds = MembershipService.mapRolebindingsForUI(roleBindings, mappedRoles);
           var kind = allMappedKinds[mappedIndex];
           expect(kind.helpLinkKey).toEqual(mockRBByKind.helpLinkKey);
         });
 
-        it('should create a map of 5 tabs with a correct name property', function() {
+        it('should create a map of 3 tabs with a correct name property', function() {
           var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
           var allMappedKinds = MembershipService.mapRolebindingsForUI(roleBindings, mappedRoles);
           var kind = allMappedKinds[mappedIndex];
           expect(kind.name).toEqual(mockRBByKind.name);
         });
 
-        it('should create a map of 5 tabs with the correct set of subjects', function() {
+        it('should create a map of 3 tabs with the correct set of subjects', function() {
           var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
           var allMappedKinds = MembershipService.mapRolebindingsForUI(roleBindings, mappedRoles);
 
@@ -424,7 +401,7 @@ describe('MembershipService', function() {
 
         });
 
-        it('should create a map of 5 tabs that exactly match the expected output structure', function() {
+        it('should create a map of 3 tabs that exactly match the expected output structure', function() {
           var mappedRoles = MembershipService.mapRolesForUI(roles, clusterRoles);
           var allMappedKinds = MembershipService.mapRolebindingsForUI(roleBindings, mappedRoles);
           var kind = allMappedKinds[mappedIndex];
