@@ -1,10 +1,6 @@
 @bind-service-page-height: 310px;
-@landing-search-area-height: 52px;
 
 .landing {
-  @media(min-width: @screen-sm-min) {
-    top: (@navbar-os-header-height-desktop + @landing-search-area-height);
-  }
   h1, .nav-tabs {
     margin-bottom: 0 !important;
     margin-top: 0 !important;
@@ -19,12 +15,5 @@
 .wizard-pf-main.bind-service-wizard-step {
   @media (min-width: @screen-sm-min) {
     height: @bind-service-page-height + @grid-gutter-width;
-  }
-}
-
-@media(min-width: @screen-sm-min) {
-  .catalog-search,
-  .landing-side-bar {
-    top: @navbar-os-header-height-desktop;
   }
 }
