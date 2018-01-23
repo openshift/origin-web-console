@@ -2,8 +2,8 @@
 
 describe('HPAService', function() {
   var HPAService;
-  var $rootScope;
   var $q;
+  var $rootScope;
   var $window;
 
   var metricsAreAvailable;
@@ -23,8 +23,8 @@ describe('HPAService', function() {
 
 
   beforeEach(inject(function(_$q_, _$rootScope_, _$window_, _HPAService_) {
-    $rootScope = _$rootScope_;
     $q = _$q_;
+    $rootScope = _$rootScope_;
     $window = _$window_;
     HPAService = _HPAService_;
   }));
@@ -80,6 +80,7 @@ describe('HPAService', function() {
 
   describe('#addCPURequestWarning', function() {
 
+
     describe('When there are no HPA resources', function() {
       it('should return an empty set of messages (no errors)', function() {
         var noHPA = [];
@@ -107,58 +108,84 @@ describe('HPAService', function() {
 
 
     // TODO: we should be testing more than just the happy paths
-    describe('When there is a CPU request', function() {
-      // this is the first check in the hasCPURequest fn
-      // it should use $window && set OPENSHIFT_CONFIG.clusterResourceOverridesEnabled
-      // to trigger the LimitRangesService.hasClusterResourceOverrides function
-      // it('should not return a warning when cluster resource overrides are enabled', function() {
-      //
-      // });
-
-      // 2nd check in the hasCPURequest fn
-      // need to test this with some mock limit ranges passed to the fn
-      // it('should not return a warning when containers or limit ranges have a cpu request', function() {
-      //
-      // });
-
-      // 3rd check in the hasCPURequest fn
-      // more tests with mock limit ranges
-      // it('should not return a warning when the containers or limit ranges have a cpu limit', function() {
-      //
-      // });
-
-    });
+    // describe('When there is a CPU request', function() {
+    //   // this is the first check in the hasCPURequest fn
+    //   // it should use $window && set OPENSHIFT_CONFIG.clusterResourceOverridesEnabled
+    //   // to trigger the LimitRangesService.hasClusterResourceOverrides function
+    //   // it('should not return a warning when cluster resource overrides are enabled', function() {
+    //   //
+    //   // });
+    //
+    //   // 2nd check in the hasCPURequest fn
+    //   // need to test this with some mock limit ranges passed to the fn
+    //   // it('should not return a warning when containers or limit ranges have a cpu request', function() {
+    //   //
+    //   // });
+    //
+    //   // 3rd check in the hasCPURequest fn
+    //   // more tests with mock limit ranges
+    //   // it('should not return a warning when the containers or limit ranges have a cpu limit', function() {
+    //   //
+    //   // });
+    //
+    // });
 
     describe('When the scale target does not have a CPU request set', function() {
-      it('should return a warning with reason ≈', function() {
-        // NOTE: if the scale target has no containers, then the
-        // hasRequestOrLimit function in HPAService will return true.
-        // This could be a potential bug, though I imagine we never
-        // pass it an object w/o containers.
-        var scaleTargetWithoutLimit = {
-          kind: '',
-          spec: {
-            template: {
-              spec: {
-                containers: [
-                  {
-                    name: 'bob',
-                    image: '',
-                    env: [],
-                  }
-                ]
-              }
+      var scaleTargetWithoutLimit = {
+        kind: '',
+        spec: {
+          template: {
+            spec: {
+              containers: [
+                {
+                  name: 'bob',
+                  image: '',
+                  env: [],
+                }
+              ]
             }
           }
-        };
-        HPAService
-          .getHPAWarnings(scaleTargetWithoutLimit, defaultHpaResources, defaultLimitRanges, defaultProject)
-          .then(function(warnings) {
-            expect(_.head(warnings).reason).toEqual('NoCPURequest');
-          });
-        $rootScope.$digest();
+        }
+      };
+
+      describe('if a v2beta1 HPA is used', function() {
+        it('should return neither a warning with reason V2Beta1HPA or NoCPURequest', function() {
+          // this is a v2beta1 hpa represented as a v1 object
+          var hpaWithV2Beta1 = [{
+            metadata: {
+              annotations: {
+                'autoscaling.alpha.kubernetes.io/metrics': '[{ "type": "Pods" }]'
+              }
+            },
+            spec: {
+              scaleTargetRef: {
+                kind: 'ReplicationController'
+              }
+            }
+          }];
+          HPAService
+            .getHPAWarnings(scaleTargetWithoutLimit, hpaWithV2Beta1, defaultLimitRanges, defaultProject)
+            .then(function(warnings) {
+              expect(warnings.length).toEqual(0);
+            });
+          $rootScope.$digest();
+        });
       });
 
+      describe('if a v1 HPA is used', function() {
+        it('should return a warning with reason NoCPURequest', function() {
+          // NOTE: if the scale target has no containers, then the
+          // hasRequestOrLimit function in HPAService will return true.
+          // This could be a potential bug, though I imagine we never
+          // pass it an object w/o containers.
+          HPAService
+            .getHPAWarnings(scaleTargetWithoutLimit, defaultHpaResources, defaultLimitRanges, defaultProject)
+            .then(function(warnings) {
+              expect(_.head(warnings).reason).toEqual('NoCPURequest');
+            });
+          $rootScope.$digest();
+        });
+      });
     });
 
     describe('Warn when there are competing autoscalers', function() {
@@ -201,5 +228,4 @@ describe('HPAService', function() {
     });
 
   });
-
 });

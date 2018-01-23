@@ -78,6 +78,7 @@ angular.module('openshiftConsole')
     var horizontalPodAutoscalerVersion = APIService.getPreferredVersion('horizontalpodautoscalers');
     var limitRangesVersion = APIService.getPreferredVersion('limitranges');
 
+
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
@@ -185,6 +186,8 @@ angular.module('openshiftConsole')
                                 value: val
                               };
                             });
+
+          $scope.usesV2Metrics = HPAService.usesV2Metrics(resource);
 
           // Are we editing an existing HPA?
           if ($routeParams.kind === "HorizontalPodAutoscaler") {
