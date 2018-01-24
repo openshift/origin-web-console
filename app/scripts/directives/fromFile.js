@@ -55,6 +55,7 @@ angular.module("openshiftConsole")
             backdrop: 'static',
             templateUrl: 'views/modals/confirm.html',
             controller: 'ConfirmModalController',
+            backdrop: 'static',
             resolve: {
               modalConfig: function() {
                 return {
