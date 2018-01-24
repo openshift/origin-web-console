@@ -10951,6 +10951,7 @@ a.isDeprecated(e) && (e.secretInputType = "password"), e.isDuplicate || o(e);
 }), a.openCreateWebhookSecretModal = function() {
 t.open({
 animation: !0,
+backdrop: "static",
 templateUrl: "views/modals/create-secret.html",
 controller: "CreateSecretModalController",
 scope: e
