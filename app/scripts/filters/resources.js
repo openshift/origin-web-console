@@ -172,10 +172,11 @@ angular.module('openshiftConsole')
       return null;
     };
   })
-  .filter('webhookURL', function(DataService, SecretsService) {
+  .filter('webhookURL', function(canIFilter, APIService, DataService, SecretsService) {
     return function(buildConfig, type, secret, project, webhookSecrets) {
-      secret = SecretsService.getWebhookSecretValue(secret, webhookSecrets);
-      if (secret) {
+      var secretsVersion = APIService.getPreferredVersion('secrets');
+      if (canIFilter(secretsVersion, 'list')) {
+        secret = SecretsService.getWebhookSecretValue(secret, webhookSecrets);
         return DataService.url({
           // arbitrarily many subresources can be included
           // url encoding of the segments is handled by the url() function
