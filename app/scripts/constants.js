@@ -27,6 +27,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     "compute_resources":       "dev_guide/compute_resources.html",
     "pod_autoscaling":         "dev_guide/pod_autoscaling.html",
     "application_health":      "dev_guide/application_health.html",
+    "webhook_secrets":         "dev_guide/builds/triggering_builds.html#webhook-triggers",
     "source_secrets":          "dev_guide/builds/build_inputs.html#using-secrets-during-build",
     "git_secret":              "dev_guide/builds/build_inputs.html#source-clone-secrets",
     "pull_secret":             "dev_guide/managing_images.html#using-image-pull-secrets",
