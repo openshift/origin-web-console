@@ -31874,7 +31874,7 @@ g.sWidthOrig = j.attr("width") || null;
 var k = (j.attr("style") || "").match(/width:\s*(\d+[pxem%]+)/);
 k && (g.sWidthOrig = k[1]);
 }
-e !== d && null !== e && (i(e), f(Wa.defaults.column, e), e.mDataProp === d || e.mData || (e.mData = e.mDataProp), e.sType && (g._sManualType = e.sType), e.className && !e.sClass && (e.sClass = e.className), a.extend(g, e), Ha(g, e, "sWidth", "sWidthOrig"), e.iDataSort !== d && (g.aDataSort = [ e.iDataSort ]), Ha(g, e, "aDataSort"));
+e !== d && null !== e && (i(e), f(Wa.defaults.column, e), e.mDataProp === d || e.mData || (e.mData = e.mDataProp), e.sType && (g._sManualType = e.sType), e.className && !e.sClass && (e.sClass = e.className), e.sClass && j.addClass(e.sClass), a.extend(g, e), Ha(g, e, "sWidth", "sWidthOrig"), e.iDataSort !== d && (g.aDataSort = [ e.iDataSort ]), Ha(g, e, "aDataSort"));
 var l = g.mData, m = B(l), n = g.mRender ? B(g.mRender) :null, o = function(a) {
 return "string" == typeof a && a.indexOf("@") !== -1;
 };
@@ -32485,7 +32485,7 @@ for (var c = b.oClasses, d = b.sTableId, e = b.aLengthMenu, f = a.isArray(e[0]),
 name:d + "_length",
 "aria-controls":d,
 "class":c.sLengthSelect
-}), j = 0, k = g.length; j < k; j++) i[0][j] = new Option(h[j], g[j]);
+}), j = 0, k = g.length; j < k; j++) i[0][j] = new Option("number" == typeof h[j] ? b.fnFormatNumber(h[j]) :h[j], g[j]);
 var l = a("<div><label/></div>").addClass(c.sLength);
 return b.aanFeatures.l || (l[0].id = d + "_length"), l.children().append(b.oLanguage.sLengthMenu.replace("_MENU_", i[0].outerHTML)), a("select", l).val(b._iDisplayLength).on("change.DT", function(c) {
 ia(b, a(this).val()), M(b);
@@ -32956,10 +32956,10 @@ sDestroyWidth:x[0].style.width,
 sInstance:r,
 sTableId:r
 });
-D.nTable = this, D.oApi = c.internal, D.oInit = p, y.push(D), D.oInstance = 1 === c.length ? c :x.dataTable(), h(p), p.oLanguage && g(p.oLanguage), p.aLengthMenu && !p.iDisplayLength && (p.iDisplayLength = a.isArray(p.aLengthMenu[0]) ? p.aLengthMenu[0][0] :p.aLengthMenu[0]), p = Ia(a.extend(!0, {}, w), p), Ha(D.oFeatures, p, [ "bPaginate", "bLengthChange", "bFilter", "bSort", "bSortMulti", "bInfo", "bProcessing", "bAutoWidth", "bSortClasses", "bServerSide", "bDeferRender" ]), Ha(D, p, [ "asStripeClasses", "ajax", "fnServerData", "fnFormatNumber", "sServerMethod", "aaSorting", "aaSortingFixed", "aLengthMenu", "sPaginationType", "sAjaxSource", "sAjaxDataProp", "iStateDuration", "sDom", "bSortCellsTop", "iTabIndex", "fnStateLoadCallback", "fnStateSaveCallback", "renderer", "searchDelay", "rowId", [ "iCookieDuration", "iStateDuration" ], [ "oSearch", "oPreviousSearch" ], [ "aoSearchCols", "aoPreSearchCols" ], [ "iDisplayLength", "_iDisplayLength" ], [ "bJQueryUI", "bJUI" ] ]), Ha(D.oScroll, p, [ [ "sScrollX", "sX" ], [ "sScrollXInner", "sXInner" ], [ "sScrollY", "sY" ], [ "bScrollCollapse", "bCollapse" ] ]), 
+D.nTable = this, D.oApi = c.internal, D.oInit = p, y.push(D), D.oInstance = 1 === c.length ? c :x.dataTable(), h(p), p.oLanguage && g(p.oLanguage), p.aLengthMenu && !p.iDisplayLength && (p.iDisplayLength = a.isArray(p.aLengthMenu[0]) ? p.aLengthMenu[0][0] :p.aLengthMenu[0]), p = Ia(a.extend(!0, {}, w), p), Ha(D.oFeatures, p, [ "bPaginate", "bLengthChange", "bFilter", "bSort", "bSortMulti", "bInfo", "bProcessing", "bAutoWidth", "bSortClasses", "bServerSide", "bDeferRender" ]), Ha(D, p, [ "asStripeClasses", "ajax", "fnServerData", "fnFormatNumber", "sServerMethod", "aaSorting", "aaSortingFixed", "aLengthMenu", "sPaginationType", "sAjaxSource", "sAjaxDataProp", "iStateDuration", "sDom", "bSortCellsTop", "iTabIndex", "fnStateLoadCallback", "fnStateSaveCallback", "renderer", "searchDelay", "rowId", [ "iCookieDuration", "iStateDuration" ], [ "oSearch", "oPreviousSearch" ], [ "aoSearchCols", "aoPreSearchCols" ], [ "iDisplayLength", "_iDisplayLength" ] ]), Ha(D.oScroll, p, [ [ "sScrollX", "sX" ], [ "sScrollXInner", "sXInner" ], [ "sScrollY", "sY" ], [ "bScrollCollapse", "bCollapse" ] ]), 
 Ha(D.oLanguage, p, "fnInfoCallback"), Ka(D, "aoDrawCallback", p.fnDrawCallback, "user"), Ka(D, "aoServerParams", p.fnServerParams, "user"), Ka(D, "aoStateSaveParams", p.fnStateSaveParams, "user"), Ka(D, "aoStateLoadParams", p.fnStateLoadParams, "user"), Ka(D, "aoStateLoaded", p.fnStateLoaded, "user"), Ka(D, "aoRowCallback", p.fnRowCallback, "user"), Ka(D, "aoRowCreatedCallback", p.fnCreatedRow, "user"), Ka(D, "aoHeaderCallback", p.fnHeaderCallback, "user"), Ka(D, "aoFooterCallback", p.fnFooterCallback, "user"), Ka(D, "aoInitComplete", p.fnInitComplete, "user"), Ka(D, "aoPreDrawCallback", p.fnPreDrawCallback, "user"), D.rowIdFn = B(p.rowId), j(D);
 var E = D.oClasses;
-if (p.bJQueryUI ? (a.extend(E, Wa.ext.oJUIClasses, p.oClasses), p.sDom === w.sDom && "lfrtip" === w.sDom && (D.sDom = '<"H"lfr>t<"F"ip>'), D.renderer ? a.isPlainObject(D.renderer) && !D.renderer.header && (D.renderer.header = "jqueryui") :D.renderer = "jqueryui") :a.extend(E, Wa.ext.classes, p.oClasses), x.addClass(E.sTable), D.iInitDisplayStart === d && (D.iInitDisplayStart = p.iDisplayStart, D._iDisplayStart = p.iDisplayStart), null !== p.iDeferLoading) {
+if (a.extend(E, Wa.ext.classes, p.oClasses), x.addClass(E.sTable), D.iInitDisplayStart === d && (D.iInitDisplayStart = p.iDisplayStart, D._iDisplayStart = p.iDisplayStart), null !== p.iDeferLoading) {
 D.bDeferLoading = !0;
 var F = a.isArray(p.iDeferLoading);
 D._iRecordsDisplay = F ? p.iDeferLoading[0] :p.iDeferLoading, D._iRecordsTotal = F ? p.iDeferLoading[1] :p.iDeferLoading;
@@ -33418,7 +33418,7 @@ var a = this;
 return this.iterator("row", function(b, c, e) {
 var f, g, h, i, j, k, l = b.aoData, m = l[c];
 for (l.splice(c, 1), f = 0, g = l.length; f < g; f++) if (j = l[f], k = j.anCells, null !== j.nTr && (j.nTr._DT_RowIndex = f), null !== k) for (h = 0, i = k.length; h < i; h++) k[h]._DT_CellIndex.row = f;
-F(b.aiDisplayMaster, c), F(b.aiDisplay, c), F(a[e], c, !1), Ma(b);
+F(b.aiDisplayMaster, c), F(b.aiDisplay, c), F(a[e], c, !1), b._iRecordsDisplay > 0 && b._iRecordsDisplay--, Ma(b);
 var n = b.rowIdFn(m._aData);
 n !== d && delete b.aIds[n];
 }), this.iterator("table", function(a) {
@@ -33780,10 +33780,7 @@ return c = c || !1, this.iterator("table", function(d) {
 var e, f = d.nTableWrapper.parentNode, g = d.oClasses, h = d.nTable, i = d.nTBody, j = d.nTHead, k = d.nTFoot, l = a(h), m = a(i), n = a(d.nTableWrapper), o = a.map(d.aoData, function(a) {
 return a.nTr;
 });
-d.bDestroying = !0, La(d, "aoDestroyCallback", "destroy", [ d ]), c || new Ta(d).columns().visible(!0), n.off(".DT").find(":not(tbody *)").off(".DT"), a(b).off(".DT-" + d.sInstance), h != j.parentNode && (l.children("thead").detach(), l.append(j)), k && h != k.parentNode && (l.children("tfoot").detach(), l.append(k)), d.aaSorting = [], d.aaSortingFixed = [], Ba(d), a(o).removeClass(d.asStripeClasses.join(" ")), a("th, td", j).removeClass(g.sSortable + " " + g.sSortableAsc + " " + g.sSortableDesc + " " + g.sSortableNone), d.bJUI && (a("th span." + g.sSortIcon + ", td span." + g.sSortIcon, j).detach(), a("th, td", j).each(function() {
-var b = a("div." + g.sSortJUIWrapper, this);
-a(this).append(b.contents()), b.detach();
-})), m.children().detach(), m.append(o);
+d.bDestroying = !0, La(d, "aoDestroyCallback", "destroy", [ d ]), c || new Ta(d).columns().visible(!0), n.off(".DT").find(":not(tbody *)").off(".DT"), a(b).off(".DT-" + d.sInstance), h != j.parentNode && (l.children("thead").detach(), l.append(j)), k && h != k.parentNode && (l.children("tfoot").detach(), l.append(k)), d.aaSorting = [], d.aaSortingFixed = [], Ba(d), a(o).removeClass(d.asStripeClasses.join(" ")), a("th, td", j).removeClass(g.sSortable + " " + g.sSortableAsc + " " + g.sSortableDesc + " " + g.sSortableNone), m.children().detach(), m.append(o);
 var p = c ? "remove" :"detach";
 l[p](), n[p](), !c && f && (f.insertBefore(h, d.nTableReinsertBefore), l.css("width", d.sDestroyWidth).removeClass(g.sTable), e = d.asDestroyStripes.length, e && m.children().each(function(b) {
 a(this).addClass(d.asDestroyStripes[b % e]);
@@ -33801,7 +33798,7 @@ a.call(e[b](g, "cell" === b ? h :c, "cell" === b ? c :d), g, h, i, j);
 }), Ua("i18n()", function(b, c, e) {
 var f = this.context[0], g = B(b)(f.oLanguage);
 return g === d && (g = c), e !== d && a.isPlainObject(g) && (g = g[e] !== d ? g[e] :g._), g.replace("%d", e);
-}), Wa.version = "1.10.15", Wa.settings = [], Wa.models = {}, Wa.models.oSearch = {
+}), Wa.version = "1.10.16", Wa.settings = [], Wa.models = {}, Wa.models.oSearch = {
 bCaseInsensitive:!0,
 sSearch:"",
 bRegex:!1,
@@ -33858,7 +33855,6 @@ bDeferRender:!1,
 bDestroy:!1,
 bFilter:!0,
 bInfo:!0,
-bJQueryUI:!1,
 bLengthChange:!0,
 bPaginate:!0,
 bProcessing:!1,
@@ -34051,7 +34047,6 @@ _iDisplayLength:10,
 _iDisplayStart:0,
 _iRecordsTotal:0,
 _iRecordsDisplay:0,
-bJUI:null,
 oClasses:{},
 bFiltered:!1,
 bSorted:!1,
@@ -34160,36 +34155,7 @@ sSortJUIWrapper:"",
 sSortIcon:"",
 sJUIHeader:"",
 sJUIFooter:""
-}), function() {
-var b = "";
-b = "";
-var c = b + "ui-state-default", d = b + "css_right ui-icon ui-icon-", e = b + "fg-toolbar ui-toolbar ui-widget-header ui-helper-clearfix";
-a.extend(Wa.ext.oJUIClasses, Wa.ext.classes, {
-sPageButton:"fg-button ui-button " + c,
-sPageButtonActive:"ui-state-disabled",
-sPageButtonDisabled:"ui-state-disabled",
-sPaging:"dataTables_paginate fg-buttonset ui-buttonset fg-buttonset-multi ui-buttonset-multi paging_",
-sSortAsc:c + " sorting_asc",
-sSortDesc:c + " sorting_desc",
-sSortable:c + " sorting",
-sSortableAsc:c + " sorting_asc_disabled",
-sSortableDesc:c + " sorting_desc_disabled",
-sSortableNone:c + " sorting_disabled",
-sSortJUIAsc:d + "triangle-1-n",
-sSortJUIDesc:d + "triangle-1-s",
-sSortJUI:d + "carat-2-n-s",
-sSortJUIAscAllowed:d + "carat-1-n",
-sSortJUIDescAllowed:d + "carat-1-s",
-sSortJUIWrapper:"DataTables_sort_wrapper",
-sSortIcon:"DataTables_sort_icon",
-sScrollHead:"dataTables_scrollHead " + c,
-sScrollFoot:"dataTables_scrollFoot " + c,
-sHeaderTH:c,
-sFooterTH:c,
-sJUIHeader:e + " ui-corner-tl ui-corner-tr",
-sJUIFooter:e + " ui-corner-bl ui-corner-br"
 });
-}();
 var Sb = Wa.ext.pager;
 a.extend(Sb, {
 simple:function(a, b) {
@@ -61901,7 +61867,7 @@ return b;
 }, l = "RedirectLoginService.nonce", m = function(a) {
 var b = String(new Date().getTime()) + "-" + k(8).join("");
 try {
-window.localStorage[l] = b;
+window.localStorage[l] && window.localStorage[l].length > 10 ? b = window.localStorage[l] :window.localStorage[l] = b;
 } catch (c) {
 j.log("RedirectLoginService.makeState, localStorage error: ", c);
 }
