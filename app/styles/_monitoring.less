@@ -69,8 +69,10 @@
       }
     }
   }
-  pod-donut {
-    margin-left: -8px; // left align with text
+  @media(max-width: @screen-sm-max) {
+    .pods {
+      margin: 5px 0;
+    }
   }
   .text-prepended-icon {
     .fa,

@@ -8871,9 +8871,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"!idled && total <= 99\">\n" +
     "{{total}}\n" +
     "</span>\n" +
-    "<span ng-if=\"idled\">\n" +
-    "Idle\n" +
-    "</span>\n" +
     "</div>\n" +
     "<span ng-if=\"mini && total === 1 && !idled\" class=\"donut-mini-text-name\">pod</span>\n" +
     "<span ng-if=\"mini && total !== 1 && !idled\" class=\"donut-mini-text-name\">\n" +
@@ -8881,6 +8878,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{total}}\n" +
     "</span> pods\n" +
     "</span>\n" +
+    "<span ng-if=\"mini && idled\" class=\"donut-mini-text-name\">Idle</span>\n" +
     "\n" +
     "<div class=\"sr-only\">\n" +
     "<div ng-if=\"(pods | hashSize) === 0\">No pods.</div>\n" +

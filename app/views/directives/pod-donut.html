@@ -4,9 +4,6 @@
   <span ng-if="!idled && total <= 99">
     {{total}}
   </span>
-  <span ng-if="idled">
-    Idle
-  </span>
 </div>
 <span ng-if="mini && total === 1 && !idled" class="donut-mini-text-name">pod</span>
 <span ng-if="mini && total !== 1 && !idled" class="donut-mini-text-name">
@@ -14,6 +11,7 @@
     {{total}}
   </span> pods
 </span>
+<span ng-if="mini && idled" class="donut-mini-text-name">Idle</span>
 
 <!-- Include text values for screen readers -->
 <div class="sr-only">
