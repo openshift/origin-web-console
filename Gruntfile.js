@@ -275,6 +275,8 @@ module.exports = function (grunt) {
           'bower_components/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css',
           'bower_components/bootstrap-treeview/dist/bootstrap-treeview.min.css',
           'bower_components/bootstrap-touchspin/src/jquery.bootstrap-touchspin.css',
+          'bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
+          'bower_components/bootstrap-slider/dist/css/bootstrap-slider.css',
           'bower_components/c3/c3.css',
           'bower_components/datatables/media/css/jquery.dataTables.css',
           'bower_components/datatables-colreorder/css/dataTables.colReorder.css',

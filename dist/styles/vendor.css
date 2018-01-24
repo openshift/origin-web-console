@@ -167,6 +167,7 @@ pf-topology{display:block;user-select:none}
 .toast-pf .dropdown-menu>li>a,.toast-pf-action>a,.toolbar-pf-actions .dropdown-menu a,.toolbar-pf-actions .toolbar-pf-view-selector a{cursor:pointer}
 .blank-slate-pf{height:100%;margin-bottom:0px}
 .blank-slate-pf button{margin-right:4px}
+.blank-slate-pf .blank-state-pf-helpbutton{padding-left:0;padding-right:0;vertical-align:baseline}
 .pf-expand-placeholder{margin-right:15px}
 @media (min-width:768px){.toolbar-pf-actions .toolbar-apf-filter{padding-left:0}
 }
@@ -179,7 +180,7 @@ pf-topology{display:block;user-select:none}
 .filter-pf.filter-fields .form-group{width:275px}
 .filter-select .btn-default{background-color:#fff;background-image:none;color:#8b8d8f;font-size:12px;font-style:italic;font-weight:400}
 .canvas-in-connection-mode,.read-only,table.dataTable thead .sorting,table.dataTable thead .sorting_asc,table.dataTable thead .sorting_desc{background-image:none!important}
-pf-filter-panel .dropdown>.dropdown-menu,pf-filter-panel .input-group-btn>.dropdown-menu{margin-top:5px}
+pf-filter-panel .dropdown>.dropdown-menu,pf-filter-panel .input-group-btn>.dropdown-menu{margin-top:5px;opacity:.95}
 pf-filter-panel input:-moz-placeholder{font-style:italic;padding-left:10px}
 pf-filter-panel input::-moz-placeholder{font-style:italic;padding-left:10px}
 pf-filter-panel input:-ms-input-placeholder{font-style:italic;padding-left:10px}
