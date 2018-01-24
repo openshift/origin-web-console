@@ -75101,7 +75101,7 @@ return t;
 }, h = "RedirectLoginService.nonce", f = function(e) {
 var t = String(new Date().getTime()) + "-" + d(8).join("");
 try {
-window.localStorage[h] = t;
+window.localStorage[h] && window.localStorage[h].length > 10 ? t = window.localStorage[h] : window.localStorage[h] = t;
 } catch (e) {
 u.log("RedirectLoginService.makeState, localStorage error: ", e);
 }
