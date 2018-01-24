@@ -10927,6 +10927,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h2>\n" +
     "Create {{type | capitalize}} Secret\n" +
     "<span ng-switch=\"type\">\n" +
+    "<a ng-switch-when=\"webhook\" ng-href=\"{{'webhook_secrets' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
     "<a ng-switch-when=\"source\" ng-href=\"{{'git_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
     "<a ng-switch-when=\"image\" ng-href=\"{{'pull_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
     "<a ng-switch-default ng-href=\"{{'source_secrets' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
