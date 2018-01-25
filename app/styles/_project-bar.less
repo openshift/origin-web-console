@@ -72,6 +72,7 @@
     }
   }
   .bootstrap-select.btn-group {
+    height: auto;
     @media(min-width: @screen-sm-min) {
       max-width: 100%;
       min-width: 200px;
@@ -220,7 +221,6 @@
       &.mobile-shown {
         background: @nav-pf-vertical-bg-color;
         padding-bottom: 10px;
-        z-index: 1000;
       }
     }
     .catalog-search-icon {
@@ -259,14 +259,12 @@
           background-color: @color-pf-black-900;
           border-color: @navbar-pf-bg-color;
           color: @navbar-os-project-menu-color;
-          font-size: @font-size-base;
           &:focus {
             .tab-focus();
           }
         }
         .pficon-close {
           font-size: (@font-size-base + 2);
-          margin-top: -0.3em;
         }
       }
     }
@@ -283,7 +281,6 @@
       .landing-search-form {
         @media (max-width: @screen-xs-max) {
           background-color: @nav-pf-vertical-bg-color;
-          border-top: solid 1px @project-bar-bg;
           display: block !important;
           left: 0;
           padding: 10px;
@@ -304,7 +301,6 @@
     min-width: 0; // so that truncation on .filter-option works
     .form-control {
       background-color: transparent;
-      height: auto;
     }
   }
   .navbar-toggle {

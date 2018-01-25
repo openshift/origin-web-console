@@ -561,6 +561,7 @@ persistent_volumes: "dev_guide/persistent_volumes.html",
 compute_resources: "dev_guide/compute_resources.html",
 pod_autoscaling: "dev_guide/pod_autoscaling.html",
 application_health: "dev_guide/application_health.html",
+webhook_secrets: "dev_guide/builds/triggering_builds.html#webhook-triggers",
 source_secrets: "dev_guide/builds/build_inputs.html#using-secrets-during-build",
 git_secret: "dev_guide/builds/build_inputs.html#source-clone-secrets",
 pull_secret: "dev_guide/managing_images.html#using-image-pull-secrets",
@@ -2464,22 +2465,6 @@ description: "Service accounts provide a flexible way to control API access with
 helpLinkKey: "service_accounts",
 name: "ServiceAccount",
 subjects: {}
-},
-SystemUser: {
-kind: "SystemUser",
-sortOrder: 4,
-description: "System users are virtual users automatically provisioned by the system.",
-helpLinkKey: "users_and_groups",
-name: "SystemUser",
-subjects: {}
-},
-SystemGroup: {
-kind: "SystemGroup",
-sortOrder: 5,
-description: "System groups are virtual groups automatically provisioned by the system.",
-helpLinkKey: "users_and_groups",
-name: "SystemGroup",
-subjects: {}
 }
 };
 }, o = function(e) {
@@ -2538,22 +2523,6 @@ description: "Service accounts provide a flexible way to control API access with
 helpLinkKey: "service_accounts",
 name: "ServiceAccount",
 subjects: {}
-},
-SystemUser: {
-kind: "SystemUser",
-sortOrder: 4,
-description: "System users are virtual users automatically provisioned by the system.",
-helpLinkKey: "users_and_groups",
-name: "SystemUser",
-subjects: {}
-},
-SystemGroup: {
-kind: "SystemGroup",
-sortOrder: 5,
-description: "System groups are virtual groups automatically provisioned by the system.",
-helpLinkKey: "users_and_groups",
-name: "SystemGroup",
-subjects: {}
 }
 });
 return _.sortBy(n, "sortOrder");
@@ -2586,9 +2555,7 @@ namespace: _.get(e, "metadata.namespace")
 subjects: []
 };
 }, s = function(e, t) {
-return _.isEqual(e.kind, "ServiceAccount") ? e.namespace = e.namespace || t : (_.isEqual(e.kind, "SystemUser") || _.isEqual(e.kind, "SystemGroup")) && (_.startsWith(e.name, "system:") || (e.name = "system:" + e.name)), e;
-}, c = function(e) {
-e.userNames = null, e.groupNames = null;
+return _.isEqual(e.kind, "ServiceAccount") && (e.namespace = e.namespace || t), e;
 };
 return {
 list: function(e, t, o) {
@@ -2601,27 +2568,27 @@ var c = i(e, a), l = t.objectToResourceGroupVersion(c);
 return r = s(r, a), c.subjects.push(angular.copy(r)), n.create(l, null, c, o);
 },
 addSubject: function(e, r, a, o) {
-var l = i(), u = _.extend(l, e), d = t.objectToResourceGroupVersion(u);
-if (!r) return u;
-if (r = s(r, a), _.isArray(u.subjects)) {
-if (_.includes(u.subjects, r)) return;
-u.subjects.push(r);
-} else u.subjects = [ r ];
-return c(u), n.update(d, u.metadata.name, u, o);
+var c = i(), l = _.extend(c, e), u = t.objectToResourceGroupVersion(l);
+if (!r) return l;
+if (r = s(r, a), _.isArray(l.subjects)) {
+if (_.includes(l.subjects, r)) return;
+l.subjects.push(r);
+} else l.subjects = [ r ];
+return n.update(u, l.metadata.name, l, o);
 },
-removeSubject: function(t, a, o, s, l) {
-var u = _.filter(s, {
+removeSubject: function(t, a, o, s, c) {
+var l = _.filter(s, {
 roleRef: {
 name: a
 }
 });
-return e.all(_.map(u, function(e) {
+return e.all(_.map(l, function(e) {
 var a = i();
-e = _.extend(a, e), c(e);
+e = _.extend(a, e);
 var s = {
 name: t
 };
-return o && (s.namespace = o), e.subjects = _.reject(e.subjects, s), e.subjects.length ? n.update(r, e.metadata.name, e, l) : n.delete(r, e.metadata.name, l).then(function() {
+return o && (s.namespace = o), e.subjects = _.reject(e.subjects, s), e.subjects.length ? n.update(r, e.metadata.name, e, c) : n.delete(r, e.metadata.name, c).then(function() {
 return e;
 });
 }));
@@ -9109,7 +9076,11 @@ onCancel: "&"
 },
 templateUrl: "views/directives/create-secret.html",
 link: function(l) {
-l.nameValidation = i, l.secretAuthTypeMap = {
+l.nameValidation = i, l.secretReferenceValidation = {
+pattern: /^[a-zA-Z0-9\-_]+$/,
+minLength: 8,
+description: "Secret reference key must consist of lower-case, upper-case letters, numbers, dash, and underscore."
+}, l.secretAuthTypeMap = {
 image: {
 label: "Image Secret",
 authTypes: [ {
@@ -11003,6 +10974,7 @@ a.isDeprecated(e) && (e.secretInputType = "password"), e.isDuplicate || o(e);
 }), a.openCreateWebhookSecretModal = function() {
 t.open({
 animation: !0,
+backdrop: "static",
 templateUrl: "views/modals/create-secret.html",
 controller: "CreateSecretModalController",
 scope: e

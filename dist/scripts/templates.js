@@ -2137,7 +2137,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tr ng-repeat=\"(prop, value) in configMap.data\">\n" +
     "<td class=\"key\">{{prop}}</td>\n" +
     "<td class=\"value\">\n" +
-    "<truncate-long-text content=\"value\" limit=\"1024\" newline-limit=\"20\" expandable=\"true\">\n" +
+    "<truncate-long-text content=\"value\" limit=\"1024\" newline-limit=\"20\" expandable=\"true\" linkify=\"true\">\n" +
     "</truncate-long-text>\n" +
     "</td>\n" +
     "</tr>\n" +
@@ -6076,22 +6076,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"newSecret.type\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"secret-name\" class=\"required\">Secret Name</label>\n" +
-    "<span ng-class=\"{'has-error': nameTaken || (secretForm.secretName.$invalid && secretForm.secretName.$touched)}\">\n" +
-    "<input class=\"form-control\" id=\"secret-name\" name=\"secret-name\" ng-model=\"newSecret.data.secretName\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"secret-name-help\" ng-pattern=\"nameValidation.pattern\" ng-maxlength=\"nameValidation.maxlength\" ng-change=\"nameChanged()\" required>\n" +
+    "<span ng-class=\"{'has-error': nameTaken || (secretForm.name.$invalid && secretForm.name.$touched)}\">\n" +
+    "<input class=\"form-control\" id=\"secret-name\" name=\"name\" ng-model=\"newSecret.data.secretName\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"secret-name-help\" ng-pattern=\"nameValidation.pattern\" ng-maxlength=\"nameValidation.maxlength\" ng-change=\"nameChanged()\" required>\n" +
     "</span>\n" +
     "<div class=\"has-error\" ng-show=\"nameTaken\">\n" +
     "<span class=\"help-block\">\n" +
     "This name is already in use. Please choose a different name.\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div class=\"has-error\" ng-show=\"secretForm.secretName.$invalid\">\n" +
-    "<div ng-show=\"secretForm.secretName.$error.pattern && secretForm.secretName.$touched\" class=\"help-block\">\n" +
+    "<div class=\"has-error\" ng-show=\"secretForm.name.$invalid\">\n" +
+    "<div ng-show=\"secretForm.name.$error.pattern && secretForm.name.$touched\" class=\"help-block\">\n" +
     "{{nameValidation.description}}\n" +
     "</div>\n" +
-    "<div ng-show=\"secretForm.secretName.$error.required && secretForm.secretName.$touched\" class=\"help-block\">\n" +
+    "<div ng-show=\"secretForm.name.$error.required && secretForm.name.$touched\" class=\"help-block\">\n" +
     "Name is required.\n" +
     "</div>\n" +
-    "<div ng-show=\"secretForm.secretName.$error.maxlength && secretForm.secretName.$touched\" class=\"help-block\">\n" +
+    "<div ng-show=\"secretForm.name.$error.maxlength && secretForm.name.$touched\" class=\"help-block\">\n" +
     "Can't be longer than {{nameValidation.maxlength}} characters.\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6102,8 +6102,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"newSecret.type == 'webhook'\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"webhook-secret-key\" class=\"required\">Webhook Secret Key</label>\n" +
-    "<div class=\"input-group\">\n" +
-    "<input class=\"form-control\" id=\"webhook-secret-key\" name=\"webhook-secret-key\" ng-model=\"newSecret.data.webhookSecretKey\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"webhook-secret-key-help\" required=\"true\">\n" +
+    "<div class=\"input-group\" ng-class=\"{ 'has-error': secretForm.webhookSecretKey.$invalid && secretForm.webhookSecretKey.$touched}\">\n" +
+    "<input class=\"form-control\" id=\"webhook-secret-key\" name=\"webhookSecretKey\" ng-model=\"newSecret.data.webhookSecretKey\" ng-pattern=\"secretReferenceValidation.pattern\" ng-minlength=\"secretReferenceValidation.minLength\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"webhook-secret-key-help\" required=\"true\">\n" +
     "<span class=\"input-group-btn\">\n" +
     "<button type=\"button\" class=\"btn btn-default\" ng-click=\"generateWebhookSecretKey()\">Generate</button>\n" +
     "</span>\n" +
@@ -6111,6 +6111,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"help-block\" id=\"secret-name-help\">\n" +
     "Value of the secret will be supplied when invoking the webhook.\n" +
     "<a ng-href=\"{{'webhooks' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"secretForm.webhookSecretKey.$error.pattern && secretForm.webhookSecretKey.$touched\">\n" +
+    "<span class=\"help-block\">\n" +
+    "{{secretReferenceValidation.description}}\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"secretForm.webhookSecretKey.$error.minlength && secretForm.webhookSecretKey.$touched\">\n" +
+    "<span class=\"help-block\">\n" +
+    "The key must have at least {{secretReferenceValidation.minLength}} characters.\n" +
+    "</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6134,7 +6144,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\" ng-class=\"{ 'has-error' : secretForm.passwordToken.$invalid && secretForm.passwordToken.$touched }\">\n" +
     "<label ng-class=\"{ required: !add.cacert && !add.gitconfig }\" for=\"password-token\">Password or Token</label>\n" +
-    "<input class=\"form-control\" id=\"password-token\" name=\"password-token\" ng-model=\"newSecret.data.passwordToken\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"password-token-help\" type=\"password\" ng-required=\"!add.cacert && !add.gitconfig\">\n" +
+    "<input class=\"form-control\" id=\"password-token\" name=\"passwordToken\" ng-model=\"newSecret.data.passwordToken\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"password-token-help\" type=\"password\" ng-required=\"!add.cacert && !add.gitconfig\">\n" +
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"secretForm.passwordToken.$error.required && secretForm.passwordToken.$touched\">\n" +
     "<div class=\"help-block\">\n" +
@@ -6207,7 +6217,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\" ng-class=\"{ 'has-error' : secretForm.dockerServer.$invalid && secretForm.dockerServer.$touched }\">\n" +
     "<label for=\"docker-server\" class=\"required\">Image Registry Server Address</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" id=\"docker-server\" name=\"docker-server\" ng-model=\"newSecret.data.dockerServer\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" required>\n" +
+    "<input class=\"form-control\" id=\"docker-server\" name=\"dockerServer\" ng-model=\"newSecret.data.dockerServer\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" required>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-show=\"secretForm.dockerServer.$error.required && secretForm.dockerServer.$touched\" class=\"has-error\">\n" +
@@ -6218,7 +6228,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\" ng-class=\"{ 'has-error' : secretForm.dockerUsername.$invalid && secretForm.dockerUsername.$touched }\">\n" +
     "<label for=\"docker-username\" class=\"required\">Username</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" id=\"docker-username\" name=\"docker-username\" ng-model=\"newSecret.data.dockerUsername\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" required>\n" +
+    "<input class=\"form-control\" id=\"docker-username\" name=\"dockerUsername\" ng-model=\"newSecret.data.dockerUsername\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" required>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-show=\"secretForm.dockerUsername.$error.required && secretForm.dockerUsername.$touched\" class=\"has-error\">\n" +
@@ -6229,7 +6239,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\" ng-class=\"{ 'has-error' : secretForm.dockerPassword.$invalid && secretForm.dockerPassword.$touched }\">\n" +
     "<label for=\"docker-password\" class=\"required\">Password</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" id=\"docker-password\" name=\"docker-password\" ng-model=\"newSecret.data.dockerPassword\" type=\"password\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" required>\n" +
+    "<input class=\"form-control\" id=\"docker-password\" name=\"dockerPassword\" ng-model=\"newSecret.data.dockerPassword\" type=\"password\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" required>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-show=\"secretForm.dockerPassword.$error.required && secretForm.dockerPassword.$touched\" class=\"has-error\">\n" +
@@ -6240,7 +6250,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\" ng-class=\"{ 'has-error' : secretForm.dockerEmail.$invalid && secretForm.dockerEmail.$touched }\">\n" +
     "<label for=\"docker-email\" class=\"required\">Email</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" type=\"email\" id=\"docker-email\" name=\"docker-email\" ng-model=\"newSecret.data.dockerMail\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" required>\n" +
+    "<input class=\"form-control\" type=\"email\" id=\"docker-email\" name=\"dockerEmail\" ng-model=\"newSecret.data.dockerMail\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" required>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"secretForm.dockerEmail.$invalid\">\n" +
@@ -10917,6 +10927,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h2>\n" +
     "Create {{type | capitalize}} Secret\n" +
     "<span ng-switch=\"type\">\n" +
+    "<a ng-switch-when=\"webhook\" ng-href=\"{{'webhook_secrets' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
     "<a ng-switch-when=\"source\" ng-href=\"{{'git_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
     "<a ng-switch-when=\"image\" ng-href=\"{{'pull_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
     "<a ng-switch-default ng-href=\"{{'source_secrets' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
