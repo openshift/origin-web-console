@@ -32,7 +32,10 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" type="text/css" href="styles/main.css">
     <!-- endbuild -->
-    <link rel="stylesheet" type="text/css" href="styles/extensions.css">
+    <!-- build:remove -->
+    <!-- Local / test stylesheets only. These files will not be included in the built dist. -->
+    <link rel="stylesheet" type="text/css" href="extensions/local-extensions.css">
+    <!-- endbuild -->
     <style type="text/css">
 
     </style>
@@ -409,8 +412,9 @@
         <script src="scripts/extensions/nav/dropdownMobile.js"></script>
         <!-- endbuild -->
 
-    <!-- Load any extensions last. -->
-    <script src="scripts/extensions.js"></script>
-
+        <!-- build:remove -->
+        <!-- Local / test scripts only. These files will not be included in the built dist. -->
+        <script src="extensions/local-extensions.js"></script>
+        <!-- endbuild -->
 </body>
 </html>
