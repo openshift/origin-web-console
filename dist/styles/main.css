@@ -9,6 +9,7 @@ body,figure{margin:0}
 .c3 svg,html{-webkit-tap-highlight-color:transparent}
 .list-view-pf-top-align .list-view-pf-actions,.list-view-pf-top-align .list-view-pf-checkbox{align-self:flex-start}
 .fa,.font-icon,.glyphicon{-moz-osx-font-smoothing:grayscale}
+.origin-modal-popup textarea,.wizard-pf-contents textarea{resize:vertical}
 @font-face{font-family:"Open Sans";font-style:normal;font-weight:300;src:url(../styles/fonts/OpenSans-Light-webfont.eot);src:local("Open Sans Light"),local("OpenSans-Light"),url(../styles/fonts/OpenSans-Light-webfont.eot?#iefix) format("embedded-opentype"),url(../styles/fonts/OpenSans-Light-webfont.woff2) format("woff2"),url(../styles/fonts/OpenSans-Light-webfont.woff) format("woff"),url(../styles/fonts/OpenSans-Light-webfont.ttf) format("truetype"),url(../styles/fonts/OpenSans-Light-webfont.svg#OpenSans) format("svg")}
 @font-face{font-family:"Open Sans";font-style:normal;font-weight:400;src:url(../styles/fonts/OpenSans-Regular-webfont.eot);src:local("Open Sans"),local("OpenSans"),url(../styles/fonts/OpenSans-Regular-webfont.eot?#iefix) format("embedded-opentype"),url(../styles/fonts/OpenSans-Regular-webfont.woff2) format("woff2"),url(../styles/fonts/OpenSans-Regular-webfont.woff) format("woff"),url(../styles/fonts/OpenSans-Regular-webfont.ttf) format("truetype"),url(../styles/fonts/OpenSans-Regular-webfont.svg#OpenSans) format("svg")}
 @font-face{font-family:"Open Sans";font-style:italic;font-weight:300;src:url(../styles/fonts/OpenSans-LightItalic-webfont.eot);src:local("Open Sans Light Italic"),local("OpenSansLight-Italic"),url(../styles/fonts/OpenSans-LightItalic-webfont.eot?#iefix) format("embedded-opentype"),url(../styles/fonts/OpenSans-LightItalic-webfont.woff2) format("woff2"),url(../styles/fonts/OpenSans-LightItalic-webfont.woff) format("woff"),url(../styles/fonts/OpenSans-LightItalic-webfont.ttf) format("truetype"),url(../styles/fonts/OpenSans-LightItalic-webfont.svg#OpenSans) format("svg")}
@@ -4002,7 +4003,6 @@ table.dataTable thead .sorting_asc:after{content:"\f106";top:-3px}
 }
 .wizard-pf-review-steps>ul>li>a,.wizard-pf-review-substeps>ul>li a{color:#030303;cursor:pointer;padding-right:5px;transition:250ms;text-decoration:none}
 .wizard-pf-main .blank-slate-pf{background-color:transparent;border:none;left:0;right:0}
-.wizard-pf-contents textarea{resize:vertical}
 .wizard-pf-review-steps{list-style:none}
 .wizard-pf-review-steps .list-group,.wizard-pf-review-steps .list-group-item{border:none;margin-bottom:0}
 .wizard-pf-review-steps>ul>li{float:left;line-height:15px;margin:0;padding-top:0;position:relative;width:100%}
@@ -5010,6 +5010,7 @@ a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;te
 .contains-actions .dropdown .dropdown-menu.dropdown-menu-right{right:-4px}
 }
 .header-actions{font-size:91%;margin-left:5px}
+.modal-body textarea{resize:vertical}
 .modal-resource-action{background-color:#f1f1f1}
 .modal-resource-action h1{font-size:21px;font-weight:500;margin-bottom:20px;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
 .modal-resource-action p{font-size:14px}
