@@ -11138,14 +11138,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/modals/set-home-page-modal.html',
-    "<div class=\"modal-resource-action set-home-page\">\n" +
+    "<div class=\"set-home-page\">\n" +
     "<div class=\"modal-header\">\n" +
-    "<h1>Set Home Page</h1>\n" +
+    "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\" aria-label=\"Close\" ng-click=\"cancel()\">\n" +
+    "<span class=\"pficon pficon-close\"></span>\n" +
+    "</button>\n" +
+    "<h1 class=\"modal-title\">Set Home Page</h1>\n" +
     "</div>\n" +
-    "<div class=\"modal-body modal-body-indent\">\n" +
+    "<div class=\"modal-body\">\n" +
     "<p>\n" +
-    "<div class=\"title\">Set your preferred home page.</div>\n" +
-    "Note: This setting is browser specific and will not be maintained across browsers.\n" +
+    "Note: This setting is browser-specific and will not be maintained across browsers.\n" +
     "</p>\n" +
     "<form name=\"homePageForm\">\n" +
     "<fieldset ng-disabled=\"loading\">\n" +
@@ -11175,8 +11177,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</form>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +
-    "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-disabled=\"homePageForm.$invalid || homePageForm.$pristine\" ng-click=\"setHomePage()\">Save</button>\n" +
     "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-disabled=\"homePageForm.$invalid || homePageForm.$pristine\" ng-click=\"setHomePage()\">Save</button>\n" +
     "</div>\n" +
     "</div>"
   );
