@@ -1,10 +1,13 @@
-<div>
-  <div class="dialog-title">
-    <h3>Add to Application</h3>
+<div class="modal-add-config-to-application">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close" ng-click="ctrl.onCancel()">
+      <span class="pficon pficon-close"></span>
+    </button>
+    <h1 class="modal-title">Add to Application</h1>
   </div>
-  <div class="dialog-body">
-    <form name="addToApplicationForm" novalidate>
-      <fieldset ng-disabled="disableInputs">
+  <form name="addToApplicationForm" novalidate>
+    <fieldset ng-disabled="disableInputs">
+      <div class="modal-body">
         <legend>Add this {{ctrl.apiObject.kind | humanizeKind}} to application:</legend>
         <div class="form-group"  ng-class="{'has-error' : ctrl.addType === 'env' && ctrl.application && !ctrl.canAddRefToApplication}">
           <div class="application-select">
@@ -136,29 +139,29 @@
             </div>
           </div>
         </div>
-        <div class="button-group pull-right">
-          <button
-            class="btn btn-default"
-            ng-class="{'dialog-btn': isDialog}"
-            ng-click="ctrl.onCancel()">
-            Cancel
-          </button>
-          <button type="submit"
-                  class="btn btn-primary"
-                  ng-class="{'dialog-btn': isDialog}"
-                  ng-click="ctrl.addToApplication()"
-                  ng-disabled="addToApplicationForm.$invalid || (ctrl.addType === 'env' && !ctrl.canAddRefToApplication)"
-                  value="">
-            Save
-          </button>
-        </div>
-      </fieldset>
-    </form>
-    <div class="updating" ng-if="ctrl.updating">
-      <div class="spinner spinner-lg" aria-hidden="true"></div>
-      <h3>
-        <span class="sr-only">Updating</span>
-      </h3>
-    </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          class="btn btn-default"
+          ng-class="{'dialog-btn': isDialog}"
+          ng-click="ctrl.onCancel()">
+          Cancel
+        </button>
+        <button type="submit"
+                class="btn btn-primary"
+                ng-class="{'dialog-btn': isDialog}"
+                ng-click="ctrl.addToApplication()"
+                ng-disabled="addToApplicationForm.$invalid || (ctrl.addType === 'env' && !ctrl.canAddRefToApplication)"
+                value="">
+                Save
+        </button>
+      </div>
+    </fieldset>
+  </form>
+  <div class="updating" ng-if="ctrl.updating">
+    <div class="spinner spinner-lg" aria-hidden="true"></div>
+    <h3>
+      <span class="sr-only">Updating</span>
+    </h3>
   </div>
 </div>

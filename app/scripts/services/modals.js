@@ -7,7 +7,6 @@ angular.module("openshiftConsole")
       // See app/scripts/controllers/modals/confirmModal.js
       confirm: function(modalConfig) {
         var modalInstance = $uibModal.open({
-          animation: true,
           templateUrl: 'views/modals/confirm.html',
           controller: 'ConfirmModalController',
           resolve: {
@@ -20,7 +19,6 @@ angular.module("openshiftConsole")
 
       confirmSaveLog: function(object) {
         var modalInstance = $uibModal.open({
-          animation: true,
           templateUrl: 'views/modals/confirm-save-log.html',
           controller: 'ConfirmSaveLogController',
           resolve: {
@@ -33,7 +31,6 @@ angular.module("openshiftConsole")
 
       showJenkinsfileExamples: function() {
         $uibModal.open({
-          animation: true,
           templateUrl: 'views/modals/jenkinsfile-examples-modal.html',
           controller: 'JenkinsfileExamplesModalController',
           size: 'lg'
@@ -42,7 +39,6 @@ angular.module("openshiftConsole")
 
       showComputeUnitsHelp: function() {
         $uibModal.open({
-          animation: true,
           templateUrl: 'views/modals/about-compute-units-modal.html',
           controller: 'AboutComputeUnitsModalController'
         });

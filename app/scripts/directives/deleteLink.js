@@ -128,7 +128,6 @@ angular.module("openshiftConsole")
 
           // opening the modal with settings scope as parent
           var modalInstance = $uibModal.open({
-            animation: true,
             templateUrl: 'views/modals/delete-resource.html',
             controller: 'DeleteModalController',
             scope: scope
