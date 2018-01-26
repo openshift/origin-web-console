@@ -34,19 +34,26 @@ angular.module('openshiftConsole')
     var displayKind = $filter('humanizeKind')(kind);
     var hasDeployment = $filter('hasDeployment');
 
+    var buildsVersion = APIService.getPreferredVersion('builds');
+    var imageStreamsVersion = APIService.getPreferredVersion('imagestreams');
+    var horizontalPodAutoscalersVersion = APIService.getPreferredVersion('horizontalpodautoscalers');
+    var limitRangesVersion = APIService.getPreferredVersion('limitranges');
+    var podsVersion = APIService.getPreferredVersion('pods');
+    var replicaSetsVersion = APIService.getPreferredVersion('replicasets');
+    var replicationControllersVersion = APIService.getPreferredVersion('replicationcontrollers');
+    var resourceQuotasVersion = APIService.getPreferredVersion('resourcequotas');
+    var appliedClusterResourceQuotasVersion = APIService.getPreferredVersion('appliedclusterresourcequotas');
+
     switch (kind) {
     case 'ReplicaSet':
-      $scope.resource = {
-        group: "extensions",
-        resource: "replicasets"
-      };
+      $scope.resource = replicaSetsVersion;
       $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
                                                       "ReplicaSet",
                                                       $routeParams.replicaSet,
                                                       "extensions");
       break;
     case 'ReplicationController':
-      $scope.resource = 'replicationcontrollers';
+      $scope.resource = replicationControllersVersion;
       $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
                                                       "ReplicationController",
                                                       $routeParams.replicaSet);
@@ -69,15 +76,6 @@ angular.module('openshiftConsole')
     $scope.renderOptions.hideFilterWidget = true;
     $scope.forms = {};
     $scope.logOptions = {};
-
-    var buildsVersion = APIService.getPreferredVersion('builds');
-    var imageStreamsVersion = APIService.getPreferredVersion('imagestreams');
-    var horizontalPodAutoscalersVersion = APIService.getPreferredVersion('horizontalpodautoscalers');
-    var limitRangesVersion = APIService.getPreferredVersion('limitranges');
-    var podsVersion = APIService.getPreferredVersion('pods');
-    var replicaSetsVersion = APIService.getPreferredVersion('replicasets');
-    var resourceQuotasVersion = APIService.getPreferredVersion('resourcequotas');
-    var appliedClusterResourceQuotasVersion = APIService.getPreferredVersion('appliedclusterresourcequotas');
 
     $scope.deploymentsVersion = APIService.getPreferredVersion('deployments');
     $scope.deploymentConfigsVersion = APIService.getPreferredVersion('deploymentconfigs');
