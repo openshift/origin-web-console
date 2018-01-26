@@ -9924,10 +9924,10 @@ r.onloadend = function() {
 t.$apply(function() {
 t.fileName = n.name, t.model = r.result;
 var e = t.onFileAdded;
-_.isFunction(e) && e(r.result);
+_.isFunction(e) && e(r.result), r.error || (t.uploadError = !1);
 });
 }, r.onerror = function(n) {
-t.supportsFileUpload = !1, t.uploadError = !0, e.error("Could not read file", n);
+t.uploadError = !0, e.error("Could not read file", n);
 }, r.readAsText(n);
 }
 function a() {

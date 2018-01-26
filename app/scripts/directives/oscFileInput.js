@@ -184,10 +184,12 @@ angular.module('openshiftConsole')
               if (_.isFunction(cb)) {
                 cb(reader.result);
               }
+              if (!reader.error) {
+                scope.uploadError = false;
+              }
             });
           };
           reader.onerror = function(e){
-            scope.supportsFileUpload = false;
             scope.uploadError = true;
             Logger.error("Could not read file", e);
           };
