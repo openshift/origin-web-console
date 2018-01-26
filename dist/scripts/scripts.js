@@ -4227,11 +4227,11 @@ return Logger.log("DEPRECATED: mapEntries() drops valueFrom from the entry."), _
 return e[t.name] = t.value, e;
 }, {});
 },
-setFocusOn: function(n, r) {
+setFocusOn: function(n, r, a) {
 e(function() {
 var e = _.head(t.document.querySelectorAll(n));
 e && (e.focus(), r && (e.value = "", e.value = r));
-}, 25);
+}, a || 25);
 },
 uniqueForKey: function(e, t) {
 return "key-value-editor-key-" + e + "-" + t;
@@ -14656,7 +14656,8 @@ onAddRow: function() {
 a.addEntry(t.entries), a.setFocusOn("." + t.setFocusKeyClass);
 },
 onAddRowWithSelectors: function() {
-a.addEntryWithSelectors(t.entries), a.setFocusOn("." + t.setFocusKeyClass);
+var e = 1 === t.entries.length ? 125 : null;
+a.addEntryWithSelectors(t.entries), a.setFocusOn("." + t.setFocusKeyClass, null, e);
 },
 isValueFromReadonly: function(e) {
 return t.isReadonlyAny || e.isReadonlyValue || e.refType && !e.selectedValueFrom || _.isEmpty(t.valueFromSelectorOptions);

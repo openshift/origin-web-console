@@ -161,7 +161,7 @@
                   }, {});
         };
 
-        var setFocusOn = function(selector, value) {
+        var setFocusOn = function(selector, value, delay) {
           // $timeout just delays enough to ensure event/$digest resolution
           $timeout(function() {
             var element = _.head($window.document.querySelectorAll(selector));
@@ -173,7 +173,7 @@
                 element.value = value;
               }
             }
-          }, 25);
+          }, delay || 25);
         };
 
         var uniqueForKey = function(unique, $index) {

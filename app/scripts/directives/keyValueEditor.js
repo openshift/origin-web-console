@@ -234,8 +234,10 @@
                   utils.setFocusOn('.'+ $scope.setFocusKeyClass);
                 },
                 onAddRowWithSelectors: function() {
+                  var entriesCount = $scope.entries.length;
+                  var extraFocusDelay = (entriesCount === 1) ? 125 : null;
                   utils.addEntryWithSelectors($scope.entries);
-                  utils.setFocusOn('.'+ $scope.setFocusKeyClass);
+                  utils.setFocusOn('.'+ $scope.setFocusKeyClass, null, extraFocusDelay);
                 },
                 isValueFromReadonly: function(entry) {
                   return $scope.isReadonlyAny ||
