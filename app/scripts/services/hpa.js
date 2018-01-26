@@ -73,6 +73,66 @@ angular.module("openshiftConsole")
     var humanizeKind = $filter('humanizeKind');
     var hasDeploymentConfig = $filter('hasDeploymentConfig');
 
+
+    var hasMetricsAvailableWarning = function(metricsAvailable) {
+      if (!metricsAvailable) {
+        return {
+          message: 'Metrics might not be configured by your cluster administrator. ' +
+                   'Metrics are required for autoscaling.',
+          reason: 'MetricsNotAvailable'
+        };
+      }
+    };
+
+
+    var hasCPURequestWarning = function(scaleTarget, limitRanges, project) {
+      var containers = _.get(scaleTarget, 'spec.template.spec.containers', []);
+      var kind;
+      if (!hasCPURequest(containers, limitRanges, project)) {
+        kind = humanizeKind(scaleTarget.kind);
+        return {
+          message: 'This ' + kind + ' does not have any containers with a CPU request set. ' +
+                   'Autoscaling will not work without a CPU request.',
+          reason: 'NoCPURequest'
+        };
+      }
+    };
+
+
+    var hasCompetingAutoscalersWarning = function(hpaResources) {
+      if (_.size(hpaResources) > 1) {
+        return {
+          message: 'More than one autoscaler is scaling this resource. ' +
+                   'This is not recommended because they might compete with each other. ' +
+                   'Consider removing all but one autoscaler.',
+          reason: 'MultipleHPA'
+        };
+      }
+    };
+
+
+    var hasCompetingDCAndAutoscalerWarning = function(scaleTarget, hpaResources) {
+      // Warn about replication controllers that have both an HPA and DC, but
+      // make sure an HPA targets the replication controller directly and
+      // not its parent DC.
+      var targetsRC = function() {
+        return _.some(hpaResources, function(hpa) {
+          return _.get(hpa, 'spec.scaleTargetRef.kind') === 'ReplicationController';
+        });
+      };
+
+      if (scaleTarget.kind === 'ReplicationController' &&
+          hasDeploymentConfig(scaleTarget) &&
+          _.some(hpaResources, targetsRC)) {
+        return {
+          message: 'This deployment is scaled by both a deployment configuration and an autoscaler. ' +
+                   'This is not recommended because they might compete with each other.',
+          reason: 'DeploymentHasHPA'
+        };
+      }
+    };
+
+
     // Gets HPA warnings.
     //
     // scaleTarget      - the object being scaled (DC or RC)
@@ -85,57 +145,13 @@ angular.module("openshiftConsole")
       if (!scaleTarget || _.isEmpty(hpaResources)) {
         return $q.when([]);
       }
-
       return MetricsService.isAvailable().then(function(metricsAvailable) {
-        var warnings = [];
-        if (!metricsAvailable) {
-          warnings.push({
-            message: 'Metrics might not be configured by your cluster administrator. ' +
-                     'Metrics are required for autoscaling.',
-            reason: 'MetricsNotAvailable'
-          });
-        }
-
-        var containers = _.get(scaleTarget, 'spec.template.spec.containers', []);
-        var kind;
-        if (!hasCPURequest(containers, limitRanges, project)) {
-          kind = humanizeKind(scaleTarget.kind);
-          warnings.push({
-            message: 'This ' + kind + ' does not have any containers with a CPU request set. ' +
-                     'Autoscaling will not work without a CPU request.',
-            reason: 'NoCPURequest'
-          });
-        }
-
-        if (_.size(hpaResources) > 1) {
-          warnings.push({
-            message: 'More than one autoscaler is scaling this resource. ' +
-                     'This is not recommended because they might compete with each other. ' +
-                     'Consider removing all but one autoscaler.',
-            reason: 'MultipleHPA'
-          });
-        }
-
-        // Warn about replication controllers that have both an HPA and DC, but
-        // make sure an HPA targets the replication controller directly and
-        // not its parent DC.
-        var targetsRC = function() {
-          return _.some(hpaResources, function(hpa) {
-            return _.get(hpa, 'spec.scaleTargetRef.kind') === 'ReplicationController';
-          });
-        };
-
-        if (scaleTarget.kind === 'ReplicationController' &&
-            hasDeploymentConfig(scaleTarget) &&
-            _.some(hpaResources, targetsRC)) {
-          warnings.push({
-            message: 'This deployment is scaled by both a deployment configuration and an autoscaler. ' +
-                     'This is not recommended because they might compete with each other.',
-            reason: 'DeploymentHasHPA'
-          });
-        }
-
-        return warnings;
+        return _.compact([
+          hasMetricsAvailableWarning(metricsAvailable),
+          hasCPURequestWarning(scaleTarget, limitRanges, project),
+          hasCompetingAutoscalersWarning(hpaResources),
+          hasCompetingDCAndAutoscalerWarning(scaleTarget, hpaResources)
+        ]);
       });
     };
 
