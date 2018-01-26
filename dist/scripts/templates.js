@@ -8522,11 +8522,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"alternate in route.alternateServices\" class=\"form-group\">\n" +
     "<osc-routing-service model=\"alternate\" service-options=\"alternateServiceOptions\" all-services=\"servicesByName\" is-alternate=\"true\" show-weight=\"route.alternateServices.length > 1 || controls.hideSlider\">\n" +
     "</osc-routing-service>\n" +
-    "<a href=\"\" ng-click=\"route.alternateServices.splice($index, 1)\">Remove Service</a>\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-sm-6\">\n" +
+    "<button type=\"button\" class=\"btn btn-link\" ng-click=\"route.alternateServices.splice($index, 1)\">Remove Service</button>\n" +
     "<span ng-if=\"$last && route.alternateServices.length < alternateServiceOptions.length\">\n" +
     "<span class=\"action-divider\">|</span>\n" +
-    "<a href=\"\" ng-click=\"addAlternateService()\">Add Another Service</a>\n" +
+    "<button type=\"button\" class=\"btn btn-link\" ng-click=\"addAlternateService()\">Add Another Service</button>\n" +
     "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"route.alternateServices.length === 1 && controls.hideSlider\" class=\"col-sm-6\">\n" +
+    "<button type=\"button\" class=\"btn btn-link\" ng-click=\"controls.hideSlider = false\">Edit Weights Using Percentage Slider</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div ng-repeat=\"duplicate in duplicateServices\" class=\"has-error mar-bottom-lg\">\n" +
     "<span class=\"help-block\">\n" +
@@ -8560,7 +8567,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</datalist>\n" +
     "<div class=\"help-block\" id=\"weight-slider-help\">\n" +
     "Percentage of traffic sent to each service. Drag the slider to adjust the values or\n" +
-    "<a href=\"\" ng-click=\"controls.hideSlider = true\">edit weights as integers</a>.\n" +
+    "<button type=\"button\" class=\"btn btn-link\" ng-click=\"controls.hideSlider = true\">edit weights as integers</button>.\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -11138,14 +11145,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/modals/set-home-page-modal.html',
-    "<div class=\"modal-resource-action set-home-page\">\n" +
+    "<div class=\"set-home-page\">\n" +
     "<div class=\"modal-header\">\n" +
-    "<h1>Set Home Page</h1>\n" +
+    "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\" aria-label=\"Close\" ng-click=\"cancel()\">\n" +
+    "<span class=\"pficon pficon-close\"></span>\n" +
+    "</button>\n" +
+    "<h1 class=\"modal-title\">Set Home Page</h1>\n" +
     "</div>\n" +
-    "<div class=\"modal-body modal-body-indent\">\n" +
+    "<div class=\"modal-body\">\n" +
     "<p>\n" +
-    "<div class=\"title\">Set your preferred home page.</div>\n" +
-    "Note: This setting is browser specific and will not be maintained across browsers.\n" +
+    "Note: This setting is browser-specific and will not be maintained across browsers.\n" +
     "</p>\n" +
     "<form name=\"homePageForm\">\n" +
     "<fieldset ng-disabled=\"loading\">\n" +
@@ -11175,8 +11184,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</form>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +
-    "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-disabled=\"homePageForm.$invalid || homePageForm.$pristine\" ng-click=\"setHomePage()\">Save</button>\n" +
     "<button class=\"btn btn-lg btn-default\" type=\"button\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "<button class=\"btn btn-lg btn-primary\" type=\"button\" ng-disabled=\"homePageForm.$invalid || homePageForm.$pristine\" ng-click=\"setHomePage()\">Save</button>\n" +
     "</div>\n" +
     "</div>"
   );

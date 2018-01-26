@@ -3,8 +3,6 @@
 require('jasmine-beforeall');
 
 const h = require('../helpers');
-const addExtension = require('../helpers/extensions').addExtension;
-const resetExtensions = require('../helpers/extensions').resetExtensions;
 const matchersHelpers = require('../helpers/matchers');
 const projectHelpers = require('../helpers/project');
 const inputsHelpers = require('../helpers/inputs');
@@ -17,16 +15,10 @@ const centosImageStream = require('../fixtures/image-streams-centos7.json');
 describe('authenticated e2e-user', function() {
 
   let project = projectHelpers.projectDetails();
+  // This namespace is whitelisted for the tests in test/extensions/test-extensions.js
   let namespaceForFixtures = "template-dumpster";
 
   let setupEnv = function() {
-    // add namespace to create whitelist for template and image stream
-    addExtension(`
-      (function() {
-        // Update whilelist:
-        window.OPENSHIFT_CONSTANTS.CREATE_FROM_URL_WHITELIST = ['openshift', '${namespaceForFixtures}'];
-      })();
-    `);
     let fixturesProject = {name: namespaceForFixtures};
     let createProjectPage = new CreateProjectPage(fixturesProject);
     createProjectPage.visit();
@@ -49,7 +41,6 @@ describe('authenticated e2e-user', function() {
 
   afterAll(function() {
     projectHelpers.deleteAllProjects();
-    resetExtensions();
     h.afterAllTeardown();
   });
 

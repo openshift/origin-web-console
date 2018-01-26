@@ -2536,16 +2536,12 @@ return e.all([ n.list(r, t, null), n.list(a, {}, null) ]);
 }
 };
 } ]), angular.module("openshiftConsole").factory("RoleBindingsService", [ "$q", "APIService", "DataService", function(e, t, n) {
-var r = t.getPreferredVersion("rolebindings"), a = {}, o = function(e, t) {
-var n = t ? e + t : e;
-return _.some(a, _.matchesProperty("metadata.name", n)) ? o(e, _.uniqueId()) : n;
-}, i = function(e, t) {
-var n = _.get(e, "metadata.name");
+var r = t.getPreferredVersion("rolebindings"), a = function(e, t) {
 return {
 kind: "RoleBinding",
 apiVersion: "v1",
 metadata: {
-name: n ? o(n) : null,
+generateName: _.get(e, "metadata.name") + "-",
 namespace: t
 },
 roleRef: {
@@ -2554,41 +2550,36 @@ namespace: _.get(e, "metadata.namespace")
 },
 subjects: []
 };
-}, s = function(e, t) {
+}, o = function(e, t) {
 return _.isEqual(e.kind, "ServiceAccount") && (e.namespace = e.namespace || t), e;
 };
 return {
-list: function(e, t, o) {
-return n.list(r, e, function(e) {
-a = e.by("metadata.name"), t(e);
-}, o);
+create: function(e, r, i, s) {
+var c = a(e, i), l = t.objectToResourceGroupVersion(c);
+return r = o(r, i), c.subjects.push(angular.copy(r)), n.create(l, null, c, s);
 },
-create: function(e, r, a, o) {
-var c = i(e, a), l = t.objectToResourceGroupVersion(c);
-return r = s(r, a), c.subjects.push(angular.copy(r)), n.create(l, null, c, o);
-},
-addSubject: function(e, r, a, o) {
-var c = i(), l = _.extend(c, e), u = t.objectToResourceGroupVersion(l);
+addSubject: function(e, r, i, s) {
+var c = a(), l = _.extend(c, e), u = t.objectToResourceGroupVersion(l);
 if (!r) return l;
-if (r = s(r, a), _.isArray(l.subjects)) {
+if (r = o(r, i), _.isArray(l.subjects)) {
 if (_.includes(l.subjects, r)) return;
 l.subjects.push(r);
 } else l.subjects = [ r ];
-return n.update(u, l.metadata.name, l, o);
+return n.update(u, l.metadata.name, l, s);
 },
-removeSubject: function(t, a, o, s, c) {
+removeSubject: function(t, o, i, s, c) {
 var l = _.filter(s, {
 roleRef: {
-name: a
+name: o
 }
 });
 return e.all(_.map(l, function(e) {
-var a = i();
-e = _.extend(a, e);
+var o = a();
+e = _.extend(o, e);
 var s = {
 name: t
 };
-return o && (s.namespace = o), e.subjects = _.reject(e.subjects, s), e.subjects.length ? n.update(r, e.metadata.name, e, c) : n.delete(r, e.metadata.name, c).then(function() {
+return i && (s.namespace = i), e.subjects = _.reject(e.subjects, s), e.subjects.length ? n.update(r, e.metadata.name, e, c) : n.delete(r, e.metadata.name, c).then(function() {
 return e;
 });
 }));
@@ -3151,7 +3142,32 @@ return s(e, "defaultRequest", t);
 return s(e, "defaultLimit", t);
 }, u = function(e, t, r) {
 return !!n.hasClusterResourceOverrides(r) || (!(!o("cpu", e) && !c("cpu", t)) || !(!i("cpu", e) && !l("cpu", t)));
-}, d = e("humanizeKind"), m = e("hasDeploymentConfig");
+}, d = e("humanizeKind"), m = e("hasDeploymentConfig"), p = function(e) {
+if (!e) return {
+message: "Metrics might not be configured by your cluster administrator. Metrics are required for autoscaling.",
+reason: "MetricsNotAvailable"
+};
+}, f = function(e, t, n) {
+var r, a = _.get(e, "spec.template.spec.containers", []);
+if (!u(a, t, n)) return r = d(e.kind), {
+message: "This " + r + " does not have any containers with a CPU request set. Autoscaling will not work without a CPU request.",
+reason: "NoCPURequest"
+};
+}, g = function(e) {
+if (_.size(e) > 1) return {
+message: "More than one autoscaler is scaling this resource. This is not recommended because they might compete with each other. Consider removing all but one autoscaler.",
+reason: "MultipleHPA"
+};
+}, v = function(e, t) {
+if ("ReplicationController" === e.kind && m(e) && _.some(t, function() {
+return _.some(t, function(e) {
+return "ReplicationController" === _.get(e, "spec.scaleTargetRef.kind");
+});
+})) return {
+message: "This deployment is scaled by both a deployment configuration and an autoscaler. This is not recommended because they might compete with each other.",
+reason: "DeploymentHasHPA"
+};
+};
 return {
 hasCPURequest: u,
 filterHPA: function(e, t, n) {
@@ -3161,26 +3177,7 @@ return e.spec.scaleTargetRef.kind === t && e.spec.scaleTargetRef.name === n;
 },
 getHPAWarnings: function(e, n, a, o) {
 return !e || _.isEmpty(n) ? t.when([]) : r.isAvailable().then(function(t) {
-var r = [];
-t || r.push({
-message: "Metrics might not be configured by your cluster administrator. Metrics are required for autoscaling.",
-reason: "MetricsNotAvailable"
-});
-var i, s = _.get(e, "spec.template.spec.containers", []);
-return u(s, a, o) || (i = d(e.kind), r.push({
-message: "This " + i + " does not have any containers with a CPU request set. Autoscaling will not work without a CPU request.",
-reason: "NoCPURequest"
-})), _.size(n) > 1 && r.push({
-message: "More than one autoscaler is scaling this resource. This is not recommended because they might compete with each other. Consider removing all but one autoscaler.",
-reason: "MultipleHPA"
-}), "ReplicationController" === e.kind && m(e) && _.some(n, function() {
-return _.some(n, function(e) {
-return "ReplicationController" === _.get(e, "spec.scaleTargetRef.kind");
-});
-}) && r.push({
-message: "This deployment is scaled by both a deployment configuration and an autoscaler. This is not recommended because they might compete with each other.",
-reason: "DeploymentHasHPA"
-}), r;
+return _.compact([ p(t), f(e, a, o), g(n), v(e, n) ]);
 });
 },
 groupHPAs: function(e) {
@@ -9942,10 +9939,10 @@ r.onloadend = function() {
 t.$apply(function() {
 t.fileName = n.name, t.model = r.result;
 var e = t.onFileAdded;
-_.isFunction(e) && e(r.result);
+_.isFunction(e) && e(r.result), r.error || (t.uploadError = !1);
 });
 }, r.onerror = function(n) {
-t.supportsFileUpload = !1, t.uploadError = !0, e.error("Could not read file", n);
+t.uploadError = !0, e.error("Could not read file", n);
 }, r.readAsText(n);
 }
 function a() {
@@ -10162,6 +10159,8 @@ if (0 === e && _.has(r, "route.to.weight") && delete r.route.to.weight, 1 === e)
 if (0 === r.route.to.weight && 0 === r.route.alternateServices[0].weight) return void (r.controls.hideSlider = !0);
 m = !0, r.controls.rangeSlider = r.weightAsPercentage(r.route.to.weight);
 }
+}), r.$watch("controls.hideSlider", function(e) {
+e || 1 !== r.route.alternateServices.length || (m = !0, r.controls.rangeSlider = r.weightAsPercentage(r.route.to.weight));
 }), r.$watch("controls.rangeSlider", function(e, t) {
 m ? m = !1 : e !== t && (e = parseInt(e, 10), _.set(r, "route.to.weight", e), _.set(r, "route.alternateServices[0].weight", 100 - e));
 });

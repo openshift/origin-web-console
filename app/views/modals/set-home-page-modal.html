@@ -1,11 +1,13 @@
-<div class="modal-resource-action set-home-page">
+<div class="set-home-page">
   <div class="modal-header">
-    <h1>Set Home Page</h1>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close" ng-click="cancel()">
+      <span class="pficon pficon-close"></span>
+    </button>
+    <h1 class="modal-title">Set Home Page</h1>
   </div>
-  <div class="modal-body modal-body-indent">
+  <div class="modal-body">
     <p>
-      <div class="title">Set your preferred home page.</div>
-      Note: This setting is browser specific and will not be maintained across browsers.
+      Note: This setting is browser-specific and will not be maintained across browsers.
     </p>
     <form name="homePageForm">
       <fieldset ng-disabled="loading">
@@ -41,9 +43,9 @@
     </form>
   </div>
   <div class="modal-footer">
-      <button class="btn btn-lg btn-primary" type="button"
-              ng-disabled="homePageForm.$invalid || homePageForm.$pristine"
-              ng-click="setHomePage()">Save</button>
-      <button class="btn btn-lg btn-default" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-lg btn-default" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-lg btn-primary" type="button"
+            ng-disabled="homePageForm.$invalid || homePageForm.$pristine"
+            ng-click="setHomePage()">Save</button>
   </div>
 </div>
