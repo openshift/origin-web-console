@@ -4644,8 +4644,6 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .static-form-value-large .small,.static-form-value-large small{font-weight:400;line-height:1;color:#9c9c9c;font-size:65%}
 .pod-template-block .pod-template .pod-template-key,.weight-slider-values .service-name{font-weight:600}
 .clear-env-changes-link{vertical-align:-2px}
-.copy-webhook-url{display:inline-flex}
-.copy-webhook-url .webhook-secrets-warning{cursor:help;font-size:15px;padding:5px}
 copy-to-clipboard .input-group.limit-width{max-width:300px}
 .copy-to-clipboard input.form-control[readonly]{background-color:#fff;color:#363636}
 .jenkinsfile-examples .copy-to-clipboard{margin-top:3px}
