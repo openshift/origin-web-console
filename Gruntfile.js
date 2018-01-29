@@ -73,6 +73,10 @@ module.exports = function (grunt) {
           }
         }
       },
+      extensions: {
+        files: ['extensions/local-extensions.js', 'extensions/local-extensions.css'],
+        tasks: ['copy:extensions']
+      },
       index: {
         files: ['<%= yeoman.app %>/index.html'],
         tasks: ['replace:index']
