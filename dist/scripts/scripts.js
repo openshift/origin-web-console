@@ -10987,24 +10987,6 @@ form: "="
 },
 templateUrl: "components/osc-webhook-triggers/osc-webhook-triggers.html"
 });
-}(), function() {
-angular.module("openshiftConsole").component("copyWebhookUrl", {
-controller: function() {
-var e = this;
-e.showSecretsWarning = function() {
-return _.get(e.secret, "secretReference.name") && !e.webhookSecrets;
-};
-},
-controllerAs: "$ctrl",
-bindings: {
-buildConfigName: "<",
-triggerType: "<",
-projectName: "<",
-secret: "<",
-webhookSecrets: "<"
-},
-templateUrl: "components/copy-webhook-url/copy-webhook-url.html"
-});
 }(), angular.module("openshiftConsole").directive("parseError", function() {
 return {
 restrict: "E",
@@ -15194,17 +15176,18 @@ if ("OPENSHIFT_BUILD_NAME" === a[0]) return t[a[1]];
 }
 return null;
 };
-}).filter("webhookURL", [ "DataService", "SecretsService", function(e, t) {
-return function(n, r, a, o, i) {
-return (a = t.getWebhookSecretValue(a, i)) ? e.url({
-resource: "buildconfigs/webhooks/" + encodeURIComponent(a) + "/" + encodeURIComponent(r.toLowerCase()),
-name: n,
-namespace: o
-}) : e.url({
+}).filter("webhookURL", [ "canIFilter", "APIService", "DataService", "SecretsService", function(e, t, n, r) {
+return function(a, o, i, s, c) {
+var l = t.getPreferredVersion("secrets");
+return e(l, "list") ? (i = r.getWebhookSecretValue(i, c), n.url({
+resource: "buildconfigs/webhooks/" + encodeURIComponent(i) + "/" + encodeURIComponent(o.toLowerCase()),
+name: a,
+namespace: s
+})) : n.url({
 resource: "buildconfigs/webhooks/",
-name: n,
-namespace: o
-}) + "<secret>/" + r.toLowerCase();
+name: a,
+namespace: s
+}) + "<secret>/" + o.toLowerCase();
 };
 } ]).filter("isWebRoute", [ "routeHostFilter", function(e) {
 return function(t) {
