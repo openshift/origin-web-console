@@ -4528,6 +4528,8 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .services-view .services-item-icon img{max-height:50px;max-width:50px}
 .services-view .services-item-name{flex:1 1 0%;font-size:14px;font-weight:600;display:-webkit-box;line-height:1.4em;max-height:4.2em;overflow:hidden;padding:0!important;-webkit-box-orient:vertical;-webkit-line-clamp:3;position:relative;word-wrap:break-word}
 .services-view .services-items{align-content:flex-start;background-color:#fff;display:flex;flex:1 1 auto;flex-wrap:wrap;padding-bottom:30px;width:100%;z-index:9}
+.services-view .services-items.no-items-available{display:block}
+.services-view .services-items.no-items-available .pf-empty-state{margin:0}
 .services-view .services-items-filter{border-bottom:1px solid #ededed;flex:1 1 100%;margin:10px 20px;padding:0 0 10px}
 .services-view .services-items-filter div.checkbox{margin-bottom:0;margin-top:0}
 .services-view .services-no-sub-categories{background:#fff}
