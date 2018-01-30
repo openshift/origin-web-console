@@ -11179,20 +11179,28 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"modal-body\">\n" +
     "<p>What would you like to do?</p>\n" +
-    "<p>\n" +
+    "<div class=\"form-group\">\n" +
+    "<div class=\"checkbox\">\n" +
     "<label>\n" +
-    "<input type=\"checkbox\" ng-model=\"templateOptions.process\"/>\n" +
+    "<input type=\"checkbox\" ng-model=\"templateOptions.process\" aria-descirbedby=\"process-template-help\">\n" +
     "<strong>Process the template</strong>\n" +
     "</label>\n" +
-    "<span id=\"helpBlock\" class=\"help-block\">Create the objects defined in the template. You will have an opportunity to fill in template parameters.</span>\n" +
-    "</p>\n" +
-    "<p>\n" +
+    "<div id=\"process-template-help\" class=\"help-block\">\n" +
+    "Create the objects defined in the template. You will have an opportunity to fill in template parameters.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group\">\n" +
+    "<div class=\"checkbox\">\n" +
     "<label>\n" +
-    "<input type=\"checkbox\" ng-model=\"templateOptions.add\"/>\n" +
+    "<input type=\"checkbox\" ng-model=\"templateOptions.add\" aria-descirbedby=\"save-template-help\">\n" +
     "<strong>{{updateTemplate ? \"Update\" : \"Save\"}} template</strong>\n" +
     "</label>\n" +
-    "<span id=\"helpBlock\" class=\"help-block\">{{updateTemplate ? \"This will overwrite the current version of the template.\" : \"Save the template to the project. This will make the template available to anyone who can view the project.\"}}</span>\n" +
-    "</p>\n" +
+    "<div id=\"save-template-help\" class=\"help-block\">\n" +
+    "{{updateTemplate ? \"This will overwrite the current version of the template.\" : \"Save the template to the project. This will make the template available to anyone who can view the project.\"}}\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div class=\"modal-footer\">\n" +
     "<button class=\"btn btn-default\" type=\"button\" ng-click=\"cancel();\">Cancel</button>\n" +

@@ -7,21 +7,28 @@
   </div>
   <div class="modal-body">
     <p>What would you like to do?</p>
-
-    <p>
-      <label>
-        <input type="checkbox" ng-model="templateOptions.process"/>
-        <strong>Process the template</strong>
-      </label>
-      <span id="helpBlock" class="help-block">Create the objects defined in the template. You will have an opportunity to fill in template parameters.</span>
-    </p>
-    <p>
-      <label>
-        <input type="checkbox" ng-model="templateOptions.add"/>
-        <strong>{{updateTemplate ? "Update" : "Save"}} template</strong>
-      </label>
-      <span id="helpBlock" class="help-block">{{updateTemplate ? "This will overwrite the current version of the template." : "Save the template to the project. This will make the template available to anyone who can view the project."}}</span>
-    </p>
+    <div class="form-group">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" ng-model="templateOptions.process" aria-descirbedby="process-template-help">
+          <strong>Process the template</strong>
+        </label>
+        <div id="process-template-help" class="help-block">
+          Create the objects defined in the template. You will have an opportunity to fill in template parameters.
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" ng-model="templateOptions.add" aria-descirbedby="save-template-help">
+          <strong>{{updateTemplate ? "Update" : "Save"}} template</strong>
+        </label>
+        <div id="save-template-help" class="help-block">
+          {{updateTemplate ? "This will overwrite the current version of the template." : "Save the template to the project. This will make the template available to anyone who can view the project."}}
+        </div>
+      </div>
+    </div>
   </div>
   <div class="modal-footer">
     <button class="btn btn-default" type="button" ng-click="cancel();">Cancel</button>
