@@ -130,7 +130,6 @@ angular.module("openshiftConsole")
       };
 
       modalInstance =  $uibModal.open({
-        animation: true,
         templateUrl: 'views/modals/delete-resource.html',
         controller: 'ConfirmModalController',
         resolve: {
@@ -155,4 +154,3 @@ angular.module("openshiftConsole")
       deprovision: deprovision
     };
   });
-

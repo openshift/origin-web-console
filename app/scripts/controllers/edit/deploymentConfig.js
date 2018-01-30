@@ -227,14 +227,13 @@ angular.module('openshiftConsole')
         return;
       }
       var modalInstance = $uibModal.open({
-        animation: true,
         templateUrl: 'views/modals/confirm.html',
         controller: 'ConfirmModalController',
         resolve: {
           modalConfig: function() {
             return {
               alerts: $scope.alerts,
-              message: "Some of your existing " + $scope.originalStrategy.toLowerCase() + " strategy parameters can be used for the " + $scope.strategyData.type.toLowerCase() + " strategy. Keep parameters?",
+              title: "Keep some existing " + $scope.originalStrategy.toLowerCase() + " strategy parameters?",
               details: "The timeout parameter and any pre or post lifecycle hooks will be copied from " + $scope.originalStrategy.toLowerCase() + " strategy to " + $scope.strategyData.type.toLowerCase() + " strategy. After saving the changes, " + $scope.originalStrategy.toLowerCase() + " strategy parameters will be removed.",
               okButtonText: "Yes",
               okButtonClass: "btn-primary",

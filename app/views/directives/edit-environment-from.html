@@ -133,9 +133,12 @@
     </div>
   </div>
 
-  <overlay-panel class="add-config-to-application" show-panel="$ctrl.overlayPanelVisible" show-close="true" handle-close="$ctrl.closeOverlayPanel">
-    <div class="dialog-title">
-      <h3>{{$ctrl.overlayPaneEntryDetails.kind | humanizeKind : true}} Details</h3>
+  <overlay-panel class="overlay-panel-as-modal add-config-to-application" show-panel="$ctrl.overlayPanelVisible" handle-close="$ctrl.closeOverlayPanel">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close" ng-click="$ctrl.closeOverlayPanel()">
+        <span class="pficon pficon-close"></span>
+      </button>
+      <h1 class="modal-title">{{$ctrl.overlayPaneEntryDetails.kind | humanizeKind : true}} Details</h1>
     </div>
     <div class="modal-body">
       <h4>{{$ctrl.overlayPaneEntryDetails.metadata.name}}
@@ -188,7 +191,7 @@
     <div class="modal-footer">
       <button ng-click="$ctrl.closeOverlayPanel()"
               type="button"
-              class="btn btn-primary pull-right">Close</button>
+              class="btn btn-default">Close</button>
     </div>
   </overlay-panel>
 </ng-form>

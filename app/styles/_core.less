@@ -997,24 +997,24 @@ a.disabled-link {
   margin-left: 5px;
 }
 
-.modal-body textarea {
-  resize: vertical; // so the textarea cannot be resized wider than the modal
-}
-
-.modal-resource-action {
-  background-color: @gray-lighter;
-  h1 {
-    font-size: 21px;
-    font-weight: 500;
-    margin-bottom: 20px;
-    .word-break();
+.modal-body {
+  &.contains-form {
+    padding-left: (@grid-gutter-width / 2); // so required field label indicator (*) is correctly positioned
   }
-  p {
-    font-size: @font-size-large;
+  .buttons {
+    display: flex;
+    flex-direction: row-reverse; // reverse the direction of the buttons so primary compress after secondary
+    margin-top: 9px; // so spacing above buttons is same as modal-footer
+    &.gutter-bottom,
+    &.gutter-top-bottom {
+      padding-bottom: 0;
+    }
+    .btn + .btn {
+      margin-right: 8px;
+    }
   }
-  .help-block {
-    margin-top: 0px;
-    margin-bottom: 10px;
+  textarea {
+    resize: vertical; // so the textarea cannot be resized wider than the modal
   }
 }
 
@@ -1023,42 +1023,15 @@ a.disabled-link {
 }
 
 .modal-debug-terminal {
-  .modal-header {
-    padding: 0 18px 5px;
-    h2 {
-      margin-bottom: 5px;
-    }
+  .empty-state-message {
+    margin-top: 60px;
   }
-  .modal-body {
-    border-top: 1px solid #bbbbbb;
-    border-bottom: 1px solid #bbbbbb;
-    padding: 5px 15px 0;
-    .original-cmd-msg {
-      margin-bottom: 10px;
-    }
-    .empty-state-message {
-      margin-top: 60px;
-    }
-    kubernetes-container-terminal {
-      .text-center();
-      overflow: hidden;
-    }
-    padding-bottom: 15px;
+  kubernetes-container-terminal {
+    .text-center();
+    overflow: hidden;
   }
-  .modal-footer {
-    padding-top: 0;
-  }
-}
-
-.jenkinsfile-examples-modal {
-  .jenkinsfile-examples p:last-child {
-    // Use `modal-body` bottom margin and padding.
-    margin-bottom: 0;
-    padding-bottom: 0;
-  }
-  .modal-footer {
-    margin-top: 0;
-    padding-top: 0;
+  .original-cmd-msg {
+    margin-bottom: 10px;
   }
 }
 

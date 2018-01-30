@@ -13,7 +13,7 @@ angular.module('openshiftConsole')
                                                  $uibModalInstance,
                                                  modalConfig) {
     // content supplied in the following forms:
-    // heading: modalConfig.message
+    // heading: modalConfig.title
     // content: modalConfig.details (plain text ONLY, no user imput)
     // content: modalConfig.detailsMarkup (pre-sanitized, see _.escape() or _.template('<%- %>') )
     _.extend($scope, modalConfig);

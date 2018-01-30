@@ -1,25 +1,30 @@
 <div class="modal-resource-action">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close" ng-click="cancel()">
+      <span class="pficon pficon-close"></span>
+    </button>
+    <h1 class="modal-title">{{updateTemplate ? "Update" : "Add"}} Template</h1>
+  </div>
   <div class="modal-body">
-    <h1>{{updateTemplate ? "Update" : "Add"}} Template</h1>
     <p>What would you like to do?</p>
 
-    <div>
+    <p>
       <label>
         <input type="checkbox" ng-model="templateOptions.process"/>
         <strong>Process the template</strong>
       </label>
       <span id="helpBlock" class="help-block">Create the objects defined in the template. You will have an opportunity to fill in template parameters.</span>
-    </div>
-    <div>
+    </p>
+    <p>
       <label>
         <input type="checkbox" ng-model="templateOptions.add"/>
         <strong>{{updateTemplate ? "Update" : "Save"}} template</strong>
       </label>
       <span id="helpBlock" class="help-block">{{updateTemplate ? "This will overwrite the current version of the template." : "Save the template to the project. This will make the template available to anyone who can view the project."}}</span>
-    </div>
+    </p>
   </div>
   <div class="modal-footer">
-      <button class="btn btn-lg btn-primary" type="button" ng-click="continue();" ng-disabled="!templateOptions.process && !templateOptions.add">Continue</button>
-      <button class="btn btn-lg btn-default" type="button" ng-click="cancel();">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="cancel();">Cancel</button>
+    <button class="btn btn-primary" type="button" ng-click="continue();" ng-disabled="!templateOptions.process && !templateOptions.add">Continue</button>
   </div>
 </div>

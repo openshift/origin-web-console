@@ -132,7 +132,6 @@ angular.module('openshiftConsole')
           // Prompt before scaling to 0.
           if ($scope.desiredReplicas === 1) {
             var modalInstance = $uibModal.open({
-              animation: true,
               templateUrl: 'views/modals/confirmScale.html',
               controller: 'ConfirmScaleController',
               resolve: {
