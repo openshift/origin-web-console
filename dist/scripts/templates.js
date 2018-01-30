@@ -11057,26 +11057,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/modals/delete-project.html',
-    "<div class=\"modal-project-delete\">\n" +
-    "<div class=\"modal-header\">\n" +
-    "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\" aria-label=\"Close\" ng-click=\"cancel()\">\n" +
-    "<span class=\"pficon pficon-close\"></span>\n" +
-    "</button>\n" +
-    "<h1 class=\"modal-title\">Confirm Delete</h1>\n" +
-    "</div>\n" +
-    "<div class=\"modal-body\">\n" +
-    "<p>Are you sure you want to delete the project '<strong>{{project | displayName}}</strong>'?</p>\n" +
-    "<p>This will <strong>delete all resources</strong> associated with the project {{project | displayName}} and <strong>cannot be undone</strong>. Make sure this is something you really want to do!</p>\n" +
-    "</div>\n" +
-    "<div class=\"modal-footer\">\n" +
-    "<button class=\"btn btn-default\" type=\"button\" ng-click=\"cancel();\">Cancel</button>\n" +
-    "<button class=\"btn btn-danger\" type=\"button\" ng-click=\"delete();\">Delete this project</button>\n" +
-    "</div>\n" +
-    "</div>"
-  );
-
-
   $templateCache.put('views/modals/delete-resource.html',
     "<div class=\"modal-resource-action\">\n" +
     "\n" +
