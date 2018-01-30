@@ -5690,6 +5690,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-switch-when=\"Terminated\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
     "<span ng-switch-when=\"Unknown\" class=\"fa fa-question text-danger\" aria-hidden=\"true\"></span>\n" +
     "\n" +
+    "<span ng-switch-when=\"Init Error\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
     "<span ng-switch-when=\"ContainerCreating\" class=\"fa fa-hourglass-half\" aria-hidden=\"true\"></span>\n" +
     "<span ng-switch-when=\"CrashLoopBackOff\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +
     "<span ng-switch-when=\"ImagePullBackOff\" class=\"fa fa-times text-danger\" aria-hidden=\"true\"></span>\n" +

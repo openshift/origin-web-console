@@ -1023,7 +1023,8 @@ angular.module('openshiftConsole')
     };
   })
   .filter('podStatus', function() {
-    // Return results that match kubernetes/pkg/kubectl/resource_printer.go
+    // Return results that match
+    // https://github.com/openshift/origin/blob/master/vendor/k8s.io/kubernetes/pkg/printers/internalversion/printers.go#L523-L615
     return function(pod) {
       if (!pod || (!pod.metadata.deletionTimestamp && !pod.status)) {
         return '';
@@ -1033,31 +1034,67 @@ angular.module('openshiftConsole')
         return 'Terminating';
       }
 
-      var reason = pod.status.reason || pod.status.phase;
+      var initializing = false;
+      var reason;
 
-      // Print detailed container reasons if available. Only the last will be
+      // Print detailed container reasons if available. Only the first will be
       // displayed if multiple containers have this detail.
-      angular.forEach(pod.status.containerStatuses, function(containerStatus) {
-        var containerReason = _.get(containerStatus, 'state.waiting.reason') || _.get(containerStatus, 'state.terminated.reason'),
-            signal,
-            exitCode;
 
-        if (containerReason) {
-          reason = containerReason;
+      _.each(pod.status.initContainerStatuses, function(initContainerStatus) {
+        var initContainerState = _.get(initContainerStatus, 'state');
+
+        if (initContainerState.terminated && initContainerState.terminated.exitCode === 0) {
+          // initialization is complete
           return;
         }
 
-        signal = _.get(containerStatus, 'state.terminated.signal');
-        if (signal) {
-          reason = "Signal: " + signal;
-          return;
+        if (initContainerState.terminated) {
+          // initialization is failed
+          if (!initContainerState.terminated.reason) {
+            if (initContainerState.terminated.signal) {
+              reason = "Init Signal: " + initContainerState.terminated.signal;
+            } else {
+              reason = "Init Exit Code: " + initContainerState.terminated.exitCode;
+            }
+          } else {
+            reason = "Init " + initContainerState.terminated.reason;
+          }
+          initializing = true;
+          return true;
         }
 
-        exitCode = _.get(containerStatus, 'state.terminated.exitCode');
-        if (exitCode) {
-          reason = "Exit Code: " + exitCode;
+        if (initContainerState.waiting && initContainerState.waiting.reason && initContainerState.waiting.reason !== 'PodInitializing') {
+          reason = "Init " + initContainerState.waiting.reason;
+          initializing = true;
         }
       });
+
+      if (!initializing) {
+        reason = pod.status.reason || pod.status.phase;
+
+        _.each(pod.status.containerStatuses, function(containerStatus) {
+          var containerReason = _.get(containerStatus, 'state.waiting.reason') || _.get(containerStatus, 'state.terminated.reason'),
+              signal,
+              exitCode;
+
+          if (containerReason) {
+            reason = containerReason;
+            return true;
+          }
+
+          signal = _.get(containerStatus, 'state.terminated.signal');
+          if (signal) {
+            reason = "Signal: " + signal;
+            return true;
+          }
+
+          exitCode = _.get(containerStatus, 'state.terminated.exitCode');
+          if (exitCode) {
+            reason = "Exit Code: " + exitCode;
+            return true;
+          }
+        });
+      }
 
       return reason;
     };
