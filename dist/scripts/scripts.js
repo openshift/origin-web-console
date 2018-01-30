@@ -1064,22 +1064,22 @@ LOGOS: {
 },
 CLUSTER_RESOURCE_OVERRIDES_EXEMPT_PROJECT_NAMES: [ "openshift", "kubernetes", "kube" ],
 CLUSTER_RESOURCE_OVERRIDES_EXEMPT_PROJECT_PREFIXES: [ "openshift-", "kubernetes-", "kube-" ]
-}), angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.navigation", "patternfly.sort", "patternfly.notification", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64", "openshiftCommonServices", "openshiftCommonUI", "webCatalog" ]).config([ "$routeProvider", "HomePagePreferenceServiceProvider", function(e, t) {
-var n, r = {
+}), angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.navigation", "patternfly.sort", "patternfly.notification", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64", "openshiftCommonServices", "openshiftCommonUI", "webCatalog" ]).config([ "$routeProvider", "$uibModalProvider", "HomePagePreferenceServiceProvider", function(e, t, n) {
+var r, a = {
 templateUrl: "views/projects.html",
 controller: "ProjectsController"
 };
-_.get(window, "OPENSHIFT_CONSTANTS.DISABLE_SERVICE_CATALOG_LANDING_PAGE") ? (n = r, e.when("/projects", {
+_.get(window, "OPENSHIFT_CONSTANTS.DISABLE_SERVICE_CATALOG_LANDING_PAGE") ? (r = a, e.when("/projects", {
 redirectTo: "/"
-})) : (n = {
+})) : (r = {
 templateUrl: "views/landing-page.html",
 controller: "LandingPageController",
 reloadOnSearch: !1
-}, e.when("/projects", r)), e.when("/", {
+}, e.when("/projects", a)), e.when("/", {
 redirectTo: function() {
-return t.$get().getHomePagePath();
+return n.$get().getHomePagePath();
 }
-}).when("/catalog", n).when("/create-project", {
+}).when("/catalog", r).when("/create-project", {
 templateUrl: "views/create-project.html",
 controller: "CreateProjectController"
 }).when("/project/:project/catalog", {
@@ -1375,7 +1375,10 @@ redirectTo: "/project/:project/browse/rc/:rc"
 redirectTo: "/project/:project/browse/rc/:rc"
 }).otherwise({
 redirectTo: "/"
-});
+}), t.options = {
+animation: !0,
+backdrop: "static"
+};
 } ]).constant("LOGGING_URL", _.get(window.OPENSHIFT_CONFIG, "loggingURL")).constant("METRICS_URL", _.get(window.OPENSHIFT_CONFIG, "metricsURL")).constant("SOURCE_URL_PATTERN", /^[a-z][a-z0-9+.-@]*:(\/\/)?[0-9a-z_-]+/i).constant("RELATIVE_PATH_PATTERN", /^(?!\/)(?!\.\.(\/|$))(?!.*\/\.\.(\/|$)).*$/).constant("IS_SAFARI", /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)).constant("amTimeAgoConfig", {
 titleFormat: "LLL"
 }).config([ "kubernetesContainerSocketProvider", function(e) {
@@ -1390,9 +1393,9 @@ t.readPersistedState();
 function r() {
 if (c) return !1;
 c = !0, (i = t.open({
-animation: !0,
 templateUrl: "views/modals/logout.html",
-controller: "LogoutModalController"
+controller: "LogoutModalController",
+backdrop: !0
 })).result.then(function(e) {
 "logout" === e ? (m(!0), p()) : "cancel" === e && (d(), c = !1);
 }, function() {
@@ -3115,8 +3118,6 @@ href: "",
 label: "Set Home Page",
 onClick: function() {
 return r.open({
-animation: !0,
-backdrop: "static",
 templateUrl: "views/modals/set-home-page-modal.html",
 controller: "SetHomePageModalController"
 }), !0;
@@ -4028,7 +4029,6 @@ return s.filterForKeywords(e, j, t);
 return {
 confirm: function(t) {
 return e.open({
-animation: !0,
 templateUrl: "views/modals/confirm.html",
 controller: "ConfirmModalController",
 resolve: {
@@ -4038,7 +4038,6 @@ modalConfig: t
 },
 confirmSaveLog: function(t) {
 return e.open({
-animation: !0,
 templateUrl: "views/modals/confirm-save-log.html",
 controller: "ConfirmSaveLogController",
 resolve: {
@@ -4048,7 +4047,6 @@ object: t
 },
 showJenkinsfileExamples: function() {
 e.open({
-animation: !0,
 templateUrl: "views/modals/jenkinsfile-examples-modal.html",
 controller: "JenkinsfileExamplesModalController",
 size: "lg"
@@ -4056,7 +4054,6 @@ size: "lg"
 },
 showComputeUnitsHelp: function() {
 e.open({
-animation: !0,
 templateUrl: "views/modals/about-compute-units-modal.html",
 controller: "AboutComputeUnitsModalController"
 });
@@ -4561,7 +4558,6 @@ r.close("delete");
 }
 };
 return (r = n.open({
-animation: !0,
 templateUrl: "views/modals/delete-resource.html",
 controller: "ConfirmModalController",
 resolve: {
@@ -4939,7 +4935,6 @@ return "Are you sure you want to leave with the debug terminal open? The debug p
 }), u = i.watchObject(n.podsVersion, r.metadata.name, o, function(e) {
 n.debugPod = e;
 }), a.open({
-animation: !0,
 templateUrl: "views/modals/debug-terminal.html",
 controller: "DebugTerminalModalController",
 scope: n,
@@ -4950,8 +4945,7 @@ return s;
 image: function() {
 return _.get(n, [ "imagesByDockerReference", s.image ]);
 }
-},
-backdrop: "static"
+}
 }).result.then(d);
 }, function(r) {
 n.alerts["debug-container-error"] = {
@@ -5313,6 +5307,7 @@ return e ? r + (y(e, "description") || "") : "";
 });
 var D = function(e, t, n, a) {
 var o = {
+title: "Confirm Removal",
 alerts: {},
 detailsMarkup: w.remove.areYouSure.html.subject({
 roleName: n,
@@ -5359,7 +5354,6 @@ canUpdateRolebindings: b("rolebindings", "update", v),
 confirmRemove: function(n, a, i, s) {
 var l = null, u = D(n, a, i, r.user.metadata.name);
 _.isEqual(n, r.user.metadata.name) && d.isLastRole(r.user.metadata.name, r.roleBindings) && (l = !0), o.open({
-animation: !0,
 templateUrl: "views/modals/confirm.html",
 controller: "ConfirmModalController",
 resolve: {
@@ -5961,7 +5955,7 @@ details: t("getErrorDetails")(r)
 var n;
 n = _.get(e, "deployment.spec.paused") ? "This will remove the volume from the deployment." : "This will remove the volume from the deployment and start a new rollout.", t.persistentVolumeClaim ? n += " It will not delete the persistent volume claim." : t.secret ? n += " It will not delete the secret." : t.configMap && (n += " It will not delete the config map.");
 u.confirm({
-message: "Remove volume " + t.name + "?",
+title: "Remove volume " + t.name + "?",
 details: n,
 okButtonText: "Remove",
 okButtonClass: "btn-danger",
@@ -6084,7 +6078,7 @@ e.removeVolume = function(t) {
 var n;
 n = k() ? "This will remove the volume from the deployment config and trigger a new deployment." : "This will remove the volume from the deployment config.", t.persistentVolumeClaim ? n += " It will not delete the persistent volume claim." : t.secret ? n += " It will not delete the secret." : t.configMap && (n += " It will not delete the config map.");
 l.confirm({
-message: "Remove volume " + t.name + "?",
+title: "Remove volume " + t.name + "?",
 details: n,
 okButtonText: "Remove",
 okButtonClass: "btn-danger",
@@ -6282,7 +6276,7 @@ return !!_.isEmpty(e.autoscalers) && (!K(e.replicaSet) && !P(e.replicaSet) || (!
 var r = "This will remove the volume from the " + t("humanizeKind")(e.replicaSet.kind) + ".";
 n.persistentVolumeClaim ? r += " It will not delete the persistent volume claim." : n.secret ? r += " It will not delete the secret." : n.configMap && (r += " It will not delete the config map.");
 f.confirm({
-message: "Remove volume " + n.name + "?",
+title: "Remove volume " + n.name + "?",
 details: r,
 okButtonText: "Remove",
 okButtonClass: "btn-danger",
@@ -7547,14 +7541,13 @@ var I = function() {
 return "Custom" !== e.strategyData.type && "Custom" !== e.originalStrategy && e.strategyData.type !== e.originalStrategy;
 }, R = function(t) {
 _.has(e.strategyData, t) || a.open({
-animation: !0,
 templateUrl: "views/modals/confirm.html",
 controller: "ConfirmModalController",
 resolve: {
 modalConfig: function() {
 return {
 alerts: e.alerts,
-message: "Some of your existing " + e.originalStrategy.toLowerCase() + " strategy parameters can be used for the " + e.strategyData.type.toLowerCase() + " strategy. Keep parameters?",
+title: "Keep some existing " + e.originalStrategy.toLowerCase() + " strategy parameters?",
 details: "The timeout parameter and any pre or post lifecycle hooks will be copied from " + e.originalStrategy.toLowerCase() + " strategy to " + e.strategyData.type.toLowerCase() + " strategy. After saving the changes, " + e.originalStrategy.toLowerCase() + " strategy parameters will be removed.",
 okButtonText: "Yes",
 okButtonClass: "btn-primary",
@@ -8166,14 +8159,14 @@ usingSampleRepo: e.usingSampleRepo()
 });
 }, x = function(e) {
 o.open({
-animation: !0,
 templateUrl: "views/modals/confirm.html",
 controller: "ConfirmModalController",
 resolve: {
 modalConfig: function() {
 return {
 alerts: e,
-message: "Problems were detected while checking your application configuration.",
+title: "Confirm Creation",
+details: "Problems were detected while checking your application configuration.",
 okButtonText: "Create Anyway",
 okButtonClass: "btn-danger",
 cancelButtonText: "Cancel"
@@ -8935,12 +8928,12 @@ e.cancel(i), a.close("cancel");
 e.cancel(i);
 });
 } ]), angular.module("openshiftConsole").controller("JenkinsfileExamplesModalController", [ "$scope", "$uibModalInstance", function(e, t) {
-e.ok = function() {
-t.close("ok");
+e.close = function() {
+t.close("close");
 };
 } ]), angular.module("openshiftConsole").controller("AboutComputeUnitsModalController", [ "$scope", "$uibModalInstance", function(e, t) {
-e.ok = function() {
-t.close("ok");
+e.close = function() {
+t.close("close");
 };
 } ]), angular.module("openshiftConsole").controller("SetHomePageModalController", [ "$scope", "$uibModalInstance", "HomePagePreferenceService", "ProjectsService", function(e, t, n, r) {
 e.homePagePreference = n.getHomePagePreference(), e.availableProjects = [], e.selectedProject = null, e.onProjectSelected = function(t) {
@@ -8961,14 +8954,19 @@ type: e.homePagePreference
 }, e.cancel = function() {
 t.dismiss("cancel");
 };
-} ]), angular.module("openshiftConsole").controller("AboutController", [ "$scope", "AuthService", "Constants", function(e, t, n) {
-t.withUser(), e.version = {
-master: {
-openshift: n.VERSION.openshift,
-kubernetes: n.VERSION.kubernetes
-},
-console: n.VERSION.console
+} ]), angular.module("openshiftConsole").controller("AboutController", [ "$scope", "$q", "AuthService", "Constants", "DataService", function(e, t, n, r, a) {
+n.withUser(), e.version = {
+master: {},
+console: r.VERSION.console || "unknown"
 };
+var o = e.version.master, i = [];
+i.push(a.getKubernetesMasterVersion().then(function(e) {
+o.kubernetes = e.data.gitVersion;
+})), i.push(a.getOpenShiftMasterVersion().then(function(e) {
+o.openshift = e.data.gitVersion;
+})), t.all(i).finally(function() {
+o.kubernetes = o.kubernetes || r.VERSION.kubernetes || "unknown", o.openshift = o.openshift || r.VERSION.openshift || "unknown";
+});
 } ]), angular.module("openshiftConsole").controller("CommandLineController", [ "$scope", "DataService", "AuthService", "Constants", function(e, t, n, r) {
 n.withUser(), e.cliDownloadURL = r.CLI, e.cliDownloadURLPresent = e.cliDownloadURL && !_.isEmpty(e.cliDownloadURL), e.loginBaseURL = t.openshiftAPIBaseUrl(), r.DISABLE_COPY_LOGIN_COMMAND || (e.sessionToken = n.UserStore().getToken());
 } ]), angular.module("openshiftConsole").controller("CreatePersistentVolumeClaimController", [ "$filter", "$routeParams", "$scope", "$window", "APIService", "ApplicationGenerator", "AuthorizationService", "DataService", "Navigate", "NotificationsService", "ProjectsService", "keyValueEditorUtils", function(e, t, n, r, a, o, i, s, c, l, u, d) {
@@ -9313,7 +9311,6 @@ t.url(e);
 };
 r.openDeleteModal = function() {
 r.disableDelete || e.open({
-animation: !0,
 templateUrl: "views/modals/delete-resource.html",
 controller: "DeleteModalController",
 scope: r
@@ -9652,8 +9649,6 @@ message: "Resource is missing metadata field."
 }
 function v() {
 r.open({
-animation: !0,
-backdrop: "static",
 templateUrl: "views/modals/process-or-save-template.html",
 controller: "ProcessOrSaveTemplateModalController",
 scope: p
@@ -9663,7 +9658,6 @@ p.templateOptions.add ? y() : (o.setTemplate(p.resourceList[0]), b());
 }
 function h() {
 r.open({
-animation: !0,
 templateUrl: "views/modals/confirm-replace.html",
 controller: "ConfirmReplaceModalController",
 scope: p
@@ -9847,15 +9841,14 @@ p.projectNameTaken = !1;
 };
 var R = function(e) {
 r.open({
-animation: !0,
-backdrop: "static",
 templateUrl: "views/modals/confirm.html",
 controller: "ConfirmModalController",
 resolve: {
 modalConfig: function() {
 return {
 alerts: e,
-message: "We checked your application for potential problems. Please confirm you still want to create this application.",
+title: "Confirm Creation",
+details: "We checked your application for potential problems. Please confirm you still want to create this application.",
 okButtonText: "Create Anyway",
 okButtonClass: "btn-danger",
 cancelButtonText: "Cancel"
@@ -10327,8 +10320,6 @@ name: ""
 } ] : t.pickedSecrets.splice(e, 1), t.secretsForm.$setDirty();
 }, t.openCreateSecretModal = function() {
 t.newSecret = {}, e.open({
-animation: !0,
-backdrop: "static",
 templateUrl: "views/modals/create-secret.html",
 controller: "CreateSecretModalController",
 scope: t
@@ -10420,8 +10411,6 @@ destinationDir: ""
 t.secretsForm.$setDirty();
 }, t.openCreateSecretModal = function() {
 e.open({
-animation: !0,
-backdrop: "static",
 templateUrl: "views/modals/create-secret.html",
 controller: "CreateSecretModalController",
 scope: t
@@ -10967,8 +10956,6 @@ e.data.type && (_.has(t, "secret") || _.has(t, "secretReference.name")) && i();
 a.isDeprecated(e) && (e.secretInputType = "password"), e.isDuplicate || o(e);
 }), a.openCreateWebhookSecretModal = function() {
 t.open({
-animation: !0,
-backdrop: "static",
 templateUrl: "views/modals/create-secret.html",
 controller: "CreateSecretModalController",
 scope: e
@@ -11149,8 +11136,6 @@ template: '<a href="">Set Home Page</a>',
 link: function(t, n) {
 n.bind("click", function() {
 e.open({
-animation: !0,
-backdrop: "static",
 templateUrl: "views/modals/set-home-page-modal.html",
 controller: "SetHomePageModalController"
 });
@@ -12609,7 +12594,6 @@ _.isEmpty(e.pods) || c.toPodsForDeployment(t, e.pods);
 e.scalable && (e.desiredReplicas = e.getDesiredReplicas(), e.desiredReplicas++, g(), s = !0);
 }, e.scaleDown = function() {
 e.scalable && (e.desiredReplicas = e.getDesiredReplicas(), 0 !== e.desiredReplicas && (1 !== e.desiredReplicas ? (e.desiredReplicas--, g()) : r.open({
-animation: !0,
 templateUrl: "views/modals/confirmScale.html",
 controller: "ConfirmScaleController",
 resolve: {
@@ -13382,15 +13366,14 @@ template: h.template
 }) : i.toNextSteps(h.templateDisplayName, h.selectedProject.metadata.name);
 }, w = function(e) {
 r.open({
-animation: !0,
-backdrop: "static",
 templateUrl: "views/modals/confirm.html",
 controller: "ConfirmModalController",
 resolve: {
 modalConfig: function() {
 return {
 alerts: e,
-message: "We checked your application for potential problems. Please confirm you still want to create this application.",
+title: "Confirm Creation",
+details: "We checked your application for potential problems. Please confirm you still want to create this application.",
 okButtonText: "Create Anyway",
 okButtonClass: "btn-danger",
 cancelButtonText: "Cancel"
@@ -14095,13 +14078,12 @@ var e = l.current;
 if (e) {
 var n, r = e.metadata.name, a = _.get(l, "apiObject.status.latestVersion");
 n = 1 === a ? "This will attempt to stop the in-progress deployment. It may take some time to complete." : "This will attempt to stop the in-progress deployment and rollback to the last successful deployment. It may take some time to complete.", t.open({
-animation: !0,
 templateUrl: "views/modals/confirm.html",
 controller: "ConfirmModalController",
 resolve: {
 modalConfig: function() {
 return {
-message: "Cancel deployment " + r + "?",
+title: "Cancel deployment " + r + "?",
 details: n,
 okButtonText: "Yes, cancel",
 okButtonClass: "btn-danger",
@@ -14442,14 +14424,14 @@ appName: n.app.name
 }) : c.toNextSteps(n.app.name, n.input.selectedProject.metadata.name);
 }, N = function(e) {
 r.open({
-animation: !0,
 templateUrl: "views/modals/confirm.html",
 controller: "ConfirmModalController",
 resolve: {
 modalConfig: function() {
 return {
 alerts: e,
-message: "Problems were detected while checking your application configuration.",
+title: "Confirm Creation",
+details: "Problems were detected while checking your application configuration.",
 okButtonText: "Create Anyway",
 okButtonClass: "btn-danger",
 cancelButtonText: "Cancel"
@@ -15661,11 +15643,14 @@ return o ? t(o.port, o.targetPort, o.protocol) : angular.isString(a) ? t(a, null
 return function(e) {
 if (!e || !e.metadata.deletionTimestamp && !e.status) return "";
 if (e.metadata.deletionTimestamp) return "Terminating";
-var t = e.status.reason || e.status.phase;
-return angular.forEach(e.status.containerStatuses, function(e) {
+var t, n = !1;
+return _.each(e.status.initContainerStatuses, function(e) {
+var r = _.get(e, "state");
+if (!r.terminated || 0 !== r.terminated.exitCode) return r.terminated ? (t = r.terminated.reason ? "Init " + r.terminated.reason : r.terminated.signal ? "Init Signal: " + r.terminated.signal : "Init Exit Code: " + r.terminated.exitCode, n = !0, !0) : void (r.waiting && r.waiting.reason && "PodInitializing" !== r.waiting.reason && (t = "Init " + r.waiting.reason, n = !0));
+}), n || (t = e.status.reason || e.status.phase, _.each(e.status.containerStatuses, function(e) {
 var n, r, a = _.get(e, "state.waiting.reason") || _.get(e, "state.terminated.reason");
-a ? t = a : (n = _.get(e, "state.terminated.signal")) ? t = "Signal: " + n : (r = _.get(e, "state.terminated.exitCode")) && (t = "Exit Code: " + r);
-}), t;
+return a ? (t = a, !0) : (n = _.get(e, "state.terminated.signal")) ? (t = "Signal: " + n, !0) : (r = _.get(e, "state.terminated.exitCode")) ? (t = "Exit Code: " + r, !0) : void 0;
+})), t;
 };
 }).filter("podStartTime", function() {
 return function(e) {

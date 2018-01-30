@@ -152,15 +152,14 @@
 
     var launchConfirmationDialog = function(alerts) {
       var modalInstance = $uibModal.open({
-        animation: true,
-        backdrop: 'static',
         templateUrl: 'views/modals/confirm.html',
         controller: 'ConfirmModalController',
         resolve: {
           modalConfig: function() {
             return {
               alerts: alerts,
-              message: "We checked your application for potential problems. Please confirm you still want to create this application.",
+              title: "Confirm Creation",
+              details: "We checked your application for potential problems. Please confirm you still want to create this application.",
               okButtonText: "Create Anyway",
               okButtonClass: "btn-danger",
               cancelButtonText: "Cancel"

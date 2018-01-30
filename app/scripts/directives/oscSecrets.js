@@ -58,8 +58,6 @@ angular.module("openshiftConsole")
         $scope.openCreateSecretModal = function() {
           $scope.newSecret = {};
           var modalInstance = $uibModal.open({
-            animation: true,
-            backdrop: 'static',
             templateUrl: 'views/modals/create-secret.html',
             controller: 'CreateSecretModalController',
             scope: $scope

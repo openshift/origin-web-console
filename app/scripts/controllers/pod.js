@@ -385,7 +385,6 @@ angular.module('openshiftConsole')
 
               // Show the terminal in a modal window.
               var modalInstance = $uibModal.open({
-                animation: true,
                 templateUrl: 'views/modals/debug-terminal.html',
                 controller: 'DebugTerminalModalController',
                 scope: $scope,
@@ -397,7 +396,6 @@ angular.module('openshiftConsole')
                     return _.get($scope, ['imagesByDockerReference', container.image]);
                   }
                 },
-                backdrop: 'static' // don't close modal when clicking backdrop
               });
 
               // On modal close, delete the pod.

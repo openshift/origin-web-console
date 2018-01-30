@@ -323,14 +323,14 @@ angular.module("openshiftConsole")
 
         var launchConfirmationDialog = function(alerts) {
           var modalInstance = $uibModal.open({
-            animation: true,
             templateUrl: 'views/modals/confirm.html',
             controller: 'ConfirmModalController',
             resolve: {
               modalConfig: function() {
                 return {
                   alerts: alerts,
-                  message: "Problems were detected while checking your application configuration.",
+                  title: "Confirm Creation",
+                  details: "Problems were detected while checking your application configuration.",
                   okButtonText: "Create Anyway",
                   okButtonClass: "btn-danger",
                   cancelButtonText: "Cancel"

@@ -75773,6 +75773,21 @@ return new URI({
 protocol: e,
 hostname: t
 }).toString();
+}, f.prototype._getAPIServerVersion = function(e) {
+var n = "http:" === window.location.protocol ? "http" : "https", i = new URI({
+protocol: n,
+hostname: o.k8s.hostPort,
+path: e
+}).toString();
+return t.get(i, {
+headers: {
+Accept: "application/json"
+}
+});
+}, f.prototype.getKubernetesMasterVersion = function() {
+return this._getAPIServerVersion("/version");
+}, f.prototype.getOpenShiftMasterVersion = function() {
+return this._getAPIServerVersion("/version/openshift");
 }, f.prototype.createData = function(e) {
 return new d(e);
 };
