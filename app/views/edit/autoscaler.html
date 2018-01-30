@@ -40,10 +40,35 @@
 
             <!-- Warning: V2Beta1 HPA -->
             <div ng-if="showV2Beta1Warning" class="alert alert-warning">
-              <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-              <span class="sr-only">Warning:</span>
-              This autoscaler uses a newer API, consider editing it with the
-              <a href="command-line" target="_blank">command line tools</a>.
+              <div class="pficon pficon-warning-triangle-o" aria-hidden="true"></div>
+              <div class="sr-only">Warning:</div>
+              <div>
+                <div>
+                  This autoscaler uses a newer API, consider editing it with the
+                  <a href="command-line" target="_blank">command line tools</a>.
+                </div>
+              </div>
+            </div>
+            <div ng-if="showV2Beta1Warning" class="alert alert-info">
+              <div>This autoscaler is configured to work on the following metrics:</div>
+              <div ng-repeat="metric in v2Beta1Metrics">
+                <div>type: <strong>{{metric.type}}</strong></div>
+                <div ng-if="metric.resource">
+                  <div ng-repeat="(key, value) in metric.resource">
+                    <span>{{key}} : {{value}}</span>
+                  </div>
+                </div>
+                <div ng-if="metric.pods">
+                  <div ng-repeat="(key, value) in metric.pods">
+                    <span>{{key}} : {{value}}</span>
+                  </div>
+                </div>
+                <div ng-if="metric.object">
+                  <div ng-repeat="(key, value) in metric.object">
+                    <span>{{key}} : {{value}}</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
 
