@@ -10016,9 +10016,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"strategyData.type === 'Custom'\">\n" +
     "<div class=\"form-group\">\n" +
-    "<label for=\"imageName\" class=\"required\">Image Name</label>\n" +
+    "<label for=\"image-name\">Image Name</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" id=\"imageName\" name=\"imageName\" ng-model=\"strategyData.customParams.image\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"image-name-help\" required>\n" +
+    "<input class=\"form-control\" id=\"image-name\" name=\"imageName\" ng-model=\"strategyData.customParams.image\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"image-name-help\">\n" +
     "</div>\n" +
     "<div class=\"help-block\" id=\"image-name-help\">An image that can carry out the deployment.</div>\n" +
     "</div>\n" +
@@ -10033,12 +10033,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"strategyData.type !== 'Custom'\">\n" +
     "<div class=\"form-group\">\n" +
-    "<label for=\"strategyTimeout\">Timeout</label>\n" +
+    "<label for=\"strategy-timeout\">Timeout</label>\n" +
     "<span class=\"input-group\" ng-class=\"{ 'has-error': form.strategyTimeout.$invalid && form.strategyTimeout.$touched }\">\n" +
-    "<input id=\"strategyTimeout\" type=\"number\" name=\"strategyTimeout\" ng-model=\"strategyData[strategyParamsPropertyName].timeoutSeconds\" placeholder=\"600\" pattern=\"\\d*\" min=\"0\" select-on-focus class=\"form-control\" aria-describedby=\"strategyTimeout\">\n" +
+    "<input id=\"strategy-timeout\" type=\"number\" name=\"strategyTimeout\" ng-model=\"strategyData[strategyParamsPropertyName].timeoutSeconds\" placeholder=\"600\" pattern=\"\\d*\" min=\"0\" select-on-focus class=\"form-control\" aria-describedby=\"strategy-timeout-help\">\n" +
     "<span class=\"input-group-addon\">seconds</span>\n" +
     "</span>\n" +
-    "<div class=\"help-block\" ng-attr-id=\"strategyTimeout\">\n" +
+    "<div class=\"help-block\" id=\"strategy-timeout-help\">\n" +
     "How long to wait for a pod to scale up before giving up.\n" +
     "</div>\n" +
     "<div ng-if=\"form.strategyTimeout.$invalid && form.strategyTimeout.$touched\" class=\"has-error\">\n" +
@@ -10057,12 +10057,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div ng-show=\"view.advancedStrategyOptions\">\n" +
     "<div class=\"form-group\">\n" +
-    "<label for=\"updatePeriod\">Update Period</label>\n" +
+    "<label for=\"update-period\">Update Period</label>\n" +
     "<span class=\"input-group\" ng-class=\"{ 'has-error': form.updatePeriod.$invalid && form.updatePeriod.$touched }\">\n" +
-    "<input id=\"updatePeriod\" type=\"number\" placeholder=\"1\" name=\"updatePeriod\" ng-model=\"strategyData[strategyParamsPropertyName].updatePeriodSeconds\" pattern=\"\\d*\" min=\"0\" select-on-focus class=\"form-control\" aria-describedby=\"updatePeriod\">\n" +
+    "<input id=\"update-period\" type=\"number\" placeholder=\"1\" name=\"updatePeriod\" ng-model=\"strategyData[strategyParamsPropertyName].updatePeriodSeconds\" pattern=\"\\d*\" min=\"0\" select-on-focus class=\"form-control\" aria-describedby=\"update-period-help\">\n" +
     "<span class=\"input-group-addon\">seconds</span>\n" +
     "</span>\n" +
-    "<div class=\"help-block\" id=\"updatePeriod\">\n" +
+    "<div class=\"help-block\" id=\"update-period-help\">\n" +
     "Time to wait between retrying to run individual pod.\n" +
     "</div>\n" +
     "<div ng-if=\"form.updatePeriod.$invalid && form.updatePeriod.$touched\" class=\"has-error\">\n" +
@@ -10080,10 +10080,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<label for=\"interval\">Interval</label>\n" +
     "<span class=\"input-group\" ng-class=\"{ 'has-error': form.interval.$invalid && form.interval.$touched }\">\n" +
-    "<input id=\"interval\" type=\"number\" placeholder=\"1\" name=\"interval\" ng-model=\"strategyData[strategyParamsPropertyName].intervalSeconds\" pattern=\"\\d*\" min=\"0\" select-on-focus class=\"form-control\" aria-describedby=\"interval\">\n" +
+    "<input id=\"interval\" type=\"number\" placeholder=\"1\" name=\"interval\" ng-model=\"strategyData[strategyParamsPropertyName].intervalSeconds\" pattern=\"\\d*\" min=\"0\" select-on-focus class=\"form-control\" aria-describedby=\"interval-help\">\n" +
     "<span class=\"input-group-addon\">seconds</span>\n" +
     "</span>\n" +
-    "<div class=\"help-block\" ng-attr-id=\"interval\">\n" +
+    "<div class=\"help-block\" id=\"interval-help\">\n" +
     "Time to wait between polling deployment status after running a pod.\n" +
     "</div>\n" +
     "<div ng-if=\"form.interval.$invalid && form.interval.$touched\" class=\"has-error\">\n" +
@@ -10100,11 +10100,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
-    "<label for=\"maxUnavailable\">Maximum Number of Unavailable Pods</label>\n" +
+    "<label for=\"max-unavailable\">Maximum Number of Unavailable Pods</label>\n" +
     "<div ng-class=\"{ 'has-error': form.maxUnavailable.$invalid && form.maxUnavailable.$touched }\">\n" +
-    "<input id=\"maxUnavailable\" type=\"text\" placeholder=\"25%\" name=\"maxUnavailable\" ng-model=\"strategyData[strategyParamsPropertyName].maxUnavailable\" ng-pattern=\"/^\\d+%?$/\" select-on-focus class=\"form-control\" aria-describedby=\"max-unavailable-help\">\n" +
+    "<input id=\"max-unavailable\" type=\"text\" placeholder=\"25%\" name=\"maxUnavailable\" ng-model=\"strategyData[strategyParamsPropertyName].maxUnavailable\" ng-pattern=\"/^\\d+%?$/\" select-on-focus class=\"form-control\" aria-describedby=\"max-unavailable-help\">\n" +
     "</div>\n" +
-    "<div class=\"help-block\">\n" +
+    "<div class=\"help-block\" id=\"max-unavailable-help\">\n" +
     "The maximum number of pods that can be unavailable during the rolling deployment. This can be either a percentage (10%) or a whole number (1).\n" +
     "</div>\n" +
     "<div ng-if=\"form.maxUnavailable.$invalid && form.maxUnavailable.$touched && form.maxUnavailable.$error.pattern\" class=\"has-error\">\n" +
@@ -10114,11 +10114,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\">\n" +
-    "<label for=\"maxSurge\">Maximum Number of Surge Pods</label>\n" +
+    "<label for=\"max-surge\">Maximum Number of Surge Pods</label>\n" +
     "<div ng-class=\"{ 'has-error': form.maxSurge.$invalid && form.maxSurge.$touched }\">\n" +
-    "<input id=\"maxSurge\" type=\"text\" placeholder=\"25%\" name=\"maxSurge\" ng-model=\"strategyData[strategyParamsPropertyName].maxSurge\" ng-pattern=\"/^\\d+%?$/\" select-on-focus class=\"form-control\" aria-describedby=\"maxSurge\">\n" +
+    "<input id=\"max-surge\" type=\"text\" placeholder=\"25%\" name=\"maxSurge\" ng-model=\"strategyData[strategyParamsPropertyName].maxSurge\" ng-pattern=\"/^\\d+%?$/\" select-on-focus class=\"form-control\" aria-describedby=\"max-surge-help\">\n" +
     "</div>\n" +
-    "<div class=\"help-block\">\n" +
+    "<div class=\"help-block\" id=\"max-surge-help\">\n" +
     "The maximum number of pods that can be scheduled above the original number of pods while the rolling deployment is in progress. This can be either a percentage (10%) or a whole number (1).\n" +
     "</div>\n" +
     "<div ng-if=\"form.maxSurge.$invalid && form.maxSurge.$touched && form.maxSurge.$error.pattern\" class=\"has-error\">\n" +
@@ -10179,8 +10179,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!containerConfig.hasDeploymentTrigger\" class=\"form-group\">\n" +
-    "<label for=\"imageName\" class=\"required\">Image Name</label>\n" +
-    "<input class=\"form-control\" id=\"imageName\" name=\"imageName\" ng-model=\"containerConfig.image\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" required>\n" +
+    "<label for=\"container-{{$index}}-image-name\" class=\"required\">Image Name</label>\n" +
+    "<input class=\"form-control\" id=\"container-{{$index}}-image-name\" name=\"container{{$index}}ImageName\" ng-model=\"containerConfig.image\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" required>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"checkbox form-group\">\n" +

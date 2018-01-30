@@ -44,18 +44,17 @@
 
                     <div ng-if="strategyData.type === 'Custom'" >
                       <div class="form-group">
-                        <label for="imageName" class="required">Image Name</label>
+                        <label for="image-name">Image Name</label>
                         <div>
                           <input class="form-control"
-                            id="imageName"
+                            id="image-name"
                             name="imageName"
                             ng-model="strategyData.customParams.image"
                             type="text"
                             autocorrect="off"
                             autocapitalize="none"
                             spellcheck="false"
-                            aria-describedby="image-name-help"
-                            required>
+                            aria-describedby="image-name-help">
                         </div>
                         <div class="help-block" id="image-name-help">An image that can carry out the deployment.</div>
                       </div>
@@ -77,10 +76,10 @@
                     </div>
                     <div ng-if="strategyData.type !== 'Custom'" >
                       <div class="form-group">
-                        <label for="strategyTimeout">Timeout</label>
+                        <label for="strategy-timeout">Timeout</label>
                         <span class="input-group"
                            ng-class="{ 'has-error': form.strategyTimeout.$invalid && form.strategyTimeout.$touched }">
-                          <input id="strategyTimeout"
+                          <input id="strategy-timeout"
                               type="number"
                               name="strategyTimeout"
                               ng-model="strategyData[strategyParamsPropertyName].timeoutSeconds"
@@ -89,10 +88,10 @@
                               min="0"
                               select-on-focus
                               class="form-control"
-                              aria-describedby="strategyTimeout">
+                              aria-describedby="strategy-timeout-help">
                           <span class="input-group-addon">seconds</span>
                         </span>
-                        <div class="help-block" ng-attr-id="strategyTimeout">
+                        <div class="help-block" id="strategy-timeout-help">
                           How long to wait for a pod to scale up before giving up.
                         </div>
                         <div ng-if="form.strategyTimeout.$invalid && form.strategyTimeout.$touched" class="has-error">
@@ -112,10 +111,10 @@
                         <!-- Use ng-show instead of ng-if so the form is still marked invalid if a hidden field has errors. -->
                         <div ng-show="view.advancedStrategyOptions">
                           <div class="form-group">
-                            <label for="updatePeriod">Update Period</label>
+                            <label for="update-period">Update Period</label>
                             <span class="input-group"
                                ng-class="{ 'has-error': form.updatePeriod.$invalid && form.updatePeriod.$touched }">
-                              <input id="updatePeriod"
+                              <input id="update-period"
                                   type="number"
                                   placeholder="1"
                                   name="updatePeriod"
@@ -124,10 +123,10 @@
                                   min="0"
                                   select-on-focus
                                   class="form-control"
-                                  aria-describedby="updatePeriod">
+                                  aria-describedby="update-period-help">
                               <span class="input-group-addon">seconds</span>
                             </span>
-                            <div class="help-block" id="updatePeriod">
+                            <div class="help-block" id="update-period-help">
                               Time to wait between retrying to run individual pod.
                             </div>
                             <div ng-if="form.updatePeriod.$invalid && form.updatePeriod.$touched" class="has-error">
@@ -156,10 +155,10 @@
                                   min="0"
                                   select-on-focus
                                   class="form-control"
-                                  aria-describedby="interval">
+                                  aria-describedby="interval-help">
                               <span class="input-group-addon">seconds</span>
                             </span>
-                            <div class="help-block" ng-attr-id="interval">
+                            <div class="help-block" id="interval-help">
                               Time to wait between polling deployment status after running a pod.
                             </div>
                             <div ng-if="form.interval.$invalid && form.interval.$touched" class="has-error">
@@ -177,9 +176,9 @@
                         </div>
 
                         <div class="form-group">
-                          <label for="maxUnavailable">Maximum Number of Unavailable Pods</label>
+                          <label for="max-unavailable">Maximum Number of Unavailable Pods</label>
                           <div ng-class="{ 'has-error': form.maxUnavailable.$invalid && form.maxUnavailable.$touched }">
-                            <input id="maxUnavailable"
+                            <input id="max-unavailable"
                                 type="text"
                                 placeholder="25%"
                                 name="maxUnavailable"
@@ -189,7 +188,7 @@
                                 class="form-control"
                                 aria-describedby="max-unavailable-help">
                           </div>
-                          <div class="help-block">
+                          <div class="help-block" id="max-unavailable-help">
                             The maximum number of pods that can be unavailable during the rolling deployment. This can be either a percentage (10%) or a whole number (1).
                           </div>
                           <div ng-if="form.maxUnavailable.$invalid && form.maxUnavailable.$touched && form.maxUnavailable.$error.pattern" class="has-error">
@@ -200,9 +199,9 @@
                         </div>
 
                         <div class="form-group">
-                          <label for="maxSurge">Maximum Number of Surge Pods</label>
+                          <label for="max-surge">Maximum Number of Surge Pods</label>
                           <div ng-class="{ 'has-error': form.maxSurge.$invalid && form.maxSurge.$touched }">
-                            <input id="maxSurge"
+                            <input id="max-surge"
                                 type="text"
                                 placeholder="25%"
                                 name="maxSurge"
@@ -210,9 +209,9 @@
                                 ng-pattern="/^\d+%?$/"
                                 select-on-focus
                                 class="form-control"
-                                aria-describedby="maxSurge">
+                                aria-describedby="max-surge-help">
                           </div>
-                          <div class="help-block">
+                          <div class="help-block" id="max-surge-help">
                             The maximum number of pods that can be scheduled above the original number of pods while the rolling deployment is in progress. This can be either a percentage (10%) or a whole number (1).
                           </div>
                           <div ng-if="form.maxSurge.$invalid && form.maxSurge.$touched && form.maxSurge.$error.pattern" class="has-error">
@@ -303,10 +302,10 @@
                       </div>
 
                       <div ng-if="!containerConfig.hasDeploymentTrigger" class="form-group">
-                        <label for="imageName" class="required">Image Name</label>
+                        <label for="container-{{$index}}-image-name" class="required">Image Name</label>
                         <input class="form-control"
-                          id="imageName"
-                          name="imageName"
+                          id="container-{{$index}}-image-name"
+                          name="container{{$index}}ImageName"
                           ng-model="containerConfig.image"
                           type="text"
                           autocorrect="off"
