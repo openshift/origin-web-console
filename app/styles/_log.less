@@ -232,12 +232,22 @@
   white-space: pre-wrap;
   width: 100%;
   .word-break();
-  // Invert colors on selection in Firefox. Change the background style for
-  // Firefox only since it's illegible with its defaults and our log colors.
-  // https://developer.mozilla.org/en-US/docs/Web/CSS/::selection
-  &::-moz-selection {
+  // Invert colors on selection
+  &::-moz-selection, *:not(a)::-moz-selection {
+    background: #a0a1a1;
     color: @log-bg-color;
-    background: lighten(#d1d1d1, 8%);
+  }
+  a::-moz-selection {
+    background: #a0a1a1;
+    color: darken(@link-color, 8%);
+  }
+  &::selection, *::selection {
+    background: lighten(#d1d1d1, 15%);
+    color: @log-bg-color;
+  }
+  a::selection {
+    background: lighten(#d1d1d1, 15%);
+    color: darken(@link-color, 8%);
   }
 }
 .table-log-pods {

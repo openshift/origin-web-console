@@ -5993,7 +5993,10 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .log-line-number{-ms-user-select:none;border-right:1px #272b30 solid;padding-right:10px;vertical-align:top;white-space:nowrap;width:60px;color:#72767b}
 .log-line-text{padding:0 10px;white-space:pre-wrap;width:100%}
 .appended-icon,.project-date [am-time-ago],.projects-list [am-time-ago]{white-space:nowrap}
-.log-line-text::-moz-selection{color:#101214;background:#e5e5e5}
+.log-line-text :not(a)::-moz-selection,.log-line-text::-moz-selection{background:#a0a1a1;color:#101214}
+.log-line-text a::-moz-selection{background:#a0a1a1;color:#006da5}
+.log-line-text ::selection,.log-line-text::selection{background:#f7f7f7;color:#101214}
+.log-line-text a::selection{background:#f7f7f7;color:#006da5}
 .table-log-pods{background-color:#fff;border:1px solid #D1D1D1}
 .table-log-pods>tbody+tbody{border-top-width:1px}
 .log-fixed-height.empty-state-message{margin-top:0}
