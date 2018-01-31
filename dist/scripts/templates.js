@@ -2175,7 +2175,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<div class=\"pull-right\" ng-if=\"project && (configMapsVersion | canI : 'create') && ((configMaps | hashSize) > 0 || filterWithZeroResults)\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/create-config-map\" class=\"btn btn-default\">Create Config Map</a>\n" +
+    "<a ng-if=\"!quotaExceeded\" ng-href=\"project/{{project.metadata.name}}/create-config-map\" class=\"btn btn-default\">Create Config Map</a>\n" +
+    "<a ng-if=\"quotaExceeded\" ng-href=\"\" class=\"btn btn-default disabled\">Create Config Map</a>\n" +
     "</div>\n" +
     "<h1>\n" +
     "Config Maps\n" +
@@ -2195,6 +2196,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<div ng-if=\"(configMaps | hashSize) == 0\">\n" +
@@ -13503,7 +13505,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<div class=\"pull-right\" ng-if=\"project && (secretsVersion | canI : 'create') && secrets.length\">\n" +
-    "<a ng-href=\"project/{{project.metadata.name}}/create-secret\" class=\"btn btn-default\">Create Secret</a>\n" +
+    "<a ng-if=\"!quotaExceeded\" ng-href=\"project/{{project.metadata.name}}/create-secret\" class=\"btn btn-default\">Create Secret</a>\n" +
+    "<a ng-if=\"quotaExceeded\" ng-href=\"\" class=\"btn btn-default disabled\">Create Secret</a>\n" +
     "</div>\n" +
     "<h1>\n" +
     "Secrets\n" +
@@ -13523,6 +13526,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
     "<div class=\"container-fluid\">\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<div ng-if=\"(secrets | size) === 0\">\n" +

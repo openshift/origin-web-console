@@ -8,30 +8,22 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('StorageController', function (
-    $filter,
-    $routeParams,
-    $scope,
-    APIService,
-    AlertMessageService,
-    DataService,
-    LabelFilter,
-    Logger,
-    ProjectsService,
-    QuotaService) {
-    $scope.projectName = $routeParams.project;
-    $scope.pvcs = {};
-    $scope.unfilteredPVCs = {};
-    $scope.labelSuggestions = {};
-    $scope.alerts = $scope.alerts || {};
-    $scope.outOfClaims = false;
-    $scope.clearFilter = function() {
-      LabelFilter.clear();
-    };
-
-    var setOutOfClaimsWarning = function() {
+  .controller('StorageController',
+              function ($filter,
+                        $routeParams,
+                        $scope,
+                        APIService,
+                        AlertMessageService,
+                        DataService,
+                        LabelFilter,
+                        Logger,
+                        ProjectsService,
+                        QuotaService) {
+    var quotaTypes = ['requests.storage', 'persistentvolumeclaims'];
+    var watches = [];
+    var setOutOfClaimsWarning = function(exceeded) {
       var isHidden = AlertMessageService.isAlertPermanentlyHidden("storage-quota-limit-reached", $scope.projectName);
-      $scope.outOfClaims = QuotaService.isAnyStorageQuotaExceeded($scope.quotas, $scope.clusterQuotas);
+      $scope.outOfClaims = exceeded;
       if (!isHidden && $scope.outOfClaims) {
         if ($scope.alerts['quotaExceeded']) {
           // Don't recreate the alert or it will reset the temporary hidden state
@@ -61,17 +53,23 @@ angular.module('openshiftConsole')
       }
     };
 
-    var resourceQuotasVersion = APIService.getPreferredVersion('resourcequotas');
-    var appliedClusterResourceQuotasVersion = APIService.getPreferredVersion('appliedclusterresourcequotas');
+    $scope.alerts = $scope.alerts || {};
+    $scope.labelSuggestions = {};
+    $scope.outOfClaims = false;
     $scope.persistentVolumeClaimsVersion = APIService.getPreferredVersion('persistentvolumeclaims');
-
-    var watches = [];
+    $scope.projectName = $routeParams.project;
+    $scope.pvcs = {};
+    $scope.unfilteredPVCs = {};
+    $scope.clearFilter = function() {
+      LabelFilter.clear();
+    };
 
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {
         $scope.project = project;
-         watches.push(DataService.watch($scope.persistentVolumeClaimsVersion, context, function(pvcs) {
+        QuotaService.isAnyCurrentQuotaExceeded(context, quotaTypes).then(setOutOfClaimsWarning);
+        watches.push(DataService.watch($scope.persistentVolumeClaimsVersion, context, function(pvcs) {
           $scope.pvcsLoaded = true;
           $scope.unfilteredPVCs = pvcs.by("metadata.name");
           LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredPVCs, $scope.labelSuggestions);
@@ -96,15 +94,5 @@ angular.module('openshiftConsole')
         $scope.$on('$destroy', function(){
           DataService.unwatchAll(watches);
         });
-
-        DataService.list(resourceQuotasVersion, { namespace: $scope.projectName }, function(quotaData) {
-          $scope.quotas = quotaData.by('metadata.name');
-          setOutOfClaimsWarning();
-        });
-        DataService.list(appliedClusterResourceQuotasVersion, { namespace: $scope.projectName }, function(quotaData) {
-          $scope.clusterQuotas = quotaData.by('metadata.name');
-          setOutOfClaimsWarning();
-        });
-
-      }));
+    }));
   });

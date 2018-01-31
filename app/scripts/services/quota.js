@@ -1,25 +1,45 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("QuotaService", function($filter,
-                                    $location,
-                                    $rootScope,
-                                    $routeParams,
-                                    $q,
-                                    APIService,
-                                    Constants,
-                                    DataService,
-                                    EventsService,
-                                    Logger,
-                                    NotificationsService) {
+  .factory("QuotaService",
+           function($filter,
+                    $location,
+                    $rootScope,
+                    $routeParams,
+                    $q,
+                    APIService,
+                    Constants,
+                    DataService,
+                    EventsService,
+                    Logger,
+                    NotificationsService) {
 
-    var resourceQuotasVersion = APIService.getPreferredVersion('resourcequotas');
-    var appliedClusterResourceQuotasVersion = APIService.getPreferredVersion('appliedclusterresourcequotas');
-
+    var humanizeKind = $filter('humanizeKind');
+    var humanizeQuotaResource = $filter('humanizeQuotaResource');
     var isNil = $filter('isNil');
+    var percent = $filter('percent');
     var usageValue = $filter('usageValue');
     var usageWithUnits = $filter('usageWithUnits');
-    var percent = $filter('percent');
+    var appliedClusterResourceQuotasVersion = APIService.getPreferredVersion('appliedclusterresourcequotas');
+    var resourceQuotasVersion = APIService.getPreferredVersion('resourcequotas');
+    var COMPUTE_RESOURCE_QUOTAS = [
+      "cpu",
+      "requests.cpu",
+      "memory",
+      "requests.memory",
+      "limits.cpu",
+      "limits.memory"
+    ];
+    var QUOTA_TYPE_TO_RESOURCE = {
+      'cpu': "resources.requests.cpu",
+      'requests.cpu': "resources.requests.cpu",
+      'limits.cpu': "resources.limits.cpu",
+      'memory': "resources.requests.memory",
+      'requests.memory': "resources.requests.memory",
+      'limits.memory': "resources.limits.memory",
+      'persistentvolumeclaims':"resources.limits.persistentvolumeclaims",
+      'requests.storage':"resources.request.storage"
+    };
 
     var isBestEffortPod = function(pod) {
       // To be best effort a pod must not have any containers that have non-zero requests or limits
@@ -38,6 +58,21 @@ angular.module("openshiftConsole")
     var isTerminatingPod = function(pod) {
       // a pod is terminating if activeDeadlineSeconds is set, ADS can be zero
       return _.has(pod, 'spec.activeDeadlineSeconds');
+    };
+
+    // Retrieves the current cluster and project level quotas wrapped.
+    // Returns a promise which resolves to [projectQuotas, clusterQuotas]
+    var getLatestQuotas = function(context) {
+      var promises = [];
+      promises.push(DataService.list(resourceQuotasVersion, context).then(function(quotaData) {
+        return quotaData.by("metadata.name");
+      }));
+
+      promises.push(DataService.list(appliedClusterResourceQuotasVersion, context).then(function(clusterQuotaData) {
+        return clusterQuotaData.by("metadata.name");
+      }));
+
+      return $q.all(promises);
     };
 
     var filterQuotasForPodTemplate = function(podTemplate, quotas) {
@@ -78,9 +113,6 @@ angular.module("openshiftConsole")
       return quotas;
     };
 
-    var humanizeQuotaResource = $filter('humanizeQuotaResource');
-    var humanizeKind = $filter('humanizeKind');
-
     var getQuotaResourceReachedAlert = function(quota, resource, type) {
       var q = quota.status.total || quota.status;
       if (usageValue(q.hard[type]) <= usageValue(q.used[type])) {
@@ -109,17 +141,6 @@ angular.module("openshiftConsole")
         };
       }
       return null;
-    };
-
-    var QUOTA_TYPE_TO_RESOURCE = {
-      'cpu': "resources.requests.cpu",
-      'requests.cpu': "resources.requests.cpu",
-      'limits.cpu': "resources.limits.cpu",
-      'memory': "resources.requests.memory",
-      'requests.memory': "resources.requests.memory",
-      'limits.memory': "resources.limits.memory",
-      'persistentvolumeclaims':"resources.limits.persistentvolumeclaims",
-      'requests.storage':"resources.request.storage"
     };
 
     var getRequestedResourceQuotaAlert = function(quota, resource, podTemplate, type) {
@@ -248,35 +269,12 @@ angular.module("openshiftConsole")
     };
 
     var getLatestQuotaAlerts = function(resources, context) {
-      var quotas, clusterQuotas, promises = [];
-
-      // double check using the latest quotas
-      promises.push(DataService.list(resourceQuotasVersion, context).then(function(quotaData) {
-        quotas = quotaData.by("metadata.name");
-        Logger.log("quotas", quotas);
-      }));
-
-      promises.push(DataService.list(appliedClusterResourceQuotasVersion, context).then(function(clusterQuotaData) {
-        clusterQuotas = clusterQuotaData.by("metadata.name");
-        Logger.log("cluster quotas", clusterQuotas);
-      }));
-
-      return $q.all(promises).then(function() {
-        var quotaAlerts = getQuotaAlerts(resources, quotas, clusterQuotas);
-        return {
-          quotaAlerts: quotaAlerts
-        };
+      return getLatestQuotas(context).then(function(quotas){
+          return {
+            quotaAlerts: getQuotaAlerts(resources, quotas[0], quotas[1])
+          };
       });
     };
-
-    var COMPUTE_RESOURCE_QUOTAS = [
-      "cpu",
-      "requests.cpu",
-      "memory",
-      "requests.memory",
-      "limits.cpu",
-      "limits.memory"
-    ];
 
     var getNotificationMessage = function(used, usedValue, hard, hardValue, quotaKey) {
       // Note: This function returns HTML markup, not plain text
@@ -398,6 +396,14 @@ angular.module("openshiftConsole")
       return isAnyQuotaExceeded(quotas, clusterQuotas, ['requests.storage', 'persistentvolumeclaims']);
     };
 
+    // Same as above, but doesn't require the caller to pass quotas as arguments.
+    // Returns a promise which resolves to a boolean value.
+    var isAnyCurrentQuotaExceeded = function(context, typesToCheck) {
+      return getLatestQuotas(context).then(function(quotas){
+          return isAnyQuotaExceeded(quotas[0], quotas[1], typesToCheck);
+      });
+    };
+
    // Check if requested quota will exceed any quotas if attempted
     var willRequestExceedQuota = function(quotas, clusterQuotas, requestedQuotaKey, request) {
       var isExceeded = function(quota) {
@@ -425,6 +431,7 @@ angular.module("openshiftConsole")
       filterQuotasForResource: filterQuotasForResource,
       isBestEffortPod: isBestEffortPod,
       isTerminatingPod: isTerminatingPod,
+      getLatestQuotas: getLatestQuotas,
       getResourceLimitAlerts: getResourceLimitAlerts,
       // Gets quota alerts relevant to a set of resources
       // Returns: Array of alerts
@@ -432,6 +439,7 @@ angular.module("openshiftConsole")
       getLatestQuotaAlerts: getLatestQuotaAlerts,
       isAnyQuotaExceeded: isAnyQuotaExceeded,
       isAnyStorageQuotaExceeded: isAnyStorageQuotaExceeded,
+      isAnyCurrentQuotaExceeded: isAnyCurrentQuotaExceeded,
       willRequestExceedQuota: willRequestExceedQuota,
       getQuotaNotifications: getQuotaNotifications
     };
