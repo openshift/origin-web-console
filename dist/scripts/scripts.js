@@ -9956,13 +9956,11 @@ return n.length > 0 && (t.file = _.head(n), r(t.file)), a(), $(".drag-and-drop-z
 }
 });
 var o = function(e, t) {
-var n = t.offset(), r = t.outerWidth(), a = t.outerHeight();
+var n = t.find("label").outerHeight(), r = n ? t.outerHeight() - n : t.outerHeight(), a = t.outerWidth();
 e.css({
-height: a + 6,
-width: r + 6,
-top: n.top,
-left: n.left,
-position: "fixed",
+width: a + 6,
+height: r,
+position: "absolute",
 "z-index": 100
 });
 };

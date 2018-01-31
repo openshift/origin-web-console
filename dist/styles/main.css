@@ -4160,12 +4160,6 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.left,div.hopscotch-bubble
 @media (min-width:768px){.results-status .fa,.results-status .pficon{font-size:32px}
 }
 .results-status .fa-clock-o{font-size:30px}
-@media (min-width:768px){.results-status .fa-clock-o{font-size:36px}
-}
-.delete-resource-modal{background-color:#f1f1f1}
-.delete-resource-modal h1{font-size:21px;font-weight:500;margin-bottom:20px;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
-.delete-resource-modal p{font-size:15px}
-.delete-resource-modal .help-block{margin-top:0px;margin-bottom:10px}
 .dialog-btn{float:right!important;margin-right:10px}
 .dialog-btn:first-of-type{margin-right:0}
 .pretty-json{font-family:Menlo,Monaco,Consolas,monospace;white-space:pre-wrap}
@@ -4176,7 +4170,8 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.left,div.hopscotch-bubble
 .truncation-expand-link{white-space:nowrap}
 .table-responsive .truncation-expand-link{display:block}
 label.required:before{content:'*';position:absolute;left:10px}
-@media (min-width:768px){.form-horizontal label.required:before{position:relative;left:-3px}
+@media (min-width:768px){.results-status .fa-clock-o{font-size:36px}
+.form-horizontal label.required:before{position:relative;left:-3px}
 }
 .guided-tour-backdrop{z-index:1052}
 div.hopscotch-bubble{border-color:#bbb;border-width:1px;box-shadow:1px 1px 3px rgba(0,0,0,.3)}
@@ -5998,7 +5993,10 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .log-line-number{-ms-user-select:none;border-right:1px #272b30 solid;padding-right:10px;vertical-align:top;white-space:nowrap;width:60px;color:#72767b}
 .log-line-text{padding:0 10px;white-space:pre-wrap;width:100%}
 .appended-icon,.project-date [am-time-ago],.projects-list [am-time-ago]{white-space:nowrap}
-.log-line-text::-moz-selection{color:#101214;background:#e5e5e5}
+.log-line-text :not(a)::-moz-selection,.log-line-text::-moz-selection{background:#a0a1a1;color:#101214}
+.log-line-text a::-moz-selection{background:#a0a1a1;color:#006da5}
+.log-line-text ::selection,.log-line-text::selection{background:#f7f7f7;color:#101214}
+.log-line-text a::selection{background:#f7f7f7;color:#006da5}
 .table-log-pods{background-color:#fff;border:1px solid #D1D1D1}
 .table-log-pods>tbody+tbody{border-top-width:1px}
 .log-fixed-height.empty-state-message{margin-top:0}
