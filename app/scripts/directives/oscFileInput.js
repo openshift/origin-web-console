@@ -135,16 +135,15 @@ angular.module('openshiftConsole')
           });
 
           var positionOver = function(element, target) {
-            var offset = target.offset();
+            // If there is a label element for the osc-file-input directive get its height the subtract it from the dropzone.
+            var labelElementHeight = target.find('label').outerHeight();
+            var outerHeight = labelElementHeight ? target.outerHeight() - labelElementHeight : target.outerHeight();
             var outerWidth = target.outerWidth();
-            var outerHeight = target.outerHeight();
             element.css({
-              // Account for -3px margin by adding 6 to width and height.
-              height: outerHeight + 6,
+              // Account for -3px margin by adding 6 to width.
               width: outerWidth + 6,
-              top: offset.top,
-              left: offset.left,
-              position: 'fixed',
+              height: outerHeight,
+              position: 'absolute',
               'z-index': 100
             });
           };
