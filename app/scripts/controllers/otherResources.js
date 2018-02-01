@@ -41,6 +41,8 @@ angular.module('openshiftConsole')
         case "ServiceInstance":
         case "StatefulSet":
           return false;
+        case "DaemonSet":
+          return kind.group === "apps";
         default:
           return true;
       }
