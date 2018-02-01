@@ -6865,6 +6865,9 @@ case "ServiceInstance":
 case "StatefulSet":
 return !1;
 
+case "DaemonSet":
+return "apps" === e.group;
+
 default:
 return !0;
 }
