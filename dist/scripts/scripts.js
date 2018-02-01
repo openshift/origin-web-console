@@ -7128,7 +7128,7 @@ e.buildConfig = t, f(), e.updatedBuildConfig = angular.copy(e.buildConfig), e.bu
 var n = m.groupSecretsByType(t), r = _.mapValues(n, function(e) {
 return _.map(e, "metadata.name");
 });
-e.webhookSecrets = m.groupSecretsByType(t).webhook, e.secrets.secretsByType = _.each(r, function(e) {
+e.webhookSecrets = m.groupSecretsByType(t).webhook, e.webhookSecrets.unshift(""), e.secrets.secretsByType = _.each(r, function(e) {
 e.unshift("");
 }), D(), P = S(t.by("metadata.name")), e.valueFromObjects = w.concat(P);
 });
@@ -10875,10 +10875,41 @@ _.isFunction(n.onClick) && n.onClick() && e.close(t);
 }
 }), function() {
 angular.module("openshiftConsole").component("oscWebhookTriggers", {
-controller: [ "$scope", "$uibModal", "$filter", "APIService", function(e, t, n, r) {
-var a = this;
-a.$onInit = function() {
-e.namespace = a.namespace, e.type = a.type, a.secretsVersion = r.getPreferredVersion("secrets"), a.webhookTypesOptions = [ {
+controller: [ "$filter", "$scope", "$timeout", "$uibModal", "APIService", function(e, t, n, r, a) {
+var o = this;
+o.isDeprecated = function(t) {
+var n = e("getWebhookSecretData")(t);
+return _.has(n, "secret") && !_.has(n, "secretReference.name");
+}, o.addEmptyWebhookTrigger = function() {
+o.webhookTriggers.push({
+lastTriggerType: "",
+data: {
+type: ""
+}
+});
+var e = o.webhookTriggers.length - 1;
+n(function() {
+t.$broadcast("focus-index-" + e);
+});
+};
+var i = function(e) {
+var t = _.get(e, "data.type");
+if (t && !_.isNil(e.data[t.toLowerCase()])) {
+var n = _.filter(o.webhookTriggers, function(t) {
+return _.isEqual(t.data, e.data);
+});
+_.each(n, function(e, t) {
+var n = 0 === t;
+e.isDuplicate = !n;
+});
+}
+}, s = function() {
+_.isEmpty(o.webhookTriggers) ? o.addEmptyWebhookTrigger() : _.each(o.webhookTriggers, function(e) {
+o.isDeprecated(e) && (e.secretInputType = "password"), e.isDuplicate || i(e);
+});
+};
+o.$onInit = function() {
+t.namespace = o.namespace, t.type = o.type, o.secretsVersion = a.getPreferredVersion("secrets"), o.webhookTypesOptions = [ {
 type: "github",
 label: "GitHub"
 }, {
@@ -10890,57 +10921,30 @@ label: "Bitbucket"
 }, {
 type: "generic",
 label: "Generic"
-} ];
-}, a.isDeprecated = function(e) {
-var t = n("getWebhookSecretData")(e);
-return _.has(t, "secret") && !_.has(t, "secretReference.name");
-}, a.toggleSecretInputType = function(e) {
+} ], s();
+}, o.toggleSecretInputType = function(e) {
 e.secretInputType = "password" === e.secretInputType ? "text" : "password";
-};
-var o = function(e) {
-var t = _.filter(a.webhookTriggers, function(t) {
-return _.isEqual(t.data, e.data);
-});
-_.each(t, function(e, t) {
-var n = 0 === t;
-e.isDuplicate = !n;
-});
-};
-a.removeWebhookTrigger = function(e, t) {
+}, o.removeWebhookTrigger = function(e, t) {
 var n = _.clone(e);
-if (1 === a.webhookTriggers.length) {
-var r = _.first(a.webhookTriggers);
+if (1 === o.webhookTriggers.length) {
+var r = _.first(o.webhookTriggers);
 r.lastTriggerType = "", r.data = {
 type: ""
 };
-} else a.webhookTriggers.splice(t, 1);
-a.form.$setDirty(), o(n);
-}, a.triggerTypeChange = function(e) {
+} else o.webhookTriggers.splice(t, 1);
+o.form.$setDirty(), i(n);
+}, o.triggerTypeChange = function(e) {
 var t = _.toLower(e.lastTriggerType), n = _.toLower(e.data.type);
-e.data[n] = e.data[t], delete e.data[t], e.lastTriggerType = e.data.type, o(e);
-}, a.triggerSecretChange = function(e) {
-o(e);
-};
-var i = function() {
-a.webhookTriggers.push({
-lastTriggerType: "",
-data: {
-type: ""
-}
-});
-};
-a.checkLastAndAddNew = function() {
-var e = _.last(a.webhookTriggers), t = n("getWebhookSecretData")(e);
-e.data.type && (_.has(t, "secret") || _.has(t, "secretReference.name")) && i();
-}, _.isEmpty(a.webhookTriggers) ? i() : _.each(a.webhookTriggers, function(e) {
-a.isDeprecated(e) && (e.secretInputType = "password"), e.isDuplicate || o(e);
-}), a.openCreateWebhookSecretModal = function() {
-t.open({
+e.data[n] = e.data[t], delete e.data[t], e.lastTriggerType = e.data.type, i(e);
+}, o.triggerSecretChange = function(e) {
+i(e);
+}, o.openCreateWebhookSecretModal = function() {
+r.open({
 templateUrl: "views/modals/create-secret.html",
 controller: "CreateSecretModalController",
-scope: e
+scope: t
 }).result.then(function(e) {
-a.webhookSecrets.push(e);
+o.webhookSecrets.push(e);
 });
 };
 } ],
