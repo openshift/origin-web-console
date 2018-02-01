@@ -198,7 +198,7 @@
          ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{replicaSet.metadata.name}}"
          role="button">Add Autoscaler</a>
       <a ng-if="replicaSet.kind === 'ReplicationController' && deploymentConfigName"
-         ng-href="project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfigName}}"
+         ng-href="project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfigName}}&group=apps.openshift.io"
          role="button">Add Autoscaler</a>
     </span>
     <span ng-if="!({resource: 'horizontalpodautoscalers', group: 'autoscaling'} | canI : 'create')">

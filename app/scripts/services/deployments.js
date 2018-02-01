@@ -291,38 +291,29 @@ angular.module("openshiftConsole")
     };
 
     DeploymentsService.prototype.getScaleResource = function(object) {
-      var resourceGroupVersion = {
-        resource: APIService.kindToResource(object.kind) + '/scale'
-      };
-
-      switch (object.kind) {
-      case 'DeploymentConfig':
-        // Deployment config scale subresources don't use group extensions.
-        break;
-      case 'Deployment':
-      case 'ReplicaSet':
-      case 'ReplicationController':
-        resourceGroupVersion.group = 'extensions';
-        break;
-      default:
+      if (!object) {
         return null;
       }
+
+      var resourceGroupVersion = APIService.objectToResourceGroupVersion(object);
+      resourceGroupVersion.resource = resourceGroupVersion.resource + '/scale';
 
       return resourceGroupVersion;
     };
 
     DeploymentsService.prototype.scale = function(object, replicas) {
       var resourceGroupVersion = this.getScaleResource(object);
-      if (!resourceGroupVersion) {
-        return $q.reject({
-          data: {
-            message: "Cannot scale kind " + object.kind + "."
-          }
-        });
+
+      // Special case deployment configs, which require extensions/v1beta1 for the scale subresource in the request body.
+      var apiVersion;
+      if (object.kind === 'DeploymentConfig' && (object.apiVersion === 'v1' || object.apiVersion === 'apps.openshift.io/v1')) {
+        apiVersion = 'extensions/v1beta1';
+      } else {
+        apiVersion = APIService.toAPIVersion(resourceGroupVersion);
       }
 
       var scaleObject = {
-        apiVersion: "extensions/v1beta1",
+        apiVersion: apiVersion,
         kind: "Scale",
         metadata: {
           name: object.metadata.name,

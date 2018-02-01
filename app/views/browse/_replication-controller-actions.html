@@ -20,7 +20,7 @@
       <a ng-href="project/{{projectName}}/edit/autoscaler?kind=ReplicationController&name={{replicaSet.metadata.name}}"
          ng-if="!deploymentConfigName"
          role="button">Add Autoscaler</a>
-      <a ng-href="project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfigName}}"
+      <a ng-href="project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfigName}}&group=apps.openshift.io"
          ng-if="deploymentConfigName"
          role="button">Add Autoscaler</a>
     </li>

@@ -84,14 +84,18 @@ function OverviewController($scope,
   var label = $filter('label');
   var getPodTemplate = $filter('podTemplate');
 
+  var buildConfigsVersion = APIService.getPreferredVersion('buildconfigs');
+  var buildsVersion = APIService.getPreferredVersion('builds');
+  var deploymentConfigsVersion = APIService.getPreferredVersion('deploymentconfigs');
   var deploymentsVersion = APIService.getPreferredVersion('deployments');
   var horizontalPodAutoscalersVersion = APIService.getPreferredVersion('horizontalpodautoscalers');
+  var replicaSetsVersion = APIService.getPreferredVersion('replicasets');
+  var routesVersion = APIService.getPreferredVersion('routes');
   var serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
   var serviceClassesVersion = APIService.getPreferredVersion('clusterserviceclasses');
   var serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
   var servicePlansVersion = APIService.getPreferredVersion('clusterserviceplans');
   var statefulSetsVersion = APIService.getPreferredVersion('statefulsets');
-  var replicaSetsVersion = APIService.getPreferredVersion('replicasets');
   overview.buildConfigsInstantiateVersion = APIService.getPreferredVersion('buildconfigs/instantiate');
 
 
@@ -1230,7 +1234,7 @@ function OverviewController($scope,
       Logger.log("replicationcontrollers (subscribe)", overview.replicationControllers);
     }));
 
-    watches.push(DataService.watch("deploymentconfigs", context, function(dcData) {
+    watches.push(DataService.watch(deploymentConfigsVersion, context, function(dcData) {
       overview.deploymentConfigs = dcData.by("metadata.name");
       groupReplicationControllers();
       updateServicesForObjects(overview.deploymentConfigs);
@@ -1271,7 +1275,7 @@ function OverviewController($scope,
       Logger.log("deployments (subscribe)", overview.deploymentsByUID);
     }));
 
-    watches.push(DataService.watch("builds", context, function(buildData) {
+    watches.push(DataService.watch(buildsVersion, context, function(buildData) {
       state.builds = buildData.by("metadata.name");
       groupBuilds();
       Logger.log("builds (subscribe)", state.builds);
@@ -1294,13 +1298,13 @@ function OverviewController($scope,
       Logger.log("services (subscribe)", state.allServices);
     }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
 
-    watches.push(DataService.watch("routes", context, function(routesData) {
+    watches.push(DataService.watch(routesVersion, context, function(routesData) {
       overview.routes = routesData.by("metadata.name");
       groupRoutes();
       Logger.log("routes (subscribe)", overview.routes);
     }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
 
-    watches.push(DataService.watch("buildConfigs", context, function(buildConfigData) {
+    watches.push(DataService.watch(buildConfigsVersion, context, function(buildConfigData) {
       overview.buildConfigs = buildConfigData.by("metadata.name");
       groupBuildConfigsByOutputImage();
       groupBuildConfigsByDeploymentConfig();

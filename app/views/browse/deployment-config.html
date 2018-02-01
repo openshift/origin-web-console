@@ -47,7 +47,7 @@
               </li>
               <li ng-if="!autoscalers.length && (horizontalPodAutoscalersVersion | canI : 'create')">
                 <!-- Create a new HPA. -->
-                <a ng-href="project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
+                <a ng-href="project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}&group=apps.openshift.io"
                    role="button">Add Autoscaler</a>
               </li>
               <li ng-if="autoscalers.length === 1 && (horizontalPodAutoscalersVersion | canI : 'update')">
@@ -301,7 +301,7 @@
 
                     <!-- Create autoscaler -->
                     <div ng-if="!autoscalers.length">
-                      <a ng-if="horizontalPodAutoscalersVersion | canI : 'create'" ng-href="project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}"
+                      <a ng-if="horizontalPodAutoscalersVersion | canI : 'create'" ng-href="project/{{projectName}}/edit/autoscaler?kind=DeploymentConfig&name={{deploymentConfig.metadata.name}}&group=apps.openshift.io"
                          role="button">Add Autoscaler</a>
                       <span ng-if="!(horizontalPodAutoscalersVersion | canI : 'create')">Autoscaling is not enabled. There are no autoscalers for this deployment config.</span>
                     </div>
