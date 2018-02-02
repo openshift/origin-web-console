@@ -84,25 +84,30 @@ code.command {
   cursor: pointer;
 }
 .pods {
-  display: inline-block;
+  display: block;
+  // mini donut circle diameter
+  height: @pod-mini-donut-diameter;
+  width: @pod-mini-donut-diameter;
   // align pod text with right outer edge of .list-pf-details text
-  margin-right: 25px;
+  @media(min-width: @screen-sm-min) {
+    margin-right: 32px;
+  }
 }
 pod-donut[mini] {
   display:inline-block;
-  // match size setting in podDonut.js
-  min-height: 45px;
-  min-width: 45px;
+  height: @pod-mini-donut-diameter;
   position: relative;
+  width: @pod-mini-donut-diameter;
 }
 .pod-donut {
   &.mini {
     display: inline-block;
-    // match size setting in podDonut.js
-    min-height: 45px;
-		min-width: 45px;
+    // Take mini donut out of flow; positioning is controlled by .pods parent element
+    height: @pod-mini-donut-diameter;
     position: absolute !important;
-		top: 2px;
+    // center donut within .pods element
+    transform: translate(-8px, -5px);
+    width: @pod-mini-donut-diameter;
   }
   .c3-defocused {
     // Adjusting the default hover "opacity: .3" to be slightly darker
@@ -130,20 +135,23 @@ pod-donut[mini] {
   }
 }
 
+// center # within mini-donut
 .donut-mini-text {
   left: 51%;
+  line-height: 1;
   position: absolute;
-	top: 49%;
-  transform: translate(-49%, -51%);
+  text-align: center;
+  top: 50%;
+  transform: translate(-51%,-50%);
 }
+// vertically position "pod" text with the # inside mini-donut
 .donut-mini-text-name {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
   position: absolute;
-	transform: translate(45px,-51%);
-	top: 49%;
-	line-height: 1;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+  transform: translate(40px, 9px);
 }
 
 .deployment-donut {

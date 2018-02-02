@@ -1,38 +1,49 @@
-<ng-form name="secretsForm" class="add-webhook">
-  <div ng-repeat="trigger in $ctrl.webhookTriggers">
+<ng-form name="$ctrl.secretsForm" class="add-webhook">
+  <div ng-repeat="trigger in $ctrl.webhookTriggers track by $index" ng-init="secretFieldName = 'triggerSecretRef' + $index">
     <div class="add-webhook-row">
-      <ui-select 
-        ng-model="trigger.data.type"
-        ng-disabled="$ctrl.isDeprecated(trigger)"
-        on-select="$ctrl.triggerTypeChange(trigger)"
-        search-enabled="false"
-        title="Select a webhook type"
-        class="select-webhook-type"
-        flex>
-        <ui-select-match placeholder="Webhook type">
-          {{ $select.selected.label }}
-        </ui-select-match>
-        <ui-select-choices repeat="option.label as option in $ctrl.webhookTypesOptions">
-          {{ option.label }}
-        </ui-select-choices>
-      </ui-select>
+      <div class="select-webhook-type">
+        <ui-select
+          ng-model="trigger.data.type"
+          name="triggerType{{$index}}"
+          ng-disabled="$ctrl.isDeprecated(trigger)"
+          on-select="$ctrl.triggerTypeChange(trigger)"
+          search-enabled="false"
+          title="Select a webhook type"
+          ng-class="{'has-warning': trigger.isDuplicate }"
+          focus-on="focus-index-{{$index}}"
+          flex>
+          <ui-select-match placeholder="Webhook type">
+            {{ $select.selected.label }}
+          </ui-select-match>
+          <ui-select-choices repeat="option.label as option in $ctrl.webhookTypesOptions">
+            {{ option.label }}
+          </ui-select-choices>
+        </ui-select>
+      </div>
 
-      <ui-select
-        ng-if="!$ctrl.isDeprecated(trigger)"
-        ng-model="trigger.data[trigger.data.type.toLowerCase()].secretReference.name"
-        ng-disabled="!trigger.data.type"
-        ng-required="trigger.data.type"
-        on-select="$ctrl.triggerSecretChange(trigger)"
-        title="Select a webhook secret reference"
-        class="select-secret-ref"
-        flex>
-        <ui-select-match placeholder="Webhook secret reference">
-          {{ $select.selected.metadata.name }}
-        </ui-select-match>
-        <ui-select-choices repeat="webhookSecret.metadata.name as webhookSecret in ($ctrl.webhookSecrets | filter : $select.search) track by (webhookSecret | uid)">
-          <div ng-bind-html="webhookSecret.metadata.name | highlight : $select.search"></div>
-        </ui-select-choices>
-      </ui-select>
+      <div class="select-secret-ref" ng-if="!$ctrl.isDeprecated(trigger)">
+        <ui-select
+          ng-model="trigger.data[trigger.data.type.toLowerCase()].secretReference.name"
+          name="{{secretFieldName}}"
+          on-select="$ctrl.triggerSecretChange(trigger)"
+          title="Select a webhook secret reference"
+          ng-class="{'has-error': $ctrl.secretsForm[secretFieldName].$invalid && $ctrl.secretsForm[secretFieldName].$touched}"
+          ng-disabled="!trigger.data.type"
+          ng-required="trigger.data.type"
+          flex>
+          <ui-select-match placeholder="Webhook secret reference">
+            {{ $select.selected.metadata.name }}
+          </ui-select-match>
+          <ui-select-choices repeat="webhookSecret.metadata.name as webhookSecret in ($ctrl.webhookSecrets | filter : $select.search) track by (webhookSecret | uid)">
+            <div ng-bind-html="webhookSecret.metadata.name | highlight : $select.search"></div>
+          </ui-select-choices>
+        </ui-select>
+        <div class="has-error select-secret-ref" ng-show="$ctrl.secretsForm[secretFieldName].$invalid && $ctrl.secretsForm[secretFieldName].$touched">
+          <span class="help-block">
+            Secret reference is required.
+          </span>
+        </div>
+      </div>
 
       <div class="select-secret-ref deprecated-secret input-group" ng-if="$ctrl.isDeprecated(trigger)">
         <input
@@ -42,7 +53,6 @@
           autocorrect="off"
           autocapitalize="none"
           spellcheck="false"
-          select-on-focus
           disabled>
         <div class="input-group-btn">
           <button
@@ -67,14 +77,13 @@
     <div class="has-warning" ng-if="trigger.isDuplicate">
       <span class="help-block">A {{trigger.data.type}} webhook trigger referencing the secret {{(trigger | getWebhookSecretData).secretReference.name}} already exists.</span>
     </div>
-
   </div>
 
   <div class="add-webhook-action-btns">
-    <button class="btn btn-link pad-left-none" type="button" ng-click="$ctrl.checkLastAndAddNew()">Add Webhook</button>
+    <button class="btn btn-link pad-left-none" type="button" ng-click="$ctrl.addEmptyWebhookTrigger()">Add Webhook</button>
     <span ng-if="$ctrl.secretsVersion | canI : 'create'">
       <span class="action-divider" aria-hidden="true"> | </span>
       <button class="btn btn-link" href="" type="button" ng-click="$ctrl.openCreateWebhookSecretModal()">Create New Webhook Secret</button>
     </span>
-  </div> 
+  </div>
 </ng-form>

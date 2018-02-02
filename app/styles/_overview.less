@@ -222,7 +222,13 @@
   .list-pf-actions {
     // if no actions-dropdown-kebab is present, still take up space
     justify-content: flex-end;
-    min-width: 35px;
+    // Allow more space for mini-pod-donut and metrics at narrower widths
+    @media(min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+      margin-left: 25px;
+    }
+    @media(min-width: @screen-md-min) and (max-width: @screen-md-max) {
+      margin-left: 35px;
+    }
   }
   .list-pf-details {
     .fade-in();
@@ -230,9 +236,9 @@
       justify-content: flex-end;
     }
     @media(max-width: @screen-xs-max) {
+      width: 100% !important; // stacked name and details so set to full width
       &.deployment-in-progress-msg {
         margin-top: 5px;
-        width: 100%;
       }
     }
   }
@@ -306,8 +312,6 @@
           .word-break();
         }
         @media (min-width: @screen-sm-min) {
-          // Prevent the row from shrinking slightly on expand.
-          min-height: 45px;
           padding-right: 15px;
         }
       }
@@ -356,7 +360,16 @@
   }
   .metrics-collapsed {
     flex-grow: 1;
-    .text-center();
+    padding-top: 10px;
+    text-align: left;
+    @media(min-width:@screen-md-min) {
+      padding-right: 60px;
+      padding-top: 20px;
+      text-align: right;
+    }
+    @media(min-width:@screen-lg-min) {
+      padding-right: 90px;
+    }
   }
   .metrics-summary {
     display: inline-block;

@@ -265,7 +265,9 @@ angular.module('openshiftConsole')
                 var secretsByType = SecretsService.groupSecretsByType(secrets);
                 var secretNamesByType =_.mapValues(secretsByType, function(secrets) {return _.map(secrets, 'metadata.name');});
                 $scope.webhookSecrets = SecretsService.groupSecretsByType(secrets).webhook;
-                // Add empty option to the image/source secrets
+                // Add empty option for user to see when there are no webhook secrets options.
+                $scope.webhookSecrets.unshift("");
+                // Add empty option for user to see when there are no image/source secrets options.
                 $scope.secrets.secretsByType = _.each(secretNamesByType, function(secretsArray) {
                   secretsArray.unshift("");
                 });
