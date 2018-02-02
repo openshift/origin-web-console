@@ -78574,6 +78574,7 @@ onProjectSelected: "<?",
 onOpen: "<?",
 availableProjects: "<?",
 showDivider: "<?",
+skipCanAddValidation: "<?",
 hideCreateProject: "<?",
 hideLabel: "<?",
 isRequired: "<?"
@@ -79377,15 +79378,31 @@ e.exports = '<div class="order-service">\n  <pf-wizard wizard-title="{{$ctrl.dis
 "use strict";
 t.__esModule = !0;
 var i = n(1), r = n(0), o = function() {
-function e(e, t) {
-var n = this;
+function e(e, t, n) {
+var o = this;
 this.ctrl = this, this.onKeywordKeyPress = function(e) {
-13 === e.which && n.ctrl.keywordFilter.value.length > 0 && (n.ctrl.keywordFilter.values.push(n.ctrl.keywordFilter.value), delete n.ctrl.keywordFilter.value, n.constructFiltersFromModel());
+if (13 === e.which && o.ctrl.keywordFilter.value.length > 0) {
+var t = o.ctrl.keywordFilter.value;
+o.keywordFilterExists(t) ? o.highlightKeywordFilter(t) : (o.ctrl.keywordFilter.values.push(t), o.constructFiltersFromModel()), delete o.ctrl.keywordFilter.value;
+}
 }, this.filterChanged = function() {
-n.constructFiltersFromModel();
-}, this.onFilterChange = function(e, t, r) {
-i.isDefined(t) && i.isDefined(r) ? n.updateFilterPanelModel(t, r) : n.resetFilterPanelModel(), n.constructFiltersFromModel();
-}, this.$scope = e, this.Catalog = t, this.ctrl.filterPanelModel = [], this.ctrl.keywordFilter = {
+o.constructFiltersFromModel();
+}, this.keywordFilterExists = function(e) {
+return r.some(o.ctrl.keywordFilter.values, function(t) {
+return e.toLowerCase() === t.toLowerCase();
+});
+}, this.highlightKeywordFilter = function(e) {
+var t = document.querySelectorAll("pf-filter-panel-results .label-info"), n = r.find(t, function(t) {
+return t.innerText.trim() === "Keyword:" + e.toLowerCase();
+});
+n && (o.$timeout(function() {
+n.classList.add("flash-filter-tag");
+}, 100), o.$timeout(function() {
+n.classList.remove("flash-filter-tag");
+}, 300));
+}, this.onFilterChange = function(e, t, n) {
+i.isDefined(t) && i.isDefined(n) ? o.updateFilterPanelModel(t, n) : o.resetFilterPanelModel(), o.constructFiltersFromModel();
+}, this.$scope = e, this.$timeout = t, this.Catalog = n, this.ctrl.filterPanelModel = [], this.ctrl.keywordFilter = {
 id: "keyword",
 title: "Keyword",
 placeholder: "Filter by Keyword",
@@ -79470,7 +79487,7 @@ e.selected = !1;
 });
 }, e;
 }();
-o.$inject = [ "$scope", "Catalog" ], t.CatalogFilterController = o;
+o.$inject = [ "$scope", "$timeout", "Catalog" ], t.CatalogFilterController = o;
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
@@ -80226,7 +80243,7 @@ var e = this;
 this.ctrl.noProjectsCantCreate = !1, this.ctrl.noProjectsConfig = {
 title: "No Projects Found",
 info: "Services cannot be provisioned without a project."
-}, void 0 === this.ctrl.showDivider && (this.ctrl.showDivider = !0), void 0 === this.ctrl.isRequired && (this.ctrl.isRequired = !0), this.ProjectsService.canCreate().then(function() {
+}, void 0 === this.ctrl.showDivider && (this.ctrl.showDivider = !0), void 0 === this.ctrl.skipCanAddValidation && (this.ctrl.skipCanAddValidation = !1), void 0 === this.ctrl.isRequired && (this.ctrl.isRequired = !0), this.ProjectsService.canCreate().then(function() {
 e.ctrl.canCreate = !0;
 }, function(t) {
 if (e.ctrl.canCreate = !1, 403 !== t.status) {
@@ -80246,7 +80263,7 @@ e.listProjects();
 }, e.prototype.$onChanges = function(e) {
 e.nameTaken && !e.nameTaken.isFirstChange() && this.ctrl.forms.createProjectForm.name.$setValidity("nameTaken", !this.ctrl.nameTaken), e.availableProjects && !e.availableProjects.isFirstChange() && this.updateProjects(this.ctrl.availableProjects);
 }, e.prototype.onSelectProjectChange = function() {
-this.canIAddToProject(), i.isFunction(this.ctrl.onProjectSelected) && this.ctrl.onProjectSelected(this.ctrl.selectedProject);
+this.ctrl.skipCanAddValidation || this.canIAddToProject(), i.isFunction(this.ctrl.onProjectSelected) && this.ctrl.onProjectSelected(this.ctrl.selectedProject);
 }, e.prototype.onOpenClose = function(e) {
 e && r.isFunction(this.ctrl.onOpen) && this.ctrl.onOpen();
 }, e.prototype.onNewProjectNameChange = function() {

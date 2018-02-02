@@ -30,6 +30,7 @@
           </label>
           <div class="select-project-container" ng-if="availableProjects.length > 1">
             <select-project is-required="homePagePreference === 'project-overview'"
+                            skip-can-add-validation="true"
                             on-project-selected="onProjectSelected"
                             on-open="onOpen"
                             available-projects="availableProjects"
