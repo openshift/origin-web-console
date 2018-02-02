@@ -26,7 +26,7 @@
   <div class="animate-if"
        ng-if="expandInitContainers"
        ng-repeat="containerStatus in pod.status.initContainerStatuses track by containerStatus.name" >
-    <h4 class="component-label">Init container {{containerStatus.name}}</h4>
+    <h4>Init container {{containerStatus.name}}</h4>
 
     <dl class="dl-horizontal left">
       <dt>State:</dt>

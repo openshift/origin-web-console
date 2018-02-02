@@ -81,8 +81,7 @@ angular.module('openshiftConsole')
         container: '=podTemplateContainer',
         imagesByDockerReference: '=',
         builds: '=',
-        detailed: '=?',
-        labelPrefix: '@?'
+        detailed: '=?'
       },
       templateUrl: 'views/_pod-template-container.html'
     };

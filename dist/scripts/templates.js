@@ -134,7 +134,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</h4>\n" +
     "<div class=\"animate-if\" ng-if=\"expandInitContainers\" ng-repeat=\"containerStatus in pod.status.initContainerStatuses track by containerStatus.name\">\n" +
-    "<h4 class=\"component-label\">Init container {{containerStatus.name}}</h4>\n" +
+    "<h4>Init container {{containerStatus.name}}</h4>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<dt>State:</dt>\n" +
     "<dd>\n" +
@@ -238,7 +238,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/_pod-template-container.html',
     " <div class=\"pod-template\">\n" +
-    "<div class=\"component-label section-label\" ng-if=\"!detailed\" ng-bind-template=\"{{labelPrefix||'Container'}}\"></div>\n" +
     "<div class=\"pod-container-name\">{{container.name}}</div>\n" +
     "<div row ng-if=\"container.image\" class=\"pod-template-image icon-row\">\n" +
     "<div class=\"icon-wrap\">\n" +
@@ -410,7 +409,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h4>Init Containers</h4>\n" +
     "<div class=\"pod-template-container\">\n" +
     "<div class=\"pod-template-block\" ng-repeat=\"container in podTemplate.spec.initContainers\">\n" +
-    "<pod-template-container pod-template-container=\"container\" images-by-docker-reference=\"imagesByDockerReference\" builds=\"builds\" detailed=\"detailed\" label-prefix=\"Init Container\"></pod-template-container>\n" +
+    "<pod-template-container pod-template-container=\"container\" images-by-docker-reference=\"imagesByDockerReference\" builds=\"builds\" detailed=\"detailed\"></pod-template-container>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -12387,7 +12386,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "          'ng-enter': row.previous,\n" +
     "          'hidden-sm hidden-md': row.previous\n" +
     "        }\">\n" +
-    "\n" +
+    "<h4 class=\"component-label section-label\">Containers</h4>\n" +
     "<pod-template pod-template=\"row.current | podTemplate\" images-by-docker-reference=\"row.state.imagesByDockerReference\" builds=\"row.state.builds\" class=\"hide-ng-leave\">\n" +
     "</pod-template>\n" +
     "<init-containers-summary api-object=\"row.apiObject\"></init-containers-summary>\n" +
@@ -12451,7 +12450,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</uib-tab>\n" +
     "<uib-tab ng-if=\"row.current\" active=\"row.selectedTab.containers\">\n" +
     "<uib-tab-heading>Containers</uib-tab-heading>\n" +
-    "\n" +
     "<pod-template pod-template=\"row.current | podTemplate\" images-by-docker-reference=\"row.state.imagesByDockerReference\" builds=\"row.state.builds\"></pod-template>\n" +
     "<init-containers-summary api-object=\"row.apiObject\"></init-containers-summary>\n" +
     "</uib-tab>\n" +
