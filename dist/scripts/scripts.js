@@ -7741,42 +7741,42 @@ a.$on("$destroy", u);
 var d = function() {
 t.path(a.routeURL);
 };
-a.cancel = d, c.get(n.project).then(_.spread(function(t, c) {
+a.cancel = d;
+var m;
+c.get(n.project).then(_.spread(function(t, c) {
 if (a.project = t, r.canI("routes", "update", n.project)) {
-var m, p = e("orderByDisplayName"), f = function() {
+var p, f = e("orderByDisplayName"), g = function() {
 i.toErrorPage('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.');
 };
 o.get("routes", a.routeName, c).then(function(e) {
-if ("Service" === e.spec.to.kind) {
-m = angular.copy(e);
-var t = _.get(m, "spec.host");
-"Subdomain" === _.get(m, "spec.wildcardPolicy") && (t = "*." + l.getSubdomain(m)), a.routing = {
-host: t,
-wildcardPolicy: _.get(m, "spec.wildcardPolicy"),
-path: _.get(m, "spec.path"),
-targetPort: _.get(m, "spec.port.targetPort"),
-tls: angular.copy(_.get(m, "spec.tls"))
+"Service" === e.spec.to.kind ? (p = angular.copy(e), m = _.get(p, "spec.host"), "Subdomain" === _.get(p, "spec.wildcardPolicy") && (m = "*." + l.getSubdomain(p)), a.routing = {
+host: m,
+wildcardPolicy: _.get(p, "spec.wildcardPolicy"),
+path: _.get(p, "spec.path"),
+targetPort: _.get(p, "spec.port.targetPort"),
+tls: angular.copy(_.get(p, "spec.tls"))
 }, o.list("services", c).then(function(e) {
 a.loading = !1;
 var t = e.by("metadata.name");
-a.routing.to = m.spec.to, a.routing.alternateServices = [], _.each(_.get(m, "spec.alternateBackends"), function(e) {
-if ("Service" !== e.kind) return f(), !1;
+a.routing.to = p.spec.to, a.routing.alternateServices = [], _.each(_.get(p, "spec.alternateBackends"), function(e) {
+if ("Service" !== e.kind) return g(), !1;
 a.routing.alternateServices.push(e);
-}), a.services = p(t);
-});
-} else f();
+}), a.services = f(t);
+})) : g();
 }, function() {
 i.toErrorPage("Could not load route " + a.routeName + ".");
 });
-var g = function() {
-var e = angular.copy(m), t = _.get(a, "routing.to.name");
+var v = function() {
+var e = angular.copy(p), t = _.get(a, "routing.to.name");
 _.set(e, "spec.to.name", t);
 var n = _.get(a, "routing.to.weight");
-isNaN(n) || _.set(e, "spec.to.weight", n), e.spec.path = a.routing.path;
-var r = a.routing.targetPort;
-r ? _.set(e, "spec.port.targetPort", r) : delete e.spec.port, _.get(a, "routing.tls.termination") ? (e.spec.tls = a.routing.tls, "passthrough" === e.spec.tls.termination && (delete e.spec.path, delete e.spec.tls.certificate, delete e.spec.tls.key, delete e.spec.tls.caCertificate), "reencrypt" !== e.spec.tls.termination && delete e.spec.tls.destinationCACertificate) : delete e.spec.tls;
-var o = _.get(a, "routing.alternateServices", []);
-return _.isEmpty(o) ? delete e.spec.alternateBackends : e.spec.alternateBackends = _.map(o, function(e) {
+isNaN(n) || _.set(e, "spec.to.weight", n);
+var r = a.routing.host;
+m !== r && (r.startsWith("*.") && (r = "wildcard" + r.substring(1)), e.spec.host = r), e.spec.path = a.routing.path;
+var o = a.routing.targetPort;
+o ? _.set(e, "spec.port.targetPort", o) : delete e.spec.port, _.get(a, "routing.tls.termination") ? (e.spec.tls = a.routing.tls, "passthrough" === e.spec.tls.termination && (delete e.spec.path, delete e.spec.tls.certificate, delete e.spec.tls.key, delete e.spec.tls.caCertificate), "reencrypt" !== e.spec.tls.termination && delete e.spec.tls.destinationCACertificate) : delete e.spec.tls;
+var i = _.get(a, "routing.alternateServices", []);
+return _.isEmpty(i) ? delete e.spec.alternateBackends : e.spec.alternateBackends = _.map(i, function(e) {
 return {
 kind: "Service",
 name: e.name,
@@ -7787,7 +7787,7 @@ weight: e.weight
 a.updateRoute = function() {
 if (a.form.$valid) {
 u(), a.disableInputs = !0;
-var t = g();
+var t = v();
 o.update("routes", a.routeName, t, c).then(function() {
 s.addNotification({
 type: "success",
@@ -9914,7 +9914,7 @@ return a.existingRoute ? a.canIUpdateCustomHosts : a.canICreateCustomHosts;
 };
 a.isHostnameReadOnly = function() {
 return !c();
-}, a.disableWildcards = t.DISABLE_WILDCARD_ROUTES, a.areCertificateInputsReadOnly = function() {
+}, a.disableWildcards = t.DISABLE_WILDCARD_ROUTES || a.existingRoute && "Subdomain" !== a.route.wildcardPolicy, a.areCertificateInputsReadOnly = function() {
 return !c();
 }, a.areCertificateInputsDisabled = function() {
 var e = _.get(a, "route.tls.termination");
