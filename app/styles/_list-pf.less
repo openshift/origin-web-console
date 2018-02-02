@@ -55,10 +55,17 @@
     .list-pf-details {
       align-items: center;
       display: flex;
-      width: 55%;
+      @media (min-width: @screen-sm-min) {
+        width: auto;
+      }
+      @media (min-width: @screen-md-min) {
+        width: 50%;
+      }
     }
     .list-pf-name {
-      width: 45%;
+      @media (min-width: @screen-sm-min) {
+        width: 50%;
+      }
     }
   }
   .list-pf-content-right {
