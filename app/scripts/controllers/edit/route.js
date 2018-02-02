@@ -51,6 +51,7 @@ angular.module('openshiftConsole')
     var routesVersion = APIService.getPreferredVersion('routes');
     var servicesVersion = APIService.getPreferredVersion('services');
 
+    var host;
 
     ProjectsService
       .get($routeParams.project)
@@ -77,7 +78,7 @@ angular.module('openshiftConsole')
             }
 
             route = angular.copy(original);
-            var host = _.get(route, 'spec.host');
+            host = _.get(route, 'spec.host');
             var isWildcard = _.get(route, 'spec.wildcardPolicy') === 'Subdomain';
             if (isWildcard) {
               // Display the route as a wildcard.
@@ -126,6 +127,13 @@ angular.module('openshiftConsole')
             _.set(updated, 'spec.to.weight', weight);
           }
 
+          var updatedHost = $scope.routing.host;
+          if (host !== updatedHost) {
+            if (updatedHost.startsWith('*.')) {
+              updatedHost = 'wildcard' + updatedHost.substring(1);
+            }
+            updated.spec.host = updatedHost;
+          }
           updated.spec.path = $scope.routing.path;
 
           var targetPort = $scope.routing.targetPort;
