@@ -10,7 +10,7 @@
           'ng-enter': row.previous,
           'hidden-sm hidden-md': row.previous
         }">
-          <!-- TODO: markup semantics suggest div.component-label in <pod-template> should be an h4, but only here on the overview -->
+          <h4 class="component-label section-label">Containers</h4>
           <pod-template
             pod-template="row.current | podTemplate"
             images-by-docker-reference="row.state.imagesByDockerReference"
@@ -115,8 +115,6 @@
           </uib-tab>
           <uib-tab ng-if="row.current" active="row.selectedTab.containers">
             <uib-tab-heading>Containers</uib-tab-heading>
-            <!-- TODO: markup semantics suggest div.component-label in <pod-template> should be an h4,
-                       but only here on the overview -->
             <pod-template
               pod-template="row.current | podTemplate"
               images-by-docker-reference="row.state.imagesByDockerReference"

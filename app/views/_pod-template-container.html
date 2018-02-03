@@ -4,11 +4,9 @@
   imagesByDockerReference (optional)
   builds (optional)
   detailed (optional)
-  labelPrefix (optional)
  -->
 
 <div class="pod-template">
-  <div class="component-label section-label" ng-if="!detailed" ng-bind-template="{{labelPrefix||'Container'}}"></div>
   <div class="pod-container-name">{{container.name}}</div>
   <div row ng-if="container.image" class="pod-template-image icon-row">
     <div class="icon-wrap">
