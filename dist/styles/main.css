@@ -6102,11 +6102,11 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .projects-instructions-link{white-space:pre}
 .projects-list{border-top:0;box-shadow:0 3px 1px -2px rgba(0,0,0,.15),0 2px 2px 0 rgba(0,0,0,.1),0 1px 5px 0 rgba(0,0,0,.09);margin-bottom:20px}
 .projects-list .project-info:hover{background-color:#def3ff}
-@media (min-width:768px){.projects-list .origin-modal-popup{margin-left:-10px;margin-top:-25px;width:370px}
+@media (min-width:768px){.projects-list .origin-modal-popup{margin-left:15px;margin-top:-25px;width:370px}
 .projects-list .origin-modal-popup.position-above{margin-top:20px}
-.projects-list .with-description .origin-modal-popup{margin-top:-45px}
+.projects-list .with-description .origin-modal-popup{margin-top:-42px}
 }
-@media (min-width:992px){.projects-list .with-description .origin-modal-popup{margin-top:-25px}
+@media (min-width:992px){.projects-list .with-description .origin-modal-popup{margin-top:0}
 }
 .container-terminal-wrapper{position:relative}
 @media (min-width:768px){.projects-list .with-description .origin-modal-popup.position-above{margin-top:20px}
