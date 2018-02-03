@@ -245,6 +245,9 @@ angular.module('openshiftConsole')
         $scope.toggleNav = function() {
           var collapsed = isCollapsed();
           setCollapsed(!collapsed, true);
+          // Emit a toggleNav message so listeners like the pod terminal can
+          // resize content if needed.
+          $rootScope.$emit('oscHeader.toggleNav');
         };
 
         $scope.toggleMobileNav = function() {
