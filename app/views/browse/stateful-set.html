@@ -63,14 +63,16 @@
               <div class="row" style="max-width: 650px;">
                 <div class="col-sm-4 col-sm-push-8 browse-deployment-donut">
                   <!--
-                  TODO: scale/autoscale is a follow-on PR
+                    TODO: Handle HPA for stateful sets. Pass an empty array for
+                    now since it will block scaling always otherwise.
                   -->
                   <deployment-donut
                     rc="statefulSet"
                     pods="podsForStatefulSet"
-                    scalable="isScalable()"
+                    scalable="true"
                     quotas="quotas"
-                    cluster-quotas="clusterQuotas">
+                    cluster-quotas="clusterQuotas"
+                    hpa="[]">
                   </deployment-donut>
                 </div>
 

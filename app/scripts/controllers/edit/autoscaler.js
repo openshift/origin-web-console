@@ -90,48 +90,6 @@ angular.module('openshiftConsole')
           return;
         }
 
-        var createHPA = function() {
-          $scope.disableInputs = true;
-          hideErrorNotifications();
-          var hpa = {
-            apiVersion: "autoscaling/v1",
-            kind: "HorizontalPodAutoscaler",
-            metadata: {
-              name: $scope.autoscaling.name,
-              labels: keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels))
-            },
-            spec: {
-              scaleTargetRef: {
-                kind: $routeParams.kind,
-                name: $routeParams.name,
-                apiVersion: "extensions/v1beta1",
-                subresource: "scale"
-              },
-              minReplicas: $scope.autoscaling.minReplicas,
-              maxReplicas: $scope.autoscaling.maxReplicas,
-              targetCPUUtilizationPercentage: $scope.autoscaling.targetCPU
-            }
-          };
-
-          DataService.create(horizontalPodAutoscalerVersion, null, hpa, context)
-            .then(function(hpa) { // Success
-              NotificationsService.addNotification({
-                type: 'success',
-                message: 'Horizontal pod autoscaler ' + hpa.metadata.name + ' successfully created.'
-              });
-
-              navigateBack();
-            }, function(result) { // Failure
-              $scope.disableInputs = false;
-              NotificationsService.addNotification({
-                id: 'edit-hpa-error',
-                type: 'error',
-                message: 'An error occurred creating the horizontal pod autoscaler.',
-                details: getErrorDetails(result)
-              });
-            });
-        };
-
         var updateHPA = function(hpa) {
           $scope.disableInputs = true;
 
@@ -185,6 +143,48 @@ angular.module('openshiftConsole')
                                 value: val
                               };
                             });
+
+          var createHPA = function() {
+            $scope.disableInputs = true;
+            hideErrorNotifications();
+            var hpa = {
+              apiVersion: "autoscaling/v1",
+              kind: "HorizontalPodAutoscaler",
+              metadata: {
+                name: $scope.autoscaling.name,
+                labels: keyValueEditorUtils.mapEntries(keyValueEditorUtils.compactEntries($scope.labels))
+              },
+              spec: {
+                scaleTargetRef: {
+                  kind: resource.kind,
+                  name: resource.metadata.name,
+                  apiVersion: resource.apiVersion,
+                  subresource: "scale"
+                },
+                minReplicas: $scope.autoscaling.minReplicas,
+                maxReplicas: $scope.autoscaling.maxReplicas,
+                targetCPUUtilizationPercentage: $scope.autoscaling.targetCPU
+              }
+            };
+
+            DataService.create(horizontalPodAutoscalerVersion, null, hpa, context)
+              .then(function(hpa) { // Success
+                NotificationsService.addNotification({
+                  type: 'success',
+                  message: 'Horizontal pod autoscaler ' + hpa.metadata.name + ' successfully created.'
+                });
+
+                navigateBack();
+              }, function(result) { // Failure
+                $scope.disableInputs = false;
+                NotificationsService.addNotification({
+                  id: 'edit-hpa-error',
+                  type: 'error',
+                  message: 'An error occurred creating the horizontal pod autoscaler.',
+                  details: getErrorDetails(result)
+                });
+              });
+          };
 
           // Are we editing an existing HPA?
           if ($routeParams.kind === "HorizontalPodAutoscaler") {

@@ -48,12 +48,7 @@ angular
               project: project,
               projectContext: context,
               statefulSet: statefulSet,
-              loaded: true,
-              // TODO: support scaling(?). currently no scale subresource.
-              isScalable: function() {
-                return false;
-              },
-              scale: function() {}
+              loaded: true
             });
 
             watches.push(DataService.watchObject($scope.statefulSetsVersion, $scope.statefulSetName, context, function(statefulSet) {
