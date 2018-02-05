@@ -7,8 +7,18 @@
   display: none !important;
 }
 
-@media only screen and (max-device-width: 736px) {
-  body.ios {
+body.ios {
+  // Prevent having to tap tabs twice on iOS.
+  .nav-tabs > {
+    li > a:hover:before {
+      content: none;
+    }
+    li.active > a:before {
+      content: '';
+    }
+  }
+
+  @media only screen and (max-device-width: 736px) {
     // Fix Bootstrap modal dialog zoom on the iPhone
     // See http://stackoverflow.com/questions/32675849/screen-zooms-in-when-a-bootstrap-modal-is-opened-on-ios-9-safari
     padding-right: 0px !important;
@@ -31,16 +41,6 @@
     textarea.form-control,
     .console-os .ace_editor {
       font-size: 16px;
-    }
-
-    // Prevent having to tap tabs twice on iOS.
-    .nav-tabs > {
-      li > a:hover:before {
-        content: none;
-      }
-      li.active > a:before {
-        content: '';
-      }
     }
   }
 }
