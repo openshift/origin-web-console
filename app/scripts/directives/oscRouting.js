@@ -75,7 +75,10 @@ angular.module("openshiftConsole")
 
         // Certificate updates also require custom host.
         scope.areCertificateInputsReadOnly = function() {
-          return !canISetCustomHost();
+          // For both new and existing routes, you can update TLS if you can
+          // *create* custom hosts.
+          // See https://github.com/openshift/origin/pull/18312
+          return !scope.canICreateCustomHosts;
         };
 
         scope.areCertificateInputsDisabled = function() {

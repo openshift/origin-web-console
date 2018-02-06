@@ -10047,7 +10047,7 @@ return r.existingRoute ? r.canIUpdateCustomHosts : r.canICreateCustomHosts;
 r.isHostnameReadOnly = function() {
 return !c();
 }, r.disableWildcards = t.DISABLE_WILDCARD_ROUTES, r.areCertificateInputsReadOnly = function() {
-return !c();
+return !r.canICreateCustomHosts;
 }, r.areCertificateInputsDisabled = function() {
 var e = _.get(r, "route.tls.termination");
 return !e || "passthrough" === e;
