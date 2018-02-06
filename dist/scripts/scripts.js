@@ -11043,6 +11043,73 @@ _.isFunction(n.onClick) && n.onClick() && e.close(t);
 };
 }
 }), function() {
+angular.module("openshiftConsole").component("istagSelect", {
+controller: [ "$scope", "APIService", "DataService", "ProjectsService", function(e, t, n, r) {
+var a = this, o = t.getPreferredVersion("imagestreams");
+a.isByNamespace = {}, a.isNamesByNamespace = {};
+var i = _.get(a, "istag.namespace") && _.get(a, "istag.imageStream") && _.get(a, "istag.tagObject.tag"), s = function(e) {
+_.each(e, function(e) {
+_.get(e, "status.tags") || _.set(e, "status.tags", []);
+});
+}, c = function(e) {
+if (a.isByNamespace[e] = {}, a.isNamesByNamespace[e] = [], !_.includes(a.namespaces, e)) return a.namespaces.push(e), a.isNamesByNamespace[e] = a.isNamesByNamespace[e].concat(a.istag.imageStream), void (a.isByNamespace[e][a.istag.imageStream] = {
+status: {
+tags: [ {
+tag: a.istag.tagObject.tag
+} ]
+}
+});
+n.list(o, {
+namespace: e
+}, function(t) {
+var n = angular.copy(t.by("metadata.name"));
+s(n), a.isByNamespace[e] = n, a.isNamesByNamespace[e] = _.keys(n).sort(), _.includes(a.isNamesByNamespace[e], a.istag.imageStream) || (a.isNamesByNamespace[e] = a.isNamesByNamespace[e].concat(a.istag.imageStream), a.isByNamespace[e][a.istag.imageStream] = {
+status: {
+tags: {}
+}
+}), _.find(a.isByNamespace[e][a.istag.imageStream].status.tags, {
+tag: a.istag.tagObject.tag
+}) || a.isByNamespace[e][a.istag.imageStream].status.tags.push({
+tag: a.istag.tagObject.tag
+});
+});
+};
+r.list().then(function(e) {
+a.namespaces = _.keys(e.by("metadata.name")), a.includeSharedNamespace && (a.namespaces = _.uniq([ "openshift" ].concat(a.namespaces))), a.namespaces = a.namespaces.sort(), a.namespaceChanged(a.istag.namespace);
+}), a.namespaceChanged = function(e) {
+if (i || (a.istag.imageStream = null, a.istag.tagObject = null), e && !a.isByNamespace[e]) return i ? (c(e), void (i = !1)) : void n.list(o, {
+namespace: e
+}, function(t) {
+var n = angular.copy(t.by("metadata.name"));
+s(n), a.isByNamespace[e] = n, a.isNamesByNamespace[e] = _.keys(n).sort();
+});
+}, a.getTags = function(e) {
+a.allowCustomTag && e && !_.find(a.isByNamespace[a.istag.namespace][a.istag.imageStream].status.tags, {
+tag: e
+}) && (_.remove(a.isByNamespace[a.istag.namespace][a.istag.imageStream].status.tags, function(e) {
+return !e.items;
+}), a.isByNamespace[a.istag.namespace][a.istag.imageStream].status.tags.unshift({
+tag: e
+}));
+}, a.groupTags = function(e) {
+return a.allowCustomTag ? e.items ? "Current Tags" : "New Tag" : "";
+};
+} ],
+controllerAs: "$ctrl",
+bindings: {
+istag: "=model",
+selectDisabled: "<",
+selectRequired: "<",
+includeSharedNamespace: "<",
+allowCustomTag: "<",
+appendToBody: "<"
+},
+require: {
+parent: "^form"
+},
+templateUrl: "components/istag-select/istag-select.html"
+});
+}(), function() {
 angular.module("openshiftConsole").component("oscWebhookTriggers", {
 controller: [ "$filter", "$scope", "$timeout", "$uibModal", "APIService", function(e, t, n, r, a) {
 var o = this;
@@ -14474,72 +14541,7 @@ serviceInstances: "<",
 createBinding: "&"
 },
 templateUrl: "views/overview/_service-bindings.html"
-}), angular.module("openshiftConsole").directive("istagSelect", [ "APIService", "DataService", "ProjectsService", function(e, t, n) {
-var r = e.getPreferredVersion("imagestreams");
-return {
-require: "^form",
-restrict: "E",
-scope: {
-istag: "=model",
-selectDisabled: "=",
-selectRequired: "=",
-includeSharedNamespace: "=",
-allowCustomTag: "=",
-appendToBody: "="
-},
-templateUrl: "views/directives/istag-select.html",
-controller: [ "$scope", function(e) {
-e.isByNamespace = {}, e.isNamesByNamespace = {};
-var a = _.get(e, "istag.namespace") && _.get(e, "istag.imageStream") && _.get(e, "istag.tagObject.tag"), o = function(e) {
-_.each(e, function(e) {
-_.get(e, "status.tags") || _.set(e, "status.tags", []);
-});
-}, i = function(n) {
-if (e.isByNamespace[n] = {}, e.isNamesByNamespace[n] = [], !_.includes(e.namespaces, n)) return e.namespaces.push(n), e.isNamesByNamespace[n] = e.isNamesByNamespace[n].concat(e.istag.imageStream), void (e.isByNamespace[n][e.istag.imageStream] = {
-status: {
-tags: [ {
-tag: e.istag.tagObject.tag
-} ]
-}
-});
-t.list(r, {
-namespace: n
-}, function(t) {
-var r = angular.copy(t.by("metadata.name"));
-o(r), e.isByNamespace[n] = r, e.isNamesByNamespace[n] = _.keys(r).sort(), _.includes(e.isNamesByNamespace[n], e.istag.imageStream) || (e.isNamesByNamespace[n] = e.isNamesByNamespace[n].concat(e.istag.imageStream), e.isByNamespace[n][e.istag.imageStream] = {
-status: {
-tags: {}
-}
-}), _.find(e.isByNamespace[n][e.istag.imageStream].status.tags, {
-tag: e.istag.tagObject.tag
-}) || e.isByNamespace[n][e.istag.imageStream].status.tags.push({
-tag: e.istag.tagObject.tag
-});
-});
-};
-n.list().then(function(n) {
-e.namespaces = _.keys(n.by("metadata.name")), e.includeSharedNamespace && (e.namespaces = _.uniq([ "openshift" ].concat(e.namespaces))), e.namespaces = e.namespaces.sort(), e.$watch("istag.namespace", function(n) {
-if (n && !e.isByNamespace[n]) return a ? (i(n), void (a = !1)) : void t.list(r, {
-namespace: n
-}, function(t) {
-var r = angular.copy(t.by("metadata.name"));
-o(r), e.isByNamespace[n] = r, e.isNamesByNamespace[n] = _.keys(r).sort();
-});
-});
-}), e.getTags = function(t) {
-e.allowCustomTag && t && !_.find(e.isByNamespace[e.istag.namespace][e.istag.imageStream].status.tags, {
-tag: t
-}) && (_.remove(e.isByNamespace[e.istag.namespace][e.istag.imageStream].status.tags, function(e) {
-return !e.items;
-}), e.isByNamespace[e.istag.namespace][e.istag.imageStream].status.tags.unshift({
-tag: t
-}));
-}, e.groupTags = function(t) {
-return e.allowCustomTag ? t.items ? "Current Tags" : "New Tag" : "";
-};
-} ]
-};
-} ]), angular.module("openshiftConsole").directive("deployImage", [ "$filter", "$q", "$window", "$uibModal", "APIService", "ApplicationGenerator", "DataService", "ImagesService", "Navigate", "NotificationsService", "ProjectsService", "QuotaService", "TaskList", "SecretsService", "keyValueEditorUtils", function(e, t, n, r, a, o, i, s, c, l, u, d, m, p, f) {
+}), angular.module("openshiftConsole").directive("deployImage", [ "$filter", "$q", "$window", "$uibModal", "APIService", "ApplicationGenerator", "DataService", "ImagesService", "Navigate", "NotificationsService", "ProjectsService", "QuotaService", "TaskList", "SecretsService", "keyValueEditorUtils", function(e, t, n, r, a, o, i, s, c, l, u, d, m, p, f) {
 var g = a.getPreferredVersion("imagestreamimages"), v = a.getPreferredVersion("configmaps"), h = a.getPreferredVersion("secrets");
 return {
 restrict: "E",
