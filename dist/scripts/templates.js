@@ -7455,45 +7455,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/directives/istag-select.html',
-    "<ng-form name=\"istagForm\">\n" +
-    "<fieldset ng-disabled=\"selectDisabled\">\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"form-group col-sm-4\">\n" +
-    "<label class=\"sr-only\">Namespace</label>\n" +
-    "<ui-select ng-required=\"selectRequired\" ng-model=\"istag.namespace\" ng-disabled=\"selectDisabled\" ng-change=\"istag.imageStream = null; istag.tagObject = null;\" append-to-body=\"appendToBody\">\n" +
-    "<ui-select-match placeholder=\"Namespace\">{{$select.selected}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"namespace in (namespaces | filter : $select.search)\">\n" +
-    "<div ng-bind-html=\"namespace | highlight : $select.search\"></div>\n" +
-    "</ui-select-choices>\n" +
-    "</ui-select>\n" +
-    "<div class=\"istag-separator\">/</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group col-sm-4\">\n" +
-    "<label class=\"sr-only\">Image Stream</label>\n" +
-    "<ui-select ng-required=\"selectRequired\" ng-model=\"istag.imageStream\" ng-disabled=\"!istag.namespace || selectDisabled\" ng-change=\"istag.tagObject = null\" append-to-body=\"appendToBody\">\n" +
-    "<ui-select-match placeholder=\"Image Stream\">{{$select.selected}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"imageStream in (isNamesByNamespace[istag.namespace] | filter : $select.search)\">\n" +
-    "<div ng-bind-html=\"imageStream | highlight : $select.search\"></div>\n" +
-    "</ui-select-choices>\n" +
-    "</ui-select>\n" +
-    "<div class=\"istag-separator\">:</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group col-sm-4\">\n" +
-    "<label class=\"sr-only\">Tag</label>\n" +
-    "<ui-select ng-required=\"selectRequired\" ng-model=\"istag.tagObject\" ng-disabled=\"!istag.imageStream || selectDisabled\" append-to-body=\"appendToBody\">\n" +
-    "<ui-select-match placeholder=\"Tag\">{{$select.selected.tag}}</ui-select-match>\n" +
-    "<ui-select-choices group-by=\"groupTags\" repeat=\"statusTag in (isByNamespace[istag.namespace][istag.imageStream].status.tags | filter : { tag: $select.search })\" refresh=\"getTags($select.search)\" refresh-delay=\"200\">\n" +
-    "<div ng-bind-html=\"statusTag.tag | highlight : $select.search\"></div>\n" +
-    "</ui-select-choices>\n" +
-    "</ui-select>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</fieldset>\n" +
-    "</ng-form>"
-  );
-
-
   $templateCache.put('views/directives/key-value-editor.html',
     "<ng-form name=\"forms.keyValueEditor\" novalidate ng-if=\"entries\" ng-class=\"{ 'has-sort' : (!cannotSort) && (entries.length > 1)}\">\n" +
     "<div ng-if=\"showHeader\" class=\"row form-row-has-controls input-labels\">\n" +
