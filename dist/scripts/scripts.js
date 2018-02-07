@@ -3109,40 +3109,44 @@ controller: "SetHomePageModalController"
 }
 };
 } ]), angular.module("openshiftConsole").factory("HPAService", [ "$filter", "$q", "LimitRangesService", "MetricsService", function(e, t, n, r) {
-var a = function(e, t, n) {
+var a = e("annotation"), o = function(e, t, n) {
 return _.every(n, function(n) {
 return _.get(n, [ "resources", t, e ]);
 });
-}, o = function(e, t) {
-return a(e, "requests", t);
 }, i = function(e, t) {
-return a(e, "limits", t);
-}, s = function(e, t, r) {
+return o(e, "requests", t);
+}, s = function(e, t) {
+return o(e, "limits", t);
+}, c = function(e, t, r) {
 return !!n.getEffectiveLimitRange(r, e, "Container")[t];
-}, c = function(e, t) {
-return s(e, "defaultRequest", t);
 }, l = function(e, t) {
-return s(e, "defaultLimit", t);
-}, u = function(e, t, r) {
-return !!n.hasClusterResourceOverrides(r) || (!(!o("cpu", e) && !c("cpu", t)) || !(!i("cpu", e) && !l("cpu", t)));
-}, d = e("humanizeKind"), m = e("hasDeploymentConfig"), p = function(e) {
+return c(e, "defaultRequest", t);
+}, u = function(e, t) {
+return c(e, "defaultLimit", t);
+}, d = function(e, t, r) {
+return !!n.hasClusterResourceOverrides(r) || (!(!i("cpu", e) && !l("cpu", t)) || !(!s("cpu", e) && !u("cpu", t)));
+}, m = e("humanizeKind"), p = e("hasDeploymentConfig"), f = function(e) {
 if (!e) return {
 message: "Metrics might not be configured by your cluster administrator. Metrics are required for autoscaling.",
 reason: "MetricsNotAvailable"
 };
-}, f = function(e, t, n) {
+}, g = function(e, t, n) {
 var r, a = _.get(e, "spec.template.spec.containers", []);
-if (!u(a, t, n)) return r = d(e.kind), {
+if (!d(a, t, n)) return r = m(e.kind), {
 message: "This " + r + " does not have any containers with a CPU request set. Autoscaling will not work without a CPU request.",
 reason: "NoCPURequest"
 };
-}, g = function(e) {
+}, v = function(e) {
+return _.some(e, function(e) {
+return a(e, "autoscaling.alpha.kubernetes.io/metrics");
+});
+}, h = function(e) {
 if (_.size(e) > 1) return {
 message: "More than one autoscaler is scaling this resource. This is not recommended because they might compete with each other. Consider removing all but one autoscaler.",
 reason: "MultipleHPA"
 };
-}, v = function(e, t) {
-if ("ReplicationController" === e.kind && m(e) && _.some(t, function() {
+}, y = function(e, t) {
+if ("ReplicationController" === e.kind && p(e) && _.some(t, function() {
 return _.some(t, function(e) {
 return "ReplicationController" === _.get(e, "spec.scaleTargetRef.kind");
 });
@@ -3152,7 +3156,10 @@ reason: "DeploymentHasHPA"
 };
 };
 return {
-hasCPURequest: u,
+usesV2Metrics: function(e) {
+return v([ e ]);
+},
+hasCPURequest: d,
 filterHPA: function(e, t, n) {
 return _.filter(e, function(e) {
 return e.spec.scaleTargetRef.kind === t && e.spec.scaleTargetRef.name === n;
@@ -3160,7 +3167,8 @@ return e.spec.scaleTargetRef.kind === t && e.spec.scaleTargetRef.name === n;
 },
 getHPAWarnings: function(e, n, a, o) {
 return !e || _.isEmpty(n) ? t.when([]) : r.isAvailable().then(function(t) {
-return _.compact([ p(t), f(e, a, o), g(n), v(e, n) ]);
+var r = v(n);
+return _.compact([ f(t), !r && g(e, a, o), h(n), y(e, n) ]);
 });
 },
 groupHPAs: function(e) {
@@ -7699,7 +7707,7 @@ return {
 name: t,
 value: e
 };
-}), "HorizontalPodAutoscaler" === n.kind) e.targetKind = _.get(a, "spec.scaleTargetRef.kind"), e.targetName = _.get(a, "spec.scaleTargetRef.name"), _.assign(e.autoscaling, {
+}), e.usesV2Metrics = c.usesV2Metrics(a), "HorizontalPodAutoscaler" === n.kind) e.targetKind = _.get(a, "spec.scaleTargetRef.kind"), e.targetName = _.get(a, "spec.scaleTargetRef.name"), _.assign(e.autoscaling, {
 minReplicas: _.get(a, "spec.minReplicas"),
 maxReplicas: _.get(a, "spec.maxReplicas"),
 targetCPU: _.get(a, "spec.targetCPUUtilizationPercentage")
@@ -10257,13 +10265,14 @@ restrict: "E",
 scope: {
 autoscaling: "=model",
 showNameInput: "=?",
-nameReadOnly: "=?"
+nameReadOnly: "=?",
+showRequestInput: "=?"
 },
 templateUrl: "views/directives/osc-autoscaling.html",
-link: function(t) {
+link: function(t, r, a) {
 t.nameValidation = n;
-var r = e.DEFAULT_HPA_CPU_TARGET_PERCENT, a = _.get(t, "autoscaling.targetCPU");
-_.isNil(a) && r && _.set(t, "autoscaling.targetCPU", r);
+var o = e.DEFAULT_HPA_CPU_TARGET_PERCENT, i = _.get(t, "autoscaling.targetCPU");
+_.isNil(i) && o && _.set(t, "autoscaling.targetCPU", o), "showRequestInput" in a || (t.showRequestInput = !0);
 }
 };
 } ]), angular.module("openshiftConsole").directive("oscSecrets", [ "$uibModal", "$filter", "APIService", "DataService", "SecretsService", function(e, t, n, r, a) {
