@@ -4975,9 +4975,12 @@ t[e.metadata.name] = r;
 }), t;
 };
 i.get(t.project).then(_.spread(function(e, r) {
-n.project = e, a.list(c, r).then(function(e) {
+n.project = e, u.push(a.watch(c, r, function(e) {
 n.quotas = _.sortBy(e.by("metadata.name"), "metadata.name"), n.orderedTypesByQuota = f(n.quotas), o.log("quotas", n.quotas);
-}), a.list(s, r).then(function(e) {
+}, {
+poll: !0,
+pollInterval: 6e4
+})), u.push(a.watch(s, r, function(e) {
 n.clusterQuotas = _.sortBy(e.by("metadata.name"), "metadata.name"), n.orderedTypesByClusterQuota = f(n.clusterQuotas), n.namespaceUsageByClusterQuota = {}, _.each(n.clusterQuotas, function(e) {
 if (e.status) {
 var r = _.find(e.status.namespaces, {
@@ -4986,7 +4989,10 @@ namespace: t.project
 n.namespaceUsageByClusterQuota[e.metadata.name] = r.status;
 }
 }), o.log("cluster quotas", n.clusterQuotas);
-}), a.list(l, r).then(function(e) {
+}, {
+poll: !0,
+pollInterval: 6e4
+})), u.push(a.watch(l, r, function(e) {
 n.limitRanges = _.sortBy(e.by("metadata.name"), "metadata.name"), n.emptyMessageLimitRanges = "There are no limit ranges set on this project.", angular.forEach(n.limitRanges, function(e) {
 var t = e.metadata.name;
 n.limitsByType[t] = {}, angular.forEach(e.spec.limits, function(e) {
@@ -5004,7 +5010,10 @@ r[t] = r[t] || {}, r[t].maxLimitRequestRatio = e;
 });
 });
 }), o.log("limitRanges", n.limitRanges);
-}), n.$on("$destroy", function() {
+}, {
+poll: !0,
+pollInterval: 6e4
+})), n.$on("$destroy", function() {
 a.unwatchAll(u);
 });
 }));
