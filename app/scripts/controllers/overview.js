@@ -84,14 +84,26 @@ function OverviewController($scope,
   var label = $filter('label');
   var getPodTemplate = $filter('podTemplate');
 
+  var buildConfigsVersion = APIService.getPreferredVersion('buildconfigs');
+  var buildsVersion = APIService.getPreferredVersion('builds');
+  var clusterResourceQuotasVersion = APIService.getPreferredVersion('appliedclusterresourcequotas');
+  var deploymentConfigsVersion = APIService.getPreferredVersion('deploymentconfigs');
   var deploymentsVersion = APIService.getPreferredVersion('deployments');
   var horizontalPodAutoscalersVersion = APIService.getPreferredVersion('horizontalpodautoscalers');
+  var imageStreamsVersion = APIService.getPreferredVersion('imagestreams');
+  var limitRangesVersion = APIService.getPreferredVersion('limitranges');
+  var podsVersion = APIService.getPreferredVersion('pods');
+  var replicaSetsVersion = APIService.getPreferredVersion('replicasets');
+  var replicationControllersVersion = APIService.getPreferredVersion('replicationcontrollers');
+  var resourceQuotasVersion = APIService.getPreferredVersion('resourcequotas');
+  var routesVersion = APIService.getPreferredVersion('routes');
   var serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
   var serviceClassesVersion = APIService.getPreferredVersion('clusterserviceclasses');
   var serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
   var servicePlansVersion = APIService.getPreferredVersion('clusterserviceplans');
+  var servicesVersion = APIService.getPreferredVersion('services');
   var statefulSetsVersion = APIService.getPreferredVersion('statefulsets');
-  var replicaSetsVersion = APIService.getPreferredVersion('replicasets');
+  var templatesVersion = APIService.getPreferredVersion('templates');
   overview.buildConfigsInstantiateVersion = APIService.getPreferredVersion('buildconfigs/instantiate');
 
 
@@ -1206,7 +1218,7 @@ function OverviewController($scope,
                                                            context);
     };
 
-    watches.push(DataService.watch("pods", context, function(podsData) {
+    watches.push(DataService.watch(podsVersion, context, function(podsData) {
       overview.pods = podsData.by("metadata.name");
       groupPods();
       updateReferencedImageStreams();
@@ -1218,7 +1230,7 @@ function OverviewController($scope,
       Logger.log("pods (subscribe)", overview.pods);
     }));
 
-    watches.push(DataService.watch("replicationcontrollers", context, function(rcData) {
+    watches.push(DataService.watch(replicationControllersVersion, context, function(rcData) {
       overview.replicationControllers = rcData.by("metadata.name");
       groupReplicationControllers();
       updateServicesForObjects(overview.vanillaReplicationControllers);
@@ -1230,7 +1242,7 @@ function OverviewController($scope,
       Logger.log("replicationcontrollers (subscribe)", overview.replicationControllers);
     }));
 
-    watches.push(DataService.watch("deploymentconfigs", context, function(dcData) {
+    watches.push(DataService.watch(deploymentConfigsVersion, context, function(dcData) {
       overview.deploymentConfigs = dcData.by("metadata.name");
       groupReplicationControllers();
       updateServicesForObjects(overview.deploymentConfigs);
@@ -1271,7 +1283,7 @@ function OverviewController($scope,
       Logger.log("deployments (subscribe)", overview.deploymentsByUID);
     }));
 
-    watches.push(DataService.watch("builds", context, function(buildData) {
+    watches.push(DataService.watch(buildsVersion, context, function(buildData) {
       state.builds = buildData.by("metadata.name");
       groupBuilds();
       Logger.log("builds (subscribe)", state.builds);
@@ -1288,19 +1300,19 @@ function OverviewController($scope,
       Logger.log("statefulsets (subscribe)", overview.statefulSets);
     }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
 
-    watches.push(DataService.watch("services", context, function(serviceData) {
+    watches.push(DataService.watch(servicesVersion, context, function(serviceData) {
       state.allServices = serviceData.by("metadata.name");
       groupServices();
       Logger.log("services (subscribe)", state.allServices);
     }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
 
-    watches.push(DataService.watch("routes", context, function(routesData) {
+    watches.push(DataService.watch(routesVersion, context, function(routesData) {
       overview.routes = routesData.by("metadata.name");
       groupRoutes();
       Logger.log("routes (subscribe)", overview.routes);
     }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
 
-    watches.push(DataService.watch("buildConfigs", context, function(buildConfigData) {
+    watches.push(DataService.watch(buildConfigsVersion, context, function(buildConfigData) {
       overview.buildConfigs = buildConfigData.by("metadata.name");
       groupBuildConfigsByOutputImage();
       groupBuildConfigsByDeploymentConfig();
@@ -1315,7 +1327,7 @@ function OverviewController($scope,
       Logger.log("autoscalers (subscribe)", overview.horizontalPodAutoscalers);
     }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
 
-    watches.push(DataService.watch("imagestreams", context, function(imageStreamData) {
+    watches.push(DataService.watch(imageStreamsVersion, context, function(imageStreamData) {
       imageStreams = imageStreamData.by("metadata.name");
       ImageStreamResolver.buildDockerRefMapForImageStreams(imageStreams,
                                                            state.imageStreamImageRefByDockerReference);
@@ -1324,12 +1336,12 @@ function OverviewController($scope,
     }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
 
     // Always poll quotas instead of watching, its not worth the overhead of maintaining websocket connections
-    watches.push(DataService.watch('resourcequotas', context, function(quotaData) {
+    watches.push(DataService.watch(resourceQuotasVersion, context, function(quotaData) {
       state.quotas = quotaData.by("metadata.name");
       setQuotaNotifications();
     }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
 
-    watches.push(DataService.watch('appliedclusterresourcequotas', context, function(clusterQuotaData) {
+    watches.push(DataService.watch(clusterResourceQuotasVersion, context, function(clusterQuotaData) {
       state.clusterQuotas = clusterQuotaData.by("metadata.name");
       setQuotaNotifications();
     }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
@@ -1425,13 +1437,13 @@ function OverviewController($scope,
 
     // List limit ranges in this project to determine if there is a default
     // CPU request for autoscaling.
-    DataService.list("limitranges", context, function(response) {
+    DataService.list(limitRangesVersion, context, function(response) {
       state.limitRanges = response.by("metadata.name");
     });
 
     var samplePipelineTemplate = Constants.SAMPLE_PIPELINE_TEMPLATE;
     if (samplePipelineTemplate) {
-      DataService.get("templates", samplePipelineTemplate.name, {
+      DataService.get(templatesVersion, samplePipelineTemplate.name, {
         namespace: samplePipelineTemplate.namespace
       }, {
         errorNotification: false
