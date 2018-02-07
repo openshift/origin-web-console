@@ -7645,7 +7645,52 @@ if (o.canI({
 resource: "horizontalpodautoscalers",
 group: "autoscaling"
 }, l, n.project)) {
-var m = function() {
+var m = function(t) {
+e.disableInputs = !0, (t = angular.copy(t)).metadata.labels = p.mapEntries(p.compactEntries(e.labels)), t.spec.minReplicas = e.autoscaling.minReplicas, t.spec.maxReplicas = e.autoscaling.maxReplicas, t.spec.targetCPUUtilizationPercentage = e.autoscaling.targetCPU, s.update(y, t.metadata.name, t, r).then(function(e) {
+d.addNotification({
+type: "success",
+message: "Horizontal pod autoscaler " + e.metadata.name + " successfully updated."
+}), v();
+}, function(t) {
+e.disableInputs = !1, d.addNotification({
+id: "edit-hpa-error",
+type: "error",
+message: "An error occurred creating the horizontal pod autoscaler.",
+details: g(t)
+});
+});
+}, f = {};
+f = "HorizontalPodAutoscaler" === n.kind ? {
+resource: "horizontalpodautoscalers",
+group: "autoscaling",
+version: "v1"
+} : {
+resource: a.kindToResource(n.kind),
+group: n.group
+}, s.get(f, n.name, r).then(function(a) {
+if (e.labels = _.map(_.get(a, "metadata.labels", {}), function(e, t) {
+return {
+name: t,
+value: e
+};
+}), e.usesV2Metrics = c.usesV2Metrics(a), "HorizontalPodAutoscaler" === n.kind) e.targetKind = _.get(a, "spec.scaleTargetRef.kind"), e.targetName = _.get(a, "spec.scaleTargetRef.name"), _.assign(e.autoscaling, {
+minReplicas: _.get(a, "spec.minReplicas"),
+maxReplicas: _.get(a, "spec.maxReplicas"),
+targetCPU: _.get(a, "spec.targetCPUUtilizationPercentage")
+}), e.disableInputs = !1, e.save = function() {
+m(a);
+}, e.breadcrumbs = i.getBreadcrumbs({
+name: e.targetName,
+kind: e.targetKind,
+namespace: n.project,
+project: t,
+subpage: "Autoscale"
+}); else {
+e.breadcrumbs = i.getBreadcrumbs({
+object: a,
+project: t,
+subpage: "Autoscale"
+}), e.save = function() {
 e.disableInputs = !0, h();
 var t = {
 apiVersion: "autoscaling/v1",
@@ -7656,10 +7701,9 @@ labels: p.mapEntries(p.compactEntries(e.labels))
 },
 spec: {
 scaleTargetRef: {
-kind: n.kind,
-name: n.name,
-apiVersion: "extensions/v1beta1",
-subresource: "scale"
+kind: a.kind,
+name: a.metadata.name,
+apiVersion: a.apiVersion
 },
 minReplicas: e.autoscaling.minReplicas,
 maxReplicas: e.autoscaling.maxReplicas,
@@ -7679,52 +7723,7 @@ message: "An error occurred creating the horizontal pod autoscaler.",
 details: g(t)
 });
 });
-}, f = function(t) {
-e.disableInputs = !0, (t = angular.copy(t)).metadata.labels = p.mapEntries(p.compactEntries(e.labels)), t.spec.minReplicas = e.autoscaling.minReplicas, t.spec.maxReplicas = e.autoscaling.maxReplicas, t.spec.targetCPUUtilizationPercentage = e.autoscaling.targetCPU, s.update(y, t.metadata.name, t, r).then(function(e) {
-d.addNotification({
-type: "success",
-message: "Horizontal pod autoscaler " + e.metadata.name + " successfully updated."
-}), v();
-}, function(t) {
-e.disableInputs = !1, d.addNotification({
-id: "edit-hpa-error",
-type: "error",
-message: "An error occurred creating the horizontal pod autoscaler.",
-details: g(t)
-});
-});
-}, S = {};
-S = "HorizontalPodAutoscaler" === n.kind ? {
-resource: "horizontalpodautoscalers",
-group: "autoscaling",
-version: "v1"
-} : {
-resource: a.kindToResource(n.kind),
-group: n.group
-}, s.get(S, n.name, r).then(function(a) {
-if (e.labels = _.map(_.get(a, "metadata.labels", {}), function(e, t) {
-return {
-name: t,
-value: e
 };
-}), e.usesV2Metrics = c.usesV2Metrics(a), "HorizontalPodAutoscaler" === n.kind) e.targetKind = _.get(a, "spec.scaleTargetRef.kind"), e.targetName = _.get(a, "spec.scaleTargetRef.name"), _.assign(e.autoscaling, {
-minReplicas: _.get(a, "spec.minReplicas"),
-maxReplicas: _.get(a, "spec.maxReplicas"),
-targetCPU: _.get(a, "spec.targetCPUUtilizationPercentage")
-}), e.disableInputs = !1, e.save = function() {
-f(a);
-}, e.breadcrumbs = i.getBreadcrumbs({
-name: e.targetName,
-kind: e.targetKind,
-namespace: n.project,
-project: t,
-subpage: "Autoscale"
-}); else {
-e.breadcrumbs = i.getBreadcrumbs({
-object: a,
-project: t,
-subpage: "Autoscale"
-}), e.save = m;
 var o = {}, l = function() {
 var n = _.get(a, "spec.template.spec.containers", []);
 e.showCPURequestWarning = !c.hasCPURequest(n, o, t);
