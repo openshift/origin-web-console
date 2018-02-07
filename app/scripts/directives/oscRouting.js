@@ -296,7 +296,7 @@ angular.module("openshiftConsole")
         });
 
         scope.$watch('controls.hideSlider', function(hideSlider){
-          if(!hideSlider && scope.route.alternateServices.length === 1){
+          if(!hideSlider && _.size(scope.route.alternateServices) === 1){
             initializingSlider = true;
             scope.controls.rangeSlider = scope.weightAsPercentage(scope.route.to.weight);
           }
