@@ -10142,7 +10142,7 @@ if (0 === r.route.to.weight && 0 === r.route.alternateServices[0].weight) return
 m = !0, r.controls.rangeSlider = r.weightAsPercentage(r.route.to.weight);
 }
 }), r.$watch("controls.hideSlider", function(e) {
-e || 1 !== r.route.alternateServices.length || (m = !0, r.controls.rangeSlider = r.weightAsPercentage(r.route.to.weight));
+e || 1 !== _.size(r.route.alternateServices) || (m = !0, r.controls.rangeSlider = r.weightAsPercentage(r.route.to.weight));
 }), r.$watch("controls.rangeSlider", function(e, t) {
 m ? m = !1 : e !== t && (e = parseInt(e, 10), _.set(r, "route.to.weight", e), _.set(r, "route.alternateServices[0].weight", 100 - e));
 });
