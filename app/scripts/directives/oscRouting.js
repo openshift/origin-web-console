@@ -71,7 +71,10 @@ angular.module("openshiftConsole")
           return !canISetCustomHost();
         };
 
-        scope.disableWildcards = Constants.DISABLE_WILDCARD_ROUTES;
+        // Wildcard policy can't be modified for existing routes.
+        scope.disableWildcards =
+          Constants.DISABLE_WILDCARD_ROUTES ||
+          (scope.existingRoute && scope.route.wildcardPolicy !== 'Subdomain');
 
         // Certificate updates also require custom host.
         scope.areCertificateInputsReadOnly = function() {
