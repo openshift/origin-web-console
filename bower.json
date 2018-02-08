@@ -50,6 +50,7 @@
   },
   "appPath": "app",
   "resolutions": {
+    "jquery": "2.1.4",
     "angular-bootstrap": "0.14.3",
     "d3": "3.5.17"
   },
