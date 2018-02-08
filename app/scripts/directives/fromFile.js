@@ -351,7 +351,10 @@ angular.module("openshiftConsole")
             function() {
               // Either it didn't exist already or we couldn't validate existence for some reason, just continue on
               // and try to create it.
-              $scope.createResources.push(item);
+              var createResource = angular.copy(item);
+              // Remove resourceVersion if set like `oc create`.
+              _.unset(createResource, 'metadata.resourceVersion');
+              $scope.createResources.push(createResource);
           });
         }
 

@@ -9693,7 +9693,8 @@ errorNotification: !1
 var n = angular.copy(e), r = angular.copy(t.metadata);
 r.annotations = e.metadata.annotations, r.labels = e.metadata.labels, n.metadata = r, p.updateResources.push(n);
 }, function() {
-p.createResources.push(e);
+var t = angular.copy(e);
+_.unset(t, "metadata.resourceVersion"), p.createResources.push(t);
 }) : (p.errorOccurred = !0, void (p.error = {
 message: a.unsupportedObjectKindOrVersion(e)
 })) : (p.errorOccurred = !0, void (p.error = {
