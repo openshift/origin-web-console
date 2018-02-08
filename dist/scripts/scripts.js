@@ -10744,17 +10744,28 @@ h = e.by("metadata.name");
 });
 }, T = function() {
 var e = a.project;
-i.currentProjectName !== e && (i.currentProjectName = e, i.chromeless = "chromeless" === a.view, e && !i.chromeless ? (_.set(r, "view.hasProject", !0), i.canIAddToProject = !1, s.getProjectRules(e).then(function() {
-i.currentProjectName === e && (i.canIAddToProject = s.canIAddToProject(e), i.canIAddToProject && l.getCatalogItems().then(function(e) {
-i.catalogItems = e;
+if (i.currentProjectName !== e) {
+i.currentProjectName = e, i.chromeless = "chromeless" === a.view;
+var t, o;
+e && !i.chromeless ? (_.set(r, "view.hasProject", !0), i.canIAddToProject = !1, s.getProjectRules(e).then(function() {
+if (i.currentProjectName === e && (i.canIAddToProject = s.canIAddToProject(e), i.canIAddToProject)) {
+var r = l.getCatalogItems().then(function(e) {
+t = e;
+}), a = c.getProjectCatalogItems(e).then(_.spread(function(e) {
+o = e;
 }));
+n.all([ r, a ]).then(function() {
+i.catalogItems = c.sortCatalogItems(_.concat(t, o));
+});
+}
 }), E().then(function() {
 i.currentProjectName && h && (h[i.currentProjectName] || (h[i.currentProjectName] = {
 metadata: {
 name: i.currentProjectName
 }
 }), i.currentProject = h[i.currentProjectName], R());
-})) : _.set(r, "view.hasProject", !1));
+})) : _.set(r, "view.hasProject", !1);
+}
 }, N = function() {
 i.orderingPanelVisible && v.addItem(_.get(i.selectedItem, "resource.metadata.uid"));
 }, D = function(e) {

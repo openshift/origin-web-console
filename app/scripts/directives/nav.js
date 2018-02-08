@@ -327,6 +327,7 @@ angular.module('openshiftConsole')
           $scope.currentProjectName = currentProjectName;
           $scope.chromeless = $routeParams.view === "chromeless";
 
+          var catalogItems, projectItems;
           if (currentProjectName && !$scope.chromeless) {
             _.set($rootScope, 'view.hasProject', true);
             // Check if the user can add to project after switching projects.
@@ -342,8 +343,14 @@ angular.module('openshiftConsole')
               $scope.canIAddToProject = AuthorizationService.canIAddToProject(currentProjectName);
 
               if ($scope.canIAddToProject) {
-                CatalogService.getCatalogItems().then(function(items) {
-                  $scope.catalogItems = items;
+                var catalogItemsPromise = CatalogService.getCatalogItems().then(function(items) {
+                  catalogItems = items;
+                });
+                var projectItemsPromise = Catalog.getProjectCatalogItems(currentProjectName).then(_.spread(function(catalogServiceItems) {
+                  projectItems = catalogServiceItems;
+                }));
+                $q.all([catalogItemsPromise, projectItemsPromise]).then(function() {
+                  $scope.catalogItems = Catalog.sortCatalogItems(_.concat(catalogItems, projectItems));
                 });
               }
             });
