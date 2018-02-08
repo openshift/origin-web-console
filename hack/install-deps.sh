@@ -2,7 +2,7 @@
 
 set -e
 
-OPENSHIFT_JVM_VERSION=v1.2.5
+OPENSHIFT_JVM_VERSION=v1.2.6
 
 STARTTIME=$(date +%s)
 
