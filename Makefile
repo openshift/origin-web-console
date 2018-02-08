@@ -44,5 +44,5 @@ build: install
 test: build
 	hack/verify-dist.sh
 	hack/test-headless.sh test $(GRUNT_FLAGS)
-	hack/test-headless.sh test-integration $(GRUNT_FLAGS)
+	hack/test-headless.sh test-integration:dist $(GRUNT_FLAGS)
 .PHONY: test
