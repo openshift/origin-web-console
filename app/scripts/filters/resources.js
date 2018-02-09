@@ -7,6 +7,11 @@ angular.module('openshiftConsole')
       return annotationFilter(pvc, 'volume.beta.kubernetes.io/storage-class');
     };
   })
+  .filter('storageClassAccessMode', function(annotationFilter) {
+    return function(storageClass) {
+      return annotationFilter(storageClass, 'storage.alpha.openshift.io/access-mode');
+    };
+  })
   .filter('tags', function(annotationFilter) {
     return function(resource, /* optional */ annotationKey) {
       annotationKey = annotationKey || "tags";
