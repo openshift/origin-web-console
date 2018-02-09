@@ -32,6 +32,7 @@ angular.module('openshiftConsole')
     var limitRangesVersion = APIService.getPreferredVersion('limitranges');
 
     var watches = [];
+    var DEFAULT_POLL_INTERVAL = 60 * 1000; // milliseconds
 
     var usageValue = $filter('usageValue');
     $scope.isAtLimit = function(quota, resourceType) {
@@ -106,13 +107,13 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
 
-        DataService.list(resourceQuotasVersion, context).then(function(resp) {
+        watches.push(DataService.watch(resourceQuotasVersion, context, function(resp) {
           $scope.quotas = _.sortBy(resp.by("metadata.name"), "metadata.name");
           $scope.orderedTypesByQuota = orderTypes($scope.quotas);
           Logger.log("quotas", $scope.quotas);
-        });
+        }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
 
-        DataService.list(appliedClusterResourceQuotasVersion, context).then(function(resp) {
+        watches.push(DataService.watch(appliedClusterResourceQuotasVersion, context, function(resp) {
           $scope.clusterQuotas = _.sortBy(resp.by("metadata.name"), "metadata.name");
           $scope.orderedTypesByClusterQuota = orderTypes($scope.clusterQuotas);
           $scope.namespaceUsageByClusterQuota = {};
@@ -123,9 +124,9 @@ angular.module('openshiftConsole')
             }
           });
           Logger.log("cluster quotas", $scope.clusterQuotas);
-        });
+        }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
 
-        DataService.list(limitRangesVersion, context).then(function(resp) {
+        watches.push(DataService.watch(limitRangesVersion, context, function(resp) {
           $scope.limitRanges = _.sortBy(resp.by("metadata.name"), "metadata.name");
           $scope.emptyMessageLimitRanges = "There are no limit ranges set on this project.";
           // Convert to a sane format for a view to a build a table with rows per resource type
@@ -159,7 +160,7 @@ angular.module('openshiftConsole')
             });
           });
           Logger.log("limitRanges", $scope.limitRanges);
-        });
+        }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
 
         $scope.$on('$destroy', function(){
           DataService.unwatchAll(watches);

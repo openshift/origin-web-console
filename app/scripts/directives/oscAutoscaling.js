@@ -13,10 +13,11 @@ angular.module("openshiftConsole")
       scope: {
         autoscaling: "=model",
         showNameInput: "=?",
-        nameReadOnly: "=?"
+        nameReadOnly: "=?",
+        showRequestInput: "=?"
       },
       templateUrl: 'views/directives/osc-autoscaling.html',
-      link: function(scope) {
+      link: function(scope, elem, attrs) {
         scope.nameValidation = DNS1123_SUBDOMAIN_VALIDATION;
 
         // Prefill a default value if DEFAULT_HPA_CPU_TARGET_PERCENT is set and
@@ -25,6 +26,10 @@ angular.module("openshiftConsole")
         var targetCPU = _.get(scope, 'autoscaling.targetCPU');
         if (_.isNil(targetCPU) && defaultTargetCPU) {
           _.set(scope, 'autoscaling.targetCPU', defaultTargetCPU);
+        }
+        // true if not present
+        if( !('showRequestInput' in attrs) ) {
+          scope.showRequestInput = true;
         }
       }
     };

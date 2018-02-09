@@ -2,6 +2,9 @@
 
 angular.module("openshiftConsole")
   .factory("HPAService", function($filter, $q, LimitRangesService, MetricsService) {
+
+    var annotation = $filter('annotation');
+
     // Checks if all containers have a value set for the compute resource request or limit.
     //
     // computeResource  - 'cpu' or 'memory'
@@ -99,6 +102,13 @@ angular.module("openshiftConsole")
     };
 
 
+    var hasV2HPAAnnotations = function(hpaResources) {
+      return _.some(hpaResources, function(hpa) {
+        return annotation(hpa, 'autoscaling.alpha.kubernetes.io/metrics');
+      });
+    };
+
+
     var hasCompetingAutoscalersWarning = function(hpaResources) {
       if (_.size(hpaResources) > 1) {
         return {
@@ -146,14 +156,18 @@ angular.module("openshiftConsole")
         return $q.when([]);
       }
       return MetricsService.isAvailable().then(function(metricsAvailable) {
+        var isV2HPA = hasV2HPAAnnotations(hpaResources);
         return _.compact([
           hasMetricsAvailableWarning(metricsAvailable),
-          hasCPURequestWarning(scaleTarget, limitRanges, project),
+          // we don't need to show this warning, but if we have it, we should also
+          // not show the cpuRequestWarning, until we update to the newer API
+          isV2HPA ? false : hasCPURequestWarning(scaleTarget, limitRanges, project),
           hasCompetingAutoscalersWarning(hpaResources),
           hasCompetingDCAndAutoscalerWarning(scaleTarget, hpaResources)
         ]);
       });
     };
+
 
     // Group HPAs by the object they scale.
     //
@@ -185,7 +199,13 @@ angular.module("openshiftConsole")
       return hpaByResource;
     };
 
+    // currently unsupported by the webconsole
+    var usesV2Metrics = function(hpa) {
+      return hasV2HPAAnnotations([hpa]);
+    };
+
     return {
+      usesV2Metrics: usesV2Metrics,
       hasCPURequest: hasCPURequest,
       filterHPA: filterHPA,
       getHPAWarnings: getHPAWarnings,
