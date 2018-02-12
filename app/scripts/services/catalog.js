@@ -37,10 +37,6 @@ angular.module("openshiftConsole")
     AuthService.onUserChanged(clearCachedCatalogItems);
     AuthService.onLogout(clearCachedCatalogItems);
 
-    var isTemplateServiceBrokerEnabled = function() {
-      return !!$window.OPENSHIFT_CONFIG.templateServiceBrokerEnabled;
-    };
-
     var getCatalogItems = function(forceRefresh) {
       if (cachedCatalogItems && !forceRefresh) {
         Logger.debug('CatalogService: returning cached catalog items');
@@ -48,8 +44,7 @@ angular.module("openshiftConsole")
       }
 
       Logger.debug('CatalogService: getCatalogItems, force refresh', forceRefresh);
-      var includeTemplates = !isTemplateServiceBrokerEnabled();
-      return Catalog.getCatalogItems(includeTemplates).then(_.spread(function(items, errorMessage) {
+      return Catalog.getCatalogItems(true).then(_.spread(function(items, errorMessage) {
         if (errorMessage) {
           var alertData = {
             type: 'error',
@@ -296,7 +291,6 @@ angular.module("openshiftConsole")
 
     return {
       SERVICE_CATALOG_ENABLED: SERVICE_CATALOG_ENABLED,
-      isTemplateServiceBrokerEnabled: isTemplateServiceBrokerEnabled,
       getCatalogItems: getCatalogItems,
       getCategoryItem: getCategoryItem,
       categorizeImageStreams: categorizeImageStreams,
