@@ -73671,6 +73671,39 @@ return r += '\n<div class="hopscotch-bubble-container" style="width: ' + (null =
 r += "\n  </div>\n  ", a.showClose && (r += '<button class="hopscotch-bubble-close hopscotch-close">' + (null == (i = o.closeTooltip) ? "" : i) + "</button>"), r += '\n</div>\n<div class="hopscotch-bubble-arrow-container hopscotch-arrow">\n  <div class="hopscotch-bubble-arrow-border"></div>\n  <div class="hopscotch-bubble-arrow"></div>\n</div>\n';
 };
 }.call(h), h;
+}), function(e, t) {
+"function" == typeof define && define.amd ? define([], t) : "object" == typeof exports ? module.exports = t() : e.compareVersions = t();
+}(this, function() {
+function e(e) {
+var t = e.replace(/^v/, "").split("."), n = t.splice(0, 2);
+return n.push(t.join(".")), n;
+}
+function t(e) {
+return isNaN(Number(e)) ? e : Number(e);
+}
+function n(e) {
+if ("string" != typeof e) throw new TypeError("Invalid argument expected string");
+if (!i.test(e)) throw new Error("Invalid argument not valid semver");
+}
+var i = /^v?(?:\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+)(?:-[\da-z\-]+(?:\.[\da-z\-]+)*)?(?:\+[\da-z\-]+(?:\.[\da-z\-]+)*)?)?)?$/i, r = /-([0-9A-Za-z-.]+)/;
+return function(i, o) {
+[ i, o ].forEach(n);
+for (var a = e(i), s = e(o), l = 0; l < 3; l++) {
+var c = parseInt(a[l] || 0, 10), u = parseInt(s[l] || 0, 10);
+if (c > u) return 1;
+if (u > c) return -1;
+}
+if ([ a[2], s[2] ].every(r.test.bind(r))) {
+var d = r.exec(a[2])[1].split(".").map(t), h = r.exec(s[2])[1].split(".").map(t);
+for (l = 0; l < Math.max(d.length, h.length); l++) {
+if (void 0 === d[l] || "string" == typeof h[l] && "number" == typeof d[l]) return -1;
+if (void 0 === h[l] || "string" == typeof d[l] && "number" == typeof h[l]) return 1;
+if (d[l] > h[l]) return 1;
+if (h[l] > d[l]) return -1;
+}
+} else if ([ a[2], s[2] ].some(r.test.bind(r))) return r.test(a[2]) ? -1 : 1;
+return 0;
+};
 }), angular.module("openshiftCommonServices", [ "ab-base64" ]).config([ "AuthServiceProvider", function(e) {
 e.UserStore("MemoryUserStore");
 } ]).constant("API_CFG", _.get(window.OPENSHIFT_CONFIG, "api", {})).constant("APIS_CFG", _.get(window.OPENSHIFT_CONFIG, "apis", {})).constant("AUTH_CFG", _.get(window.OPENSHIFT_CONFIG, "auth", {})).config([ "$httpProvider", "AuthServiceProvider", "RedirectLoginServiceProvider", "AUTH_CFG", function(e, t, n, i) {
@@ -74132,7 +74165,18 @@ n ? (t.truncatedContent = e(n, t.limit, t.useWordBoundary, t.newlineLimit), t.tr
 });
 }
 };
-} ]), angular.module("openshiftCommonServices").constant("API_PREFERRED_VERSIONS", {
+} ]), angular.module("openshiftCommonServices").constant("API_DEDUPLICATION", {
+groups: [ {
+group: "authorization.openshift.io"
+} ],
+kinds: [ {
+group: "extensions",
+kind: "HorizontalPodAutoscaler"
+}, {
+group: "extensions",
+kind: "DaemonSet"
+} ]
+}), angular.module("openshiftCommonServices").constant("API_PREFERRED_VERSIONS", {
 appliedclusterresourcequotas: {
 group: "quota.openshift.io",
 version: "v1",
@@ -74277,8 +74321,8 @@ version: "v1",
 resource: "persistentvolumeclaims"
 },
 replicasets: {
-group: "extensions",
-version: "v1beta1",
+group: "apps",
+version: "v1",
 resource: "replicasets"
 },
 replicationcontrollers: {
@@ -74717,25 +74761,25 @@ var e = (this.resource || "").split("/");
 return e.shift(), e;
 }, ResourceGroupVersion.prototype.equals = function(e, t, n) {
 return this.resource === e && (1 === arguments.length || this.group === t && (2 === arguments.length || this.version === n));
-}, angular.module("openshiftCommonServices").factory("APIService", [ "API_CFG", "APIS_CFG", "API_PREFERRED_VERSIONS", "AuthService", "Constants", "Logger", "$q", "$http", "$filter", "$window", function(e, t, n, i, r, o, a, s, l, c) {
-function u(e) {
+}, angular.module("openshiftCommonServices").factory("APIService", [ "API_CFG", "APIS_CFG", "API_PREFERRED_VERSIONS", "API_DEDUPLICATION", "AuthService", "Constants", "Logger", "$q", "$http", "$filter", "$window", function(e, t, n, i, r, o, a, s, l, c, u) {
+function d(e) {
 if (!e) return e;
 var t = e.indexOf("/");
 return -1 === t ? e.toLowerCase() : e.substring(0, t).toLowerCase() + e.substring(t);
 }
-function d(e, t) {
+function h(e, t) {
 if (!e) return "";
 var n = e;
-return t && (n = l("humanizeKind")(n)), "endpoints" === (n = String(n).toLowerCase()) || "securitycontextconstraints" === n || ("s" === n[n.length - 1] ? n += "es" : "y" === n[n.length - 1] ? n = n.substring(0, n.length - 1) + "ies" : n += "s"), n;
+return t && (n = c("humanizeKind")(n)), "endpoints" === (n = String(n).toLowerCase()) || "securitycontextconstraints" === n || ("s" === n[n.length - 1] ? n += "es" : "y" === n[n.length - 1] ? n = n.substring(0, n.length - 1) + "ies" : n += "s"), n;
 }
-var h = {
+var f = {
 "": "v1",
 extensions: "v1beta1"
-}, f = function(e) {
+}, p = function(e) {
 if (e instanceof ResourceGroupVersion) return e;
 var n, i, r;
-return angular.isString(e) ? (n = u(e), r = h[i = ""]) : e && e.resource && (n = u(e.resource), i = e.group || "", r = e.version || h[i] || _.get(t, [ "groups", i, "preferredVersion" ])), new ResourceGroupVersion(n, i, r);
-}, p = function(e) {
+return angular.isString(e) ? (n = d(e), r = f[i = ""]) : e && e.resource && (n = d(e.resource), i = e.group || "", r = e.version || f[i] || _.get(t, [ "groups", i, "preferredVersion" ])), new ResourceGroupVersion(n, i, r);
+}, g = function(e) {
 if (e) {
 var t = e.split("/");
 return 1 === t.length ? "v1" === t[0] ? {
@@ -74747,22 +74791,17 @@ version: ""
 } : 2 === t.length ? {
 group: t[0],
 version: t[1]
-} : void o.warn('Invalid apiVersion "' + e + '"');
+} : void a.warn('Invalid apiVersion "' + e + '"');
 }
-}, g = [ {
-group: "authorization.openshift.io"
-} ], m = [ {
-group: "extensions",
-kind: "HorizontalPodAutoscaler"
-} ], v = function(e, t) {
-return !(!_.find(m, {
+}, m = function(e, t) {
+return !(!_.find(i.kinds, {
 group: e,
 kind: t
-}) && !_.find(g, {
+}) && !_.find(i.groups, {
 group: e
 }));
-}, b = function(n) {
-var i = [], o = _.map(r.AVAILABLE_KINDS_BLACKLIST, function(e) {
+}, v = function(n) {
+var i = [], r = _.map(o.AVAILABLE_KINDS_BLACKLIST, function(e) {
 return _.isString(e) ? {
 kind: e,
 group: ""
@@ -74773,7 +74812,7 @@ return "openshift" !== t;
 }), function(e) {
 _.each(e.resources.v1, function(e) {
 if (e.namespaced || n) {
-if (_.includes(e.name, "/") || _.find(o, {
+if (_.includes(e.name, "/") || _.find(r, {
 kind: e.kind,
 group: ""
 })) return;
@@ -74784,12 +74823,12 @@ group: ""
 }
 });
 }), _.each(t.groups, function(e) {
-var t = h[e.name] || e.preferredVersion;
+var t = f[e.name] || e.preferredVersion;
 _.each(e.versions[t].resources, function(t) {
-_.includes(t.name, "/") || _.find(o, {
+_.includes(t.name, "/") || _.find(r, {
 kind: t.kind,
 group: e.name
-}) || v(e.name, t.kind) || (t.namespaced || n) && i.push({
+}) || m(e.name, t.kind) || (t.namespaced || n) && i.push({
 kind: t.kind,
 group: e.name
 });
@@ -74797,32 +74836,32 @@ group: e.name
 }), _.uniqBy(i, function(e) {
 return e.group + "/" + e.kind;
 });
-}, y = b(!1), w = b(!0);
+}, b = v(!1), y = v(!0);
 return {
 toAPIVersion: function(e) {
 return e.group ? e.group + "/" + e.version : e.version;
 },
-toResourceGroupVersion: f,
-parseGroupVersion: p,
+toResourceGroupVersion: p,
+parseGroupVersion: g,
 objectToResourceGroupVersion: function(e) {
 if (e && e.kind && e.apiVersion) {
-var t = d(e.kind);
+var t = h(e.kind);
 if (t) {
-var n = p(e.apiVersion);
+var n = g(e.apiVersion);
 if (n) return new ResourceGroupVersion(t, n.group, n.version);
 }
 }
 },
 deriveTargetResource: function(e, t) {
 if (e && t) {
-var n = d(t.kind), i = p(t.apiVersion), r = f(e);
+var n = h(t.kind), i = g(t.apiVersion), r = p(e);
 if (n && i && r) return angular.isString(e) ? (r.equals(n) && (r.group = i.group, r.version = i.version), r) : (r.equals(n, i.group) && (r.version = i.version), r);
 }
 },
-kindToResource: d,
+kindToResource: h,
 kindToResourceGroupVersion: function(e) {
-return f({
-resource: d(e.kind),
+return p({
+resource: h(e.kind),
 group: e.group
 });
 },
@@ -74830,19 +74869,19 @@ apiInfo: function(n) {
 if (t.API_DISCOVERY_ERRORS) {
 if (_.every(t.API_DISCOVERY_ERRORS, function(e) {
 return 0 === _.get(e, "data.status");
-}) && !i.isLoggedIn()) return void i.withUser();
-var r = !1;
+}) && !r.isLoggedIn()) return void r.withUser();
+var i = !1;
 if (_.each(t.API_DISCOVERY_ERRORS, function(e) {
-if (e.fatal) return o.error("API discovery failed (fatal error)", e), void (r = !0);
-o.warn("API discovery failed", e);
-}), r) return void (c.location.href = URI("error").query({
+if (e.fatal) return a.error("API discovery failed (fatal error)", e), void (i = !0);
+a.warn("API discovery failed", e);
+}), i) return void (u.location.href = URI("error").query({
 error_description: "Unable to load details about the server. If the problem continues, please contact your system administrator.",
 error: "API_DISCOVERY"
 }).toString());
 }
-var a, s = (n = f(n)).primaryResource();
+var o, s = (n = p(n)).primaryResource();
 if (n.group) {
-if (!(a = _.get(t, [ "groups", n.group, "versions", n.version, "resources", s ]))) return;
+if (!(o = _.get(t, [ "groups", n.group, "versions", n.version, "resources", s ]))) return;
 var l = _.get(t, [ "groups", n.group, "hostPrefix" ]) || t;
 return {
 resource: n.resource,
@@ -74851,18 +74890,18 @@ version: n.version,
 protocol: l.protocol,
 hostPort: l.hostPort,
 prefix: l.prefix,
-namespaced: a.namespaced,
-verbs: a.verbs
+namespaced: o.namespaced,
+verbs: o.verbs
 };
 }
-var u;
-for (var d in e) if (u = e[d], a = _.get(u, [ "resources", n.version, s ])) return {
+var c;
+for (var d in e) if (c = e[d], o = _.get(c, [ "resources", n.version, s ])) return {
 resource: n.resource,
 version: n.version,
-hostPort: u.hostPort,
-prefix: u.prefix,
-namespaced: a.namespaced,
-verbs: a.verbs
+hostPort: c.hostPort,
+prefix: c.prefix,
+namespaced: o.namespaced,
+verbs: o.verbs
 };
 },
 invalidObjectKindOrVersion: function(e) {
@@ -74874,11 +74913,11 @@ var t = "<none>", n = "<none>";
 return e && e.kind && (t = e.kind), e && e.apiVersion && (n = e.apiVersion), "The API version " + n + " for kind " + t + " is not supported by this server";
 },
 availableKinds: function(e) {
-return e ? w : y;
+return e ? y : b;
 },
 getPreferredVersion: function(e) {
 var t = n[e];
-return t || o.log("No preferred version for ", e), t;
+return t || a.log("No preferred version for ", e), t;
 }
 };
 } ]), angular.module("openshiftCommonServices").service("ApplicationsService", [ "$q", "APIService", "DataService", function(e, t, n) {
@@ -76250,6 +76289,24 @@ error_description: "No API token returned"
 }
 };
 } ];
+}), angular.module("openshiftCommonServices").service("VersionsService", function() {
+var e = function(e, t, n) {
+e = e || "", t = t || "";
+try {
+var i = window.compareVersions(e, t);
+return n ? -1 * i : i;
+} catch (n) {
+return e.localeCompare(t);
+}
+};
+return {
+compare: function(t, n) {
+return e(t, n, !1);
+},
+rcompare: function(t, n) {
+return e(t, n, !0);
+}
+};
 }), angular.module("openshiftCommonServices").provider("$ws", [ "$httpProvider", function(e) {
 this.$get = [ "$q", "$injector", "Logger", function(t, n, i) {
 var r = i.get("auth");
@@ -78384,7 +78441,7 @@ e.exports = '<div class="order-service-config">\n  <bind-application-form applic
 }, function(e, t) {
 e.exports = '<div class="order-service-config">\n  <div class="config-top">\n    <form name="$ctrl.builderForm" class="config-form">\n      <select-project ng-if="!$ctrl.addToProject" selected-project="$ctrl.selectedProject"\n                      name-taken="$ctrl.projectNameTaken"></select-project>\n      <span ng-if="!$ctrl.noProjectsCantCreate">\n        <div class="form-group">\n          <label class="control-label" for="version">Version</label>\n          <ui-select ng-model="$ctrl.istag" required search-enabled="false">\n            <ui-select-match>\n              <span>\n                {{$select.selected.name}}\n                <small ng-repeat="otherTag in $ctrl.referencedBy[$select.selected.name]">\n                  <span ng-if="$first"> &mdash; </span>{{otherTag}}<span ng-if="!$last">,</span>\n                </small>\n              </span>\n            </ui-select-match>\n            <ui-select-choices repeat="tag in $ctrl.versions track by tag.name">\n              {{tag.name}}\n              <small ng-repeat="otherTag in $ctrl.referencedBy[tag.name]">\n                <span ng-if="$first"> &mdash; </span>{{otherTag}}<span ng-if="!$last">,</span>\n              </small>\n            </ui-select-choices>\n          </ui-select>\n        </div>\n        <div class="form-group">\n          <label class="control-label required" for="app-name">Application Name</label>\n          <div ng-class="{ \'has-error\': $ctrl.builderForm.name.$dirty && $ctrl.builderForm.name.$touched && $ctrl.builderForm.name.$invalid }">\n            <input\n              class="form-control"\n              type="text"\n              id="app-name"\n              required\n              minlength="2"\n              ng-maxlength="$ctrl.nameMaxLength"\n              ng-pattern="$ctrl.namePattern"\n              ng-model="$ctrl.name"\n              name="name"\n              autocorrect="off"\n              autocapitalize="none"\n              spellcheck="false">\n            \x3c!--\n              Wait until users leave the field to avoid flashing errors as they\n              type. Check $dirty touched to avoid a usability problem where the\n              "Try Sample Repository" link moves from under the mouse cursor\n              when clicked since the error message appears.\n            --\x3e\n            <div ng-if="$ctrl.builderForm.name.$dirty && $ctrl.builderForm.name.$touched">\n              <div class="has-error" ng-show="$ctrl.builderForm.name.$error.required">\n                <span class="help-block">\n                  Application name is required.\n                </span>\n              </div>\n              <div class="has-error" ng-show="$ctrl.builderForm.name.$error.pattern">\n                <span class="help-block">\n                  Application name consists of lower-case letters, numbers, and dashes. It must start with a letter and can\'t end with a <code>-</code>.\n                </span>\n              </div>\n              <div class="has-error" ng-show="$ctrl.builderForm.name.$error.minlength">\n                <span class="help-block">\n                  Application name must be at least 2 characters.\n                </span>\n              </div>\n              <div class="has-error" ng-show="$ctrl.builderForm.name.$error.maxlength">\n                <span class="help-block">\n                  Application name can\'t be more than 24 characters.\n                </span>\n              </div>\n            </div>\n          </div>\n        </div>\n\n        <div class="form-group">\n          <label class="control-label required" for="repository">Git Repository</label>\n          <div ng-class="{ \'has-error\': $ctrl.builderForm.repository.$touched && $ctrl.builderForm.repository.$error.$required }">\n            <input class="form-control"\n              type="text"\n              id="repository"\n              name="repository"\n              required\n              ng-model="$ctrl.repository"\n              ng-change="$ctrl.onRepositoryChanged()"\n              autocorrect="off"\n              autocapitalize="off"\n              spellcheck="false">\n            <div ng-if="$ctrl.istag.annotations.sampleRepo" class="help-block">\n              <a href="" ng-click="$ctrl.fillSampleRepo()">Try Sample Repository\n                <i class="fa fa-level-up" aria-hidden="true"></i></a>\n            </div>\n            <div class="has-error" ng-if="$ctrl.builderForm.repository.$touched && $ctrl.builderForm.repository.$error.$required">\n              <span class="help-block">\n                Git repository is required.\n              </span>\n            </div>\n            <div class="has-warning" ng-if="$ctrl.builderForm.repository.$touched && $ctrl.repository && !$ctrl.repositoryPattern.test($ctrl.repository)">\n              <span class="help-block">\n                This might not be a valid Git URL. Check that it is the correct URL to a remote Git repository.\n              </span>\n            </div>\n          </div>\n        </div>\n\n        \x3c!--\n          Only show the link for existing projects. It will be broken for new\n          projects.  Use class `invisible` when the project list is still loading\n          so the dialog doesn\'t resize.\n        --\x3e\n        <div ng-hide="$ctrl.selectedProject && !$ctrl.selectedProject.metadata.uid"\n             ng-class="{ invisible: !$ctrl.selectedProject || !$ctrl.istag }"\n             class="form-group">\n          If you have a private Git repository or need to change application defaults, view\n          <a href="" ng-click="$ctrl.navigateToAdvancedForm()">advanced options</a>.\n        </div>\n      </span>\n    </form>\n  </div>\n</div>\n';
 }, function(e, t) {
-e.exports = '<div class="order-service-details">\n  <div class="order-service-details-top" ng-class="{\'order-service-details-top-icon-top\': $ctrl.imageStream.vendor || $ctrl.documentationUrl || $ctrl.supportUrl}">\n    <div class="service-icon">\n      <span ng-if="!$ctrl.imageStream.imageUrl" class="icon {{$ctrl.imageStream.iconClass}}" aria-hidden="true"></span>\n      <span ng-if="$ctrl.imageStream.imageUrl" class="image"><img ng-src="{{$ctrl.imageStream.imageUrl}}" alt=""></span>\n    </div>\n    <div class="service-title-area">\n      <div class="service-title">\n        {{$ctrl.imageStream.name}}\n        {{$ctrl.istag.name}}\n      </div>\n      <div ng-if="$ctrl.imageStream.vendor" class="service-vendor">\n        {{$ctrl.imageStream.vendor}}\n      </div>\n      <div class="order-service-tags">\n        <span ng-repeat="tag in $ctrl.istag.annotations.tags.split(\',\')" class="tag">\n          {{tag}}\n        </span>\n      </div>\n      <ul ng-if="$ctrl.documentationUrl || $ctrl.supportUrl" class="list-inline order-service-documentation-url">\n        <li ng-if="$ctrl.documentationUrl">\n          <a ng-href="{{$ctrl.documentationUrl}}" target="_blank" class="learn-more-link">View Documentation <i class="fa fa-external-link" aria-hidden="true"></i></a>\n        </li>\n        <li ng-if="$ctrl.supportUrl">\n          <a ng-href="{{$ctrl.supportUrl}}" target="_blank" class="learn-more-link">Get Support <i class="fa fa-external-link" aria-hidden="true"></i></a>\n        </li>\n      </ul>\n    </div>\n  </div>\n  <div class="order-service-description-block">\n    <p ng-bind-html="($ctrl.istag.annotations.description | linky : \'_blank\') || \'No description provided.\'" class="description"></p>\n    <p ng-if="$ctrl.istag.annotations.sampleRepo">\n      Sample Repository:\n      \x3c!-- TODO: Use Git link filter, needs to be added to origin-web-common --\x3e\n      <span ng-bind-html="$ctrl.istag.annotations.sampleRepo | linky : \'_blank\'"></span>\n    </p>\n  </div>\n</div>\n';
+e.exports = '<div class="order-service-details">\n  <div class="order-service-details-top" ng-class="{\'order-service-details-top-icon-top\': $ctrl.imageStream.vendor || $ctrl.documentationUrl || $ctrl.supportUrl}">\n    <div class="service-icon">\n      <span ng-if="!$ctrl.imageStream.imageUrl" class="icon {{$ctrl.imageStream.iconClass}}" aria-hidden="true"></span>\n      <span ng-if="$ctrl.imageStream.imageUrl" class="image"><img ng-src="{{$ctrl.imageStream.imageUrl}}" alt=""></span>\n    </div>\n    <div class="service-title-area">\n      <div class="service-title">\n        {{$ctrl.imageStream.name}}\n      </div>\n      <div ng-if="$ctrl.imageStream.vendor" class="service-vendor">\n        {{$ctrl.imageStream.vendor}}\n      </div>\n      <div class="order-service-tags">\n        <span ng-repeat="tag in $ctrl.istag.annotations.tags.split(\',\')" class="tag">\n          {{tag}}\n        </span>\n      </div>\n      <ul ng-if="$ctrl.documentationUrl || $ctrl.supportUrl" class="list-inline order-service-documentation-url">\n        <li ng-if="$ctrl.documentationUrl">\n          <a ng-href="{{$ctrl.documentationUrl}}" target="_blank" class="learn-more-link">View Documentation <i class="fa fa-external-link" aria-hidden="true"></i></a>\n        </li>\n        <li ng-if="$ctrl.supportUrl">\n          <a ng-href="{{$ctrl.supportUrl}}" target="_blank" class="learn-more-link">Get Support <i class="fa fa-external-link" aria-hidden="true"></i></a>\n        </li>\n      </ul>\n    </div>\n  </div>\n  <div class="order-service-description-block">\n    <p ng-bind-html="($ctrl.istag.annotations.description | linky : \'_blank\') || \'No description provided.\'" class="description"></p>\n    <p ng-if="$ctrl.istag.annotations.sampleRepo">\n      Sample Repository:\n      \x3c!-- TODO: Use Git link filter, needs to be added to origin-web-common --\x3e\n      <span ng-bind-html="$ctrl.istag.annotations.sampleRepo | linky : \'_blank\'"></span>\n    </p>\n  </div>\n</div>\n';
 }, function(e, t) {
 e.exports = '<div class="order-service-config">\n  <div ng-if="!$ctrl.success && !$ctrl.error">\n    <div class="results-status">\n      <span class="fa fa-clock-o text-muted" aria-hidden="true"></span>\n      <span class="sr-only">Pending</span>\n      <div class="results-message">\n        <h3>\n          <strong>{{$ctrl.name}}</strong> is being created in <strong>{{$ctrl.selectedProject | displayName}}</strong>.\n        </h3>\n      </div>\n    </div>\n  </div>\n  <div ng-if="$ctrl.success">\n    <div class="results-status">\n      <span class="pficon pficon-ok" aria-hidden="true"></span>\n      <span class="sr-only">Success</span>\n      <div class="results-message">\n        <h3>\n          <strong>{{$ctrl.name}}</strong> has been created in <strong>{{$ctrl.selectedProject | displayName}}</strong> successfully.\n        </h3>\n      </div>\n    </div>\n  </div>\n  <div ng-if="$ctrl.success && $ctrl.binding">\n    <bind-results error="$ctrl.bindError"\n                  binding="$ctrl.binding"\n                  service-to-bind="$ctrl.serviceToBind.metadata.name"\n                  bind-type="application"\n                  application-to-bind="$ctrl.name"\n                  show-pod-presets="$ctrl.showPodPresets">\n    </bind-results>\n  </div>\n  <div ng-if="$ctrl.success">\n    <p ng-if="!$ctrl.serviceToBind || $ctrl.bindComplete">\n      <a ng-href="{{$ctrl.selectedProject | projectUrl : $ctrl.baseProjectUrl}}" ng-click="$ctrl.closePanel()">Continue to the project overview</a> to check the status of your application as it builds and deploys.\n    </p>\n  </div>\n  <div class="results-failure" ng-if="$ctrl.error">\n    <div class="results-status">\n      <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n      <div class="results-message">\n        <h3>\n          <strong>{{$ctrl.name}}</strong> failed to create in <strong>{{$ctrl.selectedProject | displayName}}</strong>.\n        </h3>\n      </div>\n    </div>\n    <div class="sub-title">\n      <span ng-if="$ctrl.error.data.message">\n        {{$ctrl.error.data.message | upperFirst}}\n      </span>\n      <span ng-if="!$ctrl.error.data.message">\n        An error occurred creating the application.\n      </span>\n    </div>\n    \x3c!-- TODO: Improve error message presentation --\x3e\n    <ul ng-if="$ctrl.error.failure.length" class="failure-messages">\n      <li ng-repeat="failure in $ctrl.error.failure">\n        {{failure.data.message}}\n      </li>\n    </ul>\n  </div>\n</div>\n';
 }, function(e, t) {
@@ -79061,31 +79118,11 @@ function e(e, t, n, i, r, o) {
 this.$filter = e, this.$q = t, this.constants = n, this.apiService = i, this.dataService = r, this.logger = o;
 }
 return e.prototype.getCatalogItems = function(e) {
-var t = this, n = this.$q.defer(), i = {}, o = 0, a = 0, s = [], l = this.apiService.getPreferredVersion("clusterserviceclasses");
-this.apiService.apiInfo(l) && (++o, this.dataService.list(l, {}).then(function(e) {
-i.serviceClasses = r.reject(e.by("metadata.name"), {
-status: {
-removedFromBrokerCatalog: !0
-}
-});
-}, function() {
-s.push("service classes");
-}).finally(function() {
-t.returnCatalogItems(n, i, ++a, o, s);
-})), ++o;
-var c = this.apiService.getPreferredVersion("imagestreams");
-if (this.dataService.list(c, {
-namespace: "openshift"
-}).then(function(e) {
-i.imageStreams = e.by("metadata.name");
-}, function() {
-s.push("builder images");
-}).finally(function() {
-t.returnCatalogItems(n, i, ++a, o, s);
-}), e) {
+var t = this, n = this.$q.defer(), i = {}, o = 0, a = 0, s = [], l = function() {
+if (e) {
 ++o;
-var u = this.apiService.getPreferredVersion("templates");
-this.dataService.list(u, {
+var r = t.apiService.getPreferredVersion("templates");
+t.dataService.list(r, {
 namespace: "openshift"
 }, null, {
 partialObjectMetadataList: !0
@@ -79097,7 +79134,32 @@ s.push("templates");
 t.returnCatalogItems(n, i, ++a, o, s);
 });
 }
-return n.promise;
+}, c = this.apiService.getPreferredVersion("clusterserviceclasses");
+this.apiService.apiInfo(c) ? (++o, this.dataService.list(c, {}).then(function(e) {
+i.serviceClasses = r.reject(e.by("metadata.name"), {
+status: {
+removedFromBrokerCatalog: !0
+}
+});
+}, function() {
+s.push("service classes");
+}).finally(function() {
+r.some(i.serviceClasses, {
+spec: {
+clusterServiceBrokerName: "template-service-broker"
+}
+}) || l(), t.returnCatalogItems(n, i, ++a, o, s);
+})) : l(), ++o;
+var u = this.apiService.getPreferredVersion("imagestreams");
+return this.dataService.list(u, {
+namespace: "openshift"
+}).then(function(e) {
+i.imageStreams = e.by("metadata.name");
+}, function() {
+s.push("builder images");
+}).finally(function() {
+t.returnCatalogItems(n, i, ++a, o, s);
+}), n.promise;
 }, e.prototype.getServicePlansForServiceClass = function(e) {
 var t = this.apiService.getPreferredVersion("clusterserviceplans"), n = r.isString(e) ? e : r.get(e, "metadata.name");
 if (n && this.apiService.apiInfo(t)) {
@@ -79355,7 +79417,7 @@ e.exports = '\x3c!-- Use angular-schema-form to show a form based on the paramet
 }, function(e, t) {
 e.exports = '<div class="catalog-search" ng-class="{\'mobile-shown\': $ctrl.mobileSearchInputShown}">\n  <button\n     ng-if="$ctrl.toggleAtMobile"\n     title="Catalog Search"\n     class="catalog-search-toggle visible-xs-inline-block btn btn-link"\n     ng-click="$ctrl.toggleMobileShowSearchInput()">\n    <i class="fa fa-search" aria-hidden="true"></i>\n    <span class="sr-only">Catalog Search</span>\n  </button>\n  <form role="form" class="landing-search-form search-pf has-button" ng-class="{\'hidden-xs\': $ctrl.toggleAtMobile}">\n    <div class="form-group has-clear">\n      <div class="search-pf-input-group">\n        <label for="search-input" class="sr-only">Search Catalog</label>\n        <span class="fa fa-search catalog-search-icon" aria-hidden="true" ng-click="$ctrl.setSearchInputFocus()"></span>\n        <input\n            id="search-input"\n            type="search"\n            autocomplete="off"\n            ng-keypress="$ctrl.onKeyPress($event)"\n            class="form-control catalog-search-input"\n            placeholder="Search Catalog"\n            ng-model="$ctrl.searchText"\n            uib-typeahead="item.name for item in $ctrl.search($viewValue)"\n            typeahead-on-select="$ctrl.itemSelected($item)"\n            typeahead-focus-first="false"\n            typeahead-template-url="catalog-search/catalog-search-result.html"\n            autocorrect="off"\n            autocapitalize="off"\n            spellcheck="false">\n        <button\n            type="button"\n            ng-if="$ctrl.searchText"\n            ng-click="$ctrl.searchText = \'\'"\n            class="clear">\n          <span class="sr-only">Clear Search Input</span>\n          <span class="pficon pficon-close" aria-hidden="true"></span>\n        </button>\n      </div>\n    </div>\n  </form>\n</div>\n';
 }, function(e, t) {
-e.exports = '<div class="order-service">\n  <pf-wizard\n       wizard-title="{{$ctrl.imageStream.name}} {{$ctrl.istag.name}}"\n       hide-sidebar="true"\n       step-class="order-service-wizard-step"\n       current-step="$ctrl.currentStep"\n       wizard-ready="$ctrl.wizardReady"\n       next-title="$ctrl.nextTitle"\n       on-finish="$ctrl.closePanel()"\n       on-cancel="$ctrl.closePanel()"\n       wizard-done="$ctrl.wizardDone">\n    <pf-wizard-step ng-repeat="step in $ctrl.steps track by $index"\n         step-title="{{step.label}}"\n         wz-disabled="{{step.hidden}}"\n         allow-click-nav="step.allowClickNav"\n         next-enabled="step.valid && !$ctrl.updating"\n         prev-enabled="step.prevEnabled"\n         on-show="step.onShow"\n         step-id="{{step.id}}"\n         step-priority="{{$index}}">\n      <div class="wizard-pf-main-inner-shadow-covers">\n        <div class="order-service-config">\n          <div ng-include="step.view" class="wizard-pf-main-form-contents"></div>\n        </div>\n      </div>\n    </pf-wizard-step>\n  </pf-wizard>\n</div>\n';
+e.exports = '<div class="order-service">\n  <pf-wizard\n       wizard-title="{{$ctrl.imageStream.name}}"\n       hide-sidebar="true"\n       step-class="order-service-wizard-step"\n       current-step="$ctrl.currentStep"\n       wizard-ready="$ctrl.wizardReady"\n       next-title="$ctrl.nextTitle"\n       on-finish="$ctrl.closePanel()"\n       on-cancel="$ctrl.closePanel()"\n       wizard-done="$ctrl.wizardDone">\n    <pf-wizard-step ng-repeat="step in $ctrl.steps track by $index"\n         step-title="{{step.label}}"\n         wz-disabled="{{step.hidden}}"\n         allow-click-nav="step.allowClickNav"\n         next-enabled="step.valid && !$ctrl.updating"\n         prev-enabled="step.prevEnabled"\n         on-show="step.onShow"\n         step-id="{{step.id}}"\n         step-priority="{{$index}}">\n      <div class="wizard-pf-main-inner-shadow-covers">\n        <div class="order-service-config">\n          <div ng-include="step.view" class="wizard-pf-main-form-contents"></div>\n        </div>\n      </div>\n    </pf-wizard-step>\n  </pf-wizard>\n</div>\n';
 }, function(e, t) {
 e.exports = '<div class="landing-search-area" ng-transclude="landingsearch"></div>\n<div class="landing">\n  <overlay-panel show-panel="$ctrl.orderingPanelVisible" handle-close="$ctrl.closeOrderingPanel">\n    <order-service\n        ng-if="$ctrl.selectedItem.resource.kind === \'ClusterServiceClass\'"\n        base-project-url="{{$ctrl.baseProjectUrl}}"\n        service-class="$ctrl.selectedItem"\n        service-plans="$ctrl.servicePlansForItem"\n        handle-close="$ctrl.closeOrderingPanel">\n    </order-service>\n    <create-from-builder\n        ng-if="$ctrl.selectedItem.resource.kind === \'ImageStream\'"\n        base-project-url="{{$ctrl.baseProjectUrl}}"\n        image-stream="$ctrl.selectedItem"\n        handle-close="$ctrl.closeOrderingPanel">\n    </create-from-builder>\n  </overlay-panel>\n  <div class="landing-main-area">\n    <div class="landing-header-area" ng-transclude="landingheader"></div>\n    <div class="landing-body-area">\n      <div class="landing-body" ng-transclude="landingbody"></div>\n    </div>\n  </div>\n  <div class="landing-side-bar" ng-transclude="landingside"></div>\n</div>\n';
 }, function(e, t) {
@@ -79616,38 +79678,38 @@ o.$inject = [ "$rootScope", "$scope", "$timeout", "$q", "Catalog", "KeywordServi
 "use strict";
 t.__esModule = !0;
 var i = n(1), r = n(0), o = n(69), a = function() {
-function e(e, t, n, i, o, a, s, l, c, u, d) {
-var h = this;
+function e(e, t, n, i, o, a, s, l, c, u, d, h) {
+var f = this;
 this.ctrl = this, this.watches = [], this.clearValidityWatcher = function() {
-h.validityWatcher && (h.validityWatcher(), h.validityWatcher = void 0);
+f.validityWatcher && (f.validityWatcher(), f.validityWatcher = void 0);
 }, this.showInfo = function() {
-h.clearValidityWatcher(), h.ctrl.nextTitle = "Next >";
+f.clearValidityWatcher(), f.ctrl.nextTitle = "Next >";
 }, this.showConfig = function() {
-h.ctrl.currentStep = "Configuration", h.clearValidityWatcher(), h.ctrl.nextTitle = h.bindStep.hidden ? "Create" : "Next >", h.reviewStep.allowed = h.bindStep.hidden && h.configStep.valid, h.validityWatcher = h.$scope.$watch("$ctrl.builderForm.$valid", function(e, t) {
-h.configStep.valid = e, !0 === h.ctrl.noProjectsCantCreate && (h.configStep.valid = !1);
+f.ctrl.currentStep = "Configuration", f.clearValidityWatcher(), f.ctrl.nextTitle = f.bindStep.hidden ? "Create" : "Next >", f.reviewStep.allowed = f.bindStep.hidden && f.configStep.valid, f.validityWatcher = f.$scope.$watch("$ctrl.builderForm.$valid", function(e, t) {
+f.configStep.valid = e, !0 === f.ctrl.noProjectsCantCreate && (f.configStep.valid = !1);
 });
 }, this.showBind = function() {
-h.clearValidityWatcher(), h.ctrl.nextTitle = "Create", h.reviewStep.allowed = !0;
+f.clearValidityWatcher(), f.ctrl.nextTitle = "Create", f.reviewStep.allowed = !0;
 }, this.showResults = function() {
-h.clearValidityWatcher(), h.ctrl.nextTitle = "Close", h.ctrl.wizardDone = !0, h.ctrl.currentStep = "Results", h.createApp();
+f.clearValidityWatcher(), f.ctrl.nextTitle = "Close", f.ctrl.wizardDone = !0, f.ctrl.currentStep = "Results", f.createApp();
 }, this.onProjectUpdate = function() {
-if (!h.instancesSupported || h.isNewProject()) h.ctrl.serviceInstances = [], h.updateBindability(); else if (h.ctrl.showPodPresets) {
-h.ctrl.updating = !0;
-var e = h.APIService.getPreferredVersion("serviceinstances");
-h.DataService.list(e, {
-namespace: h.ctrl.selectedProject.metadata.name
+if (!f.instancesSupported || f.isNewProject()) f.ctrl.serviceInstances = [], f.updateBindability(); else if (f.ctrl.showPodPresets) {
+f.ctrl.updating = !0;
+var e = f.APIService.getPreferredVersion("serviceinstances");
+f.DataService.list(e, {
+namespace: f.ctrl.selectedProject.metadata.name
 }, null, {
 errorNotification: !1
 }).then(function(e) {
-h.ctrl.serviceInstances = r.filter(r.toArray(e.by("metadata.name")), h.isServiceBindable), h.sortServiceInstances(), h.ctrl.updating = !1, h.updateBindability();
+f.ctrl.serviceInstances = r.filter(r.toArray(e.by("metadata.name")), f.isServiceBindable), f.sortServiceInstances(), f.ctrl.updating = !1, f.updateBindability();
 }, function(e) {
-h.Logger.warn("Failed to list instances in namespace " + h.ctrl.selectedProject.metadata.name, e), h.ctrl.updating = !1, h.ctrl.serviceInstances = [], h.updateBindability();
+f.Logger.warn("Failed to list instances in namespace " + f.ctrl.selectedProject.metadata.name, e), f.ctrl.updating = !1, f.ctrl.serviceInstances = [], f.updateBindability();
 });
 }
 }, this.isServiceBindable = function(e) {
-var t, n = h.BindingService.getServiceClassForInstance(e, h.ctrl.serviceClasses), i = r.get(e, "spec.clusterServicePlanRef.name");
-return i && (t = h.ctrl.servicePlans[i]), h.BindingService.isServiceBindable(e, n, t);
-}, this.$scope = e, this.$filter = t, this.$location = n, this.$q = i, this.BuilderAppService = o, this.ProjectsService = a, this.DataService = s, this.APIService = l, this.BindingService = c, this.Logger = u, this.ctrl.serviceToBind = null, this.ctrl.showPodPresets = r.get(d, [ "ENABLE_TECH_PREVIEW_FEATURE", "pod_presets" ], !1), this.gitRef = "", this.contextDir = "";
+var t, n = f.BindingService.getServiceClassForInstance(e, f.ctrl.serviceClasses), i = r.get(e, "spec.clusterServicePlanRef.name");
+return i && (t = f.ctrl.servicePlans[i]), f.BindingService.isServiceBindable(e, n, t);
+}, this.$scope = i, this.$filter = e, this.$location = t, this.$q = n, this.BuilderAppService = s, this.ProjectsService = d, this.DataService = c, this.APIService = o, this.BindingService = a, this.Logger = u, this.VersionsService = h, this.ctrl.serviceToBind = null, this.ctrl.showPodPresets = r.get(l, [ "ENABLE_TECH_PREVIEW_FEATURE", "pod_presets" ], !1), this.gitRef = "", this.contextDir = "";
 }
 return e.prototype.$onInit = function() {
 var e = this;
@@ -79742,6 +79804,8 @@ var o = [], a = r.get(this, "ctrl.imageStream.resource.status.tags", []);
 return r.each(a, function(e) {
 var t = n[e.tag];
 t && o.push(t);
+}), o.sort(function(t, n) {
+return e.VersionsService.rcompare(t.name, n.name);
 }), o;
 }, e.prototype.getImageStreamTag = function() {
 var e = this.APIService.getPreferredVersion("imagestreamtags"), t = this.ctrl.imageStream.resource.metadata.name + ":" + this.ctrl.istag.name, n = this.ctrl.imageStream.resource.metadata.namespace;
@@ -79826,7 +79890,7 @@ e.ctrl.updating = !1;
 }
 }, e;
 }();
-a.$inject = [ "$scope", "$filter", "$location", "$q", "BuilderAppService", "ProjectsService", "DataService", "APIService", "BindingService", "Logger", "Constants" ], t.CreateFromBuilderController = a;
+a.$inject = [ "$filter", "$location", "$q", "$scope", "APIService", "BindingService", "BuilderAppService", "Constants", "DataService", "Logger", "ProjectsService", "VersionsService" ], t.CreateFromBuilderController = a;
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;

@@ -37,7 +37,7 @@ angular.module('openshiftConsole')
       // Fall back to the versions in Constants if we could not get the version
       // from the server. Set the value to 'unknown' only after the requests
       // have completed to avoid it flickering on page load.
-      masterVersion.kubernetes = masterVersion.kubernetes || Constants.VERSION.kubernetes || 'unknown';
-      masterVersion.openshift = masterVersion.openshift || Constants.VERSION.openshift || 'unknown';
+      masterVersion.kubernetes = masterVersion.kubernetes || 'unknown';
+      masterVersion.openshift = masterVersion.openshift || 'unknown';
     });
   });
