@@ -9500,7 +9500,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"command-line\" target=\"_blank\">command line tools</a>.\n" +
     "</div>\n" +
     "<fieldset ng-disabled=\"disableInputs\" class=\"gutter-top\">\n" +
-    "<osc-autoscaling model=\"autoscaling\" show-name-input=\"true\" name-read-only=\"kind === 'HorizontalPodAutoscaler'\" show-request-input=\"autoscaling.targetCPU\">\n" +
+    "<osc-autoscaling model=\"autoscaling\" show-name-input=\"true\" name-read-only=\"kind === 'HorizontalPodAutoscaler'\" show-request-input=\"autoscaling.targetCPU && !(usesV2Metrics)\">\n" +
     "</osc-autoscaling>\n" +
     "<label-editor labels=\"labels\" expand=\"true\" can-toggle=\"false\"></label-editor>\n" +
     "<div class=\"buttons gutter-top gutter-bottom\">\n" +
