@@ -14,7 +14,10 @@ angular.module("openshiftConsole")
         autoscaling: "=model",
         showNameInput: "=?",
         nameReadOnly: "=?",
-        showRequestInput: "=?"
+        // one way binding allows this field to be hidden if the
+        // autoscaler is not using cpuRequest, but the field should
+        // not disappear if a user edits it
+        showRequestInput: "&"
       },
       templateUrl: 'views/directives/osc-autoscaling.html',
       link: function(scope, elem, attrs) {
@@ -31,6 +34,7 @@ angular.module("openshiftConsole")
         if( !('showRequestInput' in attrs) ) {
           scope.showRequestInput = true;
         }
+
       }
     };
   });
