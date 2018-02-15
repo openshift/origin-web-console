@@ -854,7 +854,7 @@ href: "/monitoring",
 prefixes: [ "/browse/events" ]
 }, {
 label: "Catalog",
-iconClass: "pficon pficon-service-catalog",
+iconClass: "pficon pficon-catalog",
 href: "/catalog",
 canI: {
 addToProject: !0
