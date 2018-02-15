@@ -9500,7 +9500,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"command-line\" target=\"_blank\">command line tools</a>.\n" +
     "</div>\n" +
     "<fieldset ng-disabled=\"disableInputs\" class=\"gutter-top\">\n" +
-    "<osc-autoscaling model=\"autoscaling\" show-name-input=\"true\" name-read-only=\"kind === 'HorizontalPodAutoscaler'\" show-request-input=\"autoscaling.targetCPU\">\n" +
+    "<osc-autoscaling model=\"autoscaling\" show-name-input=\"true\" name-read-only=\"kind === 'HorizontalPodAutoscaler'\" show-request-input=\"autoscaling.targetCPU && !(usesV2Metrics)\">\n" +
     "</osc-autoscaling>\n" +
     "<label-editor labels=\"labels\" expand=\"true\" can-toggle=\"false\"></label-editor>\n" +
     "<div class=\"buttons gutter-top gutter-bottom\">\n" +
@@ -13652,7 +13652,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Bindings\">\n" +
     "<div ng-if=\"bindingsByInstanceRef[serviceInstance.metadata.name].length\">\n" +
-    "<p ng-if=\"firstBinding = bindingsByInstanceRef[serviceInstance.metadata.name][0]\">\n" +
+    "<div ng-if=\"firstBinding = bindingsByInstanceRef[serviceInstance.metadata.name][0]\">\n" +
     "<span ng-if=\"application = applicationsByBinding[firstBinding.metadata.name][0]\">\n" +
     "{{application.metadata.name}}\n" +
     "</span>\n" +
@@ -13661,7 +13661,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "<ng-pluralize count=\"bindingsByInstanceRef[serviceInstance.metadata.name].length\" when=\"{'0':'', '1':'', '2':'and {} other', 'other':'and {} others'}\" offset=\"1\">\n" +
     "</ng-pluralize>\n" +
-    "</p>\n" +
+    "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!bindingsByInstanceRef[serviceInstance.metadata.name].length\">\n" +
     "No bindings\n" +

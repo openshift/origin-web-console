@@ -52,7 +52,7 @@
                   model="autoscaling"
                   show-name-input="true"
                   name-read-only="kind === 'HorizontalPodAutoscaler'"
-                  show-request-input="autoscaling.targetCPU">
+                  show-request-input="autoscaling.targetCPU && !(usesV2Metrics)">
               </osc-autoscaling>
 
               <label-editor

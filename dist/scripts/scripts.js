@@ -3917,41 +3917,35 @@ var u, d = e("tags"), m = r.getPreferredVersion("servicebindings"), p = r.getPre
 c.debug("ProjectsService: clearing catalog items cache"), u = null;
 };
 a.onUserChanged(h), a.onLogout(h);
-var y = function() {
-return !!n.OPENSHIFT_CONFIG.templateServiceBrokerEnabled;
-}, b = {};
+var y = {};
 _.each(i.CATALOG_CATEGORIES, function(e) {
 _.each(e.items, function(e) {
-b[e.id] = e;
+y[e.id] = e;
 var t = _.get(e, "subcategories", []);
 _.each(t, function(e) {
 _.each(e.items, function(e) {
-b[e.id] = e;
+y[e.id] = e;
 });
 });
 });
 });
-var S = function(e, t) {
+var b = function(e, t) {
 e = e.toLowerCase();
 var n;
 for (n = 0; n < t.length; n++) if (e === t[n].toLowerCase()) return !0;
 return !1;
-}, C = function(e, t) {
+}, S = function(e, t) {
 var n = _.get(e, "categoryAliases", []), r = [ e.id ].concat(n);
 return _.some(r, function(e) {
-return S(e, t);
+return b(e, t);
 });
-}, w = function(e) {
+}, C = function(e) {
 return e.from && "ImageStreamTag" === e.from.kind && -1 === e.from.name.indexOf(":") && !e.from.namespace;
-}, P = e("displayName"), j = [ "metadata.name", 'metadata.annotations["openshift.io/display-name"]', "metadata.annotations.description" ];
+}, w = e("displayName"), P = [ "metadata.name", 'metadata.annotations["openshift.io/display-name"]', "metadata.annotations.description" ];
 return {
 SERVICE_CATALOG_ENABLED: v,
-isTemplateServiceBrokerEnabled: y,
 getCatalogItems: function(e) {
-if (u && !e) return c.debug("CatalogService: returning cached catalog items"), t.when(u);
-c.debug("CatalogService: getCatalogItems, force refresh", e);
-var n = !y();
-return o.getCatalogItems(n).then(_.spread(function(e, t) {
+return u && !e ? (c.debug("CatalogService: returning cached catalog items"), t.when(u)) : (c.debug("CatalogService: getCatalogItems, force refresh", e), o.getCatalogItems(!0).then(_.spread(function(e, t) {
 if (t) {
 var n = {
 type: "error",
@@ -3960,10 +3954,10 @@ message: t
 l.addNotification(n);
 }
 return u = e, e;
-}));
+})));
 },
 getCategoryItem: function(e) {
-return b[e];
+return y[e];
 },
 categorizeImageStreams: function(e) {
 var t = {};
@@ -3975,16 +3969,16 @@ var t = _.get(e, "annotations.tags");
 t && (n[e.name] = t.split(/\s*,\s*/));
 });
 var r = !1;
-_.each(b, function(a) {
+_.each(y, function(a) {
 (function(e) {
 return _.some(e.status.tags, function(e) {
 var t = n[e.tag] || [];
-return C(a, t) && S("builder", t) && !S("hidden", t);
+return S(a, t) && b("builder", t) && !b("hidden", t);
 });
 })(e) && (t[a.id] = t[a.id] || [], t[a.id].push(e), r = !0);
 }), r || _.some(e.status.tags, function(e) {
 var t = n[e.tag] || [];
-return S("builder", t) && !S("hidden", t);
+return b("builder", t) && !b("hidden", t);
 }) && (t[""] = t[""] || [], t[""].push(e));
 }
 }), t;
@@ -3993,19 +3987,19 @@ categorizeTemplates: function(e) {
 var t = {};
 return _.each(e, function(e) {
 var n = d(e), r = !1;
-_.each(b, function(a) {
-C(a, n) && (t[a.id] = t[a.id] || [], t[a.id].push(e), r = !0);
+_.each(y, function(a) {
+S(a, n) && (t[a.id] = t[a.id] || [], t[a.id].push(e), r = !0);
 }), r || (t[""] = t[""] || [], t[""].push(e));
 }), t;
 },
-referencesSameImageStream: w,
+referencesSameImageStream: C,
 filterImageStreams: function(e, t) {
 if (!t.length) return e;
 var n = [];
 return _.each(e, function(e) {
-var r = _.get(e, "metadata.name", ""), a = P(e, !0), o = [], i = {}, s = {};
+var r = _.get(e, "metadata.name", ""), a = w(e, !0), o = [], i = {}, s = {};
 _.each(e.spec.tags, function(e) {
-if (w(e)) return i[e.name] = e.from.name, s[e.from.name] = s[e.from.name] || [], void s[e.from.name].push(e.name);
+if (C(e)) return i[e.name] = e.from.name, s[e.from.name] = s[e.from.name] || [], void s[e.from.name].push(e.name);
 o.push(e);
 });
 var c = _.keyBy(o, "name");
@@ -4030,7 +4024,7 @@ return t ? c[t] : c[e.tag];
 }), n;
 },
 filterTemplates: function(e, t) {
-return s.filterForKeywords(e, j, t);
+return s.filterForKeywords(e, P, t);
 }
 };
 } ]), angular.module("openshiftConsole").factory("ModalsService", [ "$uibModal", function(e) {
@@ -8979,7 +8973,7 @@ o.kubernetes = e.data.gitVersion;
 })), i.push(a.getOpenShiftMasterVersion().then(function(e) {
 o.openshift = e.data.gitVersion;
 })), t.all(i).finally(function() {
-o.kubernetes = o.kubernetes || r.VERSION.kubernetes || "unknown", o.openshift = o.openshift || r.VERSION.openshift || "unknown";
+o.kubernetes = o.kubernetes || "unknown", o.openshift = o.openshift || "unknown";
 });
 } ]), angular.module("openshiftConsole").controller("CommandLineController", [ "$scope", "DataService", "AuthService", "Constants", function(e, t, n, r) {
 n.withUser(), e.cliDownloadURL = r.CLI, e.cliDownloadURLPresent = e.cliDownloadURL && !_.isEmpty(e.cliDownloadURL), e.loginBaseURL = t.openshiftAPIBaseUrl(), r.DISABLE_COPY_LOGIN_COMMAND || (e.sessionToken = n.UserStore().getToken());
@@ -10293,7 +10287,7 @@ scope: {
 autoscaling: "=model",
 showNameInput: "=?",
 nameReadOnly: "=?",
-showRequestInput: "=?"
+showRequestInput: "&"
 },
 templateUrl: "views/directives/osc-autoscaling.html",
 link: function(t, r, a) {

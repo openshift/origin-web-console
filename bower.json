@@ -46,8 +46,8 @@
     "angular-moment": "1.0.0",
     "angular-utf8-base64": "0.0.5",
     "file-saver": "1.3.3",
-    "origin-web-common": "3.9.0-alpha.10",
-    "origin-web-catalog": "3.9.0-alpha.12"
+    "origin-web-common": "3.9.0-alpha.12",
+    "origin-web-catalog": "3.9.0-alpha.14"
   },
   "devDependencies": {
     "angular-mocks": "1.5.11",
