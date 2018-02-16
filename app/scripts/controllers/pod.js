@@ -8,6 +8,7 @@
  */
 angular.module('openshiftConsole')
   .controller('PodController', function ($filter,
+                                         $rootScope,
                                          $routeParams,
                                          $scope,
                                          $timeout,
@@ -60,6 +61,8 @@ angular.module('openshiftConsole')
     $scope.deploymentConfigsVersion = APIService.getPreferredVersion('deploymentconfigs');
 
     var watches = [];
+    // Listen for nav toggles so we can resize the terminal window.
+    var toggleNavListener = null;
     var requestContext = null;
 
     // Check if the metrics service is available so we know when to show the tab.
@@ -125,7 +128,7 @@ angular.module('openshiftConsole')
       if (!characterBoundingBox.height || !characterBoundingBox.width || !$scope.selectedTab.terminal || retries > 10) {
         return;
       }
-      $scope.$apply(function() {
+      $scope.$evalAsync(function() {
         var terminalWrapper = $('.container-terminal-wrapper').get(0);
         // `terminalWrapper` may not exist yet, we should retry
         if (!terminalWrapper) {
@@ -153,18 +156,35 @@ angular.module('openshiftConsole')
       });
     };
 
+    var addTerminalResizeListeners = function() {
+      $(window).on('resize.terminalsize', _.debounce(calculateTerminalSize, 100));
+      if (!toggleNavListener) {
+        toggleNavListener = $rootScope.$on('oscHeader.toggleNav', function() {
+          // Wait for the Patternfly animation to complete. Transition is
+          // 100ms, but add some buffer to be safe.
+          setTimeout(calculateTerminalSize, 150);
+        });
+      }
+    };
+
+    var removeTerminalResizeListeners = function() {
+      $(window).off('resize.terminalsize');
+      if (toggleNavListener) {
+        toggleNavListener();
+        toggleNavListener = null;
+      }
+    };
+
     $scope.$watch('selectedTab.terminal', function(terminalTabSelected) {
-      if (!!terminalTabSelected) {
+      if (terminalTabSelected) {
         if (!characterBoundingBox.height || !characterBoundingBox.width) {
           Logger.warn("Unable to calculate the bounding box for a character.  Terminal will not be able to resize.");
-        }
-        else {
-          $(window).on('resize.terminalsize', _.debounce(calculateTerminalSize, 100));
+        } else {
+          addTerminalResizeListeners();
         }
         $timeout(calculateTerminalSize, 0);
-      }
-      else {
-        $(window).off('resize.terminalsize');
+      } else {
+        removeTerminalResizeListeners();
       }
     });
 
@@ -426,7 +446,7 @@ angular.module('openshiftConsole')
         $scope.$on('$destroy', function(){
           DataService.unwatchAll(watches);
           cleanUpDebugPod();
-          $(window).off('resize.terminalsize');
+          removeTerminalResizeListeners();
         });
     }));
   });
