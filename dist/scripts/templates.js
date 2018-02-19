@@ -3579,6 +3579,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{secret.metadata.name}}\n" +
     "<small class=\"meta\">created <span am-time-ago=\"secret.metadata.creationTimestamp\"></span></small>\n" +
     "</h1>\n" +
+    "<labels labels=\"secret.metadata.labels\" clickable=\"true\" kind=\"secrets\" project-name=\"{{secret.metadata.namespace}}\" limit=\"3\"></labels>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
