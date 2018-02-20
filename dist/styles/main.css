@@ -4297,7 +4297,7 @@ body>.ui-select-bootstrap.open{z-index:1050}
 .landing-search-form{margin:0 auto;width:100%}
 .landing-side-bar{background-color:#292e34;color:#fff;z-index:1029}
 @media (min-width:768px){.landing-search-form{max-width:600px;width:80%}
-.landing-side-bar{bottom:0;overflow-y:auto;position:fixed;right:0;top:61px;width:325px;-webkit-transform:translate3d(0,0,0)}
+.landing-side-bar{bottom:0;overflow-y:auto;position:fixed;right:0;top:61px;width:325px}
 }
 @media (min-width:1200px){.landing-side-bar{width:425px}
 }
@@ -4408,7 +4408,7 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 }
 .catalog-projects-summary-panel .create-button-text,.catalog-projects-summary-panel .getting-started-button-text{padding-left:4px}
 .catalog-projects-summary-panel .code-block{background:#030303;margin-top:5px;padding:4px}
-.catalog-projects-summary-panel .create-button{font-size:13px;float:right}
+.catalog-projects-summary-panel .create-button{font-size:13px;float:right;-webkit-transform:translate3d(0,0,0)}
 .catalog-projects-summary-panel .getting-started-button{width:100%;font-size:13px}
 .catalog-projects-summary-panel .getting-started-button.with-projects{margin-top:15px}
 .catalog-projects-summary-panel .getting-started-panel{margin-top:20px}
