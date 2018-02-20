@@ -60,7 +60,10 @@ angular.module('openshiftConsole')
     });
 
     $scope.buildsVersion = APIService.getPreferredVersion('builds');
+    $scope.buildsCloneVersion = APIService.getPreferredVersion('builds/clone');
+    $scope.buildsLogVersion = APIService.getPreferredVersion('builds/log');
     $scope.buildConfigsVersion = APIService.getPreferredVersion('buildconfigs');
+    $scope.eventsVersion = APIService.getPreferredVersion('events');
     $scope.podsVersion = APIService.getPreferredVersion('pods');
 
     var buildPod;
@@ -107,7 +110,7 @@ angular.module('openshiftConsole')
 
           var buildNumber = annotation(build, "buildNumber");
           if (buildNumber) {
-            // tmp fix for issue #1942 
+            // tmp fix for issue #1942
             if($scope.breadcrumbs[2]) {
               $scope.breadcrumbs[2].title = "#" + buildNumber;
             }
