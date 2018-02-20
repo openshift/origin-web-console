@@ -5667,7 +5667,7 @@ title: n.buildconfig,
 link: "project/" + n.project + "/browse/builds/" + n.buildconfig
 })), e.breadcrumbs.push({
 title: n.build
-}), e.buildsVersion = r.getPreferredVersion("builds"), e.buildConfigsVersion = r.getPreferredVersion("buildconfigs"), e.podsVersion = r.getPreferredVersion("pods");
+}), e.buildsVersion = r.getPreferredVersion("builds"), e.buildsCloneVersion = r.getPreferredVersion("builds/clone"), e.buildsLogVersion = r.getPreferredVersion("builds/log"), e.buildConfigsVersion = r.getPreferredVersion("buildconfigs"), e.eventsVersion = r.getPreferredVersion("events"), e.podsVersion = r.getPreferredVersion("pods");
 var l, u = t("annotation"), d = [], m = function(t) {
 e.logCanRun = !_.includes([ "New", "Pending", "Error" ], t.status.phase);
 }, p = function() {
