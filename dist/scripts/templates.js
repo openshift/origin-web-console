@@ -6301,7 +6301,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"('serviceaccounts' | canI : 'update') && !serviceAccountToLink\">\n" +
+    "<div ng-if=\"(serviceAccountsVersion | canI : 'update') && !serviceAccountToLink\">\n" +
     "<div class=\"form-group\">\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +

@@ -9062,7 +9062,7 @@ onCancel: "&"
 },
 templateUrl: "views/directives/create-secret.html",
 link: function(l) {
-l.nameValidation = i, l.secretReferenceValidation = {
+l.serviceAccountsVersion = n.getPreferredVersion("serviceaccounts"), l.nameValidation = i, l.secretReferenceValidation = {
 pattern: /^[a-zA-Z0-9\-_]+$/,
 minLength: 8,
 description: "Secret reference key must consist of lower-case, upper-case letters, numbers, dash, and underscore."
