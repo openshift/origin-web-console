@@ -7498,19 +7498,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-switch=\"entry.refType\">\n" +
     "<span ng-switch-when=\"configMapKeyRef\">\n" +
     "Set to the key {{entry.valueFrom.configMapKeyRef.key}} in config map\n" +
-    "<span ng-if=\"!('configmaps' | canI : 'get')\">\n" +
+    "<span ng-if=\"!(configMapVersion | canI : 'get')\">\n" +
     "{{entry.valueFrom.configMapKeyRef.name}}\n" +
     "</span>\n" +
-    "<a ng-if=\"'configmaps' | canI : 'get'\" ng-href=\"{{entry.apiObj | navigateResourceURL}}\">\n" +
+    "<a ng-if=\"configMapVersion | canI : 'get'\" ng-href=\"{{entry.apiObj | navigateResourceURL}}\">\n" +
     "{{entry.valueFrom.configMapKeyRef.name}}\n" +
     "</a>\n" +
     "</span>\n" +
     "<span ng-switch-when=\"secretKeyRef\">\n" +
     "Set to the key {{entry.valueFrom.secretKeyRef.key}} in secret\n" +
-    "<span ng-if=\"!('secrets' | canI : 'get')\">\n" +
+    "<span ng-if=\"!(secretsVersion | canI : 'get')\">\n" +
     "{{entry.valueFrom.secretKeyRef.name}}\n" +
     "</span>\n" +
-    "<a ng-if=\"'secrets' | canI : 'get'\" ng-href=\"{{entry.apiObj | navigateResourceURL}}\">\n" +
+    "<a ng-if=\"secretsVersion | canI : 'get'\" ng-href=\"{{entry.apiObj | navigateResourceURL}}\">\n" +
     "{{entry.valueFrom.secretKeyRef.name}}\n" +
     "</a>\n" +
     "</span>\n" +

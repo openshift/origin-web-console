@@ -14534,8 +14534,8 @@ type: "ConfigChange"
 }, !0);
 }
 };
-} ]), angular.module("openshiftConsole").directive("keyValueEditor", [ "$routeParams", "$timeout", "$filter", "keyValueEditorConfig", "keyValueEditorUtils", function(e, t, n, r, a) {
-var o = n("humanizeKind"), i = n("canI"), s = 1e3;
+} ]), angular.module("openshiftConsole").directive("keyValueEditor", [ "$routeParams", "$timeout", "$filter", "APIService", "keyValueEditorConfig", "keyValueEditorUtils", function(e, t, n, r, a, o) {
+var i = n("humanizeKind"), s = n("canI"), c = 1e3;
 return {
 restrict: "AE",
 scope: {
@@ -14571,19 +14571,19 @@ allowEmptyKeys: "=?",
 keyRequiredError: "@"
 },
 templateUrl: "views/directives/key-value-editor.html",
-link: function(e, n, a) {
-var i;
+link: function(e, n, r) {
+var o;
 e.validation = {
 key: e.keyValidator,
 val: e.valueValidator
-}, a.keyValidatorRegex && (e.validation.key = e.keyValidatorRegex), a.valueValidatorRegex && (e.validation.val = e.valueValidatorRegex), "grabFocus" in a && (e.grabFocus = !0, t(function() {
+}, r.keyValidatorRegex && (e.validation.key = e.keyValidatorRegex), r.valueValidatorRegex && (e.validation.val = e.valueValidatorRegex), "grabFocus" in r && (e.grabFocus = !0, t(function() {
 e.grabFocus = void 0;
-})), "cannotAdd" in a && (e.cannotAdd = !0), "cannotDelete" in a && (e.cannotDeleteAny = !0), "isReadonly" in a && (e.isReadonlyAny = !0), "isReadonlyKeys" in a && (i = e.$watch("entries", function(t) {
+})), "cannotAdd" in r && (e.cannotAdd = !0), "cannotDelete" in r && (e.cannotDeleteAny = !0), "isReadonly" in r && (e.isReadonlyAny = !0), "isReadonlyKeys" in r && (o = e.$watch("entries", function(t) {
 t && (_.each(e.entries, function(e) {
 e.isReadonlyKey = !0;
-}), i());
-})), "cannotSort" in a && (e.cannotSort = !0), "showHeader" in a && (e.showHeader = !0), "allowEmptyKeys" in a && (e.allowEmptyKeys = !0), e.groupByKind = function(e) {
-return o(e.kind);
+}), o());
+})), "cannotSort" in r && (e.cannotSort = !0), "showHeader" in r && (e.showHeader = !0), "allowEmptyKeys" in r && (e.allowEmptyKeys = !0), e.groupByKind = function(e) {
+return i(e.kind);
 }, e.valueFromObjectSelected = function(e, t) {
 "ConfigMap" === t.kind ? (e.valueFrom.configMapKeyRef = {
 name: t.metadata.name
@@ -14593,34 +14593,36 @@ name: t.metadata.name
 }, e.valueFromKeySelected = function(e, t) {
 e.valueFrom.configMapKeyRef ? e.valueFrom.configMapKeyRef.key = t : e.valueFrom.secretKeyRef && (e.valueFrom.secretKeyRef.key = t);
 }, angular.extend(e, {
-keyMinlength: r.keyMinlength || a.keyMinlength,
-keyMaxlength: r.keyMaxlength || a.keyMaxlength,
-valueMinlength: r.valueMinlength || a.valueMinlength,
-valueMaxlength: r.valueMaxlength || a.valueMaxlength,
-keyValidator: r.keyValidator || a.keyValidator,
-valueValidator: r.valueValidator || a.valueValidator,
-keyValidatorError: r.keyValidatorError || a.keyValidatorError,
-valueValidatorError: r.valueValidatorError || a.valueValidatorError,
-keyRequiredError: r.keyRequiredError || a.keyRequiredError,
-keyValidatorErrorTooltip: r.keyValidatorErrorTooltip || a.keyValidatorErrorTooltip,
-keyValidatorErrorTooltipIcon: r.keyValidatorErrorTooltipIcon || a.keyValidatorErrorTooltipIcon,
-valueValidatorErrorTooltip: r.valueValidatorErrorTooltip || a.valueValidatorErrorTooltip,
-valueValidatorErrorTooltipIcon: r.valueValidatorErrorTooltipIcon || a.valueValidatorErrorTooltipIcon,
-keyPlaceholder: r.keyPlaceholder || a.keyPlaceholder,
-valuePlaceholder: r.valuePlaceholder || a.valuePlaceholder
+keyMinlength: a.keyMinlength || r.keyMinlength,
+keyMaxlength: a.keyMaxlength || r.keyMaxlength,
+valueMinlength: a.valueMinlength || r.valueMinlength,
+valueMaxlength: a.valueMaxlength || r.valueMaxlength,
+keyValidator: a.keyValidator || r.keyValidator,
+valueValidator: a.valueValidator || r.valueValidator,
+keyValidatorError: a.keyValidatorError || r.keyValidatorError,
+valueValidatorError: a.valueValidatorError || r.valueValidatorError,
+keyRequiredError: a.keyRequiredError || r.keyRequiredError,
+keyValidatorErrorTooltip: a.keyValidatorErrorTooltip || r.keyValidatorErrorTooltip,
+keyValidatorErrorTooltipIcon: a.keyValidatorErrorTooltipIcon || r.keyValidatorErrorTooltipIcon,
+valueValidatorErrorTooltip: a.valueValidatorErrorTooltip || r.valueValidatorErrorTooltip,
+valueValidatorErrorTooltipIcon: a.valueValidatorErrorTooltipIcon || r.valueValidatorErrorTooltipIcon,
+keyPlaceholder: a.keyPlaceholder || r.keyPlaceholder,
+valuePlaceholder: a.valuePlaceholder || r.valuePlaceholder
 });
 },
 controller: [ "$scope", function(t) {
-var n = [], r = [], o = s++, c = i("secrets", "get"), l = i("configmaps", "get");
+var n = [], a = [], i = c++;
+t.configMapVersion = r.getPreferredVersion("configmaps"), t.secretsVersion = r.getPreferredVersion("secrets");
+var l = s(t.secretsVersion, "get"), u = s(t.configMapVersion, "get");
 angular.extend(t, {
 namespace: e.project,
-unique: o,
+unique: i,
 forms: {},
-placeholder: a.newEntry(),
-setFocusKeyClass: "key-value-editor-set-focus-key-" + o,
-setFocusValClass: "key-value-editor-set-focus-value-" + o,
-uniqueForKey: a.uniqueForKey,
-uniqueForValue: a.uniqueForValue,
+placeholder: o.newEntry(),
+setFocusKeyClass: "key-value-editor-set-focus-key-" + i,
+setFocusValClass: "key-value-editor-set-focus-value-" + i,
+uniqueForKey: o.uniqueForKey,
+uniqueForValue: o.uniqueForValue,
 dragControlListeners: {
 accept: function(e, t) {
 return e.itemScope.sortableScope.$id === t.$id;
@@ -14630,35 +14632,35 @@ t.forms.keyValueEditor.$setDirty();
 }
 },
 deleteEntry: function(e, n) {
-t.entries.splice(e, n), !t.entries.length && t.addRowLink && a.addEntry(t.entries), t.forms.keyValueEditor.$setDirty();
+t.entries.splice(e, n), !t.entries.length && t.addRowLink && o.addEntry(t.entries), t.forms.keyValueEditor.$setDirty();
 },
 isReadonlySome: function(e) {
 return _.includes(n, e);
 },
 cannotDeleteSome: function(e) {
-return _.includes(r, e);
+return _.includes(a, e);
 },
 onAddRow: function() {
-a.addEntry(t.entries), a.setFocusOn("." + t.setFocusKeyClass);
+o.addEntry(t.entries), o.setFocusOn("." + t.setFocusKeyClass);
 },
 onAddRowWithSelectors: function() {
-a.addEntryWithSelectors(t.entries), a.setFocusOn("." + t.setFocusKeyClass);
+o.addEntryWithSelectors(t.entries), o.setFocusOn("." + t.setFocusKeyClass);
 },
 isValueFromReadonly: function(e) {
 return t.isReadonlyAny || e.isReadonlyValue || e.refType && !e.selectedValueFrom || _.isEmpty(t.valueFromSelectorOptions);
 }
 }), t.$watch("cannotDelete", function(e) {
-angular.isArray(e) && (t.cannotDeleteAny = !1, r = e);
+angular.isArray(e) && (t.cannotDeleteAny = !1, a = e);
 }), t.$watch("isReadonly", function(e) {
 angular.isArray(e) && (t.isReadonlyAny = !1, n = e);
 }), t.$watch("addRowLink", function(e) {
-t.addRowLink = e || "Add row", t.entries && !t.entries.length && a.addEntry(t.entries);
+t.addRowLink = e || "Add row", t.entries && !t.entries.length && o.addEntry(t.entries);
 }), t.$watch("entries", function(e) {
-e && !e.length && a.addEntry(t.entries), _.each(t.entries, function(e) {
-a.altTextForValueFrom(e, t.namespace), a.setEntryPerms(e, c, l);
-}), a.findReferenceValueForEntries(e, t.valueFromSelectorOptions);
+e && !e.length && o.addEntry(t.entries), _.each(t.entries, function(e) {
+o.altTextForValueFrom(e, t.namespace), o.setEntryPerms(e, l, u);
+}), o.findReferenceValueForEntries(e, t.valueFromSelectorOptions);
 }), t.$watch("valueFromSelectorOptions", function() {
-a.findReferenceValueForEntries(t.entries, t.valueFromSelectorOptions);
+o.findReferenceValueForEntries(t.entries, t.valueFromSelectorOptions);
 });
 } ]
 };
