@@ -19,10 +19,10 @@
       </dd>
       <dt>Secret:</dt>
       <dd>
-        <span ng-if="'secrets' | canI : 'get'">
+        <span ng-if="secretsVersion | canI : 'get'">
           <a ng-href="{{volume.secret.secretName | navigateResourceURL : 'Secret' : namespace}}">{{volume.secret.secretName}}</a>
         </span>
-        <span ng-if="!('secrets' | canI : 'get')">
+        <span ng-if="!(secretsVersion | canI : 'get')">
           {{volume.secret.secretName}}
         </span>
       </dd>

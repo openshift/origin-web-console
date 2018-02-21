@@ -118,7 +118,7 @@ angular.module('openshiftConsole')
       }
     };
   })
-  .directive('volumes', function() {
+  .directive('volumes', function(APIService) {
     return {
       restrict: 'E',
       scope: {
@@ -127,7 +127,10 @@ angular.module('openshiftConsole')
         canRemove: '=?',
         removeFn: '&?'
       },
-      templateUrl: 'views/_volumes.html'
+      templateUrl: 'views/_volumes.html',
+      link: function($scope) {
+        $scope.secretsVersion = APIService.getPreferredVersion('secrets');
+      }
     };
   })
   .directive('volumeClaimTemplates', function() {

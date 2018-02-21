@@ -596,10 +596,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dd>\n" +
     "<dt>Secret:</dt>\n" +
     "<dd>\n" +
-    "<span ng-if=\"'secrets' | canI : 'get'\">\n" +
+    "<span ng-if=\"secretsVersion | canI : 'get'\">\n" +
     "<a ng-href=\"{{volume.secret.secretName | navigateResourceURL : 'Secret' : namespace}}\">{{volume.secret.secretName}}</a>\n" +
     "</span>\n" +
-    "<span ng-if=\"!('secrets' | canI : 'get')\">\n" +
+    "<span ng-if=\"!(secretsVersion | canI : 'get')\">\n" +
     "{{volume.secret.secretName}}\n" +
     "</span>\n" +
     "</dd>\n" +
