@@ -14180,7 +14180,11 @@ bindings: "<"
 },
 templateUrl: "views/overview/_service-instance-row.html"
 });
-}(), angular.module("openshiftConsole").component("overviewNetworking", {
+}(), function() {
+angular.module("openshiftConsole").component("overviewNetworking", {
+controller: [ "APIService", function(e) {
+this.routesVersion = e.getPreferredVersion("routes");
+} ],
 controllerAs: "networking",
 bindings: {
 rowServices: "<",
@@ -14188,7 +14192,8 @@ allServices: "<",
 routesByService: "<"
 },
 templateUrl: "views/overview/_networking.html"
-}), angular.module("openshiftConsole").component("overviewPipelines", {
+});
+}(), angular.module("openshiftConsole").component("overviewPipelines", {
 controllerAs: "overviewPipelines",
 bindings: {
 recentPipelines: "<"
