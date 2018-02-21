@@ -1277,7 +1277,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h4>Volumes</h4>\n" +
     "<volumes ng-if=\"pod.spec.volumes.length\" volumes=\"pod.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
     "<div ng-if=\"!pod.spec.volumes.length\">none</div>\n" +
-    "<p ng-if=\"dcName && ('deploymentconfigs' | canI : 'update')\">\n" +
+    "<p ng-if=\"dcName && (deploymentConfigsVersion | canI : 'update')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{dcName}}\">Add Storage to {{dcName}}</a>\n" +
     "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{dcName}}\">Add Config Files to {{dcName}}</a>\n" +
