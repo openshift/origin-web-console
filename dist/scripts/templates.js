@@ -12180,13 +12180,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li ng-if=\"row.showStartBuildAction()\" role=\"menuitem\">\n" +
     "<a href=\"\" ng-click=\"row.startBuild(row.buildConfigs[0])\">Start Build</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"'deploymentconfigs/instantiate' | canI : 'create'\" role=\"menuitem\">\n" +
+    "<li ng-if=\"row.deploymentConfigsInstantiateVersion | canI : 'create'\" role=\"menuitem\">\n" +
     "<a href=\"\" ng-if=\"row.canDeploy()\" ng-click=\"row.startDeployment()\">Deploy</a>\n" +
     "<a href=\"\" ng-if=\"!(row.canDeploy())\" class=\"disabled-link\" aria-disabled=\"true\">\n" +
     "Deploy <span ng-if=\"row.isPaused()\">(Paused)</span>\n" +
     "</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"'deploymentconfigs' | canI : 'update'\" role=\"menuitem\">\n" +
+    "<li ng-if=\"row.deploymentConfigsVersion | canI : 'update'\" role=\"menuitem\">\n" +
     "<a ng-href=\"{{row.apiObject | editResourceURL}}\">Edit</a>\n" +
     "</li>\n" +
     "<li ng-if=\"('pod_presets' | enableTechPreviewFeature)\n" +
@@ -12199,7 +12199,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "                      && (row.serviceBindingsVersion | canI : 'delete')\" role=\"menuitem\">\n" +
     "<a href=\"\" ng-click=\"row.showOverlayPanel('unbindService', {target: row.apiObject})\">Delete Binding</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"row.current && ('deploymentconfigs/log' | canI : 'get')\" role=\"menuitem\">\n" +
+    "<li ng-if=\"row.current && (row.deploymentConfigsLogVersion | canI : 'get')\" role=\"menuitem\">\n" +
     "<a ng-href=\"{{row.current | navigateResourceURL}}?tab=logs\">View Logs</a>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -12211,10 +12211,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i><span class=\"sr-only\">Actions</span>\n" +
     "</button>\n" +
     "<ul class=\"dropdown-menu dropdown-menu-right\" uib-dropdown-menu role=\"menu\">\n" +
-    "<li role=\"menuitem\" ng-if=\"'pods' | canI : 'update'\">\n" +
+    "<li role=\"menuitem\" ng-if=\"row.podsVersion | canI : 'update'\">\n" +
     "<a ng-href=\"{{row.apiObject | editYamlURL}}\">Edit YAML</a>\n" +
     "</li>\n" +
-    "<li role=\"menuitem\" ng-if=\"('pods/log' | canI : 'get')\">\n" +
+    "<li role=\"menuitem\" ng-if=\"(row.podsLogVersion | canI : 'get')\">\n" +
     "<a ng-href=\"{{row.apiObject | navigateResourceURL}}?tab=logs\">View Logs</a>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -12239,7 +12239,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "                      && (row.serviceBindingsVersion | canI : 'delete')\" role=\"menuitem\">\n" +
     "<a href=\"\" ng-click=\"row.showOverlayPanel('unbindService', {target: row.apiObject})\">Delete Binding</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"(pod = row.firstPod(row.current)) && ('pods/log' | canI : 'get')\" role=\"menuitem\">\n" +
+    "<li ng-if=\"(pod = row.firstPod(row.current)) && (row.podsLogVersion | canI : 'get')\" role=\"menuitem\">\n" +
     "<a ng-href=\"{{pod | navigateResourceURL}}?tab=logs\">View Logs</a>\n" +
     "</li>\n" +
     "</ul>\n" +
