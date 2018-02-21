@@ -113,7 +113,7 @@
                   ng-class="{'in': expanded.pods[pod.metadata.name]}">
                 <div class="list-pf-container">
                   <log-viewer
-                    ng-if="'pods/log' | canI : 'get'"
+                    ng-if="podsLogVersion | canI : 'get'"
                     object="pod"
                     context="projectContext"
                     options="logOptions.pods[pod.metadata.name]"
@@ -212,7 +212,7 @@
                 <div class="list-pf-container">
                   <!-- TODO fix vanilla RCs -->
                   <log-viewer
-                    ng-if="'deploymentconfigs/log' | canI : 'get'"
+                    ng-if="deploymentConfigsLogVersion | canI : 'get'"
                     object="replicationController"
                     context="projectContext"
                     options="logOptions.replicationControllers[replicationController.metadata.name]"
@@ -284,7 +284,7 @@
                 <div class="list-pf-container">
                   <!-- TODO fix vanilla RCs -->
                   <log-viewer
-                    ng-if="'deploymentconfigs/log' | canI : 'get'"
+                    ng-if="deploymentConfigsLogVersion | canI : 'get'"
                     object="replicationController"
                     context="projectContext"
                     options="logOptions.replicationControllers[replicationController.metadata.name]"
@@ -475,7 +475,7 @@
                 <div class="list-pf-container">
                   <!-- TODO fix vanilla RCs -->
                   <log-viewer
-                    ng-if="'builds/log' | canI : 'get'"
+                    ng-if="buildsLogVersion | canI : 'get'"
                     object="build"
                     context="projectContext"
                     options="logOptions.builds[build.metadata.name]"

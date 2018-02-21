@@ -13,6 +13,7 @@ angular.module('openshiftConsole')
                                                 $location,
                                                 $scope,
                                                 $filter,
+                                                APIService,
                                                 BuildsService,
                                                 DataService,
                                                 ImageStreamResolver,
@@ -28,6 +29,10 @@ angular.module('openshiftConsole')
     $scope.renderOptions = $scope.renderOptions || {};
     $scope.renderOptions.showEventsSidebar = true;
     $scope.renderOptions.collapseEventsSidebar = localStorage.getItem('monitoring.eventsidebar.collapsed') === 'true';
+
+    $scope.buildsLogVersion = APIService.getPreferredVersion('builds/log');
+    $scope.podsLogVersion = APIService.getPreferredVersion('pods/log');
+    $scope.deploymentConfigsLogVersion = APIService.getPreferredVersion('deploymentconfigs/log');
 
     var limitWatches = $filter('isIE')();
     var DEFAULT_POLL_INTERVAL = 60 * 1000; // milliseconds

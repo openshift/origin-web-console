@@ -5017,9 +5017,9 @@ pollInterval: 6e4
 a.unwatchAll(u);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("MonitoringController", [ "$routeParams", "$location", "$scope", "$filter", "BuildsService", "DataService", "ImageStreamResolver", "KeywordService", "Logger", "MetricsService", "Navigate", "PodsService", "ProjectsService", "$rootScope", function(e, t, n, r, a, o, i, s, c, l, u, d, m, p) {
-n.projectName = e.project, n.alerts = n.alerts || {}, n.renderOptions = n.renderOptions || {}, n.renderOptions.showEventsSidebar = !0, n.renderOptions.collapseEventsSidebar = "true" === localStorage.getItem("monitoring.eventsidebar.collapsed");
-var f = r("isIE")(), g = [];
+} ]), angular.module("openshiftConsole").controller("MonitoringController", [ "$routeParams", "$location", "$scope", "$filter", "APIService", "BuildsService", "DataService", "ImageStreamResolver", "KeywordService", "Logger", "MetricsService", "Navigate", "PodsService", "ProjectsService", "$rootScope", function(e, t, n, r, a, o, i, s, c, l, u, d, m, p, f) {
+n.projectName = e.project, n.alerts = n.alerts || {}, n.renderOptions = n.renderOptions || {}, n.renderOptions.showEventsSidebar = !0, n.renderOptions.collapseEventsSidebar = "true" === localStorage.getItem("monitoring.eventsidebar.collapsed"), n.buildsLogVersion = a.getPreferredVersion("builds/log"), n.podsLogVersion = a.getPreferredVersion("pods/log"), n.deploymentConfigsLogVersion = a.getPreferredVersion("deploymentconfigs/log");
+var g = r("isIE")(), v = [];
 n.kinds = [ {
 kind: "All"
 }, {
@@ -5057,49 +5057,49 @@ replicaSets: {},
 builds: {},
 statefulSets: {}
 };
-var v = r("isNil");
+var h = r("isNil");
 n.filters = {
-hideOlderResources: v(e.hideOlderResources) || "true" === e.hideOlderResources,
+hideOlderResources: h(e.hideOlderResources) || "true" === e.hideOlderResources,
 text: ""
 };
-var h, y, b, S;
-l.isAvailable().then(function(e) {
+var y, b, S, C;
+u.isAvailable().then(function(e) {
 n.metricsAvailable = e;
 });
-var C = r("orderObjectsByDate"), w = [ "metadata.name" ], P = [], j = function() {
-n.filteredPods = s.filterForKeywords(S, w, P), n.filteredReplicationControllers = s.filterForKeywords(y, w, P), n.filteredReplicaSets = s.filterForKeywords(b, w, P), n.filteredBuilds = s.filterForKeywords(h, w, P), n.filteredStatefulSets = s.filterForKeywords(_.values(n.statefulSets), w, P);
-}, k = function(e) {
+var w = r("orderObjectsByDate"), P = [ "metadata.name" ], j = [], k = function() {
+n.filteredPods = c.filterForKeywords(C, P, j), n.filteredReplicationControllers = c.filterForKeywords(b, P, j), n.filteredReplicaSets = c.filterForKeywords(S, P, j), n.filteredBuilds = c.filterForKeywords(y, P, j), n.filteredStatefulSets = c.filterForKeywords(_.values(n.statefulSets), P, j);
+}, I = function(e) {
 n.logOptions.pods[e.metadata.name] = {
 container: e.spec.containers[0].name
 }, n.logCanRun.pods[e.metadata.name] = !_.includes([ "New", "Pending", "Unknown" ], e.status.phase);
-}, I = function(e) {
+}, R = function(e) {
 n.logOptions.replicationControllers[e.metadata.name] = {};
 var t = r("annotation")(e, "deploymentVersion");
 t && (n.logOptions.replicationControllers[e.metadata.name].version = t), n.logCanRun.replicationControllers[e.metadata.name] = !_.includes([ "New", "Pending" ], r("deploymentStatus")(e));
-}, R = function(e) {
+}, T = function(e) {
 n.logOptions.builds[e.metadata.name] = {}, n.logCanRun.builds[e.metadata.name] = !_.includes([ "New", "Pending", "Error" ], e.status.phase);
-}, T = function() {
-n.filteredStatefulSets = s.filterForKeywords(_.values(n.statefulSets), w, P);
 }, E = function() {
-S = _.filter(n.pods, function(e) {
+n.filteredStatefulSets = c.filterForKeywords(_.values(n.statefulSets), P, j);
+}, N = function() {
+C = _.filter(n.pods, function(e) {
 return !n.filters.hideOlderResources || "Succeeded" !== e.status.phase && "Failed" !== e.status.phase;
-}), n.filteredPods = s.filterForKeywords(S, w, P);
-}, N = r("isIncompleteBuild"), D = r("buildConfigForBuild"), A = r("isRecentBuild"), B = function() {
+}), n.filteredPods = c.filterForKeywords(C, P, j);
+}, D = r("isIncompleteBuild"), A = r("buildConfigForBuild"), B = r("isRecentBuild"), L = function() {
 moment().subtract(5, "m");
-h = _.filter(n.builds, function(e) {
+y = _.filter(n.builds, function(e) {
 if (!n.filters.hideOlderResources) return !0;
-if (N(e)) return !0;
-var t = D(e);
-return t ? n.latestBuildByConfig[t].metadata.name === e.metadata.name : A(e);
-}), n.filteredBuilds = s.filterForKeywords(h, w, P);
-}, L = r("deploymentStatus"), V = r("deploymentIsInProgress"), O = function() {
-y = _.filter(n.replicationControllers, function(e) {
-return !n.filters.hideOlderResources || (V(e) || "Active" === L(e));
-}), n.filteredReplicationControllers = s.filterForKeywords(y, w, P);
-}, U = function() {
-b = _.filter(n.replicaSets, function(e) {
+if (D(e)) return !0;
+var t = A(e);
+return t ? n.latestBuildByConfig[t].metadata.name === e.metadata.name : B(e);
+}), n.filteredBuilds = c.filterForKeywords(y, P, j);
+}, V = r("deploymentStatus"), O = r("deploymentIsInProgress"), U = function() {
+b = _.filter(n.replicationControllers, function(e) {
+return !n.filters.hideOlderResources || (O(e) || "Active" === V(e));
+}), n.filteredReplicationControllers = c.filterForKeywords(b, P, j);
+}, F = function() {
+S = _.filter(n.replicaSets, function(e) {
 return !n.filters.hideOlderResources || _.get(e, "status.replicas");
-}), n.filteredReplicaSets = s.filterForKeywords(b, w, P);
+}), n.filteredReplicaSets = c.filterForKeywords(S, P, j);
 };
 n.toggleItem = function(e, t, a, o) {
 var i = $(e.target);
@@ -5107,80 +5107,80 @@ if (o || !i || !i.closest("a", t).length) {
 var s, c;
 switch (a.kind) {
 case "Build":
-s = !n.expanded.builds[a.metadata.name], n.expanded.builds[a.metadata.name] = s, c = s ? "event.resource.highlight" : "event.resource.clear-highlight", p.$emit(c, a);
+s = !n.expanded.builds[a.metadata.name], n.expanded.builds[a.metadata.name] = s, c = s ? "event.resource.highlight" : "event.resource.clear-highlight", f.$emit(c, a);
 var l = _.get(n.podsByName, r("annotation")(a, "buildPod"));
-l && p.$emit(c, l);
+l && f.$emit(c, l);
 break;
 
 case "ReplicationController":
-s = !n.expanded.replicationControllers[a.metadata.name], n.expanded.replicationControllers[a.metadata.name] = s, c = s ? "event.resource.highlight" : "event.resource.clear-highlight", p.$emit(c, a);
+s = !n.expanded.replicationControllers[a.metadata.name], n.expanded.replicationControllers[a.metadata.name] = s, c = s ? "event.resource.highlight" : "event.resource.clear-highlight", f.$emit(c, a);
 var u = r("annotation")(a, "deployerPod");
-u && p.$emit(c, {
+u && f.$emit(c, {
 kind: "Pod",
 metadata: {
 name: u
 }
 }), _.each(n.podsByOwnerUID[a.metadata.uid], function(e) {
-p.$emit(c, e);
+f.$emit(c, e);
 });
 break;
 
 case "ReplicaSet":
-s = !n.expanded.replicaSets[a.metadata.name], n.expanded.replicaSets[a.metadata.name] = s, c = s ? "event.resource.highlight" : "event.resource.clear-highlight", p.$emit(c, a), _.each(n.podsByOwnerUID[a.metadata.uid], function(e) {
-p.$emit(c, e);
+s = !n.expanded.replicaSets[a.metadata.name], n.expanded.replicaSets[a.metadata.name] = s, c = s ? "event.resource.highlight" : "event.resource.clear-highlight", f.$emit(c, a), _.each(n.podsByOwnerUID[a.metadata.uid], function(e) {
+f.$emit(c, e);
 });
 break;
 
 case "Pod":
-s = !n.expanded.pods[a.metadata.name], n.expanded.pods[a.metadata.name] = s, c = s ? "event.resource.highlight" : "event.resource.clear-highlight", p.$emit(c, a);
+s = !n.expanded.pods[a.metadata.name], n.expanded.pods[a.metadata.name] = s, c = s ? "event.resource.highlight" : "event.resource.clear-highlight", f.$emit(c, a);
 break;
 
 case "StatefulSet":
-s = !n.expanded.statefulSets[a.metadata.name], n.expanded.statefulSets[a.metadata.name] = s, c = s ? "event.resource.highlight" : "event.resource.clear-highlight", p.$emit(c, a);
+s = !n.expanded.statefulSets[a.metadata.name], n.expanded.statefulSets[a.metadata.name] = s, c = s ? "event.resource.highlight" : "event.resource.clear-highlight", f.$emit(c, a);
 }
 }
 }, n.viewPodsForSet = function(e) {
 var t = _.get(n, [ "podsByOwnerUID", e.metadata.uid ], []);
-_.isEmpty(t) || u.toPodsForDeployment(e, t);
-}, m.get(e.project).then(_.spread(function(e, r) {
-n.project = e, n.projectContext = r, g.push(o.watch("pods", r, function(e) {
-n.podsByName = e.by("metadata.name"), n.pods = C(n.podsByName, !0), n.podsByOwnerUID = d.groupByOwnerUID(n.pods), n.podsLoaded = !0, _.each(n.pods, k), E(), c.log("pods", n.pods);
-})), g.push(o.watch({
+_.isEmpty(t) || d.toPodsForDeployment(e, t);
+}, p.get(e.project).then(_.spread(function(e, r) {
+n.project = e, n.projectContext = r, v.push(i.watch("pods", r, function(e) {
+n.podsByName = e.by("metadata.name"), n.pods = w(n.podsByName, !0), n.podsByOwnerUID = m.groupByOwnerUID(n.pods), n.podsLoaded = !0, _.each(n.pods, I), N(), l.log("pods", n.pods);
+})), v.push(i.watch({
 resource: "statefulsets",
 group: "apps",
 version: "v1beta1"
 }, r, function(e) {
-n.statefulSets = e.by("metadata.name"), n.statefulSetsLoaded = !0, T(), c.log("statefulSets", n.statefulSets);
+n.statefulSets = e.by("metadata.name"), n.statefulSetsLoaded = !0, E(), l.log("statefulSets", n.statefulSets);
 }, {
-poll: f,
+poll: g,
 pollInterval: 6e4
-})), g.push(o.watch("replicationcontrollers", r, function(e) {
-n.replicationControllers = C(e.by("metadata.name"), !0), n.replicationControllersLoaded = !0, _.each(n.replicationControllers, I), O(), c.log("replicationcontrollers", n.replicationControllers);
-})), g.push(o.watch("builds", r, function(e) {
-n.builds = C(e.by("metadata.name"), !0), n.latestBuildByConfig = a.latestBuildByConfig(n.builds), n.buildsLoaded = !0, _.each(n.builds, R), B(), c.log("builds", n.builds);
-})), g.push(o.watch({
+})), v.push(i.watch("replicationcontrollers", r, function(e) {
+n.replicationControllers = w(e.by("metadata.name"), !0), n.replicationControllersLoaded = !0, _.each(n.replicationControllers, R), U(), l.log("replicationcontrollers", n.replicationControllers);
+})), v.push(i.watch("builds", r, function(e) {
+n.builds = w(e.by("metadata.name"), !0), n.latestBuildByConfig = o.latestBuildByConfig(n.builds), n.buildsLoaded = !0, _.each(n.builds, T), L(), l.log("builds", n.builds);
+})), v.push(i.watch({
 group: "extensions",
 resource: "replicasets"
 }, r, function(e) {
-n.replicaSets = C(e.by("metadata.name"), !0), n.replicaSetsLoaded = !0, U(), c.log("replicasets", n.replicaSets);
+n.replicaSets = w(e.by("metadata.name"), !0), n.replicaSetsLoaded = !0, F(), l.log("replicasets", n.replicaSets);
 }, {
-poll: f,
+poll: g,
 pollInterval: 6e4
 })), n.$on("$destroy", function() {
-o.unwatchAll(g);
+i.unwatchAll(v);
 }), n.$watch("filters.hideOlderResources", function() {
-E(), B(), O(), U(), T();
+N(), L(), U(), F(), E();
 var e = t.search();
 e.hideOlderResources = n.filters.hideOlderResources ? "true" : "false", t.replace().search(e);
 }), n.$watch("kindSelector.selected.kind", function() {
 var e = t.search();
 e.kind = n.kindSelector.selected.kind, t.replace().search(e);
 }), n.$watch("filters.text", _.debounce(function() {
-n.filterKeywords = P = s.generateKeywords(n.filters.text), n.$apply(j);
+n.filterKeywords = j = c.generateKeywords(n.filters.text), n.$apply(k);
 }, 50, {
 maxWait: 250
 })), n.$watch("renderOptions.collapseEventsSidebar", function(e, t) {
-e !== t && (localStorage.setItem("monitoring.eventsidebar.collapsed", n.renderOptions.collapseEventsSidebar ? "true" : "false"), p.$emit("metrics.charts.resize"));
+e !== t && (localStorage.setItem("monitoring.eventsidebar.collapsed", n.renderOptions.collapseEventsSidebar ? "true" : "false"), f.$emit("metrics.charts.resize"));
 });
 }));
 } ]), angular.module("openshiftConsole").controller("MembershipController", [ "$filter", "$location", "$routeParams", "$scope", "$timeout", "$uibModal", "APIService", "AuthService", "AuthorizationService", "DataService", "ProjectsService", "MembershipService", "NotificationsService", "RoleBindingsService", "RolesService", function(e, t, n, r, a, o, i, s, c, l, u, d, m, p, f) {
