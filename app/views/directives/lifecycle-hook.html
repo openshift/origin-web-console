@@ -38,11 +38,11 @@
             <span ng-if="env.valueFrom.configMapKeyRef">
               {{env.valueFrom.configMapKeyRef.key}} in config map
               <span
-                ng-if="!('configmaps' | canI : 'get')">
+                ng-if="!(configMapsVersion | canI : 'get')">
                 {{env.valueFrom.configMapKeyRef.name}}
               </span>
               <a
-                ng-if="'configmaps' | canI : 'get'"
+                ng-if="configMapsVersion | canI : 'get'"
                 ng-href="{{env.valueFrom.configMapKeyRef.name | navigateResourceURL : 'ConfigMap' : deploymentConfig.metadata.namespace}}">
                 {{env.valueFrom.configMapKeyRef.name}}
               </a>
@@ -50,11 +50,11 @@
             <span ng-if="env.valueFrom.secretKeyRef">
               {{env.valueFrom.secretKeyRef.key}} in secret
               <span
-                ng-if="!('secrets' | canI : 'get')">
+                ng-if="!(secretsVersion | canI : 'get')">
                 {{env.valueFrom.secretKeyRef.name}}
               </span>
               <a
-                ng-if="'secrets' | canI : 'get'"
+                ng-if="secretsVersion | canI : 'get'"
                 ng-href="{{env.valueFrom.secretKeyRef.name | navigateResourceURL : 'Secret' : deploymentConfig.metadata.namespace}}">
                 {{env.valueFrom.secretKeyRef.name}}
               </a>

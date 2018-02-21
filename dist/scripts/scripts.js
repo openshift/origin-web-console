@@ -11289,7 +11289,7 @@ value: r
 });
 } ]
 };
-}), angular.module("openshiftConsole").directive("editLifecycleHook", function() {
+}), angular.module("openshiftConsole").directive("editLifecycleHook", [ "APIService", function(e) {
 return {
 restrict: "E",
 scope: {
@@ -11302,30 +11302,30 @@ availableConfigMaps: "=",
 namespace: "="
 },
 templateUrl: "views/directives/edit-lifecycle-hook.html",
-controller: [ "$scope", function(e) {
-e.view = {
+controller: [ "$scope", function(t) {
+t.secretsVersion = e.getPreferredVersion("secrets"), t.configMapsVersion = e.getPreferredVersion("configmaps"), t.view = {
 isDisabled: !1
-}, e.lifecycleHookFailurePolicyTypes = [ "Abort", "Retry", "Ignore" ], e.istagHook = {}, e.removedHookParams = {}, e.action = {
-type: _.has(e.hookParams, "tagImages") ? "tagImages" : "execNewPod"
+}, t.lifecycleHookFailurePolicyTypes = [ "Abort", "Retry", "Ignore" ], t.istagHook = {}, t.removedHookParams = {}, t.action = {
+type: _.has(t.hookParams, "tagImages") ? "tagImages" : "execNewPod"
 };
-var t = {
+var n = {
 command: [],
 env: [],
 volumes: [],
-containerName: e.availableContainers[0] || ""
-}, n = {
+containerName: t.availableContainers[0] || ""
+}, r = {
 to: {},
-containerName: e.availableContainers[0] || ""
-}, r = function(t) {
+containerName: t.availableContainers[0] || ""
+}, a = function(e) {
 var n = {};
-if (_.isEmpty(t)) n = {
-namespace: e.namespace,
+if (_.isEmpty(e)) n = {
+namespace: t.namespace,
 imageStream: "",
 tagObject: null
 }; else {
-var r = t.name.split(":");
+var r = e.name.split(":");
 n = {
-namespace: t.namespace || e.namespace,
+namespace: e.namespace || t.namespace,
 imageStream: r[0],
 tagObject: {
 tag: r[1]
@@ -11333,25 +11333,25 @@ tag: r[1]
 };
 }
 return n;
-}, a = function() {
-"execNewPod" === e.action.type ? (_.has(e.removedHookParams, "execNewPod") ? e.hookParams.execNewPod = e.removedHookParams.execNewPod : e.hookParams.execNewPod = _.get(e, "hookParams.execNewPod", {}), e.hookParams.execNewPod = _.merge(angular.copy(t), e.hookParams.execNewPod)) : (_.has(e.removedHookParams, "tagImages") ? e.hookParams.tagImages = e.removedHookParams.tagImages : e.hookParams.tagImages = _.get(e, "hookParams.tagImages", [ {} ]), e.hookParams.tagImages = [ _.merge(angular.copy(n), e.hookParams.tagImages[0]) ], e.istagHook = r(_.head(e.hookParams.tagImages).to)), e.hookParams.failurePolicy = _.get(e.hookParams, "failurePolicy", "Abort");
+}, o = function() {
+"execNewPod" === t.action.type ? (_.has(t.removedHookParams, "execNewPod") ? t.hookParams.execNewPod = t.removedHookParams.execNewPod : t.hookParams.execNewPod = _.get(t, "hookParams.execNewPod", {}), t.hookParams.execNewPod = _.merge(angular.copy(n), t.hookParams.execNewPod)) : (_.has(t.removedHookParams, "tagImages") ? t.hookParams.tagImages = t.removedHookParams.tagImages : t.hookParams.tagImages = _.get(t, "hookParams.tagImages", [ {} ]), t.hookParams.tagImages = [ _.merge(angular.copy(r), t.hookParams.tagImages[0]) ], t.istagHook = a(_.head(t.hookParams.tagImages).to)), t.hookParams.failurePolicy = _.get(t.hookParams, "failurePolicy", "Abort");
 };
-e.addHook = function() {
-_.isEmpty(e.removedHookParams) ? (e.hookParams = {}, a()) : e.hookParams = e.removedHookParams;
-}, e.removeHook = function() {
-e.removedHookParams = e.hookParams, delete e.hookParams, e.editForm.$setDirty();
+t.addHook = function() {
+_.isEmpty(t.removedHookParams) ? (t.hookParams = {}, o()) : t.hookParams = t.removedHookParams;
+}, t.removeHook = function() {
+t.removedHookParams = t.hookParams, delete t.hookParams, t.editForm.$setDirty();
 };
-e.$watchGroup([ "hookParams", "action.type" ], function() {
-e.hookParams && ("execNewPod" === e.action.type ? (e.hookParams.tagImages && (e.removedHookParams.tagImages = e.hookParams.tagImages, delete e.hookParams.tagImages), a()) : "tagImages" === e.action.type && (e.hookParams.execNewPod && (e.removedHookParams.execNewPod = e.hookParams.execNewPod, delete e.hookParams.execNewPod), a()));
-}), e.valueFromObjects = [], e.$watchGroup([ "availableSecrets", "availableConfigMaps" ], function() {
-var t = e.availableConfigMaps || [], n = e.availableSecrets || [];
-e.valueFromObjects = t.concat(n);
-}), e.$watch("istagHook.tagObject.tag", function() {
-_.has(e.istagHook, [ "tagObject", "tag" ]) && (_.set(e.hookParams, "tagImages[0].to.kind", "ImageStreamTag"), _.set(e.hookParams, "tagImages[0].to.namespace", e.istagHook.namespace), _.set(e.hookParams, "tagImages[0].to.name", e.istagHook.imageStream + ":" + e.istagHook.tagObject.tag));
+t.$watchGroup([ "hookParams", "action.type" ], function() {
+t.hookParams && ("execNewPod" === t.action.type ? (t.hookParams.tagImages && (t.removedHookParams.tagImages = t.hookParams.tagImages, delete t.hookParams.tagImages), o()) : "tagImages" === t.action.type && (t.hookParams.execNewPod && (t.removedHookParams.execNewPod = t.hookParams.execNewPod, delete t.hookParams.execNewPod), o()));
+}), t.valueFromObjects = [], t.$watchGroup([ "availableSecrets", "availableConfigMaps" ], function() {
+var e = t.availableConfigMaps || [], n = t.availableSecrets || [];
+t.valueFromObjects = e.concat(n);
+}), t.$watch("istagHook.tagObject.tag", function() {
+_.has(t.istagHook, [ "tagObject", "tag" ]) && (_.set(t.hookParams, "tagImages[0].to.kind", "ImageStreamTag"), _.set(t.hookParams, "tagImages[0].to.namespace", t.istagHook.namespace), _.set(t.hookParams, "tagImages[0].to.name", t.istagHook.imageStream + ":" + t.istagHook.tagObject.tag));
 });
 } ]
 };
-}).directive("lifecycleHook", [ "$filter", function(e) {
+} ]).directive("lifecycleHook", [ "$filter", "APIService", function(e, t) {
 return {
 restrict: "E",
 scope: {
@@ -11359,9 +11359,9 @@ deploymentConfig: "=",
 type: "@"
 },
 templateUrl: "views/directives/lifecycle-hook.html",
-link: function(t) {
-t.$watch("deploymentConfig", function(n) {
-t.strategyParams = e("deploymentStrategyParams")(n);
+link: function(n) {
+n.secretsVersion = t.getPreferredVersion("secrets"), n.configMapsVersion = t.getPreferredVersion("configmaps"), n.$watch("deploymentConfig", function(t) {
+n.strategyParams = e("deploymentStrategyParams")(t);
 });
 }
 };

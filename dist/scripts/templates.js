@@ -7654,19 +7654,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{env.name}} set to key\n" +
     "<span ng-if=\"env.valueFrom.configMapKeyRef\">\n" +
     "{{env.valueFrom.configMapKeyRef.key}} in config map\n" +
-    "<span ng-if=\"!('configmaps' | canI : 'get')\">\n" +
+    "<span ng-if=\"!(configMapsVersion | canI : 'get')\">\n" +
     "{{env.valueFrom.configMapKeyRef.name}}\n" +
     "</span>\n" +
-    "<a ng-if=\"'configmaps' | canI : 'get'\" ng-href=\"{{env.valueFrom.configMapKeyRef.name | navigateResourceURL : 'ConfigMap' : deploymentConfig.metadata.namespace}}\">\n" +
+    "<a ng-if=\"configMapsVersion | canI : 'get'\" ng-href=\"{{env.valueFrom.configMapKeyRef.name | navigateResourceURL : 'ConfigMap' : deploymentConfig.metadata.namespace}}\">\n" +
     "{{env.valueFrom.configMapKeyRef.name}}\n" +
     "</a>\n" +
     "</span>\n" +
     "<span ng-if=\"env.valueFrom.secretKeyRef\">\n" +
     "{{env.valueFrom.secretKeyRef.key}} in secret\n" +
-    "<span ng-if=\"!('secrets' | canI : 'get')\">\n" +
+    "<span ng-if=\"!(secretsVersion | canI : 'get')\">\n" +
     "{{env.valueFrom.secretKeyRef.name}}\n" +
     "</span>\n" +
-    "<a ng-if=\"'secrets' | canI : 'get'\" ng-href=\"{{env.valueFrom.secretKeyRef.name | navigateResourceURL : 'Secret' : deploymentConfig.metadata.namespace}}\">\n" +
+    "<a ng-if=\"secretsVersion | canI : 'get'\" ng-href=\"{{env.valueFrom.secretKeyRef.name | navigateResourceURL : 'Secret' : deploymentConfig.metadata.namespace}}\">\n" +
     "{{env.valueFrom.secretKeyRef.name}}\n" +
     "</a>\n" +
     "</span>\n" +
