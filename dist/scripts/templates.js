@@ -12307,7 +12307,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</span>\n" +
     "<a ng-href=\"project/{{row.apiObject.metadata.namespace}}/browse/events\">View Events</a>\n" +
-    "<span ng-if=\"'replicationcontrollers' | canI : 'update'\">\n" +
+    "<span ng-if=\"replicationControllersVersion | canI : 'update'\">\n" +
     "<span class=\"action-divider\">|</span>\n" +
     "<a href=\"\" ng-click=\"row.cancelDeployment()\" role=\"button\">Cancel</a>\n" +
     "</span>\n" +
@@ -12380,7 +12380,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!row.pipelines.length\">\n" +
-    "<button ng-if=\"'deploymentconfigs/instantiate' | canI : 'create'\" class=\"btn btn-primary\" ng-click=\"row.startDeployment()\">\n" +
+    "<button ng-if=\"deploymentConfigsInstantiateVersion | canI : 'create'\" class=\"btn btn-primary\" ng-click=\"row.startDeployment()\">\n" +
     "Start Deployment\n" +
     "</button>\n" +
     "</div>\n" +

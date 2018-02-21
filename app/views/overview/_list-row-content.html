@@ -43,7 +43,7 @@
       </span>
     </span>
     <a ng-href="project/{{row.apiObject.metadata.namespace}}/browse/events">View Events</a>
-    <span ng-if="'replicationcontrollers' | canI : 'update'">
+    <span ng-if="replicationControllersVersion | canI : 'update'">
       <span class="action-divider">|</span>
       <a href="" ng-click="row.cancelDeployment()" role="button">Cancel</a>
     </span>
