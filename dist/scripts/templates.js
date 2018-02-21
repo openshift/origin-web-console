@@ -1674,7 +1674,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{latestBuild | buildLogURL}}\" target=\"_blank\">View Log</a>\n" +
     "</span>\n" +
     "\n" +
-    "<span ng-if=\"!(latestBuild | isJenkinsPipelineStrategy) && ('builds/log' | canI : 'get')\">\n" +
+    "<span ng-if=\"!(latestBuild | isJenkinsPipelineStrategy) && (buildsLogVersion | canI : 'get')\">\n" +
     "<a ng-href=\"{{latestBuild | buildLogURL}}\">View Log</a>\n" +
     "</span>\n" +
     "</span>\n" +
@@ -1974,7 +1974,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<key-value-editor ng-if=\"!(buildConfigsVersion | canI : 'update')\" entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" is-readonly cannot-add cannot-sort cannot-delete show-header></key-value-editor>\n" +
     "</ng-form>\n" +
     "</uib-tab>\n" +
-    "<uib-tab active=\"selectedTab.events\" ng-if=\"('events' | canI : 'watch')\">\n" +
+    "<uib-tab active=\"selectedTab.events\" ng-if=\"(eventsVersion | canI : 'watch')\">\n" +
     "<uib-tab-heading>Events</uib-tab-heading>\n" +
     "<events api-objects=\"[ buildConfig ]\" project-context=\"projectContext\" ng-if=\"selectedTab.events\"></events>\n" +
     "</uib-tab>\n" +

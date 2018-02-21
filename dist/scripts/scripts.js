@@ -5519,7 +5519,7 @@ title: "Builds",
 link: "project/" + n.project + "/browse/builds"
 }), e.breadcrumbs.push({
 title: n.buildconfig
-}), e.buildConfigsVersion = r.getPreferredVersion("buildconfigs"), e.buildsVersion = r.getPreferredVersion("builds"), e.buildConfigsInstantiateVersion = r.getPreferredVersion("buildconfigs/instantiate"), e.secretsVersion = r.getPreferredVersion("secrets"), e.emptyMessage = "Loading...", e.aceLoaded = function(e) {
+}), e.buildConfigsVersion = r.getPreferredVersion("buildconfigs"), e.buildsVersion = r.getPreferredVersion("builds"), e.buildsLogVersion = r.getPreferredVersion("builds/log"), e.buildConfigsInstantiateVersion = r.getPreferredVersion("buildconfigs/instantiate"), e.eventsVersion = r.getPreferredVersion("events"), e.secretsVersion = r.getPreferredVersion("secrets"), e.emptyMessage = "Loading...", e.aceLoaded = function(e) {
 var t = e.getSession();
 t.setOption("tabSize", 2), t.setOption("useSoftTabs", !0), e.$blockScrolling = 1 / 0;
 };
