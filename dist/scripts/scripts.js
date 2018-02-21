@@ -4896,9 +4896,9 @@ r.imageStreams = e.by("metadata.name"), l.buildDockerRefMapForImageStreams(r.ima
 })), h.push(s.watch(v, a, function(e) {
 r.builds = e.by("metadata.name"), u.log("builds (subscribe)", r.builds);
 }));
-var i, d = function() {
+var d, m = function() {
 var t = r.debugPod;
-i && (s.unwatch(i), i = null), $(window).off("beforeunload.debugPod"), t && (s.delete(r.podsVersion, t.metadata.name, a, {
+d && (s.unwatch(d), d = null), $(window).off("beforeunload.debugPod"), t && (s.delete(r.podsVersion, t.metadata.name, a, {
 gracePeriodSeconds: 0
 }).then(_.noop, function(n) {
 r.alerts["debug-container-error"] = {
@@ -4907,22 +4907,22 @@ message: "Could not delete pod " + t.metadata.name,
 details: e("getErrorDetails")(n)
 };
 }), r.debugPod = null);
-}, m = function() {
+}, f = function() {
 $(".terminal:visible").focus();
 };
 r.hasFullscreen = c.hasFullscreen(!0), r.fullscreenTerminal = function() {
-c.requestFullscreen("#container-terminal-wrapper"), setTimeout(m);
+c.requestFullscreen("#container-terminal-wrapper"), setTimeout(f);
 }, r.exitFullscreen = function() {
 c.exitFullscreen();
 }, r.debugTerminal = function(t) {
 var n = p.generateDebugPod(r.pod, t);
-n ? s.create(r.podsVersion, null, n, a).then(function(e) {
-var c = _.find(r.pod.spec.containers, {
+n ? s.create(i.objectToResourceGroupVersion(n), null, n, a).then(function(e) {
+var i = _.find(r.pod.spec.containers, {
 name: t
 });
 r.debugPod = e, $(window).on("beforeunload.debugPod", function() {
 return "Are you sure you want to leave with the debug terminal open? The debug pod will not be deleted unless you close the dialog.";
-}), i = s.watchObject(r.podsVersion, n.metadata.name, a, function(e) {
+}), d = s.watchObject(r.podsVersion, n.metadata.name, a, function(e) {
 r.debugPod = e;
 }), o.open({
 templateUrl: "views/modals/debug-terminal.html",
@@ -4930,13 +4930,13 @@ controller: "DebugTerminalModalController",
 scope: r,
 resolve: {
 container: function() {
-return c;
+return i;
 },
 image: function() {
-return _.get(r, [ "imagesByDockerReference", c.image ]);
+return _.get(r, [ "imagesByDockerReference", i.image ]);
 }
 }
-}).result.then(d);
+}).result.then(m);
 }, function(n) {
 r.alerts["debug-container-error"] = {
 type: "error",
@@ -4953,7 +4953,7 @@ return e && e.forEach(function(e) {
 e.state && e.state.running && t++;
 }), t;
 }, r.$on("$destroy", function() {
-s.unwatchAll(h), d(), k();
+s.unwatchAll(h), m(), k();
 });
 }));
 } ]), angular.module("openshiftConsole").controller("OverviewController", [ "$scope", "$filter", "$q", "$location", "$routeParams", "AlertMessageService", "APIService", "AppsService", "BindingService", "BuildsService", "CatalogService", "Constants", "DataService", "DeploymentsService", "HomePagePreferenceService", "HPAService", "HTMLService", "ImageStreamResolver", "KeywordService", "LabelFilter", "Logger", "MetricsService", "Navigate", "OwnerReferencesService", "PodsService", "ProjectsService", "PromiseUtils", "ResourceAlertsService", "RoutesService", "ServiceInstancesService", OverviewController ]), angular.module("openshiftConsole").controller("QuotaController", [ "$filter", "$routeParams", "$scope", "APIService", "DataService", "Logger", "ProjectsService", function(e, t, n, r, a, o, i) {

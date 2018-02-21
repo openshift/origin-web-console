@@ -382,8 +382,7 @@ angular.module('openshiftConsole')
             return;
           }
 
-          // Create the debug pod.
-          DataService.create($scope.podsVersion, null, debugPod, context).then(
+          DataService.create(APIService.objectToResourceGroupVersion(debugPod), null, debugPod, context).then(
             function(pod) {
               var container = _.find($scope.pod.spec.containers, { name: containerName });
               $scope.debugPod = pod;
