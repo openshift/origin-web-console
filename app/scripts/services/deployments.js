@@ -268,6 +268,13 @@ angular.module("openshiftConsole")
       return annotation(object, 'deployment.kubernetes.io/revision');
     };
 
+    DeploymentsService.prototype.getName = function(object) {
+      return object.kind === "ReplicationController" ?
+        $filter('annotation')(object, 'deploymentConfig') :
+        object.metadata.name;
+    };
+
+
     DeploymentsService.prototype.isActiveReplicaSet = function(replicaSet, deployment) {
       var replicaSetRevision = this.getRevision(replicaSet);
       var deploymentRevision = this.getRevision(deployment);
@@ -288,6 +295,14 @@ angular.module("openshiftConsole")
       return _.find(replicaSets, function(replicaSet) {
         return self.getRevision(replicaSet) === latestRevision;
       });
+    };
+
+    DeploymentsService.prototype.getLogResource = function(object) {
+      var isRC = object.kind === 'ReplicationController';
+      var defaultLogResource = APIService.kindToResource(object.kind) + '/log';
+      return isRC ?
+        APIService.getPreferredVersion('deploymentconfigs/log') :
+        (APIService.getPreferredVersion(defaultLogResource) || defaultLogResource);
     };
 
     DeploymentsService.prototype.getScaleResource = function(object) {

@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {  
+(function() {
   angular.module('openshiftConsole').component('miniLog', {
     controllerAs: 'miniLog',
     controller: [
@@ -8,6 +8,7 @@
       '$filter',
       'APIService',
       'DataService',
+      'DeploymentsService',
       'HTMLService',
       MiniLogController
     ],
@@ -23,11 +24,11 @@
                              $filter,
                              APIService,
                              DataService,
+                             DeploymentsService,
                              HTMLService) {
     var miniLog = this;
 
     var name, logSubresource, streamer;
-    var annotation = $filter('annotation');
     var numLines = miniLog.numLines || 7;
     var buffer = [];
     miniLog.lines = [];
@@ -88,15 +89,8 @@
     };
 
     miniLog.$onInit = function() {
-      if (miniLog.apiObject.kind === "ReplicationController") {
-        logSubresource = "deploymentconfigs/log";
-        name = annotation(miniLog.apiObject, 'deploymentConfig');
-      }
-      else {
-        logSubresource = APIService.kindToResource(miniLog.apiObject.kind) + "/log";
-        name = miniLog.apiObject.metadata.name;
-      }
-
+      logSubresource = DeploymentsService.getLogResource(miniLog.apiObject);
+      name = DeploymentsService.getName(miniLog.apiObject);
       startStreaming();
     };
 

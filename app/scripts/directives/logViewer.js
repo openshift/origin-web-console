@@ -12,6 +12,7 @@ angular.module('openshiftConsole')
     'APIService',
     'APIDiscovery',
     'DataService',
+    'DeploymentsService',
     'HTMLService',
     'ModalsService',
     'logLinks',
@@ -25,6 +26,7 @@ angular.module('openshiftConsole')
              APIService,
              APIDiscovery,
              DataService,
+             DeploymentsService,
              HTMLService,
              ModalsService,
              logLinks) {
@@ -83,16 +85,8 @@ angular.module('openshiftConsole')
             $scope.logViewerID = _.uniqueId('log-viewer');
             $scope.empty = true;
 
-            var logSubresource, name;
-            if ($scope.object.kind === "ReplicationController") {
-              logSubresource = "deploymentconfigs/log";
-              name = $filter('annotation')($scope.object, 'deploymentConfig');
-            }
-            else {
-              logSubresource = APIService.kindToResource($scope.object.kind) + "/log";
-              name = $scope.object.metadata.name;
-            }
-
+            var logSubresource = DeploymentsService.getLogResource($scope.object);
+            var name = DeploymentsService.getName($scope.object);
 
             // is just toggling show/hide, nothing else.
             var updateScrollLinksVisibility = function() {
