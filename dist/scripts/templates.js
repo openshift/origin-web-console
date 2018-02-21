@@ -166,7 +166,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd>{{containerStatus.ready}}</dd>\n" +
     "<dt>Restart Count:</dt>\n" +
     "<dd>{{containerStatus.restartCount}}</dd>\n" +
-    "<div ng-if=\"hasDebugTerminal && showDebugAction(containerStatus) && ('pods' | canI : 'create')\" class=\"debug-pod-action\">\n" +
+    "<div ng-if=\"hasDebugTerminal && showDebugAction(containerStatus) && (podsVersion | canI : 'create')\" class=\"debug-pod-action\">\n" +
     "<a href=\"\" ng-click=\"debugTerminal(containerStatus.name)\" role=\"button\">Debug in Terminal</a>\n" +
     "</div>\n" +
     "</dl>\n" +

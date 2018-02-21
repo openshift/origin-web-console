@@ -10448,7 +10448,7 @@ e.model.editing = !1;
 };
 }
 };
-}), angular.module("openshiftConsole").directive("containerStatuses", [ "$filter", function(e) {
+}), angular.module("openshiftConsole").directive("containerStatuses", [ "$filter", "APIService", function(e, t) {
 return {
 restrict: "E",
 scope: {
@@ -10457,23 +10457,23 @@ onDebugTerminal: "=?",
 detailed: "=?"
 },
 templateUrl: "views/_container-statuses.html",
-link: function(t) {
-t.hasDebugTerminal = angular.isFunction(t.onDebugTerminal);
-var n = e("isContainerTerminatedSuccessfully"), r = function(e) {
-return _.every(e, n);
+link: function(n) {
+n.hasDebugTerminal = angular.isFunction(n.onDebugTerminal), n.podsVersion = t.getPreferredVersion("pods");
+var r = e("isContainerTerminatedSuccessfully"), a = function(e) {
+return _.every(e, r);
 };
-t.$watch("pod", function(e) {
-t.initContainersTerminated = r(e.status.initContainerStatuses), !1 !== t.expandInitContainers && (t.expandInitContainers = !t.initContainersTerminated);
-}), t.toggleInitContainer = function() {
-t.expandInitContainers = !t.expandInitContainers;
-}, t.showDebugAction = function(n) {
-if ("Completed" === _.get(t.pod, "status.phase")) return !1;
-if (e("annotation")(t.pod, "openshift.io/build.name")) return !1;
-if (e("isDebugPod")(t.pod)) return !1;
-var r = _.get(n, "state.waiting.reason");
-return "ImagePullBackOff" !== r && "ErrImagePull" !== r && (!_.get(n, "state.running") || !n.ready);
-}, t.debugTerminal = function(e) {
-if (t.hasDebugTerminal) return t.onDebugTerminal.call(this, e);
+n.$watch("pod", function(e) {
+n.initContainersTerminated = a(e.status.initContainerStatuses), !1 !== n.expandInitContainers && (n.expandInitContainers = !n.initContainersTerminated);
+}), n.toggleInitContainer = function() {
+n.expandInitContainers = !n.expandInitContainers;
+}, n.showDebugAction = function(t) {
+if ("Completed" === _.get(n.pod, "status.phase")) return !1;
+if (e("annotation")(n.pod, "openshift.io/build.name")) return !1;
+if (e("isDebugPod")(n.pod)) return !1;
+var r = _.get(t, "state.waiting.reason");
+return "ImagePullBackOff" !== r && "ErrImagePull" !== r && (!_.get(t, "state.running") || !t.ready);
+}, n.debugTerminal = function(e) {
+if (n.hasDebugTerminal) return n.onDebugTerminal.call(this, e);
 };
 }
 };

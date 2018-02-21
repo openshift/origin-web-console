@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('containerStatuses', function($filter) {
+  .directive('containerStatuses', function($filter, APIService) {
     return {
       restrict: 'E',
       scope: {
@@ -12,7 +12,7 @@ angular.module('openshiftConsole')
       templateUrl: 'views/_container-statuses.html',
       link: function(scope) {
         scope.hasDebugTerminal = angular.isFunction(scope.onDebugTerminal);
-
+        scope.podsVersion = APIService.getPreferredVersion('pods');
         var isContainerTerminatedSuccessfully = $filter('isContainerTerminatedSuccessfully');
         var haveAllContainersTerminatedSuccessfully = function(containerStatuses) {
           return _.every(containerStatuses, isContainerTerminatedSuccessfully);
