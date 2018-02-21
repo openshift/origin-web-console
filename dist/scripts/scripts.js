@@ -9113,8 +9113,8 @@ cacert: !1
 l.serviceAccounts = e.by("metadata.name"), l.serviceAccountsNames = _.keys(l.serviceAccounts);
 });
 var u = function(e, t) {
-var n = {
-apiVersion: "v1",
+var r = {
+apiVersion: n.toAPIVersion(c),
 kind: "Secret",
 metadata: {
 name: l.newSecret.data.secretName
@@ -9124,32 +9124,32 @@ stringData: {}
 };
 switch (t) {
 case "kubernetes.io/basic-auth":
-e.passwordToken ? n.stringData.password = e.passwordToken : n.type = "Opaque", e.username && (n.stringData.username = e.username), e.gitconfig && (n.stringData[".gitconfig"] = e.gitconfig), e.cacert && (n.stringData["ca.crt"] = e.cacert);
+e.passwordToken ? r.stringData.password = e.passwordToken : r.type = "Opaque", e.username && (r.stringData.username = e.username), e.gitconfig && (r.stringData[".gitconfig"] = e.gitconfig), e.cacert && (r.stringData["ca.crt"] = e.cacert);
 break;
 
 case "kubernetes.io/ssh-auth":
-n.stringData["ssh-privatekey"] = e.privateKey, e.gitconfig && (n.stringData[".gitconfig"] = e.gitconfig);
+r.stringData["ssh-privatekey"] = e.privateKey, e.gitconfig && (r.stringData[".gitconfig"] = e.gitconfig);
 break;
 
 case "kubernetes.io/dockerconfigjson":
-var r = ".dockerconfigjson";
-JSON.parse(e.dockerConfig).auths || (n.type = "kubernetes.io/dockercfg", r = ".dockercfg"), n.stringData[r] = e.dockerConfig;
+var a = ".dockerconfigjson";
+JSON.parse(e.dockerConfig).auths || (r.type = "kubernetes.io/dockercfg", a = ".dockercfg"), r.stringData[a] = e.dockerConfig;
 break;
 
 case "kubernetes.io/dockercfg":
-var a = window.btoa(e.dockerUsername + ":" + e.dockerPassword), o = {};
-o[e.dockerServer] = {
+var o = window.btoa(e.dockerUsername + ":" + e.dockerPassword), i = {};
+i[e.dockerServer] = {
 username: e.dockerUsername,
 password: e.dockerPassword,
 email: e.dockerMail,
-auth: a
-}, n.stringData[".dockercfg"] = JSON.stringify(o);
+auth: o
+}, r.stringData[".dockercfg"] = JSON.stringify(i);
 break;
 
 case "Opaque":
-e.webhookSecretKey && (n.stringData.WebHookSecretKey = e.webhookSecretKey);
+e.webhookSecretKey && (r.stringData.WebHookSecretKey = e.webhookSecretKey);
 }
-return n;
+return r;
 }, d = function() {
 a.hideNotification("create-secret-error");
 }, m = function(t) {
@@ -9201,11 +9201,11 @@ l.nameTaken = !1;
 l.newSecret.data.webhookSecretKey = o._generateSecret();
 }, l.create = function() {
 d();
-var n = u(l.newSecret.data, l.newSecret.authType);
-r.create(c, null, n, l).then(function(e) {
+var o = u(l.newSecret.data, l.newSecret.authType);
+r.create(n.objectToResourceGroupVersion(o), null, o, l).then(function(e) {
 l.newSecret.linkSecret && l.serviceAccountsNames.contains(l.newSecret.pickedServiceAccountToLink) && t.canI("serviceaccounts", "update") ? m(e) : (a.addNotification({
 type: "success",
-message: "Secret " + n.metadata.name + " was created."
+message: "Secret " + o.metadata.name + " was created."
 }), l.onCreate({
 newSecret: e
 }));
