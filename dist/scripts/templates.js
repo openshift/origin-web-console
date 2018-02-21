@@ -12719,28 +12719,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/overview/_service-header.html',
-    "<div row class=\"service-title\" ng-if=\"service\">\n" +
-    "<div class=\"service-name truncate\">\n" +
-    "<span class=\"pficon pficon-service\" aria-hidden=\"true\" title=\"Service\"></span>\n" +
-    "<span class=\"sr-only\">Service</span>\n" +
-    "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
-    "\n" +
-    "<span ng-if=\"!isAlternate && alternateServices.length && !isChild && ('services' | canI : 'update')\" class=\"small mar-left-sm mar-right-sm\">\n" +
-    "<ng-include src=\"'views/overview/_service-linking-button.html'\"></ng-include>\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "<div ng-if=\"alternateServices.length && !isChild\" class=\"service-metadata\">\n" +
-    "<ng-include src=\"'views/overview/_traffic-percent.html'\"></ng-include>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div ng-if=\"(!alternateServices.length || isChild) && ('services' | canI : 'update')\">\n" +
-    "<ng-include src=\"'views/overview/_service-linking-button.html'\"></ng-include>\n" +
-    "</div>\n" +
-    "</div>"
-  );
-
-
   $templateCache.put('views/overview/_service-instance-row.html',
     "<div class=\"list-pf-item provisioned-service\" ng-class=\"{ active: row.expanded }\">\n" +
     "<div class=\"list-pf-container\" ng-click=\"row.toggleExpand($event)\">\n" +
