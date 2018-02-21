@@ -4408,7 +4408,7 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 }
 .catalog-projects-summary-panel .create-button-text,.catalog-projects-summary-panel .getting-started-button-text{padding-left:4px}
 .catalog-projects-summary-panel .code-block{background:#030303;margin-top:5px;padding:4px}
-.catalog-projects-summary-panel .create-button{font-size:13px;float:right}
+.catalog-projects-summary-panel .create-button{font-size:13px;float:right;-webkit-transform:translate3d(0,0,0)}
 .catalog-projects-summary-panel .getting-started-button{width:100%;font-size:13px}
 .catalog-projects-summary-panel .getting-started-button.with-projects{margin-top:15px}
 .catalog-projects-summary-panel .getting-started-panel{margin-top:20px}

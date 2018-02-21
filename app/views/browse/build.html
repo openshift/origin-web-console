@@ -13,7 +13,7 @@
                     ng-if="!build.metadata.deletionTimestamp && (build | isIncompleteBuild) && (buildsVersion | canI : 'update')">Cancel Build</button>
             <button class="btn btn-default hidden-xs"
                     ng-click="cloneBuild()"
-                    ng-hide="build.metadata.deletionTimestamp || (build | isIncompleteBuild) || !('builds/clone' | canI : 'create') || (build | isBinaryBuild)"
+                    ng-hide="build.metadata.deletionTimestamp || (build | isIncompleteBuild) || !(buildsCloneVersion | canI : 'create') || (build | isBinaryBuild)"
                     ng-disabled="!canBuild">Rebuild</button>
 
             <!-- Secondary Actions -->
@@ -44,7 +44,7 @@
               </li>
               <li class="visible-xs-inline"
                   ng-class="{ disabled: !canBuild }"
-                  ng-hide="build.metadata.deletionTimestamp || (build | isIncompleteBuild) || !('builds/clone' | canI : 'create') || (build | isBinaryBuild)">
+                  ng-hide="build.metadata.deletionTimestamp || (build | isIncompleteBuild) || !(buildsCloneVersion | canI : 'create') || (build | isBinaryBuild)">
                 <a href=""
                    role="button"
                    ng-click="cloneBuild()"
@@ -112,7 +112,7 @@
                 <p ng-if="!(build | buildStrategy).env"><em>The build strategy had no environment variables defined.</em></p>
               </uib-tab>
 
-              <uib-tab active="selectedTab.logs" ng-if="!(build | isJenkinsPipelineStrategy) && ('builds/log' | canI : 'get')">
+              <uib-tab active="selectedTab.logs" ng-if="!(build | isJenkinsPipelineStrategy) && (buildsLogVersion | canI : 'get')">
                 <uib-tab-heading>Logs</uib-tab-heading>
                 <log-viewer
                   ng-if="selectedTab.logs"
@@ -136,7 +136,7 @@
 
                 </log-viewer>
               </uib-tab>
-              <uib-tab active="selectedTab.events" ng-if="('events' | canI : 'watch')">
+              <uib-tab active="selectedTab.events" ng-if="(eventsVersion | canI : 'watch')">
                 <uib-tab-heading>Events</uib-tab-heading>
                 <events api-objects="eventObjects" project-context="projectContext" ng-if="selectedTab.events"></events>
               </uib-tab>
