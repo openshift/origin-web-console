@@ -36,7 +36,6 @@ angular.module('openshiftConsole')
 
     var buildsVersion = APIService.getPreferredVersion('builds');
     var imageStreamsVersion = APIService.getPreferredVersion('imagestreams');
-    var horizontalPodAutoscalersVersion = APIService.getPreferredVersion('horizontalpodautoscalers');
     var limitRangesVersion = APIService.getPreferredVersion('limitranges');
     var podsVersion = APIService.getPreferredVersion('pods');
     var replicaSetsVersion = APIService.getPreferredVersion('replicasets');
@@ -79,9 +78,10 @@ angular.module('openshiftConsole')
 
     $scope.deploymentsVersion = APIService.getPreferredVersion('deployments');
     $scope.deploymentConfigsVersion = APIService.getPreferredVersion('deploymentconfigs');
+    $scope.deploymentConfigsLogVersion = APIService.getPreferredVersion('deploymentconfigs/log');
     $scope.eventsVersion = APIService.getPreferredVersion('events');
-    // TODO: update common/constants/apiPreferredVersions for this
-    $scope.deploymentConfigsLogVersion = 'deploymentconfigs/log';
+    $scope.horizontalPodAutoscalersVersion = APIService.getPreferredVersion('horizontalpodautoscalers');
+    $scope.replicationControllersVersion = replicationControllersVersion;
 
     var watches = [];
 
@@ -394,7 +394,7 @@ angular.module('openshiftConsole')
           Logger.log("builds (subscribe)", $scope.builds);
         }));
 
-        watches.push(DataService.watch(horizontalPodAutoscalersVersion, context, function(data) {
+        watches.push(DataService.watch($scope.horizontalPodAutoscalersVersion, context, function(data) {
           allHPA = data.by("metadata.name");
           updateHPA();
           updateHPAWarnings();

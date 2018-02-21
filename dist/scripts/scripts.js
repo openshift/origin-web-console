@@ -6090,24 +6090,24 @@ o.unwatchAll(j);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("ReplicaSetController", [ "$scope", "$filter", "$routeParams", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "DeploymentsService", "HPAService", "ImageStreamResolver", "keyValueEditorUtils", "kind", "Logger", "MetricsService", "ModalsService", "Navigate", "OwnerReferencesService", "PodsService", "ProjectsService", "StorageService", function(e, t, n, r, a, o, i, s, c, l, u, d, m, p, f, g, v, h, y, b) {
-var S = !1, C = t("annotation"), w = t("humanizeKind")(d), P = t("hasDeployment"), j = r.getPreferredVersion("builds"), k = r.getPreferredVersion("imagestreams"), I = r.getPreferredVersion("horizontalpodautoscalers"), R = r.getPreferredVersion("limitranges"), T = r.getPreferredVersion("pods"), E = r.getPreferredVersion("replicasets"), N = r.getPreferredVersion("replicationcontrollers"), D = r.getPreferredVersion("resourcequotas"), A = r.getPreferredVersion("appliedclusterresourcequotas");
+var S = !1, C = t("annotation"), w = t("humanizeKind")(d), P = t("hasDeployment"), j = r.getPreferredVersion("builds"), k = r.getPreferredVersion("imagestreams"), I = r.getPreferredVersion("limitranges"), R = r.getPreferredVersion("pods"), T = r.getPreferredVersion("replicasets"), E = r.getPreferredVersion("replicationcontrollers"), N = r.getPreferredVersion("resourcequotas"), D = r.getPreferredVersion("appliedclusterresourcequotas");
 switch (d) {
 case "ReplicaSet":
-e.resource = E, e.healthCheckURL = g.healthCheckURL(n.project, "ReplicaSet", n.replicaSet, "extensions");
+e.resource = T, e.healthCheckURL = g.healthCheckURL(n.project, "ReplicaSet", n.replicaSet, "extensions");
 break;
 
 case "ReplicationController":
-e.resource = N, e.healthCheckURL = g.healthCheckURL(n.project, "ReplicationController", n.replicaSet);
+e.resource = E, e.healthCheckURL = g.healthCheckURL(n.project, "ReplicationController", n.replicaSet);
 }
-var $ = {};
-e.projectName = n.project, e.kind = d, e.replicaSet = null, e.deploymentConfig = null, e.deploymentConfigMissing = !1, e.imagesByDockerReference = {}, e.builds = {}, e.alerts = {}, e.renderOptions = e.renderOptions || {}, e.renderOptions.hideFilterWidget = !0, e.forms = {}, e.logOptions = {}, e.deploymentsVersion = r.getPreferredVersion("deployments"), e.deploymentConfigsVersion = r.getPreferredVersion("deploymentconfigs"), e.eventsVersion = r.getPreferredVersion("events"), e.deploymentConfigsLogVersion = "deploymentconfigs/log";
-var B = [];
+var A = {};
+e.projectName = n.project, e.kind = d, e.replicaSet = null, e.deploymentConfig = null, e.deploymentConfigMissing = !1, e.imagesByDockerReference = {}, e.builds = {}, e.alerts = {}, e.renderOptions = e.renderOptions || {}, e.renderOptions.hideFilterWidget = !0, e.forms = {}, e.logOptions = {}, e.deploymentsVersion = r.getPreferredVersion("deployments"), e.deploymentConfigsVersion = r.getPreferredVersion("deploymentconfigs"), e.deploymentConfigsLogVersion = r.getPreferredVersion("deploymentconfigs/log"), e.eventsVersion = r.getPreferredVersion("events"), e.horizontalPodAutoscalersVersion = r.getPreferredVersion("horizontalpodautoscalers"), e.replicationControllersVersion = E;
+var $ = [];
 p.isAvailable().then(function(t) {
 e.metricsAvailable = t;
 });
-var L = t("deploymentStatus"), V = function(t) {
-e.logCanRun = !_.includes([ "New", "Pending" ], L(t));
-}, O = t("isIE")();
+var B = t("deploymentStatus"), L = function(t) {
+e.logCanRun = !_.includes([ "New", "Pending" ], B(t));
+}, V = t("isIE")();
 y.get(n.project).then(_.spread(function(r, u) {
 e.project = r, e.projectContext = u;
 var p = {}, y = function() {
@@ -6118,18 +6118,18 @@ e.autoscalers = e.hpaForRS.concat(t);
 var r = c.filterHPA(p, "Deployment", e.deployment.metadata.name);
 e.autoscalers = e.hpaForRS.concat(r);
 } else e.autoscalers = e.hpaForRS;
-}, N = function() {
-B.push(i.watch(e.resource, u, function(t) {
+}, E = function() {
+$.push(i.watch(e.resource, u, function(t) {
 var n, r = [];
 angular.forEach(t.by("metadata.name"), function(t) {
 (C(t, "deploymentConfig") || "") === e.deploymentConfigName && r.push(t);
 }), n = s.getActiveDeployment(r), e.isActive = n && n.metadata.uid === e.replicaSet.metadata.uid, y();
 }));
-}, U = function() {
+}, O = function() {
 c.getHPAWarnings(e.replicaSet, e.autoscalers, e.limitRanges, r).then(function(t) {
 e.hpaWarnings = t;
 });
-}, F = function(r) {
+}, U = function(r) {
 var a = C(r, "deploymentConfig");
 if (a) {
 S = !0, e.deploymentConfigName = a;
@@ -6146,9 +6146,9 @@ details: t("getErrorDetails")(n)
 } : e.deploymentConfigMissing = !0;
 });
 }
-}, x = function() {
+}, F = function() {
 e.isActive = s.isActiveReplicaSet(e.replicaSet, e.deployment);
-}, M = function(t) {
+}, x = function(t) {
 return _.some(t, function(t) {
 if (_.get(t, "status.replicas") && _.get(t, "metadata.uid") !== _.get(e.replicaSet, "metadata.uid")) {
 var n = v.getControllerReferences(t);
@@ -6157,12 +6157,12 @@ uid: e.deployment.metadata.uid
 });
 }
 });
-}, q = !1, z = function() {
+}, M = !1, q = function() {
 var t = v.getControllerReferences(e.replicaSet), r = _.find(t, {
 kind: "Deployment"
 });
 r && i.get(e.deploymentsVersion, r.name, u).then(function(t) {
-e.deployment = t, e.healthCheckURL = g.healthCheckURL(n.project, "Deployment", t.metadata.name, "apps"), B.push(i.watchObject(e.deploymentsVersion, t.metadata.name, u, function(t, r) {
+e.deployment = t, e.healthCheckURL = g.healthCheckURL(n.project, "Deployment", t.metadata.name, "apps"), $.push(i.watchObject(e.deploymentsVersion, t.metadata.name, u, function(t, r) {
 if ("DELETED" === r) return e.alerts["deployment-deleted"] = {
 type: "warning",
 message: "The deployment controlling this replica set has been deleted."
@@ -6175,37 +6175,37 @@ title: e.deployment.metadata.name,
 link: g.resourceURL(e.deployment)
 },
 humanizedKind: "Deployments"
-}), x(), y();
-})), B.push(i.watch(E, u, function(e) {
+}), F(), y();
+})), $.push(i.watch(T, u, function(e) {
 var t = e.by("metadata.name");
-q = M(t);
+M = x(t);
 }));
 });
-}, H = function() {
-if (!_.isEmpty($)) {
+}, z = function() {
+if (!_.isEmpty(A)) {
 var t = _.get(e, "replicaSet.spec.template");
-t && l.fetchReferencedImageStreamImages([ t ], e.imagesByDockerReference, $, u);
+t && l.fetchReferencedImageStreamImages([ t ], e.imagesByDockerReference, A, u);
 }
 };
 i.get(e.resource, n.replicaSet, u, {
 errorNotification: !1
 }).then(function(t) {
-switch (e.loaded = !0, e.replicaSet = t, V(t), d) {
+switch (e.loaded = !0, e.replicaSet = t, L(t), d) {
 case "ReplicationController":
-F(t);
+U(t);
 break;
 
 case "ReplicaSet":
-z();
+q();
 }
-U(), e.breadcrumbs = o.getBreadcrumbs({
+O(), e.breadcrumbs = o.getBreadcrumbs({
 object: t
-}), B.push(i.watchObject(e.resource, n.replicaSet, u, function(t, n) {
+}), $.push(i.watchObject(e.resource, n.replicaSet, u, function(t, n) {
 "DELETED" === n && (e.alerts.deleted = {
 type: "warning",
 message: "This " + w + " has been deleted."
-}), e.replicaSet = t, V(t), U(), H(), e.deployment && x();
-})), e.deploymentConfigName && N(), B.push(i.watch(T, u, function(t) {
+}), e.replicaSet = t, L(t), O(), z(), e.deployment && F();
+})), e.deploymentConfigName && E(), $.push(i.watch(R, u, function(t) {
 var n = t.by("metadata.name");
 e.podsForDeployment = h.filterForOwner(n, e.replicaSet);
 }));
@@ -6219,39 +6219,39 @@ name: n.replicaSet,
 kind: d,
 namespace: n.project
 });
-}), B.push(i.watch(e.resource, u, function(n, r, a) {
+}), $.push(i.watch(e.resource, u, function(n, r, a) {
 e.replicaSets = n.by("metadata.name"), "ReplicationController" === d && (e.deploymentsByDeploymentConfig = s.associateDeploymentsToDeploymentConfig(e.replicaSets));
 var o, i;
 a && (o = C(a, "deploymentConfig"), i = a.metadata.name), e.deploymentConfigDeploymentsInProgress = e.deploymentConfigDeploymentsInProgress || {}, r ? "ADDED" === r || "MODIFIED" === r && t("deploymentIsInProgress")(a) ? (e.deploymentConfigDeploymentsInProgress[o] = e.deploymentConfigDeploymentsInProgress[o] || {}, e.deploymentConfigDeploymentsInProgress[o][i] = a) : "MODIFIED" === r && e.deploymentConfigDeploymentsInProgress[o] && delete e.deploymentConfigDeploymentsInProgress[o][i] : e.deploymentConfigDeploymentsInProgress = s.associateRunningDeploymentToDeploymentConfig(e.deploymentsByDeploymentConfig), a ? "DELETED" !== r && (a.causes = t("deploymentCauses")(a)) : angular.forEach(e.replicaSets, function(e) {
 e.causes = t("deploymentCauses")(e);
 });
-})), B.push(i.watch(k, u, function(e) {
+})), $.push(i.watch(k, u, function(e) {
 var t = e.by("metadata.name");
-l.buildDockerRefMapForImageStreams(t, $), H(), m.log("imagestreams (subscribe)", t);
-})), B.push(i.watch(j, u, function(t) {
+l.buildDockerRefMapForImageStreams(t, A), z(), m.log("imagestreams (subscribe)", t);
+})), $.push(i.watch(j, u, function(t) {
 e.builds = t.by("metadata.name"), m.log("builds (subscribe)", e.builds);
-})), B.push(i.watch(I, u, function(e) {
-p = e.by("metadata.name"), y(), U();
+})), $.push(i.watch(e.horizontalPodAutoscalersVersion, u, function(e) {
+p = e.by("metadata.name"), y(), O();
 }, {
-poll: O,
+poll: V,
 pollInterval: 6e4
-})), i.list(R, u).then(function(t) {
-e.limitRanges = t.by("metadata.name"), U();
+})), i.list(I, u).then(function(t) {
+e.limitRanges = t.by("metadata.name"), O();
 });
-B.push(i.watch(D, u, function(t) {
+$.push(i.watch(N, u, function(t) {
 e.quotas = t.by("metadata.name");
 }, {
 poll: !0,
 pollInterval: 6e4
-})), B.push(i.watch(A, u, function(t) {
+})), $.push(i.watch(D, u, function(t) {
 e.clusterQuotas = t.by("metadata.name");
 }, {
 poll: !0,
 pollInterval: 6e4
 }));
-var G = t("deploymentIsLatest");
+var H = t("deploymentIsLatest");
 e.showRollbackAction = function() {
-return "Complete" === L(e.replicaSet) && !G(e.replicaSet, e.deploymentConfig) && !e.replicaSet.metadata.deletionTimestamp && a.canI("deploymentconfigrollbacks", "create");
+return "Complete" === B(e.replicaSet) && !H(e.replicaSet, e.deploymentConfig) && !e.replicaSet.metadata.deletionTimestamp && a.canI("deploymentconfigrollbacks", "create");
 }, e.retryFailedDeployment = function(t) {
 s.retryFailedDeployment(t, u, e);
 }, e.rollbackToDeployment = function(t, n, r, a) {
@@ -6268,9 +6268,9 @@ details: t("getErrorDetails")(n)
 };
 });
 };
-var K = t("hasDeploymentConfig");
+var G = t("hasDeploymentConfig");
 e.isScalable = function() {
-return !!_.isEmpty(e.autoscalers) && (!K(e.replicaSet) && !P(e.replicaSet) || (!(!e.deploymentConfigMissing && !e.deploymentMissing) || !(!e.deploymentConfig && !e.deployment) && (e.isActive && !q)));
+return !!_.isEmpty(e.autoscalers) && (!G(e.replicaSet) && !P(e.replicaSet) || (!(!e.deploymentConfigMissing && !e.deploymentMissing) || !(!e.deploymentConfig && !e.deployment) && (e.isActive && !M)));
 }, e.removeVolume = function(n) {
 var r = "This will remove the volume from the " + t("humanizeKind")(e.replicaSet.kind) + ".";
 n.persistentVolumeClaim ? r += " It will not delete the persistent volume claim." : n.secret ? r += " It will not delete the secret." : n.configMap && (r += " It will not delete the config map.");
@@ -6284,7 +6284,7 @@ cancelButtonText: "Cancel"
 b.removeVolume(e.replicaSet, n, u);
 });
 }, e.$on("$destroy", function() {
-i.unwatchAll(B);
+i.unwatchAll($);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("StatefulSetsController", [ "$scope", "$routeParams", "APIService", "DataService", "ProjectsService", "LabelFilter", "PodsService", function(e, t, n, r, a, o, i) {
