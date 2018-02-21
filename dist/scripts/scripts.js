@@ -7822,31 +7822,31 @@ t.path(r.routeURL);
 };
 r.cancel = m;
 var p, f = a.getPreferredVersion("routes"), g = a.getPreferredVersion("services");
-l.get(n.project).then(_.spread(function(t, a) {
+l.get(n.project).then(_.spread(function(t, l) {
 if (r.project = t, o.canI("routes", "update", n.project)) {
-var l, v = e("orderByDisplayName"), h = function() {
+var v, h = e("orderByDisplayName"), y = function() {
 s.toErrorPage('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.');
 };
-i.get(f, r.routeName, a).then(function(e) {
-"Service" === e.spec.to.kind ? (l = angular.copy(e), p = _.get(l, "spec.host"), "Subdomain" === _.get(l, "spec.wildcardPolicy") && (p = "*." + u.getSubdomain(l)), r.routing = {
+i.get(f, r.routeName, l).then(function(e) {
+"Service" === e.spec.to.kind ? (v = angular.copy(e), p = _.get(v, "spec.host"), "Subdomain" === _.get(v, "spec.wildcardPolicy") && (p = "*." + u.getSubdomain(v)), r.routing = {
 host: p,
-wildcardPolicy: _.get(l, "spec.wildcardPolicy"),
-path: _.get(l, "spec.path"),
-targetPort: _.get(l, "spec.port.targetPort"),
-tls: angular.copy(_.get(l, "spec.tls"))
-}, i.list(g, a).then(function(e) {
+wildcardPolicy: _.get(v, "spec.wildcardPolicy"),
+path: _.get(v, "spec.path"),
+targetPort: _.get(v, "spec.port.targetPort"),
+tls: angular.copy(_.get(v, "spec.tls"))
+}, i.list(g, l).then(function(e) {
 r.loading = !1;
 var t = e.by("metadata.name");
-r.routing.to = l.spec.to, r.routing.alternateServices = [], _.each(_.get(l, "spec.alternateBackends"), function(e) {
-if ("Service" !== e.kind) return h(), !1;
+r.routing.to = v.spec.to, r.routing.alternateServices = [], _.each(_.get(v, "spec.alternateBackends"), function(e) {
+if ("Service" !== e.kind) return y(), !1;
 r.routing.alternateServices.push(e);
-}), r.services = v(t);
-})) : h();
+}), r.services = h(t);
+})) : y();
 }, function() {
 s.toErrorPage("Could not load route " + r.routeName + ".");
 });
-var y = function() {
-var e = angular.copy(l), t = _.get(r, "routing.to.name");
+var b = function() {
+var e = angular.copy(v), t = _.get(r, "routing.to.name");
 _.set(e, "spec.to.name", t);
 var n = _.get(r, "routing.to.weight");
 isNaN(n) || _.set(e, "spec.to.weight", n);
@@ -7866,8 +7866,8 @@ weight: e.weight
 r.updateRoute = function() {
 if (r.form.$valid) {
 d(), r.disableInputs = !0;
-var t = y();
-i.update(f, r.routeName, t, a).then(function() {
+var t = b();
+i.update(a.objectToResourceGroupVersion(t), r.routeName, t, l).then(function() {
 c.addNotification({
 type: "success",
 message: "Route " + r.routeName + " was successfully updated."
