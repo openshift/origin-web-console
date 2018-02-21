@@ -12085,6 +12085,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "\n" +
+    "<div ng-if=\"(overview.filteredMobileClients | size) && AEROGEAR_MOBILE_ENABLED\">\n" +
+    "<h2>Mobile Clients</h2>\n" +
+    "<div class=\"list-pf\">\n" +
+    "<mobile-client-row ng-repeat=\"mobileapp in overview.filteredMobileClients track by (mobileapp | uid)\" api-object=\"mobileapp\" state=\"overview.state\"></mobile-client-row>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "\n" +
     "<div ng-if=\"overview.filteredServiceInstances.length && !overview.hidePipelineOtherResources\">\n" +
     "<h2>\n" +
     "Provisioned Services\n" +
@@ -12592,6 +12599,59 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"miniLog.lines.length\" class=\"mini-log\">\n" +
     "<div class=\"mini-log-content\">\n" +
     "<div ng-repeat=\"line in miniLog.lines track by line.id\" ng-bind-html=\"::line.markup\" class=\"mini-log-line\"></div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/overview/_mobile-client-row.html',
+    "<div class=\"list-pf-item\" ng-class=\"{ active: row.expanded }\">\n" +
+    "<div class=\"list-pf-container\" ng-click=\"row.toggleExpand($event)\">\n" +
+    "<div class=\"list-pf-chevron\">\n" +
+    "<div ng-include src=\" 'views/overview/_list-row-chevron.html' \" class=\"list-pf-content\"></div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-content\">\n" +
+    "<div class=\"list-pf-name\">\n" +
+    "<h3>\n" +
+    "<div class=\"list-row-longname\"><span>{{row.clientType}}</span></div>\n" +
+    "\n" +
+    "<a ng-href=\"{{row.apiObject | navigateResourceURL}}\"><span ng-bind-html=\"row.apiObject.spec.name | highlightKeywords : row.state.filterKeywords\"></span></a>\n" +
+    "<div class=\"list-row-longname\">{{row.bundleDisplay}}</div>\n" +
+    "</h3>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-actions\">\n" +
+    "<div class=\"dropdown-kebab-pf\" uib-dropdown ng-if=\"row.actionsDropdownVisible()\">\n" +
+    "<button uib-dropdown-toggle class=\"btn btn-link dropdown-toggle\">\n" +
+    "<i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i>\n" +
+    "<span class=\"sr-only\">Actions</span>\n" +
+    "</button>\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right\" uib-dropdown-menu role=\"menu\">\n" +
+    "<li ng-if=\"row.mobileclientVersion | canI : 'delete'\">\n" +
+    "<delete-link kind=\"MobileClient\" group=\"mobile.k8s.io\" stay-on-current-page=\"true\" resource-name=\"{{row.apiObject.metadata.name}}\" project-name=\"{{row.projectName}}\">\n" +
+    "</delete-link>\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-expansion collapse\" ng-if=\"row.expanded\" ng-class=\"{ in: row.expanded }\">\n" +
+    "<div class=\"list-pf-container\">\n" +
+    "<div class=\"expanded-section\">\n" +
+    "<div class=\"empty-state-message text-center\">\n" +
+    "<p>Add a mobile service to your project. Or connect to external service.</p>\n" +
+    "<div class=\"empty-state-message-main-action\">\n" +
+    "\n" +
+    "<button class=\"btn btn-primary btn-lg\" ng-click=\"row.browseCatalog()\">\n" +
+    "Browse Mobile Services\n" +
+    "</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"loading\">\n" +
+    "Loading...\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>"
   );
