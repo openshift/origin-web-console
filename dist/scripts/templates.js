@@ -5394,7 +5394,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/_build-pipeline-links.html',
-    "<div ng-if=\"(build | buildLogURL) && ('builds/log' | canI : 'get')\" class=\"pipeline-link\"><a ng-href=\"{{build | buildLogURL}}\" target=\"_blank\">View Log</a></div>"
+    "<div ng-if=\"(build | buildLogURL) && (buildLogsVersion | canI : 'get')\" class=\"pipeline-link\"><a ng-href=\"{{build | buildLogURL}}\" target=\"_blank\">View Log</a></div>"
   );
 
 

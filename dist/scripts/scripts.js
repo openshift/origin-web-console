@@ -13077,7 +13077,7 @@ t.input.args = null;
 };
 }
 };
-} ]), angular.module("openshiftConsole").directive("buildPipeline", [ "$filter", "Logger", function(e, t) {
+} ]), angular.module("openshiftConsole").directive("buildPipeline", [ "$filter", "APIService", "Logger", function(e, t, n) {
 return {
 restrict: "E",
 scope: {
@@ -13088,22 +13088,23 @@ buildConfigNameOnExpanded: "=?"
 },
 replace: !0,
 templateUrl: "views/directives/build-pipeline.html",
-link: function(n) {
-var r = e("annotation");
-n.$watch(function() {
-return r(n.build, "jenkinsStatus");
+link: function(r) {
+r.buildLogsVersion = t.getPreferredVersion("builds/log");
+var a = e("annotation");
+r.$watch(function() {
+return a(r.build, "jenkinsStatus");
 }, function(e) {
 if (e) try {
-n.jenkinsStatus = JSON.parse(e);
-} catch (n) {
-t.error("Could not parse Jenkins status as JSON", e);
+r.jenkinsStatus = JSON.parse(e);
+} catch (t) {
+n.error("Could not parse Jenkins status as JSON", e);
 }
 });
-var a = e("buildConfigForBuild");
-n.$watch(function() {
-return a(n.build);
+var o = e("buildConfigForBuild");
+r.$watch(function() {
+return o(r.build);
 }, function(e) {
-n.buildConfigName = e;
+r.buildConfigName = e;
 });
 }
 };
