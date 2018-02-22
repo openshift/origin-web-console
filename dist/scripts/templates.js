@@ -1277,7 +1277,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h4>Volumes</h4>\n" +
     "<volumes ng-if=\"pod.spec.volumes.length\" volumes=\"pod.spec.volumes\" namespace=\"project.metadata.name\"></volumes>\n" +
     "<div ng-if=\"!pod.spec.volumes.length\">none</div>\n" +
-    "<p ng-if=\"dcName && ('deploymentconfigs' | canI : 'update')\">\n" +
+    "<p ng-if=\"dcName && (deploymentConfigsVersion | canI : 'update')\">\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/attach-pvc?kind=DeploymentConfig&name={{dcName}}\">Add Storage to {{dcName}}</a>\n" +
     "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
     "<a ng-href=\"project/{{project.metadata.name}}/add-config-volume?kind=DeploymentConfig&name={{dcName}}\">Add Config Files to {{dcName}}</a>\n" +
@@ -12715,28 +12715,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a href=\"catalog\">Browse Catalog</a>\n" +
     "</div>\n" +
     "</p>\n" +
-    "</div>"
-  );
-
-
-  $templateCache.put('views/overview/_service-header.html',
-    "<div row class=\"service-title\" ng-if=\"service\">\n" +
-    "<div class=\"service-name truncate\">\n" +
-    "<span class=\"pficon pficon-service\" aria-hidden=\"true\" title=\"Service\"></span>\n" +
-    "<span class=\"sr-only\">Service</span>\n" +
-    "<a ng-href=\"{{service | navigateResourceURL}}\">{{service.metadata.name}}</a>\n" +
-    "\n" +
-    "<span ng-if=\"!isAlternate && alternateServices.length && !isChild && ('services' | canI : 'update')\" class=\"small mar-left-sm mar-right-sm\">\n" +
-    "<ng-include src=\"'views/overview/_service-linking-button.html'\"></ng-include>\n" +
-    "</span>\n" +
-    "</div>\n" +
-    "<div ng-if=\"alternateServices.length && !isChild\" class=\"service-metadata\">\n" +
-    "<ng-include src=\"'views/overview/_traffic-percent.html'\"></ng-include>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div ng-if=\"(!alternateServices.length || isChild) && ('services' | canI : 'update')\">\n" +
-    "<ng-include src=\"'views/overview/_service-linking-button.html'\"></ng-include>\n" +
-    "</div>\n" +
     "</div>"
   );
 
