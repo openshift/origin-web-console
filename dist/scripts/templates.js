@@ -13154,7 +13154,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "The current filter is hiding all projects.\n" +
     "<a href=\"\" ng-click=\"search.text = ''\" role=\"button\" class=\"nowrap\">Clear Filter</a>\n" +
     "</div>\n" +
-    "<div class=\"list-pf list-group projects-list\">\n" +
+    "<div ng-if=\"projects.length\" class=\"list-pf list-group projects-list\">\n" +
     "<div ng-repeat=\"project in projects | limitTo: limitListTo track by (project | uid)\" class=\"list-pf-item list-group-item project-info tile-click\">\n" +
     "<div class=\"list-pf-container\">\n" +
     "<div class=\"list-pf-content list-pf-content-flex\">\n" +
