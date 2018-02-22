@@ -94,7 +94,7 @@
                 The current filter is hiding all projects.
                 <a href="" ng-click="search.text = ''" role="button" class="nowrap">Clear Filter</a>
               </div>
-              <div class="list-pf list-group projects-list">
+              <div ng-if="projects.length" class="list-pf list-group projects-list">
                 <div ng-repeat="project in projects | limitTo: limitListTo track by (project | uid)" class="list-pf-item list-group-item project-info tile-click">
                   <div class="list-pf-container">
                     <div class="list-pf-content list-pf-content-flex">
