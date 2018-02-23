@@ -4642,6 +4642,7 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .static-form-value-large .small,.static-form-value-large small{font-weight:400;line-height:1;color:#9c9c9c;font-size:65%}
 .pod-template-block .pod-template .pod-template-key,.weight-slider-values .service-name{font-weight:600}
 .clear-env-changes-link{vertical-align:-2px}
+.form-group-actions .btn-link{padding:0}
 copy-to-clipboard .input-group.limit-width{max-width:300px}
 .copy-to-clipboard input.form-control[readonly]{background-color:#fff;color:#363636}
 .jenkinsfile-examples .copy-to-clipboard{margin-top:3px}
@@ -5024,11 +5025,10 @@ a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;te
 .edit-form .labels .form-group .form-control{width:100%}
 .edit-form .checkbox{margin:10px 0}
 .edit-form .add-webhook{padding-bottom:10px;padding-top:5px}
-.edit-form .add-webhook .add-webhook-row{display:table;margin-bottom:5px;margin-top:15px;padding-right:25px;position:relative;table-layout:fixed;width:100%}
+.edit-form .add-webhook .add-webhook-row{display:table;margin-bottom:15px;padding-right:25px;position:relative;table-layout:fixed;width:100%}
 .edit-form .add-webhook .add-webhook-row .remove-webhook-trigger-action{position:absolute;right:0}
 .edit-form .add-webhook .add-webhook-row .remove-webhook-trigger-action .btn-remove{padding:5px 7px}
 .edit-form .add-webhook .add-webhook-row .select-secret-ref,.edit-form .add-webhook .add-webhook-row .select-webhook-type{float:left;margin-bottom:0;padding-right:5px;width:50%}
-.edit-form .add-webhook .add-webhook-action-btns{margin-top:15px}
 .edit-form .section{padding-bottom:5px}
 @media (max-width:768px){.edit-form .trigger-url{max-width:90%}
 .edit-form .labels .form-group{width:100%}
@@ -5055,7 +5055,7 @@ pre.clipped.scroll{max-height:150px;overflow:auto;width:100%}
 @media (max-width:768px){.k8s-label,.k8s-label .label-pair{width:100%}
 .k8s-label .label{display:block;min-width:50px}
 }
-.action-divider{color:#9c9c9c}
+.action-divider{color:#9c9c9c;padding:0 6px}
 .surface-shaded .table{background-color:transparent}
 .environment-variables.table.table-bordered>tbody>tr>td:first-child{font-weight:700;padding-right:10px;vertical-align:top}
 .environment-variables.table.table-bordered>tbody>tr>td:last-child{word-break:break-all;width:100%}

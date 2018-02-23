@@ -7572,7 +7572,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"key-value-editor-entry form-group\" ng-if=\"(!cannotAdd)\">\n" +
     "<a href=\"\" class=\"add-row-link\" role=\"button\" ng-click=\"onAddRow()\">{{ addRowLink }}</a>\n" +
     "<span ng-if=\"valueFromSelectorOptions.length\">\n" +
-    "<span class=\"action-divider\" aria-hidden=\"true\"> | </span>\n" +
+    "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
     "<a href=\"\" class=\"add-row-link\" role=\"button\" ng-click=\"onAddRowWithSelectors()\">{{ addRowWithSelectorsLink }}</a>\n" +
     "</span>\n" +
     "</div>\n" +
@@ -8541,7 +8541,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"alternate in route.alternateServices\" class=\"form-group\">\n" +
     "<osc-routing-service model=\"alternate\" service-options=\"alternateServiceOptions\" all-services=\"servicesByName\" is-alternate=\"true\" show-weight=\"route.alternateServices.length > 1 || controls.hideSlider\">\n" +
     "</osc-routing-service>\n" +
-    "<div class=\"row\">\n" +
+    "<div class=\"row form-group-actions\">\n" +
     "<div class=\"col-sm-6\">\n" +
     "<button type=\"button\" class=\"btn btn-link\" ng-click=\"route.alternateServices.splice($index, 1)\">Remove Service</button>\n" +
     "<span ng-if=\"$last && route.alternateServices.length < alternateServiceOptions.length\">\n" +
@@ -14014,10 +14014,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"help-block\">A {{trigger.data.type}} webhook trigger referencing the secret {{(trigger | getWebhookSecretData).secretReference.name}} already exists.</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"add-webhook-action-btns\">\n" +
+    "<div class=\"form-group-actions\">\n" +
     "<button class=\"btn btn-link pad-left-none\" type=\"button\" ng-click=\"$ctrl.addEmptyWebhookTrigger()\">Add Webhook</button>\n" +
     "<span ng-if=\"$ctrl.secretsVersion | canI : 'create'\">\n" +
-    "<span class=\"action-divider\" aria-hidden=\"true\"> | </span>\n" +
+    "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
     "<button class=\"btn btn-link\" href=\"\" type=\"button\" ng-click=\"$ctrl.openCreateWebhookSecretModal()\">Create New Webhook Secret</button>\n" +
     "</span>\n" +
     "</div>\n" +
