@@ -409,7 +409,7 @@ dd{margin-left:0}
 @media (min-width:415px){.dl-horizontal dt{float:left;width:160px;clear:left;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dl-horizontal dd{margin-left:180px}
 }
-.btn-group-vertical>.btn-group:after,.btn-toolbar:after,.clearfix:after,.container-fluid:after,.container:after,.dl-horizontal dd:after,.form-horizontal .form-group:after,.list-view-pf .list-group-item:after,.modal-footer:after,.modal-header:after,.nav:after,.navbar-collapse:after,.navbar-header:after,.navbar:after,.pager:after,.panel-body:after,.row:after{clear:both}
+.btn-group-vertical>.btn-group:after,.btn-toolbar:after,.clearfix:after,.container-fluid:after,.container:after,.dl-horizontal dd:after,.dropdown-menu>li>a,.form-horizontal .form-group:after,.list-view-pf .list-group-item:after,.modal-footer:after,.modal-header:after,.nav:after,.navbar-collapse:after,.navbar-header:after,.navbar:after,.pager:after,.panel-body:after,.row:after{clear:both}
 abbr[data-original-title],abbr[title]{cursor:help;border-bottom:1px dotted #9c9c9c}
 .initialism{font-size:90%;text-transform:uppercase}
 blockquote{padding:10px 20px;margin:0 0 20px;font-size:15px;border-left:5px solid #f1f1f1}
@@ -832,7 +832,7 @@ tbody.collapse.in{display:table-row-group}
 .btn-group>.btn-group:first-child:not(:last-child)>.btn:last-child,.btn-group>.btn-group:first-child:not(:last-child)>.dropdown-toggle,.btn-group>.btn:first-child:not(:last-child):not(.dropdown-toggle){border-bottom-right-radius:0;border-top-right-radius:0}
 .btn-group>.btn-group:last-child:not(:first-child)>.btn:first-child,.btn-group>.btn:last-child:not(:first-child),.btn-group>.dropdown-toggle:not(:first-child){border-bottom-left-radius:0;border-top-left-radius:0}
 .btn-group-vertical>.btn:not(:first-child):not(:last-child),.btn-group>.btn-group:not(:first-child):not(:last-child)>.btn,.btn-group>.btn:not(:first-child):not(:last-child):not(.dropdown-toggle){border-radius:0}
-.dropdown-menu>li>a{display:block;clear:both;font-weight:400;color:#363636}
+.dropdown-menu>li>a{display:block;font-weight:400;color:#363636}
 .dropdown-menu>li>a:focus,.dropdown-menu>li>a:hover{text-decoration:none;color:#4d5258;background-color:#def3ff}
 .dropdown-menu>.active>a,.dropdown-menu>.active>a:focus,.dropdown-menu>.active>a:hover{color:#fff;text-decoration:none;outline:0}
 .dropdown-menu>.disabled>a,.dropdown-menu>.disabled>a:focus,.dropdown-menu>.disabled>a:hover{color:#9c9c9c}
@@ -3655,6 +3655,7 @@ to{transform:rotate(359deg)}
 .spinner.spinner-lg{border-width:5px;height:30px;width:30px}
 .spinner.spinner-sm{border-width:3px;height:18px;width:18px}
 .spinner.spinner-xs{border-width:2px}
+.spinner.spinner-inverse{border-bottom-color:rgba(255,255,255,.25);border-left-color:rgba(255,255,255,.25);border-right-color:rgba(255,255,255,.25);border-top-color:rgba(255,255,255,.75)}
 .ie9 .spinner{background:url(../img/spinner.gif) no-repeat;border:0}
 .ie9 .spinner.spinner-inverse{background-image:url(../img/spinner-inverse.gif)}
 .ie9 .spinner.spinner-inverse-lg{background-image:url(../img/spinner-inverse-lg.gif)}
@@ -4984,7 +4985,6 @@ select:invalid{box-shadow:none}
 .k8s-label:before,.list-view-pf .list-group-item-expandable .list-group-item-heading{white-space:normal}
 .well h1:first-child,.well h2:first-child,.well h3:first-child,.well h4:first-child,.well h5:first-child{margin:5px 0 15px}
 .spinner.spinner-xs{height:12px;width:12px}
-.spinner.spinner-inverse{border-color:rgba(0,153,211,.25);border-top-color:rgba(0,153,211,.75)}
 .attention-message{border:1px solid #228bc0;position:absolute;left:50%;margin-top:100px;transform:translateX(-50%);padding:1em 1em 2em;min-width:85%}
 .attention-message h1,.attention-message p{text-align:center}
 .attention-message p{max-width:70em;margin:auto}
@@ -5022,7 +5022,6 @@ a.disabled-link:active,a.disabled-link:focus,a.disabled-link:hover{color:#bbb;te
 .modal-body textarea{resize:vertical}
 .debug-pod-action{margin-top:5px}
 .modal-debug-terminal .empty-state-message{margin-top:60px}
-.modal-debug-terminal kubernetes-container-terminal{text-align:center;overflow:hidden}
 .modal-debug-terminal .original-cmd-msg{margin-bottom:10px}
 .edit-form .with-divider{border-top:1px solid rgba(0,0,0,.15);padding-top:21px;padding-bottom:10px;margin-top:10px}
 .edit-form .labels .form-group{width:44%}
@@ -6122,18 +6121,10 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .container-terminal-wrapper:hover .fullscreen-toggle{display:block}
 }
 .container-terminal-wrapper .fullscreen-toggle .exit-fullscreen,.container-terminal-wrapper.disconnected .fullscreen-toggle{display:none}
-.container-terminal-wrapper .fullscreen-toggle{display:none;line-height:1;position:absolute;right:25px;top:0;z-index:1}
+.container-terminal-wrapper .fullscreen-toggle{display:none;line-height:1;position:absolute;right:19px;top:0;z-index:10}
 .container-terminal-wrapper .fullscreen-toggle a{color:#9c9c9c;cursor:pointer;font-size:18px;padding:5px}
 .container-terminal-wrapper .fullscreen-toggle a:active,.container-terminal-wrapper .fullscreen-toggle a:focus,.container-terminal-wrapper .fullscreen-toggle a:hover{color:#fff;text-decoration:none}
 .container-terminal-wrapper .fullscreen-toggle .go-fullscreen{display:block}
-.container-terminal-wrapper .terminal-actions .btn{background:0 0;font-weight:400;border-radius:0;color:#9c9c9c;cursor:pointer;font-size:18px;padding:5px}
-.terminal-font,kubernetes-container-terminal .terminal{font-family:"Monospace Regular","DejaVu Sans Mono",Menlo,Monaco,Consolas,monospace;font-size:12px;line-height:1em}
-.container-terminal-wrapper .terminal-actions .btn,.container-terminal-wrapper .terminal-actions .btn.active,.container-terminal-wrapper .terminal-actions .btn:active,.container-terminal-wrapper .terminal-actions .btn[disabled],fieldset[disabled] .container-terminal-wrapper .terminal-actions .btn{background-color:transparent;-webkit-box-shadow:none;box-shadow:none}
-.container-terminal-wrapper .terminal-actions .btn,.container-terminal-wrapper .terminal-actions .btn:active,.container-terminal-wrapper .terminal-actions .btn:focus,.container-terminal-wrapper .terminal-actions .btn:hover{border-color:transparent}
-.container-terminal-wrapper .terminal-actions .btn:focus,.container-terminal-wrapper .terminal-actions .btn:hover{background-color:transparent}
-.container-terminal-wrapper .terminal-actions .btn[disabled]:focus,.container-terminal-wrapper .terminal-actions .btn[disabled]:hover,fieldset[disabled] .container-terminal-wrapper .terminal-actions .btn:focus,fieldset[disabled] .container-terminal-wrapper .terminal-actions .btn:hover{color:#9c9c9c;text-decoration:none}
-.container-terminal-wrapper .terminal-actions .btn,.container-terminal-wrapper .terminal-actions .btn:active{-webkit-box-shadow:none;box-shadow:none}
-.container-terminal-wrapper .terminal-actions .btn:active,.container-terminal-wrapper .terminal-actions .btn:focus,.container-terminal-wrapper .terminal-actions .btn:hover{color:#fff;text-decoration:none}
 .container-terminal-wrapper:-moz-full-screen{background:#000;height:100%;width:100%}
 .container-terminal-wrapper:-moz-full-screen.disconnected .fullscreen-toggle{display:block}
 .container-terminal-wrapper:-moz-full-screen .fullscreen-toggle{right:55px}
@@ -6153,8 +6144,16 @@ alerts+.chromeless .log-loading-msg{margin-top:130px}
 .container-terminal-wrapper:-fullscreen{background:#000;height:100%;width:100%}
 .container-terminal-wrapper:-fullscreen .fullscreen-toggle{right:55px}
 .container-terminal-wrapper:-fullscreen .fullscreen-toggle .go-fullscreen{display:none}
-kubernetes-container-terminal .terminal-actions{top:0;right:47px}
+kubernetes-container-terminal .terminal-actions{top:0;right:25px}
+kubernetes-container-terminal .terminal-actions .btn{background:0 0;font-weight:400;border-radius:0;color:#9c9c9c;cursor:pointer;font-size:18px;padding:5px}
+fieldset[disabled] kubernetes-container-terminal .terminal-actions .btn,kubernetes-container-terminal .terminal-actions .btn,kubernetes-container-terminal .terminal-actions .btn.active,kubernetes-container-terminal .terminal-actions .btn:active,kubernetes-container-terminal .terminal-actions .btn[disabled]{background-color:transparent;-webkit-box-shadow:none;box-shadow:none}
+kubernetes-container-terminal .terminal-actions .btn,kubernetes-container-terminal .terminal-actions .btn:active,kubernetes-container-terminal .terminal-actions .btn:focus,kubernetes-container-terminal .terminal-actions .btn:hover{border-color:transparent}
+kubernetes-container-terminal .terminal-actions .btn:focus,kubernetes-container-terminal .terminal-actions .btn:hover{background-color:transparent}
+fieldset[disabled] kubernetes-container-terminal .terminal-actions .btn:focus,fieldset[disabled] kubernetes-container-terminal .terminal-actions .btn:hover,kubernetes-container-terminal .terminal-actions .btn[disabled]:focus,kubernetes-container-terminal .terminal-actions .btn[disabled]:hover{color:#9c9c9c;text-decoration:none}
+kubernetes-container-terminal .terminal-actions .btn,kubernetes-container-terminal .terminal-actions .btn:active{-webkit-box-shadow:none;box-shadow:none}
+kubernetes-container-terminal .terminal-actions .btn:active,kubernetes-container-terminal .terminal-actions .btn:focus,kubernetes-container-terminal .terminal-actions .btn:hover{color:#fff;text-decoration:none}
 kubernetes-container-terminal .terminal-actions .spinner{top:5px}
+.terminal-font{font-family:"Courier New",Courier,monospace;font-size:12px;line-height:14px}
 .environment-from-editor.as-sortable-dragging .as-sortable-item-delete,.environment-from-editor.as-sortable-dragging .input-group-addon,.environment-from-editor.as-sortable-dragging input,.key-value-editor.as-sortable-dragging .as-sortable-item-delete,.key-value-editor.as-sortable-dragging .input-group-addon,.key-value-editor.as-sortable-dragging input{opacity:.65}
 .environment-from-editor .as-sortable-DISABLED-item-delete:hover,.environment-from-editor .as-sortable-item-delete:hover,.environment-from-editor .as-sortable-item-handle:hover,.environment-from-editor.as-sortable-dragging .as-sortable-item-handle,.key-value-editor .as-sortable-DISABLED-item-delete:hover,.key-value-editor .as-sortable-item-delete:hover,.key-value-editor .as-sortable-item-handle:hover,.key-value-editor.as-sortable-dragging .as-sortable-item-handle{opacity:1}
 .environment-from-editor .as-sortable-DISABLED-item-delete,.environment-from-editor .as-sortable-item-delete,.environment-from-editor .as-sortable-item-handle,.key-value-editor .as-sortable-DISABLED-item-delete,.key-value-editor .as-sortable-item-delete,.key-value-editor .as-sortable-item-handle{display:inline-block;font-size:14px;opacity:.65;padding:6px;vertical-align:middle}

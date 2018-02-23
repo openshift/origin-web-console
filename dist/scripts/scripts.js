@@ -4815,8 +4815,8 @@ var t = $(".container-terminal-wrapper").get(0);
 if (t) {
 var n = t.getBoundingClientRect();
 if (0 !== n.left || 0 !== n.top || 0 !== n.width || 0 !== n.height) {
-var o = w.width(), i = w.height(), s = o - n.left - 54, c = i - n.top - 36;
-r.terminalCols = Math.max(_.floor(s / C.width), 80), r.terminalRows = Math.max(_.floor(c / C.height), 24);
+var o = w.height(), i = n.width - 17, s = o - n.top - 36;
+r.terminalCols = Math.max(_.floor(i / C.width), 80), r.terminalRows = Math.max(_.floor(s / C.height), 24);
 } else a(function() {
 P(e + 1);
 }, 50);
