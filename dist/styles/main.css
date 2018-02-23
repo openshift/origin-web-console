@@ -5372,8 +5372,6 @@ h2+.list-view-pf{margin-top:20px}
 100%{transform:translateX(0)}
 }
 .overview .row-expanded-top{display:flex;flex-wrap:wrap;justify-content:space-between}
-@media (min-width:1200px){.overview .row-expanded-top .overview-animation-block,.overview .row-expanded-top .overview-pod-template{width:50%}
-}
 .overview .row-expanded-top .overview-animation-block{display:flex;flex:1 1 auto;justify-content:center}
 @media (min-width:768px){.overview .row-expanded-top .overview-animation-block.animation-in-progress .overview-deployment-donut .latest-donut{justify-content:flex-end}
 }
@@ -5407,7 +5405,9 @@ h2+.list-view-pf{margin-top:20px}
 }
 .overview .row-expanded-top.metrics-not-active .overview-pod-template{width:50%}
 .overview .row-expanded-top .overview-pod-template{flex:1 1 auto}
-.overview .row-expanded-top .overview-pod-template .pod-template-block{padding-right:10px}
+@media (min-width:1200px){.overview .row-expanded-top .overview-animation-block,.overview .row-expanded-top .overview-pod-template{width:50%}
+.overview .row-expanded-top .overview-pod-template{padding-right:20px}
+}
 .overview .row-expanded-top .overview-pod-template .pod-template-block.ng-leave-prepare{display:none}
 @keyframes flexGrow{to{flex-basis:auto;flex-grow:1;flex-shrink:1}
 }
