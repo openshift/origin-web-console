@@ -29,24 +29,23 @@ function cmd() {
 # so we can amend our path to look into the local node_modules for the
 # correct binaries.
 repo_root="$( dirname "${BASH_SOURCE}" )/.."
-export PATH="${PATH}:${repo_root}/node_modules/bower/bin:${repo_root}/node_modules/grunt-cli/bin"
+export PATH="${PATH}:${repo_root}/node_modules/grunt-cli/bin"
 
-# Install bower if needed
-if ! which bower > /dev/null 2>&1 ; then
-  cmd "npm install bower"
+cmd "rm -rf node_modules"
+
+# Install yarn if needed
+if ! which yarn > /dev/null 2>&1 ; then
+  cmd "npm install yarn"
 fi
+
+# In case upstream components change things without incrementing versions
+cmd "yarn cache clean"
+cmd "yarn install"
 
 # Install grunt if needed
 if ! which grunt > /dev/null 2>&1 ; then
-  cmd "npm install grunt-cli"
+  cmd "yarn add grunt-cli -D"
 fi
-
-cmd "npm install --unsafe-perm"
-
-# In case upstream components change things without incrementing versions
-cmd "bower cache clean --allow-root"
-cmd "rm -rf bower_components/*"
-cmd "bower update --allow-root" 3
 
 cmd "rm -rf openshift-jvm"
 cmd "mkdir -p openshift-jvm"
