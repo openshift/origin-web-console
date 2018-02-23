@@ -5,7 +5,6 @@ beforeEach(module(function ($provide) {
       add: function() {}
     };
   });
-
 }));
 
 // Make sure a base location exists in the generated test html
