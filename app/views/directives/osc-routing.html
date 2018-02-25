@@ -160,16 +160,16 @@
           </div>
         </div>
       </div>
-      
+
       <div ng-repeat="alternate in route.alternateServices" class="form-group">
-        <osc-routing-service 
+        <osc-routing-service
           model="alternate"
           service-options="alternateServiceOptions"
           all-services="servicesByName"
           is-alternate="true"
           show-weight="route.alternateServices.length > 1 || controls.hideSlider">
         </osc-routing-service>
-        <div class="row">
+        <div class="row form-group-actions">
           <div class="col-sm-6">
             <button type="button" class="btn btn-link" ng-click="route.alternateServices.splice($index, 1)">Remove Service</button>
             <span ng-if="$last && route.alternateServices.length < alternateServiceOptions.length">

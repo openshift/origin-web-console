@@ -79,10 +79,10 @@
     </div>
   </div>
 
-  <div class="add-webhook-action-btns">
+  <div class="form-group-actions">
     <button class="btn btn-link pad-left-none" type="button" ng-click="$ctrl.addEmptyWebhookTrigger()">Add Webhook</button>
     <span ng-if="$ctrl.secretsVersion | canI : 'create'">
-      <span class="action-divider" aria-hidden="true"> | </span>
+      <span class="action-divider" aria-hidden="true">|</span>
       <button class="btn btn-link" href="" type="button" ng-click="$ctrl.openCreateWebhookSecretModal()">Create New Webhook Secret</button>
     </span>
   </div>
