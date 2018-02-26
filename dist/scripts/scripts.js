@@ -983,6 +983,7 @@ LOGOS: {
 "icon-cassandra": "cassandra.svg",
 "icon-clojure": "clojure.svg",
 "icon-codeigniter": "codeigniter.svg",
+"icon-cordova": "cordova.png",
 "icon-datagrid": "datagrid.svg",
 "icon-datavirt": "datavirt.svg",
 "icon-decisionserver": "decisionserver.svg",
