@@ -411,6 +411,12 @@ registry-imagestream-meta dt:after {
   margin: 0 20px;
 }
 
+.quota-charts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .route-service-bar-chart {
   .service-name,
   .service-weight {
@@ -1097,17 +1103,22 @@ a.disabled-link {
 }
 
 .status {
+  display: flex;
   min-width: 130px;
+  // when status-icon is child of .status, add margin-right to the icon
+  // because the space resulting from display: inline-block collapses
+  status-icon {
+    margin-right: 3px;
+  }
+}
+
+.status-detail {
+  flex: 1 1 0%;
 }
 
 build-counts,
 notification-icon,
 status-icon {
-  // when status-icon is child of [row], add margin-right to the icon
-  // because the space resulting from display: inline-block collapses
-  [row] > & {
-    margin-right: 3px;
-  }
   // so that status-icons have a fixed width (like .fa-fw, but better sized)
   // this ensures when the icons change, the text that follows doesn't shift
   .fa, .pficon {
@@ -1144,6 +1155,7 @@ pre.clipped {
 }
 
 .k8s-label {
+  display: flex;
   margin-right: 5px;
   // A bit more space below the actions button.
   margin-top: 3px;
@@ -1153,6 +1165,7 @@ pre.clipped {
     white-space: normal;
   }
   .label-pair {
+    display: flex;
     margin-bottom: 2px;
     max-width: 100%; // needed to enable truncation within table, but still allow inline display if room is available
   .label {
@@ -1207,6 +1220,11 @@ pre.clipped {
       width: 100%;
     }
   }
+}
+
+.k8s-labels {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .action-divider {
@@ -1324,4 +1342,17 @@ pre.clipped {
       }
     }
   }
+}
+
+.init-container-status-detail {
+  flex: 1 1 0%;
+}
+
+.init-container-status,
+.ui-select-choices-flex {
+  display: flex;
+}
+
+.ui-select-choices-flex {
+  justify-content: space-between;
 }

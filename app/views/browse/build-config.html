@@ -202,10 +202,12 @@
                         </span>
                       </td>
                       <td data-title="Status">
-                        <div row class="status">
+                        <div class="status">
                           <status-icon status="build.status.phase" disable-animation></status-icon>
-                          <span ng-if="!build.status.reason || build.status.phase === 'Cancelled'">{{build.status.phase}}</span>
-                          <span ng-if="build.status.reason && build.status.phase !== 'Cancelled'">{{build.status.reason | sentenceCase}}</span>
+                          <span class="status-detail">
+                            <span ng-if="!build.status.reason || build.status.phase === 'Cancelled'">{{build.status.phase}}</span>
+                            <span ng-if="build.status.reason && build.status.phase !== 'Cancelled'">{{build.status.reason | sentenceCase}}</span>
+                          </span>
                         </div>
                       </td>
                       <td data-title="Duration">

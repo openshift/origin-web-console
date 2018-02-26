@@ -28,7 +28,7 @@
               </dd>
             </dl>
             <div>
-              <div row wrap style="justify-content: center;">
+              <div class="quota-charts">
                 <div ng-if="quota.status.total.hard.cpu" class="mar-lg">
                   <h3 class="text-center">CPU <small>Request</small></h3>
                   <quota-usage-chart height="240" used="namespaceUsageByClusterQuota[quota.metadata.name].used.cpu" total="quota.status.total.hard.cpu" cross-project-used="quota.status.total.used.cpu" type="cpu" class="quota-chart"></quota-usage-chart>
@@ -120,20 +120,20 @@
               </dd>
             </dl>
             <div>
-              <div row wrap style="justify-content: center;">
-                <div column ng-if="quota.status.hard.cpu" class="mar-lg">
+              <div class="quota-charts">
+                <div ng-if="quota.status.hard.cpu" class="mar-lg">
                   <h3 class="text-center">CPU <small>Request</small></h3>
                   <quota-usage-chart used="quota.status.used.cpu" total="quota.status.hard.cpu" type="cpu" class="quota-chart"></quota-usage-chart>
                 </div>
-                <div column ng-if="quota.status.hard.memory" class="mar-lg">
+                <div ng-if="quota.status.hard.memory" class="mar-lg">
                   <h3 class="text-center">Memory <small>Request</small></h3>
                   <quota-usage-chart used="quota.status.used.memory" total="quota.status.hard.memory" type="memory" class="quota-chart"></quota-usage-chart>
                 </div>
-                <div column ng-if="quota.status.hard['requests.cpu']" class="mar-lg">
+                <div ng-if="quota.status.hard['requests.cpu']" class="mar-lg">
                   <h3 class="text-center">CPU <small>Request</small></h3>
                   <quota-usage-chart used="quota.status.used['requests.cpu']" total="quota.status.hard['requests.cpu']" type="cpu" class="quota-chart"></quota-usage-chart>
                 </div>
-                <div column ng-if="quota.status.hard['requests.memory']" class="mar-lg">
+                <div ng-if="quota.status.hard['requests.memory']" class="mar-lg">
                   <h3 class="text-center">Memory <small>Request</small></h3>
                   <quota-usage-chart used="quota.status.used['requests.memory']" total="quota.status.hard['requests.memory']" type="memory" class="quota-chart"></quota-usage-chart>
                 </div>

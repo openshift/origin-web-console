@@ -1,4 +1,4 @@
-<div flex class="build-pipeline">
+<div class="build-pipeline">
   <div class="build-summary">
     <div ng-if="buildConfigNameOnExpanded" class="build-name">
       <a ng-href="{{build | configURLForResource}}">{{buildConfigName}}</a>
@@ -30,7 +30,7 @@
     </div>
     <div class="pipeline">
       <div class="pipeline-stage" ng-repeat="stage in jenkinsStatus.stages track by stage.id">
-        <div column class="pipeline-stage-column">
+        <div class="pipeline-stage-column">
           <div title="{{stage.name}}" class="pipeline-stage-name" ng-class="build.status.phase">
             {{stage.name}}
           </div>

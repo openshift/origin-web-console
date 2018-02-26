@@ -35,12 +35,9 @@
     margin-top: 15px;
   }
   .pod-template {
-    // so that .word-break() on children works
-    [flex] {
-      min-width: 0;
-    }
     .icon-row {
       border-left: 3px solid @gray-lighter;
+      display: flex;
       padding: 2px 0 0 2px;
     }
     .fa,
@@ -50,6 +47,10 @@
     }
     .pod-template-build {
       .word-break();
+    }
+    .pod-template-detail {
+      flex: 1 1 0%;
+      min-width: 0; // so that .word-break() on children works
     }
     .pod-template-key {
       font-weight: 600;
@@ -155,9 +156,18 @@ pod-donut[mini] {
 }
 
 .deployment-donut {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   .browse-deployment-donut & {
     align-items: center;
+  }
+  .deployment-donut-column {
+    display: flex;
+    flex-direction: column;
+  }
+  .deployment-donut-row {
+    display: flex;
   }
   .scaling-controls {
     justify-content: center;

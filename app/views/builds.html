@@ -102,11 +102,12 @@
                   </span>
                 </td>
                 <td data-title="Status">
-                  <div row class="status">
-                    <!-- <build-status build="build"></build-status> -->
+                  <div class="status">
                     <status-icon status="latestBuild.status.phase" disable-animation></status-icon>
-                    <span ng-if="!latestBuild.status.reason || latestBuild.status.phase === 'Cancelled'">{{latestBuild.status.phase}}</span>
-                    <span ng-if="latestBuild.status.reason && latestBuild.status.phase !== 'Cancelled'">{{latestBuild.status.reason | sentenceCase}}</span>
+                    <span class="status-detail">
+                      <span ng-if="!latestBuild.status.reason || latestBuild.status.phase === 'Cancelled'">{{latestBuild.status.phase}}</span>
+                      <span ng-if="latestBuild.status.reason && latestBuild.status.phase !== 'Cancelled'">{{latestBuild.status.reason | sentenceCase}}</span>
+                    </span>
                   </div>
                 </td>
                 <td data-title="Duration">
@@ -147,11 +148,12 @@
                   <a ng-href="{{latestBuild | navigateResourceURL}}">{{latestBuild.metadata.name}}</a>
                 </td>
                 <td data-title="Status">
-                  <div row class="status">
-                    <!-- <build-status build="build"></build-status> -->
+                  <div class="status">
                     <status-icon status="latestBuild.status.phase" disable-animation></status-icon>
-                    <span ng-if="!latestBuild.status.reason || latestBuild.status.phase === 'Cancelled'">{{latestBuild.status.phase}}</span>
-                    <span ng-if="latestBuild.status.reason && latestBuild.status.phase !== 'Cancelled'">{{latestBuild.status.reason | sentenceCase}}</span>
+                    <span class="status-detail">
+                      <span ng-if="!latestBuild.status.reason || latestBuild.status.phase === 'Cancelled'">{{latestBuild.status.phase}}</span>
+                      <span ng-if="latestBuild.status.reason && latestBuild.status.phase !== 'Cancelled'">{{latestBuild.status.reason | sentenceCase}}</span>
+                    </span>
                   </div>
                 </td>
                 <td data-title="Duration">

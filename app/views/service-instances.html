@@ -56,9 +56,9 @@
                     </td>
                     <td data-title="Instance Name"><span>{{serviceInstance.metadata.name}}</span></td>
                     <td data-title="Status">
-                      <div row class="status">
+                      <div class="status">
                         <status-icon status="serviceInstance | serviceInstanceStatus" disable-animation></status-icon>
-                        <span flex>{{serviceInstance | serviceInstanceStatus | sentenceCase}}</span>
+                        <span class="status-detail">{{serviceInstance | serviceInstanceStatus | sentenceCase}}</span>
                       </div>
                     </td>
                     <td data-title="Created">

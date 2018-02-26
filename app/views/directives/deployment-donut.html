@@ -1,6 +1,6 @@
-<div column class="deployment-donut">
-  <div row>
-    <div column>
+<div class="deployment-donut">
+  <div class="deployment-donut-row">
+    <div class="deployment-donut-column">
       <pod-donut
           pods="pods"
           desired="getDesiredReplicas()"
@@ -21,8 +21,7 @@
 
     <!-- Don't show the scaling controls until the HPAs load so they don't appear and quickly disappear. -->
     <div
-      column
-      class="scaling-controls fade-inline"
+      class="deployment-donut-column scaling-controls fade-inline"
       ng-if="(hpa && !hpa.length) && ((deploymentConfig || rc) | canIScale) && !isIdled">
       <div>
         <a href=""
@@ -49,7 +48,7 @@
     </div>
   </div>
 
-  <div row ng-if="hpa.length" class="scaling-details">
+  <div ng-if="hpa.length" class="deployment-donut-row scaling-details">
     <div>
       Autoscaled:
       <span class="nowrap">min: {{hpa[0].spec.minReplicas || 1}},</span>

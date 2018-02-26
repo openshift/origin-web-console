@@ -156,10 +156,9 @@
                           <ui-select-choices
                             repeat="term in containerTerminals | filter: $select.search"
                             ui-disable-choice="(term.containerState !== 'running') && !term.isUsed">
-                            <div row>
+                            <div class="ui-select-choices-flex">
                               <span ng-bind-html="term.containerName | highlight: $select.search">
                               </span>
-                              <span flex></span>
                               <span
                                 ng-if="term.isUsed && (term.containerState === 'running')"
                                 ng-class="{'text-muted' : (term.status === 'disconnected')}">
