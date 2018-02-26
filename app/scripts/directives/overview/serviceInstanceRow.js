@@ -79,11 +79,16 @@
       if (changes.bindings) {
         row.deleteableBindings = _.reject(row.bindings, 'metadata.deletionTimestamp');
       }
-      if (row.isMobileService(row.apiObject) && $rootScope.AEROGEAR_MOBILE_ENABLED) {
+
+      if (changes.apiObject) {
+        // Get the list of integrations when a service is provisioned
         var serviceClass = getServiceClass();
-        var integrations = _.get(serviceClass, "spec.externalMetadata.integrations");
-        if (integrations) {
-          row.integrations = integrations.split(",");
+
+        if (row.isMobileService(serviceClass) && $rootScope.AEROGEAR_MOBILE_ENABLED) {
+          var integrations = _.get(serviceClass, "spec.externalMetadata.integrations");
+          if (integrations) {
+            row.integrations = integrations.split(",");
+          }
         }
       }
     };

@@ -14016,38 +14016,45 @@ templateUrl: "views/directives/service-instance-integrations.html"
 }), function() {
 angular.module("openshiftConsole").component("serviceIntegration", {
 controller: [ "$filter", "$scope", "APIService", "AuthorizationService", "BindingService", "Catalog", "DataService", "NotificationsService", function(e, t, n, r, a, o, i, s) {
-var c = this, l = n.getPreferredVersion("deployments"), u = n.getPreferredVersion("servicebindings"), d = n.getPreferredVersion("serviceinstances"), m = n.kindToResourceGroupVersion({
+var c = this, l = n.getPreferredVersion("configmaps"), u = n.getPreferredVersion("deployments"), d = n.getPreferredVersion("servicebindings"), m = n.getPreferredVersion("serviceinstances"), p = n.kindToResourceGroupVersion({
 group: "settings.k8s.io",
 kind: "podpreset"
-}), p = e("isServiceInstanceReady"), f = e("isBindingReady"), g = e("getErrorDetails"), v = c.integration.spec.externalMetadata.serviceName, h = [], y = !1;
+}), f = e("isServiceInstanceReady"), g = e("isBindingReady"), v = e("getErrorDetails"), h = c.integration.spec.externalMetadata.serviceName, y = [], b = !1, S = !1;
 t.$on("$destroy", function() {
-i.unwatchAll(h), y && i.unwatch(y);
+i.unwatchAll(y), b && i.unwatch(b), S && i.unwatch(S);
 }), c.$onInit = function() {
 var e = {
 namespace: c.consumerService.metadata.namespace
 };
-h.push(i.watch(d, e, function(e) {
+y.push(i.watch(l, e, function(e) {
 var n = e.by("metadata.name");
-t.serviceInstance = _.find(n, function(e) {
+_.forEach(n, function(e) {
+var n = _.get(e, "metadata.labels.serviceInstanceID");
+n !== c.consumerService.spec.externalID ? t.providerServiceInstance && n === t.providerServiceInstance.spec.externalID && (t.providerServiceName = _.get(e, "metadata.labels.serviceName")) : t.consumerServiceName = _.get(e, "metadata.labels.serviceName");
+});
+})), y.push(i.watch(m, e, function(e) {
+var n = e.by("metadata.name");
+t.providerServiceInstance = _.find(n, function(e) {
 return _.get(e, "spec.clusterServiceClassExternalName") === c.integration.spec.externalName;
 });
-})), t.$watch("serviceInstance", function(n) {
-if (!n && !1 !== y) return i.unwatch(y), void (y = !1);
-!1 === y && (y = i.watch(m, e, function(e) {
+})), t.$watch("providerServiceInstance", function(n) {
+n ? !1 === b && (b = i.watch(p, e, function(e) {
 var n = e.by("metadata.name");
 c.podPreset = _.find(n, function(e) {
-return e.metadata.name === _.get(c.consumerService, "metadata.name") + "-" + _.get(t.serviceInstance, "metadata.name");
+return e.metadata.name === _.get(c.consumerService, "metadata.name") + "-" + _.get(t.providerServiceInstance, "metadata.name");
 });
-}));
-}), h.push(i.watch(u, e, function(e) {
-var t = e.by("metadata.name");
-c.binding = _.find(t, function(e) {
-var t = _.get(e, [ "metadata", "annotations", "integrations.aerogear.org/provider" ]), n = _.get(e, [ "metadata", "annotations", "integrations.aerogear.org/consumer" ]), r = _.get(c, "consumerService.metadata.labels.serviceName");
-return t && n && r && t === v && n === r;
+})) : !1 !== b && (i.unwatch(b), b = !1);
+}), t.$watch("consumerServiceName", function(n) {
+n ? !1 === S && (S = i.watch(d, e, function(e) {
+var n = e.by("metadata.name");
+c.binding = _.find(n, function(e) {
+var n = _.get(e, [ "metadata", "annotations", "integrations.aerogear.org/provider" ]), r = _.get(e, [ "metadata", "annotations", "integrations.aerogear.org/consumer" ]);
+return n && r && t.consumerServiceName && n === h && r === t.consumerServiceName;
 });
-}));
+})) : !1 !== S && (i.unwatch(S), S = !1);
+});
 };
-var b = function(e, t, n) {
+var C = function(e, t, n) {
 var r = _.get(e, "metadata.name"), a = _.get(t, "metadata.name"), o = {
 apiVersion: "settings.k8s.io/v1alpha1",
 kind: "PodPreset",
@@ -14083,26 +14090,26 @@ c.integrationPanelVisible = !1, c.closeIntegrationPanel = function() {
 c.integrationPanelVisible = !1;
 }, c.openIntegrationPanel = function() {
 c.parameterData = {
-service: _.get(c.consumerService, "metadata.labels.serviceName")
+service: t.consumerServiceName
 }, c.integrationPanelVisible = !0;
 }, c.provision = function() {
 t.$emit("open-overlay-panel", o.getServiceItem(c.integration));
 }, c.onBind = function(e) {
 var n = {
 namespace: _.get(c.consumerService, "metadata.namespace")
-}, r = b(c.consumerService, t.serviceInstance, e), a = i.watchObject(u, _.get(e, "metadata.name"), n, function(e) {
-if (f(e)) {
+}, r = C(c.consumerService, t.providerServiceInstance, e), a = i.watchObject(d, _.get(e, "metadata.name"), n, function(e) {
+if (g(e)) {
 i.unwatch(a);
 var r = angular.copy(e);
 s.addNotification({
 type: "success",
-message: "A binding has been created for " + _.get(c, "consumerService.metadata.labels.serviceName") + " and it has been redeployed."
-}), _.setWith(r, [ "metadata", "annotations", "integrations.aerogear.org/consumer" ], c.consumerService.metadata.labels.serviceName), _.setWith(r, [ "metadata", "annotations", "integrations.aerogear.org/provider" ], v), i.update(u, r.metadata.name, r, n).then(function() {
-return i.get(l, _.get(c, "consumerService.metadata.labels.serviceName"), n, {
+message: "A binding has been created for " + t.consumerServiceName + " and it has been redeployed."
+}), _.setWith(r, [ "metadata", "annotations", "integrations.aerogear.org/consumer" ], t.consumerServiceName), _.setWith(r, [ "metadata", "annotations", "integrations.aerogear.org/provider" ], h), i.update(d, r.metadata.name, r, n).then(function() {
+return i.get(u, t.consumerServiceName, n, {
 errorNotification: !1
 });
 }).then(function(e) {
-return e.spec.template.metadata.labels[_.get(t.serviceInstance, "metadata.labels.serviceName")] = "enabled", i.update(l, _.get(c, "consumerService.metadata.labels.serviceName"), e, n);
+return e.spec.template.metadata.labels[t.providerServiceName] = "enabled", i.update(u, t.consumerServiceName, e, n);
 }).catch(function(e) {
 s.addNotification({
 type: "error",
@@ -14112,31 +14119,31 @@ details: e.data.message
 });
 }
 });
-i.create(m, null, r, n).catch(function(e) {
+i.create(p, null, r, n).catch(function(e) {
 s.addNotification({
 type: "error",
 message: "Failed to create pod preset.",
-details: g(e)
+details: v(e)
 });
 });
 }, c.getState = function() {
-return c.podPreset && !c.binding ? "pending" : c.podPreset && c.binding ? "active" : c.binding && !c.podPreset ? "pending" : t.serviceInstance && p(t.serviceInstance) ? "no-binding" : t.serviceInstance && !p(t.serviceInstance) && "Provision" === _.get(t, "serviceInstance.status.currentOperation") ? "service-provision-pending" : t.serviceInstance && !p(t.serviceInstance) && "Deprovision" === _.get(t, "serviceInstance.status.currentOperation") ? "service-deprovision-pending" : "no-service";
+return c.podPreset && !c.binding ? "pending" : c.podPreset && c.binding ? "active" : c.binding && !c.podPreset ? "pending" : t.providerServiceInstance && f(t.providerServiceInstance) ? "no-binding" : t.providerServiceInstance && !f(t.providerServiceInstance) && "Provision" === _.get(t, "providerServiceInstance.status.currentOperation") ? "service-provision-pending" : t.providerServiceInstance && !f(t.providerServiceInstance) && "Deprovision" === _.get(t, "providerServiceInstance.status.currentOperation") ? "service-deprovision-pending" : "no-service";
 }, c.deletePodPreset = function() {
 var e = {
 namespace: c.consumerService.metadata.namespace
-}, t = {
+}, n = {
 propagationPolicy: null
 };
-i.delete(m, c.podPreset.metadata.name, e, t).then(function() {
-return i.get(l, _.get(c, "consumerService.metadata.labels.serviceName"), e);
-}).then(function(t) {
-var n = angular.copy(t);
-return delete n.spec.template.metadata.labels[v], i.update(l, _.get(c, "consumerService.metadata.labels.serviceName"), n, e);
+i.delete(p, c.podPreset.metadata.name, e, n).then(function() {
+return i.get(u, t.consumerServiceName, e);
+}).then(function(n) {
+var r = angular.copy(n);
+return delete r.spec.template.metadata.labels[h], i.update(u, t.consumerServiceName, r, e);
 }).catch(function(e) {
 s.addNotification({
 type: "error",
 message: "There was an error deleting the integration.",
-details: g(e)
+details: v(e)
 });
 });
 };
@@ -14558,9 +14565,12 @@ _.get(s.apiObject, "metadata.deletionTimestamp") ? s.instanceStatus = "deleted" 
 s.$doCheck = function() {
 g(), s.notifications = o.getNotifications(s.apiObject, s.state), s.serviceClass = p(), s.servicePlan = f(), s.displayName = m(s.apiObject, s.serviceClass), s.isBindable = a.isServiceBindable(s.apiObject, s.serviceClass, s.servicePlan);
 }, s.$onChanges = function(e) {
-if (e.bindings && (s.deleteableBindings = _.reject(s.bindings, "metadata.deletionTimestamp")), s.isMobileService(s.apiObject) && t.AEROGEAR_MOBILE_ENABLED) {
-var n = p(), r = _.get(n, "spec.externalMetadata.integrations");
+if (e.bindings && (s.deleteableBindings = _.reject(s.bindings, "metadata.deletionTimestamp")), e.apiObject) {
+var n = p();
+if (s.isMobileService(n) && t.AEROGEAR_MOBILE_ENABLED) {
+var r = _.get(n, "spec.externalMetadata.integrations");
 r && (s.integrations = r.split(","));
+}
 }
 }, s.getSecretForBinding = function(e) {
 return e && _.get(s, [ "state", "secrets", e.spec.secretName ]);
@@ -16646,7 +16656,8 @@ return !!e && /[\x00-\x09\x0E-\x1F]/.test(e);
 };
 }), angular.module("openshiftConsole").filter("isMobileService", function() {
 return function(e) {
-return "enabled" === _.get(e, "metadata.labels.mobile", {});
+var t = _.get(e, "spec.tags");
+return _.includes(t, "mobile-service");
 };
 }), angular.module("openshiftConsole").factory("logLinks", [ "$anchorScroll", "$document", "$location", "$window", function(e, t, n, r) {
 var a = _.template([ "/#/discover?", "_g=(", "time:(", "from:now-1w,", "mode:relative,", "to:now", ")", ")", "&_a=(", "columns:!(kubernetes.container_name,message),", "index:'<%= index %>',", "query:(", "query_string:(", "analyze_wildcard:!t,", 'query:\'kubernetes.pod_name:"<%= podname %>" AND kubernetes.namespace_name:"<%= namespace %>"\'', ")", "),", "sort:!('@timestamp',desc)", ")", "#console_container_name=<%= containername %>", "&console_back_url=<%= backlink %>" ].join(""));

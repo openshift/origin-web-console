@@ -5723,7 +5723,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<overlay-panel show-panel=\"$ctrl.integrationPanelVisible\" handle-close=\"$ctrl.closeIntegrationPanel\">\n" +
-    "<bind-service target=\"serviceInstance\" project=\"$ctrl.project\" on-close=\"$ctrl.closeIntegrationPanel\" on-finish=\"$ctrl.onBind\" parameter-data=\"$ctrl.parameterData\"></bind-service>\n" +
+    "<bind-service target=\"providerServiceInstance\" project=\"$ctrl.project\" on-close=\"$ctrl.closeIntegrationPanel\" on-finish=\"$ctrl.onBind\" parameter-data=\"$ctrl.parameterData\"></bind-service>\n" +
     "</overlay-panel>"
   );
 
