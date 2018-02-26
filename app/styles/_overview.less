@@ -631,13 +631,13 @@
     }
     .overview-pod-template {
       flex: 1 1 auto;
-      .pod-template-block {
-        // add space so text can't touch metrics or doughnut
-        padding-right: 10px;
-        &.ng-leave-prepare {
-          // prevent previous-donut initial "flash" before animation
-          display: none;
-        }
+      // preview .section-label underline and pod-template text from touching metrics when they are next to each other >1200px
+      @media(min-width: @screen-lg-min) {
+        padding-right: (@grid-gutter-width / 2);
+      }
+      .pod-template-block.ng-leave-prepare {
+        // prevent previous-donut initial "flash" before animation
+        display: none;
       }
     }
   }
