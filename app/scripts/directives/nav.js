@@ -8,6 +8,7 @@ angular.module('openshiftConsole')
       $timeout,
       $rootScope,
       $routeParams,
+      APIService,
       AuthorizationService,
       Constants,
       HTMLService) {
@@ -86,10 +87,9 @@ angular.module('openshiftConsole')
             return $scope.canIAddToProject;
           }
 
-          return AuthorizationService.canI({
-            resource: item.canI.resource,
-            group: item.canI.group
-          }, item.canI.verb, $scope.projectName);
+          // Make sure both the resource was found during discovery and the user has authority.
+          var resourceGroupVersion = _.pick(item.canI, [ 'resource', 'group', 'version' ]);
+          return APIService.apiInfo(resourceGroupVersion) && AuthorizationService.canI(resourceGroupVersion, item.canI.verb, $scope.projectName);
         };
 
         $scope.itemClicked = function(primaryItem) {
