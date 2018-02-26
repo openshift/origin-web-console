@@ -11404,10 +11404,10 @@ autoScrollActive:!1
 });
 });
 };
-return h.getLoggingURL(b.context.project).then(function(d) {
-var e = _.get(b.context, "project.metadata.name"), g = _.get(b.options, "container");
-e && g && u && d && (angular.extend(b, {
-kibanaAuthUrl:a.trustAsResourceUrl(URI(d).segment("auth").segment("token").normalizePathname().toString()),
+return h.getLoggingURL(b.context.project).then(function(e) {
+var g = _.get(b.context, "project.metadata.name"), h = _.get(b.options, "container");
+g && h && u && e && (angular.extend(b, {
+kibanaAuthUrl:a.trustAsResourceUrl(URI(e).segment("auth").segment("token").normalizePathname().toString()),
 access_token:f.UserStore().getToken()
 }), b.$watchGroup([ "context.project.metadata.name", "options.container", "name" ], function() {
 angular.extend(b, {
@@ -11417,7 +11417,7 @@ namespaceUid:b.context.project.metadata.uid,
 podname:u,
 containername:b.options.container,
 backlink:URI.encode(c.location.href)
-}))
+}, d("annotation")(b.context.project, "openshift.io/logging.data.prefix")))
 });
 }));
 }), this.cacheScrollableNode = function(a) {
@@ -14933,8 +14933,8 @@ var e = new URI();
 _.each(c, function(a) {
 e.addSearch(a);
 }), d.open(e.toString(), "_blank");
-}, i = _.template([ "/#/discover?", "_g=(", "time:(", "from:now-1w,", "mode:relative,", "to:now", ")", ")", "&_a=(", "columns:!(kubernetes.container_name,message),", "index:'project.<%= namespace %>.<%= namespaceUid %>.*',", "query:(", "query_string:(", "analyze_wildcard:!t,", 'query:\'kubernetes.pod_name:"<%= podname %>" AND kubernetes.namespace_name:"<%= namespace %>"\'', ")", "),", "sort:!('@timestamp',desc)", ")", "#console_container_name=<%= containername %>", "&console_back_url=<%= backlink %>" ].join("")), j = function(a) {
-return i(a);
+}, i = _.template([ "/#/discover?", "_g=(", "time:(", "from:now-1w,", "mode:relative,", "to:now", ")", ")", "&_a=(", "columns:!(kubernetes.container_name,message),", "index:'<%= index %>',", "query:(", "query_string:(", "analyze_wildcard:!t,", 'query:\'kubernetes.pod_name:"<%= podname %>" AND kubernetes.namespace_name:"<%= namespace %>"\'', ")", "),", "sort:!('@timestamp',desc)", ")", "#console_container_name=<%= containername %>", "&console_back_url=<%= backlink %>" ].join("")), j = function(a, b) {
+return b = b || "project." + a.namespace + "." + a.namespaceUid, a.index = b + ".*", i(a);
 };
 return {
 scrollTop:e,
