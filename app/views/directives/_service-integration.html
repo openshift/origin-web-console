@@ -1,0 +1,19 @@
+<div class="service-integration col-md-4" ng-if="$ctrl.doRender">
+  <div ng-class="{'active-integration': $ctrl.getState() == 1,
+                              'inactive-integration': $ctrl.getState() == 0,
+                              'unknown-integration': $ctrl.getState() == -1}">
+    <span class="image-icon pull-left">
+      <img ng-src="{{ $ctrl.integrationData.imageData.imageUrl }}"/>
+    </span>
+    <span class="description">
+      <h4>
+        {{$ctrl.integrationData.name}}
+        <span class="del-integration" ng-if="$ctrl.getState() == 1">-</span>
+        <span class="add-integration" ng-if="$ctrl.getState() == 0">+</span>
+      </h4>
+      <div class="id" ng-if="$ctrl.getState() == 1">ID: {{ $ctrl.binding.metadata.name }}</div>
+      <div class="id" ng-if="$ctrl.getState() == 0">No {{$ctrl.integrationData.name}} integration found.</div>
+      <div class="id" ng-if="$ctrl.getState() == -1">Provision {{$ctrl.integrationData.name}} to enable integration.</div>
+    </span>
+  </div>
+</div>

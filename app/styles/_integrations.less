@@ -1,0 +1,37 @@
+.service-integration {
+  .image-icon {
+    font-size: 45px;
+    line-height: 1.25;
+    margin: 0 15px;
+    img {
+      width: 30px;
+    }
+    span {
+      opacity: .38;
+    }
+  };
+  .id {
+    .text-muted();
+  }
+  .add-integration {
+    color: @link-color;
+  }
+  .del-integration {
+    color: red;
+  }
+  .active-integration {
+    .description h4 {
+      color: @link-color;
+    }
+  }
+  .inactive-integration {
+    .description h4 {
+      color: @link-color;
+    }
+  }
+  .unknown-integration {
+    .description h4 {
+      .text-muted();
+    }
+  }
+}

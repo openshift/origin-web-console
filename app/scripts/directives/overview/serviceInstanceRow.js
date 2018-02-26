@@ -27,6 +27,7 @@
                               ListRowUtils,
                               ServiceInstancesService) {
     var row = this;
+
     var isBindingFailed = $filter('isBindingFailed');
     var isBindingReady = $filter('isBindingReady');
     var serviceInstanceFailedMessage = $filter('serviceInstanceFailedMessage');
@@ -38,6 +39,7 @@
 
     row.serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
     row.serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
+    row.isMobileService = _.get(row.apiObject, 'metadata.labels', {}).mobile === 'enabled';
 
     var getServiceClass = function() {
       var serviceClassName = ServiceInstancesService.getServiceClassNameForInstance(row.apiObject);
@@ -74,6 +76,16 @@
     row.$onChanges = function(changes) {
       if (changes.bindings) {
         row.deleteableBindings = _.reject(row.bindings, 'metadata.deletionTimestamp');
+      }
+      if(row.isMobileService && changes.apiObject.currentValue.spec.clusterServiceClassRef){
+        _.each(changes.apiObject.currentValue.status.conditions, function(condition){
+          if(condition.type === "Ready" && condition.status === "True"){
+            var integrations = _.get(getServiceClass(), "spec.externalMetadata.integrations")
+            if (typeof integrations !== "undefined"){
+              row.integrations = integrations.split(",");
+            }
+          }
+        });
       }
     };
 

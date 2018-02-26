@@ -32,7 +32,7 @@
           </div>
         </div>
       </div>
-      <div class="list-pf-details" ng-if="!row.expanded">
+      <div class="list-pf-details" ng-if="!row.expanded && !row.integrations | size">
         <span ng-if="!row.bindings.length
                     && row.isBindable
                     && (row.serviceBindingsVersion | canI : 'create')"
@@ -160,7 +160,7 @@
         </div>
       </div>
       <div class="expanded-section">
-        <div ng-if="row.isBindable || (row.bindings | size)">
+        <div ng-if="(row.isBindable || (row.bindings | size)) && ! row.integrations | size">
           <div class="component-label section-label">Bindings</div>
           <service-instance-bindings
             is-overview="true"
@@ -170,6 +170,14 @@
             service-class="row.serviceClass"
             service-plan="row.servicePlan">
           </service-instance-bindings>
+        </div>
+        <div ng-if="row.integrations | size">
+          <div class="component-label section-label">Integrations</div>
+          <service-instance-integrations
+            is-overview="true"
+            integrations="row.integrations"
+            service-instance="row.apiObject">
+          </service-instance-integrations>
         </div>
       </div>
     </div>

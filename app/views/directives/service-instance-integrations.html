@@ -1,0 +1,9 @@
+<div ng-if="($ctrl.integrations | size)" class="row">
+  <h3 ng-if="$ctrl.showHeader">Integrations</h3>
+  <service-integration
+    ng-repeat="integration in $ctrl.integrations"
+    integration="integration"
+    ref-api-object="$ctrl.serviceInstance">
+  </service-integration>
+</div>
+  
