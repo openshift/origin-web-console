@@ -24,12 +24,15 @@ angular.module("openshiftConsole")
       templateUrl: 'views/directives/osc-persistent-volume-claim.html',
       link: function(scope) {
         var amountAndUnit = $filter('amountAndUnit');
+        var storageClassAccessMode = $filter('storageClassAccessMode');
         var usageValue = $filter('usageValue');
 
         scope.nameValidation = DNS1123_SUBDOMAIN_VALIDATION;
 
         scope.storageClasses = [];
         scope.defaultStorageClass = "";
+        // Default to ReadWriteOnce access mode for new PVCs.
+        scope.claim.accessModes = 'ReadWriteOnce';
         scope.claim.unit = 'Gi';
         scope.units = [{
           value: "Mi",
@@ -84,6 +87,14 @@ angular.module("openshiftConsole")
 
         scope.showComputeUnitsHelp = function() {
           ModalsService.showComputeUnitsHelp();
+        };
+
+        scope.onStorageClassSelected = function(storageClass) {
+          // Update to use the access mode from the storage class if set.
+          var accessMode = storageClassAccessMode(storageClass);
+          if (accessMode) {
+            scope.claim.accessModes = accessMode;
+          }
         };
 
         var validateLimitRange = function() {
