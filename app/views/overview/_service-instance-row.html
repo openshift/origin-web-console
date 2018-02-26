@@ -160,7 +160,7 @@
         </div>
       </div>
       <div class="expanded-section">
-        <div ng-if="row.isBindable || (row.bindings | size)">
+        <div ng-if="(row.isBindable || (row.bindings | size))">
           <div class="component-label section-label">Bindings</div>
           <service-instance-bindings
             is-overview="true"
@@ -170,6 +170,13 @@
             service-class="row.serviceClass"
             service-plan="row.servicePlan">
           </service-instance-bindings>
+        </div>
+        <div ng-if="row.integrations | size">
+          <service-instance-integrations ng-if="row.instanceStatus === 'ready'"
+            is-overview="true"
+            integrations="row.integrations"
+            consumer-service="row.apiObject">
+          </service-instance-integrations>
         </div>
       </div>
     </div>

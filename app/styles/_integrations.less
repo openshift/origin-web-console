@@ -1,0 +1,74 @@
+.service-integrations {
+  .component-label.section-label {
+    margin: 0 20px;
+  }
+
+  .integrate-link{
+    color: #0088ce;
+    cursor: pointer;
+  }
+
+  .service-integration {
+    height: 40px;
+    margin: 10px 20px 0 0;
+    .image-icon {
+      padding-top: 5px;
+      margin: 0 15px;
+      width: 30px;
+    }
+    .id {
+      .text-muted();
+    }
+
+    .inline-delete{
+      display: inline-block;
+    }
+
+    .integration {
+      color: @link-color;
+
+      .integration-name {
+        display: inline;
+      }
+
+      &.active {
+        .pficon-error-circle-o {
+          &:before {
+            color: @link-color;
+          }
+          cursor: pointer;
+        }
+      }
+
+      //override delete-link default icon with the patternfly icon
+      .description {
+        .inline-delete {
+          .fa-trash-o {
+            font-family: "PatternFlyIcons-webfont";
+            color: @text-color;
+            background-color: @body-bg;
+            &:before {
+              content: "\e611";
+            }
+          }
+        }
+      }
+
+      &.inactive {
+        .pficon-add-circle-o {
+          cursor: pointer;
+        }
+      }
+
+      &.unknown {
+        .description h4 {
+          .text-muted();
+        }
+        .id {
+          color: @link-color;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
