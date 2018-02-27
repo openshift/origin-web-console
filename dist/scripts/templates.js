@@ -943,9 +943,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody>\n" +
     "<tr ng-repeat=\"pvc in pvcs track by (pvc | uid)\">\n" +
     "<td style=\"padding-left:0\">\n" +
-    "<input type=\"radio\" name=\"persistentVolumeClaim\" ng-model=\"attach.persistentVolumeClaim\" ng-value=\"pvc\" aria-describedby=\"pvc-help\">\n" +
+    "<input type=\"radio\" name=\"persistentVolumeClaim\" ng-model=\"attach.persistentVolumeClaim\" ng-value=\"pvc\" ng-change=\"onPVCSelected()\" aria-describedby=\"pvc-help\">\n" +
     "</td>\n" +
-    "<td><a ng-href=\"{{pvc | navigateResourceURL}}\">{{pvc.metadata.name}}</a></td>\n" +
+    "<td><a ng-href=\"{{pvc | navigateResourceURL}}\" target=\"_blank\">{{pvc.metadata.name}}</a></td>\n" +
     "<td ng-if=\"pvc.spec.volumeName\">{{pvc.status.capacity['storage'] | usageWithUnits: 'storage'}}</td>\n" +
     "<td ng-if=\"!pvc.spec.volumeName\">{{pvc.spec.resources.requests['storage'] | usageWithUnits: 'storage'}}</td>\n" +
     "<td>({{pvc.spec.accessModes | accessModes | join}})</td>\n" +
@@ -1002,7 +1002,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<label for=\"volume-name\">Volume Name</label>\n" +
     "\n" +
-    "<input id=\"volume-path\" class=\"form-control\" type=\"text\" name=\"volumeName\" ng-model=\"attach.volumeName\" osc-unique=\"existingVolumeNames\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/\" maxlength=\"63\" placeholder=\"(generated if empty)\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"volume-name-help\">\n" +
+    "<input id=\"volume-path\" class=\"form-control\" type=\"text\" name=\"volumeName\" ng-model=\"attach.volumeName\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/\" ng-readonly=\"volumeAlreadyMounted\" osc-unique=\"existingVolumeNames\" osc-unique-disabled=\"volumeAlreadyMounted\" maxlength=\"63\" placeholder=\"(generated if empty)\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"volume-name-help\">\n" +
     "<div>\n" +
     "<span id=\"volume-name-help\" class=\"help-block\">Unique name used to identify this volume. If not specified, a volume name is generated.</span>\n" +
     "</div>\n" +
