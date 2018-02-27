@@ -5669,7 +5669,7 @@ td.visible-print,th.visible-print{display:table-cell!important}
 .osc-secrets-form .advanced-secrets .secret-row .remove-secret,.osc-secrets-form .basic-secrets .secret-row .remove-secret{position:absolute;right:0;top:0}
 .osc-secrets-form .advanced-secrets .help-blocks .help-block,.osc-secrets-form .advanced-secrets .help-blocks .input-label,.osc-secrets-form .advanced-secrets .input-labels .help-block,.osc-secrets-form .advanced-secrets .input-labels .input-label{width:50%}
 .osc-secrets-form .advanced-secrets .secret-row .destination-dir,.osc-secrets-form .advanced-secrets .secret-row .secret-name{width:50%;display:inline-block}
-.osc-secrets-form .advanced-secrets .secret-row .destination-dir{padding-left:5px}
+.osc-secrets-form .advanced-secrets .destination-dir-padding{padding-left:5px}
 dl.secret-data dd{margin-bottom:10px}
 dl.secret-data dt{margin-bottom:5px}
 @media (min-width:992px){dl.secret-data dd{margin-left:180px}

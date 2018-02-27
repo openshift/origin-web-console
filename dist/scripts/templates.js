@@ -1801,7 +1801,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"is-item-description\">\n" +
     "<dt>Paths:</dt>\n" +
     "<div ng-repeat=\"(source, destination) in imageSourcesPaths[$index]\" class=\"image-source-paths\">\n" +
-    "<dd><span class=\"source-path\">{{source}}</span><i class=\"fa fa-long-arrow-right\"></i><span class=\"destination-dir\">{{destination}}</span></dd>\n" +
+    "<dd><span class=\"source-path\">{{source}}</span><i class=\"fa fa-long-arrow-right\" aria-hidden=\"true\"></i><span class=\"destination-dir\">{{destination}}</span></dd>\n" +
     "</div>\n" +
     "</div>\n" +
     "</dl>\n" +
@@ -8759,7 +8759,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label class=\"input-label\">\n" +
     "Build Secret\n" +
     "</label>\n" +
-    "<label class=\"input-label\">\n" +
+    "<label class=\"input-label destination-dir-padding\">\n" +
     "Destination Directory\n" +
     "</label>\n" +
     "</div>\n" +
@@ -8773,7 +8773,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
-    "<div class=\"destination-dir\">\n" +
+    "<div class=\"destination-dir destination-dir-padding\">\n" +
     "<input class=\"form-control\" id=\"destinationDir\" name=\"destinationDir\" ng-model=\"pickedSecret.destinationDir\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
     "</div>\n" +
     "<div class=\"remove-secret\">\n" +
@@ -8786,7 +8786,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"help-blocks\">\n" +
     "<div class=\"help-block\">Source secret to copy into the builder pod at build time.</div>\n" +
-    "<div class=\"help-block\">Directory where the files will be available at build time.</div>\n" +
+    "<div class=\"help-block destination-dir-padding\">Directory where the files will be available at build time.</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8798,7 +8798,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label class=\"input-label\">\n" +
     "Build Secret\n" +
     "</label>\n" +
-    "<label class=\"input-label\">\n" +
+    "<label class=\"input-label destination-dir-padding\">\n" +
     "Mount path\n" +
     "</label>\n" +
     "</div>\n" +
@@ -8812,7 +8812,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
-    "<div class=\"destination-dir\">\n" +
+    "<div class=\"destination-dir destination-dir-padding\">\n" +
     "<input class=\"form-control\" id=\"mountPath\" name=\"mountPath\" ng-model=\"pickedSecret.mountPath\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
     "</div>\n" +
     "<div class=\"remove-secret\">\n" +
@@ -8825,7 +8825,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"help-blocks\">\n" +
     "<div class=\"help-block\">Source secret to mount into the builder pod at build time.</div>\n" +
-    "<div class=\"help-block\">Path at which to mount the secret.</div>\n" +
+    "<div class=\"help-block destination-dir-padding\">Path at which to mount the secret.</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
