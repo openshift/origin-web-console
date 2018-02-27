@@ -118,6 +118,32 @@ angular.module('openshiftConsole')
         $scope.$watchGroup(['attach.resource', 'attach.allContainers'], updateMountPaths);
         $scope.$watch('attach.containers', updateMountPaths, true);
 
+        var updateVolumeName = function() {
+          var pvc = _.get($scope, 'attach.persistentVolumeClaim');
+          if (!pvc) {
+            return;
+          }
+
+          // Check if there is already a volume for this PVC.
+          var volumes = _.get($scope, 'attach.resource.spec.template.spec.volumes');
+          var volume = _.find(volumes, {
+            persistentVolumeClaim: {
+              claimName: pvc.metadata.name
+            }
+          });
+
+          if (volume) {
+            // If there's already a  volume, reuse the volume name.
+            $scope.attach.volumeName = volume.name;
+            $scope.volumeAlreadyMounted = true;
+          } else if ($scope.volumeAlreadyMounted) {
+            // Clear the volume name value since it was associated with the previously selected PVC.
+            $scope.attach.volumeName = '';
+            $scope.volumeAlreadyMounted = false;
+          }
+        };
+        $scope.onPVCSelected = updateVolumeName;
+
         // load resources required to show the page (list of pvcs and deployment or deployment config)
         var load = function() {
           DataService.get(resourceGroupVersion, $routeParams.name, context).then(
@@ -130,6 +156,7 @@ angular.module('openshiftConsole')
               });
               var podTemplate = _.get(resource, 'spec.template');
               $scope.existingVolumeNames = StorageService.getVolumeNames(podTemplate);
+              updateVolumeName();
             },
             function(e) {
               displayError($routeParams.name + " could not be loaded.", getErrorDetails(e));
@@ -140,6 +167,7 @@ angular.module('openshiftConsole')
             $scope.pvcs = orderByDisplayName(pvcs.by("metadata.name"));
             if (!_.isEmpty($scope.pvcs) && !$scope.attach.persistentVolumeClaim) {
               $scope.attach.persistentVolumeClaim = _.head($scope.pvcs);
+              updateVolumeName();
             }
           });
 
@@ -188,17 +216,15 @@ angular.module('openshiftConsole')
             }
 
             // add the new volume to the pod template
-            var newVolume = StorageService.createVolume(name, persistentVolumeClaim);
-            if (!podTemplate.spec.volumes) {
-              podTemplate.spec.volumes = [];
+            if (!$scope.volumeAlreadyMounted) {
+              podTemplate.spec.volumes = podTemplate.spec.volumes || [];
+              podTemplate.spec.volumes.push(StorageService.createVolume(name, persistentVolumeClaim));
             }
-            podTemplate.spec.volumes.push(newVolume);
 
             DataService.update(resourceGroupVersion, resource.metadata.name, $scope.attach.resource, context).then(
               function() {
                 var details;
                 if (!mountPath) {
-                  // FIXME: This seems like a bad experience since we don't give users a way to mount it later.
                   details = "No mount path was provided. The volume reference was added to the configuration, but it will not be mounted into running pods.";
                 }
                 NotificationsService.addNotification({
