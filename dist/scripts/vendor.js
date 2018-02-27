@@ -78931,7 +78931,7 @@ var i = n(0);
 t.projectUrlFilter = function() {
 return function(e, t) {
 var n, r = t || "project/";
-return n = i.isString(e) ? e : i.get(e, "metadata.name", ""), r.endsWith("/") || (r += "/"), r + n;
+return n = i.isString(e) ? e : i.get(e, "metadata.name", ""), r.endsWith("/") || (r += "/"), r + n + "/overview";
 };
 };
 }, function(e, t, n) {
