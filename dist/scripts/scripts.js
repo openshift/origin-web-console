@@ -1001,6 +1001,7 @@ LOGOS: {
 "icon-cassandra": "cassandra.svg",
 "icon-clojure": "clojure.svg",
 "icon-codeigniter": "codeigniter.svg",
+"icon-cordova": "cordova.png",
 "icon-datagrid": "datagrid.svg",
 "icon-datavirt": "datavirt.svg",
 "icon-decisionserver": "decisionserver.svg",
@@ -8701,6 +8702,18 @@ var e = _.get(n, "attach.resource.spec.template");
 n.existingMountPaths = m.getMountPaths(e, P);
 };
 n.$watchGroup([ "attach.resource", "attach.allContainers" ], j), n.$watch("attach.containers", j, !0);
+var k = function() {
+var e = _.get(n, "attach.persistentVolumeClaim");
+if (e) {
+var t = _.get(n, "attach.resource.spec.template.spec.volumes"), r = _.find(t, {
+persistentVolumeClaim: {
+claimName: e.metadata.name
+}
+});
+r ? (n.attach.volumeName = r.name, n.volumeAlreadyMounted = !0) : n.volumeAlreadyMounted && (n.attach.volumeName = "", n.volumeAlreadyMounted = !1);
+}
+};
+n.onPVCSelected = k;
 s.get(v, t.name, d).then(function(e) {
 n.attach.resource = e, n.breadcrumbs = i.getBreadcrumbs({
 object: e,
@@ -8708,11 +8721,11 @@ project: a,
 subpage: "Add Storage"
 });
 var t = _.get(e, "spec.template");
-n.existingVolumeNames = m.getVolumeNames(t);
+n.existingVolumeNames = m.getVolumeNames(t), k();
 }, function(e) {
 S(t.name + " could not be loaded.", f(e));
 }), s.list(n.pvcVersion, d).then(function(e) {
-n.pvcs = p(e.by("metadata.name")), _.isEmpty(n.pvcs) || n.attach.persistentVolumeClaim || (n.attach.persistentVolumeClaim = _.head(n.pvcs));
+n.pvcs = p(e.by("metadata.name")), _.isEmpty(n.pvcs) || n.attach.persistentVolumeClaim || (n.attach.persistentVolumeClaim = _.head(n.pvcs), k());
 }), s.list(h, {
 namespace: n.projectName
 }, function(e) {
@@ -8730,9 +8743,7 @@ if (P(e)) {
 var t = m.createVolumeMount(o, i, c, l);
 e.volumeMounts || (e.volumeMounts = []), e.volumeMounts.push(t);
 }
-});
-var p = m.createVolume(o, a);
-r.spec.volumes || (r.spec.volumes = []), r.spec.volumes.push(p), s.update(v, e.metadata.name, n.attach.resource, d).then(function() {
+}), n.volumeAlreadyMounted || (r.spec.volumes = r.spec.volumes || [], r.spec.volumes.push(m.createVolume(o, a))), s.update(v, e.metadata.name, n.attach.resource, d).then(function() {
 var e;
 i || (e = "No mount path was provided. The volume reference was added to the configuration, but it will not be mounted into running pods."), u.addNotification({
 type: "success",
@@ -10198,8 +10209,8 @@ projectName: "="
 },
 templateUrl: "views/directives/osc-persistent-volume-claim.html",
 link: function(t) {
-var d = e("amountAndUnit"), m = e("usageValue");
-t.nameValidation = i, t.storageClasses = [], t.defaultStorageClass = "", t.claim.unit = "Gi", t.units = [ {
+var d = e("amountAndUnit"), m = e("storageClassAccessMode"), p = e("usageValue");
+t.nameValidation = i, t.storageClasses = [], t.defaultStorageClass = "", t.claim.accessModes = "ReadWriteOnce", t.claim.unit = "Gi", t.units = [ {
 value: "Mi",
 label: "MiB"
 }, {
@@ -10218,9 +10229,9 @@ label: "GB"
 value: "T",
 label: "TB"
 } ], t.claim.selectedLabels = [];
-var p = [];
+var f = [];
 t.$watch("useLabels", function(e, n) {
-e !== n && (e ? t.claim.selectedLabels = p : (p = t.claim.selectedLabels, t.claim.selectedLabels = []));
+e !== n && (e ? t.claim.selectedLabels = f : (f = t.claim.selectedLabels, t.claim.selectedLabels = []));
 }), t.groupUnits = function(e) {
 switch (e.value) {
 case "Mi":
@@ -10236,11 +10247,14 @@ return "Decimal Units";
 return "";
 }, t.showComputeUnitsHelp = function() {
 o.showComputeUnitsHelp();
+}, t.onStorageClassSelected = function(e) {
+var n = m(e);
+n && (t.claim.accessModes = n);
 };
-var f = function() {
-var e = t.claim.amount && m(t.claim.amount + t.claim.unit), n = _.has(t, "limits.min") && m(t.limits.min), r = _.has(t, "limits.max") && m(t.limits.max), a = !0, o = !0;
+var g = function() {
+var e = t.claim.amount && p(t.claim.amount + t.claim.unit), n = _.has(t, "limits.min") && p(t.limits.min), r = _.has(t, "limits.max") && p(t.limits.max), a = !0, o = !0;
 e && n && (a = e >= n), e && r && (o = e <= r), t.persistentVolumeClaimForm.capacity.$setValidity("limitRangeMin", a), t.persistentVolumeClaimForm.capacity.$setValidity("limitRangeMax", o);
-}, g = function() {
+}, v = function() {
 var e = a.isAnyStorageQuotaExceeded(t.quotas, t.clusterQuotas), n = a.willRequestExceedQuota(t.quotas, t.clusterQuotas, "requests.storage", t.claim.amount + t.claim.unit);
 t.persistentVolumeClaimForm.capacity.$setValidity("willExceedStorage", !n), t.persistentVolumeClaimForm.capacity.$setValidity("outOfClaims", !e);
 };
@@ -10273,12 +10287,12 @@ var n = e.by("metadata.name");
 if (!_.isEmpty(n)) {
 t.limits = r.getEffectiveLimitRange(n, "storage", "PersistentVolumeClaim");
 var a;
-t.limits.min && t.limits.max && m(t.limits.min) === m(t.limits.max) && (a = d(t.limits.max), t.claim.amount = Number(a[0]), t.claim.unit = a[1], t.capacityReadOnly = !0), t.$watchGroup([ "claim.amount", "claim.unit" ], f);
+t.limits.min && t.limits.max && p(t.limits.min) === p(t.limits.max) && (a = d(t.limits.max), t.claim.amount = Number(a[0]), t.claim.unit = a[1], t.capacityReadOnly = !0), t.$watchGroup([ "claim.amount", "claim.unit" ], g);
 }
 }), n.list(l, {
 namespace: t.projectName
 }, function(e) {
-t.quotas = e.by("metadata.name"), t.$watchGroup([ "claim.amount", "claim.unit" ], g);
+t.quotas = e.by("metadata.name"), t.$watchGroup([ "claim.amount", "claim.unit" ], v);
 }), n.list(u, {
 namespace: t.projectName
 }, function(e) {
@@ -10641,8 +10655,8 @@ serviceClass: "<",
 servicePlan: "<"
 },
 templateUrl: "views/directives/service-instance-bindings.html"
-}), angular.module("openshiftConsole").directive("sidebar", [ "$location", "$filter", "$timeout", "$rootScope", "$routeParams", "AuthorizationService", "Constants", "HTMLService", function(e, t, n, r, a, o, i, s) {
-var c = function(e, t) {
+}), angular.module("openshiftConsole").directive("sidebar", [ "$location", "$filter", "$timeout", "$rootScope", "$routeParams", "APIService", "AuthorizationService", "Constants", "HTMLService", function(e, t, n, r, a, o, i, s, c) {
+var l = function(e, t) {
 return e.href === t || _.some(e.prefixes, function(e) {
 return _.startsWith(t, e);
 });
@@ -10650,63 +10664,64 @@ return _.startsWith(t, e);
 return {
 restrict: "E",
 templateUrl: "views/_sidebar.html",
-controller: [ "$scope", function(l) {
-var u;
-l.navItems = i.PROJECT_NAVIGATION, l.sidebar = {};
-var d = function() {
-l.projectName = a.project, _.set(l, "sidebar.secondaryOpen", !1), _.set(r, "nav.showMobileNav", !1), l.activeSecondary = null, l.activePrimary = _.find(l.navItems, function(t) {
-return u = e.path().replace("/project/" + l.projectName, ""), c(t, u) ? (l.activeSecondary = null, !0) : _.some(t.secondaryNavSections, function(e) {
+controller: [ "$scope", function(u) {
+var d;
+u.navItems = s.PROJECT_NAVIGATION, u.sidebar = {};
+var m = function() {
+u.projectName = a.project, _.set(u, "sidebar.secondaryOpen", !1), _.set(r, "nav.showMobileNav", !1), u.activeSecondary = null, u.activePrimary = _.find(u.navItems, function(t) {
+return d = e.path().replace("/project/" + u.projectName, ""), l(t, d) ? (u.activeSecondary = null, !0) : _.some(t.secondaryNavSections, function(e) {
 var t = _.find(e.items, function(e) {
-return c(e, u);
+return l(e, d);
 });
-return !!t && (l.activeSecondary = t, !0);
+return !!t && (u.activeSecondary = t, !0);
 });
 });
 };
-d(), l.$on("$routeChangeSuccess", d);
-var m = function() {
-_.each(l.navItems, function(e) {
+m(), u.$on("$routeChangeSuccess", m);
+var p = function() {
+_.each(u.navItems, function(e) {
 e.isHover = !1;
 });
 };
-l.navURL = function(e) {
-return e ? t("isAbsoluteURL")(e) ? e : "project/" + l.projectName + e : "";
-}, l.show = function(e) {
-return !(e.isValid && !e.isValid()) && (!e.canI || (e.canI.addToProject ? l.canIAddToProject : o.canI({
-resource: e.canI.resource,
-group: e.canI.group
-}, e.canI.verb, l.projectName)));
-}, l.itemClicked = function(e) {
-if (m(), e.href) return l.nav.showMobileNav = !1, void (l.sidebar.secondaryOpen = !1);
-e.isHover = !0, e.mobileSecondary = l.isMobile, l.sidebar.showMobileSecondary = l.isMobile, l.sidebar.secondaryOpen = !0;
-}, l.onMouseEnter = function(e) {
+u.navURL = function(e) {
+return e ? t("isAbsoluteURL")(e) ? e : "project/" + u.projectName + e : "";
+}, u.show = function(e) {
+if (!(!e.isValid || e.isValid())) return !1;
+if (!e.canI) return !0;
+if (e.canI.addToProject) return u.canIAddToProject;
+var t = _.pick(e.canI, [ "resource", "group", "version" ]);
+return o.apiInfo(t) && i.canI(t, e.canI.verb, u.projectName);
+}, u.itemClicked = function(e) {
+if (p(), e.href) return u.nav.showMobileNav = !1, void (u.sidebar.secondaryOpen = !1);
+e.isHover = !0, e.mobileSecondary = u.isMobile, u.sidebar.showMobileSecondary = u.isMobile, u.sidebar.secondaryOpen = !0;
+}, u.onMouseEnter = function(e) {
 e.mouseLeaveTimeout && (n.cancel(e.mouseLeaveTimeout), e.mouseLeaveTimeout = null), e.mouseEnterTimeout = n(function() {
-e.isHover = !0, e.mouseEnterTimeout = null, l.sidebar.secondaryOpen = !_.isEmpty(e.secondaryNavSections);
+e.isHover = !0, e.mouseEnterTimeout = null, u.sidebar.secondaryOpen = !_.isEmpty(e.secondaryNavSections);
 }, 200);
-}, l.onMouseLeave = function(e) {
+}, u.onMouseLeave = function(e) {
 e.mouseEnterTimeout && (n.cancel(e.mouseEnterTimeout), e.mouseEnterTimeout = null), e.mouseLeaveTimeout = n(function() {
-e.isHover = !1, e.mouseLeaveTimeout = null, l.sidebar.secondaryOpen = _.some(l.navItems, function(e) {
+e.isHover = !1, e.mouseLeaveTimeout = null, u.sidebar.secondaryOpen = _.some(u.navItems, function(e) {
 return e.isHover && !_.isEmpty(e.secondaryNavSections);
 });
 }, 300);
-}, l.closeNav = function() {
-m(), l.nav.showMobileNav = !1, l.sidebar.secondaryOpen = !1;
-}, l.collapseMobileSecondary = function(e, t) {
+}, u.closeNav = function() {
+p(), u.nav.showMobileNav = !1, u.sidebar.secondaryOpen = !1;
+}, u.collapseMobileSecondary = function(e, t) {
 e.mobileSecondary = !1, t.stopPropagation();
 };
-var p = function() {
-return s.isWindowBelowBreakpoint(s.WINDOW_SIZE_SM);
+var f = function() {
+return c.isWindowBelowBreakpoint(c.WINDOW_SIZE_SM);
 };
-l.isMobile = p();
-var f = _.throttle(function() {
-var e = p();
-e !== l.isMobile && l.$evalAsync(function() {
-l.isMobile = e, e || (_.set(r, "nav.showMobileNav", !1), _.each(l.navItems, function(e) {
+u.isMobile = f();
+var g = _.throttle(function() {
+var e = f();
+e !== u.isMobile && u.$evalAsync(function() {
+u.isMobile = e, e || (_.set(r, "nav.showMobileNav", !1), _.each(u.navItems, function(e) {
 e.mobileSecondary = !1;
 }));
 });
 }, 50);
-$(window).on("resize.verticalnav", f), l.$on("$destroy", function() {
+$(window).on("resize.verticalnav", g), u.$on("$destroy", function() {
 $(window).off(".verticalnav");
 });
 } ]
@@ -15108,6 +15123,10 @@ return (r < 0 || a < 0 || o < 0) && (r = a = o = 0), r && t.push(r + "h"), a && 
 }), angular.module("openshiftConsole").filter("storageClass", [ "annotationFilter", function(e) {
 return function(t) {
 return e(t, "volume.beta.kubernetes.io/storage-class");
+};
+} ]).filter("storageClassAccessMode", [ "annotationFilter", function(e) {
+return function(t) {
+return e(t, "storage.alpha.openshift.io/access-mode");
 };
 } ]).filter("tags", [ "annotationFilter", function(e) {
 return function(t, n) {

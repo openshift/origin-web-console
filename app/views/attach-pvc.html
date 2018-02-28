@@ -44,9 +44,10 @@
                             name="persistentVolumeClaim"
                             ng-model="attach.persistentVolumeClaim"
                             ng-value="pvc"
+                            ng-change="onPVCSelected()"
                             aria-describedby="pvc-help">
                         </td>
-                        <td><a ng-href="{{pvc | navigateResourceURL}}">{{pvc.metadata.name}}</a></td>
+                        <td><a ng-href="{{pvc | navigateResourceURL}}" target="_blank">{{pvc.metadata.name}}</a></td>
                         <td ng-if="pvc.spec.volumeName">{{pvc.status.capacity['storage'] | usageWithUnits: 'storage'}}</td>
                         <td ng-if="!pvc.spec.volumeName">{{pvc.spec.resources.requests['storage'] | usageWithUnits: 'storage'}}</td>
                         <td>({{pvc.spec.accessModes | accessModes | join}})</td>
@@ -135,6 +136,7 @@
                     Volume name must conform to a DNS label
                     https://github.com/kubernetes/kubernetes/blob/master/docs/design/identifiers.md
                     https://github.com/kubernetes/kubernetes/blob/d7a87c228506ed11240049ae95cbb4efb07fd178/pkg/util/validation/validation.go#L61-L70
+                    Reuse the volume name and disable uniqueness validation if it's already mounted under another mount path / subpath.
                   -->
                   <input
                       id="volume-path"
@@ -142,8 +144,10 @@
                       type="text"
                       name="volumeName"
                       ng-model="attach.volumeName"
-                      osc-unique="existingVolumeNames"
                       ng-pattern="/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/"
+                      ng-readonly="volumeAlreadyMounted"
+                      osc-unique="existingVolumeNames"
+                      osc-unique-disabled="volumeAlreadyMounted"
                       maxlength="63"
                       placeholder="(generated if empty)"
                       autocorrect="off"

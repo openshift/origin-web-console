@@ -715,7 +715,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h1>Red Hat OpenShift <span class=\"about-reg\">&reg;</span></h1>\n" +
     "<h2>About</h2>\n" +
     "<p>\n" +
-    "<a target=\"_blank\" href=\"https://openshift.com\">OpenShift</a> is Red Hat's container application platform that allows developers to quickly develop, host, and scale applications in a cloud environment.\n" +
+    "<a target=\"_blank\" href=\"https://www.openshift.com\">OpenShift</a> is Red Hat's container application platform that allows developers to quickly develop, host, and scale applications in a cloud environment.\n" +
     "</p>\n" +
     "<h2 id=\"version\">Version</h2>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
@@ -943,9 +943,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody>\n" +
     "<tr ng-repeat=\"pvc in pvcs track by (pvc | uid)\">\n" +
     "<td style=\"padding-left:0\">\n" +
-    "<input type=\"radio\" name=\"persistentVolumeClaim\" ng-model=\"attach.persistentVolumeClaim\" ng-value=\"pvc\" aria-describedby=\"pvc-help\">\n" +
+    "<input type=\"radio\" name=\"persistentVolumeClaim\" ng-model=\"attach.persistentVolumeClaim\" ng-value=\"pvc\" ng-change=\"onPVCSelected()\" aria-describedby=\"pvc-help\">\n" +
     "</td>\n" +
-    "<td><a ng-href=\"{{pvc | navigateResourceURL}}\">{{pvc.metadata.name}}</a></td>\n" +
+    "<td><a ng-href=\"{{pvc | navigateResourceURL}}\" target=\"_blank\">{{pvc.metadata.name}}</a></td>\n" +
     "<td ng-if=\"pvc.spec.volumeName\">{{pvc.status.capacity['storage'] | usageWithUnits: 'storage'}}</td>\n" +
     "<td ng-if=\"!pvc.spec.volumeName\">{{pvc.spec.resources.requests['storage'] | usageWithUnits: 'storage'}}</td>\n" +
     "<td>({{pvc.spec.accessModes | accessModes | join}})</td>\n" +
@@ -1002,7 +1002,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<label for=\"volume-name\">Volume Name</label>\n" +
     "\n" +
-    "<input id=\"volume-path\" class=\"form-control\" type=\"text\" name=\"volumeName\" ng-model=\"attach.volumeName\" osc-unique=\"existingVolumeNames\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/\" maxlength=\"63\" placeholder=\"(generated if empty)\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"volume-name-help\">\n" +
+    "<input id=\"volume-path\" class=\"form-control\" type=\"text\" name=\"volumeName\" ng-model=\"attach.volumeName\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/\" ng-readonly=\"volumeAlreadyMounted\" osc-unique=\"existingVolumeNames\" osc-unique-disabled=\"volumeAlreadyMounted\" maxlength=\"63\" placeholder=\"(generated if empty)\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"volume-name-help\">\n" +
     "<div>\n" +
     "<span id=\"volume-name-help\" class=\"help-block\">Unique name used to identify this volume. If not specified, a volume name is generated.</span>\n" +
     "</div>\n" +
@@ -1801,7 +1801,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"is-item-description\">\n" +
     "<dt>Paths:</dt>\n" +
     "<div ng-repeat=\"(source, destination) in imageSourcesPaths[$index]\" class=\"image-source-paths\">\n" +
-    "<dd><span class=\"source-path\">{{source}}</span><i class=\"fa fa-long-arrow-right\"></i><span class=\"destination-dir\">{{destination}}</span></dd>\n" +
+    "<dd><span class=\"source-path\">{{source}}</span><i class=\"fa fa-long-arrow-right\" aria-hidden=\"true\"></i><span class=\"destination-dir\">{{destination}}</span></dd>\n" +
     "</div>\n" +
     "</div>\n" +
     "</dl>\n" +
@@ -8192,10 +8192,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"storageClasses.length\" class=\"form-group\">\n" +
-    "\n" +
     "<label>Storage Class</label>\n" +
     "<div>\n" +
-    "<ui-select ng-model=\"claim.storageClass\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a storage class\" class=\"select-role\">\n" +
+    "<ui-select ng-model=\"claim.storageClass\" on-select=\"onStorageClassSelected($item)\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a storage class\" class=\"select-role\">\n" +
     "<ui-select-match placeholder=\"Select a storage class\">\n" +
     "<span>\n" +
     "{{$select.selected.metadata.name}}\n" +
@@ -8204,8 +8203,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ui-select-choices repeat=\"sclass as sclass in storageClasses | toArray | filter : { metadata: { name: $select.search } } \">\n" +
     "<div>\n" +
     "<span ng-bind-html=\"sclass.metadata.name  | highlight : $select.search\"></span>\n" +
-    "<span ng-if=\"sclass.parameters.type || sclass.parameters.zone || (sclass | description)\" class=\"text-muted\">\n" +
-    "<small>&ndash;\n" +
+    "<div ng-if=\"sclass.parameters.type || sclass.parameters.zone || (sclass | description) || (sclass | storageClassAccessMode)\" class=\"text-muted\">\n" +
+    "<small>\n" +
     "<span ng-if=\"sclass.parameters.type\">\n" +
     "Type: {{sclass.parameters.type}}\n" +
     "</span>\n" +
@@ -8213,12 +8212,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"sclass.parameters.type\">|</span>\n" +
     "Zone: {{sclass.parameters.zone}}\n" +
     "</span>\n" +
-    "<span ng-if=\"sclass | description\">\n" +
+    "<span ng-if=\"(sclass | storageClassAccessMode)\">\n" +
     "<span ng-if=\"sclass.parameters.type || sclass.parameters.zone\">|</span>\n" +
+    "Access: {{sclass | storageClassAccessMode}}\n" +
+    "</span>\n" +
+    "<span ng-if=\"sclass | description\">\n" +
+    "<span ng-if=\"sclass.parameters.type || sclass.parameters.zone || (sclass | storageClassAccessMode)\">|</span>\n" +
     "{{sclass | description}}\n" +
     "</span>\n" +
     "</small>\n" +
-    "</span>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
@@ -8256,20 +8259,25 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"form-group\">\n" +
-    "<label class=\"required\">Access Mode</label><br/>\n" +
+    "<div class=\"form-group mar-bottom-xl\">\n" +
+    "<label class=\"required\">Access Mode</label>\n" +
+    "<span ng-if=\"claim.storageClass && (claim.storageClass | storageClassAccessMode)\" class=\"static-form-value-large\">\n" +
+    "<small>(cannot be changed)</small>\n" +
+    "</span>\n" +
+    "<div>\n" +
     "<label class=\"radio-inline\">\n" +
-    "<input type=\"radio\" name=\"accessModes\" ng-model=\"claim.accessModes\" value=\"ReadWriteOnce\" aria-describedby=\"access-modes-help\" ng-checked=\"true\">\n" +
+    "<input type=\"radio\" name=\"accessModes\" ng-model=\"claim.accessModes\" value=\"ReadWriteOnce\" aria-describedby=\"access-modes-help\" ng-true-value=\"’1’\" ng-false-value=\"’0’\" ng-disabled=\"(claim.storageClass | storageClassAccessMode)\">\n" +
     "Single User (RWO)\n" +
     "</label>\n" +
     "<label class=\"radio-inline\">\n" +
-    "<input type=\"radio\" id=\"accessModes\" name=\"accessModes\" ng-model=\"claim.accessModes\" value=\"ReadWriteMany\" aria-describedby=\"access-modes-help\">\n" +
+    "<input type=\"radio\" id=\"accessModes\" name=\"accessModes\" ng-model=\"claim.accessModes\" value=\"ReadWriteMany\" aria-describedby=\"access-modes-help\" ng-true-value=\"’1’\" ng-false-value=\"’0’\" ng-disabled=\"(claim.storageClass | storageClassAccessMode)\">\n" +
     "Shared Access (RWX)\n" +
     "</label>\n" +
     "<label class=\"radio-inline\">\n" +
-    "<input type=\"radio\" name=\"accessModes\" ng-model=\"claim.accessModes\" value=\"ReadOnlyMany\" aria-describedby=\"access-modes-help\">\n" +
+    "<input type=\"radio\" name=\"accessModes\" ng-model=\"claim.accessModes\" value=\"ReadOnlyMany\" aria-describedby=\"access-modes-help\" ng-true-value=\"’1’\" ng-false-value=\"’0’\" ng-disabled=\"(claim.storageClass | storageClassAccessMode)\">\n" +
     "Read Only (ROX)\n" +
     "</label>\n" +
+    "</div>\n" +
     "<div>\n" +
     "<span id=\"access-modes-help\" class=\"help-block\">Permissions to the mounted volume.</span>\n" +
     "</div>\n" +
@@ -8751,7 +8759,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label class=\"input-label\">\n" +
     "Build Secret\n" +
     "</label>\n" +
-    "<label class=\"input-label\">\n" +
+    "<label class=\"input-label destination-dir-padding\">\n" +
     "Destination Directory\n" +
     "</label>\n" +
     "</div>\n" +
@@ -8765,7 +8773,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
-    "<div class=\"destination-dir\">\n" +
+    "<div class=\"destination-dir destination-dir-padding\">\n" +
     "<input class=\"form-control\" id=\"destinationDir\" name=\"destinationDir\" ng-model=\"pickedSecret.destinationDir\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
     "</div>\n" +
     "<div class=\"remove-secret\">\n" +
@@ -8778,7 +8786,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"help-blocks\">\n" +
     "<div class=\"help-block\">Source secret to copy into the builder pod at build time.</div>\n" +
-    "<div class=\"help-block\">Directory where the files will be available at build time.</div>\n" +
+    "<div class=\"help-block destination-dir-padding\">Directory where the files will be available at build time.</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8790,7 +8798,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label class=\"input-label\">\n" +
     "Build Secret\n" +
     "</label>\n" +
-    "<label class=\"input-label\">\n" +
+    "<label class=\"input-label destination-dir-padding\">\n" +
     "Mount path\n" +
     "</label>\n" +
     "</div>\n" +
@@ -8804,7 +8812,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
-    "<div class=\"destination-dir\">\n" +
+    "<div class=\"destination-dir destination-dir-padding\">\n" +
     "<input class=\"form-control\" id=\"mountPath\" name=\"mountPath\" ng-model=\"pickedSecret.mountPath\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
     "</div>\n" +
     "<div class=\"remove-secret\">\n" +
@@ -8817,7 +8825,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"help-blocks\">\n" +
     "<div class=\"help-block\">Source secret to mount into the builder pod at build time.</div>\n" +
-    "<div class=\"help-block\">Path at which to mount the secret.</div>\n" +
+    "<div class=\"help-block destination-dir-padding\">Path at which to mount the secret.</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
