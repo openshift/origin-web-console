@@ -6,9 +6,9 @@
  -->
 
 <div ng-if="detailed && pod.status.initContainerStatuses.length">
-  <h4 class="mar-bottom-xl" row ng-if="initContainersTerminated">
+  <h4 class="init-container-status mar-bottom-xl" ng-if="initContainersTerminated">
     <span><i class="fa fa-check text-success"></i></span>
-    <span flex>
+    <span class="init-container-status-detail">
       <ng-pluralize count="pod.status.initContainerStatuses.length"
                       when="{'1': '&nbsp;Init container {{pod.status.initContainerStatuses[0].name}}','other': '&nbsp;{} init containers'}">
       </ng-pluralize>

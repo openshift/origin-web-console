@@ -30,7 +30,6 @@
     "kubernetes-label-selector": "2.1.1",
     "kubernetes-container-terminal": "2.1.1",
     "registry-image-widgets": "https://github.com/cockpit-project/registry-image-widgets.git#0.0.15",
-    "layout.attrs": "2.1.1",
     "kubernetes-object-describer": "1.0.4",
     "bootstrap-hover-dropdown": "2.1.3",
     "angular-ui-ace": "0.2.3",
