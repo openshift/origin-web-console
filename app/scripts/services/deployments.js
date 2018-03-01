@@ -22,7 +22,7 @@ angular.module("openshiftConsole")
       // increase latest version by one so starts new deployment based on latest
       var req = {
         kind: "DeploymentRequest",
-        apiVersion: APIService.toAPIVersion(deploymentConfigsInstantiateVersion),
+        apiVersion: 'apps.openshift.io/v1',//APIService.toAPIVersion(deploymentConfigsInstantiateVersion),
         name: deploymentConfig.metadata.name,
         latest: true,
         force: true
