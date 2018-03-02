@@ -1,7 +1,7 @@
 "use strict";
 
 angular.module('openshiftConsole')
-  .directive('buildPipeline', function($filter, Logger) {
+  .directive('buildPipeline', function($filter, APIService, Logger) {
     return {
       restrict: 'E',
       scope: {
@@ -15,6 +15,9 @@ angular.module('openshiftConsole')
       replace: true,
       templateUrl: 'views/directives/build-pipeline.html',
       link: function($scope) {
+
+        $scope.buildLogsVersion = APIService.getPreferredVersion('builds/log');
+
         // Example JSON:
         //   https://github.com/jenkinsci/pipeline-stage-view-plugin/tree/master/rest-api#get-jobjob-namerun-idwfapidescribe
         var annotation = $filter('annotation');
