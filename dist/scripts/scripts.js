@@ -10542,7 +10542,7 @@ e.expandAnnotations = !e.expandAnnotations;
 };
 }
 };
-}).directive("volumes", function() {
+}).directive("volumes", [ "APIService", function(e) {
 return {
 restrict: "E",
 scope: {
@@ -10551,9 +10551,12 @@ namespace: "=",
 canRemove: "=?",
 removeFn: "&?"
 },
-templateUrl: "views/_volumes.html"
+templateUrl: "views/_volumes.html",
+link: function(t) {
+t.secretsVersion = e.getPreferredVersion("secrets");
+}
 };
-}).directive("volumeClaimTemplates", function() {
+} ]).directive("volumeClaimTemplates", function() {
 return {
 restrict: "E",
 scope: {
