@@ -5759,7 +5759,7 @@ s.get(n.project).then(_.spread(function(r, o) {
 t.project = r, a.get(u, n.imagestream, o, {
 errorNotification: !1
 }).then(function(e) {
-p(e, o), d.push(a.watchObject(u, n.imagestream, o, function(e, t) {
+t.loaded = !0, p(e, o), d.push(a.watchObject(u, n.imagestream, o, function(e, t) {
 p(e, o, t);
 }));
 }, function(n) {

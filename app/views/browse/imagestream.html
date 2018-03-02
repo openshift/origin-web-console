@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
       <alerts alerts="alerts"></alerts>
-      <div ng-if="!imageStream" class="mar-top-xl">Loading...</div>
+      <div ng-if="!loaded" class="mar-top-xl">Loading...</div>
       <div ng-if="imageStream">
         <h1 class="contains-actions">
           <div class="pull-right dropdown" ng-hide="!('imageStreams' | canIDoAny)">
