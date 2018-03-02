@@ -14,13 +14,13 @@
             <li ng-if="row.showStartBuildAction()" role="menuitem">
               <a href="" ng-click="row.startBuild(row.buildConfigs[0])">Start Build</a>
             </li>
-            <li ng-if="'deploymentconfigs/instantiate' | canI : 'create'" role="menuitem">
+            <li ng-if="row.deploymentConfigsInstantiateVersion | canI : 'create'" role="menuitem">
               <a href="" ng-if="row.canDeploy()" ng-click="row.startDeployment()">Deploy</a>
               <a href="" ng-if="!(row.canDeploy())" class="disabled-link" aria-disabled="true">
                 Deploy <span ng-if="row.isPaused()">(Paused)</span>
               </a>
             </li>
-            <li ng-if="'deploymentconfigs' | canI : 'update'" role="menuitem">
+            <li ng-if="row.deploymentConfigsVersion | canI : 'update'" role="menuitem">
               <a ng-href="{{row.apiObject | editResourceURL}}">Edit</a>
             </li>
             <li ng-if="('pod_presets' | enableTechPreviewFeature)
@@ -33,7 +33,7 @@
                       && (row.serviceBindingsVersion | canI : 'delete')" role="menuitem">
               <a href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})">Delete Binding</a>
             </li>
-            <li ng-if="row.current && ('deploymentconfigs/log' | canI : 'get')" role="menuitem">
+            <li ng-if="row.current && (row.deploymentConfigsLogVersion | canI : 'get')" role="menuitem">
               <a ng-href="{{row.current | navigateResourceURL}}?tab=logs">View Logs</a>
             </li>
           </ul>
@@ -45,10 +45,10 @@
             <i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span>
           </button>
           <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
-            <li role="menuitem" ng-if="'pods' | canI : 'update'">
+            <li role="menuitem" ng-if="row.podsVersion | canI : 'update'">
               <a ng-href="{{row.apiObject | editYamlURL}}">Edit YAML</a>
             </li>
-            <li role="menuitem" ng-if="('pods/log' | canI : 'get')">
+            <li role="menuitem" ng-if="(row.podsLogVersion | canI : 'get')">
               <a ng-href="{{row.apiObject | navigateResourceURL}}?tab=logs">View Logs</a>
             </li>
           </ul>
@@ -73,7 +73,7 @@
                       && (row.serviceBindingsVersion | canI : 'delete')" role="menuitem">
               <a href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})">Delete Binding</a>
             </li>
-            <li ng-if="(pod = row.firstPod(row.current)) && ('pods/log' | canI : 'get')" role="menuitem">
+            <li ng-if="(pod = row.firstPod(row.current)) && (row.podsLogVersion | canI : 'get')" role="menuitem">
               <a ng-href="{{pod | navigateResourceURL}}?tab=logs">View Logs</a>
             </li>
           </ul>
