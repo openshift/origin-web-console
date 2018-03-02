@@ -742,20 +742,36 @@ module.exports = function (grunt) {
   // will make test an alias for both unit & e2e
   grunt.registerTask('test', ['test-unit']);
 
-  grunt.registerTask('test-integration',
+  grunt.registerTask('test-integration', function (target) {
+    var protractorTask = isMac ? 'protractor:mac' : 'protractor:default';
+
     // if a baseUrl is defined assume we dont want to run the local grunt server
-    grunt.option('baseUrl') ?
-      [isMac ? 'protractor:mac' : 'protractor:default'] :
-      [
-        'clean:server',
-        'development-build',
-        'postcss',
-        'connect:test',
+    if (grunt.option('baseUrl')) {
+      grunt.task.run([protractorTask]);
+      return;
+    }
+
+    if (target === 'dist') {
+      grunt.task.run([
+        'build',
+        'connect:dist',
         'add-redirect-uri',
-        (isMac ? 'protractor:mac' : 'protractor:default'),
+        protractorTask,
         'clean:server'
-      ]
-  );
+      ]);
+      return;
+    }
+
+    grunt.task.run([
+      'clean:server',
+      'development-build',
+      'postcss',
+      'connect:test',
+      'add-redirect-uri',
+      protractorTask,
+      'clean:server'
+    ]);
+  });
 
   grunt.registerTask('build', [
     'clean:dist',
