@@ -101,6 +101,7 @@ angular.module('openshiftConsole')
         DataService
           .get(imageStreamsVersion, $routeParams.imagestream, context, { errorNotification: false })
           .then(function(imageStream) {
+            $scope.loaded = true;
             imageStreamResolved(imageStream, context);
             watches.push(DataService.watchObject(imageStreamsVersion, $routeParams.imagestream, context, function(imageStream, action) {
               imageStreamResolved(imageStream, context, action);
