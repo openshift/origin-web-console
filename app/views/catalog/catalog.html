@@ -50,7 +50,7 @@
 
   <div ng-if="allContentHidden" class="empty-state-message text-center h2">
     All content is hidden by the current filter.
-    <a href="" ng-click="filter.keyword = ''" role="button" class="nowrap">Clear Filter</a>
+    <button type="button" class="btn btn-link inline-btn-link" ng-click="filter.keyword = ''">Clear All Filters</button>
   </div>
 
   <div ng-if="!filterActive">
