@@ -1,5 +1,5 @@
-<div ng-if="($ctrl.integrations | size)" class="row">
-  <h3 ng-if="$ctrl.showHeader">Integrations</h3>
+<div ng-if="($ctrl.integrations | size)" class="row service-integrations">
+  <div class="component-label section-label">Integrations</div>
   <service-integration
     ng-repeat="integration in $ctrl.integrations"
     integration="integration"

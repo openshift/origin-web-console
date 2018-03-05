@@ -1,38 +1,41 @@
-.service-integration {
-  .image-icon {
-    font-size: 45px;
-    line-height: 1.25;
-    margin: 0 15px;
-    img {
+.service-integrations {
+  .component-label.section-label {
+    margin: 0px 20px;
+  }
+
+  .service-integration {
+    height: 40px;
+    margin: 10px 20px 0px 0px;
+    .image-icon {
+      padding-top: 5px;
+      margin: 0 15px;
       width: 30px;
     }
-    span {
-      opacity: .38;
-    }
-  };
-  .id {
-    .text-muted();
-  }
-  .add-integration {
-    color: @link-color;
-  }
-  .del-integration {
-    color: red;
-    cursor: pointer;
-  }
-  .active-integration {
-    .description h4 {
-      color: @link-color;
-    }
-  }
-  .inactive-integration {
-    .description h4 {
-      color: @link-color;
-    }
-  }
-  .unknown-integration {
-    .description h4 {
+    .id {
       .text-muted();
+    }
+    .del-integration {
+      color: red;
+    }
+
+    .integration {
+      color: @link-color;
+
+      .integration-name {
+        display: inline;
+      }
+
+      &.inactive {
+        .pficon-add-circle-o {
+          cursor: pointer;
+        }
+      }
+
+      &.unknown {
+        .description h4 {
+          .text-muted();
+        }
+      }
     }
   }
 }

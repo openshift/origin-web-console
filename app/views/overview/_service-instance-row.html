@@ -161,7 +161,6 @@
       </div>
       <div class="expanded-section">
         <div ng-if="(row.isBindable || (row.bindings | size)) && ! row.integrations | size">
-          <mobile-integration project="row.state.project" service-instance="row.apiObject"></mobile-integration>
           <div class="component-label section-label">Bindings</div>
           <service-instance-bindings
             is-overview="true"
@@ -173,8 +172,7 @@
           </service-instance-bindings>
         </div>
         <div ng-if="row.integrations | size">
-          <div class="component-label section-label">Integrations</div>
-          <service-instance-integrations
+          <service-instance-integrations ng-if="row.isMobileService && row.instanceStatus === 'ready'"
             is-overview="true"
             integrations="row.integrations"
             service-instance="row.apiObject">

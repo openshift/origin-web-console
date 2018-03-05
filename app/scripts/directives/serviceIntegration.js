@@ -10,7 +10,6 @@
       'NotificationsService',
       ServiceIntegration
     ],
-    controllerAs: '$ctrl',
     bindings: {
       integration: '<',
       refApiObject: '<?'
@@ -26,7 +25,7 @@
 
     var ctrl = this;
 
-    ctrl.$onInit = function(){
+    ctrl.$onInit = function() {
       var context = {namespace: ctrl.refApiObject.metadata.namespace};
       DataService.watch(APIService.getPreferredVersion('servicebindings'), context, function(bindingData) {
         ctrl.binding = false;
@@ -66,6 +65,79 @@
         });
       });
     };
+
+    var getPodPreset = function(serviceInstance, binding) {
+      var providerSvcName = 'keycloak';//_.get(binding, 'metadata.labels.serviceName');
+      return {
+        "apiVersion": "settings.k8s.io/v1alpha1",
+        "kind": "PodPreset",
+        "metadata": {
+          "name": "test-2"
+        },
+        "spec": {
+          "env": [{
+            "name": "test",
+            "value": "newvalue"
+          }],
+          "selector": {
+            "matchLabels": {
+              "service": 'keycloak'
+            }
+          },
+          "volumeMounts": [
+            {
+              "mountPath": "/etc/secrets/" + providerSvcName,
+              "readOnly": true,
+              "name": providerSvcName
+            }
+          ],
+          "volumes": [
+            {
+              "name": providerSvcName,
+              "secret": {
+                "secretName": _.get(binding, 'spec.secretName')
+              }
+            }
+          ]
+        }
+      };
+    };
+
+
+    ctrl.parameterData = {
+      service: 'keycloak'
+    };
+
+    ctrl.integrationPanelVisible = false;
+
+    ctrl.closeIntegrationPanel = function() {
+      ctrl.integrationPanelVisible = false;
+    }
+
+    ctrl.openIntegrationPanel = function() {
+      ctrl.integrationPanelVisible = true;
+    }
+
+    ctrl.onBind = function(binding) {
+      var podPreset = getPodPreset(ctrl.serviceInstance, binding);
+      var version = {
+        group:"settings.k8s.io",
+        resource:"podpresets",
+        version:"v1alpha1"
+      };
+      var context = {namespace: _.get(ctrl.project, 'metadata.name')};
+      DataService.create(version, null, podPreset, context)
+      .then(function() {
+          DataService.get(APIService.getPreferredVersion('deploymentconfigs'), /*_.get(binding, 'metadata.labels.serviceName');*/'keycloak', context, {
+            errorNotification: false
+          }).then(function(deploymentConfig) {
+            DeploymentsService.startLatestDeployment(deploymentConfig, context);
+          });
+      })
+      .catch(function(err) {
+        console.log('err', err);
+      });
+    }
 
     ctrl.getState = function(){
       if (ctrl.binding) {

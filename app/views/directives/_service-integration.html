@@ -1,21 +1,26 @@
-<div class="service-integration col-md-4" ng-if="$ctrl.doRender">
-  <div ng-class="{'active-integration': $ctrl.getState() == 1,
-                              'inactive-integration': $ctrl.getState() == 0,
-                              'unknown-integration': $ctrl.getState() == -1}">
-    <span class="image-icon pull-left">
-      <img ng-src="{{ $ctrl.integrationData.imageData.imageUrl }}"/>
-    </span>
-    <span class="description">
-      <h4>
-        {{$ctrl.integrationData.name}}
-        <span class="integration-error" ng-if="$ctrl.getState() == 2"><span class="spinner spinner-xs spinner-inline" aria-hidden="true"></span></span>
-        <span class="del-integration" ng-if="$ctrl.getState() == 1" ng-click="$ctrl.removeIntegration();"><span class="pficon pficon-error-circle-o" aria-hidden="true"></span></span>
-        <span class="add-integration" ng-if="$ctrl.getState() == 0">+</span>
-      </h4>
+<div class="service-integration pull-left" ng-if="$ctrl.doRender">
+  <div ng-class="{'active': $ctrl.getState() == 1,
+                              'inactive': $ctrl.getState() == 0,
+                              'unknown': $ctrl.getState() == -1}" class="integration">
+    <img class="image-icon pull-left" ng-src="{{ $ctrl.integrationData.imageData.imageUrl }}"/>
+    <div class="description pull-left">
+      <h4 class="integration-name">{{$ctrl.integrationData.name}}</h4>
+      <span class="integration-error" ng-if="$ctrl.getState() == 2"><span class="spinner spinner-xs spinner-inline" aria-hidden="true"></span></span>
+      <span class="del-integration" ng-if="$ctrl.getState() == 1">-</span>
+      <span class="pficon pficon-add-circle-o" ng-if="$ctrl.getState() == 0" ng-click="$ctrl.openIntegrationPanel()"></span>
+      
       <div class="id" ng-if="$ctrl.getState() == 2">status: Pending</div>
       <div class="id" ng-if="$ctrl.getState() == 1">ID: {{ $ctrl.binding.metadata.name }}</div>
       <div class="id" ng-if="$ctrl.getState() == 0">No {{$ctrl.integrationData.name}} integration found.</div>
       <div class="id" ng-if="$ctrl.getState() == -1">Provision {{$ctrl.integrationData.name}} to enable integration.</div>
-    </span>
+    </div>
   </div>
 </div>
+
+<overlay-panel show-panel="$ctrl.integrationPanelVisible" handle-close="$ctrl.closeIntegrationPanel">
+  <bind-service target="$ctrl.refApiObject"
+                project="$ctrl.project"
+                on-close="$ctrl.closeIntegrationPanel"
+                on-finish="$ctrl.onBind"
+                parameter-data="$ctrl.parameterData"></bind-service>
+</overlay-panel>
