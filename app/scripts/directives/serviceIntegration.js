@@ -12,7 +12,7 @@
     ],
     bindings: {
       integration: '<',
-      refApiObject: '<?'
+      consumerService: '<?'
     },
     templateUrl: 'views/directives/_service-integration.html'
   });
@@ -26,17 +26,18 @@
     var ctrl = this;
 
     ctrl.$onInit = function() {
-      var context = {namespace: ctrl.refApiObject.metadata.namespace};
+      var context = {namespace: ctrl.consumerService.metadata.namespace};
       DataService.watch(APIService.getPreferredVersion('servicebindings'), context, function(bindingData) {
         ctrl.binding = false;
         var data = bindingData.by("metadata.name");
         _.each(data, function(binding){
-          if(_.get(binding, "metadata.annotations.consumer", "consumer_not_found") === _.get(ctrl, "refApiObject.metadata.labels.serviceName", "service_not_found")){
+          if(_.get(binding, "metadata.annotations.consumer", "consumer_not_found") === _.get(ctrl, "consumerService.metadata.labels.serviceName", "service_not_found")){
             ctrl.binding = binding;
           }
         });
       });
   
+      //TODO: check out the naming here. serviceInstance === provideService?
       DataService.watch(APIService.getPreferredVersion('serviceinstances'), context, function(serviceInstancesData) {
         ctrl.serviceInstance = false;
         _.each(serviceInstancesData._data, function(serviceInstance){
@@ -66,22 +67,23 @@
       });
     };
 
-    var getPodPreset = function(serviceInstance, binding) {
-      var providerSvcName = 'keycloak';//_.get(binding, 'metadata.labels.serviceName');
-      return {
+    var getPodPreset = function(consumerService, providerService, binding) {
+      var consumerSvcName = _.get(consumerService, 'metadata.labels.serviceName');
+      var providerSvcName = _.get(providerService, 'metadata.labels.serviceName');
+      var podPreset = {
         "apiVersion": "settings.k8s.io/v1alpha1",
         "kind": "PodPreset",
         "metadata": {
-          "name": "test-2"
+          "name": consumerSvcName + '-' + providerSvcName,
+          "labels": {
+            "group": "mobile",
+            "service": providerSvcName
+          }
         },
         "spec": {
-          "env": [{
-            "name": "test",
-            "value": "newvalue"
-          }],
           "selector": {
             "matchLabels": {
-              "service": 'keycloak'
+              "run": consumerSvcName
             }
           },
           "volumeMounts": [
@@ -101,11 +103,9 @@
           ]
         }
       };
-    };
 
-
-    ctrl.parameterData = {
-      service: 'keycloak'
+      podPreset.spec.selector.matchLabels[providerSvcName] = "enabled";
+      return podPreset;
     };
 
     ctrl.integrationPanelVisible = false;
@@ -115,23 +115,27 @@
     }
 
     ctrl.openIntegrationPanel = function() {
+      ctrl.parameterData = {
+        service: _.get(ctrl.consumerService, 'metadata.labels.serviceName')
+      };
       ctrl.integrationPanelVisible = true;
     }
 
     ctrl.onBind = function(binding) {
-      var podPreset = getPodPreset(ctrl.serviceInstance, binding);
+      var podPreset = getPodPreset(ctrl.consumerService, ctrl.serviceInstance, binding);
       var version = {
         group:"settings.k8s.io",
         resource:"podpresets",
         version:"v1alpha1"
       };
-      var context = {namespace: _.get(ctrl.project, 'metadata.name')};
+      var context = {namespace: _.get(ctrl.consumerService, 'metadata.namespace')};
       DataService.create(version, null, podPreset, context)
       .then(function() {
-          DataService.get(APIService.getPreferredVersion('deploymentconfigs'), /*_.get(binding, 'metadata.labels.serviceName');*/'keycloak', context, {
+          DataService.get(APIService.getPreferredVersion('deployments'), _.get(ctrl.consumerService, 'metadata.labels.serviceName'), context, {
             errorNotification: false
-          }).then(function(deploymentConfig) {
-            DeploymentsService.startLatestDeployment(deploymentConfig, context);
+          }).then(function(deployment) {
+            deployment.spec.template.metadata.labels[_.get(ctrl.serviceInstance, 'metadata.labels.serviceName')] = "enabled";
+            DataService.update(APIService.getPreferredVersion('deployments'), _.get(ctrl, 'consumerService.metadata.labels.serviceName'), deployment, context);
           });
       })
       .catch(function(err) {

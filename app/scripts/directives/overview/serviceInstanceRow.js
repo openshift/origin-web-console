@@ -77,12 +77,12 @@
       if (changes.bindings) {
         row.deleteableBindings = _.reject(row.bindings, 'metadata.deletionTimestamp');
       }
-      if(row.isMobileService &&  changes.apiObject && changes.apiObject.currentValue.spec.clusterServiceClassRef){
+      if(row.isMobileService && _.get(changes, 'apiObject.currentValue.spec.clusterServiceClassRef', false)){
         var integrations = _.get(getServiceClass(), "spec.externalMetadata.integrations", false);
         if (integrations){
+          //TODO: Ensure ui works with multiple integrations
+          // States -> integrated, not integrated, not provisioned
           row.integrations = integrations.split(",");
-          row.integrations.push('fh-sync-server');
-          row.integrations.push('3scale');
         }
       }
     };

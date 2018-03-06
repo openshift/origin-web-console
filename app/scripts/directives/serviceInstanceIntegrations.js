@@ -5,12 +5,10 @@ angular.module('openshiftConsole').component('serviceInstanceIntegrations', {
   controllerAs: '$ctrl',
   bindings: {
     integrations : '<',
-    serviceInstance: '<?'
+    consumerService: '<?'
   },
   templateUrl: 'views/directives/service-instance-integrations.html'
 });
 
 
-function serviceInstanceIntegrationsController() {
-
-}
+function serviceInstanceIntegrationsController() {}

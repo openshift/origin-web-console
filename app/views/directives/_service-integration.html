@@ -18,7 +18,7 @@
 </div>
 
 <overlay-panel show-panel="$ctrl.integrationPanelVisible" handle-close="$ctrl.closeIntegrationPanel">
-  <bind-service target="$ctrl.refApiObject"
+  <bind-service target="$ctrl.serviceInstance"
                 project="$ctrl.project"
                 on-close="$ctrl.closeIntegrationPanel"
                 on-finish="$ctrl.onBind"
