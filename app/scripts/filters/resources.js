@@ -311,18 +311,6 @@ angular.module('openshiftConsole')
       return itemsArray;
     };
   })
-  .filter('isPodStuck', function() {
-    return function(pod) {
-      if (pod.status.phase !== 'Pending') {
-        return false;
-      }
-
-      // If this logic ever changes, update the message in podWarnings
-      var fiveMinutesAgo = moment().subtract(5, 'm');
-      var created = moment(pod.metadata.creationTimestamp);
-      return created.isBefore(fiveMinutesAgo);
-    };
-  })
   .filter('isContainerLooping', function() {
     return function(containerStatus) {
       return containerStatus.state.waiting && containerStatus.state.waiting.reason === 'CrashLoopBackOff';
@@ -353,14 +341,10 @@ angular.module('openshiftConsole')
       return started.isBefore(fiveMinutesAgo);
     };
   })
-  .filter('isTroubledPod', function(isPodStuckFilter, isContainerLoopingFilter, isContainerFailedFilter, isContainerUnpreparedFilter) {
+  .filter('isTroubledPod', function(isContainerLoopingFilter, isContainerFailedFilter, isContainerUnpreparedFilter) {
     return function(pod) {
       if (pod.status.phase === 'Unknown') {
         // We always show Unknown pods in a warning state
-        return true;
-      }
-
-      if (isPodStuckFilter(pod)) {
         return true;
       }
 
@@ -387,17 +371,13 @@ angular.module('openshiftConsole')
       return false;
     };
   })
-  .filter('podWarnings', function(isPodStuckFilter, isContainerLoopingFilter, isContainerFailedFilter, isContainerUnpreparedFilter, isTerminatingFilter) {
+  .filter('podWarnings', function(isContainerLoopingFilter, isContainerFailedFilter, isContainerUnpreparedFilter, isTerminatingFilter) {
     return function(pod) {
       var warnings = [];
 
       if (pod.status.phase === 'Unknown') {
         // We always show Unknown pods in a warning state
         warnings.push({reason: 'Unknown', pod: pod.metadata.name, message: 'The state of the pod could not be obtained. This is typically due to an error communicating with the host of the pod.'});
-      }
-
-      if (isPodStuckFilter(pod)) {
-        warnings.push({reason: "Stuck", pod: pod.metadata.name, message: "The pod has been stuck in the pending state for more than five minutes."});
       }
 
       if (pod.status.phase === 'Running' && pod.status.containerStatuses) {
