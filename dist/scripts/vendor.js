@@ -74171,10 +74171,13 @@ group: "authorization.openshift.io"
 } ],
 kinds: [ {
 group: "extensions",
+kind: "DaemonSet"
+}, {
+group: "extensions",
 kind: "HorizontalPodAutoscaler"
 }, {
 group: "extensions",
-kind: "DaemonSet"
+kind: "NetworkPolicy"
 } ]
 }), angular.module("openshiftCommonServices").constant("API_PREFERRED_VERSIONS", {
 appliedclusterresourcequotas: {
