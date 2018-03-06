@@ -57,14 +57,14 @@
           <span ng-if="(events | hashSize) === 0"><em>No events to show.</em></span>
           <span ng-if="(events | hashSize) > 0">
             All events hidden by filter.
-            <a href="" ng-click="filter.text = ''" role="button" class="nowrap">Clear Filter</a>
+            <button type="button" class="btn btn-link inline-btn-link" ng-click="filter.text = ''">Clear All Filters</button>
           </span>
         </td>
           <td class="hidden-xs hidden-sm hidden-md" colspan="{{showKindAndName ? 6 : 4}}">
           <span ng-if="(events | hashSize) === 0"><em>No events to show.</em></span>
           <span ng-if="(events | hashSize) > 0">
             All events hidden by filter.
-            <a href="" ng-click="filter.text = ''" role="button" class="nowrap">Clear Filter</a>
+            <button type="button" class="btn btn-link inline-btn-link" ng-click="filter.text = ''">Clear All Filters</button>
           </span>
         </td>
       </tr>

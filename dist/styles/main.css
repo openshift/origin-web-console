@@ -4805,6 +4805,7 @@ body.ios .console-os .ace_editor,body.ios input[type=text],body.ios input[type=u
 .resource-details h3{border-bottom:1px solid #eee;padding-bottom:10px}
 .resource-details overlay-panel h3{border-bottom:0;padding-bottom:0}
 .hide-tabs .nav-tabs{display:none}
+.btn-link.inline-btn-link{font-size:inherit;font-weight:inherit;vertical-align:initial;padding:0}
 .empty-state-message{margin:40px auto 60px;max-width:600px;padding:0}
 .empty-state-message.loading{margin:0 auto;padding:40px 0 60px}
 .empty-state-message.loading h2{margin-top:0}
