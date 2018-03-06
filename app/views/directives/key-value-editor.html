@@ -39,7 +39,7 @@
           ng-readonly="isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonlyKey || entry.isReadonly"
           ng-pattern="validation.key"
           ng-value
-          ng-required="!allowEmptyKeys && entry.value"
+          ng-required="!allowEmptyKeys && (entry.value || entry.valueFrom)"
           ng-attr-key-value-editor-focus="{{grabFocus && $last}}"
           autocorrect="off"
           autocapitalize="none"
