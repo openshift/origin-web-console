@@ -77,10 +77,10 @@
       if (changes.bindings) {
         row.deleteableBindings = _.reject(row.bindings, 'metadata.deletionTimestamp');
       }
-      if(row.isMobileService && changes.apiObject.currentValue.spec.clusterServiceClassRef){
+      if(row.isMobileService &&  changes.apiObject && changes.apiObject.currentValue.spec.clusterServiceClassRef){
         _.each(changes.apiObject.currentValue.status.conditions, function(condition){
           if(condition.type === "Ready" && condition.status === "True"){
-            var integrations = _.get(getServiceClass(), "spec.externalMetadata.integrations")
+            var integrations = _.get(getServiceClass(), "spec.externalMetadata.integrations");
             if (typeof integrations !== "undefined"){
               row.integrations = integrations.split(",");
             }

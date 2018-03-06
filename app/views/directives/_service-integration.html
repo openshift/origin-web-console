@@ -8,9 +8,11 @@
     <span class="description">
       <h4>
         {{$ctrl.integrationData.name}}
-        <span class="del-integration" ng-if="$ctrl.getState() == 1">-</span>
+        <span class="integration-error" ng-if="$ctrl.getState() == 2"><span class="spinner spinner-xs spinner-inline" aria-hidden="true"></span></span>
+        <span class="del-integration" ng-if="$ctrl.getState() == 1" ng-click="$ctrl.removeIntegration();"><span class="pficon pficon-error-circle-o" aria-hidden="true"></span></span>
         <span class="add-integration" ng-if="$ctrl.getState() == 0">+</span>
       </h4>
+      <div class="id" ng-if="$ctrl.getState() == 2">status: Pending</div>
       <div class="id" ng-if="$ctrl.getState() == 1">ID: {{ $ctrl.binding.metadata.name }}</div>
       <div class="id" ng-if="$ctrl.getState() == 0">No {{$ctrl.integrationData.name}} integration found.</div>
       <div class="id" ng-if="$ctrl.getState() == -1">Provision {{$ctrl.integrationData.name}} to enable integration.</div>

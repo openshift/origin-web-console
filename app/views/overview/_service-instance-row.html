@@ -160,7 +160,7 @@
         </div>
       </div>
       <div class="expanded-section">
-        <div ng-if="(row.isBindable || (row.bindings | size)) && ! row.integrations | size">
+        <div ng-if="(row.isBindable || (row.bindings | size))">
           <div class="component-label section-label">Bindings</div>
           <service-instance-bindings
             is-overview="true"
