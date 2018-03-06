@@ -11918,8 +11918,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"component-label\">Application</div>\n" +
     "<span ng-bind-html=\"app | highlightKeywords : overview.state.filterKeywords\"></span>\n" +
     "</h2>\n" +
-    "<div ng-if=\"route = overview.bestRouteByApp[app]\" class=\"pull-right\">\n" +
-    "<h3 class=\"overview-route\">\n" +
+    "<div class=\"overview-routes\" ng-if=\"overview.routesToDisplayByApp[app] | size\">\n" +
+    "<h3 class=\"overview-route\" ng-repeat=\"route in overview.routesToDisplayByApp[app] track by (route | uid)\">\n" +
     "<span ng-if=\"route | isWebRoute\">\n" +
     "<a ng-href=\"{{route | routeWebURL}}\" target=\"_blank\">\n" +
     "{{route | routeLabel}}\n" +
@@ -12687,7 +12687,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Routes - External Traffic\n" +
     "</div>\n" +
     "<div ng-if=\"networking.routesByService[service.metadata.name] | size\">\n" +
-    "<div ng-repeat=\"route in networking.routesByService[service.metadata.name] | limitTo : 2 track by (route | uid)\" class=\"overview-routes\">\n" +
+    "<div ng-repeat=\"route in networking.routesByService[service.metadata.name] track by (route | uid)\" class=\"overview-routes\">\n" +
     "<h3>\n" +
     "<span ng-if=\"route | isWebRoute\">\n" +
     "<a ng-href=\"{{route | routeWebURL}}\" target=\"_blank\">\n" +

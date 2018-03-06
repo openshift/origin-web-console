@@ -257,9 +257,16 @@ function OverviewController($scope,
     return AppsService.groupByApp(collection, 'metadata.name');
   };
 
-  var getBestRoute = function(routes) {
+  var getRoutesToDisplay = function(routes) {
+    var routesToDisplay = [];
     var bestRoute = null;
     _.each(routes, function(candidate) {
+      // If the the route has the annotation, display it
+      if (RoutesService.isOverviewAppRoute(candidate)) {
+        routesToDisplay.push(candidate);
+        return;
+      }
+
       if (!bestRoute) {
         bestRoute = candidate;
         return;
@@ -269,13 +276,18 @@ function OverviewController($scope,
       bestRoute = RoutesService.getPreferredDisplayRoute(bestRoute, candidate);
     });
 
-    return bestRoute;
+    // If no routes have been added and bestRoute exists, add bestRoute
+    if (!routesToDisplay.length && bestRoute) {
+      routesToDisplay.push(bestRoute);
+    }
+
+    return RoutesService.sortRoutesByScore(routesToDisplay);
   };
 
   // Debounce so we're not reevaluating this too often.
   var updateRoutesByApp = _.debounce(function() {
     $scope.$evalAsync(function() {
-      overview.bestRouteByApp = {};
+      overview.routesToDisplayByApp = {};
 
       if (!overview.routes) {
         return;
@@ -308,8 +320,7 @@ function OverviewController($scope,
             });
           });
         });
-
-        overview.bestRouteByApp[app] = getBestRoute(routesForApp);
+        overview.routesToDisplayByApp[app] = getRoutesToDisplay(routesForApp);
       });
     });
   }, 300, { maxWait: 1500 });

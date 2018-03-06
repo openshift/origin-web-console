@@ -102,9 +102,17 @@ angular.module("openshiftConsole")
       return annotation(route, "openshift.io/host.generated") !== "true";
     };
 
+    var isOverviewAppRoute = function(route) {
+      return annotation(route, "console.alpha.openshift.io/overview-app-route") === "true";
+    };
+
     // Gets a score for the route to decide which to show on the overview.
     var scoreRoute = function(route) {
       var score = 0;
+      if(isOverviewAppRoute(route)) {
+        score += 21;
+      }
+
       if (isAdmitted(route)) {
         score += 11;
       }
@@ -204,6 +212,7 @@ angular.module("openshiftConsole")
       groupByService: groupByService,
       getSubdomain: getSubdomain,
       isCustomHost: isCustomHost,
+      isOverviewAppRoute: isOverviewAppRoute,
       sortRoutesByScore: sortRoutesByScore
     };
   });

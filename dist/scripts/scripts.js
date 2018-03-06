@@ -68,13 +68,13 @@ ve.expandAll = t && 1 === N.size, N.showGetStarted = t && e, N.showLoading = !t 
 }, we = function(e) {
 return s.groupByApp(e, "metadata.name");
 }, Pe = function(e) {
-var t = null;
+var t = [], n = null;
 return _.each(e, function(e) {
-t = t ? E.getPreferredDisplayRoute(t, e) : e;
-}), t;
+E.isOverviewAppRoute(e) ? t.push(e) : n = n ? E.getPreferredDisplayRoute(n, e) : e;
+}), !t.length && n && t.push(n), E.sortRoutesByScore(t);
 }, je = _.debounce(function() {
 e.$evalAsync(function() {
-if (N.bestRouteByApp = {}, N.routes) {
+if (N.routesToDisplayByApp = {}, N.routes) {
 var e = [ N.filteredDeploymentConfigsByApp, N.filteredReplicationControllersByApp, N.filteredDeploymentsByApp, N.filteredReplicaSetsByApp, N.filteredStatefulSetsByApp, N.filteredDaemonSetsByApp, N.filteredMonopodsByApp ];
 _.each(N.apps, function(t) {
 var n = {};
@@ -87,7 +87,7 @@ var t = _.get(ve, [ "routesByService", e.metadata.name ], []);
 _.assign(n, _.keyBy(t, "metadata.name"));
 });
 });
-}), N.bestRouteByApp[t] = Pe(n);
+}), N.routesToDisplayByApp[t] = Pe(n);
 });
 }
 });
@@ -3055,11 +3055,13 @@ status: "True"
 }, s = e("annotation"), c = function(e) {
 return "true" !== s(e, "openshift.io/host.generated");
 }, l = function(e) {
+return "true" === s(e, "console.alpha.openshift.io/overview-app-route");
+}, u = function(e) {
 var t = 0;
-i(e) && (t += 11);
+l(e) && (t += 21), i(e) && (t += 11);
 var n = _.get(e, "spec.alternateBackends");
 return _.isEmpty(n) || (t += 5), c(e) && (t += 3), e.spec.tls && (t += 1), t;
-}, u = function(e) {
+}, d = function(e) {
 var t = {}, n = function(e, n) {
 t[n] = t[n] || [], t[n].push(e);
 };
@@ -3080,18 +3082,19 @@ r(e, a, t, n);
 },
 getServicePortForRoute: n,
 getPreferredDisplayRoute: function(e, t) {
-var n = l(e);
-return l(t) > n ? t : e;
+var n = u(e);
+return u(t) > n ? t : e;
 },
 groupByService: function(e, t) {
-return t ? u(e) : _.groupBy(e, "spec.to.name");
+return t ? d(e) : _.groupBy(e, "spec.to.name");
 },
 getSubdomain: function(e) {
 return _.get(e, "spec.host", "").replace(/^[a-z0-9]([-a-z0-9]*[a-z0-9])\./, "");
 },
 isCustomHost: c,
+isOverviewAppRoute: l,
 sortRoutesByScore: function(e) {
-return _.orderBy(e, [ l ], [ "desc" ]);
+return _.orderBy(e, [ u ], [ "desc" ]);
 }
 };
 } ]), angular.module("openshiftConsole").factory("ChartsService", [ "Logger", function(e) {
