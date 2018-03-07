@@ -118,9 +118,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/_container-statuses.html',
     " <div ng-if=\"detailed && pod.status.initContainerStatuses.length\">\n" +
-    "<h4 class=\"mar-bottom-xl\" row ng-if=\"initContainersTerminated\">\n" +
+    "<h4 class=\"init-container-status mar-bottom-xl\" ng-if=\"initContainersTerminated\">\n" +
     "<span><i class=\"fa fa-check text-success\"></i></span>\n" +
-    "<span flex>\n" +
+    "<span class=\"init-container-status-detail\">\n" +
     "<ng-pluralize count=\"pod.status.initContainerStatuses.length\" when=\"{'1': '&nbsp;Init container {{pod.status.initContainerStatuses[0].name}}','other': '&nbsp;{} init containers'}\">\n" +
     "</ng-pluralize>\n" +
     "completed successfully\n" +
@@ -166,7 +166,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd>{{containerStatus.ready}}</dd>\n" +
     "<dt>Restart Count:</dt>\n" +
     "<dd>{{containerStatus.restartCount}}</dd>\n" +
-    "<div ng-if=\"hasDebugTerminal && showDebugAction(containerStatus) && ('pods' | canI : 'create')\" class=\"debug-pod-action\">\n" +
+    "<div ng-if=\"hasDebugTerminal && showDebugAction(containerStatus) && (podsVersion | canI : 'create')\" class=\"debug-pod-action\">\n" +
     "<a href=\"\" ng-click=\"debugTerminal(containerStatus.name)\" role=\"button\">Debug in Terminal</a>\n" +
     "</div>\n" +
     "</dl>\n" +
@@ -239,11 +239,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/_pod-template-container.html',
     " <div class=\"pod-template\">\n" +
     "<div class=\"pod-container-name\">{{container.name}}</div>\n" +
-    "<div row ng-if=\"container.image\" class=\"pod-template-image icon-row\">\n" +
+    "<div ng-if=\"container.image\" class=\"pod-template-image icon-row\">\n" +
     "<div class=\"icon-wrap\">\n" +
     "<span class=\"pficon pficon-image\" aria-hidden=\"true\"></span>\n" +
     "</div>\n" +
-    "<div flex class=\"word-break\">\n" +
+    "<div class=\"pod-template-detail word-break\">\n" +
     "<span class=\"pod-template-key\">Image:</span>\n" +
     "<span ng-if=\"!imagesByDockerReference[container.image]\">{{container.image | imageStreamName}}</span>\n" +
     "<span ng-if=\"imagesByDockerReference[container.image]\">\n" +
@@ -256,11 +256,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"imagesByDockerReference && container.image && (image = imagesByDockerReference[container.image])\" class=\"pod-template-build\">\n" +
-    "<div row class=\"icon-row\" ng-if=\"build = (image | buildForImage : builds)\">\n" +
+    "<div class=\"icon-row\" ng-if=\"build = (image | buildForImage : builds)\">\n" +
     "<div class=\"icon-wrap\">\n" +
     "<span class=\"fa fa-refresh\" aria-hidden=\"true\"></span>\n" +
     "</div>\n" +
-    "<div flex class=\"word-break\">\n" +
+    "<div class=\"pod-template-detail word-break\">\n" +
     "<span class=\"pod-template-key\">Build:</span>\n" +
     "<span ng-if=\"build | configURLForResource\">\n" +
     "<a ng-href=\"{{build | configURLForResource}}\">{{build | buildConfigForBuild}}</a>,\n" +
@@ -271,11 +271,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div row class=\"icon-row\" ng-if=\"build.spec.source\">\n" +
+    "<div class=\"icon-row\" ng-if=\"build.spec.source\">\n" +
     "<div class=\"icon-wrap\">\n" +
     "<span class=\"fa fa-code\" aria-hidden=\"true\"></span>\n" +
     "</div>\n" +
-    "<div flex class=\"word-break\">\n" +
+    "<div class=\"pod-template-detail word-break\">\n" +
     "<span class=\"pod-template-key\">Source:</span>\n" +
     "<span ng-switch=\"build.spec.source.type\">\n" +
     "<span ng-switch-when=\"Git\">\n" +
@@ -297,11 +297,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div row ng-if=\"detailed && (container.command.length || container.args.length)\" class=\"icon-row\">\n" +
+    "<div ng-if=\"detailed && (container.command.length || container.args.length)\" class=\"icon-row\">\n" +
     "<div class=\"icon-wrap\">\n" +
     "<span aria-hidden=\"true\" class=\"fa fa-terminal\"></span>\n" +
     "</div>\n" +
-    "<div flex class=\"word-break\">\n" +
+    "<div class=\"pod-template-detail word-break\">\n" +
     "<span class=\"pod-template-key\">\n" +
     "Command:\n" +
     "</span>\n" +
@@ -313,11 +313,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div row ng-if=\"container.ports.length > 0\" class=\"pod-template-ports icon-row\">\n" +
+    "<div ng-if=\"container.ports.length > 0\" class=\"pod-template-ports icon-row\">\n" +
     "<div class=\"icon-wrap\">\n" +
     "<span aria-hidden=\"true\" class=\"pficon pficon-port\"></span>\n" +
     "</div>\n" +
-    "<div flex class=\"word-break\">\n" +
+    "<div class=\"pod-template-detail word-break\">\n" +
     "<span class=\"pod-template-key\">Ports:</span>\n" +
     "<span ng-repeat=\"port in container.ports | orderBy: 'containerPort' | limitToOrAll : detailed ? undefined : 1\">\n" +
     "<span class=\"nowrap\">{{port.containerPort}}/{{port.protocol}}</span><span ng-if=\"port.name\"><span class=\"nowrap\"> ({{port.name}})</span></span><span ng-if=\"port.hostPort\"><span class=\"nowrap\"><span class=\"port-icon\"> &#8594;</span> {{port.hostPort}}</span></span><span ng-if=\"!$last\">, </span>\n" +
@@ -329,11 +329,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div row ng-if=\"detailed\" ng-repeat=\"mount in container.volumeMounts\" class=\"icon-row\">\n" +
+    "<div ng-if=\"detailed\" ng-repeat=\"mount in container.volumeMounts\" class=\"icon-row\">\n" +
     "<div class=\"icon-wrap\">\n" +
     "<span aria-hidden=\"true\" class=\"fa fa-database\"></span>\n" +
     "</div>\n" +
-    "<div flex class=\"word-break\">\n" +
+    "<div class=\"pod-template-detail word-break\">\n" +
     "<span class=\"pod-template-key\">Mount:</span>\n" +
     "<span>\n" +
     "{{mount.name}}<span ng-if=\"mount.subPath\">, subpath {{mount.subPath}}</span>&#8201;&#8594;&#8201;<span>{{mount.mountPath}}</span>\n" +
@@ -341,11 +341,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div row ng-if=\"detailed && (container.resources.requests.cpu || container.resources.limits.cpu)\" class=\"icon-row\">\n" +
+    "<div ng-if=\"detailed && (container.resources.requests.cpu || container.resources.limits.cpu)\" class=\"icon-row\">\n" +
     "<div class=\"icon-wrap\">\n" +
     "<i class=\"fa fa-area-chart\" aria-hidden=\"true\"></i>\n" +
     "</div>\n" +
-    "<div flex>\n" +
+    "<div class=\"pod-template-detail\">\n" +
     "<span class=\"pod-template-key\">CPU:</span>\n" +
     "<span ng-if=\"container.resources.requests.cpu && container.resources.limits.cpu\">\n" +
     "{{container.resources.requests.cpu | usageWithUnits: 'cpu'}} to {{container.resources.limits.cpu | usageWithUnits: 'cpu'}}\n" +
@@ -358,11 +358,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div row ng-if=\"detailed && (container.resources.requests.memory || container.resources.limits.memory)\" class=\"icon-row\">\n" +
+    "<div ng-if=\"detailed && (container.resources.requests.memory || container.resources.limits.memory)\" class=\"icon-row\">\n" +
     "<div class=\"icon-wrap\">\n" +
     "<i class=\"fa fa-area-chart\" aria-hidden=\"true\"></i>\n" +
     "</div>\n" +
-    "<div flex>\n" +
+    "<div class=\"pod-template-detail\">\n" +
     "<span class=\"pod-template-key\">Memory:</span>\n" +
     "<span ng-if=\"container.resources.requests.memory && container.resources.limits.memory\">\n" +
     "{{container.resources.requests.memory | usageWithUnits: 'memory'}} to {{container.resources.limits.memory | usageWithUnits: 'memory'}}\n" +
@@ -375,20 +375,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div row ng-if=\"detailed && container.readinessProbe\" class=\"icon-row\">\n" +
+    "<div ng-if=\"detailed && container.readinessProbe\" class=\"icon-row\">\n" +
     "<div class=\"icon-wrap\">\n" +
     "<i class=\"fa fa-medkit\" aria-hidden=\"true\"></i>\n" +
     "</div>\n" +
-    "<div flex>\n" +
+    "<div class=\"pod-template-detail\">\n" +
     "<span class=\"pod-template-key\">Readiness Probe:</span>\n" +
     "<probe probe=\"container.readinessProbe\"></probe>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div row ng-if=\"detailed && container.livenessProbe\" class=\"icon-row\">\n" +
+    "<div ng-if=\"detailed && container.livenessProbe\" class=\"icon-row\">\n" +
     "<div class=\"icon-wrap\">\n" +
     "<i class=\"fa fa-medkit\" aria-hidden=\"true\"></i>\n" +
     "</div>\n" +
-    "<div flex>\n" +
+    "<div class=\"pod-template-detail\">\n" +
     "<span class=\"pod-template-key\">Liveness Probe:</span>\n" +
     "<probe probe=\"container.livenessProbe\"></probe>\n" +
     "</div>\n" +
@@ -542,34 +542,34 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/_volume-claim-templates.html',
     "<div class=\"pod-template-block\">\n" +
     "<div ng-repeat=\"template in templates\" class=\"pod-template\">\n" +
-    "<div class=\"component-label\">Storage claim: {{template.metadata.name}}</div>\n" +
-    "<div row class=\"pod-template-image icon-row\">\n" +
+    "<div class=\"pod-container-name\">Storage claim: {{template.metadata.name}}</div>\n" +
+    "<div class=\"pod-template-image icon-row\">\n" +
     "<div class=\"icon-wrap\">\n" +
     "<span class=\"fa fa-lock\" aria-hidden=\"true\"></span>\n" +
     "</div>\n" +
-    "<div flex class=\"word-break\">\n" +
+    "<div class=\"pod-template-detail word-break\">\n" +
     "<span class=\"pod-template-key\">Access Modes:</span>\n" +
     "<span ng-repeat=\"mode in template.spec.accessModes\">\n" +
     "{{mode | sentenceCase }}<span ng-if=\"!$last\">, </span>\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div row class=\"pod-template-image icon-row\">\n" +
+    "<div class=\"pod-template-image icon-row\">\n" +
     "<div class=\"icon-wrap\">\n" +
     "<span class=\"fa fa-database\" aria-hidden=\"true\"></span>\n" +
     "</div>\n" +
-    "<div flex class=\"word-break\">\n" +
+    "<div class=\"pod-template-detail word-break\">\n" +
     "<span class=\"pod-template-key\">Capacity:</span>\n" +
     "<span>\n" +
     "{{template.spec.resources.requests.storage}}\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div row class=\"pod-template-image icon-row\" ng-if=\"template.spec.selector.matchLabels\">\n" +
+    "<div class=\"pod-template-image icon-row\" ng-if=\"template.spec.selector.matchLabels\">\n" +
     "<div class=\"icon-wrap\">\n" +
     "<span class=\"fa fa-tag\" aria-hidden=\"true\"></span>\n" +
     "</div>\n" +
-    "<div flex class=\"word-break\">\n" +
+    "<div class=\"pod-template-detail word-break\">\n" +
     "<span class=\"pod-template-key\">Selector:</span>\n" +
     "<selector selector=\"template.spec.selector\"></selector>\n" +
     "</div>\n" +
@@ -596,10 +596,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dd>\n" +
     "<dt>Secret:</dt>\n" +
     "<dd>\n" +
-    "<span ng-if=\"'secrets' | canI : 'get'\">\n" +
+    "<span ng-if=\"secretsVersion | canI : 'get'\">\n" +
     "<a ng-href=\"{{volume.secret.secretName | navigateResourceURL : 'Secret' : namespace}}\">{{volume.secret.secretName}}</a>\n" +
     "</span>\n" +
-    "<span ng-if=\"!('secrets' | canI : 'get')\">\n" +
+    "<span ng-if=\"!(secretsVersion | canI : 'get')\">\n" +
     "{{volume.secret.secretName}}\n" +
     "</span>\n" +
     "</dd>\n" +
@@ -943,9 +943,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody>\n" +
     "<tr ng-repeat=\"pvc in pvcs track by (pvc | uid)\">\n" +
     "<td style=\"padding-left:0\">\n" +
-    "<input type=\"radio\" name=\"persistentVolumeClaim\" ng-model=\"attach.persistentVolumeClaim\" ng-value=\"pvc\" aria-describedby=\"pvc-help\">\n" +
+    "<input type=\"radio\" name=\"persistentVolumeClaim\" ng-model=\"attach.persistentVolumeClaim\" ng-value=\"pvc\" ng-change=\"onPVCSelected()\" aria-describedby=\"pvc-help\">\n" +
     "</td>\n" +
-    "<td><a ng-href=\"{{pvc | navigateResourceURL}}\">{{pvc.metadata.name}}</a></td>\n" +
+    "<td><a ng-href=\"{{pvc | navigateResourceURL}}\" target=\"_blank\">{{pvc.metadata.name}}</a></td>\n" +
     "<td ng-if=\"pvc.spec.volumeName\">{{pvc.status.capacity['storage'] | usageWithUnits: 'storage'}}</td>\n" +
     "<td ng-if=\"!pvc.spec.volumeName\">{{pvc.spec.resources.requests['storage'] | usageWithUnits: 'storage'}}</td>\n" +
     "<td>({{pvc.spec.accessModes | accessModes | join}})</td>\n" +
@@ -1002,7 +1002,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group\">\n" +
     "<label for=\"volume-name\">Volume Name</label>\n" +
     "\n" +
-    "<input id=\"volume-path\" class=\"form-control\" type=\"text\" name=\"volumeName\" ng-model=\"attach.volumeName\" osc-unique=\"existingVolumeNames\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/\" maxlength=\"63\" placeholder=\"(generated if empty)\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"volume-name-help\">\n" +
+    "<input id=\"volume-path\" class=\"form-control\" type=\"text\" name=\"volumeName\" ng-model=\"attach.volumeName\" ng-pattern=\"/^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/\" ng-readonly=\"volumeAlreadyMounted\" osc-unique=\"existingVolumeNames\" osc-unique-disabled=\"volumeAlreadyMounted\" maxlength=\"63\" placeholder=\"(generated if empty)\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"volume-name-help\">\n" +
     "<div>\n" +
     "<span id=\"volume-name-help\" class=\"help-block\">Unique name used to identify this volume. If not specified, a volume name is generated.</span>\n" +
     "</div>\n" +
@@ -1721,10 +1721,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</td>\n" +
     "<td data-title=\"Status\">\n" +
-    "<div row class=\"status\">\n" +
+    "<div class=\"status\">\n" +
     "<status-icon status=\"build.status.phase\" disable-animation></status-icon>\n" +
+    "<span class=\"status-detail\">\n" +
     "<span ng-if=\"!build.status.reason || build.status.phase === 'Cancelled'\">{{build.status.phase}}</span>\n" +
     "<span ng-if=\"build.status.reason && build.status.phase !== 'Cancelled'\">{{build.status.reason | sentenceCase}}</span>\n" +
+    "</span>\n" +
     "</div>\n" +
     "</td>\n" +
     "<td data-title=\"Duration\">\n" +
@@ -2210,7 +2212,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all config maps. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all config maps. <button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"clearFilter()\">Clear All Filters</button></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -2379,9 +2381,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</td>\n" +
     "<td data-title=\"Status\">\n" +
-    "<div row class=\"status\">\n" +
+    "<div class=\"status\">\n" +
     "<status-icon status=\"deployment | deploymentStatus\" disable-animation></status-icon>\n" +
-    "<span flex>\n" +
+    "<span class=\"status-detail\">\n" +
     "{{deployment | deploymentStatus}}<span ng-if=\"(deployment | deploymentStatus) == 'Active' || (deployment | deploymentStatus) == 'Running'\">,\n" +
     "<span ng-if=\"deployment.spec.replicas !== deployment.status.replicas\">{{deployment.status.replicas}}/</span>{{deployment.spec.replicas}} replica<span ng-if=\"deployment.spec.replicas != 1\">s</span></span>\n" +
     "</span>\n" +
@@ -2805,7 +2807,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-if=\"!imageStream\" class=\"mar-top-xl\">Loading...</div>\n" +
+    "<div ng-if=\"!loaded\" class=\"mar-top-xl\">Loading...</div>\n" +
     "<div ng-if=\"imageStream\">\n" +
     "<h1>\n" +
     "{{imageStream.metadata.name}}:{{tagName}}\n" +
@@ -2815,7 +2817,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"middle-content\" persist-tab-state>\n" +
     "<div class=\"container-fluid\">\n" +
-    "<div ng-if=\"imageStream && !image\">Loading...</div>\n" +
+    "<div ng-if=\"!loaded\">Loading...</div>\n" +
     "<div class=\"row\" ng-if=\"image\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<registry-image-pull settings=\"settings\" names=\"[ imageStream.metadata.name + ':' + tagName ]\">\n" +
@@ -2854,7 +2856,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-fluid\">\n" +
     "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div ng-if=\"!imageStream\" class=\"mar-top-xl\">Loading...</div>\n" +
+    "<div ng-if=\"!loaded\" class=\"mar-top-xl\">Loading...</div>\n" +
     "<div ng-if=\"imageStream\">\n" +
     "<h1 class=\"contains-actions\">\n" +
     "<div class=\"pull-right dropdown\" ng-hide=\"!('imageStreams' | canIDoAny)\">\n" +
@@ -3096,10 +3098,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</ui-select-match>\n" +
     "<ui-select-choices repeat=\"term in containerTerminals | filter: $select.search\" ui-disable-choice=\"(term.containerState !== 'running') && !term.isUsed\">\n" +
-    "<div row>\n" +
+    "<div class=\"ui-select-choices-flex\">\n" +
     "<span ng-bind-html=\"term.containerName | highlight: $select.search\">\n" +
     "</span>\n" +
-    "<span flex></span>\n" +
     "<span ng-if=\"term.isUsed && (term.containerState === 'running')\" ng-class=\"{'text-muted' : (term.status === 'disconnected')}\">\n" +
     "{{term.status}}\n" +
     "</span>\n" +
@@ -3467,7 +3468,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all routes. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all routes. <button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"clearFilter()\">Clear All Filters</button></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -3702,7 +3703,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Status:</dt>\n" +
     "<dd>\n" +
     "<status-icon status=\"serviceInstance | serviceInstanceStatus\" disable-animation></status-icon>\n" +
-    "<span flex>{{serviceInstance | serviceInstanceStatus | sentenceCase}}</span>\n" +
+    "<span>{{serviceInstance | serviceInstanceStatus | sentenceCase}}</span>\n" +
     "</dd>\n" +
     "<dt ng-if-start=\"serviceInstance | serviceInstanceConditionMessage\">Status Reason:</dt>\n" +
     "<dd ng-if-end class=\"instance-status-message\">{{serviceInstance | serviceInstanceConditionMessage}}</dd>\n" +
@@ -4012,7 +4013,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>No stateful sets have been added to project {{projectName}}.</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all stateful sets. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all stateful sets. <button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"clearFilter()\">Clear All Filters</button></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -4085,7 +4086,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>No builds have been added to project {{projectName}}.</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all builds. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all builds. <button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"clearFilter()\">Clear All Filters</button></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -4152,11 +4153,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</td>\n" +
     "<td data-title=\"Status\">\n" +
-    "<div row class=\"status\">\n" +
-    "\n" +
+    "<div class=\"status\">\n" +
     "<status-icon status=\"latestBuild.status.phase\" disable-animation></status-icon>\n" +
+    "<span class=\"status-detail\">\n" +
     "<span ng-if=\"!latestBuild.status.reason || latestBuild.status.phase === 'Cancelled'\">{{latestBuild.status.phase}}</span>\n" +
     "<span ng-if=\"latestBuild.status.reason && latestBuild.status.phase !== 'Cancelled'\">{{latestBuild.status.reason | sentenceCase}}</span>\n" +
+    "</span>\n" +
     "</div>\n" +
     "</td>\n" +
     "<td data-title=\"Duration\">\n" +
@@ -4193,11 +4195,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{latestBuild | navigateResourceURL}}\">{{latestBuild.metadata.name}}</a>\n" +
     "</td>\n" +
     "<td data-title=\"Status\">\n" +
-    "<div row class=\"status\">\n" +
-    "\n" +
+    "<div class=\"status\">\n" +
     "<status-icon status=\"latestBuild.status.phase\" disable-animation></status-icon>\n" +
+    "<span class=\"status-detail\">\n" +
     "<span ng-if=\"!latestBuild.status.reason || latestBuild.status.phase === 'Cancelled'\">{{latestBuild.status.phase}}</span>\n" +
     "<span ng-if=\"latestBuild.status.reason && latestBuild.status.phase !== 'Cancelled'\">{{latestBuild.status.reason | sentenceCase}}</span>\n" +
+    "</span>\n" +
     "</div>\n" +
     "</td>\n" +
     "<td data-title=\"Duration\">\n" +
@@ -4335,7 +4338,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-show=\"!emptyCatalog && loaded && !singleCategory\">\n" +
     "<p ng-if=\"!parentCategory\">Choose from web frameworks, databases, and other components to add content to your project.</p>\n" +
-    "<form role=\"form\" fit class=\"search-pf has-button\">\n" +
+    "<form role=\"form\" class=\"filter-catalog search-pf has-button\">\n" +
     "<div class=\"form-group has-clear\">\n" +
     "\n" +
     "<div class=\"search-pf-input-group\">\n" +
@@ -4349,7 +4352,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</form>\n" +
     "<div ng-if=\"allContentHidden\" class=\"empty-state-message text-center h2\">\n" +
     "All content is hidden by the current filter.\n" +
-    "<a href=\"\" ng-click=\"filter.keyword = ''\" role=\"button\" class=\"nowrap\">Clear Filter</a>\n" +
+    "<button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"filter.keyword = ''\">Clear All Filters</button>\n" +
     "</div>\n" +
     "<div ng-if=\"!filterActive\">\n" +
     "<div ng-repeat=\"category in categories\" ng-if=\"hasContent[category.id]\">\n" +
@@ -4439,7 +4442,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p><a ng-href=\"project/{{projectName}}/create\">Back to catalog</a></p>\n" +
     "</div>\n" +
     "<div ng-if=\"loaded && !emptyCategory && !catalog.subcategories\">\n" +
-    "<form role=\"form\" fit class=\"search-pf has-button mar-bottom-xl\">\n" +
+    "<form role=\"form\" class=\"filter-catalog search-pf has-button mar-bottom-xl\">\n" +
     "<div class=\"form-group has-clear\">\n" +
     "\n" +
     "<div class=\"search-pf-input-group\">\n" +
@@ -4453,7 +4456,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</form>\n" +
     "<div ng-if=\"!filteredBuilderImages.length && !filteredTemplates.length && loaded\" class=\"empty-state-message text-center h2\">\n" +
     "All content is hidden by the current filter.\n" +
-    "<a href=\"\" ng-click=\"filter.keyword = ''\" role=\"button\" class=\"nowrap\">Clear Filter</a>\n" +
+    "<button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"filter.keyword = ''\">Clear All Filters</button>\n" +
     "</div>\n" +
     "<div class=\"row row-cards-pf row-cards-pf-flex mar-top-xl\">\n" +
     "<catalog-image image-stream=\"builder\" project=\"{{projectName}}\" is-builder=\"true\" keywords=\"keywords\" ng-repeat=\"builder in filteredBuilderImages track by (builder | uid)\">\n" +
@@ -5116,7 +5119,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>No deployments have been added to project {{projectName}}.</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all deployments. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all deployments. <button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"clearFilter()\">Clear All Filters</button></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -5169,9 +5172,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</td>\n" +
     "<td data-title=\"Status\">\n" +
-    "<div row class=\"status\">\n" +
+    "<div class=\"status\">\n" +
     "<status-icon status=\"replicationController | deploymentStatus\" disable-animation></status-icon>\n" +
-    "<span flex>\n" +
+    "<span class=\"status-detail\">\n" +
     "{{replicationController | deploymentStatus}}<span ng-if=\"(replicationController | deploymentStatus) == 'Active' || (replicationController | deploymentStatus) == 'Running'\">,\n" +
     "<span ng-if=\"replicationController.spec.replicas !== replicationController.status.replicas\">{{replicationController.status.replicas}}/</span>{{replicationController.spec.replicas}} replica<span ng-if=\"replicationController.spec.replicas != 1\">s</span></span>\n" +
     "</span>\n" +
@@ -5342,7 +5345,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/_build-pipeline-expanded.html',
-    "<div flex class=\"build-pipeline\">\n" +
+    "<div class=\"build-pipeline\">\n" +
     "<div class=\"build-summary\">\n" +
     "<div ng-if=\"buildConfigNameOnExpanded\" class=\"build-name\">\n" +
     "<a ng-href=\"{{build | configURLForResource}}\">{{buildConfigName}}</a>\n" +
@@ -5374,7 +5377,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"pipeline\">\n" +
     "<div class=\"pipeline-stage\" ng-repeat=\"stage in jenkinsStatus.stages track by stage.id\">\n" +
-    "<div column class=\"pipeline-stage-column\">\n" +
+    "<div class=\"pipeline-stage-column\">\n" +
     "<div title=\"{{stage.name}}\" class=\"pipeline-stage-name\" ng-class=\"build.status.phase\">\n" +
     "{{stage.name}}\n" +
     "</div>\n" +
@@ -5394,7 +5397,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/_build-pipeline-links.html',
-    "<div ng-if=\"(build | buildLogURL) && ('builds/log' | canI : 'get')\" class=\"pipeline-link\"><a ng-href=\"{{build | buildLogURL}}\" target=\"_blank\">View Log</a></div>"
+    "<div ng-if=\"(build | buildLogURL) && (buildLogsVersion | canI : 'get')\" class=\"pipeline-link\"><a ng-href=\"{{build | buildLogURL}}\" target=\"_blank\">View Log</a></div>"
   );
 
 
@@ -6301,7 +6304,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"('serviceaccounts' | canI : 'update') && !serviceAccountToLink\">\n" +
+    "<div ng-if=\"(serviceAccountsVersion | canI : 'update') && !serviceAccountToLink\">\n" +
     "<div class=\"form-group\">\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +
@@ -6528,9 +6531,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/deployment-donut.html',
-    "<div column class=\"deployment-donut\">\n" +
-    "<div row>\n" +
-    "<div column>\n" +
+    "<div class=\"deployment-donut\">\n" +
+    "<div class=\"deployment-donut-row\">\n" +
+    "<div class=\"deployment-donut-column\">\n" +
     "<pod-donut pods=\"pods\" desired=\"getDesiredReplicas()\" idled=\"isIdled\" ng-click=\"viewPodsForDeployment(rc)\" ng-class=\"{ clickable: (pods | hashSize) > 0 }\">\n" +
     "</pod-donut>\n" +
     "\n" +
@@ -6539,7 +6542,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</div>\n" +
     "\n" +
-    "<div column class=\"scaling-controls fade-inline\" ng-if=\"(hpa && !hpa.length) && ((deploymentConfig || rc) | canIScale) && !isIdled\">\n" +
+    "<div class=\"deployment-donut-column scaling-controls fade-inline\" ng-if=\"(hpa && !hpa.length) && ((deploymentConfig || rc) | canIScale) && !isIdled\">\n" +
     "<div>\n" +
     "<a href=\"\" ng-click=\"scaleUp()\" ng-class=\"{ disabled: !scalable }\" ng-attr-title=\"{{!scalable ? undefined : 'Scale up'}}\" ng-attr-aria-disabled=\"{{!scalable ? 'true' : undefined}}\">\n" +
     "<i class=\"fa fa-chevron-up\"></i>\n" +
@@ -6555,7 +6558,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div row ng-if=\"hpa.length\" class=\"scaling-details\">\n" +
+    "<div ng-if=\"hpa.length\" class=\"deployment-donut-row scaling-details\">\n" +
     "<div>\n" +
     "Autoscaled:\n" +
     "<span class=\"nowrap\">min: {{hpa[0].spec.minReplicas || 1}},</span>\n" +
@@ -7127,14 +7130,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"(events | hashSize) === 0\"><em>No events to show.</em></span>\n" +
     "<span ng-if=\"(events | hashSize) > 0\">\n" +
     "All events hidden by filter.\n" +
-    "<a href=\"\" ng-click=\"filter.text = ''\" role=\"button\" class=\"nowrap\">Clear Filter</a>\n" +
+    "<button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"filter.text = ''\">Clear All Filters</button>\n" +
     "</span>\n" +
     "</td>\n" +
     "<td class=\"hidden-xs hidden-sm hidden-md\" colspan=\"{{showKindAndName ? 6 : 4}}\">\n" +
     "<span ng-if=\"(events | hashSize) === 0\"><em>No events to show.</em></span>\n" +
     "<span ng-if=\"(events | hashSize) > 0\">\n" +
     "All events hidden by filter.\n" +
-    "<a href=\"\" ng-click=\"filter.text = ''\" role=\"button\" class=\"nowrap\">Clear Filter</a>\n" +
+    "<button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"filter.text = ''\">Clear All Filters</button>\n" +
     "</span>\n" +
     "</td>\n" +
     "</tr>\n" +
@@ -7466,7 +7469,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div class=\"form-group key-value-editor-input\" ng-class=\"{ 'has-error' :  (forms.keyValueEditor[uniqueForKey(unique, $index)].$invalid && forms.keyValueEditor[uniqueForKey(unique, $index)].$touched) }\">\n" +
     "<label for=\"uniqueForKey(unique, $index)\" class=\"sr-only\">{{keyPlaceholder}}</label>\n" +
-    "<input type=\"text\" class=\"form-control\" ng-class=\"{ '{{setFocusKeyClass}}' : $last  }\" id=\"{{uniqueForKey(unique, $index)}}\" name=\"{{uniqueForKey(unique, $index)}}\" ng-attr-placeholder=\"{{ (!isReadonlyAny) && keyPlaceholder || ''}}\" ng-minlength=\"{{keyMinlength}}\" maxlength=\"{{keyMaxlength}}\" ng-model=\"entry.name\" ng-readonly=\"isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonlyKey || entry.isReadonly\" ng-pattern=\"validation.key\" ng-value ng-required=\"!allowEmptyKeys && entry.value\" ng-attr-key-value-editor-focus=\"{{grabFocus && $last}}\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
+    "<input type=\"text\" class=\"form-control\" ng-class=\"{ '{{setFocusKeyClass}}' : $last  }\" id=\"{{uniqueForKey(unique, $index)}}\" name=\"{{uniqueForKey(unique, $index)}}\" ng-attr-placeholder=\"{{ (!isReadonlyAny) && keyPlaceholder || ''}}\" ng-minlength=\"{{keyMinlength}}\" maxlength=\"{{keyMaxlength}}\" ng-model=\"entry.name\" ng-readonly=\"isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonlyKey || entry.isReadonly\" ng-pattern=\"validation.key\" ng-value ng-required=\"!allowEmptyKeys && (entry.value || entry.valueFrom)\" ng-attr-key-value-editor-focus=\"{{grabFocus && $last}}\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
     "\n" +
     "<span ng-show=\"(forms.keyValueEditor[uniqueForKey(unique, $index)].$touched)\">\n" +
     "<span class=\"help-block key-validation-error\" ng-show=\"(forms.keyValueEditor[uniqueForKey(unique, $index)].$error.pattern)\">\n" +
@@ -7498,19 +7501,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-switch=\"entry.refType\">\n" +
     "<span ng-switch-when=\"configMapKeyRef\">\n" +
     "Set to the key {{entry.valueFrom.configMapKeyRef.key}} in config map\n" +
-    "<span ng-if=\"!('configmaps' | canI : 'get')\">\n" +
+    "<span ng-if=\"!(configMapVersion | canI : 'get')\">\n" +
     "{{entry.valueFrom.configMapKeyRef.name}}\n" +
     "</span>\n" +
-    "<a ng-if=\"'configmaps' | canI : 'get'\" ng-href=\"{{entry.apiObj | navigateResourceURL}}\">\n" +
+    "<a ng-if=\"configMapVersion | canI : 'get'\" ng-href=\"{{entry.apiObj | navigateResourceURL}}\">\n" +
     "{{entry.valueFrom.configMapKeyRef.name}}\n" +
     "</a>\n" +
     "</span>\n" +
     "<span ng-switch-when=\"secretKeyRef\">\n" +
     "Set to the key {{entry.valueFrom.secretKeyRef.key}} in secret\n" +
-    "<span ng-if=\"!('secrets' | canI : 'get')\">\n" +
+    "<span ng-if=\"!(secretsVersion | canI : 'get')\">\n" +
     "{{entry.valueFrom.secretKeyRef.name}}\n" +
     "</span>\n" +
-    "<a ng-if=\"'secrets' | canI : 'get'\" ng-href=\"{{entry.apiObj | navigateResourceURL}}\">\n" +
+    "<a ng-if=\"secretsVersion | canI : 'get'\" ng-href=\"{{entry.apiObj | navigateResourceURL}}\">\n" +
     "{{entry.valueFrom.secretKeyRef.name}}\n" +
     "</a>\n" +
     "</span>\n" +
@@ -7600,12 +7603,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/labels.html',
-    "<div row wrap ng-if=\"(labels | hashSize) > 0\">\n" +
-    "<span row nowrap=\"nowrap\" ng-repeat=\"(labelKey, labelValue) in labels\" class=\"k8s-label\" ng-if=\"!limit || $index < limit\">\n" +
-    "<span row class=\"label-pair\" ng-if=\"clickable\">\n" +
+    "<div class=\"k8s-labels\" ng-if=\"(labels | hashSize) > 0\">\n" +
+    "<span ng-repeat=\"(labelKey, labelValue) in labels\" class=\"k8s-label nowrap\" ng-if=\"!limit || $index < limit\">\n" +
+    "<span class=\"label-pair\" ng-if=\"clickable\">\n" +
     "<a href=\"\" class=\"label-key label truncate\" ng-click=\"filterAndNavigate(labelKey)\" ng-attr-title=\"All {{titleKind || kind}} with the label '{{labelKey}}' (any value)\">{{labelKey}}</a><a href=\"\" class=\"label-value label truncate\" ng-click=\"filterAndNavigate(labelKey, labelValue)\" ng-attr-title=\"All {{titleKind || kind}} with the label '{{labelKey}}={{labelValue}}'\">{{labelValue}}<span ng-if=\"labelValue === ''\"><em>&lt;empty&gt;</em></span></a>\n" +
     "</span>\n" +
-    "<span row class=\"label-pair\" ng-if=\"!clickable\">\n" +
+    "<span class=\"label-pair\" ng-if=\"!clickable\">\n" +
     "<span class=\"label-key label truncate\">{{labelKey}}</span><span class=\"label-value label truncate\">{{labelValue}}</span>\n" +
     "</span>\n" +
     "</span>\n" +
@@ -7654,19 +7657,19 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{env.name}} set to key\n" +
     "<span ng-if=\"env.valueFrom.configMapKeyRef\">\n" +
     "{{env.valueFrom.configMapKeyRef.key}} in config map\n" +
-    "<span ng-if=\"!('configmaps' | canI : 'get')\">\n" +
+    "<span ng-if=\"!(configMapsVersion | canI : 'get')\">\n" +
     "{{env.valueFrom.configMapKeyRef.name}}\n" +
     "</span>\n" +
-    "<a ng-if=\"'configmaps' | canI : 'get'\" ng-href=\"{{env.valueFrom.configMapKeyRef.name | navigateResourceURL : 'ConfigMap' : deploymentConfig.metadata.namespace}}\">\n" +
+    "<a ng-if=\"configMapsVersion | canI : 'get'\" ng-href=\"{{env.valueFrom.configMapKeyRef.name | navigateResourceURL : 'ConfigMap' : deploymentConfig.metadata.namespace}}\">\n" +
     "{{env.valueFrom.configMapKeyRef.name}}\n" +
     "</a>\n" +
     "</span>\n" +
     "<span ng-if=\"env.valueFrom.secretKeyRef\">\n" +
     "{{env.valueFrom.secretKeyRef.key}} in secret\n" +
-    "<span ng-if=\"!('secrets' | canI : 'get')\">\n" +
+    "<span ng-if=\"!(secretsVersion | canI : 'get')\">\n" +
     "{{env.valueFrom.secretKeyRef.name}}\n" +
     "</span>\n" +
-    "<a ng-if=\"'secrets' | canI : 'get'\" ng-href=\"{{env.valueFrom.secretKeyRef.name | navigateResourceURL : 'Secret' : deploymentConfig.metadata.namespace}}\">\n" +
+    "<a ng-if=\"secretsVersion | canI : 'get'\" ng-href=\"{{env.valueFrom.secretKeyRef.name | navigateResourceURL : 'Secret' : deploymentConfig.metadata.namespace}}\">\n" +
     "{{env.valueFrom.secretKeyRef.name}}\n" +
     "</a>\n" +
     "</span>\n" +
@@ -9023,9 +9026,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</td>\n" +
     "<td data-title=\"Status\">\n" +
-    "<div row class=\"status\">\n" +
+    "<div class=\"status\">\n" +
     "<status-icon status=\"pod | podStatus\" disable-animation></status-icon>\n" +
-    "<span flex>{{pod | podStatus | humanizePodStatus}}</span>\n" +
+    "<span class=\"status-detail\">{{pod | podStatus | humanizePodStatus}}</span>\n" +
     "</div>\n" +
     "</td>\n" +
     "<td data-title=\"Ready\">{{pod | numContainersReady}}/{{pod.spec.containers.length}}</td>\n" +
@@ -10535,7 +10538,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>No image streams have been added to project {{projectName}}.</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all image streams. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all image streams. <button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"clearFilter()\">Clear All Filters</button></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -10615,7 +10618,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
-    "<log-viewer ng-if=\"build\" object=\"build\" context=\"projectContext\" status=\"build.status.phase\" time-start=\"build.status.startTimestamp | date : 'medium'\" time-end=\"build.status.completionTimestamp | date : 'medium'\" chromeless=\"true\" run=\"logCanRun\" flex>\n" +
+    "<log-viewer ng-if=\"build\" object=\"build\" context=\"projectContext\" status=\"build.status.phase\" time-start=\"build.status.startTimestamp | date : 'medium'\" time-end=\"build.status.completionTimestamp | date : 'medium'\" chromeless=\"true\" run=\"logCanRun\">\n" +
     "</log-viewer>\n" +
     "</div>\n" +
     "</div>"
@@ -10628,7 +10631,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
-    "<log-viewer ng-if=\"deploymentConfigName && logOptions.version\" object=\"replicaSet\" context=\"projectContext\" options=\"logOptions\" chromeless=\"true\" run=\"logCanRun\" flex>\n" +
+    "<log-viewer ng-if=\"deploymentConfigName && logOptions.version\" object=\"replicaSet\" context=\"projectContext\" options=\"logOptions\" chromeless=\"true\" run=\"logCanRun\">\n" +
     "</log-viewer>\n" +
     "</div>\n" +
     "</div>"
@@ -10641,7 +10644,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "</div>\n" +
     "<div class=\"middle-content\">\n" +
-    "<log-viewer ng-if=\"pod\" object=\"pod\" context=\"projectContext\" options=\"logOptions\" status=\"pod.status.phase\" time-start=\"pod.status.startTime | date : 'medium'\" chromeless=\"true\" run=\"logCanRun\" flex>\n" +
+    "<log-viewer ng-if=\"pod\" object=\"pod\" context=\"projectContext\" options=\"logOptions\" status=\"pod.status.phase\" time-start=\"pod.status.startTime | date : 'medium'\" chromeless=\"true\" run=\"logCanRun\">\n" +
     "</log-viewer>\n" +
     "</div>\n" +
     "</div>"
@@ -10676,10 +10679,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"middle-content\" persist-tab-state>\n" +
     "<div class=\"container-fluid\">\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-12\">\n" +
-    "</div>\n" +
-    "</div>\n" +
     "<div ng-if=\"!(roleBindingsVersion | canI : 'list')\">\n" +
     "<p>You do not have permission to view roles in this project.</p>\n" +
     "</div>\n" +
@@ -10696,18 +10695,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</p>\n" +
     "</div>\n" +
-    "<div column class=\"content-pane\" ng-class=\"'content-' + subjectKind.name.toLowerCase()\">\n" +
-    "<div class=\"col-heading\" flex-collapse-fix>\n" +
-    "<div class=\"col-name\" flex ng-class=\"{ 'half-width': !mode.edit }\">\n" +
+    "<div class=\"content-pane\" ng-class=\"'content-' + subjectKind.name.toLowerCase()\">\n" +
+    "<div class=\"col-heading\">\n" +
+    "<div class=\"col-name\">\n" +
     "<h3>Name</h3>\n" +
     "</div>\n" +
-    "<div class=\"col-roles\" flex>\n" +
+    "<div class=\"action-set\">\n" +
+    "<div class=\"col-roles\">\n" +
     "<h3>Roles</h3>\n" +
     "</div>\n" +
-    "<div ng-if=\"mode.edit\" class=\"col-add-role visible-md-block visible-lg-block\" flex-collapse-fix>\n" +
-    "<h3>\n" +
-    "Add Another Role\n" +
-    "</h3>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"(subjectKind.subjects | hashSize) === 0\" class=\"membership-empty\">\n" +
@@ -10715,8 +10711,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<em>There are no {{ subjectKind.name | humanizeKind }}s with access to this project.</em>\n" +
     "</p>\n" +
     "</div>\n" +
-    "<div ng-repeat=\"subject in subjectKind.subjects\" class=\"item-row highlight-hover\" row mobile=\"column\">\n" +
-    "<div class=\"col-name\" row flex cross-axis=\"center\" ng-class=\"{ 'half-width': !mode.edit }\">\n" +
+    "<div ng-repeat=\"subject in subjectKind.subjects\" class=\"item-row highlight-hover\">\n" +
+    "<div class=\"col-name\">\n" +
     "<a ng-if=\"subject.namespace\" target=\"_blank\" ng-href=\"project/{{project.metadata.name}}/browse/other?kind=ServiceAccount\">\n" +
     "<span>\n" +
     "{{subject.namespace}} /\n" +
@@ -10739,8 +10735,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<action-chip ng-repeat=\"role in subject.roles\" key=\"role.metadata.name\" key-help=\"roleHelp(role)\" show-action=\"mode.edit\" action=\"confirmRemove(subject.name, subjectKind.name, role.metadata.name, subject.namespace)\" action-title=\"Remove role {{role.metadata.name}} from {{subject.name}}\"></action-chip>\n" +
     "</div>\n" +
     "<div ng-if=\"mode.edit\" class=\"col-add-role\">\n" +
-    "<div row>\n" +
-    "<ui-select ng-if=\"filteredRoles.length\" ng-model=\"subject.newRole\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a new role for {{subject.name}}\" class=\"select-role\" flex>\n" +
+    "<div class=\"col-add-role-inputs\">\n" +
+    "<ui-select ng-if=\"filteredRoles.length\" ng-model=\"subject.newRole\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a new role for {{subject.name}}\" class=\"select-role\">\n" +
     "<ui-select-match placeholder=\"Select a role\">\n" +
     "<span ng-bind=\"subject.newRole.metadata.name\"></span>\n" +
     "</ui-select-match>\n" +
@@ -10759,8 +10755,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<ng-form class=\"new-binding\" novalidate name=\"forms.newBindingForm\" ng-if=\"newBinding\">\n" +
-    "<div ng-if=\"mode.edit\" class=\"item-row form-new-role\" row mobile=\"column\">\n" +
-    "<div class=\"col-name service-account\" row mobile=\"column\" tablet=\"column\">\n" +
+    "<div ng-if=\"mode.edit\" class=\"item-row form-new-role\">\n" +
+    "<div class=\"col-name service-account\">\n" +
     "<label ng-attr-for=\"newBindingName\" class=\"sr-only\">\n" +
     "Name\n" +
     "</label>\n" +
@@ -10768,7 +10764,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input ng-if=\"newBinding.kind !== 'ServiceAccount'\" type=\"text\" class=\"form-control input-name\" placeholder=\"Name\" ng-model=\"newBinding.name\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
     "\n" +
     "<div ng-if=\"newBinding.kind === 'ServiceAccount'\" class=\"service-account-namespace\" aria-hidden=\"true\">\n" +
-    "<ui-select ng-model=\"newBinding.namespace\" on-select=\"selectProject($item, $model)\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a project\" class=\"select-role\">\n" +
+    "<ui-select ng-model=\"newBinding.namespace\" on-select=\"selectProject($item, $model)\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a project\" class=\"select-project\">\n" +
     "<ui-select-match placeholder=\"Select a project\">\n" +
     "<span>{{newBinding.namespace}}</span>\n" +
     "</ui-select-match>\n" +
@@ -10777,10 +10773,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
-    "<span ng-if=\"newBinding.kind === 'ServiceAccount'\" class=\"mar-left-md mar-right-md hidden-xs hidden-sm\">/</span>\n" +
+    "<span ng-if=\"newBinding.kind === 'ServiceAccount'\" class=\"mar-left-sm mar-right-sm\">/</span>\n" +
     "\n" +
     "<div ng-if=\"newBinding.kind === 'ServiceAccount'\" class=\"service-account-name\">\n" +
-    "<ui-select ng-model=\"newBinding.name\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a service account\" class=\"select-role\">\n" +
+    "<ui-select ng-model=\"newBinding.name\" theme=\"bootstrap\" search-enabled=\"true\" title=\"Select a service account\" class=\"select-service-account\">\n" +
     "<ui-select-match placeholder=\"Service account\">\n" +
     "<span>{{newBinding.name}}</span>\n" +
     "</ui-select-match>\n" +
@@ -10792,8 +10788,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"action-set\">\n" +
     "<div class=\"col-add-role\">\n" +
-    "<div ng-show=\"mode.edit\" row>\n" +
-    "<ui-select ng-if=\"filteredRoles.length\" ng-model=\"newBinding.newRole\" theme=\"bootstrap\" search-enabled=\"true\" title=\"new {{subjectKind.name}} role\" class=\"select-role\" flex>\n" +
+    "<div ng-show=\"mode.edit\" class=\"col-add-role-inputs\">\n" +
+    "<ui-select ng-if=\"filteredRoles.length\" ng-model=\"newBinding.newRole\" theme=\"bootstrap\" search-enabled=\"true\" title=\"new {{subjectKind.name}} role\" class=\"select-role\">\n" +
     "<ui-select-match placeholder=\"Select a role\">\n" +
     "<span ng-bind=\"newBinding.newRole.metadata.name\"></span>\n" +
     "</ui-select-match>\n" +
@@ -10813,14 +10809,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</ng-form>\n" +
     "<div ng-if=\"mode.edit\" class=\"show-hidden-roles\">\n" +
-    "<div class=\"action-set\">\n" +
-    "<div class=\"col-add-role\">\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +
     "<input type=\"checkbox\" class=\"toggle-hidden\" ng-click=\"toggleRoles($event)\" ng-checked=\"toggle.roles\">\n" +
     "Show hidden roles</label>&nbsp;<a href=\"\" class=\"action-inline\" data-toggle=\"popover\" data-trigger=\"hover focus\" data-content=\"System roles are hidden by default and do not typically need to be managed.\"><i class=\"pficon pficon-help\"></i></a>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -11369,7 +11361,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"list-pf-expansion collapse\" ng-if=\"expanded.pods[pod.metadata.name]\" ng-class=\"{'in': expanded.pods[pod.metadata.name]}\">\n" +
     "<div class=\"list-pf-container\">\n" +
-    "<log-viewer ng-if=\"'pods/log' | canI : 'get'\" object=\"pod\" context=\"projectContext\" options=\"logOptions.pods[pod.metadata.name]\" empty=\"logEmpty.pods[pod.metadata.name]\" run=\"logCanRun.pods[pod.metadata.name]\" fixed-height=\"250\" full-log-url=\"(pod | navigateResourceURL) + '?view=chromeless'\" ng-class=\"{'log-viewer-select': pod.spec.containers.length > 1}\">\n" +
+    "<log-viewer ng-if=\"podsLogVersion | canI : 'get'\" object=\"pod\" context=\"projectContext\" options=\"logOptions.pods[pod.metadata.name]\" empty=\"logEmpty.pods[pod.metadata.name]\" run=\"logCanRun.pods[pod.metadata.name]\" fixed-height=\"250\" full-log-url=\"(pod | navigateResourceURL) + '?view=chromeless'\" ng-class=\"{'log-viewer-select': pod.spec.containers.length > 1}\">\n" +
     "<span class=\"container-details\">\n" +
     "<label for=\"selectLogContainer\">Container:</label>\n" +
     "<span ng-if=\"pod.spec.containers.length === 1\">\n" +
@@ -11447,7 +11439,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-expansion collapse\" ng-if=\"expanded.replicationControllers[replicationController.metadata.name]\" ng-class=\"{'in': expanded.replicationControllers[replicationController.metadata.name]}\">\n" +
     "<div class=\"list-pf-container\">\n" +
     "\n" +
-    "<log-viewer ng-if=\"'deploymentconfigs/log' | canI : 'get'\" object=\"replicationController\" context=\"projectContext\" options=\"logOptions.replicationControllers[replicationController.metadata.name]\" empty=\"logEmpty.replicationControllers[replicationController.metadata.name]\" run=\"logCanRun.replicationControllers[replicationController.metadata.name]\" fixed-height=\"250\" full-log-url=\"(replicationController | navigateResourceURL) + '?view=chromeless'\">\n" +
+    "<log-viewer ng-if=\"deploymentConfigsLogVersion | canI : 'get'\" object=\"replicationController\" context=\"projectContext\" options=\"logOptions.replicationControllers[replicationController.metadata.name]\" empty=\"logEmpty.replicationControllers[replicationController.metadata.name]\" run=\"logCanRun.replicationControllers[replicationController.metadata.name]\" fixed-height=\"250\" full-log-url=\"(replicationController | navigateResourceURL) + '?view=chromeless'\">\n" +
     "</log-viewer>\n" +
     "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
     "<deployment-metrics pods=\"podsByOwnerUID[replicationController.metadata.uid]\" containers=\"replicationController.spec.template.spec.containers\" alerts=\"alerts\">\n" +
@@ -11499,7 +11491,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-expansion collapse\" ng-if=\"expanded.replicationControllers[replicationController.metadata.name]\" ng-class=\"{'in': expanded.replicationControllers[replicationController.metadata.name]}\">\n" +
     "<div class=\"list-pf-container\">\n" +
     "\n" +
-    "<log-viewer ng-if=\"'deploymentconfigs/log' | canI : 'get'\" object=\"replicationController\" context=\"projectContext\" options=\"logOptions.replicationControllers[replicationController.metadata.name]\" empty=\"logEmpty.replicationControllers[replicationController.metadata.name]\" run=\"logCanRun.replicationControllers[replicationController.metadata.name]\" fixed-height=\"250\" full-log-url=\"(replicationController | navigateResourceURL) + '?view=chromeless'\">\n" +
+    "<log-viewer ng-if=\"deploymentConfigsLogVersion | canI : 'get'\" object=\"replicationController\" context=\"projectContext\" options=\"logOptions.replicationControllers[replicationController.metadata.name]\" empty=\"logEmpty.replicationControllers[replicationController.metadata.name]\" run=\"logCanRun.replicationControllers[replicationController.metadata.name]\" fixed-height=\"250\" full-log-url=\"(replicationController | navigateResourceURL) + '?view=chromeless'\">\n" +
     "</log-viewer>\n" +
     "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
     "<deployment-metrics pods=\"podsByOwnerUID[replicationController.metadata.uid]\" containers=\"replicationController.spec.template.spec.containers\" alerts=\"alerts\">\n" +
@@ -11655,7 +11647,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-expansion collapse\" ng-if=\"expanded.builds[build.metadata.name]\" ng-class=\"{'in': expanded.builds[build.metadata.name]}\">\n" +
     "<div class=\"list-pf-container\">\n" +
     "\n" +
-    "<log-viewer ng-if=\"'builds/log' | canI : 'get'\" object=\"build\" context=\"projectContext\" options=\"logOptions.builds[build.metadata.name]\" empty=\"logEmpty.builds[build.metadata.name]\" run=\"logCanRun.builds[build.metadata.name]\" fixed-height=\"250\" full-log-url=\"(build | navigateResourceURL) + '?view=chromeless'\">\n" +
+    "<log-viewer ng-if=\"buildsLogVersion | canI : 'get'\" object=\"build\" context=\"projectContext\" options=\"logOptions.builds[build.metadata.name]\" empty=\"logEmpty.builds[build.metadata.name]\" run=\"logCanRun.builds[build.metadata.name]\" fixed-height=\"250\" full-log-url=\"(build | navigateResourceURL) + '?view=chromeless'\">\n" +
     "<div ng-if=\"build.status.startTimestamp && !logEmpty.builds[build.metadata.name]\" class=\"log-timestamps\" style=\"margin-left: 0\">\n" +
     "Log from {{build.status.startTimestamp | date : 'medium'}}\n" +
     "<span ng-if=\"build.status.completionTimestamp\">\n" +
@@ -11765,7 +11757,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all {{resourceName}}. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all {{resourceName}}. <button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"clearFilter()\">Clear All Filters</button></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -11916,7 +11908,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"overview.everythingFiltered && overview.viewBy !== 'pipeline'\">\n" +
     "<div class=\"empty-state-message text-center h2\">\n" +
     "The filter is hiding all resources.\n" +
-    "<a href=\"\" ng-click=\"overview.clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a>\n" +
+    "<button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"overview.clearFilter()\">Clear All Filters</button>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!overview.everythingFiltered || overview.viewBy === 'pipeline'\">\n" +
@@ -12033,7 +12025,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"(overview.pipelineBuildConfigs | hashSize) && !(overview.filteredPipelineBuildConfigs | hashSize)\">\n" +
     "<div class=\"empty-state-message text-center h2\">\n" +
     "All pipelines are filtered.\n" +
-    "<a href=\"\" ng-click=\"overview.clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a>\n" +
+    "<button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"overview.clearFilter()\">Clear All Filters</button>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-repeat=\"pipeline in overview.filteredPipelineBuildConfigs track by (pipeline | uid)\">\n" +
@@ -12188,13 +12180,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<li ng-if=\"row.showStartBuildAction()\" role=\"menuitem\">\n" +
     "<a href=\"\" ng-click=\"row.startBuild(row.buildConfigs[0])\">Start Build</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"'deploymentconfigs/instantiate' | canI : 'create'\" role=\"menuitem\">\n" +
+    "<li ng-if=\"row.deploymentConfigsInstantiateVersion | canI : 'create'\" role=\"menuitem\">\n" +
     "<a href=\"\" ng-if=\"row.canDeploy()\" ng-click=\"row.startDeployment()\">Deploy</a>\n" +
     "<a href=\"\" ng-if=\"!(row.canDeploy())\" class=\"disabled-link\" aria-disabled=\"true\">\n" +
     "Deploy <span ng-if=\"row.isPaused()\">(Paused)</span>\n" +
     "</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"'deploymentconfigs' | canI : 'update'\" role=\"menuitem\">\n" +
+    "<li ng-if=\"row.deploymentConfigsVersion | canI : 'update'\" role=\"menuitem\">\n" +
     "<a ng-href=\"{{row.apiObject | editResourceURL}}\">Edit</a>\n" +
     "</li>\n" +
     "<li ng-if=\"('pod_presets' | enableTechPreviewFeature)\n" +
@@ -12207,7 +12199,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "                      && (row.serviceBindingsVersion | canI : 'delete')\" role=\"menuitem\">\n" +
     "<a href=\"\" ng-click=\"row.showOverlayPanel('unbindService', {target: row.apiObject})\">Delete Binding</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"row.current && ('deploymentconfigs/log' | canI : 'get')\" role=\"menuitem\">\n" +
+    "<li ng-if=\"row.current && (row.deploymentConfigsLogVersion | canI : 'get')\" role=\"menuitem\">\n" +
     "<a ng-href=\"{{row.current | navigateResourceURL}}?tab=logs\">View Logs</a>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -12219,10 +12211,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i><span class=\"sr-only\">Actions</span>\n" +
     "</button>\n" +
     "<ul class=\"dropdown-menu dropdown-menu-right\" uib-dropdown-menu role=\"menu\">\n" +
-    "<li role=\"menuitem\" ng-if=\"'pods' | canI : 'update'\">\n" +
+    "<li role=\"menuitem\" ng-if=\"row.podsVersion | canI : 'update'\">\n" +
     "<a ng-href=\"{{row.apiObject | editYamlURL}}\">Edit YAML</a>\n" +
     "</li>\n" +
-    "<li role=\"menuitem\" ng-if=\"('pods/log' | canI : 'get')\">\n" +
+    "<li role=\"menuitem\" ng-if=\"(row.podsLogVersion | canI : 'get')\">\n" +
     "<a ng-href=\"{{row.apiObject | navigateResourceURL}}?tab=logs\">View Logs</a>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -12247,7 +12239,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "                      && (row.serviceBindingsVersion | canI : 'delete')\" role=\"menuitem\">\n" +
     "<a href=\"\" ng-click=\"row.showOverlayPanel('unbindService', {target: row.apiObject})\">Delete Binding</a>\n" +
     "</li>\n" +
-    "<li ng-if=\"(pod = row.firstPod(row.current)) && ('pods/log' | canI : 'get')\" role=\"menuitem\">\n" +
+    "<li ng-if=\"(pod = row.firstPod(row.current)) && (row.podsLogVersion | canI : 'get')\" role=\"menuitem\">\n" +
     "<a ng-href=\"{{pod | navigateResourceURL}}?tab=logs\">View Logs</a>\n" +
     "</li>\n" +
     "</ul>\n" +
@@ -12315,7 +12307,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</span>\n" +
     "<a ng-href=\"project/{{row.apiObject.metadata.namespace}}/browse/events\">View Events</a>\n" +
-    "<span ng-if=\"'replicationcontrollers' | canI : 'update'\">\n" +
+    "<span ng-if=\"row.replicationControllersVersion | canI : 'update'\">\n" +
     "<span class=\"action-divider\">|</span>\n" +
     "<a href=\"\" ng-click=\"row.cancelDeployment()\" role=\"button\">Cancel</a>\n" +
     "</span>\n" +
@@ -12388,7 +12380,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!row.pipelines.length\">\n" +
-    "<button ng-if=\"'deploymentconfigs/instantiate' | canI : 'create'\" class=\"btn btn-primary\" ng-click=\"row.startDeployment()\">\n" +
+    "<button ng-if=\"row.deploymentConfigsInstantiateVersion | canI : 'create'\" class=\"btn btn-primary\" ng-click=\"row.startDeployment()\">\n" +
     "Start Deployment\n" +
     "</button>\n" +
     "</div>\n" +
@@ -13066,7 +13058,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>No pods have been added to project {{projectName}}.</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all pods. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all pods. <button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"clearFilter()\">Clear All Filters</button></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -13158,9 +13150,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</form>\n" +
     "</div>\n" +
-    "<div ng-if=\"!projects.length && !isProjectListIncomplete\" class=\"h3\">\n" +
+    "<div ng-if=\"!projects.length && !isProjectListIncomplete\" class=\"h3 empty-state-message\">\n" +
     "The current filter is hiding all projects.\n" +
-    "<a href=\"\" ng-click=\"search.text = ''\" role=\"button\" class=\"nowrap\">Clear Filter</a>\n" +
+    "<button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"search.text = ''\">Clear All Filters</button>\n" +
     "</div>\n" +
     "<div ng-if=\"projects.length\" class=\"list-pf list-group projects-list\">\n" +
     "<div ng-repeat=\"project in projects | limitTo: limitListTo track by (project | uid)\" class=\"list-pf-item list-group-item project-info tile-click\">\n" +
@@ -13277,7 +13269,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dd>\n" +
     "</dl>\n" +
     "<div>\n" +
-    "<div row wrap style=\"justify-content: center\">\n" +
+    "<div class=\"quota-charts\">\n" +
     "<div ng-if=\"quota.status.total.hard.cpu\" class=\"mar-lg\">\n" +
     "<h3 class=\"text-center\">CPU <small>Request</small></h3>\n" +
     "<quota-usage-chart height=\"240\" used=\"namespaceUsageByClusterQuota[quota.metadata.name].used.cpu\" total=\"quota.status.total.hard.cpu\" cross-project-used=\"quota.status.total.used.cpu\" type=\"cpu\" class=\"quota-chart\"></quota-usage-chart>\n" +
@@ -13360,20 +13352,20 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dd>\n" +
     "</dl>\n" +
     "<div>\n" +
-    "<div row wrap style=\"justify-content: center\">\n" +
-    "<div column ng-if=\"quota.status.hard.cpu\" class=\"mar-lg\">\n" +
+    "<div class=\"quota-charts\">\n" +
+    "<div ng-if=\"quota.status.hard.cpu\" class=\"mar-lg\">\n" +
     "<h3 class=\"text-center\">CPU <small>Request</small></h3>\n" +
     "<quota-usage-chart used=\"quota.status.used.cpu\" total=\"quota.status.hard.cpu\" type=\"cpu\" class=\"quota-chart\"></quota-usage-chart>\n" +
     "</div>\n" +
-    "<div column ng-if=\"quota.status.hard.memory\" class=\"mar-lg\">\n" +
+    "<div ng-if=\"quota.status.hard.memory\" class=\"mar-lg\">\n" +
     "<h3 class=\"text-center\">Memory <small>Request</small></h3>\n" +
     "<quota-usage-chart used=\"quota.status.used.memory\" total=\"quota.status.hard.memory\" type=\"memory\" class=\"quota-chart\"></quota-usage-chart>\n" +
     "</div>\n" +
-    "<div column ng-if=\"quota.status.hard['requests.cpu']\" class=\"mar-lg\">\n" +
+    "<div ng-if=\"quota.status.hard['requests.cpu']\" class=\"mar-lg\">\n" +
     "<h3 class=\"text-center\">CPU <small>Request</small></h3>\n" +
     "<quota-usage-chart used=\"quota.status.used['requests.cpu']\" total=\"quota.status.hard['requests.cpu']\" type=\"cpu\" class=\"quota-chart\"></quota-usage-chart>\n" +
     "</div>\n" +
-    "<div column ng-if=\"quota.status.hard['requests.memory']\" class=\"mar-lg\">\n" +
+    "<div ng-if=\"quota.status.hard['requests.memory']\" class=\"mar-lg\">\n" +
     "<h3 class=\"text-center\">Memory <small>Request</small></h3>\n" +
     "<quota-usage-chart used=\"quota.status.used['requests.memory']\" total=\"quota.status.hard['requests.memory']\" type=\"memory\" class=\"quota-chart\"></quota-usage-chart>\n" +
     "</div>\n" +
@@ -13532,7 +13524,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all secrets. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all secrets. <button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"clearFilter()\">Clear All Filters</button></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -13605,7 +13597,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>No provisioned services have been added to project {{projectName}}.</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all provisioned services. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all provisioned services. <button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"clearFilter()\">Clear All Filters</button></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -13629,9 +13621,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</td>\n" +
     "<td data-title=\"Instance Name\"><span>{{serviceInstance.metadata.name}}</span></td>\n" +
     "<td data-title=\"Status\">\n" +
-    "<div row class=\"status\">\n" +
+    "<div class=\"status\">\n" +
     "<status-icon status=\"serviceInstance | serviceInstanceStatus\" disable-animation></status-icon>\n" +
-    "<span flex>{{serviceInstance | serviceInstanceStatus | sentenceCase}}</span>\n" +
+    "<span class=\"status-detail\">{{serviceInstance | serviceInstanceStatus | sentenceCase}}</span>\n" +
     "</div>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
@@ -13702,7 +13694,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>No services have been added to project {{projectName}}.</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all services. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all services. <button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"clearFilter()\">Clear All Filters</button></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -13846,7 +13838,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</p>\n" +
     "</div>\n" +
     "<div ng-if=\"filterWithZeroResults\">\n" +
-    "<h2>The filter is hiding all persistent volume claims. <a href=\"\" ng-click=\"clearFilter()\" role=\"button\" class=\"nowrap\">Clear Filter</a></h2>\n" +
+    "<h2>The filter is hiding all persistent volume claims. <button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"clearFilter()\">Clear All Filters</button></h2>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -13978,7 +13970,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-repeat=\"trigger in $ctrl.webhookTriggers track by $index\" ng-init=\"secretFieldName = 'triggerSecretRef' + $index\">\n" +
     "<div class=\"add-webhook-row\">\n" +
     "<div class=\"select-webhook-type\">\n" +
-    "<ui-select ng-model=\"trigger.data.type\" name=\"triggerType{{$index}}\" ng-disabled=\"$ctrl.isDeprecated(trigger)\" on-select=\"$ctrl.triggerTypeChange(trigger)\" search-enabled=\"false\" title=\"Select a webhook type\" ng-class=\"{'has-warning': trigger.isDuplicate }\" focus-on=\"focus-index-{{$index}}\" flex>\n" +
+    "<ui-select ng-model=\"trigger.data.type\" name=\"triggerType{{$index}}\" ng-disabled=\"$ctrl.isDeprecated(trigger)\" on-select=\"$ctrl.triggerTypeChange(trigger)\" search-enabled=\"false\" title=\"Select a webhook type\" ng-class=\"{'has-warning': trigger.isDuplicate }\" focus-on=\"focus-index-{{$index}}\">\n" +
     "<ui-select-match placeholder=\"Webhook type\">\n" +
     "{{ $select.selected.label }}\n" +
     "</ui-select-match>\n" +
@@ -13988,7 +13980,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select>\n" +
     "</div>\n" +
     "<div class=\"select-secret-ref\" ng-if=\"!$ctrl.isDeprecated(trigger)\">\n" +
-    "<ui-select ng-model=\"trigger.data[trigger.data.type.toLowerCase()].secretReference.name\" name=\"{{secretFieldName}}\" on-select=\"$ctrl.triggerSecretChange(trigger)\" title=\"Select a webhook secret reference\" ng-class=\"{'has-error': $ctrl.secretsForm[secretFieldName].$invalid && $ctrl.secretsForm[secretFieldName].$touched}\" ng-disabled=\"!trigger.data.type\" ng-required=\"trigger.data.type\" flex>\n" +
+    "<ui-select ng-model=\"trigger.data[trigger.data.type.toLowerCase()].secretReference.name\" name=\"{{secretFieldName}}\" on-select=\"$ctrl.triggerSecretChange(trigger)\" title=\"Select a webhook secret reference\" ng-class=\"{'has-error': $ctrl.secretsForm[secretFieldName].$invalid && $ctrl.secretsForm[secretFieldName].$touched}\" ng-disabled=\"!trigger.data.type\" ng-required=\"trigger.data.type\">\n" +
     "<ui-select-match placeholder=\"Webhook secret reference\">\n" +
     "{{ $select.selected.metadata.name }}\n" +
     "</ui-select-match>\n" +

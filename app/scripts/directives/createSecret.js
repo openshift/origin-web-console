@@ -25,6 +25,9 @@ angular.module("openshiftConsole")
       },
       templateUrl: 'views/directives/create-secret.html',
       link: function($scope) {
+
+        $scope.serviceAccountsVersion = APIService.getPreferredVersion('serviceaccounts');
+
         $scope.nameValidation = DNS1123_SUBDOMAIN_VALIDATION;
         $scope.secretReferenceValidation = {
           pattern: /^[a-zA-Z0-9\-_]+$/,

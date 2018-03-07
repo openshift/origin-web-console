@@ -44,7 +44,14 @@
     var isBinaryBuild = $filter('isBinaryBuild');
     var enableTechPreviewFeature = $filter('enableTechPreviewFeature');
 
+    row.deploymentConfigsInstantiateVersion = APIService.getPreferredVersion('deploymentconfigs/instantiate');
+    row.replicationControllersVersion = APIService.getPreferredVersion('replicationcontrollers');
     row.serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
+    row.deploymentConfigsVersion = APIService.getPreferredVersion('deploymentconfigs');
+    row.deploymentConfigsInstantiateVersion = APIService.getPreferredVersion('deploymentconfigs/instantiate');
+    row.deploymentConfigsLogVersion = APIService.getPreferredVersion('deploymentconfigs/log');
+    row.podsVersion = APIService.getPreferredVersion('pods');
+    row.podsLogVersion = APIService.getPreferredVersion('pods/log');
 
     var updateTriggers = function(apiObject) {
       var triggers = _.get(apiObject, 'spec.triggers');

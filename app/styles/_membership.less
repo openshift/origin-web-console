@@ -1,88 +1,57 @@
 .membership {
   .action-set {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 100%;
-    @media(min-width: @screen-sm-min) {
-      flex-wrap: nowrap;
-    }
-    @media(min-width: @screen-md-min) {
-      flex-direction: row;
+    flex: 1 1 auto;
+    @media(min-width: @screen-xs-min) {
+      max-width: 65%;
+      .container-pf-nav-pf-vertical.collapsed-nav & {
+        max-width: 60%;
+      }
     }
   }
   .content-pane {
-    width: 100%;
     .add-role-to {
       margin-left: -1px;
     }
-    .col-add-role {
-      width: 100%;
-      @media(min-width: @screen-xs-min) {
-        min-width: 245px;
-        width: auto;
-      }
+    .col-add-role-inputs {
+      display: flex;
     }
     .col-heading {
       border-bottom: 1px solid #ededed;
       display: none;
       @media(min-width: @screen-xs-min) {
         display: flex;
-        margin: 0;
       }
     }
     .col-name {
+      align-items: center;
+      display: flex;
+      flex: 1 1 auto;
+      padding: 0 0 10px 0;
+      .word-break-all;
       @media(min-width: @screen-xs-min) {
-        max-width: 30%;
+        max-width: 35%;
+        padding: 0 5px 0 0;
+        width: 100%;
         .container-pf-nav-pf-vertical.collapsed-nav & {
           max-width: 40%;
         }
-        padding: 0 5px 0 0;
         input {
           max-width: 225px;
         }
-      }
-      &.half-width {
-        max-width: 50%;
-      }
-      .word-break-all;
-        padding: 0 0px 10px 0;
-        width: 100%;
-      .new-project {
-        margin-top: 2px;
       }
     }
     .col-roles {
       display: flex;
       flex-wrap: wrap;
       padding-bottom: 5px;
-      @media(min-width: @screen-md-min) {
-        padding: 0;
-      }
-    }
-    .content-serviceaccount .form-new-role .col-roles {
-      display: block;
-    }
-    .form-new-role {
-      .col-roles {
-        display: none;
-      }
-      @media(min-width: @screen-md-min) {
-        .action-set {
-          flex-direction: column;
-          .col-add-role {
-            align-self: flex-end;
-          }
-        }
-      }
-    }
-    .input-name {
-      margin-bottom: 5px;
     }
     .item-row {
       border-bottom: 1px solid #ededed;
-      padding: 10px 10px 10px 5px;
+      display: flex;
+      flex-direction: column;
+      padding: 10px 0;
       @media(min-width: @screen-xs-min) {
+        flex-direction: row;
         &.highlight-hover:hover {
           background-color: #fafafa;
         }
@@ -91,50 +60,30 @@
     .membership-empty {
       margin-top: 20px;
     }
-    .show-hidden-roles .action-set {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-end;
-    }
-    .select-project {
-      width: 150px;
+    .show-hidden-roles {
+      text-align: right;
     }
     .select-role {
+      flex: 1 1 auto;
+      .active {
+        small {
+          color: #c0e0f0;
+        }
+      }
       small {
         color: #999;
         display: inline-block;
         line-height: 1.4;
         white-space: pre-line;
       }
-      .active {
-        small {
-          color: #c0e0f0;
-        }
-      }
     }
     .service-account {
-      @media(max-width: @screen-sm-max) {
-        flex-direction: column; // stack inputs because lack of horizontal space
+      flex-wrap: wrap;
+      margin-bottom: -5px;
+      .select-project,
+      .select-service-account {
+        margin-bottom: 5px;
       }
-      .select-role {
-        padding-bottom: 5px;
-        width: auto;
-        @media(min-width: @screen-md-min) {
-          width: 150px;
-        }
-      }
-    }
-    // FIXME (bpeterse): to update in layout.attrs & eliminate the workaround here
-    // fix for collapse of flex items in IE
-    // https://github.com/philipwalton/flexbugs#1-minimum-content-sizing-of-flex-items-not-honored
-    [flex-collapse-fix],
-    [flex], // fixes ie flex-direction: column collapse issue
-    .col-add-role,
-    .col-heading,
-    .col-name,
-    .item-row {
-      flex-shrink: 0;
-      flex-basis: auto;
     }
   }
   // allow for taller select due to role help text

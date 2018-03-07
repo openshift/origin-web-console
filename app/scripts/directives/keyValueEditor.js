@@ -7,9 +7,16 @@
       '$routeParams',
       '$timeout',
       '$filter',
+      'APIService',
       'keyValueEditorConfig',
       'keyValueEditorUtils',
-      function($routeParams, $timeout, $filter, config, utils) {
+      function(
+        $routeParams,
+        $timeout,
+        $filter,
+        APIService,
+        config,
+        utils) {
 
         var humanizeKind = $filter('humanizeKind');
         var canI = $filter('canI');
@@ -194,8 +201,13 @@
               var readOnlySome = [];
               var cannotDeleteSome = [];
               var unique = counter++;
-              var canIGetSecrets = canI('secrets', 'get');
-              var canIGetConfigMaps = canI('configmaps', 'get');
+
+              $scope.configMapVersion = APIService.getPreferredVersion('configmaps');
+              $scope.secretsVersion = APIService.getPreferredVersion('secrets');
+
+              var canIGetSecrets = canI($scope.secretsVersion, 'get');
+              var canIGetConfigMaps = canI($scope.configMapVersion, 'get');
+
 
               angular.extend($scope, {
                 namespace: $routeParams.project,

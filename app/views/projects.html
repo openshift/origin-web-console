@@ -90,9 +90,9 @@
                   </div>
                 </form>
               </div>
-              <div ng-if="!projects.length && !isProjectListIncomplete" class="h3">
+              <div ng-if="!projects.length && !isProjectListIncomplete" class="h3 empty-state-message">
                 The current filter is hiding all projects.
-                <a href="" ng-click="search.text = ''" role="button" class="nowrap">Clear Filter</a>
+                <button type="button" class="btn btn-link inline-btn-link" ng-click="search.text = ''">Clear All Filters</button>
               </div>
               <div ng-if="projects.length" class="list-pf list-group projects-list">
                 <div ng-repeat="project in projects | limitTo: limitListTo track by (project | uid)" class="list-pf-item list-group-item project-info tile-click">

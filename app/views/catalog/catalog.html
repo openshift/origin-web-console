@@ -22,7 +22,7 @@
   <p ng-if="!parentCategory">Choose from web frameworks, databases, and other components to
   add content to your project.</p>
 
-  <form role="form" fit class="search-pf has-button">
+  <form role="form" class="filter-catalog search-pf has-button">
     <div class="form-group has-clear">
       <!-- Add a hidden label for screen readers. -->
       <div class="search-pf-input-group">
@@ -50,7 +50,7 @@
 
   <div ng-if="allContentHidden" class="empty-state-message text-center h2">
     All content is hidden by the current filter.
-    <a href="" ng-click="filter.keyword = ''" role="button" class="nowrap">Clear Filter</a>
+    <button type="button" class="btn btn-link inline-btn-link" ng-click="filter.keyword = ''">Clear All Filters</button>
   </div>
 
   <div ng-if="!filterActive">

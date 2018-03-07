@@ -363,7 +363,7 @@ angular.module("openshiftConsole")
           var resource;
           if (!_.isEmpty($scope.createResources)) {
             resource = _.head($scope.createResources);
-            DataService.create(APIService.kindToResource(resource.kind), null, resource, {namespace: $scope.input.selectedProject.metadata.name}).then(
+            DataService.create(APIService.objectToResourceGroupVersion(resource), null, resource, {namespace: $scope.input.selectedProject.metadata.name}).then(
               // create resource success
               function() {
                 if (!$scope.isDialog) {
@@ -387,7 +387,7 @@ angular.module("openshiftConsole")
               });
           } else {
             resource = _.head($scope.updateResources);
-            DataService.update(APIService.kindToResource(resource.kind), resource.metadata.name, resource, {namespace: $scope.input.selectedProject.metadata.name}).then(
+            DataService.update(APIService.objectToResourceGroupVersion(resource), resource.metadata.name, resource, {namespace: $scope.input.selectedProject.metadata.name}).then(
               // update resource success
               function() {
                 if (!$scope.isDialog) {

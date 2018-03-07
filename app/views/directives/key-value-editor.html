@@ -39,7 +39,7 @@
           ng-readonly="isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonlyKey || entry.isReadonly"
           ng-pattern="validation.key"
           ng-value
-          ng-required="!allowEmptyKeys && entry.value"
+          ng-required="!allowEmptyKeys && (entry.value || entry.valueFrom)"
           ng-attr-key-value-editor-focus="{{grabFocus && $last}}"
           autocorrect="off"
           autocapitalize="none"
@@ -114,11 +114,11 @@
                 <span ng-switch-when="configMapKeyRef">
                   Set to the key {{entry.valueFrom.configMapKeyRef.key}} in config map
                   <span
-                    ng-if="!('configmaps' | canI : 'get')">
+                    ng-if="!(configMapVersion | canI : 'get')">
                     {{entry.valueFrom.configMapKeyRef.name}}
                   </span>
                   <a
-                    ng-if="'configmaps' | canI : 'get'"
+                    ng-if="configMapVersion | canI : 'get'"
                     ng-href="{{entry.apiObj | navigateResourceURL}}">
                     {{entry.valueFrom.configMapKeyRef.name}}
                   </a>
@@ -126,11 +126,11 @@
                 <span ng-switch-when="secretKeyRef">
                   Set to the key {{entry.valueFrom.secretKeyRef.key}} in secret
                   <span
-                    ng-if="!('secrets' | canI : 'get')">
+                    ng-if="!(secretsVersion | canI : 'get')">
                     {{entry.valueFrom.secretKeyRef.name}}
                   </span>
                   <a
-                    ng-if="'secrets' | canI : 'get'"
+                    ng-if="secretsVersion | canI : 'get'"
                     ng-href="{{entry.apiObj | navigateResourceURL}}">
                     {{entry.valueFrom.secretKeyRef.name}}
                   </a>

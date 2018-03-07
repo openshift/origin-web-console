@@ -2,7 +2,7 @@
 
 angular.module("openshiftConsole")
 
-  .directive("editLifecycleHook", function() {
+  .directive("editLifecycleHook", function(APIService) {
     return {
       restrict: 'E',
       scope: {
@@ -16,6 +16,10 @@ angular.module("openshiftConsole")
       },
       templateUrl: 'views/directives/edit-lifecycle-hook.html',
       controller: function($scope) {
+
+        $scope.secretsVersion = APIService.getPreferredVersion('secrets');
+        $scope.configMapsVersion = APIService.getPreferredVersion('configmaps');
+
         $scope.view = {
           isDisabled: false
         };
@@ -140,7 +144,7 @@ angular.module("openshiftConsole")
       }
     };
   })
-  .directive("lifecycleHook", function($filter) {
+  .directive("lifecycleHook", function($filter, APIService) {
     return {
       restrict: 'E',
       scope: {
@@ -149,6 +153,10 @@ angular.module("openshiftConsole")
       },
       templateUrl: 'views/directives/lifecycle-hook.html',
       link: function($scope) {
+
+        $scope.secretsVersion = APIService.getPreferredVersion('secrets');
+        $scope.configMapsVersion = APIService.getPreferredVersion('configmaps');
+
         $scope.$watch('deploymentConfig', function(deploymentConfig) {
           $scope.strategyParams = $filter('deploymentStrategyParams')(deploymentConfig);
         });

@@ -46,9 +46,9 @@
     display: none;
     line-height: 1;
     position: absolute;
-    right: 25px;
+    right: 19px;
     top: 0;
-    z-index: 1;
+    z-index: 10;
     a {
       .style-terminal-action();
     }
@@ -58,11 +58,6 @@
     .go-fullscreen {
       display: block;
     }
-  }
-  .terminal-actions .btn {
-    background: none;
-    .btn-link();
-    .style-terminal-action();
   }
   // so that &-:ms-fullscreen works correctly, these need to come after .fullscreen-toggle
   &:-moz-full-screen {
@@ -80,21 +75,30 @@
 }
 
 kubernetes-container-terminal {
-  // Control what fonts are used in the container terminal since we need the terminal-font class for row/col character calculations
-  .terminal {
-    .terminal-font();
-  }
   .terminal-actions {
     top: 0;
-    right: 47px;
+    right: 25px;
+    .btn {
+      background: none;
+      .btn-link();
+      .style-terminal-action();
+    }
     .spinner {
       top: 5px;
     }
   }
 }
 
+// .terminal-font is used for row/col character calculations.
+// It must match what's in the xterm.js config in kubernetes-container-terminal.
+// However, the line-height is dependent on the font, so instead of a value
+// of 1, it gets the pixel value of the declared font as rendered inside of
+// xterm.js, which varies across browser and platform.  Our default monospace
+// font stack won't work in this instance because the fonts there render with
+// different line heights based on the browser (e.g., Menlo renders with a
+// line-height of 12px in Chrome for MacOS, but 14px in Firefox for MacOS).
 .terminal-font {
-  font-family: "Monospace Regular", "DejaVu Sans Mono", Menlo, Monaco, Consolas, monospace;
+  font-family: "Courier New", Courier, monospace;
   font-size: 12px;
-  line-height: 1em;
+  line-height: 14px;
 }

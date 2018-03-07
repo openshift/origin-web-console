@@ -10,8 +10,7 @@
           search-enabled="false"
           title="Select a webhook type"
           ng-class="{'has-warning': trigger.isDuplicate }"
-          focus-on="focus-index-{{$index}}"
-          flex>
+          focus-on="focus-index-{{$index}}">
           <ui-select-match placeholder="Webhook type">
             {{ $select.selected.label }}
           </ui-select-match>
@@ -29,8 +28,7 @@
           title="Select a webhook secret reference"
           ng-class="{'has-error': $ctrl.secretsForm[secretFieldName].$invalid && $ctrl.secretsForm[secretFieldName].$touched}"
           ng-disabled="!trigger.data.type"
-          ng-required="trigger.data.type"
-          flex>
+          ng-required="trigger.data.type">
           <ui-select-match placeholder="Webhook secret reference">
             {{ $select.selected.metadata.name }}
           </ui-select-match>

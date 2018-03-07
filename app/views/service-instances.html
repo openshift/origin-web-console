@@ -32,7 +32,7 @@
                     <p>No provisioned services have been added to project {{projectName}}.</p>
                   </div>
                   <div ng-if="filterWithZeroResults">
-                    <h2>The filter is hiding all provisioned services. <a href="" ng-click="clearFilter()" role="button" class="nowrap">Clear Filter</a></h2>
+                    <h2>The filter is hiding all provisioned services. <button type="button" class="btn btn-link inline-btn-link" ng-click="clearFilter()">Clear All Filters</button></h2>
                   </div>
                 </div>
               </div>
@@ -56,9 +56,9 @@
                     </td>
                     <td data-title="Instance Name"><span>{{serviceInstance.metadata.name}}</span></td>
                     <td data-title="Status">
-                      <div row class="status">
+                      <div class="status">
                         <status-icon status="serviceInstance | serviceInstanceStatus" disable-animation></status-icon>
-                        <span flex>{{serviceInstance | serviceInstanceStatus | sentenceCase}}</span>
+                        <span class="status-detail">{{serviceInstance | serviceInstanceStatus | sentenceCase}}</span>
                       </div>
                     </td>
                     <td data-title="Created">

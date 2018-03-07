@@ -24,11 +24,6 @@
   <div class="middle-content" persist-tab-state>
     <div class="container-fluid">
       <alerts alerts="alerts"></alerts>
-      <div class="row">
-        <div class="col-md-12">
-
-        </div>
-      </div>
       <div  ng-if="!(roleBindingsVersion | canI : 'list')">
         <p>You do not have permission to view roles in this project.</p>
       </div>
@@ -54,23 +49,18 @@
             </p>
           </div>
           <div
-            column
             class="content-pane"
             ng-class="'content-' + subjectKind.name.toLowerCase()">
 
             <div
-              class="col-heading"
-              flex-collapse-fix>
-              <div class="col-name" flex ng-class="{ 'half-width': !mode.edit }">
+              class="col-heading">
+              <div class="col-name">
                 <h3>Name</h3>
               </div>
-              <div class="col-roles" flex>
-                <h3>Roles</h3>
-              </div>
-              <div ng-if="mode.edit" class="col-add-role visible-md-block visible-lg-block" flex-collapse-fix>
-                <h3>
-                  Add Another Role
-                </h3>
+              <div class="action-set">
+                <div class="col-roles">
+                  <h3>Roles</h3>
+                </div>
               </div>
             </div>
 
@@ -81,9 +71,8 @@
             </div>
             <div
               ng-repeat="subject in subjectKind.subjects"
-              class="item-row highlight-hover"
-              row mobile="column">
-              <div class="col-name" row flex cross-axis="center" ng-class="{ 'half-width': !mode.edit }">
+              class="item-row highlight-hover">
+              <div class="col-name">
                 <a
                   ng-if="subject.namespace"
                   target="_blank"
@@ -119,15 +108,14 @@
                 <div
                   ng-if="mode.edit"
                   class="col-add-role">
-                  <div row>
+                  <div class="col-add-role-inputs">
                     <ui-select
                       ng-if="filteredRoles.length"
                       ng-model="subject.newRole"
                       theme="bootstrap"
                       search-enabled="true"
                       title="Select a new role for {{subject.name}}"
-                      class="select-role"
-                      flex>
+                      class="select-role">
                       <ui-select-match
                         placeholder="Select a role">
                         <span ng-bind="subject.newRole.metadata.name"></span>
@@ -162,8 +150,8 @@
               ng-if="newBinding">
               <div
                 ng-if="mode.edit"
-                class="item-row form-new-role" row mobile="column">
-                <div class="col-name service-account" row mobile="column" tablet="column">
+                class="item-row form-new-role">
+                <div class="col-name service-account">
                   <label
                     ng-attr-for="newBindingName"
                     class="sr-only">
@@ -191,7 +179,7 @@
                       theme="bootstrap"
                       search-enabled="true"
                       title="Select a project"
-                      class="select-role">
+                      class="select-project">
                       <ui-select-match
                         placeholder="Select a project">
                         <span>{{newBinding.namespace}}</span>
@@ -207,7 +195,7 @@
 
                   <span
                     ng-if="newBinding.kind === 'ServiceAccount'"
-                    class="mar-left-md mar-right-md hidden-xs hidden-sm">/</span>
+                    class="mar-left-sm mar-right-sm">/</span>
 
                   <!-- name entry/picker for service accounts -->
                   <div
@@ -218,7 +206,7 @@
                       theme="bootstrap"
                       search-enabled="true"
                       title="Select a service account"
-                      class="select-role">
+                      class="select-service-account">
                       <ui-select-match
                         placeholder="Service account">
                         <span>{{newBinding.name}}</span>
@@ -234,15 +222,14 @@
                 </div>
                 <div class="action-set">
                   <div class="col-add-role">
-                    <div ng-show="mode.edit" row>
+                    <div ng-show="mode.edit" class="col-add-role-inputs">
                       <ui-select
                         ng-if="filteredRoles.length"
                         ng-model="newBinding.newRole"
                         theme="bootstrap"
                         search-enabled="true"
                         title="new {{subjectKind.name}} role"
-                        class="select-role"
-                        flex>
+                        class="select-role">
                         <ui-select-match
                           placeholder="Select a role">
                           <span ng-bind="newBinding.newRole.metadata.name"></span>
@@ -274,22 +261,18 @@
             <div
               ng-if="mode.edit"
               class="show-hidden-roles">
-              <div class="action-set">
-                <div class="col-add-role">
-                  <div class="checkbox">
-                    <label>
-                      <input
-                        type="checkbox"
-                        class="toggle-hidden"
-                        ng-click="toggleRoles($event)"
-                        ng-checked="toggle.roles">
-                      Show hidden roles</label>&nbsp;<a href=""
-                                                        class="action-inline"
-                                                        data-toggle="popover"
-                                                        data-trigger="hover focus"
-                                                        data-content="System roles are hidden by default and do not typically need to be managed."><i class="pficon pficon-help"></i></a>
-                  </div>
-                </div>
+              <div class="checkbox">
+                <label>
+                  <input
+                    type="checkbox"
+                    class="toggle-hidden"
+                    ng-click="toggleRoles($event)"
+                    ng-checked="toggle.roles">
+                  Show hidden roles</label>&nbsp;<a href=""
+                                                    class="action-inline"
+                                                    data-toggle="popover"
+                                                    data-trigger="hover focus"
+                                                    data-content="System roles are hidden by default and do not typically need to be managed."><i class="pficon pficon-help"></i></a>
               </div>
             </div>
           </div>
