@@ -14,15 +14,21 @@
     .id {
       .text-muted();
     }
-    .del-integration {
-      color: red;
-    }
 
     .integration {
       color: @link-color;
 
       .integration-name {
         display: inline;
+      }
+
+      &.active {
+        .pficon-error-circle-o {
+          &:before {
+            color: @link-color;
+          }
+          cursor: pointer;
+        }
       }
 
       &.inactive {

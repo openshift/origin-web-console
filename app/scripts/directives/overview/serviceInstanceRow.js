@@ -83,6 +83,7 @@
           //TODO: Ensure ui works with multiple integrations
           // States -> integrated, not integrated, not provisioned
           row.integrations = integrations.split(",");
+          // row.integrations.push("fh-sync-server");
         }
       }
     };
