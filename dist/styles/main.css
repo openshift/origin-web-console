@@ -5211,10 +5211,9 @@ h2+.list-view-pf{margin-top:20px}
 }
 .monitoring-page .text-prepended-icon .fa,.monitoring-page .text-prepended-icon .pficon{margin-right:7px}
 #header-logo{background-image:url(../images/logo-origin-thin.svg);background-position:left center;background-repeat:no-repeat;height:40px;width:196px}
-@media (min-width:768px){#header-logo{width:230px}
-}
 .navbar-pf-vertical{background-color:#030303;border-bottom:1px solid #050505;border-top:none;min-height:0}
-@media (min-width:767px){.navbar-pf-vertical{padding-left:20px}
+@media (min-width:768px){#header-logo{width:230px}
+.navbar-pf-vertical{padding-left:20px}
 }
 .navbar-pf-vertical .dropdown-menu:after{border:6px solid transparent;border-bottom-color:#fff;border-top-width:0;content:"";display:block;height:0;position:absolute;right:9px;top:-6px;vertical-align:middle;width:0}
 .navbar-pf-vertical .navbar-brand{padding:0}
