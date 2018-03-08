@@ -488,6 +488,9 @@ angular
       });
     }, 1000);
   })
+  .run(function(){
+    console.log("TEST");
+  })
   .run(function(IS_IOS) {
     if (IS_IOS) {
       // Add a class for iOS devices. This lets us disable some hover effects
