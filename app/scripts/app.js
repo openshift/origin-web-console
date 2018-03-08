@@ -495,6 +495,9 @@ angular
       LabelFilter.readPersistedState();
     });
   })
+  .run(function(){
+    console.log("TEST");
+  })
   .run(function($location, $uibModal, AuthService) {
     var INACTIVITY_TIMEOUT_MINUTES = window.OPENSHIFT_CONFIG.inactivityTimeoutMinutes;
     if (!INACTIVITY_TIMEOUT_MINUTES) {
