@@ -6,7 +6,18 @@
     <div class="description pull-left">
       <h4 class="integration-name">{{$ctrl.integrationData.name}}</h4>
       <span class="integration-error" ng-if="$ctrl.getState() == 2"><span class="spinner spinner-xs spinner-inline" aria-hidden="true"></span></span>
-      <span class="pficon-error-circle-o" ng-if="$ctrl.getState() == 1" ng-click="$ctrl.removeIntegration()"></span>
+      <delete-link
+      class="inline-delete"
+      ng-if="$ctrl.getState() == 1"
+      kind="servicebinding"
+      group="servicecatalog.k8s.io"
+      button-only="true"
+      stay-on-current-page="true"
+      resource-name="{{$ctrl.binding.metadata.name}}"
+      project-name="{{$ctrl.binding.metadata.namespace}}"
+      success="$ctrl.deletePodPreset">
+    </delete-link>
+    <!-- <span class="pficon-error-circle-o" ng-if="$ctrl.getState() == 1" ng-click="$ctrl.removeIntegration()"></span> -->
       <span class="pficon pficon-add-circle-o" ng-if="$ctrl.getState() == 0" ng-click="$ctrl.openIntegrationPanel()"></span>
       <!-- Does this pending and spinner stuff work? -->
       <div class="id" ng-if="$ctrl.getState() == 2">status: Pending</div>
