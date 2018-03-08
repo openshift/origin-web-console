@@ -1199,7 +1199,9 @@ var e = $(this).data("timestamp"), f = $(this).data("omit-single"), g = $(this).
 return h ? b(e, null) || d :a(e, null, f, g) || d;
 });
 }, 1e3);
-} ]).run([ "IS_IOS", function(a) {
+} ]).run(function() {
+console.log("TEST");
+}).run([ "IS_IOS", function(a) {
 a && $("body").addClass("ios");
 } ]).run([ "$rootScope", function(a) {
 _.get(window, "OPENSHIFT_CONSTANTS.ENABLE_TECH_PREVIEW_FEATURE.service_catalog_landing_page") && (a.globalTechPreviewIndicator = !0, $("body").addClass("tech-preview"));
