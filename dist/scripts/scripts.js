@@ -1371,7 +1371,9 @@ e.aHrefSanitizationWhitelist(/^\s*(https?|mailto|git):/i);
 t.persistFilterState(!0), e.$on("$routeChangeSuccess", function() {
 t.readPersistedState();
 });
-} ]).run([ "durationFilter", "timeOnlyDurationFromTimestampsFilter", function(e, t) {
+} ]).run(function() {
+console.log("TEST");
+}).run([ "durationFilter", "timeOnlyDurationFromTimestampsFilter", function(e, t) {
 setInterval(function() {
 $(".duration[data-timestamp]").text(function(n, a) {
 var r = $(this).data("timestamp"), o = $(this).data("omit-single"), i = $(this).data("precision");
