@@ -11,6 +11,13 @@
       <div id="header-logo"></div>
     </a>
   </div>
+  <div class="nav contextselector-pf hidden-xs hidden-sm" ng-show="clusterConsoleURL">
+    <select class="selectpicker contextselector">
+      <option value="catalog">Service Catalog</option>
+      <option value="application-console">Application Console</option>
+      <option value="cluster-console">Cluster Console</option>
+    </select>
+  </div>
   <navbar-utility></navbar-utility>
 </nav>
 
@@ -25,7 +32,7 @@
   </div>
   <div class="form-group">
     <!-- Use title="" to prevent "Nothing selected" from briefly flashing while the projects are still loading. -->
-    <select class="selectpicker form-control" data-selected-text-format="count>3" id="boostrapSelect" title=""></select>
+    <select class="selectpicker project-picker form-control" id="boostrapSelect" title=""></select>
   </div>
   <catalog-search ng-if="canIAddToProject" catalog-items="catalogItems" base-project-url="project" toggle-at-mobile="true" search-toggle-callback="onSearchToggle"></catalog-search>
   <!-- create buttons show at mobile -->

@@ -1,0 +1,31 @@
+//
+// Context selector
+// --------------------------------------------------
+
+.contextselector-pf {
+  position: relative;
+  .bootstrap-select {
+    &.btn-group .btn .caret {
+      margin-top: -4px;
+    }
+    > .dropdown-toggle {
+      font-weight: 300;
+      &:hover {
+        // filler strip to cover border-bottom on .navbar-pf-vertical
+        &::after {
+          background: @navbar-pf-navbar-primary-active-bg-color-stop;
+          bottom: -1px;
+          content: "";
+          height: 1px;
+          left: 0;
+          position: absolute;
+          right: 0;
+          z-index: 0;
+        }
+      }
+    }
+    .dropdown-menu {
+      margin-top: 1px;
+    }
+  }
+}
