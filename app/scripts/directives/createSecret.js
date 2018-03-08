@@ -116,7 +116,7 @@ angular.module("openshiftConsole")
 
         var constructSecretObject = function(data, authType) {
           var secret = {
-            apiVersion: "v1",
+            apiVersion: APIService.toAPIVersion(secretsVersion),
             kind: "Secret",
             metadata: {
               name: $scope.newSecret.data.secretName
@@ -245,7 +245,7 @@ angular.module("openshiftConsole")
         $scope.create = function() {
           hideErrorNotifications();
           var newSecret = constructSecretObject($scope.newSecret.data, $scope.newSecret.authType);
-          DataService.create(secretsVersion, null, newSecret, $scope).then(function(secret) { // Success
+          DataService.create(APIService.objectToResourceGroupVersion(newSecret), null, newSecret, $scope).then(function(secret) { // Success
             // In order to link:
             // - the SA has to be defined
             // - defined SA has to be present in the obtained SA list
