@@ -2,51 +2,6 @@
 
 .key-value-editor,
 .environment-from-editor {
-  &.as-sortable-dragging {
-    .as-sortable-item-delete,
-    .input-group-addon,
-    input {
-      opacity: @as-sortable-dragging-opacity;
-    }
-  }
-
-  &.as-sortable-dragging .as-sortable-item-handle,
-  .as-sortable-item-delete:hover,
-  .as-sortable-DISABLED-item-delete:hover,
-  .as-sortable-item-handle:hover {
-    opacity: @as-sortable-item-icon-hover-opacity;
-  }
-
-  .as-sortable-item-delete,
-  .as-sortable-DISABLED-item-delete,
-  .as-sortable-item-handle {
-    display: inline-block;
-    font-size: @as-sortable-item-icon-font-size;
-    opacity: @as-sortable-item-icon-opacity;
-    padding: @as-sortable-item-icon-padding;
-    vertical-align: middle;
-  }
-
-  .as-sortable-item-delete,
-  .as-sortable-DISABLED-item-delete {
-    color: #333; // boostrap's @text-color
-    &:hover,
-    &:focus,
-    &:active {
-      text-decoration: none;
-    }
-  }
-
-  .as-sortable-item-handle {
-    cursor: move;
-  }
-
-  .as-sortable-placeholder {
-    border-top: @as-sortable-placeholder-border-top-width @as-sortable-placeholder-border-top-style @as-sortable-placeholder-border-top-color;
-    clear: left;
-    width: @as-sortable-placeholder-width;
-  }
-
   // .form-control styles duplicated from bower_components/patternfly/less/lib/boostrap/forms.less and bower_components/patternfly/less/forms.less
   .faux-form-control {
     background-color: @input-bg;
@@ -106,51 +61,8 @@
       width: 100%;
     }
   }
-
-  .key-value-editor-buttons,
-  .environment-from-editor-button {
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: (@as-sortable-item-button-width * 2);
-  }
-
   .environment-from-entry {
-    display: table;
-    margin-bottom: 15px;
-    padding-right: 0;
-    @media(max-width: @screen-xxs-max) {
-      padding-right: (@as-sortable-item-button-width * 2);
-    }
-    position: relative;
-    table-layout: fixed;
-    width: 100%;
-    .environment-from-editor-button {
-      top: 26px; // position to align with config-map ui-select when stacked
-      @media(min-width: @screen-xs-min)  {
-        float: left;
-        padding: 0 5px;
-        position: relative;
-        top: 0; // position when not stacked
-        width: auto;
-      }
-    }
     .environment-from-input {
-      float: left;
-      margin-bottom: 0;
-      padding-right: 5px;
-      width: 100%;
-      @media(min-width: @screen-xs-min) {
-        width: calc(~"50% - 26px"); // Adjust env-from width to match kve input, when env-from row doesn't have padding-right;
-      }
-      &.prefix {
-        padding-right: 0;
-        width: calc(~"50% + 26px"); // Adjust prefix width to match kve input, when env-from row doesn't have padding-right;
-        @media(max-width: @screen-xxs-max) {
-          margin-top: 5px;
-          width: 100%;
-        }
-      }
       .faux-input-group,
       .ui-select {
         float: left;
@@ -161,19 +73,9 @@
       }
     }
     .environment-from-view-details {
-      float: left;
-      line-height: 1;
-      padding: 6px 0 0;
+      padding: 5px 0 0;
+      text-align: right;
     }
-  }
-
-  .key-value-editor-entry {
-    display: table;
-    margin-bottom: 15px;
-    padding-right: (@as-sortable-item-button-width * 2);
-    position: relative;
-    table-layout: fixed;
-    width: 100%;
   }
   .key-value-editor-input .ui-select {
     @media(min-width: @screen-md-min) {
@@ -188,42 +90,4 @@
       }
     }
   }
-}
-
-.environment-from-editor-header {
-  &.config-map-header,
-  &.prefix-header {
-    @media(max-width: @screen-xxs-max) {
-      display: none;
-      width: 100%;
-    }
-    &.config-map-header-mobile,
-    &.prefix-header-mobile {
-      display: block;
-      margin-bottom: 0;
-      margin-top: 5px;
-      @media(min-width: @screen-xs-min) {
-        display: none;
-      }
-    }
-  }
-}
-
-.key-value-editor .key-value-editor-input,
-.key-value-editor-header,
-.environment-from-editor-header {
-  float: left;
-  margin-bottom: 0;
-  padding-right: 5px;
-  width: 50%;
-}
-
-.key-value-editor-entry-header,
-.environment-from-editor-entry-header {
-  padding-right: (@as-sortable-item-button-width * 2);
-}
-
-.key-value-editor-header,
-.environment-from-editor-header {
-  margin-bottom: 5px;
 }

@@ -1,19 +1,19 @@
-<ng-form name="forms.keyValueEditor" novalidate ng-if="entries">
-
-  <div
-    ng-if="showHeader"
-    class="key-value-editor-entry key-value-editor-entry-header">
-    <div class="key-value-editor-header key-header">
-      {{keyPlaceholder}}
+<ng-form name="forms.keyValueEditor" novalidate ng-if="entries" ng-class="{ 'has-sort' : (!cannotSort) && (entries.length > 1)}">
+  <div ng-if="showHeader" class="row form-row-has-controls input-labels">
+    <div class="col-xs-6">
+      <label class="input-label">
+        {{keyPlaceholder}}
+      </label>
     </div>
-    <div class="key-value-editor-header value-header">
-      {{valuePlaceholder}}
+    <div class="col-xs-6">
+      <label class="input-label">
+        {{valuePlaceholder}}
+      </label>
     </div>
   </div>
-
   <div ng-model="entries" class="key-value-editor" as-sortable="dragControlListeners">
     <div
-      class="key-value-editor-entry"
+      class="key-value-editor-entry row form-row-has-controls"
       ng-class-odd="'odd'"
       ng-class-even="'even'"
       ng-repeat="entry in entries"
@@ -21,7 +21,7 @@
 
       <!-- The name/key block -->
       <div
-        class="form-group key-value-editor-input"
+        class="form-group col-xs-6 key-value-editor-input"
         ng-class="{ 'has-error' :  (forms.keyValueEditor[uniqueForKey(unique, $index)].$invalid && forms.keyValueEditor[uniqueForKey(unique, $index)].$touched) }">
 
         <label for="uniqueForKey(unique, $index)" class="sr-only">{{keyPlaceholder}}</label>
@@ -76,7 +76,7 @@
 
       <!-- the value block -->
       <div
-        class="form-group key-value-editor-input"
+        class="form-group col-xs-6 key-value-editor-input"
         ng-class="{ 'has-error': (forms.keyValueEditor[uniqueForValue(unique, $index)].$invalid && forms.keyValueEditor[uniqueForValue(unique, $index)].$touched) }">
 
         <label for="uniqueForValue(unique, $index)" class="sr-only">{{valuePlaceholder}}</label>
@@ -197,21 +197,25 @@
         </span>
       </div>
 
-      <div class="key-value-editor-buttons">
-        <span
-          ng-if="(!cannotSort) && (entries.length > 1)"
-          class="fa fa-bars sort-row"
-          role="button"
-          aria-label="Move row"
+      <div class="key-value-editor-buttons form-row-controls">
+        <button ng-if="(!cannotSort) && (entries.length > 1)"
+          class="sort-row"
+          type="button"
+          aria-hidden="true"
           aria-grabbed="false"
-          as-sortable-item-handle></span>
-        <a
-          href=""
-          class="pficon pficon-close delete-row as-sortable-item-delete"
-          role="button"
-          aria-label="Delete row"
+          as-sortable-item-handle>
+          <span class="fa fa-bars"></span>
+          <span class="sr-only">Move row</span>
+        </button>
+        <button
+          class="btn-remove close delete-row as-sortable-item-delete"
+          type="button"
+          aria-hidden="true"
           ng-hide="cannotDeleteAny || cannotDeleteSome(entry.name) || entry.cannotDelete"
-          ng-click="deleteEntry($index, 1)"></a>
+          ng-click="deleteEntry($index, 1)">
+          <span class="pficon pficon-close" aria-hidden="true"></span>
+          <span class="sr-only">Delete row</span>
+        </button>
       </div>
     </div>
 

@@ -1,7 +1,7 @@
 <ng-form name="$ctrl.secretsForm" class="add-webhook">
-  <div ng-repeat="trigger in $ctrl.webhookTriggers track by $index" ng-init="secretFieldName = 'triggerSecretRef' + $index">
-    <div class="add-webhook-row">
-      <div class="select-webhook-type">
+  <div ng-repeat="trigger in $ctrl.webhookTriggers track by $index" ng-init="secretFieldName = 'triggerSecretRef' + $index" class="form-group">
+    <div class="row form-row-has-controls">
+      <div class="select-webhook-type col-xs-6">
         <ui-select
           ng-model="trigger.data.type"
           name="triggerType{{$index}}"
@@ -20,7 +20,7 @@
         </ui-select>
       </div>
 
-      <div class="select-secret-ref" ng-if="!$ctrl.isDeprecated(trigger)">
+      <div class="select-secret-ref col-xs-6" ng-if="!$ctrl.isDeprecated(trigger)">
         <ui-select
           ng-model="trigger.data[trigger.data.type.toLowerCase()].secretReference.name"
           name="{{secretFieldName}}"
@@ -43,7 +43,7 @@
         </div>
       </div>
 
-      <div class="select-secret-ref deprecated-secret input-group" ng-if="$ctrl.isDeprecated(trigger)">
+      <div class="select-secret-ref deprecated-secret input-group col-xs-6" ng-if="$ctrl.isDeprecated(trigger)">
         <input
           ng-model="trigger.data[trigger.data.type.toLowerCase()].secret"
           class="form-control"
@@ -65,7 +65,7 @@
         </div>
       </div>
 
-      <div class="remove-webhook-trigger-action">
+      <div class="form-row-controls">
         <button ng-click="$ctrl.removeWebhookTrigger(trigger, $index)" type="button" class="btn-remove close" aria-hidden="true">
           <span class="pficon pficon-close" aria-hidden="true"></span>
           <span class="sr-only">Remove Webhook trigger</span>
