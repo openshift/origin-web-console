@@ -170,6 +170,11 @@
                      state="overview.state">
                 </overview-list-row>
                 <overview-list-row
+                     ng-repeat="daemonSet in overview.filteredDaemonSetsByApp[app] track by (daemonSet | uid)"
+                     api-object="daemonSet"
+                     state="overview.state">
+                </overview-list-row>
+                <overview-list-row
                      ng-repeat="pod in overview.filteredMonopodsByApp[app] track by (pod | uid)"
                      api-object="pod"
                      state="overview.state">
@@ -235,6 +240,16 @@
                   <overview-list-row
                        ng-repeat="statefulSet in overview.filteredStatefulSets track by (statefulSet | uid)"
                        api-object="statefulSet"
+                       state="overview.state">
+                  </overview-list-row>
+                </div>
+              </div>
+              <div ng-if="overview.filteredDaemonSets | hashSize">
+                <h2>Daemon Sets</h2>
+                <div class="list-pf">
+                  <overview-list-row
+                       ng-repeat="daemonSet in overview.filteredDaemonSets track by (daemonSet | uid)"
+                       api-object="daemonSet"
                        state="overview.state">
                   </overview-list-row>
                 </div>
@@ -350,6 +365,11 @@
                 <overview-list-row
                      ng-repeat="statefulSet in overview.statefulSets track by (statefulSet | uid)"
                      api-object="statefulSet"
+                     state="overview.state">
+                </overview-list-row>
+                <overview-list-row
+                     ng-repeat="daemonSet in overview.daemonSets track by (daemonSet | uid)"
+                     api-object="daemonSet"
                      state="overview.state">
                 </overview-list-row>
                 <overview-list-row
