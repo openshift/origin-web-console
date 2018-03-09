@@ -27,42 +27,35 @@
                           $filter,
                           NotificationsService) {
     var ctrl = this;
-    var watches = [];
     var podPresetVersion = {
       group: "settings.k8s.io",
       version: "v1alpha1",
       resource: "podpresets"
     };
-//should integrations map to service class
-//serviceinstance = integrationinstance
     ctrl.$onInit = function() {
       var context = {namespace: ctrl.consumerService.metadata.namespace};
-      DataService.list(podPresetVersion, context)
-      .then(function(podPresets) {
+      // watch for the pod preset for this integration
+      DataService.watch(podPresetVersion, context, function(podPresets){
+        ctrl.podPreset = false;
         var data = podPresets.by("metadata.name");
         ctrl.podPreset = _.filter(data, function(podPreset) {
           return podPreset.metadata.name === _.get(ctrl.consumerService, 'metadata.labels.serviceName') + "-" + ctrl.integration;
         }).pop();
-        if (ctrl.podPreset) {
-          DataService.watch(APIService.getPreferredVersion('servicebindings'), context, function(bindingData) {
-            var data = bindingData.by("metadata.name");
-            ctrl.binding = _.filter(data, function(binding) {
-              return binding.spec.secretName === ctrl.podPreset.spec.volumes[0].secret.secretName
-            }).pop();
-          });          
-        }
       });
 
+      //setup watch on servincebindings, watch for bindings consumed by this service
       DataService.watch(APIService.getPreferredVersion('servicebindings'), context, function(bindingData) {
+        ctrl.binding = false;
         var data = bindingData.by("metadata.name");
         _.each(data, function(binding){
-          if(_.get(binding, "metadata.name", "consumer_not_found") === _.get(ctrl, "bindingName", "bindingName_not_found")){
+          if(_.get(binding, "metadata.annotations.provider", "provider_not_found") === _.get(ctrl, "integration", "integration_name_not_found") && 
+          _.get(binding, "metadata.annotations.consumer", "consumer_not_found") === _.get(ctrl, "consumerService.metadata.labels.serviceName", "consumer_name_not_found")){
             ctrl.binding = binding;
           }
         });
       });
 
-      //TODO: check out the naming here. serviceInstance === provideService?
+      //setup watch on service instances, looking for a, instance which provides this integration
       DataService.watch(APIService.getPreferredVersion('serviceinstances'), context, function(serviceInstancesData) {
         ctrl.serviceInstance = false;
         _.each(serviceInstancesData._data, function(serviceInstance){
@@ -77,6 +70,7 @@
         });
       });
   
+      //load item from catalog for icon data
       CatalogService.getCatalogItems().then(catalogServices => {
         ctrl.doRender = false;
         _.each(catalogServices, function(catalogService){
@@ -93,7 +87,7 @@
       });
     };
 
-    var getPodPreset = function(consumerService, providerService, binding) {
+    var generatePodPresetTemplate = function(consumerService, providerService, binding) {
       var consumerSvcName = _.get(consumerService, 'metadata.labels.serviceName');
       var providerSvcName = _.get(providerService, 'metadata.labels.serviceName');
       var podPreset = {
@@ -147,30 +141,31 @@
       ctrl.integrationPanelVisible = true;
     };
 
-    // ctrl.$onDestroy = function() {
-    //   if (watches) {
-    //     DataService.unwatch(watches);
-    //   }
-    // };
-
     ctrl.onBind = function(binding) {
-      ctrl.bindingName = binding.metadata.name;
-      ctrl.binding = binding;
-      var isBindingReady = $filter('isBindingReady');
-      console.log("isBindingReady:", isBindingReady());
       var context = {namespace: _.get(ctrl.consumerService, 'metadata.namespace')};
-      // watches.push(DataService.watchObject(BindingService.bindingResource, _.get(binding, 'metadata.name'), context, function(binding) {
-      //   if (!isBindingReady(binding)) {
-      //     return;
-      //   }
-
-      var podPreset = getPodPreset(ctrl.consumerService, ctrl.serviceInstance, binding);
+      var podPreset = generatePodPresetTemplate(ctrl.consumerService, ctrl.serviceInstance, binding);
       var version = {
         group:"settings.k8s.io",
         resource:"podpresets",
         version:"v1alpha1"
       };
-      
+
+      var isBindingReady = $filter("isBindingReady");
+
+      //binding might not be ready currently, so
+      //watch binding to wait for it to be ready
+      var bindingReadyWatch = DataService.watch(APIService.getPreferredVersion("servicebindings"), context, function(bindings){
+        _.each(bindings._data, function(iterateBinding){
+          if(iterateBinding.metadata.name === binding.metadata.name && isBindingReady(iterateBinding)){
+            DataService.unwatch(bindingReadyWatch);
+            _.set(iterateBinding, "metadata.annotations.consumer", ctrl.consumerService.metadata.labels.serviceName);
+            _.set(iterateBinding, "metadata.annotations.provider", ctrl.integration);
+            DataService.update(APIService.getPreferredVersion("servicebindings"), iterateBinding.metadata.name, iterateBinding, context)
+          }
+        });
+      });
+
+
       DataService.create(version, null, podPreset, context)
       .then(function() {
         return DataService.get(APIService.getPreferredVersion('deployments'), _.get(ctrl.consumerService, 'metadata.labels.serviceName'), context, {
@@ -185,7 +180,7 @@
         NotificationsService.addNotification({
           type: "success",
           message: "Binding has been set in " + _.get(ctrl, 'consumerService.metadata.labels.serviceName') + " Redeployed " + _.get(ctrl, 'consumerService.metadata.labels.serviceName')
-        });          
+        });
       })
       .catch(function(err) {
         NotificationsService.addNotification({
@@ -194,20 +189,22 @@
           details: err.data.message
         });
       });
-
-      // }));
-    }
+    };
 
     ctrl.getState = function(){
-      if (ctrl.binding) {
-        var state = 1;
-        if(ctrl.binding.status.conditions) {
-          _.each(ctrl.binding.status.conditions, function(condition){
-            if(condition.type === "Ready" && condition.status !== "True"){
-              state = 2;
-            }
-          });
-        }
+      if(ctrl.podPreset && !ctrl.binding) {
+        return 2;
+      }
+      if(ctrl.podPreset && ctrl.binding) {
+        return 1;
+      }
+      if(ctrl.binding) {
+        var state=1;
+        _.each(ctrl.binding.status.conditions, function(condition){
+          if(condition.type === "Ready" && condition.status !== "True"){
+            state=2;
+          }
+        });
         return state;
       }
       if (ctrl.serviceInstance){
@@ -222,7 +219,6 @@
       var deleteOptions = {propagationPolicy: null};
       DataService.delete(podPresetVersion, ctrl.podPreset.metadata.name, context, deleteOptions)
       .then(function(){
-        ctrl.binding = false;
         return DataService.get(APIService.getPreferredVersion('deployments'), _.get(ctrl, 'consumerService.metadata.labels.serviceName'), context)
       })
       .then(function(deployment) {
