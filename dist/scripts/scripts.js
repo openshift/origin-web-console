@@ -14690,7 +14690,7 @@ return i(e.kind);
 name: t.metadata.name
 }, delete e.valueFrom.secretKeyRef) : "Secret" === t.kind && (e.valueFrom.secretKeyRef = {
 name: t.metadata.name
-}, delete e.valueFrom.configMapKeyRef), delete e.valueFrom.key;
+}, delete e.valueFrom.configMapKeyRef), delete e.selectedValueFromKey;
 }, e.valueFromKeySelected = function(e, t) {
 e.valueFrom.configMapKeyRef ? e.valueFrom.configMapKeyRef.key = t : e.valueFrom.secretKeyRef && (e.valueFrom.secretKeyRef.key = t);
 }, angular.extend(e, {
