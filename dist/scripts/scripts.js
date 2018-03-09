@@ -58,9 +58,9 @@ return _.get(e, "metadata.name");
 }, be = function(e) {
 return _.get(e, "metadata.uid");
 }, Se = function() {
-return _.size(N.deploymentConfigs) + _.size(N.vanillaReplicationControllers) + _.size(N.deployments) + _.size(N.vanillaReplicaSets) + _.size(N.statefulSets) + _.size(N.daemonSets) + _.size(N.monopods) + _.size(N.state.serviceInstances);
+return _.size(N.deploymentConfigs) + _.size(N.vanillaReplicationControllers) + _.size(N.deployments) + _.size(N.vanillaReplicaSets) + _.size(N.statefulSets) + _.size(N.daemonSets) + _.size(N.monopods) + _.size(N.state.serviceInstances) + _.size(N.mobileClients);
 }, Ce = function() {
-return _.size(N.filteredDeploymentConfigs) + _.size(N.filteredReplicationControllers) + _.size(N.filteredDeployments) + _.size(N.filteredReplicaSets) + _.size(N.filteredStatefulSets) + _.size(N.filteredDaemonSets) + _.size(N.filteredMonopods) + _.size(N.filteredServiceInstances);
+return _.size(N.filteredDeploymentConfigs) + _.size(N.filteredReplicationControllers) + _.size(N.filteredDeployments) + _.size(N.filteredReplicaSets) + _.size(N.filteredStatefulSets) + _.size(N.filteredDaemonSets) + _.size(N.filteredMonopods) + _.size(N.filteredServiceInstances) + _.size(N.filteredMobileClients);
 }, _e = function() {
 N.size = Se(), N.filteredSize = Ce();
 var e = 0 === N.size, t = N.deploymentConfigs && N.replicationControllers && N.deployments && N.replicaSets && N.statefulSets && N.daemonSets && N.pods && N.state.serviceInstances;
@@ -125,7 +125,7 @@ case "name":
 return !_.isEmpty(ve.filterKeywords);
 }
 }, $e = function() {
-N.filteredDeploymentConfigs = De(N.deploymentConfigs), N.filteredReplicationControllers = De(N.vanillaReplicationControllers), N.filteredDeployments = De(N.deployments), N.filteredReplicaSets = De(N.vanillaReplicaSets), N.filteredStatefulSets = De(N.statefulSets), N.filteredDaemonSets = De(N.daemonSets), N.filteredMonopods = De(N.monopods), N.filteredPipelineBuildConfigs = De(N.pipelineBuildConfigs), N.filteredServiceInstances = De(ve.orderedServiceInstances), N.filterActive = Ae(), ke(), _e();
+N.filteredDeploymentConfigs = De(N.deploymentConfigs), N.filteredReplicationControllers = De(N.vanillaReplicationControllers), N.filteredDeployments = De(N.deployments), N.filteredReplicaSets = De(N.vanillaReplicaSets), N.filteredStatefulSets = De(N.statefulSets), N.filteredDaemonSets = De(N.daemonSets), N.filteredMonopods = De(N.monopods), N.filteredPipelineBuildConfigs = De(N.pipelineBuildConfigs), N.filteredServiceInstances = De(ve.orderedServiceInstances), N.filteredMobileClients = De(N.mobileClients), N.filterActive = Ae(), ke(), _e();
 }, Be = a.project + "/overview/view-by";
 N.viewBy = localStorage.getItem(Be) || "app", e.$watch(function() {
 return N.viewBy;
@@ -456,6 +456,15 @@ pollInterval: 6e4
 ve.clusterQuotas = e.by("metadata.name"), _t();
 }, {
 poll: !0,
+pollInterval: 6e4
+})), e.AEROGEAR_MOBILE_ENABLED && jt.push(m.watch({
+group: "mobile.k8s.io",
+version: "v1alpha1",
+resource: "mobileclients"
+}, r, function(e) {
+N.mobileClients = e.by("metadata.name"), $e(), S.log("mobileclients (subscribe)", e);
+}, {
+poll: D,
 pollInterval: 6e4
 }));
 var p, f, g = {}, v = {};
@@ -1441,6 +1450,25 @@ return n(r);
 }, 1e3);
 } ]).run([ "IS_IOS", function(e) {
 e && $("body").addClass("ios");
+} ]).run([ "$rootScope", "APIService", function(e, t) {
+e.AEROGEAR_MOBILE_ENABLED = !!t.apiInfo({
+resource: "mobileclients",
+group: "mobile.k8s.io"
+}), e.AEROGEAR_MOBILE_ENABLED && window.OPENSHIFT_CONSTANTS.SERVICE_CATALOG_CATEGORIES.push({
+id: "mobile",
+label: "Mobile",
+subCategories: [ {
+id: "apps",
+label: "Apps",
+tags: [ "mobile" ],
+icon: "fa fa-mobile"
+}, {
+id: "services",
+label: "Services",
+tags: [ "mobile-service" ],
+icon: "fa fa-database"
+} ]
+}), Logger.info("AEROGEAR_MOBILE_ENABLED: " + e.AEROGEAR_MOBILE_ENABLED);
 } ]), hawtioPluginLoader.addModule("openshiftConsole"), angular.module("openshiftConsole").factory("BrowserStore", [ function() {
 var e = {
 local: window.localStorage,
@@ -13841,6 +13869,40 @@ serviceInstances: "<",
 isOverview: "<?"
 },
 templateUrl: "views/directives/_service-binding.html"
+});
+}(), function() {
+angular.module("openshiftConsole").component("mobileClientRow", {
+controller: [ "$scope", "$filter", "$routeParams", "APIService", "AuthorizationService", "DataService", "ListRowUtils", "Navigate", "ProjectsService", function(e, t, n, r, a, o, i, s, c) {
+var l = this;
+l.installType = "", _.extend(l, i.ui), l.$onChanges = function(e) {
+if (e.apiObject) switch (l.bundleDisplay = l.apiObject.spec.appIdentifier, l.clientType = l.apiObject.spec.clientType.toUpperCase(), l.apiObject.spec.clientType) {
+case "android":
+l.installType = "gradle";
+break;
+
+case "iOS":
+l.installType = "cocoapods";
+break;
+
+case "cordova":
+l.installType = "npm";
+}
+}, l.mobileclientVersion = {
+group: "mobile.k8s.io",
+version: "v1alpha1",
+resource: "mobileclients"
+}, l.actionsDropdownVisible = function() {
+return !_.get(l.apiObject, "metadata.deletionTimestamp") && a.canI(l.mobileclientVersion, "delete");
+}, l.projectName = n.project, l.browseCatalog = function() {
+s.toProjectCatalog(l.projectName);
+};
+} ],
+controllerAs: "row",
+bindings: {
+apiObject: "<",
+state: "<"
+},
+templateUrl: "views/overview/_mobile-client-row.html"
 });
 }(), function() {
 angular.module("openshiftConsole").component("buildCounts", {

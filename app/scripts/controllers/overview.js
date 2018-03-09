@@ -205,7 +205,8 @@ function OverviewController($scope,
            _.size(overview.statefulSets) +
            _.size(overview.daemonSets) +
            _.size(overview.monopods) +
-           _.size(overview.state.serviceInstances);
+           _.size(overview.state.serviceInstances) +
+           _.size(overview.mobileClients);
   };
 
   // The size of all visible top-level items after filtering.
@@ -217,7 +218,8 @@ function OverviewController($scope,
            _.size(overview.filteredStatefulSets) +
            _.size(overview.filteredDaemonSets) +
            _.size(overview.filteredMonopods) +
-           _.size(overview.filteredServiceInstances);
+           _.size(overview.filteredServiceInstances) +
+           _.size(overview.filteredMobileClients);
   };
 
   // Show the "Get Started" message if the project is empty.
@@ -393,6 +395,7 @@ function OverviewController($scope,
     overview.filteredMonopods = filterItems(overview.monopods);
     overview.filteredPipelineBuildConfigs = filterItems(overview.pipelineBuildConfigs);
     overview.filteredServiceInstances = filterItems(state.orderedServiceInstances);
+    overview.filteredMobileClients = filterItems(overview.mobileClients);
     overview.filterActive = isFilterActive();
     updateApps();
     updateShowGetStarted();
@@ -1418,6 +1421,14 @@ function OverviewController($scope,
       state.clusterQuotas = clusterQuotaData.by("metadata.name");
       setQuotaNotifications();
     }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
+
+    if ($scope.AEROGEAR_MOBILE_ENABLED) {
+      watches.push(DataService.watch({ group: "mobile.k8s.io", version: "v1alpha1", resource: "mobileclients" }, context, function (clients) {
+        overview.mobileClients = clients.by("metadata.name");
+        updateFilter();
+        Logger.log("mobileclients (subscribe)", clients);
+      }, { poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL }));
+    }
 
     var fetchServiceClass, fetchServicePlan;
 

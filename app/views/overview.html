@@ -379,7 +379,16 @@
                 </overview-list-row>
               </div>
             </div>
-
+            <!-- Show Mobile Apps -->
+            <div ng-if="(overview.filteredMobileClients | size) && AEROGEAR_MOBILE_ENABLED">
+              <h2>Mobile Clients</h2>
+              <div class="list-pf">
+                <mobile-client-row
+                  ng-repeat="mobileapp in overview.filteredMobileClients track by (mobileapp | uid)"
+                  api-object="mobileapp"
+                  state="overview.state"></mobile-client-row>
+              </div>
+            </div>
             <!-- Show provisioned services. -->
             <div ng-if="overview.filteredServiceInstances.length && !overview.hidePipelineOtherResources">
               <h2>
