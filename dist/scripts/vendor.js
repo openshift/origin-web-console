@@ -55967,7 +55967,8 @@ if ("object" == typeof exports && "undefined" != typeof module) module.exports =
 ("undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof self ? self : this).Terminal = e();
 }
 }(function() {
-return function e(t, n, i) {
+return function() {
+function e(t, n, i) {
 function r(a, s) {
 if (!n[a]) {
 if (!t[a]) {
@@ -55989,8 +55990,113 @@ return n[a].exports;
 }
 for (var o = "function" == typeof require && require, a = 0; a < i.length; a++) r(i[a]);
 return r;
-}({
+}
+return e;
+}()({
 1: [ function(e, t, n) {
+"use strict";
+Object.defineProperty(n, "__esModule", {
+value: !0
+});
+var i, r = e("./Strings"), o = e("./shared/utils/Browser"), a = e("./utils/RenderDebouncer"), s = e("./utils/Dom");
+!function(e) {
+e[e.Top = 0] = "Top", e[e.Bottom = 1] = "Bottom";
+}(i || (i = {}));
+var l = function() {
+function e(e) {
+var t = this;
+this._terminal = e, this._rowElements = [], this._liveRegionLineCount = 0, this._disposables = [], this._charsToConsume = [], this._accessibilityTreeRoot = document.createElement("div"), this._accessibilityTreeRoot.classList.add("xterm-accessibility"), this._rowContainer = document.createElement("div"), this._rowContainer.classList.add("xterm-accessibility-tree");
+for (var n = 0; n < this._terminal.rows; n++) this._rowElements[n] = this._createAccessibilityTreeNode(), this._rowContainer.appendChild(this._rowElements[n]);
+this._topBoundaryFocusListener = function(e) {
+return t._onBoundaryFocus(e, i.Top);
+}, this._bottomBoundaryFocusListener = function(e) {
+return t._onBoundaryFocus(e, i.Bottom);
+}, this._rowElements[0].addEventListener("focus", this._topBoundaryFocusListener), this._rowElements[this._rowElements.length - 1].addEventListener("focus", this._bottomBoundaryFocusListener), this._refreshRowsDimensions(), this._accessibilityTreeRoot.appendChild(this._rowContainer), this._renderRowsDebouncer = new a.RenderDebouncer(this._terminal, this._renderRows.bind(this)), this._refreshRows(), this._liveRegion = document.createElement("div"), this._liveRegion.classList.add("live-region"), this._liveRegion.setAttribute("aria-live", "assertive"), this._accessibilityTreeRoot.appendChild(this._liveRegion), this._terminal.element.insertAdjacentElement("afterbegin", this._accessibilityTreeRoot), this._disposables.push(this._renderRowsDebouncer), this._disposables.push(this._terminal.addDisposableListener("resize", function(e) {
+return t._onResize(e.cols, e.rows);
+})), this._disposables.push(this._terminal.addDisposableListener("refresh", function(e) {
+return t._refreshRows(e.start, e.end);
+})), this._disposables.push(this._terminal.addDisposableListener("scroll", function(e) {
+return t._refreshRows();
+})), this._disposables.push(this._terminal.addDisposableListener("a11y.char", function(e) {
+return t._onChar(e);
+})), this._disposables.push(this._terminal.addDisposableListener("linefeed", function() {
+return t._onChar("\n");
+})), this._disposables.push(this._terminal.addDisposableListener("a11y.tab", function(e) {
+return t._onTab(e);
+})), this._disposables.push(this._terminal.addDisposableListener("key", function(e) {
+return t._onKey(e);
+})), this._disposables.push(this._terminal.addDisposableListener("blur", function() {
+return t._clearLiveRegion();
+})), this._disposables.push(this._terminal.addDisposableListener("dprchange", function() {
+return t._refreshRowsDimensions();
+})), this._disposables.push(this._terminal.renderer.addDisposableListener("resize", function() {
+return t._refreshRowsDimensions();
+})), this._disposables.push(s.addDisposableListener(window, "resize", function() {
+return t._refreshRowsDimensions();
+}));
+}
+return e.prototype.dispose = function() {
+this._terminal.element.removeChild(this._accessibilityTreeRoot), this._disposables.forEach(function(e) {
+return e.dispose();
+}), this._disposables = null, this._accessibilityTreeRoot = null, this._rowContainer = null, this._liveRegion = null, this._rowContainer = null, this._rowElements = null;
+}, e.prototype._onBoundaryFocus = function(e, t) {
+var n = e.target, r = this._rowElements[t === i.Top ? 1 : this._rowElements.length - 2];
+if (n.getAttribute("aria-posinset") !== (t === i.Top ? "1" : "" + this._terminal.buffer.lines.length) && e.relatedTarget === r) {
+var o, a;
+if (t === i.Top ? (o = n, a = this._rowElements.pop(), this._rowContainer.removeChild(a)) : (o = this._rowElements.shift(), a = n, this._rowContainer.removeChild(o)), o.removeEventListener("focus", this._topBoundaryFocusListener), a.removeEventListener("focus", this._bottomBoundaryFocusListener), t === i.Top) {
+s = this._createAccessibilityTreeNode();
+this._rowElements.unshift(s), this._rowContainer.insertAdjacentElement("afterbegin", s);
+} else {
+var s = this._createAccessibilityTreeNode();
+this._rowElements.push(s), this._rowContainer.appendChild(s);
+}
+this._rowElements[0].addEventListener("focus", this._topBoundaryFocusListener), this._rowElements[this._rowElements.length - 1].addEventListener("focus", this._bottomBoundaryFocusListener), this._terminal.scrollLines(t === i.Top ? -1 : 1), this._rowElements[t === i.Top ? 1 : this._rowElements.length - 2].focus(), e.preventDefault(), e.stopImmediatePropagation();
+}
+}, e.prototype._onResize = function(e, t) {
+this._rowElements[this._rowElements.length - 1].removeEventListener("focus", this._bottomBoundaryFocusListener);
+for (var n = this._rowContainer.children.length; n < this._terminal.rows; n++) this._rowElements[n] = this._createAccessibilityTreeNode(), this._rowContainer.appendChild(this._rowElements[n]);
+for (;this._rowElements.length > t; ) this._rowContainer.removeChild(this._rowElements.pop());
+this._rowElements[this._rowElements.length - 1].addEventListener("focus", this._bottomBoundaryFocusListener), this._refreshRowsDimensions();
+}, e.prototype._createAccessibilityTreeNode = function() {
+var e = document.createElement("div");
+return e.setAttribute("role", "listitem"), e.tabIndex = -1, this._refreshRowDimensions(e), e;
+}, e.prototype._onTab = function(e) {
+for (var t = 0; t < e; t++) this._onChar(" ");
+}, e.prototype._onChar = function(e) {
+var t = this;
+this._liveRegionLineCount < 21 && (this._charsToConsume.length > 0 ? this._charsToConsume.shift() !== e && this._announceCharacter(e) : this._announceCharacter(e), "\n" === e && 21 === ++this._liveRegionLineCount && (this._liveRegion.textContent += r.tooMuchOutput), o.isMac && this._liveRegion.textContent.length > 0 && !this._liveRegion.parentNode && setTimeout(function() {
+t._accessibilityTreeRoot.appendChild(t._liveRegion);
+}, 0));
+}, e.prototype._clearLiveRegion = function() {
+this._liveRegion.textContent = "", this._liveRegionLineCount = 0, o.isMac && this._liveRegion.parentNode && this._accessibilityTreeRoot.removeChild(this._liveRegion);
+}, e.prototype._onKey = function(e) {
+this._clearLiveRegion(), this._charsToConsume.push(e);
+}, e.prototype._refreshRows = function(e, t) {
+this._renderRowsDebouncer.refresh(e, t);
+}, e.prototype._renderRows = function(e, t) {
+for (var n = this._terminal.buffer, i = n.lines.length.toString(), o = e; o <= t; o++) {
+var a = n.translateBufferLineToString(n.ydisp + o, !0), s = (n.ydisp + o + 1).toString(), l = this._rowElements[o];
+l.textContent = 0 === a.length ? r.blankLine : a, l.setAttribute("aria-posinset", s), l.setAttribute("aria-setsize", i);
+}
+}, e.prototype._refreshRowsDimensions = function() {
+if (this._terminal.renderer.dimensions.actualCellHeight) {
+this._terminal.buffer;
+for (var e = 0; e < this._terminal.rows; e++) this._refreshRowDimensions(this._rowElements[e]);
+}
+}, e.prototype._refreshRowDimensions = function(e) {
+e.style.height = this._terminal.renderer.dimensions.actualCellHeight + "px";
+}, e.prototype._announceCharacter = function(e) {
+" " === e ? this._liveRegion.innerHTML += "&nbsp;" : this._liveRegion.textContent += e;
+}, e;
+}();
+n.AccessibilityManager = l;
+}, {
+"./Strings": 15,
+"./shared/utils/Browser": 33,
+"./utils/Dom": 36,
+"./utils/RenderDebouncer": 38
+} ],
+2: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -56068,9 +56174,9 @@ return e >= this._terminal.cols ? this._terminal.cols - 1 : e < 0 ? 0 : e;
 }();
 n.Buffer = r;
 }, {
-"./utils/CircularList": 32
+"./utils/CircularList": 35
 } ],
-2: [ function(e, t, n) {
+3: [ function(e, t, n) {
 "use strict";
 var i = this && this.__extends || function() {
 var e = Object.setPrototypeOf || {
@@ -56131,10 +56237,10 @@ this._normal.setupTabStops(e), this._alt.setupTabStops(e);
 }(e("./EventEmitter").EventEmitter);
 n.BufferSet = o;
 }, {
-"./Buffer": 1,
-"./EventEmitter": 7
+"./Buffer": 2,
+"./EventEmitter": 8
 } ],
-3: [ function(e, t, n) {
+4: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -56177,7 +56283,7 @@ nul: 0,
 control: 0
 });
 }, {} ],
-4: [ function(e, t, n) {
+5: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -56322,7 +56428,7 @@ _: "è",
 "~": "û"
 };
 }, {} ],
-5: [ function(e, t, n) {
+6: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -56396,7 +56502,7 @@ this.textarea.style.left = "", this.textarea.style.top = "";
 }();
 n.CompositionHelper = i;
 }, {} ],
-6: [ function(e, t, n) {
+7: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -56405,7 +56511,7 @@ value: !0
 e.NUL = "\0", e.SOH = "", e.STX = "", e.ETX = "", e.EOT = "", e.ENQ = "", e.ACK = "", e.BEL = "", e.BS = "\b", e.HT = "\t", e.LF = "\n", e.VT = "\v", e.FF = "\f", e.CR = "\r", e.SO = "", e.SI = "", e.DLE = "", e.DC1 = "", e.DC2 = "", e.DC3 = "", e.DC4 = "", e.NAK = "", e.SYN = "", e.ETB = "", e.CAN = "", e.EM = "", e.SUB = "", e.ESC = "", e.FS = "", e.GS = "", e.RS = "", e.US = "", e.SP = " ", e.DEL = "";
 }(n.C0 || (n.C0 = {}));
 }, {} ],
-7: [ function(e, t, n) {
+8: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -56416,6 +56522,13 @@ this._events = this._events || {};
 }
 return e.prototype.on = function(e, t) {
 this._events[e] = this._events[e] || [], this._events[e].push(t);
+}, e.prototype.addDisposableListener = function(e, t) {
+var n = this;
+return this.on(e, t), {
+dispose: function() {
+t && (n.off(e, t), t = null);
+}
+};
 }, e.prototype.off = function(e, t) {
 if (this._events[e]) for (var n = this._events[e], i = n.length; i--; ) if (n[i] === t) return void n.splice(i, 1);
 }, e.prototype.removeAllListeners = function(e) {
@@ -56431,7 +56544,7 @@ this._events = {};
 }();
 n.EventEmitter = i;
 }, {} ],
-8: [ function(e, t, n) {
+9: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -56443,7 +56556,7 @@ this._terminal = e;
 return e.prototype.addChar = function(e, t) {
 if (e >= " ") {
 var n = s.wcwidth(t);
-this._terminal.charset && this._terminal.charset[e] && (e = this._terminal.charset[e]);
+this._terminal.charset && this._terminal.charset[e] && (e = this._terminal.charset[e]), this._terminal.options.screenReaderMode && this._terminal.emit("a11y.char", e);
 var i = this._terminal.buffer.y + this._terminal.buffer.ybase;
 if (!n && this._terminal.buffer.x) return void (this._terminal.buffer.lines.get(i)[this._terminal.buffer.x - 1] && (this._terminal.buffer.lines.get(i)[this._terminal.buffer.x - 1][o.CHAR_DATA_WIDTH_INDEX] ? (this._terminal.buffer.lines.get(i)[this._terminal.buffer.x - 1][o.CHAR_DATA_CHAR_INDEX] += e, this._terminal.buffer.lines.get(i)[this._terminal.buffer.x - 1][3] = e.charCodeAt(0)) : this._terminal.buffer.lines.get(i)[this._terminal.buffer.x - 2] && (this._terminal.buffer.lines.get(i)[this._terminal.buffer.x - 2][o.CHAR_DATA_CHAR_INDEX] += e, this._terminal.buffer.lines.get(i)[this._terminal.buffer.x - 2][3] = e.charCodeAt(0)), this._terminal.updateRange(this._terminal.buffer.y)));
 if (this._terminal.buffer.x + n - 1 >= this._terminal.cols) if (this._terminal.wraparoundMode) this._terminal.buffer.x = 0, ++this._terminal.buffer.y > this._terminal.buffer.scrollBottom ? (this._terminal.buffer.y--, this._terminal.scroll(!0)) : this._terminal.buffer.lines.get(this._terminal.buffer.y).isWrapped = !0; else if (2 === n) return;
@@ -56459,7 +56572,8 @@ this._terminal.buffer.x = 0;
 }, e.prototype.backspace = function() {
 this._terminal.buffer.x > 0 && this._terminal.buffer.x--;
 }, e.prototype.tab = function() {
-this._terminal.buffer.x = this._terminal.buffer.nextStop();
+var e = this._terminal.buffer.x;
+this._terminal.buffer.x = this._terminal.buffer.nextStop(), this._terminal.options.screenReaderMode && this._terminal.emit("a11y.tab", this._terminal.buffer.x - e);
 }, e.prototype.shiftOut = function() {
 this._terminal.setgLevel(1);
 }, e.prototype.shiftIn = function() {
@@ -56762,13 +56876,13 @@ this._terminal.buffer.x = this._terminal.buffer.savedX || 0, this._terminal.buff
 }();
 n.InputHandler = l;
 }, {
-"./Buffer": 1,
-"./CharWidth": 3,
-"./Charsets": 4,
-"./EscapeSequences": 6,
-"./renderer/Types": 28
+"./Buffer": 2,
+"./CharWidth": 4,
+"./Charsets": 5,
+"./EscapeSequences": 7,
+"./renderer/Types": 31
 } ],
-9: [ function(e, t, n) {
+10: [ function(e, t, n) {
 "use strict";
 var i = this && this.__extends || function() {
 var e = Object.setPrototypeOf || {
@@ -56788,15 +56902,13 @@ e(t, n), t.prototype = null === n ? Object.create(n) : (i.prototype = n.prototyp
 Object.defineProperty(n, "__esModule", {
 value: !0
 });
-var r = e("./Types"), o = e("./input/MouseZoneManager"), a = e("./EventEmitter"), s = new RegExp("(?:^|[^\\da-z\\.-]+)((https?:\\/\\/)((([\\da-z\\.-]+)\\.([a-z\\.]{2,6}))|((\\d{1,3}\\.){3}\\d{1,3})|(localhost))(:\\d{1,5})?(\\/[\\/\\w\\.\\-%~]*)*(\\?[0-9\\w\\[\\]\\(\\)\\/\\?\\!#@$%&'*+,:;~\\=\\.\\-]*)?(#[0-9\\w\\[\\]\\(\\)\\/\\?\\!#@$%&'*+,:;~\\=\\.\\-]*)?)($|[^\\/\\w\\.\\-%]+)"), l = 0, c = function(e) {
+var r = e("./Types"), o = e("./input/MouseZoneManager"), a = function(e) {
 function t(t) {
 var n = e.call(this) || this;
-return n._terminal = t, n._linkMatchers = [], n._nextLinkMatcherId = l, n._rowsToLinkify = {
+return n._terminal = t, n._linkMatchers = [], n._nextLinkMatcherId = 0, n._rowsToLinkify = {
 start: null,
 end: null
-}, n.registerLinkMatcher(s, null, {
-matchIndex: 1
-}), n;
+}, n;
 }
 return i(t, e), t.prototype.attachToDom = function(e) {
 this._mouseZoneManager = e;
@@ -56809,12 +56921,8 @@ return i._linkifyRows();
 this._rowsTimeoutId = null;
 for (var e = this._rowsToLinkify.start; e <= this._rowsToLinkify.end; e++) this._linkifyRow(e);
 this._rowsToLinkify.start = null, this._rowsToLinkify.end = null;
-}, t.prototype.setHypertextLinkHandler = function(e) {
-this._linkMatchers[l].handler = e;
-}, t.prototype.setHypertextValidationCallback = function(e) {
-this._linkMatchers[l].validationCallback = e;
 }, t.prototype.registerLinkMatcher = function(e, t, n) {
-if (void 0 === n && (n = {}), this._nextLinkMatcherId !== l && !t) throw new Error("handler must be defined");
+if (void 0 === n && (n = {}), !t) throw new Error("handler must be defined");
 var i = {
 id: this._nextLinkMatcherId++,
 regex: e,
@@ -56833,7 +56941,7 @@ for (var t = this._linkMatchers.length - 1; t >= 0; t--) if (e.priority <= this.
 this._linkMatchers.splice(0, 0, e);
 } else this._linkMatchers.push(e);
 }, t.prototype.deregisterLinkMatcher = function(e) {
-for (var t = 1; t < this._linkMatchers.length; t++) if (this._linkMatchers[t].id === e) return this._linkMatchers.splice(t, 1), !0;
+for (var t = 0; t < this._linkMatchers.length; t++) if (this._linkMatchers[t].id === e) return this._linkMatchers.splice(t, 1), !0;
 return !1;
 }, t.prototype._linkifyRow = function(e) {
 var t = this._terminal.buffer.ydisp + e;
@@ -56841,7 +56949,6 @@ if (!(t >= this._terminal.buffer.lines.length)) for (var n = this._terminal.buff
 }, t.prototype._doLinkifyRow = function(e, t, n, i) {
 var r = this;
 void 0 === i && (i = 0);
-n.id;
 var o = t.match(n.regex);
 if (o && 0 !== o.length) {
 var a = o["number" != typeof n.matchIndex ? 0 : n.matchIndex], s = t.indexOf(a);
@@ -56878,14 +56985,14 @@ length: n.length
 return !i.willLinkActivate || i.willLinkActivate(e, n);
 }));
 }, t.TIME_BEFORE_LINKIFY = 200, t;
-}(a.EventEmitter);
-n.Linkifier = c;
+}(e("./EventEmitter").EventEmitter);
+n.Linkifier = a;
 }, {
-"./EventEmitter": 7,
-"./Types": 14,
-"./input/MouseZoneManager": 18
+"./EventEmitter": 8,
+"./Types": 17,
+"./input/MouseZoneManager": 21
 } ],
-10: [ function(e, t, n) {
+11: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -57264,10 +57371,10 @@ this._position++;
 }();
 n.Parser = u;
 }, {
-"./Charsets": 4,
-"./EscapeSequences": 6
+"./Charsets": 5,
+"./EscapeSequences": 7
 } ],
-11: [ function(e, t, n) {
+12: [ function(e, t, n) {
 "use strict";
 var i = this && this.__extends || function() {
 var e = Object.setPrototypeOf || {
@@ -57444,6 +57551,7 @@ return n;
 }, t.prototype.setSelection = function(e, t, n) {
 this._model.clearSelection(), this._removeMouseDownListeners(), this._model.selectionStart = [ e, t ], this._model.selectionStartLength = n, this.refresh();
 }, t.prototype._getWordAt = function(e, t) {
+if (e[0] >= this._terminal.cols) return null;
 var n = this._buffer.lines.get(e[1]);
 if (!n) return null;
 var i = this._buffer.translateBufferLineToString(e[1], !1), r = this._convertViewportColToCharacterIndex(n, e), o = r, a = e[0] - r, s = 0, l = 0, u = 0, d = 0;
@@ -57478,14 +57586,14 @@ this._model.selectionStart = [ 0, e ], this._model.selectionStartLength = this._
 }(s.EventEmitter);
 n.SelectionManager = f;
 }, {
-"./Buffer": 1,
-"./EventEmitter": 7,
-"./SelectionModel": 12,
-"./handlers/AltClickHandler": 16,
-"./shared/utils/Browser": 30,
-"./utils/MouseHelper": 33
+"./Buffer": 2,
+"./EventEmitter": 8,
+"./SelectionModel": 13,
+"./handlers/AltClickHandler": 19,
+"./shared/utils/Browser": 33,
+"./utils/MouseHelper": 37
 } ],
-12: [ function(e, t, n) {
+13: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -57517,7 +57625,39 @@ return this.selectionStart && (this.selectionStart[1] -= e), this.selectionEnd &
 }();
 n.SelectionModel = i;
 }, {} ],
-13: [ function(e, t, n) {
+14: [ function(e, t, n) {
+"use strict";
+Object.defineProperty(n, "__esModule", {
+value: !0
+}), n.DEFAULT_BELL_SOUND = "data:audio/wav;base64,UklGRigBAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQBAADpAFgCwAMlBZoG/wdmCcoKRAypDQ8PbRDBEQQTOxRtFYcWlBePGIUZXhoiG88bcBz7HHIdzh0WHlMeZx51HmkeUx4WHs8dah0AHXwc3hs9G4saxRnyGBIYGBcQFv8U4RPAEoYRQBACD70NWwwHC6gJOwjWBloF7gOBAhABkf8b/qv8R/ve+Xf4Ife79W/0JfPZ8Z/wde9N7ijtE+wU6xvqM+lb6H7nw+YX5mrlxuQz5Mzje+Ma49fioeKD4nXiYeJy4pHitOL04j/jn+MN5IPkFOWs5U3mDefM55/ogOl36m7rdOyE7abuyu8D8Unyj/Pg9D/2qfcb+Yn6/vuK/Qj/lAAlAg==";
+var i = function() {
+function e(e) {
+this._terminal = e;
+}
+return e.prototype.playBellSound = function() {
+var e = window.AudioContext || window.webkitAudioContext;
+if (!this._audioContext && e && (this._audioContext = new e()), this._audioContext) {
+var t = this._audioContext.createBufferSource(), n = this._audioContext;
+this._audioContext.decodeAudioData(this.base64ToArrayBuffer(this.removeMimeType(this._terminal.options.bellSound)), function(e) {
+t.buffer = e, t.connect(n.destination), t.start(0);
+});
+} else console.warn("Sorry, but the Web Audio API is not supported by your browser. Please, consider upgrading to the latest version");
+}, e.prototype.base64ToArrayBuffer = function(e) {
+for (var t = window.atob(e), n = t.length, i = new Uint8Array(n), r = 0; r < n; r++) i[r] = t.charCodeAt(r);
+return i.buffer;
+}, e.prototype.removeMimeType = function(e) {
+return e.split(",")[1];
+}, e;
+}();
+n.SoundManager = i;
+}, {} ],
+15: [ function(e, t, n) {
+"use strict";
+Object.defineProperty(n, "__esModule", {
+value: !0
+}), n.blankLine = "Blank line", n.promptLabel = "Terminal input", n.tooMuchOutput = "Too much output to announce, navigate to rows manually to read";
+}, {} ],
+16: [ function(e, t, n) {
 "use strict";
 function i(e, t, n, i) {
 void 0 === i && (i = !1), e.removeEventListener(t, n, i);
@@ -57530,15 +57670,15 @@ return Math.pow(30 * (e - i), 2) + Math.pow(59 * (t - r), 2) + Math.pow(11 * (n 
 }
 function a(e, t, n) {
 var i = e << 16 | t << 8 | n;
-if (null != F[i]) return F[i];
-for (var r, a, s, l, c, u = 1 / 0, d = -1, h = 0; h < E.length; h++) {
-if (r = E[h], a = r[0], s = r[1], l = r[2], 0 === (c = o(e, t, n, a, s, l))) {
+if (null != L[i]) return L[i];
+for (var r, a, s, l, c, u = 1 / 0, d = -1, h = 0; h < P.length; h++) {
+if (r = P[h], a = r[0], s = r[1], l = r[2], 0 === (c = o(e, t, n, a, s, l))) {
 d = h;
 break;
 }
 c < u && (u = c, d = h);
 }
-return F[i] = d;
+return L[i] = d;
 }
 var s = this && this.__extends || function() {
 var e = Object.setPrototypeOf || {
@@ -57558,14 +57698,36 @@ e(t, n), t.prototype = null === n ? Object.create(n) : (i.prototype = n.prototyp
 Object.defineProperty(n, "__esModule", {
 value: !0
 });
-var l = e("./BufferSet"), c = e("./Buffer"), u = e("./CompositionHelper"), d = e("./EventEmitter"), h = e("./Viewport"), f = e("./handlers/Clipboard"), p = e("./EscapeSequences"), g = e("./InputHandler"), m = e("./Parser"), v = e("./renderer/Renderer"), b = e("./Linkifier"), y = e("./SelectionManager"), w = e("./utils/CharMeasure"), _ = e("./shared/utils/Browser"), x = e("./utils/MouseHelper"), C = e("./utils/Sounds"), S = e("./renderer/ColorManager"), $ = e("./input/MouseZoneManager"), A = "undefined" != typeof window ? window.document : null, k = {
+var l = e("./BufferSet"), c = e("./Buffer"), u = e("./CompositionHelper"), d = e("./EventEmitter"), h = e("./Viewport"), f = e("./handlers/Clipboard"), p = e("./EscapeSequences"), g = e("./InputHandler"), m = e("./Parser"), v = e("./renderer/Renderer"), b = e("./Linkifier"), y = e("./SelectionManager"), w = e("./utils/CharMeasure"), _ = e("./shared/utils/Browser"), x = e("./Strings"), C = e("./utils/MouseHelper"), S = e("./SoundManager"), $ = e("./renderer/ColorManager"), A = e("./input/MouseZoneManager"), k = e("./AccessibilityManager"), T = e("./utils/ScreenDprMonitor"), D = {
+48: [ "0", ")" ],
+49: [ "1", "!" ],
+50: [ "2", "@" ],
+51: [ "3", "#" ],
+52: [ "4", "$" ],
+53: [ "5", "%" ],
+54: [ "6", "^" ],
+55: [ "7", "&" ],
+56: [ "8", "*" ],
+57: [ "9", "(" ],
+186: [ ";", ":" ],
+187: [ "=", "+" ],
+188: [ ",", "<" ],
+189: [ "-", "_" ],
+190: [ ".", ">" ],
+191: [ "/", "?" ],
+192: [ "`", "~" ],
+219: [ "[", "{" ],
+220: [ "\\", "|" ],
+221: [ "]", "}" ],
+222: [ "'", '"' ]
+}, E = "undefined" != typeof window ? window.document : null, F = {
 cols: 80,
 rows: 24,
 convertEol: !1,
 termName: "xterm",
 cursorBlink: !1,
 cursorStyle: "block",
-bellSound: C.BELL_SOUND,
+bellSound: S.DEFAULT_BELL_SOUND,
 bellStyle: "none",
 enableBold: !0,
 fontFamily: "courier-new, courier, monospace",
@@ -57576,6 +57738,7 @@ lineHeight: 1,
 letterSpacing: 0,
 scrollback: 1e3,
 screenKeys: !1,
+screenReaderMode: !1,
 debug: !1,
 macOptionIsMeta: !1,
 cancelEvents: !1,
@@ -57585,7 +57748,7 @@ allowTransparency: !1,
 tabStopWidth: 8,
 theme: null,
 rightClickSelectsWord: _.isMac
-}, T = function(e) {
+}, M = function(e) {
 function t(t) {
 void 0 === t && (t = {});
 var n = e.call(this) || this;
@@ -57593,13 +57756,19 @@ return n.browser = _, n.options = t, n.setup(), n;
 }
 return s(t, e), t.prototype.setup = function() {
 var e = this;
-Object.keys(k).forEach(function(t) {
-null == e.options[t] && (e.options[t] = k[t]), e[t] = e.options[t];
-}), this.parent = A ? A.body : null, this.cols = this.options.cols, this.rows = this.options.rows, this.options.handler && this.on("data", this.options.handler), this.cursorState = 0, this.cursorHidden = !1, this.sendDataQueue = "", this.customKeyEventHandler = null, this.applicationKeypad = !1, this.applicationCursor = !1, this.originMode = !1, this.insertMode = !1, this.wraparoundMode = !0, this.bracketedPasteMode = !1, this.charset = null, this.gcharset = null, this.glevel = 0, this.charsets = [ null ], this.readable = !0, this.writable = !0, this.defAttr = 131840, this.curAttr = 131840, this.params = [], this.currentParam = 0, this.prefix = "", this.postfix = "", this.writeBuffer = [], this.writeInProgress = !1, this.xoffSentToCatchUp = !1, this.writeStopped = !1, this.surrogateHigh = "", this.userScrolling = !1, this.inputHandler = new g.InputHandler(this), this.parser = new m.Parser(this.inputHandler, this), this.renderer = this.renderer || null, this.selectionManager = this.selectionManager || null, 
-this.linkifier = this.linkifier || new b.Linkifier(this), this._mouseZoneManager = this._mouseZoneManager || null, this.buffers = new l.BufferSet(this), this.selectionManager && (this.selectionManager.clearSelection(), this.selectionManager.initBuffersListeners());
+Object.keys(F).forEach(function(t) {
+null == e.options[t] && (e.options[t] = F[t]), e[t] = e.options[t];
+}), this.parent = E ? E.body : null, this.cols = this.options.cols, this.rows = this.options.rows, this.options.handler && this.on("data", this.options.handler), this.cursorState = 0, this.cursorHidden = !1, this.sendDataQueue = "", this.customKeyEventHandler = null, this.applicationKeypad = !1, this.applicationCursor = !1, this.originMode = !1, this.insertMode = !1, this.wraparoundMode = !0, this.bracketedPasteMode = !1, this.charset = null, this.gcharset = null, this.glevel = 0, this.charsets = [ null ], this.readable = !0, this.writable = !0, this.defAttr = 131840, this.curAttr = 131840, this.params = [], this.currentParam = 0, this.prefix = "", this.postfix = "", this.writeBuffer = [], this.writeInProgress = !1, this.xoffSentToCatchUp = !1, this.writeStopped = !1, this.surrogateHigh = "", this.userScrolling = !1, this.inputHandler = new g.InputHandler(this), this.parser = new m.Parser(this.inputHandler, this), this.renderer = this.renderer || null, this.selectionManager = this.selectionManager || null, 
+this.linkifier = this.linkifier || new b.Linkifier(this), this._mouseZoneManager = this._mouseZoneManager || null, this.soundManager = this.soundManager || new S.SoundManager(this), this.buffers = new l.BufferSet(this), this.selectionManager && (this.selectionManager.clearSelection(), this.selectionManager.initBuffersListeners());
 }, Object.defineProperty(t.prototype, "buffer", {
 get: function() {
 return this.buffers.active;
+},
+enumerable: !0,
+configurable: !0
+}), Object.defineProperty(t, "strings", {
+get: function() {
+return x;
 },
 enumerable: !0,
 configurable: !0
@@ -57609,15 +57778,15 @@ return -512 & this.defAttr | 511 & this.curAttr;
 this.textarea && this.textarea.focus();
 }, Object.defineProperty(t.prototype, "isFocused", {
 get: function() {
-return A.activeElement === this.textarea;
+return E.activeElement === this.textarea;
 },
 enumerable: !0,
 configurable: !0
 }), t.prototype.getOption = function(e) {
-if (!(e in k)) throw new Error('No option with key "' + e + '"');
+if (!(e in F)) throw new Error('No option with key "' + e + '"');
 return void 0 !== this.options[e] ? this.options[e] : this[e];
 }, t.prototype.setOption = function(e, t) {
-if (!(e in k)) throw new Error('No option with key "' + e + '"');
+if (!(e in F)) throw new Error('No option with key "' + e + '"');
 switch (e) {
 case "bellStyle":
 t || (t = "none");
@@ -57674,13 +57843,12 @@ case "scrollback":
 this.buffers.resize(this.cols, this.rows), this.viewport.syncScrollArea();
 break;
 
-case "tabStopWidth":
-this.buffers.setupTabStops();
+case "screenReaderMode":
+t ? this._accessibilityManager || (this._accessibilityManager = new k.AccessibilityManager(this)) : this._accessibilityManager && (this._accessibilityManager.dispose(), this._accessibilityManager = null);
 break;
 
-case "bellSound":
-case "bellStyle":
-this.syncBellSound();
+case "tabStopWidth":
+this.buffers.setupTabStops();
 }
 this.renderer && this.renderer.onOptionsChanged();
 }, t.prototype._onTextAreaFocus = function() {
@@ -57688,39 +57856,39 @@ this.sendFocus && this.send(p.C0.ESC + "[I"), this.element.classList.add("focus"
 }, t.prototype.blur = function() {
 return this.textarea.blur();
 }, t.prototype._onTextAreaBlur = function() {
-this.refresh(this.buffer.y, this.buffer.y), this.sendFocus && this.send(p.C0.ESC + "[O"), this.element.classList.remove("focus"), this.emit("blur");
+this.textarea.value = "", this.refresh(this.buffer.y, this.buffer.y), this.sendFocus && this.send(p.C0.ESC + "[O"), this.element.classList.remove("focus"), this.emit("blur");
 }, t.prototype.initGlobal = function() {
 var e = this;
-this.bindKeys(), D(this.element, "copy", function(t) {
+this.bindKeys(), I(this.element, "copy", function(t) {
 e.hasSelection() && f.copyHandler(t, e, e.selectionManager);
 });
 var t = function(t) {
 return f.pasteHandler(t, e);
 };
-D(this.textarea, "paste", t), D(this.element, "paste", t), _.isFirefox ? D(this.element, "mousedown", function(t) {
+I(this.textarea, "paste", t), I(this.element, "paste", t), _.isFirefox ? I(this.element, "mousedown", function(t) {
 2 === t.button && f.rightClickHandler(t, e.textarea, e.selectionManager, e.options.rightClickSelectsWord);
-}) : D(this.element, "contextmenu", function(t) {
+}) : I(this.element, "contextmenu", function(t) {
 f.rightClickHandler(t, e.textarea, e.selectionManager, e.options.rightClickSelectsWord);
-}), _.isLinux && D(this.element, "auxclick", function(t) {
+}), _.isLinux && I(this.element, "auxclick", function(t) {
 1 === t.button && f.moveTextAreaUnderMouseCursor(t, e.textarea);
 });
 }, t.prototype.bindKeys = function() {
 var e = this, t = this;
-D(this.element, "keydown", function(e) {
-A.activeElement === this && t._keyDown(e);
-}, !0), D(this.element, "keypress", function(e) {
-A.activeElement === this && t._keyPress(e);
-}, !0), D(this.element, "keyup", function(t) {
+I(this.element, "keydown", function(e) {
+E.activeElement === this && t._keyDown(e);
+}, !0), I(this.element, "keypress", function(e) {
+E.activeElement === this && t._keyPress(e);
+}, !0), I(this.element, "keyup", function(t) {
 r(t) || e.focus();
-}, !0), D(this.textarea, "keydown", function(t) {
-e._keyDown(t);
-}, !0), D(this.textarea, "keypress", function(t) {
-e._keyPress(t), e.textarea.value = "";
-}, !0), D(this.textarea, "compositionstart", function() {
+}, !0), I(this.textarea, "keydown", function(t) {
+return e._keyDown(t);
+}, !0), I(this.textarea, "keypress", function(t) {
+return e._keyPress(t);
+}, !0), I(this.textarea, "compositionstart", function() {
 return e.compositionHelper.compositionstart();
-}), D(this.textarea, "compositionupdate", function(t) {
+}), I(this.textarea, "compositionupdate", function(t) {
 return e.compositionHelper.compositionupdate(t);
-}), D(this.textarea, "compositionend", function() {
+}), I(this.textarea, "compositionend", function() {
 return e.compositionHelper.compositionend();
 }), this.on("refresh", function() {
 return e.compositionHelper.updateCompositionElements();
@@ -57730,15 +57898,17 @@ return e.queueLinkification(t.start, t.end);
 }, t.prototype.open = function(e) {
 var t = this;
 if (this.parent = e || this.parent, !this.parent) throw new Error("Terminal requires a parent element.");
-this.context = this.parent.ownerDocument.defaultView, this.document = this.parent.ownerDocument, this.body = this.document.body, this.element = this.document.createElement("div"), this.element.classList.add("terminal"), this.element.classList.add("xterm"), this.element.setAttribute("tabindex", "0"), this.parent.appendChild(this.element);
-var n = A.createDocumentFragment();
-this.viewportElement = A.createElement("div"), this.viewportElement.classList.add("xterm-viewport"), n.appendChild(this.viewportElement), this.viewportScrollArea = A.createElement("div"), this.viewportScrollArea.classList.add("xterm-scroll-area"), this.viewportElement.appendChild(this.viewportScrollArea), this.screenElement = A.createElement("div"), this.screenElement.classList.add("xterm-screen"), this.helperContainer = A.createElement("div"), this.helperContainer.classList.add("xterm-helpers"), this.screenElement.appendChild(this.helperContainer), n.appendChild(this.screenElement), this._mouseZoneManager = new $.MouseZoneManager(this), this.on("scroll", function() {
+this.context = this.parent.ownerDocument.defaultView, this.document = this.parent.ownerDocument, this.body = this.document.body, this._screenDprMonitor = new T.ScreenDprMonitor(), this._screenDprMonitor.setListener(function() {
+return t.emit("dprchange", window.devicePixelRatio);
+}), this.element = this.document.createElement("div"), this.element.classList.add("terminal"), this.element.classList.add("xterm"), this.element.setAttribute("tabindex", "0"), this.parent.appendChild(this.element);
+var n = E.createDocumentFragment();
+this.viewportElement = E.createElement("div"), this.viewportElement.classList.add("xterm-viewport"), n.appendChild(this.viewportElement), this.viewportScrollArea = E.createElement("div"), this.viewportScrollArea.classList.add("xterm-scroll-area"), this.viewportElement.appendChild(this.viewportScrollArea), this.screenElement = E.createElement("div"), this.screenElement.classList.add("xterm-screen"), this.helperContainer = E.createElement("div"), this.helperContainer.classList.add("xterm-helpers"), this.screenElement.appendChild(this.helperContainer), n.appendChild(this.screenElement), this._mouseZoneManager = new A.MouseZoneManager(this), this.on("scroll", function() {
 return t._mouseZoneManager.clearAll();
-}), this.linkifier.attachToDom(this._mouseZoneManager), this.textarea = A.createElement("textarea"), this.textarea.classList.add("xterm-helper-textarea"), this.textarea.setAttribute("autocorrect", "off"), this.textarea.setAttribute("autocapitalize", "off"), this.textarea.setAttribute("spellcheck", "false"), this.textarea.tabIndex = 0, this.textarea.addEventListener("focus", function() {
+}), this.linkifier.attachToDom(this._mouseZoneManager), this.textarea = E.createElement("textarea"), this.textarea.classList.add("xterm-helper-textarea"), this.textarea.setAttribute("aria-label", x.promptLabel), this.textarea.setAttribute("aria-multiline", "false"), this.textarea.setAttribute("autocorrect", "off"), this.textarea.setAttribute("autocapitalize", "off"), this.textarea.setAttribute("spellcheck", "false"), this.textarea.tabIndex = 0, this.textarea.addEventListener("focus", function() {
 return t._onTextAreaFocus();
 }), this.textarea.addEventListener("blur", function() {
 return t._onTextAreaBlur();
-}), this.helperContainer.appendChild(this.textarea), this.compositionView = A.createElement("div"), this.compositionView.classList.add("composition-view"), this.compositionHelper = new u.CompositionHelper(this.textarea, this.compositionView, this), this.helperContainer.appendChild(this.compositionView), this.charSizeStyleElement = A.createElement("style"), this.helperContainer.appendChild(this.charSizeStyleElement), this.charMeasure = new w.CharMeasure(A, this.helperContainer), this.syncBellSound(), this.element.appendChild(n), this.renderer = new v.Renderer(this, this.options.theme), this.options.theme = null, this.viewport = new h.Viewport(this, this.viewportElement, this.viewportScrollArea, this.charMeasure), this.viewport.onThemeChanged(this.renderer.colorManager.colors), this.on("cursormove", function() {
+}), this.helperContainer.appendChild(this.textarea), this.compositionView = E.createElement("div"), this.compositionView.classList.add("composition-view"), this.compositionHelper = new u.CompositionHelper(this.textarea, this.compositionView, this), this.helperContainer.appendChild(this.compositionView), this.charSizeStyleElement = E.createElement("style"), this.helperContainer.appendChild(this.charSizeStyleElement), this.charMeasure = new w.CharMeasure(E, this.helperContainer), this.element.appendChild(n), this.renderer = new v.Renderer(this, this.options.theme), this.options.theme = null, this.viewport = new h.Viewport(this, this.viewportElement, this.viewportScrollArea, this.charMeasure), this.viewport.onThemeChanged(this.renderer.colorManager.colors), this.on("cursormove", function() {
 return t.renderer.onCursorMove();
 }), this.on("resize", function() {
 return t.renderer.onResize(t.cols, t.rows, !1);
@@ -57746,6 +57916,10 @@ return t.renderer.onResize(t.cols, t.rows, !1);
 return t.renderer.onBlur();
 }), this.on("focus", function() {
 return t.renderer.onFocus();
+}), this.on("dprchange", function() {
+return t.renderer.onWindowResize(window.devicePixelRatio);
+}), window.addEventListener("resize", function() {
+return t.renderer.onWindowResize(window.devicePixelRatio);
 }), this.charMeasure.on("charsizechanged", function() {
 return t.renderer.onResize(t.cols, t.rows, !0);
 }), this.renderer.on("resize", function(e) {
@@ -57760,7 +57934,7 @@ t.textarea.value = e, t.textarea.focus(), t.textarea.select();
 t.viewport.syncScrollArea(), t.selectionManager.refresh();
 }), this.viewportElement.addEventListener("scroll", function() {
 return t.selectionManager.refresh();
-}), this.mouseHelper = new x.MouseHelper(this.renderer), this.charMeasure.measure(this.options), this.refresh(0, this.rows - 1), this.initGlobal(), this.bindMouse();
+}), this.mouseHelper = new C.MouseHelper(this.renderer), this.options.screenReaderMode && (this._accessibilityManager = new k.AccessibilityManager(this)), this.charMeasure.measure(this.options), this.refresh(0, this.rows - 1), this.initGlobal(), this.bindMouse();
 }, t.prototype._setTheme = function(e) {
 var t = this.renderer.setTheme(e);
 this.viewport && this.viewport.onThemeChanged(t);
@@ -57828,30 +58002,30 @@ t = e.wheelDeltaY > 0 ? 64 : 65;
 return n = e.shiftKey ? 4 : 0, i = e.metaKey ? 8 : 0, r = e.ctrlKey ? 16 : 0, o = n | i | r, l.vt200Mouse ? o &= r : l.normalMouse || (o = 0), t = 32 + (o << 2) + t;
 }
 var a = this, s = this.element, l = this, c = 32;
-D(s, "mousedown", function(n) {
+I(s, "mousedown", function(n) {
 if (n.preventDefault(), a.focus(), a.mouseEvents && !a.selectionManager.shouldForceSelection(n)) {
 if (e(n), a.vt200Mouse) return n.overrideType = "mouseup", e(n), a.cancel(n);
-if (a.normalMouse && D(a.document, "mousemove", t), !a.x10Mouse) {
+if (a.normalMouse && I(a.document, "mousemove", t), !a.x10Mouse) {
 var r = function(n) {
 return e(n), a.normalMouse && i(a.document, "mousemove", t), i(a.document, "mouseup", r), a.cancel(n);
 };
-D(a.document, "mouseup", r);
+I(a.document, "mouseup", r);
 }
 return a.cancel(n);
 }
-}), D(s, "wheel", function(t) {
+}), I(s, "wheel", function(t) {
 a.mouseEvents && (a.x10Mouse || a.vt300Mouse || a.decLocator || (e(t), t.preventDefault()));
-}), D(s, "wheel", function(e) {
+}), I(s, "wheel", function(e) {
 if (!a.mouseEvents) return a.viewport.onWheel(e), a.cancel(e);
-}), D(s, "touchstart", function(e) {
+}), I(s, "touchstart", function(e) {
 if (!a.mouseEvents) return a.viewport.onTouchStart(e), a.cancel(e);
-}), D(s, "touchmove", function(e) {
+}), I(s, "touchmove", function(e) {
 if (!a.mouseEvents) return a.viewport.onTouchMove(e), a.cancel(e);
 });
 }, t.prototype.destroy = function() {
 e.prototype.destroy.call(this), this.readable = !1, this.writable = !1, this.handler = function() {}, this.write = function() {}, this.element && this.element.parentNode && this.element.parentNode.removeChild(this.element);
 }, t.prototype.refresh = function(e, t) {
-this.renderer && this.renderer.queueRefresh(e, t);
+this.renderer && this.renderer.refreshRows(e, t);
 }, t.prototype.queueLinkification = function(e, t) {
 this.linkifier && this.linkifier.linkifyRows(e, t);
 }, t.prototype.showCursor = function() {
@@ -57898,20 +58072,11 @@ return e.innerWrite();
 this.write(e + "\r\n");
 }, t.prototype.attachCustomKeyEventHandler = function(e) {
 this.customKeyEventHandler = e;
-}, t.prototype.setHypertextLinkHandler = function(e) {
-if (!this.linkifier) throw new Error("Cannot attach a hypertext link handler before Terminal.open is called");
-this.linkifier.setHypertextLinkHandler(e), this.refresh(0, this.rows - 1);
-}, t.prototype.setHypertextValidationCallback = function(e) {
-if (!this.linkifier) throw new Error("Cannot attach a hypertext validation callback before Terminal.open is called");
-this.linkifier.setHypertextValidationCallback(e), this.refresh(0, this.rows - 1);
 }, t.prototype.registerLinkMatcher = function(e, t, n) {
-if (this.linkifier) {
 var i = this.linkifier.registerLinkMatcher(e, t, n);
 return this.refresh(0, this.rows - 1), i;
-}
-return 0;
 }, t.prototype.deregisterLinkMatcher = function(e) {
-this.linkifier && this.linkifier.deregisterLinkMatcher(e) && this.refresh(0, this.rows - 1);
+this.linkifier.deregisterLinkMatcher(e) && this.refresh(0, this.rows - 1);
 }, t.prototype.hasSelection = function() {
 return !!this.selectionManager && this.selectionManager.hasSelection;
 }, t.prototype.getSelection = function() {
@@ -58056,7 +58221,13 @@ t.key = n ? p.C0.ESC + "[24;" + (n + 1) + "~" : p.C0.ESC + "[24~";
 break;
 
 default:
-!e.ctrlKey || e.shiftKey || e.altKey || e.metaKey ? this.browser.isMac && !this.options.macOptionIsMeta || !e.altKey || e.ctrlKey || e.metaKey ? this.browser.isMac && !e.altKey && !e.ctrlKey && e.metaKey && 65 === e.keyCode && this.selectAll() : e.keyCode >= 65 && e.keyCode <= 90 ? t.key = p.C0.ESC + String.fromCharCode(e.keyCode + 32) : 192 === e.keyCode ? t.key = p.C0.ESC + "`" : e.keyCode >= 48 && e.keyCode <= 57 && (t.key = p.C0.ESC + (e.keyCode - 48)) : e.keyCode >= 65 && e.keyCode <= 90 ? t.key = String.fromCharCode(e.keyCode - 64) : 32 === e.keyCode ? t.key = String.fromCharCode(0) : e.keyCode >= 51 && e.keyCode <= 55 ? t.key = String.fromCharCode(e.keyCode - 51 + 27) : 56 === e.keyCode ? t.key = String.fromCharCode(127) : 219 === e.keyCode ? t.key = String.fromCharCode(27) : 220 === e.keyCode ? t.key = String.fromCharCode(28) : 221 === e.keyCode && (t.key = String.fromCharCode(29));
+if (!e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) if (this.browser.isMac && !this.options.macOptionIsMeta || !e.altKey || e.metaKey) this.browser.isMac && !e.altKey && !e.ctrlKey && e.metaKey && 65 === e.keyCode && this.selectAll(); else {
+var i = D[e.keyCode], r = i && i[e.shiftKey ? 1 : 0];
+if (r) t.key = p.C0.ESC + r; else if (e.keyCode >= 65 && e.keyCode <= 90) {
+var o = e.ctrlKey ? e.keyCode - 64 : e.keyCode + 32;
+t.key = p.C0.ESC + String.fromCharCode(o);
+}
+} else e.keyCode >= 65 && e.keyCode <= 90 ? t.key = String.fromCharCode(e.keyCode - 64) : 32 === e.keyCode ? t.key = String.fromCharCode(0) : e.keyCode >= 51 && e.keyCode <= 55 ? t.key = String.fromCharCode(e.keyCode - 51 + 27) : 56 === e.keyCode ? t.key = String.fromCharCode(127) : 219 === e.keyCode ? t.key = String.fromCharCode(27) : 220 === e.keyCode ? t.key = String.fromCharCode(28) : 221 === e.keyCode && (t.key = String.fromCharCode(29));
 }
 return t;
 }, t.prototype.setgLevel = function(e) {
@@ -58078,7 +58249,7 @@ t.handler(t.sendDataQueue), t.sendDataQueue = "";
 }, 1), this.sendDataQueue += e;
 }, t.prototype.bell = function() {
 var e = this;
-this.emit("bell"), this.soundBell() && this.bellAudioElement.play(), this.visualBell() && (this.element.classList.add("visual-bell-active"), clearTimeout(this.visualBellTimer), this.visualBellTimer = window.setTimeout(function() {
+this.emit("bell"), this.soundBell() && this.soundManager.playBellSound(), this.visualBell() && (this.element.classList.add("visual-bell-active"), clearTimeout(this.visualBellTimer), this.visualBellTimer = window.setTimeout(function() {
 e.element.classList.remove("visual-bell-active");
 }, 200));
 }, t.prototype.log = function(e, t) {
@@ -58086,7 +58257,7 @@ this.options.debug && this.context.console && this.context.console.log && this.c
 }, t.prototype.error = function(e, t) {
 this.options.debug && this.context.console && this.context.console.error && this.context.console.error(e, t);
 }, t.prototype.resize = function(e, t) {
-isNaN(e) || isNaN(t) || (e !== this.cols || t !== this.rows ? (e < 1 && (e = 1), t < 1 && (t = 1), this.buffers.resize(e, t), this.cols = e, this.rows = t, this.buffers.setupTabStops(this.cols), this.charMeasure.measure(this.options), this.refresh(0, this.rows - 1), this.emit("resize", {
+isNaN(e) || isNaN(t) || (e !== this.cols || t !== this.rows ? (e < 1 && (e = 1), t < 1 && (t = 1), this.buffers.resize(e, t), this.cols = e, this.rows = t, this.buffers.setupTabStops(this.cols), this.charMeasure && this.charMeasure.measure(this.options), this.refresh(0, this.rows - 1), this.emit("resize", {
 cols: e,
 rows: t
 })) : this.charMeasure.width && this.charMeasure.height || this.charMeasure.measure(this.options));
@@ -58149,43 +58320,44 @@ return a(e, t, n);
 return !1;
 }, t.prototype.soundBell = function() {
 return "sound" === this.options.bellStyle;
-}, t.prototype.syncBellSound = function() {
-this.element && (this.soundBell() && this.bellAudioElement ? this.bellAudioElement.setAttribute("src", this.options.bellSound) : this.soundBell() ? (this.bellAudioElement = A.createElement("audio"), this.bellAudioElement.setAttribute("preload", "auto"), this.bellAudioElement.setAttribute("src", this.options.bellSound), this.helperContainer.appendChild(this.bellAudioElement)) : this.bellAudioElement && this.helperContainer.removeChild(this.bellAudioElement));
 }, t;
 }(d.EventEmitter);
-n.Terminal = T;
-var D = function(e, t, n, i) {
+n.Terminal = M;
+var I = function(e, t, n, i) {
 Array.isArray(e) || (e = [ e ]), e.forEach(function(e) {
 e.addEventListener(t, n, i || !1);
 });
-}, E = function() {
-for (var e = S.DEFAULT_ANSI_COLORS.map(function(e) {
+}, P = function() {
+for (var e = $.DEFAULT_ANSI_COLORS.map(function(e) {
 return e = e.substring(1), [ parseInt(e.substring(0, 2), 16), parseInt(e.substring(2, 4), 16), parseInt(e.substring(4, 6), 16) ];
 }), t = [ 0, 95, 135, 175, 215, 255 ], n = 0; n < 216; n++) e.push([ t[n / 36 % 6 | 0], t[n / 6 % 6 | 0], t[n % 6] ]);
 for (var i, n = 0; n < 24; n++) i = 8 + 10 * n, e.push([ i, i, i ]);
 return e;
-}(), F = {};
+}(), L = {};
 }, {
-"./Buffer": 1,
-"./BufferSet": 2,
-"./CompositionHelper": 5,
-"./EscapeSequences": 6,
-"./EventEmitter": 7,
-"./InputHandler": 8,
-"./Linkifier": 9,
-"./Parser": 10,
-"./SelectionManager": 11,
-"./Viewport": 15,
-"./handlers/Clipboard": 17,
-"./input/MouseZoneManager": 18,
-"./renderer/ColorManager": 21,
-"./renderer/Renderer": 25,
-"./shared/utils/Browser": 30,
-"./utils/CharMeasure": 31,
-"./utils/MouseHelper": 33,
-"./utils/Sounds": 35
+"./AccessibilityManager": 1,
+"./Buffer": 2,
+"./BufferSet": 3,
+"./CompositionHelper": 6,
+"./EscapeSequences": 7,
+"./EventEmitter": 8,
+"./InputHandler": 9,
+"./Linkifier": 10,
+"./Parser": 11,
+"./SelectionManager": 12,
+"./SoundManager": 14,
+"./Strings": 15,
+"./Viewport": 18,
+"./handlers/Clipboard": 20,
+"./input/MouseZoneManager": 21,
+"./renderer/ColorManager": 24,
+"./renderer/Renderer": 28,
+"./shared/utils/Browser": 33,
+"./utils/CharMeasure": 34,
+"./utils/MouseHelper": 37,
+"./utils/ScreenDprMonitor": 39
 } ],
-14: [ function(e, t, n) {
+17: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -58194,7 +58366,7 @@ value: !0
 e.HOVER = "linkhover", e.TOOLTIP = "linktooltip", e.LEAVE = "linkleave";
 }(n.LinkHoverEventTypes || (n.LinkHoverEventTypes = {}));
 }, {} ],
-15: [ function(e, t, n) {
+18: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -58237,7 +58409,7 @@ this.lastTouchY = e.touches[0].pageY, 0 !== t && (this.viewportElement.scrollTop
 }();
 n.Viewport = r;
 }, {} ],
-16: [ function(e, t, n) {
+19: [ function(e, t, n) {
 "use strict";
 function i(e, t) {
 e = Math.floor(e);
@@ -58261,7 +58433,7 @@ var n;
 return e.prototype.move = function() {
 this._mouseEvent.altKey && this._terminal.send(this._arrowSequences());
 }, e.prototype._arrowSequences = function() {
-return this._resetStartingRow() + this._moveToRequestedRow() + this._moveToRequestedCol();
+return this._terminal.buffer.hasScrollback ? this._moveHorizontallyOnly() : this._resetStartingRow() + this._moveToRequestedRow() + this._moveToRequestedCol();
 }, e.prototype._resetStartingRow = function() {
 this._endRow, this._wrappedRowsForRow(this._endRow), this._endRow;
 return 0 === this._moveToRequestedRow().length ? "" : i(this._bufferLine(this._startCol, this._startRow, this._startCol, this._startRow - this._wrappedRowsForRow(this._startRow), !1).length, this._sequence(r.Left));
@@ -58273,6 +58445,9 @@ var e;
 e = this._moveToRequestedRow().length > 0 ? this._endRow - this._wrappedRowsForRow(this._endRow) : this._startRow;
 var t = this._endRow, n = this._horizontalDirection();
 return i(this._bufferLine(this._startCol, e, this._endCol, t, n === r.Right).length, this._sequence(n));
+}, e.prototype._moveHorizontallyOnly = function() {
+var e = this._horizontalDirection();
+return i(Math.abs(this._startCol - this._endCol), this._sequence(e));
 }, e.prototype._wrappedRowsCount = function() {
 for (var e = 0, t = this._startRow - this._wrappedRowsForRow(this._startRow), n = this._endRow - this._wrappedRowsForRow(this._endRow), i = 0; i < Math.abs(t - n); i++) {
 var o = this._verticalDirection() === r.Up ? -1 : 1;
@@ -58297,9 +58472,9 @@ return o.C0.ESC + t + e;
 }();
 n.AltClickHandler = a;
 }, {
-"../EscapeSequences": 6
+"../EscapeSequences": 7
 } ],
-17: [ function(e, t, n) {
+20: [ function(e, t, n) {
 "use strict";
 function i(e, t) {
 return t ? e.replace(/\r?\n/g, "\r") : e;
@@ -58326,7 +58501,7 @@ t.browser.isMSIE ? window.clipboardData && n(window.clipboardData.getData("Text"
 o(e, t), i && !n.isClickInSelection(e) && n.selectWordAtCursor(e), t.value = n.selectionText, t.select();
 };
 }, {} ],
-18: [ function(e, t, n) {
+21: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -58394,7 +58569,7 @@ this.x1 = e, this.x2 = t, this.y = n, this.clickCallback = i, this.hoverCallback
 }();
 n.MouseZone = r;
 }, {} ],
-19: [ function(e, t, n) {
+22: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -58459,10 +58634,10 @@ return (t ? e.options.fontWeightBold : e.options.fontWeight) + " " + e.options.f
 }();
 n.BaseRenderLayer = o;
 }, {
-"../Buffer": 1,
-"./CharAtlas": 20
+"../Buffer": 2,
+"./CharAtlas": 23
 } ],
-20: [ function(e, t, n) {
+23: [ function(e, t, n) {
 "use strict";
 function i(e, t, n, i) {
 var r = {
@@ -58530,9 +58705,9 @@ ownedBy: [ e ]
 return a.push(f), f.bitmap;
 };
 }, {
-"../shared/CharAtlasGenerator": 29
+"../shared/CharAtlasGenerator": 32
 } ],
-21: [ function(e, t, n) {
+24: [ function(e, t, n) {
 "use strict";
 function i(e) {
 for (var t = e.slice(), n = [ 0, 95, 135, 175, 215, 255 ], i = 0; i < 216; i++) {
@@ -58572,7 +58747,7 @@ this.colors.ansi[13] = e.brightMagenta || n.DEFAULT_ANSI_COLORS[13], this.colors
 }();
 n.ColorManager = u;
 }, {} ],
-22: [ function(e, t, n) {
+25: [ function(e, t, n) {
 "use strict";
 var i = this && this.__extends || function() {
 var e = Object.setPrototypeOf || {
@@ -58709,10 +58884,10 @@ this._animationTimeRestarted = null, this._restartInterval(), this.restartBlinkA
 }, e;
 }();
 }, {
-"../Buffer": 1,
-"./BaseRenderLayer": 19
+"../Buffer": 2,
+"./BaseRenderLayer": 22
 } ],
-23: [ function(e, t, n) {
+26: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -58734,7 +58909,7 @@ for (var e = 0; e < this.cache.length; e++) for (var t = 0; t < this.cache[e].le
 }();
 n.GridCache = i;
 }, {} ],
-24: [ function(e, t, n) {
+27: [ function(e, t, n) {
 "use strict";
 var i = this && this.__extends || function() {
 var e = Object.setPrototypeOf || {
@@ -58777,10 +58952,10 @@ this._clearCurrentLink();
 }(e("./BaseRenderLayer").BaseRenderLayer);
 n.LinkRenderLayer = o;
 }, {
-"../Types": 14,
-"./BaseRenderLayer": 19
+"../Types": 17,
+"./BaseRenderLayer": 22
 } ],
-25: [ function(e, t, n) {
+28: [ function(e, t, n) {
 "use strict";
 var i = this && this.__extends || function() {
 var e = Object.setPrototypeOf || {
@@ -58800,10 +58975,10 @@ e(t, n), t.prototype = null === n ? Object.create(n) : (i.prototype = n.prototyp
 Object.defineProperty(n, "__esModule", {
 value: !0
 });
-var r = e("./TextRenderLayer"), o = e("./SelectionRenderLayer"), a = e("./CursorRenderLayer"), s = e("./ColorManager"), l = e("./LinkRenderLayer"), c = e("../EventEmitter"), u = e("../utils/ScreenDprMonitor"), d = function(e) {
+var r = e("./TextRenderLayer"), o = e("./SelectionRenderLayer"), a = e("./CursorRenderLayer"), s = e("./ColorManager"), l = e("./LinkRenderLayer"), c = e("../EventEmitter"), u = e("../utils/RenderDebouncer"), d = e("../utils/ScreenDprMonitor"), h = function(e) {
 function t(t, n) {
 var i = e.call(this) || this;
-return i._terminal = t, i._refreshRowsQueue = [], i._refreshAnimationFrame = null, i._isPaused = !1, i._needsFullRefresh = !1, i.colorManager = new s.ColorManager(), n && i.colorManager.setTheme(n), i._renderLayers = [ new r.TextRenderLayer(i._terminal.screenElement, 0, i.colorManager.colors, i._terminal.options.allowTransparency), new o.SelectionRenderLayer(i._terminal.screenElement, 1, i.colorManager.colors), new l.LinkRenderLayer(i._terminal.screenElement, 2, i.colorManager.colors, i._terminal), new a.CursorRenderLayer(i._terminal.screenElement, 3, i.colorManager.colors) ], i.dimensions = {
+return i._terminal = t, i._isPaused = !1, i._needsFullRefresh = !1, i.colorManager = new s.ColorManager(), n && i.colorManager.setTheme(n), i._renderLayers = [ new r.TextRenderLayer(i._terminal.screenElement, 0, i.colorManager.colors, i._terminal.options.allowTransparency), new o.SelectionRenderLayer(i._terminal.screenElement, 1, i.colorManager.colors), new l.LinkRenderLayer(i._terminal.screenElement, 2, i.colorManager.colors, i._terminal), new a.CursorRenderLayer(i._terminal.screenElement, 3, i.colorManager.colors) ], i.dimensions = {
 scaledCharWidth: null,
 scaledCharHeight: null,
 scaledCellWidth: null,
@@ -58816,7 +58991,7 @@ canvasWidth: null,
 canvasHeight: null,
 actualCellWidth: null,
 actualCellHeight: null
-}, i._devicePixelRatio = window.devicePixelRatio, i._updateDimensions(), i.onOptionsChanged(), i._screenDprMonitor = new u.ScreenDprMonitor(), i._screenDprMonitor.setListener(function() {
+}, i._devicePixelRatio = window.devicePixelRatio, i._updateDimensions(), i.onOptionsChanged(), i._renderDebouncer = new u.RenderDebouncer(i._terminal, i._renderRows.bind(i)), i._screenDprMonitor = new d.ScreenDprMonitor(), i._screenDprMonitor.setListener(function() {
 return i.onWindowResize(window.devicePixelRatio);
 }), "IntersectionObserver" in window && new IntersectionObserver(function(e) {
 return i.onIntersectionChange(e[0]);
@@ -58837,7 +59012,7 @@ e.onThemeChanged(t._terminal, t.colorManager.colors), e.reset(t._terminal);
 var i = this;
 this._updateDimensions(), this._renderLayers.forEach(function(e) {
 return e.resize(i._terminal, i.dimensions, n);
-}), this._isPaused ? this._needsFullRefresh = !0 : this._terminal.refresh(0, this._terminal.rows - 1), this._terminal.screenElement.style.width = this.dimensions.canvasWidth + this._terminal.viewport.scrollBarWidth + "px", this._terminal.screenElement.style.height = this.dimensions.canvasHeight + "px", this.emit("resize", {
+}), this._isPaused ? this._needsFullRefresh = !0 : this._terminal.refresh(0, this._terminal.rows - 1), this._terminal.screenElement.style.width = this.dimensions.canvasWidth + "px", this._terminal.screenElement.style.height = this.dimensions.canvasHeight + "px", this.emit("resize", {
 width: this.dimensions.canvasWidth,
 height: this.dimensions.canvasHeight
 });
@@ -58877,18 +59052,11 @@ return t.reset(e._terminal);
 this._isPaused ? this._needsFullRefresh = !0 : this._renderLayers.forEach(function(t) {
 return e(t);
 });
-}, t.prototype.queueRefresh = function(e, t) {
-this._isPaused ? this._needsFullRefresh = !0 : (this._refreshRowsQueue.push({
-start: e,
-end: t
-}), this._refreshAnimationFrame || (this._refreshAnimationFrame = window.requestAnimationFrame(this._refreshLoop.bind(this))));
-}, t.prototype._refreshLoop = function() {
-var e, t, n = this;
-if (this._refreshRowsQueue.length > 4) e = 0, t = this._terminal.rows - 1; else {
-e = this._refreshRowsQueue[0].start, t = this._refreshRowsQueue[0].end;
-for (var i = 1; i < this._refreshRowsQueue.length; i++) this._refreshRowsQueue[i].start < e && (e = this._refreshRowsQueue[i].start), this._refreshRowsQueue[i].end > t && (t = this._refreshRowsQueue[i].end);
-}
-this._refreshRowsQueue = [], this._refreshAnimationFrame = null, e = Math.max(e, 0), t = Math.min(t, this._terminal.rows - 1), this._renderLayers.forEach(function(i) {
+}, t.prototype.refreshRows = function(e, t) {
+this._isPaused ? this._needsFullRefresh = !0 : this._renderDebouncer.refresh(e, t);
+}, t.prototype._renderRows = function(e, t) {
+var n = this;
+this._renderLayers.forEach(function(i) {
 return i.onGridChanged(n._terminal, e, t);
 }), this._terminal.emit("refresh", {
 start: e,
@@ -58899,17 +59067,18 @@ this._terminal.charMeasure.width && this._terminal.charMeasure.height && (this.d
 this.dimensions.canvasWidth = Math.round(this.dimensions.scaledCanvasWidth / window.devicePixelRatio), this.dimensions.actualCellHeight = this.dimensions.canvasHeight / this._terminal.rows, this.dimensions.actualCellWidth = this.dimensions.canvasWidth / this._terminal.cols);
 }, t;
 }(c.EventEmitter);
-n.Renderer = d;
+n.Renderer = h;
 }, {
-"../EventEmitter": 7,
-"../utils/ScreenDprMonitor": 34,
-"./ColorManager": 21,
-"./CursorRenderLayer": 22,
-"./LinkRenderLayer": 24,
-"./SelectionRenderLayer": 26,
-"./TextRenderLayer": 27
+"../EventEmitter": 8,
+"../utils/RenderDebouncer": 38,
+"../utils/ScreenDprMonitor": 39,
+"./ColorManager": 24,
+"./CursorRenderLayer": 25,
+"./LinkRenderLayer": 27,
+"./SelectionRenderLayer": 29,
+"./TextRenderLayer": 30
 } ],
-26: [ function(e, t, n) {
+29: [ function(e, t, n) {
 "use strict";
 var i = this && this.__extends || function() {
 var e = Object.setPrototypeOf || {
@@ -58965,9 +59134,9 @@ this._state.start = [ t[0], t[1] ], this._state.end = [ n[0], n[1] ];
 }(e("./BaseRenderLayer").BaseRenderLayer);
 n.SelectionRenderLayer = r;
 }, {
-"./BaseRenderLayer": 19
+"./BaseRenderLayer": 22
 } ],
-27: [ function(e, t, n) {
+30: [ function(e, t, n) {
 "use strict";
 var i = this && this.__extends || function() {
 var e = Object.setPrototypeOf || {
@@ -59039,12 +59208,12 @@ i && 2 === i[r.CHAR_DATA_WIDTH_INDEX] && (n = 2), this.clearCells(e, t, n, 1);
 }(s.BaseRenderLayer);
 n.TextRenderLayer = l;
 }, {
-"../Buffer": 1,
-"./BaseRenderLayer": 19,
-"./GridCache": 23,
-"./Types": 28
+"../Buffer": 2,
+"./BaseRenderLayer": 22,
+"./GridCache": 26,
+"./Types": 31
 } ],
-28: [ function(e, t, n) {
+31: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -59053,7 +59222,7 @@ value: !0
 e[e.BOLD = 1] = "BOLD", e[e.UNDERLINE = 2] = "UNDERLINE", e[e.BLINK = 4] = "BLINK", e[e.INVERSE = 8] = "INVERSE", e[e.INVISIBLE = 16] = "INVISIBLE", e[e.DIM = 32] = "DIM";
 }(n.FLAGS || (n.FLAGS = {}));
 }, {} ],
-29: [ function(e, t, n) {
+32: [ function(e, t, n) {
 "use strict";
 function i(e, t, n, i) {
 for (var r = 0; r < e.data.length; r += 4) e.data[r] === t && e.data[r + 1] === n && e.data[r + 2] === i && (e.data[r + 3] = 0);
@@ -59085,9 +59254,9 @@ var p = u.getImageData(0, 0, c.width, c.height);
 return i(p, parseInt(a.background.substr(1, 2), 16), parseInt(a.background.substr(3, 2), 16), parseInt(a.background.substr(5, 2), 16)), e.createImageBitmap(p);
 };
 }, {
-"./utils/Browser": 30
+"./utils/Browser": 33
 } ],
-30: [ function(e, t, n) {
+33: [ function(e, t, n) {
 "use strict";
 function i(e, t) {
 return e.indexOf(t) >= 0;
@@ -59098,7 +59267,7 @@ value: !0
 var r = "undefined" == typeof navigator, o = r ? "node" : navigator.userAgent, a = r ? "node" : navigator.platform;
 n.isFirefox = !!~o.indexOf("Firefox"), n.isMSIE = !!~o.indexOf("MSIE") || !!~o.indexOf("Trident"), n.isMac = i([ "Macintosh", "MacIntel", "MacPPC", "Mac68K" ], a), n.isIpad = "iPad" === a, n.isIphone = "iPhone" === a, n.isMSWindows = i([ "Windows", "Win16", "Win32", "WinCE" ], a), n.isLinux = a.indexOf("Linux") >= 0;
 }, {} ],
-31: [ function(e, t, n) {
+34: [ function(e, t, n) {
 "use strict";
 var i = this && this.__extends || function() {
 var e = Object.setPrototypeOf || {
@@ -59143,9 +59312,9 @@ var t = this._measureElement.getBoundingClientRect();
 }(e("../EventEmitter").EventEmitter);
 n.CharMeasure = r;
 }, {
-"../EventEmitter": 7
+"../EventEmitter": 8
 } ],
-32: [ function(e, t, n) {
+35: [ function(e, t, n) {
 "use strict";
 var i = this && this.__extends || function() {
 var e = Object.setPrototypeOf || {
@@ -59241,9 +59410,21 @@ return (this._startIndex + e) % this.maxLength;
 }(e("../EventEmitter").EventEmitter);
 n.CircularList = r;
 }, {
-"../EventEmitter": 7
+"../EventEmitter": 8
 } ],
-33: [ function(e, t, n) {
+36: [ function(e, t, n) {
+"use strict";
+Object.defineProperty(n, "__esModule", {
+value: !0
+}), n.addDisposableListener = function(e, t, n, i) {
+return e.addEventListener(t, n, i), {
+dispose: function() {
+n && (e.removeEventListener(t, n, i), e = null, n = null);
+}
+};
+};
+}, {} ],
+37: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -59271,7 +59452,29 @@ y: l
 }();
 n.MouseHelper = i;
 }, {} ],
-34: [ function(e, t, n) {
+38: [ function(e, t, n) {
+"use strict";
+Object.defineProperty(n, "__esModule", {
+value: !0
+});
+var i = function() {
+function e(e, t) {
+this._terminal = e, this._callback = t, this._animationFrame = null;
+}
+return e.prototype.dispose = function() {
+this._animationFrame && (window.cancelAnimationFrame(this._animationFrame), this._animationFrame = null);
+}, e.prototype.refresh = function(e, t) {
+var n = this;
+e = e || 0, t = t || this._terminal.rows - 1, this._rowStart = void 0 !== this._rowStart ? Math.min(this._rowStart, e) : e, this._rowEnd = void 0 !== this._rowEnd ? Math.max(this._rowEnd, t) : t, this._animationFrame || (this._animationFrame = window.requestAnimationFrame(function() {
+return n._innerRefresh();
+}));
+}, e.prototype._innerRefresh = function() {
+this._rowStart = Math.max(this._rowStart, 0), this._rowEnd = Math.min(this._rowEnd, this._terminal.rows - 1), this._callback(this._rowStart, this._rowEnd), this._rowStart = null, this._rowEnd = null, this._animationFrame = null;
+}, e;
+}();
+n.RenderDebouncer = i;
+}, {} ],
+39: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -59291,13 +59494,7 @@ this._listener && (this._resolutionMediaMatchList.removeListener(this._outerList
 }();
 n.ScreenDprMonitor = i;
 }, {} ],
-35: [ function(e, t, n) {
-"use strict";
-Object.defineProperty(n, "__esModule", {
-value: !0
-}), n.BELL_SOUND = "data:audio/wav;base64,UklGRigBAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQBAADpAFgCwAMlBZoG/wdmCcoKRAypDQ8PbRDBEQQTOxRtFYcWlBePGIUZXhoiG88bcBz7HHIdzh0WHlMeZx51HmkeUx4WHs8dah0AHXwc3hs9G4saxRnyGBIYGBcQFv8U4RPAEoYRQBACD70NWwwHC6gJOwjWBloF7gOBAhABkf8b/qv8R/ve+Xf4Ife79W/0JfPZ8Z/wde9N7ijtE+wU6xvqM+lb6H7nw+YX5mrlxuQz5Mzje+Ma49fioeKD4nXiYeJy4pHitOL04j/jn+MN5IPkFOWs5U3mDefM55/ogOl36m7rdOyE7abuyu8D8Unyj/Pg9D/2qfcb+Yn6/vuK/Qj/lAAlAg==";
-}, {} ],
-36: [ function(e, t, n) {
+40: [ function(e, t, n) {
 "use strict";
 Object.defineProperty(n, "__esModule", {
 value: !0
@@ -59305,9 +59502,9 @@ value: !0
 var i = e("./Terminal");
 t.exports = i.Terminal;
 }, {
-"./Terminal": 13
+"./Terminal": 16
 } ]
-}, {}, [ 36 ])(36);
+}, {}, [ 40 ])(40);
 }), function(e, t) {
 "function" == typeof define && define.amd ? define([ "angular", "term" ], t) : t(e.angular, e.Terminal);
 }(this, function(e, t) {

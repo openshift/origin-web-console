@@ -122,8 +122,8 @@
                   <div class="component-label">Application</div>
                   <span ng-bind-html="app | highlightKeywords : overview.state.filterKeywords"></span>
                 </h2>
-                <div ng-if="route = overview.bestRouteByApp[app]" class="pull-right">
-                  <h3 class="overview-route">
+                <div class="overview-routes" ng-if="overview.routesToDisplayByApp[app] | size">
+                  <h3 class="overview-route" ng-repeat="route in overview.routesToDisplayByApp[app] track by (route | uid)">
                     <span ng-if="route | isWebRoute">
                       <a ng-href="{{route | routeWebURL}}" target="_blank">
                         {{route | routeLabel}}
