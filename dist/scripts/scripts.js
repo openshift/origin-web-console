@@ -32,7 +32,7 @@ var B = this, V = t("isIE")();
 e.projectName = a.project;
 var L = a.isHomePage;
 B.catalogLandingPageEnabled = !d.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
-var O = t("annotation"), U = t("canI"), F = t("buildConfigForBuild"), x = t("deploymentIsInProgress"), M = t("imageObjectRef"), q = t("isJenkinsPipelineStrategy"), z = t("isNewerResource"), H = t("label"), G = t("podTemplate"), K = i.getPreferredVersion("buildconfigs"), W = i.getPreferredVersion("builds"), Q = i.getPreferredVersion("appliedclusterresourcequotas"), J = i.getPreferredVersion("daemonsets"), Y = i.getPreferredVersion("deploymentconfigs"), Z = i.getPreferredVersion("deployments"), X = i.getPreferredVersion("horizontalpodautoscalers"), ee = i.getPreferredVersion("imagestreams"), te = i.getPreferredVersion("limitranges"), ne = i.getPreferredVersion("pods"), re = i.getPreferredVersion("replicasets"), ae = i.getPreferredVersion("replicationcontrollers"), oe = i.getPreferredVersion("resourcequotas"), ie = i.getPreferredVersion("routes"), se = i.getPreferredVersion("servicebindings"), ce = i.getPreferredVersion("clusterserviceclasses"), le = i.getPreferredVersion("serviceinstances"), ue = i.getPreferredVersion("clusterserviceplans"), de = i.getPreferredVersion("services"), me = i.getPreferredVersion("statefulsets"), pe = i.getPreferredVersion("templates");
+var O = t("annotation"), U = t("canI"), F = t("buildConfigForBuild"), x = t("deploymentIsInProgress"), M = t("imageObjectRef"), q = t("isJenkinsPipelineStrategy"), z = t("isNewerResource"), H = t("label"), G = t("podTemplate"), K = i.getPreferredVersion("buildconfigs"), W = i.getPreferredVersion("builds"), J = i.getPreferredVersion("appliedclusterresourcequotas"), Q = i.getPreferredVersion("daemonsets"), Y = i.getPreferredVersion("deploymentconfigs"), Z = i.getPreferredVersion("deployments"), X = i.getPreferredVersion("horizontalpodautoscalers"), ee = i.getPreferredVersion("imagestreams"), te = i.getPreferredVersion("limitranges"), ne = i.getPreferredVersion("pods"), re = i.getPreferredVersion("replicasets"), ae = i.getPreferredVersion("replicationcontrollers"), oe = i.getPreferredVersion("resourcequotas"), ie = i.getPreferredVersion("routes"), se = i.getPreferredVersion("servicebindings"), ce = i.getPreferredVersion("clusterserviceclasses"), le = i.getPreferredVersion("serviceinstances"), ue = i.getPreferredVersion("clusterserviceplans"), de = i.getPreferredVersion("services"), me = i.getPreferredVersion("statefulsets"), pe = i.getPreferredVersion("templates");
 B.buildConfigsInstantiateVersion = i.getPreferredVersion("buildconfigs/instantiate");
 var fe, ge, ve = {}, he = {}, ye = {}, be = B.state = {
 alerts: {},
@@ -216,17 +216,17 @@ _.assign(t, n);
 }), xe(e, t);
 }, We = function() {
 _.each(B.deploymentConfigs, Ke);
-}, Qe = function(e) {
+}, Je = function(e) {
 var t = _e(e);
 return t ? _.get(B, [ "replicaSetsByDeploymentUID", t ]) : {};
-}, Je = function(e) {
-var t = R.getPausedDeploymentAlerts(e), n = Qe(e);
+}, Qe = function(e) {
+var t = R.getPausedDeploymentAlerts(e), n = Je(e);
 _.each(n, function(e) {
 var n = Me(e);
 _.assign(t, n);
 }), xe(e, t);
 }, Ye = function() {
-_.each(B.deployments, Je);
+_.each(B.deployments, Qe);
 }, Ze = function() {
 ze(B.replicationControllers), ze(B.replicaSets), ze(B.statefulSets), ze(B.daemonSets), ze(B.monopods);
 }, Xe = _.debounce(function() {
@@ -417,7 +417,7 @@ B.pods && h.fetchReferencedImageStreamImages(B.pods, be.imagesByDockerReference,
 }, o = function(e) {
 B.daemonSets = e.by("metadata.name"), ut(B.daemonSetData), ut(B.monopods), ze(B.daemonSets), et(B.daemonSets), kt(), Le(), S.log("daemonsets", B.daemonSets);
 }, i = !1, s = function() {
-i || (Rt.push(m.watch(J, r, o, {
+i || (Rt.push(m.watch(Q, r, o, {
 poll: V,
 pollInterval: 6e4
 })), i = !0);
@@ -447,7 +447,7 @@ B.statefulSets = e.by("metadata.name"), ut(B.statefulSets), ut(B.monopods), ze(B
 }, {
 poll: V,
 pollInterval: 6e4
-})), m.list(J, r, function(e) {
+})), m.list(Q, r, function(e) {
 o(e), _.isEmpty(B.daemonSets) || s();
 }), Rt.push(m.watch(de, r, function(e) {
 be.allServices = e.by("metadata.name"), dt(), S.log("services (subscribe)", be.allServices);
@@ -479,7 +479,7 @@ be.quotas = e.by("metadata.name"), jt();
 }, {
 poll: !0,
 pollInterval: 6e4
-})), Rt.push(m.watch(Q, r, function(e) {
+})), Rt.push(m.watch(J, r, function(e) {
 be.clusterQuotas = e.by("metadata.name"), jt();
 }, {
 poll: !0,
@@ -608,6 +608,23 @@ r.overlayPanelVisible = !0;
 r.overlayPanelVisible = !1;
 }, r.$onChanges = function() {
 i();
+};
+}
+
+function MobileClientConfigCtrl(e, t, n, r) {
+var a = this, o = [];
+a.$onChanges = function(i) {
+i.mobileClient && i.mobileClient.currentValue && !a.secretWatch && (a.secretWatch = n.watch(t.getPreferredVersion("secrets"), {
+namespace: _.get(a, "mobileClient.metadata.namespace")
+}, function(t) {
+a.secrets = _.filter(t.by("metadata.name"), function(e) {
+return _.get(e, "metadata.labels.clientId") === a.mobileClient.metadata.name;
+}), a.serviceConfig = getServiceConfig(a.secrets, _.get(i.mobileClient.currentValue, "spec.dmzUrl"), r), a.prettyConfig = getClientConfig(a.mobileClient, a.serviceConfig, e);
+}, {
+errorNotification: !1
+}), o.push(a.secretWatch)), i.mobileClient && a.secrets && (a.serviceConfig = getServiceConfig(a.secrets, _.get(i.mobileClient.currentValue, "spec.dmzUrl"), r), a.prettyConfig = getClientConfig(a.mobileClient, a.serviceConfig, e));
+}, a.$onDestroy = function() {
+n.unwatchAll(o);
 };
 }
 
@@ -11927,7 +11944,40 @@ keywords: "="
 },
 templateUrl: "views/catalog/_template.html"
 };
-}), angular.module("openshiftConsole").directive("podMetrics", [ "$filter", "$interval", "$parse", "$timeout", "$q", "$rootScope", "ChartsService", "ConversionService", "MetricsCharts", "MetricsService", "ModalsService", "usageValueFilter", function(e, t, n, r, a, o, i, s, c, l, u, d) {
+}), angular.module("openshiftConsole").component("mobileClientConfig", {
+bindings: {
+mobileClient: "<"
+},
+templateUrl: "views/mobile-client-config.html",
+controller: [ "API_CFG", "APIService", "DataService", "SecretsService", MobileClientConfigCtrl ]
+});
+
+var getClientConfig = function(e, t, n) {
+return JSON.stringify({
+version: 1,
+clusterName: "https://" + n.openshift.hostPort,
+namespace: _.get(e, "metadata.namespace"),
+clientId: _.get(e, "metadata.name"),
+services: t
+}, null, "  ");
+}, getServiceConfig = function(e, t, n) {
+return _.map(e, function(e) {
+var r = n.decodeSecretData(e.data), a = {
+id: _.get(e, "metadata.name"),
+name: _.get(r, "name"),
+type: r.type,
+url: r.uri,
+config: r.config ? JSON.parse(r.config) : {}
+};
+if (t) {
+var o = a.name || _.get(e, "metadata.labels.serviceName");
+"/" !== t.substr(t.length - 1) && (t += "/"), t += "mobile/" + o + "/", a.url = a.url.replace(/http(s):\/\/.*\//, t);
+}
+return a;
+});
+};
+
+angular.module("openshiftConsole").directive("podMetrics", [ "$filter", "$interval", "$parse", "$timeout", "$q", "$rootScope", "ChartsService", "ConversionService", "MetricsCharts", "MetricsService", "ModalsService", "usageValueFilter", function(e, t, n, r, a, o, i, s, c, l, u, d) {
 return {
 restrict: "E",
 scope: {
@@ -14067,29 +14117,42 @@ template: '<a ng-href="{{link}}" ng-transclude ng-if="link"></a><span ng-transcl
 };
 }), function() {
 angular.module("openshiftConsole").component("mobileClientRow", {
-controller: [ "$scope", "$filter", "$routeParams", "APIService", "AuthorizationService", "DataService", "ListRowUtils", "Navigate", "ProjectsService", function(e, t, n, r, a, o, i, s, c) {
-var l = this;
-l.installType = "", _.extend(l, i.ui), l.$onChanges = function(e) {
-if (e.apiObject) switch (l.bundleDisplay = l.apiObject.spec.appIdentifier, l.clientType = l.apiObject.spec.clientType.toUpperCase(), l.apiObject.spec.clientType) {
+controller: [ "$filter", "$routeParams", "APIService", "AuthorizationService", "DataService", "ListRowUtils", "Navigate", "ServiceInstancesService", function(e, t, n, r, a, o, i, s) {
+var c = this, l = n.getPreferredVersion("serviceinstances"), u = n.getPreferredVersion("clusterserviceclasses"), d = e("isServiceInstanceReady"), m = e("isMobileService");
+c.installType = "", _.extend(c, o.ui), c.$onInit = function() {
+c.context = {
+namespace: _.get(c, "apiObject.metadata.namespace")
+}, a.list(u, c.context, function(e) {
+e = e.by("metadata.name"), a.watch(l, c.context, function(t) {
+c.services = _.filter(t.by("metadata.name"), function(t) {
+var n = _.get(e, s.getServiceClassNameForInstance(t));
+return m(n) && d(t);
+});
+}, {
+errorNotification: !1
+});
+});
+}, c.$onChanges = function(e) {
+if (e.apiObject) switch (c.bundleDisplay = c.apiObject.spec.appIdentifier, c.clientType = c.apiObject.spec.clientType.toUpperCase(), c.apiObject.spec.clientType) {
 case "android":
-l.installType = "gradle";
+c.installType = "gradle";
 break;
 
 case "iOS":
-l.installType = "cocoapods";
+c.installType = "cocoapods";
 break;
 
 case "cordova":
-l.installType = "npm";
+c.installType = "npm";
 }
-}, l.mobileclientVersion = {
+}, c.mobileclientVersion = {
 group: "mobile.k8s.io",
 version: "v1alpha1",
 resource: "mobileclients"
-}, l.actionsDropdownVisible = function() {
-return !_.get(l.apiObject, "metadata.deletionTimestamp") && a.canI(l.mobileclientVersion, "delete");
-}, l.projectName = n.project, l.browseCatalog = function() {
-s.toProjectCatalog(l.projectName);
+}, c.actionsDropdownVisible = function() {
+return !_.get(c.apiObject, "metadata.deletionTimestamp") && r.canI(c.mobileclientVersion, "delete");
+}, c.projectName = t.project, c.browseCatalog = function() {
+i.toProjectCatalog(c.projectName);
 };
 } ],
 controllerAs: "row",
@@ -16537,6 +16600,11 @@ return _.get(e, [ "ENABLE_TECH_PREVIEW_FEATURE", t ], !1);
 } ]).filter("isNonPrintable", function() {
 return function(e) {
 return !!e && /[\x00-\x09\x0E-\x1F]/.test(e);
+};
+}), angular.module("openshiftConsole").filter("isMobileService", function() {
+return function(e) {
+var t = _.get(e, "spec.tags");
+return _.includes(t, "mobile-service");
 };
 }), angular.module("openshiftConsole").factory("logLinks", [ "$anchorScroll", "$document", "$location", "$window", function(e, t, n, r) {
 var a = _.template([ "/#/discover?", "_g=(", "time:(", "from:now-1w,", "mode:relative,", "to:now", ")", ")", "&_a=(", "columns:!(kubernetes.container_name,message),", "index:'<%= index %>',", "query:(", "query_string:(", "analyze_wildcard:!t,", 'query:\'kubernetes.pod_name:"<%= podname %>" AND kubernetes.namespace_name:"<%= namespace %>"\'', ")", "),", "sort:!('@timestamp',desc)", ")", "#console_container_name=<%= containername %>", "&console_back_url=<%= backlink %>" ].join(""));

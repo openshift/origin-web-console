@@ -10839,6 +10839,12 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/mobile-client-config.html',
+    "<div class=\"component-label section-label\">Config Info</div>\n" +
+    "<copy-to-clipboard clipboard-text=\"$ctrl.prettyConfig\" multiline=\"true\" display-wide=\"true\"></copy-to-clipboard>"
+  );
+
+
   $templateCache.put('views/modals/about-compute-units-modal.html',
     "<div class=\"about-compute-units-modal\">\n" +
     "<div class=\"modal-header\">\n" +
@@ -12637,7 +12643,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/overview/_mobile-client-row.html',
-    "<div class=\"list-pf-item\" ng-class=\"{ active: row.expanded }\">\n" +
+    "<div class=\"list-pf-item mobile-row\" ng-class=\"{ active: row.expanded }\">\n" +
     "<div class=\"list-pf-container\" ng-click=\"row.toggleExpand($event)\">\n" +
     "<div class=\"list-pf-chevron\">\n" +
     "<div ng-include src=\" 'views/overview/_list-row-chevron.html' \" class=\"list-pf-content\"></div>\n" +
@@ -12669,7 +12675,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"list-pf-expansion collapse\" ng-if=\"row.expanded\" ng-class=\"{ in: row.expanded }\">\n" +
     "<div class=\"list-pf-container\">\n" +
-    "<div class=\"expanded-section\">\n" +
+    "<div class=\"expanded-section\" ng-if=\"!(row.services | size)\">\n" +
     "<div class=\"empty-state-message text-center\">\n" +
     "<p>Add a mobile service to your project. Or connect to external service.</p>\n" +
     "<div class=\"empty-state-message-main-action\">\n" +
@@ -12679,9 +12685,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "</div>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "<div class=\"expanded-section\" ng-if=\"(row.services | size)\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-4\">\n" +
+    "<mobile-client-config mobile-client=\"row.apiObject\"></mobile-client-config>\n" +
+    "</div>\n" +
+    "<div class=\"col-md-8\">\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "<div ng-if=\"loading\">\n" +
     "Loading...\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
