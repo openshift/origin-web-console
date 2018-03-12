@@ -160,7 +160,7 @@
                 };
                 delete entry.valueFrom.configMapKeyRef;
               }
-              delete entry.valueFrom.key;
+              delete entry.selectedValueFromKey;
             };
 
             $scope.valueFromKeySelected = function(entry, selected) {
