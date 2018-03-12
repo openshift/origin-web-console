@@ -1,0 +1,51 @@
+.service-integrations {
+  .component-label.section-label {
+    margin: 0px 20px;
+  }
+
+  .service-integration {
+    height: 40px;
+    margin: 10px 20px 0px 0px;
+    .image-icon {
+      padding-top: 5px;
+      margin: 0 15px;
+      width: 30px;
+    }
+    .id {
+      .text-muted();
+    }
+
+    .inline-delete{
+      display: inline-block;
+    }
+
+    .integration {
+      color: @link-color;
+
+      .integration-name {
+        display: inline;
+      }
+
+      &.active {
+        .pficon-error-circle-o {
+          &:before {
+            color: @link-color;
+          }
+          cursor: pointer;
+        }
+      }
+
+      &.inactive {
+        .pficon-add-circle-o {
+          cursor: pointer;
+        }
+      }
+
+      &.unknown {
+        .description h4 {
+          .text-muted();
+        }
+      }
+    }
+  }
+}

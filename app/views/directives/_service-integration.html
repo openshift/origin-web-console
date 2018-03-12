@@ -1,0 +1,37 @@
+<div class="service-integration pull-left" ng-if="$ctrl.doRender">
+  <div ng-class="{'active': $ctrl.getState() == 1,
+                              'inactive': $ctrl.getState() == 0,
+                              'unknown': $ctrl.getState() == -1}" class="integration">
+    <img class="image-icon pull-left" ng-src="{{ $ctrl.integrationData.imageData.imageUrl }}"/>
+    <div class="description pull-left">
+      <h4 class="integration-name">{{$ctrl.integrationData.name}}</h4>
+      <span class="integration-error" ng-if="$ctrl.getState() == 2"><span class="spinner spinner-xs spinner-inline" aria-hidden="true"></span></span>
+      <delete-link
+      class="inline-delete"
+      ng-if="$ctrl.getState() == 1"
+      kind="servicebinding"
+      group="servicecatalog.k8s.io"
+      button-only="true"
+      stay-on-current-page="true"
+      resource-name="{{$ctrl.binding.metadata.name}}"
+      project-name="{{$ctrl.binding.metadata.namespace}}"
+      success="$ctrl.deletePodPreset">
+    </delete-link>
+    <!-- <span class="pficon-error-circle-o" ng-if="$ctrl.getState() == 1" ng-click="$ctrl.removeIntegration()"></span> -->
+      <span class="pficon pficon-add-circle-o" ng-if="$ctrl.getState() == 0" ng-click="$ctrl.openIntegrationPanel()"></span>
+      <!-- Does this pending and spinner stuff work? -->
+      <div class="id" ng-if="$ctrl.getState() == 2">status: Pending</div>
+      <div class="id" ng-if="$ctrl.getState() == 1">ID: {{ $ctrl.binding.metadata.name }}</div>
+      <div class="id" ng-if="$ctrl.getState() == 0">No {{$ctrl.integrationData.name}} integration found.</div>
+      <div class="id" ng-if="$ctrl.getState() == -1">Provision {{$ctrl.integrationData.name}} to enable integration.</div>
+    </div>
+  </div>
+</div>
+
+<overlay-panel show-panel="$ctrl.integrationPanelVisible" handle-close="$ctrl.closeIntegrationPanel">
+  <bind-service target="$ctrl.serviceInstance"
+                project="$ctrl.project"
+                on-close="$ctrl.closeIntegrationPanel"
+                on-finish="$ctrl.onBind"
+                parameter-data="$ctrl.parameterData"></bind-service>
+</overlay-panel>
