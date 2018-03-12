@@ -12,7 +12,7 @@
             </div>
             <form name="createConfigMapForm" class="mar-top-xl">
               <fieldset ng-disabled="disableInputs">
-                <edit-config-map model="configMap" show-name-input="true"></edit-config-map>
+                <edit-config-map-or-secret model="configMap" type="config-map" show-name-input="true"></edit-config-map-or-secret>
                 <div class="button-group gutter-top gutter-bottom">
                   <button type="submit"
                       class="btn btn-primary btn-lg"

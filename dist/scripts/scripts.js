@@ -9152,6 +9152,13 @@ authTypes: [ {
 id: "Opaque",
 label: "Webhook Secret"
 } ]
+},
+generic: {
+label: "Generic Secret",
+authTypes: [ {
+id: "Opaque",
+label: "Generic Secret"
+} ]
 }
 }, l.secretTypes = _.keys(l.secretAuthTypeMap), l.type ? l.newSecret = {
 type: l.type,
@@ -9162,7 +9169,11 @@ pickedServiceAccountToLink: l.serviceAccountToLink || ""
 } : l.newSecret = {
 type: "source",
 authType: "kubernetes.io/basic-auth",
-data: {},
+data: {
+genericKeyValues: {
+data: {}
+}
+},
 linkSecret: !1,
 pickedServiceAccountToLink: ""
 }, l.add = {
@@ -9206,7 +9217,7 @@ auth: o
 break;
 
 case "Opaque":
-e.webhookSecretKey && (r.stringData.WebHookSecretKey = e.webhookSecretKey);
+e.webhookSecretKey && (r.stringData.WebHookSecretKey = e.webhookSecretKey), e.genericKeyValues.data && (r.stringData = e.genericKeyValues.data);
 }
 return r;
 }, d = function() {
@@ -9395,15 +9406,16 @@ details: n("getErrorDetails")(e)
 };
 }
 };
-} ]), angular.module("openshiftConsole").directive("editConfigMap", [ "DNS1123_SUBDOMAIN_VALIDATION", function(e) {
+} ]), angular.module("openshiftConsole").directive("editConfigMapOrSecret", [ "DNS1123_SUBDOMAIN_VALIDATION", function(e) {
 return {
 require: "^form",
 restrict: "E",
 scope: {
-configMap: "=model",
-showNameInput: "="
+map: "=model",
+showNameInput: "=",
+type: "@"
 },
-templateUrl: "views/directives/edit-config-map.html",
+templateUrl: "views/directives/edit-config-map-or-secret.html",
 link: function(t, n, r, a) {
 t.form = a, t.nameValidation = e, t.addItem = function() {
 t.data.push({
@@ -9415,7 +9427,7 @@ t.data.splice(e, 1), t.form.$setDirty();
 }, t.getKeys = function() {
 return _.map(t.data, "key");
 };
-var o = t.$watch("configMap.data", function(e) {
+var o = t.$watch("map.data", function(e) {
 e && (t.data = _.map(e, function(e, t) {
 return {
 key: t,
@@ -9425,7 +9437,7 @@ value: e
 var n = {};
 _.each(e, function(e) {
 n[e.key] = e.value;
-}), _.set(t, "configMap.data", n);
+}), _.set(t, "map.data", n);
 }, !0));
 });
 }
