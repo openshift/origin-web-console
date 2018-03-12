@@ -25689,6 +25689,7 @@ bars:"c3-bars",
 circle:"c3-circle",
 circles:"c3-circles",
 arc:"c3-arc",
+arcLabelLine:"c3-arc-label-line",
 arcs:"c3-arcs",
 area:"c3-area",
 areas:"c3-areas",
@@ -26118,7 +26119,7 @@ var c = this.owner;
 c.axes.x.style("opacity", b ? 0 :1), c.axes.y.style("opacity", b ? 0 :1), c.axes.y2.style("opacity", b ? 0 :1), c.axes.subx.style("opacity", b ? 0 :1), a.axisX.call(c.xAxis), a.axisY.call(c.yAxis), a.axisY2.call(c.y2Axis), a.axisSubX.call(c.subXAxis);
 };
 var B, C, D = {
-version:"0.4.18"
+version:"0.4.21"
 };
 return D.generate = function(a) {
 return new c(a);
@@ -26160,8 +26161,8 @@ y2:0
 this.initBar && this.initBar(), this.initLine && this.initLine(), this.initArc && this.initArc(), this.initGauge && this.initGauge(), this.initText && this.initText();
 }, C.initWithData = function(a) {
 var b, c, d = this, e = d.d3, f = d.config, h = !0;
-d.axis = new A(d), d.initPie && d.initPie(), d.initBrush && d.initBrush(), d.initZoom && d.initZoom(), f.bindto ? "function" == typeof f.bindto.node ? d.selectChart = f.bindto :d.selectChart = e.select(f.bindto) :d.selectChart = e.selectAll([]), d.selectChart.empty() && (d.selectChart = e.select(document.createElement("div")).style("opacity", 0), d.observeInserted(d.selectChart), h = !1), d.selectChart.html("").classed("c3", !0), d.data.xs = {}, d.data.targets = d.convertDataToTargets(a), f.data_filter && (d.data.targets = d.data.targets.filter(f.data_filter)), f.data_hide && d.addHiddenTargetIds(f.data_hide === !0 ? d.mapToIds(d.data.targets) :f.data_hide), f.legend_hide && d.addHiddenLegendIds(f.legend_hide === !0 ? d.mapToIds(d.data.targets) :f.legend_hide), d.hasType("gauge") && (f.legend_show = !1), d.updateSizes(), d.updateScales(), d.x.domain(e.extent(d.getXDomain(d.data.targets))), d.y.domain(d.getYDomain(d.data.targets, "y")), d.y2.domain(d.getYDomain(d.data.targets, "y2")), d.subX.domain(d.x.domain()), 
-d.subY.domain(d.y.domain()), d.subY2.domain(d.y2.domain()), d.orgXDomain = d.x.domain(), d.brush && d.brush.scale(d.subX), f.zoom_enabled && d.zoom.scale(d.x), d.svg = d.selectChart.append("svg").style("overflow", "hidden").on("mouseenter", function() {
+d.axis = new A(d), d.initPie && d.initPie(), d.initBrush && d.initBrush(), d.initZoom && d.initZoom(), f.bindto ? "function" == typeof f.bindto.node ? d.selectChart = f.bindto :d.selectChart = e.select(f.bindto) :d.selectChart = e.selectAll([]), d.selectChart.empty() && (d.selectChart = e.select(document.createElement("div")).style("opacity", 0), d.observeInserted(d.selectChart), h = !1), d.selectChart.html("").classed("c3", !0), d.data.xs = {}, d.data.targets = d.convertDataToTargets(a), f.data_filter && (d.data.targets = d.data.targets.filter(f.data_filter)), f.data_hide && d.addHiddenTargetIds(f.data_hide === !0 ? d.mapToIds(d.data.targets) :f.data_hide), f.legend_hide && d.addHiddenLegendIds(f.legend_hide === !0 ? d.mapToIds(d.data.targets) :f.legend_hide), d.updateSizes(), d.updateScales(), d.x.domain(e.extent(d.getXDomain(d.data.targets))), d.y.domain(d.getYDomain(d.data.targets, "y")), d.y2.domain(d.getYDomain(d.data.targets, "y2")), d.subX.domain(d.x.domain()), d.subY.domain(d.y.domain()), 
+d.subY2.domain(d.y2.domain()), d.orgXDomain = d.x.domain(), d.brush && d.brush.scale(d.subX), f.zoom_enabled && d.zoom.scale(d.x), d.svg = d.selectChart.append("svg").style("overflow", "hidden").on("mouseenter", function() {
 return f.onmouseover.call(d);
 }).on("mouseleave", function() {
 return f.onmouseout.call(d);
@@ -26281,7 +26282,7 @@ return !a.isTimeSeries() && (b.data_x || v(b.data_xs));
 return "timeseries" === this.config.axis_y_type;
 }, C.getTranslate = function(a) {
 var b, c, d = this, e = d.config;
-return "main" === a ? (b = s(d.margin.left), c = s(d.margin.top)) :"context" === a ? (b = s(d.margin2.left), c = s(d.margin2.top)) :"legend" === a ? (b = d.margin3.left, c = d.margin3.top) :"x" === a ? (b = 0, c = e.axis_rotated ? 0 :d.height) :"y" === a ? (b = 0, c = e.axis_rotated ? d.height :0) :"y2" === a ? (b = e.axis_rotated ? 0 :d.width, c = e.axis_rotated ? 1 :0) :"subx" === a ? (b = 0, c = e.axis_rotated ? 0 :d.height2) :"arc" === a && (b = d.arcWidth / 2, c = d.arcHeight / 2), "translate(" + b + "," + c + ")";
+return "main" === a ? (b = s(d.margin.left), c = s(d.margin.top)) :"context" === a ? (b = s(d.margin2.left), c = s(d.margin2.top)) :"legend" === a ? (b = d.margin3.left, c = d.margin3.top) :"x" === a ? (b = 0, c = e.axis_rotated ? 0 :d.height) :"y" === a ? (b = 0, c = e.axis_rotated ? d.height :0) :"y2" === a ? (b = e.axis_rotated ? 0 :d.width, c = e.axis_rotated ? 1 :0) :"subx" === a ? (b = 0, c = e.axis_rotated ? 0 :d.height2) :"arc" === a && (b = d.arcWidth / 2, c = d.arcHeight / 2 - (d.hasType("gauge") ? 6 :0)), "translate(" + b + "," + c + ")";
 }, C.initialOpacity = function(a) {
 return null !== a.value && this.withoutFadeIn[a.id] ? 1 :0;
 }, C.initialOpacityForCircle = function(a) {
@@ -26343,9 +26344,13 @@ delete a.resizeTimeout, a.api.flush();
 }, 100);
 }), a.resizeFunction.add(function() {
 b.onresized.call(a);
-}), window.attachEvent) window.attachEvent("onresize", a.resizeFunction); else if (window.addEventListener) window.addEventListener("resize", a.resizeFunction, !1); else {
+}), a.resizeIfElementDisplayed = function() {
+null != a.api && a.api.element.offsetParent && a.resizeFunction();
+}, window.attachEvent) window.attachEvent("onresize", a.resizeIfElementDisplayed); else if (window.addEventListener) window.addEventListener("resize", a.resizeIfElementDisplayed, !1); else {
 var c = window.onresize;
-c ? c.add && c.remove || (c = a.generateResize(), c.add(window.onresize)) :c = a.generateResize(), c.add(a.resizeFunction), window.onresize = c;
+c ? c.add && c.remove || (c = a.generateResize(), c.add(window.onresize)) :c = a.generateResize(), c.add(a.resizeFunction), window.onresize = function() {
+a.api.element.offsetParent && c();
+};
 }
 }, C.generateResize = function() {
 function a() {
@@ -27438,11 +27443,11 @@ withTransitionForTransform:!1
 });
 }, B.destroy = function() {
 var a = this.internal;
-if (window.clearInterval(a.intervalForObserveInserted), void 0 !== a.resizeTimeout && window.clearTimeout(a.resizeTimeout), window.detachEvent) window.detachEvent("onresize", a.resizeFunction); else if (window.removeEventListener) window.removeEventListener("resize", a.resizeFunction); else {
+if (window.clearInterval(a.intervalForObserveInserted), void 0 !== a.resizeTimeout && window.clearTimeout(a.resizeTimeout), window.detachEvent) window.detachEvent("onresize", a.resizeIfElementDisplayed); else if (window.removeEventListener) window.removeEventListener("resize", a.resizeIfElementDisplayed); else {
 var b = window.onresize;
 b && b.add && b.remove && b.remove(a.resizeFunction);
 }
-return a.selectChart.classed("c3", !1).html(""), Object.keys(a).forEach(function(b) {
+return a.resizeFunction.remove(), a.selectChart.classed("c3", !1).html(""), Object.keys(a).forEach(function(b) {
 a[b] = null;
 }), null;
 }, B.color = function(a) {
@@ -27724,8 +27729,8 @@ return a + b.value;
 }, 0);
 }), a.pie.sort(a.getOrderFunction() || null);
 }, C.updateRadius = function() {
-var a = this, b = a.config, c = b.gauge_width || b.donut_width;
-a.radiusExpanded = Math.min(a.arcWidth, a.arcHeight) / 2, a.radius = .95 * a.radiusExpanded, a.innerRadiusRatio = c ? (a.radius - c) / a.radius :.6, a.innerRadius = a.hasType("donut") || a.hasType("gauge") ? a.radius * a.innerRadiusRatio :0;
+var a = this, b = a.config, c = b.gauge_width || b.donut_width, d = a.filterTargetsToShow(a.data.targets).length * a.config.gauge_arcs_minWidth;
+a.radiusExpanded = Math.min(a.arcWidth, a.arcHeight) / 2 * (a.hasType("gauge") ? .85 :1), a.radius = .95 * a.radiusExpanded, a.innerRadiusRatio = c ? (a.radius - c) / a.radius :.6, a.innerRadius = a.hasType("donut") || a.hasType("gauge") ? a.radius * a.innerRadiusRatio :0, a.gaugeArcWidth = c ? c :d <= a.radius - a.innerRadius ? a.radius - a.innerRadius :d <= a.radius ? d :a.radius;
 }, C.updateArc = function() {
 var a = this;
 a.svgArc = a.getSvgArc(), a.svgArcExpanded = a.getSvgArcExpanded(), a.svgArcExpandedSub = a.getSvgArcExpanded(.98);
@@ -27735,22 +27740,35 @@ return g ? (f.pie(f.filterTargetsToShow(f.data.targets)).forEach(function(b) {
 h || b.data.id !== a.data.id || (h = !0, a = b, a.index = i), i++;
 }), isNaN(a.startAngle) && (a.startAngle = 0), isNaN(a.endAngle) && (a.endAngle = a.startAngle), f.isGaugeType(a.data) && (b = g.gauge_min, c = g.gauge_max, d = Math.PI * (g.gauge_fullCircle ? 2 :1) / (c - b), e = a.value < b ? 0 :a.value < c ? a.value - b :c - b, a.startAngle = g.gauge_startingAngle, a.endAngle = a.startAngle + d * e), h ? a :null) :null;
 }, C.getSvgArc = function() {
-var a = this, b = a.d3.svg.arc().outerRadius(a.radius).innerRadius(a.innerRadius), c = function(c, d) {
+var a = this, b = a.hasType("gauge"), c = a.gaugeArcWidth / a.filterTargetsToShow(a.data.targets).length, d = a.d3.svg.arc().outerRadius(function(d) {
+return b ? a.radius - c * d.index :a.radius;
+}).innerRadius(function(d) {
+return b ? a.radius - c * (d.index + 1) :a.innerRadius;
+}), e = function(b, c) {
 var e;
-return d ? b(c) :(e = a.updateAngle(c), e ? b(e) :"M 0 0");
+return c ? d(b) :(e = a.updateAngle(b), e ? d(e) :"M 0 0");
 };
-return c.centroid = b.centroid, c;
+return e.centroid = d.centroid, e;
 }, C.getSvgArcExpanded = function(a) {
-var b = this, c = b.d3.svg.arc().outerRadius(b.radiusExpanded * (a ? a :1)).innerRadius(b.innerRadius);
+a = a || 1;
+var b = this, c = b.hasType("gauge"), d = b.gaugeArcWidth / b.filterTargetsToShow(b.data.targets).length, e = Math.min(b.radiusExpanded * a - b.radius, .8 * d - 100 * (1 - a)), f = b.d3.svg.arc().outerRadius(function(f) {
+return c ? b.radius - d * f.index + e :b.radiusExpanded * a;
+}).innerRadius(function(a) {
+return c ? b.radius - d * (a.index + 1) :b.innerRadius;
+});
 return function(a) {
-var d = b.updateAngle(a);
-return d ? c(d) :"M 0 0";
+var c = b.updateAngle(a);
+return c ? f(c) :"M 0 0";
 };
 }, C.getArc = function(a, b, c) {
 return c || this.isArcType(a.data) ? this.svgArc(a, b) :"M 0 0";
 }, C.transformForArcLabel = function(a) {
-var b, c, d, e, f, g = this, h = g.config, i = g.updateAngle(a), j = "";
-return i && !g.hasType("gauge") && (b = this.svgArc.centroid(i), c = isNaN(b[0]) ? 0 :b[0], d = isNaN(b[1]) ? 0 :b[1], e = Math.sqrt(c * c + d * d), f = g.hasType("donut") && h.donut_label_ratio ? m(h.donut_label_ratio) ? h.donut_label_ratio(a, g.radius, e) :h.donut_label_ratio :g.hasType("pie") && h.pie_label_ratio ? m(h.pie_label_ratio) ? h.pie_label_ratio(a, g.radius, e) :h.pie_label_ratio :g.radius && e ? (36 / g.radius > .375 ? 1.175 - 36 / g.radius :.8) * g.radius / e :0, j = "translate(" + c * f + "," + d * f + ")"), j;
+var b, c, d, e, f, g = this, h = g.config, i = g.updateAngle(a), j = "", k = g.hasType("gauge");
+if (i && !k) b = this.svgArc.centroid(i), c = isNaN(b[0]) ? 0 :b[0], d = isNaN(b[1]) ? 0 :b[1], e = Math.sqrt(c * c + d * d), f = g.hasType("donut") && h.donut_label_ratio ? m(h.donut_label_ratio) ? h.donut_label_ratio(a, g.radius, e) :h.donut_label_ratio :g.hasType("pie") && h.pie_label_ratio ? m(h.pie_label_ratio) ? h.pie_label_ratio(a, g.radius, e) :h.pie_label_ratio :g.radius && e ? (36 / g.radius > .375 ? 1.175 - 36 / g.radius :.8) * g.radius / e :0, j = "translate(" + c * f + "," + d * f + ")"; else if (i && k && g.filterTargetsToShow(g.data.targets).length > 1) {
+var l = Math.sin(i.endAngle - Math.PI / 2);
+c = Math.cos(i.endAngle - Math.PI / 2) * (g.radiusExpanded + 25), d = l * (g.radiusExpanded + 15 - Math.abs(10 * l)) + 3, j = "translate(" + c + "," + d + ")";
+}
+return j;
 }, C.getArcRatio = function(a) {
 var b = this, c = b.config, d = Math.PI * (b.hasType("gauge") && !c.gauge_fullCircle ? 1 :2);
 return a ? (a.endAngle - a.startAngle) / d :null;
@@ -27811,60 +27829,84 @@ return f(a) + i(a.data);
 var a = this;
 a.arcs = a.main.select("." + g.chart).append("g").attr("class", g.chartArcs).attr("transform", a.getTranslate("arc")), a.arcs.append("text").attr("class", g.chartArcsTitle).style("text-anchor", "middle").text(a.getArcTitle());
 }, C.redrawArc = function(a, b, c) {
-var d, e = this, f = e.d3, h = e.config, i = e.main;
-d = i.selectAll("." + g.arcs).selectAll("." + g.arc).data(e.arcData.bind(e)), d.enter().append("path").attr("class", e.classArc.bind(e)).style("fill", function(a) {
-return e.color(a.data);
+var d, e, f, h = this, i = h.d3, j = h.config, k = h.main, l = h.hasType("gauge");
+if (d = k.selectAll("." + g.arcs).selectAll("." + g.arc).data(h.arcData.bind(h)), d.enter().append("path").attr("class", h.classArc.bind(h)).style("fill", function(a) {
+return h.color(a.data);
 }).style("cursor", function(a) {
-return h.interaction_enabled && h.data_selection_isselectable(a) ? "pointer" :null;
+return j.interaction_enabled && j.data_selection_isselectable(a) ? "pointer" :null;
 }).each(function(a) {
-e.isGaugeType(a.data) && (a.startAngle = a.endAngle = h.gauge_startingAngle), this._current = a;
-}), d.attr("transform", function(a) {
-return !e.isGaugeType(a.data) && c ? "scale(0)" :"";
-}).on("mouseover", h.interaction_enabled ? function(a) {
+h.isGaugeType(a.data) && (a.startAngle = a.endAngle = j.gauge_startingAngle), this._current = a;
+}), l && (f = k.selectAll("." + g.arcs).selectAll("." + g.arcLabelLine).data(h.arcData.bind(h)), f.enter().append("rect").attr("class", function(a) {
+return g.arcLabelLine + " " + g.target + " " + g.target + "-" + a.data.id;
+}), 1 === h.filterTargetsToShow(h.data.targets).length ? f.style("display", "none") :f.style("fill", function(a) {
+return j.color_pattern.length > 0 ? h.levelColor(a.data.values[0].value) :h.color(a.data);
+}).style("display", j.gauge_labelLine_show ? "" :"none").each(function(a) {
+var b = 0, c = 2, d = 0, e = 0, f = "";
+if (h.hiddenTargetIds.indexOf(a.data.id) < 0) {
+var g = h.updateAngle(a), j = h.gaugeArcWidth / h.filterTargetsToShow(h.data.targets).length * (g.index + 1), k = g.endAngle - Math.PI / 2, l = h.radius - j, m = k - (0 === l ? 0 :1 / l);
+b = h.radiusExpanded - h.radius + j, d = Math.cos(m) * l, e = Math.sin(m) * l, f = "rotate(" + 180 * k / Math.PI + ", " + d + ", " + e + ")";
+}
+i.select(this).attr({
+x:d,
+y:e,
+width:b,
+height:c,
+transform:f
+}).style("stroke-dasharray", "0, " + (b + c) + ", 0");
+})), d.attr("transform", function(a) {
+return !h.isGaugeType(a.data) && c ? "scale(0)" :"";
+}).on("mouseover", j.interaction_enabled ? function(a) {
 var b, c;
-e.transiting || (b = e.updateAngle(a), b && (c = e.convertToArcData(b), e.expandArc(b.data.id), e.api.focus(b.data.id), e.toggleFocusLegend(b.data.id, !0), e.config.data_onmouseover(c, this)));
-} :null).on("mousemove", h.interaction_enabled ? function(a) {
-var b, c, d = e.updateAngle(a);
-d && (b = e.convertToArcData(d), c = [ b ], e.showTooltip(c, this));
-} :null).on("mouseout", h.interaction_enabled ? function(a) {
+h.transiting || (b = h.updateAngle(a), b && (c = h.convertToArcData(b), h.expandArc(b.data.id), h.api.focus(b.data.id), h.toggleFocusLegend(b.data.id, !0), h.config.data_onmouseover(c, this)));
+} :null).on("mousemove", j.interaction_enabled ? function(a) {
+var b, c, d = h.updateAngle(a);
+d && (b = h.convertToArcData(d), c = [ b ], h.showTooltip(c, this));
+} :null).on("mouseout", j.interaction_enabled ? function(a) {
 var b, c;
-e.transiting || (b = e.updateAngle(a), b && (c = e.convertToArcData(b), e.unexpandArc(b.data.id), e.api.revert(), e.revertLegend(), e.hideTooltip(), e.config.data_onmouseout(c, this)));
-} :null).on("click", h.interaction_enabled ? function(a, b) {
-var c, d = e.updateAngle(a);
-d && (c = e.convertToArcData(d), e.toggleShape && e.toggleShape(this, c, b), e.config.data_onclick.call(e.api, c, this));
+h.transiting || (b = h.updateAngle(a), b && (c = h.convertToArcData(b), h.unexpandArc(b.data.id), h.api.revert(), h.revertLegend(), h.hideTooltip(), h.config.data_onmouseout(c, this)));
+} :null).on("click", j.interaction_enabled ? function(a, b) {
+var c, d = h.updateAngle(a);
+d && (c = h.convertToArcData(d), h.toggleShape && h.toggleShape(this, c, b), h.config.data_onclick.call(h.api, c, this));
 } :null).each(function() {
-e.transiting = !0;
+h.transiting = !0;
 }).transition().duration(a).attrTween("d", function(a) {
-var b, c = e.updateAngle(a);
-return c ? (isNaN(this._current.startAngle) && (this._current.startAngle = 0), isNaN(this._current.endAngle) && (this._current.endAngle = this._current.startAngle), b = f.interpolate(this._current, c), this._current = b(0), function(c) {
+var b, c = h.updateAngle(a);
+return c ? (isNaN(this._current.startAngle) && (this._current.startAngle = 0), isNaN(this._current.endAngle) && (this._current.endAngle = this._current.startAngle), b = i.interpolate(this._current, c), this._current = b(0), function(c) {
 var d = b(c);
-return d.data = a.data, e.getArc(d, !0);
+return d.data = a.data, h.getArc(d, !0);
 }) :function() {
 return "M 0 0";
 };
 }).attr("transform", c ? "scale(1)" :"").style("fill", function(a) {
-return e.levelColor ? e.levelColor(a.data.values[0].value) :e.color(a.data.id);
-}).call(e.endall, function() {
-e.transiting = !1;
-}), d.exit().transition().duration(b).style("opacity", 0).remove(), i.selectAll("." + g.chartArc).select("text").style("opacity", 0).attr("class", function(a) {
-return e.isGaugeType(a.data) ? g.gaugeValue :"";
-}).text(e.textForArcLabel.bind(e)).attr("transform", e.transformForArcLabel.bind(e)).style("font-size", function(a) {
-return e.isGaugeType(a.data) ? Math.round(e.radius / 5) + "px" :"";
+return h.levelColor ? h.levelColor(a.data.values[0].value) :h.color(a.data.id);
+}).call(h.endall, function() {
+h.transiting = !1;
+}), d.exit().transition().duration(b).style("opacity", 0).remove(), k.selectAll("." + g.chartArc).select("text").style("opacity", 0).attr("class", function(a) {
+return h.isGaugeType(a.data) ? g.gaugeValue :"";
+}).text(h.textForArcLabel.bind(h)).attr("transform", h.transformForArcLabel.bind(h)).style("font-size", function(a) {
+return h.isGaugeType(a.data) && 1 === h.filterTargetsToShow(h.data.targets).length ? Math.round(h.radius / 5) + "px" :"";
 }).transition().duration(a).style("opacity", function(a) {
-return e.isTargetToShow(a.data.id) && e.isArcType(a.data) ? 1 :0;
-}), i.select("." + g.chartArcsTitle).style("opacity", e.hasType("donut") || e.hasType("gauge") ? 1 :0), e.hasType("gauge") && (e.arcs.select("." + g.chartArcsBackground).attr("d", function() {
-var a = {
+return h.isTargetToShow(a.data.id) && h.isArcType(a.data) ? 1 :0;
+}), k.select("." + g.chartArcsTitle).style("opacity", h.hasType("donut") || l ? 1 :0), l) {
+var m = 0;
+e = h.arcs.select("g." + g.chartArcsBackground).selectAll("path." + g.chartArcsBackground).data(h.data.targets), e.enter().append("path"), e.attr("class", function(a, b) {
+return g.chartArcsBackground + " " + g.chartArcsBackground + "-" + b;
+}).attr("d", function(a) {
+if (h.hiddenTargetIds.indexOf(a.id) >= 0) return "M 0 0";
+var b = {
 data:[ {
-value:h.gauge_max
+value:j.gauge_max
 } ],
-startAngle:h.gauge_startingAngle,
-endAngle:-1 * h.gauge_startingAngle
+startAngle:j.gauge_startingAngle,
+endAngle:-1 * j.gauge_startingAngle * (j.gauge_fullCircle ? Math.PI :1),
+index:m++
 };
-return e.getArc(a, !0, !0);
-}), e.arcs.select("." + g.chartArcsGaugeUnit).attr("dy", ".75em").text(h.gauge_label_show ? h.gauge_units :""), e.arcs.select("." + g.chartArcsGaugeMin).attr("dx", -1 * (e.innerRadius + (e.radius - e.innerRadius) / (h.gauge_fullCircle ? 1 :2)) + "px").attr("dy", "1.2em").text(h.gauge_label_show ? e.textForGaugeMinMax(h.gauge_min, !1) :""), e.arcs.select("." + g.chartArcsGaugeMax).attr("dx", e.innerRadius + (e.radius - e.innerRadius) / (h.gauge_fullCircle ? 1 :2) + "px").attr("dy", "1.2em").text(h.gauge_label_show ? e.textForGaugeMinMax(h.gauge_max, !0) :""));
+return h.getArc(b, !0, !0);
+}), e.exit().remove(), h.arcs.select("." + g.chartArcsGaugeUnit).attr("dy", ".75em").text(j.gauge_label_show ? j.gauge_units :""), h.arcs.select("." + g.chartArcsGaugeMin).attr("dx", -1 * (h.innerRadius + (h.radius - h.innerRadius) / (j.gauge_fullCircle ? 1 :2)) + "px").attr("dy", "1.2em").text(j.gauge_label_show ? h.textForGaugeMinMax(j.gauge_min, !1) :""), h.arcs.select("." + g.chartArcsGaugeMax).attr("dx", h.innerRadius + (h.radius - h.innerRadius) / (j.gauge_fullCircle ? 1 :2) + "px").attr("dy", "1.2em").text(j.gauge_label_show ? h.textForGaugeMinMax(j.gauge_max, !0) :"");
+}
 }, C.initGauge = function() {
 var a = this.arcs;
-this.hasType("gauge") && (a.append("path").attr("class", g.chartArcsBackground), a.append("text").attr("class", g.chartArcsGaugeUnit).style("text-anchor", "middle").style("pointer-events", "none"), a.append("text").attr("class", g.chartArcsGaugeMin).style("text-anchor", "middle").style("pointer-events", "none"), a.append("text").attr("class", g.chartArcsGaugeMax).style("text-anchor", "middle").style("pointer-events", "none"));
+this.hasType("gauge") && (a.append("g").attr("class", g.chartArcsBackground), a.append("text").attr("class", g.chartArcsGaugeUnit).style("text-anchor", "middle").style("pointer-events", "none"), a.append("text").attr("class", g.chartArcsGaugeMin).style("text-anchor", "middle").style("pointer-events", "none"), a.append("text").attr("class", g.chartArcsGaugeMax).style("text-anchor", "middle").style("pointer-events", "none"));
 }, C.getGaugeLabelHeight = function() {
 return this.config.gauge_label_show ? 20 :0;
 }, C.hasCaches = function(a) {
@@ -28174,6 +28216,7 @@ pie_expand:{},
 pie_expand_duration:50,
 gauge_fullCircle:!1,
 gauge_label_show:!0,
+gauge_labelLine_show:!0,
 gauge_label_format:void 0,
 gauge_min:0,
 gauge_max:100,
@@ -28181,6 +28224,7 @@ gauge_startingAngle:-1 * Math.PI / 2,
 gauge_label_extents:void 0,
 gauge_units:void 0,
 gauge_width:void 0,
+gauge_arcs_minWidth:5,
 gauge_expand:{},
 gauge_expand_duration:50,
 donut_label_show:!0,
@@ -29032,7 +29076,9 @@ e(this, a, b);
 return I[a];
 }).attr("height", function(a) {
 return J[a];
-}).attr("x", i).attr("y", l), v = y.legend.selectAll("line." + g.legendItemTile).data(a), (r ? v.transition() :v).style("stroke", y.color).attr("x1", m).attr("y1", o).attr("x2", n).attr("y2", o), x && (r ? x.transition() :x).attr("height", y.getLegendHeight() - 12).attr("width", C * (M + 1) + 10), y.legend.selectAll("." + g.legendItem).classed(g.legendItemHidden, function(a) {
+}).attr("x", i).attr("y", l), v = y.legend.selectAll("line." + g.legendItemTile).data(a), (r ? v.transition() :v).style("stroke", y.levelColor ? function(a) {
+return y.levelColor(y.cache[a].values[0].value);
+} :y.color).attr("x1", m).attr("y1", o).attr("x2", n).attr("y2", o), x && (r ? x.transition() :x).attr("height", y.getLegendHeight() - 12).attr("width", C * (M + 1) + 10), y.legend.selectAll("." + g.legendItem).classed(g.legendItemHidden, function(a) {
 return !y.isTargetToShow(a);
 }), y.updateLegendItemWidth(C), y.updateLegendItemHeight(D), y.updateLegendStep(M), y.updateSizes(), y.updateScales(), y.updateSvgSize(), y.transformAll(s, c), y.legendHasRendered = !0;
 }, C.initRegion = function() {
@@ -29561,7 +29607,7 @@ i = y(n(a[f].name, a[f].ratio, a[f].id, a[f].index)), j = k.levelColor ? k.level
 return e + "</table>";
 }, C.tooltipPosition = function(a, b, c, d) {
 var e, f, g, h, i, j = this, k = j.config, l = j.d3, m = j.hasArcType(), n = l.mouse(d);
-return m ? (f = (j.width - (j.isLegendRight ? j.getLegendWidth() :0)) / 2 + n[0], h = j.height / 2 + n[1] + 20) :(e = j.getSvgLeft(!0), k.axis_rotated ? (f = e + n[0] + 100, g = f + b, i = j.currentWidth - j.getCurrentPaddingRight(), h = j.x(a[0].x) + 20) :(f = e + j.getCurrentPaddingLeft(!0) + j.x(a[0].x) + 20, g = f + b, i = e + j.currentWidth - j.getCurrentPaddingRight(), h = n[1] + 15), g > i && (f -= g - i + 20), h + c > j.currentHeight && (h -= c + 30)), h < 0 && (h = 0), {
+return m ? (f = (j.width - (j.isLegendRight ? j.getLegendWidth() :0)) / 2 + n[0], h = (j.hasType("gauge") ? j.height :j.height / 2) + n[1] + 20) :(e = j.getSvgLeft(!0), k.axis_rotated ? (f = e + n[0] + 100, g = f + b, i = j.currentWidth - j.getCurrentPaddingRight(), h = j.x(a[0].x) + 20) :(f = e + j.getCurrentPaddingLeft(!0) + j.x(a[0].x) + 20, g = f + b, i = e + j.currentWidth - j.getCurrentPaddingRight(), h = n[1] + 15), g > i && (f -= g - i + 20), h + c > j.currentHeight && (h -= c + 30)), h < 0 && (h = 0), {
 top:h,
 left:f
 };
