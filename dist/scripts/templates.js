@@ -11918,8 +11918,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"component-label\">Application</div>\n" +
     "<span ng-bind-html=\"app | highlightKeywords : overview.state.filterKeywords\"></span>\n" +
     "</h2>\n" +
-    "<div ng-if=\"route = overview.bestRouteByApp[app]\" class=\"pull-right\">\n" +
-    "<h3 class=\"overview-route\">\n" +
+    "<div class=\"overview-routes\" ng-if=\"overview.routesToDisplayByApp[app] | size\">\n" +
+    "<h3 class=\"overview-route\" ng-repeat=\"route in overview.routesToDisplayByApp[app] track by (route | uid)\">\n" +
     "<span ng-if=\"route | isWebRoute\">\n" +
     "<a ng-href=\"{{route | routeWebURL}}\" target=\"_blank\">\n" +
     "{{route | routeLabel}}\n" +
@@ -12082,6 +12082,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</overview-list-row>\n" +
     "<overview-list-row ng-repeat=\"pod in overview.monopods track by (pod | uid)\" api-object=\"pod\" state=\"overview.state\">\n" +
     "</overview-list-row>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div ng-if=\"(overview.filteredMobileClients | size) && AEROGEAR_MOBILE_ENABLED\">\n" +
+    "<h2>Mobile Clients</h2>\n" +
+    "<div class=\"list-pf\">\n" +
+    "<mobile-client-row ng-repeat=\"mobileapp in overview.filteredMobileClients track by (mobileapp | uid)\" api-object=\"mobileapp\" state=\"overview.state\"></mobile-client-row>\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +
@@ -12597,6 +12604,59 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/overview/_mobile-client-row.html',
+    "<div class=\"list-pf-item\" ng-class=\"{ active: row.expanded }\">\n" +
+    "<div class=\"list-pf-container\" ng-click=\"row.toggleExpand($event)\">\n" +
+    "<div class=\"list-pf-chevron\">\n" +
+    "<div ng-include src=\" 'views/overview/_list-row-chevron.html' \" class=\"list-pf-content\"></div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-content\">\n" +
+    "<div class=\"list-pf-name\">\n" +
+    "<h3>\n" +
+    "<div class=\"list-row-longname\"><span>{{row.clientType}}</span></div>\n" +
+    "\n" +
+    "<a ng-href=\"{{row.apiObject | navigateResourceURL}}\"><span ng-bind-html=\"row.apiObject.spec.name | highlightKeywords : row.state.filterKeywords\"></span></a>\n" +
+    "<div class=\"list-row-longname\">{{row.bundleDisplay}}</div>\n" +
+    "</h3>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-actions\">\n" +
+    "<div class=\"dropdown-kebab-pf\" uib-dropdown ng-if=\"row.actionsDropdownVisible()\">\n" +
+    "<button uib-dropdown-toggle class=\"btn btn-link dropdown-toggle\">\n" +
+    "<i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i>\n" +
+    "<span class=\"sr-only\">Actions</span>\n" +
+    "</button>\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right\" uib-dropdown-menu role=\"menu\">\n" +
+    "<li ng-if=\"row.mobileclientVersion | canI : 'delete'\">\n" +
+    "<delete-link kind=\"MobileClient\" group=\"mobile.k8s.io\" stay-on-current-page=\"true\" resource-name=\"{{row.apiObject.metadata.name}}\" project-name=\"{{row.projectName}}\">\n" +
+    "</delete-link>\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-expansion collapse\" ng-if=\"row.expanded\" ng-class=\"{ in: row.expanded }\">\n" +
+    "<div class=\"list-pf-container\">\n" +
+    "<div class=\"expanded-section\">\n" +
+    "<div class=\"empty-state-message text-center\">\n" +
+    "<p>Add a mobile service to your project. Or connect to external service.</p>\n" +
+    "<div class=\"empty-state-message-main-action\">\n" +
+    "\n" +
+    "<button class=\"btn btn-primary btn-lg\" ng-click=\"row.browseCatalog()\">\n" +
+    "Browse Mobile Services\n" +
+    "</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"loading\">\n" +
+    "Loading...\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/overview/_networking.html',
     "<div ng-if=\"networking.rowServices | size\" class=\"expanded-section networking-section\">\n" +
     "<div class=\"component-label section-label hidden-xs\">Networking</div>\n" +
@@ -12627,7 +12687,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Routes - External Traffic\n" +
     "</div>\n" +
     "<div ng-if=\"networking.routesByService[service.metadata.name] | size\">\n" +
-    "<div ng-repeat=\"route in networking.routesByService[service.metadata.name] | limitTo : 2 track by (route | uid)\" class=\"overview-routes\">\n" +
+    "<div ng-repeat=\"route in networking.routesByService[service.metadata.name] track by (route | uid)\" class=\"overview-routes\">\n" +
     "<h3>\n" +
     "<span ng-if=\"route | isWebRoute\">\n" +
     "<a ng-href=\"{{route | routeWebURL}}\" target=\"_blank\">\n" +

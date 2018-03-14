@@ -1,0 +1,56 @@
+<div class="list-pf-item" ng-class="{ active: row.expanded }">
+  <div class="list-pf-container" ng-click="row.toggleExpand($event)">
+    <div class="list-pf-chevron">
+      <div ng-include src=" 'views/overview/_list-row-chevron.html' " class="list-pf-content"></div>
+    </div>
+    <div class="list-pf-content">
+      <div class="list-pf-name">
+        <h3>
+          <div class="list-row-longname"><span>{{row.clientType}}</span></div>
+          <!--<span class="fa-2x {{row.apiObject.metadata.annotations.icon}}"></span>-->
+          <a ng-href="{{row.apiObject | navigateResourceURL}}"><span ng-bind-html="row.apiObject.spec.name | highlightKeywords : row.state.filterKeywords"></span></a>
+
+
+          <div class="list-row-longname">{{row.bundleDisplay}}</div>
+        </h3>
+      </div>
+    </div>
+    <div class="list-pf-actions">
+      <div class="dropdown-kebab-pf" uib-dropdown ng-if="row.actionsDropdownVisible()">
+        <button uib-dropdown-toggle class="btn btn-link dropdown-toggle">
+          <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+          <span class="sr-only">Actions</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
+          <li ng-if="row.mobileclientVersion | canI : 'delete'">
+            <delete-link
+              kind="MobileClient"
+              group="mobile.k8s.io"
+              stay-on-current-page="true"
+              resource-name="{{row.apiObject.metadata.name}}"
+              project-name="{{row.projectName}}">
+            </delete-link>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="list-pf-expansion collapse" ng-if="row.expanded" ng-class="{ in: row.expanded }">
+    <div class="list-pf-container">
+      <div class="expanded-section">
+        <div class="empty-state-message text-center">
+          <p>Add a mobile service to your project. Or connect to external service.</p>
+          <div class="empty-state-message-main-action">
+            <!--TODO link through to the mobile category -->
+            <button class="btn btn-primary btn-lg" ng-click="row.browseCatalog()">
+              Browse Mobile Services
+            </button>
+          </div>
+        </div>
+        <div ng-if="loading">
+          Loading...
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

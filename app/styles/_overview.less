@@ -83,16 +83,25 @@
   .app-heading {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 10px;
     // Stack the route at mobile. Use `max-width: @screen-sm-max` to set just
     // the mobile styles. Otherwise we'd need to reset the default h3 margins
     // at wider widths.
     @media (max-width: @screen-sm-max) {
       flex-direction: column;
       justify-content: flex-start;
-      .overview-route {
-        .h4();
-        margin-top: -5px;
-        margin-bottom: 15px;
+    }
+    @media (min-width: @screen-md-min) {
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+    .overview-route {
+      font-size: (@font-size-base + 2);
+      line-height: normal;
+      margin-bottom: 2px;
+      margin-top: 0;
+      + .overview-route {
+        margin-top: 5px;
       }
     }
   }
@@ -209,7 +218,11 @@
     .truncate();
   }
   h2 {
+    margin-bottom: 5px;
     margin-top: 0;
+    @media (min-width: @screen-md-min) {
+      margin-bottom: 0;
+    }
     > .component-label {
       font-weight: 500;
       padding-bottom: 0;

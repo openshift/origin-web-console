@@ -58,9 +58,9 @@ return _.get(e, "metadata.name");
 }, be = function(e) {
 return _.get(e, "metadata.uid");
 }, Se = function() {
-return _.size(N.deploymentConfigs) + _.size(N.vanillaReplicationControllers) + _.size(N.deployments) + _.size(N.vanillaReplicaSets) + _.size(N.statefulSets) + _.size(N.daemonSets) + _.size(N.monopods) + _.size(N.state.serviceInstances);
+return _.size(N.deploymentConfigs) + _.size(N.vanillaReplicationControllers) + _.size(N.deployments) + _.size(N.vanillaReplicaSets) + _.size(N.statefulSets) + _.size(N.daemonSets) + _.size(N.monopods) + _.size(N.state.serviceInstances) + _.size(N.mobileClients);
 }, Ce = function() {
-return _.size(N.filteredDeploymentConfigs) + _.size(N.filteredReplicationControllers) + _.size(N.filteredDeployments) + _.size(N.filteredReplicaSets) + _.size(N.filteredStatefulSets) + _.size(N.filteredDaemonSets) + _.size(N.filteredMonopods) + _.size(N.filteredServiceInstances);
+return _.size(N.filteredDeploymentConfigs) + _.size(N.filteredReplicationControllers) + _.size(N.filteredDeployments) + _.size(N.filteredReplicaSets) + _.size(N.filteredStatefulSets) + _.size(N.filteredDaemonSets) + _.size(N.filteredMonopods) + _.size(N.filteredServiceInstances) + _.size(N.filteredMobileClients);
 }, _e = function() {
 N.size = Se(), N.filteredSize = Ce();
 var e = 0 === N.size, t = N.deploymentConfigs && N.replicationControllers && N.deployments && N.replicaSets && N.statefulSets && N.daemonSets && N.pods && N.state.serviceInstances;
@@ -68,13 +68,13 @@ ve.expandAll = t && 1 === N.size, N.showGetStarted = t && e, N.showLoading = !t 
 }, we = function(e) {
 return s.groupByApp(e, "metadata.name");
 }, Pe = function(e) {
-var t = null;
+var t = [], n = null;
 return _.each(e, function(e) {
-t = t ? E.getPreferredDisplayRoute(t, e) : e;
-}), t;
+E.isOverviewAppRoute(e) ? t.push(e) : n = n ? E.getPreferredDisplayRoute(n, e) : e;
+}), !t.length && n && t.push(n), E.sortRoutesByScore(t);
 }, je = _.debounce(function() {
 e.$evalAsync(function() {
-if (N.bestRouteByApp = {}, N.routes) {
+if (N.routesToDisplayByApp = {}, N.routes) {
 var e = [ N.filteredDeploymentConfigsByApp, N.filteredReplicationControllersByApp, N.filteredDeploymentsByApp, N.filteredReplicaSetsByApp, N.filteredStatefulSetsByApp, N.filteredDaemonSetsByApp, N.filteredMonopodsByApp ];
 _.each(N.apps, function(t) {
 var n = {};
@@ -87,7 +87,7 @@ var t = _.get(ve, [ "routesByService", e.metadata.name ], []);
 _.assign(n, _.keyBy(t, "metadata.name"));
 });
 });
-}), N.bestRouteByApp[t] = Pe(n);
+}), N.routesToDisplayByApp[t] = Pe(n);
 });
 }
 });
@@ -125,7 +125,7 @@ case "name":
 return !_.isEmpty(ve.filterKeywords);
 }
 }, $e = function() {
-N.filteredDeploymentConfigs = De(N.deploymentConfigs), N.filteredReplicationControllers = De(N.vanillaReplicationControllers), N.filteredDeployments = De(N.deployments), N.filteredReplicaSets = De(N.vanillaReplicaSets), N.filteredStatefulSets = De(N.statefulSets), N.filteredDaemonSets = De(N.daemonSets), N.filteredMonopods = De(N.monopods), N.filteredPipelineBuildConfigs = De(N.pipelineBuildConfigs), N.filteredServiceInstances = De(ve.orderedServiceInstances), N.filterActive = Ae(), ke(), _e();
+N.filteredDeploymentConfigs = De(N.deploymentConfigs), N.filteredReplicationControllers = De(N.vanillaReplicationControllers), N.filteredDeployments = De(N.deployments), N.filteredReplicaSets = De(N.vanillaReplicaSets), N.filteredStatefulSets = De(N.statefulSets), N.filteredDaemonSets = De(N.daemonSets), N.filteredMonopods = De(N.monopods), N.filteredPipelineBuildConfigs = De(N.pipelineBuildConfigs), N.filteredServiceInstances = De(ve.orderedServiceInstances), N.filteredMobileClients = De(N.mobileClients), N.filterActive = Ae(), ke(), _e();
 }, Be = a.project + "/overview/view-by";
 N.viewBy = localStorage.getItem(Be) || "app", e.$watch(function() {
 return N.viewBy;
@@ -456,6 +456,15 @@ pollInterval: 6e4
 ve.clusterQuotas = e.by("metadata.name"), _t();
 }, {
 poll: !0,
+pollInterval: 6e4
+})), e.AEROGEAR_MOBILE_ENABLED && jt.push(m.watch({
+group: "mobile.k8s.io",
+version: "v1alpha1",
+resource: "mobileclients"
+}, r, function(e) {
+N.mobileClients = e.by("metadata.name"), $e(), S.log("mobileclients (subscribe)", e);
+}, {
+poll: D,
 pollInterval: 6e4
 }));
 var p, f, g = {}, v = {};
@@ -1069,13 +1078,11 @@ var r, a = {
 templateUrl: "views/projects.html",
 controller: "ProjectsController"
 };
-_.get(window, "OPENSHIFT_CONSTANTS.DISABLE_SERVICE_CATALOG_LANDING_PAGE") ? (r = a, e.when("/projects", {
-redirectTo: "/"
-})) : (r = {
+r = _.get(window, "OPENSHIFT_CONSTANTS.DISABLE_SERVICE_CATALOG_LANDING_PAGE") ? a : {
 templateUrl: "views/landing-page.html",
 controller: "LandingPageController",
 reloadOnSearch: !1
-}, e.when("/projects", a)), e.when("/", {
+}, e.when("/projects", a), e.when("/", {
 redirectTo: function() {
 return n.$get().getHomePagePath();
 }
@@ -1441,6 +1448,25 @@ return n(r);
 }, 1e3);
 } ]).run([ "IS_IOS", function(e) {
 e && $("body").addClass("ios");
+} ]).run([ "$rootScope", "APIService", function(e, t) {
+e.AEROGEAR_MOBILE_ENABLED = !!t.apiInfo({
+resource: "mobileclients",
+group: "mobile.k8s.io"
+}), e.AEROGEAR_MOBILE_ENABLED && window.OPENSHIFT_CONSTANTS.SERVICE_CATALOG_CATEGORIES.push({
+id: "mobile",
+label: "Mobile",
+subCategories: [ {
+id: "apps",
+label: "Apps",
+tags: [ "mobile" ],
+icon: "fa fa-mobile"
+}, {
+id: "services",
+label: "Services",
+tags: [ "mobile-service" ],
+icon: "fa fa-database"
+} ]
+}), Logger.info("AEROGEAR_MOBILE_ENABLED: " + e.AEROGEAR_MOBILE_ENABLED);
 } ]), hawtioPluginLoader.addModule("openshiftConsole"), angular.module("openshiftConsole").factory("BrowserStore", [ function() {
 var e = {
 local: window.localStorage,
@@ -3027,11 +3053,13 @@ status: "True"
 }, s = e("annotation"), c = function(e) {
 return "true" !== s(e, "openshift.io/host.generated");
 }, l = function(e) {
+return "true" === s(e, "console.alpha.openshift.io/overview-app-route");
+}, u = function(e) {
 var t = 0;
-i(e) && (t += 11);
+l(e) && (t += 21), i(e) && (t += 11);
 var n = _.get(e, "spec.alternateBackends");
 return _.isEmpty(n) || (t += 5), c(e) && (t += 3), e.spec.tls && (t += 1), t;
-}, u = function(e) {
+}, d = function(e) {
 var t = {}, n = function(e, n) {
 t[n] = t[n] || [], t[n].push(e);
 };
@@ -3052,18 +3080,19 @@ r(e, a, t, n);
 },
 getServicePortForRoute: n,
 getPreferredDisplayRoute: function(e, t) {
-var n = l(e);
-return l(t) > n ? t : e;
+var n = u(e);
+return u(t) > n ? t : e;
 },
 groupByService: function(e, t) {
-return t ? u(e) : _.groupBy(e, "spec.to.name");
+return t ? d(e) : _.groupBy(e, "spec.to.name");
 },
 getSubdomain: function(e) {
 return _.get(e, "spec.host", "").replace(/^[a-z0-9]([-a-z0-9]*[a-z0-9])\./, "");
 },
 isCustomHost: c,
+isOverviewAppRoute: l,
 sortRoutesByScore: function(e) {
-return _.orderBy(e, [ l ], [ "desc" ]);
+return _.orderBy(e, [ u ], [ "desc" ]);
 }
 };
 } ]), angular.module("openshiftConsole").factory("ChartsService", [ "Logger", function(e) {
@@ -9141,8 +9170,8 @@ cacert: !1
 l.serviceAccounts = e.by("metadata.name"), l.serviceAccountsNames = _.keys(l.serviceAccounts);
 });
 var u = function(e, t) {
-var n = {
-apiVersion: "v1",
+var r = {
+apiVersion: n.toAPIVersion(c),
 kind: "Secret",
 metadata: {
 name: l.newSecret.data.secretName
@@ -9152,32 +9181,32 @@ stringData: {}
 };
 switch (t) {
 case "kubernetes.io/basic-auth":
-e.passwordToken ? n.stringData.password = e.passwordToken : n.type = "Opaque", e.username && (n.stringData.username = e.username), e.gitconfig && (n.stringData[".gitconfig"] = e.gitconfig), e.cacert && (n.stringData["ca.crt"] = e.cacert);
+e.passwordToken ? r.stringData.password = e.passwordToken : r.type = "Opaque", e.username && (r.stringData.username = e.username), e.gitconfig && (r.stringData[".gitconfig"] = e.gitconfig), e.cacert && (r.stringData["ca.crt"] = e.cacert);
 break;
 
 case "kubernetes.io/ssh-auth":
-n.stringData["ssh-privatekey"] = e.privateKey, e.gitconfig && (n.stringData[".gitconfig"] = e.gitconfig);
+r.stringData["ssh-privatekey"] = e.privateKey, e.gitconfig && (r.stringData[".gitconfig"] = e.gitconfig);
 break;
 
 case "kubernetes.io/dockerconfigjson":
-var r = ".dockerconfigjson";
-JSON.parse(e.dockerConfig).auths || (n.type = "kubernetes.io/dockercfg", r = ".dockercfg"), n.stringData[r] = e.dockerConfig;
+var a = ".dockerconfigjson";
+JSON.parse(e.dockerConfig).auths || (r.type = "kubernetes.io/dockercfg", a = ".dockercfg"), r.stringData[a] = e.dockerConfig;
 break;
 
 case "kubernetes.io/dockercfg":
-var a = window.btoa(e.dockerUsername + ":" + e.dockerPassword), o = {};
-o[e.dockerServer] = {
+var o = window.btoa(e.dockerUsername + ":" + e.dockerPassword), i = {};
+i[e.dockerServer] = {
 username: e.dockerUsername,
 password: e.dockerPassword,
 email: e.dockerMail,
-auth: a
-}, n.stringData[".dockercfg"] = JSON.stringify(o);
+auth: o
+}, r.stringData[".dockercfg"] = JSON.stringify(i);
 break;
 
 case "Opaque":
-e.webhookSecretKey && (n.stringData.WebHookSecretKey = e.webhookSecretKey);
+e.webhookSecretKey && (r.stringData.WebHookSecretKey = e.webhookSecretKey);
 }
-return n;
+return r;
 }, d = function() {
 a.hideNotification("create-secret-error");
 }, m = function(t) {
@@ -9229,11 +9258,11 @@ l.nameTaken = !1;
 l.newSecret.data.webhookSecretKey = o._generateSecret();
 }, l.create = function() {
 d();
-var n = u(l.newSecret.data, l.newSecret.authType);
-r.create(c, null, n, l).then(function(e) {
+var o = u(l.newSecret.data, l.newSecret.authType);
+r.create(n.objectToResourceGroupVersion(o), null, o, l).then(function(e) {
 l.newSecret.linkSecret && l.serviceAccountsNames.contains(l.newSecret.pickedServiceAccountToLink) && t.canI("serviceaccounts", "update") ? m(e) : (a.addNotification({
 type: "success",
-message: "Secret " + n.metadata.name + " was created."
+message: "Secret " + o.metadata.name + " was created."
 }), l.onCreate({
 newSecret: e
 }));
@@ -13843,6 +13872,40 @@ isOverview: "<?"
 templateUrl: "views/directives/_service-binding.html"
 });
 }(), function() {
+angular.module("openshiftConsole").component("mobileClientRow", {
+controller: [ "$scope", "$filter", "$routeParams", "APIService", "AuthorizationService", "DataService", "ListRowUtils", "Navigate", "ProjectsService", function(e, t, n, r, a, o, i, s, c) {
+var l = this;
+l.installType = "", _.extend(l, i.ui), l.$onChanges = function(e) {
+if (e.apiObject) switch (l.bundleDisplay = l.apiObject.spec.appIdentifier, l.clientType = l.apiObject.spec.clientType.toUpperCase(), l.apiObject.spec.clientType) {
+case "android":
+l.installType = "gradle";
+break;
+
+case "iOS":
+l.installType = "cocoapods";
+break;
+
+case "cordova":
+l.installType = "npm";
+}
+}, l.mobileclientVersion = {
+group: "mobile.k8s.io",
+version: "v1alpha1",
+resource: "mobileclients"
+}, l.actionsDropdownVisible = function() {
+return !_.get(l.apiObject, "metadata.deletionTimestamp") && a.canI(l.mobileclientVersion, "delete");
+}, l.projectName = n.project, l.browseCatalog = function() {
+s.toProjectCatalog(l.projectName);
+};
+} ],
+controllerAs: "row",
+bindings: {
+apiObject: "<",
+state: "<"
+},
+templateUrl: "views/overview/_mobile-client-row.html"
+});
+}(), function() {
 angular.module("openshiftConsole").component("buildCounts", {
 controller: [ "$scope", "BuildsService", function(e, t) {
 var n = this;
@@ -14625,7 +14688,7 @@ return i(e.kind);
 name: t.metadata.name
 }, delete e.valueFrom.secretKeyRef) : "Secret" === t.kind && (e.valueFrom.secretKeyRef = {
 name: t.metadata.name
-}, delete e.valueFrom.configMapKeyRef), delete e.valueFrom.key;
+}, delete e.valueFrom.configMapKeyRef), delete e.selectedValueFromKey;
 }, e.valueFromKeySelected = function(e, t) {
 e.valueFrom.configMapKeyRef ? e.valueFrom.configMapKeyRef.key = t : e.valueFrom.secretKeyRef && (e.valueFrom.secretKeyRef.key = t);
 }, angular.extend(e, {

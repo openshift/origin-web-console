@@ -27,7 +27,7 @@
         Routes - External Traffic
       </div>
       <div ng-if="networking.routesByService[service.metadata.name] | size">
-        <div ng-repeat="route in networking.routesByService[service.metadata.name] | limitTo : 2 track by (route | uid)" class="overview-routes">
+        <div ng-repeat="route in networking.routesByService[service.metadata.name] track by (route | uid)" class="overview-routes">
           <h3>
             <span ng-if="route | isWebRoute">
               <a ng-href="{{route | routeWebURL}}" target="_blank">
