@@ -1078,13 +1078,11 @@ var r, a = {
 templateUrl: "views/projects.html",
 controller: "ProjectsController"
 };
-_.get(window, "OPENSHIFT_CONSTANTS.DISABLE_SERVICE_CATALOG_LANDING_PAGE") ? (r = a, e.when("/projects", {
-redirectTo: "/"
-})) : (r = {
+r = _.get(window, "OPENSHIFT_CONSTANTS.DISABLE_SERVICE_CATALOG_LANDING_PAGE") ? a : {
 templateUrl: "views/landing-page.html",
 controller: "LandingPageController",
 reloadOnSearch: !1
-}, e.when("/projects", a)), e.when("/", {
+}, e.when("/projects", a), e.when("/", {
 redirectTo: function() {
 return n.$get().getHomePagePath();
 }
