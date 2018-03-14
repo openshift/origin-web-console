@@ -23,6 +23,7 @@ angular.module('openshiftConsole').controller('OverviewController', [
   'LabelFilter',
   'Logger',
   'MetricsService',
+  'MobileClientsService',
   'Navigate',
   'OwnerReferencesService',
   'PodsService',
@@ -56,6 +57,7 @@ function OverviewController($scope,
                             LabelFilter,
                             Logger,
                             MetricsService,
+                            MobileClientsService,
                             Navigate,
                             OwnerReferencesService,
                             PodsService,
@@ -247,7 +249,7 @@ function OverviewController($scope,
 
     overview.everythingFiltered = !projectEmpty && !overview.filteredSize;
     overview.hidePipelineOtherResources = overview.viewBy === 'pipeline' &&
-                                          (overview.filterActive || _.isEmpty(overview.pipelineBuildConfigs));
+                                         (overview.filterActive || _.isEmpty(overview.pipelineBuildConfigs));
   };
 
   // Group a collection of resources by app label. Returns a map where the key
@@ -1434,11 +1436,11 @@ function OverviewController($scope,
     }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
 
     if ($scope.AEROGEAR_MOBILE_ENABLED) {
-      watches.push(DataService.watch({ group: "mobile.k8s.io", version: "v1alpha1", resource: "mobileclients" }, context, function (clients) {
+      watches.push(MobileClientsService.watch(context, function(clients) {
         overview.mobileClients = clients.by("metadata.name");
         updateFilter();
         Logger.log("mobileclients (subscribe)", clients);
-      }, { poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL }));
+      }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
     }
 
     var fetchServiceClass, fetchServicePlan;
