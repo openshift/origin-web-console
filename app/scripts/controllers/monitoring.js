@@ -272,15 +272,6 @@ angular.module('openshiftConsole')
       }
     };
 
-    $scope.viewPodsForSet = function(set) {
-      var pods = _.get($scope, ['podsByOwnerUID', set.metadata.uid], []);
-      if (_.isEmpty(pods)) {
-        return;
-      }
-
-      Navigate.toPodsForDeployment(set, pods);
-    };
-
     ProjectsService
       .get($routeParams.project)
       .then(_.spread(function(project, context) {

@@ -1824,10 +1824,8 @@ name: t
 };
 _.isObject(r) && _.extend(a, r), e.path("project/" + encodeURIComponent(n) + "/create/next").search(a);
 },
-toPodsForDeployment: function(t, r) {
-1 !== _.size(r) ? (e.url("/project/" + t.metadata.namespace + "/browse/pods"), n(function() {
-a.setLabelSelector(new LabelSelector(t.spec.selector, !0));
-}, 1)) : this.toResourceURL(_.sample(r));
+toPodsForDeployment: function(e, t) {
+1 !== _.size(t) ? this.toResourceURL(e) : this.toResourceURL(_.sample(t));
 },
 resourceURL: function(e, t, n, r, a) {
 if (r = r || "browse", !(e && (e.metadata || t && n))) return null;
@@ -5186,9 +5184,6 @@ case "StatefulSet":
 s = !n.expanded.statefulSets[a.metadata.name], n.expanded.statefulSets[a.metadata.name] = s, c = s ? "event.resource.highlight" : "event.resource.clear-highlight", f.$emit(c, a);
 }
 }
-}, n.viewPodsForSet = function(e) {
-var t = _.get(n, [ "podsByOwnerUID", e.metadata.uid ], []);
-_.isEmpty(t) || d.toPodsForDeployment(e, t);
 }, p.get(e.project).then(_.spread(function(e, r) {
 n.project = e, n.projectContext = r, v.push(i.watch("pods", r, function(e) {
 n.podsByName = e.by("metadata.name"), n.pods = w(n.podsByName, !0), n.podsByOwnerUID = m.groupByOwnerUID(n.pods), n.podsLoaded = !0, _.each(n.pods, I), N(), l.log("pods", n.pods);
@@ -14230,9 +14225,6 @@ message: "Deployment #" + a + " is no longer the latest."
 }, l.urlForImageChangeTrigger = function(t) {
 var n = e("stripTag")(_.get(t, "imageChangeParams.from.name")), r = _.get(l, "apiObject.metadata.namespace"), a = _.get(t, "imageChangeParams.from.namespace", r);
 return s.resourceURL(n, "ImageStream", a);
-}, l.navigateToPods = function() {
-var e = l.getPods(l.current);
-_.isEmpty(e) || s.toPodsForDeployment(l.current, e);
 }, l.closeOverlayPanel = function() {
 _.set(l, "overlay.panelVisible", !1);
 }, l.showOverlayPanel = function(e, t) {
@@ -15926,6 +15918,10 @@ return _.startCase(e).replace("Back Off", "Back-off").replace("O Auth", "OAuth")
 };
 }).filter("humanizePodStatus", [ "humanizeReasonFilter", function(e) {
 return e;
+} ]).filter("donutURL", [ "navigateResourceURLFilter", function(e) {
+return function(t, n) {
+return 1 === _.size(n) ? e(_.sample(n)) : _.size(n) > 1 ? e(t) : void 0;
+};
 } ]), angular.module("openshiftConsole").filter("canIDoAny", [ "APIService", "canIFilter", function(e, t) {
 var n = {
 buildConfigs: [ {

@@ -352,14 +352,6 @@
       return Navigate.resourceURL(imageStreamName, 'ImageStream', imageStreamNamespace);
     };
 
-    row.navigateToPods = function() {
-      var pods = row.getPods(row.current);
-      if (_.isEmpty(pods)) {
-        return;
-      }
-      Navigate.toPodsForDeployment(row.current, pods);
-    };
-
     row.closeOverlayPanel = function() {
       _.set(row, 'overlay.panelVisible', false);
     };
