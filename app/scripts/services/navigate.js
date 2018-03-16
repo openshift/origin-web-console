@@ -386,6 +386,17 @@ angular.module("openshiftConsole")
         }).toString();
       },
 
+      configURL: function(object) {
+        if (!object) {
+          return '';
+        }
+
+        return URI.expand("project/{projectName}/edit/config-maps/{name}", {
+          projectName: object.metadata.namespace,
+          name: object.metadata.name
+        }).toString();
+      },
+
       healthCheckURL: function(projectName, kind, name, group) {
         return URI.expand("project/{projectName}/edit/health-checks?kind={kind}&name={name}&group={group}", {
           projectName: projectName,
