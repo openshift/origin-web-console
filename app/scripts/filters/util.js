@@ -397,6 +397,11 @@ angular.module('openshiftConsole')
       return Navigate.yamlURL(object, returnURL);
     };
   })
+  .filter('editConfigURL', function(Navigate) {
+    return function(object) {
+      return Navigate.configURL(object);
+    };
+  })
   .filter('join', function() {
     return function(array, separator) {
       if (!separator) {
