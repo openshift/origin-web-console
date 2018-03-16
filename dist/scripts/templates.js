@@ -4538,7 +4538,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<form name=\"createConfigMapForm\" class=\"mar-top-xl\">\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
-    "<edit-config-map model=\"configMap\" show-name-input=\"true\"></edit-config-map>\n" +
+    "<edit-config-map-or-secret model=\"configMap\" type=\"config-map\" show-name-input=\"true\"></edit-config-map-or-secret>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"createConfigMap()\" ng-disabled=\"createConfigMapForm.$invalid || disableInputs\" value=\"\">Create</button>\n" +
     "<a class=\"btn btn-default btn-lg\" href=\"\" ng-click=\"cancel()\" role=\"button\">Cancel</a>\n" +
@@ -6143,7 +6143,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"newSecret.type != 'webhook'\">\n" +
+    "<div ng-if=\"newSecret.type === 'source' || newSecret.type === 'image'\">\n" +
     "<div class=\"form-group\">\n" +
     "<label for=\"authentification-type\">Authentication Type</label>\n" +
     "<ui-select required input-id=\"authentification-type\" ng-model=\"newSecret.authType\" search-enabled=\"false\">\n" +
@@ -6326,6 +6326,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"newSecret.type === 'generic'\">\n" +
+    "<edit-config-map-or-secret model=\"newSecret.data.genericKeyValues\" type=\"secret\"></edit-config-map-or-secret>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"buttons gutter-top-bottom\">\n" +
@@ -6653,73 +6656,73 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
-  $templateCache.put('views/directives/edit-config-map.html',
-    "<ng-form name=\"configMapForm\">\n" +
+  $templateCache.put('views/directives/edit-config-map-or-secret.html',
+    "<ng-form name=\"keyValueMapForm\">\n" +
     "<fieldset>\n" +
     "\n" +
     "<div ng-show=\"showNameInput\" class=\"form-group\">\n" +
-    "<label for=\"config-map-name\" class=\"required\">Name</label>\n" +
+    "<label for=\"key-value-map-name\" class=\"required\">Name</label>\n" +
     "\n" +
-    "<div ng-class=\"{ 'has-error': configMapForm.name.$invalid && configMapForm.name.$touched }\">\n" +
-    "<input id=\"config-map-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"configMap.metadata.name\" ng-required=\"showNameInput\" ng-pattern=\"nameValidation.pattern\" ng-maxlength=\"nameValidation.maxlength\" placeholder=\"my-config-map\" select-on-focus autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"config-map-name-help\">\n" +
+    "<div ng-class=\"{ 'has-error': keyValueMapForm.name.$invalid && keyValueMapForm.name.$touched }\">\n" +
+    "<input id=\"key-value-map-name\" class=\"form-control\" type=\"text\" name=\"name\" ng-model=\"map.metadata.name\" ng-required=\"showNameInput\" ng-pattern=\"nameValidation.pattern\" ng-maxlength=\"nameValidation.maxlength\" placeholder=\"my-{{type}}\" select-on-focus autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"key-value-map-name-help\">\n" +
     "</div>\n" +
     "<div>\n" +
-    "<span id=\"config-map-name-help\" class=\"help-block\">A unique name for the config map within the project.</span>\n" +
+    "<span id=\"key-value-map-name-help\" class=\"help-block\">A unique name for the {{type}} within the project.</span>\n" +
     "</div>\n" +
-    "<div class=\"has-error\" ng-show=\"configMapForm.name.$error.pattern && configMapForm.name.$touched\">\n" +
+    "<div class=\"has-error\" ng-show=\"keyValueMapForm.name.$error.pattern && keyValueMapForm.name.$touched\">\n" +
     "<span class=\"help-block\">\n" +
     "{{nameValidation.description}}\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div class=\"has-error\" ng-show=\"configMapForm.name.$error.required && configMapForm.name.$touched\">\n" +
+    "<div class=\"has-error\" ng-show=\"keyValueMapForm.name.$error.required && keyValueMapForm.name.$touched\">\n" +
     "<span class=\"help-block\">\n" +
     "Name is required.\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div class=\"has-error\" ng-show=\"configMapForm.name.$error.maxlength\">\n" +
+    "<div class=\"has-error\" ng-show=\"keyValueMapForm.name.$error.maxlength\">\n" +
     "<span class=\"help-block\">\n" +
     "Can't be longer than {{nameValidation.maxlength}} characters.\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!data.length\">\n" +
-    "<p><em>The config map has no items.</em></p>\n" +
+    "<p><em>The {{type}} has no items.</em></p>\n" +
     "<a href=\"\" ng-click=\"addItem()\">Add Item</a>\n" +
     "</div>\n" +
     "<div ng-repeat=\"item in data\" ng-init=\"keys = getKeys()\">\n" +
     "<div class=\"form-group\">\n" +
     "<label ng-attr-for=\"key-{{$id}}\" class=\"required\">Key</label>\n" +
     "\n" +
-    "<div ng-class=\"{ 'has-error': configMapForm['key-' + $id].$invalid && configMapForm['key-' + $id].$touched }\">\n" +
+    "<div ng-class=\"{ 'has-error': keyValueMapForm['key-' + $id].$invalid && keyValueMapForm['key-' + $id].$touched }\">\n" +
     "<input class=\"form-control\" name=\"key-{{$id}}\" ng-attr-id=\"key-{{$id}}\" type=\"text\" ng-model=\"item.key\" required ng-pattern=\"/^[-._a-zA-Z0-9]+$/\" ng-maxlength=\"253\" osc-unique=\"keys\" placeholder=\"my.key\" select-on-focus autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"key-{{$id}}-help\">\n" +
     "</div>\n" +
     "<div class=\"help-block\">\n" +
-    "A unique key for this config map entry.\n" +
+    "A unique key for this {{type}} entry.\n" +
     "</div>\n" +
-    "<div class=\"has-error\" ng-show=\"configMapForm['key-' + $id].$error.required && configMapForm['key-' + $id].$touched\">\n" +
+    "<div class=\"has-error\" ng-show=\"keyValueMapForm['key-' + $id].$error.required && keyValueMapForm['key-' + $id].$touched\">\n" +
     "<span class=\"help-block\">\n" +
     "Key is required.\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div class=\"has-error\" ng-show=\"configMapForm['key-' + $id].$error.oscUnique && configMapForm['key-' + $id].$touched\">\n" +
+    "<div class=\"has-error\" ng-show=\"keyValueMapForm['key-' + $id].$error.oscUnique && keyValueMapForm['key-' + $id].$touched\">\n" +
     "<span class=\"help-block\">\n" +
-    "Duplicate key \"{{item.key}}\". Keys must be unique within the config map.\n" +
+    "Duplicate key \"{{item.key}}\". Keys must be unique within the {{type}}.\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div class=\"has-error\" ng-show=\"configMapForm['key-' + $id].$error.pattern && configMapForm['key-' + $id].$touched\">\n" +
+    "<div class=\"has-error\" ng-show=\"keyValueMapForm['key-' + $id].$error.pattern && keyValueMapForm['key-' + $id].$touched\">\n" +
     "<span class=\"help-block\">\n" +
-    "Config map keys may only consist of letters, numbers, periods, hyphens, and underscores.\n" +
+    "Keys may only consist of letters, numbers, periods, hyphens, and underscores.\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div class=\"has-error\" ng-show=\"configMapForm['key-' + $id].$error.maxlength\">\n" +
+    "<div class=\"has-error\" ng-show=\"keyValueMapForm['key-' + $id].$error.maxlength\">\n" +
     "<span class=\"help-block\">\n" +
-    "Config map keys may not be longer than 253 characters.\n" +
+    "Keys may not be longer than 253 characters.\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group\" ng-attr-id=\"drop-zone-{{$id}}\">\n" +
     "<label ng-attr-for=\"name-{{$id}}\">Value</label>\n" +
-    "<osc-file-input model=\"item.value\" drop-zone-id=\"drop-zone-{{$id}}\" help-text=\"Enter a value for the config map entry or use the contents of a file.\"></osc-file-input>\n" +
+    "<osc-file-input model=\"item.value\" drop-zone-id=\"drop-zone-{{$id}}\" help-text=\"Enter a value for the {{type}} entry or use the contents of a file.\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          theme: 'eclipse',\n" +
     "          rendererOptions: {\n" +
@@ -9988,7 +9991,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Config map {[configMap.metadata.name}} has been deleted since you started editing it.\n" +
     "</div>\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
-    "<edit-config-map model=\"configMap\"></edit-config-map>\n" +
+    "<edit-config-map-or-secret model=\"configMap\" type=\"config map\"></edit-config-map-or-secret>\n" +
     "<div class=\"button-group gutter-top gutter-bottom\">\n" +
     "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"updateConfigMap()\" ng-disabled=\"forms.editConfigMapForm.$invalid || forms.editConfigMapForm.$pristine || disableInputs || resourceChanged || resourceDeleted\" value=\"\">Save</button>\n" +
     "<a class=\"btn btn-default btn-lg\" href=\"\" ng-click=\"cancel()\" role=\"button\">Cancel</a>\n" +

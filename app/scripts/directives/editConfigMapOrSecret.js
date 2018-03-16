@@ -1,16 +1,17 @@
 "use strict";
 
 angular.module("openshiftConsole")
-  .directive("editConfigMap",
+  .directive("editConfigMapOrSecret",
              function(DNS1123_SUBDOMAIN_VALIDATION) {
     return {
       require: '^form',
       restrict: 'E',
       scope: {
-        configMap: "=model",
-        showNameInput: "="
+        map: "=model",
+        showNameInput: "=",
+        type: "@"
       },
-      templateUrl: 'views/directives/edit-config-map.html',
+      templateUrl: 'views/directives/edit-config-map-or-secret.html',
       link: function($scope, element, attrs, formCtl) {
         $scope.form = formCtl;
 
@@ -32,7 +33,7 @@ angular.module("openshiftConsole")
         };
 
         // Load the data once when it is first set.
-        var clearWatch = $scope.$watch('configMap.data', function(data) {
+        var clearWatch = $scope.$watch('map.data', function(data) {
           if (!data) {
             return;
           }
@@ -53,14 +54,14 @@ angular.module("openshiftConsole")
 
           clearWatch();
 
-          // Update `$scope.configMap` as the form data changes.
+          // Update `$scope.map` as the form data changes.
           $scope.$watch('data', function(data) {
             var map = {};
             _.each(data, function(keyValuePair) {
               map[keyValuePair.key] = keyValuePair.value;
             });
 
-            _.set($scope, 'configMap.data', map);
+            _.set($scope, 'map.data', map);
           }, true);
         });
       }
