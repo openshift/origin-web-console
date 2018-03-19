@@ -514,4 +514,15 @@ angular.module('openshiftConsole')
     return function(feature) {
       return _.get(Constants, ['ENABLE_TECH_PREVIEW_FEATURE', feature], false);
     };
+  })
+  // Return true if a string contains non-printable characters.
+  .filter('isNonPrintable', function() {
+    return function(value) {
+      if (!value) {
+        return false;
+      }
+
+      // http://stackoverflow.com/questions/1677644/detect-non-printable-characters-in-javascript
+      return /[\x00-\x09\x0E-\x1F]/.test(value);
+    };
   });
