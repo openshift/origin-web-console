@@ -14581,6 +14581,13 @@ message: "An error occurred creating project.",
 details: y(e)
 });
 });
+}, n.openCreateWebhookSecretModal = function() {
+var e = n.$new();
+e.type = "image", e.namespace = n.input.selectedProject.metadata.name, r.open({
+templateUrl: "views/modals/create-secret.html",
+controller: "CreateSecretModalController",
+scope: e
+});
 }, n.$on("newAppFromDeployImage", n.create), n.$on("$destroy", S);
 }
 };
