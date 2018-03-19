@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('oscFileInput', function(Logger) {
+  .directive('oscFileInput', function($filter, Logger) {
     return {
       restrict: 'E',
       scope: {
@@ -14,10 +14,23 @@ angular.module('openshiftConsole')
         hideClear: '<?',
         helpText: "@?",
         dropZoneId: "@?",
-        onFileAdded: "<?"
+        onFileAdded: "<?",
+        // Don't perform any encoding determination on the file. Use this if the file might be binary.
+        // https://www.w3.org/TR/file-upload/#encoding-determination
+        readAsBinaryString: "<?",
+        // This lets the parent know if binary content was added. For the config map / secret form, we
+        // can then hide the Ace editor for this field since it will have unprintable characters.
+        // Note: This should only be set to `true` if uploading a file, not if typing / pasting control
+        // characters directly into the editor. Otherwise the Ace editor could disappear when pasting
+        // content.
+        // TODO: If we add Ace editor directly to osc-file-input, rather than having it in the secret form, we
+        // can remove this flag.
+        isBinaryFile: "=?"
       },
       templateUrl: 'views/directives/osc-file-input.html',
       link: function(scope, element){
+        var isNonPrintable = $filter('isNonPrintable');
+
         var id = _.uniqueId('osc-file-input-');
         scope.dropMessageID = id + '-drop-message';
         scope.helpID = id + '-help';
@@ -71,6 +84,7 @@ angular.module('openshiftConsole')
         scope.cleanInputValues = function() {
           scope.model = '';
           scope.fileName = '';
+          scope.isBinaryFile = false;
           inputFileField[0].value = "";
         };
 
@@ -179,6 +193,7 @@ angular.module('openshiftConsole')
             scope.$apply(function(){
               scope.fileName = file.name;
               scope.model = reader.result;
+              scope.isBinaryFile = isNonPrintable(reader.result);
               var cb = scope.onFileAdded;
               if (_.isFunction(cb)) {
                 cb(reader.result);
@@ -192,7 +207,12 @@ angular.module('openshiftConsole')
             scope.uploadError = true;
             Logger.error("Could not read file", e);
           };
-          reader.readAsText(file);
+
+          if (scope.readAsBinaryString) {
+            reader.readAsBinaryString(file);
+          } else {
+            reader.readAsText(file);
+          }
         }
 
         function removeDropZoneClasses(){

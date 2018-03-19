@@ -9,7 +9,9 @@ angular.module("openshiftConsole")
       scope: {
         map: "=model",
         showNameInput: "=",
-        type: "@"
+        type: "@",
+        // TODO: This can be removed when we add support for config map binary data.
+        readAsBinaryString: "=?"
       },
       templateUrl: 'views/directives/edit-config-map-or-secret.html',
       link: function($scope, element, attrs, formCtl) {
