@@ -53,6 +53,16 @@
             </uib-tab>
             <uib-tab heading="Environment" active="selectedTab.environment">
               <uib-tab-heading>Environment</uib-tab-heading>
+              <p ng-if="dcName">
+                <span class="pficon pficon-info" aria-hidden="true"></span>
+                Environment variables can be edited on deployment config
+                <a ng-href="{{dcName | navigateResourceURL : 'DeploymentConfig' : pod.metadata.namespace}}?tab=environment">{{dcName}}</a>.
+              </p>
+              <p ng-if="!dcName && controllerRef">
+                <span class="pficon pficon-info" aria-hidden="true"></span>
+                Environment variables were set by {{controllerRef.kind | humanizeKind}}
+                <a ng-href="{{controllerRef.name | navigateResourceURL : controllerRef.kind : pod.metadata.namespace}}?tab=environment">{{controllerRef.name}}</a>.
+              </p>
               <edit-environment-variables api-object="pod" ng-readonly="true"></edit-environment-variables>
             </uib-tab>
             <uib-tab ng-if="metricsAvailable" heading="Metrics" active="selectedTab.metrics">

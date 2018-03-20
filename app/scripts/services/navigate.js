@@ -162,11 +162,7 @@ angular.module("openshiftConsole")
           this.toResourceURL(_.sample(pods));
           return;
         }
-
-        $location.url("/project/" + deployment.metadata.namespace + "/browse/pods");
-        $timeout(function() {
-          LabelFilter.setLabelSelector(new LabelSelector(deployment.spec.selector, true));
-        }, 1);
+        this.toResourceURL(deployment);
       },
 
       // Resource is either a resource object, or a name.  If resource is a name, kind and namespace must be specified
