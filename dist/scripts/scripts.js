@@ -1396,7 +1396,9 @@ e.aHrefSanitizationWhitelist(/^\s*(https?|mailto|git):/i);
 t.persistFilterState(!0), e.$on("$routeChangeSuccess", function() {
 t.readPersistedState();
 });
-} ]).run([ "$location", "$uibModal", "AuthService", function(e, t, n) {
+} ]).run(function() {
+console.log("TEST");
+}).run([ "$location", "$uibModal", "AuthService", function(e, t, n) {
 function r() {
 if (c) return !1;
 c = !0, (i = t.open({
