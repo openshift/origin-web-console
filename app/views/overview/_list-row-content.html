@@ -79,7 +79,7 @@
       </a>
     </div>
     <div ng-if="row.apiObject.kind !== 'Pod'">
-      <a href="" ng-click="row.navigateToPods()" class="mini-donut-link" ng-class="{ 'disabled-link': !(row.getPods(row.current) | size) }">
+      <a ng-href="{{row.current | donutURL : row.getPods(row.current)}}" class="mini-donut-link" ng-class="{ 'disabled-link': !(row.getPods(row.current) | size) }">
         <pod-donut
           pods="row.getPods(row.current)"
           idled="!(row.getPods(row.current) | size) && (row.apiObject | annotation : 'idledAt')"

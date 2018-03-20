@@ -11440,7 +11440,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-additional-content\">\n" +
     "<div class=\"list-pf-additional-content-item\">\n" +
     "<div class=\"pods\">\n" +
-    "<a href=\"\" ng-click=\"viewPodsForSet(replicationController)\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(podsByOwnerUID[replicationController.metadata.uid] | size) }\">\n" +
+    "<a ng-href=\"{{replicationController | donutURL : podsByOwnerUID[replicationController.metadata.uid]}}\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(podsByOwnerUID[replicationController.metadata.uid] | size) }\">\n" +
     "<pod-donut pods=\"podsByOwnerUID[replicationController.metadata.uid]\" mini=\"true\"></pod-donut>\n" +
     "</a>\n" +
     "</div>\n" +
@@ -11492,7 +11492,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-additional-content\">\n" +
     "<div class=\"list-pf-additional-content-item\">\n" +
     "<div class=\"pods\">\n" +
-    "<a href=\"\" ng-click=\"viewPodsForSet(replicaSet)\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(podsByOwnerUID[replicaSet.metadata.uid] | size) }\">\n" +
+    "<a ng-href=\"{{replicaSet | donutURL : podsByOwnerUID[replicaSet.metadata.uid]}}\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(podsByOwnerUID[replicaSet.metadata.uid] | size) }\">\n" +
     "<pod-donut pods=\"podsByOwnerUID[replicaSet.metadata.uid]\" mini=\"true\"></pod-donut>\n" +
     "</a>\n" +
     "</div>\n" +
@@ -11521,7 +11521,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Logs are not available for replica sets.\n" +
     "<span ng-if=\"podsByOwnerUID[replicaSet.metadata.uid] | size\">\n" +
     "To see application logs, view the logs for one of the replica set's\n" +
-    "<a href=\"\" ng-click=\"viewPodsForSet(replicaSet)\">pods</a>.\n" +
+    "<a ng-href=\"{{replicaSet | donutURL : podsByOwnerUID[replicaSet.metadata.uid]}}\">pods</a>.\n" +
     "</span>\n" +
     "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
     "<deployment-metrics pods=\"podsByOwnerUID[replicaSet.metadata.uid]\" containers=\"replicaSet.spec.template.spec.containers\" alerts=\"alerts\">\n" +
@@ -11571,7 +11571,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-additional-content\">\n" +
     "<div class=\"list-pf-additional-content-item\">\n" +
     "<div class=\"pods\">\n" +
-    "<a href=\"\" ng-click=\"viewPodsForSet(set)\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(podsByOwnerUID[set.metadata.uid] | size) }\">\n" +
+    "<a ng-href=\"{{set | donutURL : podsByOwnerUID[set.metadata.uid]}}\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(podsByOwnerUID[set.metadata.uid] | size) }\">\n" +
     "<pod-donut pods=\"podsByOwnerUID[set.metadata.uid]\" mini=\"true\"></pod-donut>\n" +
     "</a>\n" +
     "</div>\n" +
@@ -11588,7 +11588,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Logs are not available for stateful sets.\n" +
     "<span ng-if=\"podsByOwnerUID[set.metadata.uid] | size\">\n" +
     "To see application logs, view the logs for one of the stateful sets's\n" +
-    "<a href=\"\" ng-click=\"viewPodsForSet(set)\">pods</a>.\n" +
+    "<a ng-href=\"{{set | donutURL : podsByOwnerUID[set.metadata.uid]}}\">pods</a>.\n" +
     "</span>\n" +
     "<div class=\"mar-top-lg\" ng-if=\"metricsAvailable\">\n" +
     "<deployment-metrics pods=\"podsByOwnerUID[set.metadata.uid]\" containers=\"set.spec.template.spec.containers\" alerts=\"alerts\">\n" +
@@ -12374,7 +12374,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</div>\n" +
     "<div ng-if=\"row.apiObject.kind !== 'Pod'\">\n" +
-    "<a href=\"\" ng-click=\"row.navigateToPods()\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(row.getPods(row.current) | size) }\">\n" +
+    "<a ng-href=\"{{row.current | donutURL : row.getPods(row.current)}}\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(row.getPods(row.current) | size) }\">\n" +
     "<pod-donut pods=\"row.getPods(row.current)\" idled=\"!(row.getPods(row.current) | size) && (row.apiObject | annotation : 'idledAt')\" mini=\"true\">\n" +
     "</pod-donut>\n" +
     "</a>\n" +
