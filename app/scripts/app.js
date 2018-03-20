@@ -654,4 +654,4 @@ angular
     Logger.info("AEROGEAR_MOBILE_ENABLED: " + $rootScope.AEROGEAR_MOBILE_ENABLED);
   });
 
-hawtioPluginLoader.addModule('openshiftConsole');
+pluginLoader.addModule('openshiftConsole');
