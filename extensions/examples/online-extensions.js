@@ -100,4 +100,4 @@ angular
     }
   ]);
 
-hawtioPluginLoader.addModule('openshiftOnlineExtensions');
+pluginLoader.addModule('openshiftOnlineExtensions');

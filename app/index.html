@@ -19,13 +19,13 @@
     <link rel="stylesheet" href="bower_components/angularjs-datatables/dist/css/angular-datatables.css" />
     <link rel="stylesheet" href="bower_components/angularjs-datatables/dist/plugins/bootstrap/datatables.bootstrap.min.css" />
     <link rel="stylesheet" href="bower_components/angular-patternfly/dist/styles/angular-patternfly.css" />
-    <link rel="stylesheet" href="bower_components/kubernetes-label-selector/labelFilter.css" />
     <link rel="stylesheet" href="bower_components/xterm.js-next/xterm.css" />
     <link rel="stylesheet" href="bower_components/kubernetes-container-terminal/dist/container-terminal.css" />
-    <link rel="stylesheet" href="bower_components/registry-image-widgets/dist/image-widgets.css" />
+    <link rel="stylesheet" href="bower_components/kubernetes-label-selector/labelFilter.css" />
     <link rel="stylesheet" href="bower_components/ng-sortable/dist/ng-sortable.css" />
-    <link rel="stylesheet" href="bower_components/ui-select/dist/select.css" />
     <link rel="stylesheet" href="bower_components/hopscotch/dist/css/hopscotch.css" />
+    <link rel="stylesheet" href="bower_components/registry-image-widgets/dist/image-widgets.css" />
+    <link rel="stylesheet" href="bower_components/ui-select/dist/select.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -80,17 +80,25 @@
     <!-- build:js(.) scripts/vendor.js -->
     <script src="bower_components/es5-dom-shim/__COMPILE/a.js"></script>
     <!-- bower:js -->
+    <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/ext-searchbox.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/mode-dockerfile.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/mode-groovy.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/mode-yaml.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/theme-dreamweaver.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/theme-eclipse.js"></script>
+    <script src="bower_components/ace-builds/src-min-noconflict/mode-sh.js"></script>
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/json3/lib/json3.js"></script>
-    <script src="bower_components/es5-shim/es5-shim.js"></script>
-    <script src="bower_components/angular-resource/angular-resource.js"></script>
-    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-animate/angular-animate.js"></script>
-    <script src="bower_components/angular-touch/angular-touch.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-extension-registry/dist/angular-extension-registry.min.js"></script>
+    <script src="bower_components/angular-extension-registry/dist/compiled-templates.js"></script>
+    <script src="bower_components/angular-gettext/dist/angular-gettext.js"></script>
+    <script src="bower_components/angular-inview/angular-inview.js"></script>
+    <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/angular-moment/angular-moment.js"></script>
     <script src="bower_components/jquery-ui/jquery-ui.js"></script>
     <script src="bower_components/angular-dragdrop/src/angular-dragdrop.js"></script>
     <script src="bower_components/datatables.net/js/jquery.dataTables.js"></script>
@@ -107,6 +115,7 @@
     <script src="bower_components/angularjs-datatables/dist/plugins/buttons/angular-datatables.buttons.js"></script>
     <script src="bower_components/angularjs-datatables/dist/plugins/select/angular-datatables.select.js"></script>
     <script src="bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/datatables.net-select/js/dataTables.select.js"></script>
     <script src="bower_components/lodash/lodash.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
@@ -120,60 +129,49 @@
     <script src="bower_components/datatables/media/js/jquery.dataTables.js"></script>
     <script src="bower_components/datatables-colreorder/js/dataTables.colReorder.js"></script>
     <script src="bower_components/datatables-colvis/js/dataTables.colVis.js"></script>
-    <script src="bower_components/moment/moment.js"></script>
     <script src="bower_components/matchHeight/dist/jquery.matchHeight.js"></script>
     <script src="bower_components/patternfly-bootstrap-combobox/js/bootstrap-combobox.js"></script>
     <script src="bower_components/patternfly-bootstrap-treeview/dist/bootstrap-treeview.js"></script>
     <script src="bower_components/patternfly/dist/js/patternfly.js"></script>
     <script src="bower_components/angular-patternfly/dist/angular-patternfly.js"></script>
-    <script src="bower_components/angular-gettext/dist/angular-gettext.js"></script>
-    <script src="bower_components/uri.js/src/URI.js"></script>
-    <script src="bower_components/uri.js/src/URITemplate.js"></script>
-    <script src="bower_components/uri.js/src/jquery.URI.js"></script>
-    <script src="bower_components/uri.js/src/URI.fragmentURI.js"></script>
-    <script src="bower_components/js-logger/src/logger.js"></script>
-    <script src="bower_components/hawtio-core/dist/hawtio-core.js"></script>
-    <script src="bower_components/hawtio-extension-service/dist/hawtio-extension-service.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script src="bower_components/angular-ui-ace/ui-ace.js"></script>
+    <script src="bower_components/angular-utf8-base64/angular-utf8-base64.js"></script>
+    <script src="bower_components/ansi_up/ansi_up.js"></script>
+    <script src="bower_components/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"></script>
+    <script src="bower_components/clipboard/dist/clipboard.js"></script>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/file-saver/FileSaver.js"></script>
+    <script src="bower_components/js-yaml/dist/js-yaml.js"></script>
+    <script src="bower_components/json3/lib/json3.js"></script>
+    <script src="bower_components/xterm.js-next/xterm.js"></script>
+    <script src="bower_components/kubernetes-container-terminal/dist/container-terminal.js"></script>
     <script src="bower_components/sifter/sifter.js"></script>
     <script src="bower_components/microplugin/src/microplugin.js"></script>
     <script src="bower_components/selectize/dist/js/selectize.js"></script>
     <script src="bower_components/kubernetes-label-selector/labelSelector.js"></script>
     <script src="bower_components/kubernetes-label-selector/labelFilter.js"></script>
-    <script src="bower_components/xterm.js-next/xterm.js"></script>
-    <script src="bower_components/kubernetes-container-terminal/dist/container-terminal.js"></script>
-    <script src="bower_components/registry-image-widgets/dist/image-widgets.js"></script>
     <script src="bower_components/kubernetes-object-describer/dist/object-describer.js"></script>
-    <script src="bower_components/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"></script>
-    <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
-    <script src="bower_components/ace-builds/src-min-noconflict/ext-searchbox.js"></script>
-    <script src="bower_components/ace-builds/src-min-noconflict/mode-dockerfile.js"></script>
-    <script src="bower_components/ace-builds/src-min-noconflict/mode-groovy.js"></script>
-    <script src="bower_components/ace-builds/src-min-noconflict/mode-yaml.js"></script>
-    <script src="bower_components/ace-builds/src-min-noconflict/theme-dreamweaver.js"></script>
-    <script src="bower_components/ace-builds/src-min-noconflict/theme-eclipse.js"></script>
-    <script src="bower_components/ace-builds/src-min-noconflict/mode-sh.js"></script>
-    <script src="bower_components/angular-ui-ace/ui-ace.js"></script>
-    <script src="bower_components/clipboard/dist/clipboard.js"></script>
-    <script src="bower_components/ansi_up/ansi_up.js"></script>
-    <script src="bower_components/angular-extension-registry/dist/angular-extension-registry.min.js"></script>
-    <script src="bower_components/angular-extension-registry/dist/compiled-templates.js"></script>
     <script src="bower_components/ng-sortable/dist/ng-sortable.js"></script>
-    <script src="bower_components/ui-select/dist/select.js"></script>
-    <script src="bower_components/angular-inview/angular-inview.js"></script>
-    <script src="bower_components/js-yaml/dist/js-yaml.js"></script>
-    <script src="bower_components/angular-moment/angular-moment.js"></script>
-    <script src="bower_components/angular-utf8-base64/angular-utf8-base64.js"></script>
-    <script src="bower_components/file-saver/FileSaver.js"></script>
-    <script src="bower_components/hopscotch/dist/js/hopscotch.js"></script>
-    <script src="bower_components/compare-versions/index.js"></script>
-    <script src="bower_components/origin-web-common/dist/origin-web-common.js"></script>
     <script src="bower_components/tv4/tv4.js"></script>
     <script src="bower_components/objectpath/lib/ObjectPath.js"></script>
     <script src="bower_components/angular-schema-form/dist/schema-form.js"></script>
     <script src="bower_components/angular-schema-form/dist/bootstrap-decorator.js"></script>
+    <script src="bower_components/hopscotch/dist/js/hopscotch.js"></script>
+    <script src="bower_components/js-logger/src/logger.js"></script>
+    <script src="bower_components/uri.js/src/URI.js"></script>
+    <script src="bower_components/uri.js/src/URITemplate.js"></script>
+    <script src="bower_components/uri.js/src/jquery.URI.js"></script>
+    <script src="bower_components/uri.js/src/URI.fragmentURI.js"></script>
+    <script src="bower_components/compare-versions/index.js"></script>
+    <script src="bower_components/origin-web-common/dist/origin-web-common.js"></script>
     <script src="bower_components/angular-schema-form-bootstrap/bootstrap-decorator.min.js"></script>
     <script src="bower_components/origin-web-catalog/dist/vendor-bundle.js"></script>
     <script src="bower_components/origin-web-catalog/dist/origin-web-catalogs.js"></script>
+    <script src="bower_components/registry-image-widgets/dist/image-widgets.js"></script>
+    <script src="bower_components/ui-select/dist/select.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
