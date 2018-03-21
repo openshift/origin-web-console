@@ -9421,8 +9421,8 @@ t.data.splice(e, 1), t.form.$setDirty();
 }, t.getKeys = function() {
 return _.map(t.data, "key");
 };
-var o = t.$watch("map.data", function(e) {
-e && (t.data = _.map(e, function(e, t) {
+var o = t.$watch("map", function(e) {
+e && (t.data = _.map(e.data, function(e, t) {
 return {
 key: t,
 value: e
