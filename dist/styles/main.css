@@ -5241,9 +5241,8 @@ h2+.list-view-pf{margin-top:20px}
 .navbar-toggle:focus{color:#fff;outline:dotted thin!important;outline:-webkit-focus-ring-color auto 5px!important;outline-offset:-2px!important}
 .wizard-pf-main .ace_editor.editor{height:265px}
 .landing-page .wizard-pf-main .ace_editor.editor{height:175px}
-.wizard-pf-main .deploy-image .empty-state-message{margin-bottom:0;margin-top:35px}
-@media (min-width:768px){.wizard-pf-main .deploy-image .empty-state-message{margin-top:90px}
-.landing-page .wizard-pf-main .deploy-image .empty-state-message{margin-top:40px}
+.wizard-pf-main .deploy-image .empty-state-message{display:flex;flex-direction:column;justify-content:center;margin-bottom:0;margin-top:0;min-height:130px}
+@media (min-width:768px){.landing-page .wizard-pf-main .deploy-image .empty-state-message{margin-top:40px}
 }
 .build-count .builds,.build-count .pipelines{display:block}
 .build-count .icon-count,.builds-label{display:inline-block}

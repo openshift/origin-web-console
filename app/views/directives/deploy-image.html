@@ -2,7 +2,7 @@
   <select-project ng-if="!project" selected-project="input.selectedProject" name-taken="projectNameTaken"></select-project>
   <span ng-show="!noProjectsCantCreate">
     <p>
-      Deploy an existing image from an image stream tag or docker pull spec.
+      Deploy an existing image from an image stream tag or image registry.
     </p>
     <ng-form name="forms.imageSelection">
       <fieldset ng-disabled="loading">
@@ -60,6 +60,10 @@
                 </button>
               </span>
             </div>
+            <div class="help-block">To deploy an image from a private repository, you must
+              <a href=""
+                ng-click="openCreateWebhookSecretModal()">create an image pull secret</a>
+               with your image registry credentials.<a href="https://docs.openshift.org/latest/dev_guide/managing_images.html#using-image-pull-secrets" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a></div>
           </div>
         </fieldset>
       </fieldset>
@@ -196,6 +200,7 @@
         Could not load image metadata.
       </h2>
       <p>{{import.error | upperFirst}}</p>
+      <p>The image may not exist or it may be in a secure registry. Check that you have entered the image name correctly or <a href="" ng-click="openCreateWebhookSecretModal()">create an image pull secret</a> with your image registry credentials and try again.</p>
     </div>
 
     <div ng-if="!loading && import && !import.error && !import.image" class="empty-state-message text-center">

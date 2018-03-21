@@ -404,6 +404,17 @@ angular.module("openshiftConsole")
             });
           };
 
+          $scope.openCreateWebhookSecretModal = function() {
+            var dialogScope = $scope.$new();
+            dialogScope.type = "image";
+            dialogScope.namespace = $scope.input.selectedProject.metadata.name;
+            $uibModal.open({
+              templateUrl: 'views/modals/create-secret.html',
+              controller: 'CreateSecretModalController',
+              scope: dialogScope
+            });
+          };
+
           // When the deploy-image component is displayed in a dialog, the create
           // button is outside the component since it is in the wizard footer. Listen
           // for an event for when the button is clicked.
