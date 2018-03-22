@@ -31,6 +31,7 @@ angular.module('openshiftConsole').controller('OverviewController', [
   'ResourceAlertsService',
   'RoutesService',
   'ServiceInstancesService',
+  'KubevirtVersions',
   OverviewController
 ]);
 
@@ -63,7 +64,8 @@ function OverviewController($scope,
                             PromiseUtils,
                             ResourceAlertsService,
                             RoutesService,
-                            ServiceInstancesService) {
+                            ServiceInstancesService,
+                            KubevirtVersions) {
   var overview = this;
   var limitWatches = $filter('isIE')();
   var DEFAULT_POLL_INTERVAL = 60 * 1000; // milliseconds
@@ -204,7 +206,9 @@ function OverviewController($scope,
            _.size(overview.statefulSets) +
            _.size(overview.daemonSets) +
            _.size(overview.monopods) +
-           _.size(overview.state.serviceInstances);
+           _.size(overview.state.serviceInstances) +
+           _.size(overview.mobileClients) +
+           _.size(overview.offlineVirtualMachines);
   };
 
   // The size of all visible top-level items after filtering.
@@ -216,7 +220,9 @@ function OverviewController($scope,
            _.size(overview.filteredStatefulSets) +
            _.size(overview.filteredDaemonSets) +
            _.size(overview.filteredMonopods) +
-           _.size(overview.filteredServiceInstances);
+           _.size(overview.filteredServiceInstances) +
+           _.size(overview.filteredMobileClients) +
+           _.size(overview.filteredOfflineVirtualMachines);
   };
 
   // Show the "Get Started" message if the project is empty.
@@ -392,6 +398,8 @@ function OverviewController($scope,
     overview.filteredMonopods = filterItems(overview.monopods);
     overview.filteredPipelineBuildConfigs = filterItems(overview.pipelineBuildConfigs);
     overview.filteredServiceInstances = filterItems(state.orderedServiceInstances);
+    overview.filteredMobileClients = filterItems(overview.mobileClients);
+    overview.filteredOfflineVirtualMachines = filterItems(overview.offlineVirtualMachines);
     overview.filterActive = isFilterActive();
     updateApps();
     updateShowGetStarted();
@@ -677,10 +685,68 @@ function OverviewController($scope,
     return true;
   };
 
+  function getOvmId(vm) {
+    var ownerReferences = vm.metadata.ownerReferences;
+    if (!ownerReferences) {
+      return null;
+    }
+    return _(ownerReferences)
+      .filter({ kind: 'OfflineVirtualMachine' })
+      .map('uid')
+      .first();
+  }
+
+  function updateVirtualMachineMapping() {
+    if (!overview.offlineVirtualMachines || !overview.virtualMachines || !overview.pods) {
+      return;
+    }
+    var vmIdToPod = _(overview.pods)
+      .values()
+      .filter(function (pod) {
+        return !!_.get(pod, 'metadata.labels["kubevirt.io/vmUID"]');
+      })
+      .keyBy('metadata.labels["kubevirt.io/vmUID"]')
+      .value();
+    var ovmIdToVm = _(overview.virtualMachines)
+      .values()
+      .filter(function (vm) {
+        return !!getOvmId(vm);
+      })
+      .keyBy(function (vm) {
+        return getOvmId(vm);
+      })
+      .value();
+    var podsOfOvms = [];
+    _.each(overview.offlineVirtualMachines, function (ovm) {
+      var ovmId = ovm.metadata.uid;
+      var vm = ovmIdToVm[ovmId];
+      if (!vm) {
+        return;
+      }
+      ovm._vm = vm;
+      var pod = vmIdToPod[vm.metadata.uid];
+      if (!pod) {
+        return;
+      }
+      ovm._pod = pod;
+      podsOfOvms.push(pod);
+    });
+    // don't consider virt-launcher pods of offline virtual machines monopods
+    if (overview.monopods) {
+      overview.monopods = _(overview.monopods)
+        .filter(function (pod) {
+          return !_.includes(podsOfOvms, pod);
+        })
+        .keyBy('metadata.name')
+        .value();
+    }
+  }
+
   // Group all pods by owner, tracked in the `state.podsByOwnerUID` map.
   var groupPods = function() {
     state.podsByOwnerUID = PodsService.groupByOwnerUID(overview.pods);
     overview.monopods = _.filter(state.podsByOwnerUID[''], showMonopod);
+    updateVirtualMachineMapping();
   };
 
   // Determine if a replication controller is visible, either as part of a
@@ -1214,7 +1280,7 @@ function OverviewController($scope,
   ProjectsService.get($routeParams.project, opts).then(_.spread(function(project, context) {
     // Project must be set on `$scope` for the projects dropdown.
     state.project = $scope.project = project;
-    state.context = context;
+    state.context = $scope.context = context;
 
     var updateReferencedImageStreams = function() {
       if (!overview.pods) {
@@ -1425,6 +1491,37 @@ function OverviewController($scope,
       state.clusterQuotas = clusterQuotaData.by("metadata.name");
       setQuotaNotifications();
     }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
+
+    if ($scope.AEROGEAR_MOBILE_ENABLED) {
+      watches.push(DataService.watch({ group: "mobile.k8s.io", version: "v1alpha1", resource: "mobileclients" }, context, function (clients) {
+        overview.mobileClients = clients.by("metadata.name");
+        updateFilter();
+        Logger.log("mobileclients (subscribe)", clients);
+      }, { poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL }));
+    }
+
+    if ($scope.KUBEVIRT_ENABLED) {
+      var ovmCallback = function (ovms) {
+        overview.offlineVirtualMachines = ovms.by('metadata.name');
+        updateVirtualMachineMapping();
+        updateFilter();
+      };
+      watches.push(DataService.watch(
+        KubevirtVersions.offlineVirtualMachine,
+        context,
+        ovmCallback,
+        { poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL }));
+      var vmCallback = function (vms) {
+        overview.virtualMachines = vms.by('metadata.name');
+        updateVirtualMachineMapping();
+        updateFilter();
+      };
+      watches.push(DataService.watch(
+        KubevirtVersions.virtualMachine,
+        context,
+        vmCallback,
+        { poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL }));
+    }
 
     var fetchServiceClass, fetchServicePlan;
 
