@@ -652,6 +652,10 @@ angular
         });
     }
     Logger.info("AEROGEAR_MOBILE_ENABLED: " + $rootScope.AEROGEAR_MOBILE_ENABLED);
-  });
+  })
+  .run(['$rootScope', 'APIService', 'KubevirtVersions',
+    function ($rootScope, APIService, KubevirtVersions) {
+    $rootScope.KUBEVIRT_ENABLED = !!APIService.apiInfo(KubevirtVersions.offlineVirtualMachine);
+  }]);
 
 pluginLoader.addModule('openshiftConsole');
