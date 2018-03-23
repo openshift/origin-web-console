@@ -481,6 +481,9 @@ angular
       LabelFilter.readPersistedState();
     });
   })
+  .run(function(){
+    console.log("TEST");
+  })
   .run(function(durationFilter, timeOnlyDurationFromTimestampsFilter) {
     // Use setInterval instead of $interval because we're directly manipulating the DOM and don't want scope.$apply overhead
     setInterval(function() {
