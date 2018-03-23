@@ -95,6 +95,9 @@
       align-items: flex-end;
       flex-wrap: wrap;
     }
+    h2 {
+      margin-bottom: 0;
+    }
     .overview-route {
       font-size: (@font-size-base + 2);
       line-height: normal;
@@ -218,14 +221,15 @@
     .truncate();
   }
   h2 {
-    margin-bottom: 5px;
     margin-top: 0;
-    @media (min-width: @screen-md-min) {
-      margin-bottom: 0;
-    }
     > .component-label {
       font-weight: 500;
       padding-bottom: 0;
+    }
+    + .overview-routes {
+      @media(max-width: @screen-sm-max) {
+        margin-top: 3px;
+      }
     }
   }
   .list-pf {
