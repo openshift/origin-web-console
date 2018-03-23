@@ -15293,11 +15293,13 @@ var l = t.getPreferredVersion("secrets");
 return e(l, "list") ? (i = r.getWebhookSecretValue(i, c), n.url({
 resource: "buildconfigs/webhooks/" + encodeURIComponent(i) + "/" + encodeURIComponent(o.toLowerCase()),
 name: a,
-namespace: s
+namespace: s,
+group: "build.openshift.io"
 })) : n.url({
 resource: "buildconfigs/webhooks/",
 name: a,
-namespace: s
+namespace: s,
+group: "build.openshift.io"
 }) + "<secret>/" + o.toLowerCase();
 };
 } ]).filter("isWebRoute", [ "routeHostFilter", function(e) {
