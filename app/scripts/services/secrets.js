@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("SecretsService", function($filter, Logger, NotificationsService){
+  .factory("SecretsService", function($filter, base64, Logger, NotificationsService){
     var isNonPrintable = $filter('isNonPrintable');
 
     var groupSecretsByType = function(secrets) {
@@ -52,7 +52,7 @@ angular.module("openshiftConsole")
             params.username = username;
             params.password = password;
           });
-          setParams(_.split(window.atob(serverData.auth), ':', 2));
+          setParams(_.split(base64.decode(serverData.auth), ':', 2));
         } catch(e) {
           handleDecodeException(e, 'username:password');
           return;
@@ -89,7 +89,7 @@ angular.module("openshiftConsole")
       };
 
       try {
-        decodedData = JSON.parse(window.atob(encodedData));
+        decodedData = JSON.parse(base64.decode(encodedData));
       } catch(e) {
         handleDecodeException(e, configType);
       }
@@ -125,7 +125,7 @@ angular.module("openshiftConsole")
         if (configType === ".dockercfg" || configType === ".dockerconfigjson") {
           return decodeDockerConfig(data, configType);
         } else {
-          decoded = window.atob(data);
+          decoded = base64.decode(data);
           // Allow whitespace like newlines and tabs, but detect other
           // non-printable characters in the unencoded data.
           if (isNonPrintable(decoded)) {

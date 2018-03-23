@@ -3300,44 +3300,44 @@ message: null
 };
 }
 };
-}), angular.module("openshiftConsole").factory("SecretsService", [ "$filter", "Logger", "NotificationsService", function(e, t, n) {
-var r = e("isNonPrintable"), a = function(r, a) {
-n.addNotification({
+}), angular.module("openshiftConsole").factory("SecretsService", [ "$filter", "base64", "Logger", "NotificationsService", function(e, t, n, r) {
+var a = e("isNonPrintable"), o = function(t, a) {
+r.addNotification({
 type: "error",
 message: "Base64-encoded " + a + " string could not be decoded.",
-details: e("getErrorDetails")(r)
-}), t.error("Base64-encoded " + a + " string could not be decoded.", r);
-}, o = function(e) {
-var t = _.pick(e, [ "email", "username", "password" ]);
+details: e("getErrorDetails")(t)
+}), n.error("Base64-encoded " + a + " string could not be decoded.", t);
+}, i = function(e) {
+var n = _.pick(e, [ "email", "username", "password" ]);
 if (e.auth) try {
-_.spread(function(e, n) {
-t.username = e, t.password = n;
-})(_.split(window.atob(e.auth), ":", 2));
+_.spread(function(e, t) {
+n.username = e, n.password = t;
+})(_.split(t.decode(e.auth), ":", 2));
 } catch (e) {
-return void a(e, "username:password");
+return void o(e, "username:password");
 }
-return t;
-}, i = function(e, t) {
-var n, r = {
+return n;
+}, s = function(e, n) {
+var r, a = {
 auths: {}
 };
 try {
-n = JSON.parse(window.atob(e));
+r = JSON.parse(t.decode(e));
 } catch (e) {
-a(e, t);
+o(e, n);
 }
-return n.auths ? (_.each(n.auths, function(e, t) {
-e.auth ? r.auths[t] = o(e) : r.auths[t] = e;
-}), n.credsStore && (r.credsStore = n.credsStore)) : _.each(n, function(e, t) {
-r.auths[t] = o(e);
-}), r;
-}, s = function(e) {
-var t = {}, n = _.mapValues(e, function(e, n) {
+return r.auths ? (_.each(r.auths, function(e, t) {
+e.auth ? a.auths[t] = i(e) : a.auths[t] = e;
+}), r.credsStore && (a.credsStore = r.credsStore)) : _.each(r, function(e, t) {
+a.auths[t] = i(e);
+}), a;
+}, c = function(e) {
+var n = {}, r = _.mapValues(e, function(e, r) {
 if (!e) return "";
-var a;
-return ".dockercfg" === n || ".dockerconfigjson" === n ? i(e, n) : (a = window.atob(e), r(a) ? (t[n] = !0, e) : a);
+var o;
+return ".dockercfg" === r || ".dockerconfigjson" === r ? s(e, r) : (o = t.decode(e), a(o) ? (n[r] = !0, e) : o);
 });
-return n.$$nonprintable = t, n;
+return r.$$nonprintable = n, r;
 };
 return {
 groupSecretsByType: function(e) {
@@ -3365,7 +3365,7 @@ t.other.push(e);
 }
 }), t;
 },
-decodeSecretData: s,
+decodeSecretData: c,
 getWebhookSecretValue: function(e, t) {
 if (_.get(e, "secretReference.name") && t) {
 var n = _.find(t, {
@@ -3373,7 +3373,7 @@ metadata: {
 name: e.secretReference.name
 }
 });
-return s(n.data).WebHookSecretKey;
+return c(n.data).WebHookSecretKey;
 }
 return _.get(e, "secret");
 }
