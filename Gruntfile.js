@@ -232,23 +232,6 @@ module.exports = function (grunt) {
       server: '.tmp'
     },
 
-    // Add vendor prefixed styles
-    postcss: {
-      options: {
-        processors: [
-          require('autoprefixer')({browsers: ['last 1 version']})
-        ]
-      },
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '.tmp/styles/',
-          src: '{,*/}*.css',
-          dest: '.tmp/styles/'
-        }]
-      }
-    },
-
     // Automatically inject Bower components into the app
     wiredep: {
       app: {
@@ -682,7 +665,6 @@ module.exports = function (grunt) {
       'clean:server',
       'wiredep',
       'development-build',
-      'postcss',
       'connect:livereload',
       'watch'
     ]);
@@ -732,7 +714,6 @@ module.exports = function (grunt) {
   grunt.registerTask('test-unit', [
     'clean:server',
     'concurrent:test',
-    'postcss',
     'connect:test',
     'karma'
     // 'coverage' - add back if we want to enforce coverage percentages
@@ -749,7 +730,6 @@ module.exports = function (grunt) {
       [
         'clean:server',
         'development-build',
-        'postcss',
         'connect:test',
         'add-redirect-uri',
         (isMac ? 'protractor:mac' : 'protractor:default'),
@@ -765,7 +745,6 @@ module.exports = function (grunt) {
     'useminPrepare',
     'ngtemplates',
     'concurrent:dist',
-    'postcss',
     'concat',
     'ngAnnotate',
     'copy:dist',

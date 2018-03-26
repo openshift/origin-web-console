@@ -7,7 +7,6 @@
     "url": "git://github.com/openshift/origin.git"
   },
   "devDependencies": {
-    "autoprefixer": "^7.0.1",
     "bower": "1.8.2",
     "clean-css": "3.4.12",
     "connect-modrewrite": "0.7.9",
@@ -32,7 +31,6 @@
     "grunt-karma": "^2.0.0",
     "grunt-newer": "0.7.0",
     "grunt-ng-annotate": "0.3.2",
-    "grunt-postcss": "^0.8.0",
     "grunt-protractor-runner": "1.2.1",
     "grunt-replace": "1.0.1",
     "grunt-svgmin": "4.0.0",
