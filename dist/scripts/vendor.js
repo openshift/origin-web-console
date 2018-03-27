@@ -54121,449 +54121,7 @@ return !0 === t ? (r = a.substring(0, o.length) !== o ? e("") : new e(a.substrin
 var t = i.call(this, e);
 return !1 !== e && this._parentURI && this._parentURI.fragment(this), t;
 }, e;
-}), function(e) {
-"use strict";
-var t = {};
-t.VERSION = "0.9.14";
-var n, i = {}, r = function(e, t) {
-return function() {
-return t.apply(e, arguments);
-};
-}, o = function() {
-var e, t, n = arguments, i = n[0];
-for (t = 1; t < n.length; t++) for (e in n[t]) e in i || !n[t].hasOwnProperty(e) || (i[e] = n[t][e]);
-return i;
-}, a = function(e, t) {
-return {
-value: e,
-name: t
-};
-};
-t.DEBUG = a(1, "DEBUG"), t.INFO = a(2, "INFO"), t.WARN = a(4, "WARN"), t.ERROR = a(8, "ERROR"), t.OFF = a(99, "OFF");
-var s = function(e) {
-this.context = e, this.setLevel(e.filterLevel), this.log = this.info;
-};
-s.prototype = {
-setLevel: function(e) {
-e && "value" in e && (this.context.filterLevel = e);
-},
-enabledFor: function(e) {
-var t = this.context.filterLevel;
-return e.value >= t.value;
-},
-debug: function() {
-this.invoke(t.DEBUG, arguments);
-},
-info: function() {
-this.invoke(t.INFO, arguments);
-},
-warn: function() {
-this.invoke(t.WARN, arguments);
-},
-error: function() {
-this.invoke(t.ERROR, arguments);
-},
-invoke: function(e, t) {
-n && this.enabledFor(e) && n(t, o({
-level: e
-}, this.context));
-}
-};
-var l = new s({
-filterLevel: t.OFF
-});
-!function() {
-var e = t;
-e.enabledFor = r(l, l.enabledFor), e.debug = r(l, l.debug), e.info = r(l, l.info), e.warn = r(l, l.warn), e.error = r(l, l.error), e.log = e.info;
-}(), t.setHandler = function(e) {
-n = e;
-}, t.setLevel = function(e) {
-l.setLevel(e);
-for (var t in i) i.hasOwnProperty(t) && i[t].setLevel(e);
-}, t.get = function(e) {
-return i[e] || (i[e] = new s(o({
-name: e
-}, l.context)));
-}, t.useDefaults = function(e) {
-"undefined" != typeof console && (t.setLevel(e || t.DEBUG), t.setHandler(function(e, n) {
-var i = console.log;
-n.name && (e[0] = "[" + n.name + "] " + e[0]), n.level === t.WARN && console.warn ? i = console.warn : n.level === t.ERROR && console.error ? i = console.error : n.level === t.INFO && console.info && (i = console.info), Function.prototype.apply.call(i, console, e);
-}));
-}, "function" == typeof define && define.amd ? define(t) : "undefined" != typeof module && module.exports ? module.exports = t : (t._prevLogger = e.Logger, t.noConflict = function() {
-return e.Logger = t._prevLogger, t;
-}, e.Logger = t);
-}(this), function() {
-"use strict";
-if (Logger.setLevel(Logger.INFO), Logger.storagePrefix = "hawtio", Logger.oldGet = Logger.get, Logger.loggers = {}, Logger.get = function(e) {
-var t = Logger.oldGet(e);
-return Logger.loggers[e] = t, t;
-}, window.LogBuffer = 100, "localStorage" in window) {
-"logLevel" in window.localStorage || (window.localStorage.logLevel = JSON.stringify(Logger.INFO));
-var e = Logger.DEBUG;
-try {
-e = JSON.parse(window.localStorage.logLevel);
-} catch (e) {
-console.error("Failed to parse log level setting: ", e);
-}
-if (Logger.setLevel(e), "showLog" in window.localStorage && "true" === window.localStorage.showLog) {
-var t = document.getElementById("log-panel");
-t && t.setAttribute("style", "bottom: 50%;");
-}
-if ("logBuffer" in window.localStorage) {
-var n = window.localStorage.logBuffer;
-window.LogBuffer = parseInt(n, 10);
-} else window.localStorage.logBuffer = window.LogBuffer;
-if ("childLoggers" in window.localStorage) {
-var i = [];
-try {
-i = JSON.parse(localStorage.childLoggers);
-} catch (e) {}
-i.forEach(function(e) {
-Logger.get(e.logger).setLevel(Logger[e.level]);
-});
-}
-}
-var r = null;
-"console" in window && (window.JSConsole = window.console, r = function(e, t) {
-var n = window.JSConsole, i = n.log;
-if (t.name && (e[0] = "[" + t.name + "] " + e[0]), t.level === Logger.WARN && "warn" in n ? i = n.warn : t.level === Logger.ERROR && "error" in n ? i = n.error : t.level === Logger.INFO && "info" in n && (i = n.info), i && i.apply) try {
-i.apply(n, e);
-} catch (t) {
-n.log(e);
-}
-}), Logger.getType = function(e) {
-return Object.prototype.toString.call(e).slice(8, -1);
-}, Logger.isError = function(e) {
-return e && "Error" === Logger.getType(e);
-}, Logger.isArray = function(e) {
-return e && "Array" === Logger.getType(e);
-}, Logger.isObject = function(e) {
-return e && "Object" === Logger.getType(e);
-}, Logger.isString = function(e) {
-return e && "String" === Logger.getType(e);
-}, window.logInterceptors = [], Logger.formatStackTraceString = function(e) {
-var t = e.split("\n");
-if (t.length > 100) {
-var n = t.length - 40;
-t.splice(20, n, ">>> snipped " + n + " frames <<<");
-}
-for (var i = '<div class="log-stack-trace">\n', r = 0; r < t.length; r++) {
-var o = t[r];
-0 !== o.trim().length && (i = i + "<p>" + o + "</p>\n");
-}
-return i += "</div>\n";
-}, Logger.setHandler(function(e, t) {
-var n = void 0, i = void 0, o = document.getElementById("hawtio-log-panel");
-o && (i = document.getElementById("hawtio-log-panel-statements"), n = document.createElement("li"));
-var a = "", s = [];
-if ("ERROR" === t.level.name && 1 === e.length && Logger.isString(e[0])) {
-var l = (g = e[0]).split(/\n/);
-if (l.length > 1) {
-var c = "Error: Jolokia-Error: ";
-if (0 === l[0].search(c)) {
-var u = l[0].slice(c.length);
-window.JSConsole.info("msg: ", u);
-try {
-var d = JSON.parse(u);
-(h = new Error()).message = d.error, h.stack = d.stacktrace.replace("\\t", "&nbsp;&nbsp").replace("\\n", "\n"), e = [ h ];
-} catch (e) {}
-} else {
-var h = new Error();
-h.message = l[0], h.stack = g, e = [ h ];
-}
-}
-}
-var f = !1;
-if (n) {
-for (var p = 0; p < e.length; p++) {
-var g = e[p];
-if (Logger.isArray(g) || Logger.isObject(g)) {
-var m = "";
-try {
-m = '<pre data-language="javascript">' + JSON.stringify(g, null, 2) + "</pre>";
-} catch (h) {
-m = g + " (failed to convert) ";
-}
-a += m;
-} else Logger.isError(g) ? ("message" in g && (a += g.message), "stack" in g && s.push(function() {
-var e = Logger.formatStackTraceString(g.stack), n = Logger;
-t.name && (n = Logger.get(t.name)), n.info("Stack trace: ", e);
-})) : a += g;
-}
-t.name && (a = '[<span class="green">' + t.name + "</span>] " + a), n.innerHTML = a, n.className = t.level.name, o && (0 === o.scrollHeight && (f = !0), i.scrollTop > i.scrollHeight - o.scrollHeight - 200 && (f = !0));
-}
-!function() {
-i && n && (i.appendChild(n), i.childNodes.length > parseInt(window.LogBuffer) && i.removeChild(i.firstChild), f && (i.scrollTop = i.scrollHeight)), r && r(e, t);
-for (var o = window.logInterceptors, s = 0; s < o.length; s++) o[s](t.level.name, a);
-}(), s.forEach(function(e) {
-e();
-});
-});
-}();
-
-var hawtioPluginLoader = function(e) {
-"use strict";
-function t(e, t) {
-angular.isArray(t) || (t = [ t ]);
-var n = [];
-return t.forEach(function(t) {
-e.forEach(function(e) {
-t === e && n.push(e);
-});
-}), n;
-}
-var n = Logger.get("hawtio-loader"), i = document.documentElement;
-return e.log = n, e.urls = [], e.modules = [], e.tasks = [], e.setBootstrapElement = function(e) {
-n.debug("Setting bootstrap element to: ", e), i = e;
-}, e.getBootstrapElement = function() {
-return i;
-}, e.registerPreBootstrapTask = function(t, i) {
-angular.isFunction(t) && (n.debug("Adding legacy task"), t = {
-task: t
-}), t.name || (t.name = "unnamed-task-" + (e.tasks.length + 1)), t.depends && !angular.isArray(t.depends) && "*" !== t.depends && (t.depends = [ t.depends ]), i ? e.tasks.unshift(t) : e.tasks.push(t);
-}, e.addModule = function(t) {
-n.debug("Adding module: " + t), e.modules.push(t);
-}, e.addUrl = function(t) {
-n.debug("Adding URL: " + t), e.urls.push(t);
-}, e.getModules = function() {
-return e.modules;
-}, e.loaderCallback = null, e.setLoaderCallback = function(t) {
-e.loaderCallback = t;
-}, e.loadPlugins = function(i) {
-var r = e.loaderCallback, o = {}, a = e.urls.length, s = a, l = function() {
-var n = [], r = [], o = {
-name: "Hawtio Bootstrap",
-depends: "*",
-runs: 0,
-task: function(t) {
-function i() {
-r.forEach(function(t) {
-e.log.info("  name: " + t.name + " depends: ", t.depends);
-});
-}
-r.length > 0 && (e.log.info("tasks yet to run: "), i(), o.runs = o.runs + 1, e.log.info("Task list restarted : ", o.runs, " times"), 5 === o.runs ? (e.log.info("Orphaned tasks: "), i(), r.length = 0) : r.push(o)), e.log.debug("Executed tasks: ", n), t();
-}
-};
-e.registerPreBootstrapTask(o);
-var a = function() {
-var o = null, s = [];
-for (0 === e.tasks.length && (o = r.shift()); !o && r.length > 0; ) {
-var l = r.shift();
-"*" === l.depends ? e.tasks.length > 0 ? s.push(l) : o = l : (c = t(n, l.depends)).length === l.depends.length ? o = l : s.push(l);
-}
-if (s.length > 0 && s.forEach(function(e) {
-r.push(e);
-}), o || (o = e.tasks.shift()), o && o.depends && e.tasks.length > 0) if (e.log.debug("Task '" + o.name + "' has dependencies: ", o.depends), "*" === o.depends) {
-if (e.tasks.length > 0) return e.log.debug("Task '" + o.name + "' wants to run after all other tasks, deferring"), r.push(o), void a();
-} else {
-var c = t(n, o.depends);
-if (c.length != o.depends.length) return e.log.debug("Deferring task: '" + o.name + "'"), r.push(o), void a();
-}
-if (o) {
-e.log.debug("Executing task: '" + o.name + "'");
-var u = function() {
-u.notFired && (u.notFired = !1, n.push(o.name), setTimeout(a, 1));
-};
-u.notFired = !0, o.task(u);
-} else e.log.debug("All tasks executed"), setTimeout(i, 1);
-};
-setTimeout(a, 1);
-}, c = function() {
-var e = 0;
-$.each(o, function(t, n) {
-e += n.Scripts.length;
-});
-var t = e, i = function() {
-$.ajaxSetup({
-async: !0
-}), e -= 1, r && r.scriptLoaderCallback(r, t, e + 1), 0 === e && l();
-};
-e > 0 ? $.each(o, function(e, t) {
-t.Scripts.forEach(function(e) {
-var r = t.Context + "/" + e;
-n.debug("Fetching script: ", r), $.ajaxSetup({
-async: !1
-}), $.getScript(r).done(function(e) {
-n.debug("Loaded script: ", r);
-}).fail(function(e, t, i) {
-n.info('Failed loading script: "', i.message, '" (<a href="', r, ":", i.lineNumber, '">', r, ":", i.lineNumber, "</a>)");
-}).always(i);
-});
-}) : ($.ajaxSetup({
-async: !0
-}), l());
-};
-if (0 === a) c(); else {
-var u = function() {
-a -= 1, r && r.urlLoaderCallback(r, s, a + 1), 0 === a && c();
-}, d = new RegExp(/^jolokia:/);
-$.each(e.urls, function(e, t) {
-if (d.test(t)) {
-var i = t.split(":");
-(i = i.reverse()).pop(), t = i.pop();
-var r = i.reverse().join(":"), a = new Jolokia(t);
-try {
-var s = a.getAttribute(r, null);
-$.extend(o, s);
-} catch (e) {}
-u();
-} else n.debug("Trying url: ", t), $.get(t, function(e) {
-if (angular.isString(e)) try {
-e = angular.fromJson(e);
-} catch (e) {
-return;
-}
-$.extend(o, e);
-}).always(function() {
-u();
-});
-});
-}
-}, e.debug = function() {
-n.debug("urls and modules"), n.debug(e.urls), n.debug(e.modules);
-}, e.setLoaderCallback({
-scriptLoaderCallback: function(e, t, i) {
-n.debug("Total scripts: ", t, " Remaining: ", i);
-},
-urlLoaderCallback: function(e, t, i) {
-n.debug("Total URLs: ", t, " Remaining: ", i);
-}
-}), e;
-}(hawtioPluginLoader || {}, window), HawtioCore = function() {
-"use strict";
-function e() {}
-Object.defineProperty(e.prototype, "injector", {
-get: function() {
-return t.UpgradeAdapter ? t.UpgradeAdapter.ng1Injector : t._injector;
-},
-enumerable: !0,
-configurable: !0
-});
-var t = new e();
-t.pluginName = "hawtio-core";
-var n = Logger.get(t.pluginName), i = angular.module(t.pluginName, []);
-i.config([ "$locationProvider", function(e) {
-e.html5Mode(!0);
-} ]), i.run([ "documentBase", function(e) {
-n.debug("loaded");
-} ]);
-var r = {
-length: 0,
-key: function(e) {},
-getItem: function(e) {
-return r[e];
-},
-setItem: function(e, t) {
-r[e] = t;
-},
-removeItem: function(e) {
-var t = r[e];
-return delete r[e], t;
-},
-clear: function() {}
-};
-return t.dummyLocalStorage = r, t.documentBase = function() {
-var e = $("head").find("base"), t = "/";
-return e && e.length > 0 ? t = e.attr("href") : n.warn("Document is missing a 'base' tag, defaulting to '/'"), t;
-}, i.factory("localStorage", function() {
-return window.localStorage || r;
-}), i.factory("documentBase", function() {
-return t.documentBase();
-}), i.factory("viewRegistry", function() {
-return {};
-}), i.factory("helpRegistry", function() {
-return {
-addUserDoc: function() {},
-addDevDoc: function() {},
-addSubTopic: function() {},
-getOrCreateTopic: function() {},
-mapTopicName: function() {},
-mapSubTopicName: function() {},
-getTopics: function() {},
-disableAutodiscover: function() {},
-discoverHelpFiles: function() {}
-};
-}), i.factory("preferencesRegistry", function() {
-return {
-addTab: function() {},
-getTab: function() {},
-getTabs: function() {}
-};
-}), i.factory("pageTitle", function() {
-return {
-addTitleElement: function() {},
-getTitle: function() {},
-getTitleWithSeparator: function() {},
-getTitleExcluding: function() {},
-getTitleArrayExcluding: function() {}
-};
-}), i.factory("toastr", [ "$window", function(e) {
-var t = e.toastr;
-return t || (t = {}, e.toastr = t), t;
-} ]), i.factory("HawtioDashboard", function() {
-return {
-hasDashboard: !1,
-inDashboard: !1,
-getAddLink: function() {
-return "";
-}
-};
-}), i.factory("branding", function() {
-return {};
-}), i.factory("userDetails", function() {
-return {
-logout: function() {
-n.debug("Dummy userDetails.logout()");
-}
-};
-}), hawtioPluginLoader.addModule("ng"), hawtioPluginLoader.addModule("ngSanitize"), hawtioPluginLoader.addModule(t.pluginName), $(function() {
-if (jQuery.uaMatch = function(e) {
-e = e.toLowerCase();
-var t = /(chrome)[ \/]([\w.]+)/.exec(e) || /(webkit)[ \/]([\w.]+)/.exec(e) || /(opera)(?:.*version|)[ \/]([\w.]+)/.exec(e) || /(msie) ([\w.]+)/.exec(e) || e.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec(e) || [];
-return {
-browser: t[1] || "",
-version: t[2] || "0"
-};
-}, !jQuery.browser) {
-var e = jQuery.uaMatch(navigator.userAgent), i = {};
-e.browser && (i[e.browser] = !0, i.version = e.version), i.chrome ? i.webkit = !0 : i.webkit && (i.safari = !0), jQuery.browser = i;
-}
-window.ng && window.ng.upgrade && (t.UpgradeAdapter = new ng.upgrade.UpgradeAdapter()), hawtioPluginLoader.loadPlugins(function() {
-if (t.injector || t.UpgradeAdapterRef) n.debug("Application already bootstrapped"); else {
-var e = localStorage.hawtioCoreStrictDi || !1;
-e && n.debug("Using strict dependency injection");
-var i = hawtioPluginLoader.getBootstrapElement();
-n.debug("Using bootstrap element: ", i), t.UpgradeAdapter ? (n.debug("ngUpgrade detected, bootstrapping in Angular 1/2 hybrid mode"), t.UpgradeAdapterRef = t.UpgradeAdapter.bootstrap(i, hawtioPluginLoader.getModules(), {
-strictDi: e
-}), t._injector = t.UpgradeAdapterRef.ng1Injector) : t._injector = angular.bootstrap(i, hawtioPluginLoader.getModules(), {
-strictDi: e
-}), n.debug("Bootstrapped application");
-}
-});
-}), t;
-}(), HawtioExtensionService;
-
-!function(e) {
-e.pluginName = "hawtio-extension-service", e.templatePath = "plugins/hawtio-extension-service/html", e._module = angular.module(e.pluginName, []), e._module.service("HawtioExtension", function() {
-this._registeredExtensions = {}, this.add = function(e, t) {
-this._registeredExtensions[e] || (this._registeredExtensions[e] = []), this._registeredExtensions[e].push(t);
-}, this.render = function(e, t, n) {
-var i = this._registeredExtensions[e];
-if (i) for (var r = 0; r < i.length; r++) {
-var o = i[r](n);
-if (!o) return;
-"string" == typeof o && (o = document.createTextNode(o)), t.append(o);
-}
-};
-}), e._module.directive("hawtioExtension", [ "HawtioExtension", function(e) {
-return {
-restrict: "EA",
-link: function(t, n, i) {
-i.name && e.render(i.name, n, t);
-}
-};
-} ]), hawtioPluginLoader.addModule(e.pluginName);
-}(HawtioExtensionService || (HawtioExtensionService = {})), function(e, t) {
+}), function(e, t) {
 "function" == typeof define && define.amd ? define(t) : "object" == typeof exports ? module.exports = t() : e.Sifter = t();
 }(this, function() {
 var e = function(e, t) {
@@ -74754,7 +74312,78 @@ return r += '\n<div class="hopscotch-bubble-container" style="width: ' + (null =
 r += "\n  </div>\n  ", a.showClose && (r += '<button class="hopscotch-bubble-close hopscotch-close">' + (null == (i = o.closeTooltip) ? "" : i) + "</button>"), r += '\n</div>\n<div class="hopscotch-bubble-arrow-container hopscotch-arrow">\n  <div class="hopscotch-bubble-arrow-border"></div>\n  <div class="hopscotch-bubble-arrow"></div>\n</div>\n';
 };
 }.call(h), h;
-}), function(e, t) {
+}), function(e) {
+"use strict";
+var t = {};
+t.VERSION = "0.9.14";
+var n, i = {}, r = function(e, t) {
+return function() {
+return t.apply(e, arguments);
+};
+}, o = function() {
+var e, t, n = arguments, i = n[0];
+for (t = 1; t < n.length; t++) for (e in n[t]) e in i || !n[t].hasOwnProperty(e) || (i[e] = n[t][e]);
+return i;
+}, a = function(e, t) {
+return {
+value: e,
+name: t
+};
+};
+t.DEBUG = a(1, "DEBUG"), t.INFO = a(2, "INFO"), t.WARN = a(4, "WARN"), t.ERROR = a(8, "ERROR"), t.OFF = a(99, "OFF");
+var s = function(e) {
+this.context = e, this.setLevel(e.filterLevel), this.log = this.info;
+};
+s.prototype = {
+setLevel: function(e) {
+e && "value" in e && (this.context.filterLevel = e);
+},
+enabledFor: function(e) {
+var t = this.context.filterLevel;
+return e.value >= t.value;
+},
+debug: function() {
+this.invoke(t.DEBUG, arguments);
+},
+info: function() {
+this.invoke(t.INFO, arguments);
+},
+warn: function() {
+this.invoke(t.WARN, arguments);
+},
+error: function() {
+this.invoke(t.ERROR, arguments);
+},
+invoke: function(e, t) {
+n && this.enabledFor(e) && n(t, o({
+level: e
+}, this.context));
+}
+};
+var l = new s({
+filterLevel: t.OFF
+});
+!function() {
+var e = t;
+e.enabledFor = r(l, l.enabledFor), e.debug = r(l, l.debug), e.info = r(l, l.info), e.warn = r(l, l.warn), e.error = r(l, l.error), e.log = e.info;
+}(), t.setHandler = function(e) {
+n = e;
+}, t.setLevel = function(e) {
+l.setLevel(e);
+for (var t in i) i.hasOwnProperty(t) && i[t].setLevel(e);
+}, t.get = function(e) {
+return i[e] || (i[e] = new s(o({
+name: e
+}, l.context)));
+}, t.useDefaults = function(e) {
+"undefined" != typeof console && (t.setLevel(e || t.DEBUG), t.setHandler(function(e, n) {
+var i = console.log;
+n.name && (e[0] = "[" + n.name + "] " + e[0]), n.level === t.WARN && console.warn ? i = console.warn : n.level === t.ERROR && console.error ? i = console.error : n.level === t.INFO && console.info && (i = console.info), Function.prototype.apply.call(i, console, e);
+}));
+}, "function" == typeof define && define.amd ? define(t) : "undefined" != typeof module && module.exports ? module.exports = t : (t._prevLogger = e.Logger, t.noConflict = function() {
+return e.Logger = t._prevLogger, t;
+}, e.Logger = t);
+}(this), function(e, t) {
 "function" == typeof define && define.amd ? define([], t) : "object" == typeof exports ? module.exports = t() : e.compareVersions = t();
 }(this, function() {
 function e(e) {
@@ -74787,11 +74416,171 @@ if (h[l] > d[l]) return -1;
 } else if ([ a[2], s[2] ].some(r.test.bind(r))) return r.test(a[2]) ? -1 : 1;
 return 0;
 };
-}), angular.module("openshiftCommonServices", [ "ab-base64" ]).config([ "AuthServiceProvider", function(e) {
+}), function() {
+"use strict";
+if (Logger.setLevel(Logger.INFO), window.LogBuffer = 100, "localStorage" in window) {
+"logLevel" in window.localStorage || (window.localStorage.logLevel = JSON.stringify(Logger.INFO));
+var e = Logger.DEBUG;
+try {
+e = JSON.parse(window.localStorage.logLevel);
+} catch (e) {
+console.error("Failed to parse log level setting: ", e);
+}
+if (Logger.setLevel(e), "logBuffer" in window.localStorage) {
+var t = window.localStorage.logBuffer;
+window.LogBuffer = parseInt(t, 10);
+} else window.localStorage.logBuffer = window.LogBuffer;
+}
+}();
+
+var pluginLoader = function(e) {
+"use strict";
+function t(e, t) {
+angular.isArray(t) || (t = [ t ]);
+var n = [];
+return t.forEach(function(t) {
+e.forEach(function(e) {
+t === e && n.push(e);
+});
+}), n;
+}
+var n = Logger, i = document.documentElement;
+return e.log = n, e.modules = [], e.tasks = [], e.setBootstrapElement = function(e) {
+n.debug("Setting bootstrap element to: ", e), i = e;
+}, e.getBootstrapElement = function() {
+return i;
+}, e.registerPreBootstrapTask = function(t, i) {
+angular.isFunction(t) && (n.debug("Adding legacy task"), t = {
+task: t
+}), t.name || (t.name = "unnamed-task-" + (e.tasks.length + 1)), t.depends && !angular.isArray(t.depends) && "*" !== t.depends && (t.depends = [ t.depends ]), i ? e.tasks.unshift(t) : e.tasks.push(t);
+}, e.addModule = function(t) {
+n.debug("Adding module: " + t), e.modules.push(t);
+}, e.getModules = function() {
+return e.modules;
+}, e.loaderCallback = null, e.setLoaderCallback = function(t) {
+e.loaderCallback = t;
+}, e.loadPlugins = function(i) {
+var r = e.loaderCallback, o = {}, a = function() {
+var n = [], r = [], o = {
+name: "Bootstrap",
+depends: "*",
+runs: 0,
+task: function(t) {
+function i() {
+r.forEach(function(t) {
+e.log.info("  name: " + t.name + " depends: ", t.depends);
+});
+}
+r.length > 0 && (e.log.info("tasks yet to run: "), i(), o.runs = o.runs + 1, e.log.info("Task list restarted : ", o.runs, " times"), 5 === o.runs ? (e.log.info("Orphaned tasks: "), i(), r.length = 0) : r.push(o)), e.log.debug("Executed tasks: ", n), t();
+}
+};
+e.registerPreBootstrapTask(o);
+var a = function() {
+var o = null, s = [];
+for (0 === e.tasks.length && (o = r.shift()); !o && r.length > 0; ) {
+var l = r.shift();
+"*" === l.depends ? e.tasks.length > 0 ? s.push(l) : o = l : (c = t(n, l.depends)).length === l.depends.length ? o = l : s.push(l);
+}
+if (s.length > 0 && s.forEach(function(e) {
+r.push(e);
+}), o || (o = e.tasks.shift()), o && o.depends && e.tasks.length > 0) if (e.log.debug("Task '" + o.name + "' has dependencies: ", o.depends), "*" === o.depends) {
+if (e.tasks.length > 0) return e.log.debug("Task '" + o.name + "' wants to run after all other tasks, deferring"), r.push(o), void a();
+} else {
+var c = t(n, o.depends);
+if (c.length != o.depends.length) return e.log.debug("Deferring task: '" + o.name + "'"), r.push(o), void a();
+}
+if (o) {
+e.log.debug("Executing task: '" + o.name + "'");
+var u = function() {
+u.notFired && (u.notFired = !1, n.push(o.name), setTimeout(a, 1));
+};
+u.notFired = !0, o.task(u);
+} else e.log.debug("All tasks executed"), setTimeout(i, 1);
+};
+setTimeout(a, 1);
+};
+!function() {
+var e = 0;
+$.each(o, function(t, n) {
+e += n.Scripts.length;
+});
+var t = e, i = function() {
+$.ajaxSetup({
+async: !0
+}), e -= 1, r && r.scriptLoaderCallback(r, t, e + 1), 0 === e && a();
+};
+e > 0 ? $.each(o, function(e, t) {
+t.Scripts.forEach(function(e) {
+var r = t.Context + "/" + e;
+n.debug("Fetching script: ", r), $.ajaxSetup({
+async: !1
+}), $.getScript(r).done(function(e) {
+n.debug("Loaded script: ", r);
+}).fail(function(e, t, i) {
+n.info('Failed loading script: "', i.message, '" (<a href="', r, ":", i.lineNumber, '">', r, ":", i.lineNumber, "</a>)");
+}).always(i);
+});
+}) : ($.ajaxSetup({
+async: !0
+}), a());
+}();
+}, e.debug = function() {
+n.debug("modules"), n.debug(e.modules);
+}, e.setLoaderCallback({
+scriptLoaderCallback: function(e, t, i) {
+n.debug("Total scripts: ", t, " Remaining: ", i);
+}
+}), e;
+}(pluginLoader || {}, window), BootstrapPlugin = function() {
+"use strict";
+function e() {}
+Object.defineProperty(e.prototype, "injector", {
+get: function() {
+return t._injector;
+},
+enumerable: !0,
+configurable: !0
+});
+var t = new e();
+t.pluginName = "bootstrap-plugin";
+var n = Logger.get(t.pluginName), i = angular.module(t.pluginName, []);
+return i.config([ "$locationProvider", function(e) {
+e.html5Mode(!0);
+} ]), i.run([ "documentBase", function(e) {
+n.debug("loaded");
+} ]), t.documentBase = function() {
+var e = $("head").find("base"), t = "/";
+return e && e.length > 0 ? t = e.attr("href") : n.warn("Document is missing a 'base' tag, defaulting to '/'"), t;
+}, i.factory("documentBase", function() {
+return t.documentBase();
+}), pluginLoader.addModule("ng"), pluginLoader.addModule("ngSanitize"), pluginLoader.addModule(t.pluginName), $(function() {
+if (jQuery.uaMatch = function(e) {
+e = e.toLowerCase();
+var t = /(chrome)[ \/]([\w.]+)/.exec(e) || /(webkit)[ \/]([\w.]+)/.exec(e) || /(opera)(?:.*version|)[ \/]([\w.]+)/.exec(e) || /(msie) ([\w.]+)/.exec(e) || e.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec(e) || [];
+return {
+browser: t[1] || "",
+version: t[2] || "0"
+};
+}, !jQuery.browser) {
+var e = jQuery.uaMatch(navigator.userAgent), i = {};
+e.browser && (i[e.browser] = !0, i.version = e.version), i.chrome ? i.webkit = !0 : i.webkit && (i.safari = !0), jQuery.browser = i;
+}
+pluginLoader.loadPlugins(function() {
+if (t.injector) n.debug("Application already bootstrapped"); else {
+var e = pluginLoader.getBootstrapElement();
+n.debug("Using bootstrap element: ", e), t._injector = angular.bootstrap(e, pluginLoader.getModules(), {
+strictDi: !1
+}), n.debug("Bootstrapped application");
+}
+});
+}), t;
+}();
+
+window.hawtioPluginLoader = pluginLoader, angular.module("openshiftCommonServices", [ "ab-base64" ]).config([ "AuthServiceProvider", function(e) {
 e.UserStore("MemoryUserStore");
 } ]).constant("API_CFG", _.get(window.OPENSHIFT_CONFIG, "api", {})).constant("APIS_CFG", _.get(window.OPENSHIFT_CONFIG, "apis", {})).constant("AUTH_CFG", _.get(window.OPENSHIFT_CONFIG, "auth", {})).config([ "$httpProvider", "AuthServiceProvider", "RedirectLoginServiceProvider", "AUTH_CFG", function(e, t, n, i) {
 e.interceptors.push("AuthInterceptor"), t.LoginService("RedirectLoginService"), t.LogoutService("DeleteTokenLogoutService"), t.UserStore("LocalStorageUserStore"), n.OAuthClientID(i.oauth_client_id), n.OAuthAuthorizeURI(i.oauth_authorize_uri), n.OAuthTokenURI(i.oauth_token_uri), n.OAuthRedirectURI(URI(i.oauth_redirect_base).segment("oauth").toString());
-} ]), hawtioPluginLoader.addModule("openshiftCommonServices"), hawtioPluginLoader.registerPreBootstrapTask(function(e) {
+} ]), pluginLoader.addModule("openshiftCommonServices"), pluginLoader.registerPreBootstrapTask(function(e) {
 if (_.get(window, "OPENSHIFT_CONFIG.api.k8s.resources")) e(); else {
 var t = {
 k8s: {},
@@ -74861,393 +74650,16 @@ screenXlgMin: 1600
 pattern: /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/,
 maxlength: 253,
 description: "Name must consist of lower-case letters, numbers, periods, and hyphens. It must start and end with a letter or a number."
-}).constant("IS_IOS", /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream), hawtioPluginLoader.addModule("openshiftCommonUI"), angular.module("openshiftCommonUI").run([ "$templateCache", function(e) {
+}).constant("IS_IOS", /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream), pluginLoader.addModule("openshiftCommonUI"), angular.module("openshiftCommonUI").run([ "$templateCache", function(e) {
 "use strict";
 e.put("src/components/binding/bindApplicationForm.html", '<div class="bind-form">\n  <form>\n    <div class="form-group">\n      <label>\n        <h3>Create a binding for application <strong>{{ctrl.applicationName}}</strong></h3>\n      </label>\n      <span class="help-block">\n        Bindings create a secret containing the necessary information for an application to use a service.\n      </span>\n    </div>\n  </form>\n\n  <label ng-if="!ctrl.allowNoBinding">\n    Select a service:\n  </label>\n  <form name="ctrl.formName">\n    <fieldset>\n      <div class="radio">\n        <div ng-if="ctrl.allowNoBinding" class="bind-service-selection">\n          <label>\n            <input type="radio" ng-model="ctrl.serviceToBind" ng-value="null">\n            Do not bind at this time.\n          </label>\n          <div class="bind-description">\n          <span class="help-block service-instance-name">\n            Bindings can be created later from within a project.\n          </span>\n          </div>\n        </div>\n        <div ng-repeat="serviceInstance in ctrl.bindableServiceInstances" class="bind-service-selection">\n          <label>\n            <input type="radio" ng-model="ctrl.serviceToBind" ng-value="serviceInstance">\n            {{ctrl.serviceClasses[serviceInstance.spec.clusterServiceClassRef.name].spec.externalMetadata.displayName || serviceInstance.spec.clusterServiceClassRef.name}}\n          </label>\n          <div class="bind-description">\n            <span class="pficon pficon-info"\n                  ng-if="!(serviceInstance | isServiceInstanceReady)"\n                  data-content="This service is not yet ready. If you bind to it, then the binding will be pending until the service is ready."\n                  data-toggle="popover"\n                  data-trigger="hover">\n            </span>\n            <span class="help-block service-instance-name">\n              {{serviceInstance.metadata.name}}\n            </span>\n          </div>\n        </div>\n        <h4 ng-if="!ctrl.bindableServiceInstances.length">\n          <span class="pficon pficon-info" aria-hidden="true"></span>\n          <span class="help-block service-instance-name">\n            There are no bindable services in this project\n          </span>\n        </h4>\n      </div>\n    </fieldset>\n  </form>\n</div>\n'), 
 e.put("src/components/binding/bindResults.html", '<div ng-if="!ctrl.error && !(ctrl.binding | isBindingFailed)">\n  <div ng-if="ctrl.binding && !(ctrl.binding | isBindingReady)" class="results-status">\n    <span class="fa fa-clock-o text-muted" aria-hidden="true"></span>\n    <span class="sr-only">Pending</span>\n    <div class="results-message">\n      <h3>\n        The binding is being created.\n      </h3>\n      <p class="results-message-details">This may take several minutes.</p>\n    </div>\n  </div>\n  <div ng-if="(ctrl.binding | isBindingReady)">\n    <div class="results-status">\n      <span class="pficon pficon-ok" aria-hidden="true"></span>\n      <span class="sr-only">Success</span>\n      <div class="results-message">\n        <h3>\n          <span ng-if="ctrl.bindType === \'application\'">\n            <strong>{{ctrl.serviceToBind}}</strong> has been bound to\n            <strong>{{ctrl.applicationToBind}}</strong> successfully.\n          </span>\n          <span ng-if="ctrl.bindType !== \'application\'">\n            The binding <strong>{{ctrl.binding.metadata.name}}</strong> has been created successfully.\n          </span>\n        </h3>\n        <p class="results-message-details">\n          The binding operation created the secret\n          <a ng-if="ctrl.secretHref" ng-href="{{ctrl.secretHref}}">{{ctrl.binding.spec.secretName}}</a>\n          <span ng-if="!ctrl.secretHref">{{ctrl.binding.spec.secretName}}</span>\n          that you may need to reference in your application.\n          <span ng-if="ctrl.showPodPresets">Its data will be available to your application as environment variables.</span>\n        </p>\n      </div>\n    </div>\n    <div class="alert alert-info results-info" ng-if="ctrl.bindType === \'application\'">\n      <span class="pficon pficon-info" aria-hidden="true"></span>\n      <span class="sr-only">Info</span>\n      The binding secret will only be available to new pods. You will need to redeploy your application.\n    </div>\n  </div>\n</div>\n<div ng-if="ctrl.error || (ctrl.binding | isBindingFailed)">\n  <div class="results-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <span class="sr-only">Error</span>\n    <div class="results-message">\n      <h3>\n        The binding could not be created.\n      </h3>\n    </div>\n  </div>\n  <div ng-if="ctrl.error" class="sub-title">\n    <span ng-if="ctrl.error.data.message">\n      {{ctrl.error.data.message | upperFirst}}\n    </span>\n    <span ng-if="!ctrl.error.data.message">\n      An error occurred creating the binding.\n    </span>\n  </div>\n  <div ng-if="!ctrl.error" class="sub-title">\n    {{ctrl.binding | bindingFailedMessage}}\n  </div>\n</div>\n'), 
 e.put("src/components/binding/bindServiceForm.html", '<div class="bind-form">\n  <form>\n    <div class="form-group">\n      <label>\n        <h3>Create a binding for <strong>{{ctrl.serviceClass.spec.externalMetadata.displayName || ctrl.serviceClass.spec.externalName}}</strong></h3>\n      </label>\n      <span class="help-block">Bindings create a secret containing the necessary information for an application to use this service.</span>\n    </div>\n  </form>\n\n  <form ng-if="ctrl.allowNoBinding || ctrl.showPodPresets" name="ctrl.formName" class="mar-bottom-lg">\n    <fieldset>\n      <div class="radio">\n        <label ng-if="ctrl.showPodPresets" class="bind-choice" ng-disabled="!ctrl.applications.length">\n          <input type="radio" ng-model="ctrl.bindType" value="application" ng-disabled="!ctrl.applications.length">\n          Create a secret and inject it into an application\n        </label>\n        <div ng-if="ctrl.showPodPresets" class="application-select">\n          <ui-select ng-model="ctrl.appToBind"\n                     ng-disabled="ctrl.bindType !== \'application\'"\n                     ng-required="ctrl.bindType === \'application\'">\n            <ui-select-match placeholder="{{ctrl.applications.length ? \'Select an application\' : \'There are no applications in this project\'}}">\n              <span>\n                {{$select.selected.metadata.name}}\n                <small class="text-muted">&ndash; {{$select.selected.kind | humanizeKind : true}}</small>\n              </span>\n            </ui-select-match>\n            <ui-select-choices\n              repeat="application in (ctrl.applications) | filter : { metadata: { name: $select.search } } track by (application | uid)"\n              group-by="ctrl.groupByKind">\n              <span ng-bind-html="application.metadata.name | highlight : $select.search"></span>\n            </ui-select-choices>\n          </ui-select>\n        </div>\n        <label class="bind-choice">\n          <input type="radio" ng-model="ctrl.bindType" value="secret-only">\n          Create a secret in <strong>{{ctrl.projectName}}</strong> to be used later\n        </label>\n        <div class="help-block bind-description">\n          Secrets can be referenced later from an application.\n        </div>\n        <label ng-if="ctrl.allowNoBinding" class="bind-choice">\n          <input type="radio" ng-model="ctrl.bindType" value="none">\n          Do not bind at this time\n        </label>\n        <div ng-if="ctrl.allowNoBinding" class="help-block bind-description">\n          Bindings can be created later from within a project.\n        </div>\n      </div>\n    </fieldset>\n  </form>\n</div>\n'), 
 e.put("src/components/create-project/createProject.html", '<form name="createProjectForm" novalidate>\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="name" class="required">Name</label>\n      <span ng-class="{\'has-error\': (createProjectForm.name.$error.pattern && createProjectForm.name.$touched) || nameTaken}">\n        <input class="form-control"\n            name="name"\n            id="name"\n            placeholder="my-project"\n            type="text"\n            required\n            take-focus\n            minlength="2"\n            maxlength="63"\n            pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?"\n            aria-describedby="nameHelp"\n            ng-model="name"\n            ng-model-options="{ updateOn: \'default blur\' }"\n            ng-change="nameTaken = false"\n            autocorrect="off"\n            autocapitalize="off"\n            spellcheck="false">\n      </span>\n      <div>\n        <span class="help-block">A unique name for the project.</span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.required && createProjectForm.name.$dirty">\n          Name is required.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.minlength && createProjectForm.name.$touched">\n          Name must have at least two characters.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.pattern && createProjectForm.name.$touched">\n          Project names may only contain lower-case letters, numbers, and dashes.\n          They may not start or end with a dash.\n        </span>\n      </div>\n      <div class="has-error">\n        <span class="help-block" ng-if="nameTaken">\n          This name is already in use. Please choose a different name.\n        </span>\n      </div>\n    </div>\n\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control"\n          name="displayName"\n          id="displayName"\n          placeholder="My Project"\n          type="text"\n          ng-model="displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n      <textarea class="form-control"\n          name="description"\n          id="description"\n          placeholder="A short description."\n          ng-model="description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n          class="btn btn-primary"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="createProject()"\n          ng-disabled="createProjectForm.$invalid || nameTaken || disableInputs"\n          value="">\n        Create\n      </button>\n      <button\n          class="btn btn-default"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelCreateProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
-e.put("src/components/delete-project/delete-project-button.html", '<div class="actions">\n  \x3c!-- Avoid whitespace inside the link --\x3e\n  <a href=""\n     ng-click="$event.stopPropagation(); openDeleteModal()"\n     role="button"\n     class="action-button"\n     ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n     ng-class="{ \'disabled-link\': disableDelete }"\n    ><i class="fa fa-trash-o" aria-hidden="true"\n    ></i><span class="sr-only">Delete Project {{projectName}}</span></a>\n</div>\n'), e.put("src/components/delete-project/delete-project-modal.html", '<div class="delete-resource-modal">\n  \x3c!-- Use a form so that the enter key submits when typing a project name to confirm. --\x3e\n  <form>\n    <div class="modal-header">\n      <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close" ng-click="cancel()">\n        <span class="pficon pficon-close"></span>\n      </button>\n      <h1 class="modal-title">Are you sure you want to delete the project \'<strong>{{project | displayName}}</strong>\'?</h1>\n    </div>\n    <div class="modal-body">\n      <p>\n        This will <strong>delete all resources</strong> associated with\n        the project {{project | displayName}} and <strong>cannot be\n        undone</strong>.  Make sure this is something you really want to do!\n      </p>\n      <div ng-show="typeNameToConfirm">\n        <p>Type the name of the project to confirm.</p>\n        <p>\n          <label class="sr-only" for="resource-to-delete">project to delete</label>\n          <input\n              ng-model="confirmName"\n              id="resource-to-delete"\n              type="text"\n              class="form-control input-lg"\n              autocorrect="off"\n              autocapitalize="off"\n              spellcheck="false"\n              autofocus>\n        </p>\n      </div>\n    </div>\n    <div class="modal-footer">\n      <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>\n      <button ng-disabled="typeNameToConfirm && confirmName !== project.metadata.name && confirmName !== (project | displayName : false)" class="btn btn-danger" type="submit" ng-click="delete()">Delete</button>\n    </div>\n  </form>\n</div>\n'), 
+e.put("src/components/delete-project/delete-project-button.html", '<div class="actions">\n  \x3c!-- Avoid whitespace inside the link --\x3e\n  <a href=""\n     ng-click="$event.stopPropagation(); openDeleteModal()"\n     role="button"\n     class="action-button"\n     ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n     ng-class="{ \'disabled-link\': disableDelete }"\n    ><i class="fa fa-trash-o" aria-hidden="true"\n    ></i><span class="sr-only">Delete Project {{projectName}}</span></a>\n</div>\n'), e.put("src/components/delete-project/delete-project-modal.html", '<div class="delete-resource-modal">\n  \x3c!-- Use a form so that the enter key submits when typing a project name to confirm. --\x3e\n  <form>\n    <div class="modal-header">\n      <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close" ng-click="cancel()">\n        <span class="pficon pficon-close"></span>\n      </button>\n      <h1 class="modal-title">Are you sure you want to delete the project \'<strong>{{project | displayName}}</strong>\'?</h1>\n    </div>\n    <div class="modal-body">\n      <p>\n        This will <strong>delete all resources</strong> associated with\n        the project {{project | displayName}} and <strong>cannot be\n        undone</strong>.  Make sure this is something you really want to do!\n      </p>\n      <div ng-show="typeNameToConfirm">\n        <p>Type <strong>{{project.metadata.name}}</strong> to confirm deletion.</p>\n        <p>\n          <label class="sr-only" for="resource-to-delete">project to delete</label>\n          <input\n              ng-model="confirmName"\n              id="resource-to-delete"\n              type="text"\n              class="form-control input-lg"\n              autocorrect="off"\n              autocapitalize="off"\n              spellcheck="false"\n              autofocus>\n        </p>\n      </div>\n    </div>\n    <div class="modal-footer">\n      <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>\n      <button ng-disabled="typeNameToConfirm && confirmName !== project.metadata.name && confirmName !== (project | displayName : false)" class="btn btn-danger" type="submit" ng-click="delete()">Delete</button>\n    </div>\n  </form>\n</div>\n'), 
 e.put("src/components/delete-project/delete-project.html", '<a href="javascript:void(0)"\n   ng-click="openDeleteModal()"\n   role="button"\n   ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n   ng-class="{ \'disabled-link\': disableDelete }"\n>{{label || \'Delete\'}}</a>\n'), e.put("src/components/edit-project/editProject.html", '<form name="editProjectForm">\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control"\n             name="displayName"\n             id="displayName"\n             placeholder="My Project"\n             type="text"\n             ng-model="editableFields.displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n                    <textarea class="form-control"\n                              name="description"\n                              id="description"\n                              placeholder="A short description."\n                              ng-model="editableFields.description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n              class="btn btn-primary"\n              ng-class="{\'dialog-btn\': isDialog}"\n              ng-click="update()"\n              ng-disabled="editProjectForm.$invalid || disableInputs"\n              value="">{{submitButtonLabel}}</button>\n      <button\n          class="btn btn-default"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelEditProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
 e.put("src/components/origin-modal-popup/origin-modal-popup.html", '<div class="origin-modal-popup tile-click-prevent" ng-if="$ctrl.shown" ng-style="$ctrl.positionStyle"\n     ng-class="{\'position-above\': $ctrl.showAbove, \'position-left\': $ctrl.showLeft}">\n  <h4 class="origin-modal-popup-title">\n    {{$ctrl.modalTitle}}\n  </h4>\n  <div ng-transclude></div>\n  <a href="" class="origin-modal-popup-close" ng-click="$ctrl.onClose()">\n    <span class="pficon pficon-close"></span>\n  </a>\n</div>\n'), e.put("src/components/toast-notifications/toast-notifications.html", '<div class="toast-notifications-list-pf">\n  <div\n    ng-repeat="(notificationID, notification) in notifications track by notification.trackByID"\n    ng-if="!notification.hidden || notification.isHover"\n       ng-mouseenter="setHover(notification, true)" ng-mouseleave="setHover(notification, false)">\n    <div class="toast-pf alert {{notification.type | alertStatus}}" ng-class="{\'alert-dismissable\': !hideCloseButton}">\n      <button ng-if="!hideCloseButton" type="button" class="close" ng-click="close(notification)">\n        <span class="pficon pficon-close" aria-hidden="true"></span>\n        <span class="sr-only">Close</span>\n      </button>\n      <span class="{{notification.type | alertIcon}}" aria-hidden="true"></span>\n      <span class="sr-only">{{notification.type}}</span>\n      <span class="toast-notification-message" ng-if="notification.message">{{notification.message}}</span>\n      <div ng-if="notification.details" class="toast-notification-details">\n        <truncate-long-text\n          limit="200"\n          content="notification.details"\n          use-word-boundary="true"\n          expandable="true"\n          hide-collapse="true">\n        </truncate-long-text>\n      </div>\n      <span ng-repeat="link in notification.links">\n        <a ng-if="!link.href" href="" ng-click="onClick(notification, link)" role="button">{{link.label}}</a>\n        <a ng-if="link.href" ng-href="{{link.href}}" ng-attr-target="{{link.target}}">{{link.label}}</a>\n        <span ng-if="!$last" class="toast-action-divider">|</span>\n      </span>\n    </div>\n  </div>\n</div>\n'), 
 e.put("src/components/truncate-long-text/truncateLongText.html", '\x3c!--\n  Do not remove class `truncated-content` (here or below) even though it\'s not\n  styled directly in origin-web-common.  `truncated-content` is used by\n  origin-web-console in certain contexts.\n\n  highlightKeywords and linkify are mutually exclusive options\n--\x3e\n<span ng-if="!truncated">\n  <span ng-if="!linkify || (highlightKeywords | size)" ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n  <span ng-if="linkify && !(highlightKeywords | size)" ng-bind-html="content | linkify : \'_blank\'" class="truncated-content"></span>\n</span>\n\x3c!-- To avoid truncating in middle of a link, we only optionally apply linkify to expanded content --\x3e\n<span ng-if="truncated">\n  <span ng-if="!toggles.expanded">\n    <span ng-attr-title="{{content}}" class="truncation-block">\n      <span ng-bind-html="truncatedContent | highlightKeywords : keywords" class="truncated-content"></span>&hellip;\n    </span>\n    <a ng-if="expandable" href="" ng-click="toggles.expanded = true" class="truncation-expand-link">See All</a>\n  </span>\n  <span ng-if="toggles.expanded">\n    <span ng-if="!linkify || (highlightKeywords | size)"\n          ng-bind-html="content | highlightKeywords : keywords"\n          class="truncated-content"></span>\n    <span ng-if="linkify && !(highlightKeywords | size)"\n          ng-bind-html="content | linkify : \'_blank\'"\n          class="truncated-content"></span>\n    <a href="" ng-if="!hideCollapse" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a>\n  </span>\n</span>\n');
-} ]), angular.module("openshiftCommonUI").component("bindApplicationForm", {
-controllerAs: "ctrl",
-bindings: {
-allowNoBinding: "<?",
-createBinding: "=",
-applicationName: "=",
-formName: "=",
-serviceClasses: "<",
-serviceInstances: "<",
-serviceToBind: "="
-},
-templateUrl: "src/components/binding/bindApplicationForm.html",
-controller: [ "BindingService", function(e) {
-function t(t) {
-return e.isServiceBindable(t, n.serviceClasses);
-}
-var n = this;
-n.$onChanges = function(e) {
-(e.serviceInstances || e.serviceClasses) && (n.bindableServiceInstances = _.filter(n.serviceInstances, t));
-};
-} ]
-}), angular.module("openshiftCommonUI").component("bindResults", {
-controllerAs: "ctrl",
-bindings: {
-error: "<",
-binding: "<",
-serviceToBind: "<",
-bindType: "@",
-applicationToBind: "<",
-showPodPresets: "<",
-secretHref: "<"
-},
-templateUrl: "src/components/binding/bindResults.html"
-}), angular.module("openshiftCommonUI").component("bindServiceForm", {
-controllerAs: "ctrl",
-bindings: {
-serviceClass: "<",
-showPodPresets: "<",
-applications: "<",
-formName: "=",
-allowNoBinding: "<?",
-projectName: "<",
-bindType: "=",
-appToBind: "="
-},
-templateUrl: "src/components/binding/bindServiceForm.html",
-controller: [ "$filter", function(e) {
-var t = this, n = e("humanizeKind");
-t.groupByKind = function(e) {
-return n(e.kind);
-};
-} ]
-}), angular.module("openshiftCommonUI").directive("createProject", [ "$window", function(e) {
-return {
-restrict: "E",
-scope: {
-redirectAction: "&",
-onCancel: "&?",
-isDialog: "@"
-},
-templateUrl: "src/components/create-project/createProject.html",
-controller: [ "$scope", "$location", "ProjectsService", "NotificationsService", "displayNameFilter", "Logger", function(t, n, i, r, o, a) {
-t.submitButtonLabel || (t.submitButtonLabel = "Create"), t.isDialog = "true" === t.isDialog;
-t.createProject = function() {
-if (t.disableInputs = !0, t.createProjectForm.$valid) {
-var e = t.displayName || t.name;
-i.create(t.name, t.displayName, t.description).then(function(e) {
-var i = t.redirectAction();
-i ? i(encodeURIComponent(e.metadata.name)) : n.path("project/" + encodeURIComponent(e.metadata.name) + "/create"), r.addNotification({
-type: "success",
-message: "Project '" + o(e) + "' was successfully created."
-});
-}, function(n) {
-t.disableInputs = !1;
-var i = n.data || {};
-if ("AlreadyExists" === i.reason) t.nameTaken = !0; else {
-var o = i.message || "An error occurred creating project '" + e + "'.";
-r.addNotification({
-type: "error",
-message: o
-}), a.error("Project '" + e + "' could not be created.", n);
-}
-});
-}
-}, t.cancelCreateProject = function() {
-if (t.onCancel) {
-var n = t.onCancel();
-n && n();
-} else e.history.back();
-}, t.$on("$destroy", function() {
-r.hideNotification("create-project-error");
-});
-} ]
-};
-} ]), angular.module("openshiftCommonUI").directive("deleteProject", [ "$uibModal", "$location", "$filter", "$q", "hashSizeFilter", "APIService", "NotificationsService", "ProjectsService", "Logger", function(e, t, n, i, r, o, a, s, l) {
-return {
-restrict: "E",
-scope: {
-project: "=",
-disableDelete: "=?",
-typeNameToConfirm: "=?",
-label: "@?",
-buttonOnly: "@",
-stayOnCurrentPage: "=?",
-success: "=?",
-redirectUrl: "@?"
-},
-templateUrl: function(e, t) {
-return angular.isDefined(t.buttonOnly) ? "src/components/delete-project/delete-project-button.html" : "src/components/delete-project/delete-project.html";
-},
-replace: !0,
-link: function(i, r, o) {
-var c = n("displayName"), u = function() {
-if (!i.stayOnCurrentPage) if (i.redirectUrl) t.url(i.redirectUrl); else if ("/" !== t.path()) {
-var e = URI("/");
-t.url(e);
-} else i.$emit("deleteProject");
-};
-i.openDeleteModal = function() {
-i.disableDelete || e.open({
-templateUrl: "src/components/delete-project/delete-project-modal.html",
-controller: "DeleteProjectModalController",
-scope: i
-}).result.then(function() {
-var e = "Project '" + c(i.project) + "'";
-s.delete(i.project).then(function() {
-a.addNotification({
-type: "success",
-message: e + " was marked for deletion."
-}), i.success && i.success(), u();
-}).catch(function(t) {
-a.addNotification({
-type: "error",
-message: e + " could not be deleted.",
-details: n("getErrorDetails")(t)
-}), l.error(e + " could not be deleted.", t);
-});
-});
-};
-}
-};
-} ]), angular.module("openshiftCommonUI").controller("DeleteProjectModalController", [ "$scope", "$uibModalInstance", function(e, t) {
-e.delete = function() {
-t.close("delete");
-}, e.cancel = function() {
-t.dismiss("cancel");
-};
-} ]), angular.module("openshiftCommonUI").directive("editProject", [ "$window", function(e) {
-return {
-restrict: "E",
-scope: {
-project: "=",
-submitButtonLabel: "@",
-redirectAction: "&",
-onCancel: "&",
-isDialog: "@"
-},
-templateUrl: "src/components/edit-project/editProject.html",
-controller: [ "$scope", "$filter", "$location", "Logger", "NotificationsService", "ProjectsService", "annotationNameFilter", "displayNameFilter", function(t, n, i, r, o, a, s, l) {
-t.submitButtonLabel || (t.submitButtonLabel = "Save"), t.isDialog = "true" === t.isDialog;
-var c = n("annotation"), u = n("annotationName"), d = function(e) {
-return {
-description: c(e, "description"),
-displayName: c(e, "displayName")
-};
-}, h = function(e, t) {
-var n = angular.copy(e);
-return n.metadata.annotations[u("description")] = t.description, n.metadata.annotations[u("displayName")] = t.displayName, n;
-}, f = function(e) {
-var t = [ s("description"), s("displayName") ];
-return _.each(t, function(t) {
-e.metadata.annotations[t] || delete e.metadata.annotations[t];
-}), e;
-};
-t.editableFields = d(t.project), t.update = function() {
-t.disableInputs = !0, t.editProjectForm.$valid && a.update(t.project.metadata.name, f(h(t.project, t.editableFields))).then(function(e) {
-var n = t.redirectAction();
-n && n(encodeURIComponent(t.project.metadata.name)), o.addNotification({
-type: "success",
-message: "Project '" + l(e) + "' was successfully updated."
-});
-}, function(e) {
-t.disableInputs = !1, t.editableFields = d(t.project), o.addNotification({
-type: "error",
-message: "An error occurred while updating project '" + l(t.project) + "'.",
-details: n("getErrorDetails")(e)
-}), r.error("Project '" + l(t.project) + "' could not be updated.", e);
-});
-}, t.cancelEditProject = function() {
-var n = t.onCancel();
-n ? n() : e.history.back();
-};
-} ]
-};
-} ]), angular.module("openshiftCommonUI").component("originModalPopup", {
-transclude: !0,
-bindings: {
-modalTitle: "@",
-shown: "<",
-position: "@",
-referenceElement: "<?",
-onClose: "<"
-},
-templateUrl: "src/components/origin-modal-popup/origin-modal-popup.html",
-controller: [ "$scope", "HTMLService", "$element", "$window", function(e, t, n, i) {
-function r() {
-var e = d.referenceElement || n[0].parentNode;
-if (e && t.isWindowAboveBreakpoint(t.WINDOW_SIZE_SM)) {
-var r, o, a = d.position && d.position.indexOf("top") > -1, s = d.position && d.position.indexOf("left") > -1, l = e.getBoundingClientRect(), c = i.innerHeight, u = n[0].children[0], h = _.get(u, "offsetHeight", 0), f = _.get(u, "offsetWidth", 0);
-l.top < h ? a = !1 : l.bottom + h > c && (a = !0), r = a ? l.top - h + "px" : l.bottom + "px", o = s ? l.left + "px" : l.right - f + "px", d.showAbove = a, d.showLeft = s, d.positionStyle = {
-left: o,
-top: r
-};
-} else d.positionStyle = {};
-}
-function o() {
-var e = d.referenceElement ? d.referenceElement.parentNode : n[0].parentNode;
-$(e).append('<div class="origin-modal-popup-backdrop modal-backdrop fade in tile-click-prevent"></div>');
-}
-function a() {
-$(".origin-modal-popup-backdrop").remove();
-}
-function s() {
-e.$evalAsync(r);
-}
-function l() {
-o(), u = _.debounce(s, 50, {
-maxWait: 250
-}), angular.element(i).on("resize", u);
-}
-function c() {
-a(), u && (angular.element(i).off("resize", u), u = null);
-}
-var u, d = this;
-d.$onChanges = function(e) {
-e.shown && (d.shown ? l() : c()), (e.shown || e.referenceElement) && d.shown && r();
-}, d.$onDestroy = function() {
-d.shown && c();
-};
-} ]
-}), angular.module("openshiftCommonUI").directive("oscUnique", function() {
-return {
-restrict: "A",
-scope: {
-oscUnique: "=",
-oscUniqueDisabled: "="
-},
-require: "ngModel",
-link: function(e, t, n, i) {
-var r = [], o = !0;
-e.$watchCollection("oscUnique", function(e) {
-r = _.isArray(e) ? e : _.keys(e);
-});
-var a = function() {
-i.$setValidity("oscUnique", e.oscUniqueDisabled || o);
-};
-e.$watch("oscUniqueDisabled", a), i.$parsers.unshift(function(e) {
-return o = !_.includes(r, e), a(), e;
-});
-}
-};
-}), angular.module("openshiftCommonUI").directive("toggle", [ "IS_IOS", function(e) {
-var t = function(e) {
-$("body").css("cursor", e);
-}, n = _.partial(t, "pointer"), i = _.partial(t, "auto");
-return e && ($(document).on("shown.bs.popover", n), $(document).on("shown.bs.tooltip", n), $(document).on("hide.bs.popover", i), $(document).on("hide.bs.tooltip", i)), {
-restrict: "A",
-scope: {
-dynamicContent: "@?"
-},
-link: function(e, t, n) {
-var i = {
-container: n.container || "body",
-placement: n.placement || "auto"
-};
-if (n) switch (n.toggle) {
-case "popover":
-(n.dynamicContent || "" === n.dynamicContent) && e.$watch("dynamicContent", function() {
-$(t).popover("destroy"), setTimeout(function() {
-$(t).attr("data-content", e.dynamicContent).popover(i);
-}, 200);
-}), $(t).popover(i), e.$on("$destroy", function() {
-$(t).popover("destroy");
-});
-break;
-
-case "tooltip":
-(n.dynamicContent || "" === n.dynamicContent) && e.$watch("dynamicContent", function() {
-$(t).tooltip("destroy"), setTimeout(function() {
-$(t).attr("title", e.dynamicContent).tooltip(i);
-}, 200);
-}), $(t).tooltip(i), e.$on("$destroy", function() {
-$(t).tooltip("destroy");
-});
-break;
-
-case "dropdown":
-"dropdown" === n.hover && ($(t).dropdownHover({
-delay: 200
-}), $(t).dropdown());
-}
-}
-};
-} ]), angular.module("openshiftCommonUI").directive("takeFocus", [ "$timeout", function(e) {
-return {
-restrict: "A",
-link: function(t, n) {
-e(function() {
-$(n).focus();
-}, 300);
-}
-};
-} ]), angular.module("openshiftCommonUI").directive("tileClick", function() {
-return {
-restrict: "AC",
-link: function(e, t) {
-$(t).click(function(e) {
-var n = $(e.target);
-n && (n.closest("a", t).length || n.closest("button", t).length) || n.closest(".tile-click-prevent", t).length || angular.element($("a.tile-target", t))[0].click();
-});
-}
-};
-}), angular.module("openshiftCommonUI").directive("toastNotifications", [ "NotificationsService", "$rootScope", "$timeout", function(e, t, n) {
-return {
-restrict: "E",
-scope: {},
-templateUrl: "src/components/toast-notifications/toast-notifications.html",
-link: function(i) {
-i.notifications = [];
-var r = function(e) {
-return e.hidden && !e.isHover;
-}, o = function(e) {
-e.isHover = !1, e.hidden = !0;
-}, a = function() {
-i.notifications = _.reject(i.notifications, r);
-};
-i.close = function(e) {
-o(e), _.isFunction(e.onClose) && e.onClose();
-}, i.onClick = function(e, t) {
-_.isFunction(t.onClick) && t.onClick() && o(e);
-}, i.setHover = function(e, t) {
-r(e) || (e.isHover = t);
-};
-var s = t.$on("NotificationsService.onNotificationAdded", function(t, r) {
-r.skipToast || i.$evalAsync(function() {
-i.notifications.push(r), e.isAutoDismiss(r) && n(function() {
-r.hidden = !0;
-}, e.dismissDelay), a();
-});
-});
-i.$on("$destroy", function() {
-s && (s(), s = null);
-});
-}
-};
-} ]), angular.module("openshiftCommonUI").directive("truncateLongText", [ "truncateFilter", function(e) {
-return {
-restrict: "E",
-scope: {
-content: "=",
-limit: "=",
-newlineLimit: "=",
-useWordBoundary: "=",
-expandable: "=",
-hideCollapse: "=",
-keywords: "=highlightKeywords",
-linkify: "=?"
-},
-templateUrl: "src/components/truncate-long-text/truncateLongText.html",
-link: function(t) {
-t.toggles = {
-expanded: !1
-}, t.$watch("content", function(n) {
-n ? (t.truncatedContent = e(n, t.limit, t.useWordBoundary, t.newlineLimit), t.truncated = t.truncatedContent.length !== n.length) : (t.truncatedContent = null, t.truncated = !1);
-});
-}
-};
 } ]), angular.module("openshiftCommonServices").constant("API_DEDUPLICATION", {
 groups: [ {
 group: "authorization.openshift.io"
@@ -76979,7 +76391,8 @@ return a.delete(s, r, {}, l);
 }
 };
 } ];
-}), angular.module("openshiftCommonServices").service("KeywordService", function() {
+}), angular.module("openshiftCommonServices").service("KeywordService", [ "$filter", function(e) {
+var t = e("displayName");
 return {
 filterForKeywords: function(e, t, n) {
 var i = e;
@@ -76994,6 +76407,25 @@ return !1;
 });
 }), i);
 },
+weightedSearch: function(e, n, i) {
+if (_.isEmpty(i)) return [];
+var r = [];
+_.each(e, function(e) {
+var t = 0;
+_.each(i, function(i) {
+var r = !1;
+if (_.each(n, function(n) {
+var o = _.get(e, n.path);
+o && i.test(o) && (t += n.weight, r = !0);
+}), !r) return t = 0, !1;
+}), t > 0 && r.push({
+object: e,
+score: t
+});
+});
+var o = _.orderBy(r, [ "score", t ], [ "desc", "asc" ]);
+return _.map(o, "object");
+},
 generateKeywords: function(e) {
 if (!e) return [];
 var t = _.uniq(e.match(/\S+/g));
@@ -77004,7 +76436,7 @@ return new RegExp(_.escapeRegExp(e), "i");
 });
 }
 };
-}), angular.module("openshiftCommonServices").provider("Logger", function() {
+} ]), angular.module("openshiftCommonServices").provider("Logger", function() {
 this.$get = function() {
 var e = Logger.get("OpenShift"), t = {
 get: function(e) {
@@ -77607,7 +77039,384 @@ this.dismissDelay = e;
 }, this.setAutoDismissTypes = function(e) {
 this.autoDismissTypes = e;
 };
-}), function(e, t) {
+}), angular.module("openshiftCommonUI").component("bindApplicationForm", {
+controllerAs: "ctrl",
+bindings: {
+allowNoBinding: "<?",
+createBinding: "=",
+applicationName: "=",
+formName: "=",
+serviceClasses: "<",
+serviceInstances: "<",
+serviceToBind: "="
+},
+templateUrl: "src/components/binding/bindApplicationForm.html",
+controller: [ "BindingService", function(e) {
+function t(t) {
+return e.isServiceBindable(t, n.serviceClasses);
+}
+var n = this;
+n.$onChanges = function(e) {
+(e.serviceInstances || e.serviceClasses) && (n.bindableServiceInstances = _.filter(n.serviceInstances, t));
+};
+} ]
+}), angular.module("openshiftCommonUI").component("bindResults", {
+controllerAs: "ctrl",
+bindings: {
+error: "<",
+binding: "<",
+serviceToBind: "<",
+bindType: "@",
+applicationToBind: "<",
+showPodPresets: "<",
+secretHref: "<"
+},
+templateUrl: "src/components/binding/bindResults.html"
+}), angular.module("openshiftCommonUI").component("bindServiceForm", {
+controllerAs: "ctrl",
+bindings: {
+serviceClass: "<",
+showPodPresets: "<",
+applications: "<",
+formName: "=",
+allowNoBinding: "<?",
+projectName: "<",
+bindType: "=",
+appToBind: "="
+},
+templateUrl: "src/components/binding/bindServiceForm.html",
+controller: [ "$filter", function(e) {
+var t = this, n = e("humanizeKind");
+t.groupByKind = function(e) {
+return n(e.kind);
+};
+} ]
+}), angular.module("openshiftCommonUI").directive("createProject", [ "$window", function(e) {
+return {
+restrict: "E",
+scope: {
+redirectAction: "&",
+onCancel: "&?",
+isDialog: "@"
+},
+templateUrl: "src/components/create-project/createProject.html",
+controller: [ "$scope", "$location", "ProjectsService", "NotificationsService", "displayNameFilter", "Logger", function(t, n, i, r, o, a) {
+t.submitButtonLabel || (t.submitButtonLabel = "Create"), t.isDialog = "true" === t.isDialog;
+t.createProject = function() {
+if (t.disableInputs = !0, t.createProjectForm.$valid) {
+var e = t.displayName || t.name;
+i.create(t.name, t.displayName, t.description).then(function(e) {
+var i = t.redirectAction();
+i ? i(encodeURIComponent(e.metadata.name)) : n.path("project/" + encodeURIComponent(e.metadata.name) + "/create"), r.addNotification({
+type: "success",
+message: "Project '" + o(e) + "' was successfully created."
+});
+}, function(n) {
+t.disableInputs = !1;
+var i = n.data || {};
+if ("AlreadyExists" === i.reason) t.nameTaken = !0; else {
+var o = i.message || "An error occurred creating project '" + e + "'.";
+r.addNotification({
+type: "error",
+message: o
+}), a.error("Project '" + e + "' could not be created.", n);
+}
+});
+}
+}, t.cancelCreateProject = function() {
+if (t.onCancel) {
+var n = t.onCancel();
+n && n();
+} else e.history.back();
+}, t.$on("$destroy", function() {
+r.hideNotification("create-project-error");
+});
+} ]
+};
+} ]), angular.module("openshiftCommonUI").directive("deleteProject", [ "$uibModal", "$location", "$filter", "$q", "hashSizeFilter", "APIService", "NotificationsService", "ProjectsService", "Logger", function(e, t, n, i, r, o, a, s, l) {
+return {
+restrict: "E",
+scope: {
+project: "=",
+disableDelete: "=?",
+typeNameToConfirm: "=?",
+label: "@?",
+buttonOnly: "@",
+stayOnCurrentPage: "=?",
+success: "=?",
+redirectUrl: "@?"
+},
+templateUrl: function(e, t) {
+return angular.isDefined(t.buttonOnly) ? "src/components/delete-project/delete-project-button.html" : "src/components/delete-project/delete-project.html";
+},
+replace: !0,
+link: function(i, r, o) {
+var c = n("displayName"), u = function() {
+if (!i.stayOnCurrentPage) if (i.redirectUrl) t.url(i.redirectUrl); else if ("/" !== t.path()) {
+var e = URI("/");
+t.url(e);
+} else i.$emit("deleteProject");
+};
+i.openDeleteModal = function() {
+i.disableDelete || e.open({
+templateUrl: "src/components/delete-project/delete-project-modal.html",
+controller: "DeleteProjectModalController",
+scope: i
+}).result.then(function() {
+var e = "Project '" + c(i.project) + "'";
+s.delete(i.project).then(function() {
+a.addNotification({
+type: "success",
+message: e + " was marked for deletion."
+}), i.success && i.success(), u();
+}).catch(function(t) {
+a.addNotification({
+type: "error",
+message: e + " could not be deleted.",
+details: n("getErrorDetails")(t)
+}), l.error(e + " could not be deleted.", t);
+});
+});
+};
+}
+};
+} ]), angular.module("openshiftCommonUI").controller("DeleteProjectModalController", [ "$scope", "$uibModalInstance", function(e, t) {
+e.delete = function() {
+t.close("delete");
+}, e.cancel = function() {
+t.dismiss("cancel");
+};
+} ]), angular.module("openshiftCommonUI").directive("editProject", [ "$window", function(e) {
+return {
+restrict: "E",
+scope: {
+project: "=",
+submitButtonLabel: "@",
+redirectAction: "&",
+onCancel: "&",
+isDialog: "@"
+},
+templateUrl: "src/components/edit-project/editProject.html",
+controller: [ "$scope", "$filter", "$location", "Logger", "NotificationsService", "ProjectsService", "annotationNameFilter", "displayNameFilter", function(t, n, i, r, o, a, s, l) {
+t.submitButtonLabel || (t.submitButtonLabel = "Save"), t.isDialog = "true" === t.isDialog;
+var c = n("annotation"), u = n("annotationName"), d = function(e) {
+return {
+description: c(e, "description"),
+displayName: c(e, "displayName")
+};
+}, h = function(e, t) {
+var n = angular.copy(e);
+return n.metadata.annotations[u("description")] = t.description, n.metadata.annotations[u("displayName")] = t.displayName, n;
+}, f = function(e) {
+var t = [ s("description"), s("displayName") ];
+return _.each(t, function(t) {
+e.metadata.annotations[t] || delete e.metadata.annotations[t];
+}), e;
+};
+t.editableFields = d(t.project), t.update = function() {
+t.disableInputs = !0, t.editProjectForm.$valid && a.update(t.project.metadata.name, f(h(t.project, t.editableFields))).then(function(e) {
+var n = t.redirectAction();
+n && n(encodeURIComponent(t.project.metadata.name)), o.addNotification({
+type: "success",
+message: "Project '" + l(e) + "' was successfully updated."
+});
+}, function(e) {
+t.disableInputs = !1, t.editableFields = d(t.project), o.addNotification({
+type: "error",
+message: "An error occurred while updating project '" + l(t.project) + "'.",
+details: n("getErrorDetails")(e)
+}), r.error("Project '" + l(t.project) + "' could not be updated.", e);
+});
+}, t.cancelEditProject = function() {
+var n = t.onCancel();
+n ? n() : e.history.back();
+};
+} ]
+};
+} ]), angular.module("openshiftCommonUI").component("originModalPopup", {
+transclude: !0,
+bindings: {
+modalTitle: "@",
+shown: "<",
+position: "@",
+referenceElement: "<?",
+onClose: "<"
+},
+templateUrl: "src/components/origin-modal-popup/origin-modal-popup.html",
+controller: [ "$scope", "HTMLService", "$element", "$window", function(e, t, n, i) {
+function r() {
+var e = d.referenceElement || n[0].parentNode;
+if (e && t.isWindowAboveBreakpoint(t.WINDOW_SIZE_SM)) {
+var r, o, a = d.position && d.position.indexOf("top") > -1, s = d.position && d.position.indexOf("left") > -1, l = e.getBoundingClientRect(), c = i.innerHeight, u = n[0].children[0], h = _.get(u, "offsetHeight", 0), f = _.get(u, "offsetWidth", 0);
+l.top < h ? a = !1 : l.bottom + h > c && (a = !0), r = a ? l.top - h + "px" : l.bottom + "px", o = s ? l.left + "px" : l.right - f + "px", d.showAbove = a, d.showLeft = s, d.positionStyle = {
+left: o,
+top: r
+};
+} else d.positionStyle = {};
+}
+function o() {
+var e = d.referenceElement ? d.referenceElement.parentNode : n[0].parentNode;
+$(e).append('<div class="origin-modal-popup-backdrop modal-backdrop fade in tile-click-prevent"></div>');
+}
+function a() {
+$(".origin-modal-popup-backdrop").remove();
+}
+function s() {
+e.$evalAsync(r);
+}
+function l() {
+o(), u = _.debounce(s, 50, {
+maxWait: 250
+}), angular.element(i).on("resize", u);
+}
+function c() {
+a(), u && (angular.element(i).off("resize", u), u = null);
+}
+var u, d = this;
+d.$onChanges = function(e) {
+e.shown && (d.shown ? l() : c()), (e.shown || e.referenceElement) && d.shown && r();
+}, d.$onDestroy = function() {
+d.shown && c();
+};
+} ]
+}), angular.module("openshiftCommonUI").directive("oscUnique", function() {
+return {
+restrict: "A",
+scope: {
+oscUnique: "=",
+oscUniqueDisabled: "="
+},
+require: "ngModel",
+link: function(e, t, n, i) {
+var r = [], o = !0;
+e.$watchCollection("oscUnique", function(e) {
+r = _.isArray(e) ? e : _.keys(e);
+});
+var a = function() {
+i.$setValidity("oscUnique", e.oscUniqueDisabled || o);
+};
+e.$watch("oscUniqueDisabled", a), i.$parsers.unshift(function(e) {
+return o = !_.includes(r, e), a(), e;
+});
+}
+};
+}), angular.module("openshiftCommonUI").directive("toggle", [ "IS_IOS", function(e) {
+var t = function(e) {
+$("body").css("cursor", e);
+}, n = _.partial(t, "pointer"), i = _.partial(t, "auto");
+return e && ($(document).on("shown.bs.popover", n), $(document).on("shown.bs.tooltip", n), $(document).on("hide.bs.popover", i), $(document).on("hide.bs.tooltip", i)), {
+restrict: "A",
+scope: {
+dynamicContent: "@?"
+},
+link: function(e, t, n) {
+var i = {
+container: n.container || "body",
+placement: n.placement || "auto"
+};
+if (n) switch (n.toggle) {
+case "popover":
+(n.dynamicContent || "" === n.dynamicContent) && e.$watch("dynamicContent", function() {
+$(t).popover("destroy"), setTimeout(function() {
+$(t).attr("data-content", e.dynamicContent).popover(i);
+}, 200);
+}), $(t).popover(i), e.$on("$destroy", function() {
+$(t).popover("destroy");
+});
+break;
+
+case "tooltip":
+(n.dynamicContent || "" === n.dynamicContent) && e.$watch("dynamicContent", function() {
+$(t).tooltip("destroy"), setTimeout(function() {
+$(t).attr("title", e.dynamicContent).tooltip(i);
+}, 200);
+}), $(t).tooltip(i), e.$on("$destroy", function() {
+$(t).tooltip("destroy");
+});
+break;
+
+case "dropdown":
+"dropdown" === n.hover && ($(t).dropdownHover({
+delay: 200
+}), $(t).dropdown());
+}
+}
+};
+} ]), angular.module("openshiftCommonUI").directive("takeFocus", [ "$timeout", function(e) {
+return {
+restrict: "A",
+link: function(t, n) {
+e(function() {
+$(n).focus();
+}, 300);
+}
+};
+} ]), angular.module("openshiftCommonUI").directive("tileClick", function() {
+return {
+restrict: "AC",
+link: function(e, t) {
+$(t).click(function(e) {
+var n = $(e.target);
+n && (n.closest("a", t).length || n.closest("button", t).length) || n.closest(".tile-click-prevent", t).length || angular.element($("a.tile-target", t))[0].click();
+});
+}
+};
+}), angular.module("openshiftCommonUI").directive("toastNotifications", [ "NotificationsService", "$rootScope", "$timeout", function(e, t, n) {
+return {
+restrict: "E",
+scope: {},
+templateUrl: "src/components/toast-notifications/toast-notifications.html",
+link: function(i) {
+i.notifications = [];
+var r = function(e) {
+return e.hidden && !e.isHover;
+}, o = function(e) {
+e.isHover = !1, e.hidden = !0;
+}, a = function() {
+i.notifications = _.reject(i.notifications, r);
+};
+i.close = function(e) {
+o(e), _.isFunction(e.onClose) && e.onClose();
+}, i.onClick = function(e, t) {
+_.isFunction(t.onClick) && t.onClick() && o(e);
+}, i.setHover = function(e, t) {
+r(e) || (e.isHover = t);
+};
+var s = t.$on("NotificationsService.onNotificationAdded", function(t, r) {
+r.skipToast || i.$evalAsync(function() {
+i.notifications.push(r), e.isAutoDismiss(r) && n(function() {
+r.hidden = !0;
+}, e.dismissDelay), a();
+});
+});
+i.$on("$destroy", function() {
+s && (s(), s = null);
+});
+}
+};
+} ]), angular.module("openshiftCommonUI").directive("truncateLongText", [ "truncateFilter", function(e) {
+return {
+restrict: "E",
+scope: {
+content: "=",
+limit: "=",
+newlineLimit: "=",
+useWordBoundary: "=",
+expandable: "=",
+hideCollapse: "=",
+keywords: "=highlightKeywords",
+linkify: "=?"
+},
+templateUrl: "src/components/truncate-long-text/truncateLongText.html",
+link: function(t) {
+t.toggles = {
+expanded: !1
+}, t.$watch("content", function(n) {
+n ? (t.truncatedContent = e(n, t.limit, t.useWordBoundary, t.newlineLimit), t.truncated = t.truncatedContent.length !== n.length) : (t.truncatedContent = null, t.truncated = !1);
+});
+}
+};
+} ]), function(e, t) {
 "function" == typeof define && define.amd ? define([], t) : "undefined" != typeof module && module.exports ? module.exports = t() : e.tv4 = t();
 }(this, function() {
 function e(t, n) {
@@ -79899,7 +79708,7 @@ label: "Middleware",
 subCategories: [ {
 id: "integration",
 label: "Integration",
-tags: [ "amq", "fuse", "jboss-fuse", "sso" ]
+tags: [ "amq", "fuse", "jboss-fuse", "sso", "3scale" ]
 }, {
 id: "process-automation",
 label: "Process Automation",
@@ -79926,6 +79735,14 @@ id: "pipelines",
 label: "Pipelines",
 tags: [ "pipelines" ],
 icon: "fa fa-clone"
+} ]
+}, {
+id: "virtualization",
+label: "Virtualization",
+subCategories: [ {
+id: "vms",
+label: "Virtual Machines",
+tags: [ "virtualmachine" ]
 } ]
 } ];
 i.set(window, "OPENSHIFT_CONSTANTS.SERVICE_CATALOG_CATEGORIES", a), i.set(window, "OPENSHIFT_CONSTANTS.SAAS_OFFERINGS", o);
@@ -80006,7 +79823,16 @@ placement: "left"
 }
 }
 };
-i.set(window, "OPENSHIFT_CONSTANTS.GUIDED_TOURS", c), i.set(window, "OPENSHIFT_CONSTANTS.PUBLISHER_SYNONYMS", {});
+i.set(window, "OPENSHIFT_CONSTANTS.GUIDED_TOURS", c), i.set(window, "OPENSHIFT_CONSTANTS.PUBLISHER_SYNONYMS", {}), i.set(window, "OPENSHIFT_CONSTANTS.CATALOG_SEARCH_FIELDS", [ {
+path: "name",
+weight: 10
+}, {
+path: "tags",
+weight: 5
+}, {
+path: "description",
+weight: 3
+} ]);
 }).call(t, n(2));
 }, function(e, t, n) {
 "use strict";
@@ -80741,19 +80567,19 @@ select: !0
 "use strict";
 t.__esModule = !0;
 var i = n(0), r = n(2), o = function() {
-function e(e, t, n, i, r, o) {
-var a = this;
+function e(e, t, n, i, r, o, a) {
+var s = this;
 this.ctrl = this, this.loaded = !1, this.maxResultsToShow = 5, this.onKeyPress = function(e) {
-13 === e.which && a.ctrl.searchText && (a.$rootScope.$emit("filter-catalog-items", {
-searchText: a.ctrl.searchText
-}), a.ctrl.searchText = "");
-}, this.$rootScope = e, this.$scope = t, this.$timeout = n, this.$q = i, this.Catalog = r, this.KeywordService = o;
+13 === e.which && s.ctrl.searchText && (s.$rootScope.$emit("filter-catalog-items", {
+searchText: s.ctrl.searchText
+}), s.ctrl.searchText = "");
+}, this.$rootScope = e, this.$scope = t, this.$timeout = n, this.$q = i, this.Catalog = r, this.Constants = o, this.KeywordService = a;
 }
 return e.prototype.$onInit = function() {
 this.ctrl.searchText = "";
 }, e.prototype.$onChanges = function(e) {
 if (e.catalogItems && this.ctrl.catalogItems && (this.loaded = !0, this.searchDeferred)) {
-var t = this.filterForKeywords(this.ctrl.searchText);
+var t = this.weightedSearch(this.ctrl.searchText);
 this.searchDeferred.resolve(t), this.searchDeferred = null;
 }
 }, e.prototype.itemSelected = function(e) {
@@ -80761,7 +80587,7 @@ this.searchDeferred.resolve(t), this.searchDeferred = null;
 searchText: this.ctrl.searchText
 }) : "viewNone" !== e.id && this.$scope.$emit("open-overlay-panel", e), this.ctrl.searchText = "", this.ctrl.mobileSearchInputShown = !1, i.isFunction(this.ctrl.searchToggleCallback) && this.ctrl.searchToggleCallback(this.ctrl.mobileSearchInputShown);
 }, e.prototype.search = function(e) {
-return e ? this.loaded ? this.filterForKeywords(e) : (this.searchDeferred = this.$q.defer(), this.searchDeferred.promise) : [];
+return e ? this.loaded ? this.weightedSearch(e) : (this.searchDeferred = this.$q.defer(), this.searchDeferred.promise) : [];
 }, e.prototype.toggleMobileShowSearchInput = function() {
 this.ctrl.mobileSearchInputShown = !this.ctrl.mobileSearchInputShown, this.ctrl.searchText = "", i.isFunction(this.ctrl.searchToggleCallback) && this.ctrl.searchToggleCallback(this.ctrl.mobileSearchInputShown), this.ctrl.mobileSearchInputShown && this.setSearchInputFocus(0);
 }, e.prototype.setSearchInputFocus = function(e) {
@@ -80769,8 +80595,8 @@ var t = this, n = r(".catalog-search-input");
 n.is(":visible") ? n.focus() : e < 5 && this.$timeout(function() {
 t.setSearchInputFocus(e + 1);
 }, 100);
-}, e.prototype.filterForKeywords = function(e) {
-var t = this.KeywordService.generateKeywords(e), n = this.KeywordService.filterForKeywords(this.ctrl.catalogItems, [ "name", "tags" ], t), r = i.size(n), o = i.take(n, this.maxResultsToShow);
+}, e.prototype.weightedSearch = function(e) {
+var t = this.KeywordService.generateKeywords(e), n = this.KeywordService.weightedSearch(this.ctrl.catalogItems, this.Constants.CATALOG_SEARCH_FIELDS, t), r = i.size(n), o = i.take(n, this.maxResultsToShow);
 return 0 === r ? o.push({
 id: "viewNone",
 text: "No results found for Keyword: " + e,
@@ -80786,7 +80612,7 @@ name: e
 }), o;
 }, e;
 }();
-o.$inject = [ "$rootScope", "$scope", "$timeout", "$q", "Catalog", "KeywordService" ], t.CatalogSearchController = o;
+o.$inject = [ "$rootScope", "$scope", "$timeout", "$q", "Catalog", "Constants", "KeywordService" ], t.CatalogSearchController = o;
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;
@@ -81520,7 +81346,7 @@ e.setKeywordFilter(n.searchText);
 title: "No results match.",
 info: "The active filters are hiding all catalog items.",
 helpLink: {
-urlLabel: "Clear Filters",
+urlLabel: "Clear All Filters",
 urlAction: this.clearAppliedFilters
 }
 }, this.ctrl.noItemsConfig = {
@@ -81568,7 +81394,7 @@ id: t
 this.ctrl.keywordFilterValue = e, this.ctrl.currentFilter = this.ctrl.currentSubFilter = "all", this.ctrl.mobileView = "subcategories";
 }, e.prototype.filterForKeywords = function(e, t) {
 var n = this.keywordService.generateKeywords(e);
-return this.keywordService.filterForKeywords(t, [ "name", "tags" ], n);
+return this.keywordService.weightedSearch(t, this.constants.CATALOG_SEARCH_FIELDS, n);
 }, e.prototype.filterForVendors = function(e, t) {
 return i.filter(t, function(t) {
 return i.includes(e, t.vendor);

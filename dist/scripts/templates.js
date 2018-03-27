@@ -6396,7 +6396,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<select-project ng-if=\"!project\" selected-project=\"input.selectedProject\" name-taken=\"projectNameTaken\"></select-project>\n" +
     "<span ng-show=\"!noProjectsCantCreate\">\n" +
     "<p>\n" +
-    "Deploy an existing image from an image stream tag or docker pull spec.\n" +
+    "Deploy an existing image from an image stream tag or image registry.\n" +
     "</p>\n" +
     "<ng-form name=\"forms.imageSelection\">\n" +
     "<fieldset ng-disabled=\"loading\">\n" +
@@ -6438,6 +6438,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "</span>\n" +
     "</div>\n" +
+    "<div class=\"help-block\">To deploy an image from a private repository, you must\n" +
+    "<a href=\"\" ng-click=\"openCreateWebhookSecretModal()\">create an image pull secret</a>\n" +
+    "with your image registry credentials.<a href=\"https://docs.openshift.org/latest/dev_guide/managing_images.html#using-image-pull-secrets\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a></div>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</fieldset>\n" +
@@ -6532,6 +6535,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Could not load image metadata.\n" +
     "</h2>\n" +
     "<p>{{import.error | upperFirst}}</p>\n" +
+    "<p>The image may not exist or it may be in a secure registry. Check that you have entered the image name correctly or <a href=\"\" ng-click=\"openCreateWebhookSecretModal()\">create an image pull secret</a> with your image registry credentials and try again.</p>\n" +
     "</div>\n" +
     "<div ng-if=\"!loading && import && !import.error && !import.image\" class=\"empty-state-message text-center\">\n" +
     "<h2>\n" +

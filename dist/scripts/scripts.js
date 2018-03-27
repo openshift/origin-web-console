@@ -1485,7 +1485,7 @@ tags: [ "mobile-service" ],
 icon: "fa fa-database"
 } ]
 }), Logger.info("AEROGEAR_MOBILE_ENABLED: " + e.AEROGEAR_MOBILE_ENABLED);
-} ]), hawtioPluginLoader.addModule("openshiftConsole"), angular.module("openshiftConsole").factory("BrowserStore", [ function() {
+} ]), pluginLoader.addModule("openshiftConsole"), angular.module("openshiftConsole").factory("BrowserStore", [ function() {
 var e = {
 local: window.localStorage,
 session: window.sessionStorage
@@ -9439,8 +9439,8 @@ t.data.splice(e, 1), t.form.$setDirty();
 }, t.getKeys = function() {
 return _.map(t.data, "key");
 };
-var o = t.$watch("map.data", function(e) {
-e && (t.data = _.map(e, function(e, t) {
+var o = t.$watch("map", function(e) {
+e && (t.data = _.map(e.data, function(e, t) {
 return {
 key: t,
 value: e
@@ -14599,6 +14599,13 @@ message: "An error occurred creating project.",
 details: y(e)
 });
 });
+}, n.openCreateWebhookSecretModal = function() {
+var e = n.$new();
+e.type = "image", e.namespace = n.input.selectedProject.metadata.name, r.open({
+templateUrl: "views/modals/create-secret.html",
+controller: "CreateSecretModalController",
+scope: e
+});
 }, n.$on("newAppFromDeployImage", n.create), n.$on("$destroy", S);
 }
 };
@@ -15304,11 +15311,13 @@ var l = t.getPreferredVersion("secrets");
 return e(l, "list") ? (i = r.getWebhookSecretValue(i, c), n.url({
 resource: "buildconfigs/webhooks/" + encodeURIComponent(i) + "/" + encodeURIComponent(o.toLowerCase()),
 name: a,
-namespace: s
+namespace: s,
+group: "build.openshift.io"
 })) : n.url({
 resource: "buildconfigs/webhooks/",
 name: a,
-namespace: s
+namespace: s,
+group: "build.openshift.io"
 }) + "<secret>/" + o.toLowerCase();
 };
 } ]).filter("isWebRoute", [ "routeHostFilter", function(e) {

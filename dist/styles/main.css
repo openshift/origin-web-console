@@ -5242,9 +5242,8 @@ h2+.list-view-pf{margin-top:20px}
 .navbar-toggle:focus{color:#fff;outline:dotted thin!important;outline:-webkit-focus-ring-color auto 5px!important;outline-offset:-2px!important}
 .wizard-pf-main .ace_editor.editor{height:265px}
 .landing-page .wizard-pf-main .ace_editor.editor{height:175px}
-.wizard-pf-main .deploy-image .empty-state-message{margin-bottom:0;margin-top:35px}
-@media (min-width:768px){.wizard-pf-main .deploy-image .empty-state-message{margin-top:90px}
-.landing-page .wizard-pf-main .deploy-image .empty-state-message{margin-top:40px}
+.wizard-pf-main .deploy-image .empty-state-message{display:flex;flex-direction:column;justify-content:center;margin-bottom:0;margin-top:0;min-height:130px}
+@media (min-width:768px){.landing-page .wizard-pf-main .deploy-image .empty-state-message{margin-top:40px}
 }
 .build-count .builds,.build-count .pipelines{display:block}
 .build-count .icon-count,.builds-label{display:inline-block}
@@ -5267,6 +5266,7 @@ h2+.list-view-pf{margin-top:20px}
 }
 @media (min-width:992px){.overview .app-heading{align-items:flex-end;flex-wrap:wrap}
 }
+.overview .app-heading h2{margin-bottom:0}
 .overview .app-heading .overview-route{font-size:14px;line-height:normal;margin-bottom:2px;margin-top:0}
 .overview .app-heading .overview-route+.overview-route{margin-top:5px}
 .overview .build-pipeline{border-color:#d6d6d6}
@@ -5292,13 +5292,13 @@ h2+.list-view-pf{margin-top:20px}
 .overview .expanded-section{margin-top:20px}
 .overview .expanded-section.no-margin{margin:0}
 .overview .expanded-section .row>[class^=col-]{margin-bottom:10px}
-.overview .filter-status,.overview h2{margin-bottom:5px}
 .overview .expanded-section h3{line-height:1.4;margin-bottom:5px;margin-top:0;width:100%;word-wrap:break-word;word-break:break-word;overflow-wrap:break-word;min-width:0}
+.overview .filter-status{margin-bottom:5px}
 .overview h1,.overview h2{line-height:normal;min-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .overview h2{margin-top:0}
-@media (min-width:992px){.overview h2{margin-bottom:0}
-}
 .overview h2>.component-label{font-weight:500;padding-bottom:0}
+@media (max-width:991px){.overview h2+.overview-routes{margin-top:3px}
+}
 .overview .list-pf{border-bottom-color:#dcdcdc;margin-bottom:50px}
 .overview .list-pf-actions{justify-content:flex-end}
 @media (min-width:768px) and (max-width:991px){.overview .list-pf-actions{margin-left:25px}

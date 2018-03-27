@@ -188,7 +188,8 @@ angular.module('openshiftConsole')
           // subresource segments cannot contain '/'
           resource: "buildconfigs/webhooks/" + encodeURIComponent(secret) + "/" + encodeURIComponent(type.toLowerCase()),
           name: buildConfig,
-          namespace: project
+          namespace: project,
+          group: 'build.openshift.io'
         });
       } else {
         // In case user wont have permissions to list Secrets, an incomplaete URL will be build, similar to the one from CLI:
@@ -198,7 +199,8 @@ angular.module('openshiftConsole')
         var webhookURL = DataService.url({
           resource: "buildconfigs/webhooks/",
           name: buildConfig,
-          namespace: project
+          namespace: project,
+          group: 'build.openshift.io'
         });
         return webhookURL + "<secret>/" + type.toLowerCase();
       }
