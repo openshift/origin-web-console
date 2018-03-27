@@ -4398,7 +4398,7 @@ body.overlay-open,body.overlay-open .landing,body.overlay-open .landing-side-bar
 .catalogs-overlay-panel-close.pficon-close{color:#72767b;cursor:pointer}
 .catalogs-overlay-panel-close .pficon-close:hover.disabled,.catalogs-overlay-panel-close.pficon-close.disabled{color:#bbb;cursor:not-allowed}
 .catalogs-overlay-panel-close.pficon-close:hover{color:#393f44}
-.catalogs-overlay-panel-wrapper{bottom:0;left:0;overflow-x:hidden;overflow-y:auto;position:fixed;right:0;top:0;z-index:1050}
+.catalogs-overlay-panel-wrapper{bottom:0;left:0;overflow-x:hidden;overflow-y:auto;position:fixed;right:0;top:0;z-index:1040}
 .catalogs-overlay-panel-wrapper.ng-enter{animation:modalSlideDown .3s ease-out forwards}
 .catalogs-overlay-panel-wrapper.ng-leave{animation:modalSlideUp .2s ease-out forwards}
 @media (min-width:768px){.catalogs-overlay-panel .wizard-pf-main-inner-shadow-covers{padding-left:40px;padding-right:40px}
