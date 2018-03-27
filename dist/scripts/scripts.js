@@ -9967,7 +9967,7 @@ var A = e("displayName");
 p.$on("importFileFromYAMLOrJSON", p.create), p.$on("$destroy", T);
 } ]
 };
-} ]), angular.module("openshiftConsole").directive("oscFileInput", [ "$filter", "Logger", function(e, t) {
+} ]), angular.module("openshiftConsole").directive("oscFileInput", [ "$filter", "Logger", "NotificationsService", function(e, t, n) {
 return {
 restrict: "E",
 scope: {
@@ -9984,39 +9984,45 @@ readAsBinaryString: "<?",
 isBinaryFile: "=?"
 },
 templateUrl: "views/directives/osc-file-input.html",
-link: function(n, r) {
-function a(e) {
-var r = new FileReader();
-r.onloadend = function() {
-n.$apply(function() {
-n.fileName = e.name, n.model = r.result, n.isBinaryFile = i(r.result);
-var t = n.onFileAdded;
-_.isFunction(t) && t(r.result), r.error || (n.uploadError = !1);
+link: function(r, a) {
+function o(a) {
+if (a.size > 5242880) n.addNotification({
+type: "error",
+message: "The file is too large.",
+details: "The file " + a.name + " is " + e("humanizeSize")(a.size) + ". The web console has a 5 MiB file limit."
+}); else {
+var o = new FileReader();
+o.onloadend = function() {
+r.$apply(function() {
+r.fileName = a.name, r.model = o.result, r.isBinaryFile = s(o.result);
+var e = r.onFileAdded;
+_.isFunction(e) && e(o.result), o.error || (r.uploadError = !1);
 });
-}, r.onerror = function(e) {
-n.uploadError = !0, t.error("Could not read file", e);
-}, n.readAsBinaryString ? r.readAsBinaryString(e) : r.readAsText(e);
+}, o.onerror = function(e) {
+r.uploadError = !0, t.error("Could not read file", e);
+}, r.readAsBinaryString ? o.readAsBinaryString(a) : o.readAsText(a);
 }
-function o() {
-r.find(".drag-and-drop-zone").removeClass("show-drag-and-drop-zone highlight-drag-and-drop-zone");
 }
-var i = e("isNonPrintable"), s = _.uniqueId("osc-file-input-");
-n.dropMessageID = s + "-drop-message", n.helpID = s + "-help", n.supportsFileUpload = window.File && window.FileReader && window.FileList && window.Blob, n.uploadError = !1;
-var c = "#" + n.dropMessageID, l = !1, u = !1, d = r.find("input[type=file]");
+function i() {
+a.find(".drag-and-drop-zone").removeClass("show-drag-and-drop-zone highlight-drag-and-drop-zone");
+}
+var s = e("isNonPrintable"), c = _.uniqueId("osc-file-input-");
+r.dropMessageID = c + "-drop-message", r.helpID = c + "-help", r.supportsFileUpload = window.File && window.FileReader && window.FileList && window.Blob, r.uploadError = !1;
+var l = "#" + r.dropMessageID, u = !1, d = !1, m = a.find("input[type=file]");
 setTimeout(function() {
-var e = r.find(".drag-and-drop-zone");
+var e = a.find(".drag-and-drop-zone");
 e.on("dragover", function() {
-n.disabled || (e.addClass("highlight-drag-and-drop-zone"), l = !0);
-}), r.find(".drag-and-drop-zone p").on("dragover", function() {
-n.disabled || (l = !0);
+r.disabled || (e.addClass("highlight-drag-and-drop-zone"), u = !0);
+}), a.find(".drag-and-drop-zone p").on("dragover", function() {
+r.disabled || (u = !0);
 }), e.on("dragleave", function() {
-n.disabled || (l = !1, _.delay(function() {
-l || e.removeClass("highlight-drag-and-drop-zone");
+r.disabled || (u = !1, _.delay(function() {
+u || e.removeClass("highlight-drag-and-drop-zone");
 }, 200));
 }), e.on("drop", function(e) {
-if (!n.disabled) {
+if (!r.disabled) {
 var t = _.get(e, "originalEvent.dataTransfer.files", []);
-return t.length > 0 && (n.file = _.head(t), a(n.file)), o(), $(".drag-and-drop-zone").trigger("putDropZoneFront", !1), $(".drag-and-drop-zone").trigger("reset"), !1;
+return t.length > 0 && (r.file = _.head(t), o(r.file)), i(), $(".drag-and-drop-zone").trigger("putDropZoneFront", !1), $(".drag-and-drop-zone").trigger("reset"), !1;
 }
 });
 var t = function(e, t) {
@@ -10028,30 +10034,30 @@ position: "absolute",
 "z-index": 100
 });
 };
-e.on("putDropZoneFront", function(e, a) {
-if (!n.disabled) {
-var o, i = r.find(".drag-and-drop-zone");
-return a ? (o = n.dropZoneId ? $("#" + n.dropZoneId) : r, t(i, o)) : i.css("z-index", "-1"), !1;
+e.on("putDropZoneFront", function(e, n) {
+if (!r.disabled) {
+var o, i = a.find(".drag-and-drop-zone");
+return n ? (o = r.dropZoneId ? $("#" + r.dropZoneId) : a, t(i, o)) : i.css("z-index", "-1"), !1;
 }
 }), e.on("reset", function() {
-if (!n.disabled) return u = !1, !1;
+if (!r.disabled) return d = !1, !1;
 });
-}), $(document).on("drop." + s, function() {
-return o(), r.find(".drag-and-drop-zone").trigger("putDropZoneFront", !1), !1;
-}), $(document).on("dragenter." + s, function() {
-if (!n.disabled) return u = !0, r.find(".drag-and-drop-zone").addClass("show-drag-and-drop-zone"), r.find(".drag-and-drop-zone").trigger("putDropZoneFront", !0), !1;
-}), $(document).on("dragover." + s, function() {
-if (!n.disabled) return u = !0, r.find(".drag-and-drop-zone").addClass("show-drag-and-drop-zone"), !1;
-}), $(document).on("dragleave." + s, function() {
-return u = !1, _.delay(function() {
-u || r.find(".drag-and-drop-zone").removeClass("show-drag-and-drop-zone");
+}), $(document).on("drop." + c, function() {
+return i(), a.find(".drag-and-drop-zone").trigger("putDropZoneFront", !1), !1;
+}), $(document).on("dragenter." + c, function() {
+if (!r.disabled) return d = !0, a.find(".drag-and-drop-zone").addClass("show-drag-and-drop-zone"), a.find(".drag-and-drop-zone").trigger("putDropZoneFront", !0), !1;
+}), $(document).on("dragover." + c, function() {
+if (!r.disabled) return d = !0, a.find(".drag-and-drop-zone").addClass("show-drag-and-drop-zone"), !1;
+}), $(document).on("dragleave." + c, function() {
+return d = !1, _.delay(function() {
+d || a.find(".drag-and-drop-zone").removeClass("show-drag-and-drop-zone");
 }, 200), !1;
-}), n.cleanInputValues = function() {
-n.model = "", n.fileName = "", n.isBinaryFile = !1, d[0].value = "";
-}, d.change(function() {
-a(d[0].files[0]), d[0].value = "";
-}), n.$on("$destroy", function() {
-$(c).off(), $(document).off("drop." + s).off("dragenter." + s).off("dragover." + s).off("dragleave." + s);
+}), r.cleanInputValues = function() {
+r.model = "", r.fileName = "", r.isBinaryFile = !1, m[0].value = "";
+}, m.change(function() {
+o(m[0].files[0]), m[0].value = "";
+}), r.$on("$destroy", function() {
+$(l).off(), $(document).off("drop." + c).off("dragenter." + c).off("dragover." + c).off("dragleave." + c);
 });
 }
 };
