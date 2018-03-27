@@ -1,9 +1,8 @@
 <ng-form name="form">
-  <p ng-hide="input.args.length"><em>No {{type || 'command'}} set.</em></p>
-  <p ng-show="input.args.length" as-sortable ng-model="input.args" class="command-args">
-    <span ng-repeat="arg in input.args" as-sortable-item class="form-group">
-      <span class="input-group">
-        <!-- Args with no newlines. -->
+  <div ng-hide="input.args.length"><em>No {{type || 'command'}} set.</em></div>
+  <div ng-show="input.args.length" as-sortable ng-model="input.args" class="command-args has-sort">
+    <div class="row form-row-has-controls" ng-repeat="arg in input.args" as-sortable-item>
+      <div class="form-group col-xs-12">
         <input type="text"
                ng-model="arg.value"
                ng-if="!arg.multiline"
@@ -12,26 +11,36 @@
                autocorrect="off"
                autocapitalize="none"
                spellcheck="false">
-        <!-- Args with newlines. -->
         <textarea ng-model="arg.value"
-                  ng-if="arg.multiline"
-                  rows="5"
-                  required
-                  class="form-control"
-                  autocorrect="off"
-                  autocapitalize="none"
-                  spellcheck="false">
+                 ng-if="arg.multiline"
+                 rows="5"
+                 required
+                 class="form-control"
+                 autocorrect="off"
+                 autocapitalize="none"
+                 spellcheck="false">
         </textarea>
-        <span as-sortable-item-handle class="input-group-addon action-button drag-handle">
-          <i class="fa fa-bars" aria-hidden="true"></i>
-        </span>
-        <a href="" ng-click="removeArg($index)" class="input-group-addon action-button remove-arg" title="Remove Item">
-          <span class="sr-only">Remove Item</span>
-          <i class="pficon pficon-close" aria-hidden="true"></i>
-        </a>
-      </span>
-    </span>
-  </p>
+      </div>
+      <div class="form-row-controls">
+        <button
+          class="sort-row"
+          type="button"
+          aria-hidden="true"
+          as-sortable-item-handle>
+          <span class="fa fa-bars"></span>
+          <span class="sr-only">Move row</span>
+        </button>
+        <button
+          class="btn-remove close delete-row"
+          type="button"
+          aria-hidden="true"
+          ng-click="removeArg($index)">
+          <span class="pficon pficon-close" aria-hidden="true"></span>
+          <span class="sr-only">Delete row</span>
+        </button>
+      </div>
+    </div>
+  </div>
   <div class="form-group">
     <label class="sr-only" ng-attr-for="{{id}}-add-arg">
       <span ng-if="placeholder">{{placeholder}}</span>

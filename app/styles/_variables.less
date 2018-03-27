@@ -22,26 +22,30 @@
 // OpenShift Console specific
 @openshift-logo-color: #cd202c;
 @action-link-inline-margin: 5px;
-@as-sortable-dragging-opacity: .65;
-@as-sortable-item-button-width: ((@as-sortable-item-icon-padding * 2) + @as-sortable-item-icon-font-size - 1);
+@as-sortable-dragging-opacity: .6;
 @as-sortable-item-icon-font-size: @font-size-large;
-@as-sortable-item-icon-hover-opacity: 1;
-@as-sortable-item-icon-opacity: @as-sortable-dragging-opacity;
-@as-sortable-item-icon-padding: 6px;
+@as-sortable-item-icon-hover-opacity: .9;
 @as-sortable-placeholder-border-top-color: @link-color;
 @as-sortable-placeholder-border-top-style: solid;
 @as-sortable-placeholder-border-top-width: 2px;
 @as-sortable-placeholder-width: 100% !important;
-@as-sortable-item-gutter: 10px;
 @animate-default-speed: 300ms;
 @btn-flat-bg: #f7f7f7;
 @btn-flat-border-color: #e7e7e7;
+@btn-close-icon-font-size: @font-size-large;
 @component-label: 10px;
 @console-panel-color: #fff;
 @console-text-color-default: @gray-dark;
 @easeInCubic: cubic-bezier(0.55, 0.055, 0.675, 0.19);
 @easeOutCubic: cubic-bezier(0.215, 0.61, 0.355, 1);
 @font-size-base: 12px;
+@form-row-control-button-gutter: 8px;
+@form-row-control-button-height: @input-height-base; // 26px
+@form-row-control-button-width: @input-height-base;
+@form-row-has-controls-position-offset-with-one-button: (@form-row-control-button-width + @form-row-control-button-gutter); // 34px
+@form-row-has-controls-position-offset-with-two-buttons: ((@form-row-control-button-width * 2) + @form-row-control-button-gutter); // 60px
+@form-row-has-controls-width-offset-with-one-button: (@form-row-has-controls-width-offset-with-two-buttons - @form-row-control-button-width); // 14px
+@form-row-has-controls-width-offset-with-two-buttons: (@form-row-has-controls-position-offset-with-two-buttons - (@grid-gutter-width / 2)); // 40px
 @link-hover-color-bright: lighten(@link-color, 13%);
 @list-view-expanded-bg: #f5f5f5;
 @log-bg-color: #101214;

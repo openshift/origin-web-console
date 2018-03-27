@@ -5443,25 +5443,26 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/directives/_edit-command.html',
     "<ng-form name=\"form\">\n" +
-    "<p ng-hide=\"input.args.length\"><em>No {{type || 'command'}} set.</em></p>\n" +
-    "<p ng-show=\"input.args.length\" as-sortable ng-model=\"input.args\" class=\"command-args\">\n" +
-    "<span ng-repeat=\"arg in input.args\" as-sortable-item class=\"form-group\">\n" +
-    "<span class=\"input-group\">\n" +
-    "\n" +
+    "<div ng-hide=\"input.args.length\"><em>No {{type || 'command'}} set.</em></div>\n" +
+    "<div ng-show=\"input.args.length\" as-sortable ng-model=\"input.args\" class=\"command-args has-sort\">\n" +
+    "<div class=\"row form-row-has-controls\" ng-repeat=\"arg in input.args\" as-sortable-item>\n" +
+    "<div class=\"form-group col-xs-12\">\n" +
     "<input type=\"text\" ng-model=\"arg.value\" ng-if=\"!arg.multiline\" required class=\"form-control\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
-    "\n" +
     "<textarea ng-model=\"arg.value\" ng-if=\"arg.multiline\" rows=\"5\" required class=\"form-control\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
     "        </textarea>\n" +
-    "<span as-sortable-item-handle class=\"input-group-addon action-button drag-handle\">\n" +
-    "<i class=\"fa fa-bars\" aria-hidden=\"true\"></i>\n" +
-    "</span>\n" +
-    "<a href=\"\" ng-click=\"removeArg($index)\" class=\"input-group-addon action-button remove-arg\" title=\"Remove Item\">\n" +
-    "<span class=\"sr-only\">Remove Item</span>\n" +
-    "<i class=\"pficon pficon-close\" aria-hidden=\"true\"></i>\n" +
-    "</a>\n" +
-    "</span>\n" +
-    "</span>\n" +
-    "</p>\n" +
+    "</div>\n" +
+    "<div class=\"form-row-controls\">\n" +
+    "<button class=\"sort-row\" type=\"button\" aria-hidden=\"true\" as-sortable-item-handle>\n" +
+    "<span class=\"fa fa-bars\"></span>\n" +
+    "<span class=\"sr-only\">Move row</span>\n" +
+    "</button>\n" +
+    "<button class=\"btn-remove close delete-row\" type=\"button\" aria-hidden=\"true\" ng-click=\"removeArg($index)\">\n" +
+    "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Delete row</span>\n" +
+    "</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<label class=\"sr-only\" ng-attr-for=\"{{id}}-add-arg\">\n" +
     "<span ng-if=\"placeholder\">{{placeholder}}</span>\n" +
@@ -6764,24 +6765,23 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/edit-environment-from.html',
-    "<ng-form name=\"$ctrl.editEnvironmentFromForm\" novalidate>\n" +
-    "<div ng-if=\"$ctrl.showHeader\" class=\"environment-from-entry environment-from-editor-entry-header\">\n" +
-    "<div class=\"environment-from-editor-header config-map-header\">\n" +
+    "<ng-form name=\"$ctrl.editEnvironmentFromForm\" novalidate ng-class=\"{ 'has-sort' : !$ctrl.cannotSort && $ctrl.entries.length > 1}\">\n" +
+    "<div ng-if=\"$ctrl.showHeader\" class=\"row form-row-has-controls input-labels\">\n" +
+    "<div class=\"col-xs-6\">\n" +
+    "<label class=\"input-label\">\n" +
     "Config Map/Secret\n" +
+    "</label>\n" +
     "</div>\n" +
-    "<div class=\"environment-from-editor-header prefix-header\" ng-if=\"!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()\">\n" +
+    "<div class=\"col-xs-6\" ng-if=\"!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()\">\n" +
+    "<label class=\"input-label\">\n" +
     "Prefix\n" +
     "<small class=\"pficon pficon-help tooltip-default-icon\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Optional prefix added to each environment variable name. A valid prefix is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></small>\n" +
+    "</label>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-model=\"$ctrl.entries\" class=\"environment-from-editor\" as-sortable=\"$ctrl.dragControlListeners\">\n" +
-    "<div class=\"environment-from-entry\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\" ng-repeat=\"entry in $ctrl.envFromEntries\" as-sortable-item>\n" +
-    "<div class=\"environment-from-input\">\n" +
-    "<div class=\"environment-from-editor-entry-header\">\n" +
-    "<div class=\"environment-from-editor-header config-map-header config-map-header-mobile\">\n" +
-    "Config Map/Secret\n" +
-    "</div>\n" +
-    "</div>\n" +
+    "<div class=\"environment-from-entry row form-row-has-controls\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\" ng-repeat=\"entry in $ctrl.envFromEntries\" as-sortable-item>\n" +
+    "<div class=\"environment-from-input col-xs-6 form-group\">\n" +
     "<div ng-if=\"$ctrl.isEnvFromReadonly(entry) || !$ctrl.hasOptions()\" class=\"faux-input-group\">\n" +
     "<div ng-if=\"!entry.configMapRef.name && !entry.secretRef.name\">\n" +
     "No config maps or secrets have been added as Environment From.\n" +
@@ -6813,11 +6813,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"environment-from-input prefix\">\n" +
-    "<div class=\"environment-from-editor-header prefix-header prefix-header-mobile\" ng-if=\"!$ctrl.isEnvFromReadonly() && $ctrl.hasOptions()\">\n" +
-    "Prefix\n" +
-    "<small class=\"pficon pficon-help tooltip-default-icon\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Optional prefix added to each environment variable name. A valid prefix is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\"></small>\n" +
-    "</div>\n" +
+    "<div class=\"environment-from-input col-xs-6 form-group\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-sm-6\">\n" +
     "<div class=\"environment-from-input\" ng-if=\"!$ctrl.isEnvFromReadonly(entry) && $ctrl.hasOptions()\" ng-class=\"{ 'has-error': ($ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$invalid && $ctrl.editEnvironmentFromForm['envfrom-prefix-'+$index].$touched) }\">\n" +
     "<label for=\"envfrom-prefix-{{$index}}\" class=\"sr-only\">Prefix</label>\n" +
     "<input type=\"text\" class=\"form-control\" placeholder=\"Add prefix\" id=\"envfrom-prefix-{{$index}}\" name=\"envfrom-prefix-{{$index}}\" ng-model=\"entry.prefix\" ng-pattern=\"/^[A-Za-z_][A-Za-z0-9_]*$/\">\n" +
@@ -6827,12 +6825,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div ng-if=\"!$ctrl.isEnvFromReadonly(entry) && $ctrl.hasEntries()\" class=\"environment-from-editor-button\">\n" +
-    "<span ng-if=\"!$ctrl.cannotSort && $ctrl.entries.length > 1\" class=\"fa fa-bars sort-row\" role=\"button\" aria-label=\"Move row\" aria-grabbed=\"false\" as-sortable-item-handle></span>\n" +
-    "<a ng-if=\"!$ctrl.cannotDeleteAny\" href=\"\" class=\"pficon pficon-close delete-row as-sortable-item-delete\" role=\"button\" aria-label=\"Delete row\" ng-click=\"$ctrl.deleteEntry($index, 1)\"></a>\n" +
     "</div>\n" +
-    "<div class=\"environment-from-view-details\">\n" +
-    "<a ng-if=\"entry.selectedEnvFrom\" href=\"\" ng-click=\"$ctrl.viewOverlayPanel(entry.selectedEnvFrom)\">View Details</a>\n" +
+    "<div class=\"col-sm-6\">\n" +
+    "<div class=\"environment-from-view-details\" ng-if=\"entry.selectedEnvFrom\">\n" +
+    "<a href=\"\" ng-click=\"$ctrl.viewOverlayPanel(entry.selectedEnvFrom)\">View Details</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!$ctrl.isEnvFromReadonly(entry) && $ctrl.hasEntries()\" class=\"environment-from-editor-button form-row-controls\">\n" +
+    "<button ng-if=\"!$ctrl.cannotSort && $ctrl.entries.length > 1\" class=\"sort-row\" type=\"button\" aria-hidden=\"true\" aria-grabbed=\"false\" as-sortable-item-handle>\n" +
+    "<span class=\"fa fa-bars\"></span>\n" +
+    "<span class=\"sr-only\">Move row</span>\n" +
+    "</button>\n" +
+    "<button ng-if=\"!$ctrl.cannotDeleteAny\" class=\"btn-remove close delete-row as-sortable-item-delete\" type=\"button\" aria-hidden=\"true\" ng-click=\"$ctrl.deleteEntry($index, 1)\">\n" +
+    "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Delete row</span>\n" +
+    "</button>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6910,8 +6918,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<edit-environment-from entries=\"container.envFrom\" env-from-selector-options=\"$ctrl.valueFromObjects\" is-readonly=\"$ctrl.ngReadonly\" show-header>\n" +
     "</edit-environment-from>\n" +
     "</div>\n" +
+    "<div class=\"gutter-top-bottom\">\n" +
     "<button class=\"btn btn-default\" ng-if=\"$ctrl.canIUpdate && !$ctrl.ngReadonly\" ng-click=\"$ctrl.save()\" ng-disabled=\"$ctrl.form.$pristine || $ctrl.form.$invalid\">Save</button>\n" +
     "<a ng-if=\"!$ctrl.form.$pristine\" href=\"\" ng-click=\"$ctrl.clearChanges()\" class=\"mar-left-sm clear-env-changes-link\">Clear Changes</a>\n" +
+    "</div>\n" +
     "</form>"
   );
 
@@ -7476,19 +7486,23 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/directives/key-value-editor.html',
-    "<ng-form name=\"forms.keyValueEditor\" novalidate ng-if=\"entries\">\n" +
-    "<div ng-if=\"showHeader\" class=\"key-value-editor-entry key-value-editor-entry-header\">\n" +
-    "<div class=\"key-value-editor-header key-header\">\n" +
+    "<ng-form name=\"forms.keyValueEditor\" novalidate ng-if=\"entries\" ng-class=\"{ 'has-sort' : (!cannotSort) && (entries.length > 1)}\">\n" +
+    "<div ng-if=\"showHeader\" class=\"row form-row-has-controls input-labels\">\n" +
+    "<div class=\"col-xs-6\">\n" +
+    "<label class=\"input-label\">\n" +
     "{{keyPlaceholder}}\n" +
+    "</label>\n" +
     "</div>\n" +
-    "<div class=\"key-value-editor-header value-header\">\n" +
+    "<div class=\"col-xs-6\">\n" +
+    "<label class=\"input-label\">\n" +
     "{{valuePlaceholder}}\n" +
+    "</label>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-model=\"entries\" class=\"key-value-editor\" as-sortable=\"dragControlListeners\">\n" +
-    "<div class=\"key-value-editor-entry\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\" ng-repeat=\"entry in entries\" as-sortable-item>\n" +
+    "<div class=\"key-value-editor-entry row form-row-has-controls\" ng-class-odd=\"'odd'\" ng-class-even=\"'even'\" ng-repeat=\"entry in entries\" as-sortable-item>\n" +
     "\n" +
-    "<div class=\"form-group key-value-editor-input\" ng-class=\"{ 'has-error' :  (forms.keyValueEditor[uniqueForKey(unique, $index)].$invalid && forms.keyValueEditor[uniqueForKey(unique, $index)].$touched) }\">\n" +
+    "<div class=\"form-group col-xs-6 key-value-editor-input\" ng-class=\"{ 'has-error' :  (forms.keyValueEditor[uniqueForKey(unique, $index)].$invalid && forms.keyValueEditor[uniqueForKey(unique, $index)].$touched) }\">\n" +
     "<label for=\"uniqueForKey(unique, $index)\" class=\"sr-only\">{{keyPlaceholder}}</label>\n" +
     "<input type=\"text\" class=\"form-control\" ng-class=\"{ '{{setFocusKeyClass}}' : $last  }\" id=\"{{uniqueForKey(unique, $index)}}\" name=\"{{uniqueForKey(unique, $index)}}\" ng-attr-placeholder=\"{{ (!isReadonlyAny) && keyPlaceholder || ''}}\" ng-minlength=\"{{keyMinlength}}\" maxlength=\"{{keyMaxlength}}\" ng-model=\"entry.name\" ng-readonly=\"isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonlyKey || entry.isReadonly\" ng-pattern=\"validation.key\" ng-value ng-required=\"!allowEmptyKeys && (entry.value || entry.valueFrom)\" ng-attr-key-value-editor-focus=\"{{grabFocus && $last}}\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
     "\n" +
@@ -7510,7 +7524,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "\n" +
-    "<div class=\"form-group key-value-editor-input\" ng-class=\"{ 'has-error': (forms.keyValueEditor[uniqueForValue(unique, $index)].$invalid && forms.keyValueEditor[uniqueForValue(unique, $index)].$touched) }\">\n" +
+    "<div class=\"form-group col-xs-6 key-value-editor-input\" ng-class=\"{ 'has-error': (forms.keyValueEditor[uniqueForValue(unique, $index)].$invalid && forms.keyValueEditor[uniqueForValue(unique, $index)].$touched) }\">\n" +
     "<label for=\"uniqueForValue(unique, $index)\" class=\"sr-only\">{{valuePlaceholder}}</label>\n" +
     "<div ng-if=\"(!entry.valueFrom)\">\n" +
     "<input type=\"text\" class=\"form-control\" ng-class=\"{ '{{setFocusValClass}}' : $last  }\" id=\"{{uniqueForValue(unique, $index)}}\" name=\"{{uniqueForValue(unique, $index)}}\" ng-attr-placeholder=\"{{ (!isReadonlyAny) && valuePlaceholder || ''}}\" ng-minlength=\"{{valueMinlength}}\" maxlength=\"{{valueMaxlength}}\" ng-model=\"entry.value\" ng-readonly=\"isReadonlyAny || isReadonlySome(entry.name) || entry.isReadonly\" ng-pattern=\"validation.val\" ng-required=\"!allowEmptyKeys && entry.value\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
@@ -7588,9 +7602,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div class=\"key-value-editor-buttons\">\n" +
-    "<span ng-if=\"(!cannotSort) && (entries.length > 1)\" class=\"fa fa-bars sort-row\" role=\"button\" aria-label=\"Move row\" aria-grabbed=\"false\" as-sortable-item-handle></span>\n" +
-    "<a href=\"\" class=\"pficon pficon-close delete-row as-sortable-item-delete\" role=\"button\" aria-label=\"Delete row\" ng-hide=\"cannotDeleteAny || cannotDeleteSome(entry.name) || entry.cannotDelete\" ng-click=\"deleteEntry($index, 1)\"></a>\n" +
+    "<div class=\"key-value-editor-buttons form-row-controls\">\n" +
+    "<button ng-if=\"(!cannotSort) && (entries.length > 1)\" class=\"sort-row\" type=\"button\" aria-hidden=\"true\" aria-grabbed=\"false\" as-sortable-item-handle>\n" +
+    "<span class=\"fa fa-bars\"></span>\n" +
+    "<span class=\"sr-only\">Move row</span>\n" +
+    "</button>\n" +
+    "<button class=\"btn-remove close delete-row as-sortable-item-delete\" type=\"button\" aria-hidden=\"true\" ng-hide=\"cannotDeleteAny || cannotDeleteSome(entry.name) || entry.cannotDelete\" ng-click=\"deleteEntry($index, 1)\">\n" +
+    "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Delete row</span>\n" +
+    "</button>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"key-value-editor-entry form-group\" ng-if=\"(!cannotAdd)\">\n" +
@@ -8729,8 +8749,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{displayType | startCase}} Secret\n" +
     "</label>\n" +
     "</div>\n" +
-    "<div ng-repeat=\"pickedSecret in pickedSecrets\">\n" +
-    "<div class=\"secret-row\">\n" +
+    "<div ng-repeat=\"pickedSecret in pickedSecrets\" class=\"row form-row-has-controls\">\n" +
+    "<div class=\"secret-row col-xs-12\">\n" +
     "<div class=\"secret-name\">\n" +
     "<ui-select ng-disabled=\"disableInput\" ng-model=\"pickedSecret.name\">\n" +
     "<ui-select-match placeholder=\"Secret name\">{{$select.selected}}</ui-select-match>\n" +
@@ -8739,11 +8759,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
-    "<div class=\"remove-secret\">\n" +
-    "<a ng-click=\"removeSecret($index)\" href=\"\" role=\"button\" class=\"btn-remove\">\n" +
+    "<div class=\"remove-secret form-row-controls\">\n" +
+    "<button class=\"btn-remove close delete-row\" type=\"button\" aria-hidden=\"true\" ng-click=\"removeSecret($index)\">\n" +
     "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Remove build secret</span>\n" +
-    "</a>\n" +
+    "</button>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8779,17 +8799,21 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"strategyType !== 'Custom'\">\n" +
     "<div class=\"form-group\">\n" +
     "<div class=\"advanced-secrets\">\n" +
-    "<div class=\"input-labels\">\n" +
+    "<div class=\"row form-row-has-controls input-labels\">\n" +
+    "<div class=\"col-xs-6\">\n" +
     "<label class=\"input-label\">\n" +
     "Build Secret\n" +
     "</label>\n" +
-    "<label class=\"input-label destination-dir-padding\">\n" +
+    "</div>\n" +
+    "<div class=\"col-xs-6\">\n" +
+    "<label class=\"input-label destination-dir\">\n" +
     "Destination Directory\n" +
     "</label>\n" +
     "</div>\n" +
+    "</div>\n" +
     "<div ng-repeat=\"pickedSecret in pickedSecrets\">\n" +
-    "<div class=\"secret-row\">\n" +
-    "<div class=\"secret-name\">\n" +
+    "<div class=\"secret-row row form-row-has-controls has-label\">\n" +
+    "<div class=\"secret-name form-group col-xs-6\">\n" +
     "<ui-select ng-required=\"pickedSecret.destinationDir\" ng-model=\"pickedSecret.secret.name\">\n" +
     "<ui-select-match placeholder=\"Secret name\">{{$select.selected}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"secret in (secretsByType[type] | filter : $select.search)\">\n" +
@@ -8797,14 +8821,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
-    "<div class=\"destination-dir destination-dir-padding\">\n" +
+    "<div class=\"destination-dir form-group col-xs-6\">\n" +
     "<input class=\"form-control\" id=\"destinationDir\" name=\"destinationDir\" ng-model=\"pickedSecret.destinationDir\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
     "</div>\n" +
-    "<div class=\"remove-secret\">\n" +
-    "<a ng-click=\"removeSecret($index)\" href=\"\" role=\"button\" class=\"btn-remove\">\n" +
+    "<div class=\"remove-secret form-row-controls\">\n" +
+    "<button class=\"btn-remove close delete-row\" type=\"button\" aria-hidden=\"true\" ng-click=\"removeSecret($index)\">\n" +
     "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Remove build secret</span>\n" +
-    "</a>\n" +
+    "</button>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8839,11 +8863,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"destination-dir destination-dir-padding\">\n" +
     "<input class=\"form-control\" id=\"mountPath\" name=\"mountPath\" ng-model=\"pickedSecret.mountPath\" type=\"text\" placeholder=\"/\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
     "</div>\n" +
-    "<div class=\"remove-secret\">\n" +
-    "<a ng-click=\"removeSecret($index)\" href=\"\" role=\"button\" class=\"btn-remove\">\n" +
+    "<div class=\"remove-secret form-row-controls\">\n" +
+    "<button class=\"btn-remove close delete-row\" type=\"button\" aria-hidden=\"true\" ng-click=\"removeSecret($index)\">\n" +
     "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Remove build secret</span>\n" +
-    "</a>\n" +
+    "</button>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -9835,7 +9859,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</span></h3>\n" +
     "<div>\n" +
-    "<key-value-editor ng-if=\"envVars\" entries=\"envVars\" value-from-selector-options=\"valueFromObjects\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\"></key-value-editor>\n" +
+    "<key-value-editor ng-if=\"envVars\" entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" show-header value-from-selector-options=\"valueFromObjects\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"sources.git || !(updatedBuildConfig | isJenkinsPipelineStrategy)\" class=\"section\">\n" +
@@ -14059,9 +14083,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('components/osc-webhook-triggers/osc-webhook-triggers.html',
     "<ng-form name=\"$ctrl.secretsForm\" class=\"add-webhook\">\n" +
-    "<div ng-repeat=\"trigger in $ctrl.webhookTriggers track by $index\" ng-init=\"secretFieldName = 'triggerSecretRef' + $index\">\n" +
-    "<div class=\"add-webhook-row\">\n" +
-    "<div class=\"select-webhook-type\">\n" +
+    "<div ng-repeat=\"trigger in $ctrl.webhookTriggers track by $index\" ng-init=\"secretFieldName = 'triggerSecretRef' + $index\" class=\"form-group\">\n" +
+    "<div class=\"row form-row-has-controls\">\n" +
+    "<div class=\"select-webhook-type col-xs-6\">\n" +
     "<ui-select ng-model=\"trigger.data.type\" name=\"triggerType{{$index}}\" ng-disabled=\"$ctrl.isDeprecated(trigger)\" on-select=\"$ctrl.triggerTypeChange(trigger)\" search-enabled=\"false\" title=\"Select a webhook type\" ng-class=\"{'has-warning': trigger.isDuplicate }\" focus-on=\"focus-index-{{$index}}\">\n" +
     "<ui-select-match placeholder=\"Webhook type\">\n" +
     "{{ $select.selected.label }}\n" +
@@ -14071,7 +14095,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "</div>\n" +
-    "<div class=\"select-secret-ref\" ng-if=\"!$ctrl.isDeprecated(trigger)\">\n" +
+    "<div class=\"select-secret-ref col-xs-6\" ng-if=\"!$ctrl.isDeprecated(trigger)\">\n" +
     "<ui-select ng-model=\"trigger.data[trigger.data.type.toLowerCase()].secretReference.name\" name=\"{{secretFieldName}}\" on-select=\"$ctrl.triggerSecretChange(trigger)\" title=\"Select a webhook secret reference\" ng-class=\"{'has-error': $ctrl.secretsForm[secretFieldName].$invalid && $ctrl.secretsForm[secretFieldName].$touched}\" ng-disabled=\"!trigger.data.type\" ng-required=\"trigger.data.type\">\n" +
     "<ui-select-match placeholder=\"Webhook secret reference\">\n" +
     "{{ $select.selected.metadata.name }}\n" +
@@ -14086,7 +14110,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"select-secret-ref deprecated-secret input-group\" ng-if=\"$ctrl.isDeprecated(trigger)\">\n" +
+    "<div class=\"select-secret-ref deprecated-secret input-group col-xs-6\" ng-if=\"$ctrl.isDeprecated(trigger)\">\n" +
     "<input ng-model=\"trigger.data[trigger.data.type.toLowerCase()].secret\" class=\"form-control\" type=\"{{trigger.secretInputType}}\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" disabled=\"disabled\">\n" +
     "<div class=\"input-group-btn\">\n" +
     "<button type=\"button\" class=\"btn btn-default toggle\" title=\"Toggle Token Visibility\" aria-label=\"Toggle Token Visibility\" ng-click=\"$ctrl.toggleSecretInputType(trigger)\">\n" +
@@ -14095,7 +14119,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"remove-webhook-trigger-action\">\n" +
+    "<div class=\"form-row-controls\">\n" +
     "<button ng-click=\"$ctrl.removeWebhookTrigger(trigger, $index)\" type=\"button\" class=\"btn-remove close\" aria-hidden=\"true\">\n" +
     "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\">Remove Webhook trigger</span>\n" +
