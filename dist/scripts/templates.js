@@ -11458,6 +11458,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</overview-list-row>\n" +
     "<overview-list-row ng-repeat=\"statefulSet in overview.filteredStatefulSetsByApp[app] track by (statefulSet | uid)\" api-object=\"statefulSet\" state=\"overview.state\">\n" +
     "</overview-list-row>\n" +
+    "<overview-list-row ng-repeat=\"daemonSet in overview.filteredDaemonSetsByApp[app] track by (daemonSet | uid)\" api-object=\"daemonSet\" state=\"overview.state\">\n" +
+    "</overview-list-row>\n" +
     "<overview-list-row ng-repeat=\"pod in overview.filteredMonopodsByApp[app] track by (pod | uid)\" api-object=\"pod\" state=\"overview.state\">\n" +
     "</overview-list-row>\n" +
     "</div>\n" +
@@ -11502,6 +11504,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h2>Stateful Sets</h2>\n" +
     "<div class=\"list-pf\">\n" +
     "<overview-list-row ng-repeat=\"statefulSet in overview.filteredStatefulSets track by (statefulSet | uid)\" api-object=\"statefulSet\" state=\"overview.state\">\n" +
+    "</overview-list-row>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"overview.filteredDaemonSets | hashSize\">\n" +
+    "<h2>Daemon Sets</h2>\n" +
+    "<div class=\"list-pf\">\n" +
+    "<overview-list-row ng-repeat=\"daemonSet in overview.filteredDaemonSets track by (daemonSet | uid)\" api-object=\"daemonSet\" state=\"overview.state\">\n" +
     "</overview-list-row>\n" +
     "</div>\n" +
     "</div>\n" +
