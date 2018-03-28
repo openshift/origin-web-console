@@ -32,14 +32,14 @@ angular.module("openshiftConsole")
         };
 
         // Load the data once when it is first set.
-        var clearWatch = $scope.$watch('configMap.data', function(data) {
-          if (!data) {
+        var clearWatch = $scope.$watch('configMap', function(configMap) {
+          if (!configMap) {
             return;
           }
 
           // Transform the data into an array so the form fields are always in
           // the order they're added.
-          $scope.data = _.map(data, function(value, key) {
+          $scope.data = _.map(configMap.data, function(value, key) {
             return {
               key: key,
               value: value
