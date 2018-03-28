@@ -1,3 +1,85 @@
+// Inline form row with two inputs and remove and move button controls
+// ----------------------------------------------------
+
+// <ng-form ng-class="{ 'has-sort' : ... ">
+//   <div class="row form-row-has-controls input-labels">
+//     <div class="col-xs-6">
+//       <label class="input-label"> ...
+//     <div class="col-xs-6">
+//       <label class="input-label"> ...
+//   <div class="row form-row-has-controls has-label">
+//     <div class="form-group col-xs-6"> ...
+//     <div class="form-group col-xs-6"> ...
+//     <div class="form-row-controls">
+//       <button class="sort-row"> ...
+//       <button class="btn-remove close delete-row"> ...
+
+.as-sortable-dragging {
+  margin-left: @form-row-has-controls-position-offset-with-two-buttons;
+}
+.as-sortable-placeholder {
+  border-top: @as-sortable-placeholder-border-top-width @as-sortable-placeholder-border-top-style @as-sortable-placeholder-border-top-color;
+  clear: left;
+  width: @as-sortable-placeholder-width;
+}
+
+.form-row-has-controls {
+  position: relative;
+  width: ~"calc(100% - @{form-row-has-controls-width-offset-with-one-button})";
+  @media(min-width: @screen-sm-min) {
+    width: ~"calc(100% - @{form-row-has-controls-width-offset-with-two-buttons})";
+  }
+  .has-sort &,
+  .as-sortable-dragging & {
+    width: ~"calc(100% - @{form-row-has-controls-width-offset-with-two-buttons})";
+    .form-row-controls {
+      // offset by width of two buttons and 8px gutter
+      right: -@form-row-has-controls-position-offset-with-two-buttons;
+    }
+  }
+  // Two column padding adjustments to keep associated inputs close together
+  > [class*="col-xs-"]:nth-child(1n) {
+    padding-right: 0;
+  }
+  > [class*="col-xs-"]:nth-child(2n) {
+    padding-left: @form-row-control-button-gutter;
+    padding-right: 0;
+  }
+  .form-row-controls {
+    position: absolute;
+    // offset by width of one button and 8px gutter
+    right: -@form-row-has-controls-position-offset-with-one-button;
+    top: 0;
+    button.close,
+    button.sort-row {
+      background: transparent;
+      border: 0;
+      height: @form-row-control-button-height;
+      line-height: 1;
+      // match pf .close rule https://github.com/patternfly/patternfly/blob/master/src/less/close.less#L11
+      opacity: @as-sortable-dragging-opacity;
+      width: @form-row-control-button-width;
+      -webkit-appearance: none;
+      &:focus,
+      &:hover {
+        opacity: @as-sortable-item-icon-hover-opacity;
+      }
+      .fa-bars,
+      .pficon-close {
+        display: flex;
+        justify-content: center;
+      }
+    }
+    button.close {
+      font-size: @btn-close-icon-font-size;
+    }
+    button.sort-row {
+      cursor: move;
+      font-size: @as-sortable-item-icon-font-size;
+    }
+  }
+}
+
 .static-form-value-large {
   .h3();
   margin-top: 3px;

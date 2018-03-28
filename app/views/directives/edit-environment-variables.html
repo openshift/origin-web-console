@@ -48,14 +48,16 @@
       show-header>
     </edit-environment-from>
   </div>
-  <button
-    class="btn btn-default"
-    ng-if="$ctrl.canIUpdate && !$ctrl.ngReadonly"
-    ng-click="$ctrl.save()"
-    ng-disabled="$ctrl.form.$pristine || $ctrl.form.$invalid">Save</button>
-  <a
-    ng-if="!$ctrl.form.$pristine"
-    href=""
-    ng-click="$ctrl.clearChanges()"
-    class="mar-left-sm clear-env-changes-link">Clear Changes</a>
+  <div class="gutter-top-bottom">
+    <button
+      class="btn btn-default"
+      ng-if="$ctrl.canIUpdate && !$ctrl.ngReadonly"
+      ng-click="$ctrl.save()"
+      ng-disabled="$ctrl.form.$pristine || $ctrl.form.$invalid">Save</button>
+    <a
+      ng-if="!$ctrl.form.$pristine"
+      href=""
+      ng-click="$ctrl.clearChanges()"
+      class="mar-left-sm clear-env-changes-link">Clear Changes</a>
+  </div>
 </form>

@@ -427,6 +427,9 @@
                   <key-value-editor
                     ng-if="envVars"
                     entries="envVars"
+                    key-placeholder="Name"
+                    value-placeholder="Value"
+                    show-header
                     value-from-selector-options="valueFromObjects"
                     key-validator="[a-zA-Z_][a-zA-Z0-9_]*"
                     key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
