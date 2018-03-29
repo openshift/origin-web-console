@@ -1,0 +1,38 @@
+<div class="row mobile-clients">
+  <div class="col-sm-6">
+    <div class="client-title component-label section-label">Mobile Clients</div>
+    <div ng-repeat="mobileClient in $ctrl.associatedClients track by (mobileClient | uid)" class="col-sm-12 col-md-6 mobile-client">
+      <span aria-hidden="true" class="fa-2x {{mobileClient.metadata.annotations.icon}} client-icon"></span>
+      <div class="client-details">
+        <a ng-href="{{mobileClient | navigateResourceURL}}">{{mobileClient.spec.name}}</a>
+        <button type="button" class="exclude" ng-click="$ctrl.excludeClient(mobileClient)">
+          <span class="pficon-delete" aria-hidden="true"></span>
+          <span class="sr-only">exclude client</span>
+        </button>
+        <div class="client-type">{{mobileClient.spec.appIdentifier}}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xs-12 col-sm-6">
+    <div class="dropdown pull-right">
+      <button class="btn btn-default dropdown-toggle" type="button" id="excluded-clients" data-toggle="dropdown">
+        Add Client
+        <span class="caret" aria-hidden="true"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="excluded-clients">
+        <li ng-repeat="mobileClient in $ctrl.excludedClients track by (mobileClient | uid)" ng-if="$ctrl.hasExcludedClients" ng-click="$ctrl.addMobileClient(mobileClient)" class="has-excluded" role="presentation">
+          <a role="menuitem" tabindex="-1" href="#">
+            <span class="fa-2x {{mobileClient.metadata.annotations.icon}} menuicon" aria-hidden="true"></span>
+            <span class="menuitemtext">{{mobileClient.spec.name}}</span>
+          </a>
+        </li>
+        <li ng-if="!$ctrl.hasExcludedClients" class="no-excluded" role="presentation">
+          <a role="menuitem" tabindex="-1" href="#">
+            <span>No clients.</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
