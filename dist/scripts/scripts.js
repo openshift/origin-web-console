@@ -9171,10 +9171,10 @@ label: "Generic Secret"
 image: {
 label: "Image Secret",
 authTypes: [ {
-id: "kubernetes.io/dockercfg",
+id: "kubernetes.io/dockerconfigjson",
 label: "Image Registry Credentials"
 }, {
-id: "kubernetes.io/dockerconfigjson",
+id: "kubernetes.io/dockercfg",
 label: "Configuration File"
 } ]
 },
@@ -9237,18 +9237,20 @@ r.stringData["ssh-privatekey"] = e.privateKey, e.gitconfig && (r.stringData[".gi
 break;
 
 case "kubernetes.io/dockerconfigjson":
-var a = ".dockerconfigjson";
-JSON.parse(e.dockerConfig).auths || (r.type = "kubernetes.io/dockercfg", a = ".dockercfg"), r.stringData[a] = e.dockerConfig;
-break;
-
-case "kubernetes.io/dockercfg":
-var o = window.btoa(e.dockerUsername + ":" + e.dockerPassword), i = {};
-i[e.dockerServer] = {
+var a = window.btoa(e.dockerUsername + ":" + e.dockerPassword), o = {
+auths: {}
+};
+o.auths[e.dockerServer] = {
 username: e.dockerUsername,
 password: e.dockerPassword,
 email: e.dockerMail,
-auth: o
-}, r.stringData[".dockercfg"] = JSON.stringify(i);
+auth: a
+}, r.stringData[".dockerconfigjson"] = JSON.stringify(o);
+break;
+
+case "kubernetes.io/dockercfg":
+var i = ".dockerconfigjson";
+JSON.parse(e.dockerConfig).auths || (r.type = "kubernetes.io/dockercfg", i = ".dockercfg"), r.stringData[i] = e.dockerConfig;
 break;
 
 case "Opaque":
