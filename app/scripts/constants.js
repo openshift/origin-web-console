@@ -627,6 +627,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     'icon-joomla': 'joomla.svg',
     'icon-jruby': 'jruby.svg',
     'icon-js': 'js.svg',
+    'icon-kubevirt': 'kubevirt.svg',
     'icon-laravel': 'laravel.svg',
     'icon-load-balancer': 'load-balancer.svg',
     'icon-mariadb': 'mariadb.svg',
