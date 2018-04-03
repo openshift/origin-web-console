@@ -31121,10 +31121,6 @@ updateNavArrows: function() {
 if (this._allow_update) {
 var e, t, n = new Date(this.viewDate), i = n.getUTCFullYear(), r = n.getUTCMonth(), o = this.o.startDate !== -1 / 0 ? this.o.startDate.getUTCFullYear() : -1 / 0, a = this.o.startDate !== -1 / 0 ? this.o.startDate.getUTCMonth() : -1 / 0, s = this.o.endDate !== 1 / 0 ? this.o.endDate.getUTCFullYear() : 1 / 0, l = this.o.endDate !== 1 / 0 ? this.o.endDate.getUTCMonth() : 1 / 0, c = 1;
 switch (this.viewMode) {
-case 0:
-e = i <= o && r <= a, t = i >= s && r >= l;
-break;
-
 case 4:
 c *= 10;
 
@@ -31135,7 +31131,11 @@ case 2:
 c *= 10;
 
 case 1:
-e = Math.floor(i / c) * c <= o, t = Math.floor(i / c) * c + c >= s;
+e = Math.floor(i / c) * c < o, t = Math.floor(i / c) * c + c > s;
+break;
+
+case 0:
+e = i <= o && r < a, t = i >= s && r > l;
 }
 this.picker.find(".prev").toggleClass("disabled", e), this.picker.find(".next").toggleClass("disabled", t);
 }
@@ -31255,6 +31255,11 @@ return e.valueOf();
 });
 e.each(this.pickers, function(e, n) {
 n.setRange(t);
+});
+},
+clearDates: function() {
+e.each(this.pickers, function(e, t) {
+t.clearDates();
 });
 },
 dateUpdated: function(n) {
@@ -31476,7 +31481,7 @@ footTemplate: '<tfoot><tr><th colspan="7" class="today"></th></tr><tr><th colspa
 };
 v.template = '<div class="datepicker"><div class="datepicker-days"><table class="table-condensed">' + v.headTemplate + "<tbody></tbody>" + v.footTemplate + '</table></div><div class="datepicker-months"><table class="table-condensed">' + v.headTemplate + v.contTemplate + v.footTemplate + '</table></div><div class="datepicker-years"><table class="table-condensed">' + v.headTemplate + v.contTemplate + v.footTemplate + '</table></div><div class="datepicker-decades"><table class="table-condensed">' + v.headTemplate + v.contTemplate + v.footTemplate + '</table></div><div class="datepicker-centuries"><table class="table-condensed">' + v.headTemplate + v.contTemplate + v.footTemplate + "</table></div></div>", e.fn.datepicker.DPGlobal = v, e.fn.datepicker.noConflict = function() {
 return e.fn.datepicker = h, this;
-}, e.fn.datepicker.version = "1.7.1", e.fn.datepicker.deprecated = function(e) {
+}, e.fn.datepicker.version = "1.8.0", e.fn.datepicker.deprecated = function(e) {
 var t = window.console;
 t && t.warn && t.warn("DEPRECATED: " + e);
 }, e(document).on("focus.datepicker.data-api click.datepicker.data-api", '[data-provide="datepicker"]', function(t) {
