@@ -6275,3 +6275,4 @@ notification-drawer-wrapper .expanded-notification.unread .drawer-pf-notificatio
 .add-config-to-application .updating{background-color:#fff;bottom:55px;left:0;padding-top:60px;position:absolute;right:0;top:55px;z-index:1000}
 .service-instance-details .instance-status-message{white-space:pre-line}
 .set-home-page .select-project-container{max-width:360px;padding-left:20px}
+.virtual-machine-detail-col{width:50%}

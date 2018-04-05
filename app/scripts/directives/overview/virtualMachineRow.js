@@ -23,6 +23,76 @@
     templateUrl: 'views/overview/_virtual-machine-row.html'
   });
 
+  var RDP_PORT = 3389;
+
+  function fileDownload(data, fileName, mimeType) {
+    fileName = fileName || "vm.rdp";
+    mimeType = mimeType || "application/rdp";
+
+    var a = document.createElement('a');
+    if (navigator.msSaveBlob) { // IE10
+      return navigator.msSaveBlob(new Blob([data], { type: mimeType }), fileName);
+    } else if ('download' in a) { // html5 A[download]
+      a.href = 'data:' + mimeType + ',' + encodeURIComponent(data);
+      a.setAttribute('download', fileName);
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      return true;
+    } else { // do iframe dataURL download (old ch+FF):
+      var f = document.createElement('iframe');
+      document.body.appendChild(f);
+      f.src = 'data:' + mimeType + ',' + encodeURIComponent(data);
+      setTimeout(function () {
+        document.body.removeChild(f);
+      }, 333);
+      return true;
+    }
+  }
+
+  function buildRdp(address, port) {
+    return '' +
+      'full address:s:' + address +
+      '\nserver port:i: ' + port +
+      '\ndesktopwidth:i:1024' +
+      '\ndesktopheight:i:768' +
+      '\nscreen mode id:i:1' + // set 2 for full screen
+      '\nauthentication level:i:2' +
+      '\nredirectclipboard:i:1' +
+      '\nsession bpp:i:32' +
+      '\ncompression:i:1' +
+      '\nkeyboardhook:i:2' +
+      '\naudiocapturemode:i:0' +
+      '\nvideoplaybackmode:i:1' +
+      '\nconnection type:i:2' +
+      '\ndisplayconnectionbar:i:1' +
+      '\ndisable wallpaper:i:1' +
+      '\nallow font smoothing:i:0' +
+      '\nallow desktop composition:i:0' +
+      '\ndisable full window drag:i:1' +
+      '\ndisable menu anims:i:1' +
+      '\ndisable themes:i:0' +
+      '\ndisable cursor setting:i:0' +
+      '\nbitmapcachepersistenable:i:1' +
+      '\naudiomode:i:0' +
+      '\nredirectcomports:i:0' +
+      '\nredirectposdevices:i:0' +
+      '\nredirectdirectx:i:1' +
+      '\nautoreconnection enabled:i:1' +
+      '\nprompt for credentials:i:1' +
+      '\nnegotiate security layer:i:1' +
+      '\nremoteapplicationmode:i:0' +
+      '\nalternate shell:s:' +
+      '\nshell working directory:s:' +
+      '\ngatewayhostname:s:' +
+      '\ngatewayusagemethod:i:4' +
+      '\ngatewaycredentialssource:i:4' +
+      '\ngatewayprofileusagemethod:i:0' +
+      '\npromptcredentialonce:i:1' +
+      '\nuse redirection server name:i:0' +
+      '\n';
+  }
+
   function VirtualMachineRow(
     $scope,
     $filter,
@@ -49,10 +119,6 @@
     };
     row.projectName = $routeParams.project;
 
-    function isOvmRunning() {
-      return row.apiObject.spec.running;
-    }
-
     function createOvmCopy() {
       var copy = angular.copy(row.apiObject);
       delete copy._pod;
@@ -71,6 +137,9 @@
       );
     }
 
+    row.isOvmRunning = function () {
+      return row.apiObject.spec.running;
+    };
     row.startOvm = function () {
       setOvmRunning(true);
     };
@@ -85,15 +154,53 @@
       );
     };
     row.canStartOvm = function () {
-      return !isOvmRunning();
+      return !row.isOvmRunning();
     };
     row.canStopOvm = function () {
-      return isOvmRunning();
+      return row.isOvmRunning();
     };
     row.canRestartOvm = function () {
-      return isOvmRunning() &&
-             row.apiObject._vm &&
-             _.get(row.apiObject, '_pod.status.phase') === 'Running';
+      return row.isOvmRunning() &&
+        row.apiObject._vm &&
+        _.get(row.apiObject, '_pod.status.phase') === 'Running';
+    };
+    row.isWindowsVM = function () {
+      var ovm = row.apiObject;
+      var os = _.get(ovm, 'metadata.labels["kubevirt.io/os"]');
+      return (os && _.startsWith(os, 'win'));
+    };
+    row.isRdpService = function () {
+      var ovm = row.apiObject;
+      return !_.isEmpty(ovm.services);
+    };
+
+    row.onOpenRemoteDesktop = function () {
+      var ovm = row.apiObject;
+      if (_.isEmpty(ovm.services)) {// https://github.com/kubevirt/user-guide/blob/master/service.md
+        return ;
+      }
+      var rdpPortFinder = function (service) {
+        return _.find(_.get(service, 'spec.ports'), function (portObj) {
+          return portObj.targetPort === RDP_PORT;
+        });
+
+      };
+      var service = _.find(ovm.services, rdpPortFinder);
+      var rdpPortObj = rdpPortFinder(service);
+      var port = _.get(rdpPortObj, "port");
+
+      if (!port) {
+        console.warn("Port is not defined: ", rdpPortObj, ovm);
+        return ;
+      }
+      var externalIPs = _.get(service, 'spec.externalIPs');
+      if (_.isEmpty(externalIPs)) {
+        console.warn("externalIP is not defined for the RDP Service: ", service, ovm);
+        return ;
+      }
+
+      var externalIP = externalIPs[0];
+      fileDownload(buildRdp(externalIP, port));
     };
   }
 

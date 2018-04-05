@@ -13070,8 +13070,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"list-pf-expansion collapse\" ng-if=\"row.expanded\" ng-class=\"{ in: row.expanded }\">\n" +
     "<div class=\"list-pf-container\">\n" +
-    "<div class=\"expanded-section resource-details\">\n" +
+    "<div class=\"expanded-section resource-details row-expanded-top\">\n" +
     "<h3>Details</h3>\n" +
+    "<div class=\"virtual-machine-detail-col\">\n" +
     "<dl class=\"dl-horizontal\">\n" +
     "<dt>State:</dt>\n" +
     "<dd>\n" +
@@ -13080,6 +13081,16 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Operating System:</dt>\n" +
     "<dd>{{row.apiObject.metadata.labels['kubevirt.io/os'] || '-'}}</dd>\n" +
     "</dl>\n" +
+    "</div>\n" +
+    "<div class=\"virtual-machine-detail-col\" ng-if=\"row.isWindowsVM() && row.isOvmRunning()\">\n" +
+    "<dl class=\"dl-horizontal\">\n" +
+    "<dt>Remote Desktop:</dt>\n" +
+    "<dd>\n" +
+    "<a href=\"\" ng-if=\"row.isRdpService()\" ng-click=\"row.onOpenRemoteDesktop()\">Open Console</a>\n" +
+    "<div ng-if=\"!row.isRdpService()\">No RDP service defined</div>\n" +
+    "</dd>\n" +
+    "</dl>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +

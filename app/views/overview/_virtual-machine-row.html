@@ -41,17 +41,29 @@
   </div>
   <div class="list-pf-expansion collapse" ng-if="row.expanded" ng-class="{ in: row.expanded }">
     <div class="list-pf-container">
-      <div class="expanded-section resource-details">
+      <div class="expanded-section resource-details row-expanded-top">
         <h3>Details</h3>
-        <dl class="dl-horizontal">
-          <dt>State:</dt>
-          <dd>
-            <div vm-state ovm="row.apiObject"></div>
-          </dd>
+        <div class="virtual-machine-detail-col">
+          <dl class="dl-horizontal">
+            <dt>State:</dt>
+            <dd>
+              <div vm-state ovm="row.apiObject"></div>
+            </dd>
 
-          <dt>Operating System:</dt>
-          <dd>{{row.apiObject.metadata.labels['kubevirt.io/os'] || '-'}}</dd>
-        </dl>
+            <dt>Operating System:</dt>
+            <dd>{{row.apiObject.metadata.labels['kubevirt.io/os'] || '-'}}</dd>
+          </dl>
+        </div>
+
+        <div class="virtual-machine-detail-col" ng-if="row.isWindowsVM() && row.isOvmRunning()">
+          <dl class="dl-horizontal">
+            <dt>Remote Desktop:</dt>
+            <dd>
+              <a href="" ng-if="row.isRdpService()" ng-click="row.onOpenRemoteDesktop()">Open Console</a>
+              <div ng-if="!row.isRdpService()">No RDP service defined</div>
+            </dd>
+          </dl>
+        </div>
       </div>
     </div>
   </div>
