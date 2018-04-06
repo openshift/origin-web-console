@@ -14045,12 +14045,12 @@ function e(e) {
 var t = _.get(e, "_vm.status.phase");
 return void 0 !== t ? t : _.get(e, ".spec.running") ? "Unknown" : "Off";
 }
-function t(t, n, r) {
+function t(t) {
 t.$watch("ovm", function() {
 t.status = e(t.ovm);
-}), console.log("ovm", t.ovm);
+});
 }
-return t.$inject = [ "$scope", "$element", "$attrs" ], {
+return t.$inject = [ "$scope" ], {
 scope: {
 ovm: "<"
 },

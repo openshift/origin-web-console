@@ -91,9 +91,9 @@
       return isOvmRunning();
     };
     row.canRestartOvm = function () {
-      return isOvmRunning()
-        && row.apiObject._vm
-        && _.get(row.apiObject, '_pod.status.phase') === 'Running';
+      return isOvmRunning() &&
+             row.apiObject._vm &&
+             _.get(row.apiObject, '_pod.status.phase') === 'Running';
     };
   }
 
@@ -109,12 +109,11 @@
       return "Unknown";
     }
 
-    function controller ($scope, $element, $attrs) {
+    function controller ($scope) {
       function onOvmChange() {
         $scope.status = getOvmStatus($scope.ovm);
       }
       $scope.$watch('ovm', onOvmChange);
-      console.log('ovm', $scope.ovm);
     }
 
     return {
@@ -123,10 +122,10 @@
       },
       controller: controller,
       templateUrl: 'views/overview/_vm-status.html'
-    }
+    };
   });
 
-    angular.module('openshiftConsole').constant('KubevirtVersions', {
+  angular.module('openshiftConsole').constant('KubevirtVersions', {
     offlineVirtualMachine: {
       resource: "offlinevirtualmachines",
       group: "kubevirt.io",
