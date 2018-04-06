@@ -64,11 +64,9 @@ angular.module("openshiftConsole")
     // decodeDockerConfig handles both Docker configuration file formats, which are:
     //  - .dockercfg
     //    {
-    //      "auths": {
-    //        "https://index.docker.io/v1/": {
-    //          "auth": "dGVzdHVzZXI6dGVzdHB3",
-    //          "email": "jhadvig@test.com"
-    //        }
+    //      "https://index.docker.io/v1/": {
+    //        "auth": "dGVzdHVzZXI6dGVzdHB3",
+    //        "email": "mail@test.com"
     //      }
     //    }
     //

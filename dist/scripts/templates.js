@@ -6243,7 +6243,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "          }\" ng-model=\"newSecret.data.gitconfig\" class=\"create-secret-editor ace-bordered\" id=\"gitconfig-editor\" required></div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"newSecret.authType === 'kubernetes.io/dockercfg'\">\n" +
+    "<div ng-if=\"newSecret.authType === 'kubernetes.io/dockerconfigjson'\">\n" +
     "<div class=\"form-group\" ng-class=\"{ 'has-error' : secretForm.dockerServer.$invalid && secretForm.dockerServer.$touched }\">\n" +
     "<label for=\"docker-server\" class=\"required\">Image Registry Server Address</label>\n" +
     "<div>\n" +
@@ -6292,7 +6292,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"newSecret.authType === 'kubernetes.io/dockerconfigjson'\">\n" +
+    "<div ng-if=\"newSecret.authType === 'kubernetes.io/dockercfg'\">\n" +
     "<div class=\"form-group\" id=\"docker-config\">\n" +
     "<label for=\"dockerConfig\" class=\"required\">Configuration File</label>\n" +
     "<osc-file-input id=\"dockercfg-file-input\" model=\"newSecret.data.dockerConfig\" drop-zone-id=\"docker-config\" help-text=\"Upload a .dockercfg or .docker/config.json file\" required=\"true\"></osc-file-input>\n" +
@@ -6439,8 +6439,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div class=\"help-block\">To deploy an image from a private repository, you must\n" +
-    "<a href=\"\" ng-click=\"openCreateWebhookSecretModal()\">create an image pull secret</a>\n" +
+    "<div class=\"help-block\">To deploy an image from a private repository, you must <span ng-if=\"!input.selectedProject.metadata.uid\">create an image pull secret</span>\n" +
+    "<a href=\"\" ng-click=\"openCreateWebhookSecretModal()\" ng-if=\"input.selectedProject.metadata.uid\">create an image pull secret</a>\n" +
     "with your image registry credentials.<a href=\"https://docs.openshift.org/latest/dev_guide/managing_images.html#using-image-pull-secrets\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a></div>\n" +
     "</div>\n" +
     "</fieldset>\n" +
@@ -12137,6 +12137,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "\n" +
+    "<div ng-if=\"overview.filteredOfflineVirtualMachines | size\">\n" +
+    "<h2>Virtual Machines</h2>\n" +
+    "<div class=\"list-pf\">\n" +
+    "<virtual-machine-row ng-repeat=\"ovm in overview.filteredOfflineVirtualMachines track by (ovm | uid)\" api-object=\"ovm\" state=\"overview.state\"></virtual-machine-row>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "\n" +
     "<div ng-if=\"overview.filteredServiceInstances.length && !overview.hidePipelineOtherResources\">\n" +
     "<h2>\n" +
     "Provisioned Services\n" +
@@ -13019,6 +13026,77 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>"
+  );
+
+
+  $templateCache.put('views/overview/_virtual-machine-row.html',
+    "<div class=\"list-pf-item\" ng-class=\"{ active: row.expanded }\">\n" +
+    "<div class=\"list-pf-container\" ng-click=\"row.toggleExpand($event)\">\n" +
+    "<div class=\"list-pf-chevron\">\n" +
+    "<div ng-include src=\" 'views/overview/_list-row-chevron.html' \" class=\"list-pf-content\"></div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-content\">\n" +
+    "<div class=\"list-pf-name\">\n" +
+    "<h3>\n" +
+    "<div class=\"component-label\"><span>Virtual Machine</span></div>\n" +
+    "<optional-link link=\"{{row.apiObject._pod | navigateResourceURL}}\">\n" +
+    "<span ng-bind-html=\"row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords\"></span>\n" +
+    "</optional-link>\n" +
+    "</h3>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-details\">\n" +
+    "<div ng-if=\"!row.expanded\" vm-state ovm=\"row.apiObject\"></div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-actions\">\n" +
+    "<div class=\"dropdown-kebab-pf\" uib-dropdown ng-if=\"row.actionsDropdownVisible()\">\n" +
+    "<button uib-dropdown-toggle class=\"btn btn-link dropdown-toggle\">\n" +
+    "<i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i>\n" +
+    "<span class=\"sr-only\">Actions</span>\n" +
+    "</button>\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right\" uib-dropdown-menu role=\"menu\">\n" +
+    "<dropdown-item action=\"row.startOvm()\" enabled=\"{{row.canStartOvm()}}\">Start</dropdown-item>\n" +
+    "<dropdown-item action=\"row.restartOvm()\" enabled=\"{{row.canRestartOvm()}}\">Restart</dropdown-item>\n" +
+    "<dropdown-item action=\"row.stopOvm()\" enabled=\"{{row.canStopOvm()}}\">Stop</dropdown-item>\n" +
+    "<li ng-if=\"row.OfflineVirtualMachineVersion | canI : 'delete'\">\n" +
+    "<delete-link kind=\"OfflineVirtualMachine\" group=\"{{row.OfflineVirtualMachineVersion.group}}\" stay-on-current-page=\"true\" resource-name=\"{{row.apiObject.metadata.name}}\" project-name=\"{{row.projectName}}\">\n" +
+    "</delete-link>\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-expansion collapse\" ng-if=\"row.expanded\" ng-class=\"{ in: row.expanded }\">\n" +
+    "<div class=\"list-pf-container\">\n" +
+    "<div class=\"expanded-section resource-details\">\n" +
+    "<h3>Details</h3>\n" +
+    "<dl class=\"dl-horizontal\">\n" +
+    "<dt>State:</dt>\n" +
+    "<dd>\n" +
+    "<div vm-state ovm=\"row.apiObject\"></div>\n" +
+    "</dd>\n" +
+    "<dt>Operating System:</dt>\n" +
+    "<dd>{{row.apiObject.metadata.labels['kubevirt.io/os'] || '-'}}</dd>\n" +
+    "</dl>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/overview/_vm-status.html',
+    " <span ng-switch=\"status\">\n" +
+    "<span class=\"pficon pficon-on-running\" ng-style=\"{color: '#3f9c35'}\" ng-switch-when=\"Running\"></span>\n" +
+    "<span class=\"spinner spinner-xs spinner-inline\" ng-switch-when=\"Pending\"></span>\n" +
+    "<span class=\"spinner spinner-xs spinner-inline\" ng-switch-when=\"Scheduling\"></span>\n" +
+    "<span class=\"spinner spinner-xs spinner-inline\" ng-switch-when=\"Scheduled\"></span>\n" +
+    "<span class=\"pficon pficon-off\" ng-switch-when=\"Off\"></span>\n" +
+    "<span class=\"pficonpficon-error-circle-o\" ng-style=\"{color: '#a30000'}\" ng-switch-when=\"Failed\"></span>\n" +
+    "<span class=\"pficon pficon-unknown\" ng-switch-when=\"Unknown\"></span>\n" +
+    "<span class=\"pficon pficon-unknown\" ng-switch-when=\"\"></span>\n" +
+    "</span>\n" +
+    "{{status}}"
   );
 
 

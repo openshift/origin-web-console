@@ -49,11 +49,14 @@ angular.module("openshiftConsole")
             label: "Image Secret",
             authTypes: [
               {
-                id: "kubernetes.io/dockercfg",
+                id: "kubernetes.io/dockerconfigjson",
                 label: "Image Registry Credentials"
               },
+              // User can paste content of his docker configuration file, which could be either in old
+              // '.dockercfg' format, or new '.docker/config.json' format. Because of that the secret type
+              // is determined upon creating the secret, where we scan for the type of format.
               {
-                id: "kubernetes.io/dockerconfigjson",
+                id: "kubernetes.io/dockercfg",
                 label: "Configuration File"
               }
             ]
@@ -164,23 +167,23 @@ angular.module("openshiftConsole")
               }
               break;
             case "kubernetes.io/dockerconfigjson":
+              var auth = window.btoa(data.dockerUsername + ":" + data.dockerPassword);
+              var configData = {auths: {}};
+              configData.auths[data.dockerServer] = {
+                username: data.dockerUsername,
+                password: data.dockerPassword,
+                email: data.dockerMail,
+                auth: auth
+              };
+              secret.stringData['.dockerconfigjson'] = JSON.stringify(configData);
+              break;
+            case "kubernetes.io/dockercfg":
               var configType = ".dockerconfigjson";
               if (!JSON.parse(data.dockerConfig).auths) {
                 secret.type = "kubernetes.io/dockercfg";
                 configType = ".dockercfg";
               }
               secret.stringData[configType] = data.dockerConfig;
-              break;
-            case "kubernetes.io/dockercfg":
-              var auth = window.btoa(data.dockerUsername + ":" + data.dockerPassword);
-              var configData = {};
-              configData[data.dockerServer] = {
-                username: data.dockerUsername,
-                password: data.dockerPassword,
-                email: data.dockerMail,
-                auth: auth
-              };
-              secret.stringData['.dockercfg'] = JSON.stringify(configData);
               break;
             case "Opaque":
               if (data.webhookSecretKey) {
