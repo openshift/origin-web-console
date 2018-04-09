@@ -1109,6 +1109,7 @@ LOGOS: {
 "icon-tomcat": "tomcat.svg",
 "icon-wildfly": "wildfly.svg",
 "icon-wordpress": "wordpress.svg",
+"icon-xamarin": "xamarin.svg",
 "icon-zend": "zend.svg"
 },
 CLUSTER_RESOURCE_OVERRIDES_EXEMPT_PROJECT_NAMES: [ "openshift", "kubernetes", "kube" ],
