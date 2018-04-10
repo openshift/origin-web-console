@@ -13090,6 +13090,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dd>\n" +
     "<dt>Operating System:</dt>\n" +
     "<dd>{{row.apiObject.metadata.labels['kubevirt.io/os'] || '-'}}</dd>\n" +
+    "<dt>Uptime:</dt>\n" +
+    "<dd>{{ row.apiObject._pod | vmPodUptime }}</dd>\n" +
     "</dl>\n" +
     "</div>\n" +
     "</div>\n" +
