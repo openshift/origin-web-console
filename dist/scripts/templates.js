@@ -6439,9 +6439,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div class=\"help-block\">To deploy an image from a private repository, you must <span ng-if=\"!input.selectedProject.metadata.uid\">create an image pull secret</span>\n" +
+    "<div class=\"help-block\">\n" +
+    "To deploy an image from a private repository, you must <span ng-if=\"!input.selectedProject.metadata.uid\">create an image pull secret</span>\n" +
     "<a href=\"\" ng-click=\"openCreateWebhookSecretModal()\" ng-if=\"input.selectedProject.metadata.uid\">create an image pull secret</a>\n" +
-    "with your image registry credentials.<a href=\"https://docs.openshift.org/latest/dev_guide/managing_images.html#using-image-pull-secrets\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a></div>\n" +
+    "with your image registry credentials.\n" +
+    "<a ng-href=\"{{'pull_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a></div>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</fieldset>\n" +
