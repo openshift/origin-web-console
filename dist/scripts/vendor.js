@@ -76178,13 +76178,13 @@ f.prototype._uniqueKey = function(e, t, n, i) {
 var r, o = n && n.namespace || _.get(n, "project.metadata.name") || n.projectName, a = _.get(i, "http.params"), s = this._urlForResource(e, t, n, null, angular.extend({}, {}, {
 namespace: o
 }));
-return r = s ? s.toString() : e || "<unknown>", r += x(a || {}), _.get(i, "partialObjectMetadataList") ? r + "#application/json;as=PartialObjectMetadataList;v=v1alpha1;g=meta.k8s.io" : r;
+return r = s ? s.toString() : e || "<unknown>", r += x(a || {}), _.get(i, "partialObjectMetadataList") ? r + "#application/json;as=PartialObjectMetadataList;v=v1beta1;g=meta.k8s.io,application/json" : r;
 }, f.prototype._startListOp = function(e, n, i) {
 i = i || {};
 var r = _.get(i, "http.params") || {}, o = this._uniqueKey(e, null, n, i);
 this._listInFlight(o, !0);
 var a = {};
-i.partialObjectMetadataList && (a.Accept = "application/json;as=PartialObjectMetadataList;v=v1alpha1;g=meta.k8s.io");
+i.partialObjectMetadataList && (a.Accept = "application/json;as=PartialObjectMetadataList;v=v1beta1;g=meta.k8s.io,application/json");
 var s, l = this;
 if (n.projectPromise && !e.equals("projects")) n.projectPromise.done(function(c) {
 if (!(s = l._urlForResource(e, null, n, !1, _.assign({}, r, {
