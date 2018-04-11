@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('oscFileInput', function($filter, Logger) {
+  .directive('oscFileInput', function($filter, Logger, NotificationsService) {
     return {
       restrict: 'E',
       scope: {
@@ -188,6 +188,17 @@ angular.module('openshiftConsole')
         }
 
         function addFile(file) {
+          // If the file is larger than 5 MiB, don't try to upload. Note that secrets and config
+          // maps have an even smaller limit (1 MB).
+          if (file.size > (5 * 1024 * 1024)) {
+            NotificationsService.addNotification({
+              type: "error",
+              message: "The file is too large.",
+              details: "The file " + file.name + " is " + $filter('humanizeSize')(file.size) + ". The web console has a 5 MiB file limit."
+            });
+            return;
+          }
+
           var reader = new FileReader();
           reader.onloadend = function(){
             scope.$apply(function(){
