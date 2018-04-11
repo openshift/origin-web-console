@@ -49,18 +49,30 @@
     <div class="list-pf-container">
       <div class="expanded-section resource-details">
         <h3>Details</h3>
-        <dl class="dl-horizontal">
-          <dt>State:</dt>
-          <dd>
-            <div vm-state ovm="row.apiObject"></div>
-          </dd>
+        <div class="row">
+          <dl class="dl-horizontal col-md-6">
+            <dt>State:</dt>
+            <dd>
+              <div vm-state ovm="row.apiObject"></div>
+              <span class="bar-separated" ng-if="row.canStartOvm()">
+                <a href="" ng-click="row.startOvm()">Start</a>
+              </span>
+              <span class="bar-separated" ng-if="row.canRestartOvm()">
+                <a href="" ng-click="row.restartOvm()">Restart</a>
+              </span>
+              <span class="bar-separated" ng-if="row.canStopOvm()">
+                <a href="" ng-click="row.stopOvm()">Stop</a>
+              </span>
+            </dd>
+          </dl>
+          <dl class="dl-horizontal col-md-6">
+            <dt>Operating System:</dt>
+            <dd>{{row.apiObject.metadata.labels['kubevirt.io/os'] || '-'}}</dd>
 
-          <dt>Operating System:</dt>
-          <dd>{{row.apiObject.metadata.labels['kubevirt.io/os'] || '-'}}</dd>
-
-          <dt>Uptime:</dt>
-          <dd>{{ row.apiObject._pod | vmPodUptime }}</dd>
-        </dl>
+            <dt>Uptime:</dt>
+            <dd>{{ row.apiObject._pod | vmPodUptime }}</dd>
+          </dl>
+        </div>
       </div>
     </div>
   </div>
