@@ -47,33 +47,34 @@
   </div>
   <div class="list-pf-expansion collapse" ng-if="row.expanded" ng-class="{ in: row.expanded }">
     <div class="list-pf-container">
-      <div class="expanded-section resource-details">
-        <h3>Details</h3>
-        <div class="row">
-          <dl class="dl-horizontal col-md-6">
-            <dt>State:</dt>
-            <dd>
-              <div vm-state ovm="row.apiObject"></div>
-              <span class="bar-separated" ng-if="row.canStartOvm()">
-                <a href="" ng-click="row.startOvm()">Start</a>
-              </span>
-              <span class="bar-separated" ng-if="row.canRestartOvm()">
-                <a href="" ng-click="row.restartOvm()">Restart</a>
-              </span>
-              <span class="bar-separated" ng-if="row.canStopOvm()">
-                <a href="" ng-click="row.stopOvm()">Stop</a>
-              </span>
-            </dd>
-          </dl>
-          <dl class="dl-horizontal col-md-6">
-            <dt>Operating System:</dt>
-            <dd>{{row.apiObject.metadata.labels['kubevirt.io/os'] || '--'}}</dd>
 
-            <dt>Uptime:</dt>
-            <dd>{{ row.apiObject._pod | vmPodUptime }}</dd>
-          </dl>
-        </div>
+      <div class="word-break">
+        <span class="vm-detail-key">State:</span>
+
+        <span vm-state ovm="row.apiObject"></span>
+        <span class="vm-detail-state-actions">
+          <span class="bar-separated" ng-if="row.canStartOvm()">
+            <a href="" ng-click="row.startOvm()">Start</a>
+          </span>
+          <span class="bar-separated" ng-if="row.canRestartOvm()">
+            <a href="" ng-click="row.restartOvm()">Restart</a>
+          </span>
+          <span class="bar-separated" ng-if="row.canStopOvm()">
+            <a href="" ng-click="row.stopOvm()">Stop</a>
+          </span>
+         </span>
       </div>
+
+      <div class="word-break">
+        <span class="vm-detail-key">Uptime:</span>
+        <span class="vm-detail-value">{{ row.apiObject._pod | vmPodUptime }}</span>
+      </div>
+
+      <div class="word-break">
+        <span class="vm-detail-key">Operating System:</span>
+        <span class="vm-detail-value">{{row.apiObject.metadata.labels['kubevirt.io/os'] || '--'}}</span>
+      </div>
+
     </div>
   </div>
 </div>

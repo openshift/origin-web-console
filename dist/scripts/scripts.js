@@ -14126,7 +14126,7 @@ return t ? moment(t).fromNow(!0) : "--";
 }), angular.module("openshiftConsole").directive("vmState", function() {
 function e(e) {
 var t = _.get(e, "_vm.status.phase");
-return void 0 !== t ? t : _.get(e, ".spec.running") ? "Unknown" : "Off";
+return void 0 !== t ? t : _.get(e, ".spec.running") ? "Unknown" : "Not Running";
 }
 function t(t) {
 return e(t.ovm);

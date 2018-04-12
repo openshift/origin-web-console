@@ -6337,3 +6337,6 @@ notification-drawer-wrapper .expanded-notification.unread .drawer-pf-notificatio
 .service-instance-details .instance-status-message{white-space:pre-line}
 .set-home-page .select-project-container{max-width:360px;padding-left:20px}
 .bar-separated+.bar-separated::before{content:' | '}
+.vm-detail-key{font-weight:600}
+.vm-detail-value{padding-left:3px}
+.vm-detail-state-actions{padding-left:12px}
