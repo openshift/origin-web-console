@@ -62049,60 +62049,60 @@ return {
 startTour:k,
 cancelTour:l
 };
-}), angular.module("openshiftCommonUI").factory("HTMLService", [ "BREAKPOINTS", function(a) {
-var b = "xxs", c = "xs", d = "sm", e = "md", f = "lg";
+}), angular.module("openshiftCommonUI").factory("HTMLService", [ "$sanitize", "BREAKPOINTS", function(a, b) {
+var c = "xxs", d = "xs", e = "sm", f = "md", g = "lg";
 return {
-WINDOW_SIZE_XXS:b,
-WINDOW_SIZE_XS:c,
-WINDOW_SIZE_SM:d,
-WINDOW_SIZE_MD:e,
-WINDOW_SIZE_LG:f,
+WINDOW_SIZE_XXS:c,
+WINDOW_SIZE_XS:d,
+WINDOW_SIZE_SM:e,
+WINDOW_SIZE_MD:f,
+WINDOW_SIZE_LG:g,
 getBreakpoint:function() {
-return window.innerWidth < a.screenXsMin ? b :window.innerWidth < a.screenSmMin ? c :window.innerWidth < a.screenMdMin ? d :window.innerWidth < a.screenLgMin ? e :f;
+return window.innerWidth < b.screenXsMin ? c :window.innerWidth < b.screenSmMin ? d :window.innerWidth < b.screenMdMin ? e :window.innerWidth < b.screenLgMin ? f :g;
 },
-isWindowBelowBreakpoint:function(g) {
-switch (g) {
-case b:
+isWindowBelowBreakpoint:function(a) {
+switch (a) {
+case c:
 return !1;
 
-case c:
-return window.innerWidth < a.screenXsMin;
-
 case d:
-return window.innerWidth < a.screenSmMin;
+return window.innerWidth < b.screenXsMin;
 
 case e:
-return window.innerWidth < a.screenMdMin;
+return window.innerWidth < b.screenSmMin;
 
 case f:
-return window.innerWidth < a.screenLgMin;
+return window.innerWidth < b.screenMdMin;
+
+case g:
+return window.innerWidth < b.screenLgMin;
 
 default:
 return !0;
 }
 },
-isWindowAboveBreakpoint:function(b) {
-switch (b) {
-case c:
-return window.innerWidth >= a.screenXsMin;
-
+isWindowAboveBreakpoint:function(a) {
+switch (a) {
 case d:
-return window.innerWidth >= a.screenSmMin;
+return window.innerWidth >= b.screenXsMin;
 
 case e:
-return window.innerWidth >= a.screenMdMin;
+return window.innerWidth >= b.screenSmMin;
 
 case f:
-return window.innerWidth >= a.screenLgMin;
+return window.innerWidth >= b.screenMdMin;
+
+case g:
+return window.innerWidth >= b.screenLgMin;
 
 default:
 return !0;
 }
 },
-linkify:function(a, b, c) {
-return a ? (c || (a = _.escape(a)), a.replace(/https?:\/\/[A-Za-z0-9._%+-]+\S*[^\s.;,(){}<>"\u201d\u2019]/gm, function(a) {
-return b ? '<a href="' + a + '" target="' + b + '">' + a + "</a>" :'<a href="' + a + '">' + a + "</a>";
-})) :a;
+linkify:function(b, c, d) {
+return b ? (d || (b = _.escape(b)), a(b.replace(/https?:\/\/[A-Za-z0-9._%+-]+\S*[^\s.;,(){}<>"\u201d\u2019]/gm, function(a) {
+return c ? '<a href="' + a + '" target="' + c + '">' + a + "</a>" :'<a href="' + a + '">' + a + "</a>";
+}))) :b;
 }
 };
 } ]), angular.module("openshiftCommonUI").provider("NotificationsService", function() {
