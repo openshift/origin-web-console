@@ -25894,7 +25894,19 @@ return b.tspanDx(a, c);
 break;
 
 case "top":
-e = b.axisX, p.attr("x2", 0).attr("y2", -b.innerTickSize), q.attr("x", 0).attr("y", -b.tickLength).style("text-anchor", "middle"), r.attr("x", 0).attr("dy", "0em"), t.attr("d", "M" + b.range[0] + "," + -b.outerTickSize + "V0H" + b.range[1] + "V" + -b.outerTickSize);
+e = b.axisX, p.attr("x1", f).attr("x2", f).attr("y2", function(a, c) {
+return -1 * b.lineY2(a, c);
+}), q.attr("x", 0).attr("y", function(a, c) {
+return -1 * b.textY(a, c) - (d.isCategory ? 2 :b.tickLength - 2);
+}).attr("transform", function(a, c) {
+return b.textTransform(a, c);
+}).style("text-anchor", function(a, c) {
+return b.textTextAnchor(a, c);
+}), r.attr("x", 0).attr("dy", function(a, c) {
+return b.tspanDy(a, c);
+}).attr("dx", function(a, c) {
+return b.tspanDx(a, c);
+}), t.attr("d", "M" + b.range[0] + "," + -b.outerTickSize + "V0H" + b.range[1] + "V" + -b.outerTickSize);
 break;
 
 case "left":
@@ -25904,7 +25916,7 @@ return b.tspanDy(a, c);
 break;
 
 case "right":
-e = b.axisY, p.attr("x2", b.innerTickSize).attr("y2", 0), q.attr("x", b.tickLength).attr("y", 0).style("text-anchor", "start"), r.attr("x", b.tickLength).attr("dy", function(a, c) {
+e = b.axisY, p.attr("x2", b.innerTickSize).attr("y1", g).attr("y2", g), q.attr("x", b.tickLength).attr("y", b.tickOffset).style("text-anchor", "start"), r.attr("x", b.tickLength).attr("dy", function(a, c) {
 return b.tspanDy(a, c);
 }), t.attr("d", "M" + b.outerTickSize + "," + b.range[0] + "H0V" + b.range[1] + "H" + b.outerTickSize);
 }
@@ -25965,7 +25977,7 @@ return j(c, b), c;
 }(b);
 e = A.prototype, e.init = function() {
 var a = this.owner, b = a.config, c = a.main;
-a.axes.x = c.append("g").attr("class", g.axis + " " + g.axisX).attr("clip-path", a.clipPathForXAxis).attr("transform", a.getTranslate("x")).style("visibility", b.axis_x_show ? "visible" :"hidden"), a.axes.x.append("text").attr("class", g.axisXLabel).attr("transform", b.axis_rotated ? "rotate(-90)" :"").style("text-anchor", this.textAnchorForXAxisLabel.bind(this)), a.axes.y = c.append("g").attr("class", g.axis + " " + g.axisY).attr("clip-path", b.axis_y_inner ? "" :a.clipPathForYAxis).attr("transform", a.getTranslate("y")).style("visibility", b.axis_y_show ? "visible" :"hidden"), a.axes.y.append("text").attr("class", g.axisYLabel).attr("transform", b.axis_rotated ? "" :"rotate(-90)").style("text-anchor", this.textAnchorForYAxisLabel.bind(this)), a.axes.y2 = c.append("g").attr("class", g.axis + " " + g.axisY2).attr("transform", a.getTranslate("y2")).style("visibility", b.axis_y2_show ? "visible" :"hidden"), a.axes.y2.append("text").attr("class", g.axisY2Label).attr("transform", b.axis_rotated ? "" :"rotate(-90)").style("text-anchor", this.textAnchorForY2AxisLabel.bind(this));
+a.axes.x = c.append("g").attr("class", g.axis + " " + g.axisX).attr("clip-path", b.axis_x_inner ? "" :a.clipPathForXAxis).attr("transform", a.getTranslate("x")).style("visibility", b.axis_x_show ? "visible" :"hidden"), a.axes.x.append("text").attr("class", g.axisXLabel).attr("transform", b.axis_rotated ? "rotate(-90)" :"").style("text-anchor", this.textAnchorForXAxisLabel.bind(this)), a.axes.y = c.append("g").attr("class", g.axis + " " + g.axisY).attr("clip-path", b.axis_y_inner ? "" :a.clipPathForYAxis).attr("transform", a.getTranslate("y")).style("visibility", b.axis_y_show ? "visible" :"hidden"), a.axes.y.append("text").attr("class", g.axisYLabel).attr("transform", b.axis_rotated ? "" :"rotate(-90)").style("text-anchor", this.textAnchorForYAxisLabel.bind(this)), a.axes.y2 = c.append("g").attr("class", g.axis + " " + g.axisY2).attr("transform", a.getTranslate("y2")).style("visibility", b.axis_y2_show ? "visible" :"hidden"), a.axes.y2.append("text").attr("class", g.axisY2Label).attr("transform", b.axis_rotated ? "" :"rotate(-90)").style("text-anchor", this.textAnchorForY2AxisLabel.bind(this));
 }, e.getXAxis = function(a, b, c, d, e, f, g) {
 var h = this.owner, i = h.config, j = {
 isCategory:h.isCategorized(),
@@ -26064,7 +26076,7 @@ return this.dxForAxisLabel(this.owner.config.axis_rotated, this.getYAxisLabelPos
 return this.dxForAxisLabel(this.owner.config.axis_rotated, this.getY2AxisLabelPosition());
 }, e.dyForXAxisLabel = function() {
 var a = this.owner, b = a.config, c = this.getXAxisLabelPosition();
-return b.axis_rotated ? c.isInner ? "1.2em" :-25 - this.getMaxTickWidth("x") :c.isInner ? "-0.5em" :b.axis_x_height ? b.axis_x_height - 10 :"3em";
+return b.axis_rotated ? c.isInner ? "1.2em" :-25 - (a.config.axis_x_inner ? 0 :this.getMaxTickWidth("x")) :c.isInner ? "-0.5em" :b.axis_x_height ? b.axis_x_height - 10 :"3em";
 }, e.dyForYAxisLabel = function() {
 var a = this.owner, b = this.getYAxisLabelPosition();
 return a.config.axis_rotated ? b.isInner ? "-0.5em" :"3em" :b.isInner ? "1.2em" :-10 - (a.config.axis_y_inner ? 0 :this.getMaxTickWidth("y") + 10);
@@ -26119,7 +26131,7 @@ var c = this.owner;
 c.axes.x.style("opacity", b ? 0 :1), c.axes.y.style("opacity", b ? 0 :1), c.axes.y2.style("opacity", b ? 0 :1), c.axes.subx.style("opacity", b ? 0 :1), a.axisX.call(c.xAxis), a.axisY.call(c.yAxis), a.axisY2.call(c.y2Axis), a.axisSubX.call(c.subXAxis);
 };
 var B, C, D = {
-version:"0.4.21"
+version:"0.4.22"
 };
 return D.generate = function(a) {
 return new c(a);
@@ -26152,7 +26164,7 @@ return 1 !== a.getDate();
 return a.getMonth();
 } ], [ "%Y/%-m/%-d", function() {
 return !0;
-} ] ]), a.hiddenTargetIds = [], a.hiddenLegendIds = [], a.focusedTargetIds = [], a.defocusedTargetIds = [], a.xOrient = c.axis_rotated ? "left" :"bottom", a.yOrient = c.axis_rotated ? c.axis_y_inner ? "top" :"bottom" :c.axis_y_inner ? "right" :"left", a.y2Orient = c.axis_rotated ? c.axis_y2_inner ? "bottom" :"top" :c.axis_y2_inner ? "left" :"right", a.subXOrient = c.axis_rotated ? "left" :"bottom", a.isLegendRight = "right" === c.legend_position, a.isLegendInset = "inset" === c.legend_position, a.isLegendTop = "top-left" === c.legend_inset_anchor || "top-right" === c.legend_inset_anchor, a.isLegendLeft = "top-left" === c.legend_inset_anchor || "bottom-left" === c.legend_inset_anchor, a.legendStep = 0, a.legendItemWidth = 0, a.legendItemHeight = 0, a.currentMaxTickWidths = {
+} ] ]), a.hiddenTargetIds = [], a.hiddenLegendIds = [], a.focusedTargetIds = [], a.defocusedTargetIds = [], a.xOrient = c.axis_rotated ? c.axis_x_inner ? "right" :"left" :c.axis_x_inner ? "top" :"bottom", a.yOrient = c.axis_rotated ? c.axis_y_inner ? "top" :"bottom" :c.axis_y_inner ? "right" :"left", a.y2Orient = c.axis_rotated ? c.axis_y2_inner ? "bottom" :"top" :c.axis_y2_inner ? "left" :"right", a.subXOrient = c.axis_rotated ? "left" :"bottom", a.isLegendRight = "right" === c.legend_position, a.isLegendInset = "inset" === c.legend_position, a.isLegendTop = "top-left" === c.legend_inset_anchor || "top-right" === c.legend_inset_anchor, a.isLegendLeft = "top-left" === c.legend_inset_anchor || "bottom-left" === c.legend_inset_anchor, a.legendStep = 0, a.legendItemWidth = 0, a.legendItemHeight = 0, a.currentMaxTickWidths = {
 x:0,
 y:0,
 y2:0
@@ -28155,6 +28167,7 @@ axis_x_padding:{},
 axis_x_height:void 0,
 axis_x_extent:void 0,
 axis_x_label:{},
+axis_x_inner:void 0,
 axis_y_show:!0,
 axis_y_type:void 0,
 axis_y_max:void 0,
@@ -29415,7 +29428,7 @@ var a = this.config;
 return l(a.padding_bottom) ? a.padding_bottom :0;
 }, C.getCurrentPaddingLeft = function(a) {
 var b = this, c = b.config;
-return l(c.padding_left) ? c.padding_left :c.axis_rotated ? c.axis_x_show ? Math.max(r(b.getAxisWidthByAxisId("x", a)), 40) :1 :!c.axis_y_show || c.axis_y_inner ? b.axis.getYAxisLabelPosition().isOuter ? 30 :1 :r(b.getAxisWidthByAxisId("y", a));
+return l(c.padding_left) ? c.padding_left :c.axis_rotated ? !c.axis_x_show || c.axis_x_inner ? 1 :Math.max(r(b.getAxisWidthByAxisId("x", a)), 40) :!c.axis_y_show || c.axis_y_inner ? b.axis.getYAxisLabelPosition().isOuter ? 30 :1 :r(b.getAxisWidthByAxisId("y", a));
 }, C.getCurrentPaddingRight = function() {
 var a = this, b = a.config, c = 10, d = a.isLegendRight ? a.getLegendWidth() + 20 :0;
 return l(b.padding_right) ? b.padding_right + 1 :b.axis_rotated ? c + d :!b.axis_y2_show || b.axis_y2_inner ? 2 + d + (a.axis.getY2AxisLabelPosition().isOuter ? 20 :0) :r(a.getAxisWidthByAxisId("y2")) + d;
