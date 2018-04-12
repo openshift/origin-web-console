@@ -4245,15 +4245,23 @@ return d += " -n " + a.metadata.namespace;
 return {
 getLogsCommand:c
 };
-} ]), angular.module("openshiftConsole").factory("HTMLService", function() {
+} ]), angular.module("openshiftConsole").factory("HTMLService", [ "$sanitize", function(a) {
 return {
-linkify:function(a, b, c) {
-return a ? (c || (a = _.escape(a)), a.replace(/https?:\/\/[A-Za-z0-9._%+-]+\S*[^\s.;,(){}<>"\u201d\u2019]/gm, function(a) {
-return b ? '<a href="' + a + '" target="' + b + '">' + a + "</a>" :'<a href="' + a + '">' + a + "</a>";
-})) :a;
+linkify:function(b, c, d) {
+if (!b) return b;
+d || (b = _.escape(b));
+var e = b.replace(/https?:\/\/[A-Za-z0-9._%+-]+\S*[^\s.;,(){}<>"\u201d\u2019]/gm, function(a) {
+return c ? '<a href="' + a + '" target="' + c + '">' + a + "</a>" :'<a href="' + a + '">' + a + "</a>";
+});
+try {
+e = a(e);
+} catch (f) {
+return b;
+}
+return e;
 }
 };
-}), angular.module("openshiftConsole").factory("EnvironmentService", [ "$filter", "keyValueEditorUtils", function(a, b) {
+} ]), angular.module("openshiftConsole").factory("EnvironmentService", [ "$filter", "keyValueEditorUtils", function(a, b) {
 var c = a("altTextForValueFrom"), d = function(a) {
 return _.get(a, "spec.template.spec.containers", []);
 };
