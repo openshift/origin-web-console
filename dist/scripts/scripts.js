@@ -10765,12 +10765,17 @@ a.destroy();
 });
 }
 };
-} ]), angular.module("openshiftConsole").directive("logViewer", [ "$sce", "$timeout", "$window", "AuthService", "APIDiscovery", "DataService", "logLinks", "BREAKPOINTS", function(a, b, c, d, e, f, g, h) {
-var i = $(window), j = $('<tr class="log-line"><td class="log-line-number"></td><td class="log-line-text"></td></tr>').get(0), k = function(a, b) {
-var c = j.cloneNode(!0);
-c.firstChild.setAttribute("data-line-number", a);
-var d = ansi_up.escape_for_html(b), e = ansi_up.ansi_to_html(d), f = ansi_up.linkify(e);
-return c.lastChild.innerHTML = f, c;
+} ]), angular.module("openshiftConsole").directive("logViewer", [ "$sanitize", "$sce", "$timeout", "$window", "AuthService", "APIDiscovery", "DataService", "logLinks", "BREAKPOINTS", function(a, b, c, d, e, f, g, h, i) {
+var j = $(window), k = $('<tr class="log-line"><td class="log-line-number"></td><td class="log-line-text"></td></tr>').get(0), l = function(b, c) {
+var d = k.cloneNode(!0);
+d.firstChild.setAttribute("data-line-number", b);
+var e, f = ansi_up.escape_for_html(c), g = ansi_up.ansi_to_html(f), h = ansi_up.linkify(g);
+try {
+d.lastChild.innerHTML = a(h);
+} catch (i) {
+e = document.createTextNode(c), d.lastChild.append(e);
+}
+return d;
 };
 return {
 restrict:"AE",
@@ -10789,144 +10794,144 @@ chromeless:"=?",
 empty:"=?",
 run:"=?"
 },
-controller:[ "$scope", function(j) {
-var l, m, n, o, p, q = document.documentElement;
-j.logViewerID = _.uniqueId("log-viewer"), j.empty = !0;
+controller:[ "$scope", function(a) {
+var k, m, n, o, p, q = document.documentElement;
+a.logViewerID = _.uniqueId("log-viewer"), a.empty = !0;
 var r = function() {
-o = window.innerWidth < h.screenSmMin && !j.fixedHeight ? null :m;
+o = window.innerWidth < i.screenSmMin && !a.fixedHeight ? null :m;
 }, s = function() {
-j.$apply(function() {
-var a = l.getBoundingClientRect();
-j.fixedHeight ? j.showScrollLinks = a && a.height > j.fixedHeight :j.showScrollLinks = a && (a.top < 0 || a.bottom > q.clientHeight);
+a.$apply(function() {
+var b = k.getBoundingClientRect();
+a.fixedHeight ? a.showScrollLinks = b && b.height > a.fixedHeight :a.showScrollLinks = b && (b.top < 0 || b.bottom > q.clientHeight);
 });
 }, t = !1, u = function() {
-t ? t = !1 :j.$evalAsync(function() {
-j.autoScrollActive = !1;
+t ? t = !1 :a.$evalAsync(function() {
+a.autoScrollActive = !1;
 });
 }, v = function() {
-n.off("scroll", u), i.off("scroll", u), window.innerWidth <= h.screenSmMin && !j.fixedHeight ? i.on("scroll", u) :n.on("scroll", u);
+n.off("scroll", u), j.off("scroll", u), window.innerWidth <= i.screenSmMin && !a.fixedHeight ? j.on("scroll", u) :n.on("scroll", u);
 }, w = function() {
-j.fixedHeight || (window.innerWidth < h.screenSmMin && !j.fixedHeight ? p.removeClass("target-logger-node").affix({
+a.fixedHeight || (window.innerWidth < i.screenSmMin && !a.fixedHeight ? p.removeClass("target-logger-node").affix({
 target:window,
 offset:{
-top:j.followAffixTop || 0,
-bottom:j.followAffixBottom || 0
+top:a.followAffixTop || 0,
+bottom:a.followAffixBottom || 0
 }
 }) :p.addClass("target-logger-node").affix({
 target:n,
 offset:{
-top:j.followAffixTop || 0,
-bottom:j.followAffixBottom || 0
+top:a.followAffixTop || 0,
+bottom:a.followAffixBottom || 0
 }
 }));
-}, x = function(a) {
-var b = $("#" + j.logViewerID + " .log-view-output"), c = b.offset().top;
-if (!(c < 0)) {
-var d = j.fixedHeight ? j.fixedHeight :Math.floor($(window).height() - c);
-j.chromeless || j.fixedHeight || (d -= 35), a ? b.animate({
-"min-height":d + "px"
-}, "fast") :b.css("min-height", d + "px"), j.fixedHeight && b.css("max-height", d);
+}, x = function(b) {
+var c = $("#" + a.logViewerID + " .log-view-output"), d = c.offset().top;
+if (!(d < 0)) {
+var e = a.fixedHeight ? a.fixedHeight :Math.floor($(window).height() - d);
+a.chromeless || a.fixedHeight || (e -= 35), b ? c.animate({
+"min-height":e + "px"
+}, "fast") :c.css("min-height", e + "px"), a.fixedHeight && c.css("max-height", e);
 }
 }, y = _.debounce(function() {
 x(!0), r(), v(), s(), w(), u();
 }, 100);
-i.on("resize", y);
+j.on("resize", y);
 var z, A = function() {
-t = !0, g.scrollBottom(o);
+t = !0, h.scrollBottom(o);
 }, B = function() {
-j.autoScrollActive = !j.autoScrollActive, j.autoScrollActive && A();
+a.autoScrollActive = !a.autoScrollActive, a.autoScrollActive && A();
 }, C = document.createDocumentFragment(), D = _.debounce(function() {
-l.appendChild(C), C = document.createDocumentFragment(), j.autoScrollActive && A(), j.showScrollLinks || s();
+k.appendChild(C), C = document.createDocumentFragment(), a.autoScrollActive && A(), a.showScrollLinks || s();
 }, 100, {
 maxWait:300
 }), E = function(a) {
-z && (z.stop(), z = null), a || (D.cancel(), l && (l.innerHTML = ""), C = document.createDocumentFragment());
+z && (z.stop(), z = null), a || (D.cancel(), k && (k.innerHTML = ""), C = document.createDocumentFragment());
 }, F = function() {
-if (E(), j.name && j.run) {
-angular.extend(j, {
+if (E(), a.name && a.run) {
+angular.extend(a, {
 loading:!0,
 autoScroll:!1,
 limitReached:!1,
 showScrollLinks:!1
 });
-var a = angular.extend({
+var b = angular.extend({
 follow:!0,
 tailLines:5e3,
 limitBytes:10485760
-}, j.options);
-z = f.createStream(j.resource, j.name, j.context, a);
-var c = 0, d = function(a) {
-c++, C.appendChild(k(c, a)), D();
+}, a.options);
+z = g.createStream(a.resource, a.name, a.context, b);
+var d = 0, e = function(a) {
+d++, C.appendChild(l(d, a)), D();
 };
-z.onMessage(function(b, e, f) {
-j.$evalAsync(function() {
-j.empty = !1, "logs" !== j.state && (j.state = "logs", setTimeout(x));
-}), b && (a.limitBytes && f >= a.limitBytes && (j.$evalAsync(function() {
-j.limitReached = !0, j.loading = !1;
-}), E(!0)), d(b), !j.largeLog && c >= a.tailLines && j.$evalAsync(function() {
-j.largeLog = !0;
+z.onMessage(function(c, f, g) {
+a.$evalAsync(function() {
+a.empty = !1, "logs" !== a.state && (a.state = "logs", setTimeout(x));
+}), c && (b.limitBytes && g >= b.limitBytes && (a.$evalAsync(function() {
+a.limitReached = !0, a.loading = !1;
+}), E(!0)), e(c), !a.largeLog && d >= b.tailLines && a.$evalAsync(function() {
+a.largeLog = !0;
 }));
 }), z.onClose(function() {
-z = null, j.$evalAsync(function() {
-j.autoScrollActive = !1, 0 !== c || j.emptyStateMessage || (j.state = "empty", j.emptyStateMessage = "The logs are no longer available or could not be loaded.");
-}), b(function() {
-j.loading = !1;
+z = null, a.$evalAsync(function() {
+a.autoScrollActive = !1, 0 !== d || a.emptyStateMessage || (a.state = "empty", a.emptyStateMessage = "The logs are no longer available or could not be loaded.");
+}), c(function() {
+a.loading = !1;
 }, 100);
 }), z.onError(function() {
-z = null, j.$evalAsync(function() {
-angular.extend(j, {
+z = null, a.$evalAsync(function() {
+angular.extend(a, {
 loading:!1,
 autoScroll:!1
-}), 0 === c ? (j.state = "empty", j.emptyStateMessage = "The logs are no longer available or could not be loaded.") :j.errorWhileRunning = !0;
+}), 0 === d ? (a.state = "empty", a.emptyStateMessage = "The logs are no longer available or could not be loaded.") :a.errorWhileRunning = !0;
 });
 }), z.start();
 }
 };
-return e.getLoggingURL().then(function(b) {
-var e = _.get(j.context, "project.metadata.name"), f = _.get(j.options, "container");
-e && f && j.name && b && (angular.extend(j, {
-kibanaAuthUrl:a.trustAsResourceUrl(URI(b).segment("auth").segment("token").normalizePathname().toString()),
-access_token:d.UserStore().getToken()
-}), j.$watchGroup([ "context.project.metadata.name", "options.container", "name" ], function() {
-angular.extend(j, {
-kibanaArchiveUrl:a.trustAsResourceUrl(g.archiveUri({
-namespace:j.context.project.metadata.name,
-namespaceUid:j.context.project.metadata.uid,
-podname:j.name,
-containername:j.options.container,
-backlink:URI.encode(c.location.href)
+return f.getLoggingURL().then(function(c) {
+var f = _.get(a.context, "project.metadata.name"), g = _.get(a.options, "container");
+f && g && a.name && c && (angular.extend(a, {
+kibanaAuthUrl:b.trustAsResourceUrl(URI(c).segment("auth").segment("token").normalizePathname().toString()),
+access_token:e.UserStore().getToken()
+}), a.$watchGroup([ "context.project.metadata.name", "options.container", "name" ], function() {
+angular.extend(a, {
+kibanaArchiveUrl:b.trustAsResourceUrl(h.archiveUri({
+namespace:a.context.project.metadata.name,
+namespaceUid:a.context.project.metadata.uid,
+podname:a.name,
+containername:a.options.container,
+backlink:URI.encode(d.location.href)
 }))
 });
 }));
 }), this.cacheScrollableNode = function(a) {
 m = a, n = $(m);
 }, this.cacheLogNode = function(a) {
-l = a;
+k = a;
 }, this.cacheAffixable = function(a) {
 p = $(a);
 }, this.start = function() {
 r(), v(), w();
-}, angular.extend(j, {
+}, angular.extend(a, {
 ready:!0,
 loading:!0,
 autoScroll:!1,
 state:!1,
 onScrollBottom:function() {
-g.scrollBottom(o);
+h.scrollBottom(o);
 },
 onScrollTop:function() {
-j.autoScrollActive = !1, g.scrollTop(o);
+a.autoScrollActive = !1, h.scrollTop(o);
 },
 toggleAutoScroll:B,
-goChromeless:g.chromelessLink,
+goChromeless:h.chromelessLink,
 restartLogs:F
-}), j.$on("$destroy", function() {
-E(), i.off("resize", y), i.off("scroll", u), n.off("scroll", u);
-}), "deploymentconfigs/log" !== j.resource || j.name ? void j.$watchGroup([ "name", "options.container", "run" ], F) :(j.state = "empty", void (j.emptyStateMessage = "Logs are not available for this replication controller because it was not generated from a deployment configuration."));
+}), a.$on("$destroy", function() {
+E(), j.off("resize", y), j.off("scroll", u), n.off("scroll", u);
+}), "deploymentconfigs/log" !== a.resource || a.name ? void a.$watchGroup([ "name", "options.container", "run" ], F) :(a.state = "empty", void (a.emptyStateMessage = "Logs are not available for this replication controller because it was not generated from a deployment configuration."));
 } ],
 require:"logViewer",
-link:function(a, c, d, e) {
-b(function() {
+link:function(a, b, d, e) {
+c(function() {
 e.cacheScrollableNode(document.getElementById(a.fixedHeight ? a.logViewerID + "-fixed-scrollable" :"container-main")), e.cacheLogNode(document.getElementById(a.logViewerID + "-logContent")), e.cacheAffixable(document.getElementById(a.logViewerID + "-affixedFollow")), e.start();
 }, 0);
 }
