@@ -67,7 +67,7 @@
           </dl>
           <dl class="dl-horizontal col-md-6">
             <dt>Operating System:</dt>
-            <dd>{{row.apiObject.metadata.labels['kubevirt.io/os'] || '-'}}</dd>
+            <dd>{{row.apiObject.metadata.labels['kubevirt.io/os'] || '--'}}</dd>
 
             <dt>Uptime:</dt>
             <dd>{{ row.apiObject._pod | vmPodUptime }}</dd>
