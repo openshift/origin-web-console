@@ -3,6 +3,7 @@
 
 angular.module('openshiftConsole')
   .directive('logViewer', [
+    '$sanitize',
     '$sce',
     '$timeout',
     '$window',
@@ -11,7 +12,7 @@ angular.module('openshiftConsole')
     'DataService',
     'logLinks',
     'BREAKPOINTS',
-    function($sce, $timeout, $window, AuthService, APIDiscovery, DataService, logLinks, BREAKPOINTS) {
+    function($sanitize, $sce, $timeout, $window, AuthService, APIDiscovery, DataService, logLinks, BREAKPOINTS) {
       // cache the jQuery win, but not clobber angular's $window
       var $win = $(window);
       // Keep a reference the DOM node rather than the jQuery object for cloneNode.
@@ -32,7 +33,14 @@ angular.module('openshiftConsole')
         var escaped = ansi_up.escape_for_html(text);
         var html = ansi_up.ansi_to_html(escaped);
         var linkifiedHTML = ansi_up.linkify(html);
-        line.lastChild.innerHTML = linkifiedHTML;
+        var textNode;
+        try {
+          line.lastChild.innerHTML = $sanitize(linkifiedHTML);
+        } catch (e) {
+          // $sanitize will throw errors on invalid HTML. Fall back to plain text.
+          textNode = document.createTextNode(text);
+          line.lastChild.append(textNode);
+        }
 
         return line;
       };
