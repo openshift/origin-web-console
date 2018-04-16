@@ -76943,7 +76943,7 @@ closeTooltip: "x"
 },
 cancelTour: u
 };
-}), angular.module("openshiftCommonUI").factory("HTMLService", [ "BREAKPOINTS", function(e) {
+}), angular.module("openshiftCommonUI").factory("HTMLService", [ "$sanitize", "BREAKPOINTS", function(e, t) {
 return {
 WINDOW_SIZE_XXS: "xxs",
 WINDOW_SIZE_XS: "xs",
@@ -76951,51 +76951,51 @@ WINDOW_SIZE_SM: "sm",
 WINDOW_SIZE_MD: "md",
 WINDOW_SIZE_LG: "lg",
 getBreakpoint: function() {
-return window.innerWidth < e.screenXsMin ? "xxs" : window.innerWidth < e.screenSmMin ? "xs" : window.innerWidth < e.screenMdMin ? "sm" : window.innerWidth < e.screenLgMin ? "md" : "lg";
+return window.innerWidth < t.screenXsMin ? "xxs" : window.innerWidth < t.screenSmMin ? "xs" : window.innerWidth < t.screenMdMin ? "sm" : window.innerWidth < t.screenLgMin ? "md" : "lg";
 },
-isWindowBelowBreakpoint: function(t) {
-switch (t) {
+isWindowBelowBreakpoint: function(e) {
+switch (e) {
 case "xxs":
 return !1;
 
 case "xs":
-return window.innerWidth < e.screenXsMin;
+return window.innerWidth < t.screenXsMin;
 
 case "sm":
-return window.innerWidth < e.screenSmMin;
+return window.innerWidth < t.screenSmMin;
 
 case "md":
-return window.innerWidth < e.screenMdMin;
+return window.innerWidth < t.screenMdMin;
 
 case "lg":
-return window.innerWidth < e.screenLgMin;
+return window.innerWidth < t.screenLgMin;
 
 default:
 return !0;
 }
 },
-isWindowAboveBreakpoint: function(t) {
-switch (t) {
+isWindowAboveBreakpoint: function(e) {
+switch (e) {
 case "xs":
-return window.innerWidth >= e.screenXsMin;
+return window.innerWidth >= t.screenXsMin;
 
 case "sm":
-return window.innerWidth >= e.screenSmMin;
+return window.innerWidth >= t.screenSmMin;
 
 case "md":
-return window.innerWidth >= e.screenMdMin;
+return window.innerWidth >= t.screenMdMin;
 
 case "lg":
-return window.innerWidth >= e.screenLgMin;
+return window.innerWidth >= t.screenLgMin;
 
 default:
 return !0;
 }
 },
-linkify: function(e, t, n) {
-return e ? (n || (e = _.escape(e)), e.replace(/https?:\/\/[A-Za-z0-9._%+-]+[^\s<]*[^\s.,()\[\]{}<>"\u201d\u2019]/gm, function(e) {
-return t ? '<a href="' + e + '" target="' + t + '">' + e + ' <i class="fa fa-external-link" aria-hidden="true"></i></a>' : '<a href="' + e + '">' + e + "</a>";
-})) : e;
+linkify: function(t, n, i) {
+return t ? (i || (t = _.escape(t)), e(t.replace(/https?:\/\/[A-Za-z0-9._%+-]+[^\s<]*[^\s.,()\[\]{}<>"\u201d\u2019]/gm, function(e) {
+return n ? '<a href="' + e + '" target="' + n + '">' + e + ' <i class="fa fa-external-link" aria-hidden="true"></i></a>' : '<a href="' + e + '">' + e + "</a>";
+}))) : t;
 }
 };
 } ]), angular.module("openshiftCommonUI").provider("NotificationsService", function() {
