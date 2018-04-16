@@ -10836,6 +10836,12 @@ var P = function() {
 return _.get(r, "nav.collapsed", !1);
 }, j = function(e) {
 _.set(r, "nav.showMobileNav", e);
+}, k = function(e) {
+"/catalog" === t.path() ? e.selectpicker("val", "catalog") : e.selectpicker("val", "application-console");
+}, I = function(e) {
+i.$evalAsync(function() {
+t.url(e);
+});
 };
 i.toggleNav = function() {
 var e = P();
@@ -10852,22 +10858,40 @@ i.orderingPanelVisible = !0, i.orderKind = e;
 }, i.onSearchToggle = function(e) {
 _.set(r, "view.hasProjectSearch", e);
 }, i.catalogLandingPageEnabled = !u.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
-var k = p.find(".selectpicker"), I = [], R = function() {
+var R = p.find(".contextselector");
+i.clusterConsoleURL = window.OPENSHIFT_CONSTANTS.TECTONIC_URL || window.OPENSHIFT_CONFIG.tectonicURL, R.on("loaded.bs.select", function() {
+k(R);
+}).change(function() {
+switch ($(this).val()) {
+case "catalog":
+I("/catalog");
+break;
+
+case "application-console":
+I("/projects");
+break;
+
+case "cluster-console":
+window.location.assign(i.clusterConsoleURL);
+}
+});
+var E = p.find(".project-picker"), T = [], N = function() {
 var t = i.currentProjectName;
 if (t) {
 var n = function(e, n) {
 var r = $("<option>").attr("value", e.metadata.name).attr("selected", e.metadata.name === t);
 return n ? r.text(b(e)) : r.text(S(e, y)), r;
 };
-_.size(h) <= 100 ? (y = e("orderByDisplayName")(h), I = _.map(y, function(e) {
+_.size(h) <= 100 ? (y = e("orderByDisplayName")(h), T = _.map(y, function(e) {
 return n(e, !1);
-})) : I = [ n(h[t], !0) ], k.empty(), k.append(I), k.append($('<option data-divider="true"></option>')), k.append($('<option value="">View All Projects</option>')), k.selectpicker("refresh");
+})) : T = [ n(h[t], !0) ], E.empty(), E.append(T), E.append($('<option data-divider="true"></option>')), E.append($('<option value="">View All Projects</option>')), E.selectpicker("refresh");
 }
-}, E = function() {
+}, D = function() {
 return f.list().then(function(e) {
 h = e.by("metadata.name");
 });
-}, T = function() {
+}, A = function() {
+k(R);
 var e = a.project;
 if (i.currentProjectName !== e) {
 i.currentProjectName = e, i.chromeless = "chromeless" === a.view;
@@ -10883,20 +10907,20 @@ n.all([ r, a ]).then(function() {
 i.catalogItems = c.sortCatalogItems(_.concat(t, o));
 });
 }
-}), E().then(function() {
+}), D().then(function() {
 i.currentProjectName && h && (h[i.currentProjectName] || (h[i.currentProjectName] = {
 metadata: {
 name: i.currentProjectName
 }
-}), i.currentProject = h[i.currentProjectName], R());
+}), i.currentProject = h[i.currentProjectName], N());
 })) : _.set(r, "view.hasProject", !1);
 }
-}, N = function() {
+}, B = function() {
 i.orderingPanelVisible && v.addItem(_.get(i.selectedItem, "resource.metadata.uid"));
-}, D = function(e) {
+}, V = function(e) {
 return "PartialObjectMetadata" === e.kind;
-}, A = function(e) {
-return D(e) ? d.get(C, e.metadata.name, {
+}, L = function(e) {
+return V(e) ? d.get(C, e.metadata.name, {
 namespace: e.metadata.namespace
 }) : n.when(e);
 };
@@ -10909,11 +10933,11 @@ status: {
 removedFromBrokerCatalog: !0
 }
 }), i.selectedItem = t, i.orderingPanelVisible = !0;
-}) : A(t.resource).then(function(e) {
+}) : L(t.resource).then(function(e) {
 i.selectedItem = e, i.orderingPanelVisible = !0, i.orderKind = "Template";
 }));
 });
-var B = r.$on("filter-catalog-items", function(e, t) {
+var O = r.$on("filter-catalog-items", function(e, t) {
 if (i.currentProjectName) {
 var n = {
 filter: t.searchText
@@ -10923,16 +10947,11 @@ m.toProjectCatalog(i.currentProjectName, n);
 });
 i.closeOrderingPanel = function() {
 v.addItem(_.get(i.selectedItem, "resource.metadata.uid")), i.orderingPanelVisible = !1;
-}, T(), i.$on("$routeChangeSuccess", T), k.selectpicker({
-iconBase: "fa",
-tickIcon: "fa-check"
-}).change(function() {
-var e = $(this).val(), n = "" === e ? "projects" : g(e);
-i.$apply(function() {
-t.url(n);
-});
+}, A(), i.$on("$routeChangeSuccess", A), E.change(function() {
+var e = $(this).val(), t = "" === e ? "projects" : g(e);
+I(t);
 }), i.$on("$destroy", function() {
-B(), N();
+O(), B();
 });
 }
 };

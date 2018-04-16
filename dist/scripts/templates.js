@@ -7363,6 +7363,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div id=\"header-logo\"></div>\n" +
     "</a>\n" +
     "</div>\n" +
+    "<div class=\"nav contextselector-pf hidden-xs hidden-sm\" ng-show=\"clusterConsoleURL\">\n" +
+    "<select class=\"selectpicker contextselector\">\n" +
+    "<option value=\"catalog\">Service Catalog</option>\n" +
+    "<option value=\"application-console\">Application Console</option>\n" +
+    "<option value=\"cluster-console\">Cluster Console</option>\n" +
+    "</select>\n" +
+    "</div>\n" +
     "<navbar-utility></navbar-utility>\n" +
     "</nav>\n" +
     "<div ng-show=\"view.hasProject\" class=\"project-bar\">\n" +
@@ -7376,7 +7383,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "\n" +
-    "<select class=\"selectpicker form-control\" data-selected-text-format=\"count>3\" id=\"boostrapSelect\" title=\"\"></select>\n" +
+    "<select class=\"selectpicker project-picker form-control\" id=\"boostrapSelect\" title=\"\"></select>\n" +
     "</div>\n" +
     "<catalog-search ng-if=\"canIAddToProject\" catalog-items=\"catalogItems\" base-project-url=\"project\" toggle-at-mobile=\"true\" search-toggle-callback=\"onSearchToggle\"></catalog-search>\n" +
     "\n" +

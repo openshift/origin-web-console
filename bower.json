@@ -18,7 +18,7 @@
     "uri.js": "1.18.12",
     "moment": "2.19.3",
     "moment-timezone": "0.5.3",
-    "patternfly": "3.37.4",
+    "patternfly": "3.43.0",
     "jquery": "3.2.1",
     "lodash": "4.17.4",
     "sifter": "0.4.1",
