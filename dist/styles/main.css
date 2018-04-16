@@ -4187,6 +4187,9 @@ div.hopscotch-bubble .hopscotch-bubble-arrow-container.left,div.hopscotch-bubble
 .icon-sso:before{content:"\e909"}
 .icon-openshift:before{content:"\e90a"}
 .icon-cordova:before{content:"\e90b"}
+.icon-xamarin:before{content:"\e90c"}
+.icon-kubevirt:before{content:"\e90d"}
+.icon-mssql:before{content:"\e90e"}
 @keyframes toastSlideIn{0%{opacity:0;transform:translateX(150px)}
 100%{opacity:1;transform:translateX(0)}
 }
