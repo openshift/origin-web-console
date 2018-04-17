@@ -12372,13 +12372,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</metrics-summary>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"pods hidden-xs\">\n" +
-    "<div ng-if=\"row.apiObject.kind === 'Pod'\">\n" +
+    "<div ng-switch on=\"row.apiObject.kind\" class=\"pods hidden-xs\">\n" +
+    "<div ng-switch-when=\"Pod\">\n" +
     "<a ng-href=\"{{row.apiObject | navigateResourceURL}}\" class=\"mini-donut-link\">\n" +
     "<pod-donut pods=\"[row.apiObject]\" mini=\"true\"></pod-donut>\n" +
     "</a>\n" +
     "</div>\n" +
-    "<div ng-if=\"row.apiObject.kind !== 'Pod'\">\n" +
+    "<div ng-switch-when=\"DaemonSet\">\n" +
+    "<a ng-href=\"{{row.apiObject | navigateResourceURL}}\" class=\"mini-donut-link\">\n" +
+    "<pod-donut pods=\"row.getPods(row.current)\" mini=\"true\"></pod-donut>\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "<div ng-switch-default>\n" +
     "<a ng-href=\"{{row.current | donutURL : row.getPods(row.current)}}\" class=\"mini-donut-link\" ng-class=\"{ 'disabled-link': !(row.getPods(row.current) | size) }\">\n" +
     "<pod-donut pods=\"row.getPods(row.current)\" idled=\"!(row.getPods(row.current) | size) && (row.apiObject | annotation : 'idledAt')\" mini=\"true\">\n" +
     "</pod-donut>\n" +
@@ -12476,13 +12481,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div class=\"latest-donut\">\n" +
-    "<div ng-if=\"row.apiObject.kind === 'Pod'\">\n" +
+    "<div ng-switch on=\"row.apiObject.kind\" class=\"latest-donut\">\n" +
+    "<div ng-switch-when=\"Pod\">\n" +
     "<a ng-href=\"{{row.apiObject | navigateResourceURL}}\">\n" +
     "<pod-donut pods=\"[row.apiObject]\"></pod-donut>\n" +
     "</a>\n" +
     "</div>\n" +
-    "<div ng-if=\"row.apiObject.kind !== 'Pod'\">\n" +
+    "<div ng-switch-when=\"DaemonSet\">\n" +
+    "<a ng-href=\"{{row.apiObject | navigateResourceURL}}\">\n" +
+    "<pod-donut pods=\"row.getPods(row.current)\"></pod-donut>\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "<div ng-switch-default>\n" +
     "<deployment-donut rc=\"row.current\" deployment-config=\"row.apiObject\" pods=\"row.getPods(row.current)\" hpa=\"row.hpa\" limit-ranges=\"row.state.limitRanges\" project=\"row.state.project\" quotas=\"row.state.quotas\" cluster-quotas=\"row.state.clusterQuotas\" scalable=\"row.isScalable()\">\n" +
     "</deployment-donut>\n" +
     "</div>\n" +
