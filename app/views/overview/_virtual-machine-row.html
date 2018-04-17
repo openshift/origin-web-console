@@ -57,6 +57,9 @@
 
           <dt>Operating System:</dt>
           <dd>{{row.apiObject.metadata.labels['kubevirt.io/os'] || '-'}}</dd>
+
+          <dt>Uptime:</dt>
+          <dd>{{ row.apiObject._pod | vmPodUptime }}</dd>
         </dl>
       </div>
     </div>

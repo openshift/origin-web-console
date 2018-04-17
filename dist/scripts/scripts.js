@@ -14080,33 +14080,33 @@ templateUrl: "views/overview/_mobile-client-row.html"
 });
 }(), function() {
 angular.module("openshiftConsole").component("virtualMachineRow", {
-controller: [ "$scope", "$filter", "$routeParams", "APIService", "AuthorizationService", "DataService", "ListRowUtils", "Navigate", "ProjectsService", "KubevirtVersions", function(e, t, n, r, a, o, i, s, c, l) {
-function u() {
-return p.apiObject.spec.running;
-}
+controller: [ "$scope", "$filter", "$routeParams", "APIService", "AuthorizationService", "DataService", "ListRowUtils", "Navigate", "ProjectsService", "KubevirtVersions", "moment", function(e, t, n, r, a, o, i, s, c, l, u) {
 function d() {
-var e = angular.copy(p.apiObject);
+return f.apiObject.spec.running;
+}
+function m() {
+var e = angular.copy(f.apiObject);
 return delete e._pod, delete e._vm, e;
 }
-function m(t) {
-var n = d();
+function p(t) {
+var n = m();
 return n.spec.running = t, o.update(l.offlineVirtualMachine.resource, n.metadata.name, n, e.$parent.context);
 }
-var p = this;
-p.OfflineVirtualMachineVersion = l.offlineVirtualMachine, _.extend(p, i.ui), p.actionsDropdownVisible = function() {
-return !_.get(p.apiObject, "metadata.deletionTimestamp") && a.canI(l.offlineVirtualMachine, "delete");
-}, p.projectName = n.project, p.startOvm = function() {
-m(!0);
-}, p.stopOvm = function() {
-m(!1);
-}, p.restartOvm = function() {
-return o.delete(l.virtualMachine, p.apiObject._vm.metadata.name, e.$parent.context);
-}, p.canStartOvm = function() {
-return !u();
-}, p.canStopOvm = function() {
-return u();
-}, p.canRestartOvm = function() {
-return u() && p.apiObject._vm && "Running" === _.get(p.apiObject, "_pod.status.phase");
+var f = this;
+f.OfflineVirtualMachineVersion = l.offlineVirtualMachine, _.extend(f, i.ui), f.actionsDropdownVisible = function() {
+return !_.get(f.apiObject, "metadata.deletionTimestamp") && a.canI(l.offlineVirtualMachine, "delete");
+}, f.projectName = n.project, f.startOvm = function() {
+p(!0);
+}, f.stopOvm = function() {
+p(!1);
+}, f.restartOvm = function() {
+return o.delete(l.virtualMachine, f.apiObject._vm.metadata.name, e.$parent.context);
+}, f.canStartOvm = function() {
+return !d();
+}, f.canStopOvm = function() {
+return d();
+}, f.canRestartOvm = function() {
+return d() && f.apiObject._vm && "Running" === _.get(f.apiObject, "_pod.status.phase");
 };
 } ],
 controllerAs: "row",
@@ -14115,6 +14115,13 @@ apiObject: "<",
 state: "<"
 },
 templateUrl: "views/overview/_virtual-machine-row.html"
+}), angular.module("openshiftConsole").filter("vmPodUptime", function() {
+return function(e) {
+var t = _(_.get(e, "status.containerStatuses")).filter({
+name: "compute"
+}).map("state.running.startedAt").first() || _.get(e, "status.startTime");
+return t ? moment(t).fromNow(!0) : "--";
+};
 }), angular.module("openshiftConsole").directive("vmState", function() {
 function e(e) {
 var t = _.get(e, "_vm.status.phase");
