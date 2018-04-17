@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
       <alerts alerts="alerts"></alerts>
-      <div ng-if="!imageStream" class="mar-top-xl">Loading...</div>
+      <div ng-if="!loaded" class="mar-top-xl">Loading...</div>
       <div ng-if="imageStream">
         <h1>
           {{imageStream.metadata.name}}:{{tagName}}
@@ -13,7 +13,7 @@
   </div><!-- /middle-header-->
   <div class="middle-content" persist-tab-state>
     <div class="container-fluid">
-      <div ng-if="imageStream && !image">Loading...</div>
+      <div ng-if="!loaded">Loading...</div>
       <div class="row" ng-if="image">
         <div class="col-md-12">
           <registry-image-pull settings="settings" names="[ imageStream.metadata.name + ':' + tagName ]">
