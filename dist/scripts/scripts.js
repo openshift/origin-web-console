@@ -14129,15 +14129,18 @@ var t = _.get(e, "_vm.status.phase");
 return void 0 !== t ? t : _.get(e, ".spec.running") ? "Unknown" : "Off";
 }
 function t(t) {
-t.$watch("ovm", function() {
-t.status = e(t.ovm);
+return e(t.ovm);
+}
+function n(n) {
+n.$watch(t, function() {
+n.status = e(n.ovm);
 });
 }
-return t.$inject = [ "$scope" ], {
+return n.$inject = [ "$scope" ], {
 scope: {
 ovm: "<"
 },
-controller: t,
+controller: n,
 templateUrl: "views/overview/_vm-status.html"
 };
 }), angular.module("openshiftConsole").constant("KubevirtVersions", {
