@@ -664,6 +664,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     'icon-tomcat': 'tomcat.svg',
     'icon-wildfly': 'wildfly.svg',
     'icon-wordpress': 'wordpress.svg',
+    'icon-xamarin': 'xamarin.svg',
     'icon-zend': 'zend.svg'
   },
 
