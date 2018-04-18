@@ -7363,6 +7363,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div id=\"header-logo\"></div>\n" +
     "</a>\n" +
     "</div>\n" +
+    "<div class=\"nav contextselector-pf hidden-xs hidden-sm\" ng-show=\"clusterConsoleURL\">\n" +
+    "<select class=\"selectpicker contextselector\">\n" +
+    "<option value=\"catalog\">Service Catalog</option>\n" +
+    "<option value=\"application-console\">Application Console</option>\n" +
+    "<option value=\"cluster-console\">Cluster Console</option>\n" +
+    "</select>\n" +
+    "</div>\n" +
     "<navbar-utility></navbar-utility>\n" +
     "</nav>\n" +
     "<div ng-show=\"view.hasProject\" class=\"project-bar\">\n" +
@@ -7376,7 +7383,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "\n" +
-    "<select class=\"selectpicker form-control\" data-selected-text-format=\"count>3\" id=\"boostrapSelect\" title=\"\"></select>\n" +
+    "<select class=\"selectpicker project-picker form-control\" id=\"boostrapSelect\" title=\"\"></select>\n" +
     "</div>\n" +
     "<catalog-search ng-if=\"canIAddToProject\" catalog-items=\"catalogItems\" base-project-url=\"project\" toggle-at-mobile=\"true\" search-toggle-callback=\"onSearchToggle\"></catalog-search>\n" +
     "\n" +
@@ -7445,45 +7452,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt ng-if-start=\"hpa.status.lastScaleTime\">Last Scaled:</dt>\n" +
     "<dd ng-if-end><span am-time-ago=\"hpa.status.lastScaleTime\"></span></dd>\n" +
     "</dl>"
-  );
-
-
-  $templateCache.put('views/directives/istag-select.html',
-    "<ng-form name=\"istagForm\">\n" +
-    "<fieldset ng-disabled=\"selectDisabled\">\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"form-group col-sm-4\">\n" +
-    "<label class=\"sr-only\">Namespace</label>\n" +
-    "<ui-select ng-required=\"selectRequired\" ng-model=\"istag.namespace\" ng-disabled=\"selectDisabled\" ng-change=\"istag.imageStream = null; istag.tagObject = null;\" append-to-body=\"appendToBody\">\n" +
-    "<ui-select-match placeholder=\"Namespace\">{{$select.selected}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"namespace in (namespaces | filter : $select.search)\">\n" +
-    "<div ng-bind-html=\"namespace | highlight : $select.search\"></div>\n" +
-    "</ui-select-choices>\n" +
-    "</ui-select>\n" +
-    "<div class=\"istag-separator\">/</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group col-sm-4\">\n" +
-    "<label class=\"sr-only\">Image Stream</label>\n" +
-    "<ui-select ng-required=\"selectRequired\" ng-model=\"istag.imageStream\" ng-disabled=\"!istag.namespace || selectDisabled\" ng-change=\"istag.tagObject = null\" append-to-body=\"appendToBody\">\n" +
-    "<ui-select-match placeholder=\"Image Stream\">{{$select.selected}}</ui-select-match>\n" +
-    "<ui-select-choices repeat=\"imageStream in (isNamesByNamespace[istag.namespace] | filter : $select.search)\">\n" +
-    "<div ng-bind-html=\"imageStream | highlight : $select.search\"></div>\n" +
-    "</ui-select-choices>\n" +
-    "</ui-select>\n" +
-    "<div class=\"istag-separator\">:</div>\n" +
-    "</div>\n" +
-    "<div class=\"form-group col-sm-4\">\n" +
-    "<label class=\"sr-only\">Tag</label>\n" +
-    "<ui-select ng-required=\"selectRequired\" ng-model=\"istag.tagObject\" ng-disabled=\"!istag.imageStream || selectDisabled\" append-to-body=\"appendToBody\">\n" +
-    "<ui-select-match placeholder=\"Tag\">{{$select.selected.tag}}</ui-select-match>\n" +
-    "<ui-select-choices group-by=\"groupTags\" repeat=\"statusTag in (isByNamespace[istag.namespace][istag.imageStream].status.tags | filter : { tag: $select.search })\" refresh=\"getTags($select.search)\" refresh-delay=\"200\">\n" +
-    "<div ng-bind-html=\"statusTag.tag | highlight : $select.search\"></div>\n" +
-    "</ui-select-choices>\n" +
-    "</ui-select>\n" +
-    "</div>\n" +
-    "</div>\n" +
-    "</fieldset>\n" +
-    "</ng-form>"
   );
 
 
@@ -13083,6 +13051,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dd>\n" +
     "<dt>Operating System:</dt>\n" +
     "<dd>{{row.apiObject.metadata.labels['kubevirt.io/os'] || '-'}}</dd>\n" +
+    "<dt>Uptime:</dt>\n" +
+    "<dd>{{ row.apiObject._pod | vmPodUptime }}</dd>\n" +
     "</dl>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -14162,6 +14132,45 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>"
+  );
+
+
+  $templateCache.put('components/istag-select/istag-select.html',
+    "<ng-form name=\"istagForm\">\n" +
+    "<fieldset ng-disabled=\"$ctrl.selectDisabled\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"form-group col-sm-4\">\n" +
+    "<label class=\"sr-only\">Namespace</label>\n" +
+    "<ui-select ng-required=\"$ctrl.selectRequired\" ng-model=\"$ctrl.istag.namespace\" ng-disabled=\"$ctrl.selectDisabled\" ng-change=\"$ctrl.namespaceChanged($ctrl.istag.namespace)\" append-to-body=\"$ctrl.appendToBody\">\n" +
+    "<ui-select-match placeholder=\"Namespace\">{{$select.selected}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"namespace in ($ctrl.namespaces | filter : $select.search)\">\n" +
+    "<div ng-bind-html=\"namespace | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<div class=\"istag-separator\">/</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group col-sm-4\">\n" +
+    "<label class=\"sr-only\">Image Stream</label>\n" +
+    "<ui-select ng-required=\"$ctrl.selectRequired\" ng-model=\"$ctrl.istag.imageStream\" ng-disabled=\"!$ctrl.istag.namespace || $ctrl.selectDisabled\" ng-change=\"$ctrl.istag.tagObject = null\" append-to-body=\"$ctrl.appendToBody\">\n" +
+    "<ui-select-match placeholder=\"Image Stream\">{{$select.selected}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"imageStream in ($ctrl.isNamesByNamespace[$ctrl.istag.namespace] | filter : $select.search)\">\n" +
+    "<div ng-bind-html=\"imageStream | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "<div class=\"istag-separator\">:</div>\n" +
+    "</div>\n" +
+    "<div class=\"form-group col-sm-4\">\n" +
+    "<label class=\"sr-only\">Tag</label>\n" +
+    "<ui-select ng-required=\"$ctrl.selectRequired\" ng-model=\"$ctrl.istag.tagObject\" ng-disabled=\"!$ctrl.istag.imageStream || $ctrl.selectDisabled\" append-to-body=\"$ctrl.appendToBody\">\n" +
+    "<ui-select-match placeholder=\"Tag\">{{$select.selected.tag}}</ui-select-match>\n" +
+    "<ui-select-choices group-by=\"groupTags\" repeat=\"statusTag in ($ctrl.isByNamespace[$ctrl.istag.namespace][$ctrl.istag.imageStream].status.tags | filter : { tag: $select.search })\" refresh=\"$ctrl.getTags($select.search)\" refresh-delay=\"200\">\n" +
+    "<div ng-bind-html=\"statusTag.tag | highlight : $select.search\"></div>\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</ng-form>"
   );
 
 

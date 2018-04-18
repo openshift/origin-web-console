@@ -14,7 +14,6 @@
     // Max logo dimensions width 320px / height 40px
     width: 320px;
   }
-}
 
 .navbar-pf-vertical {
   background-color: @navbar-pf-bg-color;
@@ -23,19 +22,6 @@
   min-height: 0;
   @media(min-width: @screen-sm-min) {
     padding-left: 20px;
-  }
-  .dropdown-menu:after {
-    border: 6px solid transparent;
-    border-bottom-color: #fff;
-    border-top-width: 0;
-    content: "";
-    display: block;
-    height: 0;
-    position: absolute;
-    right: 9px;
-    top: -6px;
-    vertical-align: middle;
-    width: 0;
   }
   .navbar-brand {
     padding: 0;
@@ -64,7 +50,6 @@
         top: 18px !important;
       }
     }
-
     .drawer-pf-trigger {
       display: inline-block; // workaround for Safari bug
       a {
@@ -73,6 +58,19 @@
     }
     .dropdown .nav-item-iconic {
       padding-right: 20px;
+    }
+    .dropdown-menu:after {
+      border: 6px solid transparent;
+      border-bottom-color: #fff;
+      border-top-width: 0;
+      content: "";
+      display: block;
+      height: 0;
+      position: absolute;
+      right: 9px;
+      top: -6px;
+      vertical-align: middle;
+      width: 0;
     }
     > li {
       display: none;
@@ -89,7 +87,7 @@
       .username {
         display: inline-block;
         font-weight: 300;
-        max-width: 170px; // enable truncation
+        max-width: 140px; // enable truncation
         padding-right: 2px;
         vertical-align: top; // align text and icon
       }

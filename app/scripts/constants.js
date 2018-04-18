@@ -659,6 +659,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     'icon-mediawiki': 'mediawiki.svg',
     'icon-memcached': 'memcached.svg',
     'icon-mongodb': 'mongodb.svg',
+    'icon-mssql': 'mssql.svg',
     'icon-mysql-database': 'mysql-database.svg',
     'icon-nginx': 'nginx.svg',
     'icon-nodejs': 'nodejs.svg',

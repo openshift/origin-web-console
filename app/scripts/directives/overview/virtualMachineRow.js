@@ -13,6 +13,7 @@
       'Navigate',
       'ProjectsService',
       'KubevirtVersions',
+      'moment',
       VirtualMachineRow
     ],
     controllerAs: 'row',
@@ -33,7 +34,8 @@
     ListRowUtils,
     Navigate,
     ProjectsService,
-    KubevirtVersions) {
+    KubevirtVersions,
+    moment) {
     var row = this;
     row.OfflineVirtualMachineVersion = KubevirtVersions.offlineVirtualMachine;
 
@@ -96,6 +98,20 @@
              _.get(row.apiObject, '_pod.status.phase') === 'Running';
     };
   }
+
+  angular.module('openshiftConsole').filter('vmPodUptime', function () {
+    return function (pod) {
+      var computeContainerStartTime = _(_.get(pod, 'status.containerStatuses'))
+        .filter({ name: "compute" })
+        .map('state.running.startedAt')
+        .first();
+      var startTime = computeContainerStartTime || _.get(pod, 'status.startTime');
+      if (!startTime) {
+        return '--';
+      }
+      return moment(startTime).fromNow(true);
+    };
+  });
 
   angular.module('openshiftConsole').directive('vmState', function () {
     function getOvmStatus(ovm) {
