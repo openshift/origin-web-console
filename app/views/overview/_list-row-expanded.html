@@ -70,13 +70,18 @@
             </div>
           </div>
 
-          <div class="latest-donut">
-            <div ng-if="row.apiObject.kind === 'Pod'">
+          <div ng-switch on="row.apiObject.kind" class="latest-donut">
+            <div ng-switch-when="Pod">
               <a ng-href="{{row.apiObject | navigateResourceURL}}">
                 <pod-donut pods="[row.apiObject]"></pod-donut>
               </a>
             </div>
-            <div ng-if="row.apiObject.kind !== 'Pod'">
+            <div ng-switch-when="DaemonSet">
+              <a ng-href="{{row.apiObject | navigateResourceURL}}">
+                <pod-donut pods="row.getPods(row.current)"></pod-donut>
+              </a>
+            </div>
+            <div ng-switch-default>
               <deployment-donut
                 rc="row.current"
                 deployment-config="row.apiObject"
