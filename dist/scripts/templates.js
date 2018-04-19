@@ -13044,16 +13044,29 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-container\">\n" +
     "<div class=\"expanded-section resource-details\">\n" +
     "<h3>Details</h3>\n" +
-    "<dl class=\"dl-horizontal\">\n" +
+    "<div class=\"row\">\n" +
+    "<dl class=\"dl-horizontal col-md-6\">\n" +
     "<dt>State:</dt>\n" +
     "<dd>\n" +
     "<div vm-state ovm=\"row.apiObject\"></div>\n" +
+    "<span class=\"bar-separated\" ng-if=\"row.canStartOvm()\">\n" +
+    "<a href=\"\" ng-click=\"row.startOvm()\">Start</a>\n" +
+    "</span>\n" +
+    "<span class=\"bar-separated\" ng-if=\"row.canRestartOvm()\">\n" +
+    "<a href=\"\" ng-click=\"row.restartOvm()\">Restart</a>\n" +
+    "</span>\n" +
+    "<span class=\"bar-separated\" ng-if=\"row.canStopOvm()\">\n" +
+    "<a href=\"\" ng-click=\"row.stopOvm()\">Stop</a>\n" +
+    "</span>\n" +
     "</dd>\n" +
+    "</dl>\n" +
+    "<dl class=\"dl-horizontal col-md-6\">\n" +
     "<dt>Operating System:</dt>\n" +
-    "<dd>{{row.apiObject.metadata.labels['kubevirt.io/os'] || '-'}}</dd>\n" +
+    "<dd>{{row.apiObject.metadata.labels['kubevirt.io/os'] || '--'}}</dd>\n" +
     "<dt>Uptime:</dt>\n" +
     "<dd>{{ row.apiObject._pod | vmPodUptime }}</dd>\n" +
     "</dl>\n" +
+    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
