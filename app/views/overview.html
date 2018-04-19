@@ -380,7 +380,7 @@
               </div>
             </div>
             <!-- Show Mobile Apps -->
-            <div ng-if="(overview.filteredMobileClients | size) && AEROGEAR_MOBILE_ENABLED">
+            <div ng-if="(overview.filteredMobileClients | size) && AEROGEAR_MOBILE_ENABLED && !overview.hidePipelineOtherResources">
               <h2>Mobile Clients</h2>
               <div class="list-pf">
                 <mobile-client-row
@@ -390,7 +390,7 @@
               </div>
             </div>
             <!-- Show Kubevirt Virtual Machines -->
-            <div ng-if="overview.filteredOfflineVirtualMachines | size">
+            <div ng-if="(overview.filteredOfflineVirtualMachines | size) && !overview.hidePipelineOtherResources">
               <h2>Virtual Machines</h2>
               <div class="list-pf">
                 <virtual-machine-row

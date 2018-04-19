@@ -12100,14 +12100,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "\n" +
-    "<div ng-if=\"(overview.filteredMobileClients | size) && AEROGEAR_MOBILE_ENABLED\">\n" +
+    "<div ng-if=\"(overview.filteredMobileClients | size) && AEROGEAR_MOBILE_ENABLED && !overview.hidePipelineOtherResources\">\n" +
     "<h2>Mobile Clients</h2>\n" +
     "<div class=\"list-pf\">\n" +
     "<mobile-client-row ng-repeat=\"mobileapp in overview.filteredMobileClients track by (mobileapp | uid)\" api-object=\"mobileapp\" state=\"overview.state\"></mobile-client-row>\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +
-    "<div ng-if=\"overview.filteredOfflineVirtualMachines | size\">\n" +
+    "<div ng-if=\"(overview.filteredOfflineVirtualMachines | size) && !overview.hidePipelineOtherResources\">\n" +
     "<h2>Virtual Machines</h2>\n" +
     "<div class=\"list-pf\">\n" +
     "<virtual-machine-row ng-repeat=\"ovm in overview.filteredOfflineVirtualMachines track by (ovm | uid)\" api-object=\"ovm\" state=\"overview.state\"></virtual-machine-row>\n" +
