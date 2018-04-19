@@ -72,13 +72,18 @@
       </metrics-summary>
     </div>
   </div>
-  <div class="pods hidden-xs">
-    <div ng-if="row.apiObject.kind === 'Pod'">
+  <div ng-switch on="row.apiObject.kind" class="pods hidden-xs">
+    <div ng-switch-when="Pod">
       <a ng-href="{{row.apiObject | navigateResourceURL}}" class="mini-donut-link">
         <pod-donut pods="[row.apiObject]" mini="true"></pod-donut>
       </a>
     </div>
-    <div ng-if="row.apiObject.kind !== 'Pod'">
+    <div ng-switch-when="DaemonSet">
+      <a ng-href="{{row.apiObject | navigateResourceURL}}" class="mini-donut-link">
+        <pod-donut pods="row.getPods(row.current)" mini="true"></pod-donut>
+      </a>
+    </div>
+    <div ng-switch-default>
       <a ng-href="{{row.current | donutURL : row.getPods(row.current)}}" class="mini-donut-link" ng-class="{ 'disabled-link': !(row.getPods(row.current) | size) }">
         <pod-donut
           pods="row.getPods(row.current)"
