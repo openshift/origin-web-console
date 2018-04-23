@@ -120,13 +120,13 @@
         return vmPhase;
       }
       if (!_.get(ovm, '.spec.running')) {
-        return "Off";
+        return "Not Running";
       }
       return "Unknown";
     }
 
     function getOvmStatusFromScope(scope) {
-      return getOvmStatus(scope.ovm)
+      return getOvmStatus(scope.ovm);
     }
 
     function controller ($scope) {
