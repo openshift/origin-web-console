@@ -13052,13 +13052,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"list-pf-expansion collapse\" ng-if=\"row.expanded\" ng-class=\"{ in: row.expanded }\">\n" +
     "<div class=\"list-pf-container\">\n" +
-    "<div class=\"expanded-section resource-details\">\n" +
-    "<h3>Details</h3>\n" +
-    "<div class=\"row\">\n" +
-    "<dl class=\"dl-horizontal col-md-6\">\n" +
-    "<dt>State:</dt>\n" +
-    "<dd>\n" +
-    "<div vm-state ovm=\"row.apiObject\"></div>\n" +
+    "<div class=\"word-break\">\n" +
+    "<span class=\"vm-detail-key\">State:</span>\n" +
+    "<span vm-state ovm=\"row.apiObject\"></span>\n" +
+    "<span class=\"vm-detail-state-actions\">\n" +
     "<span class=\"bar-separated\" ng-if=\"row.canStartOvm()\">\n" +
     "<a href=\"\" ng-click=\"row.startOvm()\">Start</a>\n" +
     "</span>\n" +
@@ -13068,15 +13065,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"bar-separated\" ng-if=\"row.canStopOvm()\">\n" +
     "<a href=\"\" ng-click=\"row.stopOvm()\">Stop</a>\n" +
     "</span>\n" +
-    "</dd>\n" +
-    "</dl>\n" +
-    "<dl class=\"dl-horizontal col-md-6\">\n" +
-    "<dt>Operating System:</dt>\n" +
-    "<dd>{{row.apiObject.metadata.labels['kubevirt.io/os'] || '--'}}</dd>\n" +
-    "<dt>Uptime:</dt>\n" +
-    "<dd>{{ row.apiObject._pod | vmPodUptime }}</dd>\n" +
-    "</dl>\n" +
+    "</span>\n" +
     "</div>\n" +
+    "<div class=\"word-break\">\n" +
+    "<span class=\"vm-detail-key\">Uptime:</span>\n" +
+    "<span class=\"vm-detail-value\">{{ row.apiObject._pod | vmPodUptime }}</span>\n" +
+    "</div>\n" +
+    "<div class=\"word-break\">\n" +
+    "<span class=\"vm-detail-key\">Operating System:</span>\n" +
+    "<span class=\"vm-detail-value\">{{row.apiObject.metadata.labels['kubevirt.io/os'] || '--'}}</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -13085,7 +13082,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/overview/_vm-status.html',
-    " <span ng-switch=\"status\">\n" +
+    " <span ng-switch=\"status\" class=\"vm-detail-value\">\n" +
     "<span class=\"pficon pficon-on-running\" ng-style=\"{color: '#3f9c35'}\" ng-switch-when=\"Running\"></span>\n" +
     "<span class=\"spinner spinner-xs spinner-inline\" ng-switch-when=\"Pending\"></span>\n" +
     "<span class=\"spinner spinner-xs spinner-inline\" ng-switch-when=\"Scheduling\"></span>\n" +

@@ -1070,6 +1070,7 @@ LOGOS: {
 "icon-cordova": "cordova.png",
 "icon-datagrid": "datagrid.svg",
 "icon-datavirt": "datavirt.svg",
+"icon-debian": "debian.svg",
 "icon-decisionserver": "decisionserver.svg",
 "icon-django": "django.svg",
 "icon-dotnet": "dotnet.svg",
@@ -1077,6 +1078,8 @@ LOGOS: {
 "icon-eap": "eap.svg",
 "icon-elastic": "elastic.svg",
 "icon-erlang": "erlang.svg",
+"icon-fedora": "fedora.svg",
+"icon-freebsd": "freebsd.svg",
 "icon-git": "git.svg",
 "icon-github": "github.svg",
 "icon-gitlab": "gitlab.svg",
@@ -1092,6 +1095,7 @@ LOGOS: {
 "icon-joomla": "joomla.svg",
 "icon-jruby": "jruby.svg",
 "icon-js": "js.svg",
+"icon-kubevirt": "kubevirt.svg",
 "icon-laravel": "laravel.svg",
 "icon-load-balancer": "load-balancer.svg",
 "icon-mariadb": "mariadb.svg",
@@ -1105,6 +1109,8 @@ LOGOS: {
 "icon-openjdk": "openjdk.svg",
 "icon-openshift": "openshift.svg",
 "icon-openstack": "openstack.svg",
+"icon-other-linux": "other-linux.svg",
+"icon-other-unknown": "other-unknown.svg",
 "icon-perl": "perl.svg",
 "icon-phalcon": "phalcon.svg",
 "icon-php": "php.svg",
@@ -1124,9 +1130,12 @@ LOGOS: {
 "icon-spring": "spring.svg",
 "icon-sso": "sso.svg",
 "icon-stackoverflow": "stackoverflow.svg",
+"icon-suse": "suse.svg",
 "icon-symfony": "symfony.svg",
 "icon-tomcat": "tomcat.svg",
+"icon-ubuntu": "ubuntu.svg",
 "icon-wildfly": "wildfly.svg",
+"icon-windows": "windows.svg",
 "icon-wordpress": "wordpress.svg",
 "icon-xamarin": "xamarin.svg",
 "icon-zend": "zend.svg"
@@ -14144,7 +14153,7 @@ return t ? moment(t).fromNow(!0) : "--";
 }), angular.module("openshiftConsole").directive("vmState", function() {
 function e(e) {
 var t = _.get(e, "_vm.status.phase");
-return void 0 !== t ? t : _.get(e, ".spec.running") ? "Unknown" : "Off";
+return void 0 !== t ? t : _.get(e, ".spec.running") ? "Unknown" : "Not Running";
 }
 function t(t) {
 return e(t.ovm);
