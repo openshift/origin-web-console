@@ -13071,6 +13071,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"vm-detail-key\">Uptime:</span>\n" +
     "<span class=\"vm-detail-value\">{{ row.apiObject._pod | vmPodUptime }}</span>\n" +
     "</div>\n" +
+    "<div class=\"word-break\" ng-if=\"row.isWindowsVM() && row.isOvmInRunningPhase()\">\n" +
+    "<span class=\"vm-detail-key\">Remote Desktop:</span>\n" +
+    "<span class=\"vm-detail-value\">\n" +
+    "<a href=\"\" ng-if=\"row.isRdpService()\" ng-click=\"row.onOpenRemoteDesktop()\">Open Console</a>\n" +
+    "<div ng-if=\"!row.isRdpService()\">No RDP service defined</div>\n" +
+    "</span>\n" +
+    "</div>\n" +
     "<div class=\"word-break\">\n" +
     "<span class=\"vm-detail-key\">Operating System:</span>\n" +
     "<span class=\"vm-detail-value\">{{row.apiObject.metadata.labels['kubevirt.io/os'] || '--'}}</span>\n" +
