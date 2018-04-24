@@ -7830,6 +7830,22 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/directives/mobile-service-clients.html',
+    "<div class=\"row mobile-service-clients-integrations\">\n" +
+    "<div class=\"col-sm-6\">\n" +
+    "<div ng-if=\"$ctrl.integratedClients | size\" class=\"client-title component-label section-label\">Mobile Clients</div>\n" +
+    "<div ng-repeat=\"mobileClient in $ctrl.integratedClients track by $index\" class=\"col-sm-12 col-md-6 mobile-client-integration\">\n" +
+    "<span aria-hidden=\"true\" class=\"fa-2x {{mobileClient.metadata.annotations.icon}} client-icon\"></span>\n" +
+    "<div class=\"client-details\">\n" +
+    "<a ng-href=\"{{mobileClient | navigateResourceURL}}\">{{mobileClient.spec.name}}</a>\n" +
+    "<div class=\"client-type\">{{mobileClient.spec.appIdentifier}}</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/directives/next-steps.html',
     "<div ng-controller=\"TasksController\">\n" +
     "<div ng-if=\"$ctrl.pendingTasks(tasks()).length\">\n" +
@@ -12119,7 +12135,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Provisioned Services\n" +
     "</h2>\n" +
     "<div class=\"list-pf\">\n" +
-    "<service-instance-row ng-repeat=\"serviceInstance in overview.filteredServiceInstances track by (serviceInstance | uid)\" api-object=\"serviceInstance\" bindings=\"overview.bindingsByInstanceRef[serviceInstance.metadata.name]\" state=\"overview.state\"></service-instance-row>\n" +
+    "<service-instance-row ng-repeat=\"serviceInstance in overview.filteredServiceInstances track by (serviceInstance | uid)\" api-object=\"serviceInstance\" bindings=\"overview.bindingsByInstanceRef[serviceInstance.metadata.name]\" state=\"overview.state\" mobile-clients=\"overview.mobileClients\"></service-instance-row>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -12952,11 +12968,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-sm-12\" ng-if=\"row.serviceClass.spec.description\">\n" +
     "<p class=\"service-description\"><truncate-long-text limit=\"500\" content=\"row.serviceClass.spec.description\" use-word-boundary=\"true\" expandable=\"true\" linkify=\"true\">\n" +
     "</truncate-long-text></p>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-sm-12\">\n" +
     "<div ng-if=\"row.serviceClass.spec.externalMetadata.documentationUrl || row.serviceClass.spec.externalMetadata.supportUrl\">\n" +
     "<a ng-if=\"row.serviceClass.spec.externalMetadata.documentationUrl\" ng-href=\"{{row.serviceClass.spec.externalMetadata.documentationUrl}}\" target=\"_blank\" class=\"learn-more-link\">View Documentation <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
     "<a ng-if=\"row.serviceClass.spec.externalMetadata.supportUrl\" ng-href=\"{{row.serviceClass.spec.externalMetadata.supportUrl}}\" target=\"_blank\" class=\"learn-more-link\">Get Support <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
     "</div>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"row.isMobileEnabled && row.hasMobileClients && (row.serviceClass | isMobileService)\">\n" +
+    "<mobile-service-clients ng-if=\"row.apiObject | isServiceInstanceReady\" mobile-clients=\"row.mobileClients\" service-instance=\"row.apiObject\" project=\"row.state.project\"></mobile-service-clients>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"expanded-section\">\n" +

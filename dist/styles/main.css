@@ -5261,7 +5261,7 @@ h2+.list-view-pf{margin-top:20px}
 .list-view-pf .list-group-item-heading small{overflow:hidden;text-overflow:ellipsis;color:#757575}
 .list-view-pf .list-group-item-text{margin-bottom:5px}
 .list-view-pf-additional-info-item{display:inline-block;text-align:left;width:100%}
-.list-view-pf-additional-info-item image-names,.monitoring-page .list-pf-expansion .list-pf-container{display:block}
+.list-view-pf-additional-info-item image-names{display:block}
 .list-view-pf-description{flex:1 0 55%}
 .list-view-pf-main-info{padding-bottom:10px;padding-top:10px}
 @media (max-width:991px){.list-view-pf-main-info .list-view-pf-body{display:block}
@@ -5271,7 +5271,14 @@ h2+.list-view-pf{margin-top:20px}
 .list-view-pf-description{width:60%}
 .monitoring-page .list-pf-main-content{flex-basis:30%}
 }
+.mobile-service-clients-integrations .client-title{border-bottom:none}
+.mobile-service-clients-integrations .mobile-client-integration{height:60px;margin-bottom:1em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mobile-service-clients-integrations .mobile-client-integration .client-icon{display:inline-block;line-height:42px;vertical-align:bottom}
+.mobile-service-clients-integrations .mobile-client-integration .client-details{display:inline-block}
+.mobile-service-clients-integrations .mobile-client-integration .client-details .client-type{color:#757575;font-size:11px;line-height:11px;padding-left:10px}
+.mobile-service-clients-integrations .mobile-client-integration a{padding-left:10px;text-overflow:ellipsis;vertical-align:middle;white-space:nowrap}
 .monitoring-page .list-pf-content{min-height:45px}
+.monitoring-page .list-pf-expansion .list-pf-container{display:block}
 .monitoring-page .list-pf-expansion .log-fixed-height.empty-state-message,.monitoring-page .list-pf-expansion .metrics .empty-state-message{margin:10px 0 0;padding:0;text-align:left}
 .monitoring-page .list-pf-expansion .log-fixed-height.empty-state-message h2,.monitoring-page .list-pf-expansion .metrics .empty-state-message h2{margin-top:0}
 .monitoring-page .list-pf-expansion .metrics .empty-state-message .pficon-error-circle-o{display:none}
