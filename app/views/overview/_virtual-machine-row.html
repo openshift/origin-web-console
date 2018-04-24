@@ -70,6 +70,14 @@
         <span class="vm-detail-value">{{ row.apiObject._pod | vmPodUptime }}</span>
       </div>
 
+      <div class="word-break" ng-if="row.isWindowsVM() && row.isOvmInRunningPhase()">
+        <span class="vm-detail-key">Remote Desktop:</span>
+        <span class="vm-detail-value">
+          <a href="" ng-if="row.isRdpService()" ng-click="row.onOpenRemoteDesktop()">Open Console</a>
+            <div ng-if="!row.isRdpService()">No RDP service defined</div>
+        </span>
+      </div>
+
       <div class="word-break">
         <span class="vm-detail-key">Operating System:</span>
         <span class="vm-detail-value">{{row.apiObject.metadata.labels['kubevirt.io/os'] || '--'}}</span>

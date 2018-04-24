@@ -933,6 +933,20 @@ function OverviewController($scope,
     });
   };
 
+  var updateServicesForOvms = function () {
+    if (!overview.offlineVirtualMachines || !state.allServices) {
+      return;
+    }
+    _.each(overview.offlineVirtualMachines, function(ovm) {
+      var ovmDomain = _.get(ovm, ['metadata', 'labels', 'kubevirt.io/domain']);
+      if (!ovmDomain) {
+        return;
+      }
+
+      ovm.services = _.filter(state.allServices, { spec: { selector: { "kubevirt.io/domain": ovmDomain } } });
+    });
+  };
+
   // Update the list of services for all API objects.
   //
   // Updates `state.servicesByObjectUID`
@@ -959,6 +973,7 @@ function OverviewController($scope,
     _.each(toUpdate, updateServicesForObjects);
 
     updateRoutesByApp();
+    updateServicesForOvms();
   };
 
   // Group routes by the services they route to (either as a primary service or
@@ -1508,6 +1523,7 @@ function OverviewController($scope,
       var ovmCallback = function (ovms) {
         overview.offlineVirtualMachines = ovms.by('metadata.name');
         updateVirtualMachineMapping();
+        updateServicesForOvms(); // https://github.com/kubevirt/user-guide/blob/master/service.md
         updateFilter();
       };
       watches.push(DataService.watch(

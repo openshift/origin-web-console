@@ -14,6 +14,7 @@
       'ProjectsService',
       'KubevirtVersions',
       'moment',
+      'RdpService',
       VirtualMachineRow
     ],
     controllerAs: 'row',
@@ -23,6 +24,8 @@
     },
     templateUrl: 'views/overview/_virtual-machine-row.html'
   });
+
+  var RDP_PORT = 3389;
 
   function VirtualMachineRow(
     $scope,
@@ -35,7 +38,8 @@
     Navigate,
     ProjectsService,
     KubevirtVersions,
-    moment) {
+    moment,
+    RdpService) {
     var row = this;
     row.OfflineVirtualMachineVersion = KubevirtVersions.offlineVirtualMachine;
 
@@ -50,10 +54,6 @@
       return AuthorizationService.canI(KubevirtVersions.offlineVirtualMachine, 'delete');
     };
     row.projectName = $routeParams.project;
-
-    function isOvmRunning() {
-      return row.apiObject.spec.running;
-    }
 
     function createOvmCopy() {
       var copy = angular.copy(row.apiObject);
@@ -73,6 +73,14 @@
       );
     }
 
+    row.isOvmRunning = function () {
+      return row.apiObject.spec.running;
+    };
+    row.isOvmInRunningPhase = function () {
+      return row.isOvmRunning() &&
+        row.apiObject._vm &&
+        _.get(row.apiObject, '_pod.status.phase') === 'Running';
+    };
     row.startOvm = function () {
       setOvmRunning(true);
     };
@@ -87,15 +95,40 @@
       );
     };
     row.canStartOvm = function () {
-      return !isOvmRunning();
+      return !row.isOvmRunning();
     };
     row.canStopOvm = function () {
-      return isOvmRunning();
+      return row.isOvmRunning();
     };
     row.canRestartOvm = function () {
-      return isOvmRunning() &&
-             row.apiObject._vm &&
-             _.get(row.apiObject, '_pod.status.phase') === 'Running';
+      return row.isOvmInRunningPhase();
+    };
+    row.isWindowsVM = function () {
+      // https://github.com/kubevirt/kubevirt/blob/576d232e3c181134e69719cdb2d624ac52e7eecb/docs/devel/guest-os-info.md
+      var ovm = row.apiObject;
+      var vm = row.apiObject._vm;
+      var os = _.get(vm, ['metadata', 'labels', 'kubevirt.io/os']) || _.get(ovm, ['metadata', 'labels', 'kubevirt.io/os']);
+      return (os && _.startsWith(os, 'win'));
+    };
+    row.isRdpService = function () {
+      var ovm = row.apiObject;
+      return !_.isEmpty(ovm.services);
+    };
+
+    /**
+     * Requires Service object to be created:
+     *   https://github.com/kubevirt/user-guide/blob/master/workloads/virtual-machines/expose-service.md
+     */
+    row.onOpenRemoteDesktop = function () {
+      var ovm = row.apiObject;
+      if (_.isEmpty(ovm.services)) {
+        return ;
+      }
+      var service = _.find(ovm.services, function (service) {return RdpService.findRDPPort(service, RDP_PORT);}); // a service which one of the ports is RDP
+      var addressPort = RdpService.getAddressPort(service, ovm, RDP_PORT);
+      if (addressPort) {
+        RdpService.fileDownload(RdpService.buildRdp(addressPort.address, addressPort.port));
+      }
     };
   }
 
