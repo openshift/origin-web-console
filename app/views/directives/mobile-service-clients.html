@@ -1,0 +1,12 @@
+<div class="row mobile-service-clients-integrations">
+  <div class="col-sm-6">
+    <div ng-if="$ctrl.integratedClients | size" class="client-title component-label section-label">Mobile Clients</div>
+    <div ng-repeat="mobileClient in $ctrl.integratedClients track by (mobileClient | uid)" class="col-sm-12 col-md-6 mobile-client-integration">
+      <span aria-hidden="true" class="fa-2x {{mobileClient.metadata.annotations.icon}} client-icon"></span>
+      <div class="client-details">
+        <a ng-href="{{mobileClient | navigateResourceURL}}">{{mobileClient.spec.name}}</a>
+        <div class="client-type">{{mobileClient.spec.appIdentifier}}</div>
+      </div>
+    </div>
+  </div>
+</div>
