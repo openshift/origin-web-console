@@ -52,7 +52,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="imageStream in imageStreams | orderObjectsByDate : true">
+              <tr ng-repeat="imageStream in imageStreams track by (imageStream | uid)">
                 <td data-title="Name"><a href="{{imageStream | navigateResourceURL}}">{{imageStream.metadata.name}}</a></td>
                 <td data-title="Docker Repo">
                   <span ng-if="!imageStream.status.dockerImageRepository && !imageStream.spec.dockerImageRepository"><em>unknown</em></span>
