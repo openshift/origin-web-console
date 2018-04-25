@@ -10573,7 +10573,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</tr>\n" +
     "</thead>\n" +
     "<tbody>\n" +
-    "<tr ng-repeat=\"imageStream in imageStreams | orderObjectsByDate : true\">\n" +
+    "<tr ng-repeat=\"imageStream in imageStreams track by (imageStream | uid)\">\n" +
     "<td data-title=\"Name\"><a href=\"{{imageStream | navigateResourceURL}}\">{{imageStream.metadata.name}}</a></td>\n" +
     "<td data-title=\"Docker Repo\">\n" +
     "<span ng-if=\"!imageStream.status.dockerImageRepository && !imageStream.spec.dockerImageRepository\"><em>unknown</em></span>\n" +
