@@ -5867,35 +5867,35 @@ a.unwatchAll(d);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("ImagesController", [ "$filter", "$routeParams", "$scope", "APIService", "DataService", "LabelFilter", "Logger", "ProjectsService", function(e, t, n, r, a, o, i, s) {
-n.projectName = t.project, n.imageStreams = {}, n.unfilteredImageStreams = {}, n.missingStatusTagsByImageStream = {}, n.builds = {}, n.labelSuggestions = {}, n.clearFilter = function() {
+n.projectName = t.project, n.imageStreams = {}, n.missingStatusTagsByImageStream = {}, n.builds = {}, n.labelSuggestions = {}, n.clearFilter = function() {
 o.clear();
 };
-var c = r.getPreferredVersion("imagestreams"), l = [];
+var c, l = r.getPreferredVersion("imagestreams"), u = [];
 s.get(t.project).then(_.spread(function(e, t) {
 function r() {
-angular.forEach(n.unfilteredImageStreams, function(e, t) {
-var r = n.missingStatusTagsByImageStream[t] = {};
+_.each(c, function(e) {
+var t = n.missingStatusTagsByImageStream[e.metadata.name] = {};
 if (e.spec && e.spec.tags) {
-var a = {};
+var r = {};
 e.status && e.status.tags && angular.forEach(e.status.tags, function(e) {
-a[e.tag] = !0;
+r[e.tag] = !0;
 }), angular.forEach(e.spec.tags, function(e) {
-a[e.name] || (r[e.name] = e);
+r[e.name] || (t[e.name] = e);
 });
 }
 });
 }
 function s() {
-n.filterWithZeroResults = !o.getLabelSelector().isEmpty() && _.isEmpty(n.imageStreams) && !_.isEmpty(n.unfilteredImageStreams);
+n.filterWithZeroResults = !o.getLabelSelector().isEmpty() && _.isEmpty(n.imageStreams) && !_.isEmpty(c);
 }
-n.project = e, l.push(a.watch(c, t, function(e) {
-n.imageStreamsLoaded = !0, n.unfilteredImageStreams = e.by("metadata.name"), o.addLabelSuggestionsFromResources(n.unfilteredImageStreams, n.labelSuggestions), o.setLabelSuggestions(n.labelSuggestions), n.imageStreams = o.getLabelSelector().select(n.unfilteredImageStreams), r(), s(), i.log("image streams (subscribe)", n.imageStreams);
+n.project = e, u.push(a.watch(l, t, function(e) {
+n.imageStreamsLoaded = !0, c = _.sortBy(e.by("metadata.name"), "metadata.name"), o.addLabelSuggestionsFromResources(c, n.labelSuggestions), o.setLabelSuggestions(n.labelSuggestions), n.imageStreams = o.getLabelSelector().select(c), r(), s(), i.log("image streams (subscribe)", n.imageStreams);
 })), o.onActiveFiltersChanged(function(e) {
 n.$evalAsync(function() {
-n.imageStreams = e.select(n.unfilteredImageStreams), s();
+n.imageStreams = e.select(c), s();
 });
 }), n.$on("$destroy", function() {
-a.unwatchAll(l);
+a.unwatchAll(u);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("ImageStreamController", [ "$filter", "$routeParams", "$scope", "APIService", "DataService", "ImageStreamsService", "Navigate", "ProjectsService", function(e, t, n, r, a, o, i, s) {
