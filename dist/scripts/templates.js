@@ -14183,7 +14183,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label class=\"sr-only\">Tag</label>\n" +
     "<ui-select ng-required=\"$ctrl.selectRequired\" ng-model=\"$ctrl.istag.tagObject\" ng-disabled=\"!$ctrl.istag.imageStream || $ctrl.selectDisabled\" append-to-body=\"$ctrl.appendToBody\">\n" +
     "<ui-select-match placeholder=\"Tag\">{{$select.selected.tag}}</ui-select-match>\n" +
-    "<ui-select-choices group-by=\"groupTags\" repeat=\"statusTag in ($ctrl.isByNamespace[$ctrl.istag.namespace][$ctrl.istag.imageStream].status.tags | filter : { tag: $select.search })\" refresh=\"$ctrl.getTags($select.search)\" refresh-delay=\"200\">\n" +
+    "<ui-select-choices group-by=\"$ctrl.groupTags\" repeat=\"statusTag in ($ctrl.isByNamespace[$ctrl.istag.namespace][$ctrl.istag.imageStream].status.tags | filter : { tag: $select.search })\" refresh=\"$ctrl.getTags($select.search)\" refresh-delay=\"200\">\n" +
     "<div ng-bind-html=\"statusTag.tag | highlight : $select.search\"></div>\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
