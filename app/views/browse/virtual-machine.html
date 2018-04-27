@@ -1,0 +1,196 @@
+<div class="middle pod">
+  <div class="middle-header">
+    <div class="container-fluid">
+      <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+      <alerts alerts="alerts"></alerts>
+      <div ng-if="!loaded()" class="mar-top-xl">Loading...</div>
+      <div ng-if="loaded() && (mergedVm.vm || mergedVm.ovm)">
+        <h1 class="contains-actions">
+          <div class="pull-right dropdown" ng-show="(mergedVm.vm && 'virtualMachines' | canIDoAny) || (mergedVm.ovm && 'offlineVirtualMachines' | canIDoAny)">
+            <button type="button" class="dropdown-toggle actions-dropdown-btn btn btn-default hidden-xs" data-toggle="dropdown">
+              Actions
+              <span class="caret"></span>
+            </button>
+            <a href=""
+               class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
+               data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
+            <ul class="dropdown-menu dropdown-menu-right actions action-button">
+              <dropdown-item
+                action="VmActions.start(mergedVm.ovm, projectContext)"
+                ng-if="KubevirtVersions.offlineVirtualMachine | canI : 'update'"
+                enabled="mergedVm | canStartMergedVm">Start</dropdown-item>
+              <dropdown-item
+                action="VmActions.restart(mergedVm.vm, projectContext)"
+                ng-if="KubevirtVersions.virtualMachine | canI : 'delete'"
+                enabled="mergedVm | canRestartMergedVm">Restart</dropdown-item>
+              <dropdown-item
+                action="VmActions.stop(mergedVm.ovm, projectContext)"
+                ng-if="KubevirtVersions.offlineVirtualMachine | canI : 'update'"
+                enabled="mergedVm | canStopMergedVm">Stop</dropdown-item>
+              <li ng-if="mergedVm.vm && (KubevirtVersions.virtualMachine | canI : 'update')">
+                <a ng-href="{{mergedVm.vm | editYamlURL}}" role="button">Edit Virtual machine YAML</a>
+              </li>
+              <li ng-if="mergedVm.ovm && (KubevirtVersions.offlineVirtualMachine | canI : 'update')">
+                <a ng-href="{{mergedVm.ovm | editYamlURL}}" role="button">Edit Offline virtual machine YAML</a>
+              </li>
+              <li ng-if="!mergedVm.ovm && mergedVm.vm && (KubevirtVersions.virtualMachine | canI : 'delete')">
+                <delete-link
+                  kind="VirtualMachine"
+                  group="{{KubevirtVersions.virtualMachine.group}}"
+                  resource-name="{{mergedVm.vm.metadata.name}}"
+                  project-name="{{mergedVm.vm.metadata.namespace}}"
+                  alerts="alerts">
+                </delete-link>
+              </li>
+              <li ng-if="mergedVm.ovm && (KubevirtVersions.offlineVirtualMachine | canI : 'delete')">
+                <delete-link
+                  kind="OfflineVirtualMachine"
+                  group="{{KubevirtVersions.offlineVirtualMachine.group}}"
+                  resource-name="{{mergedVm.ovm.metadata.name}}"
+                  project-name="{{mergedVm.ovm.metadata.namespace}}"
+                  alerts="alerts">
+                </delete-link>
+              </li>
+            </ul>
+          </div>
+          {{mergedVm | mergedVmName}}
+          <small ng-if="mergedVm | mergedVmType" class="meta">{{mergedVm | mergedVmType}},</small>
+          <small class="meta">created <span am-time-ago="(mergedVm.ovm || mergedVm.vm).metadata.creationTimestamp"></span></small>
+        </h1>
+
+        <div ng-if="mergedVm.vm.metadata.labels | hashSize">
+          <labels labels="mergedVm.vm.metadata.labels"
+                  clickable="true" kind="virtual-machines"
+                  title-kind="Virtual machines"
+                  project-name="{{mergedVm.vm.metadata.namespace}}"
+                  limit="3"
+                  style="display:inline-block; vertical-align: middle;"></labels>
+          <small class="meta text-muted" style="display: inline-block; vertical-align: middle">Virtual machine</small>
+        </div>
+        <div ng-if="mergedVm.ovm.metadata.labels | hashSize">
+          <labels labels="mergedVm.ovm.metadata.labels"
+                  clickable="true" kind="virtual-machines"
+                  title-kind="Offline virtual machine"
+                  project-name="{{mergedVm.ovm.metadata.namespace}}"
+                  limit="3"
+                  style="display:inline-block; vertical-align: middle;"></labels>
+          <small class="meta text-muted" style="display: inline-block; vertical-align: middle">Offline virtual machine</small>
+        </div>
+      </div>
+    </div>
+  </div><!-- /middle-header-->
+  <div class="middle-content" persist-tab-state>
+    <div class="container-fluid">
+      <div class="row" ng-if="mergedVm.vm || mergedVm.ovm">
+        <div class="col-md-12">
+          <uib-tabset>
+            <uib-tab heading="Details" active="selectedTab.details">
+              <uib-tab-heading>Details</uib-tab-heading>
+              <div class="resource-details">
+                <div class="row">
+                  <div class="col-lg-6">
+                    <h3>
+                      Status
+                    </h3>
+                    <dl class="dl-horizontal left">
+                      <dt>State:</dt>
+                      <dd>
+                        <vm-state state="mergedVm | mergedVmState" />
+                        <vm-actions-line merged-vm="mergedVm" context="projectContext"></vm-actions-line>
+                        <span ng-if="mergedVm | mergedVmDeletionTimestamp">(expires {{mergedVm | mergedVmDeletionTimestamp | date : 'medium'}})</span>
+                      </dd>
+                      <dt>Uptime:</dt>
+                      <dd>
+                        {{pods[0] | vmPodUptime}}
+                      </dd>
+                      <dt>Node:</dt>
+                      <dd>
+                        {{mergedVm.vm.metadata.labels['kubevirt.io/nodeName'] || '--'}}
+                      </dd>
+                      <dt>Pod:</dt>
+                      <dd>
+                        <span ng-if="!pods.length">--</span>
+                        <ul ng-if="pods.length" class="list-unstyled">
+                          <li ng-repeat="pod in pods track by pod.metadata.uid">
+                            <a ng-href="{{pod | navigateResourceURL}}">{{pod.metadata.name}}</a>
+                          </li>
+                        </ul>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="col-lg-6">
+                    <h3>
+                      Configuration
+                    </h3>
+                    <dl class="dl-horizontal left">
+                      <dt>Memory:</dt>
+                      <dd>
+                        <merged-vm-value merged-vm="mergedVm" selector="vmMemory"></merged-vm-value>
+                      </dd>
+                      <dt>Operating system:</dt>
+                      <dd>
+                        <merged-vm-value merged-vm="mergedVm" selector="vmOs"></merged-vm-value>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </uib-tab>
+
+            <uib-tab active="selectedTab.logs" ng-if="(podsLogVersion | canI : 'get')">
+              <uib-tab-heading>Logs</uib-tab-heading>
+
+              <em ng-if="!pods[0]">Related pod doesn't exist. No logs to show.</em>
+
+              <log-viewer
+                ng-if="selectedTab.logs && pods[0]"
+                follow-affix-top="390"
+                object="pods[0]"
+                context="projectContext"
+                options="logOptions"
+                empty="logEmpty"
+                run="logCanRun"
+                ng-class="{'log-viewer-select': pod.spec.containers.length > 1}">
+
+                <span class="container-details">
+
+                  <span style="margin-right: 10px; font-weight: 600">
+                    Pod:
+                    <a ng-href="{{pods[0] | navigateResourceURL}}">{{pods[0].metadata.name}}</a>
+                  </span>
+                  <label for="selectLogContainer">Container:</label>
+
+                  <span ng-if="pods[0].spec.containers.length === 1">
+                    {{pods[0].spec.containers[0].name}}
+                  </span>
+
+                  <ui-select ng-show="pods[0].spec.containers.length > 1" ng-model="logOptions.container" input-id="selectLogContainer">
+                    <ui-select-match>{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices repeat="container.name as container in pods[0].spec.containers">
+                      <div ng-bind-html="container.name | highlight : $select.search"></div>
+                    </ui-select-choices>
+                  </ui-select>
+
+                  <span class="container-state" ng-if="containerStateReason || containerStatusKey">
+                    <span class="dash">&mdash;</span>
+                    <status-icon status="containerStateReason || (containerStatusKey | capitalize)"></status-icon>
+                    <span>{{containerStateReason || containerStatusKey | sentenceCase}}</span>
+                  </span>
+
+                  <span ng-if="containerStartTime && !logEmpty">
+                    <span class="log-timestamps">Log from {{containerStartTime  | date : 'medium'}} <span ng-if="containerEndTime">to {{containerEndTime  | date : 'medium'}}</span></span>
+                  </span>
+                </span>
+
+              </log-viewer>
+            </uib-tab>
+            <uib-tab active="selectedTab.events" ng-if="eventsVersion | canI : 'watch'">
+              <uib-tab-heading>Events</uib-tab-heading>
+              <events api-objects="eventsApiObjects" project-context="projectContext" ng-if="selectedTab.events"></events>
+            </uib-tab>
+          </uib-tabset>
+        </div><!-- /col-* -->
+      </div>
+    </div>
+  </div><!-- /middle-content -->
+</div>

@@ -1,0 +1,11 @@
+<span class="vm-detail-state-actions">
+  <span class="bar-separated" ng-if="('offlineVirtualMachines' | canI : 'update') && ($ctrl.mergedVm | canStartMergedVm)">
+    <a href="" ng-click="$ctrl.VmActions.start($ctrl.mergedVm.ovm, $ctrl.context)">Start</a>
+  </span>
+  <span class="bar-separated" ng-if="('virtualMachines' | canI : 'delete') && ($ctrl.mergedVm | canRestartMergedVm)">
+    <a href="" ng-click="$ctrl.VmActions.restart($ctrl.mergedVm.vm, $ctrl.context)">Restart</a>
+  </span>
+  <span class="bar-separated" ng-if="('offlineVirtualMachines' | canI : 'update') && ($ctrl.mergedVm | canStopMergedVm)">
+    <a href="" ng-click="$ctrl.VmActions.stop($ctrl.mergedVm.ovm, $ctrl.context)">Stop</a>
+  </span>
+</span>
