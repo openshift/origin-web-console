@@ -19,7 +19,6 @@ angular.module('openshiftConsole')
     ProjectsService) {
     $scope.projectName = $routeParams.project;
     $scope.imageStreams = {};
-    $scope.unfilteredImageStreams = {};
     $scope.missingStatusTagsByImageStream = {};
     $scope.builds = {};
     $scope.labelSuggestions = {};
@@ -30,6 +29,7 @@ angular.module('openshiftConsole')
     var imageStreamsVersion = APIService.getPreferredVersion('imagestreams');
 
     var watches = [];
+    var unfilteredImageStreams;
 
     ProjectsService
       .get($routeParams.project)
@@ -37,10 +37,10 @@ angular.module('openshiftConsole')
         $scope.project = project;
         watches.push(DataService.watch(imageStreamsVersion, context, function(imageStreams) {
           $scope.imageStreamsLoaded = true;
-          $scope.unfilteredImageStreams = imageStreams.by("metadata.name");
-          LabelFilter.addLabelSuggestionsFromResources($scope.unfilteredImageStreams, $scope.labelSuggestions);
+          unfilteredImageStreams = _.sortBy(imageStreams.by('metadata.name'), 'metadata.name');
+          LabelFilter.addLabelSuggestionsFromResources(unfilteredImageStreams, $scope.labelSuggestions);
           LabelFilter.setLabelSuggestions($scope.labelSuggestions);
-          $scope.imageStreams = LabelFilter.getLabelSelector().select($scope.unfilteredImageStreams);
+          $scope.imageStreams = LabelFilter.getLabelSelector().select(unfilteredImageStreams);
           updateMissingStatusTags();
           updateFilterMessage();
           Logger.log("image streams (subscribe)", $scope.imageStreams);
@@ -49,8 +49,8 @@ angular.module('openshiftConsole')
         // Check each image stream to see if the spec tags resolve to status tags.
         // We call out missing status tags with a warning.
         function updateMissingStatusTags() {
-          angular.forEach($scope.unfilteredImageStreams, function(is, name) {
-            var missingStatusTags = $scope.missingStatusTagsByImageStream[name] = {};
+          _.each(unfilteredImageStreams, function(is) {
+            var missingStatusTags = $scope.missingStatusTagsByImageStream[is.metadata.name] = {};
             if (!is.spec || !is.spec.tags) {
               return;
             }
@@ -73,13 +73,13 @@ angular.module('openshiftConsole')
         }
 
         function updateFilterMessage() {
-          $scope.filterWithZeroResults = !LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.imageStreams) && !_.isEmpty($scope.unfilteredImageStreams);
+          $scope.filterWithZeroResults = !LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.imageStreams) && !_.isEmpty(unfilteredImageStreams);
         }
 
         LabelFilter.onActiveFiltersChanged(function(labelSelector) {
           // trigger a digest loop
           $scope.$evalAsync(function() {
-            $scope.imageStreams = labelSelector.select($scope.unfilteredImageStreams);
+            $scope.imageStreams = labelSelector.select(unfilteredImageStreams);
             updateFilterMessage();
           });
         });
