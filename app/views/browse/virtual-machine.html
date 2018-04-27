@@ -1,0 +1,114 @@
+<div class="middle pod">
+  <div class="middle-header">
+    <div class="container-fluid">
+      <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+      <alerts alerts="alerts"></alerts>
+      <div ng-if="!loaded()" class="mar-top-xl">Loading...</div>
+      <div ng-if="loaded() && vm">
+        <h1 class="contains-actions">
+          <div class="pull-right dropdown" ng-show="'virtualMachines' | canIDoAny">
+            <button type="button" class="dropdown-toggle actions-dropdown-btn btn btn-default hidden-xs" data-toggle="dropdown">
+              Actions
+              <span class="caret"></span>
+            </button>
+            <a href=""
+               class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
+               data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
+            <ul class="dropdown-menu dropdown-menu-right actions action-button">
+              <li ng-if="KubevirtVersions.virtualMachine | canI : 'update'">
+                <a ng-href="{{vm | editYamlURL}}" role="button">Edit YAML</a>
+              </li>
+              <li ng-if="KubevirtVersions.virtualMachine | canI : 'delete'">
+                <delete-link
+                  kind="VirtualMachine"
+                  group="{{KubevirtVersions.virtualMachine.group}}"
+                  resource-name="{{vm.metadata.name}}"
+                  project-name="{{vm.metadata.namespace}}"
+                  alerts="alerts">
+                </delete-link>
+              </li>
+            </ul>
+          </div>
+          {{vm.metadata.name}}
+          <small class="meta">created <span am-time-ago="vm.metadata.creationTimestamp"></span></small>
+        </h1>
+        <labels labels="vm.metadata.labels"
+                clickable="true" kind="virtual-machines"
+                title-kind="Virtual machines"
+                project-name="{{vm.metadata.namespace}}"
+                limit="3"></labels>
+      </div>
+    </div>
+  </div><!-- /middle-header-->
+  <div class="middle-content" persist-tab-state>
+    <div class="container-fluid">
+      <div class="row" ng-if="vm">
+        <div class="col-md-12">
+          <uib-tabset>
+            <uib-tab heading="Details" active="selectedTab.details">
+              <uib-tab-heading>Details</uib-tab-heading>
+              <div class="resource-details">
+                <div class="row">
+                  <div class="col-lg-6">
+                    <h3>
+                      Status
+                    </h3>
+                    <dl class="dl-horizontal left">
+                      <dt>State:</dt>
+                      <dd>
+                        <vm-state state="vm.status.phase" />
+                        <span ng-if="vm.metadata.deletionTimestamp">(expires {{vm.metadata.deletionTimestamp | date : 'medium'}})</span>
+                      </dd>
+                      <dt>Uptime:</dt>
+                      <dd>
+                        {{pods[0] | vmPodUptime}}
+                      </dd>
+                      <dt>Node:</dt>
+                      <dd>
+                        {{vm.metadata.labels['kubevirt.io/nodeName'] || '--'}}
+                      </dd>
+                      <dt>Offline virtual machine:</dt>
+                      <dd>
+                        <a ng-if="ovm" ng-href="{{ovm | navigateResourceURL}}">{{ovm.metadata.name}}</a>
+                        <span ng-if="!ovm">--</span>
+                      </dd>
+                      <dt>Pod:</dt>
+                      <dd>
+                        <span ng-if="!pods.length">--</span>
+                        <ul ng-if="pods.length" class="list-unstyled">
+                          <li ng-repeat="pod in pods track by pod.metadata.uid">
+                            <a ng-href="{{pod | navigateResourceURL}}">{{pod.metadata.name}}</a>
+                          </li>
+                        </ul>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="col-lg-6">
+                    <h3>
+                      Configuration
+                    </h3>
+                    <dl class="dl-horizontal left">
+                      <dt>Memory:</dt>
+                      <dd>
+                        {{vm | vmMemory | orDashes}}
+                      </dd>
+                      <dt>Operating system:</dt>
+                      <dd>
+                        {{vm | vmOs | orDashes}}
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </uib-tab>
+
+            <uib-tab active="selectedTab.events" ng-if="eventsVersion | canI : 'watch'">
+              <uib-tab-heading>Events</uib-tab-heading>
+              <events api-objects="[ vm ]" project-context="projectContext" ng-if="selectedTab.events"></events>
+            </uib-tab>
+          </uib-tabset>
+        </div><!-- /col-* -->
+      </div>
+    </div>
+  </div><!-- /middle-content -->
+</div>

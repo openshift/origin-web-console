@@ -6,10 +6,10 @@
     <div class="list-pf-content">
       <div class="list-pf-name">
         <h3>
-          <div class="component-label"><span>Virtual Machine</span></div>
-          <optional-link link="{{row.apiObject._pod | navigateResourceURL}}">
+          <div class="component-label"><span>Offline Virtual Machine</span></div>
+          <a ng-href="{{row.apiObject | navigateResourceURL}}">
             <span ng-bind-html="row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords"></span>
-          </optional-link>
+          </a>
         </h3>
       </div>
       <div ng-if="row.state.showMetrics && (row.state.breakpoint === 'md' || row.state.breakpoint === 'lg') && row.apiObject._pod" class="list-pf-details">
@@ -19,7 +19,7 @@
         </metrics-summary>
       </div>
       <div class="list-pf-details">
-        <div ng-if="!row.expanded" vm-state ovm="row.apiObject"></div>
+        <vm-state ng-if="!row.expanded" state="row.apiObject._vm | vmStateText : row.apiObject"></vm-state>
       </div>
     </div>
     <div class="list-pf-actions">
@@ -29,10 +29,22 @@
           <span class="sr-only">Actions</span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
-          <dropdown-item action="row.startOvm()" enabled="{{row.canStartOvm()}}">Start</dropdown-item>
-          <dropdown-item action="row.restartOvm()" enabled="{{row.canRestartOvm()}}">Restart</dropdown-item>
-          <dropdown-item action="row.stopOvm()" enabled="{{row.canStopOvm()}}">Stop</dropdown-item>
-          <li ng-if="row.OfflineVirtualMachineVersion | canI : 'delete'">
+          <dropdown-item
+            action="row.VmActions.start(row.apiObject, row.state.context)"
+            ng-if="row.KubevirtVersions.offlineVirtualMachine | canI : 'update'"
+            enabled="row.VmActions.canStart(row.apiObject)">Start</dropdown-item>
+          <dropdown-item
+            action="row.VmActions.restart(row.apiObject._vm, row.state.context)"
+            ng-if="row.KubevirtVersions.virtualMachine | canI : 'delete'"
+            enabled="row.VmActions.canRestart(row.apiObject._vm, row.apiObject)">Restart</dropdown-item>
+          <dropdown-item
+            action="row.VmActions.stop(row.apiObject, row.state.context)"
+            ng-if="row.KubevirtVersions.offlineVirtualMachine | canI : 'update'"
+            enabled="row.VmActions.canStop(row.apiObject)">Stop</dropdown-item>
+          <li ng-if="row.KubevirtVersions.offlineVirtualMachine | canI : 'update'">
+            <a ng-href="{{row.apiObject | editYamlURL}}" role="button">Edit YAML</a>
+          </li>
+          <li ng-if="row.KubevirtVersions.offlineVirtualMachine | canI : 'delete'">
             <delete-link
               kind="OfflineVirtualMachine"
               group="{{row.OfflineVirtualMachineVersion.group}}"
@@ -51,18 +63,8 @@
       <div class="word-break">
         <span class="vm-detail-key">State:</span>
 
-        <span vm-state ovm="row.apiObject"></span>
-        <span class="vm-detail-state-actions">
-          <span class="bar-separated" ng-if="row.canStartOvm()">
-            <a href="" ng-click="row.startOvm()">Start</a>
-          </span>
-          <span class="bar-separated" ng-if="row.canRestartOvm()">
-            <a href="" ng-click="row.restartOvm()">Restart</a>
-          </span>
-          <span class="bar-separated" ng-if="row.canStopOvm()">
-            <a href="" ng-click="row.stopOvm()">Stop</a>
-          </span>
-         </span>
+        <vm-state state="row.apiObject._vm | vmStateText : row.apiObject" ></vm-state>
+        <vm-actions-line vm="row.apiObject._vm" ovm="row.apiObject" context="row.state.context"></vm-actions-line>
       </div>
 
       <div class="word-break">

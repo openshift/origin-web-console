@@ -268,6 +268,26 @@ angular
         controller: 'PodController',
         reloadOnSearch: false
       })
+      .when('/project/:project/browse/virtual-machines', {
+        templateUrl: 'views/virtual-machines.html',
+        controller: 'VirtualMachinesController',
+        reloadOnSearch: false
+      })
+      .when('/project/:project/browse/virtual-machines/:vm', {
+        templateUrl: 'views/browse/virtual-machine.html',
+        controller: 'VirtualMachineController',
+        reloadOnSearch: false
+      })
+      .when('/project/:project/browse/offline-virtual-machines', {
+        templateUrl: 'views/offline-virtual-machines.html',
+        controller: 'OfflineVirtualMachinesController',
+        reloadOnSearch: false
+      })
+      .when('/project/:project/browse/offline-virtual-machines/:vm', {
+        templateUrl: 'views/browse/offline-virtual-machine.html',
+        controller: 'OfflineVirtualMachineController',
+        reloadOnSearch: false
+      })
       .when('/project/:project/browse/services', {
         templateUrl: 'views/services.html',
         controller: 'ServicesController',
@@ -656,6 +676,34 @@ angular
   .run(['$rootScope', 'APIService', 'KubevirtVersions',
     function ($rootScope, APIService, KubevirtVersions) {
     $rootScope.KUBEVIRT_ENABLED = !!APIService.apiInfo(KubevirtVersions.offlineVirtualMachine);
+    if ($rootScope.KUBEVIRT_ENABLED) {
+      // add "Applications" > "Virtual Machines" navigation item
+      var applicationNavigationItems = _(window.OPENSHIFT_CONSTANTS.PROJECT_NAVIGATION)
+        .filter({ label: "Applications"})
+        .map('secondaryNavSections[0].items')
+        .first();
+      if (applicationNavigationItems) {
+        var insertionIndex = _.findIndex(applicationNavigationItems, { label: "Pods" });
+        if (insertionIndex !== -1) {
+          insertionIndex += 1;
+          var vmNavigationItem = {
+            label: "Virtual Machines",
+            href: "/browse/virtual-machines",
+            prefixes: [
+              "/browse/virtual-machines/"
+            ]
+          };
+          var ovmNavigationItem = {
+            label: "Offline Virtual Machines",
+            href: "/browse/offline-virtual-machines",
+            prefixes: [
+              "/browse/offline-virtual-machines/"
+            ]
+          };
+          applicationNavigationItems.splice(insertionIndex, 0, vmNavigationItem, ovmNavigationItem);
+        }
+      }
+    }
   }]);
 
 pluginLoader.addModule('openshiftConsole');
