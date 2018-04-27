@@ -2,7 +2,7 @@
 
 angular
   .module('openshiftConsole')
-  .filter('canIDoAny', function(APIService, canIFilter) {
+  .filter('canIDoAny', function(APIService, canIFilter, KubevirtVersions) {
     // Top level keys are representing pages.
     // Within each page may one or more resources.
     // canIDoAny returns truthy if the user passes the canIFilter
@@ -65,6 +65,12 @@ angular
       // FIXME: inconsistent case (camel)
       'statefulsets': [
         {group: 'apps', resource: 'statefulsets', verbs: ['update', 'delete']}
+      ],
+      'virtualMachineInstances': [
+        {group: KubevirtVersions.virtualMachineInstance.group, resource: KubevirtVersions.virtualMachineInstance.resource, verbs: ['update', 'delete']}
+      ],
+      'virtualMachines': [
+        {group: KubevirtVersions.virtualMachine.group, resource: KubevirtVersions.virtualMachine.resource, verbs: ['update', 'delete']}
       ]
     };
 

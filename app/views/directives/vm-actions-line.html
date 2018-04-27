@@ -1,0 +1,11 @@
+<span class="vm-detail-state-actions">
+  <span class="bar-separated" ng-if="('virtualMachines' | canI : 'update') && ($ctrl.VmActions.canStart($ctrl.vm))">
+    <a href="" ng-click="$ctrl.VmActions.start($ctrl.vm, $ctrl.context)">Start</a>
+  </span>
+  <span class="bar-separated" ng-if="('virtualMachineInstances' | canI : 'delete') && ($ctrl.VmActions.canRestart($ctrl.vmi, $ctrl.vm))">
+    <a href="" ng-click="$ctrl.VmActions.restart($ctrl.vmi, $ctrl.context)">Restart</a>
+  </span>
+  <span class="bar-separated" ng-if="('virtualMachines' | canI : 'update') && ($ctrl.VmActions.canStop($ctrl.vm))">
+    <a href="" ng-click="$ctrl.VmActions.stop($ctrl.vm, $ctrl.context)">Stop</a>
+  </span>
+</span>

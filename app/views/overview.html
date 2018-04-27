@@ -390,12 +390,16 @@
               </div>
             </div>
             <!-- Show Kubevirt Virtual Machines -->
-            <div ng-if="(overview.filteredOfflineVirtualMachines | size) && !overview.hidePipelineOtherResources">
+            <div ng-if="(overview.filteredVirtualMachines | size) && !overview.hidePipelineOtherResources">
               <h2>Virtual Machines</h2>
               <div class="list-pf">
                 <virtual-machine-row
-                  ng-repeat="ovm in overview.filteredOfflineVirtualMachines track by (ovm | uid)"
-                  api-object="ovm"
+                  ng-repeat="vm in overview.filteredVirtualMachines track by (vm | uid)"
+                  api-object="vm"
+                  vm="vm"
+                  vmi="vm._vmi"
+                  pods="vm._pods"
+                  services="vm._services"
                   state="overview.state"></virtual-machine-row>
               </div>
             </div>

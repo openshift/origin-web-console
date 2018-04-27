@@ -1,0 +1,65 @@
+<div class="middle">
+  <div class="middle-header header-toolbar">
+    <div class="container-fluid">
+      <div class="page-header page-header-bleed-right page-header-bleed-left">
+        <h1>
+          Virtual Machines
+          <span class="page-header-link">
+            <a ng-href="http://kubevirt.io/user-guide/#/workloads/virtual-machines/README" target="_blank">
+              Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
+            </a>
+          </span>
+        </h1>
+      </div>
+      <div ng-if="mergedVms.length || filterWithZeroResults" class="data-toolbar">
+        <div class="data-toolbar-filter">
+          <project-filter></project-filter>
+        </div>
+      </div>
+    </div>
+  </div><!-- /middle-header-->
+  <div class="middle-content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <div ng-if="!mergedVms.length">
+            <p ng-if="!allVmsLoaded()">
+              Loading...
+            </p>
+            <div ng-if="allVmsLoaded()" class="empty-state-message text-center">
+              <div ng-if="!filterWithZeroResults">
+                <h2>No virtual machines.</h2>
+                <p>No virtual machines have been added to project {{projectName}}.</p>
+              </div>
+              <div ng-if="filterWithZeroResults">
+                <h2>The filter is hiding all virtual machines. <a href="" ng-click="clearFilter()" role="button" class="nowrap">Clear Filter</a></h2>
+              </div>
+            </div>
+          </div>
+          <table class="table table-bordered table-mobile table-layout-fixed" ng-if="mergedVms.length">
+            <thead>
+            <tr>
+              <th>Name</th>
+              <th>Status</th>
+              <th>Age</th>
+            </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="mergedVm in mergedVms track by mergedVm.vm.metadata.uid" class="animate-repeat">
+                <td>
+                  <a href="{{mergedVm.vm | navigateResourceURL}}">{{mergedVm.vm.metadata.name}}</a>
+                </td>
+                <td>
+                  <vm-state state="mergedVm.vmi | vmStateText : mergedVm.vm"/>
+                </td>
+                <td>
+                  <span am-time-ago="mergedVm.ovm.metadata.creationTimestamp || mergedVm.vm.metadata.creationTimestamp" am-without-suffix="true"></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div><!-- /col-* -->
+      </div>
+    </div>
+  </div><!-- /middle-content -->
+</div>

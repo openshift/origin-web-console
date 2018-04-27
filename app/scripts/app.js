@@ -268,6 +268,21 @@ angular
         controller: 'PodController',
         reloadOnSearch: false
       })
+      .when('/project/:project/browse/virtual-machine-instances/:vm', {
+        templateUrl: 'views/browse/virtual-machine-instance.html',
+        controller: 'VirtualMachineInstanceController',
+        reloadOnSearch: false
+      })
+      .when('/project/:project/browse/virtual-machines', {
+        templateUrl: 'views/virtual-machines.html',
+        controller: 'VirtualMachinesController',
+        reloadOnSearch: false
+      })
+      .when('/project/:project/browse/virtual-machines/:vm', {
+        templateUrl: 'views/browse/virtual-machine.html',
+        controller: 'VirtualMachineController',
+        reloadOnSearch: false
+      })
       .when('/project/:project/browse/services', {
         templateUrl: 'views/services.html',
         controller: 'ServicesController',
@@ -655,8 +670,29 @@ angular
   })
   .run(['$rootScope', 'APIService', 'KubevirtVersions',
     function ($rootScope, APIService, KubevirtVersions) {
-    // Entities needs to be renamed in 3.11, https://groups.google.com/forum/#!topic/kubevirt-dev/CU_VskPIisg
-    // $rootScope.KUBEVIRT_ENABLED = !!APIService.apiInfo(KubevirtVersions.offlineVirtualMachine);
+    $rootScope.KUBEVIRT_ENABLED = !!APIService.apiInfo(KubevirtVersions.virtualMachineInstance) &&
+      !!APIService.apiInfo(KubevirtVersions.virtualMachine);
+    if ($rootScope.KUBEVIRT_ENABLED) {
+      // add "Applications" > "Virtual Machines" navigation item
+      var applicationNavigationItems = _(window.OPENSHIFT_CONSTANTS.PROJECT_NAVIGATION)
+        .filter({ label: "Applications"})
+        .map('secondaryNavSections[0].items')
+        .first();
+      if (applicationNavigationItems) {
+        var insertionIndex = _.findIndex(applicationNavigationItems, { label: "Routes" });
+        if (insertionIndex !== -1) {
+          insertionIndex += 1;
+          var vmNavigationItem = {
+            label: "Virtual Machines",
+            href: "/browse/virtual-machines",
+            prefixes: [
+              '/browse/virtual-machines/'
+            ]
+          };
+          applicationNavigationItems.splice(insertionIndex, 0, vmNavigationItem);
+        }
+      }
+    }
   }]);
 
 pluginLoader.addModule('openshiftConsole');

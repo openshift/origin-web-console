@@ -1,0 +1,141 @@
+<div class="middle pod">
+  <div class="middle-header">
+    <div class="container-fluid">
+      <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+      <alerts alerts="alerts"></alerts>
+      <div ng-if="!loaded()" class="mar-top-xl">Loading...</div>
+      <div ng-if="loaded() && vm">
+        <h1 class="contains-actions">
+          <div class="pull-right dropdown" ng-show="(vmi && 'virtualMachinesInstances' | canIDoAny) || (vm && 'virtualMachineInstances' | canIDoAny)">
+            <button type="button" class="dropdown-toggle actions-dropdown-btn btn btn-default hidden-xs" data-toggle="dropdown">
+              Actions
+              <span class="caret"></span>
+            </button>
+            <a href=""
+               class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
+               data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i><span class="sr-only">Actions</span></a>
+            <ul class="dropdown-menu dropdown-menu-right actions action-button">
+              <dropdown-item
+                action="VmActions.start(vm, projectContext)"
+                ng-if="KubevirtVersions.virtualMachine | canI : 'update'"
+                enabled="VmActions.canStart(vm)">Start</dropdown-item>
+              <dropdown-item
+                action="VmActions.restart(vmi, projectContext)"
+                ng-if="KubevirtVersions.virtualMachineInstance | canI : 'delete'"
+                enabled="VmActions.canRestart(vmi, vm)">Restart</dropdown-item>
+              <dropdown-item
+                action="VmActions.stop(vm, projectContext)"
+                ng-if="KubevirtVersions.virtualMachine | canI : 'update'"
+                enabled="VmActions.canStop(vm)">Stop</dropdown-item>
+              <li ng-if="KubevirtVersions.virtualMachine | canI : 'update'">
+                <a ng-href="{{vm | editYamlURL}}" role="button">Edit YAML</a>
+              </li>
+              <li ng-if="KubevirtVersions.virtualMachine | canI : 'delete'">
+                <delete-link
+                  kind="{{KubevirtVersions.virtualMachine.kind}}"
+                  group="{{KubevirtVersions.virtualMachine.group}}"
+                  resource-name="{{vm.metadata.name}}"
+                  project-name="{{vm.metadata.namespace}}"
+                  alerts="alerts">
+                </delete-link>
+              </li>
+            </ul>
+          </div>
+          {{vm.metadata.name}}
+          <small class="meta">created {{vm.metadata.creationTimestamp | amTimeAgo : true}}</small>
+          <small class="meta" ng-if="vm.metadata.deletionTimestamp">(expires {{vm.metadata.deletionTimestamp | date : 'medium'}})</small>
+        </h1>
+
+        <labels labels="vm.metadata.labels"
+                clickable="true" kind="virtual-machines"
+                title-kind="Virtual machine"
+                project-name="{{vm.metadata.namespace}}"
+                limit="3"></labels>
+      </div>
+    </div>
+  </div><!-- /middle-header-->
+  <div class="middle-content" persist-tab-state>
+    <div class="container-fluid">
+      <div class="row" ng-if="vm">
+        <div class="col-md-12">
+          <uib-tabset>
+            <uib-tab heading="Details" active="selectedTab.details">
+              <uib-tab-heading>Details</uib-tab-heading>
+              <div class="resource-details">
+                <div class="row">
+                  <div class="col-lg-6">
+                    <h3>
+                      Status
+                    </h3>
+                    <dl class="dl-horizontal left">
+                      <dt>Node:</dt>
+                      <dd>
+                        {{vmi.metadata.labels['kubevirt.io/nodeName'] | orDashes}}
+                      </dd>
+                      <dt>Virtual machine instance:</dt>
+                      <dd>
+                        <span ng-if="vmi">
+                          <span dynamic-content="{{vmi | vmStateText}}"
+                                data-toggle="tooltip"
+                                data-trigger="hover"
+                                aria-hidden="true">
+                            <vm-state-icon state="vmi | vmStateText"></vm-state-icon>
+                            <a ng-href="{{vmi | navigateResourceURL}}">{{vmi.metadata.name}}</a>
+                          </span>
+                        </span>
+                        <span ng-if="!vmi">--</span>
+                      </dd>
+                      <dt>Pod:</dt>
+                      <dd>
+                        <span ng-if="!(pods | size)">--</span>
+                        <ul ng-if="pods | size" class="list-unstyled">
+                          <li ng-repeat="pod in pods track by pod.metadata.uid">
+                            <a ng-href="{{pod | navigateResourceURL}}">{{pod.metadata.name}}</a>
+                          </li>
+                        </ul>
+                      </dd>
+                    </dl>
+                  </div>
+                  <div class="col-lg-6">
+                    <h3>
+                      Configuration
+                    </h3>
+                    <dl class="dl-horizontal left">
+                      <dt>Memory:</dt>
+                      <dd>
+                        {{vm.spec.template | vmMemory | orDashes}}
+                      </dd>
+                      <dt>CPU:</dt>
+                      <dd>
+                        {{vm.spec.template | vmCpu | orDashes}}
+                      </dd>
+                      <dt>Operating system:</dt>
+                      <dd>
+                        {{vm.spec.template | vmOs | humanizeOs | orDashes}}
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </uib-tab>
+
+            <uib-tab ng-if="metricsAvailable && pods[0]" heading="Metrics" active="selectedTab.metrics">
+              <!-- Use ng-if to remove the metrics directive when the tab is not active so
+                   we don't update in the background. -->
+              <pod-metrics
+                ng-if="selectedTab.metrics"
+                pod="pods[0]"
+                alerts="alerts">
+              </pod-metrics>
+            </uib-tab>
+
+            <uib-tab active="selectedTab.events" ng-if="eventsVersion | canI : 'watch'">
+              <uib-tab-heading>Events</uib-tab-heading>
+              <events api-objects="[ vm ]" project-context="projectContext" ng-if="selectedTab.events"></events>
+            </uib-tab>
+          </uib-tabset>
+        </div><!-- /col-* -->
+      </div>
+    </div>
+  </div><!-- /middle-content -->
+</div>
