@@ -4,6 +4,7 @@
   angular.module('openshiftConsole').component('serviceInstanceRow', {
     controller: [
       '$filter',
+      '$rootScope',
       'APIService',
       'AuthorizationService',
       'BindingService',
@@ -21,12 +22,14 @@
   });
 
   function ServiceInstanceRow($filter,
+                              $rootScope,
                               APIService,
                               AuthorizationService,
                               BindingService,
                               ListRowUtils,
                               ServiceInstancesService) {
     var row = this;
+
     var isBindingFailed = $filter('isBindingFailed');
     var isBindingReady = $filter('isBindingReady');
     var serviceInstanceFailedMessage = $filter('serviceInstanceFailedMessage');
@@ -38,6 +41,7 @@
 
     row.serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
     row.serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
+    row.isMobileService = $filter('isMobileService');
 
     var getServiceClass = function() {
       var serviceClassName = ServiceInstancesService.getServiceClassNameForInstance(row.apiObject);
@@ -74,6 +78,18 @@
     row.$onChanges = function(changes) {
       if (changes.bindings) {
         row.deleteableBindings = _.reject(row.bindings, 'metadata.deletionTimestamp');
+      }
+
+      if (changes.apiObject) {
+        // Get the list of integrations when a service is provisioned
+        var serviceClass = getServiceClass();
+
+        if (row.isMobileService(serviceClass) && $rootScope.AEROGEAR_MOBILE_ENABLED) {
+          var integrations = _.get(serviceClass, "spec.externalMetadata.integrations");
+          if (integrations) {
+            row.integrations = integrations.split(",");
+          }
+        }
       }
     };
 
