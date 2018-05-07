@@ -189,7 +189,7 @@ angular.module("openshiftConsole")
               if (data.webhookSecretKey) {
                 secret.stringData.WebHookSecretKey = data.webhookSecretKey;
               }
-              if (data.genericKeyValues.data) {
+              if (_.get(data, 'genericKeyValues.data')) {
                 // Base64 encode the values.
                 secret.data = _.mapValues(data.genericKeyValues.data, window.btoa);
               }
