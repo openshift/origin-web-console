@@ -9265,7 +9265,7 @@ JSON.parse(e.dockerConfig).auths || (r.type = "kubernetes.io/dockercfg", i = ".d
 break;
 
 case "Opaque":
-e.webhookSecretKey && (r.stringData.WebHookSecretKey = e.webhookSecretKey), e.genericKeyValues.data && (r.data = _.mapValues(e.genericKeyValues.data, window.btoa));
+e.webhookSecretKey && (r.stringData.WebHookSecretKey = e.webhookSecretKey), _.get(e, "genericKeyValues.data") && (r.data = _.mapValues(e.genericKeyValues.data, window.btoa));
 }
 return r;
 }, d = function() {
