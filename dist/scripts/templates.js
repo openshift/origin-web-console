@@ -6722,7 +6722,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Key is required.\n" +
     "</span>\n" +
     "</div>\n" +
-    "<div class=\"has-error\" ng-show=\"keyValueMapForm['key-' + $id].$error.oscUnique && keyValueMapForm['key-' + $id].$touched\">\n" +
+    "<div class=\"has-error\" ng-show=\"keyValueMapForm['key-' + $id].$error.oscUnique && keyValueMapForm['key-' + $id].$touched && item.key\">\n" +
     "<span class=\"help-block\">\n" +
     "Duplicate key \"{{item.key}}\". Keys must be unique within the {{type}}.\n" +
     "</span>\n" +
