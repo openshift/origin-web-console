@@ -1,0 +1,76 @@
+<div class="list-pf-item provisioned-service" ng-class="{ active: row.expanded }">
+  <div class="list-pf-container" ng-click="row.toggleExpand($event)">
+    <div class="list-pf-chevron">
+      <div ng-include src=" 'views/overview/_list-row-chevron.html' " class="list-pf-content"></div>
+    </div>
+    <div class="list-pf-content">
+      <div class="list-pf-name">
+        <h3>
+          <span class="logo" ng-if="row.serviceClass.spec.externalMetadata.imageUrl">
+            <img src="{{row.serviceClass.spec.externalMetadata.imageUrl}}">
+          </span>
+          <span class="logo {{row.serviceClass.spec.externalMetadata['console.openshift.io/iconClass']}}" ng-if="row.serviceClass.spec.externalMetadata['console.openshift.io/iconClass'] && !row.serviceClass.spec.externalMetadata.imageUrl"></span>
+          <a ng-href="{{row.apiObject | navigateResourceURL}}" ng-bind-html="row.displayName | highlightKeywords : row.state.filterKeywords"></a>
+          <div ng-bind-html="row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords" class="list-row-longname"></div>
+        </h3>
+      </div>
+    </div>
+    <span class="pficon-info icon" ng-if="((row.bindings | size) === 0)"></span>
+    <div class="list-pf-actions">
+      <div class="dropdown-kebab-pf" uib-dropdown ng-if="row.bindingInProgress == false && !(row.apiObject.metadata.deletionTimestamp) && ((row.serviceBindingsVersion | canI : 'create') || (row.serviceBindingsVersion | canI : 'delete'))">
+        <button uib-dropdown-toggle class="btn btn-link dropdown-toggle">
+          <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+          <span class="sr-only">Actions</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
+          <li role="menuitem" ng-if="((row.bindings | size) < row.bindingsLimit) && (row.serviceBindingsVersion | canI : 'create')">
+            <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">
+              Create Binding
+            </a>
+          </li>
+          <li role="menuitem" ng-if="((row.bindings | size) > 0)  && (row.serviceBindingsVersion | canI : 'delete')">
+            <a href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})">Delete Binding</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="list-pf-expansion collapse" ng-if="row.expanded" ng-class="{ in: row.expanded }">
+    <div class="list-pf-container">
+      <div class="expanded-section no-margin">
+        <h4 ng-if="(row.bindings | size) && row.bindingInProgress == false" class="component-label section-label">Details</h4>
+        <ul ng-if="(row.bindings | size) && row.bindingInProgress == false">
+          <li ng-if="row.serviceClass.spec.externalMetadata.documentationUrl | size">
+            <b>Documentation</b>:
+            <a href="{{row.serviceClass.spec.externalMetadata.documentationUrl}}">SDK Setup
+              <i class="fa fa-external-link" aria-hidden="true"></i>
+            </a>
+          </li>
+          <li ng-repeat="annotation in row.annotations">
+            <b>{{annotation.label}}</b>:
+            <a ng-if="annotation.type === 'href'" href="{{annotation.value}}">{{ annotation.value }}</a>
+            <span ng-if="annotation.type === 'string'">{{ annotation.value }}</span>
+          </li>
+        </ul>
+        <span class="note" ng-if="(row.bindings | size) && (row.annotations | size) == 0 && row.bindingInProgress == false">No configuration data to show for this service.</span>
+        <div ng-if="((row.bindings | size) < row.bindingsLimit) && row.bindingInProgress == false" class="empty-state-message text-center">
+          <p ng-if="((row.bindings | size) === 0)">Bind to this service to use it in your mobile application.</p>
+          <p ng-if="((row.bindings | size) > 0)">Create further bindings to this service.</p>
+          <div class="empty-state-message-main-action">
+            <button class="btn btn-primary btn-lg" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</button>
+          </div>
+        </div>
+        <div ng-if="row.bindingInProgress == true && row.expanded" class="spinner spinner-lg" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<overlay-panel show-panel="row.overlay.panelVisible" handle-close="row.closeOverlayPanel">
+  <div ng-if="row.overlay.panelName === 'bindService'">
+    <bind-service target="row.apiObject" project="row.project" on-close="row.closeOverlayPanel" parameter-data="row.parameterData"
+      binding-meta="row.bindingMeta"></bind-service>
+  </div>
+  <div ng-if="row.overlay.panelName === 'unbindService'">
+    <unbind-service target="row.apiObject" bindings="row.bindings" on-close="row.closeOverlayPanel" service-class="row.serviceClass"></unbind-service>
+  </div>
+</overlay-panel>

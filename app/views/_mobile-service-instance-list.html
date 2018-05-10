@@ -1,0 +1,15 @@
+
+<div class="overview" ng-if="(ctrl.serviceInstances | size)">
+    <div class="list-pf">
+        <mobile-service-instance-row
+            ng-repeat="serviceInstance in ctrl.serviceInstances track by (serviceInstance | uid)"
+            api-object="serviceInstance" 
+            service-class="ctrl.serviceClasses[serviceInstance.spec.clusterServiceClassRef.name]">>
+        </mobile-service-instance-row>
+    </div>
+</div>
+
+<div class="note" ng-if="!(ctrl.serviceInstances | size)">
+    <p>Provision a mobile service to integrate it with your mobile client.</p>
+    <button class="btn btn-primary btn-lg" ng-click="ctrl.goToCatalog()">Browse Catalog</button>
+</div>
