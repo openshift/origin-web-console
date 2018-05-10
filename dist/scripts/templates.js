@@ -224,6 +224,36 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/_mobile-service-sdk-docs.html',
+    "<div class=\"col-md-6 service-instance-getting-started\" ng-repeat=\"sdkInfo in ctrl.serviceSdkInfo\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<img ng-if=\"sdkInfo.logo\" class=\"logo\" ng-src=\"{{sdkInfo.logo}}\">\n" +
+    "<span ng-if=\"!sdkInfo.logo && sdkInfo.iconClass \" class=\"logo-icon-class {{sdkInfo.iconClass}}\"></span>\n" +
+    "<div class=\"service-details\">\n" +
+    "<h4>\n" +
+    "<div>\n" +
+    "{{sdkInfo.displayName}}\n" +
+    "</div>\n" +
+    "<div>\n" +
+    "<small class=\"meta\">\n" +
+    "{{sdkInfo.serviceInstanceName}}\n" +
+    "</small>\n" +
+    "</div>\n" +
+    "</h4>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<div class=\"sdk-docs\">\n" +
+    "<h5>{{sdkInfo.description}}</h5>\n" +
+    "<h5>\n" +
+    "<a href=\"{{sdkInfo.sdkDocs}}\" target=\"_blank\">{{sdkInfo.displayName}} SDK setup</a>\n" +
+    "</h5>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/_parse-error.html',
     "<div ng-show=\"error && !hidden\" class=\"alert alert-danger animate-show\">\n" +
     "<button ng-click=\"hidden = true\" type=\"button\" class=\"close\" aria-hidden=\"true\">\n" +
@@ -2894,6 +2924,126 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</registry-image-listing>\n" +
     "<registry-imagestream-push settings=\"settings\" imagestream=\"imageStream\">\n" +
     "</registry-imagestream-push>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/browse/mobile-clients.html',
+    "<div class=\"middle mobile-clients-view\">\n" +
+    "<div class=\"middle-header\">\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<breadcrumbs breadcrumbs=\"breadcrumbs\"></breadcrumbs>\n" +
+    "<alerts alerts=\"alerts\"></alerts>\n" +
+    "<div>\n" +
+    "<h1 class=\"contains-actions\">\n" +
+    "<div class=\"pull-right dropdown\" ng-if=\"ctrl.mobileClient\">\n" +
+    "<button type=\"button\" class=\"dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs\" data-toggle=\"dropdown\">\n" +
+    "Actions\n" +
+    "<span class=\"caret\" aria-hidden=\"true\"></span>\n" +
+    "</button>\n" +
+    "<a href=\"\" class=\"dropdown-toggle actions-dropdown-kebab visible-xs-inline\" data-toggle=\"dropdown\"><i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i><span class=\"sr-only\">Actions</span></a>\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right actions action-button\">\n" +
+    "<li ng-if=\"ctrl.mobileCIEnabled && (ctrl.mobileClient.spec.clientType !== 'xamarin')\">\n" +
+    "<a ng-href=\"project/{{ctrl.project.metadata.name}}/create-client-build/{{ctrl.mobileClient.metadata.name}}\" role=\"button\">Create Build</a>\n" +
+    "</li>\n" +
+    "<li>\n" +
+    "<a ng-href=\"{{ctrl.mobileClient | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
+    "</li>\n" +
+    "<li>\n" +
+    "<delete-link kind=\"MobileClient\" group=\"mobile.k8s.io\" resource-name=\"{{ctrl.mobileClient.metadata.name}}\" project-name=\"{{ctrl.mobileClient.metadata.namespace}}\" alerts=\"alerts\" redirect-url=\"{{ctrl.redirectUrl}}\">\n" +
+    "</delete-link>\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
+    "{{ctrl.mobileClient.spec.name}}\n" +
+    "<small class=\"meta\" ng-if=\"ctrl.mobileClient\">created <span am-time-ago=\"ctrl.mobileClient.metadata.creationTimestamp\"></span></small>\n" +
+    "</h1>\n" +
+    "<labels labels=\"ctrl.mobileClient.metadata.labels\" clickable=\"true\" kind=\"mobileClient\" project-name=\"{{ctrl.mobileClient.metadata.namespace}}\" limit=\"3\"></labels>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"middle-content\" persist-tab-state>\n" +
+    "<div class=\"container-fluid\">\n" +
+    "<div ng-if=\"!ctrl.loaded\">{{ctrl.emptyMessage}}</div>\n" +
+    "<div ng-if=\"ctrl.loaded\" class=\"row\">\n" +
+    "<div class=\"col-md-12\" ng-class=\"{ 'hide-tabs' : !ctrl.mobileClient }\">\n" +
+    "<uib-tabset>\n" +
+    "<uib-tab active=\"selectedTab.configuration\">\n" +
+    "<uib-tab-heading>Configuration</uib-tab-heading>\n" +
+    "<div class=\"configuration\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"resource-details col-md-6\">\n" +
+    "<h3>Mobile Client Details</h3>\n" +
+    "<dl class=\"dl-horizontal left\">\n" +
+    "<dt>Client Type:</dt>\n" +
+    "<dd>{{ctrl.mobileClient.spec.clientType}}</dd>\n" +
+    "<dt>Client ID:</dt>\n" +
+    "<dd>{{ctrl.mobileClient.spec.appIdentifier}}</dd>\n" +
+    "<dt>Client API Key:</dt>\n" +
+    "<dd>{{ctrl.mobileClient.spec.apiKey}}</dd>\n" +
+    "<dt>DMZ Url:</dt>\n" +
+    "<dd>\n" +
+    "<inline-edit pattern=\"ctrl.validUrlPattern\" pattern-errmsg=\"'The value provided is not a valid url.'\" label=\"'Set DMZ Url'\" value=\"ctrl.mobileClient.spec.dmzUrl\" on-edited=\"ctrl.setDmzUrl\">\n" +
+    "</inline-edit>\n" +
+    "</dd>\n" +
+    "</dl>\n" +
+    "</div>\n" +
+    "<div class=\"col-md-6 resource-details client-config\">\n" +
+    "<h3>Mobile Client Config</h3>\n" +
+    "<mobile-client-config mobile-client=\"ctrl.mobileClient\"></mobile-client-config>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"resource-details col-md-12\">\n" +
+    "<h3>SDK Configuration</h3>\n" +
+    "<h4>\n" +
+    "<a href=\"{{ctrl.coreSdkSetup}}\" target=\"_blank\">{{ctrl.mobileClient.spec.clientType | upperFirst}} SDK setup</a>\n" +
+    "</h4>\n" +
+    "</div>\n" +
+    "<div class=\"resource-details service-configuration col-md-12\">\n" +
+    "<h3>Service Configuration</h3>\n" +
+    "<mobile-service-sdk-docs context=\"ctrl.projectName\" mobile-client=\"ctrl.mobileClient\" service-classes=\"ctrl.serviceClasses\"></mobile-service-sdk-docs>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</uib-tab>\n" +
+    "<uib-tab ng-if=\"true\" active=\"selectedTab.builds\">\n" +
+    "<uib-tab-heading>Builds</uib-tab-heading>\n" +
+    "<div class=\"builds\">\n" +
+    "<div class=\"note\" ng-if=\"(ctrl.mobileCIProvisioning || ctrl.mobileCIDeprovisioning) && ctrl.mobileClient.spec.clientType !== 'xamarin'\">\n" +
+    "<div class=\"col-md-offset-1 col-md-10\">\n" +
+    "<div class=\"alert alert-info\">\n" +
+    "<span class=\"pficon pficon-info\"></span>\n" +
+    "<span ng-class=\"{'spinner spinner-xs spinner-inline': (ctrl.mobileCIProvisioning || ctrl.mobileCIDeprovisioning)}\" aria-hidden=\"true\"></span>\n" +
+    "<span ng-if=\"ctrl.mobileCIProvisioning\">Mobile CI | CD is provisioning</span>\n" +
+    "<span ng-if=\"ctrl.mobileCIDeprovisioning\">Mobile CI | CD is deprovisioning</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"note\" ng-if=\"!ctrl.mobileCIService && ctrl.mobileClient.spec.clientType !== 'xamarin'\">\n" +
+    "<p>Provision a Mobile CI | CD service to create a mobile build.</p>\n" +
+    "<button class=\"btn btn-primary btn-lg\" ng-click=\"ctrl.goToMobileServices()\">Browse Mobile Services</button>\n" +
+    "</div>\n" +
+    "<div ng-if=\"ctrl.mobileClient.spec.clientType === 'xamarin'\" class=\"row\">\n" +
+    "<div class=\"col-md-offset-1 col-md-10\">\n" +
+    "<div class=\"alert alert-info\">\n" +
+    "<span class=\"pficon pficon-info\"></span>\n" +
+    "Mobile builds are not avaialble for Xamarin.\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<mobile-client-builds-list ng-if=\"ctrl.mobileCIEnabled && ctrl.mobileClient.spec.clientType !== 'xamarin'\" mobile-client=\"ctrl.mobileClient\"></mobile-client-builds-list>\n" +
+    "</div>\n" +
+    "</uib-tab>\n" +
+    "<uib-tab ng-if=\"true\" active=\"selectedTab.mobileServices\" class=\"mobile-services\">\n" +
+    "<uib-tab-heading>Mobile Services</uib-tab-heading>\n" +
+    "<mobile-service-instance-list></mobile-service-instance-list>\n" +
+    "</uib-tab>\n" +
+    "</uib-tabset>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -7452,6 +7602,33 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt ng-if-start=\"hpa.status.lastScaleTime\">Last Scaled:</dt>\n" +
     "<dd ng-if-end><span am-time-ago=\"hpa.status.lastScaleTime\"></span></dd>\n" +
     "</dl>"
+  );
+
+
+  $templateCache.put('views/directives/inline-edit.html',
+    "<div class=\"form-control-pf-editable inline-edit\">\n" +
+    "<ng-form name=\"$ctrl.inlineEditForm\" class=\"inline-edit-form\">\n" +
+    "<button ng-if=\"!$ctrl.editEnabled\" type=\"button\" class=\"form-control-pf-value\" ng-click=\"$ctrl.enableEdit()\">\n" +
+    "<span class=\"sr-only\">{{$ctrl.label}}</span>\n" +
+    "<span ng-if=\"$ctrl.value\">{{$ctrl.value}}</span>\n" +
+    "<span ng-if=\"!$ctrl.value\">{{$ctrl.label}}</span>\n" +
+    "<i class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></i>\n" +
+    "</button>\n" +
+    "<div ng-if=\"$ctrl.editEnabled\" class=\"form-control-pf-textbox\">\n" +
+    "<input ng-model=\"$ctrl.inputVal\" name=\"input\" type=\"text\" ng-pattern=\"$ctrl.pattern\" class=\"form-control form-control-pf-editor\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-label=\"{{$ctrl.label}}\" autofocus/>\n" +
+    "<button type=\"button\" class=\"form-control-pf-empty\" ng-click=\"$ctrl.clearInput()\" aria-label=\"Clear Value\">\n" +
+    "<span class=\"fa fa-times-circle fa-lg\"></span>\n" +
+    "</button>\n" +
+    "</div>\n" +
+    "<button ng-if=\"$ctrl.editEnabled\" type=\"button\" class=\"btn btn-primary form-control-pf-save\" aria-label=\"Save\" ng-click=\"$ctrl.save($ctrl.inputVal)\" ng-disabled=\"$ctrl.inlineEditForm.input.$invalid\">\n" +
+    "<i class=\"glyphicon glyphicon-ok\"></i>\n" +
+    "</button>\n" +
+    "<button ng-if=\"$ctrl.editEnabled\" type=\"button\" class=\"btn btn-default form-control-pf-cancel\" aria-label=\"Cancel\" ng-click=\"$ctrl.cancelEdit()\"><i class=\"glyphicon glyphicon-remove\"></i></button>\n" +
+    "</ng-form>\n" +
+    "<span ng-if=\"$ctrl.inlineEditForm.input.$error.pattern\" class=\"help-block inline-edit-input-error\">\n" +
+    "{{$ctrl.patternErrmsg}}\n" +
+    "</span>\n" +
+    "</div>"
   );
 
 
