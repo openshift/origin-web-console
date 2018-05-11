@@ -14,6 +14,9 @@
                class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span></a>
             <ul class="dropdown-menu dropdown-menu-right actions action-button">
+              <li ng-if="ctrl.mobileCIEnabled && ctrl.mobileClient.spec.clientType == 'android'">
+                <a ng-href="project/{{ctrl.project.metadata.name}}/create-client-build/{{ctrl.mobileClient.metadata.name}}" role="button">Create Build</a>
+              </li>
               <li>
                 <a ng-href="{{ctrl.mobileClient | editYamlURL}}" role="button">Edit YAML</a>
               </li>

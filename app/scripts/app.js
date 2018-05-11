@@ -314,6 +314,10 @@ angular
         templateUrl: 'views/create-secret.html',
         controller: 'CreateSecretController'
       })
+      .when('/project/:project/create-client-build/:mobileclient', {
+        templateUrl: 'views/create-client-build.html',
+        controller: 'CreateClientBuildController'
+      })
       .when('/project/:project/browse/config-maps', {
         templateUrl: 'views/browse/config-maps.html',
         controller: 'ConfigMapsController',

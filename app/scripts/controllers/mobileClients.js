@@ -20,6 +20,9 @@ angular.module('openshiftConsole')
     VALID_URL_PATTERN
   ) {
       var ctrl = this;
+      var serviceInstanceVersion = APIService.getPreferredVersion('serviceinstances');
+      var isServiceInstanceReady = $filter('isServiceInstanceReady');
+
       var watches = [];
       ctrl.projectName = $routeParams.project;
       ctrl.emptyMessage = 'Loading...';
@@ -73,6 +76,15 @@ angular.module('openshiftConsole')
                 }
                 ctrl.mobileClient = mobileClient;
               }));
+
+              watches.push(DataService.watch(serviceInstanceVersion, context, function (serviceInstances) {
+                $scope.serviceInstances = serviceInstances.by("metadata.name");
+                ctrl.mobileCIEnabled = _.some($scope.serviceInstances, function(serviceInstance) {
+                  console.log(serviceInstance.metadata.name + " :: ready = " + isServiceInstanceReady(serviceInstance));
+                  return /aerogear-digger/.test(serviceInstance.metadata.name) && isServiceInstanceReady(serviceInstance);
+                });
+              }));
+
             }),
             function(e) {
               ctrl.loaded = true;
