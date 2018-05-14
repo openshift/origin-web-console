@@ -1520,7 +1520,18 @@ icon: "fa fa-database"
 }), Logger.info("AEROGEAR_MOBILE_ENABLED: " + e.AEROGEAR_MOBILE_ENABLED);
 } ]).run([ "$rootScope", "APIService", "KubevirtVersions", function(e, t, n) {
 e.KUBEVIRT_ENABLED = !!t.apiInfo(n.offlineVirtualMachine);
-} ]), pluginLoader.addModule("openshiftConsole"), angular.module("openshiftConsole").factory("BrowserStore", [ function() {
+} ]), pluginLoader.addModule("openshiftConsole"), angular.module("openshiftConsole").factory("HawtioExtension", [ "extensionRegistry", function(e) {
+return console.warn("HawtioExtension.add() has been deprecated.  Please migrate to angular-extension-registry https://github.com/openshift/angular-extension-registry"), {
+add: function(t, n) {
+e.add(t, function(e) {
+return {
+type: "dom",
+node: n(e)
+};
+});
+}
+};
+} ]), angular.module("openshiftConsole").factory("BrowserStore", [ function() {
 var e = {
 local: window.localStorage,
 session: window.sessionStorage
