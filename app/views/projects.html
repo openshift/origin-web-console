@@ -175,7 +175,7 @@
                 OpenShift helps you quickly develop, host, and scale applications.<br>
                 <span ng-if="canCreate">Create a project for your application.</span>
               </p>
-              <div>
+              <div ng-if="canCreate">
                 <button ng-click="createProject($event)" class="btn btn-lg btn-primary">
                   <span class="fa fa-plus" aria-hidden="true"></span>
                   <span class="icon-button-text">Create Project</span>
