@@ -74391,34 +74391,38 @@ return e.Logger = t._prevLogger, t;
 }(this), function(e, t) {
 "function" == typeof define && define.amd ? define([], t) : "object" == typeof exports ? module.exports = t() : e.compareVersions = t();
 }(this, function() {
-function e(e) {
-var t = e.replace(/^v/, "").split("."), n = t.splice(0, 2);
-return n.push(t.join(".")), n;
+function e(e, t) {
+return -1 === e.indexOf(t) ? e.length : e.indexOf(t);
 }
-function t(e) {
-return isNaN(Number(e)) ? e : Number(e);
+function t(t) {
+var n = t.replace(/^v/, "").replace(/\+.*$/, ""), i = e(n, "-"), r = n.substring(0, i).split(".");
+return r.push(n.substring(i + 1)), r;
 }
 function n(e) {
+return isNaN(Number(e)) ? e : Number(e);
+}
+function i(e) {
 if ("string" != typeof e) throw new TypeError("Invalid argument expected string");
-if (!i.test(e)) throw new Error("Invalid argument not valid semver");
+if (!r.test(e)) throw new Error("Invalid argument not valid semver");
 }
-var i = /^v?(?:\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+)(?:-[\da-z\-]+(?:\.[\da-z\-]+)*)?(?:\+[\da-z\-]+(?:\.[\da-z\-]+)*)?)?)?$/i, r = /-([0-9A-Za-z-.]+)/;
-return function(i, o) {
-[ i, o ].forEach(n);
-for (var a = e(i), s = e(o), l = 0; l < 3; l++) {
-var c = parseInt(a[l] || 0, 10), u = parseInt(s[l] || 0, 10);
-if (c > u) return 1;
-if (u > c) return -1;
+var r = /^v?(?:\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+))?(?:-[\da-z\-]+(?:\.[\da-z\-]+)*)?(?:\+[\da-z\-]+(?:\.[\da-z\-]+)*)?)?)?$/i;
+return function(e, r) {
+[ e, r ].forEach(i);
+for (var o = t(e), a = t(r), s = 0; s < Math.max(o.length - 1, a.length - 1); s++) {
+var l = parseInt(o[s] || 0, 10), c = parseInt(a[s] || 0, 10);
+if (l > c) return 1;
+if (c > l) return -1;
 }
-if ([ a[2], s[2] ].every(r.test.bind(r))) {
-var d = r.exec(a[2])[1].split(".").map(t), h = r.exec(s[2])[1].split(".").map(t);
-for (l = 0; l < Math.max(d.length, h.length); l++) {
-if (void 0 === d[l] || "string" == typeof h[l] && "number" == typeof d[l]) return -1;
-if (void 0 === h[l] || "string" == typeof d[l] && "number" == typeof h[l]) return 1;
-if (d[l] > h[l]) return 1;
-if (h[l] > d[l]) return -1;
+var u = o[o.length - 1], d = a[a.length - 1];
+if (u && d) {
+var h = u.split(".").map(n), f = d.split(".").map(n);
+for (s = 0; s < Math.max(h.length, f.length); s++) {
+if (void 0 === h[s] || "string" == typeof f[s] && "number" == typeof h[s]) return -1;
+if (void 0 === f[s] || "string" == typeof h[s] && "number" == typeof f[s]) return 1;
+if (h[s] > f[s]) return 1;
+if (f[s] > h[s]) return -1;
 }
-} else if ([ a[2], s[2] ].some(r.test.bind(r))) return r.test(a[2]) ? -1 : 1;
+} else if (u || d) return u ? -1 : 1;
 return 0;
 };
 }), function() {
