@@ -263,7 +263,8 @@ angular.module('openshiftConsole')
         $scope.controllerRef = _.find(controllerReferences, function(ref) {
           return ref.kind === 'ReplicationController' ||
                  ref.kind === 'ReplicaSet' ||
-                 ref.kind === 'Build';
+                 ref.kind === 'Build' ||
+                 ref.kind === 'StatefulSet';
         });
       }
 
