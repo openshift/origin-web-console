@@ -26,8 +26,16 @@ var getClientConfig = function(mobileClient, serviceConfig, clusterInfo) {
 };
 
 var getServiceConfig = function(secrets, externalURL, SecretsService) {
+  var urlRgx = /http(s)?:\/\/.*\//;
+  if(externalURL && externalURL.substr(externalURL.length -1) !== "/"){
+    externalURL+="/";
+  }
+
   return _.map(secrets, function(secret) {
     var decodedData = SecretsService.decodeSecretData(secret.data);
+    if (decodedData.uri && !decodedData.uri.match(urlRgx)) {
+      decodedData.uri+="/";
+    }
     var conf ={
       id: _.get(secret, 'metadata.name'),
       name: _.get(decodedData, 'name'),
@@ -37,11 +45,8 @@ var getServiceConfig = function(secrets, externalURL, SecretsService) {
     };
     if(externalURL){
       var serviceName = conf.name || _.get(secret,"metadata.labels.serviceName");
-      if(externalURL.substr(externalURL.length -1) !== "/"){
-        externalURL+="/";
-      }
-      externalURL+="mobile/"+serviceName+"/";
-      conf.url = conf.url.replace(/http(s):\/\/.*\//,externalURL);
+      var dmzURL = externalURL + "mobile/"+serviceName+"/";
+      conf.url = conf.url.replace(urlRgx,dmzURL);
     }
     return conf;
   });
