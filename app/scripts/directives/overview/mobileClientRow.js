@@ -3,7 +3,6 @@
 (function () {
   angular.module('openshiftConsole').component('mobileClientRow', {
     controller: [
-      '$scope',
       '$filter',
       '$routeParams',
       'APIService',
@@ -11,7 +10,7 @@
       'DataService',
       'ListRowUtils',
       'Navigate',
-      'ProjectsService',
+      'ServiceInstancesService',
       MobileAppRow,
     ],
     controllerAs: 'row',
@@ -22,11 +21,28 @@
     templateUrl: 'views/overview/_mobile-client-row.html'
   });
 
-  function MobileAppRow($scope, $filter, $routeParams, APIService, AuthorizationService, DataService, ListRowUtils, Navigate, ProjectsService) {
+  function MobileAppRow($filter, $routeParams, APIService, AuthorizationService, DataService, ListRowUtils, Navigate, ServiceInstancesService) {
     var row = this;
+    var serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
+    var serviceClassesVersion = APIService.getPreferredVersion('clusterserviceclasses');
+    var isServiceInstanceReady = $filter('isServiceInstanceReady');
+    var isMobileService = $filter('isMobileService');
     row.installType = '';
 
     _.extend(row, ListRowUtils.ui);
+
+    row.$onInit = function() {
+      row.context = {namespace: _.get(row, 'apiObject.metadata.namespace')};
+      DataService.list(serviceClassesVersion, row.context, function(serviceClasses) {
+        serviceClasses = serviceClasses.by('metadata.name');
+        DataService.watch(serviceInstancesVersion, row.context, function(serviceinstances) {
+          row.services = _.filter(serviceinstances.by('metadata.name'), function(serviceInstance){
+            var serviceClass = _.get(serviceClasses, ServiceInstancesService.getServiceClassNameForInstance(serviceInstance));
+            return isMobileService(serviceClass) && isServiceInstanceReady(serviceInstance);
+          });
+        }, { errorNotification: false });
+      });
+    };
 
     row.$onChanges = function(changes) {
       if (changes.apiObject) {

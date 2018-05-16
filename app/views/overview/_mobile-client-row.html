@@ -1,4 +1,4 @@
-<div class="list-pf-item" ng-class="{ active: row.expanded }">
+<div class="list-pf-item mobile-row" ng-class="{ active: row.expanded }">
   <div class="list-pf-container" ng-click="row.toggleExpand($event)">
     <div class="list-pf-chevron">
       <div ng-include src=" 'views/overview/_list-row-chevron.html' " class="list-pf-content"></div>
@@ -37,7 +37,7 @@
   </div>
   <div class="list-pf-expansion collapse" ng-if="row.expanded" ng-class="{ in: row.expanded }">
     <div class="list-pf-container">
-      <div class="expanded-section">
+      <div class="expanded-section" ng-if="!(row.services | size)">
         <div class="empty-state-message text-center">
           <p>Add a mobile service to your project. Or connect to external service.</p>
           <div class="empty-state-message-main-action">
@@ -47,9 +47,18 @@
             </button>
           </div>
         </div>
-        <div ng-if="loading">
-          Loading...
+      </div>
+      <div class="expanded-section" ng-if="(row.services | size)">
+        <div class="row">
+          <div class="col-md-4">
+            <mobile-client-config mobile-client="row.apiObject"></mobile-client-config>
+          </div>
+          <div class="col-md-8">
+          </div>
         </div>
+      </div>
+      <div ng-if="loading">
+        Loading...
       </div>
     </div>
   </div>

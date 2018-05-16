@@ -5497,6 +5497,7 @@ h2+.list-view-pf{margin-top:20px}
 .overview .row-expanded-top .overview-pod-template{padding-right:20px}
 }
 .overview .row-expanded-top .overview-pod-template .pod-template-block.ng-leave-prepare{display:none}
+.overview .mobile-row .copy-to-clipboard pre{max-height:250px}
 @keyframes flexGrow{to{flex-basis:auto;flex-grow:1;flex-shrink:1}
 }
 @keyframes flexShrink{to{flex-basis:1;flex-grow:.000001;flex-shrink:1}
