@@ -4977,7 +4977,7 @@ e.containerState = n;
 if (r.loaded = !0, r.pod = e, r.dcName = N(e, "deploymentConfig"), r.rcName = N(e, "deployment"), r.deploymentVersion = N(e, "deploymentVersion"), r.logCanRun = !_.includes([ "New", "Pending", "Unknown" ], e.status.phase), S(), delete r.controllerRef, !r.dcName) {
 var n = m.getControllerReferences(e);
 r.controllerRef = _.find(n, function(e) {
-return "ReplicationController" === e.kind || "ReplicaSet" === e.kind || "Build" === e.kind;
+return "ReplicationController" === e.kind || "ReplicaSet" === e.kind || "Build" === e.kind || "StatefulSet" === e.kind;
 });
 }
 "DELETED" === t && (r.alerts.deleted = {
