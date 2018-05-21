@@ -8,13 +8,14 @@
         <h3>
           <div class="list-row-longname"><span>{{row.clientType}}</span></div>
           <!--<span class="fa-2x {{row.apiObject.metadata.annotations.icon}}"></span>-->
-          <a ng-href="{{row.apiObject | navigateResourceURL}}"><span ng-bind-html="row.apiObject.spec.name | highlightKeywords : row.state.filterKeywords"></span></a>
-
-
+          <a ng-href="{{row.apiObject | navigateResourceURL}}">
+            <span ng-bind-html="row.apiObject.spec.name | highlightKeywords : row.state.filterKeywords"></span>
+          </a>
           <div class="list-row-longname">{{row.bundleDisplay}}</div>
         </h3>
       </div>
     </div>
+    <span class="pficon-info icon" ng-if="!row.alertDismissed && (row.servicesNotBoundCount > 0) && !row.expanded"></span>
     <div class="list-pf-actions">
       <div class="dropdown-kebab-pf" uib-dropdown ng-if="row.actionsDropdownVisible()">
         <button uib-dropdown-toggle class="btn btn-link dropdown-toggle">
@@ -50,16 +51,63 @@
       </div>
       <div class="expanded-section" ng-if="(row.services | size)">
         <div class="row">
-          <div class="col-md-4">
+          <div ng-if="(row.services | size)" class="col-md-12">
+            <div ng-if="!row.alertDismissed && (row.servicesNotBoundCount > 0)" class="alert alert-info alert-dismissable">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true" ng-click="row.alertDismissed = true">
+                <span class="pficon pficon-close"></span>
+              </button>
+              <span class="pficon pficon-info"></span>
+              {{row.servicesNotBoundCount}} mobile services are not bound to this client.
+              <a href="" ng-href="{{ row.navigateToMobileTab('mobileServices') }}">Bind them to use with this client.</a>
+            </div>
+          </div>
+          <div ng-if="(row.services | size)" class="col-md-6">
+            <div>
+              <div class="component-label section-label">Mobile Services</div>
+              <div class="services-chart">
+                <pf-donut-chart config="row.config" data="row.data" chart-height="row.chartHeight"></pf-donut-chart>
+              </div>
+              <a href="" ng-href="{{ row.navigateToMobileTab('mobileServices') }}">View All Mobile Services</a>
+            </div>
+          </div>
+          <div class="col-md-6">
             <mobile-client-config mobile-client="row.apiObject"></mobile-client-config>
           </div>
-          <div class="col-md-8">
-          </div>
         </div>
-      </div>
-      <div ng-if="loading">
-        Loading...
+        <div ng-if="(row.builds | size)">
+          <div class="component-label section-label">Mobile Builds</div>
+          <div ng-repeat="build in (row.builds | limitTo: 5) track by (build | uid)" class="mobile-builds">
+            <div class="row">
+              <div class="col-md-6">
+                <h3>
+                  <a ng-href="{{build | configURLForResource}}">{{build | buildConfigForBuild}}</a>
+                </h3>
+              </div>
+              <div class="col-md-6">
+                <span class="status-icon" ng-class="build.status.phase">
+                  <span ng-switch="build.status.phase" class="hide-ng-leave">
+                    <span ng-switch-when="Complete" aria-hidden="true">
+                      <i class="fa fa-check-circle fa-fw"></i>
+                    </span>
+                    <span ng-switch-when="Failed" aria-hidden="true">
+                      <i class="fa fa-times-circle fa-fw"></i>
+                    </span>
+                    <span ng-switch-default>
+                      <status-icon status="build.status.phase"></status-icon>
+                    </span>
+                  </span>
+                </span>
+                <a ng-href="{{build | navigateResourceURL}}">Build #{{build | annotation : 'buildNumber'}}</a>
+                <span am-time-ago="build.metadata.creationTimestamp" class="build-timestamp"></span>
+              </div>
+            </div>
+          </div>
+          <a href="" ng-href="{{ row.navigateToMobileTab('builds') }}">View All Mobile Builds</a>
+        </div>
+        </div>
+        <div ng-if="loading">
+          Loading...
+        </div>
       </div>
     </div>
   </div>
-</div>

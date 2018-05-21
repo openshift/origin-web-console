@@ -39,4 +39,22 @@
       }
     }
   }
+  .mobile-builds {
+    .row > [class^=col-] {
+      margin: 0 !important;
+    }
+
+    .status-icon {
+      &.Complete {
+        color: @build-pipeline-success-color;
+      }
+      &.Failed {
+        color: @build-pipeline-failed-color;
+      }
+    }
+  }
+  .services-chart {
+    padding-bottom: 0.5em;
+    width: 200px;
+  }
 }
