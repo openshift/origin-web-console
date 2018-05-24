@@ -10,9 +10,138 @@
     .note {
       font-size: 1.3em;
     }
-  }  
+  }
+  .mobile-builds {
+
+    .mobile-build-detail {
+      padding-bottom: 20px;
+
+      b {
+        padding-right: 20px;
+      }
+    }
+
+    .client-build-history {
+      margin-top: 10px;
+      
+      .build-history-list {
+        .mobile-client-build-history-item {
+          border: 1px solid @build-pipeline-border-color;
+          box-sizing: border-box;
+          display: flex;
+          flex-wrap: wrap;
+          padding: 10px;
+          margin-bottom: -1px;
+
+          .status-panel {
+            align-items: center;
+            display: flex;
+          }
+
+          .build-link {
+            padding: 10px 0px 10px 10px;
+          }
+
+          .state {
+            display: flex;
+            flex-wrap: wrap;
+          }
+
+          .download-trigger {
+            align-items: center;
+            display: flex;
+          }
+        }
+      }
+      .mobile-chevron {
+        margin-bottom: 10px;
+
+        a {
+          text-decoration: none;
+        }
+      }
+    }
+    .component-label {
+      padding-top: 15px;
+    }
+    .expanded-section {
+      width: 100%;
+    }
+    .icon-header {
+      font-size:19px!important;
+    }
+    .latest-build {
+      display: inline-block;
+      width: 100%;
+      border: 1px solid @build-pipeline-border-color;
+    }
+    .latest-mobile-build {
+      display: flex;
+      
+      .latest-build-pipeline {
+        padding: 0px;
+
+        .build-summary, .build-pipeline {
+          border: none;
+        }
+        .pipeline-stage {
+          @media (min-width: @screen-lg-min) {
+            width: 25%;
+          }
+        }
+      }
+      .latest-download-trigger {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+      }
+    }
+    .list-pf-content {
+      .list-row-longname {
+        display: inline-block;
+        height: 26px;
+        font-size: 16px;
+        line-height: 26px;
+      }
+    }
+    .mobile-client-download-url {
+      margin-top: -1px;
+      padding: 0px;
+
+      canvas {
+        height: 180px;
+      }
+      p {
+        font-weight: bold;
+      }
+      span {
+        font-weight: bold;
+      }
+      .spinner {
+        margin-top: 15px;
+        margin-bottom: 15px;
+      }
+    }
+    .no-builds-note {
+      text-align: center;
+    }
+    .qr-code-container {
+      display: flex;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+  }
   .note {
     text-align: center;
+  }
+  .status-icon {
+    font-size: 13px;
+    &.Complete {
+      color: @build-pipeline-success-color;
+    }
+    &.Failed{
+      color: @build-pipeline-failed-color;
+    }
   }
 }
 
@@ -56,5 +185,36 @@
   .services-chart {
     padding-bottom: 0.5em;
     width: 200px;
+  }
+}
+
+
+@media (max-width: 479px) {
+
+  .mobile-clients-view {
+    .mobile-builds {
+
+      .client-build-history  {
+
+        .build-history-list {
+          .download-trigger {
+            padding: 0;
+          }
+
+          .mobile-client-build-history-item {
+            .status-panel {
+              display: block;
+              padding: 0;
+
+              .state {
+                .info {
+                  padding-left: 0;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

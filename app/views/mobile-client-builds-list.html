@@ -1,0 +1,16 @@
+<div ng-if="!$ctrl.loaded">Loading...</div>
+
+<div class="mobile-builds" ng-if="$ctrl.loaded && ($ctrl.mobileBuildConfigs | size)">
+  <div class="list-pf">
+    <mobile-client-builds-row 
+      ng-repeat="mobileBuildConfig in $ctrl.mobileBuildConfigs" 
+      api-object="mobileBuildConfig">
+    </mobile-client-builds-row>
+  </div>
+</div>
+
+<div class="note" ng-if="$ctrl.loaded && !($ctrl.mobileBuildConfigs | size)">
+  <h2>No Build Config</h2>
+  <p>Create a mobile build config to create a mobile client build.</p>
+  <button role="button" class="btn btn-primary btn-lg" ng-click="$ctrl.goToCreateClientBuild()">Create Build</button>
+</div>

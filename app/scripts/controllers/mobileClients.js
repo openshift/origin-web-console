@@ -79,9 +79,13 @@ angular.module('openshiftConsole')
 
               watches.push(DataService.watch(serviceInstanceVersion, context, function (serviceInstances) {
                 $scope.serviceInstances = serviceInstances.by("metadata.name");
-                ctrl.mobileCIEnabled = _.some($scope.serviceInstances, function(serviceInstance) {
-                  return /aerogear-digger/.test(serviceInstance.metadata.name) && isServiceInstanceReady(serviceInstance);
+                ctrl.mobileCIService = _.find($scope.serviceInstances, function(serviceInstance) {
+                  return /aerogear-digger/.test(serviceInstance.metadata.name);
                 });
+
+                ctrl.mobileCIProvisioning = _.get(ctrl, 'mobileCIService.status.currentOperation') === 'Provision';
+                ctrl.mobileCIDeprovisioning = _.get(ctrl, 'mobileCIService.status.currentOperation') === 'Deprovision';
+                ctrl.mobileCIEnabled = isServiceInstanceReady(ctrl.mobileCIService);
               }));
 
             }),
@@ -95,6 +99,10 @@ angular.module('openshiftConsole')
             }
           );
         }));
+
+      ctrl.goToMobileServices = function () {
+        Navigate.toProjectCatalog(ctrl.projectName, {category: 'mobile', subcategory: 'services'});
+      };
 
       $scope.$on('$destroy', function(){
         DataService.unwatchAll(watches);

@@ -76,9 +76,35 @@
                 </div>
               </div>
             </uib-tab>
+            <uib-tab active="selectedTab.builds">
+              <uib-tab-heading>Builds</uib-tab-heading>
+                <div class="note" ng-if="(ctrl.mobileCIProvisioning || ctrl.mobileCIDeprovisioning) && ctrl.mobileClient.spec.clientType !== 'xamarin'">
+                  <div class="col-md-offset-1 col-md-10">
+                    <div class="alert alert-info">
+                      <span class="pficon pficon-info"></span>
+                      <span ng-class="{'spinner spinner-xs spinner-inline': (ctrl.mobileCIProvisioning || ctrl.mobileCIDeprovisioning)}" aria-hidden="true"></span>
+                      <span ng-if="ctrl.mobileCIProvisioning" >Mobile CI | CD is provisioning</span>
+                      <span ng-if="ctrl.mobileCIDeprovisioning">Mobile CI | CD is deprovisioning</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="note" ng-if="!ctrl.mobileCIService && ctrl.mobileClient.spec.clientType !== 'xamarin'">
+                    <p>Provision a Mobile CI | CD service to create a mobile build.</p>
+                    <button class="btn btn-primary btn-lg" ng-click="ctrl.goToMobileServices()">Browse Mobile Catalog</button>
+                </div>
+                <div ng-if="ctrl.mobileClient.spec.clientType === 'xamarin'"  class="row">
+                  <div class="col-md-offset-1 col-md-10">
+                    <div class="alert alert-info">
+                      <span class="pficon pficon-info"></span>
+                      Mobile builds are not avaialble for Xamarin.
+                    </div>
+                  </div>
+                </div>
+                <mobile-client-builds-list ng-if="ctrl.mobileCIEnabled && ctrl.mobileClient.spec.clientType !== 'xamarin'" mobile-client="ctrl.mobileClient"></mobile-client-builds-list>
+            </uib-tab>
             <uib-tab active="selectedTab.mobileServices" class="mobile-services">
               <uib-tab-heading>Mobile Services</uib-tab-heading>
-                  <mobile-service-instance-list></mobile-service-instance-list>
+                <mobile-service-instance-list></mobile-service-instance-list>
             </uib-tab>
           </uib-tabset>
         </div>
