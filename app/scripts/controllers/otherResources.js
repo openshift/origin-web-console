@@ -30,6 +30,7 @@ angular.module('openshiftConsole')
         case "ImageStreamMapping":
         case "ImageStreamTag":
         case "LimitRange":
+        case "OfflineVirtualMachine":
         case "PersistentVolumeClaim":
         case "Pod":
         case "ReplicaSet":
@@ -40,6 +41,7 @@ angular.module('openshiftConsole')
         case "Service":
         case "ServiceInstance":
         case "StatefulSet":
+        case "VirtualMachine":
           return false;
         default:
           return true;

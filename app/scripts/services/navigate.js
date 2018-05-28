@@ -259,7 +259,15 @@ angular.module("openshiftConsole")
           case "Secret":
           case "Service":
             url.segment(APIService.kindToResource(kind))
-            .segmentCoded(name);
+              .segmentCoded(name);
+            break;
+          case "VirtualMachine":
+            url.segment('virtual-machines')
+              .segmentCoded(name);
+            break;
+          case "OfflineVirtualMachine":
+            url.segment('offline-virtual-machines')
+              .segmentCoded(name);
             break;
           default:
             var rgv;
@@ -340,6 +348,7 @@ angular.module("openshiftConsole")
           'deploymentconfigs': 'deployments',
           'imagestreams': 'images',
           'pods': 'pods',
+          'offlinevirtualmachines': 'offline-virtual-machines',
           'replicasets': 'deployments',
           'replicationcontrollers': 'deployments',
           'routes': 'routes',
@@ -347,7 +356,8 @@ angular.module("openshiftConsole")
           'services': 'services',
           'serviceinstances': 'service-instances',
           'persistentvolumeclaims': 'storage',
-          'statefulsets' : 'stateful-sets'
+          'statefulsets' : 'stateful-sets',
+          'virtualmachines': 'virtual-machines',
         };
 
         return URI.expand("project/{projectName}/browse/{browsePath}", {

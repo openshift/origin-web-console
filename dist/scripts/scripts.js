@@ -32,7 +32,7 @@ var B = this, V = t("isIE")();
 e.projectName = a.project;
 var L = a.isHomePage;
 B.catalogLandingPageEnabled = !d.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
-var O = t("annotation"), U = t("canI"), F = t("buildConfigForBuild"), x = t("deploymentIsInProgress"), M = t("imageObjectRef"), q = t("isJenkinsPipelineStrategy"), z = t("isNewerResource"), H = t("label"), G = t("podTemplate"), K = i.getPreferredVersion("buildconfigs"), W = i.getPreferredVersion("builds"), Q = i.getPreferredVersion("appliedclusterresourcequotas"), J = i.getPreferredVersion("daemonsets"), Y = i.getPreferredVersion("deploymentconfigs"), Z = i.getPreferredVersion("deployments"), X = i.getPreferredVersion("horizontalpodautoscalers"), ee = i.getPreferredVersion("imagestreams"), te = i.getPreferredVersion("limitranges"), ne = i.getPreferredVersion("pods"), re = i.getPreferredVersion("replicasets"), ae = i.getPreferredVersion("replicationcontrollers"), oe = i.getPreferredVersion("resourcequotas"), ie = i.getPreferredVersion("routes"), se = i.getPreferredVersion("servicebindings"), ce = i.getPreferredVersion("clusterserviceclasses"), le = i.getPreferredVersion("serviceinstances"), ue = i.getPreferredVersion("clusterserviceplans"), de = i.getPreferredVersion("services"), me = i.getPreferredVersion("statefulsets"), pe = i.getPreferredVersion("templates");
+var O = t("annotation"), U = t("canI"), F = t("buildConfigForBuild"), M = t("deploymentIsInProgress"), x = t("imageObjectRef"), q = t("isJenkinsPipelineStrategy"), z = t("isNewerResource"), H = t("label"), G = t("podTemplate"), K = i.getPreferredVersion("buildconfigs"), W = i.getPreferredVersion("builds"), J = i.getPreferredVersion("appliedclusterresourcequotas"), Q = i.getPreferredVersion("daemonsets"), Y = i.getPreferredVersion("deploymentconfigs"), Z = i.getPreferredVersion("deployments"), X = i.getPreferredVersion("horizontalpodautoscalers"), ee = i.getPreferredVersion("imagestreams"), te = i.getPreferredVersion("limitranges"), ne = i.getPreferredVersion("pods"), re = i.getPreferredVersion("replicasets"), ae = i.getPreferredVersion("replicationcontrollers"), oe = i.getPreferredVersion("resourcequotas"), ie = i.getPreferredVersion("routes"), se = i.getPreferredVersion("servicebindings"), ce = i.getPreferredVersion("clusterserviceclasses"), le = i.getPreferredVersion("serviceinstances"), ue = i.getPreferredVersion("clusterserviceplans"), de = i.getPreferredVersion("services"), me = i.getPreferredVersion("statefulsets"), pe = i.getPreferredVersion("templates");
 B.buildConfigsInstantiateVersion = i.getPreferredVersion("buildconfigs/instantiate");
 var fe, ge, ve = {}, he = {}, ye = {}, be = B.state = {
 alerts: {},
@@ -182,16 +182,16 @@ return e && "Pod" === e.kind;
 }, Fe = function(e) {
 var t = _e(e);
 return t ? Ue(e) ? [ e ] : _.get(B, [ "state", "podsByOwnerUID", t ], []) : [];
-}, xe = function(e, t) {
+}, Me = function(e, t) {
 var n = _e(e);
 be.notificationsByObjectUID[n] = t || {};
-}, Me = function(e) {
+}, xe = function(e) {
 var t = _e(e);
 return t ? _.get(be, [ "notificationsByObjectUID", t ], {}) : {};
 }, qe = function(e) {
 if (_e(e)) {
 var t = Fe(e), n = R.getPodAlerts(t, a.project);
-xe(e, n);
+Me(e, n);
 }
 }, ze = function(e) {
 _.each(e, qe);
@@ -211,22 +211,22 @@ var t = {}, n = He(e);
 _.assign(t, R.getDeploymentStatusAlerts(e, n), R.getPausedDeploymentAlerts(e));
 var r = Ge(e);
 _.each(r, function(e) {
-var n = Me(e);
+var n = xe(e);
 _.assign(t, n);
-}), xe(e, t);
+}), Me(e, t);
 }, We = function() {
 _.each(B.deploymentConfigs, Ke);
-}, Qe = function(e) {
+}, Je = function(e) {
 var t = _e(e);
 return t ? _.get(B, [ "replicaSetsByDeploymentUID", t ]) : {};
-}, Je = function(e) {
-var t = R.getPausedDeploymentAlerts(e), n = Qe(e);
+}, Qe = function(e) {
+var t = R.getPausedDeploymentAlerts(e), n = Je(e);
 _.each(n, function(e) {
-var n = Me(e);
+var n = xe(e);
 _.assign(t, n);
-}), xe(e, t);
+}), Me(e, t);
 }, Ye = function() {
-_.each(B.deployments, Je);
+_.each(B.deployments, Qe);
 }, Ze = function() {
 ze(B.replicationControllers), ze(B.replicaSets), ze(B.statefulSets), ze(B.daemonSets), ze(B.monopods);
 }, Xe = _.debounce(function() {
@@ -242,7 +242,7 @@ return "Succeeded" !== e.status.phase && "Failed" !== e.status.phase && (!H(e, "
 }, rt = function() {
 be.podsByOwnerUID = j.groupByOwnerUID(B.pods), B.monopods = _.filter(be.podsByOwnerUID[""], nt), D();
 }, at = function(e) {
-return !!_.get(e, "status.replicas") || (!O(e, "deploymentConfig") || x(e));
+return !!_.get(e, "status.replicas") || (!O(e, "deploymentConfig") || M(e));
 }, ot = function(e) {
 return O(e, "deploymentConfig");
 }, it = function() {
@@ -285,19 +285,30 @@ e.matches(r) && t.push(be.allServices[n]);
 }), be.servicesByObjectUID[n] = _.sortBy(t, "metadata.name");
 });
 }, dt = function() {
+B.offlineVirtualMachines && be.allServices && _.each(B.offlineVirtualMachines, function(e) {
+var t = _.get(e, [ "metadata", "labels", "kubevirt.io/domain" ]);
+t && (e.services = _.filter(be.allServices, {
+spec: {
+selector: {
+"kubevirt.io/domain": t
+}
+}
+}));
+});
+}, mt = function() {
 if (be.allServices) {
 lt = _.mapValues(be.allServices, function(e) {
 return new LabelSelector(e.spec.selector);
 });
 var e = [ B.deploymentConfigs, B.vanillaReplicationControllers, B.deployments, B.vanillaReplicaSets, B.statefulSets, B.daemonSets, B.monopods ];
-_.each(e, ut), Re();
+_.each(e, ut), Re(), dt();
 }
-}, mt = function() {
+}, pt = function() {
 var e = E.groupByService(B.routes, !0);
 be.routesByService = _.mapValues(e, E.sortRoutesByScore), Re();
-}, pt = function() {
+}, ft = function() {
 be.hpaByResource = g.groupHPAs(B.horizontalPodAutoscalers);
-}, ft = function(e) {
+}, gt = function(e) {
 var t = F(e), n = B.buildConfigs[t];
 if (n) {
 B.recentPipelinesByBuildConfig[t] = B.recentPipelinesByBuildConfig[t] || [], B.recentPipelinesByBuildConfig[t].push(e);
@@ -306,23 +317,23 @@ _.each(r, function(t) {
 be.recentPipelinesByDeploymentConfig[t] = be.recentPipelinesByDeploymentConfig[t] || [], be.recentPipelinesByDeploymentConfig[t].push(e);
 }), Te();
 }
-}, gt = {}, vt = function() {
-gt = l.groupBuildConfigsByOutputImage(B.buildConfigs);
-}, ht = function(e) {
+}, vt = {}, ht = function() {
+vt = l.groupBuildConfigsByOutputImage(B.buildConfigs);
+}, yt = function(e) {
 var t = _e(e);
 if (t) return _.get(be, [ "buildConfigsByObjectUID", t ], []);
-}, yt = function(e) {
-var t = [], n = ht(e);
+}, bt = function(e) {
+var t = [], n = yt(e);
 _.each(n, function(e) {
 var n = _.get(be, [ "recentBuildsByBuildConfig", e.metadata.name ], []);
 t = t.concat(n);
 });
 var r = Ce(e);
 _.set(be, [ "recentBuildsByDeploymentConfig", r ], t);
-}, bt = function(e, t) {
+}, St = function(e, t) {
 var n = _e(t);
 n && _.set(be, [ "buildConfigsByObjectUID", n ], e);
-}, St = function() {
+}, Ct = function() {
 var e = [];
 B.deploymentConfigsByPipeline = {}, be.pipelinesByDeploymentConfig = {}, _.each(B.buildConfigs, function(t) {
 if (q(t)) {
@@ -333,37 +344,37 @@ be.pipelinesByDeploymentConfig[e] = be.pipelinesByDeploymentConfig[e] || [], be.
 });
 }
 }), B.pipelineBuildConfigs = _.sortBy(e, "metadata.name"), Te(), tt(B.pipelineBuildConfigs), Ne();
-}, Ct = function() {
+}, _t = function() {
 be.buildConfigsByObjectUID = {}, _.each(B.deploymentConfigs, function(e) {
 var t = [], n = _.get(e, "spec.triggers");
 _.each(n, function(n) {
 var r = _.get(n, "imageChangeParams.from");
 if (r) {
-var a = M(r, e.metadata.namespace), o = gt[a];
+var a = x(r, e.metadata.namespace), o = vt[a];
 _.isEmpty(o) || (t = t.concat(o));
 }
-}), t = _.sortBy(t, "metadata.name"), bt(t, e), yt(e);
+}), t = _.sortBy(t, "metadata.name"), St(t, e), bt(e);
 });
-}, _t = function() {
-St(), Ct();
 }, wt = function() {
-_.each(B.deploymentConfigs, yt);
+Ct(), _t();
 }, Pt = function() {
+_.each(B.deploymentConfigs, bt);
+}, jt = function() {
 if (be.builds && B.buildConfigs) {
 B.recentPipelinesByBuildConfig = {}, be.recentBuildsByBuildConfig = {}, be.recentPipelinesByDeploymentConfig = {};
 var e = {};
 _.each(l.interestingBuilds(be.builds), function(t) {
 var n = F(t);
-q(t) ? ft(t) : (e[n] = e[n] || [], e[n].push(t));
+q(t) ? gt(t) : (e[n] = e[n] || [], e[n].push(t));
 }), B.recentPipelinesByBuildConfig = _.mapValues(B.recentPipelinesByBuildConfig, function(e) {
 return l.sortBuilds(e, !0);
 }), be.recentPipelinesByDeploymentConfig = _.mapValues(be.recentPipelinesByDeploymentConfig, function(e) {
 return l.sortBuilds(e, !0);
 }), be.recentBuildsByBuildConfig = _.mapValues(e, function(e) {
 return l.sortBuilds(e, !0);
-}), wt();
+}), Pt();
 }
-}, jt = function() {
+}, kt = function() {
 R.setQuotaNotifications(be.quotas, be.clusterQuotas, a.project);
 };
 B.clearFilter = function() {
@@ -383,7 +394,7 @@ w.toProjectCatalog(e.projectName);
 }, b.onActiveFiltersChanged(function() {
 e.$evalAsync(Le);
 }), B.startBuild = l.startBuild;
-var kt = function() {
+var It = function() {
 if (be.bindingsByApplicationUID = {}, be.applicationsByBinding = {}, be.deleteableBindingsByApplicationUID = {}, !_.isEmpty(be.bindings)) {
 var e = [ B.deployments, B.deploymentConfigs, B.vanillaReplicationControllers, B.vanillaReplicaSets, B.statefulSets, B.daemonSets ];
 if (!_.some(e, function(e) {
@@ -405,19 +416,19 @@ return _.get(_.head(t), [ "metadata", "name" ]) || e.metadata.name;
 }, {});
 }
 }
-}, It = function() {
+}, Rt = function() {
 be.bindableServiceInstances = c.filterBindableServiceInstances(be.serviceInstances, be.serviceClasses, be.servicePlans), be.orderedServiceInstances = c.sortServiceInstances(be.serviceInstances, be.serviceClasses);
-}, Rt = [], Et = L ? {
+}, Et = [], Tt = L ? {
 skipErrorNotFound: !0
 } : {};
-k.get(a.project, Et).then(_.spread(function(t, r) {
+k.get(a.project, Tt).then(_.spread(function(t, r) {
 be.project = e.project = t, be.context = e.context = r;
 var a = function() {
 B.pods && h.fetchReferencedImageStreamImages(B.pods, be.imagesByDockerReference, be.imageStreamImageRefByDockerReference, r);
 }, o = function(e) {
-B.daemonSets = e.by("metadata.name"), ut(B.daemonSetData), ut(B.monopods), ze(B.daemonSets), et(B.daemonSets), kt(), Le(), S.log("daemonsets", B.daemonSets);
+B.daemonSets = e.by("metadata.name"), ut(B.daemonSetData), ut(B.monopods), ze(B.daemonSets), et(B.daemonSets), It(), Le(), S.log("daemonsets", B.daemonSets);
 }, i = !1, s = function() {
-i || (Rt.push(m.watch(J, r, o, {
+i || (Et.push(m.watch(Q, r, o, {
 poll: V,
 pollInterval: 6e4
 })), i = !0);
@@ -430,61 +441,61 @@ kind: "DaemonSet"
 }, l = function() {
 i || _.some(B.pods, c) && s();
 };
-if (Rt.push(m.watch(ne, r, function(e, t) {
+if (Et.push(m.watch(ne, r, function(e, t) {
 B.pods = e.by("metadata.name"), rt(), a(), Xe(), ut(B.monopods), ze(B.monopods), et(B.monopods), Le(), t && "ADDED" !== t || l(), S.log("pods (subscribe)", B.pods);
-})), Rt.push(m.watch(ae, r, function(e) {
-B.replicationControllers = e.by("metadata.name"), it(), ut(B.vanillaReplicationControllers), ut(B.monopods), ze(B.vanillaReplicationControllers), et(B.vanillaReplicationControllers), kt(), Le(), S.log("replicationcontrollers (subscribe)", B.replicationControllers);
-})), Rt.push(m.watch(Y, r, function(e) {
-B.deploymentConfigs = e.by("metadata.name"), it(), ut(B.deploymentConfigs), ut(B.vanillaReplicationControllers), et(B.deploymentConfigs), Ye(), _t(), wt(), kt(), Le(), S.log("deploymentconfigs (subscribe)", B.deploymentConfigs);
-})), Rt.push(m.watch(re, r, function(e) {
-B.replicaSets = e.by("metadata.name"), ct(), ut(B.vanillaReplicaSets), ut(B.monopods), ze(B.vanillaReplicaSets), et(B.vanillaReplicaSets), kt(), Le(), S.log("replicasets (subscribe)", B.replicaSets);
-})), Rt.push(m.watch(Z, r, function(e) {
-fe = e.by("metadata.uid"), B.deployments = _.sortBy(fe, "metadata.name"), ct(), ut(B.deployments), ut(B.vanillaReplicaSets), et(B.deployments), kt(), Le(), S.log("deployments (subscribe)", B.deploymentsByUID);
-})), Rt.push(m.watch(W, r, function(e) {
-be.builds = e.by("metadata.name"), Pt(), S.log("builds (subscribe)", be.builds);
-})), Rt.push(m.watch(me, r, function(e) {
-B.statefulSets = e.by("metadata.name"), ut(B.statefulSets), ut(B.monopods), ze(B.statefulSets), et(B.statefulSets), kt(), Le(), S.log("statefulsets (subscribe)", B.statefulSets);
+})), Et.push(m.watch(ae, r, function(e) {
+B.replicationControllers = e.by("metadata.name"), it(), ut(B.vanillaReplicationControllers), ut(B.monopods), ze(B.vanillaReplicationControllers), et(B.vanillaReplicationControllers), It(), Le(), S.log("replicationcontrollers (subscribe)", B.replicationControllers);
+})), Et.push(m.watch(Y, r, function(e) {
+B.deploymentConfigs = e.by("metadata.name"), it(), ut(B.deploymentConfigs), ut(B.vanillaReplicationControllers), et(B.deploymentConfigs), Ye(), wt(), Pt(), It(), Le(), S.log("deploymentconfigs (subscribe)", B.deploymentConfigs);
+})), Et.push(m.watch(re, r, function(e) {
+B.replicaSets = e.by("metadata.name"), ct(), ut(B.vanillaReplicaSets), ut(B.monopods), ze(B.vanillaReplicaSets), et(B.vanillaReplicaSets), It(), Le(), S.log("replicasets (subscribe)", B.replicaSets);
+})), Et.push(m.watch(Z, r, function(e) {
+fe = e.by("metadata.uid"), B.deployments = _.sortBy(fe, "metadata.name"), ct(), ut(B.deployments), ut(B.vanillaReplicaSets), et(B.deployments), It(), Le(), S.log("deployments (subscribe)", B.deploymentsByUID);
+})), Et.push(m.watch(W, r, function(e) {
+be.builds = e.by("metadata.name"), jt(), S.log("builds (subscribe)", be.builds);
+})), Et.push(m.watch(me, r, function(e) {
+B.statefulSets = e.by("metadata.name"), ut(B.statefulSets), ut(B.monopods), ze(B.statefulSets), et(B.statefulSets), It(), Le(), S.log("statefulsets (subscribe)", B.statefulSets);
 }, {
 poll: V,
 pollInterval: 6e4
-})), m.list(J, r, function(e) {
+})), m.list(Q, r, function(e) {
 o(e), _.isEmpty(B.daemonSets) || s();
-}), Rt.push(m.watch(de, r, function(e) {
-be.allServices = e.by("metadata.name"), dt(), S.log("services (subscribe)", be.allServices);
+}), Et.push(m.watch(de, r, function(e) {
+be.allServices = e.by("metadata.name"), mt(), S.log("services (subscribe)", be.allServices);
 }, {
 poll: V,
 pollInterval: 6e4
-})), Rt.push(m.watch(ie, r, function(e) {
-B.routes = e.by("metadata.name"), mt(), S.log("routes (subscribe)", B.routes);
+})), Et.push(m.watch(ie, r, function(e) {
+B.routes = e.by("metadata.name"), pt(), S.log("routes (subscribe)", B.routes);
 }, {
 poll: V,
 pollInterval: 6e4
-})), Rt.push(m.watch(K, r, function(e) {
-B.buildConfigs = e.by("metadata.name"), vt(), _t(), Pt(), Le(), S.log("buildconfigs (subscribe)", B.buildConfigs);
+})), Et.push(m.watch(K, r, function(e) {
+B.buildConfigs = e.by("metadata.name"), ht(), wt(), jt(), Le(), S.log("buildconfigs (subscribe)", B.buildConfigs);
 }, {
 poll: V,
 pollInterval: 6e4
-})), Rt.push(m.watch(X, r, function(e) {
-B.horizontalPodAutoscalers = e.by("metadata.name"), pt(), S.log("autoscalers (subscribe)", B.horizontalPodAutoscalers);
+})), Et.push(m.watch(X, r, function(e) {
+B.horizontalPodAutoscalers = e.by("metadata.name"), ft(), S.log("autoscalers (subscribe)", B.horizontalPodAutoscalers);
 }, {
 poll: V,
 pollInterval: 6e4
-})), Rt.push(m.watch(ee, r, function(e) {
+})), Et.push(m.watch(ee, r, function(e) {
 ge = e.by("metadata.name"), h.buildDockerRefMapForImageStreams(ge, be.imageStreamImageRefByDockerReference), a(), S.log("imagestreams (subscribe)", ge);
 }, {
 poll: V,
 pollInterval: 6e4
-})), Rt.push(m.watch(oe, r, function(e) {
-be.quotas = e.by("metadata.name"), jt();
+})), Et.push(m.watch(oe, r, function(e) {
+be.quotas = e.by("metadata.name"), kt();
 }, {
 poll: !0,
 pollInterval: 6e4
-})), Rt.push(m.watch(Q, r, function(e) {
-be.clusterQuotas = e.by("metadata.name"), jt();
+})), Et.push(m.watch(J, r, function(e) {
+be.clusterQuotas = e.by("metadata.name"), kt();
 }, {
 poll: !0,
 pollInterval: 6e4
-})), e.AEROGEAR_MOBILE_ENABLED && Rt.push(m.watch({
+})), e.AEROGEAR_MOBILE_ENABLED && Et.push(m.watch({
 group: "mobile.k8s.io",
 version: "v1alpha1",
 resource: "mobileclients"
@@ -494,13 +505,13 @@ B.mobileClients = e.by("metadata.name"), Le(), S.log("mobileclients (subscribe)"
 poll: V,
 pollInterval: 6e4
 })), e.KUBEVIRT_ENABLED) {
-Rt.push(m.watch(N.offlineVirtualMachine, r, function(e) {
-B.offlineVirtualMachines = e.by("metadata.name"), D(), Le();
+Et.push(m.watch(N.offlineVirtualMachine, r, function(e) {
+B.offlineVirtualMachines = e.by("metadata.name"), D(), dt(), Le();
 }, {
 poll: V,
 pollInterval: 6e4
 }));
-Rt.push(m.watch(N.virtualMachine, r, function(e) {
+Et.push(m.watch(N.virtualMachine, r, function(e) {
 B.virtualMachines = e.by("metadata.name"), D(), Le();
 }, {
 poll: V,
@@ -526,20 +537,20 @@ return be.servicePlans[t] = e, e;
 }).finally(function() {
 delete v[t];
 })), v[t]);
-}, Rt.push(m.watch(le, r, function(e) {
+}, Et.push(m.watch(le, r, function(e) {
 be.serviceInstances = e.by("metadata.name");
 var t = [];
 _.each(be.serviceInstances, function(e) {
 var n = R.getServiceInstanceAlerts(e);
-xe(e, n), t.push(p(e)), t.push(f(e));
+Me(e, n), t.push(p(e)), t.push(f(e));
 }), I.waitForAll(t).finally(function() {
-It(), Le();
+Rt(), Le();
 }), et(be.serviceInstances);
 }, {
 poll: V,
 pollInterval: 6e4
-}))), u.SERVICE_CATALOG_ENABLED && U(se, "watch") && Rt.push(m.watch(se, r, function(e) {
-be.bindings = e.by("metadata.name"), B.bindingsByInstanceRef = _.groupBy(be.bindings, "spec.instanceRef.name"), kt();
+}))), u.SERVICE_CATALOG_ENABLED && U(se, "watch") && Et.push(m.watch(se, r, function(e) {
+be.bindings = e.by("metadata.name"), B.bindingsByInstanceRef = _.groupBy(be.bindings, "spec.instanceRef.name"), It();
 }, {
 poll: V,
 pollInterval: 6e4
@@ -554,7 +565,7 @@ errorNotification: !1
 }).then(function(t) {
 B.samplePipelineURL = w.createFromTemplateURL(t, e.projectName);
 }), e.$on("$destroy", function() {
-m.unwatchAll(Rt), $(window).off(".overview");
+m.unwatchAll(Et), $(window).off(".overview");
 });
 }), function(t) {
 L && _.get(t, "notFound") && (f.notifyInvalidProjectHomePage(e.projectName), w.toProjectList());
@@ -1297,6 +1308,22 @@ return "chromeless" === e.view ? "views/logs/chromeless-pod-log.html" : "views/b
 },
 controller: "PodController",
 reloadOnSearch: !1
+}).when("/project/:project/browse/virtual-machines", {
+templateUrl: "views/virtual-machines.html",
+controller: "VirtualMachinesController",
+reloadOnSearch: !1
+}).when("/project/:project/browse/virtual-machines/:vm", {
+templateUrl: "views/browse/virtual-machine.html",
+controller: "VirtualMachineController",
+reloadOnSearch: !1
+}).when("/project/:project/browse/offline-virtual-machines", {
+templateUrl: "views/offline-virtual-machines.html",
+controller: "OfflineVirtualMachinesController",
+reloadOnSearch: !1
+}).when("/project/:project/browse/offline-virtual-machines/:vm", {
+templateUrl: "views/browse/offline-virtual-machine.html",
+controller: "OfflineVirtualMachineController",
+reloadOnSearch: !1
 }).when("/project/:project/browse/services", {
 templateUrl: "views/services.html",
 controller: "ServicesController",
@@ -1519,7 +1546,29 @@ icon: "fa fa-database"
 } ]
 }), Logger.info("AEROGEAR_MOBILE_ENABLED: " + e.AEROGEAR_MOBILE_ENABLED);
 } ]).run([ "$rootScope", "APIService", "KubevirtVersions", function(e, t, n) {
-e.KUBEVIRT_ENABLED = !!t.apiInfo(n.offlineVirtualMachine);
+if (e.KUBEVIRT_ENABLED = !!t.apiInfo(n.offlineVirtualMachine), e.KUBEVIRT_ENABLED) {
+var r = _(window.OPENSHIFT_CONSTANTS.PROJECT_NAVIGATION).filter({
+label: "Applications"
+}).map("secondaryNavSections[0].items").first();
+if (r) {
+var a = _.findIndex(r, {
+label: "Pods"
+});
+if (-1 !== a) {
+a += 1;
+var o = {
+label: "Virtual Machines",
+href: "/browse/virtual-machines",
+prefixes: [ "/browse/virtual-machines/" ]
+}, i = {
+label: "Offline Virtual Machines",
+href: "/browse/offline-virtual-machines",
+prefixes: [ "/browse/offline-virtual-machines/" ]
+};
+r.splice(a, 0, o, i);
+}
+}
+}
 } ]), pluginLoader.addModule("openshiftConsole"), angular.module("openshiftConsole").factory("HawtioExtension", [ "extensionRegistry", function(e) {
 return console.warn("HawtioExtension.add() has been deprecated.  Please migrate to angular-extension-registry https://github.com/openshift/angular-extension-registry"), {
 add: function(t, n) {
@@ -1952,6 +2001,14 @@ case "Service":
 c.segment(i.kindToResource(t)).segmentCoded(s);
 break;
 
+case "VirtualMachine":
+c.segment("virtual-machines").segmentCoded(s);
+break;
+
+case "OfflineVirtualMachine":
+c.segment("offline-virtual-machines").segmentCoded(s);
+break;
+
 default:
 var p;
 if (e.metadata) p = i.objectToResourceGroupVersion(e); else if (_.get(a, "apiVersion")) {
@@ -1992,6 +2049,7 @@ deployments: "deployments",
 deploymentconfigs: "deployments",
 imagestreams: "images",
 pods: "pods",
+offlinevirtualmachines: "offline-virtual-machines",
 replicasets: "deployments",
 replicationcontrollers: "deployments",
 routes: "routes",
@@ -1999,7 +2057,8 @@ secrets: "secrets",
 services: "services",
 serviceinstances: "service-instances",
 persistentvolumeclaims: "storage",
-statefulsets: "stateful-sets"
+statefulsets: "stateful-sets",
+virtualmachines: "virtual-machines"
 };
 return URI.expand("project/{projectName}/browse/{browsePath}", {
 projectName: t,
@@ -3317,6 +3376,51 @@ return e.groupByControllerUID(t);
 },
 filterForOwner: function(t, n) {
 return e.filterForController(t, n);
+}
+};
+} ]), angular.module("openshiftConsole").factory("RdpService", [ "Logger", function(e) {
+function t(e, t) {
+var n = _.get(e, "spec.ports");
+return _.find(n, {
+targetPort: t
+});
+}
+return {
+buildRdp: function(e, t) {
+return "full address:s:" + e + ":" + t + "\nusername:s:Administrator\nscreen mode id:i:2\nprompt for credentials:i:1\ndesktopwidth:i:0\ndesktopheight:i:0\nauthentication level:i:2\nredirectclipboard:i:1\nsession bpp:i:32\ncompression:i:1\nkeyboardhook:i:2\naudiocapturemode:i:0\nvideoplaybackmode:i:1\nconnection type:i:2\ndisplayconnectionbar:i:1\ndisable wallpaper:i:1\nallow font smoothing:i:1\nallow desktop composition:i:0\ndisable full window drag:i:1\ndisable menu anims:i:1\ndisable themes:i:0\ndisable cursor setting:i:0\nbitmapcachepersistenable:i:1\naudiomode:i:0\nredirectcomports:i:0\nredirectposdevices:i:0\nredirectdirectx:i:1\nautoreconnection enabled:i:1\nnegotiate security layer:i:1\nremoteapplicationmode:i:0\nalternate shell:s:\nshell working directory:s:\ngatewayhostname:s:\ngatewayusagemethod:i:4\ngatewaycredentialssource:i:4\ngatewayprofileusagemethod:i:0\npromptcredentialonce:i:1\nuse redirection server name:i:0\n";
+},
+fileDownload: function(e, t, n) {
+t = t || "vm.rdp", n = n || "application/rdp";
+var r = new Blob([ e ], {
+type: n
+});
+saveAs(r, t);
+},
+findRDPPort: t,
+getAddressPort: function(n, r, a) {
+var o = t(n, a);
+if (!o) return null;
+var i, s = _.get(n, "spec.type"), c = _.get(o, "port");
+switch (s) {
+case "LoadBalancer":
+if (!(i = _.get(n, "spec.externalIPs[0]"))) return e.warn("External IP is not defined for the LoadBalancer RDP Service: ", n, r), null;
+break;
+
+case "ClusterIP":
+if (!(i = _.get(n, "spec.clusterIP"))) return e.warn("Cluster IP is not defined for the ClusterIP RDP Service: ", n, r), null;
+break;
+
+case "NodePort":
+if (!(i = _.get(r, "_pod.status.hostIP"))) return e.warn("Node IP (pod.status.hostIP) is not yet known, using NodePort RDP Service: ", n, r), null;
+break;
+
+default:
+return console.error("Unrecognized Service type: ", n), null;
+}
+return e.info("RDP requested for: ", i, c, s), {
+address: i,
+port: c
+};
 }
 };
 } ]), angular.module("openshiftConsole").service("CachedTemplateService", function() {
@@ -6252,9 +6356,9 @@ details: t("getErrorDetails")(n)
 } : e.deploymentConfigMissing = !0;
 });
 }
-}, x = function() {
+}, M = function() {
 e.isActive = s.isActiveReplicaSet(e.replicaSet, e.deployment);
-}, M = function(t) {
+}, x = function(t) {
 return _.some(t, function(t) {
 if (_.get(t, "status.replicas") && _.get(t, "metadata.uid") !== _.get(e.replicaSet, "metadata.uid")) {
 var n = v.getControllerReferences(t);
@@ -6281,10 +6385,10 @@ title: e.deployment.metadata.name,
 link: g.resourceURL(e.deployment)
 },
 humanizedKind: "Deployments"
-}), x(), y();
+}), M(), y();
 })), B.push(i.watch(T, u, function(e) {
 var t = e.by("metadata.name");
-q = M(t);
+q = x(t);
 }));
 });
 }, H = function() {
@@ -6310,7 +6414,7 @@ object: t
 "DELETED" === n && (e.alerts.deleted = {
 type: "warning",
 message: "This " + w + " has been deleted."
-}), e.replicaSet = t, L(t), U(), H(), e.deployment && x();
+}), e.replicaSet = t, L(t), U(), H(), e.deployment && M();
 })), e.deploymentConfigName && N(), B.push(i.watch(E, u, function(t) {
 var n = t.by("metadata.name");
 e.podsForDeployment = h.filterForOwner(n, e.replicaSet);
@@ -6976,6 +7080,7 @@ case "ImageStreamImport":
 case "ImageStreamMapping":
 case "ImageStreamTag":
 case "LimitRange":
+case "OfflineVirtualMachine":
 case "PersistentVolumeClaim":
 case "Pod":
 case "ReplicaSet":
@@ -6986,6 +7091,7 @@ case "Secret":
 case "Service":
 case "ServiceInstance":
 case "StatefulSet":
+case "VirtualMachine":
 return !1;
 
 default:
@@ -8259,7 +8365,7 @@ hasErrors: a
 }), f.toNextSteps(e.name, e.projectName, {
 usingSampleRepo: e.usingSampleRepo()
 });
-}, x = function(e) {
+}, M = function(e) {
 o.open({
 templateUrl: "views/modals/confirm.html",
 controller: "ConfirmModalController",
@@ -8276,12 +8382,12 @@ cancelButtonText: "Cancel"
 }
 }
 }).result.then(F);
-}, M = function(t) {
+}, x = function(t) {
 N(), T = t.quotaAlerts || [], e.nameTaken || _.some(T, {
 type: "error"
 }) ? (e.disableInputs = !1, _.each(T, function(e) {
 e.id = _.uniqueId("create-builder-alert-"), g.addNotification(e);
-})) : _.isEmpty(T) ? F() : (x(T), e.disableInputs = !1);
+})) : _.isEmpty(T) ? F() : (M(T), e.disableInputs = !1);
 };
 e.projectDisplayName = function() {
 return P(this.project) || this.projectName;
@@ -8294,7 +8400,7 @@ null !== e && (m.debug("Generated resource definition:", e), U.push(e));
 var r = s.ifResourcesDontExist(U, e.projectName), a = h.getLatestQuotaAlerts(U, n), o = function(t) {
 return e.nameTaken = t.nameTaken, a;
 };
-r.then(o, o).then(M, M);
+r.then(o, o).then(x, x);
 };
 })), e.cancel = function() {
 f.toProjectOverview(e.projectName);
@@ -8520,7 +8626,262 @@ n.debug("LogoutController, not logged in, logout complete");
 var o = "You are logged out.";
 "timeout" === t.cause && (o = "You have been logged out due to inactivity."), e.logoutMessage = o + ' Return to the <a href="./">console</a>.';
 }
-} ]), angular.module("openshiftConsole").controller("CreateController", [ "$scope", "$filter", "$location", "$q", "$routeParams", "$uibModal", "CatalogService", "Constants", "DataService", "LabelFilter", "Logger", "ProjectsService", function(e, t, n, r, a, o, i, s, c, l, u, d) {
+} ]), angular.module("openshiftConsole").controller("OfflineVirtualMachineController", [ "$filter", "$routeParams", "$scope", "APIService", "DataService", "ProjectsService", "KubevirtVersions", "VmActions", function(e, t, n, r, a, o, i, s) {
+n.projectName = t.project, n.alerts = {}, n.logOptions = {}, n.breadcrumbs = [ {
+title: "Offline Virtual Machines",
+link: "project/" + t.project + "/browse/offline-virtual-machines"
+}, {
+title: t.vm
+} ], n.selectedTab = {}, n.vm = void 0, n.ovm = void 0, n.pods = [], n.loaded = function() {
+return n.vmLoaded && n.ovmLoaded && n.podsLoaded;
+}, n.podsVersion = r.getPreferredVersion("pods"), n.eventsVersion = r.getPreferredVersion("events"), n.KubevirtVersions = i, n.VmActions = s;
+var c, l = [], u = null, d = {};
+o.get(t.project).then(_.spread(function(r, o) {
+function s() {
+n.vm ? n.pods = _(d).filter(function(e) {
+return "virt-launcher" === _.get(e, 'metadata.labels["kubevirt.io"]') && _.get(e, 'metadata.labels["kubevirt.io/domain"]') === n.vm.metadata.name;
+}).sortBy(function(e) {
+return new Date(e.metadata.creationTimestamp);
+}).value() : n.pods = [];
+}
+function m() {
+c ? n.alerts.load = {
+type: "error",
+message: "The offline virtual machine detail could not be loaded.",
+details: e("getErrorDetails")(c)
+} : delete n.alerts.load, n.ovm || c ? delete n.alerts.deleted : n.alerts.deleted = {
+type: "warning",
+message: "The offline virtual machine " + t.vm + " has been deleted."
+};
+}
+u = o, n.project = r, n.projectContext = o, a.get(i.virtualMachine, t.vm, o, {
+errorNotification: !1
+}).then(function(e) {
+n.vm = e, n.vmLoaded = !0;
+}, function() {
+n.vmLoaded = !0;
+}), a.get(i.offlineVirtualMachine, t.vm, o, {
+errorNotification: !1
+}).then(function(e) {
+n.ovm = e, n.ovmLoaded = !0;
+}, function(e) {
+n.ovmLoaded = !0, c = e, m();
+}), l.push(a.watchObject(i.virtualMachine, t.vm, o, function(e, t) {
+n.vm = "DELETED" === t ? void 0 : e;
+})), l.push(a.watchObject(i.offlineVirtualMachine, t.vm, o, function(e, t) {
+n.ovm = "DELETED" === t ? void 0 : e, c = void 0, m();
+})), l.push(a.watch(n.podsVersion, o, function(e) {
+n.podsLoaded = !0, d = e.by("metadata.name"), s();
+})), n.$on("$destroy", function() {
+a.unwatchAll(l);
+});
+}));
+} ]), angular.module("openshiftConsole").controller("OfflineVirtualMachinesController", [ "$filter", "$routeParams", "$scope", "APIService", "DataService", "ProjectsService", "LabelFilter", "Logger", "KubevirtVersions", "getOvmReferenceId", function(e, t, n, r, a, o, i, s, c, l) {
+n.projectName = t.project, n.unfilteredVms = {}, n.unfilteredOvms = {}, n.mergedVms = {}, n.labelSuggestions = {}, n.clearFilter = function() {
+i.clear();
+};
+var u = [];
+o.get(t.project).then(_.spread(function(e, t) {
+function r() {
+n.mergedVms = _(n.unfilteredMergedVms).filter(function(e) {
+return i.getLabelSelector().matches(e.ovm);
+}).sortBy("ovm.metadata.name").value(), n.filterWithZeroResults = !i.getLabelSelector().isEmpty() && _.isEmpty(n.mergedVms) && !_.isEmpty(n.unfilteredMergedVms);
+}
+function o() {
+n.unfilteredMergedVms = s(n.unfilteredOvms, n.unfilteredVms), i.addLabelSuggestionsFromResources(n.unfilteredOvms, n.labelSuggestions), i.setLabelSuggestions(n.labelSuggestions), r();
+}
+function s(e, t) {
+var n = _.keyBy(t, l), r = _.map(e, function(e) {
+var t = n[e.metadata.uid], r = {
+ovm: e
+};
+return t && (r.vm = t), r;
+});
+return _.keyBy(r, "ovm.metadata.name");
+}
+n.project = e, u.push(a.watch(c.virtualMachine, t, function(e) {
+n.vmsLoaded = !0, n.unfilteredVms = e.by("metadata.name"), o();
+})), u.push(a.watch(c.offlineVirtualMachine, t, function(e) {
+n.ovmsLoaded = !0, n.unfilteredOvms = e.by("metadata.name"), o();
+})), i.onActiveFiltersChanged(function() {
+n.$evalAsync(function() {
+r();
+});
+}), n.allVmsLoaded = function() {
+return n.vmsLoaded && n.ovmsLoaded;
+}, n.$on("$destroy", function() {
+a.unwatchAll(u);
+});
+}));
+} ]), angular.module("openshiftConsole").controller("VirtualMachineController", [ "$filter", "$routeParams", "$scope", "APIService", "DataService", "ProjectsService", "KubevirtVersions", "VmActions", function(e, t, n, r, a, o, i, s) {
+function c() {
+n.vm ? n.pods = _(m).filter(function(e) {
+return "virt-launcher" === _.get(e, 'metadata.labels["kubevirt.io"]') && _.get(e, 'metadata.labels["kubevirt.io/domain"]') === n.vm.metadata.name;
+}).sortBy(function(e) {
+return new Date(e.metadata.creationTimestamp);
+}).value() : n.pods = [];
+}
+n.projectName = t.project, n.alerts = {}, n.logOptions = {}, n.breadcrumbs = [ {
+title: "Virtual Machines",
+link: "project/" + t.project + "/browse/virtual-machines"
+}, {
+title: t.vm
+} ], n.selectedTab = {}, n.vm = void 0, n.ovm = void 0, n.pods = [], n.loaded = function() {
+return n.vmLoaded && n.ovmLoaded && n.podsLoaded;
+}, n.podsVersion = r.getPreferredVersion("pods"), n.eventsVersion = r.getPreferredVersion("events"), n.KubevirtVersions = i, n.VmActions = s;
+var l, u = [], d = null, m = {};
+o.get(t.project).then(_.spread(function(r, o) {
+function s() {
+l ? n.alerts.load = {
+type: "error",
+message: "The virtual machine detail could not be loaded.",
+details: e("getErrorDetails")(l)
+} : delete n.alerts.load, n.vm || l ? delete n.alerts.deleted : n.alerts.deleted = {
+type: "warning",
+message: "The virtual machine " + t.vm + " has been deleted."
+};
+}
+d = o, n.project = r, n.projectContext = o, a.get(i.virtualMachine, t.vm, o, {
+errorNotification: !1
+}).then(function(e) {
+n.vm = e, n.vmLoaded = !0, c();
+}, function(e) {
+n.vmLoaded = !0, l = e, s();
+}), a.get(i.offlineVirtualMachine, t.vm, o, {
+errorNotification: !1
+}).then(function(e) {
+n.ovm = e, n.ovmLoaded = !0;
+}, function() {
+n.ovmLoaded = !0;
+}), u.push(a.watchObject(i.virtualMachine, t.vm, o, function(e, t) {
+n.vm = "DELETED" === t ? void 0 : e, c(), l = void 0, s();
+})), u.push(a.watchObject(i.offlineVirtualMachine, t.vm, o, function(e, t) {
+n.ovm = "DELETED" === t ? void 0 : e;
+})), u.push(a.watch(n.podsVersion, o, function(e) {
+n.podsLoaded = !0, m = e.by("metadata.name"), c();
+})), n.$on("$destroy", function() {
+a.unwatchAll(u);
+});
+}));
+} ]), angular.module("openshiftConsole").filter("ovmReference", function() {
+return function(e) {
+return _(_.get(e, "metadata.ownerReferences")).filter({
+kind: "OfflineVirtualMachine"
+}).first();
+};
+}), angular.module("openshiftConsole").factory("VmActions", [ "DataService", "KubevirtVersions", function(e, t) {
+function n(n, r, a) {
+var o = angular.copy(n);
+o.spec.running = r, e.update(t.offlineVirtualMachine.resource, n.metadata.name, o, a);
+}
+return {
+start: function(e, t) {
+n(e, !0, t);
+},
+restart: function(n, r) {
+e.delete(t.virtualMachine, n.metadata.name, r);
+},
+stop: function(e, t) {
+n(e, !1, t);
+},
+canStart: function(e) {
+return e && !0 !== _.get(e, "spec.running");
+},
+canRestart: function(e, t) {
+return e && t;
+},
+canStop: function(e) {
+return !0 === _.get(e, "spec.running");
+}
+};
+} ]), angular.module("openshiftConsole").component("vmActionsLine", {
+bindings: {
+vm: "<",
+ovm: "<",
+context: "<"
+},
+templateUrl: "views/directives/vm-actions-line.html",
+controller: [ "VmActions", function(e) {
+this.VmActions = e;
+} ]
+}), angular.module("openshiftConsole").filter("vmStateText", function() {
+return function(e, t) {
+var n = _.get(e, "status.phase");
+return void 0 !== n ? n : !1 === _.get(t, "spec.running") ? "Not Running" : "Unknown";
+};
+}), angular.module("openshiftConsole").filter("vmMemory", function() {
+return function(e) {
+return _.get(e, "spec.domain.resources.requests.memory");
+};
+}), angular.module("openshiftConsole").filter("vmOs", function() {
+return function(e) {
+return _.get(e, 'metadata.labels["kubevirt.io/os"]');
+};
+}), angular.module("openshiftConsole").filter("orDashes", function() {
+return function(e) {
+return void 0 === e ? "--" : e;
+};
+}), angular.module("openshiftConsole").directive("vmState", function() {
+return {
+scope: {
+state: "<"
+},
+template: '<vm-state-icon state="state"></vm-state-icon> {{state}}'
+};
+}), angular.module("openshiftConsole").directive("vmStateIcon", function() {
+return {
+scope: {
+state: "<"
+},
+templateUrl: "views/directives/vm-state-icon.html"
+};
+}), angular.module("openshiftConsole").controller("VirtualMachinesController", [ "$filter", "$routeParams", "$scope", "APIService", "DataService", "ProjectsService", "LabelFilter", "Logger", "KubevirtVersions", "getOvmReferenceId", function(e, t, n, r, a, o, i, s, c, l) {
+n.projectName = t.project, n.unfilteredVms = {}, n.unfilteredOvms = {}, n.unfilteredPods = {}, n.mergedVms = {}, n.labelSuggestions = {}, n.clearFilter = function() {
+i.clear();
+};
+var u = [];
+o.get(t.project).then(_.spread(function(e, t) {
+function o() {
+n.mergedVms = _(n.unfilteredMergedVms).filter(function(e) {
+return i.getLabelSelector().matches(e.vm);
+}).sortBy("vm.metadata.name").value(), n.filterWithZeroResults = !i.getLabelSelector().isEmpty() && _.isEmpty(n.mergedVms) && !_.isEmpty(n.unfilteredMergedVms);
+}
+function s() {
+n.unfilteredMergedVms = d(n.unfilteredOvms, n.unfilteredVms, n.unfilteredPods), i.addLabelSuggestionsFromResources(n.unfilteredVms, n.labelSuggestions), i.setLabelSuggestions(n.labelSuggestions), o();
+}
+function d(e, t, n) {
+var r = _.keyBy(e, "metadata.uid"), a = _(n).filter(function(e) {
+return _.get(e, 'metadata.labels["kubevirt.io"]') && _.get(e, 'metadata.labels["kubevirt.io/domain"]');
+}).keyBy('metadata.labels["kubevirt.io/domain"]').value(), o = _.map(t, function(e) {
+var t = l(e), n = t && r[t], o = a[e.metadata.name], i = {
+vm: e
+};
+return n && (i.ovm = n), o && (i.pod = o), i;
+});
+return _.keyBy(o, "vm.metadata.name");
+}
+n.project = e, u.push(a.watch(c.virtualMachine, t, function(e) {
+n.vmsLoaded = !0, n.unfilteredVms = e.by("metadata.name"), s();
+})), u.push(a.watch(c.offlineVirtualMachine, t, function(e) {
+n.ovmsLoaded = !0, n.unfilteredOvms = e.by("metadata.name"), s();
+})), u.push(a.watch(r.getPreferredVersion("pods"), t, function(e) {
+n.podsLoaded = !0, n.unfilteredPods = e.by("metadata.name"), s();
+})), i.onActiveFiltersChanged(function() {
+n.$evalAsync(function() {
+o();
+});
+}), n.allVmsLoaded = function() {
+return n.vmsLoaded && n.ovmsLoaded && n.podsLoaded;
+}, n.$on("$destroy", function() {
+a.unwatchAll(u);
+});
+}));
+} ]), angular.module("openshiftConsole").constant("getOvmReferenceId", function(e) {
+var t = _.get(e, "metadata.ownerReferences");
+if (void 0 !== t) return _(t).filter({
+kind: "OfflineVirtualMachine"
+}).first().uid;
+}), angular.module("openshiftConsole").controller("CreateController", [ "$scope", "$filter", "$location", "$q", "$routeParams", "$uibModal", "CatalogService", "Constants", "DataService", "LabelFilter", "Logger", "ProjectsService", function(e, t, n, r, a, o, i, s, c, l, u, d) {
 e.projectName = a.project, e.categories = s.CATALOG_CATEGORIES, e.alerts = e.alerts || {}, d.get(a.project).then(_.spread(function(t, n) {
 e.project = t, e.context = n, c.list("imagestreams", {
 namespace: "openshift"
@@ -14045,11 +14406,11 @@ restrict: "E",
 transclude: !0,
 scope: {
 action: "&",
-enabled: "@"
+enabled: "<"
 },
 link: function(t, n, r, a, o) {
 function i() {
-var n = "true" === t.enabled ? '<li><a ng-click="action()" href="" ng-transclude></a></li>' : '<li class="disabled"><a ng-click="$event.stopPropagation()" ng-transclude></a></li>', r = e(n, o)(t);
+var n = t.enabled ? '<li><a ng-click="action()" href="" ng-transclude></a></li>' : '<li class="disabled"><a ng-click="$event.stopPropagation()" ng-transclude></a></li>', r = e(n, o)(t);
 s.replaceWith(r), s = r;
 }
 var s = n;
@@ -14101,33 +14462,42 @@ templateUrl: "views/overview/_mobile-client-row.html"
 });
 }(), function() {
 angular.module("openshiftConsole").component("virtualMachineRow", {
-controller: [ "$scope", "$filter", "$routeParams", "APIService", "AuthorizationService", "DataService", "ListRowUtils", "Navigate", "ProjectsService", "KubevirtVersions", "moment", function(e, t, n, r, a, o, i, s, c, l, u) {
-function d() {
-return f.apiObject.spec.running;
-}
-function m() {
-var e = angular.copy(f.apiObject);
+controller: [ "$scope", "$filter", "$routeParams", "APIService", "AuthorizationService", "DataService", "ListRowUtils", "Navigate", "ProjectsService", "KubevirtVersions", "VmActions", "moment", "RdpService", function(t, n, r, a, o, i, s, c, l, u, d, m, p) {
+function f() {
+var e = angular.copy(v.apiObject);
 return delete e._pod, delete e._vm, e;
 }
-function p(t) {
-var n = m();
-return n.spec.running = t, o.update(l.offlineVirtualMachine.resource, n.metadata.name, n, e.$parent.context);
+function g(e) {
+var n = f();
+return n.spec.running = e, i.update(u.offlineVirtualMachine.resource, n.metadata.name, n, t.$parent.context);
 }
-var f = this;
-f.OfflineVirtualMachineVersion = l.offlineVirtualMachine, _.extend(f, i.ui), f.actionsDropdownVisible = function() {
-return !_.get(f.apiObject, "metadata.deletionTimestamp") && a.canI(l.offlineVirtualMachine, "delete");
-}, f.projectName = n.project, f.startOvm = function() {
-p(!0);
-}, f.stopOvm = function() {
-p(!1);
-}, f.restartOvm = function() {
-return o.delete(l.virtualMachine, f.apiObject._vm.metadata.name, e.$parent.context);
-}, f.canStartOvm = function() {
-return !d();
-}, f.canStopOvm = function() {
-return d();
-}, f.canRestartOvm = function() {
-return d() && f.apiObject._vm && "Running" === _.get(f.apiObject, "_pod.status.phase");
+var v = this;
+v.KubevirtVersions = u, v.VmActions = d, _.extend(v, s.ui), v.actionsDropdownVisible = function() {
+return !_.get(v.apiObject, "metadata.deletionTimestamp") && n("canIDoAny")("offlineVirtualMachines");
+}, v.projectName = r.project, v.isOvmRunning = function() {
+return v.apiObject.spec.running;
+}, v.isOvmInRunningPhase = function() {
+return v.isOvmRunning() && v.apiObject._vm && "Running" === _.get(v.apiObject, "_pod.status.phase");
+}, v.startOvm = function() {
+g(!0);
+}, v.stopOvm = function() {
+g(!1);
+}, v.restartOvm = function() {
+return i.delete(u.virtualMachine, v.apiObject._vm.metadata.name, t.$parent.context);
+}, v.isWindowsVM = function() {
+var e = v.apiObject, t = v.apiObject._vm, n = _.get(t, [ "metadata", "labels", "kubevirt.io/os" ]) || _.get(e, [ "metadata", "labels", "kubevirt.io/os" ]);
+return n && _.startsWith(n, "win");
+}, v.isRdpService = function() {
+var e = v.apiObject;
+return !_.isEmpty(e.services);
+}, v.onOpenRemoteDesktop = function() {
+var t = v.apiObject;
+if (!_.isEmpty(t.services)) {
+var n = _.find(t.services, function(t) {
+return p.findRDPPort(t, e);
+}), r = p.getAddressPort(n, t, e);
+r && p.fileDownload(p.buildRdp(r.address, r.port));
+}
 };
 } ],
 controllerAs: "row",
@@ -14136,32 +14506,14 @@ apiObject: "<",
 state: "<"
 },
 templateUrl: "views/overview/_virtual-machine-row.html"
-}), angular.module("openshiftConsole").filter("vmPodUptime", function() {
+});
+var e = 3389;
+angular.module("openshiftConsole").filter("vmPodUptime", function() {
 return function(e) {
 var t = _(_.get(e, "status.containerStatuses")).filter({
 name: "compute"
 }).map("state.running.startedAt").first() || _.get(e, "status.startTime");
 return t ? moment(t).fromNow(!0) : "--";
-};
-}), angular.module("openshiftConsole").directive("vmState", function() {
-function e(e) {
-var t = _.get(e, "_vm.status.phase");
-return void 0 !== t ? t : _.get(e, ".spec.running") ? "Unknown" : "Not Running";
-}
-function t(t) {
-return e(t.ovm);
-}
-function n(n) {
-n.$watch(t, function() {
-n.status = e(n.ovm);
-});
-}
-return n.$inject = [ "$scope" ], {
-scope: {
-ovm: "<"
-},
-controller: n,
-templateUrl: "views/overview/_vm-status.html"
 };
 }), angular.module("openshiftConsole").constant("KubevirtVersions", {
 offlineVirtualMachine: {
@@ -15275,7 +15627,7 @@ m && (l.unwatch(m), m = null);
 d && d(), d = null;
 }, F = function(e) {
 b[a.project] = A(D(e.by("metadata.name"))), V();
-}, x = function(e, t) {
+}, M = function(e, t) {
 var n = t.namespace || a.project, r = t.id ? n + "/" + t.id : _.uniqueId("notification_") + Date.now();
 t.showInDrawer && !u.isCleared(r) && (S[n] = S[n] || {}, S[n][r] = {
 actions: t.actions,
@@ -15290,7 +15642,7 @@ details: t.details,
 namespace: n,
 links: t.links
 }, V());
-}, M = function(e, t) {
+}, x = function(e, t) {
 O(), e && (m = l.watch(p, {
 namespace: e
 }, _.debounce(t, 400), {
@@ -15300,7 +15652,7 @@ skipDigest: !0
 U(), d = r.$on("NotificationsService.onNotificationAdded", t);
 }), z = function() {
 j(a.project).then(function() {
-M(a.project, F), q(a.project, x), w(a.project), V();
+x(a.project, F), q(a.project, M), w(a.project), V();
 });
 };
 angular.extend(h, {
@@ -16126,8 +16478,8 @@ return e;
 return function(t, n) {
 return 1 === _.size(n) ? e(_.sample(n)) : _.size(n) > 1 ? e(t) : void 0;
 };
-} ]), angular.module("openshiftConsole").filter("canIDoAny", [ "APIService", "canIFilter", function(e, t) {
-var n = {
+} ]), angular.module("openshiftConsole").filter("canIDoAny", [ "APIService", "canIFilter", "KubevirtVersions", function(e, t, n) {
+var r = {
 buildConfigs: [ {
 group: "",
 resource: "buildconfigs",
@@ -16220,10 +16572,20 @@ statefulsets: [ {
 group: "apps",
 resource: "statefulsets",
 verbs: [ "update", "delete" ]
+} ],
+virtualMachines: [ {
+group: n.virtualMachine.group,
+resource: n.virtualMachine.resource,
+verbs: [ "update", "delete" ]
+} ],
+offlineVirtualMachines: [ {
+group: n.offlineVirtualMachine.group,
+resource: n.offlineVirtualMachine.resource,
+verbs: [ "update", "delete" ]
 } ]
 };
 return function(e) {
-return _.some(n[e], function(e) {
+return _.some(r[e], function(e) {
 return _.some(e.verbs, function(n) {
 return t({
 resource: e.resource,

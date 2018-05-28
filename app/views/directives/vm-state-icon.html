@@ -1,6 +1,6 @@
 <!-- options are from set {Off} ∪ https://github.com/kubevirt/kubevirt/blob/846d4313cb7797f6403d0bc73522f1204a592d38/pkg/api/v1/types.go#L261-L282 -->
 <!-- some states don't have their icons -->
-<span ng-switch="status" class="vm-detail-value">
+<span ng-switch="state" class="vm-detail-value">
   <span class="pficon pficon-on-running"    ng-style="{color: '#3f9c35'}" ng-switch-when="Running"></span>
   <span class="spinner spinner-xs spinner-inline"                         ng-switch-when="Pending"></span>
   <span class="spinner spinner-xs spinner-inline"                         ng-switch-when="Scheduling"></span>
@@ -10,4 +10,3 @@
   <span class="pficon pficon-unknown"                                     ng-switch-when="Unknown"></span>
   <span class="pficon pficon-unknown"                                     ng-switch-when=""></span>
 </span>
-{{status}}
