@@ -140,20 +140,20 @@
                             </div>
 
                             <div ng-if="newClientBuild.authType !== 'public'" class="form-group">
-                              <label for="credentialsName" class="required">Name</label>
-                              <div ng-class="{ 'has-error' : clientBuildForm.credentialsName.$invalid && clientBuildForm.credentialsName.$touched }">
+                              <label for="gitCredentialsName" class="required">Name</label>
+                              <div ng-class="{ 'has-error' : clientBuildForm.gitCredentialsName.$invalid && clientBuildForm.gitCredentialsName.$touched }">
                                 <input class="form-control"
-                                  id="credentialsName"
-                                  name="credentialsName"
+                                  id="gitCredentialsName"
+                                  name="gitCredentialsName"
                                   type="text"
-                                  ng-model="newClientBuild.credentialsName"
+                                  ng-model="newClientBuild.gitCredentialsName"
                                   autocorrect="off"
                                   autocapitalize="none"
                                   spellcheck="false"
                                   required>
                               </div>
                               <span class="help-block">A name for the credentials.</span>
-                              <div class="has-error" ng-if="clientBuildForm.credentialsName.$touched && clientBuildForm.credentialsName.$error.required">
+                              <div class="has-error" ng-if="clientBuildForm.gitCredentialsName.$touched && clientBuildForm.gitCredentialsName.$error.required">
                                 <span class="help-block">A name for the credentials is required.</span>
                               </div>
                             </div>
@@ -227,9 +227,8 @@
                                 </div>
                               </div>
                             </div>
-
                         </div>
-
+                      </div>
                     </div>
                   </dl>
                 </div>
@@ -247,53 +246,106 @@
                         </ui-select>
                     </div>
 
-                    <div ng-if="newClientBuild.clientType === 'android'">
-                      <div ng-if="newClientBuild.buildType === 'release'">
-                        <div class="form-group" id="android-credentials">
-                          <label for="androidSecretName" class="required">Name</label>
+                    <div ng-if="newClientBuild.clientType === 'ios'">
+                      <div class="form-group" id="client-credentials">
+                        <label for="clientCredentialsName" class="required">Name</label>
 
-                          <div ng-class="{
-                                'has-error': clientBuildForm.androidSecretName.$touched && clientBuildForm.androidSecretName.$error.required
-                              }">
-                            <input class="form-control"
-                                   id="androidSecretName"
-                                   name="androidSecretName"
-                                   type="text"
-                                   ng-model="newClientBuild.androidSecretName"
-                                   autocorrect="off"
-                                   autocapitalize="none"
-                                   spellcheck="false"
-                                   required>
-                          </div>
-                          <span class="help-block">A name for the android credentials.</span>
-                          <div class="has-error" ng-if="clientBuildForm.androidSecretName.$touched && clientBuildForm.androidSecretName.$error.required">
-                            <span class="help-block">A name for the android credentials is required.</span>
-                          </div>
+                        <div ng-class="{
+                              'has-error': clientBuildForm.clientCredentialsName.$touched && clientBuildForm.clientCredentialsName.$error.required
+                            }">
+                          <input class="form-control"
+                                  id="clientCredentialsName"
+                                  name="clientCredentialsName"
+                                  type="text"
+                                  ng-model="newClientBuild.clientCredentialsName"
+                                  autocorrect="off"
+                                  autocapitalize="none"
+                                  spellcheck="false"
+                                  required>
+                        </div>
+                        <span class="help-block">A name for the ios credentials.</span>
+                        <div class="has-error" ng-if="clientBuildForm.clientCredentialsName.$touched && clientBuildForm.clientCredentialsName.$error.required">
+                          <span class="help-block">A name for the ios credentials is required.</span>
+                        </div>
 
-                          <label class="required" for="androidKeystore">Android KeyStore</label>
-                          <osc-file-input
-                              id="androidKeystore"
-                              model="newClientBuild.androidKeyStore"
-                              help-text="Password protected PKCS12 file containing a key protected by the same password"
-                              read-as-binary-string="true"
-                              required="true"></osc-file-input>
+                        <label class="required" for="clientCredentials">Apple Developer Profile</label>
+                        <osc-file-input
+                          id="clientCredentials"
+                          model="newClientBuild.clientCredentials"
+                          read-as-binary-string="true"
+                          required="true"></osc-file-input>        
+                        <div class="help-block">
+                          A developer profile file (*.developerprofile) which contains a code signing private key, corresponding developer/distribution certificates, and mobile provisioning profiles.
+                          For more information, see this <a target="_blank" href="https://help.apple.com/xcode/mac/8.0/#/dev8a2822e0b">documentation</a> on exporting developer accounts in XCode.
+                        </div>               
 
-                          <label for="androidKeystorePassword">KeyStore Password</label>
-                          <input class="form-control" id="androidKeystorePassword" name="androidKeystorePassword" ng-model="newClientBuild.androidKeyStorePassword" type="password">
-                          <div class="help-block">
-                            Password for the PKCS12 archive and key
-                          </div>
+                        <label for="clientCredentialsPassword">Apple Developer Profile Password</label>
 
-                          <label for="androidKeystoreAlias">KeyStore Alias</label>
-                          <input class="form-control" id="androidKeystore-key-alias" name="androidKeystoreAlias" ng-model="newClientBuild.androidKeyStoreKeyAlias" type="text">
-                          <div class="help-block">
-                            The entry name of the private key/certificate chain you want to use to sign your APK(s). This entry must exist in the key store uploaded. If your key store contains only one key entry, which is the most common case, you can leave this field blank.
-                          </div>
+                        <div ng-class="{
+                          'has-error': clientBuildForm.clientCredentialsPassword.$touched && clientBuildForm.clientCredentialsPassword.$error.required
+                        }">
+                          <input class="form-control" id="clientCredentialsPassword" name="clientCredentialsPassword" ng-model="newClientBuild.clientCredentialsPassword" type="password" required>
+                        </div>
+                        <div class="help-block">
+                            Password for the developer profile key, certs and provisioning profiles
+                        </div>
+                        <div class="has-error" ng-if="clientBuildForm.clientCredentialsPassword.$touched && clientBuildForm.clientCredentialsPassword.$error.required">
+                          <span class="help-block">A password for the ios credentials is required.</span>
+                        </div>
+                      </div>                    
+                    </div>
+
+                    <div ng-if="newClientBuild.buildType === 'release' && newClientBuild.clientType === 'android'">
+                      <div class="form-group" id="client-credentials">
+                        <label for="clientCredentialsName" class="required">Name</label>
+
+                        <div ng-class="{
+                              'has-error': clientBuildForm.clientCredentialsName.$touched && clientBuildForm.clientCredentialsName.$error.required
+                            }">
+                          <input class="form-control"
+                                  id="clientCredentialsName"
+                                  name="clientCredentialsName"
+                                  type="text"
+                                  ng-model="newClientBuild.clientCredentialsName"
+                                  autocorrect="off"
+                                  autocapitalize="none"
+                                  spellcheck="false"
+                                  required>
+                        </div>
+                        <span class="help-block">A name for the android credentials.</span>
+                        <div class="has-error" ng-if="clientBuildForm.clientCredentialsName.$touched && clientBuildForm.clientCredentialsName.$error.required">
+                          <span class="help-block">A name for the android credentials is required.</span>
+                        </div>
+
+                        <label class="required" for="clientCredentials">Android Keystore</label>
+                        <osc-file-input
+                            id="clientCredentials"
+                            model="newClientBuild.clientCredentials"
+                            help-text="Password protected PKCS12 file containing a key protected by the same password"
+                            read-as-binary-string="true"
+                            required="true"></osc-file-input>                        
+
+                        <label for="clientCredentialsPassword">Android Keystore Password</label>
+
+                        <div ng-class="{
+                          'has-error': clientBuildForm.clientCredentialsPassword.$touched && clientBuildForm.clientCredentialsPassword.$error.required
+                        }">
+                          <input class="form-control" id="clientCredentialsPassword" name="clientCredentialsPassword" ng-model="newClientBuild.clientCredentialsPassword" type="password" required>
+                        </div>
+                        <div class="help-block">Password for the PKCS12 archive and key</div>
+                        <div class="has-error" ng-if="clientBuildForm.clientCredentialsPassword.$touched && clientBuildForm.clientCredentialsPassword.$error.required">
+                          <span class="help-block">A password is required.</span>
+                        </div>
+
+                        <label for="credentialsAlias">KeyStore Alias</label>
+                        <input class="form-control" id="credentialsAlias" name="credentialsAlias" ng-model="newClientBuild.credentialsAlias" type="text">
+                        <div class="help-block">
+                          The entry name of the private key/certificate chain you want to use to sign your APK(s). This entry must exist in the key store uploaded. If your key store contains only one key entry, which is the most common case, you can leave this field blank.
                         </div>
                       </div>
                     </div>
                   </dl>
-                <div>
+                </div>
 
                 <div class="buttons gutter-top-bottom">
                   <button class="btn btn-primary"
@@ -302,7 +354,7 @@
                           ng-click="createClientBuild()">Create</button>
                   <button class="btn btn-default"
                           type="button"
-                          ng-click="navigateBack()">Cancel</button>
+                          ng-click="navigateToMobileTab('builds')">Cancel</button>
                 </div>
               </ng-form>
             </div>

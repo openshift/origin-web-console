@@ -23,6 +23,14 @@ angular.module('openshiftConsole')
 
     var buildConfigsVersion = APIService.getPreferredVersion('buildconfigs');
     var secretsVersion = APIService.getPreferredVersion('secrets');
+    var debugBuildType = {
+      id: 'debug',
+      label: 'Debug'
+    };
+    var releaseBuildType = {
+      id: 'release',
+      label: 'Release'
+    };
 
     $scope.alerts = [];
     $scope.projectName = $routeParams.project;
@@ -37,26 +45,15 @@ angular.module('openshiftConsole')
         title: 'Create client build'
       }
     ];
-
-    $scope.newClientBuild = {
-      authType: 'public',
-      clientType: 'android',
-      buildType: 'debug'
-    };
     
     $scope.buildTypeMap = {
       android: {
         label: 'Android',
-        buildTypes: [
-          {
-            id: 'debug',
-            label: 'Debug'
-          },
-          {
-            id: 'release',
-            label: 'Release'
-          }
-        ]
+        buildTypes: [debugBuildType, releaseBuildType]
+      },
+      ios: {
+        label: 'iOS',
+        buildTypes: [debugBuildType, releaseBuildType]
       }
     };
 
@@ -75,7 +72,7 @@ angular.module('openshiftConsole')
       }
     ];
 
-    var createBuildConfig = function(clientConfig, secret) {
+    var createBuildConfig = function(clientConfig) {
       var buildConfig = {
         kind: 'BuildConfig',
         apiVersion: APIService.toAPIVersion(buildConfigsVersion),
@@ -83,7 +80,8 @@ angular.module('openshiftConsole')
           name: clientConfig.buildName,
           labels:  {
             'mobile-client-build': 'true',
-            'mobile-client-id': _.get($routeParams, 'mobileclient')
+            'mobile-client-id': _.get($routeParams, 'mobileclient'),
+            'mobile-client-type': clientConfig.clientType          
           }
         },
         spec: {
@@ -107,16 +105,16 @@ angular.module('openshiftConsole')
         }
       };
 
-      if(clientConfig.buildType === 'release') {
-        buildConfig.spec.strategy.jenkinsPipelineStrategy.env.push({name: 'BUILD_CREDENTIAL_ID', value: $scope.projectName + '-' + clientConfig.androidSecretName});
-        if(clientConfig.androidKeyStoreKeyAlias) {
-          buildConfig.spec.strategy.jenkinsPipelineStrategy.env.push({name: 'BUILD_CREDENTIAL_ALIAS', value: clientConfig.androidKeyStoreKeyAlias});
+      if(clientConfig.buildType === releaseBuildType.id) {
+        buildConfig.spec.strategy.jenkinsPipelineStrategy.env.push({name: 'BUILD_CREDENTIAL_ID', value: $scope.projectName + '-' + clientConfig.clientCredentialsName});
+        if(clientConfig.credentialsAlias) {
+          buildConfig.spec.strategy.jenkinsPipelineStrategy.env.push({name: 'BUILD_CREDENTIAL_ALIAS', value: clientConfig.credentialsAlias});
         }
       }
 
       if (clientConfig.authType !== 'public') {
         buildConfig.spec.source.sourceSecret = {
-          name: clientConfig.credentialsName
+          name: clientConfig.gitCredentialsName
         };
       }
 
@@ -128,7 +126,7 @@ angular.module('openshiftConsole')
         apiVersion: APIService.toAPIVersion(secretsVersion),
         kind: 'Secret',
         metadata: {
-          name: clientConfig.credentialsName,
+          name: clientConfig.gitCredentialsName,
           labels:  {
             'mobile-client-build': 'true'
           }
@@ -151,12 +149,12 @@ angular.module('openshiftConsole')
       return secret;
     };
 
-    var createAndroidKeyStoreSecret = function(clientConfig) {
+    var createClientCredentialsSecret = function(clientConfig) {
       var secret = {
         apiVersion: APIService.toAPIVersion(secretsVersion),
         kind: 'Secret',
         metadata: {
-          name:  clientConfig.androidSecretName,
+          name:  clientConfig.clientCredentialsName,
           labels:  {
             'mobile-client-build': 'true',
             'credential.sync.jenkins.openshift.io': 'true'
@@ -165,11 +163,18 @@ angular.module('openshiftConsole')
         type: 'Opaque',
         stringData: {}
       };
-
-      var secretData =  {
-        certificate: clientConfig.androidKeyStore,
-        password: clientConfig.androidKeyStorePassword
+      var secretData = {
+        password: clientConfig.clientCredentialsPassword
       };
+
+      if (clientConfig.clientType === 'android') {
+        secretData['certificate'] = clientConfig.clientCredentials;
+      }
+
+      if (clientConfig.clientType === 'ios') {
+        secretData['developer-profile'] = clientConfig.clientCredentials;
+      }
+      
       // Base64 encode the values.
       secret.data = _.mapValues(secretData, window.btoa);
 
@@ -181,15 +186,25 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
         $scope.context = context;
+
+        DataService.get(APIService.getPreferredVersion('mobileclients'), $routeParams.mobileclient, context).then(function(mobileClient) {
+          $scope.mobileClient = mobileClient;
+          $scope.newClientBuild = {
+            authType: 'public',
+            clientType: _.get(mobileClient, 'spec.clientType').toLowerCase(),
+            buildType: debugBuildType.id
+          };
+        });
     }));
 
-    $scope.navigateBack = function() {
-      if ($routeParams.then) {
-        $location.url($routeParams.then);
-        return;
-      }
-
-      $window.history.back();
+    $scope.navigateToMobileTab = function(tab) {
+      var resource = $routeParams.mobileclient;
+      var kind = _.get($scope, 'mobileClient.kind');
+      var namespace = $scope.projectName;
+      var opts = {
+        tab: tab
+      };
+      $location.url(Navigate.resourceURL(resource, kind, namespace, null, opts));
     };
 
     $scope.setAdvancedOptions = function(value) {
@@ -208,15 +223,15 @@ angular.module('openshiftConsole')
           return DataService.create(secretsVersion, null, gitSecret, $scope.context);
         })
         .then(function() {
-          if ($scope.newClientBuild.buildType === 'debug') {
+          if ($scope.newClientBuild.buildType === debugBuildType.id && $scope.newClientBuild.clientType === 'android') {
             return Promise.resolve();
           }
 
-          var certSecret = createAndroidKeyStoreSecret($scope.newClientBuild);
-          return DataService.create(secretsVersion, null, certSecret, $scope.context)
+          var certSecret = createClientCredentialsSecret($scope.newClientBuild);
+          return DataService.create(secretsVersion, null, certSecret, $scope.context);
         })
         .then(function() {
-          $scope.navigateBack();
+          $scope.navigateToMobileTab('builds');
         })
         .catch(function(err) {
           $scope.alerts.push({
