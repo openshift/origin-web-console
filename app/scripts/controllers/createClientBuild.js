@@ -93,7 +93,7 @@ angular.module('openshiftConsole')
           },
           strategy: {
             jenkinsPipelineStrategy: {
-              jenkinsfilePath: clientConfig.jenkinsfilePath,
+              jenkinsfilePath: clientConfig.jenkinsFilePath,
               env: [
                 {
                   name: 'BUILD_CONFIG',
