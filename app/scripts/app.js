@@ -655,7 +655,8 @@ angular
   })
   .run(['$rootScope', 'APIService', 'KubevirtVersions',
     function ($rootScope, APIService, KubevirtVersions) {
-    $rootScope.KUBEVIRT_ENABLED = !!APIService.apiInfo(KubevirtVersions.offlineVirtualMachine);
+    // Entities needs to be renamed in 3.11, https://groups.google.com/forum/#!topic/kubevirt-dev/CU_VskPIisg
+    // $rootScope.KUBEVIRT_ENABLED = !!APIService.apiInfo(KubevirtVersions.offlineVirtualMachine);
   }]);
 
 pluginLoader.addModule('openshiftConsole');
