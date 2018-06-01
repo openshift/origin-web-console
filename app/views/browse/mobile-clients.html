@@ -14,7 +14,7 @@
                class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
                data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span></a>
             <ul class="dropdown-menu dropdown-menu-right actions action-button">
-              <li ng-if="ctrl.mobileCIEnabled && (ctrl.mobileClient.spec.clientType === 'android' || ctrl.mobileClient.spec.clientType === 'iOS')">
+              <li ng-if="ctrl.mobileCIEnabled && (ctrl.mobileClient.spec.clientType !== 'xamarin')">
                 <a ng-href="project/{{ctrl.project.metadata.name}}/create-client-build/{{ctrl.mobileClient.metadata.name}}" role="button">Create Build</a>
               </li>
               <li>

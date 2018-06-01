@@ -49,11 +49,18 @@ angular.module('openshiftConsole')
     $scope.buildTypeMap = {
       android: {
         label: 'Android',
-        buildTypes: [debugBuildType, releaseBuildType]
+        buildTypes: [debugBuildType, releaseBuildType],
+        buildPlatforms: ['android']
       },
       ios: {
         label: 'iOS',
-        buildTypes: [debugBuildType, releaseBuildType]
+        buildTypes: [debugBuildType, releaseBuildType],
+        buildPlatforms: ['ios']
+      },
+      cordova: {
+        label: 'Cordova',
+        buildTypes: [debugBuildType, releaseBuildType],
+        buildPlatforms: ['android', 'ios']
       }
     };
 
@@ -98,6 +105,10 @@ angular.module('openshiftConsole')
                 {
                   name: 'BUILD_CONFIG',
                   value: clientConfig.buildType
+                },
+                {
+                  name: 'PLATFORM',
+                  value: clientConfig.buildPlatform
                 }
               ]
             }
@@ -105,14 +116,15 @@ angular.module('openshiftConsole')
         }
       };
 
-      if(clientConfig.buildType === releaseBuildType.id) {
+      if(clientConfig.clientCredentialsName) {
         buildConfig.spec.strategy.jenkinsPipelineStrategy.env.push({name: 'BUILD_CREDENTIAL_ID', value: $scope.projectName + '-' + clientConfig.clientCredentialsName});
-        if(clientConfig.credentialsAlias) {
-          buildConfig.spec.strategy.jenkinsPipelineStrategy.env.push({name: 'BUILD_CREDENTIAL_ALIAS', value: clientConfig.credentialsAlias});
-        }
       }
 
-      if (clientConfig.authType !== 'public') {
+      if(clientConfig.credentialsAlias) {
+        buildConfig.spec.strategy.jenkinsPipelineStrategy.env.push({name: 'BUILD_CREDENTIAL_ALIAS', value: clientConfig.credentialsAlias});
+      }
+
+      if (clientConfig.gitCredentialsName) {
         buildConfig.spec.source.sourceSecret = {
           name: clientConfig.gitCredentialsName
         };
@@ -167,11 +179,11 @@ angular.module('openshiftConsole')
         password: clientConfig.clientCredentialsPassword
       };
 
-      if (clientConfig.clientType === 'android') {
+      if (clientConfig.buildPlatform === 'android') {
         secretData['certificate'] = clientConfig.clientCredentials;
       }
 
-      if (clientConfig.clientType === 'ios') {
+      if (clientConfig.buildPlatform === 'ios') {
         secretData['developer-profile'] = clientConfig.clientCredentials;
       }
       
@@ -189,10 +201,13 @@ angular.module('openshiftConsole')
 
         DataService.get(APIService.getPreferredVersion('mobileclients'), $routeParams.mobileclient, context).then(function(mobileClient) {
           $scope.mobileClient = mobileClient;
+          var clientType = _.get(mobileClient, 'spec.clientType').toLowerCase();
+          var buildPlatform = $scope.buildTypeMap[clientType].buildPlatforms[0];
           $scope.newClientBuild = {
             authType: 'public',
-            clientType: _.get(mobileClient, 'spec.clientType').toLowerCase(),
-            buildType: debugBuildType.id
+            clientType: clientType,
+            buildType: debugBuildType.id,
+            buildPlatform: buildPlatform
           };
         });
     }));
@@ -223,7 +238,7 @@ angular.module('openshiftConsole')
           return DataService.create(secretsVersion, null, gitSecret, $scope.context);
         })
         .then(function() {
-          if ($scope.newClientBuild.buildType === debugBuildType.id && $scope.newClientBuild.clientType === 'android') {
+          if ($scope.newClientBuild.buildType === debugBuildType.id && $scope.newClientBuild.buildPlatform === 'android') {
             return Promise.resolve();
           }
 

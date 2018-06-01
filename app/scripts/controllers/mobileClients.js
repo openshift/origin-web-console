@@ -80,7 +80,6 @@ angular.module('openshiftConsole')
               watches.push(DataService.watch(serviceInstanceVersion, context, function (serviceInstances) {
                 $scope.serviceInstances = serviceInstances.by("metadata.name");
                 ctrl.mobileCIEnabled = _.some($scope.serviceInstances, function(serviceInstance) {
-                  console.log(serviceInstance.metadata.name + " :: ready = " + isServiceInstanceReady(serviceInstance));
                   return /aerogear-digger/.test(serviceInstance.metadata.name) && isServiceInstanceReady(serviceInstance);
                 });
               }));

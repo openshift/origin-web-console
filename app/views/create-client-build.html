@@ -236,6 +236,17 @@
                 <div class="section">
                   <h3 class="with-divider">Build Configuration</h3>
                   <dl class="dl-horizontal left">
+                    <div class="form-group" ng-if="(buildTypeMap[newClientBuild.clientType].buildPlatforms | size) > 1">
+                      <label for="build-type">Platform</label>
+                      <ui-select input-id="build-platform" ng-model="newClientBuild.buildPlatform" search-enabled="false" required>
+                        <ui-select-match>{{buildTypeMap[$select.selected].label}}</ui-select-match>
+                        <ui-select-choices
+                            repeat="platform in buildTypeMap[newClientBuild.clientType].buildPlatforms">
+                          {{buildTypeMap[platform].label}}
+                        </ui-select-choices>
+                      </ui-select>
+                    </div>
+
                     <div class="form-group">
                         <label for="build-type">Build Type</label>
                         <ui-select required input-id="build-type" ng-model="newClientBuild.buildType" search-enabled="false">
@@ -246,7 +257,7 @@
                         </ui-select>
                     </div>
 
-                    <div ng-if="newClientBuild.clientType === 'ios'">
+                    <div ng-if="newClientBuild.buildPlatform === 'ios'">
                       <div class="form-group" id="client-credentials">
                         <label for="clientCredentialsName" class="required">Name</label>
 
@@ -295,7 +306,7 @@
                       </div>                    
                     </div>
 
-                    <div ng-if="newClientBuild.buildType === 'release' && newClientBuild.clientType === 'android'">
+                    <div ng-if="newClientBuild.buildType === 'release' && newClientBuild.buildPlatform === 'android'">
                       <div class="form-group" id="client-credentials">
                         <label for="clientCredentialsName" class="required">Name</label>
 
