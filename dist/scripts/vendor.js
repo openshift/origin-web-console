@@ -74682,6 +74682,9 @@ kind: "HorizontalPodAutoscaler"
 }, {
 group: "extensions",
 kind: "NetworkPolicy"
+}, {
+group: "extensions",
+kind: "ReplicationControllerDummy"
 } ]
 }), angular.module("openshiftCommonServices").constant("API_PREFERRED_VERSIONS", {
 appliedclusterresourcequotas: {
