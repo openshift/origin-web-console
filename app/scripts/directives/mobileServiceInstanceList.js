@@ -43,8 +43,10 @@
       ctrl.serviceClasses = serviceClasses.by("metadata.name");
       watches.push(DataService.watch(APIService.getPreferredVersion("serviceinstances"), {namespace: $routeParams.project}, function(serviceInstances){
         ctrl.serviceInstances = _.filter(serviceInstances.by('metadata.name'), function(serviceInstance){
-          return $filter('isMobileService')(ctrl.serviceClasses[serviceInstance.spec.clusterServiceClassRef.name]) && 
-          $filter('isServiceInstanceReady')(serviceInstance);
+          var serviceInstanceName = _.get(serviceInstance, 'spec.clusterServiceClassRef.name');
+          return $filter('isMobileService')(ctrl.serviceClasses[serviceInstanceName]) && 
+                 $filter('isServiceInstanceReady')(serviceInstance) &&
+                 $filter('isMobileClientEnabled')(ctrl.serviceClasses[serviceInstanceName]);
         });
       }));
     }));
