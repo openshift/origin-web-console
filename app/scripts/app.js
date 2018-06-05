@@ -64,7 +64,8 @@ angular
       })
       .when('/project/:project/catalog', {
         templateUrl: 'views/project-browse-catalog.html',
-        controller: 'ProjectBrowseCatalogController'
+        controller: 'ProjectBrowseCatalogController',
+        reloadOnSearch: false
       })
       .when('/project/:project', {
         redirectTo: function(params) {
