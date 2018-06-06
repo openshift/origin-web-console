@@ -30,10 +30,11 @@
     var serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
     var buildsVersion = APIService.getPreferredVersion('builds');
     var isServiceInstanceReady = $filter('isServiceInstanceReady');
+    var isMobileClientEnabled = $filter('isMobileClientEnabled');
     var isMobileService = $filter('isMobileService');
     var watches = [];
-    var boundServices = 'Bound Services';
-    var unboundServices = 'Unbound Services';
+    var boundServices = 'Bound Mobile Services';
+    var unboundServices = 'Unbound Mobile Services';
     row.installType = '';
     row.config = {
       'chartId': _.get(row, 'apiObject.metadata.name') + '-services-info',
@@ -45,7 +46,7 @@
     };
     row.config.colors[boundServices] = $.pfPaletteColors.blue;
     row.config.colors[unboundServices] = $.pfPaletteColors.orange;
-    row.chartHeight = 80;
+    row.chartHeight = 95;
 
     _.extend(row, ListRowUtils.ui);
 
@@ -105,7 +106,7 @@
           watches.push(DataService.watch(serviceInstancesVersion, row.context, function(serviceinstances) {
             row.services = _.filter(serviceinstances.by('metadata.name'), function(serviceInstance){
               var serviceClass = _.get(serviceClasses, ServiceInstancesService.getServiceClassNameForInstance(serviceInstance));
-              return isMobileService(serviceClass) && isServiceInstanceReady(serviceInstance);
+              return isMobileService(serviceClass) && isServiceInstanceReady(serviceInstance) && isMobileClientEnabled(serviceClass);
             });
             row.updateServicesInfo();
           }, { errorNotification: false }));
