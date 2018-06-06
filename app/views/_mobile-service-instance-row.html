@@ -38,20 +38,33 @@
   <div class="list-pf-expansion collapse" ng-if="row.expanded" ng-class="{ in: row.expanded }">
     <div class="list-pf-container">
       <div class="expanded-section no-margin">
-        <h4 ng-if="(row.bindings | size) && row.bindingInProgress == false" class="component-label section-label">Details</h4>
-        <ul ng-if="(row.bindings | size) && row.bindingInProgress == false">
-          <li ng-if="row.serviceClass.spec.externalMetadata.documentationUrl | size">
-            <b>Documentation</b>:
-            <a href="{{row.serviceClass.spec.externalMetadata.documentationUrl}}">SDK Setup
-              <i class="fa fa-external-link" aria-hidden="true"></i>
-            </a>
-          </li>
-          <li ng-repeat="annotation in row.annotations">
-            <b>{{annotation.label}}</b>:
-            <a ng-if="annotation.type === 'href'" href="{{annotation.value}}">{{ annotation.value }}</a>
-            <span ng-if="annotation.type === 'string'">{{ annotation.value }}</span>
-          </li>
-        </ul>
+        <div class="row" ng-if="(row.bindings | size) && row.bindingInProgress == false">
+          <div class="col-md-6">
+            <h4 class="component-label section-label">Details</h4>
+            <dl class="dl-horizontal left">
+              <dt>Documentation</dt>
+              <dd>
+                <a href="{{row.serviceClass.spec.externalMetadata.documentationUrl}}">SDK Setup
+                  <i class="fa fa-external-link" aria-hidden="true"></i>
+                </a>
+              </dd>
+              <dt ng-repeat-start="annotation in row.annotations">{{annotation.label}}</dt>
+              <dd ng-repeat-end>
+                <a ng-if="annotation.type === 'href'" href="{{annotation.value}}">{{ annotation.text || annotation.value }}</a>
+                <span ng-if="annotation.type === 'string'">{{ annotation.value }}</span>
+              </dd>
+            </dl>
+          </div>
+          <div class="col-md-6" ng-if="row.serviceType === 'ups'">
+            <h4 class="component-label section-label">Variants</h4>
+            <dl class="dl-horizontal left">
+              <dt ng-repeat-start="variant in row.extendedAnnotations.variants">{{variant.typeLabel}}</dt>
+              <dd ng-repeat-end>
+                <a href="{{variant.url}}">{{ variant.id }}</a>
+              </dd>
+            </dl>
+          </div>
+        </div>
         <span class="note" ng-if="(row.bindings | size) && (row.annotations | size) == 0 && row.bindingInProgress == false">No configuration data to show for this service.</span>
         <div ng-if="((row.bindings | size) < row.bindingsLimit) && row.bindingInProgress == false" class="empty-state-message text-center">
           <p ng-if="((row.bindings | size) === 0)">Bind to this service to use it in your mobile application.</p>

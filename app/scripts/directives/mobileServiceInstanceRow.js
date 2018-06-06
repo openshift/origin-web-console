@@ -35,6 +35,7 @@
     row.serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
     row.state = row.state || {};
     var annotationSpace = "org.aerogear.binding." + this.apiObject.metadata.name;
+    var extendedAnnotationSpace = "org.aerogear.binding-ext." + this.apiObject.metadata.name;
     var watches = [];
     var bindingsWatch = false;
     row.bindingsLimit = _.get(row.serviceClass, "spec.externalMetadata.bindingsLimit", 1);
@@ -55,7 +56,7 @@
             'binding.aerogear.org/provider': _.get(row, 'apiObject.metadata.name')
           }
         };
-        
+
         row.annotations = _.filter(row.mobileClient.metadata.annotations, function(annotation, name){
           return name.split("/")[0] === annotationSpace;
         })
@@ -69,6 +70,18 @@
           }
           return 0;
         });
+
+        row.serviceType = _.get(row, "serviceClass.spec.externalMetadata.serviceName"); // safe get
+
+        row.extendedAnnotations = _(row.mobileClient.metadata.annotations)
+          .pickBy(function(annotation, name){
+            return name.split("/")[0] === extendedAnnotationSpace;
+          })
+          .transform(function(result, strVal, name) {
+            var key = name.split("/")[1];
+            result[key] = JSON.parse(strVal);
+          })
+          .value();
 
         row.servicePlanPromise = DataService.list(APIService.getPreferredVersion('clusterserviceplans'), {}, function(servicePlans) {
           var servicePlanData = servicePlans.by('metadata.name');
@@ -87,7 +100,7 @@
               return _.get(binding.metadata.annotations, "binding.aerogear.org/consumer") === row.mobileClient.metadata.name &&
                     _.get(binding.metadata.annotations, "binding.aerogear.org/provider") === row.apiObject.metadata.name;
             });
-      
+
             row.bindingInProgress = _.sumBy(row.bindings, function(binding){
               return $filter('isBindingReady')(binding) ? 0 : 1;
             });
