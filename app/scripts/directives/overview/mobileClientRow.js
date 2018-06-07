@@ -50,20 +50,16 @@
 
     _.extend(row, ListRowUtils.ui);
 
-    row.navigateToMobileTab = function(tab) {
+    row.navigateToMobileTab = function(tab, anchor) {
       var resource = _.get(row, 'apiObject.metadata.name');
       var kind = _.get(row, 'apiObject.kind');
       var namespace = _.get(row, 'apiObject.metadata.namespace');
       var opts = {
         tab: tab
       };
-      return Navigate.resourceURL(resource, kind, namespace, null, opts);
-    }
+      var url = Navigate.resourceURL(resource, kind, namespace, null, opts);
 
-    row.navigateToBuild = function(build) {
-      var resource = _.get(build, 'metadata.labels.buildconfig');
-      var namespace = _.get(build, 'metadata.namespace');
-      return Navigate.resourceURL(resource, BUILD_CONFIG_KIND, namespace);
+      return anchor ? url + '#' + anchor : url;
     }
 
     row.updateServicesInfo = function() {

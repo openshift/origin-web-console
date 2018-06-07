@@ -4,7 +4,8 @@
   <div class="list-pf">
     <mobile-client-builds-row 
       ng-repeat="mobileBuildConfig in $ctrl.mobileBuildConfigs" 
-      api-object="mobileBuildConfig">
+      api-object="mobileBuildConfig"
+      id="{{mobileBuildConfig.metadata.name}}">
     </mobile-client-builds-row>
   </div>
 </div>

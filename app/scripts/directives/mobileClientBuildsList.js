@@ -3,6 +3,8 @@
 (function() {
   angular.module('openshiftConsole').component('mobileClientBuildsList', {
     controller: [
+      '$timeout',
+      '$anchorScroll',
       '$location',
       'APIService',
       'DataService',
@@ -15,13 +17,16 @@
   });
 
   function MobileClientBuildsList(
+    $timeout,
+    $anchorScroll,
     $location,
     APIService,
     DataService
   ) {
     var ctrl = this;
     var buildConfigsVersion = APIService.getPreferredVersion('buildconfigs');
-    var watches = [];  
+    var watches = [];
+    var anchor;
 
     ctrl.$onChanges = function(changes) {
       var mobileClientChanged = _.get(changes, "mobileClient.currentValue", false);
@@ -36,9 +41,21 @@
             return _.get(buildConfig, 'metadata.labels.mobile-client-build') === 'true' && _.get(buildConfig, 'metadata.labels.mobile-client-id') === _.get(ctrl, 'mobileClient.metadata.name');
           });
           ctrl.loaded = true;
+          ctrl.goToBuildConfig();
         }));
       }
     };
+
+    ctrl.goToBuildConfig = function() {
+      if ($location.hash() && anchor !== $location.hash()) {
+        anchor = $location.hash();
+
+        $timeout(function() {
+          $anchorScroll.yOffset = 100;
+          $anchorScroll();
+        }, 400);
+      }
+    }
 
     ctrl.goToCreateClientBuild = function() {
       $location.url('project/' + ctrl.mobileClient.metadata.namespace + '/create-client-build/' + ctrl.mobileClient.metadata.name);

@@ -3,6 +3,7 @@
 (function() {
   angular.module('openshiftConsole').component('mobileClientBuildsRow', {
     controller: [
+      '$location',
       'APIService',
       'BuildsService',
       'DataService',
@@ -18,6 +19,7 @@
   });
 
   function MobileClientBuildsRow(
+    $location,
     APIService,
     BuildsService,
     DataService,
@@ -30,6 +32,7 @@
     row.buildConfigsVersion = APIService.getPreferredVersion('buildconfigs');
     row.buildsVersion = APIService.getPreferredVersion('builds');
     var watches = [];
+    var anchor;
 
     _.extend(row, ListRowUtils.ui);
 
@@ -49,9 +52,21 @@
           var sortedBuilds = BuildsService.sortBuilds(_builds, true);
           row.latestBuild = sortedBuilds[0];
           row.historyBuilds = _.tail(sortedBuilds);
+          row.toggleExpandForAnchor();
         }));
       }
     };
+
+    row.toggleExpandForAnchor = function() {
+      var buildId = _.get(row, 'apiObject.metadata.name');
+
+      if ($location.hash() && $location.hash() !== anchor && buildId === $location.hash()) {
+        anchor = $location.hash();
+        row.expanded = 'true';
+        var key = 'overview/expand/' + _.get(row, 'apiObject.metadata.uid');
+        sessionStorage.setItem(key, row.expanded);
+      }
+    }
 
     row.startBuild = function() {
       BuildsService.startBuild(row.apiObject);
