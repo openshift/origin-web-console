@@ -15,29 +15,26 @@
     <meta name="msapplication-TileColor" content="#000000">
     <meta name="msapplication-TileImage" content="images/mstile-144x144.png">
     <!-- build:css(.) styles/vendor.css -->
-    <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/angularjs-datatables/dist/css/angular-datatables.css" />
-    <link rel="stylesheet" href="bower_components/angularjs-datatables/dist/plugins/bootstrap/datatables.bootstrap.min.css" />
-    <link rel="stylesheet" href="bower_components/angular-patternfly/dist/styles/angular-patternfly.css" />
-    <link rel="stylesheet" href="bower_components/kubernetes-label-selector/labelFilter.css" />
-    <link rel="stylesheet" href="bower_components/xterm.js-next/xterm.css" />
-    <link rel="stylesheet" href="bower_components/kubernetes-container-terminal/dist/container-terminal.css" />
-    <link rel="stylesheet" href="bower_components/registry-image-widgets/dist/image-widgets.css" />
-    <link rel="stylesheet" href="bower_components/ng-sortable/dist/ng-sortable.css" />
-    <link rel="stylesheet" href="bower_components/ui-select/dist/select.css" />
-    <link rel="stylesheet" href="bower_components/hopscotch/dist/css/hopscotch.css" />
-    <!-- endbower -->
+    <link rel="stylesheet" href="node_modules/angular-patternfly/dist/styles/angular-patternfly.css" />
+    <link rel="stylesheet" href="node_modules/kubernetes-label-selector/labelFilter.css" />
+    <link rel="stylesheet" href="node_modules/xterm/dist/xterm.css" />
+    <link rel="stylesheet" href="node_modules/kubernetes-container-terminal/dist/container-terminal.css" />
+    <link rel="stylesheet" href="node_modules/registry-image-widgets/dist/image-widgets.css" />
+    <link rel="stylesheet" href="node_modules/ng-sortable/dist/ng-sortable.css" />
+    <link rel="stylesheet" href="node_modules/ui-select/dist/select.css" />
+    <link rel="stylesheet" href="node_modules/hopscotch/dist/css/hopscotch.css" />
     <!-- endbuild -->
+
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" type="text/css" href="styles/main.css">
     <!-- endbuild -->
+
     <!-- build:remove -->
     <!-- Local / test stylesheets only. These files will not be included in the built dist. -->
     <link rel="stylesheet" type="text/css" href="extensions/local-extensions.css">
     <!-- endbuild -->
-    <style type="text/css">
 
-    </style>
+    <style type="text/css"></style>
   </head>
   <body class="console-os" ng-class="{ 'has-project-bar': view.hasProject, 'has-project-search': view.hasProjectSearch }" >
     <!-- Add your site or application content here -->
@@ -70,109 +67,76 @@
 
     <script src="config.js"></script>
 
-    <!-- build:js(.) scripts/oldieshim.js -->
-    <!--[if lt IE 9]>
-    <script src="bower_components/es5-shim/es5-shim.js"></script>
-    <script src="bower_components/json3/lib/json3.js"></script>
-    <![endif]-->
-    <!-- endbuild -->
-
     <!-- build:js(.) scripts/vendor.js -->
-    <script src="bower_components/es5-dom-shim/__COMPILE/a.js"></script>
-    <!-- bower:js -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/json3/lib/json3.js"></script>
-    <script src="bower_components/es5-shim/es5-shim.js"></script>
-    <script src="bower_components/angular-resource/angular-resource.js"></script>
-    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="bower_components/angular-animate/angular-animate.js"></script>
-    <script src="bower_components/angular-touch/angular-touch.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-    <script src="bower_components/jquery-ui/jquery-ui.js"></script>
-    <script src="bower_components/angular-dragdrop/src/angular-dragdrop.js"></script>
-    <script src="bower_components/datatables.net/js/jquery.dataTables.js"></script>
-    <script src="bower_components/angularjs-datatables/dist/angular-datatables.js"></script>
-    <script src="bower_components/angularjs-datatables/dist/plugins/bootstrap/angular-datatables.bootstrap.js"></script>
-    <script src="bower_components/angularjs-datatables/dist/plugins/colreorder/angular-datatables.colreorder.js"></script>
-    <script src="bower_components/angularjs-datatables/dist/plugins/columnfilter/angular-datatables.columnfilter.js"></script>
-    <script src="bower_components/angularjs-datatables/dist/plugins/light-columnfilter/angular-datatables.light-columnfilter.js"></script>
-    <script src="bower_components/angularjs-datatables/dist/plugins/colvis/angular-datatables.colvis.js"></script>
-    <script src="bower_components/angularjs-datatables/dist/plugins/fixedcolumns/angular-datatables.fixedcolumns.js"></script>
-    <script src="bower_components/angularjs-datatables/dist/plugins/fixedheader/angular-datatables.fixedheader.js"></script>
-    <script src="bower_components/angularjs-datatables/dist/plugins/scroller/angular-datatables.scroller.js"></script>
-    <script src="bower_components/angularjs-datatables/dist/plugins/tabletools/angular-datatables.tabletools.js"></script>
-    <script src="bower_components/angularjs-datatables/dist/plugins/buttons/angular-datatables.buttons.js"></script>
-    <script src="bower_components/angularjs-datatables/dist/plugins/select/angular-datatables.select.js"></script>
-    <script src="bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js"></script>
-    <script src="bower_components/datatables.net-select/js/dataTables.select.js"></script>
-    <script src="bower_components/lodash/lodash.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
-    <script src="bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
-    <script src="bower_components/bootstrap-slider/dist/bootstrap-slider.js"></script>
-    <script src="bower_components/bootstrap-switch/dist/js/bootstrap-switch.js"></script>
-    <script src="bower_components/bootstrap-touchspin/src/jquery.bootstrap-touchspin.js"></script>
-    <script src="bower_components/d3/d3.js"></script>
-    <script src="bower_components/c3/c3.js"></script>
-    <script src="bower_components/datatables/media/js/jquery.dataTables.js"></script>
-    <script src="bower_components/datatables-colreorder/js/dataTables.colReorder.js"></script>
-    <script src="bower_components/datatables-colvis/js/dataTables.colVis.js"></script>
-    <script src="bower_components/moment/moment.js"></script>
-    <script src="bower_components/matchHeight/dist/jquery.matchHeight.js"></script>
-    <script src="bower_components/patternfly-bootstrap-combobox/js/bootstrap-combobox.js"></script>
-    <script src="bower_components/patternfly-bootstrap-treeview/dist/bootstrap-treeview.js"></script>
-    <script src="bower_components/patternfly/dist/js/patternfly.js"></script>
-    <script src="bower_components/angular-patternfly/dist/angular-patternfly.js"></script>
-    <script src="bower_components/angular-gettext/dist/angular-gettext.js"></script>
-    <script src="bower_components/uri.js/src/URI.js"></script>
-    <script src="bower_components/uri.js/src/URITemplate.js"></script>
-    <script src="bower_components/uri.js/src/jquery.URI.js"></script>
-    <script src="bower_components/uri.js/src/URI.fragmentURI.js"></script>
-    <script src="bower_components/sifter/sifter.js"></script>
-    <script src="bower_components/microplugin/src/microplugin.js"></script>
-    <script src="bower_components/selectize/dist/js/selectize.js"></script>
-    <script src="bower_components/kubernetes-label-selector/labelSelector.js"></script>
-    <script src="bower_components/kubernetes-label-selector/labelFilter.js"></script>
-    <script src="bower_components/xterm.js-next/xterm.js"></script>
-    <script src="bower_components/kubernetes-container-terminal/dist/container-terminal.js"></script>
-    <script src="bower_components/registry-image-widgets/dist/image-widgets.js"></script>
-    <script src="bower_components/kubernetes-object-describer/dist/object-describer.js"></script>
-    <script src="bower_components/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js"></script>
-    <script src="bower_components/ace-builds/src-min-noconflict/ace.js"></script>
-    <script src="bower_components/ace-builds/src-min-noconflict/ext-searchbox.js"></script>
-    <script src="bower_components/ace-builds/src-min-noconflict/mode-dockerfile.js"></script>
-    <script src="bower_components/ace-builds/src-min-noconflict/mode-groovy.js"></script>
-    <script src="bower_components/ace-builds/src-min-noconflict/mode-yaml.js"></script>
-    <script src="bower_components/ace-builds/src-min-noconflict/theme-dreamweaver.js"></script>
-    <script src="bower_components/ace-builds/src-min-noconflict/theme-eclipse.js"></script>
-    <script src="bower_components/ace-builds/src-min-noconflict/mode-sh.js"></script>
-    <script src="bower_components/angular-ui-ace/ui-ace.js"></script>
-    <script src="bower_components/clipboard/dist/clipboard.js"></script>
-    <script src="bower_components/ansi_up/ansi_up.js"></script>
-    <script src="bower_components/angular-extension-registry/dist/angular-extension-registry.min.js"></script>
-    <script src="bower_components/angular-extension-registry/dist/compiled-templates.js"></script>
-    <script src="bower_components/ng-sortable/dist/ng-sortable.js"></script>
-    <script src="bower_components/ui-select/dist/select.js"></script>
-    <script src="bower_components/angular-inview/angular-inview.js"></script>
-    <script src="bower_components/js-yaml/dist/js-yaml.js"></script>
-    <script src="bower_components/angular-moment/angular-moment.js"></script>
-    <script src="bower_components/angular-utf8-base64/angular-utf8-base64.js"></script>
-    <script src="bower_components/file-saver/FileSaver.js"></script>
-    <script src="bower_components/hopscotch/dist/js/hopscotch.js"></script>
-    <script src="bower_components/js-logger/src/logger.js"></script>
-    <script src="bower_components/compare-versions/index.js"></script>
-    <script src="bower_components/origin-web-common/dist/origin-web-common.js"></script>
-    <script src="bower_components/tv4/tv4.js"></script>
-    <script src="bower_components/objectpath/lib/ObjectPath.js"></script>
-    <script src="bower_components/angular-schema-form/dist/schema-form.js"></script>
-    <script src="bower_components/angular-schema-form/dist/bootstrap-decorator.js"></script>
-    <script src="bower_components/angular-schema-form-bootstrap/bootstrap-decorator.min.js"></script>
-    <script src="bower_components/origin-web-catalog/dist/vendor-bundle.js"></script>
-    <script src="bower_components/origin-web-catalog/dist/origin-web-catalogs.js"></script>
-    <!-- endbower -->
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/angular/angular.js"></script>
+    <script src="node_modules/angular-resource/angular-resource.js"></script>
+    <script src="node_modules/angular-cookies/angular-cookies.js"></script>
+    <script src="node_modules/angular-sanitize/angular-sanitize.js"></script>
+    <script src="node_modules/angular-animate/angular-animate.js"></script>
+    <script src="node_modules/angular-route/angular-route.js"></script>
+    <script src="node_modules/angular-ui-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="node_modules/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js"></script>
+    <script src="node_modules/lodash/lodash.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js"></script>
+    <script src="node_modules/bootstrap-select/dist/js/bootstrap-select.js"></script>
+    <script src="node_modules/bootstrap-slider/dist/bootstrap-slider.js"></script>
+    <script src="node_modules/bootstrap-switch/dist/js/bootstrap-switch.js"></script>
+    <script src="node_modules/bootstrap-touchspin/src/jquery.bootstrap-touchspin.js"></script>
+    <script src="node_modules/d3/d3.js"></script>
+    <script src="node_modules/c3/c3.js"></script>
+    <script src="node_modules/moment/moment.js"></script>
+    <script src="node_modules/jquery-match-height/dist/jquery.matchHeight.js"></script>
+    <script src="node_modules/patternfly-bootstrap-combobox/js/bootstrap-combobox.js"></script>
+    <script src="node_modules/patternfly-bootstrap-treeview/dist/bootstrap-treeview.js"></script>
+    <script src="node_modules/patternfly/dist/js/patternfly.js"></script>
+    <script src="node_modules/angular-patternfly/dist/angular-patternfly.js"></script>
+    <script src="node_modules/angular-gettext/dist/angular-gettext.js"></script>
+    <script src="node_modules/urijs/src/URI.js"></script>
+    <script src="node_modules/urijs/src/URITemplate.js"></script>
+    <script src="node_modules/urijs/src/jquery.URI.js"></script>
+    <script src="node_modules/urijs/src/URI.fragmentURI.js"></script>
+    <script src="node_modules/sifter/sifter.js"></script>
+    <script src="node_modules/microplugin/src/microplugin.js"></script>
+    <script src="node_modules/selectize/dist/js/selectize.js"></script>
+    <script src="node_modules/kubernetes-label-selector/labelSelector.js"></script>
+    <script src="node_modules/kubernetes-label-selector/labelFilter.js"></script>
+    <script src="node_modules/xterm/dist/xterm.js"></script>
+    <script src="node_modules/kubernetes-container-terminal/dist/container-terminal.js"></script>
+    <script src="node_modules/registry-image-widgets/dist/image-widgets.js"></script>
+    <script src="node_modules/kubernetes-object-describer/dist/object-describer.js"></script>
+    <script src="node_modules/ace-builds/src-min-noconflict/ace.js"></script>
+    <script src="node_modules/ace-builds/src-min-noconflict/ext-searchbox.js"></script>
+    <script src="node_modules/ace-builds/src-min-noconflict/mode-dockerfile.js"></script>
+    <script src="node_modules/ace-builds/src-min-noconflict/mode-groovy.js"></script>
+    <script src="node_modules/ace-builds/src-min-noconflict/mode-yaml.js"></script>
+    <script src="node_modules/ace-builds/src-min-noconflict/theme-dreamweaver.js"></script>
+    <script src="node_modules/ace-builds/src-min-noconflict/theme-eclipse.js"></script>
+    <script src="node_modules/ace-builds/src-min-noconflict/mode-sh.js"></script>
+    <script src="node_modules/angular-ui-ace/src/ui-ace.js"></script>
+    <script src="node_modules/clipboard/dist/clipboard.js"></script>
+    <script src="node_modules/angular-extension-registry/dist/angular-extension-registry.min.js"></script>
+    <script src="node_modules/angular-extension-registry/dist/compiled-templates.js"></script>
+    <script src="node_modules/ng-sortable/dist/ng-sortable.js"></script>
+    <script src="node_modules/ui-select/dist/select.js"></script>
+    <script src="node_modules/angular-inview/angular-inview.js"></script>
+    <script src="node_modules/js-yaml/dist/js-yaml.js"></script>
+    <script src="node_modules/angular-moment/angular-moment.js"></script>
+    <script src="node_modules/angular-utf8-base64/angular-utf8-base64.js"></script>
+    <script src="node_modules/file-saver/FileSaver.js"></script>
+    <script src="node_modules/hopscotch/dist/js/hopscotch.js"></script>
+    <script src="node_modules/js-logger/src/logger.js"></script>
+    <script src="node_modules/compare-versions/index.js"></script>
+    <script src="node_modules/origin-web-common/dist/origin-web-common.js"></script>
+    <script src="node_modules/tv4/tv4.js"></script>
+    <script src="node_modules/ansi_up/ansi_up.js"></script>
+    <script src="node_modules/objectpath/lib/ObjectPath.js"></script>
+    <script src="node_modules/angular-schema-form/dist/schema-form.js"></script>
+    <script src="node_modules/angular-schema-form/dist/bootstrap-decorator.js"></script>
+    <script src="node_modules/angular-schema-form-bootstrap/bootstrap-decorator.min.js"></script>
+    <script src="node_modules/origin-web-catalog/dist/vendor-bundle.js"></script>
+    <script src="node_modules/origin-web-catalog/dist/origin-web-catalogs.js"></script>
     <!-- endbuild -->
 
     <!-- This needs to be loaded before scripts.js -->
@@ -376,47 +340,47 @@
         <script src="scripts/directives/overview/mobileClientRow.js"></script>
         <script src="scripts/directives/overview/virtualMachineRow.js"></script>
 
-        <!-- New Overview -->
-        <script src="scripts/directives/buildCounts.js"></script>
-        <script src="scripts/directives/metricsSummary.js"></script>
-        <script src="scripts/directives/miniLog.js"></script>
-        <script src="scripts/directives/notificationIcon.js"></script>
-        <script src="scripts/directives/overview/builds.js"></script>
-        <script src="scripts/directives/overview/listRow.js"></script>
-        <script src="scripts/directives/overview/serviceInstanceRow.js"></script>
-        <script src="scripts/directives/overview/networking.js"></script>
-        <script src="scripts/directives/overview/pipelines.js"></script>
-        <script src="scripts/directives/overview/serviceBindings.js"></script>
+    <!-- New Overview -->
+    <script src="scripts/directives/buildCounts.js"></script>
+    <script src="scripts/directives/metricsSummary.js"></script>
+    <script src="scripts/directives/miniLog.js"></script>
+    <script src="scripts/directives/notificationIcon.js"></script>
+    <script src="scripts/directives/overview/builds.js"></script>
+    <script src="scripts/directives/overview/listRow.js"></script>
+    <script src="scripts/directives/overview/serviceInstanceRow.js"></script>
+    <script src="scripts/directives/overview/networking.js"></script>
+    <script src="scripts/directives/overview/pipelines.js"></script>
+    <script src="scripts/directives/overview/serviceBindings.js"></script>
+    <script src="scripts/directives/istagSelect.js"></script>
+    <script src="scripts/directives/deployImage.js"></script>
+    <script src="scripts/directives/selector.js"></script>
+    <script src="scripts/directives/selectContainers.js"></script>
+    <script src="scripts/directives/buildHooks.js"></script>
+    <script src="scripts/directives/pauseRolloutsCheckbox.js"></script>
+    <script src="scripts/directives/keyValueEditor.js"></script>
+    <script src="scripts/directives/confirmOnExit.js"></script>
+    <script src="scripts/directives/uiAceYaml.js"></script>
+    <script src="scripts/directives/affix.js"></script>
+    <script src="scripts/directives/editEnvironmentVariables.js"></script>
+    <script src="scripts/directives/initContainersSummary.js"></script>
+    <script src="scripts/directives/notifications/notificationCounter.js"></script>
+    <script src="scripts/directives/notifications/notificationDrawerWrapper.js"></script>
+    <script src="scripts/filters/date.js"></script>
+    <script src="scripts/filters/resources.js"></script>
+    <script src="scripts/filters/canI.js"></script>
+    <script src="scripts/filters/util.js"></script>
+    <script src="scripts/services/logLinks.js"></script>
 
-        <script src="scripts/directives/deployImage.js"></script>
-        <script src="scripts/directives/selector.js"></script>
-        <script src="scripts/directives/selectContainers.js"></script>
-        <script src="scripts/directives/buildHooks.js"></script>
-        <script src="scripts/directives/pauseRolloutsCheckbox.js"></script>
-        <script src="scripts/directives/keyValueEditor.js"></script>
-        <script src="scripts/directives/confirmOnExit.js"></script>
-        <script src="scripts/directives/uiAceYaml.js"></script>
-        <script src="scripts/directives/affix.js"></script>
-        <script src="scripts/directives/editEnvironmentVariables.js"></script>
-        <script src="scripts/directives/initContainersSummary.js"></script>
-        <script src="scripts/directives/notifications/notificationCounter.js"></script>
-        <script src="scripts/directives/notifications/notificationDrawerWrapper.js"></script>
-        <script src="scripts/filters/date.js"></script>
-        <script src="scripts/filters/resources.js"></script>
-        <script src="scripts/filters/canI.js"></script>
-        <script src="scripts/filters/util.js"></script>
-        <script src="scripts/services/logLinks.js"></script>
+    <!-- add bundled extensions here -->
+    <script src="scripts/extensions/javalink/javaLink.js"></script>
+    <script src="scripts/extensions/nav/helpDropdown.js"></script>
+    <script src="scripts/extensions/nav/userDropdown.js"></script>
+    <script src="scripts/extensions/nav/dropdownMobile.js"></script>
+    <!-- endbuild -->
 
-        <!-- add bundled extensions here -->
-        <script src="scripts/extensions/javalink/javaLink.js"></script>
-        <script src="scripts/extensions/nav/helpDropdown.js"></script>
-        <script src="scripts/extensions/nav/userDropdown.js"></script>
-        <script src="scripts/extensions/nav/dropdownMobile.js"></script>
-        <!-- endbuild -->
-
-        <!-- build:remove -->
-        <!-- Local / test scripts only. These files will not be included in the built dist. -->
-        <script src="extensions/local-extensions.js"></script>
-        <!-- endbuild -->
+    <!-- build:remove -->
+    <!-- Local / test scripts only. These files will not be included in the built dist. -->
+    <script src="extensions/local-extensions.js"></script>
+    <!-- endbuild -->
 </body>
 </html>

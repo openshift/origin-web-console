@@ -26,7 +26,7 @@ module.exports = function (grunt) {
 
   // Configurable paths for the application
   var appConfig = {
-    app: require('./bower.json').appPath || 'app',
+    app: require('./package.json').appPath || 'app',
     dist: 'dist'
   };
 
@@ -38,10 +38,6 @@ module.exports = function (grunt) {
 
     // Watches files for changes and runs tasks based on the changed files
     watch: {
-      bower: {
-        files: ['bower.json'],
-        tasks: ['wiredep']
-      },
       js: {
         files: [
           '<%= yeoman.app %>/scripts/{,*/}*.js',
@@ -116,7 +112,7 @@ module.exports = function (grunt) {
               modRewrite([
                 '^/$ /' + contextRoot + '/ [R=302]',
                 '^/' + contextRoot + '(.*)$ $1',
-                '!^/(config.js|(java|bower_components|scripts|images|styles|views|components|extensions)(/.*)?)$ /index.html [L]'
+                '!^/(config.js|(java|node_modules|scripts|images|styles|views|components|extensions)(/.*)?)$ /index.html [L]'
               ]),
               serveStatic('.tmp'),
               connect().use(
@@ -124,8 +120,8 @@ module.exports = function (grunt) {
                 serveStatic('./openshift-jvm')
               ),
               connect().use(
-                '/bower_components',
-                serveStatic('./bower_components')
+                '/node_modules',
+                serveStatic('./node_modules')
               ),
               connect().use(
                 '/extensions',
@@ -143,13 +139,13 @@ module.exports = function (grunt) {
               modRewrite([
                 '^/$ /' + contextRoot + '/ [R=302]',
                 '^/' + contextRoot + '(.*)$ $1',
-                '!^/(config.js|(bower_components|scripts|images|styles|views|components|extensions)(/.*)?)$ /index.html [L]'
+                '!^/(config.js|(node_modules|scripts|images|styles|views|components|extensions)(/.*)?)$ /index.html [L]'
               ]),
               serveStatic('.tmp'),
               serveStatic('test'),
               connect().use(
-                '/bower_components',
-                serveStatic('./bower_components')
+                '/node_modules',
+                serveStatic('./node_modules')
               ),
               connect().use(
                 '/extensions',
@@ -168,7 +164,7 @@ module.exports = function (grunt) {
             var rewriteRules = [
               '^/$ /' + contextRoot + '/ [R=302]',
               '^/' + contextRoot + '(.*)$ $1',
-              '!^/(config.js|(bower_components|scripts|images|styles|views|components)(/.*)?)$ /index.html [L]'
+              '!^/(config.js|(node_modules|scripts|images|styles|views|components)(/.*)?)$ /index.html [L]'
             ];
 
             // If config.local.js exists, use that instead of config.js.
@@ -180,8 +176,8 @@ module.exports = function (grunt) {
               modRewrite(rewriteRules),
               serveStatic('dist'),
               connect().use(
-                '/bower_components',
-                serveStatic('./bower_components')
+                '/node_modules',
+                serveStatic('./node_modules')
               ),
               serveStatic(appConfig.app)
             ];
@@ -231,57 +227,13 @@ module.exports = function (grunt) {
       },
       server: '.tmp'
     },
-
-    // Automatically inject Bower components into the app
-    wiredep: {
-      app: {
-        src: ['<%= yeoman.app %>/index.html'],
-        ignorePath:  /\.\.\//,
-        exclude: [
-          // choosing uri.js over urijs
-          'bower_components/uri.js/src/IPv6.js',
-          'bower_components/uri.js/src/SecondLevelDomains.js',
-          'bower_components/uri.js/src/punycode.js',
-          'bower_components/uri.js/src/URI.min.js',
-          'bower_components/uri.js/src/jquery.URI.min.js',
-          'bower_components/uri.js/src/URI.fragmentQuery.js',
-          // bower registration error? we get 2x versions of uri.js/urijs
-          'bower_components/urijs/',
-          'bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
-          'bower_components/fontawesome/css/font-awesome.css',
-          'bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.css',
-          'bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
-          'bower_components/bootstrap-select/dist/css/bootstrap-select.css',
-          'bower_components/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.css',
-          'bower_components/bootstrap-treeview/dist/bootstrap-treeview.min.css',
-          'bower_components/bootstrap-touchspin/src/jquery.bootstrap-touchspin.css',
-          'bower_components/bootstrap-sass/assets/javascripts/bootstrap.js',
-          'bower_components/bootstrap-slider/dist/css/bootstrap-slider.css',
-          'bower_components/c3/c3.css',
-          'bower_components/datatables/media/css/jquery.dataTables.css',
-          'bower_components/datatables-colreorder/css/dataTables.colReorder.css',
-          'bower_components/datatables-colvis/css/dataTables.colVis.css',
-          'bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
-          'bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
-          'bower_components/font-awesome/css/font-awesome.css',
-          'bower_components/google-code-prettify/bin/prettify.min.js',
-          'bower_components/google-code-prettify/bin/prettify.min.css',
-          'bower_components/patternfly/dist/css/patternfly.css',
-          'bower_components/patternfly/dist/css/patternfly-additions.css',
-          'bower_components/patternfly-bootstrap-combobox/css/bootstrap-combobox.css',
-          'bower_components/origin-web-common/dist/origin-web-common.css',
-          'bower_components/origin-web-catalog/dist/origin-web-catalogs.css'
-        ]
-      }
-    },
-
     less: {
       development: {
         files: {
           '.tmp/styles/main.css': '<%= yeoman.app %>/styles/main.less'
         },
         options: {
-          paths: ['<%= yeoman.app %>/styles', 'bower_components/'],
+          paths: ['<%= yeoman.app %>/styles', 'node_modules/'],
           sourceMap: true,
           sourceMapFilename: '.tmp/styles/main.css.map',
           sourceMapURL: 'main.css.map',
@@ -294,7 +246,7 @@ module.exports = function (grunt) {
         },
         options: {
           cleancss: true,
-          paths: ['<%= yeoman.app %>/styles', 'bower_components/']
+          paths: ['<%= yeoman.app %>/styles', 'node_modules/']
         }
       }
     },
@@ -384,17 +336,6 @@ module.exports = function (grunt) {
     // concat: {
     //   dist: {}
     // },
-
-    imagemin: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>/images',
-          src: '{,*/}*.{png,jpg,jpeg,gif}',
-          dest: '<%= yeoman.dist %>/images'
-        }]
-      }
-    },
 
     svgmin: {
       dist: {
@@ -486,17 +427,17 @@ module.exports = function (grunt) {
           src: ['generated/*']
         }, {
           expand: true,
-          cwd: 'bower_components/patternfly/dist',
+          cwd: 'node_modules/patternfly/dist',
           src: 'fonts/*',
           dest: '<%= yeoman.dist %>/styles'
         }, {
           expand: true,
-          cwd: 'bower_components/font-awesome',
+          cwd: 'node_modules/font-awesome',
           src: 'fonts/*',
           dest: '<%= yeoman.dist %>/styles'
         },{
           expand: true,
-          cwd: 'bower_components/openshift-logos-icon',
+          cwd: 'node_modules/openshift-logos-icon',
           src: 'fonts/*',
           dest: '<%= yeoman.dist %>/styles'
         },
@@ -518,17 +459,17 @@ module.exports = function (grunt) {
           src: '{,*/}*.css'
         }, {
           expand: true,
-          cwd: 'bower_components/patternfly/dist',
+          cwd: 'node_modules/patternfly/dist',
           src: 'fonts/*',
           dest: '.tmp/styles'
         }, {
           expand: true,
-          cwd: 'bower_components/font-awesome',
+          cwd: 'node_modules/font-awesome',
           src: 'fonts/*',
           dest: '.tmp/styles'
         }, {
           expand: true,
-          cwd: 'bower_components/openshift-logos-icon',
+          cwd: 'node_modules/openshift-logos-icon',
           src: 'fonts/*',
           dest: '.tmp/styles'
         }]
@@ -570,8 +511,6 @@ module.exports = function (grunt) {
       ],
       dist: [
         'less:production',
-        // remove imagemin from build, since it doesn't tend to behave well cross-platform
-        // 'imagemin',
         'svgmin',
         // Also do everything we do in the development build so that you can leave grunt server running while doing a build
         'development-build'
@@ -588,14 +527,7 @@ module.exports = function (grunt) {
         // grunt test --browsers=Chrome
         // grunt test --browsers=Chrome,Firefox,Safari (be sure karma-<browser_name>-launcher is installed)
         browsers: grunt.option('browsers') ?
-                    grunt.option('browsers').split(',') :
-                    // if running locally on mac, we can test both FF & Chrome,
-                    // in Travis, just FF
-                    // ['Nightmare'] is a good alt for a current headless
-                    // FIXME: fix this, PhantomJS is deprecated
-                    isMac ?
-                      ['Firefox'] :
-                      ['PhantomJS']
+                    grunt.option('browsers').split(',') : ['Firefox', 'ChromeNoSandbox'],
       },
       unit: {
         singleRun: true,
@@ -663,7 +595,6 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
-      'wiredep',
       'development-build',
       'connect:livereload',
       'watch'
@@ -741,7 +672,6 @@ module.exports = function (grunt) {
     'clean:dist',
     'newer:jshint',
     'htmlhint',
-    'wiredep',
     'useminPrepare',
     'ngtemplates',
     'concurrent:dist',

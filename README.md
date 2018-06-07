@@ -11,7 +11,7 @@ Contributing
 
 1. Be sure to have a development environment running for OpenShift. See [the contributing doc](https://github.com/openshift/origin/blob/master/CONTRIBUTING.adoc#develop-locally-on-your-host), we recommend the use of `oc cluster up`.
 1. Install [Nodejs](http://nodejs.org/) and [npm](https://www.npmjs.org/)
-1. Install [grunt-cli](http://gruntjs.com/installing-grunt) and [bower](http://bower.io/) by running `npm install -g grunt-cli bower` (may need to be run with sudo)
+1. Install [yarn](https://yarnpkg.com/en/docs/install) and [grunt-cli](http://gruntjs.com/installing-grunt)
 1. Install dev dependencies by running `hack/install-deps.sh`
 1. Launch the console and start watching for asset changes by running `grunt serve`. This should open <https://localhost:9000/> in your default browser.
 
@@ -98,7 +98,7 @@ The web console is currently split into three repositories.  The two dependency 
 [origin-web-common](https://github.com/openshift/origin-web-common) and
 [origin-web-catalog](https://github.com/openshift/origin-web-catalog).
 To make changes to one of these repositories while working in the web console, it is recommended that you clone down the
-repository and create a `bower link`.  The following example assumes you clone your forks to `~/git-repos`:
+repository and create a `yarn link`.  The following example assumes you clone your forks to `~/git-repos`:
 
 ```bash
 # fork the origin-web-console & clone:
@@ -111,14 +111,14 @@ $ git clone git@github.com:<your-fork>/origin-web-common.git
 $ cd ~/git-repos
 $ git clone git@github.com:<your-fork>/origin-web-catalog.git
 #
-# Now, using bower link you can:
+# Now, using yarn link you can:
 $ cd ~/git-repos/origin-web-common
-$ bower link
+$ yarn link
 $ cd ~/git-repos/origin-web-catalog
-$ bower link
+$ yarn link
 $ cd ~/git-repos/origin-web-console
-$ bower link origin-web-common
-$ bower link origin-web-catalog
+$ yarn link origin-web-common
+$ yarn link origin-web-catalog
 #
 # NOTE:
 # When you make changes in the linked repos you will need to rebuild
