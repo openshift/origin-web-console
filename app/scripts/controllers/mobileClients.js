@@ -21,6 +21,8 @@ angular.module('openshiftConsole')
   ) {
       var ctrl = this;
       var serviceInstanceVersion = APIService.getPreferredVersion('serviceinstances');
+      var clusterServiceClassesVersion = APIService.getPreferredVersion('clusterserviceclasses');
+      var mobileClientsVersion = APIService.getPreferredVersion('mobileclients');
       var isServiceInstanceReady = $filter('isServiceInstanceReady');
 
       var watches = [];
@@ -47,7 +49,7 @@ angular.module('openshiftConsole')
         .then(function() {
           NotificationsService.addNotification({
             type: "success",
-            message: "Successfully updated the DMZ URL for " + ctrl.mobileClient.metadata.name 
+            message: "Successfully updated the DMZ URL for " + ctrl.mobileClient.metadata.name
           });
         });
       };
@@ -59,15 +61,18 @@ angular.module('openshiftConsole')
           ctrl.projectContext = context;
 
           return $q.all([
-            DataService.list(APIService.getPreferredVersion('clusterserviceclasses'), ctrl.projectContext),
-            DataService.get(APIService.getPreferredVersion('mobileclients'), $routeParams.mobileclient, context, { errorNotification: false })
-          ]).then(_.spread(function(serviceClasses, mobileClient) {
+            DataService.list(clusterServiceClassesVersion, ctrl.projectContext),
+            DataService.list(serviceInstanceVersion, context),
+            DataService.get(mobileClientsVersion, $routeParams.mobileclient, context, { errorNotification: false })
+          ]).then(_.spread(function(serviceClasses, serviceInstances, mobileClient) {
               ctrl.loaded = true;
-
               ctrl.serviceClasses = serviceClasses.by('metadata.name');
               ctrl.mobileClient = mobileClient;
+              var marServiceInstanceName = mobileClient.metadata.annotations.service_instance_name;
+              var marClusterClassRef = serviceInstances._data[marServiceInstanceName].spec.clusterServiceClassRef.name;
+              ctrl.coreSdkSetup = serviceClasses._data[marClusterClassRef].spec.externalMetadata.documentationUrl;
 
-              watches.push(DataService.watchObject(APIService.getPreferredVersion('mobileclients'), $routeParams.mobileclient, context, function(mobileClient, action) {
+              watches.push(DataService.watchObject(mobileClientsVersion, $routeParams.mobileclient, context, function(mobileClient, action) {
                 if (action === 'DELETED') {
                   ctrl.alerts['deleted'] = {
                     type: 'warning',

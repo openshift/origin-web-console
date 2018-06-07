@@ -49,30 +49,45 @@
               <uib-tab-heading>Configuration</uib-tab-heading>
               <div class="row">
                 <div class="resource-details col-md-6">
-                <h3>Mobile Client Details</h3>
-                  <dl class="dl-horizontal left">
-                    <dt>Client Type:</dt>
-                    <dd>{{ctrl.mobileClient.spec.clientType}}</dd>
-                    <dt>Client ID:</dt>
-                    <dd>{{ctrl.mobileClient.spec.appIdentifier}}</dd>
-                    <dt>Client API Key:</dt>
-                    <dd>{{ctrl.mobileClient.spec.apiKey}}</dd>
-                    <dt>DMZ Url:</dt>
-                    <dd>
-                      <inline-edit
-                        pattern="ctrl.validUrlPattern"
-                        pattern-errmsg="'The value provided is not a valid url.'"
-                        label="'Set DMZ Url'"
-                        value="ctrl.mobileClient.spec.dmzUrl"
-                        on-edited="ctrl.setDmzUrl">
-                      </inline-edit>
-                    </dd>
-                  </dl>
+                  <h3>Mobile Client Details</h3>
+                    <dl class="dl-horizontal left">
+                      <dt>Client Type:</dt>
+                      <dd>{{ctrl.mobileClient.spec.clientType}}</dd>
+                      <dt>Client ID:</dt>
+                      <dd>{{ctrl.mobileClient.spec.appIdentifier}}</dd>
+                      <dt>Client API Key:</dt>
+                      <dd>{{ctrl.mobileClient.spec.apiKey}}</dd>
+                      <dt>DMZ Url:</dt>
+                      <dd>
+                        <inline-edit
+                          pattern="ctrl.validUrlPattern"
+                          pattern-errmsg="'The value provided is not a valid url.'"
+                          label="'Set DMZ Url'"
+                          value="ctrl.mobileClient.spec.dmzUrl"
+                          on-edited="ctrl.setDmzUrl">
+                        </inline-edit>
+                      </dd>
+                    </dl>
                   <annotations annotations="ctrl.mobileClient.metadata.annotations"></annotations>
+
+                  <h3>SDK Configuration</h3>
+                  <h4>
+                    <a href="{{ctrl.coreSdkSetup}}">{{ctrl.mobileClient.spec.clientType | upperFirst}} SDK setup</a>
+                  </h4>
                 </div>
+
                 <div class="col-md-6 resource-details client-config">
                   <h3>Mobile Client Config</h3>
                   <mobile-client-config mobile-client="ctrl.mobileClient"></mobile-client-config>
+                </div>
+              </div>
+              <div class="row">
+                <div class="resource-details col-md-12">
+                  <h3>Service Configuration</h3>
+                    <mobile-service-sdk-docs
+                      context="ctrl.projectName"
+                      mobile-client="ctrl.mobileClient"
+                      service-classes="ctrl.serviceClasses"></mobile-service-sdk-docs>
                 </div>
               </div>
             </uib-tab>
