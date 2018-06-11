@@ -82,8 +82,7 @@
 </div>
 <overlay-panel show-panel="row.overlay.panelVisible" handle-close="row.closeOverlayPanel">
   <div ng-if="row.overlay.panelName === 'bindService'">
-    <bind-service target="row.apiObject" project="row.project" on-close="row.closeOverlayPanel" parameter-data="row.parameterData"
-      binding-meta="row.bindingMeta"></bind-service>
+    <bind-service target="row.apiObject" project="row.project" on-close="row.closeOverlayPanel" parameter-data="row.parameterData"></bind-service>
   </div>
   <div ng-if="row.overlay.panelName === 'unbindService'">
     <unbind-service target="row.apiObject" bindings="row.bindings" on-close="row.closeOverlayPanel" service-class="row.serviceClass"></unbind-service>

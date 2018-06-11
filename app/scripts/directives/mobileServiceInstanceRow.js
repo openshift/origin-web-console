@@ -49,14 +49,6 @@
     watches.push(DataService.watchObject(APIService.getPreferredVersion('mobileclients'), $routeParams.mobileclient, {namespace: $routeParams.project}, function(mobileClient) {
         row.mobileClient = mobileClient;
 
-        row.bindingMeta = {
-          generateName: _.get(row, 'mobileClient.metadata.name').toLowerCase() + '-' + _.get(row, 'serviceClass.spec.externalMetadata.serviceName').toLowerCase() + '-',
-          annotations: {
-            'binding.aerogear.org/consumer': _.get(row, 'mobileClient.metadata.name'),
-            'binding.aerogear.org/provider': _.get(row, 'apiObject.metadata.name')
-          }
-        };
-
         row.annotations = _.filter(row.mobileClient.metadata.annotations, function(annotation, name){
           return name.split("/")[0] === annotationSpace;
         })

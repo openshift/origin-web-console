@@ -3,6 +3,7 @@
 (function() {
   angular.module('openshiftConsole').component('bindService', {
     controller: [
+      '$rootScope',
       '$scope',
       '$filter',
       'APIService',
@@ -18,13 +19,13 @@
       target: '<',
       project: '<',
       onClose: '<',
-      parameterData: '<',
-      bindingMeta: '<'
+      parameterData: '<'
     },
     templateUrl: 'views/directives/bind-service.html'
   });
 
-  function BindService($scope,
+  function BindService($rootScope,
+                       $scope,
                        $filter,
                        APIService,
                        ApplicationsService,
@@ -41,6 +42,7 @@
     var bindingWatch;
     var statusCondition = $filter('statusCondition');
     var enableTechPreviewFeature = $filter('enableTechPreviewFeature');
+    var isMobileService = $filter('isMobileService');
     var serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
     var serviceClassesVersion = APIService.getPreferredVersion('clusterserviceclasses');
     var servicePlansVersion = APIService.getPreferredVersion('clusterserviceplans');
@@ -189,9 +191,28 @@
       });
     };
 
+    var loadServiceClasses = function() {
+      DataService.list(serviceClassesVersion, {}).then(function (serviceClasses) {
+        ctrl.serviceClasses = serviceClasses.by('metadata.name');
+      });
+    };
+
+    var getBindingMetadata = function(svcToBind, serviceClass) {
+      var consumerId = _.get(ctrl, 'parameterData.CLIENT_ID');
+
+      return {
+        generateName: consumerId.toLowerCase() + '-' + _.get(serviceClass, 'spec.externalMetadata.serviceName').toLowerCase() + '-',
+        annotations: {
+          'binding.aerogear.org/consumer':  consumerId,
+          'binding.aerogear.org/provider': _.get(svcToBind, 'metadata.name')
+        }
+      };      
+    };
+
     $scope.$watch("ctrl.serviceToBind", updateServiceInstance);
 
     ctrl.$onInit = function() {
+      ctrl.isMobileEnabled = $rootScope.AEROGEAR_MOBILE_ENABLED;
       ctrl.serviceSelection = {};
       ctrl.projectDisplayName = $filter('displayName')(ctrl.project);
       ctrl.podPresets = enableTechPreviewFeature('pod_presets');
@@ -206,6 +227,9 @@
         ctrl.serviceToBind = ctrl.target;
         if (ctrl.podPresets) {
           loadApplications();
+        }
+        if (ctrl.isMobileEnabled) {
+          loadServiceClasses();
         }
       }
       else {
@@ -244,7 +268,12 @@
       };
 
       var serviceClass = BindingService.getServiceClassForInstance(svcToBind, ctrl.serviceClasses);
-      BindingService.bindService(svcToBind, application, serviceClass, ctrl.parameterData, ctrl.bindingMeta).then(function(binding){
+
+      if (ctrl.isMobileEnabled && isMobileService(serviceClass)) {
+        var bindingMeta = getBindingMetadata(svcToBind, serviceClass);
+      }
+
+      BindingService.bindService(svcToBind, application, serviceClass, ctrl.parameterData, bindingMeta).then(function(binding){
         ctrl.binding = binding;
         ctrl.error = null;
 
