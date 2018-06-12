@@ -39,7 +39,7 @@
     <div class="list-pf-container">
       <div class="expanded-section no-margin">
         <div class="row" ng-if="(row.bindings | size) && row.bindingInProgress == false">
-          <div class="col-md-6">
+          <div ng-class="{'col-md-6' : (row.extendedAnnotations | size), 'col-md-12' : !(row.extendedAnnotations | size)}">
             <h4 class="component-label section-label">Details</h4>
             <dl class="dl-horizontal left">
               <dt>Documentation</dt>
@@ -55,14 +55,16 @@
               </dd>
             </dl>
           </div>
-          <div class="col-md-6" ng-if="row.serviceType === 'ups'">
-            <h4 class="component-label section-label">Variants</h4>
-            <dl class="dl-horizontal left">
-              <dt ng-repeat-start="variant in row.extendedAnnotations.variants">{{variant.typeLabel}}</dt>
-              <dd ng-repeat-end>
-                <a href="{{variant.url}}">{{ variant.id }}</a>
-              </dd>
-            </dl>
+          <div class="col-md-6" ng-if="(row.extendedAnnotations | size)">
+            <div ng-if="row.serviceType === 'ups'">
+              <h4 class="component-label section-label">Variants</h4>
+              <dl class="dl-horizontal left">
+                <dt ng-repeat-start="variant in row.extendedAnnotations.variants">{{variant.typeLabel}}</dt>
+                <dd ng-repeat-end>
+                  <a href="{{variant.url}}">{{ variant.id }}</a>
+                </dd>
+              </dl>
+            </div>
           </div>
         </div>
         <span class="note" ng-if="(row.bindings | size) && (row.annotations | size) == 0 && row.bindingInProgress == false">No configuration data to show for this service.</span>
@@ -73,7 +75,7 @@
             <button class="btn btn-primary btn-lg" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</button>
           </div>
         </div>
-        <div ng-if="row.bindingInProgress == true && row.expanded" class="spinner spinner-lg" aria-hidden="true"></div>
+        <div ng-class="{'spinner spinner-lg' : row.bindingInProgress == true && row.expanded}" aria-hidden="true"></div>
       </div>
     </div>
   </div>

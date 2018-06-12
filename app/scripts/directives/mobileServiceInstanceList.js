@@ -36,7 +36,7 @@
     });
 
     ctrl.goToCatalog = function() {
-      Navigate.toProjectCatalog(ctrl.projectName, {category: 'mobile', subcategory: 'services'});
+      Navigate.toProjectCatalog($routeParams.project, {category: 'mobile', subcategory: 'services'});
     };  
 
     watches.push(DataService.watch(APIService.getPreferredVersion("clusterserviceclasses"), {namespace: $routeParams.project}, function(serviceClasses){
