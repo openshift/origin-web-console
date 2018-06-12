@@ -88,7 +88,8 @@ angular.module('openshiftConsole')
           labels:  {
             'mobile-client-build': 'true',
             'mobile-client-id': _.get($routeParams, 'mobileclient'),
-            'mobile-client-type': clientConfig.clientType          
+            'mobile-client-build-platform': clientConfig.buildPlatform,
+            'mobile-client-type': clientConfig.clientType      
           }
         },
         spec: {
