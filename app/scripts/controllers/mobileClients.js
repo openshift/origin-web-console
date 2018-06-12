@@ -29,11 +29,10 @@ angular.module('openshiftConsole')
       ctrl.projectName = $routeParams.project;
       ctrl.emptyMessage = 'Loading...';
       ctrl.alerts = {};
-      ctrl.redirectUrl = Navigate.projectOverviewURL(ctrl.projectName);
       $scope.breadcrumbs = [
         {
           title: 'Mobile Clients',
-          link: ctrl.redirectUrl + '/browse/mobile-clients'
+          link: 'project/' + ctrl.projectName + '/browse/other?kind=MobileClient&group=' + mobileClientsVersion.group
         },
         {
           title: $routeParams.mobileclient
