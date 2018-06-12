@@ -29,6 +29,7 @@
     var serviceClassesVersion = APIService.getPreferredVersion('clusterserviceclasses');
     var serviceBindingsVersion = APIService.getPreferredVersion('servicebindings');
     var buildsVersion = APIService.getPreferredVersion('builds');
+    var isBindingReady = $filter('isBindingReady');
     var isServiceInstanceReady = $filter('isServiceInstanceReady');
     var isMobileClientEnabled = $filter('isMobileClientEnabled');
     var isMobileService = $filter('isMobileService');
@@ -113,7 +114,7 @@
         row.bindingsWatched = true;
         watches.push(DataService.watch(serviceBindingsVersion, row.context, function(bindingsData) {
           row.bindings = _.filter(bindingsData.by('metadata.name'), function(binding) {
-            return _.get(binding.metadata.annotations, 'binding.aerogear.org/consumer') === _.get(row, 'apiObject.metadata.name');
+            return _.get(binding.metadata.annotations, 'binding.aerogear.org/consumer') === _.get(row, 'apiObject.metadata.name') && isBindingReady(binding);
           });
           row.updateServicesInfo();
         }));
