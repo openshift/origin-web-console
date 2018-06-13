@@ -26579,34 +26579,36 @@ var n = t.settings()[0]._select.selector;
 e(t.table().container()).off("mousedown.dtSelect", n).off("mouseup.dtSelect", n).off("click.dtSelect", n), e("body").off("click.dtSelect" + t.table().node().id);
 }
 function a(n) {
-var i = e(n.table().container()), r = n.settings()[0], o = r._select.selector;
-i.on("mousedown.dtSelect", o, function(e) {
-(e.shiftKey || e.metaKey || e.ctrlKey) && i.css("-moz-user-select", "none").one("selectstart.dtSelect", o, function() {
+var i, r = e(n.table().container()), o = n.settings()[0], a = o._select.selector;
+r.on("mousedown.dtSelect", a, function(e) {
+(e.shiftKey || e.metaKey || e.ctrlKey) && r.css("-moz-user-select", "none").one("selectstart.dtSelect", a, function() {
 return !1;
-});
-}).on("mouseup.dtSelect", o, function() {
-i.css("-moz-user-select", "");
-}).on("click.dtSelect", o, function(i) {
-var r, o = n.select.items();
-if (!t.getSelection || !e.trim(t.getSelection().toString())) {
-var a = n.settings()[0];
-if (e(i.target).closest("div.dataTables_wrapper")[0] == n.table().container()) {
-var l = n.cell(e(i.target).closest("td, th"));
-if (l.any()) {
-var c = e.Event("user-select.dt");
-if (s(n, c, [ o, l, i ]), !c.isDefaultPrevented()) {
-var u = l.index();
-"row" === o ? (r = u.row, h(i, n, a, "row", r)) : "column" === o ? (r = l.index().column, h(i, n, a, "column", r)) : "cell" === o && (r = l.index(), h(i, n, a, "cell", r)), a._select_lastCell = u;
+}), t.getSelection && (i = t.getSelection());
+}).on("mouseup.dtSelect", a, function() {
+r.css("-moz-user-select", "");
+}).on("click.dtSelect", a, function(r) {
+var o, a = n.select.items();
+if (t.getSelection) {
+var l = t.getSelection();
+if ((!l.anchorNode || e(l.anchorNode).closest("table")[0] === n.table().node()) && l !== i) return;
 }
+var c = n.settings()[0], u = n.settings()[0].oClasses.sWrapper.replace(/ /g, ".");
+if (e(r.target).closest("div." + u)[0] == n.table().container()) {
+var d = n.cell(e(r.target).closest("td, th"));
+if (d.any()) {
+var f = e.Event("user-select.dt");
+if (s(n, f, [ a, d, r ]), !f.isDefaultPrevented()) {
+var p = d.index();
+"row" === a ? (o = p.row, h(r, n, c, "row", o)) : "column" === a ? (o = d.index().column, h(r, n, c, "column", o)) : "cell" === a && (o = d.index(), h(r, n, c, "cell", o)), c._select_lastCell = p;
 }
 }
 }
 }), e("body").on("click.dtSelect" + n.table().node().id, function(t) {
-if (r._select.blurable) {
+if (o._select.blurable) {
 if (e(t.target).parents().filter(n.table().container()).length) return;
 if (0 === e(t.target).parents("html").length) return;
 if (e(t.target).parents("div.DTE").length) return;
-d(r, !0);
+d(o, !0);
 }
 });
 }
@@ -26639,7 +26641,7 @@ l.length && l.remove(), "" !== s.text() && n.append(s);
 }
 }
 function c(t) {
-var n = new g.Api(t);
+var n = new m.Api(t);
 t.aoRowCreatedCallback.push({
 fn: function(n, i, r) {
 var o, a, s = t.aoData[r];
@@ -26692,7 +26694,7 @@ selected: !0
 }
 function d(e, t) {
 if (t || "single" === e._select.style) {
-var n = new g.Api(e);
+var n = new m.Api(e);
 n.rows({
 selected: !0
 }).deselect(), n.columns({
@@ -26722,9 +26724,18 @@ function p(e) {
 var t = e._eventNamespace;
 return "draw.dt.DT" + t + " select.dt.DT" + t + " deselect.dt.DT" + t;
 }
-var g = e.fn.dataTable;
-g.select = {}, g.select.version = "1.2.3", g.select.init = function(t) {
-var n = t.settings()[0], r = n.oInit.select, o = g.defaults.select, a = r === i ? o : r, s = "row", l = "api", c = !1, u = !0, d = "td, th", h = "selected", f = !1;
+function g(t, n) {
+return !(-1 === e.inArray("rows", n.limitTo) || !t.rows({
+selected: !0
+}).any()) || (!(-1 === e.inArray("columns", n.limitTo) || !t.columns({
+selected: !0
+}).any()) || !(-1 === e.inArray("cells", n.limitTo) || !t.cells({
+selected: !0
+}).any()));
+}
+var m = e.fn.dataTable;
+m.select = {}, m.select.version = "1.2.6", m.select.init = function(t) {
+var n = t.settings()[0], r = n.oInit.select, o = m.defaults.select, a = r === i ? o : r, s = "row", l = "api", c = !1, u = !0, d = "td, th", h = "selected", f = !1;
 n._select = {}, !0 === a ? (l = "os", f = !0) : "string" == typeof a ? (l = a, f = !0) : e.isPlainObject(a) && (a.blurable !== i && (c = a.blurable), a.info !== i && (u = a.info), a.items !== i && (s = a.items), a.style !== i && (l = a.style, f = !0), a.selector !== i && (d = a.selector), a.className !== i && (h = a.className)), t.select.selector(d), t.select.items(s), t.select.style(l), t.select.blurable(c), t.select.info(u), n._select.className = h, e.fn.dataTable.ext.order["select-checkbox"] = function(t, n) {
 return this.api().column(n, {
 order: "index"
@@ -26739,62 +26750,62 @@ prop: "aoData"
 type: "column",
 prop: "aoColumns"
 } ], function(e, t) {
-g.ext.selector[t.type].push(function(e, n, r) {
-var o, a = n.selected, s = [];
-if (a === i) return r;
-for (var l = 0, c = r.length; l < c; l++) o = e[t.prop][r[l]], (!0 === a && !0 === o._select_selected || !1 === a && !o._select_selected) && s.push(r[l]);
-return s;
+m.ext.selector[t.type].push(function(e, n, i) {
+var r, o = n.selected, a = [];
+if (!0 !== o && !1 !== o) return i;
+for (var s = 0, l = i.length; s < l; s++) r = e[t.prop][i[s]], (!0 === o && !0 === r._select_selected || !1 === o && !r._select_selected) && a.push(i[s]);
+return a;
 });
-}), g.ext.selector.cell.push(function(e, t, n) {
+}), m.ext.selector.cell.push(function(e, t, n) {
 var r, o = t.selected, a = [];
 if (o === i) return n;
 for (var s = 0, l = n.length; s < l; s++) r = e.aoData[n[s].row], (!0 === o && r._selected_cells && !0 === r._selected_cells[n[s].column] || !1 === o && (!r._selected_cells || !r._selected_cells[n[s].column])) && a.push(n[s]);
 return a;
 });
-var m = g.Api.register, v = g.Api.registerPlural;
-m("select()", function() {
+var v = m.Api.register, b = m.Api.registerPlural;
+v("select()", function() {
 return this.iterator("table", function(e) {
-g.select.init(new g.Api(e));
+m.select.init(new m.Api(e));
 });
-}), m("select.blurable()", function(e) {
+}), v("select.blurable()", function(e) {
 return e === i ? this.context[0]._select.blurable : this.iterator("table", function(t) {
 t._select.blurable = e;
 });
-}), m("select.info()", function(e) {
+}), v("select.info()", function(e) {
 return l === i ? this.context[0]._select.info : this.iterator("table", function(t) {
 t._select.info = e;
 });
-}), m("select.items()", function(e) {
+}), v("select.items()", function(e) {
 return e === i ? this.context[0]._select.items : this.iterator("table", function(t) {
-t._select.items = e, s(new g.Api(t), "selectItems", [ e ]);
+t._select.items = e, s(new m.Api(t), "selectItems", [ e ]);
 });
-}), m("select.style()", function(e) {
+}), v("select.style()", function(e) {
 return e === i ? this.context[0]._select.style : this.iterator("table", function(t) {
 t._select.style = e, t._select_init || c(t);
-var n = new g.Api(t);
-o(n), "api" !== e && a(n), s(new g.Api(t), "selectStyle", [ e ]);
+var n = new m.Api(t);
+o(n), "api" !== e && a(n), s(new m.Api(t), "selectStyle", [ e ]);
 });
-}), m("select.selector()", function(e) {
+}), v("select.selector()", function(e) {
 return e === i ? this.context[0]._select.selector : this.iterator("table", function(t) {
-o(new g.Api(t)), t._select.selector = e, "api" !== t._select.style && a(new g.Api(t));
+o(new m.Api(t)), t._select.selector = e, "api" !== t._select.style && a(new m.Api(t));
 });
-}), v("rows().select()", "row().select()", function(t) {
+}), b("rows().select()", "row().select()", function(t) {
 var n = this;
 return !1 === t ? this.deselect() : (this.iterator("row", function(t, n) {
 d(t), t.aoData[n]._select_selected = !0, e(t.aoData[n].nTr).addClass(t._select.className);
 }), this.iterator("table", function(e, t) {
 s(n, "select", [ "row", n[t] ], !0);
 }), this);
-}), v("columns().select()", "column().select()", function(t) {
+}), b("columns().select()", "column().select()", function(t) {
 var n = this;
 return !1 === t ? this.deselect() : (this.iterator("column", function(t, n) {
 d(t), t.aoColumns[n]._select_selected = !0;
-var i = new g.Api(t).column(n);
+var i = new m.Api(t).column(n);
 e(i.header()).addClass(t._select.className), e(i.footer()).addClass(t._select.className), i.nodes().to$().addClass(t._select.className);
 }), this.iterator("table", function(e, t) {
 s(n, "select", [ "column", n[t] ], !0);
 }), this);
-}), v("cells().select()", "cell().select()", function(t) {
+}), b("cells().select()", "cell().select()", function(t) {
 var n = this;
 return !1 === t ? this.deselect() : (this.iterator("cell", function(t, n, r) {
 d(t);
@@ -26803,18 +26814,18 @@ o._selected_cells === i && (o._selected_cells = []), o._selected_cells[r] = !0, 
 }), this.iterator("table", function(e, t) {
 s(n, "select", [ "cell", n[t] ], !0);
 }), this);
-}), v("rows().deselect()", "row().deselect()", function() {
+}), b("rows().deselect()", "row().deselect()", function() {
 var t = this;
 return this.iterator("row", function(t, n) {
 t.aoData[n]._select_selected = !1, e(t.aoData[n].nTr).removeClass(t._select.className);
 }), this.iterator("table", function(e, n) {
 s(t, "deselect", [ "row", t[n] ], !0);
 }), this;
-}), v("columns().deselect()", "column().deselect()", function() {
+}), b("columns().deselect()", "column().deselect()", function() {
 var t = this;
 return this.iterator("column", function(t, n) {
 t.aoColumns[n]._select_selected = !1;
-var i = new g.Api(t), r = i.column(n);
+var i = new m.Api(t), r = i.column(n);
 e(r.header()).removeClass(t._select.className), e(r.footer()).removeClass(t._select.className), i.cells(null, n).indexes().each(function(n) {
 var i = t.aoData[n.row], r = i._selected_cells;
 !i.anCells || r && r[n.column] || e(i.anCells[n.column]).removeClass(t._select.className);
@@ -26822,7 +26833,7 @@ var i = t.aoData[n.row], r = i._selected_cells;
 }), this.iterator("table", function(e, n) {
 s(t, "deselect", [ "column", t[n] ], !0);
 }), this;
-}), v("cells().deselect()", "cell().deselect()", function() {
+}), b("cells().deselect()", "cell().deselect()", function() {
 var t = this;
 return this.iterator("cell", function(t, n, i) {
 var r = t.aoData[n];
@@ -26831,22 +26842,16 @@ r._selected_cells[i] = !1, r.anCells && !t.aoColumns[i]._select_selected && e(r.
 s(t, "deselect", [ "cell", t[n] ], !0);
 }), this;
 });
-var b = 0;
-return e.extend(g.ext.buttons, {
+var y = 0;
+return e.extend(m.ext.buttons, {
 selected: {
 text: f("selected", "Selected"),
 className: "buttons-selected",
+limitTo: [ "rows", "columns", "cells" ],
 init: function(e, t, n) {
 var i = this;
-n._eventNamespace = ".select" + b++, e.on(p(n), function() {
-var e = i.rows({
-selected: !0
-}).any() || i.columns({
-selected: !0
-}).any() || i.cells({
-selected: !0
-}).any();
-i.enable(e);
+n._eventNamespace = ".select" + y++, e.on(p(n), function() {
+i.enable(g(e, n));
 }), this.disable();
 },
 destroy: function(e, t, n) {
@@ -26858,7 +26863,7 @@ text: f("selectedSingle", "Selected single"),
 className: "buttons-selected-single",
 init: function(e, t, n) {
 var i = this;
-n._eventNamespace = ".select" + b++, e.on(p(n), function() {
+n._eventNamespace = ".select" + y++, e.on(p(n), function() {
 var t = e.rows({
 selected: !0
 }).flatten().length + e.columns({
@@ -26888,7 +26893,7 @@ d(this.settings()[0], !0);
 },
 init: function(e, t, n) {
 var i = this;
-n._eventNamespace = ".select" + b++, e.on(p(n), function() {
+n._eventNamespace = ".select" + y++, e.on(p(n), function() {
 var t = e.rows({
 selected: !0
 }).flatten().length + e.columns({
@@ -26905,7 +26910,7 @@ e.off(n._eventNamespace);
 }
 }), e.each([ "Row", "Column", "Cell" ], function(e, t) {
 var n = t.toLowerCase();
-g.ext.buttons["select" + t + "s"] = {
+m.ext.buttons["select" + t + "s"] = {
 text: f("select" + t + "s", "Select " + n + "s"),
 className: "buttons-select-" + n + "s",
 action: function() {
@@ -26919,8 +26924,8 @@ t.active(r === n);
 }
 };
 }), e(n).on("preInit.dt.dtSelect", function(e, t) {
-"dt" === e.namespace && g.select.init(new g.Api(t));
-}), g.select;
+"dt" === e.namespace && m.select.init(new m.Api(t));
+}), m.select;
 }), function() {
 function e(e, t) {
 return e.set(t[0], t[1]), e;
@@ -46091,7 +46096,7 @@ if (S) for (o(S, n, s), h = 0, p = S.length; h < p; h++) S[h] && S[h]._DT_CellIn
 }
 for (u = 0, d = t.aoHeader.length; u < d; u++) o(t.aoHeader[u], n, s);
 if (null !== t.aoFooter) for (u = 0, d = t.aoFooter.length; u < d; u++) o(t.aoFooter[u], n, s);
-for ((c || c === i) && e.fn.dataTable.Api(t).rows().invalidate(), u = 0, d = v; u < d; u++) e(t.aoColumns[u].nTh).off("click.DT"), this.oApi._fnSortAttachListener(t, t.aoColumns[u].nTh, u);
+for ((c || c === i) && e.fn.dataTable.Api(t).rows().invalidate(), u = 0, d = v; u < d; u++) e(t.aoColumns[u].nTh).off(".DT"), this.oApi._fnSortAttachListener(t, t.aoColumns[u].nTh, u);
 e(t.oInstance).trigger("column-reorder.dt", [ t, {
 from: n,
 to: s,
@@ -46110,6 +46115,7 @@ if (i._colReorder) return i._colReorder;
 var r = e.fn.dataTable.camelToHungarian;
 return r && (r(l.defaults, l.defaults, !0), r(l.defaults, n || {})), this.s = {
 dt: null,
+enable: null,
 init: e.extend(!0, {}, l.defaults, n),
 fixed: 0,
 fixedRight: 0,
@@ -46127,9 +46133,16 @@ aoTargets: []
 }, this.dom = {
 drag: null,
 pointer: null
-}, this.s.dt = i, this.s.dt._colReorder = this, this._fnConstruct(), this;
+}, this.s.enable = this.s.init.bEnable, this.s.dt = i, this.s.dt._colReorder = this, this._fnConstruct(), this;
 };
 return e.extend(l.prototype, {
+fnEnable: function(e) {
+if (!1 === e) return fnDisable();
+this.s.enable = !0;
+},
+fnDisable: function() {
+this.s.enable = !1;
+},
 fnReset: function() {
 return this._fnOrderColumns(this.fnOrder()), this;
 },
@@ -46179,8 +46192,8 @@ n._fnOrderColumns.call(n, e);
 });
 } else this._fnSetColumnIndexes();
 e(o).on("destroy.dt.colReorder", function() {
-e(o).off("destroy.dt.colReorder draw.dt.colReorder"), e(n.s.dt.nTHead).find("*").off(".ColReorder"), e.each(n.s.dt.aoColumns, function(t, n) {
-e(n.nTh).removeAttr("data-column-index");
+e(o).off("destroy.dt.colReorder draw.dt.colReorder"), e.each(n.s.dt.aoColumns, function(t, n) {
+e(n.nTh).off(".ColReorder"), e(n.nTh).removeAttr("data-column-index");
 }), n.s.dt._colReorder = null, n.s = null;
 });
 },
@@ -46191,7 +46204,7 @@ for (var i = 0, r = t.length; i < r; i++) {
 var a = e.inArray(i, t);
 i != a && (o(t, a, i), this.s.dt.oInstance.fnColReorder(a, i, !0, !1), n = !0);
 }
-e.fn.dataTable.Api(this.s.dt).rows().invalidate(), this._fnSetColumnIndexes(), n && ("" === this.s.dt.oScroll.sX && "" === this.s.dt.oScroll.sY || this.s.dt.oInstance.fnAdjustColumnSizing(!1), this.s.dt.oInstance.oApi._fnSaveState(this.s.dt), null !== this.s.reorderCallback && this.s.reorderCallback.call(this));
+this._fnSetColumnIndexes(), n && (e.fn.dataTable.Api(this.s.dt).rows().invalidate(), "" === this.s.dt.oScroll.sX && "" === this.s.dt.oScroll.sY || this.s.dt.oInstance.fnAdjustColumnSizing(!1), this.s.dt.oInstance.oApi._fnSaveState(this.s.dt), null !== this.s.reorderCallback && this.s.reorderCallback.call(this));
 } else this.s.dt.oInstance.oApi._fnLog(this.s.dt, 1, "ColReorder - array reorder does not match known number of columns. Skipping.");
 },
 _fnStateSave: function(t) {
@@ -46209,9 +46222,9 @@ for (n = 0, i = o.length; n < i; n++) r = o[n]._ColReorder_iOrigCol, t.columns[r
 _fnMouseListener: function(t, n) {
 var i = this;
 e(n).on("mousedown.ColReorder", function(e) {
-i._fnMouseDown.call(i, e, n);
+i.s.enable && i._fnMouseDown.call(i, e, n);
 }).on("touchstart.ColReorder", function(e) {
-i._fnMouseDown.call(i, e, n);
+i.s.enable && i._fnMouseDown.call(i, e, n);
 });
 },
 _fnMouseDown: function(t, r) {
@@ -46235,7 +46248,7 @@ for (var t = !1, n = this.s.mouse.toIndex, i = 1, r = this.s.aoTargets.length; i
 this.dom.pointer.css("left", this.s.aoTargets[i - 1].x), this.s.mouse.toIndex = this.s.aoTargets[i - 1].to, t = !0;
 break;
 }
-t || (this.dom.pointer.css("left", this.s.aoTargets[this.s.aoTargets.length - 1].x), this.s.mouse.toIndex = this.s.aoTargets[this.s.aoTargets.length - 1].to), this.s.init.bRealtime && n !== this.s.mouse.toIndex && (this.s.dt.oInstance.fnColReorder(this.s.mouse.fromIndex, this.s.mouse.toIndex, !1), this.s.mouse.fromIndex = this.s.mouse.toIndex, this._fnRegions());
+t || (this.dom.pointer.css("left", this.s.aoTargets[this.s.aoTargets.length - 1].x), this.s.mouse.toIndex = this.s.aoTargets[this.s.aoTargets.length - 1].to), this.s.init.bRealtime && n !== this.s.mouse.toIndex && (this.s.dt.oInstance.fnColReorder(this.s.mouse.fromIndex, this.s.mouse.toIndex), this.s.mouse.fromIndex = this.s.mouse.toIndex, "" === this.s.dt.oScroll.sX && "" === this.s.dt.oScroll.sY || this.s.dt.oInstance.fnAdjustColumnSizing(!1), this._fnRegions());
 },
 _fnMouseUp: function(t) {
 e(n).off(".ColReorder"), null !== this.dom.drag && (this.dom.drag.remove(), this.dom.pointer.remove(), this.dom.drag = null, this.dom.pointer = null, this.s.dt.oInstance.fnColReorder(this.s.mouse.fromIndex, this.s.mouse.toIndex, !0), this._fnSetColumnIndexes(), "" === this.s.dt.oScroll.sX && "" === this.s.dt.oScroll.sY || this.s.dt.oInstance.fnAdjustColumnSizing(!1), this.s.dt.oInstance.oApi._fnSaveState(this.s.dt), null !== this.s.reorderCallback && this.s.reorderCallback.call(this));
@@ -46276,11 +46289,12 @@ return -1 !== e.type.indexOf("touch") ? e.originalEvent.touches[0][t] : e[t];
 }
 }), l.defaults = {
 aiOrder: null,
+bEnable: !0,
 bRealtime: !0,
 iFixedColumnsLeft: 0,
 iFixedColumnsRight: 0,
 fnReorderCallback: null
-}, l.version = "1.4.1", e.fn.dataTable.ColReorder = l, e.fn.DataTable.ColReorder = l, "function" == typeof e.fn.dataTable && "function" == typeof e.fn.dataTableExt.fnVersionCheck && e.fn.dataTableExt.fnVersionCheck("1.10.8") ? e.fn.dataTableExt.aoFeatures.push({
+}, l.version = "1.5.0", e.fn.dataTable.ColReorder = l, e.fn.DataTable.ColReorder = l, "function" == typeof e.fn.dataTable && "function" == typeof e.fn.dataTableExt.fnVersionCheck && e.fn.dataTableExt.fnVersionCheck("1.10.8") ? e.fn.dataTableExt.aoFeatures.push({
 fnInit: function(e) {
 var t = e.oInstance;
 if (e._colReorder) t.oApi._fnLog(e, 1, "ColReorder attempted to initialise twice. Ignoring second"); else {
@@ -46311,6 +46325,14 @@ n._colReorder.fnOrder(e, t);
 return this.context.length && this.context[0]._colReorder ? this.context[0]._colReorder.fnTranspose(e, t) : e;
 }), e.fn.dataTable.Api.register("colReorder.move()", function(e, t, n, i) {
 return this.context.length && this.context[0]._colReorder.s.dt.oInstance.fnColReorder(e, t, n, i), this;
+}), e.fn.dataTable.Api.register("colReorder.enable()", function(e) {
+return this.iterator("table", function(t) {
+t._colReorder && t._colReorder.fnEnable(e);
+});
+}), e.fn.dataTable.Api.register("colReorder.disable()", function() {
+return this.iterator("table", function(e) {
+e._colReorder && e._colReorder.fnDisable();
+});
 }), l;
 }), function(e, t, n) {
 var i = function(e, n) {
