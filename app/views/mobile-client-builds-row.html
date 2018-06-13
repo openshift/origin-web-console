@@ -71,7 +71,7 @@
             <b>Build Platform</b>
           </div>
           <div class="col-sm-6 col-md-4">
-            {{row.apiObject.metadata.labels['mobile-client-build-platform']}}
+            {{row.apiObject | label:'mobile-client-build-platform'}}
           </div>
           <div class="col-sm-6 col-md-2">
             <b>Jenkinsfile Path</b>
