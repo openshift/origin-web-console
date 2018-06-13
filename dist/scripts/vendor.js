@@ -46091,7 +46091,7 @@ if (S) for (o(S, n, s), h = 0, p = S.length; h < p; h++) S[h] && S[h]._DT_CellIn
 }
 for (u = 0, d = t.aoHeader.length; u < d; u++) o(t.aoHeader[u], n, s);
 if (null !== t.aoFooter) for (u = 0, d = t.aoFooter.length; u < d; u++) o(t.aoFooter[u], n, s);
-for ((c || c === i) && e.fn.dataTable.Api(t).rows().invalidate(), u = 0, d = v; u < d; u++) e(t.aoColumns[u].nTh).off("click.DT"), this.oApi._fnSortAttachListener(t, t.aoColumns[u].nTh, u);
+for ((c || c === i) && e.fn.dataTable.Api(t).rows().invalidate(), u = 0, d = v; u < d; u++) e(t.aoColumns[u].nTh).off(".DT"), this.oApi._fnSortAttachListener(t, t.aoColumns[u].nTh, u);
 e(t.oInstance).trigger("column-reorder.dt", [ t, {
 from: n,
 to: s,
@@ -46110,6 +46110,7 @@ if (i._colReorder) return i._colReorder;
 var r = e.fn.dataTable.camelToHungarian;
 return r && (r(l.defaults, l.defaults, !0), r(l.defaults, n || {})), this.s = {
 dt: null,
+enable: null,
 init: e.extend(!0, {}, l.defaults, n),
 fixed: 0,
 fixedRight: 0,
@@ -46127,9 +46128,16 @@ aoTargets: []
 }, this.dom = {
 drag: null,
 pointer: null
-}, this.s.dt = i, this.s.dt._colReorder = this, this._fnConstruct(), this;
+}, this.s.enable = this.s.init.bEnable, this.s.dt = i, this.s.dt._colReorder = this, this._fnConstruct(), this;
 };
 return e.extend(l.prototype, {
+fnEnable: function(e) {
+if (!1 === e) return fnDisable();
+this.s.enable = !0;
+},
+fnDisable: function() {
+this.s.enable = !1;
+},
 fnReset: function() {
 return this._fnOrderColumns(this.fnOrder()), this;
 },
@@ -46179,8 +46187,8 @@ n._fnOrderColumns.call(n, e);
 });
 } else this._fnSetColumnIndexes();
 e(o).on("destroy.dt.colReorder", function() {
-e(o).off("destroy.dt.colReorder draw.dt.colReorder"), e(n.s.dt.nTHead).find("*").off(".ColReorder"), e.each(n.s.dt.aoColumns, function(t, n) {
-e(n.nTh).removeAttr("data-column-index");
+e(o).off("destroy.dt.colReorder draw.dt.colReorder"), e.each(n.s.dt.aoColumns, function(t, n) {
+e(n.nTh).off(".ColReorder"), e(n.nTh).removeAttr("data-column-index");
 }), n.s.dt._colReorder = null, n.s = null;
 });
 },
@@ -46191,7 +46199,7 @@ for (var i = 0, r = t.length; i < r; i++) {
 var a = e.inArray(i, t);
 i != a && (o(t, a, i), this.s.dt.oInstance.fnColReorder(a, i, !0, !1), n = !0);
 }
-e.fn.dataTable.Api(this.s.dt).rows().invalidate(), this._fnSetColumnIndexes(), n && ("" === this.s.dt.oScroll.sX && "" === this.s.dt.oScroll.sY || this.s.dt.oInstance.fnAdjustColumnSizing(!1), this.s.dt.oInstance.oApi._fnSaveState(this.s.dt), null !== this.s.reorderCallback && this.s.reorderCallback.call(this));
+this._fnSetColumnIndexes(), n && (e.fn.dataTable.Api(this.s.dt).rows().invalidate(), "" === this.s.dt.oScroll.sX && "" === this.s.dt.oScroll.sY || this.s.dt.oInstance.fnAdjustColumnSizing(!1), this.s.dt.oInstance.oApi._fnSaveState(this.s.dt), null !== this.s.reorderCallback && this.s.reorderCallback.call(this));
 } else this.s.dt.oInstance.oApi._fnLog(this.s.dt, 1, "ColReorder - array reorder does not match known number of columns. Skipping.");
 },
 _fnStateSave: function(t) {
@@ -46209,9 +46217,9 @@ for (n = 0, i = o.length; n < i; n++) r = o[n]._ColReorder_iOrigCol, t.columns[r
 _fnMouseListener: function(t, n) {
 var i = this;
 e(n).on("mousedown.ColReorder", function(e) {
-i._fnMouseDown.call(i, e, n);
+i.s.enable && i._fnMouseDown.call(i, e, n);
 }).on("touchstart.ColReorder", function(e) {
-i._fnMouseDown.call(i, e, n);
+i.s.enable && i._fnMouseDown.call(i, e, n);
 });
 },
 _fnMouseDown: function(t, r) {
@@ -46235,7 +46243,7 @@ for (var t = !1, n = this.s.mouse.toIndex, i = 1, r = this.s.aoTargets.length; i
 this.dom.pointer.css("left", this.s.aoTargets[i - 1].x), this.s.mouse.toIndex = this.s.aoTargets[i - 1].to, t = !0;
 break;
 }
-t || (this.dom.pointer.css("left", this.s.aoTargets[this.s.aoTargets.length - 1].x), this.s.mouse.toIndex = this.s.aoTargets[this.s.aoTargets.length - 1].to), this.s.init.bRealtime && n !== this.s.mouse.toIndex && (this.s.dt.oInstance.fnColReorder(this.s.mouse.fromIndex, this.s.mouse.toIndex, !1), this.s.mouse.fromIndex = this.s.mouse.toIndex, this._fnRegions());
+t || (this.dom.pointer.css("left", this.s.aoTargets[this.s.aoTargets.length - 1].x), this.s.mouse.toIndex = this.s.aoTargets[this.s.aoTargets.length - 1].to), this.s.init.bRealtime && n !== this.s.mouse.toIndex && (this.s.dt.oInstance.fnColReorder(this.s.mouse.fromIndex, this.s.mouse.toIndex), this.s.mouse.fromIndex = this.s.mouse.toIndex, "" === this.s.dt.oScroll.sX && "" === this.s.dt.oScroll.sY || this.s.dt.oInstance.fnAdjustColumnSizing(!1), this._fnRegions());
 },
 _fnMouseUp: function(t) {
 e(n).off(".ColReorder"), null !== this.dom.drag && (this.dom.drag.remove(), this.dom.pointer.remove(), this.dom.drag = null, this.dom.pointer = null, this.s.dt.oInstance.fnColReorder(this.s.mouse.fromIndex, this.s.mouse.toIndex, !0), this._fnSetColumnIndexes(), "" === this.s.dt.oScroll.sX && "" === this.s.dt.oScroll.sY || this.s.dt.oInstance.fnAdjustColumnSizing(!1), this.s.dt.oInstance.oApi._fnSaveState(this.s.dt), null !== this.s.reorderCallback && this.s.reorderCallback.call(this));
@@ -46276,11 +46284,12 @@ return -1 !== e.type.indexOf("touch") ? e.originalEvent.touches[0][t] : e[t];
 }
 }), l.defaults = {
 aiOrder: null,
+bEnable: !0,
 bRealtime: !0,
 iFixedColumnsLeft: 0,
 iFixedColumnsRight: 0,
 fnReorderCallback: null
-}, l.version = "1.4.1", e.fn.dataTable.ColReorder = l, e.fn.DataTable.ColReorder = l, "function" == typeof e.fn.dataTable && "function" == typeof e.fn.dataTableExt.fnVersionCheck && e.fn.dataTableExt.fnVersionCheck("1.10.8") ? e.fn.dataTableExt.aoFeatures.push({
+}, l.version = "1.5.0", e.fn.dataTable.ColReorder = l, e.fn.DataTable.ColReorder = l, "function" == typeof e.fn.dataTable && "function" == typeof e.fn.dataTableExt.fnVersionCheck && e.fn.dataTableExt.fnVersionCheck("1.10.8") ? e.fn.dataTableExt.aoFeatures.push({
 fnInit: function(e) {
 var t = e.oInstance;
 if (e._colReorder) t.oApi._fnLog(e, 1, "ColReorder attempted to initialise twice. Ignoring second"); else {
@@ -46311,6 +46320,14 @@ n._colReorder.fnOrder(e, t);
 return this.context.length && this.context[0]._colReorder ? this.context[0]._colReorder.fnTranspose(e, t) : e;
 }), e.fn.dataTable.Api.register("colReorder.move()", function(e, t, n, i) {
 return this.context.length && this.context[0]._colReorder.s.dt.oInstance.fnColReorder(e, t, n, i), this;
+}), e.fn.dataTable.Api.register("colReorder.enable()", function(e) {
+return this.iterator("table", function(t) {
+t._colReorder && t._colReorder.fnEnable(e);
+});
+}), e.fn.dataTable.Api.register("colReorder.disable()", function() {
+return this.iterator("table", function(e) {
+e._colReorder && e._colReorder.fnDisable();
+});
 }), l;
 }), function(e, t, n) {
 var i = function(e, n) {
