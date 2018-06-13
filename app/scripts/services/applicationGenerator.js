@@ -270,8 +270,7 @@ angular.module("openshiftConsole")
           scaleTargetRef: {
             kind: "DeploymentConfig",
             name: dc.metadata.name,
-            apiVersion: "extensions/v1beta1",
-            subresource: "scale"
+            apiVersion: "apps.openshift.io/v1"
           },
           minReplicas: input.scaling.minReplicas,
           maxReplicas: input.scaling.maxReplicas,
