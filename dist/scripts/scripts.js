@@ -1712,8 +1712,7 @@ spec: {
 scaleTargetRef: {
 kind: "DeploymentConfig",
 name: t.metadata.name,
-apiVersion: "extensions/v1beta1",
-subresource: "scale"
+apiVersion: "apps.openshift.io/v1"
 },
 minReplicas: e.scaling.minReplicas,
 maxReplicas: e.scaling.maxReplicas,

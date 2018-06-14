@@ -26579,34 +26579,36 @@ var n = t.settings()[0]._select.selector;
 e(t.table().container()).off("mousedown.dtSelect", n).off("mouseup.dtSelect", n).off("click.dtSelect", n), e("body").off("click.dtSelect" + t.table().node().id);
 }
 function a(n) {
-var i = e(n.table().container()), r = n.settings()[0], o = r._select.selector;
-i.on("mousedown.dtSelect", o, function(e) {
-(e.shiftKey || e.metaKey || e.ctrlKey) && i.css("-moz-user-select", "none").one("selectstart.dtSelect", o, function() {
+var i, r = e(n.table().container()), o = n.settings()[0], a = o._select.selector;
+r.on("mousedown.dtSelect", a, function(e) {
+(e.shiftKey || e.metaKey || e.ctrlKey) && r.css("-moz-user-select", "none").one("selectstart.dtSelect", a, function() {
 return !1;
-});
-}).on("mouseup.dtSelect", o, function() {
-i.css("-moz-user-select", "");
-}).on("click.dtSelect", o, function(i) {
-var r, o = n.select.items();
-if (!t.getSelection || !e.trim(t.getSelection().toString())) {
-var a = n.settings()[0];
-if (e(i.target).closest("div.dataTables_wrapper")[0] == n.table().container()) {
-var l = n.cell(e(i.target).closest("td, th"));
-if (l.any()) {
-var c = e.Event("user-select.dt");
-if (s(n, c, [ o, l, i ]), !c.isDefaultPrevented()) {
-var u = l.index();
-"row" === o ? (r = u.row, h(i, n, a, "row", r)) : "column" === o ? (r = l.index().column, h(i, n, a, "column", r)) : "cell" === o && (r = l.index(), h(i, n, a, "cell", r)), a._select_lastCell = u;
+}), t.getSelection && (i = t.getSelection());
+}).on("mouseup.dtSelect", a, function() {
+r.css("-moz-user-select", "");
+}).on("click.dtSelect", a, function(r) {
+var o, a = n.select.items();
+if (t.getSelection) {
+var l = t.getSelection();
+if ((!l.anchorNode || e(l.anchorNode).closest("table")[0] === n.table().node()) && l !== i) return;
 }
+var c = n.settings()[0], u = n.settings()[0].oClasses.sWrapper.replace(/ /g, ".");
+if (e(r.target).closest("div." + u)[0] == n.table().container()) {
+var d = n.cell(e(r.target).closest("td, th"));
+if (d.any()) {
+var f = e.Event("user-select.dt");
+if (s(n, f, [ a, d, r ]), !f.isDefaultPrevented()) {
+var p = d.index();
+"row" === a ? (o = p.row, h(r, n, c, "row", o)) : "column" === a ? (o = d.index().column, h(r, n, c, "column", o)) : "cell" === a && (o = d.index(), h(r, n, c, "cell", o)), c._select_lastCell = p;
 }
 }
 }
 }), e("body").on("click.dtSelect" + n.table().node().id, function(t) {
-if (r._select.blurable) {
+if (o._select.blurable) {
 if (e(t.target).parents().filter(n.table().container()).length) return;
 if (0 === e(t.target).parents("html").length) return;
 if (e(t.target).parents("div.DTE").length) return;
-d(r, !0);
+d(o, !0);
 }
 });
 }
@@ -26639,7 +26641,7 @@ l.length && l.remove(), "" !== s.text() && n.append(s);
 }
 }
 function c(t) {
-var n = new g.Api(t);
+var n = new m.Api(t);
 t.aoRowCreatedCallback.push({
 fn: function(n, i, r) {
 var o, a, s = t.aoData[r];
@@ -26692,7 +26694,7 @@ selected: !0
 }
 function d(e, t) {
 if (t || "single" === e._select.style) {
-var n = new g.Api(e);
+var n = new m.Api(e);
 n.rows({
 selected: !0
 }).deselect(), n.columns({
@@ -26722,9 +26724,18 @@ function p(e) {
 var t = e._eventNamespace;
 return "draw.dt.DT" + t + " select.dt.DT" + t + " deselect.dt.DT" + t;
 }
-var g = e.fn.dataTable;
-g.select = {}, g.select.version = "1.2.3", g.select.init = function(t) {
-var n = t.settings()[0], r = n.oInit.select, o = g.defaults.select, a = r === i ? o : r, s = "row", l = "api", c = !1, u = !0, d = "td, th", h = "selected", f = !1;
+function g(t, n) {
+return !(-1 === e.inArray("rows", n.limitTo) || !t.rows({
+selected: !0
+}).any()) || (!(-1 === e.inArray("columns", n.limitTo) || !t.columns({
+selected: !0
+}).any()) || !(-1 === e.inArray("cells", n.limitTo) || !t.cells({
+selected: !0
+}).any()));
+}
+var m = e.fn.dataTable;
+m.select = {}, m.select.version = "1.2.6", m.select.init = function(t) {
+var n = t.settings()[0], r = n.oInit.select, o = m.defaults.select, a = r === i ? o : r, s = "row", l = "api", c = !1, u = !0, d = "td, th", h = "selected", f = !1;
 n._select = {}, !0 === a ? (l = "os", f = !0) : "string" == typeof a ? (l = a, f = !0) : e.isPlainObject(a) && (a.blurable !== i && (c = a.blurable), a.info !== i && (u = a.info), a.items !== i && (s = a.items), a.style !== i && (l = a.style, f = !0), a.selector !== i && (d = a.selector), a.className !== i && (h = a.className)), t.select.selector(d), t.select.items(s), t.select.style(l), t.select.blurable(c), t.select.info(u), n._select.className = h, e.fn.dataTable.ext.order["select-checkbox"] = function(t, n) {
 return this.api().column(n, {
 order: "index"
@@ -26739,62 +26750,62 @@ prop: "aoData"
 type: "column",
 prop: "aoColumns"
 } ], function(e, t) {
-g.ext.selector[t.type].push(function(e, n, r) {
-var o, a = n.selected, s = [];
-if (a === i) return r;
-for (var l = 0, c = r.length; l < c; l++) o = e[t.prop][r[l]], (!0 === a && !0 === o._select_selected || !1 === a && !o._select_selected) && s.push(r[l]);
-return s;
+m.ext.selector[t.type].push(function(e, n, i) {
+var r, o = n.selected, a = [];
+if (!0 !== o && !1 !== o) return i;
+for (var s = 0, l = i.length; s < l; s++) r = e[t.prop][i[s]], (!0 === o && !0 === r._select_selected || !1 === o && !r._select_selected) && a.push(i[s]);
+return a;
 });
-}), g.ext.selector.cell.push(function(e, t, n) {
+}), m.ext.selector.cell.push(function(e, t, n) {
 var r, o = t.selected, a = [];
 if (o === i) return n;
 for (var s = 0, l = n.length; s < l; s++) r = e.aoData[n[s].row], (!0 === o && r._selected_cells && !0 === r._selected_cells[n[s].column] || !1 === o && (!r._selected_cells || !r._selected_cells[n[s].column])) && a.push(n[s]);
 return a;
 });
-var m = g.Api.register, v = g.Api.registerPlural;
-m("select()", function() {
+var v = m.Api.register, b = m.Api.registerPlural;
+v("select()", function() {
 return this.iterator("table", function(e) {
-g.select.init(new g.Api(e));
+m.select.init(new m.Api(e));
 });
-}), m("select.blurable()", function(e) {
+}), v("select.blurable()", function(e) {
 return e === i ? this.context[0]._select.blurable : this.iterator("table", function(t) {
 t._select.blurable = e;
 });
-}), m("select.info()", function(e) {
+}), v("select.info()", function(e) {
 return l === i ? this.context[0]._select.info : this.iterator("table", function(t) {
 t._select.info = e;
 });
-}), m("select.items()", function(e) {
+}), v("select.items()", function(e) {
 return e === i ? this.context[0]._select.items : this.iterator("table", function(t) {
-t._select.items = e, s(new g.Api(t), "selectItems", [ e ]);
+t._select.items = e, s(new m.Api(t), "selectItems", [ e ]);
 });
-}), m("select.style()", function(e) {
+}), v("select.style()", function(e) {
 return e === i ? this.context[0]._select.style : this.iterator("table", function(t) {
 t._select.style = e, t._select_init || c(t);
-var n = new g.Api(t);
-o(n), "api" !== e && a(n), s(new g.Api(t), "selectStyle", [ e ]);
+var n = new m.Api(t);
+o(n), "api" !== e && a(n), s(new m.Api(t), "selectStyle", [ e ]);
 });
-}), m("select.selector()", function(e) {
+}), v("select.selector()", function(e) {
 return e === i ? this.context[0]._select.selector : this.iterator("table", function(t) {
-o(new g.Api(t)), t._select.selector = e, "api" !== t._select.style && a(new g.Api(t));
+o(new m.Api(t)), t._select.selector = e, "api" !== t._select.style && a(new m.Api(t));
 });
-}), v("rows().select()", "row().select()", function(t) {
+}), b("rows().select()", "row().select()", function(t) {
 var n = this;
 return !1 === t ? this.deselect() : (this.iterator("row", function(t, n) {
 d(t), t.aoData[n]._select_selected = !0, e(t.aoData[n].nTr).addClass(t._select.className);
 }), this.iterator("table", function(e, t) {
 s(n, "select", [ "row", n[t] ], !0);
 }), this);
-}), v("columns().select()", "column().select()", function(t) {
+}), b("columns().select()", "column().select()", function(t) {
 var n = this;
 return !1 === t ? this.deselect() : (this.iterator("column", function(t, n) {
 d(t), t.aoColumns[n]._select_selected = !0;
-var i = new g.Api(t).column(n);
+var i = new m.Api(t).column(n);
 e(i.header()).addClass(t._select.className), e(i.footer()).addClass(t._select.className), i.nodes().to$().addClass(t._select.className);
 }), this.iterator("table", function(e, t) {
 s(n, "select", [ "column", n[t] ], !0);
 }), this);
-}), v("cells().select()", "cell().select()", function(t) {
+}), b("cells().select()", "cell().select()", function(t) {
 var n = this;
 return !1 === t ? this.deselect() : (this.iterator("cell", function(t, n, r) {
 d(t);
@@ -26803,18 +26814,18 @@ o._selected_cells === i && (o._selected_cells = []), o._selected_cells[r] = !0, 
 }), this.iterator("table", function(e, t) {
 s(n, "select", [ "cell", n[t] ], !0);
 }), this);
-}), v("rows().deselect()", "row().deselect()", function() {
+}), b("rows().deselect()", "row().deselect()", function() {
 var t = this;
 return this.iterator("row", function(t, n) {
 t.aoData[n]._select_selected = !1, e(t.aoData[n].nTr).removeClass(t._select.className);
 }), this.iterator("table", function(e, n) {
 s(t, "deselect", [ "row", t[n] ], !0);
 }), this;
-}), v("columns().deselect()", "column().deselect()", function() {
+}), b("columns().deselect()", "column().deselect()", function() {
 var t = this;
 return this.iterator("column", function(t, n) {
 t.aoColumns[n]._select_selected = !1;
-var i = new g.Api(t), r = i.column(n);
+var i = new m.Api(t), r = i.column(n);
 e(r.header()).removeClass(t._select.className), e(r.footer()).removeClass(t._select.className), i.cells(null, n).indexes().each(function(n) {
 var i = t.aoData[n.row], r = i._selected_cells;
 !i.anCells || r && r[n.column] || e(i.anCells[n.column]).removeClass(t._select.className);
@@ -26822,7 +26833,7 @@ var i = t.aoData[n.row], r = i._selected_cells;
 }), this.iterator("table", function(e, n) {
 s(t, "deselect", [ "column", t[n] ], !0);
 }), this;
-}), v("cells().deselect()", "cell().deselect()", function() {
+}), b("cells().deselect()", "cell().deselect()", function() {
 var t = this;
 return this.iterator("cell", function(t, n, i) {
 var r = t.aoData[n];
@@ -26831,22 +26842,16 @@ r._selected_cells[i] = !1, r.anCells && !t.aoColumns[i]._select_selected && e(r.
 s(t, "deselect", [ "cell", t[n] ], !0);
 }), this;
 });
-var b = 0;
-return e.extend(g.ext.buttons, {
+var y = 0;
+return e.extend(m.ext.buttons, {
 selected: {
 text: f("selected", "Selected"),
 className: "buttons-selected",
+limitTo: [ "rows", "columns", "cells" ],
 init: function(e, t, n) {
 var i = this;
-n._eventNamespace = ".select" + b++, e.on(p(n), function() {
-var e = i.rows({
-selected: !0
-}).any() || i.columns({
-selected: !0
-}).any() || i.cells({
-selected: !0
-}).any();
-i.enable(e);
+n._eventNamespace = ".select" + y++, e.on(p(n), function() {
+i.enable(g(e, n));
 }), this.disable();
 },
 destroy: function(e, t, n) {
@@ -26858,7 +26863,7 @@ text: f("selectedSingle", "Selected single"),
 className: "buttons-selected-single",
 init: function(e, t, n) {
 var i = this;
-n._eventNamespace = ".select" + b++, e.on(p(n), function() {
+n._eventNamespace = ".select" + y++, e.on(p(n), function() {
 var t = e.rows({
 selected: !0
 }).flatten().length + e.columns({
@@ -26888,7 +26893,7 @@ d(this.settings()[0], !0);
 },
 init: function(e, t, n) {
 var i = this;
-n._eventNamespace = ".select" + b++, e.on(p(n), function() {
+n._eventNamespace = ".select" + y++, e.on(p(n), function() {
 var t = e.rows({
 selected: !0
 }).flatten().length + e.columns({
@@ -26905,7 +26910,7 @@ e.off(n._eventNamespace);
 }
 }), e.each([ "Row", "Column", "Cell" ], function(e, t) {
 var n = t.toLowerCase();
-g.ext.buttons["select" + t + "s"] = {
+m.ext.buttons["select" + t + "s"] = {
 text: f("select" + t + "s", "Select " + n + "s"),
 className: "buttons-select-" + n + "s",
 action: function() {
@@ -26919,8 +26924,8 @@ t.active(r === n);
 }
 };
 }), e(n).on("preInit.dt.dtSelect", function(e, t) {
-"dt" === e.namespace && g.select.init(new g.Api(t));
-}), g.select;
+"dt" === e.namespace && m.select.init(new m.Api(t));
+}), m.select;
 }), function() {
 function e(e, t) {
 return e.set(t[0], t[1]), e;
@@ -43439,10 +43444,13 @@ e.each(n, function(r, l) {
 });
 }
 function a(e) {
-var t = qe.defaults.oLanguage, n = e.sZeroRecords;
-!e.sEmptyTable && n && "No data available in table" === t.sEmptyTable && Fe(e, e, "sZeroRecords", "sEmptyTable"), !e.sLoadingRecords && n && "Loading..." === t.sLoadingRecords && Fe(e, e, "sZeroRecords", "sLoadingRecords"), e.sInfoThousands && (e.sThousands = e.sInfoThousands);
-var i = e.sDecimal;
-i && je(i);
+var t = qe.defaults.oLanguage, n = t.sDecimal;
+if (n && je(n), e) {
+var i = e.sZeroRecords;
+!e.sEmptyTable && i && "No data available in table" === t.sEmptyTable && Fe(e, e, "sZeroRecords", "sEmptyTable"), !e.sLoadingRecords && i && "Loading..." === t.sLoadingRecords && Fe(e, e, "sZeroRecords", "sLoadingRecords"), e.sInfoThousands && (e.sThousands = e.sInfoThousands);
+var r = e.sDecimal;
+r && n !== r && je(r);
+}
 }
 function s(e) {
 ht(e, "ordering", "bSort"), ht(e, "orderMulti", "bSortMulti"), ht(e, "orderClasses", "bSortClasses"), ht(e, "orderCellsTop", "bSortCellsTop"), ht(e, "order", "aaSorting"), ht(e, "orderFixed", "aaSortingFixed"), ht(e, "paging", "bPaginate"), ht(e, "pagingType", "sPaginationType"), ht(e, "pageLength", "iDisplayLength"), ht(e, "searching", "bFilter"), "boolean" == typeof e.sScrollX && (e.sScrollX = e.sScrollX ? "100%" : ""), "boolean" == typeof e.scrollX && (e.scrollX = e.scrollX ? "100%" : "");
@@ -43731,7 +43739,7 @@ for (a = r || n.createElement("tr"), d.nTr = a, d.anCells = f, a._DT_RowIndex = 
 row: i,
 column: c
 }, f.push(s), r && !l.mRender && l.mData === c || e.isPlainObject(l.mData) && l.mData._ === c + ".display" || (s.innerHTML = x(t, i, c, "display")), l.sClass && (s.className += " " + l.sClass), l.bVisible && !r ? a.appendChild(s) : !l.bVisible && r && s.parentNode.removeChild(s), l.fnCreatedCell && l.fnCreatedCell.call(t.oInstance, s, x(t, i, c), h, i, c);
-Le(t, "aoRowCreatedCallback", null, [ a, h, i ]);
+Le(t, "aoRowCreatedCallback", null, [ a, h, i, f ]);
 }
 d.nTr.setAttribute("role", "row");
 }
@@ -43791,7 +43799,7 @@ if (0 !== s) {
 var _ = a[o % s];
 y._sRowStripe != _ && (e(w).removeClass(y._sRowStripe).addClass(_), y._sRowStripe = _);
 }
-Le(t, "aoRowCallback", null, [ w, y._aData, o, v ]), r.push(w), o++;
+Le(t, "aoRowCallback", null, [ w, y._aData, o, v, b ]), r.push(w), o++;
 } else {
 var x = l.sZeroRecords;
 1 == t.iDraw && "ajax" == Ne(t) ? x = l.sLoadingRecords : l.sEmptyTable && 0 === t.fnRecordsTotal() && (x = l.sEmptyTable), r[0] = e("<tr/>", {
@@ -43874,9 +43882,8 @@ var a, s = t.ajax, l = t.oInstance, c = function(e) {
 Le(t, null, "xhr", [ t, e, t.jqXHR ]), i(e);
 };
 if (e.isPlainObject(s) && s.data) {
-a = s.data;
-var u = e.isFunction(a) ? a(n, t) : a;
-n = e.isFunction(a) && u ? u : e.extend(!0, n, u), delete s.data;
+var u = "function" == typeof (a = s.data) ? a(n, t) : a;
+n = "function" == typeof a && u ? u : e.extend(!0, n, u), delete s.data;
 }
 var d = {
 data: n,
@@ -43899,7 +43906,7 @@ value: e
 };
 }), c, t) : t.sAjaxSource || "string" == typeof s ? t.jqXHR = e.ajax(e.extend(d, {
 url: s || t.sAjaxSource
-})) : e.isFunction(s) ? t.jqXHR = s.call(l, n, c, t) : (t.jqXHR = e.ajax(e.extend(d, s)), s.data = a);
+})) : "function" == typeof s ? t.jqXHR = s.call(l, n, c, t) : (t.jqXHR = e.ajax(e.extend(d, s)), s.data = a);
 }
 function V(e) {
 return !e.bAjaxDataGet || (e.iDraw++, de(e, !0), H(e, U(e), function(t) {
@@ -44203,9 +44210,9 @@ H.push(t.innerHTML), N.push(ye(e(t).css("width")));
 }, a), pe(function(e, t) {
 e.style.width = N[t];
 }, r), e(a).height(0)), pe(function(e, t) {
-e.innerHTML = '<div class="dataTables_sizing" style="height:0;overflow:hidden;">' + B[t] + "</div>", e.style.width = R[t];
+e.innerHTML = '<div class="dataTables_sizing">' + B[t] + "</div>", e.childNodes[0].style.height = "0", e.childNodes[0].style.overflow = "hidden", e.style.width = R[t];
 }, o), I && pe(function(e, t) {
-e.innerHTML = '<div class="dataTables_sizing" style="height:0;overflow:hidden;">' + H[t] + "</div>", e.style.width = N[t];
+e.innerHTML = '<div class="dataTables_sizing">' + H[t] + "</div>", e.childNodes[0].style.height = "0", e.childNodes[0].style.overflow = "hidden", e.style.width = N[t];
 }, a), E.outerWidth() < d ? (u = S.scrollHeight > S.offsetHeight || "scroll" == $.css("overflow-y") ? d + b : d, L && (S.scrollHeight > S.offsetHeight || "scroll" == $.css("overflow-y")) && (M.width = ye(u - b)), "" !== g && "" === m || Ee(t, 1, "Possible column misalignment", 6)) : u = "100%", A.width = ye(u), w.width = ye(u), I && (t.nScrollFoot.style.width = ye(u)), v || L && (A.height = ye(F.offsetHeight + b));
 var z = E.outerWidth();
 C[0].style.width = ye(z), x.width = ye(z);
@@ -44414,8 +44421,8 @@ for (var o in n) n.hasOwnProperty(o) && (r = n[o], e.isPlainObject(r) ? (e.isPla
 return t;
 }
 function Ie(t, n, i) {
-e(t).on("click.DT", n, function(e) {
-t.blur(), i(e);
+e(t).on("click.DT", n, function(n) {
+e(t).blur(), i(n);
 }).on("keypress.DT", n, function(e) {
 13 === e.which && (e.preventDefault(), i(e));
 }).on("selectstart.DT", function() {
@@ -44553,7 +44560,7 @@ s(x), l(x.column), o(x, x, !0), o(x.column, x.column, !0), o(x, e.extend(g, C.da
 var S = qe.settings;
 for (m = 0, f = S.length; m < f; m++) {
 var A = S[m];
-if (A.nTable == this || A.nTHead.parentNode == this || A.nTFoot && A.nTFoot.parentNode == this) {
+if (A.nTable == this || A.nTHead && A.nTHead.parentNode == this || A.nTFoot && A.nTFoot.parentNode == this) {
 var k = g.bRetrieve !== i ? g.bRetrieve : x.bRetrieve, T = g.bDestroy !== i ? g.bDestroy : x.bDestroy;
 if (r || k) return A.oInstance;
 if (T) {
@@ -44573,7 +44580,7 @@ sDestroyWidth: C[0].style.width,
 sInstance: v,
 sTableId: v
 });
-D.nTable = this, D.oApi = n.internal, D.oInit = g, S.push(D), D.oInstance = 1 === n.length ? n : C.dataTable(), s(g), g.oLanguage && a(g.oLanguage), g.aLengthMenu && !g.iDisplayLength && (g.iDisplayLength = e.isArray(g.aLengthMenu[0]) ? g.aLengthMenu[0][0] : g.aLengthMenu[0]), g = Me(e.extend(!0, {}, x), g), Fe(D.oFeatures, g, [ "bPaginate", "bLengthChange", "bFilter", "bSort", "bSortMulti", "bInfo", "bProcessing", "bAutoWidth", "bSortClasses", "bServerSide", "bDeferRender" ]), Fe(D, g, [ "asStripeClasses", "ajax", "fnServerData", "fnFormatNumber", "sServerMethod", "aaSorting", "aaSortingFixed", "aLengthMenu", "sPaginationType", "sAjaxSource", "sAjaxDataProp", "iStateDuration", "sDom", "bSortCellsTop", "iTabIndex", "fnStateLoadCallback", "fnStateSaveCallback", "renderer", "searchDelay", "rowId", [ "iCookieDuration", "iStateDuration" ], [ "oSearch", "oPreviousSearch" ], [ "aoSearchCols", "aoPreSearchCols" ], [ "iDisplayLength", "_iDisplayLength" ] ]), Fe(D.oScroll, g, [ [ "sScrollX", "sX" ], [ "sScrollXInner", "sXInner" ], [ "sScrollY", "sY" ], [ "bScrollCollapse", "bCollapse" ] ]), 
+D.nTable = this, D.oApi = n.internal, D.oInit = g, S.push(D), D.oInstance = 1 === n.length ? n : C.dataTable(), s(g), a(g.oLanguage), g.aLengthMenu && !g.iDisplayLength && (g.iDisplayLength = e.isArray(g.aLengthMenu[0]) ? g.aLengthMenu[0][0] : g.aLengthMenu[0]), g = Me(e.extend(!0, {}, x), g), Fe(D.oFeatures, g, [ "bPaginate", "bLengthChange", "bFilter", "bSort", "bSortMulti", "bInfo", "bProcessing", "bAutoWidth", "bSortClasses", "bServerSide", "bDeferRender" ]), Fe(D, g, [ "asStripeClasses", "ajax", "fnServerData", "fnFormatNumber", "sServerMethod", "aaSorting", "aaSortingFixed", "aLengthMenu", "sPaginationType", "sAjaxSource", "sAjaxDataProp", "iStateDuration", "sDom", "bSortCellsTop", "iTabIndex", "fnStateLoadCallback", "fnStateSaveCallback", "renderer", "searchDelay", "rowId", [ "iCookieDuration", "iStateDuration" ], [ "oSearch", "oPreviousSearch" ], [ "aoSearchCols", "aoPreSearchCols" ], [ "iDisplayLength", "_iDisplayLength" ] ]), Fe(D.oScroll, g, [ [ "sScrollX", "sX" ], [ "sScrollXInner", "sXInner" ], [ "sScrollY", "sY" ], [ "bScrollCollapse", "bCollapse" ] ]), 
 Fe(D.oLanguage, g, "fnInfoCallback"), Pe(D, "aoDrawCallback", g.fnDrawCallback, "user"), Pe(D, "aoServerParams", g.fnServerParams, "user"), Pe(D, "aoStateSaveParams", g.fnStateSaveParams, "user"), Pe(D, "aoStateLoadParams", g.fnStateLoadParams, "user"), Pe(D, "aoStateLoaded", g.fnStateLoaded, "user"), Pe(D, "aoRowCallback", g.fnRowCallback, "user"), Pe(D, "aoRowCreatedCallback", g.fnCreatedRow, "user"), Pe(D, "aoHeaderCallback", g.fnHeaderCallback, "user"), Pe(D, "aoFooterCallback", g.fnFooterCallback, "user"), Pe(D, "aoInitComplete", g.fnInitComplete, "user"), Pe(D, "aoPreDrawCallback", g.fnPreDrawCallback, "user"), D.rowIdFn = $(g.rowId), c(D);
 var E = D.oClasses;
 if (e.extend(E, qe.ext.classes, g.oClasses), C.addClass(E.sTable), D.iInitDisplayStart === i && (D.iInitDisplayStart = g.iDisplayStart, D._iDisplayStart = g.iDisplayStart), null !== g.iDeferLoading) {
@@ -44646,7 +44653,7 @@ D.aiDisplay = D.aiDisplayMaster.slice(), D.bInitialised = !0, !1 === b && re(D);
 g.bStateSave ? (H.bStateSave = !0, Pe(D, "aoDrawCallback", ke, "state_save"), Te(D, 0, V)) : V();
 } else Ee(null, 0, "Non-table node initialisation (" + this.nodeName + ")", 2);
 }), n = null, this;
-}, Ge = {}, Ye = /[\r\n]/g, Ke = /<.*?>/g, Xe = /^\d{2,4}[\.\/\-]\d{1,2}[\.\/\-]\d{1,2}([T ]{1}\d{1,2}[:\.]\d{2}([\.:]\d{2})?)?$/, Qe = new RegExp("(\\" + [ "/", ".", "*", "+", "?", "|", "(", ")", "[", "]", "{", "}", "\\", "$", "^", "-" ].join("|\\") + ")", "g"), Ze = /[',$£€¥%\u2009\u202F\u20BD\u20a9\u20BArfk]/gi, Je = function(e) {
+}, Ge = {}, Ye = /[\r\n]/g, Ke = /<.*?>/g, Xe = /^\d{2,4}[\.\/\-]\d{1,2}[\.\/\-]\d{1,2}([T ]{1}\d{1,2}[:\.]\d{2}([\.:]\d{2})?)?$/, Qe = new RegExp("(\\" + [ "/", ".", "*", "+", "?", "|", "(", ")", "[", "]", "{", "}", "\\", "$", "^", "-" ].join("|\\") + ")", "g"), Ze = /[',$£€¥%\u2009\u202F\u20BD\u20a9\u20BArfkɃΞ]/gi, Je = function(e) {
 return !e || !0 === e || "-" === e;
 }, et = function(e) {
 var t = parseInt(e, 10);
@@ -44962,35 +44969,41 @@ page: "all"
 for (var t = 0, n = e.length; t < n; t++) if (e[t].length > 0) return e[0] = e[t], e[0].length = 1, e.length = 1, e.context = [ e.context[t] ], e;
 return e.length = 0, e;
 }, Tt = function(t, n) {
-var i, r, o, a = [], s = t.aiDisplay, l = t.aiDisplayMaster, c = n.search, u = n.order, d = n.page;
-if ("ssp" == Ne(t)) return "removed" === c ? [] : st(0, l.length);
-if ("current" == d) for (i = t._iDisplayStart, r = t.fnDisplayEnd(); i < r; i++) a.push(s[i]); else if ("current" == u || "applied" == u) a = "none" == c ? l.slice() : "applied" == c ? s.slice() : e.map(l, function(t, n) {
-return -1 === e.inArray(t, s) ? t : null;
-}); else if ("index" == u || "original" == u) for (i = 0, r = t.aoData.length; i < r; i++) "none" == c ? a.push(i) : (-1 === (o = e.inArray(i, s)) && "removed" == c || o >= 0 && "applied" == c) && a.push(i);
-return a;
+var i, r = [], o = t.aiDisplay, a = t.aiDisplayMaster, s = n.search, l = n.order, c = n.page;
+if ("ssp" == Ne(t)) return "removed" === s ? [] : st(0, a.length);
+if ("current" == c) for (d = t._iDisplayStart, h = t.fnDisplayEnd(); d < h; d++) r.push(o[d]); else if ("current" == l || "applied" == l) {
+if ("none" == s) r = a.slice(); else if ("applied" == s) r = o.slice(); else if ("removed" == s) {
+for (var u = {}, d = 0, h = o.length; d < h; d++) u[o[d]] = null;
+r = e.map(a, function(e) {
+return u.hasOwnProperty(e) ? null : e;
+});
+}
+} else if ("index" == l || "original" == l) for (d = 0, h = t.aoData.length; d < h; d++) "none" == s ? r.push(d) : (-1 === (i = e.inArray(d, o)) && "removed" == s || i >= 0 && "applied" == s) && r.push(d);
+return r;
 }, Dt = function(t, n, r) {
 var o;
 return $t("row", n, function(n) {
-var a = et(n);
+var a = et(n), s = t.aoData;
 if (null !== a && !r) return [ a ];
 if (o || (o = Tt(t, r)), null !== a && -1 !== e.inArray(a, o)) return [ a ];
 if (null === n || n === i || "" === n) return o;
 if ("function" == typeof n) return e.map(o, function(e) {
-var i = t.aoData[e];
-return n(e, i._aData, i.nTr) ? e : null;
+var t = s[e];
+return n(e, t._aData, t.nTr) ? e : null;
 });
-var s = lt(at(t.aoData, o, "nTr"));
 if (n.nodeName) {
-if (n._DT_RowIndex !== i) return [ n._DT_RowIndex ];
-if (n._DT_CellIndex) return [ n._DT_CellIndex.row ];
-var l = e(n).closest("*[data-dt-row]");
-return l.length ? [ l.data("dt-row") ] : [];
+var l = n._DT_RowIndex, c = n._DT_CellIndex;
+if (l !== i) return s[l] && s[l].nTr === n ? [ l ] : [];
+if (c) return s[c.row] && s[c.row].nTr === n ? [ c.row ] : [];
+var u = e(n).closest("*[data-dt-row]");
+return u.length ? [ u.data("dt-row") ] : [];
 }
 if ("string" == typeof n && "#" === n.charAt(0)) {
-var c = t.aIds[n.replace(/^#/, "")];
-if (c !== i) return [ c.idx ];
+var d = t.aIds[n.replace(/^#/, "")];
+if (d !== i) return [ d.idx ];
 }
-return e(s).filter(n).map(function() {
+var h = lt(at(t.aoData, o, "nTr"));
+return e(h).filter(n).map(function() {
 return this._DT_RowIndex;
 }).toArray();
 }, t, r);
@@ -45048,9 +45061,11 @@ return o;
 return i.pop(), e.merge(i, n), i;
 }), ze("row()", function(e, t) {
 return kt(this.rows(e, t));
-}), ze("row().data()", function(e) {
-var t = this.context;
-return e === i ? t.length && this.length ? t[0].aoData[this[0]]._aData : i : (t[0].aoData[this[0]]._aData = e, E(t[0], this[0], "data"), this);
+}), ze("row().data()", function(t) {
+var n = this.context;
+if (t === i) return n.length && this.length ? n[0].aoData[this[0]]._aData : i;
+var r = n[0].aoData[this[0]];
+return r._aData = t, e.isArray(t) && r.nTr.id && A(n[0].rowId)(t, r.nTr.id), E(n[0], this[0], "data"), this;
 }), ze("row().node()", function() {
 var e = this.context;
 return e.length && this.length ? e[0].aoData[this[0]].nTr || null : null;
@@ -45161,7 +45176,7 @@ if (r) {
 var h = e.inArray(!0, ot(c, "bVisible"), n + 1);
 for (a = 0, s = d.length; a < s; a++) l = d[a].nTr, o = d[a].anCells, l && l.insertBefore(o[n], o[h] || null);
 } else e(ot(t.aoData, "anCells", n)).detach();
-u.bVisible = r, L(t, t.aoHeader), L(t, t.aoFooter), ke(t);
+u.bVisible = r, L(t, t.aoHeader), L(t, t.aoFooter), t.aiDisplay.length || e(t.nTBody).find("td[colspan]").attr("colspan", m(t)), ke(t);
 }
 };
 ze("columns()", function(t, n) {
@@ -45228,7 +45243,7 @@ column: c
 }, r ? (d = h[o], n(u, x(t, o, c), d.anCells ? d.anCells[c] : null) && a.push(u)) : a.push(u);
 return a;
 }
-if (e.isPlainObject(n)) return [ n ];
+if (e.isPlainObject(n)) return n.column !== i && n.row !== i && -1 !== e.inArray(n.row, f) ? [ n ] : [];
 var p = g.filter(n).map(function(e, t) {
 return {
 row: t._DT_CellIndex.row,
@@ -45245,13 +45260,14 @@ ze("cells()", function(t, n, r) {
 if (e.isPlainObject(t) && (t.row === i ? (r = t, t = null) : (r = n, n = null)), e.isPlainObject(n) && (r = n, n = null), null === n || n === i) return this.iterator("table", function(e) {
 return Nt(e, t, At(r));
 });
-var o, a, s, l, c, u = this.columns(n, r), d = this.rows(t, r), h = this.iterator("table", function(e, t) {
+var o, a, s, l, c, u = this.columns(n), d = this.rows(t);
+this.iterator("table", function(e, t) {
 for (o = [], a = 0, s = d[t].length; a < s; a++) for (l = 0, c = u[t].length; l < c; l++) o.push({
 row: d[t][a],
 column: u[t][l]
 });
-return o;
 }, 1);
+var h = this.cells(o, r);
 return e.extend(h.selector, {
 cols: n,
 rows: t,
@@ -45415,7 +45431,7 @@ e.call(r[t](a, "cell" === t ? s : n, "cell" === t ? n : i), a, s, l, c);
 }), ze("i18n()", function(t, n, r) {
 var o = this.context[0], a = $(t)(o.oLanguage);
 return a === i && (a = n), r !== i && e.isPlainObject(a) && (a = a[r] !== i ? a[r] : a._), a.replace("%d", r);
-}), qe.version = "1.10.16", qe.settings = [], qe.models = {}, qe.models.oSearch = {
+}), qe.version = "1.10.18", qe.settings = [], qe.models = {}, qe.models.oSearch = {
 bCaseInsensitive: !0,
 sSearch: "",
 bRegex: !1,
@@ -45879,7 +45895,8 @@ return 0 === e || e && "-" !== e ? (t && (e = tt(e, t)), e.replace && (n && (e =
 };
 e.extend(Ve.type.order, {
 "date-pre": function(e) {
-return Date.parse(e) || -1 / 0;
+var t = Date.parse(e);
+return isNaN(t) ? -1 / 0 : t;
 },
 "html-pre": function(e) {
 return Je(e) ? "" : e.replace ? e.replace(/<.*?>/g, "").toLowerCase() : e + "";
@@ -46027,6 +46044,7 @@ _fnLengthOverflow: Oe,
 _fnRenderer: Re,
 _fnDataSource: Ne,
 _fnRowAttributes: I,
+_fnExtend: Me,
 _fnCalculateEnd: function() {}
 }), e.fn.dataTable = qe, qe.$ = e, e.fn.dataTableSettings = qe.settings, e.fn.dataTableExt = qe.ext, e.fn.DataTable = function(t) {
 return e(this).dataTable(t).api();
@@ -46091,7 +46109,7 @@ if (S) for (o(S, n, s), h = 0, p = S.length; h < p; h++) S[h] && S[h]._DT_CellIn
 }
 for (u = 0, d = t.aoHeader.length; u < d; u++) o(t.aoHeader[u], n, s);
 if (null !== t.aoFooter) for (u = 0, d = t.aoFooter.length; u < d; u++) o(t.aoFooter[u], n, s);
-for ((c || c === i) && e.fn.dataTable.Api(t).rows().invalidate(), u = 0, d = v; u < d; u++) e(t.aoColumns[u].nTh).off("click.DT"), this.oApi._fnSortAttachListener(t, t.aoColumns[u].nTh, u);
+for ((c || c === i) && e.fn.dataTable.Api(t).rows().invalidate(), u = 0, d = v; u < d; u++) e(t.aoColumns[u].nTh).off(".DT"), this.oApi._fnSortAttachListener(t, t.aoColumns[u].nTh, u);
 e(t.oInstance).trigger("column-reorder.dt", [ t, {
 from: n,
 to: s,
@@ -46110,6 +46128,7 @@ if (i._colReorder) return i._colReorder;
 var r = e.fn.dataTable.camelToHungarian;
 return r && (r(l.defaults, l.defaults, !0), r(l.defaults, n || {})), this.s = {
 dt: null,
+enable: null,
 init: e.extend(!0, {}, l.defaults, n),
 fixed: 0,
 fixedRight: 0,
@@ -46127,9 +46146,16 @@ aoTargets: []
 }, this.dom = {
 drag: null,
 pointer: null
-}, this.s.dt = i, this.s.dt._colReorder = this, this._fnConstruct(), this;
+}, this.s.enable = this.s.init.bEnable, this.s.dt = i, this.s.dt._colReorder = this, this._fnConstruct(), this;
 };
 return e.extend(l.prototype, {
+fnEnable: function(e) {
+if (!1 === e) return fnDisable();
+this.s.enable = !0;
+},
+fnDisable: function() {
+this.s.enable = !1;
+},
 fnReset: function() {
 return this._fnOrderColumns(this.fnOrder()), this;
 },
@@ -46179,8 +46205,8 @@ n._fnOrderColumns.call(n, e);
 });
 } else this._fnSetColumnIndexes();
 e(o).on("destroy.dt.colReorder", function() {
-e(o).off("destroy.dt.colReorder draw.dt.colReorder"), e(n.s.dt.nTHead).find("*").off(".ColReorder"), e.each(n.s.dt.aoColumns, function(t, n) {
-e(n.nTh).removeAttr("data-column-index");
+e(o).off("destroy.dt.colReorder draw.dt.colReorder"), e.each(n.s.dt.aoColumns, function(t, n) {
+e(n.nTh).off(".ColReorder"), e(n.nTh).removeAttr("data-column-index");
 }), n.s.dt._colReorder = null, n.s = null;
 });
 },
@@ -46191,7 +46217,7 @@ for (var i = 0, r = t.length; i < r; i++) {
 var a = e.inArray(i, t);
 i != a && (o(t, a, i), this.s.dt.oInstance.fnColReorder(a, i, !0, !1), n = !0);
 }
-e.fn.dataTable.Api(this.s.dt).rows().invalidate(), this._fnSetColumnIndexes(), n && ("" === this.s.dt.oScroll.sX && "" === this.s.dt.oScroll.sY || this.s.dt.oInstance.fnAdjustColumnSizing(!1), this.s.dt.oInstance.oApi._fnSaveState(this.s.dt), null !== this.s.reorderCallback && this.s.reorderCallback.call(this));
+this._fnSetColumnIndexes(), n && (e.fn.dataTable.Api(this.s.dt).rows().invalidate(), "" === this.s.dt.oScroll.sX && "" === this.s.dt.oScroll.sY || this.s.dt.oInstance.fnAdjustColumnSizing(!1), this.s.dt.oInstance.oApi._fnSaveState(this.s.dt), null !== this.s.reorderCallback && this.s.reorderCallback.call(this));
 } else this.s.dt.oInstance.oApi._fnLog(this.s.dt, 1, "ColReorder - array reorder does not match known number of columns. Skipping.");
 },
 _fnStateSave: function(t) {
@@ -46209,9 +46235,9 @@ for (n = 0, i = o.length; n < i; n++) r = o[n]._ColReorder_iOrigCol, t.columns[r
 _fnMouseListener: function(t, n) {
 var i = this;
 e(n).on("mousedown.ColReorder", function(e) {
-i._fnMouseDown.call(i, e, n);
+i.s.enable && i._fnMouseDown.call(i, e, n);
 }).on("touchstart.ColReorder", function(e) {
-i._fnMouseDown.call(i, e, n);
+i.s.enable && i._fnMouseDown.call(i, e, n);
 });
 },
 _fnMouseDown: function(t, r) {
@@ -46235,7 +46261,7 @@ for (var t = !1, n = this.s.mouse.toIndex, i = 1, r = this.s.aoTargets.length; i
 this.dom.pointer.css("left", this.s.aoTargets[i - 1].x), this.s.mouse.toIndex = this.s.aoTargets[i - 1].to, t = !0;
 break;
 }
-t || (this.dom.pointer.css("left", this.s.aoTargets[this.s.aoTargets.length - 1].x), this.s.mouse.toIndex = this.s.aoTargets[this.s.aoTargets.length - 1].to), this.s.init.bRealtime && n !== this.s.mouse.toIndex && (this.s.dt.oInstance.fnColReorder(this.s.mouse.fromIndex, this.s.mouse.toIndex, !1), this.s.mouse.fromIndex = this.s.mouse.toIndex, this._fnRegions());
+t || (this.dom.pointer.css("left", this.s.aoTargets[this.s.aoTargets.length - 1].x), this.s.mouse.toIndex = this.s.aoTargets[this.s.aoTargets.length - 1].to), this.s.init.bRealtime && n !== this.s.mouse.toIndex && (this.s.dt.oInstance.fnColReorder(this.s.mouse.fromIndex, this.s.mouse.toIndex), this.s.mouse.fromIndex = this.s.mouse.toIndex, "" === this.s.dt.oScroll.sX && "" === this.s.dt.oScroll.sY || this.s.dt.oInstance.fnAdjustColumnSizing(!1), this._fnRegions());
 },
 _fnMouseUp: function(t) {
 e(n).off(".ColReorder"), null !== this.dom.drag && (this.dom.drag.remove(), this.dom.pointer.remove(), this.dom.drag = null, this.dom.pointer = null, this.s.dt.oInstance.fnColReorder(this.s.mouse.fromIndex, this.s.mouse.toIndex, !0), this._fnSetColumnIndexes(), "" === this.s.dt.oScroll.sX && "" === this.s.dt.oScroll.sY || this.s.dt.oInstance.fnAdjustColumnSizing(!1), this.s.dt.oInstance.oApi._fnSaveState(this.s.dt), null !== this.s.reorderCallback && this.s.reorderCallback.call(this));
@@ -46276,11 +46302,12 @@ return -1 !== e.type.indexOf("touch") ? e.originalEvent.touches[0][t] : e[t];
 }
 }), l.defaults = {
 aiOrder: null,
+bEnable: !0,
 bRealtime: !0,
 iFixedColumnsLeft: 0,
 iFixedColumnsRight: 0,
 fnReorderCallback: null
-}, l.version = "1.4.1", e.fn.dataTable.ColReorder = l, e.fn.DataTable.ColReorder = l, "function" == typeof e.fn.dataTable && "function" == typeof e.fn.dataTableExt.fnVersionCheck && e.fn.dataTableExt.fnVersionCheck("1.10.8") ? e.fn.dataTableExt.aoFeatures.push({
+}, l.version = "1.5.0", e.fn.dataTable.ColReorder = l, e.fn.DataTable.ColReorder = l, "function" == typeof e.fn.dataTable && "function" == typeof e.fn.dataTableExt.fnVersionCheck && e.fn.dataTableExt.fnVersionCheck("1.10.8") ? e.fn.dataTableExt.aoFeatures.push({
 fnInit: function(e) {
 var t = e.oInstance;
 if (e._colReorder) t.oApi._fnLog(e, 1, "ColReorder attempted to initialise twice. Ignoring second"); else {
@@ -46311,6 +46338,14 @@ n._colReorder.fnOrder(e, t);
 return this.context.length && this.context[0]._colReorder ? this.context[0]._colReorder.fnTranspose(e, t) : e;
 }), e.fn.dataTable.Api.register("colReorder.move()", function(e, t, n, i) {
 return this.context.length && this.context[0]._colReorder.s.dt.oInstance.fnColReorder(e, t, n, i), this;
+}), e.fn.dataTable.Api.register("colReorder.enable()", function(e) {
+return this.iterator("table", function(t) {
+t._colReorder && t._colReorder.fnEnable(e);
+});
+}), e.fn.dataTable.Api.register("colReorder.disable()", function() {
+return this.iterator("table", function(e) {
+e._colReorder && e._colReorder.fnDisable();
+});
 }), l;
 }), function(e, t, n) {
 var i = function(e, n) {
