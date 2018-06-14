@@ -6348,3 +6348,8 @@ notification-drawer-wrapper .expanded-notification.unread .drawer-pf-notificatio
 .vm-detail-key{font-weight:600}
 .vm-detail-value{padding-left:3px}
 .vm-detail-state-actions{padding-left:12px}
+.mobile-row .services-chart{padding-bottom:.5em;width:270px}
+.mobile-row .copy-to-clipboard pre{max-height:250px}
+.mobile-row .mobile-builds .row>[class^=col-]{margin:0!important}
+.mobile-row .mobile-builds .status-icon.Complete{color:#3f9c35}
+.mobile-row .mobile-builds .status-icon.Failed{color:#c00}

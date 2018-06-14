@@ -1,0 +1,29 @@
+.mobile-row {
+
+  .services-chart {
+    padding-bottom: 0.5em;
+    width: 270px;
+  }
+
+  .copy-to-clipboard {
+    pre {
+      max-height: 250px;
+    }
+  }
+
+  .mobile-builds {
+    .row > [class^=col-] {
+      margin: 0 !important;
+    }
+
+    .status-icon {
+      &.Complete {
+        color: @build-pipeline-success-color;
+      }
+      &.Failed {
+        color: @build-pipeline-failed-color;
+      }
+    }
+  }
+
+}

@@ -10839,6 +10839,11 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/mobile-client-config.html',
+    "<copy-to-clipboard clipboard-text=\"$ctrl.prettyConfig\" multiline=\"true\" display-wide=\"true\"></copy-to-clipboard>"
+  );
+
+
   $templateCache.put('views/modals/about-compute-units-modal.html',
     "<div class=\"about-compute-units-modal\">\n" +
     "<div class=\"modal-header\">\n" +
@@ -12637,7 +12642,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
 
   $templateCache.put('views/overview/_mobile-client-row.html',
-    "<div class=\"list-pf-item\" ng-class=\"{ active: row.expanded }\">\n" +
+    "<div class=\"list-pf-item mobile-row\" ng-class=\"{ active: row.expanded }\">\n" +
     "<div class=\"list-pf-container\" ng-click=\"row.toggleExpand($event)\">\n" +
     "<div class=\"list-pf-chevron\">\n" +
     "<div ng-include src=\" 'views/overview/_list-row-chevron.html' \" class=\"list-pf-content\"></div>\n" +
@@ -12646,12 +12651,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"list-pf-name\">\n" +
     "<h3>\n" +
     "<div class=\"list-row-longname\"><span>{{row.clientType}}</span></div>\n" +
-    "\n" +
-    "<a ng-href=\"{{row.apiObject | navigateResourceURL}}\"><span ng-bind-html=\"row.apiObject.spec.name | highlightKeywords : row.state.filterKeywords\"></span></a>\n" +
+    "<a ng-href=\"{{row.apiObject | navigateResourceURL}}\">\n" +
+    "<span ng-bind-html=\"row.apiObject.spec.name | highlightKeywords : row.state.filterKeywords\"></span>\n" +
+    "</a>\n" +
     "<div class=\"list-row-longname\">{{row.bundleDisplay}}</div>\n" +
     "</h3>\n" +
     "</div>\n" +
     "</div>\n" +
+    "<span class=\"pficon-info icon\" ng-if=\"!row.alertDismissed && (row.servicesNotBoundCount > 0) && !row.expanded\"></span>\n" +
     "<div class=\"list-pf-actions\">\n" +
     "<div class=\"dropdown-kebab-pf\" uib-dropdown ng-if=\"row.actionsDropdownVisible()\">\n" +
     "<button uib-dropdown-toggle class=\"btn btn-link dropdown-toggle\">\n" +
@@ -12669,19 +12676,75 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"list-pf-expansion collapse\" ng-if=\"row.expanded\" ng-class=\"{ in: row.expanded }\">\n" +
     "<div class=\"list-pf-container\">\n" +
-    "<div class=\"expanded-section\">\n" +
+    "<div class=\"expanded-section\" ng-if=\"!(row.services | size)\">\n" +
     "<div class=\"empty-state-message text-center\">\n" +
     "<p>Add a mobile service to your project. Or connect to external service.</p>\n" +
     "<div class=\"empty-state-message-main-action\">\n" +
-    "\n" +
     "<button class=\"btn btn-primary btn-lg\" ng-click=\"row.browseCatalog()\">\n" +
     "Browse Mobile Services\n" +
     "</button>\n" +
     "</div>\n" +
     "</div>\n" +
+    "</div>\n" +
+    "<div class=\"expanded-section\" ng-if=\"(row.services | size)\">\n" +
+    "<div class=\"row\">\n" +
+    "<div ng-if=\"(row.services | size)\" class=\"col-md-12\">\n" +
+    "<div ng-if=\"!row.alertDismissed && (row.servicesNotBoundCount > 0)\" class=\"alert alert-info alert-dismissable\">\n" +
+    "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\" ng-click=\"row.alertDismissed = true\">\n" +
+    "<span class=\"pficon pficon-close\"></span>\n" +
+    "</button>\n" +
+    "<span class=\"pficon pficon-info\"></span>\n" +
+    "{{row.servicesNotBoundCount}} mobile services are not bound to this client.\n" +
+    "<a href=\"\" ng-href=\"{{ row.navigateToMobileTab('mobileServices') }}\">Bind them to use with this client.</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"(row.services | size)\" class=\"col-md-6\">\n" +
+    "<div>\n" +
+    "<div class=\"component-label section-label\">Mobile Services</div>\n" +
+    "<div class=\"services-chart\">\n" +
+    "<pf-donut-chart config=\"row.config\" data=\"row.data\" chart-height=\"row.chartHeight\"></pf-donut-chart>\n" +
+    "</div>\n" +
+    "<a href=\"\" ng-href=\"{{ row.navigateToMobileTab('mobileServices') }}\">View All Mobile Services</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"col-md-6\">\n" +
+    "<div class=\"component-label section-label\">Client Info</div>\n" +
+    "<mobile-client-config mobile-client=\"row.apiObject\"></mobile-client-config>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"(row.builds | size)\">\n" +
+    "<div class=\"component-label section-label\">Mobile Builds</div>\n" +
+    "<div ng-repeat=\"build in (row.builds | limitTo: 5) track by (build | uid)\" class=\"mobile-builds\">\n" +
+    "<div class=\"row\">\n" +
+    "<div class=\"col-md-6\">\n" +
+    "<h3>\n" +
+    "<a ng-href=\"{{row.navigateToMobileTab('builds', (build | buildConfigForBuild))}}\">{{build | buildConfigForBuild}}</a>\n" +
+    "</h3>\n" +
+    "</div>\n" +
+    "<div class=\"col-md-6\">\n" +
+    "<span class=\"status-icon\" ng-class=\"build.status.phase\">\n" +
+    "<span ng-switch=\"build.status.phase\" class=\"hide-ng-leave\">\n" +
+    "<span ng-switch-when=\"Complete\" aria-hidden=\"true\">\n" +
+    "<i class=\"fa fa-check-circle fa-fw\"></i>\n" +
+    "</span>\n" +
+    "<span ng-switch-when=\"Failed\" aria-hidden=\"true\">\n" +
+    "<i class=\"fa fa-times-circle fa-fw\"></i>\n" +
+    "</span>\n" +
+    "<span ng-switch-default>\n" +
+    "<status-icon status=\"build.status.phase\"></status-icon>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "<a ng-href=\"{{build | navigateResourceURL}}\">Build #{{build | annotation : 'buildNumber'}}</a>\n" +
+    "<span am-time-ago=\"build.metadata.creationTimestamp\" class=\"build-timestamp\"></span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<a href=\"\" ng-href=\"{{ row.navigateToMobileTab('builds') }}\">View All Mobile Builds</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
     "<div ng-if=\"loading\">\n" +
     "Loading...\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
