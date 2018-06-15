@@ -45,7 +45,7 @@ angular.module('openshiftConsole')
         title: 'Create client build'
       }
     ];
-    
+
     $scope.buildTypeMap = {
       android: {
         label: 'Android',
@@ -89,7 +89,7 @@ angular.module('openshiftConsole')
             'mobile-client-build': 'true',
             'mobile-client-id': _.get($routeParams, 'mobileclient'),
             'mobile-client-build-platform': clientConfig.buildPlatform,
-            'mobile-client-type': clientConfig.clientType      
+            'mobile-client-type': clientConfig.clientType
           }
         },
         spec: {
@@ -187,7 +187,7 @@ angular.module('openshiftConsole')
       if (clientConfig.buildPlatform === 'ios') {
         secretData['developer-profile'] = clientConfig.clientCredentials;
       }
-      
+
       // Base64 encode the values.
       secret.data = _.mapValues(secretData, window.btoa);
 
@@ -239,10 +239,9 @@ angular.module('openshiftConsole')
           return DataService.create(secretsVersion, null, gitSecret, $scope.context);
         })
         .then(function() {
-          if ($scope.newClientBuild.buildType === debugBuildType.id && $scope.newClientBuild.buildPlatform === 'android') {
+          if ($scope.newClientBuild.buildPlatform === 'android' && ($scope.newClientBuild.buildType === debugBuildType.id || !$scope.newClientBuild.externalCredential)) {
             return Promise.resolve();
           }
-
           var certSecret = createClientCredentialsSecret($scope.newClientBuild);
           return DataService.create(secretsVersion, null, certSecret, $scope.context);
         })

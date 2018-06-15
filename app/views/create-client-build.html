@@ -284,11 +284,11 @@
                           id="clientCredentials"
                           model="newClientBuild.clientCredentials"
                           read-as-binary-string="true"
-                          required="true"></osc-file-input>        
+                          required="true"></osc-file-input>
                         <div class="help-block">
                           A developer profile file (*.developerprofile) which contains a code signing private key, corresponding developer/distribution certificates, and mobile provisioning profiles.
                           For more information, see this <a target="_blank" href="https://help.apple.com/xcode/mac/8.0/#/dev8a2822e0b">documentation</a> on exporting developer accounts in XCode.
-                        </div>               
+                        </div>
 
                         <label for="clientCredentialsPassword">Apple Developer Profile Password</label>
 
@@ -303,11 +303,14 @@
                         <div class="has-error" ng-if="clientBuildForm.clientCredentialsPassword.$touched && clientBuildForm.clientCredentialsPassword.$error.required">
                           <span class="help-block">A password for the ios credentials is required.</span>
                         </div>
-                      </div>                    
+                      </div>
                     </div>
 
                     <div ng-if="newClientBuild.buildType === 'release' && newClientBuild.buildPlatform === 'android'">
-                      <div class="form-group" id="client-credentials">
+                        <div class="form-group" id="client-credentials">
+                          <input ng-model="newClientBuild.externalCredential" type="checkbox" id="upload-credential"> Upload external credentials (Use this option if your Keystore is external to your source code)
+                        </div>
+                      <div ng-if="newClientBuild.externalCredential" class="form-group" id="client-credentials">
                         <label for="clientCredentialsName" class="required">Name</label>
 
                         <div ng-class="{
@@ -334,7 +337,7 @@
                             model="newClientBuild.clientCredentials"
                             help-text="Password protected PKCS12 file containing a key protected by the same password"
                             read-as-binary-string="true"
-                            required="true"></osc-file-input>                        
+                            required="true"></osc-file-input>
 
                         <label for="clientCredentialsPassword">Android Keystore Password</label>
 
