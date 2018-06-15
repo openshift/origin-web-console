@@ -1,0 +1,133 @@
+<div class="list-pf-item" ng-class="{ active: row.expanded }">
+  <div class="list-pf-container" ng-click="row.toggleExpand($event)">
+    <div class="list-pf-chevron">
+      <div ng-include src=" 'views/overview/_list-row-chevron.html' " class="list-pf-content"></div>
+    </div>
+    <div class="list-pf-content">
+      <div class="list-pf-name">
+        <span class="status-icon icon-header" ng-class="row.latestBuild.status.phase">
+          <span ng-switch="row.latestBuild.status.phase" class="hide-ng-leave">
+            <span ng-switch-when="Complete" aria-hidden="true">
+              <i class="fa fa-check-circle fa-fw"></i>
+            </span>
+            <span ng-switch-when="Failed" aria-hidden="true">
+              <i class="fa fa-times-circle fa-fw"></i>
+            </span>
+            <span ng-switch-default>
+              <status-icon status="row.latestBuild.status.phase"></status-icon>
+            </span>
+          </span>
+        </span>
+        <span class="list-row-longname"> 
+          <a href="" ng-href="{{row.navigateToBuildConfig()}}"> {{ row.apiObject.metadata.name }} </a>
+        </span>
+        <button 
+          class="btn btn-default pull-right" 
+          ng-if="(!row.latestBuild && !row.expanded) || (row.latestBuild) && row.buildConfigsInstantiateVersion | canI : 'create'"
+          ng-click="row.startBuild()">Start Build</button>
+      </div>
+    </div>
+    <div class="list-pf-actions">
+      <div class="dropdown-kebab-pf" uib-dropdown>
+        <button uib-dropdown-toggle class="btn btn-link dropdown-toggle">
+          <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+          <span class="sr-only">Actions</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
+          <li ng-if="row.buildConfigsVersion | canI : 'update'">
+            <a ng-href="{{row.apiObject | editYamlURL}}" role="button">Edit YAML</a>
+          </li>
+          <li role="menuitem" ng-if="row.buildConfigsVersion | canI : 'delete'">
+            <delete-link
+              resource-name="{{row.apiObject.metadata.name}}"
+              project-name="{{row.apiObject.metadata.namespace}}"
+              kind="{{row.apiObject.kind}}"
+              stay-on-current-page="true"></delete-link>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="list-pf-expansion collapse" ng-if="row.expanded" ng-class="{ in: row.expanded }">
+    <div class="list-pf-container">
+      <div class="expanded-section no-margin">
+        <div class="component-label section-label">BUILD CONFIG</div>
+        <div class="row">
+          <div class="col-sm-6 col-md-2">
+            <b>Repo Url</b>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            {{row.apiObject.spec.source.git.uri}}
+          </div>
+          <div class="col-sm-6 col-md-2">
+            <b>Branch</b>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            {{row.apiObject.spec.source.git.ref}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6 col-md-2">
+            <b>Build Platform</b>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            {{row.apiObject | label:'mobile-client-build-platform'}}
+          </div>
+          <div class="col-sm-6 col-md-2">
+            <b>Jenkinsfile Path</b>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            {{row.apiObject.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}
+          </div>
+        </div>
+        <div class="row"  ng-class="{'display-download-options': row.latestDownloadPanelExpanded}">
+          <div class="col-md-12">
+            <div class="component-label section-label">Builds</div>
+            <div class="latest-build" ng-if="row.latestBuild">
+              <div class="latest-mobile-build">
+                <div class="latest-build-pipeline col-md-9">
+                  <build-pipeline build="row.latestBuild"></build-pipeline>
+                </div>
+                <div class="latest-download-trigger col-md-3" ng-if="row.latestBuild.status.phase === 'Complete'">
+                  <button role="button" class="btn btn-primary btn-lg" ng-click="row.toggleLatestDownloadUrl()">Download</button>
+                </div>
+              </div>
+              <mobile-client-download-url show-panel="row.latestDownloadPanelExpanded" mobile-build="row.latestBuild"></mobile-client-download-url>
+            </div>
+            <div class="no-builds-note" ng-if="!row.latestBuild">
+              <h2> No Builds </h2>
+              <p>
+                No builds exist for {{row.apiObject.metadata.name}}
+              </p>
+              <button 
+              class="btn btn-default" 
+              ng-if="row.buildConfigsInstantiateVersion | canI : 'create'"
+              ng-click="row.startBuild()">Start Build</button>
+            </div>
+          </div>
+        </div>
+        <div class="row client-build-history">
+          <div class="col-md-12">
+            <div ng-if="row.historyBuilds | size" class="mobile-chevron">
+              <a href="" ng-click="row.toggleBuildHistory()" class="toggle-expand-link">
+                <span ng-if="row.historyExpanded">
+                  <span class="fa fa-angle-down" aria-hidden="true"></span>
+                  <span class="sr-only">Collapse</span>
+                  <span>Hide build history</span>
+                </span>
+                <span ng-if="!row.historyExpanded">
+                  <span class="fa fa-angle-right" aria-hidden="true"></span>
+                  <span class="sr-only">Expand</span>
+                  <span>Show build history</span>
+                </span>
+              </a>
+            </div>
+            <div ng-if="row.historyExpanded" class="build-history-list">
+              <mobile-client-build-history-item build="build" ng-repeat="build in row.historyBuilds track by (build | uid)"></mobile-client-build-history-item>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
