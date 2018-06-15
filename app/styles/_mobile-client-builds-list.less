@@ -19,26 +19,47 @@
         box-sizing: border-box;
         display: flex;
         flex-wrap: wrap;
-        padding: 10px;
         margin-bottom: -1px;
+        padding: 0;
 
         .status-panel {
           align-items: center;
           display: flex;
-        }
+          padding: 0;
 
-        .build-link {
-          padding: 10px 0px 10px 10px;
-        }
+          .build-summary {
+            border: none;
+          }
 
-        .state {
-          display: flex;
-          flex-wrap: wrap;
+          .state {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 0;
+
+            .col-sm-12 {
+              padding-left: 10px;
+            }
+
+            .info {
+              display: inline;
+              padding-right: 20px;
+
+              &.logs {
+                padding-right: 60px;
+              }
+            }
+          }
         }
 
         .download-trigger {
           align-items: center;
           display: flex;
+          justify-content: flex-end;
+          padding-right: 20px;
+
+          button {
+            width: 91px;
+          }
         }
       }
     }
@@ -86,7 +107,7 @@
     .latest-download-trigger {
       align-items: center;
       display: flex;
-      justify-content: center;
+      justify-content: flex-end;
     }
   }
 
@@ -128,33 +149,5 @@
 
   &.note {
     text-align: center;
-  }
-}
-
-@media (max-width: 479px) {
-
-  .mobile-client-builds-list {
-
-    .client-build-history  {
-
-      .build-history-list {
-        .download-trigger {
-          padding: 0;
-        }
-
-        .mobile-client-build-history-item {
-          .status-panel {
-            display: block;
-            padding: 0;
-
-            .state {
-              .info {
-                padding-left: 0;
-              }
-            }
-          }
-        }
-      }
-    }
   }
 }

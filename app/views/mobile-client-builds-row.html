@@ -85,10 +85,10 @@
             <div class="component-label section-label">Builds</div>
             <div class="latest-build" ng-if="row.latestBuild">
               <div class="latest-mobile-build">
-                <div class="latest-build-pipeline col-md-9">
+                <div class="latest-build-pipeline col-md-10">
                   <build-pipeline build="row.latestBuild"></build-pipeline>
                 </div>
-                <div class="latest-download-trigger col-md-3" ng-if="row.latestBuild.status.phase === 'Complete'">
+                <div class="latest-download-trigger col-md-2" ng-if="row.latestBuild.status.phase === 'Complete'">
                   <button role="button" class="btn btn-primary btn-lg" ng-click="row.toggleLatestDownloadUrl()">Download</button>
                 </div>
               </div>
