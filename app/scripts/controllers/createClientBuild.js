@@ -131,6 +131,15 @@ angular.module('openshiftConsole')
         };
       }
 
+      if (clientConfig.envVars) {
+        _.forEach(clientConfig.envVars, function(envVar) {
+          if (envVar.name) {
+            envVar = _.omit(envVar, ['$$hashKey']);
+            buildConfig.spec.strategy.jenkinsPipelineStrategy.env.push(envVar);
+          }
+        });
+      }
+
       return buildConfig;
     };
 
@@ -208,7 +217,8 @@ angular.module('openshiftConsole')
             authType: 'public',
             clientType: clientType,
             buildType: debugBuildType.id,
-            buildPlatform: buildPlatform
+            buildPlatform: buildPlatform,
+            envVars: []
           };
         });
     }));

@@ -358,6 +358,21 @@
                         </div>
                       </div>
                     </div>
+
+                    <div class="form-group">
+                      <label for="env-vars">Environment Variables</label>
+                      <key-value-editor
+                        entries="newClientBuild.envVars"
+                        key-placeholder="Key"
+                        value-placeholder="Value"
+                        key-validator="[A-Za-z_][A-Za-z0-9_]*"
+                        key-validator-error="Please enter a valid key"
+                        key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
+                        add-row-link="Add Environment Variable"
+                        cannot-sort
+                        show-header>
+                      </key-value-editor>                    
+                    </div>
                   </dl>
                 </div>
 
