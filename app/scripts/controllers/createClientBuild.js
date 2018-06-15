@@ -88,6 +88,7 @@ angular.module('openshiftConsole')
           labels:  {
             'mobile-client-build': 'true',
             'mobile-client-id': _.get($routeParams, 'mobileclient'),
+            'mobile-client-build-platform': clientConfig.buildPlatform,
             'mobile-client-type': clientConfig.clientType
           }
         },
@@ -257,7 +258,6 @@ angular.module('openshiftConsole')
           if (isAndroidBuild() && isDebugBuildOrHasSigningCredentials()) {
             return;
           }
-
           var certSecret = createClientCredentialsSecret($scope.newClientBuild);
           return DataService.create(secretsVersion, null, certSecret, $scope.context);
         })
