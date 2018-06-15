@@ -27,9 +27,10 @@
     var buildConfigsVersion = APIService.getPreferredVersion('buildconfigs');
     var watches = [];
     var anchor;
+    var PAGE_HEADER_HEIGHT = 100;
 
     ctrl.$onChanges = function(changes) {
-      var mobileClientChanged = _.get(changes, "mobileClient.currentValue", false);
+      var mobileClientChanged = _.get(changes, 'mobileClient.currentValue', false);
       if (mobileClientChanged && !ctrl.context) {
         ctrl.context = {namespace: _.get(ctrl, 'mobileClient.metadata.namespace')};
       }
@@ -38,7 +39,8 @@
         ctrl.buildsWatchSet = true;
         watches.push(DataService.watch(buildConfigsVersion, ctrl.context, function(buildConfigs) {    
           ctrl.mobileBuildConfigs = _.filter(buildConfigs.by('metadata.name'), function(buildConfig) {
-            return _.get(buildConfig, 'metadata.labels.mobile-client-build') === 'true' && _.get(buildConfig, 'metadata.labels.mobile-client-id') === _.get(ctrl, 'mobileClient.metadata.name');
+            return _.get(buildConfig, 'metadata.labels.mobile-client-build') === 'true' &&
+              _.get(buildConfig, 'metadata.labels.mobile-client-id') === _.get(ctrl, 'mobileClient.metadata.name');
           });
           ctrl.loaded = true;
           ctrl.goToBuildConfig();
@@ -51,7 +53,7 @@
         anchor = $location.hash();
 
         $timeout(function() {
-          $anchorScroll.yOffset = 100;
+          $anchorScroll.yOffset = PAGE_HEADER_HEIGHT;
           $anchorScroll();
         }, 400);
       }
