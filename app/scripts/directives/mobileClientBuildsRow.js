@@ -30,7 +30,7 @@
     row.state = {};
     row.buildConfigsInstantiateVersion = APIService.getPreferredVersion('buildconfigs/instantiate');
     row.buildConfigsVersion = APIService.getPreferredVersion('buildconfigs');
-    row.buildsVersion = APIService.getPreferredVersion('builds');
+    var buildsVersion = APIService.getPreferredVersion('builds');
     var watches = [];
     var anchor;
 
@@ -45,28 +45,31 @@
 
       if (buildConfigChanged && row.context && !row.watchSet) {
         row.watchSet = true;
-        watches.push(DataService.watch(row.buildsVersion, row.context, function(builds) {
-          var _builds = _.filter(builds.by('metadata.name'), function(build) {
+        watches.push(DataService.watch(buildsVersion, row.context, function(buildData) {
+          var builds = _.filter(buildData.by('metadata.name'), function(build) {
             return _.get(build, 'metadata.labels.buildconfig') === _.get(row, 'apiObject.metadata.name');
           });
-          var sortedBuilds = BuildsService.sortBuilds(_builds, true);
-          row.latestBuild = sortedBuilds[0];
+          var sortedBuilds = BuildsService.sortBuilds(builds, true);
+          row.latestBuild = _.head(sortedBuilds);
           row.historyBuilds = _.tail(sortedBuilds);
           row.toggleExpandForAnchor();
         }));
       }
     };
 
-    row.toggleExpandForAnchor = function() {
+    row.isMatchingAnchor = function() {
       var buildId = _.get(row, 'apiObject.metadata.name');
+      return $location.hash() && $location.hash() !== anchor && buildId === $location.hash();
+    };
 
-      if ($location.hash() && $location.hash() !== anchor && buildId === $location.hash()) {
+    row.toggleExpandForAnchor = function() {
+      if (row.isMatchingAnchor()) {
         anchor = $location.hash();
         row.expanded = 'true';
         var key = 'overview/expand/' + _.get(row, 'apiObject.metadata.uid');
         sessionStorage.setItem(key, row.expanded);
       }
-    }
+    };
 
     row.startBuild = function() {
       BuildsService.startBuild(row.apiObject);
