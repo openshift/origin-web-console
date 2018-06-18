@@ -152,17 +152,16 @@ angular.module('openshiftConsole')
     }]);
 
 angular.module('openshiftConsole').constant('KubevirtVersions', {
-  // TODO Mark finish renaming when appropriate
   virtualMachine: {
-    resource: 'offlinevirtualmachines',
-    group: 'kubevirt.io',
-    version: 'v1alpha1',
-    kind: 'OfflineVirtualMachine'
-  },
-  virtualMachineInstance: {
     resource: 'virtualmachines',
     group: 'kubevirt.io',
-    version: 'v1alpha1',
+    version: 'v1alpha2',
     kind: 'VirtualMachine'
+  },
+  virtualMachineInstance: {
+    resource: 'virtualmachineinstances',
+    group: 'kubevirt.io',
+    version: 'v1alpha2',
+    kind: 'VirtualMachineInstance'
   }
 });
