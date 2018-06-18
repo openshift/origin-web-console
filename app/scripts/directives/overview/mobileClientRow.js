@@ -64,8 +64,8 @@
     }
 
     row.updateServicesInfo = function() {
-      if (row.services) {
-        row.servicesNotBoundCount = row.services.length - row.bindings.length;
+      if (row.mobileClientEnabledServices) {
+        row.servicesNotBoundCount = row.mobileClientEnabledServices.length - row.bindings.length;
 
         row.data = [
           [boundServices, row.bindings.length],
@@ -103,7 +103,11 @@
           watches.push(DataService.watch(serviceInstancesVersion, row.context, function(serviceinstances) {
             row.services = _.filter(serviceinstances.by('metadata.name'), function(serviceInstance){
               var serviceClass = _.get(serviceClasses, ServiceInstancesService.getServiceClassNameForInstance(serviceInstance));
-              return isMobileService(serviceClass) && isServiceInstanceReady(serviceInstance) && isMobileClientEnabled(serviceClass);
+              return isMobileService(serviceClass) && isServiceInstanceReady(serviceInstance);
+            });
+            row.mobileClientEnabledServices = _.filter(row.services, function(service){
+              var serviceClass = _.get(serviceClasses, ServiceInstancesService.getServiceClassNameForInstance(service));
+              return isMobileClientEnabled(serviceClass);
             });
             row.updateServicesInfo();
           }, { errorNotification: false }));
@@ -122,7 +126,7 @@
 
       if (apiObjectChanges && !row.buildsWatched) {
         row.buildsWatched = true;
-        watches.push(DataService.watch(buildsVersion, row.context, function(buildsData) {    
+        watches.push(DataService.watch(buildsVersion, row.context, function(buildsData) {
           // Filter builds by mobile client id
           var builds = _.filter(buildsData.by('metadata.name'), function(build) {
             return _.get(build, 'metadata.labels.mobile-client-id') === _.get(row, 'apiObject.metadata.name');
