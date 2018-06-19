@@ -52,32 +52,24 @@
     <div class="list-pf-container">
       <div class="expanded-section no-margin">
         <div class="component-label section-label">BUILD CONFIG</div>
-        <div class="row">
-          <div class="col-sm-6 col-md-2">
-            <b>Repo Url</b>
+        <div class="build-config-details row">
+          <div class="col-sm-12 col-md-12 col-lg-6">
+            <b class="title">Repo Url</b>
+            <span>{{row.apiObject.spec.source.git.uri}}</span>
           </div>
-          <div class="col-sm-6 col-md-4">
-            {{row.apiObject.spec.source.git.uri}}
-          </div>
-          <div class="col-sm-6 col-md-2">
-            <b>Branch</b>
-          </div>
-          <div class="col-sm-6 col-md-4">
-            {{row.apiObject.spec.source.git.ref}}
+          <div class="col-sm-12 col-md-12 col-lg-6">
+            <b class="title">Branch</b>
+            <span>{{row.apiObject.spec.source.git.ref}}</span>
           </div>
         </div>
-        <div class="row">
-          <div class="col-sm-6 col-md-2">
-            <b>Build Platform</b>
+        <div class="build-config-details row">
+          <div class="col-sm-12 col-md-12 col-lg-6">
+            <b class="title">Build Platform</b>
+            <span>{{row.apiObject | label:'mobile-client-build-platform'}}</span>
           </div>
-          <div class="col-sm-6 col-md-4">
-            {{row.apiObject | label:'mobile-client-build-platform'}}
-          </div>
-          <div class="col-sm-6 col-md-2">
-            <b>Jenkinsfile Path</b>
-          </div>
-          <div class="col-sm-6 col-md-4">
-            {{row.apiObject.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}
+          <div class="col-sm-12 col-md-12 col-lg-6">
+            <b class="title">Jenkinsfile Path</b>
+            <span>{{row.apiObject.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</span>
           </div>
         </div>
         <div class="row"  ng-class="{'display-download-options': row.latestDownloadPanelExpanded}">
