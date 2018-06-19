@@ -269,8 +269,9 @@
 
       var serviceClass = BindingService.getServiceClassForInstance(svcToBind, ctrl.serviceClasses);
 
+      var bindingMeta = {};
       if (ctrl.isMobileEnabled && isMobileService(serviceClass)) {
-        var bindingMeta = getBindingMetadata(svcToBind, serviceClass);
+        bindingMeta = getBindingMetadata(svcToBind, serviceClass);
       }
 
       BindingService.bindService(svcToBind, application, serviceClass, ctrl.parameterData, bindingMeta).then(function(binding){

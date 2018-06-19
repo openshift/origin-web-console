@@ -1,5 +1,4 @@
-
-<div class="overview" ng-if="(ctrl.serviceInstances | size)">
+<div class="overview mobile-service-instance-list" ng-if="(ctrl.serviceInstances | size)">
     <div class="list-pf">
         <mobile-service-instance-row
             ng-repeat="serviceInstance in ctrl.serviceInstances track by (serviceInstance | uid)"
@@ -9,7 +8,7 @@
     </div>
 </div>
 
-<div class="note" ng-if="!(ctrl.serviceInstances | size)">
+<div class="mobile-service-instance-list note" ng-if="!(ctrl.serviceInstances | size)">
     <p>Provision a mobile service to integrate it with your mobile client.</p>
     <button class="btn btn-primary btn-lg" ng-click="ctrl.goToCatalog()">Browse Catalog</button>
 </div>
