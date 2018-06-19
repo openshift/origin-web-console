@@ -7,7 +7,6 @@
       <div class="list-pf-name">
         <h3>
           <div class="list-row-longname"><span>{{row.clientType}}</span></div>
-          <!--<span class="fa-2x {{row.apiObject.metadata.annotations.icon}}"></span>-->
           <a ng-href="{{row.apiObject | navigateResourceURL}}">
             <span ng-bind-html="row.apiObject.spec.name | highlightKeywords : row.state.filterKeywords"></span>
           </a>
@@ -42,7 +41,6 @@
         <div class="empty-state-message text-center">
           <p>Add a mobile service to your project. Or connect to external service.</p>
           <div class="empty-state-message-main-action">
-            <!--TODO link through to the mobile category -->
             <button class="btn btn-primary btn-lg" ng-click="row.browseCatalog()">
               Browse Mobile Services
             </button>
@@ -71,7 +69,7 @@
             </div>
           </div>
           <div class="col-md-6">
-            <div class="component-label section-label">Client Config</div>
+            <div class="component-label section-label">Client Info</div>
             <mobile-client-config mobile-client="row.apiObject"></mobile-client-config>
           </div>
         </div>
@@ -105,10 +103,10 @@
           </div>
           <a href="" ng-href="{{ row.navigateToMobileTab('builds') }}">View All Mobile Builds</a>
         </div>
-        </div>
         <div ng-if="loading">
           Loading...
         </div>
       </div>
     </div>
   </div>
+</div>

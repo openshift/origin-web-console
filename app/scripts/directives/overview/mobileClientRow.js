@@ -36,6 +36,7 @@
     var watches = [];
     var boundServices = 'Bound Mobile Services';
     var unboundServices = 'Unbound Mobile Services';
+    row.mobileClientsVersion = APIService.getPreferredVersion('mobileclients');
     row.installType = '';
     row.config = {
       'chartId': _.get(row, 'apiObject.metadata.name') + '-services-info',
@@ -136,19 +137,12 @@
       }
     };
 
-    row.mobileclientVersion = {
-      group: "mobile.k8s.io",
-      version: "v1alpha1",
-      resource: "mobileclients"
-    };
     row.actionsDropdownVisible = function () {
-      // no actions on those marked for deletion
       if (_.get(row.apiObject, 'metadata.deletionTimestamp')) {
         return false;
       }
 
-      // We can delete mobileclients
-      return AuthorizationService.canI(row.mobileclientVersion, 'delete');
+      return AuthorizationService.canI(row.mobileClientsVersion, 'delete');
     };
     row.projectName = $routeParams.project;
     row.browseCatalog = function () {
