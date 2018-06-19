@@ -13386,6 +13386,38 @@ highlightService: "<"
 templateUrl: "views/directives/route-service-bar-chart.html"
 });
 }(), function() {
+angular.module("openshiftConsole").component("mobileServiceClients", {
+controller: [ "APIService", "DataService", function(e, t) {
+var n = this, r = [], a = e.getPreferredVersion("servicebindings");
+n.$onChanges = function(e) {
+if (e.mobileClients && e.mobileClients.currentValue && (n.clientNames = _.map(n.mobileClients, function(e) {
+return _.get(e, "metadata.name");
+})), e.mobileClients && e.mobileClients.currentValue && e.serviceInstance && e.serviceInstance.currentValue && !n.watchSet) {
+var o = {
+namespace: _.get(n, "project.metadata.name")
+};
+r.push(t.watch(a, o, function(e) {
+n.watchSet = !0;
+var t = e.by("metadata.name");
+n.integratedClients = _(t).filter(function(e) {
+var t = _.get(e, [ "metadata", "annotations", "binding.aerogear.org/provider" ]), r = _.get(e, [ "metadata", "annotations", "binding.aerogear.org/consumer" ]);
+return t === _.get(n, "serviceInstance.metadata.name") && _.includes(n.clientNames, r);
+}).map(function(e) {
+var t = _.get(e, [ "metadata", "annotations", "binding.aerogear.org/consumer" ]);
+return n.mobileClients[t];
+}).value();
+}));
+}
+};
+} ],
+bindings: {
+project: "<",
+serviceInstance: "<",
+mobileClients: "<"
+},
+templateUrl: "views/directives/mobile-service-clients.html"
+});
+}(), function() {
 angular.module("openshiftConsole").component("bindService", {
 controller: [ "$scope", "$filter", "APIService", "ApplicationsService", "BindingService", "Catalog", "DataService", "ServiceInstancesService", function(e, t, n, r, a, o, i, s) {
 var c, l, u, d, m, p, f = this, g = t("statusCondition"), v = t("enableTechPreviewFeature"), h = n.getPreferredVersion("serviceinstances"), y = n.getPreferredVersion("clusterserviceclasses"), b = n.getPreferredVersion("clusterserviceplans"), S = function() {
@@ -14500,46 +14532,47 @@ templateUrl: "views/overview/_list-row.html"
 });
 }(), function() {
 angular.module("openshiftConsole").component("serviceInstanceRow", {
-controller: [ "$filter", "APIService", "AuthorizationService", "BindingService", "ListRowUtils", "ServiceInstancesService", function(e, t, n, r, a, o) {
-var i = this, s = e("isBindingFailed"), c = e("isBindingReady"), l = e("serviceInstanceFailedMessage"), u = e("truncate");
-_.extend(i, a.ui);
-var d = e("serviceInstanceDisplayName");
-i.serviceBindingsVersion = t.getPreferredVersion("servicebindings"), i.serviceInstancesVersion = t.getPreferredVersion("serviceinstances");
-var m = function() {
-var e = o.getServiceClassNameForInstance(i.apiObject);
-return _.get(i, [ "state", "serviceClasses", e ]);
-}, p = function() {
-var e = o.getServicePlanNameForInstance(i.apiObject);
-return _.get(i, [ "state", "servicePlans", e ]);
+controller: [ "$filter", "$rootScope", "APIService", "AuthorizationService", "BindingService", "ListRowUtils", "ServiceInstancesService", function(e, t, n, r, a, o, i) {
+var s = this, c = e("isBindingFailed"), l = e("isBindingReady"), u = e("serviceInstanceFailedMessage"), d = e("truncate");
+s.isMobileEnabled = t.AEROGEAR_MOBILE_ENABLED, _.extend(s, o.ui);
+var m = e("serviceInstanceDisplayName");
+s.serviceBindingsVersion = n.getPreferredVersion("servicebindings"), s.serviceInstancesVersion = n.getPreferredVersion("serviceinstances");
+var p = function() {
+var e = i.getServiceClassNameForInstance(s.apiObject);
+return _.get(s, [ "state", "serviceClasses", e ]);
 }, f = function() {
-_.get(i.apiObject, "metadata.deletionTimestamp") ? i.instanceStatus = "deleted" : s(i.apiObject) ? i.instanceStatus = "failed" : c(i.apiObject) ? i.instanceStatus = "ready" : i.instanceStatus = "pending";
+var e = i.getServicePlanNameForInstance(s.apiObject);
+return _.get(s, [ "state", "servicePlans", e ]);
+}, g = function() {
+_.get(s.apiObject, "metadata.deletionTimestamp") ? s.instanceStatus = "deleted" : c(s.apiObject) ? s.instanceStatus = "failed" : l(s.apiObject) ? s.instanceStatus = "ready" : s.instanceStatus = "pending";
 };
-i.$doCheck = function() {
-f(), i.notifications = a.getNotifications(i.apiObject, i.state), i.serviceClass = m(), i.servicePlan = p(), i.displayName = d(i.apiObject, i.serviceClass), i.isBindable = r.isServiceBindable(i.apiObject, i.serviceClass, i.servicePlan);
-}, i.$onChanges = function(e) {
-e.bindings && (i.deleteableBindings = _.reject(i.bindings, "metadata.deletionTimestamp"));
-}, i.getSecretForBinding = function(e) {
-return e && _.get(i, [ "state", "secrets", e.spec.secretName ]);
-}, i.actionsDropdownVisible = function() {
-return !(_.get(i.apiObject, "metadata.deletionTimestamp") || (!i.isBindable || !n.canI(i.serviceBindingsVersion, "create")) && (_.isEmpty(i.deleteableBindings) || !n.canI(i.serviceBindingsVersion, "delete")) && !n.canI(i.serviceInstancesVersion, "delete"));
-}, i.closeOverlayPanel = function() {
-_.set(i, "overlay.panelVisible", !1);
-}, i.showOverlayPanel = function(e, t) {
-_.set(i, "overlay.panelVisible", !0), _.set(i, "overlay.panelName", e), _.set(i, "overlay.state", t);
-}, i.getFailedTooltipText = function() {
-var e = l(i.apiObject);
+s.$doCheck = function() {
+g(), s.notifications = o.getNotifications(s.apiObject, s.state), s.serviceClass = p(), s.servicePlan = f(), s.displayName = m(s.apiObject, s.serviceClass), s.isBindable = a.isServiceBindable(s.apiObject, s.serviceClass, s.servicePlan), s.isMobileEnabled && (s.hasMobileClients = !_.isEmpty(s.mobileClients));
+}, s.$onChanges = function(e) {
+e.bindings && (s.deleteableBindings = _.reject(s.bindings, "metadata.deletionTimestamp"));
+}, s.getSecretForBinding = function(e) {
+return e && _.get(s, [ "state", "secrets", e.spec.secretName ]);
+}, s.actionsDropdownVisible = function() {
+return !(_.get(s.apiObject, "metadata.deletionTimestamp") || (!s.isBindable || !r.canI(s.serviceBindingsVersion, "create")) && (_.isEmpty(s.deleteableBindings) || !r.canI(s.serviceBindingsVersion, "delete")) && !r.canI(s.serviceInstancesVersion, "delete"));
+}, s.closeOverlayPanel = function() {
+_.set(s, "overlay.panelVisible", !1);
+}, s.showOverlayPanel = function(e, t) {
+_.set(s, "overlay.panelVisible", !0), _.set(s, "overlay.panelName", e), _.set(s, "overlay.state", t);
+}, s.getFailedTooltipText = function() {
+var e = u(s.apiObject);
 if (!e) return "";
-var t = u(e, 128);
+var t = d(e, 128);
 return e.length !== t.length && (t += "..."), t;
-}, i.deprovision = function() {
-o.deprovision(i.apiObject, i.deleteableBindings);
+}, s.deprovision = function() {
+i.deprovision(s.apiObject, s.deleteableBindings);
 };
 } ],
 controllerAs: "row",
 bindings: {
 apiObject: "<",
 state: "<",
-bindings: "<"
+bindings: "<",
+mobileClients: "<"
 },
 templateUrl: "views/overview/_service-instance-row.html"
 });
@@ -16534,6 +16567,11 @@ return _.get(e, [ "ENABLE_TECH_PREVIEW_FEATURE", t ], !1);
 } ]).filter("isNonPrintable", function() {
 return function(e) {
 return !!e && /[\x00-\x09\x0E-\x1F]/.test(e);
+};
+}), angular.module("openshiftConsole").filter("isMobileService", function() {
+return function(e) {
+var t = _.get(e, "spec.tags");
+return _.includes(t, "mobile-service");
 };
 }), angular.module("openshiftConsole").factory("logLinks", [ "$anchorScroll", "$document", "$location", "$window", function(e, t, n, r) {
 var a = _.template([ "/#/discover?", "_g=(", "time:(", "from:now-1w,", "mode:relative,", "to:now", ")", ")", "&_a=(", "columns:!(kubernetes.container_name,message),", "index:'<%= index %>',", "query:(", "query_string:(", "analyze_wildcard:!t,", 'query:\'kubernetes.pod_name:"<%= podname %>" AND kubernetes.namespace_name:"<%= namespace %>"\'', ")", "),", "sort:!('@timestamp',desc)", ")", "#console_container_name=<%= containername %>", "&console_back_url=<%= backlink %>" ].join(""));
