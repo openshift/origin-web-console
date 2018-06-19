@@ -10839,6 +10839,219 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/mobile-client-build-history-item.html',
+    "<div class=\"mobile-client-build-history-item col-xs-12\">\n" +
+    "<div class=\"status-panel col-xs-9 col-sm-10 col-md-10\">\n" +
+    "<div class=\"build-summary\">\n" +
+    "<div>\n" +
+    "<span class=\"status-icon\" ng-class=\"$ctrl.build.status.phase\">\n" +
+    "<span ng-switch=\"$ctrl.build.status.phase\" class=\"hide-ng-leave\">\n" +
+    "<span ng-switch-when=\"Complete\" aria-hidden=\"true\">\n" +
+    "<i class=\"fa fa-check-circle fa-fw\"></i>\n" +
+    "</span>\n" +
+    "<span ng-switch-when=\"Failed\" aria-hidden=\"true\">\n" +
+    "<i class=\"fa fa-times-circle fa-fw\"></i>\n" +
+    "</span>\n" +
+    "<span ng-switch-default>\n" +
+    "<status-icon status=\"$ctrl.build.status.phase\"></status-icon>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "<a ng-href=\"{{$ctrl.build | navigateResourceURL}}\">Build #{{$ctrl.build | annotation : 'buildNumber'}}</a>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"state col-md-12\">\n" +
+    "<div class=\"col-sm-12 col-md-7\">\n" +
+    "<div class=\"info status\">\n" +
+    "<span>{{$ctrl.build.status.phase}}</span>\n" +
+    "</div>\n" +
+    "<div class=\"info logs\">\n" +
+    "<span ng-if=\"('builds/log' | canI : 'get')\">\n" +
+    "<a ng-href=\"{{$ctrl.build | buildLogURL}}\">View Log</a>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div class=\"info creation build-timestamp\">\n" +
+    "<span am-time-ago=\"$ctrl.build.metadata.creationTimestamp\"></span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"col-sm-12 col-md-5\">\n" +
+    "<span>Duration:</span>\n" +
+    "<span ng-switch=\"$ctrl.build.status.phase\" class=\"hide-ng-leave\">\n" +
+    "<span ng-switch-when=\"Complete\">{{($ctrl.build.status.startTimestamp || $ctrl.build.metadata.creationTimestamp) | duration : $ctrl.build.status.completionTimestamp}}</span>\n" +
+    "<span ng-switch-when=\"Failed\">{{$ctrl.build.status.startTimestamp | duration : $ctrl.build.status.completionTimestamp}}</span>\n" +
+    "<span ng-switch-when=\"Running\">running for <duration-until-now timestamp=\"$ctrl.build.status.startTimestamp\"></duration-until-now></span>\n" +
+    "<span ng-switch-when=\"New\">waiting for <duration-until-now timestamp=\"$ctrl.build.metadata.creationTimestamp\"></duration-until-now></span>\n" +
+    "<span ng-switch-when=\"Pending\">waiting for <duration-until-now timestamp=\"$ctrl.build.metadata.creationTimestamp\"></duration-until-now></span>\n" +
+    "<span ng-switch-default>\n" +
+    "<span ng-if=\"$ctrl.build.status.startTimestamp\">{{$ctrl.build.status.startTimestamp | duration : $ctrl.build.status.completionTimestamp}}</span>\n" +
+    "<span ng-if=\"!$ctrl.build.status.startTimestamp\">waited for {{$ctrl.build.metadata.creationTimestamp | duration : $ctrl.build.status.completionTimestamp}}</span>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"download-trigger col-xs-3 col-sm-2 col-md-2\">\n" +
+    "<button ng-if=\"$ctrl.build.status.phase === 'Complete'\" ng-click=\"$ctrl.toggleBuildDownloadUrl()\" class=\"btn btn-default btn-sm\">Download</button>\n" +
+    "</div>\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<mobile-client-download-url show-panel=\"$ctrl.buildDownloadPanelExpanded\" mobile-build=\"$ctrl.build\"></mobile-client-download-url>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/mobile-client-builds-list.html',
+    "<div ng-if=\"!$ctrl.loaded\">Loading...</div>\n" +
+    "<div class=\"mobile-client-builds-list\" ng-if=\"$ctrl.loaded && ($ctrl.mobileBuildConfigs | size)\">\n" +
+    "<div class=\"list-pf\">\n" +
+    "<mobile-client-builds-row ng-repeat=\"mobileBuildConfig in $ctrl.mobileBuildConfigs\" api-object=\"mobileBuildConfig\" id=\"{{mobileBuildConfig.metadata.name}}\">\n" +
+    "</mobile-client-builds-row>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"mobile-client-builds-list note\" ng-if=\"$ctrl.loaded && !($ctrl.mobileBuildConfigs | size)\">\n" +
+    "<h2>No Build Config</h2>\n" +
+    "<p>Create a mobile build config to create a mobile client build.</p>\n" +
+    "<button role=\"button\" class=\"btn btn-primary btn-lg\" ng-click=\"$ctrl.goToCreateClientBuild()\">Create Build</button>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/mobile-client-builds-row.html',
+    "<div class=\"list-pf-item\" ng-class=\"{ active: row.expanded }\">\n" +
+    "<div class=\"list-pf-container\" ng-click=\"row.toggleExpand($event)\">\n" +
+    "<div class=\"list-pf-chevron\">\n" +
+    "<div ng-include src=\" 'views/overview/_list-row-chevron.html' \" class=\"list-pf-content\"></div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-content\">\n" +
+    "<div class=\"list-pf-name\">\n" +
+    "<span class=\"status-icon icon-header\" ng-class=\"row.latestBuild.status.phase\">\n" +
+    "<span ng-switch=\"row.latestBuild.status.phase\" class=\"hide-ng-leave\">\n" +
+    "<span ng-switch-when=\"Complete\" aria-hidden=\"true\">\n" +
+    "<i class=\"fa fa-check-circle fa-fw\"></i>\n" +
+    "</span>\n" +
+    "<span ng-switch-when=\"Failed\" aria-hidden=\"true\">\n" +
+    "<i class=\"fa fa-times-circle fa-fw\"></i>\n" +
+    "</span>\n" +
+    "<span ng-switch-default>\n" +
+    "<status-icon status=\"row.latestBuild.status.phase\"></status-icon>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "</span>\n" +
+    "<span class=\"list-row-longname\">\n" +
+    "<a href=\"\" ng-href=\"{{row.navigateToBuildConfig()}}\"> {{ row.apiObject.metadata.name }} </a>\n" +
+    "</span>\n" +
+    "<button class=\"btn btn-default pull-right\" ng-if=\"(!row.latestBuild && !row.expanded) || (row.latestBuild) && row.buildConfigsInstantiateVersion | canI : 'create'\" ng-click=\"row.startBuild()\">Start Build</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-actions\">\n" +
+    "<div class=\"dropdown-kebab-pf\" uib-dropdown>\n" +
+    "<button uib-dropdown-toggle class=\"btn btn-link dropdown-toggle\">\n" +
+    "<i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i>\n" +
+    "<span class=\"sr-only\">Actions</span>\n" +
+    "</button>\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right\" uib-dropdown-menu role=\"menu\">\n" +
+    "<li ng-if=\"row.buildConfigsVersion | canI : 'update'\">\n" +
+    "<a ng-href=\"{{row.apiObject | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
+    "</li>\n" +
+    "<li role=\"menuitem\" ng-if=\"row.buildConfigsVersion | canI : 'delete'\">\n" +
+    "<delete-link resource-name=\"{{row.apiObject.metadata.name}}\" project-name=\"{{row.apiObject.metadata.namespace}}\" kind=\"{{row.apiObject.kind}}\" stay-on-current-page=\"true\"></delete-link>\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-expansion collapse\" ng-if=\"row.expanded\" ng-class=\"{ in: row.expanded }\">\n" +
+    "<div class=\"list-pf-container\">\n" +
+    "<div class=\"expanded-section no-margin\">\n" +
+    "<div class=\"component-label section-label\">BUILD CONFIG</div>\n" +
+    "<div class=\"build-config-details row\">\n" +
+    "<div class=\"col-sm-12 col-md-12 col-lg-6\">\n" +
+    "<b class=\"title\">Repo Url</b>\n" +
+    "<span>{{row.apiObject.spec.source.git.uri}}</span>\n" +
+    "</div>\n" +
+    "<div class=\"col-sm-12 col-md-12 col-lg-6\">\n" +
+    "<b class=\"title\">Branch</b>\n" +
+    "<span>{{row.apiObject.spec.source.git.ref}}</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"build-config-details row\">\n" +
+    "<div class=\"col-sm-12 col-md-12 col-lg-6\">\n" +
+    "<b class=\"title\">Build Platform</b>\n" +
+    "<span>{{row.apiObject | label:'mobile-client-build-platform'}}</span>\n" +
+    "</div>\n" +
+    "<div class=\"col-sm-12 col-md-12 col-lg-6\">\n" +
+    "<b class=\"title\">Jenkinsfile Path</b>\n" +
+    "<span>{{row.apiObject.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"row\" ng-class=\"{'display-download-options': row.latestDownloadPanelExpanded}\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<div class=\"component-label section-label\">Builds</div>\n" +
+    "<div class=\"latest-build\" ng-if=\"row.latestBuild\">\n" +
+    "<div class=\"latest-mobile-build\">\n" +
+    "<div class=\"latest-build-pipeline col-md-10\">\n" +
+    "<build-pipeline build=\"row.latestBuild\"></build-pipeline>\n" +
+    "</div>\n" +
+    "<div class=\"latest-download-trigger col-md-2\" ng-if=\"row.latestBuild.status.phase === 'Complete'\">\n" +
+    "<button role=\"button\" class=\"btn btn-primary btn-lg\" ng-click=\"row.toggleLatestDownloadUrl()\">Download</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<mobile-client-download-url show-panel=\"row.latestDownloadPanelExpanded\" mobile-build=\"row.latestBuild\"></mobile-client-download-url>\n" +
+    "</div>\n" +
+    "<div class=\"no-builds-note\" ng-if=\"!row.latestBuild\">\n" +
+    "<h2> No Builds </h2>\n" +
+    "<p>\n" +
+    "No builds exist for {{row.apiObject.metadata.name}}\n" +
+    "</p>\n" +
+    "<button class=\"btn btn-default\" ng-if=\"row.buildConfigsInstantiateVersion | canI : 'create'\" ng-click=\"row.startBuild()\">Start Build</button>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"row client-build-history\">\n" +
+    "<div class=\"col-md-12\">\n" +
+    "<div ng-if=\"row.historyBuilds | size\" class=\"mobile-chevron\">\n" +
+    "<a href=\"\" ng-click=\"row.toggleBuildHistory()\" class=\"toggle-expand-link\">\n" +
+    "<span ng-if=\"row.historyExpanded\">\n" +
+    "<span class=\"fa fa-angle-down\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Collapse</span>\n" +
+    "<span>Hide build history</span>\n" +
+    "</span>\n" +
+    "<span ng-if=\"!row.historyExpanded\">\n" +
+    "<span class=\"fa fa-angle-right\" aria-hidden=\"true\"></span>\n" +
+    "<span class=\"sr-only\">Expand</span>\n" +
+    "<span>Show build history</span>\n" +
+    "</span>\n" +
+    "</a>\n" +
+    "</div>\n" +
+    "<div ng-if=\"row.historyExpanded\" class=\"build-history-list\">\n" +
+    "<mobile-client-build-history-item build=\"build\" ng-repeat=\"build in row.historyBuilds track by (build | uid)\"></mobile-client-build-history-item>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/mobile-client-download-url.html',
+    "<div ng-if=\"$ctrl.showPanel\" class=\"mobile-client-download-url col-md-12\">\n" +
+    "<div ng-class=\"{'spinner spinner-lg': !$ctrl.url}\" aria-hidden=\"true\"></div>\n" +
+    "<div ng-if=\"$ctrl.url\">\n" +
+    "<div class=\"col-md-6\">\n" +
+    "<p>Download from URL:</p>\n" +
+    "<a ng-href=\"{{$ctrl.url}}\" target=\"_blank\">{{$ctrl.url}}</a>\n" +
+    "</div>\n" +
+    "<div class=\"col-md-6\">\n" +
+    "<span> Or scan QR code: </span>\n" +
+    "<jq-qr-code content=\"$ctrl.url\"/>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>"
+  );
+
+
   $templateCache.put('views/modals/about-compute-units-modal.html',
     "<div class=\"about-compute-units-modal\">\n" +
     "<div class=\"modal-header\">\n" +
