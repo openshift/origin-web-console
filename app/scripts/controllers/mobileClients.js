@@ -65,11 +65,13 @@ angular.module('openshiftConsole')
             DataService.get(mobileClientsVersion, $routeParams.mobileclient, context, { errorNotification: false })
           ]).then(_.spread(function(serviceClasses, serviceInstances, mobileClient) {
               ctrl.loaded = true;
+
               ctrl.serviceClasses = serviceClasses.by('metadata.name');
+              ctrl.serviceInstances = serviceInstances.by('metadata.name');
               ctrl.mobileClient = mobileClient;
-              var marServiceInstanceName = mobileClient.metadata.annotations.service_instance_name;
-              var marClusterClassRef = serviceInstances._data[marServiceInstanceName].spec.clusterServiceClassRef.name;
-              ctrl.coreSdkSetup = serviceClasses._data[marClusterClassRef].spec.externalMetadata.documentationUrl;
+              var marServiceInstanceName = _.get(ctrl, 'mobileClient.metadata.annotations.service_instance_name');
+              var marClusterClassRef = _.get(ctrl, ['serviceInstances', marServiceInstanceName, 'spec', 'clusterServiceClassRef', 'name']);
+              ctrl.coreSdkSetup = _.get(ctrl, ['serviceClasses', marClusterClassRef, 'spec', 'externalMetadata', 'documentationUrl']);
 
               watches.push(DataService.watchObject(mobileClientsVersion, $routeParams.mobileclient, context, function(mobileClient, action) {
                 if (action === 'DELETED') {

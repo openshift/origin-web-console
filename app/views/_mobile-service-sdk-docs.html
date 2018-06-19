@@ -1,24 +1,24 @@
-<div class="col-md-6 service-instance-getting-started" ng-repeat="binding in ctrl.bindings">
-  <div class="row">
-    <div class="col-md-1 vertical-align logo-container">
-      <img class="logo" ng-src="{{binding.logo}}">
+<div class="col-md-6 service-instance-getting-started" ng-repeat="sdkInfo in ctrl.serviceSdkInfo">
+  <div class="col-md-12">
+    <img class="logo" ng-src="{{sdkInfo.logo}}">
+    <div class="service-details">
+      <h4>
+        <div>
+          {{sdkInfo.displayName}}
+        </div>
+        <div>
+          <small class="meta">
+            {{sdkInfo.serviceInstanceName}}
+          </small>
+        </div>
+      </h4>
     </div>
-    <h4 class="col-md-10 vertical-align">
-      <div class="row">
-        {{binding.displayName}}
-      </div>
-      <div class="row">
-        <small class="meta">
-          {{binding.serviceInstanceName}}
-        </small>
-      </div>
-    </h4>
   </div>
-  <div class="row">
-    <div class="col-md-offset-1">
-      <h5>{{binding.description}}</h5>
+  <div class="col-md-12">
+    <div class="sdk-docs">
+      <h5>{{sdkInfo.description}}</h5>
       <h5>
-        <a href={{binding.sdkDocs}}>{{binding.displayName}} SDK setup</a>
+        <a href={{sdkInfo.sdkDocs}}>{{sdkInfo.displayName}} SDK setup</a>
       </h5>
     </div>
   </div>

@@ -47,79 +47,83 @@
           <uib-tabset>
             <uib-tab active="selectedTab.configuration">
               <uib-tab-heading>Configuration</uib-tab-heading>
-              <div class="row">
-                <div class="resource-details col-md-6">
-                  <h3>Mobile Client Details</h3>
-                    <dl class="dl-horizontal left">
-                      <dt>Client Type:</dt>
-                      <dd>{{ctrl.mobileClient.spec.clientType}}</dd>
-                      <dt>Client ID:</dt>
-                      <dd>{{ctrl.mobileClient.spec.appIdentifier}}</dd>
-                      <dt>Client API Key:</dt>
-                      <dd>{{ctrl.mobileClient.spec.apiKey}}</dd>
-                      <dt>DMZ Url:</dt>
-                      <dd>
-                        <inline-edit
-                          pattern="ctrl.validUrlPattern"
-                          pattern-errmsg="'The value provided is not a valid url.'"
-                          label="'Set DMZ Url'"
-                          value="ctrl.mobileClient.spec.dmzUrl"
-                          on-edited="ctrl.setDmzUrl">
-                        </inline-edit>
-                      </dd>
-                    </dl>
-                  <annotations annotations="ctrl.mobileClient.metadata.annotations"></annotations>
+              <div class="configuration">
+                <div class="row">
+                  <div class="resource-details col-md-6">
+                    <h3>Mobile Client Details</h3>
+                      <dl class="dl-horizontal left">
+                        <dt>Client Type:</dt>
+                        <dd>{{ctrl.mobileClient.spec.clientType}}</dd>
+                        <dt>Client ID:</dt>
+                        <dd>{{ctrl.mobileClient.spec.appIdentifier}}</dd>
+                        <dt>Client API Key:</dt>
+                        <dd>{{ctrl.mobileClient.spec.apiKey}}</dd>
+                        <dt>DMZ Url:</dt>
+                        <dd>
+                          <inline-edit
+                            pattern="ctrl.validUrlPattern"
+                            pattern-errmsg="'The value provided is not a valid url.'"
+                            label="'Set DMZ Url'"
+                            value="ctrl.mobileClient.spec.dmzUrl"
+                            on-edited="ctrl.setDmzUrl">
+                          </inline-edit>
+                        </dd>
+                      </dl>
+                  </div>
 
-                  <h3>SDK Configuration</h3>
-                  <h4>
-                    <a href="{{ctrl.coreSdkSetup}}">{{ctrl.mobileClient.spec.clientType | upperFirst}} SDK setup</a>
-                  </h4>
+                  <div class="col-md-6 resource-details client-config">
+                    <h3>Mobile Client Config</h3>
+                    <mobile-client-config mobile-client="ctrl.mobileClient"></mobile-client-config>
+                  </div>
                 </div>
-
-                <div class="col-md-6 resource-details client-config">
-                  <h3>Mobile Client Config</h3>
-                  <mobile-client-config mobile-client="ctrl.mobileClient"></mobile-client-config>
-                </div>
-              </div>
-              <div class="row">
-                <div class="resource-details col-md-12">
-                  <h3>Service Configuration</h3>
-                    <mobile-service-sdk-docs
-                      context="ctrl.projectName"
-                      mobile-client="ctrl.mobileClient"
-                      service-classes="ctrl.serviceClasses"></mobile-service-sdk-docs>
+                <div class="row">
+                  <div class="resource-details col-md-12">
+                    <h3>SDK Configuration</h3>
+                    <h4>
+                      <a href="{{ctrl.coreSdkSetup}}">{{ctrl.mobileClient.spec.clientType | upperFirst}} SDK setup</a>
+                    </h4>
+                  </div>
+                  <div class="resource-details service-configuration col-md-12">
+                    <h3>Service Configuration</h3>
+                      <mobile-service-sdk-docs
+                        context="ctrl.projectName"
+                        mobile-client="ctrl.mobileClient"
+                        service-classes="ctrl.serviceClasses"></mobile-service-sdk-docs>
+                  </div>
                 </div>
               </div>
             </uib-tab>
-            <uib-tab active="selectedTab.builds">
+            <uib-tab ng-if="true" active="selectedTab.builds">
               <uib-tab-heading>Builds</uib-tab-heading>
-                <div class="note" ng-if="(ctrl.mobileCIProvisioning || ctrl.mobileCIDeprovisioning) && ctrl.mobileClient.spec.clientType !== 'xamarin'">
-                  <div class="col-md-offset-1 col-md-10">
-                    <div class="alert alert-info">
-                      <span class="pficon pficon-info"></span>
-                      <span ng-class="{'spinner spinner-xs spinner-inline': (ctrl.mobileCIProvisioning || ctrl.mobileCIDeprovisioning)}" aria-hidden="true"></span>
-                      <span ng-if="ctrl.mobileCIProvisioning" >Mobile CI | CD is provisioning</span>
-                      <span ng-if="ctrl.mobileCIDeprovisioning">Mobile CI | CD is deprovisioning</span>
+                <div class="builds">
+                  <div class="note" ng-if="(ctrl.mobileCIProvisioning || ctrl.mobileCIDeprovisioning) && ctrl.mobileClient.spec.clientType !== 'xamarin'">
+                    <div class="col-md-offset-1 col-md-10">
+                      <div class="alert alert-info">
+                        <span class="pficon pficon-info"></span>
+                        <span ng-class="{'spinner spinner-xs spinner-inline': (ctrl.mobileCIProvisioning || ctrl.mobileCIDeprovisioning)}" aria-hidden="true"></span>
+                        <span ng-if="ctrl.mobileCIProvisioning" >Mobile CI | CD is provisioning</span>
+                        <span ng-if="ctrl.mobileCIDeprovisioning">Mobile CI | CD is deprovisioning</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="note" ng-if="!ctrl.mobileCIService && ctrl.mobileClient.spec.clientType !== 'xamarin'">
+                  <div class="note" ng-if="!ctrl.mobileCIService && ctrl.mobileClient.spec.clientType !== 'xamarin'">
                     <p>Provision a Mobile CI | CD service to create a mobile build.</p>
                     <button class="btn btn-primary btn-lg" ng-click="ctrl.goToMobileServices()">Browse Mobile Catalog</button>
-                </div>
-                <div ng-if="ctrl.mobileClient.spec.clientType === 'xamarin'"  class="row">
-                  <div class="col-md-offset-1 col-md-10">
-                    <div class="alert alert-info">
-                      <span class="pficon pficon-info"></span>
-                      Mobile builds are not avaialble for Xamarin.
+                  </div>
+                  <div ng-if="ctrl.mobileClient.spec.clientType === 'xamarin'"  class="row">
+                    <div class="col-md-offset-1 col-md-10">
+                      <div class="alert alert-info">
+                        <span class="pficon pficon-info"></span>
+                        Mobile builds are not avaialble for Xamarin.
+                      </div>
                     </div>
                   </div>
+                  <mobile-client-builds-list ng-if="ctrl.mobileCIEnabled && ctrl.mobileClient.spec.clientType !== 'xamarin'" mobile-client="ctrl.mobileClient"></mobile-client-builds-list>
                 </div>
-                <mobile-client-builds-list ng-if="ctrl.mobileCIEnabled && ctrl.mobileClient.spec.clientType !== 'xamarin'" mobile-client="ctrl.mobileClient"></mobile-client-builds-list>
             </uib-tab>
-            <uib-tab active="selectedTab.mobileServices" class="mobile-services">
+            <uib-tab ng-if="true" active="selectedTab.mobileServices" class="mobile-services">
               <uib-tab-heading>Mobile Services</uib-tab-heading>
-                <mobile-service-instance-list></mobile-service-instance-list>
+                  <mobile-service-instance-list></mobile-service-instance-list>
             </uib-tab>
           </uib-tabset>
         </div>
