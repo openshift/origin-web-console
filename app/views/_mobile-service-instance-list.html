@@ -1,14 +1,29 @@
-<div class="overview mobile-service-instance-list" ng-if="(ctrl.serviceInstances | size)">
-    <div class="list-pf">
-        <mobile-service-instance-row
-            ng-repeat="serviceInstance in ctrl.serviceInstances track by (serviceInstance | uid)"
-            api-object="serviceInstance"
-            service-class="ctrl.serviceClasses[serviceInstance.spec.clusterServiceClassRef.name]">
-        </mobile-service-instance-row>
+<div ng-if="!ctrl.loaded">Loading...</div>
+
+<div class="overview mobile-service-instance-list" ng-if="ctrl.loaded && ctrl.serviceInstances | size">
+    <div ng-if="ctrl.boundInstances | size">
+        <div class="list-pf">
+            <mobile-service-instance-row
+                ng-repeat="serviceInstance in ctrl.boundInstances track by (serviceInstance | uid)"
+                api-object="serviceInstance"
+                service-class="ctrl.serviceClasses[serviceInstance.spec.clusterServiceClassRef.name]">
+            </mobile-service-instance-row>
+        </div>
+    </div>
+
+    <div ng-if="ctrl.unboundInstances | size">
+        <h3>Unbound Services</h3>
+        <div class="list-pf">
+            <mobile-service-instance-row
+                ng-repeat="serviceInstance in ctrl.unboundInstances track by (serviceInstance | uid)"
+                api-object="serviceInstance"
+                service-class="ctrl.serviceClasses[serviceInstance.spec.clusterServiceClassRef.name]">
+            </mobile-service-instance-row>
+        </div>
     </div>
 </div>
 
-<div class="mobile-service-instance-list note" ng-if="!(ctrl.serviceInstances | size)">
+<div class="mobile-service-instance-list note" ng-if="ctrl.loaded && !(ctrl.serviceInstances | size)">
     <p>Provision a mobile service to integrate it with your mobile client.</p>
-    <button class="btn btn-primary btn-lg" ng-click="ctrl.goToCatalog()">Browse Catalog</button>
+    <button class="btn btn-primary btn-lg" ng-click="ctrl.goToCatalog()">Browse Mobile Services</button>
 </div>
