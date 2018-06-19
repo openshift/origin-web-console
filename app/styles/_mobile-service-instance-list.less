@@ -5,12 +5,36 @@
   }
 
   .mobile-service-instance-row {
-    .icon {
-      clear: both;
-      color: #888;
-      font-size: 2em;
-      margin: auto;
+    &.no-bindings {
+      pointer-events: none;
+      background-color: inherit;
+      border-color: @list-pf-border-color;
+      border-left-color: @color-pf-white;
+      border-right-color: @color-pf-white;
+      border-style: solid;
+      border-width: 1px;
+      border-bottom: none;
+
+      .list-pf-name {
+        .service-name {
+          pointer-events: all;
+        }
+      }
+      .list-pf-container {
+        cursor: default;
+      }
+      .list-pf-content {
+        flex-grow: 1;
+      }
+      .create-binding {
+        pointer-events: all;
+      }
+
+      &.active {
+        border-top-color: @list-pf-border-color;
+      }
     }
+
     .list-pf-name {
       h3 {
         .logo {

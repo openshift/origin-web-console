@@ -19,6 +19,7 @@
       target: '<',
       project: '<',
       onClose: '<',
+      onBindCreated: '<',
       parameterData: '<'
     },
     templateUrl: 'views/directives/bind-service.html'
@@ -197,7 +198,7 @@
       });
     };
 
-    var getBindingMetadata = function(svcToBind, serviceClass) {
+    var getMobileBindingMetadata = function(svcToBind, serviceClass) {
       var consumerId = _.get(ctrl, 'parameterData.CLIENT_ID');
 
       return {
@@ -259,24 +260,15 @@
       }
     };
 
-    ctrl.bindService = function() {
-      var svcToBind = ctrl.target.kind === 'ServiceInstance' ? ctrl.target : ctrl.serviceToBind;
-      var application = ctrl.bindType === 'application' ? ctrl.appToBind : undefined;
-
+    var createBinding = _.bind(function(svcToBind, application, serviceClass, parameterData, bindingMeta) {
       var context = {
         namespace: _.get(svcToBind, 'metadata.namespace')
       };
-
-      var serviceClass = BindingService.getServiceClassForInstance(svcToBind, ctrl.serviceClasses);
-
-      var bindingMeta = {};
-      if (ctrl.isMobileEnabled && isMobileService(serviceClass)) {
-        bindingMeta = getBindingMetadata(svcToBind, serviceClass);
-      }
-
-      BindingService.bindService(svcToBind, application, serviceClass, ctrl.parameterData, bindingMeta).then(function(binding){
+      BindingService.bindService(svcToBind, application, serviceClass, parameterData, bindingMeta).then(function(binding){
         ctrl.binding = binding;
         ctrl.error = null;
+
+        ctrl.bindCreated(ctrl.binding);
 
         bindingWatch = DataService.watchObject(BindingService.bindingResource, _.get(ctrl.binding, 'metadata.name'), context, function(binding) {
           ctrl.binding = binding;
@@ -284,11 +276,37 @@
       }, function(e) {
         ctrl.error = e;
       });
+    }, ctrl);
+
+    var bindMobileService = _.bind(function(svcToBind, serviceClass) {
+      var bindingMeta = getMobileBindingMetadata(svcToBind, serviceClass);
+      createBinding(svcToBind, undefined, serviceClass, ctrl.parameterData, bindingMeta);
+    }, ctrl);
+
+    var bindService = _.bind(function(svcToBind, serviceClass) {
+      var application = ctrl.bindType === 'application' ? ctrl.appToBind : undefined;
+      createBinding(svcToBind, application, serviceClass, ctrl.parameterData);
+    }, ctrl);
+
+    ctrl.bindService = function() {
+      var svcToBind = ctrl.target.kind === 'ServiceInstance' ? ctrl.target : ctrl.serviceToBind;
+      var serviceClass = BindingService.getServiceClassForInstance(svcToBind, ctrl.serviceClasses);
+      if (ctrl.isMobileEnabled && isMobileService(serviceClass)) {
+        bindMobileService(svcToBind, serviceClass);  
+      } else {
+        bindService(svcToBind, serviceClass);
+      }
     };
 
     ctrl.closeWizard = function() {
       if (_.isFunction(ctrl.onClose)) {
         ctrl.onClose();
+      }
+    };
+
+    ctrl.bindCreated = function(binding) {
+      if (_.isFunction(ctrl.onBindCreated)) {
+        ctrl.onBindCreated(binding);
       }
     };
   }
