@@ -1,0 +1,13 @@
+<div ng-if="$ctrl.showPanel" class="mobile-client-download-url col-md-12">
+  <div ng-class="{'spinner spinner-lg': !$ctrl.url}" aria-hidden="true"></div>
+  <div ng-if="$ctrl.url">
+    <div class="col-md-6">
+      <p>Download from URL:</p>
+      <a ng-href="{{$ctrl.url}}" target="_blank">{{$ctrl.url}}</a>
+    </div>
+    <div class="col-md-6">
+      <span> Or scan QR code: </span>
+      <jq-qr-code content="$ctrl.url" />
+    </div>
+  </div>
+</div>

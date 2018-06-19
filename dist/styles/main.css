@@ -5261,7 +5261,8 @@ h2+.list-view-pf{margin-top:20px}
 .list-view-pf .list-group-item-heading small{overflow:hidden;text-overflow:ellipsis;color:#757575}
 .list-view-pf .list-group-item-text{margin-bottom:5px}
 .list-view-pf-additional-info-item{display:inline-block;text-align:left;width:100%}
-.list-view-pf-additional-info-item image-names,.monitoring-page .list-pf-expansion .list-pf-container{display:block}
+.mobile-client-builds-list .no-builds-note,.mobile-client-builds-list.note{text-align:center}
+.list-view-pf-additional-info-item image-names{display:block}
 .list-view-pf-description{flex:1 0 55%}
 .list-view-pf-main-info{padding-bottom:10px;padding-top:10px}
 @media (max-width:991px){.list-view-pf-main-info .list-view-pf-body{display:block}
@@ -5269,9 +5270,44 @@ h2+.list-view-pf{margin-top:20px}
 @media (min-width:992px){.list-view-pf .list-group-item-heading,.list-view-pf .list-group-item-text{flex:1 0 auto;margin:0;padding:0 20px 0 0;width:50%}
 .list-view-pf-additional-info{width:40%}
 .list-view-pf-description{width:60%}
-.monitoring-page .list-pf-main-content{flex-basis:30%}
 }
+.mobile-client-builds-list .status-icon{font-size:13px}
+.mobile-client-builds-list .status-icon.Complete{color:#3f9c35}
+.mobile-client-builds-list .status-icon.Failed{color:#c00}
+.mobile-client-builds-list .build-config-details .title{display:inline-block;margin-right:40px;width:100px}
+.mobile-client-builds-list .build-timestamp{color:#72767b}
+.mobile-client-builds-list .build-summary{padding-left:20px}
+.mobile-client-builds-list .client-build-history{margin-top:10px}
+.mobile-client-builds-list .client-build-history .fa-angle-down,.mobile-client-builds-list .client-build-history .fa-angle-right{color:#363636}
+.mobile-client-builds-list .client-build-history .build-history-list .mobile-client-build-history-item{border:1px solid #d1d1d1;box-sizing:border-box;display:flex;flex-wrap:wrap;margin-bottom:-1px;padding:0}
+.mobile-client-builds-list .client-build-history .build-history-list .mobile-client-build-history-item .status-panel{align-items:center;display:flex;padding:0}
+.mobile-client-builds-list .client-build-history .build-history-list .mobile-client-build-history-item .status-panel .build-summary{border:none}
+.mobile-client-builds-list .client-build-history .build-history-list .mobile-client-build-history-item .status-panel .state{display:flex;flex-wrap:wrap;padding:0}
+.mobile-client-builds-list .client-build-history .build-history-list .mobile-client-build-history-item .status-panel .state .col-sm-12{padding-left:10px}
+.mobile-client-builds-list .client-build-history .build-history-list .mobile-client-build-history-item .status-panel .state .info{display:inline;padding-right:12px}
+.mobile-client-builds-list .client-build-history .build-history-list .mobile-client-build-history-item .status-panel .state .info.logs{padding-right:60px}
+.mobile-client-builds-list .client-build-history .build-history-list .mobile-client-build-history-item .download-trigger{align-items:center;display:flex;justify-content:flex-end;padding:13px 20px 13px 0}
+.mobile-client-builds-list .client-build-history .build-history-list .mobile-client-build-history-item .download-trigger button{color:#363636;width:91px}
+.mobile-client-builds-list .client-build-history .mobile-chevron{margin-bottom:10px}
+.mobile-client-builds-list .client-build-history .mobile-chevron a{text-decoration:none}
+.mobile-client-builds-list .component-label{padding-top:15px}
+.mobile-client-builds-list .expanded-section{width:100%}
+.mobile-client-builds-list .icon-header{font-size:19px!important}
+.mobile-client-builds-list .latest-build{display:inline-block;width:100%;border:1px solid #d1d1d1}
+.mobile-client-builds-list .latest-mobile-build{display:flex}
+.mobile-client-builds-list .latest-mobile-build .latest-build-pipeline{padding:0px}
+.mobile-client-builds-list .latest-mobile-build .latest-build-pipeline .build-pipeline,.mobile-client-builds-list .latest-mobile-build .latest-build-pipeline .build-summary{border:none}
+@media (min-width:1200px){.mobile-client-builds-list .latest-mobile-build .latest-build-pipeline .pipeline-stage{width:25%}
+}
+.mobile-client-builds-list .latest-mobile-build .latest-download-trigger{align-items:center;display:flex;justify-content:flex-end}
+.mobile-client-builds-list .list-pf-content .list-row-longname{display:inline-block;height:26px;font-size:16px;line-height:26px}
+.mobile-client-builds-list .mobile-client-download-url{margin-top:-1px;padding:0px}
+.mobile-client-builds-list .mobile-client-download-url canvas{height:180px}
+.mobile-client-builds-list .mobile-client-download-url p,.mobile-client-builds-list .mobile-client-download-url span{font-weight:700}
+.mobile-client-builds-list .mobile-client-download-url .spinner{margin-top:15px;margin-bottom:15px}
+.mobile-client-builds-list .qr-code-container{display:flex;padding-top:10px;padding-bottom:10px}
 .monitoring-page .list-pf-content{min-height:45px}
+.monitoring-page .list-pf-expansion .list-pf-container{display:block}
 .monitoring-page .list-pf-expansion .log-fixed-height.empty-state-message,.monitoring-page .list-pf-expansion .metrics .empty-state-message{margin:10px 0 0;padding:0;text-align:left}
 .monitoring-page .list-pf-expansion .log-fixed-height.empty-state-message h2,.monitoring-page .list-pf-expansion .metrics .empty-state-message h2{margin-top:0}
 .monitoring-page .list-pf-expansion .metrics .empty-state-message .pficon-error-circle-o{display:none}
@@ -5281,7 +5317,8 @@ h2+.list-view-pf{margin-top:20px}
 .monitoring-page .list-pf-main-content .list-pf-title small{display:block;font-size:11px;font-weight:400;line-height:normal;overflow:hidden;text-overflow:ellipsis;color:#757575}
 .monitoring-page .list-pf-additional-content small{white-space:nowrap}
 .monitoring-page .list-pf-additional-content .list-pf-additional-content-item{align-self:center;width:100%}
-@media (min-width:992px){.monitoring-page .list-pf-additional-content{flex-basis:70%}
+@media (min-width:992px){.monitoring-page .list-pf-main-content{flex-basis:30%}
+.monitoring-page .list-pf-additional-content{flex-basis:70%}
 .monitoring-page .list-pf-additional-content .list-pf-additional-content-item{width:40%}
 .monitoring-page .list-pf-additional-content .list-pf-additional-content-item+.list-pf-additional-content-item{width:50%}
 }

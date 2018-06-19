@@ -1,0 +1,57 @@
+<div class="mobile-client-build-history-item col-xs-12">
+  <div class="status-panel col-xs-9 col-sm-10 col-md-10">
+    <div class="build-summary">
+      <div>
+        <span class="status-icon" ng-class="$ctrl.build.status.phase">
+          <span ng-switch="$ctrl.build.status.phase" class="hide-ng-leave">
+            <span ng-switch-when="Complete" aria-hidden="true">
+              <i class="fa fa-check-circle fa-fw"></i>
+            </span>
+            <span ng-switch-when="Failed" aria-hidden="true">
+              <i class="fa fa-times-circle fa-fw"></i>
+            </span>
+            <span ng-switch-default>
+              <status-icon status="$ctrl.build.status.phase"></status-icon>
+            </span>
+          </span>
+        </span>
+        <a ng-href="{{$ctrl.build | navigateResourceURL}}">Build #{{$ctrl.build | annotation : 'buildNumber'}}</a>
+      </div>
+    </div>
+    <div class="state col-md-12">
+      <div class="col-sm-12 col-md-7">
+        <div class="info status">
+          <span>{{$ctrl.build.status.phase}}</span>
+        </div>
+        <div class="info logs">
+          <span ng-if="('builds/log' | canI : 'get')">
+            <a ng-href="{{$ctrl.build | buildLogURL}}">View Log</a>
+          </span>
+        </div>
+        <div class="info creation build-timestamp">
+          <span am-time-ago="$ctrl.build.metadata.creationTimestamp"></span>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-5">
+        <span>Duration:</span>
+        <span ng-switch="$ctrl.build.status.phase" class="hide-ng-leave">
+          <span ng-switch-when="Complete">{{($ctrl.build.status.startTimestamp || $ctrl.build.metadata.creationTimestamp) | duration : $ctrl.build.status.completionTimestamp}}</span>
+          <span ng-switch-when="Failed">{{$ctrl.build.status.startTimestamp | duration : $ctrl.build.status.completionTimestamp}}</span>
+          <span ng-switch-when="Running">running for <duration-until-now timestamp="$ctrl.build.status.startTimestamp"></duration-until-now></span>
+          <span ng-switch-when="New">waiting for <duration-until-now timestamp="$ctrl.build.metadata.creationTimestamp"></duration-until-now></span>
+          <span ng-switch-when="Pending">waiting for <duration-until-now timestamp="$ctrl.build.metadata.creationTimestamp"></duration-until-now></span>
+          <span ng-switch-default>
+            <span ng-if="$ctrl.build.status.startTimestamp">{{$ctrl.build.status.startTimestamp | duration : $ctrl.build.status.completionTimestamp}}</span>
+            <span ng-if="!$ctrl.build.status.startTimestamp">waited for {{$ctrl.build.metadata.creationTimestamp | duration : $ctrl.build.status.completionTimestamp}}</span>
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="download-trigger col-xs-3 col-sm-2 col-md-2">
+    <button ng-if="$ctrl.build.status.phase === 'Complete'" ng-click="$ctrl.toggleBuildDownloadUrl()" class="btn btn-default btn-sm">Download</button>
+  </div>
+  <div class="col-md-12">
+    <mobile-client-download-url show-panel="$ctrl.buildDownloadPanelExpanded" mobile-build="$ctrl.build"></mobile-client-download-url>
+  </div>
+</div>
