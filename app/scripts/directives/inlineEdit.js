@@ -4,7 +4,6 @@ angular.module('openshiftConsole').component('inlineEdit', {
   controller: [
     InlineEdit
   ],
-  controllerAs: '$ctrl',
   bindings: {
     label: '<',
     pattern: '<',

@@ -1,11 +1,5 @@
 'use strict';
 
-/**
- * @ngdoc function
- * @name openshiftConsole.controller:MobileClientsController
- * @description
- * Controller of the openshiftConsole
- */
 angular.module('openshiftConsole')
   .controller('MobileClientsController', function(
     $filter,
@@ -24,8 +18,10 @@ angular.module('openshiftConsole')
       var clusterServiceClassesVersion = APIService.getPreferredVersion('clusterserviceclasses');
       var mobileClientsVersion = APIService.getPreferredVersion('mobileclients');
       var isServiceInstanceReady = $filter('isServiceInstanceReady');
+      var marServiceInstanceNameAnnotation = $filter('annotationName')('mobileServiceInstanceName');
 
       var watches = [];
+      var projectContext;
       ctrl.projectName = $routeParams.project;
       ctrl.emptyMessage = 'Loading...';
       ctrl.alerts = {};
@@ -41,10 +37,10 @@ angular.module('openshiftConsole')
       ctrl.validUrlPattern = VALID_URL_PATTERN;
 
       ctrl.setDmzUrl = function(dmzUrl) {
-        var mobileClient = angular.copy(ctrl.mobileClient);
-        mobileClient.spec['dmzUrl'] = dmzUrl;
+        var updatedMobileClient = angular.copy(ctrl.mobileClient);
+        updatedMobileClient.spec['dmzUrl'] = dmzUrl;
 
-        DataService.update(APIService.getPreferredVersion('mobileclients'), ctrl.mobileClient.metadata.name, mobileClient, ctrl.projectContext)
+        DataService.update(mobileClientsVersion, ctrl.mobileClient.metadata.name, updatedMobileClient, projectContext)
         .then(function() {
           NotificationsService.addNotification({
             type: "success",
@@ -53,14 +49,49 @@ angular.module('openshiftConsole')
         });
       };
 
+      function setMobileCICDWatch(context) {
+        watches.push(DataService.watch(serviceInstanceVersion, context, function (serviceInstances) {
+          $scope.serviceInstances = serviceInstances.by("metadata.name");
+          ctrl.mobileCIService = _.find($scope.serviceInstances, function(serviceInstance) {
+            return /aerogear-digger/.test(serviceInstance.metadata.name);
+          });
+
+          ctrl.mobileCIProvisioning = _.get(ctrl, 'mobileCIService.status.currentOperation') === 'Provision';
+          ctrl.mobileCIDeprovisioning = _.get(ctrl, 'mobileCIService.status.currentOperation') === 'Deprovision';
+          ctrl.mobileCIEnabled = isServiceInstanceReady(ctrl.mobileCIService);
+        }));
+      }
+
+      function setCoreSdkSetup() {
+        var marServiceInstanceName = _.get(ctrl, ['mobileClient', 'metadata', 'annotations', marServiceInstanceNameAnnotation]);
+        var marClusterClassRef = _.get(ctrl, ['serviceInstances', marServiceInstanceName, 'spec', 'clusterServiceClassRef', 'name']);
+        ctrl.coreSdkSetup = _.get(ctrl, ['serviceClasses', marClusterClassRef, 'spec', 'externalMetadata', 'documentationUrl']);
+      }
+
+      function setMobileClientWatch(context) {
+        watches.push(DataService.watchObject(mobileClientsVersion, $routeParams.mobileclient, context, function(mobileClient, action) {
+          if (action === 'DELETED') {
+            ctrl.alerts['deleted'] = {
+              type: 'warning',
+              message: 'This mobile client has been deleted.'
+            };
+          }
+          ctrl.mobileClient = mobileClient;
+        }));
+      }
+
+
       ProjectsService
         .get(ctrl.projectName)
         .then(_.spread(function(project, context) {
           ctrl.project = project;
-          ctrl.projectContext = context;
+          projectContext = context;
+
+          setMobileCICDWatch(projectContext);
+          setMobileClientWatch(projectContext);
 
           return $q.all([
-            DataService.list(clusterServiceClassesVersion, ctrl.projectContext),
+            DataService.list(clusterServiceClassesVersion, projectContext),
             DataService.list(serviceInstanceVersion, context),
             DataService.get(mobileClientsVersion, $routeParams.mobileclient, context, { errorNotification: false })
           ]).then(_.spread(function(serviceClasses, serviceInstances, mobileClient) {
@@ -69,31 +100,8 @@ angular.module('openshiftConsole')
               ctrl.serviceClasses = serviceClasses.by('metadata.name');
               ctrl.serviceInstances = serviceInstances.by('metadata.name');
               ctrl.mobileClient = mobileClient;
-              var marServiceInstanceName = _.get(ctrl, 'mobileClient.metadata.annotations.service_instance_name');
-              var marClusterClassRef = _.get(ctrl, ['serviceInstances', marServiceInstanceName, 'spec', 'clusterServiceClassRef', 'name']);
-              ctrl.coreSdkSetup = _.get(ctrl, ['serviceClasses', marClusterClassRef, 'spec', 'externalMetadata', 'documentationUrl']);
 
-              watches.push(DataService.watchObject(mobileClientsVersion, $routeParams.mobileclient, context, function(mobileClient, action) {
-                if (action === 'DELETED') {
-                  ctrl.alerts['deleted'] = {
-                    type: 'warning',
-                    message: 'This mobile client has been deleted.'
-                  };
-                }
-                ctrl.mobileClient = mobileClient;
-              }));
-
-              watches.push(DataService.watch(serviceInstanceVersion, context, function (serviceInstances) {
-                $scope.serviceInstances = serviceInstances.by("metadata.name");
-                ctrl.mobileCIService = _.find($scope.serviceInstances, function(serviceInstance) {
-                  return /aerogear-digger/.test(serviceInstance.metadata.name);
-                });
-
-                ctrl.mobileCIProvisioning = _.get(ctrl, 'mobileCIService.status.currentOperation') === 'Provision';
-                ctrl.mobileCIDeprovisioning = _.get(ctrl, 'mobileCIService.status.currentOperation') === 'Deprovision';
-                ctrl.mobileCIEnabled = isServiceInstanceReady(ctrl.mobileCIService);
-              }));
-
+              setCoreSdkSetup();
             }),
             function(e) {
               ctrl.loaded = true;
