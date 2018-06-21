@@ -22786,10 +22786,13 @@ e.each(n, function(r, l) {
 });
 }
 function a(e) {
-var t = qe.defaults.oLanguage, n = e.sZeroRecords;
-!e.sEmptyTable && n && "No data available in table" === t.sEmptyTable && Fe(e, e, "sZeroRecords", "sEmptyTable"), !e.sLoadingRecords && n && "Loading..." === t.sLoadingRecords && Fe(e, e, "sZeroRecords", "sLoadingRecords"), e.sInfoThousands && (e.sThousands = e.sInfoThousands);
-var i = e.sDecimal;
-i && je(i);
+var t = qe.defaults.oLanguage, n = t.sDecimal;
+if (n && je(n), e) {
+var i = e.sZeroRecords;
+!e.sEmptyTable && i && "No data available in table" === t.sEmptyTable && Fe(e, e, "sZeroRecords", "sEmptyTable"), !e.sLoadingRecords && i && "Loading..." === t.sLoadingRecords && Fe(e, e, "sZeroRecords", "sLoadingRecords"), e.sInfoThousands && (e.sThousands = e.sInfoThousands);
+var r = e.sDecimal;
+r && n !== r && je(r);
+}
 }
 function s(e) {
 ht(e, "ordering", "bSort"), ht(e, "orderMulti", "bSortMulti"), ht(e, "orderClasses", "bSortClasses"), ht(e, "orderCellsTop", "bSortCellsTop"), ht(e, "order", "aaSorting"), ht(e, "orderFixed", "aaSortingFixed"), ht(e, "paging", "bPaginate"), ht(e, "pagingType", "sPaginationType"), ht(e, "pageLength", "iDisplayLength"), ht(e, "searching", "bFilter"), "boolean" == typeof e.sScrollX && (e.sScrollX = e.sScrollX ? "100%" : ""), "boolean" == typeof e.scrollX && (e.scrollX = e.scrollX ? "100%" : "");
@@ -23078,7 +23081,7 @@ for (a = r || n.createElement("tr"), d.nTr = a, d.anCells = f, a._DT_RowIndex = 
 row: i,
 column: c
 }, f.push(s), r && !l.mRender && l.mData === c || e.isPlainObject(l.mData) && l.mData._ === c + ".display" || (s.innerHTML = x(t, i, c, "display")), l.sClass && (s.className += " " + l.sClass), l.bVisible && !r ? a.appendChild(s) : !l.bVisible && r && s.parentNode.removeChild(s), l.fnCreatedCell && l.fnCreatedCell.call(t.oInstance, s, x(t, i, c), h, i, c);
-Le(t, "aoRowCreatedCallback", null, [ a, h, i ]);
+Le(t, "aoRowCreatedCallback", null, [ a, h, i, f ]);
 }
 d.nTr.setAttribute("role", "row");
 }
@@ -23138,7 +23141,7 @@ if (0 !== s) {
 var _ = a[o % s];
 y._sRowStripe != _ && (e(w).removeClass(y._sRowStripe).addClass(_), y._sRowStripe = _);
 }
-Le(t, "aoRowCallback", null, [ w, y._aData, o, v ]), r.push(w), o++;
+Le(t, "aoRowCallback", null, [ w, y._aData, o, v, b ]), r.push(w), o++;
 } else {
 var x = l.sZeroRecords;
 1 == t.iDraw && "ajax" == Ne(t) ? x = l.sLoadingRecords : l.sEmptyTable && 0 === t.fnRecordsTotal() && (x = l.sEmptyTable), r[0] = e("<tr/>", {
@@ -23221,9 +23224,8 @@ var a, s = t.ajax, l = t.oInstance, c = function(e) {
 Le(t, null, "xhr", [ t, e, t.jqXHR ]), i(e);
 };
 if (e.isPlainObject(s) && s.data) {
-a = s.data;
-var u = e.isFunction(a) ? a(n, t) : a;
-n = e.isFunction(a) && u ? u : e.extend(!0, n, u), delete s.data;
+var u = "function" == typeof (a = s.data) ? a(n, t) : a;
+n = "function" == typeof a && u ? u : e.extend(!0, n, u), delete s.data;
 }
 var d = {
 data: n,
@@ -23246,7 +23248,7 @@ value: e
 };
 }), c, t) : t.sAjaxSource || "string" == typeof s ? t.jqXHR = e.ajax(e.extend(d, {
 url: s || t.sAjaxSource
-})) : e.isFunction(s) ? t.jqXHR = s.call(l, n, c, t) : (t.jqXHR = e.ajax(e.extend(d, s)), s.data = a);
+})) : "function" == typeof s ? t.jqXHR = s.call(l, n, c, t) : (t.jqXHR = e.ajax(e.extend(d, s)), s.data = a);
 }
 function V(e) {
 return !e.bAjaxDataGet || (e.iDraw++, de(e, !0), H(e, U(e), function(t) {
@@ -23550,9 +23552,9 @@ H.push(t.innerHTML), N.push(ye(e(t).css("width")));
 }, a), pe(function(e, t) {
 e.style.width = N[t];
 }, r), e(a).height(0)), pe(function(e, t) {
-e.innerHTML = '<div class="dataTables_sizing" style="height:0;overflow:hidden;">' + B[t] + "</div>", e.style.width = R[t];
+e.innerHTML = '<div class="dataTables_sizing">' + B[t] + "</div>", e.childNodes[0].style.height = "0", e.childNodes[0].style.overflow = "hidden", e.style.width = R[t];
 }, o), I && pe(function(e, t) {
-e.innerHTML = '<div class="dataTables_sizing" style="height:0;overflow:hidden;">' + H[t] + "</div>", e.style.width = N[t];
+e.innerHTML = '<div class="dataTables_sizing">' + H[t] + "</div>", e.childNodes[0].style.height = "0", e.childNodes[0].style.overflow = "hidden", e.style.width = N[t];
 }, a), E.outerWidth() < d ? (u = S.scrollHeight > S.offsetHeight || "scroll" == $.css("overflow-y") ? d + b : d, L && (S.scrollHeight > S.offsetHeight || "scroll" == $.css("overflow-y")) && (M.width = ye(u - b)), "" !== g && "" === m || Ee(t, 1, "Possible column misalignment", 6)) : u = "100%", A.width = ye(u), w.width = ye(u), I && (t.nScrollFoot.style.width = ye(u)), v || L && (A.height = ye(F.offsetHeight + b));
 var z = E.outerWidth();
 C[0].style.width = ye(z), x.width = ye(z);
@@ -23761,8 +23763,8 @@ for (var o in n) n.hasOwnProperty(o) && (r = n[o], e.isPlainObject(r) ? (e.isPla
 return t;
 }
 function Ie(t, n, i) {
-e(t).on("click.DT", n, function(e) {
-t.blur(), i(e);
+e(t).on("click.DT", n, function(n) {
+e(t).blur(), i(n);
 }).on("keypress.DT", n, function(e) {
 13 === e.which && (e.preventDefault(), i(e));
 }).on("selectstart.DT", function() {
@@ -23900,7 +23902,7 @@ s(x), l(x.column), o(x, x, !0), o(x.column, x.column, !0), o(x, e.extend(g, C.da
 var S = qe.settings;
 for (m = 0, f = S.length; m < f; m++) {
 var A = S[m];
-if (A.nTable == this || A.nTHead.parentNode == this || A.nTFoot && A.nTFoot.parentNode == this) {
+if (A.nTable == this || A.nTHead && A.nTHead.parentNode == this || A.nTFoot && A.nTFoot.parentNode == this) {
 var k = g.bRetrieve !== i ? g.bRetrieve : x.bRetrieve, T = g.bDestroy !== i ? g.bDestroy : x.bDestroy;
 if (r || k) return A.oInstance;
 if (T) {
@@ -23920,7 +23922,7 @@ sDestroyWidth: C[0].style.width,
 sInstance: v,
 sTableId: v
 });
-D.nTable = this, D.oApi = n.internal, D.oInit = g, S.push(D), D.oInstance = 1 === n.length ? n : C.dataTable(), s(g), g.oLanguage && a(g.oLanguage), g.aLengthMenu && !g.iDisplayLength && (g.iDisplayLength = e.isArray(g.aLengthMenu[0]) ? g.aLengthMenu[0][0] : g.aLengthMenu[0]), g = Me(e.extend(!0, {}, x), g), Fe(D.oFeatures, g, [ "bPaginate", "bLengthChange", "bFilter", "bSort", "bSortMulti", "bInfo", "bProcessing", "bAutoWidth", "bSortClasses", "bServerSide", "bDeferRender" ]), Fe(D, g, [ "asStripeClasses", "ajax", "fnServerData", "fnFormatNumber", "sServerMethod", "aaSorting", "aaSortingFixed", "aLengthMenu", "sPaginationType", "sAjaxSource", "sAjaxDataProp", "iStateDuration", "sDom", "bSortCellsTop", "iTabIndex", "fnStateLoadCallback", "fnStateSaveCallback", "renderer", "searchDelay", "rowId", [ "iCookieDuration", "iStateDuration" ], [ "oSearch", "oPreviousSearch" ], [ "aoSearchCols", "aoPreSearchCols" ], [ "iDisplayLength", "_iDisplayLength" ] ]), Fe(D.oScroll, g, [ [ "sScrollX", "sX" ], [ "sScrollXInner", "sXInner" ], [ "sScrollY", "sY" ], [ "bScrollCollapse", "bCollapse" ] ]), 
+D.nTable = this, D.oApi = n.internal, D.oInit = g, S.push(D), D.oInstance = 1 === n.length ? n : C.dataTable(), s(g), a(g.oLanguage), g.aLengthMenu && !g.iDisplayLength && (g.iDisplayLength = e.isArray(g.aLengthMenu[0]) ? g.aLengthMenu[0][0] : g.aLengthMenu[0]), g = Me(e.extend(!0, {}, x), g), Fe(D.oFeatures, g, [ "bPaginate", "bLengthChange", "bFilter", "bSort", "bSortMulti", "bInfo", "bProcessing", "bAutoWidth", "bSortClasses", "bServerSide", "bDeferRender" ]), Fe(D, g, [ "asStripeClasses", "ajax", "fnServerData", "fnFormatNumber", "sServerMethod", "aaSorting", "aaSortingFixed", "aLengthMenu", "sPaginationType", "sAjaxSource", "sAjaxDataProp", "iStateDuration", "sDom", "bSortCellsTop", "iTabIndex", "fnStateLoadCallback", "fnStateSaveCallback", "renderer", "searchDelay", "rowId", [ "iCookieDuration", "iStateDuration" ], [ "oSearch", "oPreviousSearch" ], [ "aoSearchCols", "aoPreSearchCols" ], [ "iDisplayLength", "_iDisplayLength" ] ]), Fe(D.oScroll, g, [ [ "sScrollX", "sX" ], [ "sScrollXInner", "sXInner" ], [ "sScrollY", "sY" ], [ "bScrollCollapse", "bCollapse" ] ]), 
 Fe(D.oLanguage, g, "fnInfoCallback"), Pe(D, "aoDrawCallback", g.fnDrawCallback, "user"), Pe(D, "aoServerParams", g.fnServerParams, "user"), Pe(D, "aoStateSaveParams", g.fnStateSaveParams, "user"), Pe(D, "aoStateLoadParams", g.fnStateLoadParams, "user"), Pe(D, "aoStateLoaded", g.fnStateLoaded, "user"), Pe(D, "aoRowCallback", g.fnRowCallback, "user"), Pe(D, "aoRowCreatedCallback", g.fnCreatedRow, "user"), Pe(D, "aoHeaderCallback", g.fnHeaderCallback, "user"), Pe(D, "aoFooterCallback", g.fnFooterCallback, "user"), Pe(D, "aoInitComplete", g.fnInitComplete, "user"), Pe(D, "aoPreDrawCallback", g.fnPreDrawCallback, "user"), D.rowIdFn = $(g.rowId), c(D);
 var E = D.oClasses;
 if (e.extend(E, qe.ext.classes, g.oClasses), C.addClass(E.sTable), D.iInitDisplayStart === i && (D.iInitDisplayStart = g.iDisplayStart, D._iDisplayStart = g.iDisplayStart), null !== g.iDeferLoading) {
@@ -23993,7 +23995,7 @@ D.aiDisplay = D.aiDisplayMaster.slice(), D.bInitialised = !0, !1 === b && re(D);
 g.bStateSave ? (H.bStateSave = !0, Pe(D, "aoDrawCallback", ke, "state_save"), Te(D, 0, V)) : V();
 } else Ee(null, 0, "Non-table node initialisation (" + this.nodeName + ")", 2);
 }), n = null, this;
-}, Ge = {}, Ye = /[\r\n]/g, Ke = /<.*?>/g, Xe = /^\d{2,4}[\.\/\-]\d{1,2}[\.\/\-]\d{1,2}([T ]{1}\d{1,2}[:\.]\d{2}([\.:]\d{2})?)?$/, Qe = new RegExp("(\\" + [ "/", ".", "*", "+", "?", "|", "(", ")", "[", "]", "{", "}", "\\", "$", "^", "-" ].join("|\\") + ")", "g"), Ze = /[',$£€¥%\u2009\u202F\u20BD\u20a9\u20BArfk]/gi, Je = function(e) {
+}, Ge = {}, Ye = /[\r\n]/g, Ke = /<.*?>/g, Xe = /^\d{2,4}[\.\/\-]\d{1,2}[\.\/\-]\d{1,2}([T ]{1}\d{1,2}[:\.]\d{2}([\.:]\d{2})?)?$/, Qe = new RegExp("(\\" + [ "/", ".", "*", "+", "?", "|", "(", ")", "[", "]", "{", "}", "\\", "$", "^", "-" ].join("|\\") + ")", "g"), Ze = /[',$£€¥%\u2009\u202F\u20BD\u20a9\u20BArfkɃΞ]/gi, Je = function(e) {
 return !e || !0 === e || "-" === e;
 }, et = function(e) {
 var t = parseInt(e, 10);
@@ -24309,35 +24311,41 @@ page: "all"
 for (var t = 0, n = e.length; t < n; t++) if (e[t].length > 0) return e[0] = e[t], e[0].length = 1, e.length = 1, e.context = [ e.context[t] ], e;
 return e.length = 0, e;
 }, Tt = function(t, n) {
-var i, r, o, a = [], s = t.aiDisplay, l = t.aiDisplayMaster, c = n.search, u = n.order, d = n.page;
-if ("ssp" == Ne(t)) return "removed" === c ? [] : st(0, l.length);
-if ("current" == d) for (i = t._iDisplayStart, r = t.fnDisplayEnd(); i < r; i++) a.push(s[i]); else if ("current" == u || "applied" == u) a = "none" == c ? l.slice() : "applied" == c ? s.slice() : e.map(l, function(t, n) {
-return -1 === e.inArray(t, s) ? t : null;
-}); else if ("index" == u || "original" == u) for (i = 0, r = t.aoData.length; i < r; i++) "none" == c ? a.push(i) : (-1 === (o = e.inArray(i, s)) && "removed" == c || o >= 0 && "applied" == c) && a.push(i);
-return a;
+var i, r = [], o = t.aiDisplay, a = t.aiDisplayMaster, s = n.search, l = n.order, c = n.page;
+if ("ssp" == Ne(t)) return "removed" === s ? [] : st(0, a.length);
+if ("current" == c) for (d = t._iDisplayStart, h = t.fnDisplayEnd(); d < h; d++) r.push(o[d]); else if ("current" == l || "applied" == l) {
+if ("none" == s) r = a.slice(); else if ("applied" == s) r = o.slice(); else if ("removed" == s) {
+for (var u = {}, d = 0, h = o.length; d < h; d++) u[o[d]] = null;
+r = e.map(a, function(e) {
+return u.hasOwnProperty(e) ? null : e;
+});
+}
+} else if ("index" == l || "original" == l) for (d = 0, h = t.aoData.length; d < h; d++) "none" == s ? r.push(d) : (-1 === (i = e.inArray(d, o)) && "removed" == s || i >= 0 && "applied" == s) && r.push(d);
+return r;
 }, Dt = function(t, n, r) {
 var o;
 return $t("row", n, function(n) {
-var a = et(n);
+var a = et(n), s = t.aoData;
 if (null !== a && !r) return [ a ];
 if (o || (o = Tt(t, r)), null !== a && -1 !== e.inArray(a, o)) return [ a ];
 if (null === n || n === i || "" === n) return o;
 if ("function" == typeof n) return e.map(o, function(e) {
-var i = t.aoData[e];
-return n(e, i._aData, i.nTr) ? e : null;
+var t = s[e];
+return n(e, t._aData, t.nTr) ? e : null;
 });
-var s = lt(at(t.aoData, o, "nTr"));
 if (n.nodeName) {
-if (n._DT_RowIndex !== i) return [ n._DT_RowIndex ];
-if (n._DT_CellIndex) return [ n._DT_CellIndex.row ];
-var l = e(n).closest("*[data-dt-row]");
-return l.length ? [ l.data("dt-row") ] : [];
+var l = n._DT_RowIndex, c = n._DT_CellIndex;
+if (l !== i) return s[l] && s[l].nTr === n ? [ l ] : [];
+if (c) return s[c.row] && s[c.row].nTr === n ? [ c.row ] : [];
+var u = e(n).closest("*[data-dt-row]");
+return u.length ? [ u.data("dt-row") ] : [];
 }
 if ("string" == typeof n && "#" === n.charAt(0)) {
-var c = t.aIds[n.replace(/^#/, "")];
-if (c !== i) return [ c.idx ];
+var d = t.aIds[n.replace(/^#/, "")];
+if (d !== i) return [ d.idx ];
 }
-return e(s).filter(n).map(function() {
+var h = lt(at(t.aoData, o, "nTr"));
+return e(h).filter(n).map(function() {
 return this._DT_RowIndex;
 }).toArray();
 }, t, r);
@@ -24395,9 +24403,11 @@ return o;
 return i.pop(), e.merge(i, n), i;
 }), ze("row()", function(e, t) {
 return kt(this.rows(e, t));
-}), ze("row().data()", function(e) {
-var t = this.context;
-return e === i ? t.length && this.length ? t[0].aoData[this[0]]._aData : i : (t[0].aoData[this[0]]._aData = e, E(t[0], this[0], "data"), this);
+}), ze("row().data()", function(t) {
+var n = this.context;
+if (t === i) return n.length && this.length ? n[0].aoData[this[0]]._aData : i;
+var r = n[0].aoData[this[0]];
+return r._aData = t, e.isArray(t) && r.nTr.id && A(n[0].rowId)(t, r.nTr.id), E(n[0], this[0], "data"), this;
 }), ze("row().node()", function() {
 var e = this.context;
 return e.length && this.length ? e[0].aoData[this[0]].nTr || null : null;
@@ -24508,7 +24518,7 @@ if (r) {
 var h = e.inArray(!0, ot(c, "bVisible"), n + 1);
 for (a = 0, s = d.length; a < s; a++) l = d[a].nTr, o = d[a].anCells, l && l.insertBefore(o[n], o[h] || null);
 } else e(ot(t.aoData, "anCells", n)).detach();
-u.bVisible = r, L(t, t.aoHeader), L(t, t.aoFooter), ke(t);
+u.bVisible = r, L(t, t.aoHeader), L(t, t.aoFooter), t.aiDisplay.length || e(t.nTBody).find("td[colspan]").attr("colspan", m(t)), ke(t);
 }
 };
 ze("columns()", function(t, n) {
@@ -24575,7 +24585,7 @@ column: c
 }, r ? (d = h[o], n(u, x(t, o, c), d.anCells ? d.anCells[c] : null) && a.push(u)) : a.push(u);
 return a;
 }
-if (e.isPlainObject(n)) return [ n ];
+if (e.isPlainObject(n)) return n.column !== i && n.row !== i && -1 !== e.inArray(n.row, f) ? [ n ] : [];
 var p = g.filter(n).map(function(e, t) {
 return {
 row: t._DT_CellIndex.row,
@@ -24592,13 +24602,14 @@ ze("cells()", function(t, n, r) {
 if (e.isPlainObject(t) && (t.row === i ? (r = t, t = null) : (r = n, n = null)), e.isPlainObject(n) && (r = n, n = null), null === n || n === i) return this.iterator("table", function(e) {
 return Nt(e, t, At(r));
 });
-var o, a, s, l, c, u = this.columns(n, r), d = this.rows(t, r), h = this.iterator("table", function(e, t) {
+var o, a, s, l, c, u = this.columns(n), d = this.rows(t);
+this.iterator("table", function(e, t) {
 for (o = [], a = 0, s = d[t].length; a < s; a++) for (l = 0, c = u[t].length; l < c; l++) o.push({
 row: d[t][a],
 column: u[t][l]
 });
-return o;
 }, 1);
+var h = this.cells(o, r);
 return e.extend(h.selector, {
 cols: n,
 rows: t,
@@ -24762,7 +24773,7 @@ e.call(r[t](a, "cell" === t ? s : n, "cell" === t ? n : i), a, s, l, c);
 }), ze("i18n()", function(t, n, r) {
 var o = this.context[0], a = $(t)(o.oLanguage);
 return a === i && (a = n), r !== i && e.isPlainObject(a) && (a = a[r] !== i ? a[r] : a._), a.replace("%d", r);
-}), qe.version = "1.10.16", qe.settings = [], qe.models = {}, qe.models.oSearch = {
+}), qe.version = "1.10.18", qe.settings = [], qe.models = {}, qe.models.oSearch = {
 bCaseInsensitive: !0,
 sSearch: "",
 bRegex: !1,
@@ -25226,7 +25237,8 @@ return 0 === e || e && "-" !== e ? (t && (e = tt(e, t)), e.replace && (n && (e =
 };
 e.extend(Ve.type.order, {
 "date-pre": function(e) {
-return Date.parse(e) || -1 / 0;
+var t = Date.parse(e);
+return isNaN(t) ? -1 / 0 : t;
 },
 "html-pre": function(e) {
 return Je(e) ? "" : e.replace ? e.replace(/<.*?>/g, "").toLowerCase() : e + "";
@@ -25374,6 +25386,7 @@ _fnLengthOverflow: Oe,
 _fnRenderer: Re,
 _fnDataSource: Ne,
 _fnRowAttributes: I,
+_fnExtend: Me,
 _fnCalculateEnd: function() {}
 }), e.fn.dataTable = qe, qe.$ = e, e.fn.dataTableSettings = qe.settings, e.fn.dataTableExt = qe.ext, e.fn.DataTable = function(t) {
 return e(this).dataTable(t).api();
@@ -74717,9 +74730,6 @@ kind: "HorizontalPodAutoscaler"
 }, {
 group: "extensions",
 kind: "NetworkPolicy"
-}, {
-group: "extensions",
-kind: "ReplicationControllerDummy"
 } ]
 }), angular.module("openshiftCommonServices").constant("API_PREFERRED_VERSIONS", {
 appliedclusterresourcequotas: {
@@ -74837,6 +74847,11 @@ resource: "imagestreamimports"
 limitranges: {
 version: "v1",
 resource: "limitranges"
+},
+mobileclients: {
+group: "mobile.k8s.io",
+version: "v1alpha1",
+resource: "mobileclients"
 },
 oauthaccesstokens: {
 group: "oauth.openshift.io",
@@ -75003,7 +75018,12 @@ loggingUIHostname: [ "openshift.io/logging.ui.hostname" ],
 loggingDataPrefix: [ "openshift.io/logging.data.prefix" ],
 idledAt: [ "idling.alpha.openshift.io/idled-at" ],
 idledPreviousScale: [ "idling.alpha.openshift.io/previous-scale" ],
-systemOnly: [ "authorization.openshift.io/system-only" ]
+systemOnly: [ "authorization.openshift.io/system-only" ],
+mobileSetBuildDownload: [ "aerogear.org/download-mobile-artifact" ],
+mobileGetBuildDownload: [ "aerogear.org/download-mobile-artifact-url" ],
+mobileServiceInstanceName: [ "aerogear.org/service-instance-name" ],
+mobileBindingConsumerId: [ "binding.aerogear.org/consumer" ],
+mobileBindingProviderId: [ "binding.aerogear.org/provider" ]
 };
 return function(t) {
 return e[t] || null;
@@ -75722,33 +75742,35 @@ type: "Opaque",
 stringData: {}
 };
 return i.stringData.parameters = JSON.stringify(t), i;
-}, d = function(e, t, n) {
-var i = e.metadata.name, r = c(e.metadata.name + "-credentials-"), o = {
+}, d = function(e, t, n, i) {
+var r = e.metadata.name;
+i = _.assign({
+generateName: r + "-"
+}, i);
+var o = c(e.metadata.name + "-credentials-"), a = {
 kind: "ServiceBinding",
 apiVersion: "servicecatalog.k8s.io/v1beta1",
-metadata: {
-generateName: i + "-"
-},
+metadata: i,
 spec: {
 instanceRef: {
-name: i
+name: r
 },
-secretName: r
+secretName: o
 }
 };
-n && (o.spec.parametersFrom = [ {
+n && (a.spec.parametersFrom = [ {
 secretKeyRef: {
 name: n,
 key: "parameters"
 }
 } ]);
-var a = _.get(t, "spec.selector");
-return a && (a.matchLabels || a.matchExpressions || (a = {
-matchLabels: a
-}), o.spec.alphaPodPresetTemplate = {
-name: r,
-selector: a
-}), o;
+var s = _.get(t, "spec.selector");
+return s && (s.matchLabels || s.matchExpressions || (s = {
+matchLabels: s
+}), a.spec.alphaPodPresetTemplate = {
+name: o,
+selector: s
+}), a;
 }, h = function(t, n, i) {
 if (!t || !n || !i) return !1;
 if (_.get(t, "metadata.deletionTimestamp")) return !1;
@@ -75771,18 +75793,18 @@ return n ? t[n] : null;
 },
 makeParametersSecret: u,
 generateSecretName: c,
-bindService: function(e, t, n, i) {
-var o;
-_.isEmpty(i) || (o = c(e.metadata.name + "-bind-parameters-"));
-var l = d(e, t, o), h = {
+bindService: function(e, t, n, i, o) {
+var l;
+_.isEmpty(i) || (l = c(e.metadata.name + "-bind-parameters-"));
+var h = d(e, t, l, o), f = {
 namespace: e.metadata.namespace
-}, f = r.create(a, null, l, h);
-return o ? f.then(function(e) {
-var t = u(o, i, e);
-return r.create(s, null, t, h).then(function() {
+}, p = r.create(a, null, h, f);
+return l ? p.then(function(e) {
+var t = u(l, i, e);
+return r.create(s, null, t, f).then(function() {
 return e;
 });
-}) : f;
+}) : p;
 },
 isServiceBindable: h,
 getPodPresetSelectorsForBindings: f,
@@ -79418,7 +79440,7 @@ e.exports = '<div class="order-service-config">\n  <div class="config-top">\n   
 }, function(e, t) {
 e.exports = '<div class="order-service-config">\n  <bind-service-form service-class="$ctrl.serviceClass.resource"\n                     show-pod-presets="$ctrl.showPodPresets"\n                     applications="$ctrl.applications"\n                     form-name="$ctrl.forms.bindForm"\n                     allow-no-binding="true"\n                     project-name="$ctrl.projectDisplayName"\n                     bind-type="$ctrl.bindType"\n                     app-to-bind="$ctrl.appToBind">\n  </bind-service-form>\n</div>\n';
 }, function(e, t) {
-e.exports = '<div class="order-service-config">\n  <div class="config-top">\n    <form name="$ctrl.forms.orderConfigureForm" class="config-form">\n      <select-project ng-if="!$ctrl.addToProject" selected-project="$ctrl.selectedProject" name-taken="$ctrl.projectNameTaken" show-divider="$ctrl.parameterSchema.properties.length > 0"></select-project>\n      <catalog-parameters\n        ng-if="$ctrl.parameterSchema.properties && !$ctrl.noProjectsCantCreate"\n        model="$ctrl.parameterData"\n        parameter-schema="$ctrl.parameterSchema"\n        parameter-form-definition="$ctrl.parameterFormDefinition">\n      </catalog-parameters>\n    </form>\n    <div ng-if="$ctrl.error" class="has-error">\n      <span class="help-block">{{$ctrl.error}}</span>\n    </div>\n  </div>\n</div>\n';
+e.exports = '<div class="order-service-config">\n  <div class="config-top">\n    <form name="$ctrl.forms.orderConfigureForm" class="config-form">\n      <select-project ng-if="!$ctrl.addToProject"\n                      selected-project="$ctrl.selectedProject"\n                      name-taken="$ctrl.projectNameTaken"\n                      show-divider="$ctrl.parameterSchema.properties | size"></select-project>\n      <catalog-parameters\n        ng-if="$ctrl.parameterSchema.properties && !$ctrl.noProjectsCantCreate"\n        model="$ctrl.parameterData"\n        parameter-schema="$ctrl.parameterSchema"\n        parameter-form-definition="$ctrl.parameterFormDefinition">\n      </catalog-parameters>\n    </form>\n    <div ng-if="$ctrl.error" class="has-error">\n      <span class="help-block">{{$ctrl.error}}</span>\n    </div>\n  </div>\n</div>\n';
 }, function(e, t) {
 e.exports = '<div class="order-service-details">\n  <div class="order-service-details-top" ng-class="{\'order-service-details-top-icon-top\': $ctrl.serviceClass.vendor || $ctrl.docUrl || $ctrl.supportUrl}">\n    <div class="service-icon">\n      <span ng-if="!$ctrl.imageUrl" class="icon {{$ctrl.iconClass}}" aria-hidden="true"></span>\n      <span ng-if="$ctrl.imageUrl" class="image"><img ng-src="{{$ctrl.imageUrl}}" alt=""></span>\n    </div>\n    <div class="service-title-area">\n      <div class="service-title">\n        {{$ctrl.serviceName}}\n      </div>\n      <div ng-if="$ctrl.serviceClass.vendor" class="service-vendor">\n        {{$ctrl.serviceClass.vendor}}\n      </div>\n      <div ng-if="$ctrl.serviceClass.tags" class="order-service-tags">\n        <span ng-repeat="tag in $ctrl.serviceClass.tags" class="tag">\n          {{tag}}\n        </span>\n      </div>\n      <ul ng-if="$ctrl.docUrl || $ctrl.supportUrl" class="list-inline order-service-documentation-url">\n        <li ng-if="$ctrl.docUrl" >\n          <a ng-href="{{$ctrl.docUrl}}" target="_blank" class="learn-more-link">View Documentation <i class="fa fa-external-link" aria-hidden="true"></i></a>\n        </li>\n        <li ng-if="$ctrl.supportUrl" >\n          <a ng-href="{{$ctrl.supportUrl}}" target="_blank" class="learn-more-link">Get Support <i class="fa fa-external-link" aria-hidden="true"></i></a>\n        </li>\n      </ul>\n    </div>\n  </div>\n  <div class="order-service-description-block">\n    <p ng-if="!$ctrl.multipleServicePlans && ($ctrl.selectedPlan.spec.externalMetadata.displayName || $ctrl.selectedPlan.spec.description)">\n      <span ng-if="$ctrl.selectedPlan.spec.externalMetadata.displayName">\n        Plan {{$ctrl.selectedPlan.spec.externalMetadata.displayName}}\n        <span ng-if="$ctrl.selectedPlan.spec.description">&ndash;</span>\n      </span>\n      <span ng-if="$ctrl.selectedPlan.spec.description">{{$ctrl.selectedPlan.spec.description}}</span>\n    </p>\n    <p ng-if="!$ctrl.description && !$ctrl.longDescription" class="description">No description provided.</p>\n    <p ng-if="$ctrl.description" ng-bind-html="($ctrl.description | linky : \'_blank\')" class="description"></p>\n    <p ng-if="$ctrl.longDescription" ng-bind-html="$ctrl.longDescription | linky : \'_blank\'" class="description"></p>\n    <div ng-if="$ctrl.imageDependencies.length">\n      <div class="order-service-subheading">Image Dependencies</div>\n      <div ng-repeat="imageName in $ctrl.imageDependencies" class="order-service-dependent-image">\n        <span class="pficon pficon-image" aria-hidden="true"></span>\n        <span class="sr-only">Image</span>\n        {{imageName}}\n      </div>\n    </div>\n  </div>\n</div>\n';
 }, function(e, t) {
@@ -81359,27 +81381,27 @@ o.$inject = [ "$filter", "$scope", "AuthService", "AuthorizationService", "Keywo
 "use strict";
 t.__esModule = !0;
 var i = n(0), r = n(2), o = function() {
-function e(e, t, n, r, o, a, s, l, c, u) {
-var d = this;
+function e(e, t, n, r, o, a, s, l, c, u, d) {
+var h = this;
 this.ctrl = this, this.previousSubCategoryHeight = 0, this.resizeRetries = 0, this.serviceViewItemClicked = function(e, t) {
-d.$scope.$emit("open-overlay-panel", e);
+h.$scope.$emit("open-overlay-panel", e);
 }, this.filterChange = function(e) {
-d.filterByCategory(d.ctrl.currentFilter, d.ctrl.currentSubFilter, !1), i.isEmpty(e) || i.each(e, function(e) {
+h.filterByCategory(h.ctrl.currentFilter, h.ctrl.currentSubFilter, !1), i.isEmpty(e) || i.each(e, function(e) {
 switch (e.id) {
 case "keyword":
-d.ctrl.filteredItems = d.filterForKeywords(e.values[0], d.ctrl.filteredItems);
+h.ctrl.filteredItems = h.filterForKeywords(e.values[0], h.ctrl.filteredItems);
 break;
 
 case "vendors":
-d.ctrl.filteredItems = d.filterForVendors(e.values, d.ctrl.filteredItems);
+h.ctrl.filteredItems = h.filterForVendors(e.values, h.ctrl.filteredItems);
 }
-}), d.ctrl.filterConfig.resultsCount = d.ctrl.filteredItems.length, d.ctrl.keywordFilterValue = null;
+}), h.ctrl.filterConfig.resultsCount = h.ctrl.filteredItems.length, h.ctrl.keywordFilterValue = null;
 }, this.clearAppliedFilters = function() {
-d.$scope.$broadcast("clear-filters");
-}, this.constants = e, this.catalog = t, this.keywordService = n, this.logger = r, this.htmlService = o, this.element = a[0], this.$filter = s, this.$rootScope = l, this.$scope = c, this.$timeout = u, this.ctrl.loaded = !1, this.ctrl.isEmpty = !1, this.ctrl.mobileView = "categories", this.ctrl.filterConfig = {
+h.$scope.$broadcast("clear-filters");
+}, this.constants = e, this.catalog = t, this.keywordService = n, this.logger = r, this.htmlService = o, this.element = a[0], this.$filter = s, this.$rootScope = c, this.$location = l, this.$scope = u, this.$timeout = d, this.ctrl.loaded = !1, this.ctrl.isEmpty = !1, this.ctrl.mobileView = "categories", this.ctrl.filterConfig = {
 resultsLabel: "Items",
 appliedFilters: []
-}, this.ctrl.keywordFilterValue = null;
+}, this.ctrl.keywordFilterValue = null, this.ctrl.currentFilter = this.$location.search().category || "all", this.ctrl.currentSubFilter = this.$location.search().category && this.$location.search().subcategory;
 }
 return e.prototype.$onInit = function() {
 var e = this;
@@ -81387,7 +81409,7 @@ this.debounceResize = i.debounce(function() {
 return e.resizeExpansion(!1);
 }, 50, {
 maxWait: 250
-}), r(window).on("resize.services", this.debounceResize), this.ctrl.currentFilter = this.ctrl.currentSubFilter = "all", this.ctrl.sectionTitle = this.ctrl.sectionTitle || "Browse Catalog", this.removeFilterListener = this.$rootScope.$on("filter-catalog-items", function(t, n) {
+}), r(window).on("resize.services", this.debounceResize), this.ctrl.sectionTitle = this.ctrl.sectionTitle || "Browse Catalog", this.removeFilterListener = this.$rootScope.$on("filter-catalog-items", function(t, n) {
 e.setKeywordFilter(n.searchText);
 }), this.ctrl.emptyFilterConfig = {
 title: "No results match.",
@@ -81405,7 +81427,7 @@ url: "https://docs.openshift.org/latest/install_config/imagestreams_templates.ht
 }
 }, this.ctrl.keywordFilter && this.setKeywordFilter(this.ctrl.keywordFilter);
 }, e.prototype.$onChanges = function(e) {
-e.catalogItems && e.catalogItems.currentValue && (this.ctrl.isEmpty = i.isEmpty(this.ctrl.catalogItems), this.ctrl.isEmpty || (this.ctrl.categories = this.catalog.categorizeItems(this.ctrl.catalogItems), this.ctrl.vendors = this.catalog.getVendors(this.ctrl.catalogItems), this.filterByCategory("all", "all", !0)), this.ctrl.loaded = !0), e.keywordFilter && !e.keywordFilter.isFirstChange() && this.setKeywordFilter(this.ctrl.keywordFilter);
+e.catalogItems && e.catalogItems.currentValue && (this.ctrl.isEmpty = i.isEmpty(this.ctrl.catalogItems), this.ctrl.isEmpty || (this.ctrl.categories = this.catalog.categorizeItems(this.ctrl.catalogItems), this.ctrl.vendors = this.catalog.getVendors(this.ctrl.catalogItems), this.filterByCategory(this.ctrl.currentFilter, this.ctrl.currentSubFilter, !0)), this.ctrl.loaded = !0), e.keywordFilter && !e.keywordFilter.isFirstChange() && this.setKeywordFilter(this.ctrl.keywordFilter);
 }, e.prototype.$postLink = function() {
 this.scrollParent = this.getScrollParent(this.element), this.scrollParent && this.htmlService.isWindowAboveBreakpoint(this.htmlService.WINDOW_SIZE_SM) && (this.ctrl.viewStyle = {
 "min-height": "calc(100vh - " + this.scrollParent.getBoundingClientRect().top + "px)"
@@ -81425,18 +81447,27 @@ this.ctrl.mobileView = "items", this.ctrl.currentSubFilter === e && "xxs" !== th
 var t = [];
 return this.ctrl.categories.map(function(n) {
 e === n.id && (t = t.concat(n.subCategories));
-}), "all" === (t = i.filter(t, {
+}), (t = i.filter(t, {
 hasItems: !0
-}))[0].id && 2 === t.length && (t = i.drop(t, 1)), t;
+}))[0] && "all" === t[0].id && 2 === t.length && (t = i.drop(t, 1)), t;
 }, e.prototype.applyFilters = function(e) {
 this.filterChange(e.appliedFilters);
 }, e.prototype.filterByCategory = function(e, t, n) {
 var r, o;
-"all" === e || "other" === e ? t = "all" : (n && (this.ctrl.subCategories = this.getSubCategories(e)), t = 1 === this.ctrl.subCategories.length ? this.ctrl.subCategories[0].id : t || null), (r = i.find(this.ctrl.categories, {
+if ("all" === e || "other" === e) t = "all"; else if (n && (this.ctrl.subCategories = this.getSubCategories(e)), t) {
+var a = i.some(this.ctrl.subCategories, function(e) {
+return e.id === t;
+});
+t = a ? t : null;
+} else t = 1 === this.ctrl.subCategories.length ? this.ctrl.subCategories[0].id : null;
+(r = i.find(this.ctrl.categories, {
 id: e
 })) ? t && ((o = i.find(r.subCategories, {
 id: t
-})) ? (this.ctrl.filteredItems = o.items, this.ctrl.filterConfig.totalCount = this.ctrl.filteredItems.length, this.ctrl.filterConfig.resultsCount = this.ctrl.filterConfig.totalCount) : this.logger.error("Could not find subcategory '" + t + "' for category '" + e + "'")) : this.logger.error("Could not find category '" + e + "'"), this.ctrl.currentFilter = e, this.ctrl.currentSubFilter = t, this.updateActiveCardStyles();
+})) ? (this.ctrl.filteredItems = o.items, this.ctrl.filterConfig.totalCount = this.ctrl.filteredItems.length, this.ctrl.filterConfig.resultsCount = this.ctrl.filterConfig.totalCount) : this.logger.error("Could not find subcategory '" + t + "' for category '" + e + "'")) : this.logger.error("Could not find category '" + e + "'"), this.ctrl.currentFilter = e, this.ctrl.currentSubFilter = t, t = "all" === e ? null : t, this.$location.path(this.$location.path()).search({
+category: this.ctrl.currentFilter,
+subcategory: t
+}), this.updateActiveCardStyles();
 }, e.prototype.setKeywordFilter = function(e) {
 this.ctrl.keywordFilterValue = e, this.ctrl.currentFilter = this.ctrl.currentSubFilter = "all", this.ctrl.mobileView = "subcategories";
 }, e.prototype.filterForKeywords = function(e, t) {
@@ -81475,7 +81506,7 @@ return e.resizeExpansion(!0);
 });
 }, e;
 }();
-o.$inject = [ "Constants", "Catalog", "KeywordService", "Logger", "HTMLService", "$element", "$filter", "$rootScope", "$scope", "$timeout" ], o.MAX_RESIZE_RETRIES = 20, t.ServicesViewController = o;
+o.$inject = [ "Constants", "Catalog", "KeywordService", "Logger", "HTMLService", "$element", "$filter", "$location", "$rootScope", "$scope", "$timeout" ], o.MAX_RESIZE_RETRIES = 20, t.ServicesViewController = o;
 }, function(e, t, n) {
 "use strict";
 t.__esModule = !0;

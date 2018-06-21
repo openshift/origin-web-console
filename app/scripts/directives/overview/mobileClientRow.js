@@ -63,7 +63,7 @@
     };
     row.projectName = $routeParams.project;
     row.browseCatalog = function () {
-      Navigate.toProjectCatalog(row.projectName);
+      Navigate.toProjectCatalog(row.projectName, {category: 'mobile', subcategory: 'services'});
     };
   }
 })();

@@ -1,0 +1,38 @@
+<div class="form-control-pf-editable inline-edit">
+    <ng-form name="$ctrl.inlineEditForm" class="inline-edit-form">
+    <button ng-if="!$ctrl.editEnabled" type="button" class="form-control-pf-value" ng-click="$ctrl.enableEdit()">
+        <span class="sr-only">{{$ctrl.label}}</span>
+        <span ng-if="$ctrl.value">{{$ctrl.value}}</span>
+        <span ng-if="!$ctrl.value">{{$ctrl.label}}</span>
+        <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
+    </button>
+    <div ng-if="$ctrl.editEnabled" class="form-control-pf-textbox">
+      <input
+        ng-model="$ctrl.inputVal"
+        name="input"
+        type="text"
+        ng-pattern="$ctrl.pattern"
+        class="form-control form-control-pf-editor"
+        autocorrect="off"
+        autocapitalize="none"
+        spellcheck="false"
+        aria-label="{{$ctrl.label}}"
+        autofocus/>
+      <button type="button" class="form-control-pf-empty" ng-click="$ctrl.clearInput()" aria-label="Clear Value">
+        <span class="fa fa-times-circle fa-lg"></span>
+      </button>
+    </div>
+    <button ng-if="$ctrl.editEnabled" 
+            type="button" 
+            class="btn btn-primary form-control-pf-save" 
+            aria-label="Save"
+            ng-click="$ctrl.save($ctrl.inputVal)" 
+            ng-disabled="$ctrl.inlineEditForm.input.$invalid">
+            <i class="glyphicon glyphicon-ok"></i>
+    </button>
+    <button ng-if="$ctrl.editEnabled" type="button" class="btn btn-default form-control-pf-cancel" aria-label="Cancel" ng-click="$ctrl.cancelEdit()"><i class="glyphicon glyphicon-remove"></i></button>
+    </ng-form>
+    <span ng-if="$ctrl.inlineEditForm.input.$error.pattern" class="help-block inline-edit-input-error">
+        {{$ctrl.patternErrmsg}}
+    </span>
+  </div>

@@ -5179,6 +5179,9 @@ pre.clipped.scroll{max-height:150px;overflow:auto;width:100%}
 .data-toolbar .data-toolbar-filter .form-group{margin-bottom:0}
 .header-toolbar .data-toolbar{background-color:#fff;border-bottom:1px solid #e4e4e4;margin:0 -20px;padding-left:20px;padding-right:20px}
 .data-toolbar .vertical-divider+.data-toolbar-filter{margin-top:10px}
+@media (min-width:768px){.data-toolbar .data-toolbar-filter{flex:1 1 0%}
+.data-toolbar .vertical-divider+.data-toolbar-filter{margin-top:0}
+}
 .selectize-dropdown{font-size:12px}
 .ellipsis-pulser{padding:10px;text-align:center}
 .ellipsis-pulser .dot{display:inline-block;height:4px;position:relative;width:4px}
@@ -5203,12 +5206,18 @@ pre.clipped.scroll{max-height:150px;overflow:auto;width:100%}
 70%{transform:scale(.66)}
 100%{opacity:.33;z-index:1}
 }
+.inline-edit .form-control-pf-cancel,.inline-edit .form-control-pf-save{margin-left:3px}
+.inline-edit .form-control-pf-empty{background:0 0;border:none;color:#bbb;height:100%;position:absolute;right:0;top:0}
+.inline-edit .form-control-pf-textbox{display:inline-block;position:relative;flex:1}
+.inline-edit .form-control-pf-textbox input{padding-right:26px}
+.inline-edit .form-control-pf-value{background-color:transparent;border:1px solid transparent;padding:2px 2px 2px 0px}
+.inline-edit .form-control-pf-value:hover{background-color:transparent;border:1px solid #d3d3d3;padding-left:0px}
+.inline-edit .inline-edit-form{display:flex}
+.inline-edit .inline-edit-input-error{color:pf-red-200}
 .layout-pf.layout-pf-fixed{height:1px}
 .layout-pf.layout-pf-fixed body{height:1px;padding-top:41px}
 .layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical,.layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical .view{height:100%}
-@media (min-width:768px){.data-toolbar .data-toolbar-filter{flex:1 1 0%}
-.data-toolbar .vertical-divider+.data-toolbar-filter{margin-top:0}
-.layout-pf.layout-pf-fixed body{padding-top:61px}
+@media (min-width:768px){.layout-pf.layout-pf-fixed body{padding-top:61px}
 }
 .layout-pf.layout-pf-fixed body.has-project-bar{padding-top:69px}
 .layout-pf.layout-pf-fixed body.has-project-bar.has-project-search{padding-top:116px}
@@ -5261,7 +5270,7 @@ h2+.list-view-pf{margin-top:20px}
 .list-view-pf .list-group-item-heading small{overflow:hidden;text-overflow:ellipsis;color:#757575}
 .list-view-pf .list-group-item-text{margin-bottom:5px}
 .list-view-pf-additional-info-item{display:inline-block;text-align:left;width:100%}
-.list-view-pf-additional-info-item image-names,.monitoring-page .list-pf-expansion .list-pf-container{display:block}
+.list-view-pf-additional-info-item image-names{display:block}
 .list-view-pf-description{flex:1 0 55%}
 .list-view-pf-main-info{padding-bottom:10px;padding-top:10px}
 @media (max-width:991px){.list-view-pf-main-info .list-view-pf-body{display:block}
@@ -5271,7 +5280,19 @@ h2+.list-view-pf{margin-top:20px}
 .list-view-pf-description{width:60%}
 .monitoring-page .list-pf-main-content{flex-basis:30%}
 }
+.mobile-clients-view .configuration .copy-to-clipboard{margin-bottom:25px}
+.mobile-clients-view .configuration .copy-to-clipboard pre{max-height:350px}
+.mobile-clients-view .configuration .service-configuration{padding:0}
+.mobile-clients-view .configuration .service-configuration h3{margin:20px}
+.mobile-clients-view .configuration .service-configuration .service-instance-getting-started{margin-bottom:50px;padding:0}
+.mobile-clients-view .configuration .service-configuration .service-instance-getting-started .logo{display:inline-block;height:30px;width:30px}
+.mobile-clients-view .configuration .service-configuration .service-instance-getting-started .logo-icon-class{display:inline-block;height:30px;width:30px;font-size:22px;text-align:center}
+.mobile-clients-view .configuration .service-configuration .service-instance-getting-started .service-details{display:inline-block;margin-left:10px;vertical-align:middle}
+.mobile-clients-view .configuration .service-configuration .service-instance-getting-started .service-details h4{margin:0}
+.mobile-clients-view .configuration .service-configuration .service-instance-getting-started .sdk-docs{left:42px;margin:0;position:relative}
+.mobile-clients-view .builds .note{text-align:center}
 .monitoring-page .list-pf-content{min-height:45px}
+.monitoring-page .list-pf-expansion .list-pf-container{display:block}
 .monitoring-page .list-pf-expansion .log-fixed-height.empty-state-message,.monitoring-page .list-pf-expansion .metrics .empty-state-message{margin:10px 0 0;padding:0;text-align:left}
 .monitoring-page .list-pf-expansion .log-fixed-height.empty-state-message h2,.monitoring-page .list-pf-expansion .metrics .empty-state-message h2{margin-top:0}
 .monitoring-page .list-pf-expansion .metrics .empty-state-message .pficon-error-circle-o{display:none}

@@ -64,7 +64,8 @@ angular
       })
       .when('/project/:project/catalog', {
         templateUrl: 'views/project-browse-catalog.html',
-        controller: 'ProjectBrowseCatalogController'
+        controller: 'ProjectBrowseCatalogController',
+        reloadOnSearch: false
       })
       .when('/project/:project', {
         redirectTo: function(params) {
@@ -118,6 +119,12 @@ angular
             $route.current.params.isPipeline = true;
           }
         },
+        reloadOnSearch: false
+      })
+      .when('/project/:project/browse/mobile-clients/:mobileclient', {
+        templateUrl: 'views/browse/mobile-clients.html',
+        controller: 'MobileClientsController',
+        controllerAs: 'ctrl',
         reloadOnSearch: false
       })
       .when('/project/:project/edit/yaml', {
@@ -470,6 +477,7 @@ angular
   //   (?!\.\.(\/|$))        do not match strings starting with `../` or exactly `..`
   //   (?!.*\/\.\.(\/|$))    do not match strings containing `/../` or ending in `/..`
   .constant('RELATIVE_PATH_PATTERN', /^(?!\/)(?!\.\.(\/|$))(?!.*\/\.\.(\/|$)).*$/)
+  .constant('VALID_URL_PATTERN', /^(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/)
   // http://stackoverflow.com/questions/5899783/detect-safari-using-jquery
   .constant('IS_SAFARI', /Version\/[\d\.]+.*Safari/.test(navigator.userAgent))
   .constant('amTimeAgoConfig', {

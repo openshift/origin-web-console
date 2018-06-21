@@ -245,6 +245,10 @@ angular.module("openshiftConsole")
               .segmentCoded(name.substring(0, ind))
               .segmentCoded(name.substring(ind + 1));
             break;
+          case "MobileClient":
+            url.segment("mobile-clients")
+              .segmentCoded(name);
+            break;
           case "ServiceInstance":
             url.segment("service-instances")
               .segmentCoded(name);
