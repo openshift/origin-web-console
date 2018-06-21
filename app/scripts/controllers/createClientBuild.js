@@ -118,11 +118,17 @@ angular.module('openshiftConsole')
       };
 
       if(clientConfig.clientCredentialsName) {
-        buildConfig.spec.strategy.jenkinsPipelineStrategy.env.push({name: 'BUILD_CREDENTIAL_ID', value: $scope.projectName + '-' + clientConfig.clientCredentialsName});
+        buildConfig.spec.strategy.jenkinsPipelineStrategy.env.push({
+          name: 'BUILD_CREDENTIAL_ID',
+          value: $scope.projectName + '-' + clientConfig.clientCredentialsName
+        });
       }
 
       if(clientConfig.credentialsAlias) {
-        buildConfig.spec.strategy.jenkinsPipelineStrategy.env.push({name: 'BUILD_CREDENTIAL_ALIAS', value: clientConfig.credentialsAlias});
+        buildConfig.spec.strategy.jenkinsPipelineStrategy.env.push({
+          name: 'BUILD_CREDENTIAL_ALIAS',
+          value: clientConfig.credentialsAlias
+        });
       }
 
       if (clientConfig.gitCredentialsName) {
@@ -143,19 +149,25 @@ angular.module('openshiftConsole')
       return buildConfig;
     };
 
-    var createGitCredentialsSecret = function(clientConfig) {
-      var secret = {
+    var createBaseCredentialsSecret = function() {
+      return {
         apiVersion: APIService.toAPIVersion(secretsVersion),
         kind: 'Secret',
         metadata: {
-          name: clientConfig.gitCredentialsName,
+          name: '',
           labels:  {
             'mobile-client-build': 'true'
           }
         },
-        type: clientConfig.authType,
+        type: '',
         stringData: {}
       };
+    };
+
+    var createGitCredentialsSecret = function(clientConfig) {
+      var secret = createBaseCredentialsSecret();
+      _.assign(secret.metadata, {name: clientConfig.gitCredentialsName});
+      _.assign(secret, {type: clientConfig.authType});
 
       switch (clientConfig.authType) {
         case 'kubernetes.io/basic-auth':
@@ -172,19 +184,13 @@ angular.module('openshiftConsole')
     };
 
     var createClientCredentialsSecret = function(clientConfig) {
-      var secret = {
-        apiVersion: APIService.toAPIVersion(secretsVersion),
-        kind: 'Secret',
-        metadata: {
-          name:  clientConfig.clientCredentialsName,
-          labels:  {
-            'mobile-client-build': 'true',
-            'credential.sync.jenkins.openshift.io': 'true'
-          }
-        },
-        type: 'Opaque',
-        stringData: {}
-      };
+      var secret = createBaseCredentialsSecret();
+      _.assign(secret.metadata.labels, {
+        'credential.sync.jenkins.openshift.io': 'true'
+      });
+      _.assign(secret.metadata, {name: clientConfig.clientCredentialsName});
+      _.assign(secret, {type: 'Opaque'});
+
       var secretData = {
         password: clientConfig.clientCredentialsPassword
       };
@@ -241,16 +247,15 @@ angular.module('openshiftConsole')
       var clientBuildConfig = createBuildConfig($scope.newClientBuild);
       DataService.create(buildConfigsVersion, null, clientBuildConfig, $scope.context)
         .then(function() {
-          if ($scope.newClientBuild.authType === 'public') {
-            return Promise.resolve();
+          if (isPublicRepo()) {
+            return;
           }
-
           var gitSecret = createGitCredentialsSecret($scope.newClientBuild);
           return DataService.create(secretsVersion, null, gitSecret, $scope.context);
         })
         .then(function() {
-          if ($scope.newClientBuild.buildPlatform === 'android' && ($scope.newClientBuild.buildType === debugBuildType.id || !$scope.newClientBuild.externalCredential)) {
-            return Promise.resolve();
+          if (isAndroidBuild() && isDebugBuildOrHasSigningCredentials()) {
+            return;
           }
           var certSecret = createClientCredentialsSecret($scope.newClientBuild);
           return DataService.create(secretsVersion, null, certSecret, $scope.context);
@@ -265,5 +270,16 @@ angular.module('openshiftConsole')
             details: $filter('getErrorDetails')(err)
           });
         });
+    };
+
+    var isDebugBuildOrHasSigningCredentials = function() {
+      return $scope.newClientBuild.buildType === debugBuildType.id || !$scope.newClientBuild.externalCredential
+    };
+
+    var isAndroidBuild = function() {
+      return $scope.newClientBuild.buildPlatform === 'android';
+    };
+    var isPublicRepo = function() {
+      return $scope.newClientBuild.authType === 'public';
     };
   });

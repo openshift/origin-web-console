@@ -131,7 +131,7 @@
                           <div>
                             <div class="form-group">
                               <label for="authentification-type">Authentication Type</label>
-                              <ui-select required input-id="authentification-type" ng-model="newClientBuild.authType" search-enabled="false">
+                              <ui-select required input-id="authentification-type-{{$id}}" ng-model="newClientBuild.authType" search-enabled="false">
                                 <ui-select-match>{{$select.selected.label}}</ui-select-match>
                                 <ui-select-choices repeat="type.id as type in authTypes">
                                   {{type.label}}
