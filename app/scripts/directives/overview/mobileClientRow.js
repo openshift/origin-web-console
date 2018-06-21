@@ -33,6 +33,7 @@
     var isServiceInstanceReady = $filter('isServiceInstanceReady');
     var isMobileClientEnabled = $filter('isMobileClientEnabled');
     var isMobileService = $filter('isMobileService');
+    var mobileBindingConsumerID = $filter('annotationName')('mobileBindingConsumerId');
     var watches = [];
     var boundServices = 'Bound Mobile Services';
     var unboundServices = 'Unbound Mobile Services';
@@ -62,7 +63,7 @@
       var url = Navigate.resourceURL(resource, kind, namespace, null, opts);
 
       return anchor ? url + '#' + anchor : url;
-    }
+    };
 
     row.updateServicesInfo = function() {
       if (row.mobileClientEnabledServices) {
@@ -75,75 +76,66 @@
       }
     };
 
+    var installTypes = {
+      android: 'gradle',
+      iOS: 'cocoapods',
+      cordova: 'npm'
+    };
+
+    var startServiceInstancesWatch = _.once(function(context) {
+      DataService.list(serviceClassesVersion, context, function(serviceClasses) {
+        serviceClasses = serviceClasses.by('metadata.name');
+        watches.push(DataService.watch(serviceInstancesVersion, context, function(serviceinstances) {
+          row.services = _.filter(serviceinstances.by('metadata.name'), function(serviceInstance) {
+            var serviceClass = _.get(serviceClasses, ServiceInstancesService.getServiceClassNameForInstance(serviceInstance));
+            return isMobileService(serviceClass) && isServiceInstanceReady(serviceInstance);
+          });
+          row.mobileClientEnabledServices = _.filter(row.services, function(service) {
+            var serviceClass = _.get(serviceClasses, ServiceInstancesService.getServiceClassNameForInstance(service));
+            return isMobileClientEnabled(serviceClass);
+          });
+          row.updateServicesInfo();
+        }, {errorNotification: false}));
+      });
+    });
+
+    var startBindingsWatch = _.once(function(context) {
+      watches.push(DataService.watch(serviceBindingsVersion, context, function(bindingsData) {
+        row.bindings = _.filter(bindingsData.by('metadata.name'), function(binding) {
+          return _.get(binding, ['metadata', 'annotations', mobileBindingConsumerID]) === _.get(row, 'apiObject.metadata.name') && isBindingReady(binding);
+        });
+        row.updateServicesInfo();
+      }));
+    });
+    var startBuildWatch = _.once(function(context) {
+      watches.push(DataService.watch(buildsVersion, context, function(buildsData) {
+        var builds = _.filter(buildsData.by('metadata.name'), function(build) {
+          return _.get(build, 'metadata.labels.mobile-client-id') === _.get(row, 'apiObject.metadata.name');
+        });
+        row.builds = BuildsService.sortBuilds(builds, true);
+      }));
+    });
+
     row.$onChanges = function(changes) {
       var apiObjectChanges = changes.apiObject && changes.apiObject.currentValue;
+
       if (apiObjectChanges) {
         row.bundleDisplay = row.apiObject.spec.appIdentifier;
         row.clientType = row.apiObject.spec.clientType.toUpperCase();
-        switch (row.apiObject.spec.clientType) {
-          case 'android':
-            row.installType = 'gradle';
-            break;
-          case 'iOS':
-            row.installType = 'cocoapods';
-            break;
-          case 'cordova':
-            row.installType = 'npm';
-            break;
-        }
-      }
+        row.installType = installTypes[row.apiObject.spec.clientType];
 
-      if (apiObjectChanges && !row.context) {
-        row.context = {namespace: _.get(row, 'apiObject.metadata.namespace')};
-      }
-
-      if (apiObjectChanges && !row.serviceInstancesWatched) {
-        row.serviceInstancesWatched = true;
-        DataService.list(serviceClassesVersion, row.context, function(serviceClasses) {
-          serviceClasses = serviceClasses.by('metadata.name');
-          watches.push(DataService.watch(serviceInstancesVersion, row.context, function(serviceinstances) {
-            row.services = _.filter(serviceinstances.by('metadata.name'), function(serviceInstance){
-              var serviceClass = _.get(serviceClasses, ServiceInstancesService.getServiceClassNameForInstance(serviceInstance));
-              return isMobileService(serviceClass) && isServiceInstanceReady(serviceInstance);
-            });
-            row.mobileClientEnabledServices = _.filter(row.services, function(service){
-              var serviceClass = _.get(serviceClasses, ServiceInstancesService.getServiceClassNameForInstance(service));
-              return isMobileClientEnabled(serviceClass);
-            });
-            row.updateServicesInfo();
-          }, { errorNotification: false }));
-        });
-      }
-
-      if (apiObjectChanges && !row.bindingsWatched) {
-        row.bindingsWatched = true;
-        watches.push(DataService.watch(serviceBindingsVersion, row.context, function(bindingsData) {
-          row.bindings = _.filter(bindingsData.by('metadata.name'), function(binding) {
-            return _.get(binding.metadata.annotations, 'binding.aerogear.org/consumer') === _.get(row, 'apiObject.metadata.name') && isBindingReady(binding);
-          });
-          row.updateServicesInfo();
-        }));
-      }
-
-      if (apiObjectChanges && !row.buildsWatched) {
-        row.buildsWatched = true;
-        watches.push(DataService.watch(buildsVersion, row.context, function(buildsData) {
-          // Filter builds by mobile client id
-          var builds = _.filter(buildsData.by('metadata.name'), function(build) {
-            return _.get(build, 'metadata.labels.mobile-client-id') === _.get(row, 'apiObject.metadata.name');
-          });
-          row.builds = BuildsService.sortBuilds(builds, true);
-        }));
+        var context = {namespace: _.get(row, 'apiObject.metadata.namespace')};
+        startServiceInstancesWatch(context);
+        startBindingsWatch(context);
+        startBuildWatch(context);
       }
     };
 
     row.actionsDropdownVisible = function () {
-      if (_.get(row.apiObject, 'metadata.deletionTimestamp')) {
-        return false;
-      }
-
-      return AuthorizationService.canI(row.mobileClientsVersion, 'delete');
+      return !!_.get(row.apiObject, 'metadata.deletionTimestamp') ||
+        AuthorizationService.canI(row.mobileClientsVersion, 'delete');
     };
+
     row.projectName = $routeParams.project;
     row.browseCatalog = function () {
       Navigate.toProjectCatalog(row.projectName, {category: 'mobile', subcategory: 'services'});
@@ -151,6 +143,6 @@
 
     row.$onDestroy = function() {
       DataService.unwatchAll(watches);
-    }
+    };
   }
 })();

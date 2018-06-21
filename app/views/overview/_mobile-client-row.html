@@ -86,10 +86,10 @@
                 <span class="status-icon" ng-class="build.status.phase">
                   <span ng-switch="build.status.phase" class="hide-ng-leave">
                     <span ng-switch-when="Complete" aria-hidden="true">
-                      <i class="fa fa-check-circle fa-fw"></i>
+                      <i class="fa fa-check-circle fa-fw" aria-hidden="true"></i>
                     </span>
                     <span ng-switch-when="Failed" aria-hidden="true">
-                      <i class="fa fa-times-circle fa-fw"></i>
+                      <i class="fa fa-times-circle fa-fw" aria-hidden="true"></i>
                     </span>
                     <span ng-switch-default>
                       <status-icon status="build.status.phase"></status-icon>
