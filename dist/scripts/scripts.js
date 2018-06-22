@@ -32,7 +32,7 @@ var B = this, V = t("isIE")();
 e.projectName = a.project;
 var L = a.isHomePage;
 B.catalogLandingPageEnabled = !d.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
-var O = t("annotation"), U = t("canI"), F = t("buildConfigForBuild"), x = t("deploymentIsInProgress"), M = t("imageObjectRef"), q = t("isJenkinsPipelineStrategy"), z = t("isNewerResource"), H = t("label"), G = t("podTemplate"), K = i.getPreferredVersion("buildconfigs"), W = i.getPreferredVersion("builds"), Q = i.getPreferredVersion("appliedclusterresourcequotas"), J = i.getPreferredVersion("daemonsets"), Y = i.getPreferredVersion("deploymentconfigs"), Z = i.getPreferredVersion("deployments"), X = i.getPreferredVersion("horizontalpodautoscalers"), ee = i.getPreferredVersion("imagestreams"), te = i.getPreferredVersion("limitranges"), ne = i.getPreferredVersion("pods"), re = i.getPreferredVersion("replicasets"), ae = i.getPreferredVersion("replicationcontrollers"), oe = i.getPreferredVersion("resourcequotas"), ie = i.getPreferredVersion("routes"), se = i.getPreferredVersion("servicebindings"), ce = i.getPreferredVersion("clusterserviceclasses"), le = i.getPreferredVersion("serviceinstances"), ue = i.getPreferredVersion("clusterserviceplans"), de = i.getPreferredVersion("services"), me = i.getPreferredVersion("statefulsets"), pe = i.getPreferredVersion("templates");
+var O = t("annotation"), U = t("canI"), F = t("buildConfigForBuild"), x = t("deploymentIsInProgress"), M = t("imageObjectRef"), q = t("isJenkinsPipelineStrategy"), z = t("isNewerResource"), H = t("label"), G = t("podTemplate"), K = i.getPreferredVersion("buildconfigs"), W = i.getPreferredVersion("builds"), J = i.getPreferredVersion("appliedclusterresourcequotas"), Q = i.getPreferredVersion("daemonsets"), Y = i.getPreferredVersion("deploymentconfigs"), Z = i.getPreferredVersion("deployments"), X = i.getPreferredVersion("horizontalpodautoscalers"), ee = i.getPreferredVersion("imagestreams"), te = i.getPreferredVersion("limitranges"), ne = i.getPreferredVersion("pods"), re = i.getPreferredVersion("replicasets"), ae = i.getPreferredVersion("replicationcontrollers"), oe = i.getPreferredVersion("resourcequotas"), ie = i.getPreferredVersion("routes"), se = i.getPreferredVersion("servicebindings"), ce = i.getPreferredVersion("clusterserviceclasses"), le = i.getPreferredVersion("serviceinstances"), ue = i.getPreferredVersion("clusterserviceplans"), de = i.getPreferredVersion("services"), me = i.getPreferredVersion("statefulsets"), pe = i.getPreferredVersion("templates");
 B.buildConfigsInstantiateVersion = i.getPreferredVersion("buildconfigs/instantiate");
 var fe, ge, ve = {}, he = {}, ye = {}, be = B.state = {
 alerts: {},
@@ -216,17 +216,17 @@ _.assign(t, n);
 }), xe(e, t);
 }, We = function() {
 _.each(B.deploymentConfigs, Ke);
-}, Qe = function(e) {
+}, Je = function(e) {
 var t = _e(e);
 return t ? _.get(B, [ "replicaSetsByDeploymentUID", t ]) : {};
-}, Je = function(e) {
-var t = R.getPausedDeploymentAlerts(e), n = Qe(e);
+}, Qe = function(e) {
+var t = R.getPausedDeploymentAlerts(e), n = Je(e);
 _.each(n, function(e) {
 var n = Me(e);
 _.assign(t, n);
 }), xe(e, t);
 }, Ye = function() {
-_.each(B.deployments, Je);
+_.each(B.deployments, Qe);
 }, Ze = function() {
 ze(B.replicationControllers), ze(B.replicaSets), ze(B.statefulSets), ze(B.daemonSets), ze(B.monopods);
 }, Xe = _.debounce(function() {
@@ -417,7 +417,7 @@ B.pods && h.fetchReferencedImageStreamImages(B.pods, be.imagesByDockerReference,
 }, o = function(e) {
 B.daemonSets = e.by("metadata.name"), ut(B.daemonSetData), ut(B.monopods), ze(B.daemonSets), et(B.daemonSets), kt(), Le(), S.log("daemonsets", B.daemonSets);
 }, i = !1, s = function() {
-i || (Rt.push(m.watch(J, r, o, {
+i || (Rt.push(m.watch(Q, r, o, {
 poll: V,
 pollInterval: 6e4
 })), i = !0);
@@ -447,7 +447,7 @@ B.statefulSets = e.by("metadata.name"), ut(B.statefulSets), ut(B.monopods), ze(B
 }, {
 poll: V,
 pollInterval: 6e4
-})), m.list(J, r, function(e) {
+})), m.list(Q, r, function(e) {
 o(e), _.isEmpty(B.daemonSets) || s();
 }), Rt.push(m.watch(de, r, function(e) {
 be.allServices = e.by("metadata.name"), dt(), S.log("services (subscribe)", be.allServices);
@@ -479,7 +479,7 @@ be.quotas = e.by("metadata.name"), jt();
 }, {
 poll: !0,
 pollInterval: 6e4
-})), Rt.push(m.watch(Q, r, function(e) {
+})), Rt.push(m.watch(J, r, function(e) {
 be.clusterQuotas = e.by("metadata.name"), jt();
 }, {
 poll: !0,
@@ -13387,100 +13387,126 @@ templateUrl: "views/directives/route-service-bar-chart.html"
 });
 }(), function() {
 angular.module("openshiftConsole").component("bindService", {
-controller: [ "$scope", "$filter", "APIService", "ApplicationsService", "BindingService", "Catalog", "DataService", "ServiceInstancesService", function(e, t, n, r, a, o, i, s) {
-var c, l, u, d, m, p, f = this, g = t("statusCondition"), v = t("enableTechPreviewFeature"), h = n.getPreferredVersion("serviceinstances"), y = n.getPreferredVersion("clusterserviceclasses"), b = n.getPreferredVersion("clusterserviceplans"), S = function() {
+controller: [ "$rootScope", "$scope", "$filter", "APIService", "ApplicationsService", "BindingService", "Catalog", "DataService", "ServiceInstancesService", function(e, t, n, r, a, o, i, s, c) {
+var l, u, d, m, p, f, g = this, v = n("statusCondition"), h = n("enableTechPreviewFeature"), y = n("isMobileService"), b = r.getPreferredVersion("serviceinstances"), S = r.getPreferredVersion("clusterserviceclasses"), C = r.getPreferredVersion("clusterserviceplans"), w = n("annotationName")("mobileBindingProviderId"), P = n("annotationName")("mobileBindingConsumerId"), j = function() {
 var e, t;
-_.each(f.serviceInstances, function(n) {
-var r = "True" === _.get(g(n, "Ready"), "status");
+_.each(g.serviceInstances, function(n) {
+var r = "True" === _.get(v(n, "Ready"), "status");
 r && (!e || n.metadata.creationTimestamp > e.metadata.creationTimestamp) && (e = n), r || t && !(n.metadata.creationTimestamp > t.metadata.creationTimestamp) || (t = n);
-}), f.serviceToBind = e || t;
-}, C = function() {
-f.serviceClasses && f.serviceInstances && f.servicePlans && (f.serviceInstances = a.filterBindableServiceInstances(f.serviceInstances, f.serviceClasses, f.servicePlans), f.orderedServiceInstances = a.sortServiceInstances(f.serviceInstances, f.serviceClasses), f.serviceToBind || S());
-}, w = function() {
+}), g.serviceToBind = e || t;
+}, k = function() {
+g.serviceClasses && g.serviceInstances && g.servicePlans && (g.serviceInstances = o.filterBindableServiceInstances(g.serviceInstances, g.serviceClasses, g.servicePlans), g.orderedServiceInstances = o.sortServiceInstances(g.serviceInstances, g.serviceClasses), g.serviceToBind || j());
+}, I = function() {
 var e = {
-namespace: _.get(f.target, "metadata.namespace")
+namespace: _.get(g.target, "metadata.namespace")
 };
-r.getApplications(e).then(function(e) {
-f.applications = e, f.bindType = f.applications.length ? "application" : "secret-only";
+a.getApplications(e).then(function(e) {
+g.applications = e, g.bindType = g.applications.length ? "application" : "secret-only";
 });
-}, P = function() {
+}, R = function() {
 var e = {
-namespace: _.get(f.target, "metadata.namespace")
+namespace: _.get(g.target, "metadata.namespace")
 };
-i.list(h, e).then(function(e) {
-f.serviceInstances = e.by("metadata.name"), C();
-}), i.list(y, {}).then(function(e) {
-f.serviceClasses = e.by("metadata.name"), C();
-}), i.list(b, {}).then(function(e) {
-f.servicePlans = e.by("metadata.name"), C();
+s.list(b, e).then(function(e) {
+g.serviceInstances = e.by("metadata.name"), k();
+}), s.list(S, {}).then(function(e) {
+g.serviceClasses = e.by("metadata.name"), k();
+}), s.list(C, {}).then(function(e) {
+g.servicePlans = e.by("metadata.name"), k();
 });
 };
-c = {
+l = {
 id: "bindForm",
 label: "Binding",
 view: "views/directives/bind-service/bind-service-form.html",
 valid: !1,
 allowClickNav: !0,
 onShow: function() {
-f.nextTitle = l.hidden ? "Bind" : "Next >", f.podPresets && !d && (d = e.$watch("ctrl.selectionForm.$valid", function(e) {
-c.valid = e;
+g.nextTitle = u.hidden ? "Bind" : "Next >", g.podPresets && !m && (m = t.$watch("ctrl.selectionForm.$valid", function(e) {
+l.valid = e;
 }));
 }
-}, l = {
+}, u = {
 id: "bindParameters",
 label: "Parameters",
 view: "views/directives/bind-service/bind-parameters.html",
 hidden: !0,
 allowClickNav: !0,
 onShow: function() {
-f.nextTitle = "Bind", m || (m = e.$watch("ctrl.parametersForm.$valid", function(e) {
-l.valid = e;
+g.nextTitle = "Bind", p || (p = t.$watch("ctrl.parametersForm.$valid", function(e) {
+u.valid = e;
 }));
 }
-}, u = {
+}, d = {
 id: "results",
 label: "Results",
 view: "views/directives/bind-service/results.html",
 valid: !0,
 allowClickNav: !1,
 onShow: function() {
-d && (d(), d = void 0), m && (m(), m = void 0), f.nextTitle = "Close", f.wizardComplete = !0, f.bindService();
+m && (m(), m = void 0), p && (p(), p = void 0), g.nextTitle = "Close", g.wizardComplete = !0, g.bindService();
 }
 };
-e.$watch("ctrl.serviceToBind", function() {
-f.serviceToBind && s.fetchServiceClassForInstance(f.serviceToBind).then(function(e) {
-f.serviceClass = e;
-var t = s.getServicePlanNameForInstance(f.serviceToBind);
-i.get(b, t, {}).then(function(e) {
-f.plan = e, f.parameterSchema = _.get(f.plan, "spec.serviceBindingCreateParameterSchema"), f.parameterFormDefinition = _.get(f.plan, "spec.externalMetadata.schemas.service_binding.create.openshift_form_definition"), l.hidden = !_.has(f.parameterSchema, "properties"), f.nextTitle = l.hidden ? "Bind" : "Next >", f.hideBack = l.hidden, c.valid = !0;
+var E = function() {
+s.list(S, {}).then(function(e) {
+g.serviceClasses = e.by("metadata.name");
+});
+}, T = function(e, t) {
+var n = _.get(g, "parameterData.CLIENT_ID"), r = {};
+return r[P] = n, r[w] = _.get(e, "metadata.name"), {
+generateName: n.toLowerCase() + "-" + _.get(t, "spec.externalMetadata.serviceName").toLowerCase() + "-",
+annotations: r
+};
+};
+t.$watch("ctrl.serviceToBind", function() {
+g.serviceToBind && c.fetchServiceClassForInstance(g.serviceToBind).then(function(e) {
+g.serviceClass = e;
+var t = c.getServicePlanNameForInstance(g.serviceToBind);
+s.get(C, t, {}).then(function(e) {
+g.plan = e, g.parameterSchema = _.get(g.plan, "spec.serviceBindingCreateParameterSchema"), g.parameterFormDefinition = _.get(g.plan, "spec.externalMetadata.schemas.service_binding.create.openshift_form_definition"), u.hidden = !_.has(g.parameterSchema, "properties"), g.nextTitle = u.hidden ? "Bind" : "Next >", g.hideBack = u.hidden, l.valid = !0;
 });
 });
-}), f.$onInit = function() {
-f.serviceSelection = {}, f.projectDisplayName = t("displayName")(f.project), f.podPresets = v("pod_presets"), f.parameterData = {}, f.steps = [ c, l, u ], f.hideBack = l.hidden, "ServiceInstance" === f.target.kind ? (f.bindType = "secret-only", f.appToBind = null, f.serviceToBind = f.target, f.podPresets && w()) : (f.bindType = "application", f.appToBind = f.target, P());
-}, f.$onChanges = function(e) {
-e.project && !e.project.isFirstChange() && (f.projectDisplayName = t("displayName")(f.project));
-}, f.$onDestroy = function() {
-d && (d(), d = void 0), m && (m(), m = void 0), p && i.unwatch(p);
-}, f.bindService = function() {
-var e = "ServiceInstance" === f.target.kind ? f.target : f.serviceToBind, t = "application" === f.bindType ? f.appToBind : void 0, n = {
+}), g.$onInit = function() {
+g.isMobileEnabled = e.AEROGEAR_MOBILE_ENABLED, g.serviceSelection = {}, g.projectDisplayName = n("displayName")(g.project), g.podPresets = h("pod_presets"), g.parameterData = g.parameterData || {}, g.steps = [ l, u, d ], g.hideBack = u.hidden, "ServiceInstance" === g.target.kind ? (g.bindType = "secret-only", g.appToBind = null, g.serviceToBind = g.target, g.podPresets && I(), g.isMobileEnabled && E()) : (g.bindType = "application", g.appToBind = g.target, R());
+}, g.$onChanges = function(e) {
+e.project && !e.project.isFirstChange() && (g.projectDisplayName = n("displayName")(g.project));
+}, g.$onDestroy = function() {
+m && (m(), m = void 0), p && (p(), p = void 0), f && s.unwatch(f);
+};
+var N = _.bind(function(e, t, n, r, a) {
+var i = {
 namespace: _.get(e, "metadata.namespace")
-}, r = a.getServiceClassForInstance(e, f.serviceClasses);
-a.bindService(e, t, r, f.parameterData).then(function(e) {
-f.binding = e, f.error = null, p = i.watchObject(a.bindingResource, _.get(f.binding, "metadata.name"), n, function(e) {
-f.binding = e;
+};
+o.bindService(e, t, n, r, a).then(function(e) {
+g.binding = e, g.error = null, g.bindCreated(g.binding), f = s.watchObject(o.bindingResource, _.get(g.binding, "metadata.name"), i, function(e) {
+g.binding = e;
 });
 }, function(e) {
-f.error = e;
+g.error = e;
 });
-}, f.closeWizard = function() {
-_.isFunction(f.onClose) && f.onClose();
+}, g), A = _.bind(function(e, t) {
+var n = T(e, t);
+N(e, void 0, t, g.parameterData, n);
+}, g), D = _.bind(function(e, t) {
+var n = "application" === g.bindType ? g.appToBind : void 0;
+N(e, n, t, g.parameterData);
+}, g);
+g.bindService = function() {
+var e = "ServiceInstance" === g.target.kind ? g.target : g.serviceToBind, t = o.getServiceClassForInstance(e, g.serviceClasses);
+g.isMobileEnabled && y(t) ? A(e, t) : D(e, t);
+}, g.closeWizard = function() {
+_.isFunction(g.onClose) && g.onClose();
+}, g.bindCreated = function(e) {
+_.isFunction(g.onBindCreated) && g.onBindCreated(e);
 };
 } ],
 controllerAs: "ctrl",
 bindings: {
 target: "<",
 project: "<",
-onClose: "<"
+onClose: "<",
+onBindCreated: "<",
+parameterData: "<"
 },
 templateUrl: "views/directives/bind-service.html"
 });
@@ -14063,6 +14089,134 @@ transclude: !0,
 template: '<a ng-href="{{link}}" ng-transclude ng-if="link"></a><span ng-transclude ng-if="!link"></span>'
 };
 }), function() {
+angular.module("openshiftConsole").component("mobileServiceInstanceList", {
+controller: [ "$filter", "$routeParams", "$scope", "APIService", "AuthorizationService", "BindingService", "DataService", "Navigate", function(e, t, n, r, a, o, i, s) {
+var c = this, l = {
+namespace: t.project
+}, u = r.getPreferredVersion("clusterserviceclasses"), d = r.getPreferredVersion("serviceinstances"), m = r.getPreferredVersion("servicebindings"), p = e("isMobileService"), f = e("isServiceInstanceReady"), g = e("isMobileClientEnabled"), v = e("isBindingReady"), h = e("annotationName")("mobileBindingProviderId");
+c.state = c.state || {}, c.boundInstances = [], c.unboundInstances = [];
+var y = [], b = function(e) {
+if (c.serviceClasses) return _.filter(e, function(e) {
+var t = _.get(e, "spec.clusterServiceClassRef.name");
+return p(c.serviceClasses[t]) && f(e) && g(c.serviceClasses[t]);
+});
+}, S = function() {
+if (c.serviceInstances) {
+var e = _.partition(c.serviceInstances, function(e) {
+return _.some(c.bindings, function(t) {
+return _.get(t, [ "metadata", "annotations", h ]) === e.metadata.name && (v(t) || "Unbind" === _.get(t, "status.currentOperation"));
+});
+});
+c.boundInstances = e[0], c.unboundInstances = e[1];
+}
+};
+c.$onInit = function() {
+c.loaded = !1, i.list(u, l, function(e) {
+c.serviceClasses = e.by("metadata.name"), i.list(d, l, function(e) {
+c.serviceInstances = b(e.by("metadata.name")), i.list(m, l, function(e) {
+c.bindings = e.by("metadata.name"), S(), c.loaded = !0;
+});
+});
+}), y.push(i.watch(d, l, function(e) {
+c.serviceInstances = b(e.by("metadata.name")), S();
+})), y.push(i.watch(m, l, function(e) {
+c.bindings = e.by("metadata.name"), S();
+}));
+}, c.goToCatalog = function() {
+s.toProjectCatalog(t.project, {
+category: "mobile",
+subcategory: "services"
+});
+}, n.$on("$destroy", function() {
+i.unwatchAll(y);
+});
+} ],
+controllerAs: "ctrl",
+templateUrl: "views/_mobile-service-instance-list.html"
+});
+}(), function() {
+angular.module("openshiftConsole").component("mobileServiceInstanceRow", {
+controller: [ "$filter", "$routeParams", "$scope", "APIService", "AuthorizationService", "BindingService", "DataService", "ListRowUtils", function(e, t, n, r, a, o, i, s) {
+var c = this, l = e("serviceInstanceDisplayName"), u = e("annotationName")("mobileBindingProviderId"), d = e("annotationName")("mobileBindingConsumerId");
+c.serviceBindingsVersion = r.getPreferredVersion("servicebindings");
+var m = r.getPreferredVersion("mobileclients"), p = r.getPreferredVersion("clusterserviceplans"), f = r.getPreferredVersion("servicebindings");
+c.state = c.state || {};
+var g = "org.aerogear.binding." + this.apiObject.metadata.name, v = "org.aerogear.binding-ext." + this.apiObject.metadata.name, h = [];
+c.bindingInProgress = !1;
+var y = e("isBindingReady");
+c.bindingsLimit = _.get(c.serviceClass, "spec.externalMetadata.bindingsLimit", 1), _.extend(c, s.ui), c.$onChanges = function(e) {
+c.displayName = l(c.apiObject, c.serviceClass), e.apiObject && e.apiObject.isFirstChange() && c.getClient().then(function(e) {
+c.mobileClient = e, c.serviceType = _.get(c, "serviceClass.spec.externalMetadata.serviceName"), c.sortAnnotations(), c.getBindingParametersData(), c.watchServiceBindings(), c.watchClient();
+});
+}, c.getClient = function() {
+return i.list(m, {
+namespace: t.project
+}).then(function(e) {
+return _.find(e.by("metadata.name"), function(e) {
+return e.metadata.name === t.mobileclient;
+});
+});
+}, c.sortAnnotations = function() {
+var e = _.get(c, "mobileClient.metadata.annotations", []);
+c.annotations = _(e).filter(function(e, t) {
+return t.split("/")[0] === g;
+}).map(JSON.parse).sortBy(function(e) {
+return e.label;
+}).value(), c.extendedAnnotations = _(e).pickBy(function(e, t) {
+return t.split("/")[0] === v;
+}).transform(function(e, t, n) {
+e[n.split("/")[1]] = JSON.parse(t);
+}).value();
+}, c.getBindingParametersData = function() {
+i.list(p, {}, function(e) {
+var t = e.by("metadata.name");
+c.providerServicePlan = _.find(t, function(e) {
+return c.serviceClass.metadata.name === e.spec.clusterServiceClassRef.name;
+});
+var n = "providerServicePlan.spec.externalMetadata." + c.mobileClient.kind.toLowerCase() + "_bind_parameters_data", r = _.get(c, n, []);
+c.bindData = _(r).map(JSON.parse).value();
+});
+}, c.watchServiceBindings = function() {
+h.push(i.watch(f, {
+namespace: t.project
+}, function(e) {
+var t = _.filter(e.by("metadata.name"), function(e) {
+return _.get(e.metadata.annotations, d) === c.mobileClient.metadata.name && _.get(e.metadata.annotations, u) === c.apiObject.metadata.name;
+});
+c.bindings = _.filter(t, function(e) {
+return y(e) || "Unbind" === _.get(e, "status.currentOperation");
+}), c.bindingInProgress = _.some(t, function(e) {
+return !y(e);
+});
+}));
+}, c.watchClient = function() {
+h.push(i.watchObject(m, t.mobileclient, {
+namespace: t.project
+}, function(e) {
+c.mobileClient = e, c.sortAnnotations();
+}));
+}, c.closeOverlayPanel = function() {
+_.set(c, "overlay.panelVisible", !1);
+}, c.showOverlayPanel = function(e, t) {
+c.parameterData = _.reduce(c.bindData, function(e, t) {
+return "path" === t.type ? e[t.name] = _.get(c, "mobileClient." + t.value) : "default" === t.type && (e[t.name] = t.value), e;
+}, {}), _.set(c, "overlay.panelVisible", !0), _.set(c, "overlay.panelName", e), _.set(c, "overlay.state", t);
+}, c.onBindCreated = function() {
+var e = _.get(c.apiObject, "metadata.uid", "");
+sessionStorage.setItem("overview/expand/" + e, "true");
+}, n.$on("$destroy", function() {
+i.unwatchAll(h);
+});
+} ],
+controllerAs: "row",
+bindings: {
+apiObject: "<",
+serviceClass: "<",
+state: "<"
+},
+templateUrl: "views/_mobile-service-instance-row.html"
+});
+}(), function() {
 angular.module("openshiftConsole").component("mobileClientRow", {
 controller: [ "$scope", "$filter", "$routeParams", "APIService", "AuthorizationService", "DataService", "ListRowUtils", "Navigate", "ProjectsService", function(e, t, n, r, a, o, i, s, c) {
 var l = this;

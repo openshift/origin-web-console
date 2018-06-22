@@ -224,6 +224,121 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   );
 
 
+  $templateCache.put('views/_mobile-service-instance-list.html',
+    "<div ng-if=\"!ctrl.loaded\">Loading...</div>\n" +
+    "<div class=\"overview mobile-service-instance-list\" ng-if=\"ctrl.loaded && ctrl.serviceInstances | size\">\n" +
+    "<div ng-if=\"ctrl.boundInstances | size\">\n" +
+    "<div class=\"list-pf\">\n" +
+    "<mobile-service-instance-row ng-repeat=\"serviceInstance in ctrl.boundInstances track by (serviceInstance | uid)\" api-object=\"serviceInstance\" service-class=\"ctrl.serviceClasses[serviceInstance.spec.clusterServiceClassRef.name]\">\n" +
+    "</mobile-service-instance-row>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"ctrl.unboundInstances | size\">\n" +
+    "<h3>Unbound Services</h3>\n" +
+    "<div class=\"list-pf\">\n" +
+    "<mobile-service-instance-row ng-repeat=\"serviceInstance in ctrl.unboundInstances track by (serviceInstance | uid)\" api-object=\"serviceInstance\" service-class=\"ctrl.serviceClasses[serviceInstance.spec.clusterServiceClassRef.name]\">\n" +
+    "</mobile-service-instance-row>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"mobile-service-instance-list note\" ng-if=\"ctrl.loaded && !(ctrl.serviceInstances | size)\">\n" +
+    "<p>Provision a mobile service to integrate it with your mobile client.</p>\n" +
+    "<button class=\"btn btn-primary btn-lg\" ng-click=\"ctrl.goToCatalog()\">Browse Mobile Services</button>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/_mobile-service-instance-row.html',
+    "<div class=\"list-pf-item provisioned-service mobile-service-instance-row\" ng-class=\"{ active: row.expanded, 'no-bindings': (row.bindings | size) === 0}\">\n" +
+    "<div class=\"list-pf-container\" ng-click=\"row.toggleExpand($event)\">\n" +
+    "<div class=\"list-pf-chevron\" ng-if=\"row.bindings | size\">\n" +
+    "<div ng-include src=\" 'views/overview/_list-row-chevron.html' \" class=\"list-pf-content\"></div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-content\">\n" +
+    "<div class=\"list-pf-name\">\n" +
+    "<h3>\n" +
+    "<span class=\"logo\" ng-if=\"row.serviceClass.spec.externalMetadata.imageUrl\">\n" +
+    "<img src=\"{{row.serviceClass.spec.externalMetadata.imageUrl}}\" alt=\"{{row.displayName}} logo\">\n" +
+    "</span>\n" +
+    "<span class=\"logo {{row.serviceClass.spec.externalMetadata['console.openshift.io/iconClass']}}\" ng-if=\"row.serviceClass.spec.externalMetadata['console.openshift.io/iconClass'] && !row.serviceClass.spec.externalMetadata.imageUrl\"></span>\n" +
+    "<a class=\"service-name\" ng-href=\"{{row.apiObject | navigateResourceURL}}\" ng-bind-html=\"row.displayName | highlightKeywords : row.state.filterKeywords\"></a>\n" +
+    "<div ng-bind-html=\"row.apiObject.metadata.name | highlightKeywords : row.state.filterKeywords\" class=\"list-row-longname\"></div>\n" +
+    "</h3>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-class=\"{'spinner spinner-sm' : (row.bindings | size) && row.bindingInProgress && !row.expanded}\"></div>\n" +
+    "<div class=\"list-pf-actions\" ng-if=\"row.bindings | size\">\n" +
+    "<div class=\"dropdown-kebab-pf\" uib-dropdown ng-if=\"row.bindingInProgress === false && !(row.apiObject.metadata.deletionTimestamp) && ((row.serviceBindingsVersion | canI : 'create') || (row.serviceBindingsVersion | canI : 'delete'))\">\n" +
+    "<button uib-dropdown-toggle class=\"btn btn-link dropdown-toggle\">\n" +
+    "<i class=\"fa fa-ellipsis-v\" aria-hidden=\"true\"></i>\n" +
+    "<span class=\"sr-only\">Actions</span>\n" +
+    "</button>\n" +
+    "<ul class=\"dropdown-menu dropdown-menu-right\" uib-dropdown-menu role=\"menu\">\n" +
+    "<li role=\"menuitem\" ng-if=\"((row.bindings | size) < row.bindingsLimit) && (row.serviceBindingsVersion | canI : 'create')\">\n" +
+    "<a href=\"\" ng-click=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">\n" +
+    "Add Binding\n" +
+    "</a>\n" +
+    "</li>\n" +
+    "<li role=\"menuitem\" ng-if=\"((row.bindings | size) > 0)  && (row.serviceBindingsVersion | canI : 'delete')\">\n" +
+    "<a href=\"\" ng-click=\"row.showOverlayPanel('unbindService', {target: row.apiObject})\">Delete Binding</a>\n" +
+    "</li>\n" +
+    "</ul>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!(row.bindings | size)\">\n" +
+    "<button ng-if=\"(row.serviceBindingsVersion | canI : 'create') && row.bindingInProgress === false\" class=\"btn btn-default create-binding\" ng-click=\"row.showOverlayPanel('bindService', {target: row.apiObject})\">Create Binding</button>\n" +
+    "<div ng-class=\"{'spinner spinner-sm' : row.bindingInProgress === true}\"></div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div class=\"list-pf-expansion collapse\" ng-if=\"row.expanded\" ng-class=\"{ in: row.expanded }\">\n" +
+    "<div class=\"list-pf-container\" ng-if=\"row.bindings | size\">\n" +
+    "<div class=\"expanded-section no-margin\">\n" +
+    "<div class=\"row\" ng-if=\"(row.bindings | size) && row.bindingInProgress === false\">\n" +
+    "<div ng-class=\"{'col-md-6' : (row.extendedAnnotations | size), 'col-md-12' : !(row.extendedAnnotations | size)}\">\n" +
+    "<h4 class=\"component-label section-label\">Details</h4>\n" +
+    "<dl class=\"dl-horizontal left\">\n" +
+    "<dt>Documentation</dt>\n" +
+    "<dd>\n" +
+    "<a href=\"{{row.serviceClass.spec.externalMetadata.documentationUrl}}\">SDK Setup\n" +
+    "<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "</a>\n" +
+    "</dd>\n" +
+    "<dt ng-repeat-start=\"annotation in row.annotations\">{{annotation.label}}</dt>\n" +
+    "<dd ng-repeat-end>\n" +
+    "<a ng-if=\"annotation.type === 'href'\" href=\"{{annotation.value}}\">{{ annotation.text || annotation.value }}</a>\n" +
+    "<span ng-if=\"annotation.type === 'string'\">{{ annotation.value }}</span>\n" +
+    "</dd>\n" +
+    "</dl>\n" +
+    "</div>\n" +
+    "<div class=\"col-md-6\" ng-if=\"(row.extendedAnnotations | size)\">\n" +
+    "<div ng-if=\"row.serviceType === 'ups'\">\n" +
+    "<h4 class=\"component-label section-label\">Variants</h4>\n" +
+    "<dl class=\"dl-horizontal left\">\n" +
+    "<dt ng-repeat-start=\"variant in row.extendedAnnotations.variants\">{{variant.typeLabel}}</dt>\n" +
+    "<dd ng-repeat-end>\n" +
+    "<a href=\"{{variant.url}}\">{{ variant.id }}</a>\n" +
+    "</dd>\n" +
+    "</dl>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<span class=\"note\" ng-if=\"(row.bindings | size) && (row.annotations | size) === 0 && row.bindingInProgress === false\">No configuration data to show for this service.</span>\n" +
+    "<div ng-class=\"{'spinner spinner-lg' : row.bindingInProgress === true && row.expanded}\" aria-hidden=\"true\"></div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<overlay-panel show-panel=\"row.overlay.panelVisible\" handle-close=\"row.closeOverlayPanel\">\n" +
+    "<div ng-if=\"row.overlay.panelName === 'bindService'\">\n" +
+    "<bind-service target=\"row.apiObject\" project=\"row.project\" on-close=\"row.closeOverlayPanel\" parameter-data=\"row.parameterData\" on-bind-created=\"row.onBindCreated\"></bind-service>\n" +
+    "</div>\n" +
+    "<div ng-if=\"row.overlay.panelName === 'unbindService'\">\n" +
+    "<unbind-service target=\"row.apiObject\" bindings=\"row.bindings\" on-close=\"row.closeOverlayPanel\" service-class=\"row.serviceClass\"></unbind-service>\n" +
+    "</div>\n" +
+    "</overlay-panel>"
+  );
+
+
   $templateCache.put('views/_parse-error.html',
     "<div ng-show=\"error && !hidden\" class=\"alert alert-danger animate-show\">\n" +
     "<button ng-click=\"hidden = true\" type=\"button\" class=\"close\" aria-hidden=\"true\">\n" +
