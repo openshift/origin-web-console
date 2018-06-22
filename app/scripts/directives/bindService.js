@@ -47,6 +47,8 @@
     var serviceInstancesVersion = APIService.getPreferredVersion('serviceinstances');
     var serviceClassesVersion = APIService.getPreferredVersion('clusterserviceclasses');
     var servicePlansVersion = APIService.getPreferredVersion('clusterserviceplans');
+    var mobileBindingProviderAnnotation = $filter('annotationName')('mobileBindingProviderId');
+    var mobileBindingConsumerAnnotation = $filter('annotationName')('mobileBindingConsumerId');
 
     var preselectService = function(){
       var newestReady;
@@ -200,13 +202,12 @@
 
     var getMobileBindingMetadata = function(svcToBind, serviceClass) {
       var consumerId = _.get(ctrl, 'parameterData.CLIENT_ID');
-
+      var annotations = {};
+      annotations[mobileBindingConsumerAnnotation] = consumerId;
+      annotations[mobileBindingProviderAnnotation] = _.get(svcToBind, 'metadata.name');
       return {
         generateName: consumerId.toLowerCase() + '-' + _.get(serviceClass, 'spec.externalMetadata.serviceName').toLowerCase() + '-',
-        annotations: {
-          'binding.aerogear.org/consumer':  consumerId,
-          'binding.aerogear.org/provider': _.get(svcToBind, 'metadata.name')
-        }
+        annotations: annotations
       };      
     };
 
