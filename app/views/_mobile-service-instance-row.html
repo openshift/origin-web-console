@@ -29,7 +29,15 @@
             </a>
           </li>
           <li role="menuitem" ng-if="((row.bindings | size) > 0)  && (row.serviceBindingsVersion | canI : 'delete')">
-            <a href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})">Delete Binding</a>
+            <a ng-if="(row.bindings | size) > 1" href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})">Delete Binding</a>
+            <delete-link
+              ng-if="(row.bindings | size) === 1"
+              kind="{{row.bindings[0].kind}}"
+              group="{{row.serviceBindingsVersion.group}}"
+              resource-name="{{row.bindings[0].metadata.name}}"
+              project-name="{{row.bindings[0].metadata.namespace}}"
+              stay-on-current-page="true">
+            </delete-link>
           </li>
         </ul>
       </div>
@@ -44,7 +52,7 @@
       <div class="expanded-section no-margin">
         <div class="row" ng-if="(row.bindings | size) && row.bindingInProgress === false">
           <div ng-class="{'col-md-6' : (row.extendedAnnotations | size), 'col-md-12' : !(row.extendedAnnotations | size)}">
-            <h4 class="component-label section-label">Details</h4>
+            <h4 ng-if="(row.extendedAnnotations | size)" class="component-label section-label">Details</h4>
             <dl class="dl-horizontal left">
               <dt>Documentation</dt>
               <dd>
