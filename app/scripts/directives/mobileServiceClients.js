@@ -3,6 +3,7 @@
 (function() {
   angular.module('openshiftConsole').component('mobileServiceClients', {
     controller: [
+      '$filter',
       'APIService',
       'DataService',
       MobileServiceClientsCtrl
@@ -16,12 +17,14 @@
   });
 
   function MobileServiceClientsCtrl(
+    $filter,
     APIService,
     DataService
   ) {
     var ctrl = this;
     var watches = [];
     var bindingPreferredVersion = APIService.getPreferredVersion('servicebindings');
+    var isBindingReady = $filter('isBindingReady');
 
     ctrl.$onChanges = function(changes) {
       if (changes.mobileClients && changes.mobileClients.currentValue) {
@@ -42,7 +45,7 @@
             var bindingProviderName = _.get(binding, ['metadata', 'annotations', 'binding.aerogear.org/provider']);
             var bindingConsumerName = _.get(binding, ['metadata', 'annotations', 'binding.aerogear.org/consumer']);
             var serviceInstanceName = _.get(ctrl, 'serviceInstance.metadata.name');
-            return (bindingProviderName === serviceInstanceName && _.includes(ctrl.clientNames, bindingConsumerName));
+            return (bindingProviderName === serviceInstanceName && _.includes(ctrl.clientNames, bindingConsumerName)) && isBindingReady(binding);
           })
           .map(function(binding) {
             var bindingConsumerName = _.get(binding, ['metadata', 'annotations', 'binding.aerogear.org/consumer']);
