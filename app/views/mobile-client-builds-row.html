@@ -54,21 +54,21 @@
         <div class="component-label section-label">BUILD CONFIG</div>
         <div class="build-config-details row">
           <div class="col-sm-12 col-md-12 col-lg-6">
-            <b class="title">Repo Url</b>
+            <b class="title">Repo Url:</b>
             <span>{{row.apiObject.spec.source.git.uri}}</span>
           </div>
           <div class="col-sm-12 col-md-12 col-lg-6">
-            <b class="title">Branch</b>
+            <b class="title">Branch:</b>
             <span>{{row.apiObject.spec.source.git.ref}}</span>
           </div>
         </div>
         <div class="build-config-details row">
           <div class="col-sm-12 col-md-12 col-lg-6">
-            <b class="title">Build Platform</b>
+            <b class="title">Build Platform:</b>
             <span>{{row.apiObject | label:'mobile-client-build-platform'}}</span>
           </div>
           <div class="col-sm-12 col-md-12 col-lg-6">
-            <b class="title">Jenkinsfile Path</b>
+            <b class="title">Jenkinsfile Path:</b>
             <span>{{row.apiObject.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath}}</span>
           </div>
         </div>
