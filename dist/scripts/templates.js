@@ -4121,7 +4121,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd>\n" +
     "{{vmi.metadata.labels['kubevirt.io/nodeName'] || '--'}}\n" +
     "</dd>\n" +
-    "<dt>Offline virtual machine:</dt>\n" +
+    "<dt>Virtual Machine:</dt>\n" +
     "<dd>\n" +
     "<a ng-if=\"vm\" ng-href=\"{{vm | navigateResourceURL}}\">{{vm.metadata.name}}</a>\n" +
     "<span ng-if=\"!vm\">--</span>\n" +
@@ -4150,7 +4150,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd>\n" +
     "{{vmi | vmCpu | orDefault}}\n" +
     "</dd>\n" +
-    "<dt>Operating system:</dt>\n" +
+    "<dt>Operating System:</dt>\n" +
     "<dd>\n" +
     "{{vmi | vmOs | humanizeOs | orDashes}}\n" +
     "</dd>\n" +
@@ -4231,7 +4231,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd>\n" +
     "{{vmi.metadata.labels['kubevirt.io/nodeName'] | orDashes}}\n" +
     "</dd>\n" +
-    "<dt>Virtual machine instance:</dt>\n" +
+    "<dt>Virtual Machine Instance:</dt>\n" +
     "<dd>\n" +
     "<span ng-if=\"vmi\">\n" +
     "<span dynamic-content=\"{{vmi | vmStateText}}\" data-toggle=\"tooltip\" data-trigger=\"hover\" aria-hidden=\"true\">\n" +

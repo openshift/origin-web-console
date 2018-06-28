@@ -24,7 +24,7 @@ var B = this, L = t("isIE")();
 e.projectName = a.project;
 var V = a.isHomePage;
 B.catalogLandingPageEnabled = !d.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
-var U = t("annotation"), O = t("canI"), x = t("buildConfigForBuild"), F = t("deploymentIsInProgress"), M = t("imageObjectRef"), H = t("isJenkinsPipelineStrategy"), q = t("isNewerResource"), z = t("label"), W = t("podTemplate"), G = i.getPreferredVersion("buildconfigs"), K = i.getPreferredVersion("builds"), J = i.getPreferredVersion("appliedclusterresourcequotas"), Q = i.getPreferredVersion("daemonsets"), Y = i.getPreferredVersion("deploymentconfigs"), Z = i.getPreferredVersion("deployments"), X = i.getPreferredVersion("horizontalpodautoscalers"), ee = i.getPreferredVersion("imagestreams"), te = i.getPreferredVersion("limitranges"), ne = i.getPreferredVersion("pods"), re = i.getPreferredVersion("replicasets"), ae = i.getPreferredVersion("replicationcontrollers"), oe = i.getPreferredVersion("resourcequotas"), ie = i.getPreferredVersion("routes"), se = i.getPreferredVersion("servicebindings"), ce = i.getPreferredVersion("clusterserviceclasses"), le = i.getPreferredVersion("serviceinstances"), ue = i.getPreferredVersion("clusterserviceplans"), de = i.getPreferredVersion("services"), pe = i.getPreferredVersion("statefulsets"), me = i.getPreferredVersion("templates");
+var U = t("annotation"), O = t("canI"), x = t("buildConfigForBuild"), F = t("deploymentIsInProgress"), M = t("imageObjectRef"), H = t("isJenkinsPipelineStrategy"), q = t("isNewerResource"), z = t("label"), G = t("podTemplate"), W = i.getPreferredVersion("buildconfigs"), K = i.getPreferredVersion("builds"), Q = i.getPreferredVersion("appliedclusterresourcequotas"), J = i.getPreferredVersion("daemonsets"), Y = i.getPreferredVersion("deploymentconfigs"), Z = i.getPreferredVersion("deployments"), X = i.getPreferredVersion("horizontalpodautoscalers"), ee = i.getPreferredVersion("imagestreams"), te = i.getPreferredVersion("limitranges"), ne = i.getPreferredVersion("pods"), re = i.getPreferredVersion("replicasets"), ae = i.getPreferredVersion("replicationcontrollers"), oe = i.getPreferredVersion("resourcequotas"), ie = i.getPreferredVersion("routes"), se = i.getPreferredVersion("servicebindings"), ce = i.getPreferredVersion("clusterserviceclasses"), le = i.getPreferredVersion("serviceinstances"), ue = i.getPreferredVersion("clusterserviceplans"), de = i.getPreferredVersion("services"), pe = i.getPreferredVersion("statefulsets"), me = i.getPreferredVersion("templates");
 B.buildConfigsInstantiateVersion = i.getPreferredVersion("buildconfigs/instantiate");
 var fe, ge, ve = {}, he = {}, ye = {}, be = B.state = {
 alerts: {},
@@ -190,35 +190,35 @@ _.each(e, He);
 }, ze = function(e) {
 var t = Ce(e);
 return t ? ye[t] : null;
-}, We = function(e) {
+}, Ge = function(e) {
 var t = Ce(e);
 return t ? _.get(B, [ "replicationControllersByDeploymentConfig", t ]) : [];
 };
 B.getPreviousReplicationController = function(e) {
-var t = We(e);
+var t = Ge(e);
 return _.size(t) < 2 ? null : t[1];
 };
-var Ge = function(e) {
+var We = function(e) {
 var t = {}, n = ze(e);
 _.assign(t, I.getDeploymentStatusAlerts(e, n), I.getPausedDeploymentAlerts(e));
-var r = We(e);
+var r = Ge(e);
 _.each(r, function(e) {
 var n = Me(e);
 _.assign(t, n);
 }), Fe(e, t);
 }, Ke = function() {
-_.each(B.deploymentConfigs, Ge);
-}, Je = function(e) {
+_.each(B.deploymentConfigs, We);
+}, Qe = function(e) {
 var t = _e(e);
 return t ? _.get(B, [ "replicaSetsByDeploymentUID", t ]) : {};
-}, Qe = function(e) {
-var t = I.getPausedDeploymentAlerts(e), n = Je(e);
+}, Je = function(e) {
+var t = I.getPausedDeploymentAlerts(e), n = Qe(e);
 _.each(n, function(e) {
 var n = Me(e);
 _.assign(t, n);
 }), Fe(e, t);
 }, Ye = function() {
-_.each(B.deployments, Qe);
+_.each(B.deployments, Je);
 }, Ze = function() {
 qe(B.replicationControllers), qe(B.replicaSets), qe(B.statefulSets), qe(B.daemonSets), qe(B.monopods);
 }, Xe = _.debounce(function() {
@@ -271,7 +271,7 @@ B.replicaSetsByDeploymentUID[t] = a, B.currentByDeploymentUID[t] = _.head(a);
 }), B.vanillaReplicaSets = _.sortBy(B.replicaSetsByDeploymentUID[""], "metadata.name"), Ye());
 }, lt = {}, ut = function(e) {
 e && be.allServices && _.each(e, function(e) {
-var t = [], n = _e(e), r = W(e);
+var t = [], n = _e(e), r = G(e);
 _.each(lt, function(e, n) {
 e.matches(r) && t.push(be.allServices[n]);
 }), be.servicesByObjectUID[n] = _.sortBy(t, "metadata.name");
@@ -420,7 +420,7 @@ B.pods && h.fetchReferencedImageStreamImages(B.pods, be.imagesByDockerReference,
 }, o = function(e) {
 B.daemonSets = e.by("metadata.name"), ut(B.daemonSetData), ut(B.monopods), qe(B.daemonSets), et(B.daemonSets), Rt(), Ve(), S.log("daemonsets", B.daemonSets);
 }, i = !1, s = function() {
-i || (Et.push(p.watch(Q, r, o, {
+i || (Et.push(p.watch(J, r, o, {
 poll: L,
 pollInterval: 6e4
 })), i = !0);
@@ -450,7 +450,7 @@ B.statefulSets = e.by("metadata.name"), ut(B.statefulSets), ut(B.monopods), qe(B
 }, {
 poll: L,
 pollInterval: 6e4
-})), p.list(Q, r, function(e) {
+})), p.list(J, r, function(e) {
 o(e), _.isEmpty(B.daemonSets) || s();
 }), Et.push(p.watch(de, r, function(e) {
 be.allServices = e.by("metadata.name"), pt(), S.log("services (subscribe)", be.allServices);
@@ -462,7 +462,7 @@ B.routes = e.by("metadata.name"), mt(), S.log("routes (subscribe)", B.routes);
 }, {
 poll: L,
 pollInterval: 6e4
-})), Et.push(p.watch(G, r, function(e) {
+})), Et.push(p.watch(W, r, function(e) {
 B.buildConfigs = e.by("metadata.name"), ht(), wt(), kt(), Ve(), S.log("buildconfigs (subscribe)", B.buildConfigs);
 }, {
 poll: L,
@@ -482,7 +482,7 @@ be.quotas = e.by("metadata.name"), jt();
 }, {
 poll: !0,
 pollInterval: 6e4
-})), Et.push(p.watch(J, r, function(e) {
+})), Et.push(p.watch(Q, r, function(e) {
 be.clusterQuotas = e.by("metadata.name"), jt();
 }, {
 poll: !0,
@@ -1497,11 +1497,7 @@ cause: "timeout"
 e.url(t.toString());
 };
 $(window).on("storage", function(e) {
-<<<<<<< HEAD
-e.originalEvent.key === s ? u() : "origin-web-console-inactivity-logout" === e.originalEvent.key && "true" === localStorage.getItem("origin-web-console-inactivity-logout") && p();
-=======
-e.originalEvent.key === s ? u() : "origin-web-console-inactivity-logout" === e.originalEvent.key && m();
->>>>>>> a8b70657... Virtual Machines views
+e.originalEvent.key === s ? u() : "origin-web-console-inactivity-logout" === e.originalEvent.key && "true" === localStorage.getItem("origin-web-console-inactivity-logout") && m();
 }), n.onUserChanged(function() {
 p(!1);
 }), d(), $(document).bind("click keydown", _.throttle(d, 500));
@@ -3370,23 +3366,15 @@ return _.find(t, {
 targetPort: o
 });
 }
-<<<<<<< HEAD
-return {
-buildRdp: function(e, t) {
+function n(e, t) {
 return [ "full address:s:" + e + ":" + t, "\nusername:s:Administrator", "\nscreen mode id:i:2", "\nprompt for credentials:i:1", "\ndesktopwidth:i:0", "\ndesktopheight:i:0", "\nauthentication level:i:2", "\nredirectclipboard:i:1", "\nsession bpp:i:32", "\ncompression:i:1", "\nkeyboardhook:i:2", "\naudiocapturemode:i:0", "\nvideoplaybackmode:i:1", "\nconnection type:i:2", "\ndisplayconnectionbar:i:1", "\ndisable wallpaper:i:1", "\nallow font smoothing:i:1", "\nallow desktop composition:i:0", "\ndisable full window drag:i:1", "\ndisable menu anims:i:1", "\ndisable themes:i:0", "\ndisable cursor setting:i:0", "\nbitmapcachepersistenable:i:1", "\naudiomode:i:0", "\nredirectcomports:i:0", "\nredirectposdevices:i:0", "\nredirectdirectx:i:1", "\nautoreconnection enabled:i:1", "\nnegotiate security layer:i:1", "\nremoteapplicationmode:i:0", "\nalternate shell:s:", "\nshell working directory:s:", "\ngatewayhostname:s:", "\ngatewayusagemethod:i:4", "\ngatewaycredentialssource:i:4", "\ngatewayprofileusagemethod:i:0", "\npromptcredentialonce:i:1", "\nuse redirection server name:i:0", "\n" ].join("");
-},
-fileDownload: function(e, t, n) {
-=======
-function n(e, t, n) {
->>>>>>> a8b70657... Virtual Machines views
+}
+function r(e, t, n) {
 t = t || "vm.rdp", n = n || "application/rdp";
 var r = new Blob([ e ], {
 type: n
 });
 saveAs(r, t);
-}
-function r(e, t) {
-return "full address:s:" + e + ":" + t + "\nusername:s:Administrator\nscreen mode id:i:2\nprompt for credentials:i:1\ndesktopwidth:i:0\ndesktopheight:i:0\nauthentication level:i:2\nredirectclipboard:i:1\nsession bpp:i:32\ncompression:i:1\nkeyboardhook:i:2\naudiocapturemode:i:0\nvideoplaybackmode:i:1\nconnection type:i:2\ndisplayconnectionbar:i:1\ndisable wallpaper:i:1\nallow font smoothing:i:1\nallow desktop composition:i:0\ndisable full window drag:i:1\ndisable menu anims:i:1\ndisable themes:i:0\ndisable cursor setting:i:0\nbitmapcachepersistenable:i:1\naudiomode:i:0\nredirectcomports:i:0\nredirectposdevices:i:0\nredirectdirectx:i:1\nautoreconnection enabled:i:1\nnegotiate security layer:i:1\nremoteapplicationmode:i:0\nalternate shell:s:\nshell working directory:s:\ngatewayhostname:s:\ngatewayusagemethod:i:4\ngatewaycredentialssource:i:4\ngatewayprofileusagemethod:i:0\npromptcredentialonce:i:1\nuse redirection server name:i:0\n";
 }
 function a(n, r) {
 var a = t(n);
@@ -3394,43 +3382,24 @@ if (!a) return null;
 var o, i = _.get(n, "spec.type"), s = _.get(a, "port");
 switch (i) {
 case "LoadBalancer":
-<<<<<<< HEAD
-(i = _.get(n, "spec.externalIPs[0]")) || e.warn("External IP is not defined for the LoadBalancer RDP Service: ", n, r);
+(o = _.get(n, "spec.externalIPs[0]")) || e.warn("External IP is not defined for the LoadBalancer RDP Service: ", n, r);
 break;
 
 case "ClusterIP":
-(i = _.get(n, "spec.clusterIP")) || e.warn("Cluster IP is not defined for the ClusterIP RDP Service: ", n, r);
+(o = _.get(n, "spec.clusterIP")) || e.warn("Cluster IP is not defined for the ClusterIP RDP Service: ", n, r);
 break;
 
 case "NodePort":
-(i = _.get(r, "_pod.status.hostIP")) || e.warn("Node IP (pod.status.hostIP) is not yet known, using NodePort RDP Service: ", n, r);
-=======
-if (!(o = _.get(n, "spec.externalIPs[0]"))) return e.warn("External IP is not defined for the LoadBalancer RDP Service: ", n, r), null;
-break;
-
-case "ClusterIP":
-if (!(o = _.get(n, "spec.clusterIP"))) return e.warn("Cluster IP is not defined for the ClusterIP RDP Service: ", n, r), null;
-break;
-
-case "NodePort":
-if (!(o = _.get(r, "_pod.status.hostIP"))) return e.warn("Node IP (pod.status.hostIP) is not yet known, using NodePort RDP Service: ", n, r), null;
->>>>>>> a8b70657... Virtual Machines views
+(o = _.get(r, "_pod.status.hostIP")) || e.warn("Node IP (pod.status.hostIP) is not yet known, using NodePort RDP Service: ", n, r);
 break;
 
 default:
 console.error("Unrecognized Service type: ", n);
 }
-<<<<<<< HEAD
-return i ? (e.info("RDP requested for: ", i, c, s), {
-address: i,
-port: c
-}) : null;
-=======
-return e.info("RDP requested for: ", o, s, i), {
+return o ? (e.info("RDP requested for: ", o, s, i), {
 address: o,
 port: s
-};
->>>>>>> a8b70657... Virtual Machines views
+}) : null;
 }
 var o = 3389;
 return {
@@ -3440,7 +3409,7 @@ return t && _.startsWith(t, "win");
 },
 openRemoteDesktop: function(e, t) {
 var o = a(t, e);
-o && n(r(o.address, o.port));
+o && r(n(o.address, o.port));
 },
 findRdpService: function(e) {
 return _.find(e, t);
@@ -6482,9 +6451,9 @@ e.clusterQuotas = t.by("metadata.name");
 poll: !0,
 pollInterval: 6e4
 }));
-var W = t("deploymentIsLatest");
+var G = t("deploymentIsLatest");
 e.showRollbackAction = function() {
-return "Complete" === L(e.replicaSet) && !W(e.replicaSet, e.deploymentConfig) && !e.replicaSet.metadata.deletionTimestamp && a.canI("deploymentconfigrollbacks", "create");
+return "Complete" === L(e.replicaSet) && !G(e.replicaSet, e.deploymentConfig) && !e.replicaSet.metadata.deletionTimestamp && a.canI("deploymentconfigrollbacks", "create");
 }, e.retryFailedDeployment = function(t) {
 s.retryFailedDeployment(t, u, e);
 }, e.rollbackToDeployment = function(t, n, r, a) {
@@ -6501,9 +6470,9 @@ details: t("getErrorDetails")(n)
 };
 });
 };
-var G = t("hasDeploymentConfig");
+var W = t("hasDeploymentConfig");
 e.isScalable = function() {
-return !!_.isEmpty(e.autoscalers) && (!G(e.replicaSet) && !P(e.replicaSet) || (!(!e.deploymentConfigMissing && !e.deploymentMissing) || !(!e.deploymentConfig && !e.deployment) && (e.isActive && !H)));
+return !!_.isEmpty(e.autoscalers) && (!W(e.replicaSet) && !P(e.replicaSet) || (!(!e.deploymentConfigMissing && !e.deploymentMissing) || !(!e.deploymentConfig && !e.deployment) && (e.isActive && !H)));
 }, e.removeVolume = function(n) {
 var r = "This will remove the volume from the " + t("humanizeKind")(e.replicaSet.kind) + ".";
 n.persistentVolumeClaim ? r += " It will not delete the persistent volume claim." : n.secret ? r += " It will not delete the secret." : n.configMap && (r += " It will not delete the config map.");
@@ -8830,7 +8799,7 @@ a.unwatchAll(p);
 } ]), angular.module("openshiftConsole").filter("ovmReference", function() {
 return function(e) {
 return _(_.get(e, "metadata.ownerReferences")).filter({
-kind: "OfflineVirtualMachine"
+kind: "VirtualMachine"
 }).first();
 };
 }), angular.module("openshiftConsole").factory("VmActions", [ "DataService", "KubevirtVersions", function(e, t) {
@@ -9795,11 +9764,11 @@ t.close("delete");
 t.dismiss("cancel");
 };
 } ]), angular.module("openshiftConsole").controller("EditPvcModalController", [ "APIService", "DataService", "$filter", "LimitRangesService", "QuotaService", "$scope", "$uibModalInstance", function(e, t, n, r, a, o, i) {
-var s = e.getPreferredVersion("limitranges"), c = e.getPreferredVersion("resourcequotas"), l = e.getPreferredVersion("appliedclusterresourcequotas"), u = n("amountAndUnit"), d = (n("usageWithUnits"), n("usageValue")), m = function() {
+var s = e.getPreferredVersion("limitranges"), c = e.getPreferredVersion("resourcequotas"), l = e.getPreferredVersion("appliedclusterresourcequotas"), u = n("amountAndUnit"), d = (n("usageWithUnits"), n("usageValue")), p = function() {
 var e = u(o.pvc.spec.resources.requests.storage), t = u(o.pvc.status.capacity.storage), n = d(e[0] + e[1]);
 return d(t[0] + t[1]) > n ? t : e;
 }();
-o.projectName = o.pvc.metadata.namespace, o.typeDisplayName = n("humanizeKind")(o.pvc.metadata.name), o.claim = {}, o.claim.capacity = Number(m[0]), o.claim.unit = m[1], o.disableButton = !0, o.currentCapacityUnits = angular.copy(o.claim), o.units = [ {
+o.projectName = o.pvc.metadata.namespace, o.typeDisplayName = n("humanizeKind")(o.pvc.metadata.name), o.claim = {}, o.claim.capacity = Number(p[0]), o.claim.unit = p[1], o.disableButton = !0, o.currentCapacityUnits = angular.copy(o.claim), o.units = [ {
 value: "Mi",
 label: "MiB"
 }, {
@@ -9835,7 +9804,7 @@ o.updatedCapacity = o.claim.capacity + o.claim.unit, i.close(o.updatedCapacity);
 }, o.cancel = function() {
 i.dismiss("cancel");
 };
-var p = function() {
+var m = function() {
 var e = o.claim.capacity && d(o.claim.capacity + o.claim.unit), t = !0, n = !0;
 t = e >= (_.has(o, "limits.min") && d(o.limits.min)), n = e <= (_.has(o, "limits.max") && d(o.limits.max)), o.expandPersistentVolumeClaimForm.capacity.$setValidity("limitRangeMin", t), o.expandPersistentVolumeClaimForm.capacity.$setValidity("limitRangeMax", n);
 }, f = function() {
@@ -9854,7 +9823,7 @@ if (o.limits = r.getEffectiveLimitRange(t, "storage", "PersistentVolumeClaim"), 
 var n = u(o.limits.max);
 o.claim.capacity = Number(n[0]), o.claim.unit = n[1], o.capacityReadOnly = !0;
 }
-o.$watchGroup([ "claim.capacity", "claim.unit" ], p);
+o.$watchGroup([ "claim.capacity", "claim.unit" ], m);
 }
 }), t.list(c, {
 namespace: o.projectName
@@ -13392,31 +13361,21 @@ var e = angular.extend({
 follow: !0,
 tailLines: 5e3,
 limitBytes: 10485760
-<<<<<<< HEAD
 }, t.options), n = 0, r = "", a = function(e) {
 return /\n$/.test(e);
 }, o = function(e) {
 return e.match(/^.*(\n|$)/gm);
 }, i = function(e) {
 var t = r + e;
-a(e) ? (r = "", n++, N.appendChild(f(n, t)), D()) : r = t;
+a(e) ? (r = "", n++, T.appendChild(f(n, t)), N()) : r = t;
 }, s = function(e) {
 var t = o(e);
 _.each(t, i);
-=======
-}, t.options), n = 0, r = function(e) {
-n++, T.appendChild(f(n, e)), N();
->>>>>>> a8b70657... Virtual Machines views
 };
 (E = c.createStream(v, h, t.context, e)).onMessage(function(r, a, o) {
 t.$evalAsync(function() {
-<<<<<<< HEAD
-t.empty = !1, "logs" !== t.state && (t.state = "logs", I());
-}), r && (e.limitBytes && o >= e.limitBytes && (t.$evalAsync(function() {
-=======
 t.empty = !1, "logs" !== t.state && (t.state = "logs", R());
-}), a && (e.limitBytes && i >= e.limitBytes && (t.$evalAsync(function() {
->>>>>>> a8b70657... Virtual Machines views
+}), r && (e.limitBytes && o >= e.limitBytes && (t.$evalAsync(function() {
 t.limitReached = !0, t.loading = !1;
 }), A(!0)), s(r), !t.largeLog && n >= e.tailLines && t.$evalAsync(function() {
 t.largeLog = !0;

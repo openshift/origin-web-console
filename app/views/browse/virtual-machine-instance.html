@@ -65,7 +65,7 @@
                       <dd>
                         {{vmi.metadata.labels['kubevirt.io/nodeName'] || '--'}}
                       </dd>
-                      <dt>Offline virtual machine:</dt>
+                      <dt>Virtual Machine:</dt>
                       <dd>
                         <a ng-if="vm" ng-href="{{vm | navigateResourceURL}}">{{vm.metadata.name}}</a>
                         <span ng-if="!vm">--</span>

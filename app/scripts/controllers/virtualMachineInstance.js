@@ -137,7 +137,7 @@ angular.module('openshiftConsole')
   .filter('ovmReference', function () {
     return function (vm) {
       return _(_.get(vm, 'metadata.ownerReferences'))
-        .filter({ kind: 'OfflineVirtualMachine'})
+        .filter({ kind: 'VirtualMachine'})
         .first();
     };
   });
