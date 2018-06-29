@@ -204,7 +204,7 @@
       var consumerId = _.get(ctrl, 'parameterData.CLIENT_ID');
       var annotations = {};
       annotations[mobileBindingConsumerAnnotation] = consumerId;
-      annotations[mobileBindingProviderAnnotation] = _.get(svcToBind, 'metadata.name')
+      annotations[mobileBindingProviderAnnotation] = _.get(svcToBind, 'metadata.name');
       return {
         generateName: consumerId.toLowerCase() + '-' + _.get(serviceClass, 'spec.externalMetadata.serviceName').toLowerCase() + '-',
         annotations: annotations
