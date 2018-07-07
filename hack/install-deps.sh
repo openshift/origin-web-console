@@ -29,7 +29,7 @@ function cmd() {
 # so we can amend our path to look into the local node_modules for the
 # correct binaries.
 repo_root="$( dirname "${BASH_SOURCE}" )/.."
-export PATH="${PATH}:${repo_root}/node_modules/bower/bin:${repo_root}/node_modules/grunt-cli/bin"
+export PATH="${repo_root}/node_modules/bower/bin:${repo_root}/node_modules/grunt-cli/bin:${PATH}"
 
 # Install bower if needed
 if ! which bower > /dev/null 2>&1 ; then
