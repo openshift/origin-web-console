@@ -48,7 +48,9 @@ angular.module('openshiftConsole')
 
     $scope.buildConfigsVersion = APIService.getPreferredVersion('buildconfigs');
     $scope.buildsVersion = APIService.getPreferredVersion('builds');
+    $scope.buildsLogVersion = APIService.getPreferredVersion('builds/log');
     $scope.buildConfigsInstantiateVersion = APIService.getPreferredVersion('buildconfigs/instantiate');
+    $scope.eventsVersion = APIService.getPreferredVersion('events');
     $scope.secretsVersion = APIService.getPreferredVersion('secrets');
 
     $scope.emptyMessage = "Loading...";

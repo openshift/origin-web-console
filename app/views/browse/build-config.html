@@ -154,7 +154,7 @@
                       <a ng-href="{{latestBuild | buildLogURL}}" target="_blank">View Log</a>
                     </span>
                     <!-- Show a log link for other builds if the user can view. -->
-                    <span ng-if="!(latestBuild | isJenkinsPipelineStrategy) && ('builds/log' | canI : 'get')">
+                    <span ng-if="!(latestBuild | isJenkinsPipelineStrategy) && (buildsLogVersion | canI : 'get')">
                       <a ng-href="{{latestBuild | buildLogURL}}">View Log</a>
                     </span>
                   </span>
@@ -503,7 +503,7 @@
                   show-header></key-value-editor>
               </ng-form>
             </uib-tab>
-            <uib-tab active="selectedTab.events" ng-if="('events' | canI : 'watch')">
+            <uib-tab active="selectedTab.events" ng-if="(eventsVersion | canI : 'watch')">
               <uib-tab-heading>Events</uib-tab-heading>
               <events api-objects="[ buildConfig ]" project-context="projectContext" ng-if="selectedTab.events"></events>
             </uib-tab>
