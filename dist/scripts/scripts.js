@@ -11703,7 +11703,7 @@ r.spec.volumes = r.spec.volumes || [], r.spec.volumes.push(p);
 var f = e("humanizeKind"), g = f(c.apiObject.kind), v = f(t.kind), h = {
 namespace: c.project.metadata.name
 };
-a.update(n.kindToResource(t.kind), t.metadata.name, t, h).then(function() {
+a.update(n.objectToResourceGroupVersion(t), t.metadata.name, t, h).then(function() {
 i.addNotification({
 type: "success",
 message: "Successfully added " + g + " " + c.apiObject.metadata.name + " to " + v + " " + t.metadata.name + ".",
