@@ -163,7 +163,7 @@
         namespace: ctrl.project.metadata.name
       };
 
-      DataService.update(APIService.kindToResource(applicationToUpdate.kind), applicationToUpdate.metadata.name, applicationToUpdate, context).then(
+      DataService.update(APIService.objectToResourceGroupVersion(applicationToUpdate), applicationToUpdate.metadata.name, applicationToUpdate, context).then(
         function() {
           NotificationsService.addNotification({
             type: "success",

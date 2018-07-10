@@ -5622,7 +5622,7 @@ title: "Builds",
 link: "project/" + n.project + "/browse/builds"
 }), e.breadcrumbs.push({
 title: n.buildconfig
-}), e.buildConfigsVersion = r.getPreferredVersion("buildconfigs"), e.buildsVersion = r.getPreferredVersion("builds"), e.buildConfigsInstantiateVersion = r.getPreferredVersion("buildconfigs/instantiate"), e.secretsVersion = r.getPreferredVersion("secrets"), e.emptyMessage = "Loading...", e.aceLoaded = function(e) {
+}), e.buildConfigsVersion = r.getPreferredVersion("buildconfigs"), e.buildsVersion = r.getPreferredVersion("builds"), e.buildsLogVersion = r.getPreferredVersion("builds/log"), e.buildConfigsInstantiateVersion = r.getPreferredVersion("buildconfigs/instantiate"), e.eventsVersion = r.getPreferredVersion("events"), e.secretsVersion = r.getPreferredVersion("secrets"), e.emptyMessage = "Loading...", e.aceLoaded = function(e) {
 var t = e.getSession();
 t.setOption("tabSize", 2), t.setOption("useSoftTabs", !0), e.$blockScrolling = 1 / 0;
 };
@@ -11703,7 +11703,7 @@ r.spec.volumes = r.spec.volumes || [], r.spec.volumes.push(p);
 var f = e("humanizeKind"), g = f(c.apiObject.kind), v = f(t.kind), h = {
 namespace: c.project.metadata.name
 };
-a.update(n.kindToResource(t.kind), t.metadata.name, t, h).then(function() {
+a.update(n.objectToResourceGroupVersion(t), t.metadata.name, t, h).then(function() {
 i.addNotification({
 type: "success",
 message: "Successfully added " + g + " " + c.apiObject.metadata.name + " to " + v + " " + t.metadata.name + ".",
