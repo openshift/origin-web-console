@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {
+(function () {
   angular.module('openshiftConsole').component('overviewListRow', {
     controller: [
       '$filter',
@@ -9,6 +9,7 @@
       'BuildsService',
       'CatalogService',
       'DeploymentsService',
+      'IdleService',
       'ListRowUtils',
       'Navigate',
       'NotificationsService',
@@ -27,14 +28,15 @@
   });
 
   function OverviewListRow($filter,
-                           $uibModal,
-                           APIService,
-                           BuildsService,
-                           CatalogService,
-                           DeploymentsService,
-                           ListRowUtils,
-                           Navigate,
-                           NotificationsService) {
+    $uibModal,
+    APIService,
+    BuildsService,
+    CatalogService,
+    DeploymentsService,
+    IdleService,
+    ListRowUtils,
+    Navigate,
+    NotificationsService) {
     var row = this;
 
     _.extend(row, ListRowUtils.ui);
@@ -53,36 +55,35 @@
     row.podsVersion = APIService.getPreferredVersion('pods');
     row.podsLogVersion = APIService.getPreferredVersion('pods/log');
 
-    var updateTriggers = function(apiObject) {
+    var updateTriggers = function (apiObject) {
       var triggers = _.get(apiObject, 'spec.triggers');
       if (_.isEmpty(triggers)) {
         return;
       }
 
-      row.imageChangeTriggers = _.filter(triggers, function(trigger) {
+      row.imageChangeTriggers = _.filter(triggers, function (trigger) {
         return trigger.type === 'ImageChange' && _.get(trigger, 'imageChangeParams.automatic');
       });
     };
 
-    var updateCurrent = function(apiObject) {
+    var updateCurrent = function (apiObject) {
       if (!apiObject ||
-          row.current ||
-          apiObject.kind === 'DeploymentConfig' ||
-          apiObject.kind === 'Deployment') {
+        row.current ||
+        apiObject.kind === 'DeploymentConfig' ||
+        apiObject.kind === 'Deployment') {
         return;
       }
-
       // For anything that's not a deployment or deployment config, "current" is the object itself.
       row.current = apiObject;
     };
 
-    var updateAPIObject = function(apiObject) {
+    var updateAPIObject = function (apiObject) {
       row.rgv = APIService.objectToResourceGroupVersion(apiObject);
       updateCurrent(apiObject);
       updateTriggers(apiObject);
     };
 
-    row.$onChanges = function(changes) {
+    row.$onChanges = function (changes) {
       if (changes.apiObject) {
         updateAPIObject(changes.apiObject.currentValue);
       }
@@ -90,7 +91,7 @@
 
     // Return the same empty array each time. Otherwise, digest loop errors occur.
     var NO_HPA = [];
-    var getHPA = function(object) {
+    var getHPA = function (object) {
       if (!row.state.hpaByResource) {
         return null;
       }
@@ -105,9 +106,19 @@
       return _.get(row.state.hpaByResource, [kind, name], NO_HPA);
     };
 
+    var NO_IDLER = [];
+    var getIdler = function (object) {
+      if (!row.state.idlersByResource) {
+        return null;
+      }
+      var kind = (_.get(object, 'kind') || '').toLowerCase();
+      var name = _.get(object, 'metadata.name');
+      return _.get(row.state.idlersByResource, [kind, name], NO_IDLER);
+    }
+
     row.showBindings = CatalogService.SERVICE_CATALOG_ENABLED && enableTechPreviewFeature('pod_presets');
 
-    row.$doCheck = function() {
+    row.$doCheck = function () {
       // Update notifications.
       row.notifications = ListRowUtils.getNotifications(row.apiObject, row.state);
 
@@ -116,6 +127,8 @@
       if (row.current && _.isEmpty(row.hpa)) {
         row.hpa = getHPA(row.current);
       }
+
+      row.idler = getIdler(row.apiObject);
 
       // Update services and build configs.
       var uid = _.get(row, 'apiObject.metadata.uid');
@@ -135,18 +148,18 @@
       }
     };
 
-    row.getPods = function(owner) {
+    row.getPods = function (owner) {
       var uid = _.get(owner, 'metadata.uid');
       return _.get(row, ['state', 'podsByOwnerUID', uid]);
     };
 
-    row.firstPod = function(owner) {
+    row.firstPod = function (owner) {
       var pods = row.getPods(owner);
       // Use `_.find` to get the first item.
       return _.find(pods);
     };
 
-    row.isScalable = function() {
+    row.isScalable = function () {
       if (!_.isEmpty(row.hpa)) {
         return false;
       }
@@ -154,7 +167,7 @@
       return !row.isDeploymentInProgress();
     };
 
-    row.isDeploymentInProgress = function() {
+    row.isDeploymentInProgress = function () {
       if (row.current && row.previous) {
         return true;
       }
@@ -162,77 +175,77 @@
       return deploymentIsInProgress(row.current);
     };
 
-    row.canIDoAny = function() {
+    row.canIDoAny = function () {
       var kind = _.get(row, 'apiObject.kind');
       var uid = _.get(row, 'apiObject.metadata.uid');
       var deleteableBindings = _.get(row.state.deleteableBindingsByApplicationUID, uid);
       switch (kind) {
-      case 'DeploymentConfig':
-        // Deploy is displayed.
-        if (canI('deploymentconfigs/instantiate', 'create')) {
-          return true;
-        }
-        // Edit is displayed.
-        if (canI('deploymentconfigs', 'update')) {
-          return true;
-        }
-        // View logs is displayed.
-        if (row.current && canI('deploymentconfigs/log', 'get')) {
-          return true;
-        }
-        // Create Binding is displayed.
-        if (enableTechPreviewFeature('pod_presets') &&
+        case 'DeploymentConfig':
+          // Deploy is displayed.
+          if (canI('deploymentconfigs/instantiate', 'create')) {
+            return true;
+          }
+          // Edit is displayed.
+          if (canI('deploymentconfigs', 'update')) {
+            return true;
+          }
+          // View logs is displayed.
+          if (row.current && canI('deploymentconfigs/log', 'get')) {
+            return true;
+          }
+          // Create Binding is displayed.
+          if (enableTechPreviewFeature('pod_presets') &&
             !_.isEmpty(row.state.bindableServiceInstances) &&
             canI(row.serviceBindingsVersion, 'create')) {
-          return true;
-        }
-        // Delete Binding is displayed.
-        if (enableTechPreviewFeature('pod_presets') &&
+            return true;
+          }
+          // Delete Binding is displayed.
+          if (enableTechPreviewFeature('pod_presets') &&
             !_.isEmpty(deleteableBindings) &&
             canI(row.serviceBindingsVersion, 'delete')) {
-          return true;
-        }
-        // Check if one of the start build actions is displayed
-        return row.showStartPipelineAction() || row.showStartBuildAction();
+            return true;
+          }
+          // Check if one of the start build actions is displayed
+          return row.showStartPipelineAction() || row.showStartBuildAction();
 
-      case 'Pod':
-        // View log is displayed.
-        if (canI('pods/log', 'get')) {
-          return true;
-        }
-        // Edit YAML is displayed.
-        if (canI('pods', 'update')) {
-          return true;
-        }
+        case 'Pod':
+          // View log is displayed.
+          if (canI('pods/log', 'get')) {
+            return true;
+          }
+          // Edit YAML is displayed.
+          if (canI('pods', 'update')) {
+            return true;
+          }
 
-        return false;
+          return false;
 
-      default:
-        // View log is displayed.
-        if (row.firstPod(row.current) && canI('pods/log', 'get')) {
-          return true;
-        }
-        // Edit YAML is displayed.
-        if (canI(row.rgv, 'update')) {
-          return true;
-        }
-        // Create Binding is displayed.
-        if (enableTechPreviewFeature('pod_presets') &&
+        default:
+          // View log is displayed.
+          if (row.firstPod(row.current) && canI('pods/log', 'get')) {
+            return true;
+          }
+          // Edit YAML is displayed.
+          if (canI(row.rgv, 'update')) {
+            return true;
+          }
+          // Create Binding is displayed.
+          if (enableTechPreviewFeature('pod_presets') &&
             !_.isEmpty(row.state.bindableServiceInstances) &&
             canI(row.serviceBindingsVersion, 'create')) {
-          return true;
-        }
-        // Delete Binding is displayed.
-        if (enableTechPreviewFeature('pod_presets') &&
+            return true;
+          }
+          // Delete Binding is displayed.
+          if (enableTechPreviewFeature('pod_presets') &&
             !_.isEmpty(deleteableBindings) &&
             canI(row.serviceBindingsVersion, 'delete')) {
-          return true;
-        }
-        return false;
+            return true;
+          }
+          return false;
       }
     };
 
-    row.showStartBuildAction = function() {
+    row.showStartBuildAction = function () {
       // Hide the "Start Build" action if there is a pipeline.
       if (!_.isEmpty(row.pipelines)) {
         return false;
@@ -250,13 +263,13 @@
       return !isBinaryBuild(buildConfig);
     };
 
-    row.showStartPipelineAction = function() {
+    row.showStartPipelineAction = function () {
       return canI('buildconfigs/instantiate', 'create') && _.size(row.pipelines) === 1;
     };
 
     row.startBuild = BuildsService.startBuild;
 
-    row.canDeploy = function() {
+    row.canDeploy = function () {
       if (!row.apiObject) {
         return false;
       }
@@ -276,18 +289,18 @@
       return true;
     };
 
-    row.isPaused = function() {
+    row.isPaused = function () {
       return row.apiObject.spec.paused;
     };
 
-    row.startDeployment = function() {
+    row.startDeployment = function () {
       DeploymentsService.startLatestDeployment(row.apiObject, {
         namespace: row.apiObject.metadata.namespace
       });
     };
 
     // TODO: Pulled from dc.js, but we should probably make the dialog generic and reuse for the deployment config page.
-    row.cancelDeployment = function() {
+    row.cancelDeployment = function () {
       var replicationController = row.current;
       if (!replicationController) {
         return;
@@ -306,7 +319,7 @@
         templateUrl: 'views/modals/confirm.html',
         controller: 'ConfirmModalController',
         resolve: {
-          modalConfig: function() {
+          modalConfig: function () {
             return {
               title: "Cancel deployment " + rcName + "?",
               details: details,
@@ -318,7 +331,7 @@
         }
       });
 
-      modalInstance.result.then(function() {
+      modalInstance.result.then(function () {
         if (replicationController.metadata.uid !== row.current.metadata.uid) {
           NotificationsService.addNotification({
             type: "error",
@@ -345,18 +358,18 @@
       });
     };
 
-    row.urlForImageChangeTrigger = function(imageChangeTrigger) {
+    row.urlForImageChangeTrigger = function (imageChangeTrigger) {
       var imageStreamName = $filter('stripTag')(_.get(imageChangeTrigger, 'imageChangeParams.from.name'));
       var deploymentConfigNamespace = _.get(row, 'apiObject.metadata.namespace');
       var imageStreamNamespace = _.get(imageChangeTrigger, 'imageChangeParams.from.namespace', deploymentConfigNamespace);
       return Navigate.resourceURL(imageStreamName, 'ImageStream', imageStreamNamespace);
     };
 
-    row.closeOverlayPanel = function() {
+    row.closeOverlayPanel = function () {
       _.set(row, 'overlay.panelVisible', false);
     };
 
-    row.showOverlayPanel = function(panelName, state) {
+    row.showOverlayPanel = function (panelName, state) {
       _.set(row, 'overlay.panelVisible', true);
       _.set(row, 'overlay.panelName', panelName);
       _.set(row, 'overlay.state', state);

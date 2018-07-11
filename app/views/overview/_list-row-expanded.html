@@ -11,94 +11,79 @@
           'hidden-sm hidden-md': row.previous
         }">
           <h4 class="component-label section-label">Containers</h4>
-          <pod-template
-            pod-template="row.current | podTemplate"
-            images-by-docker-reference="row.state.imagesByDockerReference"
-            builds="row.state.builds"
+          <pod-template pod-template="row.current | podTemplate" images-by-docker-reference="row.state.imagesByDockerReference" builds="row.state.builds"
             class="hide-ng-leave">
           </pod-template>
 
           <init-containers-summary api-object="row.apiObject"></init-containers-summary>
-        </div><!-- /overview-pod-template -->
+        </div>
+        <!-- /overview-pod-template -->
 
-      <div class="overview-animation-block" ng-class="{
+        <div class="overview-animation-block" ng-class="{
         'animation-in-progress': row.previous
       }">
-        <div ng-if="row.state.showMetrics && !row.previous" class="overview-metrics" ng-class="{
+          <div ng-if="row.state.showMetrics && !row.previous" class="overview-metrics" ng-class="{
           'ng-enter': row.previous
         }">
-          <div ng-if="row.apiObject.kind === 'Pod'">
-            <deployment-metrics
-              pods="[row.apiObject]"
-              containers="row.apiObject.spec.containers"
-              profile="compact"
-              alerts="row.state.alerts"
-              class="overview-metrics">
-            </deployment-metrics>
-            <h4 class="h5">Usage <small>Last 15 Minutes</small></h4>
+            <div ng-if="row.apiObject.kind === 'Pod'">
+              <deployment-metrics pods="[row.apiObject]" containers="row.apiObject.spec.containers" profile="compact" alerts="row.state.alerts"
+                class="overview-metrics">
+              </deployment-metrics>
+              <h4 class="h5">Usage
+                <small>Last 15 Minutes</small>
+              </h4>
+            </div>
+            <div ng-if="row.apiObject.kind !== 'Pod'">
+              <deployment-metrics pods="row.getPods(row.current)" containers="row.current.spec.template.spec.containers" profile="compact"
+                alerts="row.state.alerts">
+              </deployment-metrics>
+              <h4 class="h5">Average Usage
+                <small>Last 15 Minutes</small>
+              </h4>
+            </div>
           </div>
-          <div ng-if="row.apiObject.kind !== 'Pod'">
-            <deployment-metrics
-              pods="row.getPods(row.current)"
-              containers="row.current.spec.template.spec.containers"
-              profile="compact"
-              alerts="row.state.alerts">
-            </deployment-metrics>
-            <h4 class="h5">Average Usage <small>Last 15 Minutes</small></h4>
-          </div>
-        </div><!-- /overview-metrics -->
+          <!-- /overview-metrics -->
 
-        <div class="overview-deployment-donut" ng-class="{
+          <div class="overview-deployment-donut" ng-class="{
             'ng-enter': row.previous,
             'stacked-template': row.state.breakpoint !== 'lg'
         }">
-          <div ng-if="row.previous" class="previous-donut">
-            <deployment-donut
-              rc="row.previous"
-              deployment-config="row.apiObject"
-              pods="row.getPods(row.previous)"
-              hpa="row.hpa"
-              limit-ranges="row.state.limitRanges"
-              project="row.state.project"
-              quotas="row.state.quotas"
-              cluster-quotas="row.state.clusterQuotas"
-              scalable="false">
-            </deployment-donut>
-            <div ng-if="row.previous" class="deployment-connector">
-              <div class="deployment-connector-arrow" aria-hidden="true">
+
+            <div ng-if="row.previous" class="previous-donut">
+              <deployment-donut rc="row.previous" deployment-config="row.apiObject" pods="row.getPods(row.previous)" hpa="row.hpa" idler="row.idler"
+                limit-ranges="row.state.limitRanges" project="row.state.project" quotas="row.state.quotas" cluster-quotas="row.state.clusterQuotas"
+                scalable="false">
+              </deployment-donut>
+              <div ng-if="row.previous" class="deployment-connector">
+                <div class="deployment-connector-arrow" aria-hidden="true">
+                </div>
+              </div>
+            </div>
+
+            <div ng-switch on="row.apiObject.kind" class="latest-donut">
+              <div ng-switch-when="Pod">
+                <a ng-href="{{row.apiObject | navigateResourceURL}}">
+                  <pod-donut pods="[row.apiObject]"></pod-donut>
+                </a>
+              </div>
+              <div ng-switch-when="DaemonSet">
+                <a ng-href="{{row.apiObject | navigateResourceURL}}">
+                  <pod-donut pods="row.getPods(row.current)"></pod-donut>
+                </a>
+              </div>
+              <div ng-switch-default>
+                <deployment-donut rc="row.current" deployment-config="row.apiObject" pods="row.getPods(row.current)" hpa="row.hpa" idler="row.idler"
+                  limit-ranges="row.state.limitRanges" project="row.state.project" quotas="row.state.quotas" cluster-quotas="row.state.clusterQuotas"
+                  scalable="row.isScalable()">
+                </deployment-donut>
               </div>
             </div>
           </div>
-
-          <div ng-switch on="row.apiObject.kind" class="latest-donut">
-            <div ng-switch-when="Pod">
-              <a ng-href="{{row.apiObject | navigateResourceURL}}">
-                <pod-donut pods="[row.apiObject]"></pod-donut>
-              </a>
-            </div>
-            <div ng-switch-when="DaemonSet">
-              <a ng-href="{{row.apiObject | navigateResourceURL}}">
-                <pod-donut pods="row.getPods(row.current)"></pod-donut>
-              </a>
-            </div>
-            <div ng-switch-default>
-              <deployment-donut
-                rc="row.current"
-                deployment-config="row.apiObject"
-                pods="row.getPods(row.current)"
-                hpa="row.hpa"
-                limit-ranges="row.state.limitRanges"
-                project="row.state.project"
-                quotas="row.state.quotas"
-                cluster-quotas="row.state.clusterQuotas"
-                scalable="row.isScalable()">
-              </deployment-donut>
-            </div>
-          </div>
         </div>
-      </div><!-- /overview-animation-block -->
+        <!-- /overview-animation-block -->
 
-      </div><!-- /row-expanded-top -->
+      </div>
+      <!-- /row-expanded-top -->
     </div>
 
     <!-- Empty State Message -->
@@ -112,18 +97,12 @@
         <uib-tabset ng-if="row.current || (row.services | size) || row.recentPipelines.length || row.buildConfigs.length" class="list-row-tabset">
           <uib-tab active="row.selectedTab.networking" ng-if="row.services | size">
             <uib-tab-heading>Networking</uib-tab-heading>
-            <overview-networking
-              row-services="row.services"
-              all-services="row.state.allServices"
-              routes-by-service="row.state.routesByService">
+            <overview-networking row-services="row.services" all-services="row.state.allServices" routes-by-service="row.state.routesByService">
             </overview-networking>
           </uib-tab>
           <uib-tab ng-if="row.current" active="row.selectedTab.containers">
             <uib-tab-heading>Containers</uib-tab-heading>
-            <pod-template
-              pod-template="row.current | podTemplate"
-              images-by-docker-reference="row.state.imagesByDockerReference"
-              builds="row.state.builds"></pod-template>
+            <pod-template pod-template="row.current | podTemplate" images-by-docker-reference="row.state.imagesByDockerReference" builds="row.state.builds"></pod-template>
 
             <init-containers-summary api-object="row.apiObject"></init-containers-summary>
           </uib-tab>
@@ -132,24 +111,20 @@
             <!-- Use ng-if to avoid requesting metrics when the tab is not active. -->
             <div ng-if="row.selectedTab.metrics">
               <div ng-if="row.apiObject.kind === 'Pod'">
-                <deployment-metrics
-                  pods="[row.apiObject]"
-                  containers="row.apiObject.spec.containers"
-                  profile="compact"
-                  alerts="row.state.alerts"
+                <deployment-metrics pods="[row.apiObject]" containers="row.apiObject.spec.containers" profile="compact" alerts="row.state.alerts"
                   class="overview-metrics">
                 </deployment-metrics>
-                <h4 class="h5">Usage <small>Last 15 Minutes</small></h4>
+                <h4 class="h5">Usage
+                  <small>Last 15 Minutes</small>
+                </h4>
               </div>
               <div ng-if="row.apiObject.kind !== 'Pod'">
-                <deployment-metrics
-                  pods="row.getPods(row.current)"
-                  containers="row.current.spec.template.spec.containers"
-                  profile="compact"
-                  alerts="row.state.alerts"
-                  class="overview-metrics">
+                <deployment-metrics pods="row.getPods(row.current)" containers="row.current.spec.template.spec.containers" profile="compact"
+                  alerts="row.state.alerts" class="overview-metrics">
                 </deployment-metrics>
-                <h4 class="h5">Average Usage <small>Last 15 Minutes</small></h4>
+                <h4 class="h5">Average Usage
+                  <small>Last 15 Minutes</small>
+                </h4>
               </div>
             </div>
           </uib-tab>
@@ -160,8 +135,7 @@
                 <build-counts builds="row.recentPipelines"></build-counts>
               </span>
             </uib-tab-heading>
-            <overview-pipelines
-              recent-pipelines="row.recentPipelines">
+            <overview-pipelines recent-pipelines="row.recentPipelines">
             </overview-pipelines>
           </uib-tab>
           <uib-tab ng-if="row.buildConfigs.length" active="row.selectedTab.builds">
@@ -171,24 +145,15 @@
                 <build-counts builds="row.recentBuilds"></build-counts>
               </span>
             </uib-tab-heading>
-            <overview-builds
-              build-configs="row.buildConfigs"
-              recent-builds-by-build-config="row.state.recentBuildsByBuildConfig"
-              context="row.state.context"
+            <overview-builds build-configs="row.buildConfigs" recent-builds-by-build-config="row.state.recentBuildsByBuildConfig" context="row.state.context"
               hide-log="row.state.limitWatches">
             </overview-builds>
           </uib-tab>
           <uib-tab ng-if="row.showBindings && (row.bindings | size)" active="row.selectedTab.bindings">
             <uib-tab-heading>Bindings</uib-tab-heading>
-            <overview-service-bindings
-              component-label="Service Bindings"
-              ref-api-object="row.apiObject"
-              namespace="row.apiObject.metadata.namespace"
-              bindings="row.bindings"
-              bindable-service-instances="row.state.bindableServiceInstances"
-              service-classes="row.state.serviceClasses"
-              service-instances="row.state.serviceInstances"
-              create-binding="row.showOverlayPanel('bindService', {target: row.apiObject})">
+            <overview-service-bindings component-label="Service Bindings" ref-api-object="row.apiObject" namespace="row.apiObject.metadata.namespace"
+              bindings="row.bindings" bindable-service-instances="row.state.bindableServiceInstances" service-classes="row.state.serviceClasses"
+              service-instances="row.state.serviceInstances" create-binding="row.showOverlayPanel('bindService', {target: row.apiObject})">
             </overview-service-bindings>
           </uib-tab>
         </uib-tabset>
@@ -197,37 +162,24 @@
 
     <div ng-if="row.state.breakpoint !== 'xxs' && row.state.breakpoint !== 'xs'">
       <!-- Networking Section -->
-      <overview-networking
-        row-services="row.services"
-        all-services="row.state.allServices"
-        routes-by-service="row.state.routesByService">
+      <overview-networking row-services="row.services" all-services="row.state.allServices" routes-by-service="row.state.routesByService">
       </overview-networking>
 
       <!-- Pipelines Section -->
-      <overview-pipelines
-        ng-if="!row.hidePipelines"
-        recent-pipelines="row.recentPipelines">
+      <overview-pipelines ng-if="!row.hidePipelines" recent-pipelines="row.recentPipelines">
       </overview-pipelines>
 
       <!-- Builds Section -->
-      <overview-builds
-        build-configs="row.buildConfigs"
-        recent-builds-by-build-config="row.state.recentBuildsByBuildConfig"
-        context="row.state.context"
+      <overview-builds build-configs="row.buildConfigs" recent-builds-by-build-config="row.state.recentBuildsByBuildConfig" context="row.state.context"
         hide-log="row.state.limitWatches">
       </overview-builds>
 
-      <overview-service-bindings
-        component-label="Service Bindings"
-        ng-if="row.showBindings && (row.bindings | size)"
-        ref-api-object="row.apiObject"
-        namespace="row.apiObject.metadata.namespace"
-        bindings="row.bindings"
-        bindable-service-instances="row.state.bindableServiceInstances"
-        service-classes="row.state.serviceClasses"
-        service-instances="row.state.serviceInstances"
-        create-binding="row.showOverlayPanel('bindService', {target: row.apiObject})">
+      <overview-service-bindings component-label="Service Bindings" ng-if="row.showBindings && (row.bindings | size)" ref-api-object="row.apiObject"
+        namespace="row.apiObject.metadata.namespace" bindings="row.bindings" bindable-service-instances="row.state.bindableServiceInstances"
+        service-classes="row.state.serviceClasses" service-instances="row.state.serviceInstances" create-binding="row.showOverlayPanel('bindService', {target: row.apiObject})">
       </overview-service-bindings>
     </div>
-  </div><!-- /list-pf-content -->
-</div> <!-- /list-pf-container -->
+  </div>
+  <!-- /list-pf-content -->
+</div>
+<!-- /list-pf-container -->

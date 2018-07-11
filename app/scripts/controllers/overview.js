@@ -18,6 +18,7 @@ angular.module('openshiftConsole').controller('OverviewController', [
   'HomePagePreferenceService',
   'HPAService',
   'HTMLService',
+  'IdleService',
   'ImageStreamResolver',
   'KeywordService',
   'LabelFilter',
@@ -36,36 +37,37 @@ angular.module('openshiftConsole').controller('OverviewController', [
 ]);
 
 function OverviewController($scope,
-                            $filter,
-                            $q,
-                            $location,
-                            $routeParams,
-                            AlertMessageService,
-                            APIService,
-                            AppsService,
-                            BindingService,
-                            BuildsService,
-                            CatalogService,
-                            Constants,
-                            DataService,
-                            DeploymentsService,
-                            HomePagePreferenceService,
-                            HPAService,
-                            HTMLService,
-                            ImageStreamResolver,
-                            KeywordService,
-                            LabelFilter,
-                            Logger,
-                            MetricsService,
-                            Navigate,
-                            OwnerReferencesService,
-                            PodsService,
-                            ProjectsService,
-                            PromiseUtils,
-                            ResourceAlertsService,
-                            RoutesService,
-                            ServiceInstancesService,
-                            KubevirtVersions) {
+  $filter,
+  $q,
+  $location,
+  $routeParams,
+  AlertMessageService,
+  APIService,
+  AppsService,
+  BindingService,
+  BuildsService,
+  CatalogService,
+  Constants,
+  DataService,
+  DeploymentsService,
+  HomePagePreferenceService,
+  HPAService,
+  HTMLService,
+  IdleService,
+  ImageStreamResolver,
+  KeywordService,
+  LabelFilter,
+  Logger,
+  MetricsService,
+  Navigate,
+  OwnerReferencesService,
+  PodsService,
+  ProjectsService,
+  PromiseUtils,
+  ResourceAlertsService,
+  RoutesService,
+  ServiceInstancesService,
+  KubevirtVersions) {
   var overview = this;
   var limitWatches = $filter('isIE')();
   var DEFAULT_POLL_INTERVAL = 60 * 1000; // milliseconds
@@ -128,6 +130,14 @@ function OverviewController($scope,
     alerts: {},
     builds: {},
     clusterQuotas: {},
+    idlers: {},
+    // TODO: ideally do the mapping of idler to resource here.
+    // The problem is that idlers can target a broad list of resources, 
+    // and timing may be an issue.
+    // This would have to be done similar to servicesByObjectUID, which 
+    // is mapped in updateRoutesByApp(), which has a list of resources 
+    // to map, and is a debounced function.  
+    idlersByResource: {},
     imageStreamImageRefByDockerReference: {},
     imagesByDockerReference: {},
     limitRanges: {},
@@ -154,10 +164,10 @@ function OverviewController($scope,
   // once for the responsive layout, which switches to tabs at smaller screen
   // widths.
   overview.state.breakpoint = HTMLService.getBreakpoint();
-  var onResize = _.throttle(function() {
+  var onResize = _.throttle(function () {
     var breakpoint = HTMLService.getBreakpoint();
     if (overview.state.breakpoint !== breakpoint) {
-      $scope.$evalAsync(function() {
+      $scope.$evalAsync(function () {
         overview.state.breakpoint = breakpoint;
       });
     }
@@ -190,44 +200,44 @@ function OverviewController($scope,
     label: 'Pipeline'
   }];
 
-  var getName = function(apiObject) {
+  var getName = function (apiObject) {
     return _.get(apiObject, 'metadata.name');
   };
 
-  var getUID = function(apiObject) {
+  var getUID = function (apiObject) {
     return _.get(apiObject, 'metadata.uid');
   };
 
   // The size of all visible top-level items.
-  var size = function() {
+  var size = function () {
     return _.size(overview.deploymentConfigs) +
-           _.size(overview.vanillaReplicationControllers) +
-           _.size(overview.deployments) +
-           _.size(overview.vanillaReplicaSets) +
-           _.size(overview.statefulSets) +
-           _.size(overview.daemonSets) +
-           _.size(overview.monopods) +
-           _.size(overview.state.serviceInstances) +
-           _.size(overview.mobileClients) +
-           _.size(overview.offlineVirtualMachines);
+      _.size(overview.vanillaReplicationControllers) +
+      _.size(overview.deployments) +
+      _.size(overview.vanillaReplicaSets) +
+      _.size(overview.statefulSets) +
+      _.size(overview.daemonSets) +
+      _.size(overview.monopods) +
+      _.size(overview.state.serviceInstances) +
+      _.size(overview.mobileClients) +
+      _.size(overview.offlineVirtualMachines);
   };
 
   // The size of all visible top-level items after filtering.
-  var filteredSize = function() {
+  var filteredSize = function () {
     return _.size(overview.filteredDeploymentConfigs) +
-           _.size(overview.filteredReplicationControllers) +
-           _.size(overview.filteredDeployments) +
-           _.size(overview.filteredReplicaSets) +
-           _.size(overview.filteredStatefulSets) +
-           _.size(overview.filteredDaemonSets) +
-           _.size(overview.filteredMonopods) +
-           _.size(overview.filteredServiceInstances) +
-           _.size(overview.filteredMobileClients) +
-           _.size(overview.filteredOfflineVirtualMachines);
+      _.size(overview.filteredReplicationControllers) +
+      _.size(overview.filteredDeployments) +
+      _.size(overview.filteredReplicaSets) +
+      _.size(overview.filteredStatefulSets) +
+      _.size(overview.filteredDaemonSets) +
+      _.size(overview.filteredMonopods) +
+      _.size(overview.filteredServiceInstances) +
+      _.size(overview.filteredMobileClients) +
+      _.size(overview.filteredOfflineVirtualMachines);
   };
 
   // Show the "Get Started" message if the project is empty.
-  var updateShowGetStarted = function() {
+  var updateShowGetStarted = function () {
     overview.size = size();
     overview.filteredSize = filteredSize();
 
@@ -236,13 +246,13 @@ function OverviewController($scope,
 
     // Check if we've loaded the top-level items we show on the overview.
     var loaded = overview.deploymentConfigs &&
-                 overview.replicationControllers &&
-                 overview.deployments &&
-                 overview.replicaSets &&
-                 overview.statefulSets &&
-                 overview.daemonSets &&
-                 overview.pods &&
-                 overview.state.serviceInstances;
+      overview.replicationControllers &&
+      overview.deployments &&
+      overview.replicaSets &&
+      overview.statefulSets &&
+      overview.daemonSets &&
+      overview.pods &&
+      overview.state.serviceInstances;
 
     state.expandAll = loaded && overview.size === 1;
 
@@ -251,20 +261,20 @@ function OverviewController($scope,
 
     overview.everythingFiltered = !projectEmpty && !overview.filteredSize;
     overview.hidePipelineOtherResources = overview.viewBy === 'pipeline' &&
-                                          (overview.filterActive || _.isEmpty(overview.pipelineBuildConfigs));
+      (overview.filterActive || _.isEmpty(overview.pipelineBuildConfigs));
   };
 
   // Group a collection of resources by app label. Returns a map where the key
   // is the app label value and the value is an array of objects, sorted by
   // `metadata.name`.
-  var groupByApp = function(collection) {
+  var groupByApp = function (collection) {
     return AppsService.groupByApp(collection, 'metadata.name');
   };
 
-  var getRoutesToDisplay = function(routes) {
+  var getRoutesToDisplay = function (routes) {
     var routesToDisplay = [];
     var bestRoute = null;
-    _.each(routes, function(candidate) {
+    _.each(routes, function (candidate) {
       // If the the route has the annotation, display it
       if (RoutesService.isOverviewAppRoute(candidate)) {
         routesToDisplay.push(candidate);
@@ -289,8 +299,8 @@ function OverviewController($scope,
   };
 
   // Debounce so we're not reevaluating this too often.
-  var updateRoutesByApp = _.debounce(function() {
-    $scope.$evalAsync(function() {
+  var updateRoutesByApp = _.debounce(function () {
+    $scope.$evalAsync(function () {
       overview.routesToDisplayByApp = {};
 
       if (!overview.routes) {
@@ -309,15 +319,15 @@ function OverviewController($scope,
       ];
 
       // Find the best route for each app.
-      _.each(overview.apps, function(app) {
+      _.each(overview.apps, function (app) {
         // Create a map of routes, keyed by route name to avoid adding them twice.
         var routesForApp = {};
-        _.each(toCheck, function(byApp) {
+        _.each(toCheck, function (byApp) {
           var apiObjects = _.get(byApp, app, []);
-          _.each(apiObjects, function(apiObject) {
+          _.each(apiObjects, function (apiObject) {
             var uid = getUID(apiObject);
             var services = _.get(state, ['servicesByObjectUID', uid], []);
-            _.each(services, function(service) {
+            _.each(services, function (service) {
               // Only need to get the first route, since they're already sorted by score.
               var routes = _.get(state, ['routesByService', service.metadata.name], []);
               _.assign(routesForApp, _.keyBy(routes, 'metadata.name'));
@@ -330,7 +340,7 @@ function OverviewController($scope,
   }, 300, { maxWait: 1500 });
 
   // Group each resource kind by app and update the list of app label values.
-  var updateApps = function() {
+  var updateApps = function () {
     overview.filteredDeploymentConfigsByApp = groupByApp(overview.filteredDeploymentConfigs);
     overview.filteredReplicationControllersByApp = groupByApp(overview.filteredReplicationControllers);
     overview.filteredDeploymentsByApp = groupByApp(overview.filteredDeployments);
@@ -339,20 +349,20 @@ function OverviewController($scope,
     overview.filteredDaemonSetsByApp = groupByApp(overview.filteredDaemonSets);
     overview.filteredMonopodsByApp = groupByApp(overview.filteredMonopods);
     overview.apps = _.union(_.keys(overview.filteredDeploymentConfigsByApp),
-                            _.keys(overview.filteredReplicationControllersByApp),
-                            _.keys(overview.filteredDeploymentsByApp),
-                            _.keys(overview.filteredReplicaSetsByApp),
-                            _.keys(overview.filteredStatefulSetsByApp),
-                            _.keys(overview.filteredDaemonSetsByApp),
-                            _.keys(overview.filteredMonopodsByApp));
+      _.keys(overview.filteredReplicationControllersByApp),
+      _.keys(overview.filteredDeploymentsByApp),
+      _.keys(overview.filteredReplicaSetsByApp),
+      _.keys(overview.filteredStatefulSetsByApp),
+      _.keys(overview.filteredDaemonSetsByApp),
+      _.keys(overview.filteredMonopodsByApp));
 
     AppsService.sortAppNames(overview.apps);
     updateRoutesByApp();
   };
 
-  var updatePipelineOtherResources = function() {
+  var updatePipelineOtherResources = function () {
     // Find deployment configs not associated with a pipeline.
-    var otherDeploymentConfigs = _.filter(overview.deploymentConfigs, function(deploymentConfig) {
+    var otherDeploymentConfigs = _.filter(overview.deploymentConfigs, function (deploymentConfig) {
       var name = getName(deploymentConfig);
       return _.isEmpty(state.pipelinesByDeploymentConfig[name]);
     });
@@ -366,41 +376,41 @@ function OverviewController($scope,
       !_.isEmpty(overview.monopods);
   };
 
-  var updateFilterDisabledState = function() {
+  var updateFilterDisabledState = function () {
     overview.disableFilter = overview.viewBy === 'pipeline' && _.isEmpty(overview.pipelineBuildConfigs);
   };
 
-  var filterByLabel = function(items) {
+  var filterByLabel = function (items) {
     return LabelFilter.getLabelSelector().select(items);
   };
 
   // Updated on viewBy changes to include the app label when appropriate.
   var filterFields = ['metadata.name', 'spec.clusterServiceClassExternalName'];
-  var filterByName = function(items) {
+  var filterByName = function (items) {
     return KeywordService.filterForKeywords(items, filterFields, state.filterKeywords);
   };
 
-  var filterItems = function(items) {
+  var filterItems = function (items) {
     switch (overview.filterBy) {
-    case 'label':
-      return filterByLabel(items);
-    case 'name':
-      return filterByName(items);
+      case 'label':
+        return filterByLabel(items);
+      case 'name':
+        return filterByName(items);
     }
 
     return items;
   };
 
-  var isFilterActive = function() {
+  var isFilterActive = function () {
     switch (overview.filterBy) {
-    case 'label':
-      return !LabelFilter.getLabelSelector().isEmpty();
-    case 'name':
-      return !_.isEmpty(state.filterKeywords);
+      case 'label':
+        return !LabelFilter.getLabelSelector().isEmpty();
+      case 'name':
+        return !_.isEmpty(state.filterKeywords);
     }
   };
 
-  var updateFilter = function() {
+  var updateFilter = function () {
     overview.filteredDeploymentConfigs = filterItems(overview.deploymentConfigs);
     overview.filteredReplicationControllers = filterItems(overview.vanillaReplicationControllers);
     overview.filteredDeployments = filterItems(overview.deployments);
@@ -420,9 +430,9 @@ function OverviewController($scope,
   // Track view-by state in localStorage.
   var viewByKey = $routeParams.project + '/overview/view-by';
   overview.viewBy = localStorage.getItem(viewByKey) || 'app';
-  $scope.$watch(function() {
+  $scope.$watch(function () {
     return overview.viewBy;
-  },function(value){
+  }, function (value) {
     localStorage.setItem(viewByKey, value);
     updateFilterDisabledState();
     filterFields = overview.viewBy === 'app' ? ['metadata.name', 'metadata.labels.app'] : ['metadata.name'];
@@ -436,12 +446,12 @@ function OverviewController($scope,
 
   if (!Constants.DISABLE_OVERVIEW_METRICS) {
     // Check if a metrics URL has been configured for overview metrics.
-    MetricsService.isAvailable(true).then(function(available) {
+    MetricsService.isAvailable(true).then(function (available) {
       state.showMetrics = available;
     });
 
     // Show a page-level alert when we fail to connect to Hawkular metrics.
-    $scope.$on('metrics-connection-failed', function(e, data) {
+    $scope.$on('metrics-connection-failed', function (e, data) {
       var hidden = AlertMessageService.isAlertPermanentlyHidden('metrics-connection-failed');
       if (hidden || state.alerts['metrics-connection-failed']) {
         return;
@@ -457,7 +467,7 @@ function OverviewController($scope,
         }, {
           href: '',
           label: "Don't Show Me Again",
-          onClick: function() {
+          onClick: function () {
             // Hide the alert on future page loads.
             AlertMessageService.permanentlyHideAlert('metrics-connection-failed');
 
@@ -469,11 +479,11 @@ function OverviewController($scope,
     });
   }
 
-  var isPod = function(apiObject) {
+  var isPod = function (apiObject) {
     return apiObject && apiObject.kind === 'Pod';
   };
 
-  var getPods = function(apiObject) {
+  var getPods = function (apiObject) {
     var uid = getUID(apiObject);
     if (!uid) {
       return [];
@@ -486,12 +496,12 @@ function OverviewController($scope,
     return _.get(overview, ['state', 'podsByOwnerUID', uid], []);
   };
 
-  var setNotifications = function(apiObject, notifications) {
+  var setNotifications = function (apiObject, notifications) {
     var uid = getUID(apiObject);
     state.notificationsByObjectUID[uid] = notifications || {};
   };
 
-  var getNotifications = function(apiObject) {
+  var getNotifications = function (apiObject) {
     var uid = getUID(apiObject);
     if (!uid) {
       return {};
@@ -505,7 +515,7 @@ function OverviewController($scope,
   // Updates `state.notificationsByObjectUID`
   //   key: object UID
   //   value: alerts object
-  var updatePodWarningsForObject = function(apiObject) {
+  var updatePodWarningsForObject = function (apiObject) {
     var uid = getUID(apiObject);
     if (!uid) {
       return;
@@ -518,14 +528,14 @@ function OverviewController($scope,
 
   // Updates pod warnings for a collection of API objects such as replication
   // controllers or monopods.
-  var updatePodWarnings = function(apiObjects) {
+  var updatePodWarnings = function (apiObjects) {
     _.each(apiObjects, updatePodWarningsForObject);
   };
 
   // Get the most recently-created replication controller for a deployment
   // config. This might not be the active deployment if it was a failed or
   // cancelled.
-  var getMostRecentReplicationController = function(deploymentConfig) {
+  var getMostRecentReplicationController = function (deploymentConfig) {
     var name = getName(deploymentConfig);
     if (!name) {
       return null;
@@ -537,7 +547,7 @@ function OverviewController($scope,
   // Get the replication controllers that are displayed for a deployment
   // config. This will return only the active replication controller unless a
   // deployment is in progress.
-  var getVisibleReplicationControllers = function(deploymentConfig) {
+  var getVisibleReplicationControllers = function (deploymentConfig) {
     var name = getName(deploymentConfig);
     if (!name) {
       return [];
@@ -549,7 +559,7 @@ function OverviewController($scope,
   // progress and more than one is active). This is the donut that appears on
   // the left when we show two. Returns null if there is no deployment in
   // progress or the previous has been scaled down.
-  overview.getPreviousReplicationController = function(deploymentConfig) {
+  overview.getPreviousReplicationController = function (deploymentConfig) {
     var replicationControllers = getVisibleReplicationControllers(deploymentConfig);
     if (_.size(replicationControllers) < 2) {
       return null;
@@ -565,7 +575,7 @@ function OverviewController($scope,
   // Updates `state.notificationsByObjectUID`
   //   key: object UID
   //   value: alerts object
-  var updateDeploymentConfigWarnings = function(deploymentConfig) {
+  var updateDeploymentConfigWarnings = function (deploymentConfig) {
     var notifications = {};
 
     // Add any failed / canceled deployment notifications.
@@ -578,7 +588,7 @@ function OverviewController($scope,
 
     // Roll up notifications like pod warnings for any visible replication controller.
     var visibleReplicationControllers = getVisibleReplicationControllers(deploymentConfig);
-    _.each(visibleReplicationControllers, function(replicationController) {
+    _.each(visibleReplicationControllers, function (replicationController) {
       var rcNotifications = getNotifications(replicationController);
       _.assign(notifications, rcNotifications);
     });
@@ -587,13 +597,13 @@ function OverviewController($scope,
   };
 
   // Update warnings for all deployment configs.
-  var updateAllDeploymentConfigWarnings = function() {
+  var updateAllDeploymentConfigWarnings = function () {
     _.each(overview.deploymentConfigs, updateDeploymentConfigWarnings);
   };
 
   // Get the replica sets that are displayed for a deployment. This will return
   // only the active replica set unless a deployment is in progress.
-  var getVisibleReplicaSets = function(deployment) {
+  var getVisibleReplicaSets = function (deployment) {
     var uid = getUID(deployment);
     if (!uid) {
       return {};
@@ -606,12 +616,12 @@ function OverviewController($scope,
   // Updates `state.notificationsByObjectUID`
   //   key: object UID
   //   value: alerts object
-  var updateDeploymentWarnings = function(deployment) {
+  var updateDeploymentWarnings = function (deployment) {
     var notifications = ResourceAlertsService.getPausedDeploymentAlerts(deployment);
 
     // Roll up notifications like pod warnings for any visible replica set.
     var visibleReplicaSets = getVisibleReplicaSets(deployment);
-    _.each(visibleReplicaSets, function(replicaSet) {
+    _.each(visibleReplicaSets, function (replicaSet) {
       var replicaSetNotifications = getNotifications(replicaSet);
       _.assign(notifications, replicaSetNotifications);
     });
@@ -620,12 +630,12 @@ function OverviewController($scope,
   };
 
   // Update warnings for all Kubernetes deployments.
-  var updateAllDeploymentWarnings = function() {
+  var updateAllDeploymentWarnings = function () {
     _.each(overview.deployments, updateDeploymentWarnings);
   };
 
   // Update all pod warnings, indexing the errors by owner UID.
-  var updateAllPodWarnings = function() {
+  var updateAllPodWarnings = function () {
     updatePodWarnings(overview.replicationControllers);
     updatePodWarnings(overview.replicaSets);
     updatePodWarnings(overview.statefulSets);
@@ -634,8 +644,8 @@ function OverviewController($scope,
   };
 
   // Update warnings for all kinds. Debounce so we're not reevaluating this too often.
-  var updateWarnings = _.debounce(function() {
-    $scope.$evalAsync(function() {
+  var updateWarnings = _.debounce(function () {
+    $scope.$evalAsync(function () {
       updateAllPodWarnings();
       updateAllDeploymentConfigWarnings();
       updateAllDeploymentWarnings();
@@ -644,7 +654,7 @@ function OverviewController($scope,
 
   // Update the label filter suggestions for a list of objects. This should
   // only be called for filterable top-level items to avoid polluting the list.
-  var updateLabelSuggestions = function(objects) {
+  var updateLabelSuggestions = function (objects) {
     if (_.isEmpty(objects)) {
       return;
     }
@@ -656,7 +666,7 @@ function OverviewController($scope,
   };
 
   // Update the label suggestions used when viewBy === 'pipeline'.
-  var updatePipelineLabelSuggestions = function(pipelineBuildConfigs) {
+  var updatePipelineLabelSuggestions = function (pipelineBuildConfigs) {
     if (_.isEmpty(pipelineBuildConfigs)) {
       return;
     }
@@ -668,11 +678,11 @@ function OverviewController($scope,
   };
 
   // Filter out monopods we know we don't want to see.
-  var showMonopod = function(pod) {
+  var showMonopod = function (pod) {
     // Hide pods in the succeeded and failed phases since these are run once
     // pods that are done.
     if (pod.status.phase === 'Succeeded' ||
-        pod.status.phase === 'Failed') {
+      pod.status.phase === 'Failed') {
       // TODO: We may want to show pods for X amount of time after they have completed.
       return false;
     }
@@ -755,7 +765,7 @@ function OverviewController($scope,
   }
 
   // Group all pods by owner, tracked in the `state.podsByOwnerUID` map.
-  var groupPods = function() {
+  var groupPods = function () {
     state.podsByOwnerUID = PodsService.groupByOwnerUID(overview.pods);
     overview.monopods = _.filter(state.podsByOwnerUID[''], showMonopod);
     updateVirtualMachineMapping();
@@ -763,7 +773,7 @@ function OverviewController($scope,
 
   // Determine if a replication controller is visible, either as part of a
   // deployment config or a standalone replication controller.
-  var isReplicationControllerVisible = function(replicationController) {
+  var isReplicationControllerVisible = function (replicationController) {
     if (_.get(replicationController, 'status.replicas')) {
       return true;
     }
@@ -778,13 +788,13 @@ function OverviewController($scope,
 
   // Get the deployment config name for a replication controller by reading the
   // "openshift.io/deployment-config.name" annotation.
-  var getDeploymentConfigName = function(replicationController) {
+  var getDeploymentConfigName = function (replicationController) {
     return annotation(replicationController, 'deploymentConfig');
   };
 
   // Group replication controllers by deployment config and filter the visible
   // replication controllers.
-  var groupReplicationControllers = function() {
+  var groupReplicationControllers = function () {
     if (!overview.deploymentConfigs || !overview.replicationControllers) {
       return;
     }
@@ -801,7 +811,7 @@ function OverviewController($scope,
 
     // Add the replication controllers to a temporary map until we have them all and can sort.
     var rcByDC = {};
-    _.each(overview.replicationControllers, function(replicationController) {
+    _.each(overview.replicationControllers, function (replicationController) {
       var dcName = getDeploymentConfigName(replicationController) || '';
       if (!dcName || (!overview.deploymentConfigs[dcName] && _.get(replicationController, 'status.replicas'))) {
         vanillaReplicationControllers.push(replicationController);
@@ -835,12 +845,12 @@ function OverviewController($scope,
     // Make sure the active replication controllers are in `rcByDC` map. This
     // isn't checked by `isReplicationControllerVisible` since that function is
     // called before the loop completes and active is known.
-    _.each(activeByDeploymentConfig, function(replicationController, dcName) {
+    _.each(activeByDeploymentConfig, function (replicationController, dcName) {
       _.set(rcByDC, [dcName, replicationController.metadata.name], replicationController);
     });
 
     // Sort the visible replication controllers.
-    _.each(rcByDC, function(replicationControllers, dcName) {
+    _.each(rcByDC, function (replicationControllers, dcName) {
       var ordered = DeploymentsService.sortByDeploymentVersion(replicationControllers, true);
       overview.replicationControllersByDeploymentConfig[dcName] = ordered;
       // "Current" is considered the most recent visible replication
@@ -856,7 +866,7 @@ function OverviewController($scope,
 
   // Determine if a replica set is visible, either as part of a deployment or
   // as a standalone replica set.
-  var isReplicaSetVisible = function(replicaSet, deployment) {
+  var isReplicaSetVisible = function (replicaSet, deployment) {
     // If the replica set has pods, show it.
     if (_.get(replicaSet, 'status.replicas')) {
       return true;
@@ -880,7 +890,7 @@ function OverviewController($scope,
   };
 
   // Group replica sets by deployment and filter the visible replica sets.
-  var groupReplicaSets = function() {
+  var groupReplicaSets = function () {
     if (!overview.replicaSets || !deploymentsByUID) {
       return;
     }
@@ -889,13 +899,13 @@ function OverviewController($scope,
     overview.currentByDeploymentUID = {};
 
     // Sort the visible replica sets.
-    _.each(overview.replicaSetsByDeploymentUID, function(replicaSets, deploymentUID) {
+    _.each(overview.replicaSetsByDeploymentUID, function (replicaSets, deploymentUID) {
       if (!deploymentUID) {
         return;
       }
 
       var deployment = deploymentsByUID[deploymentUID];
-      var visibleReplicaSets = _.filter(replicaSets, function(replicaSet) {
+      var visibleReplicaSets = _.filter(replicaSets, function (replicaSet) {
         return isReplicaSetVisible(replicaSet, deployment);
       });
       var ordered = DeploymentsService.sortByRevision(visibleReplicaSets);
@@ -915,16 +925,16 @@ function OverviewController($scope,
   //   key: object UID
   //   value: array of sorted services
   var selectorsByService = {};
-  var updateServicesForObjects = function(apiObjects) {
+  var updateServicesForObjects = function (apiObjects) {
     if (!apiObjects || !state.allServices) {
       return;
     }
 
-    _.each(apiObjects, function(apiObject) {
+    _.each(apiObjects, function (apiObject) {
       var services = [];
       var uid = getUID(apiObject);
       var podTemplate = getPodTemplate(apiObject);
-      _.each(selectorsByService, function(selector, serviceName) {
+      _.each(selectorsByService, function (selector, serviceName) {
         if (selector.matches(podTemplate)) {
           services.push(state.allServices[serviceName]);
         }
@@ -938,12 +948,12 @@ function OverviewController($scope,
   // Updates `state.servicesByObjectUID`
   //   key: object UID
   //   value: array of sorted services
-  var groupServices = function() {
+  var groupServices = function () {
     if (!state.allServices) {
       return;
     }
 
-    selectorsByService = _.mapValues(state.allServices, function(service) {
+    selectorsByService = _.mapValues(state.allServices, function (service) {
       return new LabelSelector(service.spec.selector);
     });
 
@@ -967,7 +977,7 @@ function OverviewController($scope,
   // Updates `state.routesByService`
   //   key: service name
   //   value: array of routes, sorted by RoutesService.sortRoutesByScore
-  var groupRoutes = function() {
+  var groupRoutes = function () {
     var routesByService = RoutesService.groupByService(overview.routes, true);
     state.routesByService = _.mapValues(routesByService, RoutesService.sortRoutesByScore);
     updateRoutesByApp();
@@ -978,9 +988,10 @@ function OverviewController($scope,
   // Updates `state.hpaByResource`
   //   key: hpaByResource[kind][name]
   //   value: array of HPA objects
-  var groupHPAs = function() {
+  var groupHPAs = function () {
     state.hpaByResource = HPAService.groupHPAs(overview.horizontalPodAutoscalers);
   };
+
 
   // Adds a recent pipeline build to the following maps:
   //
@@ -991,7 +1002,7 @@ function OverviewController($scope,
   // `state.recentPipelinesByDeploymentConfig`
   //   key: deployment config name
   //   value: array of pipeline builds
-  var groupPipeline = function(build) {
+  var groupPipeline = function (build) {
     var bcName = getBuildConfigName(build);
     var buildConfig = overview.buildConfigs[bcName];
     if (!buildConfig) {
@@ -1003,7 +1014,7 @@ function OverviewController($scope,
 
     // Index running pipelines by DC name.
     var dcNames = BuildsService.usesDeploymentConfigs(buildConfig);
-    _.each(dcNames, function(dcName) {
+    _.each(dcNames, function (dcName) {
       state.recentPipelinesByDeploymentConfig[dcName] = state.recentPipelinesByDeploymentConfig[dcName] || [];
       state.recentPipelinesByDeploymentConfig[dcName].push(build);
     });
@@ -1013,11 +1024,11 @@ function OverviewController($scope,
   // Group build configs by their output image. This lets us match them to
   // deployment config image change triggers.
   var buildConfigsByOutputImage = {};
-  var groupBuildConfigsByOutputImage = function() {
+  var groupBuildConfigsByOutputImage = function () {
     buildConfigsByOutputImage = BuildsService.groupBuildConfigsByOutputImage(overview.buildConfigs);
   };
 
-  var getBuildConfigsForObject = function(apiObject) {
+  var getBuildConfigsForObject = function (apiObject) {
     var uid = getUID(apiObject);
     if (!uid) {
       return;
@@ -1031,10 +1042,10 @@ function OverviewController($scope,
   // Updates `state.recentBuildsByDeploymentConfig`
   //   key: deployment config name
   //   value: array of builds, sorted in descending order by creation date
-  var updateRecentBuildsForDeploymentConfig = function(deploymentConfig) {
+  var updateRecentBuildsForDeploymentConfig = function (deploymentConfig) {
     var builds = [];
     var buildConfigs = getBuildConfigsForObject(deploymentConfig);
-    _.each(buildConfigs, function(buildConfig) {
+    _.each(buildConfigs, function (buildConfig) {
       var recentForConfig = _.get(state, ['recentBuildsByBuildConfig', buildConfig.metadata.name], []);
       builds = builds.concat(recentForConfig);
     });
@@ -1044,7 +1055,7 @@ function OverviewController($scope,
     _.set(state, ['recentBuildsByDeploymentConfig', dcName], builds);
   };
 
-  var setBuildConfigsForObject = function(buildConfigs, apiObject) {
+  var setBuildConfigsForObject = function (buildConfigs, apiObject) {
     var uid = getUID(apiObject);
     if (!uid) {
       return;
@@ -1060,11 +1071,11 @@ function OverviewController($scope,
   // Updates `state.pipelinesByDeploymentConfig`
   //   key: deployment config name
   //   value: array of pipeline build configs
-  var groupPipelineBuildConfigsByDeploymentConfig = function() {
+  var groupPipelineBuildConfigsByDeploymentConfig = function () {
     var pipelineBuildConfigs = [];
     overview.deploymentConfigsByPipeline = {};
     state.pipelinesByDeploymentConfig = {};
-    _.each(overview.buildConfigs, function(buildConfig) {
+    _.each(overview.buildConfigs, function (buildConfig) {
       if (!isJenkinsPipelineStrategy(buildConfig)) {
         return;
       }
@@ -1076,7 +1087,7 @@ function OverviewController($scope,
       var dcNames = BuildsService.usesDeploymentConfigs(buildConfig);
       var bcName = getName(buildConfig);
       _.set(overview, ['deploymentConfigsByPipeline', bcName], dcNames);
-      _.each(dcNames, function(dcName) {
+      _.each(dcNames, function (dcName) {
         state.pipelinesByDeploymentConfig[dcName] = state.pipelinesByDeploymentConfig[dcName] || [];
         state.pipelinesByDeploymentConfig[dcName].push(buildConfig);
       });
@@ -1094,12 +1105,12 @@ function OverviewController($scope,
   // Updates `state.buildConfigsByObjectUID`
   //   key: deployment config UID
   //   value: array of build configs, sorted by name
-  var matchOutputImagesToImageChangeTriggers = function() {
+  var matchOutputImagesToImageChangeTriggers = function () {
     state.buildConfigsByObjectUID = {};
-    _.each(overview.deploymentConfigs, function(deploymentConfig) {
+    _.each(overview.deploymentConfigs, function (deploymentConfig) {
       var buildConfigs = [];
       var triggers = _.get(deploymentConfig, 'spec.triggers');
-      _.each(triggers, function(trigger) {
+      _.each(triggers, function (trigger) {
         var from = _.get(trigger, 'imageChangeParams.from');
         if (!from) {
           return;
@@ -1122,17 +1133,17 @@ function OverviewController($scope,
   // build configs are grouped using an annotation. Other build configs are
   // grouping using output images matched against a deployment config image
   // change trigger.
-  var groupBuildConfigsByDeploymentConfig = function() {
+  var groupBuildConfigsByDeploymentConfig = function () {
     groupPipelineBuildConfigsByDeploymentConfig();
     matchOutputImagesToImageChangeTriggers();
   };
 
-  var groupRecentBuildsByDeploymentConfig = function() {
+  var groupRecentBuildsByDeploymentConfig = function () {
     _.each(overview.deploymentConfigs, updateRecentBuildsForDeploymentConfig);
   };
 
-  var groupBuilds = function() {
-    if(!state.builds || !overview.buildConfigs) {
+  var groupBuilds = function () {
+    if (!state.builds || !overview.buildConfigs) {
       return;
     }
 
@@ -1142,9 +1153,9 @@ function OverviewController($scope,
     state.recentPipelinesByDeploymentConfig = {};
 
     var recentByConfig = {};
-    _.each(BuildsService.interestingBuilds(state.builds), function(build) {
+    _.each(BuildsService.interestingBuilds(state.builds), function (build) {
       var bcName = getBuildConfigName(build);
-      if(isJenkinsPipelineStrategy(build)) {
+      if (isJenkinsPipelineStrategy(build)) {
         groupPipeline(build);
       } else {
         recentByConfig[bcName] = recentByConfig[bcName] || [];
@@ -1152,33 +1163,33 @@ function OverviewController($scope,
       }
     });
 
-    overview.recentPipelinesByBuildConfig = _.mapValues(overview.recentPipelinesByBuildConfig, function(builds) {
+    overview.recentPipelinesByBuildConfig = _.mapValues(overview.recentPipelinesByBuildConfig, function (builds) {
       return BuildsService.sortBuilds(builds, true);
     });
-    state.recentPipelinesByDeploymentConfig = _.mapValues(state.recentPipelinesByDeploymentConfig, function(builds) {
+    state.recentPipelinesByDeploymentConfig = _.mapValues(state.recentPipelinesByDeploymentConfig, function (builds) {
       return BuildsService.sortBuilds(builds, true);
     });
-    state.recentBuildsByBuildConfig = _.mapValues(recentByConfig, function(builds) {
+    state.recentBuildsByBuildConfig = _.mapValues(recentByConfig, function (builds) {
       return BuildsService.sortBuilds(builds, true);
     });
 
     groupRecentBuildsByDeploymentConfig();
   };
 
-  var setQuotaNotifications = function() {
+  var setQuotaNotifications = function () {
     ResourceAlertsService.setQuotaNotifications(state.quotas,
-                                                state.clusterQuotas,
-                                                $routeParams.project);
+      state.clusterQuotas,
+      $routeParams.project);
   };
 
-  overview.clearFilter = function() {
+  overview.clearFilter = function () {
     LabelFilter.clear();
     overview.filterText = '';
   };
 
-  $scope.$watch(function() {
+  $scope.$watch(function () {
     return overview.filterText;
-  }, _.debounce(function(text, previous) {
+  }, _.debounce(function (text, previous) {
     if (text === previous) {
       return;
     }
@@ -1186,9 +1197,9 @@ function OverviewController($scope,
     $scope.$evalAsync(updateFilter);
   }, 50, { maxWait: 250 }));
 
-  $scope.$watch(function() {
+  $scope.$watch(function () {
     return overview.filterBy;
-  }, function(newValue, oldValue) {
+  }, function (newValue, oldValue) {
     // Avoid clearing label filter values set from the URL on controller initialization.
     if (newValue === oldValue) {
       return;
@@ -1199,17 +1210,17 @@ function OverviewController($scope,
     updateFilter();
   });
 
-  $scope.browseCatalog = function() {
+  $scope.browseCatalog = function () {
     Navigate.toProjectCatalog($scope.projectName);
   };
 
-  LabelFilter.onActiveFiltersChanged(function() {
+  LabelFilter.onActiveFiltersChanged(function () {
     $scope.$evalAsync(updateFilter);
   });
 
   overview.startBuild = BuildsService.startBuild;
 
-  var groupBindings = function() {
+  var groupBindings = function () {
     // Build two maps:
     // - Bindings by the UID of the target object
     // - API objects by binding name
@@ -1233,15 +1244,15 @@ function OverviewController($scope,
     ];
 
     // Make sure all the binding targets have loaded first.
-    if (_.some(objectsByKind, function(collection) { return !collection; })) {
+    if (_.some(objectsByKind, function (collection) { return !collection; })) {
       return;
     }
 
     // Build a map of pod preset selectors by binding name.
     var podPresetSelectors = BindingService.getPodPresetSelectorsForBindings(state.bindings);
 
-    _.each(objectsByKind, function(collection) {
-      _.each(collection, function(apiObject) {
+    _.each(objectsByKind, function (collection) {
+      _.each(collection, function (apiObject) {
         // Key by UID since name is not unique across different kinds.
         var applicationUID = getUID(apiObject);
 
@@ -1252,7 +1263,7 @@ function OverviewController($scope,
         state.deleteableBindingsByApplicationUID[applicationUID] = [];
 
         // Look at each pod preset selector to see if it covers this API object selector.
-        _.each(podPresetSelectors, function(podPresetSelector, bindingName) {
+        _.each(podPresetSelectors, function (podPresetSelector, bindingName) {
           if (podPresetSelector.covers(applicationSelector)) {
             // Keep a map of the target UID to the binding and the binding to
             // the target. We want to show bindings both in the "application"
@@ -1268,9 +1279,9 @@ function OverviewController($scope,
       });
     });
 
-    overview.bindingsByInstanceRef = _.reduce(overview.bindingsByInstanceRef, function(result, bindingList, key) {
-      result[key] = _.sortBy(bindingList, function(binding) {
-        var apps =  _.get(state.applicationsByBinding, [binding.metadata.name]);
+    overview.bindingsByInstanceRef = _.reduce(overview.bindingsByInstanceRef, function (result, bindingList, key) {
+      result[key] = _.sortBy(bindingList, function (binding) {
+        var apps = _.get(state.applicationsByBinding, [binding.metadata.name]);
         var firstName = _.get(_.head(apps), ['metadata', 'name']);
         return firstName || binding.metadata.name;
       });
@@ -1278,34 +1289,34 @@ function OverviewController($scope,
     }, {});
   };
 
-  var sortServiceInstances = function() {
+  var sortServiceInstances = function () {
     state.bindableServiceInstances =
       BindingService.filterBindableServiceInstances(state.serviceInstances,
-                                                    state.serviceClasses,
-                                                    state.servicePlans);
+        state.serviceClasses,
+        state.servicePlans);
     state.orderedServiceInstances =
       BindingService.sortServiceInstances(state.serviceInstances, state.serviceClasses);
   };
 
   var watches = [];
-  var opts = isHomePage ? {skipErrorNotFound: true} : {};
-  ProjectsService.get($routeParams.project, opts).then(_.spread(function(project, context) {
+  var opts = isHomePage ? { skipErrorNotFound: true } : {};
+  ProjectsService.get($routeParams.project, opts).then(_.spread(function (project, context) {
     // Project must be set on `$scope` for the projects dropdown.
     state.project = $scope.project = project;
     state.context = $scope.context = context;
 
-    var updateReferencedImageStreams = function() {
+    var updateReferencedImageStreams = function () {
       if (!overview.pods) {
         return;
       }
 
       ImageStreamResolver.fetchReferencedImageStreamImages(overview.pods,
-                                                           state.imagesByDockerReference,
-                                                           state.imageStreamImageRefByDockerReference,
-                                                           context);
+        state.imagesByDockerReference,
+        state.imageStreamImageRefByDockerReference,
+        context);
     };
 
-    var daemonSetsResolved = function(daemonSetData) {
+    var daemonSetsResolved = function (daemonSetData) {
       overview.daemonSets = daemonSetData.by('metadata.name');
       updateServicesForObjects(overview.daemonSetData);
       updateServicesForObjects(overview.monopods);
@@ -1320,7 +1331,7 @@ function OverviewController($scope,
     // have a daemon set, so try to save a watch unless we know there are some.
     var isWatchingDaemonSets = false;
 
-    var watchDaemonSets = function() {
+    var watchDaemonSets = function () {
       if (isWatchingDaemonSets) {
         return;
       }
@@ -1332,7 +1343,7 @@ function OverviewController($scope,
       isWatchingDaemonSets = true;
     };
 
-    var hasDaemonSetControllerRef = function(pod) {
+    var hasDaemonSetControllerRef = function (pod) {
       var ownerReferences = OwnerReferencesService.getOwnerReferences(pod);
       return _.some(ownerReferences, {
         controller: true,
@@ -1340,7 +1351,7 @@ function OverviewController($scope,
       });
     };
 
-    var checkPodsForDaemonSets = function() {
+    var checkPodsForDaemonSets = function () {
       if (isWatchingDaemonSets) {
         return;
       }
@@ -1350,7 +1361,22 @@ function OverviewController($scope,
       }
     };
 
-    watches.push(DataService.watch(podsVersion, context, function(podsData, action) {
+
+    var idlerVersion = {
+      group: 'idling.openshift.io',
+      version: 'v1alpha2',
+      resource: 'idlers'
+    };
+    // TODO: move this up by groupHPAs()
+    var groupIdlers = function () {
+      state.idlersByResource = IdleService.groupIdlers(state.idlers);
+    };
+    watches.push(DataService.watch(idlerVersion, context, function (idlerData) {
+      state.idlers = idlerData.by('metadata.name');
+      groupIdlers();
+    }));
+
+    watches.push(DataService.watch(podsVersion, context, function (podsData, action) {
       overview.pods = podsData.by("metadata.name");
       groupPods();
       updateReferencedImageStreams();
@@ -1369,7 +1395,7 @@ function OverviewController($scope,
       Logger.log("pods (subscribe)", overview.pods);
     }));
 
-    watches.push(DataService.watch(replicationControllersVersion, context, function(rcData) {
+    watches.push(DataService.watch(replicationControllersVersion, context, function (rcData) {
       overview.replicationControllers = rcData.by("metadata.name");
       groupReplicationControllers();
       updateServicesForObjects(overview.vanillaReplicationControllers);
@@ -1381,7 +1407,7 @@ function OverviewController($scope,
       Logger.log("replicationcontrollers (subscribe)", overview.replicationControllers);
     }));
 
-    watches.push(DataService.watch(deploymentConfigsVersion, context, function(dcData) {
+    watches.push(DataService.watch(deploymentConfigsVersion, context, function (dcData) {
       overview.deploymentConfigs = dcData.by("metadata.name");
       groupReplicationControllers();
       updateServicesForObjects(overview.deploymentConfigs);
@@ -1398,7 +1424,7 @@ function OverviewController($scope,
       Logger.log("deploymentconfigs (subscribe)", overview.deploymentConfigs);
     }));
 
-    watches.push(DataService.watch(replicaSetsVersion, context, function(replicaSetData) {
+    watches.push(DataService.watch(replicaSetsVersion, context, function (replicaSetData) {
       overview.replicaSets = replicaSetData.by('metadata.name');
       groupReplicaSets();
       updateServicesForObjects(overview.vanillaReplicaSets);
@@ -1410,7 +1436,7 @@ function OverviewController($scope,
       Logger.log("replicasets (subscribe)", overview.replicaSets);
     }));
 
-    watches.push(DataService.watch(deploymentsVersion, context, function(deploymentData) {
+    watches.push(DataService.watch(deploymentsVersion, context, function (deploymentData) {
       deploymentsByUID = deploymentData.by('metadata.uid');
       overview.deployments = _.sortBy(deploymentsByUID, 'metadata.name');
       groupReplicaSets();
@@ -1422,13 +1448,13 @@ function OverviewController($scope,
       Logger.log("deployments (subscribe)", overview.deploymentsByUID);
     }));
 
-    watches.push(DataService.watch(buildsVersion, context, function(buildData) {
+    watches.push(DataService.watch(buildsVersion, context, function (buildData) {
       state.builds = buildData.by("metadata.name");
       groupBuilds();
       Logger.log("builds (subscribe)", state.builds);
     }));
 
-    watches.push(DataService.watch(statefulSetsVersion, context, function(statefulSetData) {
+    watches.push(DataService.watch(statefulSetsVersion, context, function (statefulSetData) {
       overview.statefulSets = statefulSetData.by('metadata.name');
       updateServicesForObjects(overview.statefulSets);
       updateServicesForObjects(overview.monopods);
@@ -1437,9 +1463,9 @@ function OverviewController($scope,
       groupBindings();
       updateFilter();
       Logger.log("statefulsets (subscribe)", overview.statefulSets);
-    }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
+    }, { poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL }));
 
-    DataService.list(daemonSetsVersion, context, function(daemonSetData) {
+    DataService.list(daemonSetsVersion, context, function (daemonSetData) {
       daemonSetsResolved(daemonSetData);
       // Only watch daemon sets if the initial list was not empty. This saves a
       // watch for projects that don't have daemon sets, which are relatively
@@ -1450,51 +1476,51 @@ function OverviewController($scope,
       }
     });
 
-    watches.push(DataService.watch(servicesVersion, context, function(serviceData) {
+    watches.push(DataService.watch(servicesVersion, context, function (serviceData) {
       state.allServices = serviceData.by("metadata.name");
       groupServices();
       Logger.log("services (subscribe)", state.allServices);
-    }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
+    }, { poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL }));
 
-    watches.push(DataService.watch(routesVersion, context, function(routesData) {
+    watches.push(DataService.watch(routesVersion, context, function (routesData) {
       overview.routes = routesData.by("metadata.name");
       groupRoutes();
       Logger.log("routes (subscribe)", overview.routes);
-    }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
+    }, { poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL }));
 
-    watches.push(DataService.watch(buildConfigsVersion, context, function(buildConfigData) {
+    watches.push(DataService.watch(buildConfigsVersion, context, function (buildConfigData) {
       overview.buildConfigs = buildConfigData.by("metadata.name");
       groupBuildConfigsByOutputImage();
       groupBuildConfigsByDeploymentConfig();
       groupBuilds();
       updateFilter();
       Logger.log("buildconfigs (subscribe)", overview.buildConfigs);
-    }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
+    }, { poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL }));
 
-    watches.push(DataService.watch(horizontalPodAutoscalersVersion, context, function(hpaData) {
+    watches.push(DataService.watch(horizontalPodAutoscalersVersion, context, function (hpaData) {
       overview.horizontalPodAutoscalers = hpaData.by("metadata.name");
       groupHPAs();
       Logger.log("autoscalers (subscribe)", overview.horizontalPodAutoscalers);
-    }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
+    }, { poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL }));
 
-    watches.push(DataService.watch(imageStreamsVersion, context, function(imageStreamData) {
+    watches.push(DataService.watch(imageStreamsVersion, context, function (imageStreamData) {
       imageStreams = imageStreamData.by("metadata.name");
       ImageStreamResolver.buildDockerRefMapForImageStreams(imageStreams,
-                                                           state.imageStreamImageRefByDockerReference);
+        state.imageStreamImageRefByDockerReference);
       updateReferencedImageStreams();
       Logger.log("imagestreams (subscribe)", imageStreams);
-    }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
+    }, { poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL }));
 
     // Always poll quotas instead of watching, its not worth the overhead of maintaining websocket connections
-    watches.push(DataService.watch(resourceQuotasVersion, context, function(quotaData) {
+    watches.push(DataService.watch(resourceQuotasVersion, context, function (quotaData) {
       state.quotas = quotaData.by("metadata.name");
       setQuotaNotifications();
-    }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
+    }, { poll: true, pollInterval: DEFAULT_POLL_INTERVAL }));
 
-    watches.push(DataService.watch(clusterResourceQuotasVersion, context, function(clusterQuotaData) {
+    watches.push(DataService.watch(clusterResourceQuotasVersion, context, function (clusterQuotaData) {
       state.clusterQuotas = clusterQuotaData.by("metadata.name");
       setQuotaNotifications();
-    }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
+    }, { poll: true, pollInterval: DEFAULT_POLL_INTERVAL }));
 
     if ($scope.AEROGEAR_MOBILE_ENABLED) {
       watches.push(DataService.watch({ group: "mobile.k8s.io", version: "v1alpha1", resource: "mobileclients" }, context, function (clients) {
@@ -1537,7 +1563,7 @@ function OverviewController($scope,
     if (CatalogService.SERVICE_CATALOG_ENABLED && canI(serviceInstancesVersion, 'watch')) {
 
       // Get the service class for this instance. Returns a promise.
-      fetchServiceClass = function(instance) {
+      fetchServiceClass = function (instance) {
         var serviceClassName = ServiceInstancesService.getServiceClassNameForInstance(instance);
         if (!serviceClassName) {
           return $q.when();
@@ -1550,10 +1576,10 @@ function OverviewController($scope,
 
         // Check if we already have the service class or if a request is already in flight.
         if (!serviceClassPromises[serviceClassName]) {
-          serviceClassPromises[serviceClassName] = DataService.get(serviceClassesVersion, serviceClassName, {}).then(function(serviceClass) {
+          serviceClassPromises[serviceClassName] = DataService.get(serviceClassesVersion, serviceClassName, {}).then(function (serviceClass) {
             state.serviceClasses[serviceClassName] = serviceClass;
             return serviceClass;
-          }).finally(function() {
+          }).finally(function () {
             delete servicePlanPromises[serviceClassName];
           });
         }
@@ -1562,7 +1588,7 @@ function OverviewController($scope,
       };
 
       // Get the service plan for this instance. Returns a promise.
-      fetchServicePlan = function(instance) {
+      fetchServicePlan = function (instance) {
         var servicePlanName = ServiceInstancesService.getServicePlanNameForInstance(instance);
         if (!servicePlanName) {
           return $q.when();
@@ -1575,10 +1601,10 @@ function OverviewController($scope,
         }
 
         if (!servicePlanPromises[servicePlanName]) {
-          servicePlanPromises[servicePlanName] = DataService.get(servicePlansVersion, servicePlanName, {}).then(function(servicePlan) {
+          servicePlanPromises[servicePlanName] = DataService.get(servicePlansVersion, servicePlanName, {}).then(function (servicePlan) {
             state.servicePlans[servicePlanName] = servicePlan;
             return servicePlan;
-          }).finally(function() {
+          }).finally(function () {
             delete servicePlanPromises[servicePlanName];
           });
         }
@@ -1586,11 +1612,11 @@ function OverviewController($scope,
         return servicePlanPromises[servicePlanName];
       };
 
-      watches.push(DataService.watch(serviceInstancesVersion, context, function(serviceInstances) {
+      watches.push(DataService.watch(serviceInstancesVersion, context, function (serviceInstances) {
         state.serviceInstances = serviceInstances.by('metadata.name');
 
         var promises = [];
-        _.each(state.serviceInstances, function(instance) {
+        _.each(state.serviceInstances, function (instance) {
           var notifications = ResourceAlertsService.getServiceInstanceAlerts(instance);
           setNotifications(instance, notifications);
 
@@ -1600,25 +1626,25 @@ function OverviewController($scope,
 
         // Wait for all promises to complete before trying to sort the
         // instances and check bindability.
-        PromiseUtils.waitForAll(promises).finally(function() {
+        PromiseUtils.waitForAll(promises).finally(function () {
           sortServiceInstances();
           updateFilter();
         });
         updateLabelSuggestions(state.serviceInstances);
-      }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
+      }, { poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL }));
     }
 
     if (CatalogService.SERVICE_CATALOG_ENABLED && canI(serviceBindingsVersion, 'watch')) {
-      watches.push(DataService.watch(serviceBindingsVersion, context, function(bindings) {
+      watches.push(DataService.watch(serviceBindingsVersion, context, function (bindings) {
         state.bindings = bindings.by('metadata.name');
         overview.bindingsByInstanceRef = _.groupBy(state.bindings, 'spec.instanceRef.name');
         groupBindings();
-      }, {poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL}));
+      }, { poll: limitWatches, pollInterval: DEFAULT_POLL_INTERVAL }));
     }
 
     // List limit ranges in this project to determine if there is a default
     // CPU request for autoscaling.
-    DataService.list(limitRangesVersion, context, function(response) {
+    DataService.list(limitRangesVersion, context, function (response) {
       state.limitRanges = response.by("metadata.name");
     });
 
@@ -1627,17 +1653,17 @@ function OverviewController($scope,
       DataService.get(templatesVersion, samplePipelineTemplate.name, {
         namespace: samplePipelineTemplate.namespace
       }, {
-        errorNotification: false
-      }).then(function(template) {
-        overview.samplePipelineURL = Navigate.createFromTemplateURL(template, $scope.projectName);
-      });
+          errorNotification: false
+        }).then(function (template) {
+          overview.samplePipelineURL = Navigate.createFromTemplateURL(template, $scope.projectName);
+        });
     }
 
-    $scope.$on('$destroy', function() {
+    $scope.$on('$destroy', function () {
       DataService.unwatchAll(watches);
       $(window).off('.overview');
     });
-  }),function(e) {
+  }), function (e) {
     if (isHomePage && _.get(e, 'notFound')) {
       HomePagePreferenceService.notifyInvalidProjectHomePage($scope.projectName);
       Navigate.toProjectList();

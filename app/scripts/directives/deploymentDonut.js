@@ -2,18 +2,19 @@
 
 // Deployment donut contains the pod donut with scaling controls and autoscaling details.
 angular.module('openshiftConsole')
-  .directive('deploymentDonut', function($filter,
-                                         $location,
-                                         $timeout,
-                                         $uibModal,
-                                         DeploymentsService,
-                                         HPAService,
-                                         QuotaService,
-                                         LabelFilter,
-                                         Navigate,
-                                         NotificationsService,
-                                         hashSizeFilter,
-                                         hasDeploymentConfigFilter) {
+  .directive('deploymentDonut', function ($filter,
+    $location,
+    $timeout,
+    $uibModal,
+    DeploymentsService,
+    HPAService,
+    IdleService,
+    QuotaService,
+    LabelFilter,
+    Navigate,
+    NotificationsService,
+    hashSizeFilter,
+    hasDeploymentConfigFilter) {
     return {
       restrict: 'E',
       scope: {
@@ -23,31 +24,31 @@ angular.module('openshiftConsole')
         deployment: '=',
         scalable: '=',
         hpa: '=?',
+        idler: '=?',
         limitRanges: '=',
         quotas: '=',
         clusterQuotas: '=',
         project: '=',
-
         // Pods
         pods: '='
       },
       templateUrl: 'views/directives/deployment-donut.html',
-      controller: function($scope, $filter, $q) {
+      controller: function ($scope, $filter, $q) {
         var scaleRequestPending = false;
         var humanizeKind = $filter('humanizeKind');
 
-        $scope.$watch("rc.spec.replicas", function() {
+        $scope.$watch("rc.spec.replicas", function () {
           // Only reset desiredReplicas if we've already requested that value.
           if (!scaleRequestPending) {
             $scope.desiredReplicas = null;
           }
         });
 
-        var updateHPAWarnings = function() {
-            HPAService.getHPAWarnings($scope.rc, $scope.hpa, $scope.limitRanges, $scope.project)
-                      .then(function(warnings) {
+        var updateHPAWarnings = function () {
+          HPAService.getHPAWarnings($scope.rc, $scope.hpa, $scope.limitRanges, $scope.project)
+            .then(function (warnings) {
               // Create one string that we can show in a single popover.
-              $scope.hpaWarnings = _.map(warnings, function(warning) {
+              $scope.hpaWarnings = _.map(warnings, function (warning) {
                 return _.escape(warning.message);
               }).join('<br>');
             });
@@ -56,12 +57,12 @@ angular.module('openshiftConsole')
         $scope.$watchGroup(['limitRanges', 'hpa', 'project'], updateHPAWarnings);
         $scope.$watch('rc.spec.template.spec.containers', updateHPAWarnings, true);
 
-        var updateQuotaWarning = function() {
+        var updateQuotaWarning = function () {
           if (_.get($scope.rc, 'spec.replicas', 1) > _.get($scope.rc, 'status.replicas', 0)) {
             // if we haven't achieved our scale target double check for quota issues
             var filteredQuotas = QuotaService.filterQuotasForResource($scope.rc, $scope.quotas);
             var filteredClusterQuotas = QuotaService.filterQuotasForResource($scope.rc, $scope.clusterQuotas);
-            var checkQuota = function(quota) {
+            var checkQuota = function (quota) {
               return !_.isEmpty(QuotaService.getResourceLimitAlerts($scope.rc, quota));
             };
             $scope.showQuotaWarning = _.some(filteredQuotas, checkQuota) || _.some(filteredClusterQuotas, checkQuota);
@@ -73,7 +74,7 @@ angular.module('openshiftConsole')
 
         $scope.$watchGroup(['rc.spec.replicas', 'rc.status.replicas', 'quotas', 'clusterQuotas'], updateQuotaWarning);
 
-        var getScaleTarget = function() {
+        var getScaleTarget = function () {
           return $scope.deploymentConfig || $scope.deployment || $scope.rc;
         };
 
@@ -84,7 +85,7 @@ angular.module('openshiftConsole')
             return;
           }
           var scaleTarget = getScaleTarget();
-          return DeploymentsService.scale(scaleTarget, $scope.desiredReplicas).then(_.noop, function(result) {
+          return DeploymentsService.scale(scaleTarget, $scope.desiredReplicas).then(_.noop, function (result) {
             var kind = humanizeKind(scaleTarget.kind);
             NotificationsService.addNotification({
               id: "deployment-scale-error",
@@ -100,7 +101,7 @@ angular.module('openshiftConsole')
         // Debounce scaling so multiple consecutive clicks only result in one request
         var debouncedScale = _.debounce(scale, 650);
 
-        $scope.viewPodsForDeployment = function(deployment) {
+        $scope.viewPodsForDeployment = function (deployment) {
           if (_.isEmpty($scope.pods)) {
             return;
           }
@@ -108,7 +109,7 @@ angular.module('openshiftConsole')
           Navigate.toPodsForDeployment(deployment, $scope.pods);
         };
 
-        $scope.scaleUp = function() {
+        $scope.scaleUp = function () {
           if (!$scope.scalable) {
             return;
           }
@@ -119,7 +120,7 @@ angular.module('openshiftConsole')
           scaleRequestPending = true;
         };
 
-        $scope.scaleDown = function() {
+        $scope.scaleDown = function () {
           if (!$scope.scalable) {
             return;
           }
@@ -135,10 +136,10 @@ angular.module('openshiftConsole')
               templateUrl: 'views/modals/confirmScale.html',
               controller: 'ConfirmScaleController',
               resolve: {
-                resource: function() {
+                resource: function () {
                   return $scope.rc;
                 },
-                type: function() {
+                type: function () {
                   if (hasDeploymentConfigFilter($scope.rc)) {
                     return "deployment";
                   }
@@ -148,7 +149,7 @@ angular.module('openshiftConsole')
               }
             });
 
-            modalInstance.result.then(function() {
+            modalInstance.result.then(function () {
               // It's possible $scope.desiredReplicas was set to null if
               // rc.spec.replicas changed since the dialog was shown, so call
               // getDesiredReplicas() again.
@@ -164,7 +165,7 @@ angular.module('openshiftConsole')
           debouncedScale();
         };
 
-        $scope.getDesiredReplicas = function() {
+        $scope.getDesiredReplicas = function () {
           // If not null or undefined, use $scope.desiredReplicas.
           if (angular.isDefined($scope.desiredReplicas) && $scope.desiredReplicas !== null) {
             return $scope.desiredReplicas;
@@ -177,22 +178,34 @@ angular.module('openshiftConsole')
           return 1;
         };
 
-        $scope.$watch(
-          function() {
-            return !_.get($scope.rc, 'spec.replicas') && !!($scope.deploymentConfig ?
-                    $filter('annotation')($scope.deploymentConfig, 'idledAt') :
-                    $filter('annotation')($scope.rc, 'idledAt'));
-          },
-          function(isIdled) {
-            $scope.isIdled = !!isIdled;
-          });
+        $scope.$watch("idler", function (idler) {
+          if (!idler) {
+            return;
+          }
+          $scope.isIdled = $scope.isIdle();
+        });
 
-        $scope.unIdle = function() {
-          $scope.desiredReplicas = $filter('unidleTargetReplicas')($scope.deploymentConfig || $scope.rc, $scope.hpa);
-          scale().then(function() {
+
+        // TODO: support rc as well?
+        $scope.idle = function () {
+          var apiObject = $scope.deploymentConfig;
+          IdleService.idle($scope.idler, apiObject).then(function () {
+            $scope.isIdled = true;
+          });
+        };
+
+        $scope.unidle = function () {
+          var apiObject = $scope.deploymentConfig;
+          IdleService.unidle($scope.idler, apiObject).then(function () {
             $scope.isIdled = false;
           });
         };
+
+        $scope.isIdle = function () {
+          var apiObject = $scope.deploymentConfig;
+          return IdleService.isIdle($scope.idler, apiObject);
+        };
+
       }
     };
   });
