@@ -1,28 +1,44 @@
 <div class="deployment-donut">
   <div class="deployment-donut-row">
     <div class="deployment-donut-column">
-      <pod-donut pods="pods" desired="getDesiredReplicas()" idled="isIdled" ng-click="viewPodsForDeployment(rc)" ng-class="{ clickable: (pods | hashSize) > 0 }">
+      <pod-donut pods="pods"
+                 desired="getDesiredReplicas()"
+                 idled="isIdled"
+                 ng-click="viewPodsForDeployment(rc)"
+                 ng-class="{ clickable: (pods | hashSize) > 0 }">
       </pod-donut>
 
       <!-- Add a link for screen readers. -->
-      <a href="" class="sr-only" ng-click="viewPodsForDeployment(rc)" ng-if="(pods | hashSize) > 0" role="button">
+      <a href=""
+         class="sr-only"
+         ng-click="viewPodsForDeployment(rc)"
+         ng-if="(pods | hashSize) > 0"
+         role="button">
         View pods for {{rc | displayName}}
       </a>
     </div>
 
     <!-- Don't show the scaling controls until the HPAs load so they don't appear and quickly disappear. -->
-    <div class="deployment-donut-column scaling-controls fade-inline" ng-if="(hpa && !hpa.length) && ((deploymentConfig || rc) | canIScale) && !isIdled">
+    <div class="deployment-donut-column scaling-controls fade-inline"
+         ng-if="(hpa && !hpa.length) && ((deploymentConfig || rc) | canIScale) && !isIdled">
       <div>
-        <a href="" ng-click="scaleUp()" ng-class="{ disabled: !scalable }" ng-attr-title="{{!scalable ? undefined : 'Scale up'}}"
-          ng-attr-aria-disabled="{{!scalable ? 'true' : undefined}}">
+        <a href=""
+           ng-click="scaleUp()"
+           ng-class="{ disabled: !scalable }"
+           ng-attr-title="{{!scalable ? undefined : 'Scale up'}}"
+           ng-attr-aria-disabled="{{!scalable ? 'true' : undefined}}">
           <i class="fa fa-chevron-up"></i>
           <span class="sr-only">Scale up</span>
         </a>
       </div>
       <div>
         <!-- Remove the title when disabled because the not-allowed styled cursor overlaps the tooltip on some browsers. -->
-        <a href="" ng-click="scaleDown()" ng-class="{ disabled: !scalable || getDesiredReplicas() === 0 }" ng-attr-title="{{(!scalable || getDesiredReplicas() === 0) ? undefined : 'Scale down'}}"
-          ng-attr-aria-disabled="{{(!scalable || getDesiredReplicas() === 0) ? 'true' : undefined}}" role="button">
+        <a href=""
+           ng-click="scaleDown()"
+           ng-class="{ disabled: !scalable || getDesiredReplicas() === 0 }"
+           ng-attr-title="{{(!scalable || getDesiredReplicas() === 0) ? undefined : 'Scale down'}}"
+           ng-attr-aria-disabled="{{(!scalable || getDesiredReplicas() === 0) ? 'true' : undefined}}"
+           role="button">
           <i class="fa fa-chevron-down"></i>
           <span class="sr-only">Scale down</span>
         </a>
@@ -30,29 +46,42 @@
     </div>
   </div>
 
-  <div ng-if="hpa.length" class="deployment-donut-row scaling-details">
+  <div ng-if="hpa.length"
+       class="deployment-donut-row scaling-details">
     <div>
       Autoscaled:
       <span class="nowrap">min: {{hpa[0].spec.minReplicas || 1}},</span>
       <span class="nowrap">
         max: {{hpa[0].spec.maxReplicas}}
-        <span ng-if="hpaWarnings" dynamic-content="{{hpaWarnings}}" data-toggle="popover" data-trigger="hover" data-html="true" class="pficon pficon-warning-triangle-o hpa-warning"
-          aria-hidden="true">
+        <span ng-if="hpaWarnings"
+              dynamic-content="{{hpaWarnings}}"
+              data-toggle="popover"
+              data-trigger="hover"
+              data-html="true"
+              class="pficon pficon-warning-triangle-o hpa-warning"
+              aria-hidden="true">
         </span>
       </span>
     </div>
   </div>
-  <div class="scaling-details" ng-if="showQuotaWarning">
+  <div class="scaling-details"
+       ng-if="showQuotaWarning">
     <span class="pficon pficon-warning-triangle-o"></span>
     <a ng-href="project/{{rc.metadata.namespace}}/quota">Quota</a>
     limit reached.
   </div>
-  <div class="scaling-details" ng-if="showQuotaWarning">
+  <div class="scaling-details"
+       ng-if="showQuotaWarning">
     Scaling may be affected.
-    <a ng-if="rc.kind !== 'StatefulSet'" ng-href="{{rc | navigateResourceURL}}?tab=events" class="check-events">Check events</a>
-    <a ng-if="rc.kind === 'StatefulSet'" ng-href="project/{{rc.metadata.namespace}}/browse/events" class="check-events">Check events</a>
+    <a ng-if="rc.kind !== 'StatefulSet'"
+       ng-href="{{rc | navigateResourceURL}}?tab=events"
+       class="check-events">Check events</a>
+    <a ng-if="rc.kind === 'StatefulSet'"
+       ng-href="project/{{rc.metadata.namespace}}/browse/events"
+       class="check-events">Check events</a>
   </div>
-  <div class="scaling-details" ng-if="isIdled && (!getDesiredReplicas())">
+  <div class="scaling-details"
+       ng-if="isIdled && (!getDesiredReplicas())">
     <div ng-if="(!resuming)">
       <span>Idled.</span>
     </div>
