@@ -74,6 +74,7 @@ angular
     // idler.spec.wantIdle = true
     //   if wantIdle is true, but the item IS NOT listed 
     //   in status.unidledScales, then an idle is likely in progress.
+    //
     // var isIdlingInProgress = function (idlers, apiObject) {
     //   var idler = idlerFor(idlers, apiObject);
     //   // TODO: details of this fn...
@@ -95,12 +96,11 @@ angular
 
 
     var updateIdler = function (idler, namespace) {
-      return DataService
-        .update(
-          idlerVersion,
-          idler.metadata.name,
-          idler,
-          { namespace: namespace });
+      return DataService.update(
+        idlerVersion,
+        idler.metadata.name,
+        idler,
+        { namespace: namespace });
     };
 
     var idle = function (idlers, apiObject) {
