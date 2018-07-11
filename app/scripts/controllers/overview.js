@@ -110,6 +110,12 @@ function OverviewController($scope,
   var statefulSetsVersion = APIService.getPreferredVersion('statefulsets');
   var templatesVersion = APIService.getPreferredVersion('templates');
   overview.buildConfigsInstantiateVersion = APIService.getPreferredVersion('buildconfigs/instantiate');
+  
+  var idlerVersion = {
+    group: 'idling.openshift.io',
+    version: 'v1alpha2',
+    resource: 'idlers'
+  };
 
   var deploymentsByUID;
   var imageStreams;
@@ -986,6 +992,15 @@ function OverviewController($scope,
     state.hpaByResource = HPAService.groupHPAs(overview.horizontalPodAutoscalers);
   };
 
+  // Group Idlers by the spec.targetScalables.
+  //
+  // idlersByResource[kind][name]
+  // NOTE: this is similar to hpaByResource, but 
+  // the [kind] is the lowercase due to how objects
+  // are listed in spec.targetScalables
+  var groupIdlers = function () {
+    state.idlersByResource = IdleService.groupIdlers(state.idlers);
+  };
 
   // Adds a recent pipeline build to the following maps:
   //
@@ -1355,16 +1370,6 @@ function OverviewController($scope,
       }
     };
 
-
-    var idlerVersion = {
-      group: 'idling.openshift.io',
-      version: 'v1alpha2',
-      resource: 'idlers'
-    };
-    // TODO: move this up by groupHPAs()
-    var groupIdlers = function () {
-      state.idlersByResource = IdleService.groupIdlers(state.idlers);
-    };
     watches.push(DataService.watch(idlerVersion, context, function (idlerData) {
       state.idlers = idlerData.by('metadata.name');
       groupIdlers();
