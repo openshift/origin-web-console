@@ -2922,6 +2922,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a ng-href=\"{{pvc | editYamlURL}}\" role=\"button\">Edit YAML</a>\n" +
     "</li>\n" +
     "<li>\n" +
+    "<edit-pvc ng-if=\"isExpansionAllowed && (pvcVersion | canI : 'update')\" pvc=\"pvc\">\n" +
+    "</edit-pvc>\n" +
+    "</li>\n" +
+    "<li>\n" +
     "<delete-link ng-if=\"pvcVersion | canI : 'delete'\" kind=\"PersistentVolumeClaim\" resource-name=\"{{pvc.metadata.name}}\" project-name=\"{{pvc.metadata.namespace}}\" alerts=\"alerts\">\n" +
     "</delete-link>\n" +
     "</li>\n" +
@@ -11148,6 +11152,106 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<button ng-disabled=\"typeNameToConfirm && confirmName !== resourceName && confirmName !== displayName\" class=\"btn btn-danger\" type=\"submit\" ng-click=\"delete();\">Delete</button>\n" +
     "</div>\n" +
     "</form>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/modals/edit-pvc-resource.html',
+    "<div class=\"modal-resource-action\">\n" +
+    "<div class=\"modal-header\">\n" +
+    "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\" aria-label=\"Close\" ng-click=\"cancel()\">\n" +
+    "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
+    "</button>\n" +
+    "<h1 class=\"modal-title\">Expand Persistent Volume Claim</h1>\n" +
+    "</div>\n" +
+    "<div class=\"modal-body\">\n" +
+    "<h3>Increase the capacity of claim\n" +
+    "<strong>{{typeDisplayName}}</strong>.\n" +
+    "<a ng-href=\"{{'persistent_volumes' | helpLink}}\" target=\"_blank\">\n" +
+    "<span class=\"learn-more-inline\">Learn More\n" +
+    "<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
+    "</span>\n" +
+    "</a>\n" +
+    "</h3>\n" +
+    "<p>This can be a time-consuming process.</p>\n" +
+    "<ng-form name=\"expandPersistentVolumeClaimForm\">\n" +
+    "<div ng-if=\"capacityReadOnly\" class=\"form-group mar-bottom-xl\">\n" +
+    "<label>Size</label>\n" +
+    "<div class=\"static-form-value-large\">\n" +
+    "{{claim.capacity}} {{claim.unit | humanizeUnit : 'storage'}}\n" +
+    "<small>(cannot be changed)</small>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!capacityReadOnly\" class=\"form-group\">\n" +
+    "<fieldset class=\"form-inline compute-resource\">\n" +
+    "<label>\n" +
+    "Capacity\n" +
+    "<small ng-if=\"limits.min && limits.max\">\n" +
+    "{{limits.min | usageWithUnits : 'storage'}} min to {{limits.max | usageWithUnits : 'storage'}} max\n" +
+    "</small>\n" +
+    "<small ng-if=\"limits.min && !limits.max\">\n" +
+    "Min: {{limits.min | usageWithUnits : 'storage'}}\n" +
+    "</small>\n" +
+    "<small ng-if=\"limits.max && !limits.min\">\n" +
+    "Max: {{limits.max | usageWithUnits : 'storage'}}\n" +
+    "</small>\n" +
+    "</label>\n" +
+    "<div class=\"resource-size\" ng-class=\"{ 'has-error': expandPersistentVolumeClaimForm.capacity.$invalid && expandPersistentVolumeClaimForm.capacity.$touched}\">\n" +
+    "<div class=\"resource-amount\">\n" +
+    "<label for=\"claim-amount\" class=\"sr-only\">Amount</label>\n" +
+    "<input type=\"number\" name=\"capacity\" id=\"claim-amount\" ng-model=\"claim.capacity\" required min=\"0\" pattern=\"\\d+(\\.\\d+)?\" select-on-focus class=\"form-control\" aria-describedby=\"claim-capacity-help\">\n" +
+    "</div>\n" +
+    "<div class=\"resource-unit\">\n" +
+    "<label class=\"sr-only\">Unit</label>\n" +
+    "<ui-select search-enabled=\"false\" ng-model=\"claim.unit\" input-id=\"claim-capacity-unit\">\n" +
+    "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
+    "<ui-select-choices repeat=\"option.value as option in units\" group-by=\"groupUnits\">\n" +
+    "{{option.label}}\n" +
+    "</ui-select-choices>\n" +
+    "</ui-select>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "<div id=\"claim-capacity-help\" class=\"help-block\">\n" +
+    "Desired storage capacity.\n" +
+    "</div>\n" +
+    "<div ng-if=\"expandPersistentVolumeClaimForm.capacity.$invalid\">\n" +
+    "<div class=\"has-error\" ng-show=\"expandPersistentVolumeClaimForm.capacity.$error.required\">\n" +
+    "<span class=\"help-block\">Size is required.</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"expandPersistentVolumeClaimForm.capacity.$error.number\">\n" +
+    "<span class=\"help-block\">Must be a number.</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"expandPersistentVolumeClaimForm .capacity.$error.min\">\n" +
+    "<span class=\"help-block\">Must be a positive number.</span>\n" +
+    "</div>\n" +
+    "<div class=\"has-error\" ng-show=\"expandPersistentVolumeClaimForm.capacity.$error.checkCurrentCapacity\">\n" +
+    "<span class=\"help-block\">The requested capacity may not be less than the current capacity.</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"expandPersistentVolumeClaimForm.capacity.$error.limitRangeMin\" class=\"has-error\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Can't be less than {{limits.min | usageWithUnits : 'storage'}}.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"expandPersistentVolumeClaimForm.capacity.$error.limitRangeMax\" class=\"has-error\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Can't be greater than {{limits.max | usageWithUnits : 'storage'}}.\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "<div ng-if=\"expandPersistentVolumeClaimForm.capacity.$error.willExceedStorage\" class=\"has-error\">\n" +
+    "<span class=\"help-block\">\n" +
+    "Storage quota will be exceeded. <a ng-href=\"project/{{projectName}}/quota\" target=\"_blank\">View Quota&nbsp;</a>\n" +
+    "</span>\n" +
+    "</div>\n" +
+    "</div>\n" +
+    "</fieldset>\n" +
+    "</div>\n" +
+    "<div class=\"modal-footer\" style=\"padding-right: 0\">\n" +
+    "<button class=\"btn btn-default\" type=\"button\" ng-click=\"cancel()\">Cancel</button>\n" +
+    "<button class=\"btn btn-primary\" type=\"submit\" ng-disabled=\"expandPersistentVolumeClaimForm.$invalid || disableButton\" ng-click=\"expand()\"> Expand\n" +
+    "</button>\n" +
+    "</div>\n" +
+    "</ng-form>\n" +
+    "</div>\n" +
     "</div>"
   );
 
