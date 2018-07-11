@@ -131,12 +131,6 @@ function OverviewController($scope,
     builds: {},
     clusterQuotas: {},
     idlers: {},
-    // TODO: ideally do the mapping of idler to resource here.
-    // The problem is that idlers can target a broad list of resources, 
-    // and timing may be an issue.
-    // This would have to be done similar to servicesByObjectUID, which 
-    // is mapped in updateRoutesByApp(), which has a list of resources 
-    // to map, and is a debounced function.  
     idlersByResource: {},
     imageStreamImageRefByDockerReference: {},
     imagesByDockerReference: {},
