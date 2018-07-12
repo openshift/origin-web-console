@@ -1,0 +1,110 @@
+<div class="modal-resource-action">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close" ng-click="cancel()">
+      <span class="pficon pficon-close" aria-hidden="true"></span>
+    </button>
+    <h1 class="modal-title">Expand Persistent Volume Claim</h1>
+  </div>
+
+  <div class="modal-body">
+    <h3>Increase the capacity of claim
+      <strong>{{typeDisplayName}}</strong>.
+      <a ng-href="{{'persistent_volumes' | helpLink}}" target="_blank">
+        <span class="learn-more-inline">Learn More
+          <i class="fa fa-external-link" aria-hidden="true"></i>
+        </span>
+      </a>
+    </h3>
+
+    <p>This can be a time-consuming process.</p>
+
+    <ng-form name="expandPersistentVolumeClaimForm">
+      <div ng-if="capacityReadOnly" class="form-group mar-bottom-xl">
+        <label>Size</label>
+        <div class="static-form-value-large">
+          {{claim.capacity}} {{claim.unit | humanizeUnit : 'storage'}}
+          <small>(cannot be changed)</small>
+        </div>
+      </div>
+      <div ng-if="!capacityReadOnly" class="form-group">
+        <fieldset class="form-inline compute-resource">
+          <label>
+            Capacity
+            <small ng-if="limits.min && limits.max">
+              {{limits.min | usageWithUnits : 'storage'}} min to {{limits.max | usageWithUnits : 'storage'}} max
+            </small>
+            <small ng-if="limits.min && !limits.max">
+              Min: {{limits.min | usageWithUnits : 'storage'}}
+            </small>
+            <small ng-if="limits.max && !limits.min">
+              Max: {{limits.max | usageWithUnits : 'storage'}}
+            </small>
+          </label>
+          <div class="resource-size" ng-class="{ 'has-error': expandPersistentVolumeClaimForm.capacity.$invalid && expandPersistentVolumeClaimForm.capacity.$touched}">
+            <div class="resource-amount">
+              <label for="claim-amount" class="sr-only">Amount</label>
+              <input type="number"
+                     name="capacity"
+                     id="claim-amount"
+                     ng-model="claim.capacity"
+                     required min="0"
+                     pattern="\d+(\.\d+)?"
+                     select-on-focus class="form-control"
+                     aria-describedby="claim-capacity-help">
+            </div>
+            <div class="resource-unit">
+                <label class="sr-only">Unit</label>
+                <ui-select search-enabled="false"
+                           ng-model="claim.unit"
+                           input-id="claim-capacity-unit">
+                    <ui-select-match>{{$select.selected.label}}</ui-select-match>
+                    <ui-select-choices repeat="option.value as option in units" group-by="groupUnits">
+                        {{option.label}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+          </div>
+          <div id="claim-capacity-help" class="help-block">
+            Desired storage capacity.
+          </div>
+          <div ng-if="expandPersistentVolumeClaimForm.capacity.$invalid">
+            <div class="has-error" ng-show="expandPersistentVolumeClaimForm.capacity.$error.required">
+              <span class="help-block">Size is required.</span>
+            </div>
+            <div class="has-error" ng-show="expandPersistentVolumeClaimForm.capacity.$error.number">
+              <span class="help-block">Must be a number.</span>
+            </div>
+            <div class="has-error" ng-show="expandPersistentVolumeClaimForm .capacity.$error.min">
+              <span class="help-block">Must be a positive number.</span>
+            </div>
+            <div class="has-error" ng-show="expandPersistentVolumeClaimForm.capacity.$error.checkCurrentCapacity">
+              <span class="help-block">The requested capacity may not be less than the current capacity.</span>
+            </div>
+            <div ng-if="expandPersistentVolumeClaimForm.capacity.$error.limitRangeMin" class="has-error">
+              <span class="help-block">
+                Can't be less than {{limits.min | usageWithUnits : 'storage'}}.
+              </span>
+            </div>
+            <div ng-if="expandPersistentVolumeClaimForm.capacity.$error.limitRangeMax" class="has-error">
+              <span class="help-block">
+                Can't be greater than {{limits.max | usageWithUnits : 'storage'}}.
+              </span>
+            </div>
+            <div ng-if="expandPersistentVolumeClaimForm.capacity.$error.willExceedStorage" class="has-error">
+              <span class="help-block">
+                Storage quota will be exceeded. <a ng-href="project/{{projectName}}/quota" target="_blank">View Quota&nbsp;</a>
+              </span>
+            </div>
+          </div>
+
+        </fieldset>
+      </div>
+
+      <div class="modal-footer" style="padding-right: 0;">
+        <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-primary" type="submit" ng-disabled="expandPersistentVolumeClaimForm.$invalid || disableButton" ng-click="expand()"> Expand
+        </button>
+      </div>
+    </ng-form>
+  </div>
+</div>

@@ -7039,9 +7039,14 @@ title: "Storage",
 link: "project/" + n.project + "/browse/storage"
 }, {
 title: n.pvc
-} ], t.pvcVersion = r.getPreferredVersion("persistentvolumeclaims"), t.eventsVersion = r.getPreferredVersion("events");
-var i = [], s = function(e, n) {
-t.pvc = e, t.loaded = !0, "DELETED" === n && (t.alerts.deleted = {
+} ], t.storageClassesVersion = r.getPreferredVersion("storageclasses"), t.pvcVersion = r.getPreferredVersion("persistentvolumeclaims"), t.eventsVersion = r.getPreferredVersion("events"), t.isExpansionAllowed = !1;
+var i = e("storageClass"), s = [], c = function(e) {
+var n = i(t.pvc);
+n !== _.get(i, "metadata.name") && a.get(t.storageClassesVersion, n, {}).then(function(n) {
+t.isExpansionAllowed = (!n || n.allowVolumeExpansion) && "Bound" === e.status.phase;
+});
+}, l = function(e, n) {
+t.pvc = e, t.loaded = !0, c(e), "DELETED" === n && (t.alerts.deleted = {
 type: "warning",
 message: "This persistent volume claim has been deleted."
 });
@@ -7050,7 +7055,7 @@ o.get(n.project).then(_.spread(function(r, o) {
 t.project = r, t.projectContext = o, a.get(t.pvcVersion, n.pvc, o, {
 errorNotification: !1
 }).then(function(e) {
-s(e), i.push(a.watchObject(t.pvcVersion, n.pvc, o, s));
+l(e), s.push(a.watchObject(t.pvcVersion, n.pvc, o, l));
 }, function(n) {
 t.loaded = !0, t.alerts.load = {
 type: "error",
@@ -7058,7 +7063,7 @@ message: "The persistent volume claim details could not be loaded.",
 details: e("getErrorDetails")(n)
 };
 }), t.$on("$destroy", function() {
-a.unwatchAll(i);
+a.unwatchAll(s);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("SetLimitsController", [ "$filter", "$location", "$parse", "$routeParams", "$scope", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "LimitRangesService", "Navigate", "NotificationsService", "ProjectsService", function(e, t, n, r, a, o, i, s, c, l, u, d, m) {
@@ -8995,6 +9000,71 @@ t.close("delete");
 }, e.cancel = function() {
 t.dismiss("cancel");
 };
+} ]), angular.module("openshiftConsole").controller("EditPvcModalController", [ "APIService", "DataService", "$filter", "LimitRangesService", "QuotaService", "$scope", "$uibModalInstance", function(e, t, n, r, a, o, i) {
+var s = e.getPreferredVersion("limitranges"), c = e.getPreferredVersion("resourcequotas"), l = e.getPreferredVersion("appliedclusterresourcequotas"), u = n("amountAndUnit"), d = (n("usageWithUnits"), n("usageValue")), m = u(o.pvc.spec.resources.requests.storage);
+o.projectName = o.pvc.metadata.namespace, o.typeDisplayName = n("humanizeKind")(o.pvc.metadata.name), o.claim = {}, o.claim.capacity = Number(m[0]), o.claim.unit = m[1], o.disableButton = !0, o.currentCapacityUnits = angular.copy(o.claim), o.units = [ {
+value: "Mi",
+label: "MiB"
+}, {
+value: "Gi",
+label: "GiB"
+}, {
+value: "Ti",
+label: "TiB"
+}, {
+value: "M",
+label: "MB"
+}, {
+value: "G",
+label: "GB"
+}, {
+value: "T",
+label: "TB"
+} ], o.groupUnits = function(e) {
+switch (e.value) {
+case "Mi":
+case "Gi":
+case "Ti":
+return "Binary Units";
+
+case "M":
+case "G":
+case "T":
+return "Decimal Units";
+}
+return "";
+}, o.expand = function() {
+o.updatedCapacity = o.claim.capacity + o.claim.unit, i.close(o.updatedCapacity);
+}, o.cancel = function() {
+i.dismiss("cancel");
+};
+var p = function() {
+var e = o.claim.capacity && d(o.claim.capacity + o.claim.unit), t = o.currentCapacityUnits.capacity && d(o.currentCapacityUnits.capacity + o.currentCapacityUnits.unit), n = !0, r = !0, a = !0;
+n = e >= (_.has(o, "limits.min") && d(o.limits.min)), r = e <= (_.has(o, "limits.max") && d(o.limits.max)), a = e > t, o.expandPersistentVolumeClaimForm.capacity.$setValidity("limitRangeMin", n), o.expandPersistentVolumeClaimForm.capacity.$setValidity("limitRangeMax", r), o.expandPersistentVolumeClaimForm.capacity.$setValidity("checkCurrentCapacity", a), o.expandPersistentVolumeClaimForm.capacity.$touched = !0;
+}, f = function() {
+var e = o.claim.capacity && d(o.claim.capacity + o.claim.unit), t = o.currentCapacityUnits.capacity && d(o.currentCapacityUnits.capacity + o.currentCapacityUnits.unit), n = a.isAnyStorageQuotaExceeded(o.quotas, o.clusterQuotas), r = a.willRequestExceedQuota(o.quotas, o.clusterQuotas, "requests.storage", e - t);
+o.expandPersistentVolumeClaimForm.capacity.$setValidity("willExceedStorage", !r), o.expandPersistentVolumeClaimForm.capacity.$setValidity("outOfClaims", !n);
+};
+t.list(s, {
+namespace: o.projectName
+}, function(e) {
+var t = e.by("metadata.name");
+if (o.disableButton = !1, !_.isEmpty(t)) {
+if (o.limits = r.getEffectiveLimitRange(t, "storage", "PersistentVolumeClaim"), o.limits.min && o.limits.max && d(o.limits.min) === d(o.limits.max)) {
+var n = u(o.limits.max);
+o.claim.capacity = Number(n[0]), o.claim.unit = n[1], o.capacityReadOnly = !0;
+}
+o.$watchGroup([ "claim.capacity", "claim.unit" ], p);
+}
+}), t.list(c, {
+namespace: o.projectName
+}, function(e) {
+o.quotas = e.by("metadata.name"), o.$watchGroup([ "claim.capacity", "claim.unit" ], f);
+}), t.list(l, {
+namespace: o.projectName
+}, function(e) {
+o.clusterQuotas = e.by("metadata.name");
+});
 } ]), angular.module("openshiftConsole").controller("DebugTerminalModalController", [ "$scope", "$filter", "$uibModalInstance", "container", "image", function(e, t, n, r, a) {
 e.container = r, e.image = a, e.$watch("debugPod.status.containerStatuses", function() {
 e.containerState = _.get(e, "debugPod.status.containerStatuses[0].state");
@@ -9497,6 +9567,49 @@ n[e.key] = e.value;
 }), _.set(t, "map.data", n);
 }, !0));
 });
+}
+};
+} ]), angular.module("openshiftConsole").directive("editPvc", [ "$uibModal", "$filter", "$routeParams", "APIService", "DataService", "ProjectsService", "NotificationsService", "Logger", function(e, t, n, r, a, o, i, s) {
+return {
+restrict: "E",
+scope: {
+pvc: "<"
+},
+template: '<a href="" ng-click="openEditModal()" role="button">Expand PVC</a>',
+replace: !0,
+link: function(n) {
+n.openEditModal = function() {
+var o = e.open({
+templateUrl: "views/modals/edit-pvc-resource.html",
+controller: "EditPvcModalController",
+scope: n
+}), c = function() {
+i.hideNotification("expand-pvc-error");
+};
+n.$on("$destroy", c), o.result.then(function(e) {
+c();
+var o = angular.copy(n.pvc);
+_.set(o, "spec.resources.requests.storage", e);
+var l = n.pvc.kind, u = n.pvc.metadata.name, d = t("humanizeKind")(l) + " '" + u + "'";
+a.update({
+resource: r.kindToResource(l)
+}, u, o, {
+namespace: n.pvc.metadata.namespace
+}).then(function() {
+i.addNotification({
+type: "success",
+message: d + " expand request has been submitted."
+});
+}).catch(function(e) {
+i.addNotification({
+id: "expand-pvc-error",
+type: "error",
+message: "Could not save " + d,
+details: t("getErrorDetails")(e)
+}), s.error(d + " could not be expanded.", e);
+});
+});
+};
 }
 };
 } ]), function() {

@@ -30,14 +30,29 @@ angular.module('openshiftConsole')
       }
     ];
 
+    $scope.storageClassesVersion = APIService.getPreferredVersion('storageclasses');
     $scope.pvcVersion = APIService.getPreferredVersion('persistentvolumeclaims');
     $scope.eventsVersion = APIService.getPreferredVersion('events');
+    $scope.isExpansionAllowed = false;
 
+    var storageClass = $filter('storageClass');
     var watches = [];
+
+    var updateStorageClass = function(pvc) {
+      var storageClassName = storageClass($scope.pvc);
+      if (storageClassName !== _.get(storageClass, 'metadata.name')) {
+        DataService.get($scope.storageClassesVersion, storageClassName, {}).then(function(sc) {
+          $scope.isExpansionAllowed = (!sc || sc.allowVolumeExpansion) && pvc.status.phase === 'Bound';
+        });
+      }
+    };
 
     var pvcResolved = function(pvc, action) {
       $scope.pvc = pvc;
       $scope.loaded = true;
+
+      updateStorageClass(pvc);
+
       if (action === "DELETED") {
         $scope.alerts["deleted"] = {
           type: "warning",
@@ -65,9 +80,8 @@ angular.module('openshiftConsole')
           };
         });
 
-      $scope.$on('$destroy', function(){
+      $scope.$on('$destroy', function() {
         DataService.unwatchAll(watches);
       });
-
     }));
 });
