@@ -243,6 +243,17 @@ angular.module('openshiftConsole')
       $scope.advancedOptions = value;
     };
 
+    var isDebugBuildOrHasSigningCredentials = function() {
+      return $scope.newClientBuild.buildType === debugBuildType.id || !$scope.newClientBuild.externalCredential;
+    };
+
+    var isAndroidBuild = function() {
+      return $scope.newClientBuild.buildPlatform === 'android';
+    };
+    var isPublicRepo = function() {
+      return $scope.newClientBuild.authType === 'public';
+    };
+
     $scope.createClientBuild = function() {
       var clientBuildConfig = createBuildConfig($scope.newClientBuild);
       DataService.create(buildConfigsVersion, null, clientBuildConfig, $scope.context)
@@ -270,16 +281,5 @@ angular.module('openshiftConsole')
             details: $filter('getErrorDetails')(err)
           });
         });
-    };
-
-    var isDebugBuildOrHasSigningCredentials = function() {
-      return $scope.newClientBuild.buildType === debugBuildType.id || !$scope.newClientBuild.externalCredential
-    };
-
-    var isAndroidBuild = function() {
-      return $scope.newClientBuild.buildPlatform === 'android';
-    };
-    var isPublicRepo = function() {
-      return $scope.newClientBuild.authType === 'public';
     };
   });
