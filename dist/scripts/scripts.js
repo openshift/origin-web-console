@@ -7041,12 +7041,16 @@ link: "project/" + n.project + "/browse/storage"
 title: n.pvc
 } ], t.storageClassesVersion = r.getPreferredVersion("storageclasses"), t.pvcVersion = r.getPreferredVersion("persistentvolumeclaims"), t.eventsVersion = r.getPreferredVersion("events"), t.isExpansionAllowed = !1;
 var i = e("storageClass"), s = [], c = function(e) {
+t.isExpansionAllowed = (!e || e.allowVolumeExpansion) && "Bound" === t.pvc.status.phase;
+}, l = function(e) {
 var n = i(t.pvc);
-n !== _.get(i, "metadata.name") && a.get(t.storageClassesVersion, n, {}).then(function(n) {
-t.isExpansionAllowed = (!n || n.allowVolumeExpansion) && "Bound" === e.status.phase;
+n !== _.get(i, "metadata.name") && a.get(t.storageClassesVersion, n, {}).then(function(r) {
+t.isExpansionAllowed = (!r || r.allowVolumeExpansion) && "Bound" === e.status.phase, s.push(a.watchObject(t.storageClassesVersion, n, {
+namespace: t.projectContext
+}, c));
 });
-}, l = function(e, n) {
-t.pvc = e, t.loaded = !0, c(e), "DELETED" === n && (t.alerts.deleted = {
+}, u = function(e, n) {
+t.pvc = e, t.loaded = !0, l(e), "DELETED" === n && (t.alerts.deleted = {
 type: "warning",
 message: "This persistent volume claim has been deleted."
 });
@@ -7055,7 +7059,7 @@ o.get(n.project).then(_.spread(function(r, o) {
 t.project = r, t.projectContext = o, a.get(t.pvcVersion, n.pvc, o, {
 errorNotification: !1
 }).then(function(e) {
-l(e), s.push(a.watchObject(t.pvcVersion, n.pvc, o, l));
+u(e), s.push(a.watchObject(t.pvcVersion, n.pvc, o, u));
 }, function(n) {
 t.loaded = !0, t.alerts.load = {
 type: "error",
@@ -9001,7 +9005,10 @@ t.close("delete");
 t.dismiss("cancel");
 };
 } ]), angular.module("openshiftConsole").controller("EditPvcModalController", [ "APIService", "DataService", "$filter", "LimitRangesService", "QuotaService", "$scope", "$uibModalInstance", function(e, t, n, r, a, o, i) {
-var s = e.getPreferredVersion("limitranges"), c = e.getPreferredVersion("resourcequotas"), l = e.getPreferredVersion("appliedclusterresourcequotas"), u = n("amountAndUnit"), d = (n("usageWithUnits"), n("usageValue")), m = u(o.pvc.spec.resources.requests.storage);
+var s = e.getPreferredVersion("limitranges"), c = e.getPreferredVersion("resourcequotas"), l = e.getPreferredVersion("appliedclusterresourcequotas"), u = n("amountAndUnit"), d = (n("usageWithUnits"), n("usageValue")), m = function() {
+var e = u(o.pvc.spec.resources.requests.storage), t = u(o.pvc.status.capacity.storage), n = d(e[0] + e[1]);
+return d(t[0] + t[1]) > n ? t : e;
+}();
 o.projectName = o.pvc.metadata.namespace, o.typeDisplayName = n("humanizeKind")(o.pvc.metadata.name), o.claim = {}, o.claim.capacity = Number(m[0]), o.claim.unit = m[1], o.disableButton = !0, o.currentCapacityUnits = angular.copy(o.claim), o.units = [ {
 value: "Mi",
 label: "MiB"
@@ -9039,17 +9046,20 @@ o.updatedCapacity = o.claim.capacity + o.claim.unit, i.close(o.updatedCapacity);
 i.dismiss("cancel");
 };
 var p = function() {
-var e = o.claim.capacity && d(o.claim.capacity + o.claim.unit), t = o.currentCapacityUnits.capacity && d(o.currentCapacityUnits.capacity + o.currentCapacityUnits.unit), n = !0, r = !0, a = !0;
-n = e >= (_.has(o, "limits.min") && d(o.limits.min)), r = e <= (_.has(o, "limits.max") && d(o.limits.max)), a = e > t, o.expandPersistentVolumeClaimForm.capacity.$setValidity("limitRangeMin", n), o.expandPersistentVolumeClaimForm.capacity.$setValidity("limitRangeMax", r), o.expandPersistentVolumeClaimForm.capacity.$setValidity("checkCurrentCapacity", a), o.expandPersistentVolumeClaimForm.capacity.$touched = !0;
+var e = o.claim.capacity && d(o.claim.capacity + o.claim.unit), t = !0, n = !0;
+t = e >= (_.has(o, "limits.min") && d(o.limits.min)), n = e <= (_.has(o, "limits.max") && d(o.limits.max)), o.expandPersistentVolumeClaimForm.capacity.$setValidity("limitRangeMin", t), o.expandPersistentVolumeClaimForm.capacity.$setValidity("limitRangeMax", n);
 }, f = function() {
 var e = o.claim.capacity && d(o.claim.capacity + o.claim.unit), t = o.currentCapacityUnits.capacity && d(o.currentCapacityUnits.capacity + o.currentCapacityUnits.unit), n = a.isAnyStorageQuotaExceeded(o.quotas, o.clusterQuotas), r = a.willRequestExceedQuota(o.quotas, o.clusterQuotas, "requests.storage", e - t);
 o.expandPersistentVolumeClaimForm.capacity.$setValidity("willExceedStorage", !r), o.expandPersistentVolumeClaimForm.capacity.$setValidity("outOfClaims", !n);
+}, g = function(e) {
+var t = (o.claim.capacity && d(o.claim.capacity + o.claim.unit)) > (o.currentCapacityUnits.capacity && d(o.currentCapacityUnits.capacity + o.currentCapacityUnits.unit));
+o.expandPersistentVolumeClaimForm.capacity.$setValidity("checkCurrentCapacity", t), o.expandPersistentVolumeClaimForm.capacity.$touched = !0;
 };
 t.list(s, {
 namespace: o.projectName
 }, function(e) {
 var t = e.by("metadata.name");
-if (o.disableButton = !1, !_.isEmpty(t)) {
+if (o.$watchGroup([ "claim.capacity", "claim.unit" ], g), o.disableButton = !1, !_.isEmpty(t)) {
 if (o.limits = r.getEffectiveLimitRange(t, "storage", "PersistentVolumeClaim"), o.limits.min && o.limits.max && d(o.limits.min) === d(o.limits.max)) {
 var n = u(o.limits.max);
 o.claim.capacity = Number(n[0]), o.claim.unit = n[1], o.capacityReadOnly = !0;

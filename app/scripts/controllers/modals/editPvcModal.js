@@ -11,7 +11,7 @@ angular.module('openshiftConsole')
     var usageWithUnits = $filter('usageWithUnits');
     var usageValue = $filter('usageValue');
 
-    var allocatedAmountAndUnit = amountAndUnit($scope.pvc.spec.resources.requests['storage']);
+    var allocatedAmountAndUnit = getAllocatedAmountAndUnit();
 
     $scope.projectName = $scope.pvc.metadata.namespace;
     $scope.typeDisplayName = $filter('humanizeKind')($scope.pvc.metadata.name);
@@ -66,24 +66,27 @@ angular.module('openshiftConsole')
       $uibModalInstance.dismiss('cancel');
     };
 
+    function getAllocatedAmountAndUnit() {
+      var requestedCapacity = amountAndUnit($scope.pvc.spec.resources.requests['storage']);
+      var allocatedCapacity = amountAndUnit($scope.pvc.status.capacity['storage']);
+      var requestedCapacityInBytes = usageValue(requestedCapacity[0] + requestedCapacity[1]);
+      var allocatedCapacityInBytes = usageValue(allocatedCapacity[0] + allocatedCapacity[1]);
+      return allocatedCapacityInBytes > requestedCapacityInBytes ? allocatedCapacity : requestedCapacity;
+    }
+
     var validateLimitRange = function() {
       // Use usageValue filter to normalize units for comparison.
       var value = $scope.claim.capacity && usageValue($scope.claim.capacity + $scope.claim.unit);
-      var currentValue = $scope.currentCapacityUnits.capacity && usageValue($scope.currentCapacityUnits.capacity + $scope.currentCapacityUnits.unit);
       var min = _.has($scope, 'limits.min') && usageValue($scope.limits.min);
       var max = _.has($scope, 'limits.max') && usageValue($scope.limits.max);
       var minValid = true;
       var maxValid = true;
-      var requestValid = true;
 
       minValid = value >= min;
       maxValid = value <= max;
-      requestValid = value > currentValue;
 
       $scope.expandPersistentVolumeClaimForm.capacity.$setValidity('limitRangeMin', minValid);
       $scope.expandPersistentVolumeClaimForm.capacity.$setValidity('limitRangeMax', maxValid);
-      $scope.expandPersistentVolumeClaimForm.capacity.$setValidity('checkCurrentCapacity', requestValid);
-      $scope.expandPersistentVolumeClaimForm.capacity.$touched =  true;
     };
 
     var validateQuota = function() {
@@ -95,8 +98,17 @@ angular.module('openshiftConsole')
       $scope.expandPersistentVolumeClaimForm.capacity.$setValidity('outOfClaims', !outOfClaims);
     };
 
+    var validateCapacityValid = function (value) {
+      var value = $scope.claim.capacity && usageValue($scope.claim.capacity + $scope.claim.unit);
+      var currentValue = $scope.currentCapacityUnits.capacity && usageValue($scope.currentCapacityUnits.capacity + $scope.currentCapacityUnits.unit);
+      var requestValid = value > currentValue;
+      $scope.expandPersistentVolumeClaimForm.capacity.$setValidity('checkCurrentCapacity', requestValid);
+      $scope.expandPersistentVolumeClaimForm.capacity.$touched =  true;
+    }
+
     DataService.list(limitRangesVersion, { namespace: $scope.projectName }, function(limitRangeData) {
       var limitRanges = limitRangeData.by('metadata.name');
+      $scope.$watchGroup(['claim.capacity', 'claim.unit'], validateCapacityValid);
       $scope.disableButton = false;
       if (_.isEmpty(limitRanges)) {
         return;
