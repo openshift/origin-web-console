@@ -115,6 +115,17 @@
               </log-viewer>
             </uib-tab>
 
+            <uib-tab active="selectedTab.problems">
+              <uib-tab-heading>Problems</uib-tab-heading>
+              <problems
+                ng-if="selectedTab.problems"
+                object="pod"
+                context="projectContext"
+                run="logCanRun">
+              </problems>
+            </uib-tab>
+
+
             <uib-tab
               active="selectedTab.terminal"
               select="terminalTabWasSelected = true"

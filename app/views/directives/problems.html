@@ -1,0 +1,72 @@
+<div ng-if="!problems">
+  Loading...
+</div>
+<div ng-if="problems" class="events">
+  <div class="table-filter-extension">
+    <div class="data-toolbar">
+      <form role="form" class="search-pf has-button">
+        <div class="form-group filter-controls has-clear">
+          <div class="search-pf-input-group">
+            <label for="problems-filter" class="sr-only">Filter</label>
+            <input type="search"
+                   placeholder="Filter by keyword"
+                   class="form-control"
+                   id="problems-filter"
+                   ng-model="filter.text"
+                   autocorrect="off"
+                   autocapitalize="none"
+                   spellcheck="false">
+            <button
+                type="button"
+                class="clear"
+                aria-hidden="true"
+                ng-if="filter.text"
+                ng-click="filter.text = ''">
+                <span class="pficon pficon-close"></span>
+            </button>
+          </div>
+        </div>
+      </form>
+      <div class="vertical-divider"></div>
+      <div class="sort-group">
+        <span class="sort-label">Sort by</span>
+        <pf-sort config="sortConfig" class="sort-controls"></pf-sort>
+      </div>
+    </div>
+  </div>
+  <table class="table table-bordered table-condensed table-mobile events-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th id="time">Time</th>
+        <th>Message</th>
+        <th>Reason</th>
+        <th>Count</th>
+      </tr>
+    </thead>
+
+    <tbody ng-if="(filteredProblems | hashSize) === 0">
+      <tr>
+        <td colspan="5">No problems to show.</td>
+      </tr>
+    </tbody>
+
+
+    <tbody ng-click="showDropdown($event)" ng-repeat="problem in filteredProblems">
+      <tr class="accordion-table-item">
+        <td class="accordion-table-caret">
+          <i class="fa fa-fw"></i>
+        <td>{{problem.lastTimestamp | date:'mediumTime'}}</td>
+        <td>{{problem.message}}</td>
+        <td>{{problem.reason}}</td>
+        <td>{{problem.count}}</td>
+      </tr>
+      <tr class="accordion-table-body">
+        <td class="backtrace" colspan="5">
+            {{problem.backtrace}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>

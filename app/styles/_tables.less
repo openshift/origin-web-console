@@ -257,3 +257,59 @@ td[role="presentation"] {
     content: "\2192";
   }
 }
+
+tbody tr.accordion-table-item:hover td.accordion-table-caret i {
+    visibility: visible;
+}
+
+tbody.open tr.accordion-table-item:hover td.accordion-table-caret i {
+    color: #65bedf;
+}
+
+tbody tr.accordion-table-item {
+    &:hover{
+        background-color: #d4edfa;
+    }
+    background-color: #ffffff;
+}
+
+tbody.open tr.accordion-table-item {
+    background-color: #ededed;
+}
+
+.accordion-table-caret {
+    padding: 0px 0px 0px 10px !important;
+    width: 0px !important;
+    margin: 0px !important;
+}
+
+tbody td.accordion-table-caret i {
+    &:before{
+        font-size: 24px;
+        content: "\f105";
+    }
+    visibility: hidden;
+    padding: 0px !important;
+    margin: 0px !important;
+}
+
+tbody.open td.accordion-table-caret i {
+    &:before{
+        font-size: 24px;
+        content: "\f107";
+    }
+    visibility: visible;
+    padding: 0px !important;
+    margin: 0px !important;
+}
+tbody tr.accordion-table-body{
+    display: none;
+}
+
+tbody.open tr.accordion-table-body{
+    display: table-row;
+}
+
+.accordion-table-body .backtrace{
+    white-space: pre-wrap;
+}
