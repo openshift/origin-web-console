@@ -1482,7 +1482,7 @@ cause: "timeout"
 e.url(t.toString());
 };
 $(window).on("storage", function(e) {
-e.originalEvent.key === s ? u() : "origin-web-console-inactivity-logout" === e.originalEvent.key && p();
+e.originalEvent.key === s ? u() : "origin-web-console-inactivity-logout" === e.originalEvent.key && "true" === localStorage.getItem("origin-web-console-inactivity-logout") && p();
 }), n.onUserChanged(function() {
 m(!1);
 }), d(), $(document).bind("click keydown", _.throttle(d, 500));
