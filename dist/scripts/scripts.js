@@ -12602,15 +12602,23 @@ var e = angular.extend({
 follow: !0,
 tailLines: 5e3,
 limitBytes: 10485760
-}, t.options), n = 0, r = function(e) {
-n++, N.appendChild(f(n, e)), A();
+}, t.options), n = 0, r = "", a = function(e) {
+return /\n$/.test(e);
+}, o = function(e) {
+return e.match(/^.*(\n|$)/gm);
+}, i = function(e) {
+var t = r + e;
+a(e) ? (r = "", n++, N.appendChild(f(n, t)), A()) : r = t;
+}, s = function(e) {
+var t = o(e);
+_.each(t, i);
 };
-(E = c.createStream(v, h, t.context, e)).onMessage(function(a, o, i) {
+(E = c.createStream(v, h, t.context, e)).onMessage(function(r, a, o) {
 t.$evalAsync(function() {
 t.empty = !1, "logs" !== t.state && (t.state = "logs", I());
-}), a && (e.limitBytes && i >= e.limitBytes && (t.$evalAsync(function() {
+}), r && (e.limitBytes && o >= e.limitBytes && (t.$evalAsync(function() {
 t.limitReached = !0, t.loading = !1;
-}), D(!0)), r(a), !t.largeLog && n >= e.tailLines && t.$evalAsync(function() {
+}), D(!0)), s(r), !t.largeLog && n >= e.tailLines && t.$evalAsync(function() {
 t.largeLog = !0;
 }));
 }), E.onClose(function() {
