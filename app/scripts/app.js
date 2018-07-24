@@ -589,7 +589,7 @@ angular
     $(window).on('storage', function (event) {
       if (event.originalEvent.key === lastInteractionKey) {
         restartCheckInteractionInterval();
-      } else if (event.originalEvent.key === inactivityLogoutKey) {
+      } else if (event.originalEvent.key === inactivityLogoutKey && localStorage.getItem(inactivityLogoutKey) === 'true') {
         logout();
       }
     });
