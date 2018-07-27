@@ -38,11 +38,16 @@ angular.module('openshiftConsole')
     var storageClass = $filter('storageClass');
     var watches = [];
 
+    var scResolved = function (sc) {
+      $scope.isExpansionAllowed = (!sc || sc.allowVolumeExpansion) && $scope.pvc.status.phase === 'Bound';
+    };
+
     var updateStorageClass = function(pvc) {
       var storageClassName = storageClass($scope.pvc);
       if (storageClassName !== _.get(storageClass, 'metadata.name')) {
         DataService.get($scope.storageClassesVersion, storageClassName, {}).then(function(sc) {
           $scope.isExpansionAllowed = (!sc || sc.allowVolumeExpansion) && pvc.status.phase === 'Bound';
+          watches.push(DataService.watchObject($scope.storageClassesVersion, storageClassName, { namespace: $scope.projectContext }, scResolved));
         });
       }
     };
