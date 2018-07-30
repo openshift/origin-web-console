@@ -11167,7 +11167,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"modal-body\">\n" +
     "<h3>Increase the capacity of claim\n" +
     "<strong>{{typeDisplayName}}</strong>.\n" +
-    "<a ng-href=\"{{'persistent_volumes' | helpLink}}\" target=\"_blank\">\n" +
+    "<a ng-href=\"{{'expanding_persistent_volumes' | helpLink}}\" target=\"_blank\">\n" +
     "<span class=\"learn-more-inline\">Learn More\n" +
     "<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
     "</span>\n" +
