@@ -24,6 +24,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     "deployment-operations":   "cli_reference/basic_cli_operations.html#build-and-deployment-cli-operations",
     "route-types":             "architecture/networking/routes.html#route-types",
     "persistent_volumes":      "dev_guide/persistent_volumes.html",
+    "expanding_persistent_volumes":      "dev_guide/expanding_persistent_volumes.html",
     "compute_resources":       "dev_guide/compute_resources.html",
     "pod_autoscaling":         "dev_guide/pod_autoscaling.html",
     "application_health":      "dev_guide/application_health.html",
