@@ -624,6 +624,7 @@ new_app: "dev_guide/application_lifecycle/new_app.html",
 "deployment-operations": "cli_reference/basic_cli_operations.html#build-and-deployment-cli-operations",
 "route-types": "architecture/networking/routes.html#route-types",
 persistent_volumes: "dev_guide/persistent_volumes.html",
+expanding_persistent_volumes: "dev_guide/expanding_persistent_volumes.html",
 compute_resources: "dev_guide/compute_resources.html",
 pod_autoscaling: "dev_guide/pod_autoscaling.html",
 application_health: "dev_guide/application_health.html",
@@ -11019,7 +11020,7 @@ i.orderingPanelVisible = !0, i.orderKind = e;
 _.set(r, "view.hasProjectSearch", e);
 }, i.catalogLandingPageEnabled = !u.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
 var R = p.find(".contextselector");
-i.clusterConsoleURL = window.OPENSHIFT_CONSTANTS.TECTONIC_URL || window.OPENSHIFT_CONFIG.tectonicURL, R.on("loaded.bs.select", function() {
+i.clusterConsoleURL = window.OPENSHIFT_CONFIG.adminConsoleURL, R.on("loaded.bs.select", function() {
 k(R);
 }).change(function() {
 switch ($(this).val()) {
