@@ -707,15 +707,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<div class=\"about\">\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-2 about-icon gutter-top hidden-sm hidden-xs\">\n" +
-    "<img src=\"images/openshift-logo.svg\"/>\n" +
-    "</div>\n" +
-    "<div class=\"col-md-9\">\n" +
     "<h1>Red Hat OpenShift <span class=\"about-reg\">&reg;</span></h1>\n" +
     "<h2>About</h2>\n" +
     "<p>\n" +
-    "<a target=\"_blank\" href=\"https://www.openshift.com\">OpenShift</a> is Red Hat's container application platform that allows developers to quickly develop, host, and scale applications in a cloud environment.\n" +
+    "<a target=\"_blank\" href=\"http://okd.io\">OpenShift</a> is Red Hat's container application platform that allows developers to quickly develop, host, and scale applications in a cloud environment.\n" +
     "</p>\n" +
     "<h2 id=\"version\">Version</h2>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
@@ -743,8 +738,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>\n" +
     "You are currently logged in under the user account <strong>{{user.metadata.name}}</strong>.\n" +
     "</p>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
