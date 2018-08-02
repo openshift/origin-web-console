@@ -9006,10 +9006,7 @@ t.close("delete");
 t.dismiss("cancel");
 };
 } ]), angular.module("openshiftConsole").controller("EditPvcModalController", [ "APIService", "DataService", "$filter", "LimitRangesService", "QuotaService", "$scope", "$uibModalInstance", function(e, t, n, r, a, o, i) {
-var s = e.getPreferredVersion("limitranges"), c = e.getPreferredVersion("resourcequotas"), l = e.getPreferredVersion("appliedclusterresourcequotas"), u = n("amountAndUnit"), d = (n("usageWithUnits"), n("usageValue")), m = function() {
-var e = u(o.pvc.spec.resources.requests.storage), t = u(o.pvc.status.capacity.storage), n = d(e[0] + e[1]);
-return d(t[0] + t[1]) > n ? t : e;
-}();
+var s = e.getPreferredVersion("limitranges"), c = e.getPreferredVersion("resourcequotas"), l = e.getPreferredVersion("appliedclusterresourcequotas"), u = n("amountAndUnit"), d = (n("usageWithUnits"), n("usageValue")), m = u(o.pvc.spec.resources.requests.storage);
 o.projectName = o.pvc.metadata.namespace, o.typeDisplayName = n("humanizeKind")(o.pvc.metadata.name), o.claim = {}, o.claim.capacity = Number(m[0]), o.claim.unit = m[1], o.disableButton = !0, o.currentCapacityUnits = angular.copy(o.claim), o.units = [ {
 value: "Mi",
 label: "MiB"
@@ -9054,7 +9051,7 @@ var e = o.claim.capacity && d(o.claim.capacity + o.claim.unit), t = o.currentCap
 o.expandPersistentVolumeClaimForm.capacity.$setValidity("willExceedStorage", !r), o.expandPersistentVolumeClaimForm.capacity.$setValidity("outOfClaims", !n);
 }, g = function(e) {
 var t = (o.claim.capacity && d(o.claim.capacity + o.claim.unit)) > (o.currentCapacityUnits.capacity && d(o.currentCapacityUnits.capacity + o.currentCapacityUnits.unit));
-o.expandPersistentVolumeClaimForm.capacity.$setValidity("checkCurrentCapacity", t), o.expandPersistentVolumeClaimForm.capacity.$touched = !0;
+o.expandPersistentVolumeClaimForm.capacity.$setValidity("checkCurrentCapacity", t);
 };
 t.list(s, {
 namespace: o.projectName

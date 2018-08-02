@@ -40,7 +40,7 @@
               Max: {{limits.max | usageWithUnits : 'storage'}}
             </small>
           </label>
-          <div class="resource-size" ng-class="{ 'has-error': expandPersistentVolumeClaimForm.capacity.$invalid && expandPersistentVolumeClaimForm.capacity.$touched}">
+          <div class="resource-size" ng-class="{ 'has-error': expandPersistentVolumeClaimForm.capacity.$invalid && expandPersistentVolumeClaimForm.capacity.$dirty}">
             <div class="resource-amount">
               <label for="claim-amount" class="sr-only">Amount</label>
               <input type="number"
@@ -67,7 +67,7 @@
           <div id="claim-capacity-help" class="help-block">
             Desired storage capacity.
           </div>
-          <div ng-if="expandPersistentVolumeClaimForm.capacity.$invalid">
+          <div ng-if="expandPersistentVolumeClaimForm.capacity.$invalid && expandPersistentVolumeClaimForm.capacity.$dirty">
             <div class="has-error" ng-show="expandPersistentVolumeClaimForm.capacity.$error.required">
               <span class="help-block">Size is required.</span>
             </div>

@@ -11196,7 +11196,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Max: {{limits.max | usageWithUnits : 'storage'}}\n" +
     "</small>\n" +
     "</label>\n" +
-    "<div class=\"resource-size\" ng-class=\"{ 'has-error': expandPersistentVolumeClaimForm.capacity.$invalid && expandPersistentVolumeClaimForm.capacity.$touched}\">\n" +
+    "<div class=\"resource-size\" ng-class=\"{ 'has-error': expandPersistentVolumeClaimForm.capacity.$invalid && expandPersistentVolumeClaimForm.capacity.$dirty}\">\n" +
     "<div class=\"resource-amount\">\n" +
     "<label for=\"claim-amount\" class=\"sr-only\">Amount</label>\n" +
     "<input type=\"number\" name=\"capacity\" id=\"claim-amount\" ng-model=\"claim.capacity\" required min=\"0\" pattern=\"\\d+(\\.\\d+)?\" select-on-focus class=\"form-control\" aria-describedby=\"claim-capacity-help\">\n" +
@@ -11214,7 +11214,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div id=\"claim-capacity-help\" class=\"help-block\">\n" +
     "Desired storage capacity.\n" +
     "</div>\n" +
-    "<div ng-if=\"expandPersistentVolumeClaimForm.capacity.$invalid\">\n" +
+    "<div ng-if=\"expandPersistentVolumeClaimForm.capacity.$invalid && expandPersistentVolumeClaimForm.capacity.$dirty\">\n" +
     "<div class=\"has-error\" ng-show=\"expandPersistentVolumeClaimForm.capacity.$error.required\">\n" +
     "<span class=\"help-block\">Size is required.</span>\n" +
     "</div>\n" +
