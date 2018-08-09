@@ -707,15 +707,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"row\">\n" +
     "<div class=\"col-md-12\">\n" +
     "<div class=\"about\">\n" +
-    "<div class=\"row\">\n" +
-    "<div class=\"col-md-2 about-icon gutter-top hidden-sm hidden-xs\">\n" +
-    "<img src=\"images/openshift-logo.svg\"/>\n" +
-    "</div>\n" +
-    "<div class=\"col-md-9\">\n" +
     "<h1>Red Hat OpenShift <span class=\"about-reg\">&reg;</span></h1>\n" +
     "<h2>About</h2>\n" +
     "<p>\n" +
-    "<a target=\"_blank\" href=\"https://www.openshift.com\">OpenShift</a> is Red Hat's container application platform that allows developers to quickly develop, host, and scale applications in a cloud environment.\n" +
+    "<a target=\"_blank\" href=\"http://okd.io\">OpenShift</a> is Red Hat's container application platform that allows developers to quickly develop, host, and scale applications in a cloud environment.\n" +
     "</p>\n" +
     "<h2 id=\"version\">Version</h2>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
@@ -743,8 +738,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>\n" +
     "You are currently logged in under the user account <strong>{{user.metadata.name}}</strong>.\n" +
     "</p>\n" +
-    "</div>\n" +
-    "</div>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -11196,7 +11189,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "Max: {{limits.max | usageWithUnits : 'storage'}}\n" +
     "</small>\n" +
     "</label>\n" +
-    "<div class=\"resource-size\" ng-class=\"{ 'has-error': expandPersistentVolumeClaimForm.capacity.$invalid && expandPersistentVolumeClaimForm.capacity.$touched}\">\n" +
+    "<div class=\"resource-size\" ng-class=\"{ 'has-error': expandPersistentVolumeClaimForm.capacity.$invalid && expandPersistentVolumeClaimForm.capacity.$dirty}\">\n" +
     "<div class=\"resource-amount\">\n" +
     "<label for=\"claim-amount\" class=\"sr-only\">Amount</label>\n" +
     "<input type=\"number\" name=\"capacity\" id=\"claim-amount\" ng-model=\"claim.capacity\" required min=\"0\" pattern=\"\\d+(\\.\\d+)?\" select-on-focus class=\"form-control\" aria-describedby=\"claim-capacity-help\">\n" +
@@ -11214,7 +11207,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div id=\"claim-capacity-help\" class=\"help-block\">\n" +
     "Desired storage capacity.\n" +
     "</div>\n" +
-    "<div ng-if=\"expandPersistentVolumeClaimForm.capacity.$invalid\">\n" +
+    "<div ng-if=\"expandPersistentVolumeClaimForm.capacity.$invalid && expandPersistentVolumeClaimForm.capacity.$dirty\">\n" +
     "<div class=\"has-error\" ng-show=\"expandPersistentVolumeClaimForm.capacity.$error.required\">\n" +
     "<span class=\"help-block\">Size is required.</span>\n" +
     "</div>\n" +
