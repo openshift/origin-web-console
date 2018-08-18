@@ -84,10 +84,8 @@ angular.module('openshiftConsole')
     var validateQuota = function() {
       var newValue = $scope.claim.capacity && usageValue($scope.claim.capacity + $scope.claim.unit);
       var oldValue = $scope.currentCapacityUnits.capacity && usageValue($scope.currentCapacityUnits.capacity + $scope.currentCapacityUnits.unit);
-      var outOfClaims = QuotaService.isAnyStorageQuotaExceeded($scope.quotas, $scope.clusterQuotas);
       var willExceedStorage = QuotaService.willRequestExceedQuota($scope.quotas, $scope.clusterQuotas, 'requests.storage', (newValue - oldValue));
       $scope.expandPersistentVolumeClaimForm.capacity.$setValidity('willExceedStorage', !willExceedStorage);
-      $scope.expandPersistentVolumeClaimForm.capacity.$setValidity('outOfClaims', !outOfClaims);
     };
 
     var validateCapacityValid = function (value) {
