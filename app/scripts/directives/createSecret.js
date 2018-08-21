@@ -169,7 +169,7 @@ angular.module("openshiftConsole")
             case "kubernetes.io/dockerconfigjson":
               var auth = window.btoa(data.dockerUsername + ":" + data.dockerPassword);
               var configData = {auths: {}};
-              configData.auths[data.dockerServer] = {
+              configData.auths[_.get(data, 'dockerServer', "https://index.docker.io/v1/")] = {
                 username: data.dockerUsername,
                 password: data.dockerPassword,
                 email: data.dockerMail,
