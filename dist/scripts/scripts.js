@@ -9337,7 +9337,7 @@ case "kubernetes.io/dockerconfigjson":
 var a = window.btoa(e.dockerUsername + ":" + e.dockerPassword), o = {
 auths: {}
 };
-o.auths[e.dockerServer] = {
+o.auths[_.get(e, "dockerServer", "https://index.docker.io/v1/")] = {
 username: e.dockerUsername,
 password: e.dockerPassword,
 email: e.dockerMail,

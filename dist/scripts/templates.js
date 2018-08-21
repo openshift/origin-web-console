@@ -6242,9 +6242,9 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"newSecret.authType === 'kubernetes.io/dockerconfigjson'\">\n" +
     "<div class=\"form-group\" ng-class=\"{ 'has-error' : secretForm.dockerServer.$invalid && secretForm.dockerServer.$touched }\">\n" +
-    "<label for=\"docker-server\" class=\"required\">Image Registry Server Address</label>\n" +
+    "<label for=\"docker-server\">Image Registry Server Address</label>\n" +
     "<div>\n" +
-    "<input class=\"form-control\" id=\"docker-server\" name=\"dockerServer\" ng-model=\"newSecret.data.dockerServer\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" required>\n" +
+    "<input class=\"form-control\" id=\"docker-server\" name=\"dockerServer\" placeholder=\"https://index.docker.io/v1/\" ng-model=\"newSecret.data.dockerServer\" type=\"text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-show=\"secretForm.dockerServer.$error.required && secretForm.dockerServer.$touched\" class=\"has-error\">\n" +
