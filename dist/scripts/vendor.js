@@ -26734,7 +26734,7 @@ selected: !0
 }).any()));
 }
 var m = e.fn.dataTable;
-m.select = {}, m.select.version = "1.2.7", m.select.init = function(t) {
+m.select = {}, m.select.version = "1.2.6", m.select.init = function(t) {
 var n = t.settings()[0], r = n.oInit.select, o = m.defaults.select, a = r === i ? o : r, s = "row", l = "api", c = !1, u = !0, d = "td, th", h = "selected", f = !1;
 n._select = {}, !0 === a ? (l = "os", f = !0) : "string" == typeof a ? (l = a, f = !0) : e.isPlainObject(a) && (a.blurable !== i && (c = a.blurable), a.info !== i && (u = a.info), a.items !== i && (s = a.items), a.style !== i && (l = a.style, f = !0), a.selector !== i && (d = a.selector), a.className !== i && (h = a.className)), t.select.selector(d), t.select.items(s), t.select.style(l), t.select.blurable(c), t.select.info(u), n._select.className = h, e.fn.dataTable.ext.order["select-checkbox"] = function(t, n) {
 return this.api().column(n, {
@@ -45431,7 +45431,7 @@ e.call(r[t](a, "cell" === t ? s : n, "cell" === t ? n : i), a, s, l, c);
 }), ze("i18n()", function(t, n, r) {
 var o = this.context[0], a = $(t)(o.oLanguage);
 return a === i && (a = n), r !== i && e.isPlainObject(a) && (a = a[r] !== i ? a[r] : a._), a.replace("%d", r);
-}), qe.version = "1.10.19", qe.settings = [], qe.models = {}, qe.models.oSearch = {
+}), qe.version = "1.10.18", qe.settings = [], qe.models = {}, qe.models.oSearch = {
 bCaseInsensitive: !0,
 sSearch: "",
 bRegex: !1,
@@ -45948,8 +45948,7 @@ return a + (i || "") + l.toString().replace(/\B(?=(\d{3})+(?!\d))/g, e) + c + (r
 },
 text: function() {
 return {
-display: Vt,
-filter: Vt
+display: Vt
 };
 }
 }, e.extend(qe.ext.internal, {
@@ -46308,7 +46307,7 @@ bRealtime: !0,
 iFixedColumnsLeft: 0,
 iFixedColumnsRight: 0,
 fnReorderCallback: null
-}, l.version = "1.5.1", e.fn.dataTable.ColReorder = l, e.fn.DataTable.ColReorder = l, "function" == typeof e.fn.dataTable && "function" == typeof e.fn.dataTableExt.fnVersionCheck && e.fn.dataTableExt.fnVersionCheck("1.10.8") ? e.fn.dataTableExt.aoFeatures.push({
+}, l.version = "1.5.0", e.fn.dataTable.ColReorder = l, e.fn.DataTable.ColReorder = l, "function" == typeof e.fn.dataTable && "function" == typeof e.fn.dataTableExt.fnVersionCheck && e.fn.dataTableExt.fnVersionCheck("1.10.8") ? e.fn.dataTableExt.aoFeatures.push({
 fnInit: function(e) {
 var t = e.oInstance;
 if (e._colReorder) t.oApi._fnLog(e, 1, "ColReorder attempted to initialise twice. Ignoring second"); else {
