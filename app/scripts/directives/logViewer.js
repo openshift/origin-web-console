@@ -437,10 +437,13 @@ angular.module('openshiftConsole')
 
                 // 3 things needed:
                 // - kibanaAuthUrl to authorize user
+                // - access_token
                 // - kibanaArchiveUrl for the final destination once auth'd
                 angular.extend($scope, {
                   kibanaAuthUrl: $sce.trustAsResourceUrl(URI(url)
-                                        .normalizePathname().toString())
+                                                          .segment('auth').segment('token')
+                                                          .normalizePathname().toString()),
+                  access_token: AuthService.UserStore().getToken()
                 });
 
                 $scope.$watchGroup(['context.project.metadata.name', 'options.container', 'name'], function() {
@@ -448,7 +451,6 @@ angular.module('openshiftConsole')
                     // The archive URL violates angular's built in same origin policy.
                     // Need to explicitly tell it to trust this location or it will throw errors.
                     kibanaArchiveUrl: $sce.trustAsResourceUrl(logLinks.archiveUri({
-                                        url: url,
                                         namespace: $scope.context.project.metadata.name,
                                         namespaceUid: $scope.context.project.metadata.uid,
                                         podname: name,
