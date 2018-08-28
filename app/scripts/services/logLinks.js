@@ -46,7 +46,7 @@ angular.module('openshiftConsole')
 
       // broken up for readability:
       var template = _.template([
-        "/#/discover?",
+        "<%= url %>/#/discover?",
         "_g=(",
           "time:(",
             "from:now-1w,",

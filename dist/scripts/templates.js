@@ -7723,9 +7723,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"log-actions\">\n" +
     "<span extension-point extension-name=\"log-links\" extension-types=\"link dom\" extension-args=\"[object, options]\"></span>\n" +
     "<span ng-if=\"kibanaAuthUrl\">\n" +
-    "<form action=\"{{kibanaAuthUrl}}\" method=\"POST\">\n" +
+    "<form action=\"{{kibanaAuthUrl}}\" method=\"GET\">\n" +
     "<input type=\"hidden\" name=\"redirect\" value=\"{{kibanaArchiveUrl}}\">\n" +
-    "<input type=\"hidden\" name=\"access_token\" value=\"{{access_token}}\">\n" +
     "<button class=\"btn btn-link\">View Archive</button>\n" +
     "</form>\n" +
     "<span ng-if=\"state && state !== 'empty'\" class=\"action-divider\">|</span>\n" +
