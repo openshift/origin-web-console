@@ -46,7 +46,7 @@ angular.module('openshiftConsole')
 
       // broken up for readability:
       var template = _.template([
-        "/#/discover?",
+        "<%= baseURL %>#/discover?",
         "_g=(",
           "time:(",
             "from:now-1w,",
@@ -76,6 +76,11 @@ angular.module('openshiftConsole')
       var archiveUri = function(opts, prefix) {
         prefix = prefix || 'project.' + opts.namespace + '.' + opts.namespaceUid;
         opts.index = prefix + '.*';
+
+        if (opts.baseURL.substr(-1) !== '/') {
+            opts.baseURL += '/';
+        }
+
         return template(opts);
       };
 
