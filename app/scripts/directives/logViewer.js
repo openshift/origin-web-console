@@ -8,9 +8,10 @@ angular.module('openshiftConsole')
     '$window',
     '$filter',
     '$q',
-    'AuthService',
+    'AggregatedLoggingService',
     'APIService',
     'APIDiscovery',
+    'AuthService',
     'DataService',
     'HTMLService',
     'ModalsService',
@@ -21,9 +22,10 @@ angular.module('openshiftConsole')
              $window,
              $filter,
              $q,
-             AuthService,
+             AggregatedLoggingService,
              APIService,
              APIDiscovery,
+             AuthService,
              DataService,
              HTMLService,
              ModalsService,
@@ -434,16 +436,19 @@ angular.module('openshiftConsole')
                 if(!(projectName && containerName && name && url)) {
                   return;
                 }
-                $scope.$watchGroup(['context.project.metadata.name', 'options.container', 'name'], function() {
-                  angular.extend($scope, {
-                    kibanaArchiveUrl: $sce.trustAsResourceUrl(logLinks.archiveUri({
-                                        baseURL: url,
-                                        namespace: $scope.context.project.metadata.name,
-                                        namespaceUid: $scope.context.project.metadata.uid,
-                                        podname: name,
-                                        containername: $scope.options.container,
-                                        backlink: URI.encode($window.location.href)
-                                      }, $filter('annotation')($scope.context.project,'loggingDataPrefix')))
+
+                AggregatedLoggingService.isOperationsUser().then(function(canViewOperationsLogs) {
+                  $scope.$watchGroup(['context.project.metadata.name', 'options.container', 'name'], function() {
+                    angular.extend($scope, {
+                      kibanaArchiveUrl: logLinks.archiveUri({
+                        baseURL: url,
+                        namespace: $scope.context.project.metadata.name,
+                        namespaceUid: $scope.context.project.metadata.uid,
+                        podname: name,
+                        containername: $scope.options.container,
+                        backlink: URI.encode($window.location.href)
+                      }, $filter('annotation')($scope.context.project,'loggingDataPrefix'), canViewOperationsLogs)
+                    });
                   });
                 });
               });
