@@ -35,6 +35,21 @@ angular
     'openshiftCommonUI',
     'webCatalog'
   ])
+  .config(function () {
+    try {
+      // Make sure we are running on the correct scheme/host/port,
+      // otherwise the login will fail with invalid client state errors.
+      var currentURL = URI(window.location.href);
+      var publicURL = URI(window.OPENSHIFT_CONFIG.auth.oauth_redirect_base);
+      if (currentURL.protocol() !== publicURL.protocol() ||
+          currentURL.hostname() !== publicURL.hostname() ||
+          currentURL.port() !== publicURL.port()) {
+        window.location.href = window.OPENSHIFT_CONFIG.auth.oauth_redirect_base;
+      }
+    } catch(e) {
+      console.log('WARNING: could not compare current and public URIs', e);
+    }
+  })
   .config(function ($routeProvider, $uibModalProvider, HomePagePreferenceServiceProvider) {
     var landingPageRoute;
     var projectsPageRoute = {
