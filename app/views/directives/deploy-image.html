@@ -170,8 +170,8 @@
           <key-value-editor
             entries="env"
             key-placeholder="Name"
-            key-validator="[A-Za-z_][A-Za-z0-9_]*"
-            key-validator-error="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
+            key-validator="[-._a-zA-Z][-._a-zA-Z0-9]*"
+            key-validator-error="A valid environment variable name must consist of alphabetic characters, digits, '_', '-', or '.', and must not start with a digit."
             value-placeholder="Value"
             value-from-selector-options="input.selectedProject.metadata.uid && valueFromNamespace[input.selectedProject.metadata.name]"
             add-row-link="Add Value"
