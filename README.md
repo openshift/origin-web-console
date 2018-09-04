@@ -79,13 +79,8 @@ Note: in order to run the end to end tests you must have [Firefox](https://www.m
 #### Production builds
 1. Make sure all dev dependencies are up to date by running `hack/install-deps.sh`
 2. Run `grunt build`
-3. Run script to build bindata.go from the dist in this repo
-  * If you are building from branch 3.9, you need to clone the origin-web-console-server repo and run the vendor console script in the repo `hack/vendor-console.sh`
-  * If you are building from branch 3.8 or earlier, you run the same script, but in the origin repo `hack/vendor-console.sh`
-   
-4. Rebuild images and binaries
-  * If you are building from branch 3.9, then rebuild the image `OS_BUILD_ENV_PRESERVE=_output/local/bin hack/env make build build-images`
-  * If you are building from branch 3.8 or earlier,In your origin repo run `hack/build-go.sh`
+3. [Run script](https://github.com/openshift/origin-web-console-server#Vendoring%20origin-web-console) to build bindata.go from the dist in this repo 
+4. In your origin repo run `hack/build-go.sh`
 
 The assets served by the OpenShift all-in-one server will now be up to date. By default the assets are served from [http://localhost:8091](http://localhost:8091)
 
