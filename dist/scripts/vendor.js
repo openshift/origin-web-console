@@ -74439,7 +74439,7 @@ return isNaN(Number(e)) ? e : Number(e);
 }
 function i(e) {
 if ("string" != typeof e) throw new TypeError("Invalid argument expected string");
-if (!r.test(e)) throw new Error("Invalid argument not valid semver");
+if (!r.test(e)) throw new Error("Invalid argument not valid semver ('" + e + "' received)");
 }
 var r = /^v?(?:\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+))?(?:-[\da-z\-]+(?:\.[\da-z\-]+)*)?(?:\+[\da-z\-]+(?:\.[\da-z\-]+)*)?)?)?$/i;
 return function(e, r) {
