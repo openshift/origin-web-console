@@ -7729,12 +7729,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-transclude class=\"log-status\"></div>\n" +
     "<div class=\"log-actions\">\n" +
     "<span extension-point extension-name=\"log-links\" extension-types=\"link dom\" extension-args=\"[object, options]\"></span>\n" +
-    "<span ng-if=\"kibanaAuthUrl\">\n" +
-    "<form action=\"{{kibanaAuthUrl}}\" method=\"POST\">\n" +
-    "<input type=\"hidden\" name=\"redirect\" value=\"{{kibanaArchiveUrl}}\">\n" +
-    "<input type=\"hidden\" name=\"access_token\" value=\"{{access_token}}\">\n" +
-    "<button class=\"btn btn-link\">View Archive</button>\n" +
-    "</form>\n" +
+    "<span ng-if=\"kibanaArchiveUrl\">\n" +
+    "<a href=\"{{kibanaArchiveUrl}}\">View Archive</a>\n" +
     "<span ng-if=\"state && state !== 'empty'\" class=\"action-divider\">|</span>\n" +
     "</span>\n" +
     "<span ng-if=\"canSave && state && state !== 'empty'\">\n" +
@@ -7762,14 +7758,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<p>\n" +
     "{{emptyStateMessage}}\n" +
     "</p>\n" +
-    "<div ng-if=\"kibanaAuthUrl\">\n" +
-    "<form action=\"{{kibanaAuthUrl}}\" method=\"POST\">\n" +
-    "<input type=\"hidden\" name=\"redirect\" value=\"{{kibanaArchiveUrl}}\">\n" +
-    "<input type=\"hidden\" name=\"access_token\" value=\"{{access_token}}\">\n" +
-    "<button class=\"btn btn-primary btn-lg\">\n" +
-    "View Archive\n" +
-    "</button>\n" +
-    "</form>\n" +
+    "<div ng-if=\"kibanaArchiveUrl\">\n" +
+    "<a href=\"{{kibanaArchiveUrl}}\">View Archive</a>\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +

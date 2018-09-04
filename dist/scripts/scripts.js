@@ -1571,6 +1571,36 @@ getMetricsURL: function() {
 return n.when(t);
 }
 };
+} ]), angular.module("openshiftConsole").factory("AggregatedLoggingService", [ "$q", "Logger", "DataService", function(e, t, n) {
+var r;
+return {
+isOperationsUser: function() {
+if (void 0 !== r) return t.log("AggregatedLoggingService, using cached user"), e.when(r);
+t.log("AggregatedLoggingService, loading whether user is Operations user");
+var a = {
+apiVersion: "authorization.k8s.io/v1",
+kind: "SelfSubjectAccessReview",
+spec: {
+resourceAttributes: {
+resource: "pods/log",
+namespace: "default",
+verb: "view"
+}
+}
+};
+return n.create({
+group: "authorization.k8s.io",
+version: "v1",
+resource: "selfsubjectaccessreviews"
+}, null, a, {
+namespace: "default"
+}).then(function(e) {
+return r = e.status.allowed;
+}, function() {
+return !1;
+});
+}
+};
 } ]), angular.module("openshiftConsole").service("ApplicationGenerator", [ "DataService", "APIService", "Logger", "$parse", "$q", function(e, t, n, r, a) {
 var o = {}, i = function(e) {
 return _.isArray(e) ? e : _.map(e, function(e, t) {
@@ -12520,11 +12550,11 @@ e.destroy();
 });
 }
 };
-} ]), angular.module("openshiftConsole").directive("logViewer", [ "$sce", "$timeout", "$window", "$filter", "$q", "AuthService", "APIService", "APIDiscovery", "DataService", "HTMLService", "ModalsService", "logLinks", "BREAKPOINTS", function(e, t, n, r, a, o, i, s, c, l, u, d) {
-var m = $(window), p = $('<tr class="log-line"><td class="log-line-number"></td><td class="log-line-text"></td></tr>').get(0), f = function(e, t) {
-var n = p.cloneNode(!0);
+} ]), angular.module("openshiftConsole").directive("logViewer", [ "$sce", "$timeout", "$window", "$filter", "$q", "AggregatedLoggingService", "APIService", "APIDiscovery", "AuthService", "DataService", "HTMLService", "ModalsService", "logLinks", "BREAKPOINTS", function(e, t, n, r, a, o, i, s, c, l, u, d, m) {
+var p = $(window), f = $('<tr class="log-line"><td class="log-line-number"></td><td class="log-line-text"></td></tr>').get(0), g = function(e, t) {
+var n = f.cloneNode(!0);
 n.firstChild.setAttribute("data-line-number", e);
-var r = ansi_up.escape_for_html(t), a = ansi_up.ansi_to_html(r), o = l.linkify(a, "_blank", !0);
+var r = ansi_up.escape_for_html(t), a = ansi_up.ansi_to_html(r), o = u.linkify(a, "_blank", !0);
 return n.lastChild.innerHTML = o, n;
 };
 return {
@@ -12543,70 +12573,70 @@ chromeless: "=?",
 empty: "=?",
 run: "=?"
 },
-controller: [ "$scope", function(t) {
-var l, u, p, g = document.documentElement;
-t.logViewerID = _.uniqueId("log-viewer"), t.empty = !0;
-var v, h;
-"ReplicationController" === t.object.kind ? (v = "deploymentconfigs/log", h = r("annotation")(t.object, "deploymentConfig")) : (v = i.kindToResource(t.object.kind) + "/log", h = t.object.metadata.name);
-var y, b = function() {
-t.$apply(function() {
-var e = l.getBoundingClientRect();
-t.fixedHeight ? t.showScrollLinks = e && e.height > t.fixedHeight : t.showScrollLinks = e && (e.top < 0 || e.bottom > g.clientHeight);
+controller: [ "$scope", function(e) {
+var t, c, u, d = document.documentElement;
+e.logViewerID = _.uniqueId("log-viewer"), e.empty = !0;
+var f, v;
+"ReplicationController" === e.object.kind ? (f = "deploymentconfigs/log", v = r("annotation")(e.object, "deploymentConfig")) : (f = i.kindToResource(e.object.kind) + "/log", v = e.object.metadata.name);
+var h, y = function() {
+e.$apply(function() {
+var n = t.getBoundingClientRect();
+e.fixedHeight ? e.showScrollLinks = n && n.height > e.fixedHeight : e.showScrollLinks = n && (n.top < 0 || n.bottom > d.clientHeight);
 });
-}, S = !1, C = function() {
-S ? S = !1 : t.$evalAsync(function() {
-t.autoScrollActive = !1;
+}, b = !1, S = function() {
+b ? b = !1 : e.$evalAsync(function() {
+e.autoScrollActive = !1;
 });
+}, C = function() {
+c ? $(c).on("scroll", S) : p.on("scroll", S);
 }, w = function() {
-u ? $(u).on("scroll", C) : m.on("scroll", C);
-}, P = function() {
-t.fixedHeight || p.affix({
+e.fixedHeight || u.affix({
 target: window,
 offset: {
-top: t.followAffixTop || 0
+top: e.followAffixTop || 0
 }
 });
-}, j = function() {
-return $("#" + t.logViewerID + " .log-view-output");
-}, k = function(e) {
-var n = j(), r = n.offset().top;
+}, P = function() {
+return $("#" + e.logViewerID + " .log-view-output");
+}, j = function(t) {
+var n = P(), r = n.offset().top;
 if (!(r < 0)) {
-var a = $(".ellipsis-pulser").outerHeight(!0), o = t.fixedHeight ? t.fixedHeight : Math.floor($(window).height() - r - a);
-t.chromeless || t.fixedHeight || (o -= 40), e ? n.animate({
+var a = $(".ellipsis-pulser").outerHeight(!0), o = e.fixedHeight ? e.fixedHeight : Math.floor($(window).height() - r - a);
+e.chromeless || e.fixedHeight || (o -= 40), t ? n.animate({
 "min-height": o + "px"
-}, "fast") : n.css("min-height", o + "px"), t.fixedHeight && n.css("max-height", o);
+}, "fast") : n.css("min-height", o + "px"), e.fixedHeight && n.css("max-height", o);
 }
-}, I = function() {
-if (!y) {
-var e = function() {
-clearInterval(y), y = null, t.$evalAsync(function() {
-t.sized = !0;
+}, k = function() {
+if (!h) {
+var t = function() {
+clearInterval(h), h = null, e.$evalAsync(function() {
+e.sized = !0;
 });
 }, n = 0;
-y = setInterval(function() {
-n > 10 ? e() : (n++, j().is(":visible") && (k(), e()));
+h = setInterval(function() {
+n > 10 ? t() : (n++, P().is(":visible") && (j(), t()));
 }, 100);
 }
-}, R = _.debounce(function() {
-k(!0), b(), C();
+}, I = _.debounce(function() {
+j(!0), y(), S();
 }, 100);
-m.on("resize", R);
-var E, T = function() {
-S = !0, d.scrollBottom(u);
-}, N = document.createDocumentFragment(), A = _.debounce(function() {
-l.appendChild(N), N = document.createDocumentFragment(), t.autoScrollActive && T(), t.showScrollLinks || b();
+p.on("resize", I);
+var R, E = function() {
+b = !0, m.scrollBottom(c);
+}, T = document.createDocumentFragment(), N = _.debounce(function() {
+t.appendChild(T), T = document.createDocumentFragment(), e.autoScrollActive && E(), e.showScrollLinks || y();
 }, 100, {
 maxWait: 300
-}), D = function(e) {
-var t = a.defer();
-return E ? (E.onClose(function() {
-t.resolve();
-}), E.stop()) : t.resolve(), e || (A.cancel(), l && (l.innerHTML = ""), N = document.createDocumentFragment()), t.promise;
-}, B = function() {
-D().then(function() {
-t.$evalAsync(function() {
-if (t.run) {
-angular.extend(t, {
+}), A = function(e) {
+var n = a.defer();
+return R ? (R.onClose(function() {
+n.resolve();
+}), R.stop()) : n.resolve(), e || (N.cancel(), t && (t.innerHTML = ""), T = document.createDocumentFragment()), n.promise;
+}, D = function() {
+A().then(function() {
+e.$evalAsync(function() {
+if (e.run) {
+angular.extend(e, {
 loading: !0,
 autoScrollActive: !0,
 largeLog: !1,
@@ -12614,89 +12644,89 @@ limitReached: !1,
 showScrollLinks: !1,
 state: ""
 });
-var e = angular.extend({
+var t = angular.extend({
 follow: !0,
 tailLines: 5e3,
 limitBytes: 10485760
-}, t.options), n = 0, r = "", a = function(e) {
+}, e.options), n = 0, r = "", a = function(e) {
 return /\n$/.test(e);
 }, o = function(e) {
 return e.match(/^.*(\n|$)/gm);
 }, i = function(e) {
 var t = r + e;
-a(e) ? (r = "", n++, N.appendChild(f(n, t)), A()) : r = t;
+a(e) ? (r = "", n++, T.appendChild(g(n, t)), N()) : r = t;
 }, s = function(e) {
 var t = o(e);
 _.each(t, i);
 };
-(E = c.createStream(v, h, t.context, e)).onMessage(function(r, a, o) {
-t.$evalAsync(function() {
-t.empty = !1, "logs" !== t.state && (t.state = "logs", I());
-}), r && (e.limitBytes && o >= e.limitBytes && (t.$evalAsync(function() {
-t.limitReached = !0, t.loading = !1;
-}), D(!0)), s(r), !t.largeLog && n >= e.tailLines && t.$evalAsync(function() {
-t.largeLog = !0;
+(R = l.createStream(f, v, e.context, t)).onMessage(function(r, a, o) {
+e.$evalAsync(function() {
+e.empty = !1, "logs" !== e.state && (e.state = "logs", k());
+}), r && (t.limitBytes && o >= t.limitBytes && (e.$evalAsync(function() {
+e.limitReached = !0, e.loading = !1;
+}), A(!0)), s(r), !e.largeLog && n >= t.tailLines && e.$evalAsync(function() {
+e.largeLog = !0;
 }));
-}), E.onClose(function() {
-E = null, t.$evalAsync(function() {
-t.loading = !1, t.autoScrollActive = !1, 0 !== n || t.emptyStateMessage || (t.state = "empty", t.emptyStateMessage = "The logs are no longer available or could not be loaded.");
+}), R.onClose(function() {
+R = null, e.$evalAsync(function() {
+e.loading = !1, e.autoScrollActive = !1, 0 !== n || e.emptyStateMessage || (e.state = "empty", e.emptyStateMessage = "The logs are no longer available or could not be loaded.");
 });
-}), E.onError(function() {
-E = null, t.$evalAsync(function() {
-angular.extend(t, {
+}), R.onError(function() {
+R = null, e.$evalAsync(function() {
+angular.extend(e, {
 loading: !1,
 autoScrollActive: !1
-}), 0 === n ? (t.state = "empty", t.emptyStateMessage = "The logs are no longer available or could not be loaded.") : t.errorWhileRunning = !0;
+}), 0 === n ? (e.state = "empty", e.emptyStateMessage = "The logs are no longer available or could not be loaded.") : e.errorWhileRunning = !0;
 });
-}), E.start();
+}), R.start();
 }
 });
 });
 };
-if (s.getLoggingURL(t.context.project).then(function(a) {
-var i = _.get(t.context, "project.metadata.name"), s = _.get(t.options, "container");
-i && s && h && a && (angular.extend(t, {
-kibanaAuthUrl: e.trustAsResourceUrl(URI(a).segment("auth").segment("token").normalizePathname().toString()),
-access_token: o.UserStore().getToken()
-}), t.$watchGroup([ "context.project.metadata.name", "options.container", "name" ], function() {
-angular.extend(t, {
-kibanaArchiveUrl: e.trustAsResourceUrl(d.archiveUri({
-namespace: t.context.project.metadata.name,
-namespaceUid: t.context.project.metadata.uid,
-podname: h,
-containername: t.options.container,
+if (s.getLoggingURL(e.context.project).then(function(t) {
+var a = _.get(e.context, "project.metadata.name"), i = _.get(e.options, "container");
+a && i && v && t && o.isOperationsUser().then(function(a) {
+e.$watchGroup([ "context.project.metadata.name", "options.container", "name" ], function() {
+angular.extend(e, {
+kibanaArchiveUrl: m.archiveUri({
+baseURL: t,
+namespace: e.context.project.metadata.name,
+namespaceUid: e.context.project.metadata.uid,
+podname: v,
+containername: e.options.container,
 backlink: URI.encode(n.location.href)
-}, r("annotation")(t.context.project, "loggingDataPrefix")))
+}, r("annotation")(e.context.project, "loggingDataPrefix"), a)
 });
-}));
+});
+});
 }), this.cacheScrollableNode = function(e) {
-u = e;
+c = e;
 }, this.cacheLogNode = function(e) {
-l = e;
+t = e;
 }, this.cacheAffixable = function(e) {
-p = $(e);
+u = $(e);
 }, this.start = function() {
-w(), P();
-}, angular.extend(t, {
+C(), w();
+}, angular.extend(e, {
 ready: !0,
 loading: !0,
 autoScrollActive: !0,
 state: !1,
 onScrollBottom: function() {
-d.scrollBottom(u);
+m.scrollBottom(c);
 },
 onScrollTop: function() {
-t.autoScrollActive = !1, d.scrollTop(u), $("#" + t.logViewerID + "-affixedFollow").affix("checkPosition");
+e.autoScrollActive = !1, m.scrollTop(c), $("#" + e.logViewerID + "-affixedFollow").affix("checkPosition");
 },
 toggleAutoScroll: function() {
-t.autoScrollActive = !t.autoScrollActive, t.autoScrollActive && T();
+e.autoScrollActive = !e.autoScrollActive, e.autoScrollActive && E();
 },
-goChromeless: d.chromelessLink,
-restartLogs: B
-}), t.$on("$destroy", function() {
-D(), m.off("resize", R), m.off("scroll", C), u && $(u).off("scroll", C);
-}), "deploymentconfigs/logs" === v && !h) return t.state = "empty", void (t.emptyStateMessage = "Logs are not available for this replication controller because it was not generated from a deployment configuration.");
-t.$watchGroup([ "name", "options.container", "run" ], B);
+goChromeless: m.chromelessLink,
+restartLogs: D
+}), e.$on("$destroy", function() {
+A(), p.off("resize", I), p.off("scroll", S), c && $(c).off("scroll", S);
+}), "deploymentconfigs/logs" === f && !v) return e.state = "empty", void (e.emptyStateMessage = "Logs are not available for this replication controller because it was not generated from a deployment configuration.");
+e.$watchGroup([ "name", "options.container", "run" ], D);
 } ],
 require: "logViewer",
 link: function(e, n, r, a) {
@@ -12710,7 +12740,7 @@ type: "text/plain;charset=utf-8"
 saveAs(a, r);
 };
 e.canSave = !!new Blob(), e.saveLog = function() {
-e.largeLog ? u.confirmSaveLog(e.object).then(o) : o();
+e.largeLog ? d.confirmSaveLog(e.object).then(o) : o();
 };
 }
 };
@@ -16683,7 +16713,7 @@ return function(e) {
 return !!e && /[\x00-\x09\x0E-\x1F]/.test(e);
 };
 }), angular.module("openshiftConsole").factory("logLinks", [ "$anchorScroll", "$document", "$location", "$window", function(e, t, n, r) {
-var a = _.template([ "/#/discover?", "_g=(", "time:(", "from:now-1w,", "mode:relative,", "to:now", ")", ")", "&_a=(", "columns:!(kubernetes.container_name,message),", "index:'<%= index %>',", "query:(", "query_string:(", "analyze_wildcard:!t,", 'query:\'kubernetes.pod_name:"<%= podname %>" AND kubernetes.namespace_name:"<%= namespace %>"\'', ")", "),", "sort:!('@timestamp',desc)", ")", "#console_container_name=<%= containername %>", "&console_back_url=<%= backlink %>" ].join(""));
+var a = _.template([ "<%= baseURL %>#/discover?", "_g=(", "time:(", "from:now-1w,", "mode:relative,", "to:now", ")", ")", "&_a=(", "columns:!(kubernetes.container_name,message),", "index:'<%= index %>',", "query:(", "query_string:(", "analyze_wildcard:!t,", 'query:\'kubernetes.pod_name:"<%= podname %>" AND kubernetes.namespace_name:"<%= namespace %>"\'', ")", "),", "sort:!('@timestamp',desc)", ")", "#console_container_name=<%= containername %>", "&console_back_url=<%= backlink %>" ].join(""));
 return {
 scrollTop: function(e) {
 e ? e.scrollTop = 0 : window.scrollTo(null, 0);
@@ -16703,8 +16733,8 @@ a.addSearch(e);
 }), r.open(a.toString(), "_blank");
 }
 },
-archiveUri: function(e, t) {
-return t = t || "project." + e.namespace + "." + e.namespaceUid, e.index = t + ".*", a(e);
+archiveUri: function(e, t, n) {
+return !n || t && !t.startsWith("project.") || (t = "project"), t = t || "project." + e.namespace + "." + e.namespaceUid, e.index = t + ".*", "/" !== e.baseURL.substr(-1) && (e.baseURL += "/"), a(e);
 }
 };
 } ]), angular.module("javaLinkExtension", [ "openshiftConsole" ]).run([ "AuthService", "BaseHref", "DataService", "extensionRegistry", function(e, t, n, r) {

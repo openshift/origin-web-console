@@ -6,14 +6,8 @@
         extension-name="log-links"
         extension-types="link dom"
         extension-args="[object, options]"></span>
-    <span ng-if="kibanaAuthUrl">
-      <form
-        action="{{kibanaAuthUrl}}"
-        method="POST">
-        <input type="hidden" name="redirect" value="{{kibanaArchiveUrl}}">
-        <input type="hidden" name="access_token" value="{{access_token}}">
-        <button class="btn btn-link">View Archive</button>
-      </form>
+    <span ng-if="kibanaArchiveUrl">
+      <a href="{{kibanaArchiveUrl}}">View Archive</a>
       <span ng-if="state && state !== 'empty'" class="action-divider">|</span>
     </span>
     <span ng-if="canSave && state && state !== 'empty'">
@@ -53,16 +47,8 @@
     {{emptyStateMessage}}
   </p>
 
-  <div ng-if="kibanaAuthUrl">
-    <form
-      action="{{kibanaAuthUrl}}"
-      method="POST">
-      <input type="hidden" name="redirect" value="{{kibanaArchiveUrl}}">
-      <input type="hidden" name="access_token" value="{{access_token}}">
-      <button class="btn btn-primary btn-lg">
-        View Archive
-      </button>
-    </form>
+  <div ng-if="kibanaArchiveUrl">
+    <a href="{{kibanaArchiveUrl}}">View Archive</a>
   </div>
 </div>
 
