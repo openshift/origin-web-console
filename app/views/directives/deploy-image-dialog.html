@@ -22,7 +22,7 @@
     <div class="wizard-pf-main-inner-shadow-covers">
       <div class="order-service-config">
         <div class="wizard-pf-main-form-contents">
-          <form name="$ctrl.deployForm">
+          <form name="$ctrl.deployForm" on-enter="$ctrl.deployForm.$valid && $ctrl.deployImage()" novalidate>
             <deploy-image is-dialog="true" project="$ctrl.project" context="$ctrl.context"></deploy-image>
           </form>
         </div>
