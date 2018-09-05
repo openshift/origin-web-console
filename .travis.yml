@@ -2,7 +2,7 @@ language: node_js
 node_js:
   - "6"
 before_script:
-  - make build 
+  - make build
   # FIXME:
   # This needs to be enabled again when we eliminate PhantomJS for Firefox
   # Even the unit tests require a browser
@@ -12,3 +12,7 @@ before_script:
 script:
   - grunt test
   - hack/verify-dist.sh
+
+branches:
+  only:
+  - enterprise-3.9
