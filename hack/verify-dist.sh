@@ -82,7 +82,10 @@ if [[ "${PASSED}" == "true" ]]; then
   os::log::success "Verified. Rebuilt /dist matches what has been committed."
 else
   os::log::fatal "Built /dist does not match what is committed, run 'grunt build' and include the results in your commit."
+  os::log::fatal "output ............................."
+  os::log::fatal "$GIT_STATUS"
   os::log::fatal "$GIT_DIFF"
+
   git diff --exit-code dist*
   exit 1
 fi
