@@ -67,8 +67,8 @@
                         <label>Environment Variables</label>
                         <key-value-editor
                           entries="strategyData.customParams.environment"
-                          key-validator="[a-zA-Z_][a-zA-Z0-9_]*"
-                          key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
+                          key-validator="[-._a-zA-Z][-._a-zA-Z0-9]*"
+                          key-validator-error-tooltip="A valid environment variable name must consist of alphabetic characters, digits, '_', '-', or '.', and must not start with a digit."
                           value-from-selector-options="valueFromObjects"
                           add-row-link="Add Value"
                           add-row-with-selectors-link="Add Value from Config Map or Secret"></key-value-editor>
@@ -356,8 +356,8 @@
                       ng-if="containerConfig"
                       entries="containerConfig.env"
                       value-from-selector-options="valueFromObjects"
-                      key-validator="[a-zA-Z_][a-zA-Z0-9_]*"
-                      key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
+                      key-validator="[-._a-zA-Z][-._a-zA-Z0-9]*"
+                      key-validator-error-tooltip="A valid environment variable name must consist of alphabetic characters, digits, '_', '-', or '.', and must not start with a digit."
                       add-row-link="Add Value"
                       add-row-with-selectors-link="Add Value from Config Map or Secret"></key-value-editor>
                   </div>
