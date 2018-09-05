@@ -26734,7 +26734,7 @@ selected: !0
 }).any()));
 }
 var m = e.fn.dataTable;
-m.select = {}, m.select.version = "1.2.6", m.select.init = function(t) {
+m.select = {}, m.select.version = "1.2.7", m.select.init = function(t) {
 var n = t.settings()[0], r = n.oInit.select, o = m.defaults.select, a = r === i ? o : r, s = "row", l = "api", c = !1, u = !0, d = "td, th", h = "selected", f = !1;
 n._select = {}, !0 === a ? (l = "os", f = !0) : "string" == typeof a ? (l = a, f = !0) : e.isPlainObject(a) && (a.blurable !== i && (c = a.blurable), a.info !== i && (u = a.info), a.items !== i && (s = a.items), a.style !== i && (l = a.style, f = !0), a.selector !== i && (d = a.selector), a.className !== i && (h = a.className)), t.select.selector(d), t.select.items(s), t.select.style(l), t.select.blurable(c), t.select.info(u), n._select.className = h, e.fn.dataTable.ext.order["select-checkbox"] = function(t, n) {
 return this.api().column(n, {
@@ -45431,7 +45431,7 @@ e.call(r[t](a, "cell" === t ? s : n, "cell" === t ? n : i), a, s, l, c);
 }), ze("i18n()", function(t, n, r) {
 var o = this.context[0], a = $(t)(o.oLanguage);
 return a === i && (a = n), r !== i && e.isPlainObject(a) && (a = a[r] !== i ? a[r] : a._), a.replace("%d", r);
-}), qe.version = "1.10.18", qe.settings = [], qe.models = {}, qe.models.oSearch = {
+}), qe.version = "1.10.19", qe.settings = [], qe.models = {}, qe.models.oSearch = {
 bCaseInsensitive: !0,
 sSearch: "",
 bRegex: !1,
@@ -45948,7 +45948,8 @@ return a + (i || "") + l.toString().replace(/\B(?=(\d{3})+(?!\d))/g, e) + c + (r
 },
 text: function() {
 return {
-display: Vt
+display: Vt,
+filter: Vt
 };
 }
 }, e.extend(qe.ext.internal, {
@@ -46307,7 +46308,7 @@ bRealtime: !0,
 iFixedColumnsLeft: 0,
 iFixedColumnsRight: 0,
 fnReorderCallback: null
-}, l.version = "1.5.0", e.fn.dataTable.ColReorder = l, e.fn.DataTable.ColReorder = l, "function" == typeof e.fn.dataTable && "function" == typeof e.fn.dataTableExt.fnVersionCheck && e.fn.dataTableExt.fnVersionCheck("1.10.8") ? e.fn.dataTableExt.aoFeatures.push({
+}, l.version = "1.5.1", e.fn.dataTable.ColReorder = l, e.fn.DataTable.ColReorder = l, "function" == typeof e.fn.dataTable && "function" == typeof e.fn.dataTableExt.fnVersionCheck && e.fn.dataTableExt.fnVersionCheck("1.10.8") ? e.fn.dataTableExt.aoFeatures.push({
 fnInit: function(e) {
 var t = e.oInstance;
 if (e._colReorder) t.oApi._fnLog(e, 1, "ColReorder attempted to initialise twice. Ignoring second"); else {
@@ -73726,7 +73727,7 @@ return isNaN(Number(e)) ? e : Number(e);
 }
 function i(e) {
 if ("string" != typeof e) throw new TypeError("Invalid argument expected string");
-if (!r.test(e)) throw new Error("Invalid argument not valid semver");
+if (!r.test(e)) throw new Error("Invalid argument not valid semver ('" + e + "' received)");
 }
 var r = /^v?(?:\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+))?(?:-[\da-z\-]+(?:\.[\da-z\-]+)*)?(?:\+[\da-z\-]+(?:\.[\da-z\-]+)*)?)?)?$/i;
 return function(e, r) {
@@ -77244,9 +77245,16 @@ var n = /[A-Z]/g, i = function(e, t) {
 return t = t || "_", e.replace(n, function(e, n) {
 return (n ? t : "") + e.toLowerCase();
 });
-}, r = 0, o = {
+}, r = 0;
+"firstElementChild" in document.createDocumentFragment() || Object.defineProperty(DocumentFragment.prototype, "firstElementChild", {
+get: function() {
+for (var e, t = this.childNodes, n = 0, i = t.length; n < i; ++n) if (1 === (e = t[n]).nodeType) return e;
+return null;
+}
+});
+var o = {
 sfField: function(e) {
-e.fieldFrag.firstChild.setAttribute("sf-field", r), e.lookup["f" + r] = e.form, r++;
+e.fieldFrag.firstElementChild.setAttribute("sf-field", r), e.lookup["f" + r] = e.form, r++;
 },
 ngModel: function(e) {
 if (e.form.key) {
@@ -77290,16 +77298,13 @@ if (e.form.key) {
 var i = t.stringify(e.form.key);
 n = "evalExpr(" + e.path + '.condition,{ model: model, "arrayIndex": $index, "modelValue": model' + ("[" === i[0] ? "" : ".") + i + "})";
 }
-for (var r = e.fieldFrag.children || e.fieldFrag.childNodes, o = 0; o < r.length; o++) {
-var a = r[o], s = a.getAttribute("ng-if");
-a.setAttribute("ng-if", s ? "(" + s + ") || (" + n + ")" : n);
-}
+for (var r, o, a = e.fieldFrag.children || e.fieldFrag.childNodes, s = 0; s < a.length; s++) o = !1, (r = a[s]).hasAttribute && r.hasAttribute("ng-if") && (o = r.getAttribute("ng-if")), r.setAttribute && r.setAttribute("ng-if", o ? "(" + o + ") || (" + n + ")" : n);
 }
 },
 array: function(n) {
 var i = n.fieldFrag.querySelector("[schema-form-array-items]");
 if (i) {
-if (state = e.copy(n.state), state.keyRedaction = state.keyRedaction || 0, state.keyRedaction += n.form.key.length + 1, n.form.schema && n.form.schema.items && n.form.schema.items.type && -1 === n.form.schema.items.type.indexOf("object") && -1 === n.form.schema.items.type.indexOf("array")) {
+if (state = e.copy(n.state), state.keyRedaction = 0, state.keyRedaction += n.form.key.length + 1, n.form.schema && n.form.schema.items && n.form.schema.items.type && -1 === n.form.schema.items.type.indexOf("object") && -1 === n.form.schema.items.type.indexOf("array")) {
 t.stringify(n.form.key).replace(/"/g, "&quot;");
 state.modelValue = "modelArray[$index]";
 } else state.modelName = "item";
@@ -77405,7 +77410,7 @@ if (e) return t.$eval(e, n);
 }, t.interp = function(e, t) {
 return e && l(e)(t);
 }, t.hasSuccess = function() {
-return !!t.ngModel && (t.ngModel.$valid && (!t.ngModel.$pristine || !t.ngModel.$isEmpty(t.ngModel.$modelValue)));
+return !!t.ngModel && (t.options && t.options.pristine && !1 === t.options.pristine.success ? t.ngModel.$valid && !t.ngModel.$pristine && !t.ngModel.$isEmpty(t.ngModel.$modelValue) : t.ngModel.$valid && (!t.ngModel.$pristine || !t.ngModel.$isEmpty(t.ngModel.$modelValue)));
 }, t.hasError = function() {
 return !!t.ngModel && (t.ngModel.$invalid && !t.ngModel.$pristine);
 }, t.errorMessage = function(e) {
@@ -77436,8 +77441,8 @@ e.setAttribute("ng-if", t ? "(" + t + ") || (" + a + ")" : a);
 });
 }
 r(f.contents())(t);
-}), l.key && (t.$on("schemaForm.error." + l.key.join("."), function(e, n, i, r) {
-!0 !== i && !1 !== i || (r = i, i = void 0), t.ngModel && n && (t.ngModel.$setDirty ? t.ngModel.$setDirty() : (t.ngModel.$dirty = !0, t.ngModel.$pristine = !1), i && (l.validationMessage || (l.validationMessage = {}), l.validationMessage[n] = i), t.ngModel.$setValidity(n, !0 === r), !0 === r && (t.ngModel.$validate(), t.$broadcast("schemaFormValidate")));
+}), l.key && (t.$on("schemaForm.error." + l.key.join("."), function(e, n, i, r, o) {
+o = r, !0 !== i && !1 !== i || (r = i, i = void 0), void 0 != o && t.ngModel.$$parentForm.$name !== o || t.ngModel && n && (t.ngModel.$setDirty ? t.ngModel.$setDirty() : (t.ngModel.$dirty = !0, t.ngModel.$pristine = !1), i && (l.validationMessage || (l.validationMessage = {}), l.validationMessage[n] = i), t.ngModel.$setValidity(n, !0 === r), !0 === r && (t.ngModel.$validate(), t.$broadcast("schemaFormValidate")));
 }), t.$on("$destroy", function() {
 if (!t.externalDestructionInProgress) {
 var e = l.destroyStrategy || t.options && t.options.destroyStrategy || "remove";
@@ -77455,7 +77460,7 @@ var i = l.schema && l.schema.type || "";
 };
 } ]);
 }, s = function(n, i, r) {
-r = !!e.isDefined(r) && r, t.directive("sf" + e.uppercase(n[0]) + n.substr(1), function() {
+r = !!e.isDefined(r) && r, t.directive("sf" + n[0].toUpperCase() + n.substr(1), function() {
 return {
 restrict: "EAC",
 scope: !0,
@@ -77637,7 +77642,7 @@ return o.key = r.path, o.type = "text", r.lookup[t.stringify(r.path)] = o, o;
 object: [ function(i, r, s) {
 if ("object" === n(r.type)) {
 var l = a(i, r, s);
-return l.type = "fieldset", l.items = [], s.lookup[t.stringify(s.path)] = l, e.forEach(r.properties, function(e, n) {
+return l.type = "fieldset", l.key = s.path, l.items = [], s.lookup[t.stringify(s.path)] = l, e.forEach(r.properties, function(e, n) {
 var i = s.path.slice();
 if (i.push(n), !0 !== s.ignore[t.stringify(i)]) {
 var a = r.required && -1 !== r.required.indexOf(n), c = o(n, e, {
@@ -77953,8 +77958,8 @@ return !!t.ngModel && (t.options && t.options.pristine && !1 === t.options.prist
 return s.interpolate(e && e.code + "" || "default", t.ngModel && t.ngModel.$modelValue || "", t.ngModel && t.ngModel.$viewValue || "", t.form, t.options && t.options.validationMessage);
 };
 var a = t.form;
-a.key && (t.$on("schemaForm.error." + a.key.join("."), function(e, n, i, r) {
-!0 !== i && !1 !== i || (r = i, i = void 0), t.ngModel && n && (t.ngModel.$setDirty ? t.ngModel.$setDirty() : (t.ngModel.$dirty = !0, t.ngModel.$pristine = !1), i && (a.validationMessage || (a.validationMessage = {}), a.validationMessage[n] = i), t.ngModel.$setValidity(n, !0 === r), !0 === r && (t.ngModel.$validate(), t.$broadcast("schemaFormValidate")));
+a.key && (t.$on("schemaForm.error." + a.key.join("."), function(e, n, i, r, o) {
+o = r, !0 !== i && !1 !== i || (r = i, i = void 0), void 0 != o && t.ngModel.$$parentForm.$name !== o || t.ngModel && n && (t.ngModel.$setDirty ? t.ngModel.$setDirty() : (t.ngModel.$dirty = !0, t.ngModel.$pristine = !1), i && (a.validationMessage || (a.validationMessage = {}), a.validationMessage[n] = i), t.ngModel.$setValidity(n, !0 === r), !0 === r && (t.ngModel.$validate(), t.$broadcast("schemaFormValidate")));
 }), t.$on("$destroy", function() {
 if (!t.externalDestructionInProgress) {
 var e = a.destroyStrategy || t.options && t.options.destroyStrategy || "remove";
@@ -78044,9 +78049,10 @@ r.titleMapValues.push(-1 !== t.indexOf(e.value));
 };
 t(r.modelArray), r.$watchCollection("modelArray", t), r.$watchCollection("titleMapValues", function(t, n) {
 if (t && t !== n) {
-for (var i = c(); i.length > 0; ) i.pop();
+var i = c();
 e.titleMap.forEach(function(e, n) {
-t[n] && i.push(e.value);
+var r = i.indexOf(e.value);
+-1 === r && t[n] && i.push(e.value), -1 === r || t[n] || i.splice(r, 1);
 }), r.validateField && r.validateField();
 }
 });
@@ -78218,129 +78224,110 @@ return s;
 }
 };
 } ]), r;
-}), function(e, t) {
-"function" == typeof define && define.amd ? define([ "schemaForm" ], t) : "object" == typeof exports ? module.exports = t(require("schemaForm")) : e.bootstrapDecorator = t(e.schemaForm);
-}(this, function(e) {
-return angular.module("schemaForm").run([ "$templateCache", function(e) {
-e.put("directives/decorators/bootstrap/actions-trcl.html", '<div class="btn-group schema-form-actions {{form.htmlClass}}" ng-transclude=""></div>'), e.put("directives/decorators/bootstrap/actions.html", '<div class="btn-group schema-form-actions {{form.htmlClass}}"><input ng-repeat-start="item in form.items" type="submit" class="btn {{ item.style || \'btn-default\' }} {{form.fieldHtmlClass}}" value="{{item.title}}" ng-if="item.type === \'submit\'"> <button ng-repeat-end="" class="btn {{ item.style || \'btn-default\' }} {{form.fieldHtmlClass}}" type="button" ng-disabled="form.readonly" ng-if="item.type !== \'submit\'" ng-click="buttonClick($event,item)"><span ng-if="item.icon" class="{{item.icon}}"></span>{{item.title}}</button></div>'), e.put("directives/decorators/bootstrap/array.html", '<div sf-array="form" class="schema-form-array {{form.htmlClass}}" ng-model="$$value$$" ng-model-options="form.ngModelOptions"><label class="control-label" ng-show="showTitle()">{{ form.title }}</label><ol class="list-group" ng-model="modelArray" ui-sortable=""><li class="list-group-item {{form.fieldHtmlClass}}" ng-repeat="item in modelArray track by $index"><button ng-hide="form.readonly || form.remove === null" ng-click="deleteFromArray($index)" style="position: relative; z-index: 20;" type="button" class="close pull-right"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button><sf-decorator ng-init="arrayIndex = $index" form="copyWithIndex($index)"></sf-decorator></li></ol><div class="clearfix" style="padding: 15px;"><button ng-hide="form.readonly || form.add === null" ng-click="appendToArray()" type="button" class="btn {{ form.style.add || \'btn-default\' }} pull-right"><i class="glyphicon glyphicon-plus"></i> {{ form.add || \'Add\'}}</button></div><div class="help-block" ng-show="(hasError() && errorMessage(schemaError())) || form.description" ng-bind-html="(hasError() && errorMessage(schemaError())) || form.description"></div></div>'), 
-e.put("directives/decorators/bootstrap/checkbox.html", '<div class="checkbox schema-form-checkbox {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="{{form.labelHtmlClass}}"><input type="checkbox" sf-changed="form" ng-disabled="form.readonly" ng-model="$$value$$" ng-model-options="form.ngModelOptions" schema-validate="form" class="{{form.fieldHtmlClass}}" name="{{form.key.slice(-1)[0]}}"> <span ng-bind-html="form.title"></span></label><div class="help-block" sf-message="form.description"></div></div>'), e.put("directives/decorators/bootstrap/checkboxes.html", '<div sf-array="form" ng-model="$$value$$" class="form-group schema-form-checkboxes {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()">{{form.title}}</label><div class="checkbox" ng-repeat="val in titleMapValues track by $index"><label><input type="checkbox" ng-disabled="form.readonly" sf-changed="form" class="{{form.fieldHtmlClass}}" ng-model="titleMapValues[$index]" name="{{form.key.slice(-1)[0]}}"> <span ng-bind-html="form.titleMap[$index].name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'), 
-e.put("directives/decorators/bootstrap/default.html", '<div class="form-group schema-form-{{form.type}} {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess(), \'has-feedback\': form.feedback !== false }"><label class="control-label {{form.labelHtmlClass}}" ng-class="{\'sr-only\': !showTitle()}" for="{{form.key.slice(-1)[0]}}">{{form.title}}</label> <input ng-if="!form.fieldAddonLeft && !form.fieldAddonRight" ng-show="form.key" type="{{form.type}}" step="any" sf-changed="form" placeholder="{{form.placeholder}}" class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" ng-model-options="form.ngModelOptions" ng-model="$$value$$" ng-disabled="form.readonly" schema-validate="form" name="{{form.key.slice(-1)[0]}}" aria-describedby="{{form.key.slice(-1)[0] + \'Status\'}}"><div ng-if="form.fieldAddonLeft || form.fieldAddonRight" ng-class="{\'input-group\': (form.fieldAddonLeft || form.fieldAddonRight)}"><span ng-if="form.fieldAddonLeft" class="input-group-addon" ng-bind-html="form.fieldAddonLeft"></span> <input ng-show="form.key" type="{{form.type}}" step="any" sf-changed="form" placeholder="{{form.placeholder}}" class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" ng-model-options="form.ngModelOptions" ng-model="$$value$$" ng-disabled="form.readonly" schema-validate="form" name="{{form.key.slice(-1)[0]}}" aria-describedby="{{form.key.slice(-1)[0] + \'Status\'}}"> <span ng-if="form.fieldAddonRight" class="input-group-addon" ng-bind-html="form.fieldAddonRight"></span></div><span ng-if="form.feedback !== false" class="form-control-feedback" ng-class="evalInScope(form.feedback) || {\'glyphicon\': true, \'glyphicon-ok\': hasSuccess(), \'glyphicon-remove\': hasError() }" aria-hidden="true"></span> <span ng-if="hasError() || hasSuccess()" id="{{form.key.slice(-1)[0] + \'Status\'}}" class="sr-only">{{ hasSuccess() ? \'(success)\' : \'(error)\' }}</span><div class="help-block" sf-message="form.description"></div></div>'), 
-e.put("directives/decorators/bootstrap/fieldset-trcl.html", '<fieldset ng-disabled="form.readonly" class="schema-form-fieldset {{form.htmlClass}}"><legend ng-class="{\'sr-only\': !showTitle() }">{{ form.title }}</legend><div class="help-block" ng-show="form.description" ng-bind-html="form.description"></div><div ng-transclude=""></div></fieldset>'), e.put("directives/decorators/bootstrap/fieldset.html", '<fieldset ng-disabled="form.readonly" class="schema-form-fieldset {{form.htmlClass}}"><legend ng-class="{\'sr-only\': !showTitle() }">{{ form.title }}</legend><div class="help-block" ng-show="form.description" ng-bind-html="form.description"></div><sf-decorator ng-repeat="item in form.items" form="item"></sf-decorator></fieldset>'), e.put("directives/decorators/bootstrap/help.html", '<div class="helpvalue schema-form-helpvalue {{form.htmlClass}}" ng-bind-html="form.helpvalue"></div>'), e.put("directives/decorators/bootstrap/radio-buttons.html", '<div class="form-group schema-form-radiobuttons {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><div><label class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()">{{form.title}}</label></div><div class="btn-group"><label class="btn {{ (item.value === $$value$$) ? form.style.selected || \'btn-default\' : form.style.unselected || \'btn-default\'; }}" ng-class="{ active: item.value === $$value$$ }" ng-repeat="item in form.titleMap"><input type="radio" class="{{form.fieldHtmlClass}}" sf-changed="form" style="display: none;" ng-disabled="form.readonly" ng-model="$$value$$" ng-model-options="form.ngModelOptions" schema-validate="form" ng-value="item.value" name="{{form.key.join(\'.\')}}"> <span ng-bind-html="item.name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'), 
-e.put("directives/decorators/bootstrap/radios-inline.html", '<div class="form-group schema-form-radios-inline {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label ng-model="$$value$$" ng-model-options="form.ngModelOptions" schema-validate="form" class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()">{{form.title}}</label><div><label class="radio-inline" ng-repeat="item in form.titleMap"><input type="radio" class="{{form.fieldHtmlClass}}" sf-changed="form" ng-disabled="form.readonly" ng-model="$$value$$" ng-value="item.value" name="{{form.key.join(\'.\')}}"> <span ng-bind-html="item.name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'), e.put("directives/decorators/bootstrap/radios.html", '<div class="form-group schema-form-radios {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label ng-model="$$value$$" ng-model-options="form.ngModelOptions" schema-validate="form" class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()">{{form.title}}</label><div class="radio" ng-repeat="item in form.titleMap"><label><input type="radio" class="{{form.fieldHtmlClass}}" sf-changed="form" ng-disabled="form.readonly" ng-model="$$value$$" ng-value="item.value" name="{{form.key.join(\'.\')}}"> <span ng-bind-html="item.name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'), 
-e.put("directives/decorators/bootstrap/section.html", '<div class="schema-form-section {{form.htmlClass}}"><sf-decorator ng-repeat="item in form.items" form="item"></sf-decorator></div>'), e.put("directives/decorators/bootstrap/select.html", '<div class="form-group {{form.htmlClass}} schema-form-select" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess(), \'has-feedback\': form.feedback !== false}"><label class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()">{{form.title}}</label><select ng-model="$$value$$" ng-model-options="form.ngModelOptions" ng-disabled="form.readonly" sf-changed="form" class="form-control {{form.fieldHtmlClass}}" schema-validate="form" ng-options="item.value as item.name group by item.group for item in form.titleMap" name="{{form.key.slice(-1)[0]}}"></select><div class="help-block" sf-message="form.description"></div></div>'), e.put("directives/decorators/bootstrap/submit.html", '<div class="form-group schema-form-submit {{form.htmlClass}}"><input type="submit" class="btn {{ form.style || \'btn-primary\' }} {{form.fieldHtmlClass}}" value="{{form.title}}" ng-disabled="form.readonly" ng-if="form.type === \'submit\'"> <button class="btn {{ form.style || \'btn-default\' }}" type="button" ng-click="buttonClick($event,form)" ng-disabled="form.readonly" ng-if="form.type !== \'submit\'"><span ng-if="form.icon" class="{{form.icon}}"></span> {{form.title}}</button></div>'), 
-e.put("directives/decorators/bootstrap/tabarray.html", '<div sf-array="form" ng-init="selected = { tab: 0 }" class="clearfix schema-form-tabarray schema-form-tabarray-{{form.tabType || \'left\'}} {{form.htmlClass}}"><div ng-if="!form.tabType || form.tabType !== \'right\'" ng-class="{\'col-xs-3\': !form.tabType || form.tabType === \'left\'}"><ul class="nav nav-tabs" ng-class="{ \'tabs-left\': !form.tabType || form.tabType === \'left\'}"><li ng-repeat="item in modelArray track by $index" ng-click="$event.preventDefault() || (selected.tab = $index)" ng-class="{active: selected.tab === $index}"><a href="#">{{interp(form.title,{\'$index\':$index, value: item}) || $index}}</a></li><li ng-hide="form.readonly" ng-click="$event.preventDefault() || (selected.tab = appendToArray().length - 1)"><a href="#"><i class="glyphicon glyphicon-plus"></i> {{ form.add || \'Add\'}}</a></li></ul></div><div ng-class="{\'col-xs-9\': !form.tabType || form.tabType === \'left\' || form.tabType === \'right\'}"><div class="tab-content {{form.fieldHtmlClass}}"><div class="tab-pane clearfix" ng-repeat="item in modelArray track by $index" ng-show="selected.tab === $index" ng-class="{active: selected.tab === $index}"><sf-decorator ng-init="arrayIndex = $index" form="copyWithIndex($index)"></sf-decorator><button ng-hide="form.readonly" ng-click="selected.tab = deleteFromArray($index).length - 1" type="button" class="btn {{ form.style.remove || \'btn-default\' }} pull-right"><i class="glyphicon glyphicon-trash"></i> {{ form.remove || \'Remove\'}}</button></div></div></div><div ng-if="form.tabType === \'right\'" class="col-xs-3"><ul class="nav nav-tabs tabs-right"><li ng-repeat="item in modelArray track by $index" ng-click="$event.preventDefault() || (selected.tab = $index)" ng-class="{active: selected.tab === $index}"><a href="#">{{interp(form.title,{\'$index\':$index, value: item}) || $index}}</a></li><li ng-hide="form.readonly" ng-click="$event.preventDefault() || appendToArray()"><a href="#"><i class="glyphicon glyphicon-plus"></i> {{ form.add || \'Add\'}}</a></li></ul></div></div>'), 
-e.put("directives/decorators/bootstrap/tabs.html", '<div ng-init="selected = { tab: 0 }" class="schema-form-tabs {{form.htmlClass}}"><ul class="nav nav-tabs"><li ng-repeat="tab in form.tabs" ng-disabled="form.readonly" ng-click="$event.preventDefault() || (selected.tab = $index)" ng-class="{active: selected.tab === $index}"><a href="#">{{ tab.title }}</a></li></ul><div class="tab-content {{form.fieldHtmlClass}}"><div class="tab-pane" ng-disabled="form.readonly" ng-repeat="tab in form.tabs" ng-show="selected.tab === $index" ng-class="{active: selected.tab === $index}"><bootstrap-decorator ng-repeat="item in tab.items" form="item"></bootstrap-decorator></div></div></div>'), e.put("directives/decorators/bootstrap/textarea.html", '<div class="form-group has-feedback {{form.htmlClass}} schema-form-textarea" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="{{form.labelHtmlClass}}" ng-class="{\'sr-only\': !showTitle()}" for="{{form.key.slice(-1)[0]}}">{{form.title}}</label> <textarea ng-if="!form.fieldAddonLeft && !form.fieldAddonRight" class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-changed="form" placeholder="{{form.placeholder}}" ng-disabled="form.readonly" ng-model="$$value$$" ng-model-options="form.ngModelOptions" schema-validate="form" name="{{form.key.slice(-1)[0]}}"></textarea><div ng-if="form.fieldAddonLeft || form.fieldAddonRight" ng-class="{\'input-group\': (form.fieldAddonLeft || form.fieldAddonRight)}"><span ng-if="form.fieldAddonLeft" class="input-group-addon" ng-bind-html="form.fieldAddonLeft"></span> <textarea class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-changed="form" placeholder="{{form.placeholder}}" ng-disabled="form.readonly" ng-model="$$value$$" ng-model-options="form.ngModelOptions" schema-validate="form" name="{{form.key.slice(-1)[0]}}"></textarea> <span ng-if="form.fieldAddonRight" class="input-group-addon" ng-bind-html="form.fieldAddonRight"></span></div><span class="help-block" sf-message="form.description"></span></div>');
-} ]), angular.module("schemaForm").config([ "schemaFormDecoratorsProvider", function(e) {
-var t = "directives/decorators/bootstrap/";
+}), angular.module("schemaForm").run([ "$templateCache", function(e) {
+e.put("decorators/bootstrap/actions-trcl.html", '<div class="btn-group schema-form-actions {{form.htmlClass}}" ng-transclude=""></div>'), e.put("decorators/bootstrap/actions.html", '<div class="btn-group schema-form-actions {{form.htmlClass}}"><input ng-repeat-start="item in form.items" type="submit" class="btn {{ item.style || \'btn-default\' }} {{form.fieldHtmlClass}}" value="{{item.title}}" ng-if="item.type === \'submit\'"> <button ng-repeat-end="" class="btn {{ item.style || \'btn-default\' }} {{form.fieldHtmlClass}}" type="button" ng-disabled="form.readonly" ng-if="item.type !== \'submit\'" ng-click="buttonClick($event,item)"><span ng-if="item.icon" class="{{item.icon}}"></span>{{item.title}}</button></div>'), e.put("decorators/bootstrap/array.html", '<div class="schema-form-array {{form.htmlClass}}" sf-field-model="sf-new-array" sf-new-array=""><label class="control-label" ng-show="showTitle()">{{ form.title }}</label><ol class="list-group" sf-field-model="" ui-sortable="form.sortOptions"><li class="list-group-item {{form.fieldHtmlClass}}" schema-form-array-items="" sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index"><button ng-hide="form.readonly || form.remove === null" ng-click="deleteFromArray($index)" ng-disabled="form.schema.minItems >= modelArray.length" style="position: relative; z-index: 20;" type="button" class="close pull-right"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></li></ol><div class="clearfix" style="padding: 15px;" ng-model="modelArray" schema-validate="form"><div class="help-block" ng-show="(hasError() && errorMessage(schemaError())) || form.description" ng-bind-html="(hasError() && errorMessage(schemaError())) || form.description"></div><button ng-hide="form.readonly || form.add === null" ng-click="appendToArray()" ng-disabled="form.schema.maxItems <= modelArray.length" type="button" class="btn {{ form.style.add || \'btn-default\' }} pull-right"><i class="glyphicon glyphicon-plus"></i> {{ form.add || \'Add\'}}</button></div></div>'), 
+e.put("decorators/bootstrap/checkbox.html", '<div class="checkbox schema-form-checkbox {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="{{form.labelHtmlClass}}"><input type="checkbox" sf-changed="form" ng-disabled="form.readonly" sf-field-model="" schema-validate="form" class="{{form.fieldHtmlClass}}" name="{{form.key.slice(-1)[0]}}"> <span ng-bind-html="form.title"></span></label><div class="help-block" sf-message="form.description"></div></div>'), e.put("decorators/bootstrap/checkboxes.html", '<div sf-field-model="sf-new-array" sf-new-array="" class="form-group schema-form-checkboxes {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" sf-field-model="" schema-validate="form" ng-show="showTitle()">{{form.title}}</label><div class="checkbox" ng-repeat="val in titleMapValues track by $index"><label><input type="checkbox" ng-disabled="form.readonly" sf-changed="form" class="{{form.fieldHtmlClass}}" ng-model="titleMapValues[$index]" name="{{form.key.slice(-1)[0]}}"> <span ng-bind-html="form.titleMap[$index].name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'), 
+e.put("decorators/bootstrap/default.html", '<div class="form-group schema-form-{{form.type}} {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess(), \'has-feedback\': form.feedback !== false }"><label class="control-label {{form.labelHtmlClass}}" ng-class="{\'sr-only\': !showTitle()}" for="{{form.key.slice(-1)[0]}}">{{form.title}}</label> <input ng-if="!form.fieldAddonLeft && !form.fieldAddonRight" ng-show="form.key" type="{{form.type}}" step="any" sf-changed="form" placeholder="{{form.placeholder}}" class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-field-model="" ng-disabled="form.readonly" schema-validate="form" name="{{form.key.slice(-1)[0]}}" aria-describedby="{{form.key.slice(-1)[0] + \'Status\'}}"><div ng-if="form.fieldAddonLeft || form.fieldAddonRight" ng-class="{\'input-group\': (form.fieldAddonLeft || form.fieldAddonRight)}"><span ng-if="form.fieldAddonLeft" class="input-group-addon" ng-bind-html="form.fieldAddonLeft"></span> <input ng-show="form.key" type="{{form.type}}" step="any" sf-changed="form" placeholder="{{form.placeholder}}" class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-field-model="" ng-disabled="form.readonly" schema-validate="form" name="{{form.key.slice(-1)[0]}}" aria-describedby="{{form.key.slice(-1)[0] + \'Status\'}}"> <span ng-if="form.fieldAddonRight" class="input-group-addon" ng-bind-html="form.fieldAddonRight"></span></div><span ng-if="form.feedback !== false" class="form-control-feedback" ng-class="evalInScope(form.feedback) || {\'glyphicon\': true, \'glyphicon-ok\': hasSuccess(), \'glyphicon-remove\': hasError() }" aria-hidden="true"></span> <span ng-if="hasError() || hasSuccess()" id="{{form.key.slice(-1)[0] + \'Status\'}}" class="sr-only">{{ hasSuccess() ? \'(success)\' : \'(error)\' }}</span><div class="help-block" sf-message="form.description"></div></div>'), 
+e.put("decorators/bootstrap/fieldset.html", '<fieldset ng-disabled="form.readonly" class="schema-form-fieldset {{form.htmlClass}}"><legend ng-class="{\'sr-only\': !showTitle() }">{{ form.title }}</legend><div class="help-block" ng-show="form.description" ng-bind-html="form.description"></div></fieldset>'), e.put("decorators/bootstrap/help.html", '<div class="helpvalue schema-form-helpvalue {{form.htmlClass}}" ng-bind-html="form.helpvalue"></div>'), e.put("decorators/bootstrap/radio-buttons.html", '<div class="form-group schema-form-radiobuttons {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><div><label class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()">{{form.title}}</label></div><div class="btn-group"><label sf-field-model="replaceAll" class="btn {{ (item.value === $$value$$) ? form.style.selected || \'btn-default\' : form.style.unselected || \'btn-default\'; }}" ng-class="{ active: item.value === $$value$$ }" ng-repeat="item in form.titleMap"><input type="radio" class="{{form.fieldHtmlClass}}" sf-changed="form" style="display: none;" ng-disabled="form.readonly" sf-field-model="" schema-validate="form" ng-value="item.value" name="{{form.key.join(\'.\')}}"> <span ng-bind-html="item.name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'), 
+e.put("decorators/bootstrap/radios-inline.html", '<div class="form-group schema-form-radios-inline {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()" sf-field-model="" schema-validate="form">{{form.title}}</label><div><label class="radio-inline" ng-repeat="item in form.titleMap"><input type="radio" class="{{form.fieldHtmlClass}}" sf-changed="form" ng-disabled="form.readonly" sf-field-model="" ng-value="item.value" name="{{form.key.join(\'.\')}}"> <span ng-bind-html="item.name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'), e.put("decorators/bootstrap/radios.html", '<div class="form-group schema-form-radios {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" sf-field-model="" schema-validate="form" ng-show="showTitle()">{{form.title}}</label><div class="radio" ng-repeat="item in form.titleMap"><label><input type="radio" class="{{form.fieldHtmlClass}}" sf-changed="form" ng-disabled="form.readonly" sf-field-model="" ng-value="item.value" name="{{form.key.join(\'.\')}}"> <span ng-bind-html="item.name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'), 
+e.put("decorators/bootstrap/section.html", '<div class="schema-form-section {{form.htmlClass}}"></div>'), e.put("decorators/bootstrap/select.html", '<div class="form-group {{form.htmlClass}} schema-form-select" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess(), \'has-feedback\': form.feedback !== false}"><label class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()">{{form.title}}</label><select sf-field-model="" ng-disabled="form.readonly" sf-changed="form" class="form-control {{form.fieldHtmlClass}}" schema-validate="form" ng-options="item.value as item.name group by item.group for item in form.titleMap" name="{{form.key.slice(-1)[0]}}"></select><div class="help-block" sf-message="form.description"></div></div>'), e.put("decorators/bootstrap/submit.html", '<div class="form-group schema-form-submit {{form.htmlClass}}"><input type="submit" class="btn {{ form.style || \'btn-primary\' }} {{form.fieldHtmlClass}}" value="{{form.title}}" ng-disabled="form.readonly" ng-if="form.type === \'submit\'"> <button class="btn {{ form.style || \'btn-default\' }}" type="button" ng-click="buttonClick($event,form)" ng-disabled="form.readonly" ng-if="form.type !== \'submit\'"><span ng-if="form.icon" class="{{form.icon}}"></span> {{form.title}}</button></div>'), 
+e.put("decorators/bootstrap/tabarray.html", '<div ng-init="selected = { tab: 0 }" ng-model="modelArray" schema-validate="form" sf-field-model="sf-new-array" sf-new-array="" class="clearfix schema-form-tabarray schema-form-tabarray-{{form.tabType || \'left\'}} {{form.htmlClass}}"><div ng-if="!form.tabType || form.tabType !== \'right\'" ng-class="{\'col-xs-3\': !form.tabType || form.tabType === \'left\'}"><ul class="nav nav-tabs" ng-class="{ \'tabs-left\': !form.tabType || form.tabType === \'left\'}"><li sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index" ng-click="$event.preventDefault() || (selected.tab = $index)" ng-class="{active: selected.tab === $index}"><a href="#">{{interp(form.title,{\'$index\':$index, value: item}) || $index}}</a></li><li ng-hide="form.readonly" ng-disabled="form.schema.maxItems <= modelArray.length" ng-click="$event.preventDefault() || (selected.tab = appendToArray().length - 1)"><a href="#"><i class="glyphicon glyphicon-plus"></i> {{ form.add || \'Add\'}}</a></li></ul></div><div ng-class="{\'col-xs-9\': !form.tabType || form.tabType === \'left\' || form.tabType === \'right\'}"><div class="tab-content {{form.fieldHtmlClass}}"><div class="tab-pane clearfix tab{{selected.tab}} index{{$index}}" sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index" ng-show="selected.tab === $index" ng-class="{active: selected.tab === $index}"><div schema-form-array-items=""></div><button ng-hide="form.readonly" ng-click="selected.tab = deleteFromArray($index).length - 1" ng-disabled="form.schema.minItems >= modelArray.length" type="button" class="btn {{ form.style.remove || \'btn-default\' }} pull-right"><i class="glyphicon glyphicon-trash"></i> {{ form.remove || \'Remove\'}}</button></div><div class="help-block" ng-show="(hasError() && errorMessage(schemaError())) || form.description" ng-bind-html="(hasError() && errorMessage(schemaError())) || form.description"></div></div></div></div><div ng-if="form.tabType === \'right\'" class="col-xs-3"><ul class="nav nav-tabs tabs-right"><li sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index" ng-click="$event.preventDefault() || (selected.tab = $index)" ng-class="{active: selected.tab === $index}"><a href="#">{{interp(form.title,{\'$index\':$index, value: item}) || $index}}</a></li><li ng-hide="form.readonly" ng-disabled="form.schema.maxItems <= modelArray.length" ng-click="$event.preventDefault() || (selected.tab = appendToArray().length - 1)"><a href="#"><i class="glyphicon glyphicon-plus"></i> {{ form.add || \'Add\'}}</a></li></ul></div>'), 
+e.put("decorators/bootstrap/tabs.html", '<div ng-init="selected = { tab: 0 }" class="schema-form-tabs {{form.htmlClass}}"><ul class="nav nav-tabs"><li ng-repeat="tab in form.tabs" ng-disabled="form.readonly" ng-click="$event.preventDefault() || (selected.tab = $index)" ng-class="{active: selected.tab === $index}"><a href="#">{{ tab.title }}</a></li></ul><div class="tab-content {{form.fieldHtmlClass}}"></div></div>'), e.put("decorators/bootstrap/textarea.html", '<div class="form-group has-feedback {{form.htmlClass}} schema-form-textarea" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" ng-class="{\'sr-only\': !showTitle()}" for="{{form.key.slice(-1)[0]}}">{{form.title}}</label> <textarea ng-if="!form.fieldAddonLeft && !form.fieldAddonRight" class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-changed="form" placeholder="{{form.placeholder}}" ng-disabled="form.readonly" sf-field-model="" schema-validate="form" name="{{form.key.slice(-1)[0]}}"></textarea><div ng-if="form.fieldAddonLeft || form.fieldAddonRight" ng-class="{\'input-group\': (form.fieldAddonLeft || form.fieldAddonRight)}"><span ng-if="form.fieldAddonLeft" class="input-group-addon" ng-bind-html="form.fieldAddonLeft"></span> <textarea class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-changed="form" placeholder="{{form.placeholder}}" ng-disabled="form.readonly" sf-field-model="" schema-validate="form" name="{{form.key.slice(-1)[0]}}"></textarea> <span ng-if="form.fieldAddonRight" class="input-group-addon" ng-bind-html="form.fieldAddonRight"></span></div><span class="help-block" sf-message="form.description"></span></div>');
+} ]), angular.module("schemaForm").config([ "schemaFormDecoratorsProvider", "sfBuilderProvider", "sfPathProvider", function(e, t, n) {
+var i = "decorators/bootstrap/", r = t.builders.simpleTransclusion, o = t.builders.ngModelOptions, a = t.builders.ngModel, s = t.builders.sfField, l = t.builders.condition, c = t.builders.array, u = [ s, a, o, l ];
 e.defineDecorator("bootstrapDecorator", {
 textarea: {
-template: t + "textarea.html",
-replace: !1
+template: i + "textarea.html",
+builder: u
 },
 fieldset: {
-template: t + "fieldset.html",
-replace: !1
+template: i + "fieldset.html",
+builder: [ s, r, l ]
 },
 array: {
-template: t + "array.html",
-replace: !1
+template: i + "array.html",
+builder: [ s, o, a, c, l ]
 },
 tabarray: {
-template: t + "tabarray.html",
-replace: !1
+template: i + "tabarray.html",
+builder: [ s, o, a, c, l ]
 },
 tabs: {
-template: t + "tabs.html",
-replace: !1
+template: i + "tabs.html",
+builder: [ s, o, function(e) {
+if (e.form.tabs && e.form.tabs.length > 0) {
+var t = e.fieldFrag.querySelector(".tab-content");
+e.form.tabs.forEach(function(n, i) {
+var r = document.createElement("div");
+r.className = "tab-pane", r.setAttribute("ng-disabled", "form.readonly"), r.setAttribute("ng-show", "selected.tab === " + i), r.setAttribute("ng-class", "{active: selected.tab === " + i + "}");
+var o = e.build(n.items, e.path + ".tabs[" + i + "].items", e.state);
+r.appendChild(o), t.appendChild(r);
+});
+}
+}, l ]
 },
 section: {
-template: t + "section.html",
-replace: !1
+template: i + "section.html",
+builder: [ s, r, l ]
 },
 conditional: {
-template: t + "section.html",
-replace: !1
+template: i + "section.html",
+builder: [ s, r, l ]
 },
 actions: {
-template: t + "actions.html",
-replace: !1
+template: i + "actions.html",
+builder: u
 },
 select: {
-template: t + "select.html",
-replace: !1
+template: i + "select.html",
+builder: u
 },
 checkbox: {
-template: t + "checkbox.html",
-replace: !1
+template: i + "checkbox.html",
+builder: u
 },
 checkboxes: {
-template: t + "checkboxes.html",
-replace: !1
+template: i + "checkboxes.html",
+builder: [ s, o, a, c, l ]
 },
 number: {
-template: t + "default.html",
-replace: !1
+template: i + "default.html",
+builder: u
 },
 password: {
-template: t + "default.html",
-replace: !1
+template: i + "default.html",
+builder: u
 },
 submit: {
-template: t + "submit.html",
-replace: !1
+template: i + "submit.html",
+builder: u
 },
 button: {
-template: t + "submit.html",
-replace: !1
+template: i + "submit.html",
+builder: u
 },
 radios: {
-template: t + "radios.html",
-replace: !1
+template: i + "radios.html",
+builder: u
 },
 "radios-inline": {
-template: t + "radios-inline.html",
-replace: !1
+template: i + "radios-inline.html",
+builder: u
 },
 radiobuttons: {
-template: t + "radio-buttons.html",
-replace: !1
+template: i + "radio-buttons.html",
+builder: u
 },
 help: {
-template: t + "help.html",
-replace: !1
+template: i + "help.html",
+builder: u
 },
 default: {
-template: t + "default.html",
-replace: !1
+template: i + "default.html",
+builder: u
 }
-}, []), e.createDirectives({
-textarea: t + "textarea.html",
-select: t + "select.html",
-checkbox: t + "checkbox.html",
-checkboxes: t + "checkboxes.html",
-number: t + "default.html",
-submit: t + "submit.html",
-button: t + "submit.html",
-text: t + "default.html",
-date: t + "default.html",
-password: t + "default.html",
-datepicker: t + "datepicker.html",
-input: t + "default.html",
-radios: t + "radios.html",
-"radios-inline": t + "radios-inline.html",
-radiobuttons: t + "radio-buttons.html"
-});
-} ]).directive("sfFieldset", function() {
-return {
-transclude: !0,
-scope: !0,
-templateUrl: "directives/decorators/bootstrap/fieldset-trcl.html",
-link: function(e, t, n) {
-e.title = e.$eval(n.title);
-}
-};
-}), e;
-}), angular.module("schemaForm").run([ "$templateCache", function(e) {
+}, []);
+} ]), angular.module("schemaForm").run([ "$templateCache", function(e) {
 e.put("decorators/bootstrap/actions-trcl.html", '<div class="btn-group schema-form-actions {{form.htmlClass}}" ng-transclude=""></div>'), e.put("decorators/bootstrap/actions.html", '<div class="btn-group schema-form-actions {{form.htmlClass}}"><input ng-repeat-start="item in form.items" type="submit" class="btn {{ item.style || \'btn-default\' }} {{form.fieldHtmlClass}}" value="{{item.title}}" ng-if="item.type === \'submit\'"> <button ng-repeat-end="" class="btn {{ item.style || \'btn-default\' }} {{form.fieldHtmlClass}}" type="button" ng-disabled="form.readonly" ng-if="item.type !== \'submit\'" ng-click="buttonClick($event,item)"><span ng-if="item.icon" class="{{item.icon}}"></span>{{item.title}}</button></div>'), e.put("decorators/bootstrap/array.html", '<div class="schema-form-array {{form.htmlClass}}" sf-field-model="sf-new-array" sf-new-array=""><label class="control-label" ng-show="showTitle()">{{ form.title }}</label><ol class="list-group" sf-field-model="" ui-sortable="form.sortOptions"><li class="list-group-item {{form.fieldHtmlClass}}" schema-form-array-items="" sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index"><button ng-hide="form.readonly || form.remove === null" ng-click="deleteFromArray($index)" ng-disabled="form.schema.minItems >= modelArray.length" style="position: relative; z-index: 20;" type="button" class="close pull-right"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></li></ol><div class="clearfix" style="padding: 15px;" ng-model="modelArray" schema-validate="form"><div class="help-block" ng-show="(hasError() && errorMessage(schemaError())) || form.description" ng-bind-html="(hasError() && errorMessage(schemaError())) || form.description"></div><button ng-hide="form.readonly || form.add === null" ng-click="appendToArray()" ng-disabled="form.schema.maxItems <= modelArray.length" type="button" class="btn {{ form.style.add || \'btn-default\' }} pull-right"><i class="glyphicon glyphicon-plus"></i> {{ form.add || \'Add\'}}</button></div></div>'), 
 e.put("decorators/bootstrap/checkbox.html", '<div class="checkbox schema-form-checkbox {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="{{form.labelHtmlClass}}"><input type="checkbox" sf-changed="form" ng-disabled="form.readonly" sf-field-model="" schema-validate="form" class="{{form.fieldHtmlClass}}" name="{{form.key.slice(-1)[0]}}"> <span ng-bind-html="form.title"></span></label><div class="help-block" sf-message="form.description"></div></div>'), e.put("decorators/bootstrap/checkboxes.html", '<div sf-field-model="sf-new-array" sf-new-array="" class="form-group schema-form-checkboxes {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" sf-field-model="" schema-validate="form" ng-show="showTitle()">{{form.title}}</label><div class="checkbox" ng-repeat="val in titleMapValues track by $index"><label><input type="checkbox" ng-disabled="form.readonly" sf-changed="form" class="{{form.fieldHtmlClass}}" ng-model="titleMapValues[$index]" name="{{form.key.slice(-1)[0]}}"> <span ng-bind-html="form.titleMap[$index].name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'), 
 e.put("decorators/bootstrap/default.html", '<div class="form-group schema-form-{{form.type}} {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess(), \'has-feedback\': form.feedback !== false }"><label class="control-label {{form.labelHtmlClass}}" ng-class="{\'sr-only\': !showTitle()}" for="{{form.key.slice(-1)[0]}}">{{form.title}}</label> <input ng-if="!form.fieldAddonLeft && !form.fieldAddonRight" ng-show="form.key" type="{{form.type}}" step="any" sf-changed="form" placeholder="{{form.placeholder}}" class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-field-model="" ng-disabled="form.readonly" schema-validate="form" name="{{form.key.slice(-1)[0]}}" aria-describedby="{{form.key.slice(-1)[0] + \'Status\'}}"><div ng-if="form.fieldAddonLeft || form.fieldAddonRight" ng-class="{\'input-group\': (form.fieldAddonLeft || form.fieldAddonRight)}"><span ng-if="form.fieldAddonLeft" class="input-group-addon" ng-bind-html="form.fieldAddonLeft"></span> <input ng-show="form.key" type="{{form.type}}" step="any" sf-changed="form" placeholder="{{form.placeholder}}" class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-field-model="" ng-disabled="form.readonly" schema-validate="form" name="{{form.key.slice(-1)[0]}}" aria-describedby="{{form.key.slice(-1)[0] + \'Status\'}}"> <span ng-if="form.fieldAddonRight" class="input-group-addon" ng-bind-html="form.fieldAddonRight"></span></div><span ng-if="form.feedback !== false" class="form-control-feedback" ng-class="evalInScope(form.feedback) || {\'glyphicon\': true, \'glyphicon-ok\': hasSuccess(), \'glyphicon-remove\': hasError() }" aria-hidden="true"></span> <span ng-if="hasError() || hasSuccess()" id="{{form.key.slice(-1)[0] + \'Status\'}}" class="sr-only">{{ hasSuccess() ? \'(success)\' : \'(error)\' }}</span><div class="help-block" sf-message="form.description"></div></div>'), 

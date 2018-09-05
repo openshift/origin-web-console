@@ -12,7 +12,3 @@ before_script:
 script:
   - grunt test
   - hack/verify-dist.sh
-
-branches:
-  only:
-  - enterprise-3.9
