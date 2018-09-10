@@ -474,9 +474,9 @@
                     key-placeholder="Name"
                     value-placeholder="Value"
                     value-from-selector-options="valueFromObjects"
-                    ey-validator="[-._a-zA-Z][-._a-zA-Z0-9]*"
+                    key-validator="[a-zA-Z_][a-zA-Z0-9_]*"
                     key-validator-error="Please enter a valid key."
-                    key-validator-error-tooltip="A valid environment variable name must consist of alphabetic characters, digits, '_', '-', or '.', and must not start with a digit."
+                    key-validator-error-tooltip="A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores."
                     add-row-link="Add Value"
                     add-row-with-selectors-link="Add Value from Config Map or Secret"
                     show-header></key-value-editor>
