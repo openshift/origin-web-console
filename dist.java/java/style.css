@@ -1786,6 +1786,7 @@ select.bs-select-hidden,select.selectpicker{display:none!important}
 .c3 text{-webkit-user-select:none;-moz-user-select:none;user-select:none}
 .c3-bars path,.c3-event-rect,.c3-legend-item-tile,.c3-xgrid-focus,.c3-ygrid{shape-rendering:crispEdges}
 .c3-chart-arc path{stroke:#fff}
+.c3-chart-arc rect{stroke:#fff;stroke-width:1}
 .c3-chart-arc text{fill:#fff;font-size:13px}
 .c3-grid line{stroke:#aaa}
 .c3-grid text{fill:#aaa}
@@ -1814,7 +1815,7 @@ select.bs-select-hidden,select.selectpicker{display:none!important}
 .c3-tooltip td.value{text-align:right}
 .c3-area{stroke-width:0;opacity:.2}
 .c3-chart-arcs-title{dominant-baseline:middle;font-size:1.3em}
-.c3-chart-arcs .c3-chart-arcs-background{fill:#e0e0e0;stroke:none}
+.c3-chart-arcs .c3-chart-arcs-background{fill:#e0e0e0;stroke:#fff}
 .c3-chart-arcs .c3-chart-arcs-gauge-unit{fill:#000;font-size:16px}
 .c3-chart-arcs .c3-chart-arcs-gauge-max{fill:#777}
 .c3-chart-arcs .c3-chart-arcs-gauge-min{fill:#777}
