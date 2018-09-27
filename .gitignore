@@ -10,3 +10,4 @@ openshift-jvm
 /app/config.local.js
 .DS_Store
 test/junit/
+/package-lock.json
