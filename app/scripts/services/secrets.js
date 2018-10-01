@@ -17,7 +17,7 @@ angular.module("openshiftConsole")
           case 'kubernetes.io/basic-auth':
           case 'kubernetes.io/ssh-auth':
           case 'Opaque':
-            if (secret.data.WebHookSecretKey) {
+            if (_.get(secret,['data', 'WebHookSecretKey'])) {
               secretsByType.webhook.push(secret);
             } else {
               secretsByType.source.push(secret);
