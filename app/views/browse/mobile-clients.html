@@ -1,0 +1,133 @@
+<div class="middle mobile-clients-view">
+  <div class="middle-header">
+    <div class="container-fluid">
+      <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
+      <alerts alerts="alerts"></alerts>
+      <div>
+        <h1 class="contains-actions">
+          <div class="pull-right dropdown" ng-if="ctrl.mobileClient">
+            <button type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
+              Actions
+              <span class="caret" aria-hidden="true"></span>
+            </button>
+            <a href=""
+               class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
+               data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span></a>
+            <ul class="dropdown-menu dropdown-menu-right actions action-button">
+              <li ng-if="ctrl.mobileCIEnabled && (ctrl.mobileClient.spec.clientType !== 'xamarin')">
+                <a ng-href="project/{{ctrl.project.metadata.name}}/create-client-build/{{ctrl.mobileClient.metadata.name}}" role="button">Create Build</a>
+              </li>
+              <li>
+                <a ng-href="{{ctrl.mobileClient | editYamlURL}}" role="button">Edit YAML</a>
+              </li>
+              <li>
+                <delete-link
+                  kind="MobileClient"
+                  group="mobile.k8s.io"
+                  resource-name="{{ctrl.mobileClient.metadata.name}}"
+                  project-name="{{ctrl.mobileClient.metadata.namespace}}"
+                  alerts="alerts"
+                  redirect-url={{ctrl.redirectUrl}}>
+                </delete-link>
+              </li>
+            </ul>
+          </div>
+          {{ctrl.mobileClient.spec.name}}
+          <small class="meta" ng-if="ctrl.mobileClient">created <span am-time-ago="ctrl.mobileClient.metadata.creationTimestamp"></span></small>
+        </h1>
+        <labels labels="ctrl.mobileClient.metadata.labels" clickable="true" kind="mobileClient" project-name="{{ctrl.mobileClient.metadata.namespace}}" limit="3"></labels>
+      </div>
+    </div>
+  </div>
+  <div class="middle-content" persist-tab-state>
+    <div class="container-fluid">
+      <div ng-if="!ctrl.loaded">{{ctrl.emptyMessage}}</div>
+      <div  ng-if="ctrl.loaded" class="row">
+        <div class="col-md-12" ng-class="{ 'hide-tabs' : !ctrl.mobileClient }">
+          <uib-tabset>
+            <uib-tab active="selectedTab.configuration">
+              <uib-tab-heading>Configuration</uib-tab-heading>
+              <div class="configuration">
+                <div class="row">
+                  <div class="resource-details col-md-6">
+                    <h3>Mobile Client Details</h3>
+                      <dl class="dl-horizontal left">
+                        <dt>Client Type:</dt>
+                        <dd>{{ctrl.mobileClient.spec.clientType}}</dd>
+                        <dt>Client ID:</dt>
+                        <dd>{{ctrl.mobileClient.spec.appIdentifier}}</dd>
+                        <dt>Client API Key:</dt>
+                        <dd>{{ctrl.mobileClient.spec.apiKey}}</dd>
+                        <dt>DMZ Url:</dt>
+                        <dd>
+                          <inline-edit
+                            pattern="ctrl.validUrlPattern"
+                            pattern-errmsg="'The value provided is not a valid url.'"
+                            label="'Set DMZ Url'"
+                            value="ctrl.mobileClient.spec.dmzUrl"
+                            on-edited="ctrl.setDmzUrl">
+                          </inline-edit>
+                        </dd>
+                      </dl>
+                  </div>
+
+                  <div class="col-md-6 resource-details client-config">
+                    <h3>Mobile Client Config</h3>
+                    <mobile-client-config mobile-client="ctrl.mobileClient"></mobile-client-config>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="resource-details col-md-12">
+                    <h3>SDK Configuration</h3>
+                    <h4>
+                      <a href="{{ctrl.coreSdkSetup}}" target="_blank">{{ctrl.mobileClient.spec.clientType | upperFirst}} SDK setup</a>
+                    </h4>
+                  </div>
+                  <div class="resource-details service-configuration col-md-12">
+                    <h3>Service Configuration</h3>
+                      <mobile-service-sdk-docs
+                        context="ctrl.projectName"
+                        mobile-client="ctrl.mobileClient"
+                        service-classes="ctrl.serviceClasses"></mobile-service-sdk-docs>
+                  </div>
+                </div>
+              </div>
+            </uib-tab>
+            <uib-tab ng-if="true" active="selectedTab.builds">
+              <uib-tab-heading>Builds</uib-tab-heading>
+                <div class="builds">
+                  <div class="note" ng-if="(ctrl.mobileCIProvisioning || ctrl.mobileCIDeprovisioning) && ctrl.mobileClient.spec.clientType !== 'xamarin'">
+                    <div class="col-md-offset-1 col-md-10">
+                      <div class="alert alert-info">
+                        <span class="pficon pficon-info"></span>
+                        <span ng-class="{'spinner spinner-xs spinner-inline': (ctrl.mobileCIProvisioning || ctrl.mobileCIDeprovisioning)}" aria-hidden="true"></span>
+                        <span ng-if="ctrl.mobileCIProvisioning" >Mobile CI | CD is provisioning</span>
+                        <span ng-if="ctrl.mobileCIDeprovisioning">Mobile CI | CD is deprovisioning</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="note" ng-if="!ctrl.mobileCIService && ctrl.mobileClient.spec.clientType !== 'xamarin'">
+                    <p>Provision a Mobile CI | CD service to create a mobile build.</p>
+                    <button class="btn btn-primary btn-lg" ng-click="ctrl.goToMobileServices()">Browse Mobile Services</button>
+                  </div>
+                  <div ng-if="ctrl.mobileClient.spec.clientType === 'xamarin'"  class="row">
+                    <div class="col-md-offset-1 col-md-10">
+                      <div class="alert alert-info">
+                        <span class="pficon pficon-info"></span>
+                        Mobile builds are not available for Xamarin.
+                      </div>
+                    </div>
+                  </div>
+                  <mobile-client-builds-list ng-if="ctrl.mobileCIEnabled && ctrl.mobileClient.spec.clientType !== 'xamarin'" mobile-client="ctrl.mobileClient"></mobile-client-builds-list>
+                </div>
+            </uib-tab>
+            <uib-tab ng-if="true" active="selectedTab.mobileServices" class="mobile-services">
+              <uib-tab-heading>Mobile Services</uib-tab-heading>
+                  <mobile-service-instance-list></mobile-service-instance-list>
+            </uib-tab>
+          </uib-tabset>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

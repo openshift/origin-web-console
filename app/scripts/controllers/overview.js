@@ -107,6 +107,7 @@ function OverviewController($scope,
   var servicesVersion = APIService.getPreferredVersion('services');
   var statefulSetsVersion = APIService.getPreferredVersion('statefulsets');
   var templatesVersion = APIService.getPreferredVersion('templates');
+  var mobileClientsVersion = APIService.getPreferredVersion('mobileclients');
   overview.buildConfigsInstantiateVersion = APIService.getPreferredVersion('buildconfigs/instantiate');
 
   var deploymentsByUID;
@@ -1497,7 +1498,7 @@ function OverviewController($scope,
     }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
 
     if ($scope.AEROGEAR_MOBILE_ENABLED) {
-      watches.push(DataService.watch({ group: "mobile.k8s.io", version: "v1alpha1", resource: "mobileclients" }, context, function (clients) {
+      watches.push(DataService.watch(mobileClientsVersion, context, function (clients) {
         overview.mobileClients = clients.by("metadata.name");
         updateFilter();
         Logger.log("mobileclients (subscribe)", clients);

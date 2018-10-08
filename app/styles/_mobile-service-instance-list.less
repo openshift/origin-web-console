@@ -1,0 +1,56 @@
+.mobile-service-instance-list {
+
+  &.note {
+    text-align: center;
+  }
+
+  .mobile-service-instance-row {
+    &.no-bindings {
+      pointer-events: none;
+      background-color: inherit;
+      border-color: @list-pf-border-color;
+      border-left-color: @color-pf-white;
+      border-right-color: @color-pf-white;
+      border-style: solid;
+      border-width: 1px;
+      border-bottom: none;
+
+      .list-pf-name {
+        .service-name {
+          pointer-events: all;
+        }
+      }
+      .list-pf-container {
+        cursor: default;
+      }
+      .list-pf-content {
+        flex-grow: 1;
+      }
+      .create-binding {
+        pointer-events: all;
+      }
+
+      &.active {
+        border-top-color: @list-pf-border-color;
+      }
+    }
+
+    .list-pf-name {
+      h3 {
+        .logo {
+          width: 30px;
+          height: 30px;
+          margin: 0 10px;
+          display: block;
+          float: left;
+          font-size: 1.6em;
+          img {
+            width: inherit;
+            height: inherit;
+          }
+        }
+      }
+    }
+  }
+
+}

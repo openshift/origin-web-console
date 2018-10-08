@@ -131,6 +131,7 @@
     <script src="bower_components/uri.js/src/URITemplate.js"></script>
     <script src="bower_components/uri.js/src/jquery.URI.js"></script>
     <script src="bower_components/uri.js/src/URI.fragmentURI.js"></script>
+    <script src="bower_components/jquery-qrcode/jquery.qrcode.min.js"></script>
     <script src="bower_components/sifter/sifter.js"></script>
     <script src="bower_components/microplugin/src/microplugin.js"></script>
     <script src="bower_components/selectize/dist/js/selectize.js"></script>
@@ -237,6 +238,7 @@
         <script src="scripts/controllers/pod.js"></script>
         <script src="scripts/controllers/overview.js"></script>
         <script src="scripts/controllers/quota.js"></script>
+        <script src="scripts/controllers/mobileClients.js"></script>
         <script src="scripts/controllers/monitoring.js"></script>
         <script src="scripts/controllers/membership.js"></script>
         <script src="scripts/controllers/builds.js"></script>
@@ -259,6 +261,7 @@
         <script src="scripts/controllers/secrets.js"></script>
         <script src="scripts/controllers/secret.js"></script>
         <script src="scripts/controllers/createSecret.js"></script>
+        <script src="scripts/controllers/createClientBuild.js"></script>
         <script src="scripts/controllers/configMaps.js"></script>
         <script src="scripts/controllers/configMap.js"></script>
         <script src="scripts/controllers/createConfigMap.js"></script>
@@ -320,6 +323,7 @@
         <script src="scripts/directives/eventsSidebar.js"></script>
         <script src="scripts/directives/eventsBadge.js"></script>
         <script src="scripts/directives/fromFile.js"></script>
+        <script src="scripts/directives/inlineEdit.js"></script>
         <script src="scripts/directives/oscFileInput.js"></script>
         <script src="scripts/directives/oscFormSection.js"></script>
         <script src="scripts/directives/oscGitLink.js"></script>
@@ -349,6 +353,8 @@
         <script src="scripts/directives/catalog/categoryContent.js"></script>
         <script src="scripts/directives/catalog/catalogImage.js"></script>
         <script src="scripts/directives/catalog/catalogTemplate.js"></script>
+        <script src="scripts/directives/mobileClientConfig.js"></script>
+        <script src="scripts/directives/mobileServiceSdkDocs.js"></script>
         <script src="scripts/directives/podMetrics.js"></script>
         <script src="scripts/directives/deploymentMetrics.js"></script>
         <script src="scripts/directives/logViewer.js"></script>
@@ -365,6 +371,7 @@
         <script src="scripts/directives/buildPipeline.js"></script>
         <script src="scripts/directives/buildStatus.js"></script>
         <script src="scripts/directives/routeServiceBarChart.js"></script>
+        <script src="scripts/directives/mobileServiceClients.js"></script>
         <script src="scripts/directives/bindService.js"></script>
         <script src="scripts/directives/unbindService.js"></script>
         <script src="scripts/directives/processTemplate.js"></script>
@@ -375,7 +382,14 @@
         <script src="scripts/directives/imageNames.js"></script>
         <script src="scripts/directives/serviceBinding.js"></script>
         <script src="scripts/directives/dropdownItem.js"></script>
+        <script src="scripts/directives/jqQrCode.js"></script>
         <script src="scripts/directives/optionalLink.js"></script>
+        <script src="scripts/directives/mobileServiceInstanceList.js"></script>
+        <script src="scripts/directives/mobileServiceInstanceRow.js"></script>
+        <script src="scripts/directives/mobileClientBuildsList.js"></script>
+        <script src="scripts/directives/mobileClientBuildsRow.js"></script>
+        <script src="scripts/directives/mobileClientBuildHistoryItem.js"></script>
+        <script src="scripts/directives/mobileClientDownloadUrl.js"></script>
         <script src="scripts/directives/overview/mobileClientRow.js"></script>
         <script src="scripts/directives/overview/virtualMachineRow.js"></script>
 
@@ -408,6 +422,7 @@
         <script src="scripts/filters/resources.js"></script>
         <script src="scripts/filters/canI.js"></script>
         <script src="scripts/filters/util.js"></script>
+        <script src="scripts/filters/mobile.js"></script>
         <script src="scripts/services/logLinks.js"></script>
 
         <!-- add bundled extensions here -->
