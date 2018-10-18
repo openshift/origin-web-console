@@ -73,7 +73,10 @@ angular.module('openshiftConsole')
       ].join(''));
 
 
-      var archiveUri = function(opts, prefix) {
+      var archiveUri = function(opts, prefix, canViewOperationsLogs) {
+        if(canViewOperationsLogs && (!prefix || prefix.startsWith('project.'))) {
+            prefix = 'project';
+        }
         prefix = prefix || 'project.' + opts.namespace + '.' + opts.namespaceUid;
         opts.index = prefix + '.*';
         return template(opts);

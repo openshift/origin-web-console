@@ -1,4 +1,4 @@
-OpenShift Management Console
+OpenShift Management Console   
 =========================
 The management console for [OpenShift Origin](https://github.com/openshift/origin).
 
