@@ -2,9 +2,9 @@
 /* jshint unused: false */
 
 angular.module('openshiftConsole')
-  .filter('storageClass', function(annotationFilter) {
+  .filter('storageClass', function() {
     return function(pvc) {
-      return annotationFilter(pvc, 'volume.beta.kubernetes.io/storage-class');
+      return pvc.spec.storageClassName;
     };
   })
   .filter('storageClassAccessMode', function(annotationFilter) {
