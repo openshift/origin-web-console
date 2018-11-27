@@ -3401,7 +3401,7 @@ metadata: {
 name: e.secretReference.name
 }
 });
-return i(n.data).WebHookSecretKey;
+return _.has(n, "data") ? i(n.data).WebHookSecretKey : "";
 }
 return _.get(e, "secret");
 }
@@ -11158,6 +11158,15 @@ $(this).hide(), $(".reveal-contents", t).show();
 });
 }
 };
+}).directive("copyWebhookTrigger", function() {
+return {
+restrict: "E",
+scope: {
+webhookUrl: "=",
+secretRef: "=?"
+},
+templateUrl: "views/directives/_copy-webhook-trigger.html"
+};
 }).directive("copyToClipboard", function() {
 return {
 restrict: "E",
@@ -15264,11 +15273,11 @@ return null;
 }).filter("webhookURL", [ "canIFilter", "APIService", "DataService", "SecretsService", function(e, t, n, r) {
 return function(a, o, i, s, c) {
 var l = t.getPreferredVersion("secrets");
-return e(l, "list") ? (i = r.getWebhookSecretValue(i, c), n.url({
+return e(l, "list") ? (i = r.getWebhookSecretValue(i, c)) ? n.url({
 resource: "buildconfigs/webhooks/" + encodeURIComponent(i) + "/" + encodeURIComponent(o.toLowerCase()),
 name: a,
 namespace: s
-})) : n.url({
+}) : "" : n.url({
 resource: "buildconfigs/webhooks/",
 name: a,
 namespace: s
