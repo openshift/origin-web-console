@@ -3371,7 +3371,7 @@ metadata: {
 name: e.secretReference.name
 }
 });
-return _.has(n, "data") ? i(n.data).WebHookSecretKey : "";
+return _.get(n, "data") ? i(n.data).WebHookSecretKey : "";
 }
 return _.get(e, "secret");
 }
