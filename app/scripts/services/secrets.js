@@ -149,7 +149,7 @@ angular.module("openshiftConsole")
       // to list Secrets
       if (_.get(secret, 'secretReference.name') && webhookSecrets) {
         var matchingSecret = _.find(webhookSecrets, {metadata:{name: secret.secretReference.name}});
-        return decodeSecretData(matchingSecret.data).WebHookSecretKey;
+        return _.get(matchingSecret, 'data') ? decodeSecretData(matchingSecret.data).WebHookSecretKey : '';
       } else {
         return _.get(secret, 'secret');
       }

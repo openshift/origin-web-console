@@ -1892,28 +1892,28 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dt>Bitbucket Webhook URL:\n" +
     "</dt>\n" +
     "<dd>\n" +
-    "<copy-to-clipboard clipboard-text=\"buildConfig.metadata.name | webhookURL : trigger.type : trigger.bitbucket : project.metadata.name : webhookSecrets\"></copy-to-clipboard>\n" +
+    "<copy-webhook-trigger webhook-url=\"buildConfig.metadata.name | webhookURL : trigger.type : trigger.bitbucket : project.metadata.name : webhookSecrets\" secret-ref=\"trigger.bitbucket.secretReference.name\"></copy-webhook-trigger>\n" +
     "</dd>\n" +
     "</div>\n" +
     "<div ng-switch-when=\"GitHub\">\n" +
     "<dt>GitHub Webhook URL:\n" +
     "</dt>\n" +
     "<dd>\n" +
-    "<copy-to-clipboard clipboard-text=\"buildConfig.metadata.name | webhookURL : trigger.type : trigger.github : project.metadata.name : webhookSecrets\"></copy-to-clipboard>\n" +
+    "<copy-webhook-trigger webhook-url=\"buildConfig.metadata.name | webhookURL : trigger.type : trigger.github : project.metadata.name : webhookSecrets\" secret-ref=\"trigger.github.secretReference.name\"></copy-webhook-trigger>\n" +
     "</dd>\n" +
     "</div>\n" +
     "<div ng-switch-when=\"GitLab\">\n" +
     "<dt>GitLab Webhook URL:\n" +
     "</dt>\n" +
     "<dd>\n" +
-    "<copy-to-clipboard clipboard-text=\"buildConfig.metadata.name | webhookURL : trigger.type : trigger.gitlab : project.metadata.name : webhookSecrets\"></copy-to-clipboard>\n" +
+    "<copy-webhook-trigger webhook-url=\"buildConfig.metadata.name | webhookURL : trigger.type : trigger.gitlab : project.metadata.name : webhookSecrets\" secret-ref=\"trigger.gitlab.secretReference.name\"></copy-webhook-trigger>\n" +
     "</dd>\n" +
     "</div>\n" +
     "<div ng-switch-when=\"Generic\">\n" +
     "<dt>Generic Webhook URL:\n" +
     "</dt>\n" +
     "<dd>\n" +
-    "<copy-to-clipboard clipboard-text=\"buildConfig.metadata.name | webhookURL : trigger.type : trigger.generic : project.metadata.name : webhookSecrets\"></copy-to-clipboard>\n" +
+    "<copy-webhook-trigger webhook-url=\"buildConfig.metadata.name | webhookURL : trigger.type : trigger.generic : project.metadata.name : webhookSecrets\" secret-ref=\"trigger.generic.secretReference.name\"></copy-webhook-trigger>\n" +
     "</dd>\n" +
     "</div>\n" +
     "<div ng-switch-when=\"ImageChange\">\n" +
@@ -5428,6 +5428,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"sr-only\">Copy to Clipboard</span>\n" +
     "</a>\n" +
     "</span>\n" +
+    "</div>"
+  );
+
+
+  $templateCache.put('views/directives/_copy-webhook-trigger.html',
+    "<div ng-if=\"webhookUrl\">\n" +
+    "<copy-to-clipboard clipboard-text=\"webhookUrl\"></copy-to-clipboard>\n" +
+    "</div>\n" +
+    "<div ng-if=\"!webhookUrl\">\n" +
+    "<span ng-show=\"secretRef\" class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"Webhook secret {{secretRef}} referenced by this webhook trigger is not yet available, or was deleted.\">\n" +
+    "</span>\n" +
+    "<em>Not available</em>\n" +
     "</div>"
   );
 
