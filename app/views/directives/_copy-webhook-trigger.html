@@ -1,0 +1,12 @@
+<div ng-if="webhookUrl">
+	<copy-to-clipboard clipboard-text="webhookUrl"></copy-to-clipboard>
+</div>
+<div ng-if="!webhookUrl">
+  <span ng-show="secretRef"
+  		class="pficon pficon-warning-triangle-o"
+      aria-hidden="true"
+      data-toggle="tooltip"
+      data-original-title="Webhook secret {{secretRef}} referenced by this webhook trigger is not yet available, or was deleted.">
+  </span>
+  <em>Not available</em>
+</div>
