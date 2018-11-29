@@ -57,6 +57,16 @@ angular.module('openshiftConsole')
       }
     };
   })
+  .directive('copyWebhookTrigger', function() {
+    return {
+      restrict: 'E',
+      scope: {
+        webhookUrl: "=",
+        secretRef: "=?"
+      },
+      templateUrl: 'views/directives/_copy-webhook-trigger.html',
+    };
+  })
   .directive('copyToClipboard', function() {
     return {
       restrict: 'E',
