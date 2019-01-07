@@ -29941,13 +29941,13 @@ if (e(t.target).is(this)) return t.handleObj.handler.apply(this, arguments);
 var t = '[data-dismiss="alert"]', n = function(n) {
 e(n).on("click", t, this.close);
 };
-n.VERSION = "3.3.7", n.TRANSITION_DURATION = 150, n.prototype.close = function(t) {
+n.VERSION = "3.4.0", n.TRANSITION_DURATION = 150, n.prototype.close = function(t) {
 function i() {
 a.detach().trigger("closed.bs.alert").remove();
 }
 var r = e(this), o = r.attr("data-target");
-o || (o = (o = r.attr("href")) && o.replace(/.*(?=#[^\s]*$)/, ""));
-var a = e("#" === o ? [] : o);
+o || (o = (o = r.attr("href")) && o.replace(/.*(?=#[^\s]*$)/, "")), o = "#" === o ? [] : o;
+var a = e(document).find(o);
 t && t.preventDefault(), a.length || (a = r.closest(".alert")), a.trigger(t = e.Event("close.bs.alert")), t.isDefaultPrevented() || (a.removeClass("in"), e.support.transition && a.hasClass("fade") ? a.one("bsTransitionEnd", i).emulateTransitionEnd(n.TRANSITION_DURATION) : i());
 };
 var i = e.fn.alert;
@@ -29970,7 +29970,7 @@ r || i.data("bs.button", r = new n(this, o)), "toggle" == t ? r.toggle() : t && 
 var n = function(t, i) {
 this.$element = e(t), this.options = e.extend({}, n.DEFAULTS, i), this.isLoading = !1;
 };
-n.VERSION = "3.3.7", n.DEFAULTS = {
+n.VERSION = "3.4.0", n.DEFAULTS = {
 loadingText: "loading..."
 }, n.prototype.setState = function(t) {
 var n = "disabled", i = this.$element, r = i.is("input") ? "val" : "html", o = i.data();
@@ -30004,7 +30004,7 @@ r || i.data("bs.carousel", r = new n(this, o)), "number" == typeof t ? r.to(t) :
 var n = function(t, n) {
 this.$element = e(t), this.$indicators = this.$element.find(".carousel-indicators"), this.options = n, this.paused = null, this.sliding = null, this.interval = null, this.$active = null, this.$items = null, this.options.keyboard && this.$element.on("keydown.bs.carousel", e.proxy(this.keydown, this)), "hover" == this.options.pause && !("ontouchstart" in document.documentElement) && this.$element.on("mouseenter.bs.carousel", e.proxy(this.pause, this)).on("mouseleave.bs.carousel", e.proxy(this.cycle, this));
 };
-n.VERSION = "3.3.7", n.TRANSITION_DURATION = 600, n.DEFAULTS = {
+n.VERSION = "3.4.0", n.TRANSITION_DURATION = 600, n.DEFAULTS = {
 interval: 5e3,
 pause: "hover",
 wrap: !0,
@@ -30062,7 +30062,7 @@ var h = e.Event("slid.bs.carousel", {
 relatedTarget: c,
 direction: s
 });
-return e.support.transition && this.$element.hasClass("slide") ? (o.addClass(t), o[0].offsetWidth, r.addClass(s), o.addClass(s), r.one("bsTransitionEnd", function() {
+return e.support.transition && this.$element.hasClass("slide") ? (o.addClass(t), "object" == typeof o && o.length && o[0].offsetWidth, r.addClass(s), o.addClass(s), r.one("bsTransitionEnd", function() {
 o.removeClass([ t, s ].join(" ")).addClass("active"), r.removeClass([ "active", s ].join(" ")), l.sliding = !1, setTimeout(function() {
 l.$element.trigger(h);
 }, 0);
@@ -30074,10 +30074,12 @@ e.fn.carousel = t, e.fn.carousel.Constructor = n, e.fn.carousel.noConflict = fun
 return e.fn.carousel = i, this;
 };
 var r = function(n) {
-var i, r = e(this), o = e(r.attr("data-target") || (i = r.attr("href")) && i.replace(/.*(?=#[^\s]+$)/, ""));
-if (o.hasClass("carousel")) {
-var a = e.extend({}, o.data(), r.data()), s = r.attr("data-slide-to");
-s && (a.interval = !1), t.call(o, a), s && o.data("bs.carousel").to(s), n.preventDefault();
+var i = e(this), r = i.attr("href");
+r && (r = r.replace(/.*(?=#[^\s]+$)/, ""));
+var o = i.attr("data-target") || r, a = e(document).find(o);
+if (a.hasClass("carousel")) {
+var s = e.extend({}, a.data(), i.data()), l = i.attr("data-slide-to");
+l && (s.interval = !1), t.call(a, s), l && a.data("bs.carousel").to(l), n.preventDefault();
 }
 };
 e(document).on("click.bs.carousel.data-api", "[data-slide]", r).on("click.bs.carousel.data-api", "[data-slide-to]", r), e(window).on("load", function() {
@@ -30090,7 +30092,7 @@ t.call(n, n.data());
 "use strict";
 function t(t) {
 var n, i = t.attr("data-target") || (n = t.attr("href")) && n.replace(/.*(?=#[^\s]+$)/, "");
-return e(i);
+return e(document).find(i);
 }
 function n(t) {
 return this.each(function() {
@@ -30101,7 +30103,7 @@ var n = e(this), r = n.data("bs.collapse"), o = e.extend({}, i.DEFAULTS, n.data(
 var i = function(t, n) {
 this.$element = e(t), this.options = e.extend({}, i.DEFAULTS, n), this.$trigger = e('[data-toggle="collapse"][href="#' + t.id + '"],[data-toggle="collapse"][data-target="#' + t.id + '"]'), this.transitioning = null, this.options.parent ? this.$parent = this.getParent() : this.addAriaAndCollapsedClass(this.$element, this.$trigger), this.options.toggle && this.toggle();
 };
-i.VERSION = "3.3.7", i.TRANSITION_DURATION = 350, i.DEFAULTS = {
+i.VERSION = "3.4.0", i.TRANSITION_DURATION = 350, i.DEFAULTS = {
 toggle: !0
 }, i.prototype.dimension = function() {
 return this.$element.hasClass("width") ? "width" : "height";
@@ -30139,7 +30141,7 @@ this.$element[n](0).one("bsTransitionEnd", e.proxy(r, this)).emulateTransitionEn
 }, i.prototype.toggle = function() {
 this[this.$element.hasClass("in") ? "hide" : "show"]();
 }, i.prototype.getParent = function() {
-return e(this.options.parent).find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]').each(e.proxy(function(n, i) {
+return e(document).find(this.options.parent).find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]').each(e.proxy(function(n, i) {
 var r = e(i);
 this.addAriaAndCollapsedClass(t(r), r);
 }, this)).end();
@@ -30161,7 +30163,7 @@ n.call(o, a);
 function t(t) {
 var n = t.attr("data-target");
 n || (n = (n = t.attr("href")) && /#[A-Za-z]/.test(n) && n.replace(/.*(?=#[^\s]*$)/, ""));
-var i = n && e(n);
+var i = n && e(document).find(n);
 return i && i.length ? i : t.parent();
 }
 function n(n) {
@@ -30175,7 +30177,7 @@ r.hasClass("open") && (n && "click" == n.type && /input|textarea/i.test(n.target
 var i = ".dropdown-backdrop", r = '[data-toggle="dropdown"]', o = function(t) {
 e(t).on("click.bs.dropdown", this.toggle);
 };
-o.VERSION = "3.3.7", o.prototype.toggle = function(i) {
+o.VERSION = "3.4.0", o.prototype.toggle = function(i) {
 var r = e(this);
 if (!r.is(".disabled, :disabled")) {
 var o = t(r), a = o.hasClass("open");
@@ -30223,11 +30225,11 @@ o || r.data("bs.modal", o = new n(this, a)), "string" == typeof t ? o[t](i) : a.
 });
 }
 var n = function(t, n) {
-this.options = n, this.$body = e(document.body), this.$element = e(t), this.$dialog = this.$element.find(".modal-dialog"), this.$backdrop = null, this.isShown = null, this.originalBodyPad = null, this.scrollbarWidth = 0, this.ignoreBackdropClick = !1, this.options.remote && this.$element.find(".modal-content").load(this.options.remote, e.proxy(function() {
+this.options = n, this.$body = e(document.body), this.$element = e(t), this.$dialog = this.$element.find(".modal-dialog"), this.$backdrop = null, this.isShown = null, this.originalBodyPad = null, this.scrollbarWidth = 0, this.ignoreBackdropClick = !1, this.fixedContent = ".navbar-fixed-top, .navbar-fixed-bottom", this.options.remote && this.$element.find(".modal-content").load(this.options.remote, e.proxy(function() {
 this.$element.trigger("loaded.bs.modal");
 }, this));
 };
-n.VERSION = "3.3.7", n.TRANSITION_DURATION = 300, n.BACKDROP_TRANSITION_DURATION = 150, n.DEFAULTS = {
+n.VERSION = "3.4.0", n.TRANSITION_DURATION = 300, n.BACKDROP_TRANSITION_DURATION = 150, n.DEFAULTS = {
 backdrop: !0,
 keyboard: !0,
 show: !0
@@ -30306,10 +30308,18 @@ e = t.right - Math.abs(t.left);
 }
 this.bodyIsOverflowing = document.body.clientWidth < e, this.scrollbarWidth = this.measureScrollbar();
 }, n.prototype.setScrollbar = function() {
-var e = parseInt(this.$body.css("padding-right") || 0, 10);
-this.originalBodyPad = document.body.style.paddingRight || "", this.bodyIsOverflowing && this.$body.css("padding-right", e + this.scrollbarWidth);
+var t = parseInt(this.$body.css("padding-right") || 0, 10);
+this.originalBodyPad = document.body.style.paddingRight || "";
+var n = this.scrollbarWidth;
+this.bodyIsOverflowing && (this.$body.css("padding-right", t + n), e(this.fixedContent).each(function(t, i) {
+var r = i.style.paddingRight, o = e(i).css("padding-right");
+e(i).data("padding-right", r).css("padding-right", parseFloat(o) + n + "px");
+}));
 }, n.prototype.resetScrollbar = function() {
-this.$body.css("padding-right", this.originalBodyPad);
+this.$body.css("padding-right", this.originalBodyPad), e(this.fixedContent).each(function(t, n) {
+var i = e(n).data("padding-right");
+e(n).removeData("padding-right"), n.style.paddingRight = i || "";
+});
 }, n.prototype.measureScrollbar = function() {
 var e = document.createElement("div");
 e.className = "modal-scrollbar-measure", this.$body.append(e);
@@ -30320,21 +30330,21 @@ var i = e.fn.modal;
 e.fn.modal = t, e.fn.modal.Constructor = n, e.fn.modal.noConflict = function() {
 return e.fn.modal = i, this;
 }, e(document).on("click.bs.modal.data-api", '[data-toggle="modal"]', function(n) {
-var i = e(this), r = i.attr("href"), o = e(i.attr("data-target") || r && r.replace(/.*(?=#[^\s]+$)/, "")), a = o.data("bs.modal") ? "toggle" : e.extend({
+var i = e(this), r = i.attr("href"), o = i.attr("data-target") || r && r.replace(/.*(?=#[^\s]+$)/, ""), a = e(document).find(o), s = a.data("bs.modal") ? "toggle" : e.extend({
 remote: !/#/.test(r) && r
-}, o.data(), i.data());
-i.is("a") && n.preventDefault(), o.one("show.bs.modal", function(e) {
-e.isDefaultPrevented() || o.one("hidden.bs.modal", function() {
+}, a.data(), i.data());
+i.is("a") && n.preventDefault(), a.one("show.bs.modal", function(e) {
+e.isDefaultPrevented() || a.one("hidden.bs.modal", function() {
 i.is(":visible") && i.trigger("focus");
 });
-}), t.call(o, a, this);
+}), t.call(a, s, this);
 });
 }(jQuery), function(e) {
 "use strict";
 var t = function(e, t) {
 this.type = null, this.options = null, this.enabled = null, this.timeout = null, this.hoverState = null, this.$element = null, this.inState = null, this.init("tooltip", e, t);
 };
-t.VERSION = "3.3.7", t.TRANSITION_DURATION = 150, t.DEFAULTS = {
+t.VERSION = "3.4.0", t.TRANSITION_DURATION = 150, t.DEFAULTS = {
 animation: !0,
 placement: "top",
 selector: !1,
@@ -30349,7 +30359,7 @@ selector: "body",
 padding: 0
 }
 }, t.prototype.init = function(t, n, i) {
-if (this.enabled = !0, this.type = t, this.$element = e(n), this.options = this.getOptions(i), this.$viewport = this.options.viewport && e(e.isFunction(this.options.viewport) ? this.options.viewport.call(this, this.$element) : this.options.viewport.selector || this.options.viewport), this.inState = {
+if (this.enabled = !0, this.type = t, this.$element = e(n), this.options = this.getOptions(i), this.$viewport = this.options.viewport && e(document).find(e.isFunction(this.options.viewport) ? this.options.viewport.call(this, this.$element) : this.options.viewport.selector || this.options.viewport), this.inState = {
 click: !1,
 hover: !1,
 focus: !1
@@ -30409,7 +30419,7 @@ c && (s = s.replace(l, "") || "top"), o.detach().css({
 top: 0,
 left: 0,
 display: "block"
-}).addClass(s).data("bs." + this.type, this), this.options.container ? o.appendTo(this.options.container) : o.insertAfter(this.$element), this.$element.trigger("inserted.bs." + this.type);
+}).addClass(s).data("bs." + this.type, this), this.options.container ? o.appendTo(e(document).find(this.options.container)) : o.insertAfter(this.$element), this.$element.trigger("inserted.bs." + this.type);
 var u = this.getPosition(), d = o[0].offsetWidth, h = o[0].offsetHeight;
 if (c) {
 var f = s, p = this.getPosition(this.$viewport);
@@ -30543,7 +30553,7 @@ var t = function(e, t) {
 this.init("popover", e, t);
 };
 if (!e.fn.tooltip) throw new Error("Popover requires tooltip.js");
-t.VERSION = "3.3.7", t.DEFAULTS = e.extend({}, e.fn.tooltip.Constructor.DEFAULTS, {
+t.VERSION = "3.4.0", t.DEFAULTS = e.extend({}, e.fn.tooltip.Constructor.DEFAULTS, {
 placement: "right",
 trigger: "click",
 content: "",
@@ -30581,7 +30591,7 @@ var i = e(this), r = i.data("bs.scrollspy"), o = "object" == typeof n && n;
 r || i.data("bs.scrollspy", r = new t(this, o)), "string" == typeof n && r[n]();
 });
 }
-t.VERSION = "3.3.7", t.DEFAULTS = {
+t.VERSION = "3.4.0", t.DEFAULTS = {
 offset: 10
 }, t.prototype.getScrollHeight = function() {
 return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight);
@@ -30627,7 +30637,7 @@ r || i.data("bs.tab", r = new n(this)), "string" == typeof t && r[t]();
 var n = function(t) {
 this.element = e(t);
 };
-n.VERSION = "3.3.7", n.TRANSITION_DURATION = 150, n.prototype.show = function() {
+n.VERSION = "3.4.0", n.TRANSITION_DURATION = 150, n.prototype.show = function() {
 var t = this.element, n = t.closest("ul:not(.dropdown-menu)"), i = t.data("target");
 if (i || (i = (i = t.attr("href")) && i.replace(/.*(?=#[^\s]*$)/, "")), !t.parent("li").hasClass("active")) {
 var r = n.find(".active:last a"), o = e.Event("hide.bs.tab", {
@@ -30636,7 +30646,7 @@ relatedTarget: t[0]
 relatedTarget: r[0]
 });
 if (r.trigger(o), t.trigger(a), !a.isDefaultPrevented() && !o.isDefaultPrevented()) {
-var s = e(i);
+var s = e(document).find(i);
 this.activate(t.closest("li"), n), this.activate(s, s.parent(), function() {
 r.trigger({
 type: "hidden.bs.tab",
@@ -30672,9 +30682,11 @@ r || i.data("bs.affix", r = new n(this, o)), "string" == typeof t && r[t]();
 });
 }
 var n = function(t, i) {
-this.options = e.extend({}, n.DEFAULTS, i), this.$target = e(this.options.target).on("scroll.bs.affix.data-api", e.proxy(this.checkPosition, this)).on("click.bs.affix.data-api", e.proxy(this.checkPositionWithEventLoop, this)), this.$element = e(t), this.affixed = null, this.unpin = null, this.pinnedOffset = null, this.checkPosition();
+this.options = e.extend({}, n.DEFAULTS, i);
+var r = this.options.target === n.DEFAULTS.target ? e(this.options.target) : e(document).find(this.options.target);
+this.$target = r.on("scroll.bs.affix.data-api", e.proxy(this.checkPosition, this)).on("click.bs.affix.data-api", e.proxy(this.checkPositionWithEventLoop, this)), this.$element = e(t), this.affixed = null, this.unpin = null, this.pinnedOffset = null, this.checkPosition();
 };
-n.VERSION = "3.3.7", n.RESET = "affix affix-top affix-bottom", n.DEFAULTS = {
+n.VERSION = "3.4.0", n.RESET = "affix affix-top affix-bottom", n.DEFAULTS = {
 offset: 0,
 target: window
 }, n.prototype.getState = function(e, t, n, i) {
@@ -48742,15 +48754,15 @@ var r = e.data(this, "treeview");
 }(jQuery, window, document), function(e) {
 "use strict";
 var t = {
-version: "3.42.0"
+version: "0.0.0-semantically-released"
 };
 t.pfBreakpoints = {
 tablet: 768,
 desktop: 1200
 }, e.patternfly = t;
-}(window), function(e) {
+}("undefined" != typeof window ? window : global), function(e) {
 "use strict";
-patternfly.pfPaletteColors = {
+e.patternfly.pfPaletteColors = {
 black: "#030303",
 black100: "#fafafa",
 black200: "#ededed",
@@ -48832,41 +48844,42 @@ red300: "#8b0000",
 red400: "#470000",
 red500: "#2c0000"
 };
-}(window), function(e) {
+}("undefined" != typeof window ? window : global), function(e) {
 "use strict";
-patternfly.pfSetDonutChartTitle = function(t, n, i) {
+var t = e.patternfly;
+t.pfSetDonutChartTitle = function(t, n, i) {
 var r = e.d3.select(t).select("text.c3-chart-arcs-title");
 r.text(""), r.insert("tspan").text(n).classed("donut-title-big-pf", !0).attr("dy", 0).attr("x", 0), r.insert("tspan").text(i).classed("donut-title-small-pf", !0).attr("dy", 20).attr("x", 0);
-}, patternfly.pfDonutTooltipContents = function(e, t, n, i) {
+}, t.pfDonutTooltipContents = function(e, t, n, i) {
 return '<table class="c3-tooltip">  <tr>    <td><span style="background-color:' + i(e[0].id) + '"></span><strong>' + e[0].value + "</strong> " + e[0].name + "</td>    <td>" + Math.round(1e3 * e[0].ratio) / 10 + "%</td>  </tr></table>";
-}, patternfly.pfGetUtilizationDonutTooltipContentsFn = function(e) {
+}, t.pfGetUtilizationDonutTooltipContentsFn = function(e) {
 return function(t) {
 return '<span class="donut-tooltip-pf" style="white-space: nowrap;">' + Math.round(1e3 * t[0].ratio) / 10 + "% " + e + " " + t[0].name + "</span>";
 };
-}, patternfly.pfGetBarChartTooltipContentsFn = function(e) {
+}, t.pfGetBarChartTooltipContentsFn = function(e) {
 return function(t) {
 return '<table class="c3-tooltip">  <tr>    <td><strong>' + (e ? e[t[0].index] : t[0].index) + ":</td>    <td>" + t[0].value + "</td>  </tr></table>";
 };
-}, patternfly.pfSingleLineChartTooltipContentsFn = function(e) {
+}, t.pfSingleLineChartTooltipContentsFn = function(e) {
 return function(t) {
 return '<table class="c3-tooltip">  <tr>    <td><strong>' + (e ? e[t[0].index] : t[0].index) + ":</td>    <td>" + t[0].value + "</td>  </tr></table>";
 };
-}, patternfly.pfPieTooltipContents = function(e, t, n, i) {
-return patternfly.pfDonutTooltipContents(e, t, n, i);
-}, patternfly.c3ChartDefaults = function() {
+}, t.pfPieTooltipContents = function(e, n, i, r) {
+return t.pfDonutTooltipContents(e, n, i, r);
+}, t.c3ChartDefaults = function() {
 var e = function() {
 return {
-pattern: [ patternfly.pfPaletteColors.blue, patternfly.pfPaletteColors.blue300, patternfly.pfPaletteColors.green, patternfly.pfPaletteColors.orange, patternfly.pfPaletteColors.red ]
-};
-}, t = function() {
-return {
-zerobased: !0
+pattern: [ t.pfPaletteColors.blue, t.pfPaletteColors.blue300, t.pfPaletteColors.green, t.pfPaletteColors.orange, t.pfPaletteColors.red ]
 };
 }, n = function() {
 return {
-height: 60
+zerobased: !0
 };
 }, i = function() {
+return {
+height: 60
+};
+}, r = function() {
 return {
 x: {
 show: !1
@@ -48875,11 +48888,11 @@ y: {
 show: !1
 }
 };
-}, r = function() {
+}, o = function() {
 return {
 show: !1
 };
-}, o = function() {
+}, a = function() {
 return {
 r: 1,
 focus: {
@@ -48888,25 +48901,16 @@ r: 4
 }
 }
 };
-}, a = function() {
+}, s = function() {
 return {
 contents: function(e) {
 return '<span class="c3-tooltip-sparkline">' + e[0].value + " " + e[0].name + "</span>";
 }
 };
-}, s = function() {
-return {
-x: {
-show: !0
-},
-y: {
-show: !0
-}
-};
 }, l = function() {
 return {
 x: {
-show: !1
+show: !0
 },
 y: {
 show: !0
@@ -48914,9 +48918,18 @@ show: !0
 };
 }, c = function() {
 return {
+x: {
+show: !1
+},
+y: {
 show: !0
+}
 };
 }, u = function() {
+return {
+show: !0
+};
+}, d = function() {
 return {
 r: 3,
 focus: {
@@ -48925,11 +48938,11 @@ r: 5
 }
 }
 };
-}, d = function() {
-return {
-contents: patternfly.pfGetBarChartTooltipContentsFn()
-};
 }, h = function() {
+return {
+contents: t.pfGetBarChartTooltipContentsFn()
+};
+}, f = function() {
 return {
 x: {
 show: !0
@@ -48938,7 +48951,7 @@ y: {
 show: !0
 }
 };
-}, f = function() {
+}, p = function() {
 return {
 x: {
 show: !1
@@ -48947,11 +48960,11 @@ y: {
 show: !0
 }
 };
-}, p = function() {
+}, g = function() {
 return {
 show: !0
 };
-}, g = function() {
+}, m = function() {
 return {
 r: 3,
 focus: {
@@ -48960,9 +48973,9 @@ r: 5
 }
 }
 };
-}, m = function() {
+}, v = function() {
 return {
-contents: patternfly.pfGetBarChartTooltipContentsFn()
+contents: t.pfGetBarChartTooltipContentsFn()
 };
 };
 return {
@@ -48976,7 +48989,7 @@ show: !0
 },
 getDefaultBarTooltip: function(e) {
 return {
-contents: patternfly.pfGetBarChartTooltipContentsFn(e)
+contents: t.pfGetBarChartTooltipContentsFn(e)
 };
 },
 getDefaultBarLegend: function() {
@@ -49048,7 +49061,7 @@ height: 171
 },
 getDefaultDonutColors: function() {
 return {
-pattern: [ patternfly.pfPaletteColors.blue, patternfly.pfPaletteColors.black300 ]
+pattern: [ t.pfPaletteColors.blue, t.pfPaletteColors.black300 ]
 };
 },
 getDefaultDonutTooltip: function() {
@@ -49094,17 +49107,17 @@ height: 171
 },
 getDefaultPieColors: function() {
 return {
-pattern: [ patternfly.pfPaletteColors.blue, patternfly.pfPaletteColors.black300 ]
+pattern: [ t.pfPaletteColors.blue, t.pfPaletteColors.black300 ]
 };
 },
 getDefaultRelationshipDonutColors: function() {
 return {
-pattern: [ patternfly.pfPaletteColors.blue, patternfly.pfPaletteColors.red100, patternfly.pfPaletteColors.orange400, patternfly.pfPaletteColors.green400, patternfly.pfPaletteColors.cyan500, patternfly.pfPaletteColors.gold200 ]
+pattern: [ t.pfPaletteColors.blue, t.pfPaletteColors.red100, t.pfPaletteColors.orange400, t.pfPaletteColors.green400, t.pfPaletteColors.cyan500, t.pfPaletteColors.gold200 ]
 };
 },
 getDefaultPieTooltip: function() {
 return {
-contents: patternfly.pfPieTooltipContents
+contents: t.pfPieTooltipContents
 };
 },
 getDefaultPieLegend: function() {
@@ -49121,12 +49134,12 @@ color: this.getDefaultPieColors(),
 tooltip: this.getDefaultPieTooltip()
 };
 },
-getDefaultSparklineArea: t,
-getDefaultSparklineSize: n,
-getDefaultSparklineAxis: i,
-getDefaultSparklineLegend: r,
-getDefaultSparklinePoint: o,
-getDefaultSparklineTooltip: a,
+getDefaultSparklineArea: n,
+getDefaultSparklineSize: i,
+getDefaultSparklineAxis: r,
+getDefaultSparklineLegend: o,
+getDefaultSparklinePoint: a,
+getDefaultSparklineTooltip: s,
 getDefaultSparklineConfig: function() {
 return {
 area: {
@@ -49155,13 +49168,13 @@ r: 4
 }
 }
 },
-tooltip: a()
+tooltip: s()
 };
 },
-getDefaultLineAxis: s,
-getDefaultLineGrid: l,
-getDefaultLineLegend: c,
-getDefaultLinePoint: u,
+getDefaultLineAxis: l,
+getDefaultLineGrid: c,
+getDefaultLineLegend: u,
+getDefaultLinePoint: d,
 getDefaultLineConfig: function() {
 return {
 axis: {
@@ -49194,7 +49207,7 @@ r: 5
 }
 };
 },
-getDefaultSingleLineTooltip: d,
+getDefaultSingleLineTooltip: h,
 getDefaultSingleLineConfig: function() {
 return {
 axis: {
@@ -49225,13 +49238,13 @@ r: 5
 }
 }
 },
-tooltip: d()
+tooltip: h()
 };
 },
-getDefaultAreaAxis: h,
-getDefaultAreaGrid: f,
-getDefaultAreaLegend: p,
-getDefaultAreaPoint: g,
+getDefaultAreaAxis: f,
+getDefaultAreaGrid: p,
+getDefaultAreaLegend: g,
+getDefaultAreaPoint: m,
 getDefaultAreaConfig: function() {
 return {
 axis: {
@@ -49264,7 +49277,7 @@ r: 5
 }
 };
 },
-getDefaultSingleAreaTooltip: m,
+getDefaultSingleAreaTooltip: v,
 getDefaultSingleAreaConfig: function() {
 return {
 axis: {
@@ -49295,12 +49308,12 @@ r: 5
 }
 }
 },
-tooltip: m()
+tooltip: v()
 };
 }
 };
 };
-}(window), function(e) {
+}("undefined" != typeof window ? window : global), function(e) {
 "use strict";
 void 0 !== patternfly && (e.pfBreakpoints = patternfly.pfBreakpoints);
 }(jQuery), function(e) {
@@ -49340,7 +49353,7 @@ e(".navbar-pf .navbar-toggle").is(":hidden") && (t = e(document).height() - e(".
 });
 }, e(document).ready(function() {
 e(".sidebar-pf").length > 0 && 0 === e(".datatable").length && e.fn.sidebar();
-}), e(window).resize(function() {
+}), e(window).on("resize", function() {
 e(".sidebar-pf").length > 0 && e.fn.sidebar();
 });
 }(jQuery), function(e) {
@@ -49502,13 +49515,22 @@ n !== l[0] && (c += i.outerHeight(!0));
 "overflow-y": s
 });
 }, 100);
-})(), e(window).resize(n);
+})(), e(window).on("resize", n);
+}, e.fn.initFixedAccordion = function() {
+var t, n = this;
+n.on("show.bs.collapse", ".collapse", function(t) {
+e(t.target.parentNode).addClass("panel-open");
+}), n.on("hide.bs.collapse", ".collapse", function(t) {
+e(t.target.parentNode).removeClass("panel-open");
+}), n.find(".panel").each(function(t, n) {
+e(n).removeClass("panel-open");
+}), (t = e(n.find(".collapse.in"))[0]) && e(t.parentNode).addClass("panel-open");
 };
 }(jQuery), function(e) {
 "use strict";
 function t(t, n) {
 var i = n.attr("data-parent");
-if ("string" == typeof i) return i = isNaN(i) ? t.closest(i) : e(t[parseInt(i, 10)]);
+if ("string" == typeof i) return isNaN(i) ? (i = e(i)).length > 1 && (i = t.closest(i)) : i = e(t[parseInt(i, 10)]), i;
 }
 function n(e, t) {
 t && (t.find(".treegrid-node > span.expand-icon").toggleClass("fa-angle-right", t.hasClass("collapsed")).toggleClass("fa-angle-down", !t.hasClass("collapsed")), e.toggleClass("hidden", t.hasClass("collapsed")), t.hasClass("collapsed") && e.addClass("collapsed"));
@@ -49533,116 +49555,121 @@ n(l, c);
 };
 }(jQuery), function(e) {
 "use strict";
-e.fn.setupVerticalNavigation = function(t, n) {
-var i = e(".nav-pf-vertical"), r = e(".container-pf-nav-pf-vertical"), o = e(".navbar-toggle"), a = !0, s = !1, l = !1, c = function() {
-return r.hasClass("hidden-nav");
-}, u = function(t) {
+e.fn.setupVerticalNavigation = function(t, n, i) {
+var r = e.extend({
+hoverDelay: 500,
+hideDelay: 700,
+rememberOpenState: !0,
+storage: "localStorage"
+}, i || {}), o = e(".nav-pf-vertical"), a = e(".container-pf-nav-pf-vertical"), s = e(".navbar-toggle"), l = !0, c = !1, u = !1, d = "sessionStorage" === r.storage ? "sessionStorage" : "localStorage", h = function() {
+return a.hasClass("hidden-nav");
+}, f = function(t) {
 setTimeout(function() {
 e(window).trigger("resize");
 }, t);
-}, d = function() {
-!c() && l || (i.addClass("secondary-visible-pf"), r.addClass("secondary-visible-pf")), l || u(100);
-}, h = function() {
-i.removeClass("secondary-visible-pf"), r.removeClass("secondary-visible-pf"), i.find(".secondary-nav-item-pf.is-hover").length <= 1 && i.removeClass("hover-secondary-nav-pf"), i.find(".mobile-nav-item-pf").each(function(t, n) {
-e(n).removeClass("mobile-nav-item-pf");
-}), i.find(".is-hover").each(function(t, n) {
-e(n).removeClass("is-hover");
-});
-}, f = function() {
-i.removeClass("tertiary-visible-pf"), r.removeClass("tertiary-visible-pf"), i.find(".tertiary-nav-item-pf.is-hover").length <= 1 && i.removeClass("hover-tertiary-nav-pf"), i.find(".mobile-nav-item-pf").each(function(t, n) {
-e(n).removeClass("mobile-nav-item-pf");
-}), i.find(".is-hover").each(function(t, n) {
-e(n).removeClass("is-hover");
-});
-}, p = function(t) {
-e(".nav-pf-vertical .list-group-item.active").removeClass("active"), t.addClass("active").parents(".list-group-item").addClass("active");
+}, p = function() {
+!h() && u || (o.addClass("secondary-visible-pf"), a.addClass("secondary-visible-pf")), u || f(100);
 }, g = function() {
-c() ? (i.removeClass("show-mobile-nav"), h(), i.find(".mobile-nav-item-pf").each(function(t, n) {
+o.removeClass("secondary-visible-pf"), a.removeClass("secondary-visible-pf"), o.find(".secondary-nav-item-pf.is-hover").length <= 1 && o.removeClass("hover-secondary-nav-pf"), o.find(".mobile-nav-item-pf").each(function(t, n) {
 e(n).removeClass("mobile-nav-item-pf");
-})) : d();
-}, m = function(t, n) {
-t ? (n.addClass("collapsed"), i.addClass("collapsed-secondary-nav-pf"), r.addClass("collapsed-secondary-nav-pf")) : (n ? n.removeClass("collapsed") : i.find('[data-toggle="collapse-secondary-nav"]').each(function(t, n) {
+}), o.find(".is-hover").each(function(t, n) {
+e(n).removeClass("is-hover");
+});
+}, m = function() {
+o.removeClass("tertiary-visible-pf"), a.removeClass("tertiary-visible-pf"), o.find(".tertiary-nav-item-pf.is-hover").length <= 1 && o.removeClass("hover-tertiary-nav-pf"), o.find(".mobile-nav-item-pf").each(function(t, n) {
+e(n).removeClass("mobile-nav-item-pf");
+}), o.find(".is-hover").each(function(t, n) {
+e(n).removeClass("is-hover");
+});
+}, v = function(t) {
+e(".nav-pf-vertical .list-group-item.active").removeClass("active"), t.addClass("active").parents(".list-group-item").addClass("active");
+}, b = function() {
+h() ? (o.removeClass("show-mobile-nav"), g(), o.find(".mobile-nav-item-pf").each(function(t, n) {
+e(n).removeClass("mobile-nav-item-pf");
+})) : p();
+}, y = function(t, n) {
+t ? (n.addClass("collapsed"), o.addClass("collapsed-secondary-nav-pf"), a.addClass("collapsed-secondary-nav-pf")) : (n ? n.removeClass("collapsed") : o.find('[data-toggle="collapse-secondary-nav"]').each(function(t, n) {
 e(n).removeClass("collapsed");
-}), i.removeClass("collapsed-secondary-nav-pf"), r.removeClass("collapsed-secondary-nav-pf"));
-}, v = function(t, n) {
-t ? (n.addClass("collapsed"), i.addClass("collapsed-tertiary-nav-pf"), r.addClass("collapsed-tertiary-nav-pf"), m(!1)) : (n ? n.removeClass("collapsed") : i.find('[data-toggle="collapse-tertiary-nav"]').each(function(t, n) {
+}), o.removeClass("collapsed-secondary-nav-pf"), a.removeClass("collapsed-secondary-nav-pf"));
+}, w = function(t, n) {
+t ? (n.addClass("collapsed"), o.addClass("collapsed-tertiary-nav-pf"), a.addClass("collapsed-tertiary-nav-pf"), y(!1)) : (n ? n.removeClass("collapsed") : o.find('[data-toggle="collapse-tertiary-nav"]').each(function(t, n) {
 e(n).removeClass("collapsed");
-}), i.removeClass("collapsed-tertiary-nav-pf"), r.removeClass("collapsed-tertiary-nav-pf"));
-}, b = function(t, n) {
+}), o.removeClass("collapsed-tertiary-nav-pf"), a.removeClass("collapsed-tertiary-nav-pf"));
+}, _ = function(t, n) {
 e(document).find(".list-group-item.mobile-nav-item-pf").each(function(t, n) {
 e(n).removeClass("mobile-nav-item-pf");
 }), e(document).find(".list-group-item.mobile-secondary-item-pf").each(function(t, n) {
 e(n).removeClass("mobile-secondary-item-pf");
-}), t ? (t.addClass("mobile-nav-item-pf"), n ? (n.addClass("mobile-secondary-item-pf"), i.removeClass("show-mobile-secondary"), i.addClass("show-mobile-tertiary")) : (i.addClass("show-mobile-secondary"), i.removeClass("show-mobile-tertiary"))) : (i.removeClass("show-mobile-secondary"), i.removeClass("show-mobile-tertiary"));
-}, y = function() {
-i.hasClass("hidden") || (i.addClass("hidden"), i.removeClass("collapsed"), r.removeClass("collapsed-nav"), r.addClass("hidden-nav"), m(!1), v(!1), s = !1);
-}, w = function() {
-i.removeClass("hidden show-mobile-nav"), r.removeClass("hidden-nav");
-}, _ = function() {
-var t, n = e(window).width();
-a && (n < e.pfBreakpoints.tablet && !s ? y() : i.hasClass("hidden") && w(), n < e.pfBreakpoints.desktop ? (l || (i.addClass("collapsed"), r.addClass("collapsed-nav")), n >= e.pfBreakpoints.tablet && h(), l = !0) : (t = l && i.find(".secondary-nav-item-pf.active").length > 0, l = !1, t && d()), s ? (i.addClass("collapsed"), r.addClass("collapsed-nav")) : (i.removeClass("collapsed"), r.removeClass("collapsed-nav")));
+}), t ? (t.addClass("mobile-nav-item-pf"), n ? (n.addClass("mobile-secondary-item-pf"), o.removeClass("show-mobile-secondary"), o.addClass("show-mobile-tertiary")) : (o.addClass("show-mobile-secondary"), o.removeClass("show-mobile-tertiary"))) : (o.removeClass("show-mobile-secondary"), o.removeClass("show-mobile-tertiary"));
 }, C = function() {
-i.addClass("collapsed"), r.addClass("collapsed-nav"), l && h(), s = !0;
+o.hasClass("hidden") || (o.addClass("hidden"), o.removeClass("collapsed"), a.removeClass("collapsed-nav"), a.addClass("hidden-nav"), y(!1), w(!1), c = !1);
 }, x = function() {
-e("html").addClass("transitions");
+o.removeClass("hidden show-mobile-nav"), a.removeClass("hidden-nav");
 }, S = function() {
-i.removeClass("collapsed"), r.removeClass("collapsed-nav"), s = !1, l || u(100);
+var t, n = e(window).width();
+l && (n < e.pfBreakpoints.tablet && !c ? C() : o.hasClass("hidden") && x(), n < e.pfBreakpoints.desktop ? (u || (o.addClass("collapsed"), a.addClass("collapsed-nav")), n >= e.pfBreakpoints.tablet && g(), u = !0) : (t = u && o.find(".secondary-nav-item-pf.active").length > 0, u = !1, t && p()), c ? (o.addClass("collapsed"), a.addClass("collapsed-nav")) : (o.removeClass("collapsed"), a.removeClass("collapsed-nav")));
 }, $ = function() {
-o.on("click", function(t) {
-var r;
-x(), c() ? i.hasClass("show-mobile-nav") ? i.removeClass("show-mobile-nav") : (b(), i.addClass("show-mobile-nav"), n || (r = e(".drawer-pf")).length && (e(".drawer-pf-trigger").removeClass("open"), r.addClass("hide"))) : i.hasClass("collapsed") ? (window.localStorage.setItem("patternfly-navigation-primary", "expanded"), S()) : (window.localStorage.setItem("patternfly-navigation-primary", "collapsed"), C());
-});
+o.addClass("collapsed"), a.addClass("collapsed-nav"), u && g(), c = !0;
 }, A = function() {
-i.addClass("force-hide-secondary-nav-pf"), setTimeout(function() {
-i.removeClass("force-hide-secondary-nav-pf");
+e("html").addClass("transitions");
+}, k = function() {
+o.removeClass("collapsed"), a.removeClass("collapsed-nav"), c = !1, u || f(100);
+}, T = function() {
+s.on("click", function(t) {
+var i;
+A(), h() ? o.hasClass("show-mobile-nav") ? o.removeClass("show-mobile-nav") : (_(), o.addClass("show-mobile-nav"), n || (i = e(".drawer-pf")).length && (e(".drawer-pf-trigger").removeClass("open"), i.addClass("hide"))) : o.hasClass("collapsed") ? (r.rememberOpenState && window[d].setItem("patternfly-navigation-primary", "expanded"), k()) : (r.rememberOpenState && window[d].setItem("patternfly-navigation-primary", "collapsed"), $());
+});
+}, D = function() {
+o.addClass("force-hide-secondary-nav-pf"), setTimeout(function() {
+o.removeClass("force-hide-secondary-nav-pf");
 }, 500);
-}, k = function(t) {
-e(document).find(".nav-pf-vertical .list-group-item").each(function(n, r) {
-var o, a = e(r), s = a.closest('[class*="nav-pf-"]');
-s.hasClass("nav-pf-vertical") ? o = function(n) {
-var r, o, s = e(this);
-s.hasClass("secondary-nav-item-pf") ? c() ? b(s) : t && (o = r = a.find(".nav-pf-secondary-nav > .list-group > .list-group-item").eq(0), r.hasClass("tertiary-nav-item-pf") && (o = r.find(".nav-pf-tertiary-nav > .list-group > .list-group-item").eq(0)), p(o), n.stopImmediatePropagation()) : (h(), c() && (b(), i.removeClass("show-mobile-nav")), t && (p(s), n.stopImmediatePropagation()));
-} : s.hasClass("nav-pf-secondary-nav") ? o = function(n) {
-var r, o, s = e(this);
-s.hasClass("tertiary-nav-item-pf") ? c() ? (o = a.parents(".list-group-item"), b(s, o), n.stopImmediatePropagation()) : t && (r = a.find(".nav-pf-tertiary-nav > .list-group > .list-group-item").eq(0), p(r), n.stopImmediatePropagation()) : (c() && (b(), i.removeClass("show-mobile-nav")), g(), t && (p(a), h(), n.stopImmediatePropagation()));
-} : s.hasClass("nav-pf-tertiary-nav") && (o = function(e) {
-c() && (b(), i.removeClass("show-mobile-nav")), g(), t && (p(a), f(), h(), e.stopImmediatePropagation());
-}), a.on("click.pf.secondarynav.data-api", o);
-}), e(document).find(".secondary-nav-item-pf").each(function(n, r) {
-var o = e(r);
-o.on("click.pf.secondarynav.data-api", '[data-toggle="collapse-secondary-nav"]', function(n) {
-var r = e(this);
-c() ? (b(), n.stopImmediatePropagation()) : r.hasClass("collapsed") ? (window.localStorage.setItem("patternfly-navigation-secondary", "expanded"), window.localStorage.setItem("patternfly-navigation-tertiary", "expanded"), m(!1, r), A()) : (window.localStorage.setItem("patternfly-navigation-secondary", "collapsed"), m(!0, r)), i.removeClass("hover-secondary-nav-pf"), t && n.stopImmediatePropagation();
-}), o.find(".tertiary-nav-item-pf").each(function(n, r) {
-e(r).on("click.pf.tertiarynav.data-api", '[data-toggle="collapse-tertiary-nav"]', function(n) {
-var r = e(this);
-c() ? (b(o), n.stopImmediatePropagation()) : r.hasClass("collapsed") ? (window.localStorage.setItem("patternfly-navigation-secondary", "expanded"), window.localStorage.setItem("patternfly-navigation-tertiary", "expanded"), v(!1, r), A()) : (window.localStorage.setItem("patternfly-navigation-tertiary", "collapsed"), v(!0, r)), i.removeClass("hover-secondary-nav-pf"), i.removeClass("hover-tertiary-nav-pf"), t && n.stopImmediatePropagation();
+}, E = function(t) {
+e(document).find(".nav-pf-vertical .list-group-item").each(function(n, i) {
+var r, a = e(i), s = a.closest('[class*="nav-pf-"]');
+s.hasClass("nav-pf-vertical") ? r = function(n) {
+var i, r, s = e(this);
+s.hasClass("secondary-nav-item-pf") ? h() ? _(s) : t && (r = i = a.find(".nav-pf-secondary-nav > .list-group > .list-group-item").eq(0), i.hasClass("tertiary-nav-item-pf") && (r = i.find(".nav-pf-tertiary-nav > .list-group > .list-group-item").eq(0)), v(r), n.stopImmediatePropagation()) : (g(), h() && (_(), o.removeClass("show-mobile-nav")), t && (v(s), n.stopImmediatePropagation()));
+} : s.hasClass("nav-pf-secondary-nav") ? r = function(n) {
+var i, r, s = e(this);
+s.hasClass("tertiary-nav-item-pf") ? h() ? (r = a.parents(".list-group-item"), _(s, r), n.stopImmediatePropagation()) : t && (i = a.find(".nav-pf-tertiary-nav > .list-group > .list-group-item").eq(0), v(i), n.stopImmediatePropagation()) : (h() && (_(), o.removeClass("show-mobile-nav")), b(), t && (v(a), g(), n.stopImmediatePropagation()));
+} : s.hasClass("nav-pf-tertiary-nav") && (r = function(e) {
+h() && (_(), o.removeClass("show-mobile-nav")), b(), t && (v(a), m(), g(), e.stopImmediatePropagation());
+}), a.on("click.pf.secondarynav.data-api", r);
+}), e(document).find(".secondary-nav-item-pf").each(function(n, i) {
+var a = e(i);
+a.on("click.pf.secondarynav.data-api", '[data-toggle="collapse-secondary-nav"]', function(n) {
+var i = e(this);
+h() ? (_(), n.stopImmediatePropagation()) : i.hasClass("collapsed") ? (r.rememberOpenState && (window[d].setItem("patternfly-navigation-secondary", "expanded"), window[d].setItem("patternfly-navigation-tertiary", "expanded")), y(!1, i), D()) : (r.rememberOpenState && window[d].setItem("patternfly-navigation-secondary", "collapsed"), y(!0, i)), o.removeClass("hover-secondary-nav-pf"), t && n.stopImmediatePropagation();
+}), a.find(".tertiary-nav-item-pf").each(function(n, i) {
+e(i).on("click.pf.tertiarynav.data-api", '[data-toggle="collapse-tertiary-nav"]', function(n) {
+var i = e(this);
+h() ? (_(a), n.stopImmediatePropagation()) : i.hasClass("collapsed") ? (r.rememberOpenState && (window[d].setItem("patternfly-navigation-secondary", "expanded"), window[d].setItem("patternfly-navigation-tertiary", "expanded")), w(!1, i), D()) : (r.rememberOpenState && window[d].setItem("patternfly-navigation-tertiary", "collapsed"), w(!0, i)), o.removeClass("hover-secondary-nav-pf"), o.removeClass("hover-tertiary-nav-pf"), t && n.stopImmediatePropagation();
 });
 });
 }), e(document).on("mouseenter.pf.tertiarynav.data-api", ".secondary-nav-item-pf", function(t) {
 var n = e(this);
-c() || (void 0 !== n[0].navUnHoverTimeout ? (clearTimeout(n[0].navUnHoverTimeout), n[0].navUnHoverTimeout = void 0) : void 0 === n[0].navHoverTimeout && (n[0].navHoverTimeout = setTimeout(function() {
-i.addClass("hover-secondary-nav-pf"), n.addClass("is-hover"), n[0].navHoverTimeout = void 0;
-}, 500)));
+h() || (void 0 !== n[0].navUnHoverTimeout ? (clearTimeout(n[0].navUnHoverTimeout), n[0].navUnHoverTimeout = void 0) : void 0 === n[0].navHoverTimeout && (n[0].navHoverTimeout = setTimeout(function() {
+o.addClass("hover-secondary-nav-pf"), n.addClass("is-hover"), n[0].navHoverTimeout = void 0;
+}, r.hoverDelay)));
 }), e(document).on("mouseleave.pf.tertiarynav.data-api", ".secondary-nav-item-pf", function(t) {
 var n = e(this);
-void 0 !== n[0].navHoverTimeout ? (clearTimeout(n[0].navHoverTimeout), n[0].navHoverTimeout = void 0) : void 0 === n[0].navUnHoverTimeout && i.find(".secondary-nav-item-pf.is-hover").length > 0 && (n[0].navUnHoverTimeout = setTimeout(function() {
-i.find(".secondary-nav-item-pf.is-hover").length <= 1 && i.removeClass("hover-secondary-nav-pf"), n.removeClass("is-hover"), n[0].navUnHoverTimeout = void 0;
-}, 700));
+void 0 !== n[0].navHoverTimeout ? (clearTimeout(n[0].navHoverTimeout), n[0].navHoverTimeout = void 0) : void 0 === n[0].navUnHoverTimeout && o.find(".secondary-nav-item-pf.is-hover").length > 0 && (n[0].navUnHoverTimeout = setTimeout(function() {
+o.find(".secondary-nav-item-pf.is-hover").length <= 1 && o.removeClass("hover-secondary-nav-pf"), n.removeClass("is-hover"), n[0].navUnHoverTimeout = void 0;
+}, r.hideDelay));
 }), e(document).on("mouseover.pf.tertiarynav.data-api", ".tertiary-nav-item-pf", function(t) {
 var n = e(this);
-c() || (void 0 !== n[0].navUnHoverTimeout ? (clearTimeout(n[0].navUnHoverTimeout), n[0].navUnHoverTimeout = void 0) : void 0 === n[0].navHoverTimeout && (n[0].navHoverTimeout = setTimeout(function() {
-i.addClass("hover-tertiary-nav-pf"), n.addClass("is-hover"), n[0].navHoverTimeout = void 0;
-}, 500)));
+h() || (void 0 !== n[0].navUnHoverTimeout ? (clearTimeout(n[0].navUnHoverTimeout), n[0].navUnHoverTimeout = void 0) : void 0 === n[0].navHoverTimeout && (n[0].navHoverTimeout = setTimeout(function() {
+o.addClass("hover-tertiary-nav-pf"), n.addClass("is-hover"), n[0].navHoverTimeout = void 0;
+}, r.hoverDelay)));
 }), e(document).on("mouseout.pf.tertiarynav.data-api", ".tertiary-nav-item-pf", function(t) {
 var n = e(this);
 void 0 !== n[0].navHoverTimeout ? (clearTimeout(n[0].navHoverTimeout), n[0].navHoverTimeout = void 0) : void 0 === n[0].navUnHoverTimeout && (n[0].navUnHoverTimeout = setTimeout(function() {
-i.find(".tertiary-nav-item-pf.is-hover").length <= 1 && i.removeClass("hover-tertiary-nav-pf"), n.removeClass("is-hover"), n[0].navUnHoverTimeout = void 0;
-}, 700));
+o.find(".tertiary-nav-item-pf.is-hover").length <= 1 && o.removeClass("hover-tertiary-nav-pf"), n.removeClass("is-hover"), n[0].navUnHoverTimeout = void 0;
+}, r.hideDelay));
 });
-}, T = function() {
-c() || ("collapsed" === window.localStorage.getItem("patternfly-navigation-primary") && C(), e(".nav-pf-vertical.nav-pf-vertical-collapsible-menus").length > 0 && ("collapsed" === window.localStorage.getItem("patternfly-navigation-secondary") && m(!0, e(".secondary-nav-item-pf.active [data-toggle=collapse-secondary-nav]")), "collapsed" === window.localStorage.getItem("patternfly-navigation-tertiary") && v(!0, e(".tertiary-nav-item-pf.active [data-toggle=collapse-tertiary-nav]"))));
-}, D = function() {
+}, F = function() {
+h() || ("collapsed" === window[d].getItem("patternfly-navigation-primary") && $(), e(".nav-pf-vertical.nav-pf-vertical-collapsible-menus").length > 0 && ("collapsed" === window[d].getItem("patternfly-navigation-secondary") && y(!0, e(".secondary-nav-item-pf.active [data-toggle=collapse-secondary-nav]")), "collapsed" === window[d].getItem("patternfly-navigation-tertiary") && w(!0, e(".tertiary-nav-item-pf.active [data-toggle=collapse-tertiary-nav]"))));
+}, M = function() {
 var t = {
 container: "body",
 placement: "bottom",
@@ -49655,21 +49682,21 @@ template: '<div class="nav-pf-vertical-tooltip tooltip" role="tooltip"><div clas
 e('.nav-pf-vertical [data-toggle="tooltip"]').tooltip(t), e(".nav-pf-vertical").on("show.bs.tooltip", function(t) {
 return e(this).hasClass("collapsed");
 });
-}, E = {
+}, I = {
 hideMenu: function() {
-a = !1, y();
+l = !1, C();
 },
 showMenu: function() {
-a = !0, w();
+l = !0, x();
 },
 isVisible: function() {
-return a;
+return l;
 }
 };
-return e.fn.setupVerticalNavigation.self || (e.fn.setupVerticalNavigation.self = E, e(window).on("resize", function() {
-_(), x();
+return e.fn.setupVerticalNavigation.self || (e.fn.setupVerticalNavigation.self = I, e(window).on("resize", function() {
+S(), A();
 }), function(e) {
-i.addClass("hide-nav-pf"), r.addClass("hide-nav-pf"), _(), $(), k(e), D(), T(), i.removeClass("hide-nav-pf"), r.removeClass("hide-nav-pf"), u(250);
+o.addClass("hide-nav-pf"), a.addClass("hide-nav-pf"), S(), T(), E(e), M(), r.rememberOpenState && F(), o.removeClass("hide-nav-pf"), a.removeClass("hide-nav-pf"), f(250);
 }(t)), e.fn.setupVerticalNavigation.self;
 };
 }(jQuery), angular.module("patternfly.canvas", [ "dragging", "ngDragDrop", "ui.bootstrap" ]), angular.module("patternfly.card", [ "ui.bootstrap" ]), angular.module("patternfly.charts", [ "patternfly.utils", "ui.bootstrap", "ngSanitize" ]), angular.module("patternfly.filters", [ "ui.bootstrap" ]), angular.module("patternfly.form", []), angular.module("patternfly.modals", [ "ui.bootstrap.modal", "ui.bootstrap.tpls" ]), angular.module("patternfly.navigation", [ "ui.bootstrap" ]), angular.module("patternfly.notification", [ "patternfly.utils", "ui.bootstrap" ]), angular.module("patternfly.pagination", [ "ui.bootstrap" ]).filter("startFrom", function() {
