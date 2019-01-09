@@ -9240,7 +9240,7 @@ if (e.spec.resources.requests.storage = n.claim.amount + t, n.claim.selectedLabe
 var r = d.mapEntries(d.compactEntries(n.claim.selectedLabels));
 _.isEmpty(r) || _.set(e, "spec.selector.matchLabels", r);
 }
-return n.claim.storageClass && "No Storage Class" !== n.claim.storageClass.metadata.name && (e.metadata.annotations["volume.beta.kubernetes.io/storage-class"] = n.claim.storageClass.metadata.name), e;
+return n.claim.storageClass && "No Storage Class" !== n.claim.storageClass.metadata.name && _.set(e, "spec.storageClassName", n.claim.storageClass.metadata.name), e;
 }
 n.project = r, i.canI(p, "create", t.project) ? n.createPersistentVolumeClaim = function() {
 if (f(), n.createPersistentVolumeClaimForm.$valid) {
@@ -15580,11 +15580,11 @@ return function(e) {
 var t = [], n = moment.duration(e), r = Math.floor(n.asHours()), a = n.minutes(), o = n.seconds();
 return (r < 0 || a < 0 || o < 0) && (r = a = o = 0), r && t.push(r + "h"), a && t.push(a + "m"), r || t.push(o + "s"), t.join(" ");
 };
-}), angular.module("openshiftConsole").filter("storageClass", [ "annotationFilter", function(e) {
-return function(t) {
-return e(t, "volume.beta.kubernetes.io/storage-class");
+}), angular.module("openshiftConsole").filter("storageClass", function() {
+return function(e) {
+return e.spec.storageClassName;
 };
-} ]).filter("storageClassAccessMode", [ "annotationFilter", function(e) {
+}).filter("storageClassAccessMode", [ "annotationFilter", function(e) {
 return function(t) {
 return e(t, "storage.alpha.openshift.io/access-mode");
 };
