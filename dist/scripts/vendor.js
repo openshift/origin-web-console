@@ -48278,6 +48278,7 @@ onNodeCollapsed: void 0,
 onNodeDisabled: void 0,
 onNodeEnabled: void 0,
 onNodeExpanded: void 0,
+onNodeChanged: void 0,
 onNodeSelected: void 0,
 onNodeUnchecked: void 0,
 onNodeUnselected: void 0,
@@ -48369,10 +48370,10 @@ this._destroy(), e.removeData(this, "treeview"), e("#" + this._styleId).remove()
 }, o.prototype._destroy = function() {
 this._initialized && (this._initialized = !1, this._triggerEvent("destroyed", null, r.options), this._unsubscribeEvents(), this.$wrapper.remove(), this.$wrapper = null);
 }, o.prototype._unsubscribeEvents = function() {
-this.$element.off("loading"), this.$element.off("loadingFailed"), this.$element.off("initialized"), this.$element.off("nodeRendered"), this.$element.off("rendered"), this.$element.off("destroyed"), this.$element.off("click"), this.$element.off("nodeChecked"), this.$element.off("nodeCollapsed"), this.$element.off("nodeDisabled"), this.$element.off("nodeEnabled"), this.$element.off("nodeExpanded"), this.$element.off("nodeSelected"), this.$element.off("nodeUnchecked"), this.$element.off("nodeUnselected"), this.$element.off("searchComplete"), this.$element.off("searchCleared");
+this.$element.off("loading"), this.$element.off("loadingFailed"), this.$element.off("initialized"), this.$element.off("nodeRendered"), this.$element.off("rendered"), this.$element.off("destroyed"), this.$element.off("click"), this.$element.off("nodeChecked"), this.$element.off("nodeCollapsed"), this.$element.off("nodeDisabled"), this.$element.off("nodeEnabled"), this.$element.off("nodeExpanded"), this.$element.off("nodeChanged"), this.$element.off("nodeSelected"), this.$element.off("nodeUnchecked"), this.$element.off("nodeUnselected"), this.$element.off("searchComplete"), this.$element.off("searchCleared");
 }, o.prototype._subscribeEvents = function() {
 this._unsubscribeEvents(), "function" == typeof this._options.onLoading && this.$element.on("loading", this._options.onLoading), "function" == typeof this._options.onLoadingFailed && this.$element.on("loadingFailed", this._options.onLoadingFailed), "function" == typeof this._options.onInitialized && this.$element.on("initialized", this._options.onInitialized), "function" == typeof this._options.onNodeRendered && this.$element.on("nodeRendered", this._options.onNodeRendered), "function" == typeof this._options.onRendered && this.$element.on("rendered", this._options.onRendered), "function" == typeof this._options.onDestroyed && this.$element.on("destroyed", this._options.onDestroyed), this.$element.on("click", e.proxy(this._clickHandler, this)), "function" == typeof this._options.onNodeChecked && this.$element.on("nodeChecked", this._options.onNodeChecked), "function" == typeof this._options.onNodeCollapsed && this.$element.on("nodeCollapsed", this._options.onNodeCollapsed), "function" == typeof this._options.onNodeDisabled && this.$element.on("nodeDisabled", this._options.onNodeDisabled), 
-"function" == typeof this._options.onNodeEnabled && this.$element.on("nodeEnabled", this._options.onNodeEnabled), "function" == typeof this._options.onNodeExpanded && this.$element.on("nodeExpanded", this._options.onNodeExpanded), "function" == typeof this._options.onNodeSelected && this.$element.on("nodeSelected", this._options.onNodeSelected), "function" == typeof this._options.onNodeUnchecked && this.$element.on("nodeUnchecked", this._options.onNodeUnchecked), "function" == typeof this._options.onNodeUnselected && this.$element.on("nodeUnselected", this._options.onNodeUnselected), "function" == typeof this._options.onSearchComplete && this.$element.on("searchComplete", this._options.onSearchComplete), "function" == typeof this._options.onSearchCleared && this.$element.on("searchCleared", this._options.onSearchCleared);
+"function" == typeof this._options.onNodeEnabled && this.$element.on("nodeEnabled", this._options.onNodeEnabled), "function" == typeof this._options.onNodeExpanded && this.$element.on("nodeExpanded", this._options.onNodeExpanded), "function" == typeof this._options.onNodeChanged && this.$element.on("nodeChanged", this._options.onNodeChanged), "function" == typeof this._options.onNodeSelected && this.$element.on("nodeSelected", this._options.onNodeSelected), "function" == typeof this._options.onNodeUnchecked && this.$element.on("nodeUnchecked", this._options.onNodeUnchecked), "function" == typeof this._options.onNodeUnselected && this.$element.on("nodeUnselected", this._options.onNodeUnselected), "function" == typeof this._options.onSearchComplete && this.$element.on("searchComplete", this._options.onSearchComplete), "function" == typeof this._options.onSearchCleared && this.$element.on("searchCleared", this._options.onSearchCleared);
 }, o.prototype._triggerEvent = function(t, n, i) {
 i && !i.silent && this.$element.trigger(t, e.extend(!0, {}, n));
 }, o.prototype._setInitialStates = function(t, n) {
@@ -48431,15 +48432,15 @@ this._setVisible(t, !1, i), this._setExpanded(t, !1, i);
 n && t === e.state.visible || (t ? (e.state.visible = !0, e.$el && e.$el.removeClass("node-hidden")) : (e.state.visible = !1, e.$el && e.$el.addClass("node-hidden")));
 }, o.prototype._toggleSelected = function(e, t) {
 if (e) return this._setSelected(e, !e.state.selected, t), this;
-}, o.prototype._setSelected = function(t, n, i) {
+}, o.prototype._setSelected = function(t, n, i, r) {
 if (!i || n !== t.state.selected) {
 if (n) this._options.multiSelect || e.each(this._findNodes("true", "state.selected"), e.proxy(function(t, n) {
 this._setSelected(n, !1, e.extend(i, {
 unselecting: !0
-}));
-}, this)), t.state.selected = !0, t.$el && (t.$el.addClass("node-selected"), (t.selectedIcon || this._options.selectedIcon) && t.$el.children("span.node-icon").removeClass(t.icon || this._options.nodeIcon).addClass(t.selectedIcon || this._options.selectedIcon)), this._triggerEvent("nodeSelected", t, i); else {
-if (this._options.preventUnselect && i && !i.unselecting && 1 === this._findNodes("true", "state.selected").length) return this._options.allowReselect && this._triggerEvent("nodeSelected", t, i), this;
-t.state.selected = !1, t.$el && (t.$el.removeClass("node-selected"), (t.selectedIcon || this._options.selectedIcon) && t.$el.children("span.node-icon").removeClass(t.selectedIcon || this._options.selectedIcon).addClass(t.icon || this._options.nodeIcon)), this._triggerEvent("nodeUnselected", t, i);
+}), !0);
+}, this)), t.state.selected = !0, t.$el && (t.$el.addClass("node-selected"), (t.selectedIcon || this._options.selectedIcon) && t.$el.children("span.node-icon").removeClass(t.icon || this._options.nodeIcon).addClass(t.selectedIcon || this._options.selectedIcon)), this._triggerEvent("nodeSelected", t, i), this._triggerEvent("nodeChanged", t, i); else {
+if (this._options.preventUnselect && i && !i.unselecting && 1 === this._findNodes("true", "state.selected").length) return this._options.allowReselect && (this._triggerEvent("nodeSelected", t, i), this._triggerEvent("nodeChanged", t, i)), this;
+t.state.selected = !1, t.$el && (t.$el.removeClass("node-selected"), (t.selectedIcon || this._options.selectedIcon) && t.$el.children("span.node-icon").removeClass(t.selectedIcon || this._options.selectedIcon).addClass(t.icon || this._options.nodeIcon)), this._triggerEvent("nodeUnselected", t, i), r || this._triggerEvent("nodeChanged", t, i);
 }
 return this;
 }
@@ -48491,7 +48492,10 @@ t.$el.append(this._template.badge.clone().addClass(("object" == typeof n ? n.cla
 }, o.prototype._addCheckbox = function(e) {
 !this._options.showCheckbox || void 0 !== e.hideCheckbox && !1 !== e.hideCheckbox || e.$el.append(this._template.icon.check.clone());
 }, o.prototype._addIcon = function(e) {
-!this._options.showIcon || this._options.showImage && e.image || e.$el.append(this._template.icon.node.clone().addClass(e.icon || this._options.nodeIcon));
+if (this._options.showIcon && (!this._options.showImage || !e.image)) {
+var t = this._template.icon.node.clone().addClass(e.icon || this._options.nodeIcon);
+e.iconColor && t.css("color", e.iconColor), e.iconBackground && (t.addClass("node-icon-background"), t.css("background", e.iconBackground)), e.$el.append(t);
+}
 }, o.prototype._addImage = function(e) {
 this._options.showImage && e.image && e.$el.append(this._template.image.clone().addClass("node-image").css("background-image", "url('" + e.image + "')"));
 }, o.prototype._newNodeEl = function(e, t) {
@@ -48523,12 +48527,8 @@ t += ".node-" + this._elementId + ".node-check-changed{" + n + "}";
 }
 return e.each(this._orderedNodes, e.proxy(function(e, n) {
 if (n.color || n.backColor) {
-i = "";
+var i = "";
 n.color && (i += "color:" + n.color + ";"), n.backColor && (i += "background-color:" + n.backColor + ";"), t += ".node-" + this._elementId + '[data-nodeId="' + n.nodeId + '"]{' + i + "}";
-}
-if (n.iconColor) {
-var i = "color:" + n.iconColor + ";";
-t += ".node-" + this._elementId + '[data-nodeId="' + n.nodeId + '"] .node-icon{' + i + "}";
 }
 }, this)), this._css + t;
 }, o.prototype._template = {
@@ -48544,8 +48544,8 @@ empty: e('<span class="icon"></span>')
 image: e('<span class="image"></span>'),
 badge: e("<span></span>"),
 text: e('<span class="text"></span>')
-}, o.prototype._css = ".treeview .list-group-item{cursor:pointer}.treeview span.indent{margin-left:10px;margin-right:10px}.treeview span.icon{width:12px;margin-right:5px}.treeview .node-disabled{color:silver;cursor:not-allowed}", o.prototype.findNodes = function(e, t) {
-return this._findNodes(e, t);
+}, o.prototype._css = ".treeview .list-group-item{cursor:pointer}.treeview span.indent{margin-left:10px;margin-right:10px}.treeview span.icon{width:12px;margin-right:5px}.treeview .node-disabled{color:silver;cursor:not-allowed}", o.prototype.findNodes = function(e, t, n) {
+return this._findNodes(e, t, n);
 }, o.prototype.getNodes = function() {
 return this._orderedNodes;
 }, o.prototype.getParents = function(t) {
