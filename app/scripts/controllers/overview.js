@@ -1489,12 +1489,12 @@ function OverviewController($scope,
     watches.push(DataService.watch(resourceQuotasVersion, context, function(quotaData) {
       state.quotas = quotaData.by("metadata.name");
       setQuotaNotifications();
-    }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
+    }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL, errorNotification: false}));
 
     watches.push(DataService.watch(clusterResourceQuotasVersion, context, function(clusterQuotaData) {
       state.clusterQuotas = clusterQuotaData.by("metadata.name");
       setQuotaNotifications();
-    }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL}));
+    }, {poll: true, pollInterval: DEFAULT_POLL_INTERVAL, errorNotification: false}));
 
     if ($scope.AEROGEAR_MOBILE_ENABLED) {
       watches.push(DataService.watch({ group: "mobile.k8s.io", version: "v1alpha1", resource: "mobileclients" }, context, function (clients) {

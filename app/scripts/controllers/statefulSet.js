@@ -69,11 +69,11 @@ angular
             var QUOTA_POLL_INTERVAL = 60 * 1000;
             watches.push(DataService.watch(resourceQuotasVersion, context, function(quotaData) {
               $scope.quotas = quotaData.by("metadata.name");
-            }, {poll: true, pollInterval: QUOTA_POLL_INTERVAL}));
+            }, {poll: true, pollInterval: QUOTA_POLL_INTERVAL, errorNotification: false}));
 
             watches.push(DataService.watch(appliedClusterResourceQuotasVersion, context, function(clusterQuotaData) {
               $scope.clusterQuotas = clusterQuotaData.by("metadata.name");
-            }, {poll: true, pollInterval: QUOTA_POLL_INTERVAL}));
+            }, {poll: true, pollInterval: QUOTA_POLL_INTERVAL, errorNotification: false}));
           }, function(e) {
             $scope.loaded = true;
             $scope.alerts["load"] = {
