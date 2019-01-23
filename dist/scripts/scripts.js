@@ -478,12 +478,14 @@ pollInterval: 6e4
 be.quotas = e.by("metadata.name"), jt();
 }, {
 poll: !0,
-pollInterval: 6e4
+pollInterval: 6e4,
+errorNotification: !1
 })), Rt.push(m.watch(Q, r, function(e) {
 be.clusterQuotas = e.by("metadata.name"), jt();
 }, {
 poll: !0,
-pollInterval: 6e4
+pollInterval: 6e4,
+errorNotification: !1
 })), e.AEROGEAR_MOBILE_ENABLED && Rt.push(m.watch({
 group: "mobile.k8s.io",
 version: "v1alpha1",
@@ -6394,12 +6396,14 @@ B.push(i.watch(A, u, function(t) {
 e.quotas = t.by("metadata.name");
 }, {
 poll: !0,
-pollInterval: 6e4
+pollInterval: 6e4,
+errorNotification: !1
 })), B.push(i.watch(D, u, function(t) {
 e.clusterQuotas = t.by("metadata.name");
 }, {
 poll: !0,
-pollInterval: 6e4
+pollInterval: 6e4,
+errorNotification: !1
 }));
 var G = t("deploymentIsLatest");
 e.showRollbackAction = function() {
@@ -6497,12 +6501,14 @@ p.push(o.watch(u, r, function(e) {
 t.quotas = e.by("metadata.name");
 }, {
 poll: !0,
-pollInterval: 6e4
+pollInterval: 6e4,
+errorNotification: !1
 })), p.push(o.watch(d, r, function(e) {
 t.clusterQuotas = e.by("metadata.name");
 }, {
 poll: !0,
-pollInterval: 6e4
+pollInterval: 6e4,
+errorNotification: !1
 }));
 }, function(n) {
 t.loaded = !0, t.alerts.load = {
