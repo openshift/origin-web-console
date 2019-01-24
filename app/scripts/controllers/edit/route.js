@@ -181,7 +181,7 @@ angular.module('openshiftConsole')
             hideErrorNotifications();
             $scope.disableInputs = true;
             var updated = updateRouteFields();
-            DataService.update(routesVersion, $scope.routeName, updated, context)
+            DataService.update(APIService.objectToResourceGroupVersion(updated), $scope.routeName, updated, context)
               .then(function() { // Success
                 NotificationsService.addNotification({
                   type: "success",
