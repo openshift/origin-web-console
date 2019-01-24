@@ -374,6 +374,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
               href: "/membership",
               // supports: {resource: '', verb: '', group: '' }
               canI: {
+                group: 'rbac.authorization.k8s.io',
                 resource: 'rolebindings',
                 verb: 'list'
               }
