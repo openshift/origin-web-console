@@ -909,6 +909,7 @@ href: "/quota"
 label: "Membership",
 href: "/membership",
 canI: {
+group: "rbac.authorization.k8s.io",
 resource: "rolebindings",
 verb: "list"
 }
