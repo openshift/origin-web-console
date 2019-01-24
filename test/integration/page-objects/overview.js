@@ -8,7 +8,8 @@ class OverviewPage extends Page {
     super(project, menu);
   }
   getUrl() {
-    return 'project/' + this.project.name + '/overview';
+    return `project/${this.project.name}/overview`;
+
   }
   clickAddToProject() {
     // The project bar uses `ng-show` instead of `ng-if,` so make sure it's

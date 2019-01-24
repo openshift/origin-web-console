@@ -7,7 +7,7 @@ class BuildsPage extends Page {
     super(project, menu);
   }
   getUrl() {
-    return 'project/' + this.project.name + '/browse/builds';
+    return `project/${this.project.name}/browse/builds`;
   }
 }
 

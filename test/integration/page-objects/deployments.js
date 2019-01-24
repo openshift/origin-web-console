@@ -7,7 +7,7 @@ class DeploymentsPage extends Page {
     super(project, menu);
   }
   getUrl() {
-    return 'project/' + this.project.name + '/browse/deployments';
+    return `project/${this.project.name}/browse/deployments`;
   }
 }
 

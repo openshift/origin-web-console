@@ -7,7 +7,7 @@ class ServicesPage extends Page {
     super(project, menus);
   }
   getUrl() {
-    return 'project/' + this.project.name + '/browse/services';
+    return `project/${this.project.name}/browse/services`;
   }
 }
 

@@ -10,8 +10,8 @@ exports.visitCreatePage = () => {
 exports.projectDetails = () => {
   let timestamp = (new Date()).getTime();
   let project = {
-    name:        'console-test-project-' + timestamp,
-    displayName: 'Console integration test Project ' + timestamp,
+    name:        `console-test-project-${timestamp}`,
+    displayName: `Console integration test Project ${timestamp}`,
     description: 'Created by integration tests'
   };
   return project;
