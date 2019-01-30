@@ -3833,7 +3833,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<dd>{{service.spec.clusterIP}}</dd>\n" +
     "<dt>Hostname:</dt>\n" +
     "<dd>\n" +
-    "{{service.metadata.name}}.{{service.metadata.namespace}}.svc\n" +
+    "{{service.metadata.name}}.{{service.metadata.namespace}}.svc.cluster.local\n" +
     "<span data-toggle=\"popover\" data-trigger=\"hover\" data-content=\"{{'This address is only resolvable from within the cluster.'}}\" style=\"cursor: help; padding-left: 5px\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\" data-toggle=\"tooltip\" style=\"cursor: help\"></span>\n" +
     "</span>\n" +
