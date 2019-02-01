@@ -15,10 +15,12 @@ angular.module('openshiftConsole')
           });
         }
 
-        items.push({
-          type: 'dom',
-          node: '<li><set-home-page></set-home-page></li>'
-        });
+        if (!_.get(window, 'OPENSHIFT_CONSTANTS.DISABLE_SERVICE_CATALOG_LANDING_PAGE')) {
+          items.push({
+            type: 'dom',
+            node: '<li><set-home-page></set-home-page></li>'
+          });
+        }
 
         var msg = 'Log Out';
         if ($rootScope.user.fullName && $rootScope.user.fullName !== $rootScope.user.metadata.name) {
