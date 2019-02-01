@@ -272,7 +272,6 @@ angular.module('openshiftConsole')
           _.set($rootScope, 'view.hasProjectSearch', showMobileSearch);
         };
 
-        $scope.catalogLandingPageEnabled = !Constants.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
         var select = $elem.find('.selectpicker');
         var options = [];
 
