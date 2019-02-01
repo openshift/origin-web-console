@@ -289,8 +289,6 @@ angular.module('openshiftConsole')
           _.set($rootScope, 'view.hasProjectSearch', showMobileSearch);
         };
 
-        $scope.catalogLandingPageEnabled = !Constants.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
-
         var contextSelector = $elem.find('.contextselector');
         $scope.clusterConsoleURL = window.OPENSHIFT_CONSTANTS.TECTONIC_URL || window.OPENSHIFT_CONFIG.tectonicURL;
         contextSelector
