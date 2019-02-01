@@ -71,8 +71,6 @@ function OverviewController($scope,
   $scope.projectName = $routeParams.project;
   var isHomePage = $routeParams.isHomePage;
 
-  overview.catalogLandingPageEnabled = !Constants.DISABLE_SERVICE_CATALOG_LANDING_PAGE;
-
   // Filters used by this controller.
   var annotation = $filter('annotation');
   var canI = $filter('canI');

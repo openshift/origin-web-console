@@ -21,8 +21,7 @@ angular.module("openshiftConsole")
 
     // Enable service catalog features if the new experience is enabled and the
     // servicecatalog.k8s.io resources are available.
-    var SERVICE_CATALOG_ENABLED = !Constants.DISABLE_SERVICE_CATALOG_LANDING_PAGE &&
-                                  APIService.apiInfo(serviceBindingsVersion) &&
+    var SERVICE_CATALOG_ENABLED = APIService.apiInfo(serviceBindingsVersion) &&
                                   APIService.apiInfo(serviceClassesVersion) &&
                                   APIService.apiInfo(serviceInstancesVersion) &&
                                   APIService.apiInfo(servicePlansVersion);
