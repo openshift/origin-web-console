@@ -16,8 +16,8 @@ body,figure{margin:0}
 @font-face{font-family:"Open Sans";font-style:italic;font-weight:800;src:url(../styles/fonts/OpenSans-ExtraBoldItalic-webfont.eot);src:local("Open Sans Extrabold Italic"),local("OpenSans-ExtraboldItalic"),url(../styles/fonts/OpenSans-ExtraBoldItalic-webfont.eot?#iefix) format("embedded-opentype"),url(../styles/fonts/OpenSans-ExtraBoldItalic-webfont.woff2) format("woff2"),url(../styles/fonts/OpenSans-ExtraBoldItalic-webfont.woff) format("woff"),url(../styles/fonts/OpenSans-ExtraBoldItalic-webfont.ttf) format("truetype"),url(../styles/fonts/OpenSans-ExtraBoldItalic-webfont.svg#OpenSans) format("svg")}
 @font-face{font-family:"Open Sans";font-style:normal;font-weight:800;src:url(../styles/fonts/OpenSans-ExtraBold-webfont.eot);src:local("Open Sans Extrabold"),local("OpenSans-Extrabold"),url(../styles/fonts/OpenSans-ExtraBold-webfont.eot?#iefix) format("embedded-opentype"),url(../styles/fonts/OpenSans-ExtraBold-webfont.woff2) format("woff2"),url(../styles/fonts/OpenSans-ExtraBold-webfont.woff) format("woff"),url(../styles/fonts/OpenSans-ExtraBold-webfont.ttf) format("truetype"),url(../styles/fonts/OpenSans-ExtraBold-webfont.svg#OpenSans) format("svg")}
 /*!
- * Bootstrap v3.4.0 (https://getbootstrap.com/)
- * Copyright 2011-2018 Twitter, Inc.
+ * Bootstrap v3.4.1 (https://getbootstrap.com/)
+ * Copyright 2011-2019 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */

@@ -106,38 +106,35 @@
       var helpLinks = getHelpLinks(ctrl.template);
       TaskList.clear();
       TaskList.add(titles, helpLinks, ctrl.selectedProject.metadata.name, function() {
-        var d = $q.defer();
-        DataService.batch(processedResources, context).then(
-          function(result) {
-            var alerts = [];
-            var hasErrors = false;
-            if (result.failure.length > 0) {
-              hasErrors = true;
-              result.failure.forEach(
-                function(failure) {
-                  alerts.push({
-                    type: "error",
-                    message: "Cannot create " + humanize(failure.object.kind).toLowerCase() + " \"" + failure.object.metadata.name + "\". ",
-                    details: failure.data.message
-                  });
-                }
-              );
-              result.success.forEach(
-                function(success) {
-                  alerts.push({
-                    type: "success",
-                    message: "Created " + humanize(success.kind).toLowerCase() + " \"" + success.metadata.name + "\" successfully. "
-                  });
-                }
-              );
-            } else {
-              alerts.push({ type: "success", message: "All items in template " + ctrl.templateDisplayName +
-                " were created successfully."});
-            }
-            d.resolve({alerts: alerts, hasErrors: hasErrors});
-          }
-        );
-        return d.promise;
+        var chain = $q.when();
+        var alerts = [];
+        var hasErrors = false;
+        _.each(processedResources, function(obj) {
+          var groupVersionKind = APIService.objectToResourceGroupVersion(obj);
+          chain = chain.then(function() {
+            return DataService.create(groupVersionKind, null, obj, context)
+              .then(function() {
+                alerts.push({
+                  type: "success",
+                  message: "Created " + humanize(obj.kind).toLowerCase() + " \"" + obj.metadata.name + "\" successfully. "
+                });
+              })
+              .catch(function(failure) {
+                hasErrors = true;
+                alerts.push({
+                  type: "error",
+                  message: "Cannot create " + humanize(obj.kind).toLowerCase() + " \"" + obj.metadata.name + "\". ",
+                  details: failure.message
+                });
+              });
+          });
+        });
+        return chain.then(function() {
+          return {
+            alerts: alerts,
+            hasErrors: hasErrors
+          };
+        });
       });
 
       if (ctrl.isDialog) {
