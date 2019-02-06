@@ -1967,7 +1967,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<ng-form name=\"forms.bcEnvVars\" class=\"mar-bottom-xl block\">\n" +
     "<div ng-if=\"buildConfigsVersion | canI : 'update'\">\n" +
     "<confirm-on-exit dirty=\"forms.bcEnvVars.$dirty\"></confirm-on-exit>\n" +
-    "<key-value-editor entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" value-from-selector-options=\"valueFromObjects\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\" show-header></key-value-editor>\n" +
+    "<key-value-editor entries=\"envVars\" key-placeholder=\"Name\" value-placeholder=\"Value\" value-from-selector-options=\"valueFromObjects\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key.\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\" show-header></key-value-editor>\n" +
     "<button class=\"btn btn-default\" ng-click=\"saveEnvVars()\" ng-disabled=\"forms.bcEnvVars.$pristine || forms.bcEnvVars.$invalid\">Save</button>\n" +
     "<a ng-if=\"!forms.bcEnvVars.$pristine\" href=\"\" ng-click=\"clearEnvVarUpdates()\" class=\"mar-left-sm\" style=\"vertical-align: -2px\">Clear Changes</a>\n" +
     "</div>\n" +
@@ -4951,7 +4951,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<i class=\"pficon pficon-help\"></i>\n" +
     "</a>\n" +
     "</span></span></h3>\n" +
-    "<key-value-editor entries=\"buildConfigEnvVars\" key-placeholder=\"name\" value-placeholder=\"value\" value-from-selector-options=\"valueFromObjects\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"buildConfigEnvVars\" key-placeholder=\"name\" value-placeholder=\"value\" value-from-selector-options=\"valueFromObjects\" key-validator=\"[-._a-zA-Z][-._a-zA-Z0-9]*\" key-validator-error-tooltip=\"A valid environment variable name must consist of alphabetic characters, digits, '_', '-', or '.', and must not start with a digit.\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\"></key-value-editor>\n" +
     "</osc-form-section>\n" +
     "\n" +
     "<osc-form-section header=\"Deployment Configuration\" about-title=\"Deployment Configuration\" about=\"Deployment configurations describe how your application is configured\n" +
@@ -4987,7 +4987,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<key-value-editor entries=\"DCEnvVarsFromImage\" is-readonly cannot-add cannot-sort cannot-delete></key-value-editor>\n" +
     "</div>\n" +
-    "<key-value-editor entries=\"DCEnvVarsFromUser\" key-placeholder=\"name\" value-placeholder=\"value\" value-from-selector-options=\"valueFromObjects\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"DCEnvVarsFromUser\" key-placeholder=\"name\" value-placeholder=\"value\" value-from-selector-options=\"valueFromObjects\" key-validator=\"[-._a-zA-Z][-._a-zA-Z0-9]*\" kkey-validator-error-tooltip=\"A valid environment variable name must consist of alphabetic characters, digits, '_', '-', or '.', and must not start with a digit.\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "</osc-form-section>\n" +
@@ -6510,7 +6510,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<osc-form-section header=\"Environment Variables\" about-title=\"Environment Variables\" about=\"Environment variables are used to configure and pass information to running containers.\" expand=\"true\" can-toggle=\"false\" class=\"first-section\">\n" +
-    "<key-value-editor entries=\"env\" key-placeholder=\"Name\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" value-placeholder=\"Value\" value-from-selector-options=\"input.selectedProject.metadata.uid && valueFromNamespace[input.selectedProject.metadata.name]\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"env\" key-placeholder=\"Name\" key-validator=\"[-._a-zA-Z][-._a-zA-Z0-9]*\" key-validator-error=\"A valid environment variable name must consist of alphabetic characters, digits, '_', '-', or '.', and must not start with a digit.\" value-placeholder=\"Value\" value-from-selector-options=\"input.selectedProject.metadata.uid && valueFromNamespace[input.selectedProject.metadata.name]\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\"></key-value-editor>\n" +
     "</osc-form-section>\n" +
     "<label-editor labels=\"labels\" expand=\"true\" can-toggle=\"false\" help-text=\"Each label is applied to each created resource.\">\n" +
     "</label-editor>\n" +
@@ -6889,7 +6889,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<key-value-editor ng-if=\"container.env.length\" entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" cannot-add cannot-sort cannot-delete is-readonly show-header>\n" +
     "</key-value-editor>\n" +
     "</div>\n" +
-    "<key-value-editor ng-if=\"$ctrl.canIUpdate && !$ctrl.ngReadonly\" entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" value-from-selector-options=\"$ctrl.valueFromObjects\" key-validator=\"[A-Za-z_][A-Za-z0-9_]*\" key-validator-error=\"Please enter a valid key.\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\" show-header>\n" +
+    "<key-value-editor ng-if=\"$ctrl.canIUpdate && !$ctrl.ngReadonly\" entries=\"container.env\" key-placeholder=\"Name\" value-placeholder=\"Value\" value-from-selector-options=\"$ctrl.valueFromObjects\" key-validator=\"[-._a-zA-Z][-._a-zA-Z0-9]*\" key-validator-error=\"Please enter a valid key.\" key-validator-error-tooltip=\"A valid environment variable name must consist of alphabetic characters, digits, '_', '-', or '.', and must not start with a digit.\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\" show-header>\n" +
     "</key-value-editor>\n" +
     "<h4>\n" +
     "Environment From\n" +
@@ -6945,7 +6945,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<label>Environment Variables</label>\n" +
-    "<key-value-editor entries=\"hookParams.execNewPod.env\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" value-from-selector-options=\"valueFromObjects\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\" add-row-link=\"Add Value\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"hookParams.execNewPod.env\" key-validator=\"[-._a-zA-Z][-._a-zA-Z0-9]*\" key-validator-error-tooltip=\"A valid environment variable name must consist of alphabetic characters, digits, '_', '-', or '.', and must not start with a digit.\" value-from-selector-options=\"valueFromObjects\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\" add-row-link=\"Add Value\"></key-value-editor>\n" +
     "<div class=\"help-block\">\n" +
     "Environment variables to supply to the hook pod's container.\n" +
     "</div>\n" +
@@ -10069,7 +10069,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"form-group\">\n" +
     "<label>Environment Variables</label>\n" +
-    "<key-value-editor entries=\"strategyData.customParams.environment\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" value-from-selector-options=\"valueFromObjects\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"strategyData.customParams.environment\" key-validator=\"[-._a-zA-Z][-._a-zA-Z0-9]*\" key-validator-error-tooltip=\"A valid environment variable name must consist of alphabetic characters, digits, '_', '-', or '.', and must not start with a digit.\" value-from-selector-options=\"valueFromObjects\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"strategyData.type !== 'Custom'\">\n" +
@@ -10249,7 +10249,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"container-name\">\n" +
     "<h4>Container {{containerName}}</h4>\n" +
     "</div>\n" +
-    "<key-value-editor ng-if=\"containerConfig\" entries=\"containerConfig.env\" value-from-selector-options=\"valueFromObjects\" key-validator=\"[a-zA-Z_][a-zA-Z0-9_]*\" key-validator-error-tooltip=\"A valid environment variable name is an alphanumeric (a-z and 0-9) string beginning with a letter that may contain underscores.\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\"></key-value-editor>\n" +
+    "<key-value-editor ng-if=\"containerConfig\" entries=\"containerConfig.env\" value-from-selector-options=\"valueFromObjects\" key-validator=\"[-._a-zA-Z][-._a-zA-Z0-9]*\" key-validator-error-tooltip=\"A valid environment variable name must consist of alphabetic characters, digits, '_', '-', or '.', and must not start with a digit.\" add-row-link=\"Add Value\" add-row-with-selectors-link=\"Add Value from Config Map or Secret\"></key-value-editor>\n" +
     "</div>\n" +
     "</div>\n" +
     "<pause-rollouts-checkbox deployment=\"updatedDeploymentConfig\" always-visible=\"true\">\n" +
