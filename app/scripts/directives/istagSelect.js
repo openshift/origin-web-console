@@ -76,7 +76,7 @@ angular.module("openshiftConsole")
               $scope.isNamesByNamespace[ns] = $scope.isNamesByNamespace[ns].concat($scope.istag.imageStream);
               $scope.isByNamespace[ns][$scope.istag.imageStream] = {
                 status: {
-                  tags: {}
+                  tags: []
                 }
               };
             }

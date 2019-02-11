@@ -14337,7 +14337,7 @@ namespace: n
 var r = angular.copy(t.by("metadata.name"));
 o(r), e.isByNamespace[n] = r, e.isNamesByNamespace[n] = _.keys(r).sort(), _.includes(e.isNamesByNamespace[n], e.istag.imageStream) || (e.isNamesByNamespace[n] = e.isNamesByNamespace[n].concat(e.istag.imageStream), e.isByNamespace[n][e.istag.imageStream] = {
 status: {
-tags: {}
+tags: []
 }
 }), _.find(e.isByNamespace[n][e.istag.imageStream].status.tags, {
 tag: e.istag.tagObject.tag
