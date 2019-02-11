@@ -86,7 +86,7 @@
           ctrl.isNamesByNamespace[ns] = ctrl.isNamesByNamespace[ns].concat(ctrl.istag.imageStream);
           ctrl.isByNamespace[ns][ctrl.istag.imageStream] = {
             status: {
-              tags: {}
+              tags: []
             }
           };
         }
