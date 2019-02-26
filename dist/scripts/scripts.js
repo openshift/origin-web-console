@@ -13769,28 +13769,29 @@ success: "Created " + h.templateDisplayName + " in project " + y(h.selectedProje
 failure: "Failed to create " + h.templateDisplayName + " in project " + y(h.selectedProject)
 }, r = f(h.template);
 m.clear(), m.add(e, r, h.selectedProject.metadata.name, function() {
-var e = t.defer();
-return o.batch(S, v).then(function(t) {
-var n = [], r = !1;
-t.failure.length > 0 ? (r = !0, t.failure.forEach(function(e) {
+var e = t.when(), n = [], r = !1;
+return _.each(S, function(t) {
+var i = a.objectToResourceGroupVersion(t);
+e = e.then(function() {
+return o.create(i, null, t, v).then(function() {
 n.push({
+type: "success",
+message: "Created " + b(t.kind).toLowerCase() + ' "' + t.metadata.name + '" successfully. '
+});
+}).catch(function(e) {
+r = !0, n.push({
 type: "error",
-message: "Cannot create " + b(e.object.kind).toLowerCase() + ' "' + e.object.metadata.name + '". ',
-details: e.data.message
+message: "Cannot create " + b(t.kind).toLowerCase() + ' "' + t.metadata.name + '". ',
+details: e.message
 });
-}), t.success.forEach(function(e) {
-n.push({
-type: "success",
-message: "Created " + b(e.kind).toLowerCase() + ' "' + e.metadata.name + '" successfully. '
 });
-})) : n.push({
-type: "success",
-message: "All items in template " + h.templateDisplayName + " were created successfully."
-}), e.resolve({
+});
+}), e.then(function() {
+return {
 alerts: n,
 hasErrors: r
+};
 });
-}), e.promise;
 }), h.isDialog ? n.$emit("templateInstantiated", {
 project: h.selectedProject,
 template: h.template

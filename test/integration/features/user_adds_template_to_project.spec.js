@@ -34,20 +34,22 @@ describe('User adds a template to a project', () => {
           .processTemplate(JSON.stringify(nodeMongoTemplate))
           .then((createFromTemplatePage) => {
             createFromTemplatePage.clickCreate();             // implicit redirect to overview page
-            // verify we have the 2 deployments in the template
-            let deploymentsPage = new DeploymentsPage(project);
-            deploymentsPage.visit();
-            expect(element(by.cssContainingText('td', 'mongodb')).isPresent()).toBe(true); // TODO: use fixture
-            expect(element(by.cssContainingText('td', 'nodejs-mongodb-example')).isPresent()).toBe(true); // TODO: use fixture
-            // verify we have the two services in the template
-            let servicesPage = new ServicesPage(project);
-            servicesPage.visit();
-            expect(element(by.cssContainingText('td', 'mongodb')).isPresent()).toBe(true); // TODO: use fixture
-            expect(element(by.cssContainingText('td', 'nodejs-mongodb-example')).isPresent()).toBe(true); // TODO: use fixture
-            // verify we have one route for the mongo app
-            let routesPage = new RoutesPage(project);
-            routesPage.visit();
-            expect(element(by.cssContainingText('td', 'nodejs-mongodb-example')).isPresent()).toBe(true); // TODO: use fixture
+            return browser.sleep(3000).then(() => {
+              // verify we have the 2 deployments in the template
+              let deploymentsPage = new DeploymentsPage(project);
+              deploymentsPage.visit();
+              expect(element(by.cssContainingText('td', 'mongodb')).isPresent()).toBe(true); // TODO: use fixture
+              expect(element(by.cssContainingText('td', 'nodejs-mongodb-example')).isPresent()).toBe(true); // TODO: use fixture
+              // verify we have the two services in the template
+              let servicesPage = new ServicesPage(project);
+              servicesPage.visit();
+              expect(element(by.cssContainingText('td', 'mongodb')).isPresent()).toBe(true); // TODO: use fixture
+              expect(element(by.cssContainingText('td', 'nodejs-mongodb-example')).isPresent()).toBe(true); // TODO: use fixture
+              // verify we have one route for the mongo app
+              let routesPage = new RoutesPage(project);
+              routesPage.visit();
+              expect(element(by.cssContainingText('td', 'nodejs-mongodb-example')).isPresent()).toBe(true); // TODO: use fixture
+            });
           });
       });
 
