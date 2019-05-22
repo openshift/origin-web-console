@@ -30863,8 +30863,8 @@ var n = [];
 return n.push.apply(n, arguments), e.extend(n, t), n;
 };
 }(), u = function(t, n) {
-e.data(t, "datepicker", this), this._process_options(n), this.dates = new c(), this.viewDate = this.o.defaultViewDate, this.focusDate = null, this.element = e(t), this.isInput = this.element.is("input"), this.inputField = this.isInput ? this.element : this.element.find("input"), this.component = !!this.element.hasClass("date") && this.element.find(".add-on, .input-group-addon, .btn"), this.component && 0 === this.component.length && (this.component = !1), this.isInline = !this.component && this.element.is("div"), this.picker = e(v.template), this._check_template(this.o.templates.leftArrow) && this.picker.find(".prev").html(this.o.templates.leftArrow), this._check_template(this.o.templates.rightArrow) && this.picker.find(".next").html(this.o.templates.rightArrow), this._buildEvents(), this._attachEvents(), this.isInline ? this.picker.addClass("datepicker-inline").appendTo(this.element) : this.picker.addClass("datepicker-dropdown dropdown-menu"), this.o.rtl && this.picker.addClass("datepicker-rtl"), 
-this.o.calendarWeeks && this.picker.find(".datepicker-days .datepicker-switch, thead .datepicker-title, tfoot .today, tfoot .clear").attr("colspan", function(e, t) {
+e.data(t, "datepicker", this), this._events = [], this._secondaryEvents = [], this._process_options(n), this.dates = new c(), this.viewDate = this.o.defaultViewDate, this.focusDate = null, this.element = e(t), this.isInput = this.element.is("input"), this.inputField = this.isInput ? this.element : this.element.find("input"), this.component = !!this.element.hasClass("date") && this.element.find(".add-on, .input-group-addon, .input-group-append, .input-group-prepend, .btn"), this.component && 0 === this.component.length && (this.component = !1), this.isInline = !this.component && this.element.is("div"), this.picker = e(v.template), this._check_template(this.o.templates.leftArrow) && this.picker.find(".prev").html(this.o.templates.leftArrow), this._check_template(this.o.templates.rightArrow) && this.picker.find(".next").html(this.o.templates.rightArrow), this._buildEvents(), this._attachEvents(), this.isInline ? this.picker.addClass("datepicker-inline").appendTo(this.element) : this.picker.addClass("datepicker-dropdown dropdown-menu"), 
+this.o.rtl && this.picker.addClass("datepicker-rtl"), this.o.calendarWeeks && this.picker.find(".datepicker-days .datepicker-switch, thead .datepicker-title, tfoot .today, tfoot .clear").attr("colspan", function(e, t) {
 return Number(t) + 1;
 }), this._process_options({
 startDate: this._o.startDate,
@@ -30924,8 +30924,6 @@ var c = r.defaultViewDate.year || new Date().getFullYear(), u = r.defaultViewDat
 r.defaultViewDate = n(c, u, d);
 } else r.defaultViewDate = i();
 },
-_events: [],
-_secondaryEvents: [],
 _applyEvents: function(e) {
 for (var n, i, r, o = 0; o < e.length; o++) n = e[o][0], 2 === e[o].length ? (i = t, r = e[o][1]) : 3 === e[o].length && (i = e[o][1], r = e[o][2]), n.on(r, i);
 },
@@ -30998,7 +30996,7 @@ return v.formatDate(n, t, this.o.language);
 });
 },
 show: function() {
-if (!(this.inputField.prop("disabled") || this.inputField.prop("readonly") && !1 === this.o.enableOnReadonly)) return this.isInline || this.picker.appendTo(this.o.container), this.place(), this.picker.show(), this._attachSecondaryEvents(), this._trigger("show"), (window.navigator.msMaxTouchPoints || "ontouchstart" in document) && this.o.disableTouchKeyboard && e(this.element).blur(), this;
+if (!(this.inputField.is(":disabled") || this.inputField.prop("readonly") && !1 === this.o.enableOnReadonly)) return this.isInline || this.picker.appendTo(this.o.container), this.place(), this.picker.show(), this._attachSecondaryEvents(), this._trigger("show"), (window.navigator.msMaxTouchPoints || "ontouchstart" in document) && this.o.disableTouchKeyboard && e(this.element).blur(), this;
 },
 hide: function() {
 return this.isInline || !this.picker.is(":visible") ? this : (this.focusDate = null, this.picker.hide().detach(), this._detachSecondaryEvents(), this.setViewMode(this.o.startView), this.o.forceParse && this.inputField.val() && this.setValue(), this._trigger("hide"), this);
@@ -31166,34 +31164,34 @@ classes: d
 p.find(".datepicker-switch").text(g + "-" + m), p.find("td").html(h);
 },
 fill: function() {
-var i, r, o = new Date(this.viewDate), a = o.getUTCFullYear(), s = o.getUTCMonth(), l = this.o.startDate !== -1 / 0 ? this.o.startDate.getUTCFullYear() : -1 / 0, c = this.o.startDate !== -1 / 0 ? this.o.startDate.getUTCMonth() : -1 / 0, u = this.o.endDate !== 1 / 0 ? this.o.endDate.getUTCFullYear() : 1 / 0, d = this.o.endDate !== 1 / 0 ? this.o.endDate.getUTCMonth() : 1 / 0, h = m[this.o.language].today || m.en.today || "", f = m[this.o.language].clear || m.en.clear || "", p = m[this.o.language].titleFormat || m.en.titleFormat;
-if (!isNaN(a) && !isNaN(s)) {
-this.picker.find(".datepicker-days .datepicker-switch").text(v.formatDate(o, p, this.o.language)), this.picker.find("tfoot .today").text(h).css("display", !0 === this.o.todayBtn || "linked" === this.o.todayBtn ? "table-cell" : "none"), this.picker.find("tfoot .clear").text(f).css("display", !0 === this.o.clearBtn ? "table-cell" : "none"), this.picker.find("thead .datepicker-title").text(this.o.title).css("display", "string" == typeof this.o.title && "" !== this.o.title ? "table-cell" : "none"), this.updateNavArrows(), this.fillMonths();
-var g = n(a, s, 0), y = g.getUTCDate();
-g.setUTCDate(y - (g.getUTCDay() - this.o.weekStart + 7) % 7);
-var b = new Date(g);
-g.getUTCFullYear() < 100 && b.setUTCFullYear(g.getUTCFullYear()), b.setUTCDate(b.getUTCDate() + 42), b = b.valueOf();
-for (var _, w, C = []; g.valueOf() < b; ) {
-if ((_ = g.getUTCDay()) === this.o.weekStart && (C.push("<tr>"), this.o.calendarWeeks)) {
-var x = new Date(+g + (this.o.weekStart - _ - 7) % 7 * 864e5), S = new Date(Number(x) + (11 - x.getUTCDay()) % 7 * 864e5), $ = new Date(Number($ = n(S.getUTCFullYear(), 0, 1)) + (11 - $.getUTCDay()) % 7 * 864e5), A = (S - $) / 864e5 / 7 + 1;
-C.push('<td class="cw">' + A + "</td>");
+var r, o, a = new Date(this.viewDate), s = a.getUTCFullYear(), l = a.getUTCMonth(), c = this.o.startDate !== -1 / 0 ? this.o.startDate.getUTCFullYear() : -1 / 0, u = this.o.startDate !== -1 / 0 ? this.o.startDate.getUTCMonth() : -1 / 0, d = this.o.endDate !== 1 / 0 ? this.o.endDate.getUTCFullYear() : 1 / 0, h = this.o.endDate !== 1 / 0 ? this.o.endDate.getUTCMonth() : 1 / 0, f = m[this.o.language].today || m.en.today || "", p = m[this.o.language].clear || m.en.clear || "", g = m[this.o.language].titleFormat || m.en.titleFormat, y = i(), b = (!0 === this.o.todayBtn || "linked" === this.o.todayBtn) && y >= this.o.startDate && y <= this.o.endDate && !this.weekOfDateIsDisabled(y);
+if (!isNaN(s) && !isNaN(l)) {
+this.picker.find(".datepicker-days .datepicker-switch").text(v.formatDate(a, g, this.o.language)), this.picker.find("tfoot .today").text(f).css("display", b ? "table-cell" : "none"), this.picker.find("tfoot .clear").text(p).css("display", !0 === this.o.clearBtn ? "table-cell" : "none"), this.picker.find("thead .datepicker-title").text(this.o.title).css("display", "string" == typeof this.o.title && "" !== this.o.title ? "table-cell" : "none"), this.updateNavArrows(), this.fillMonths();
+var _ = n(s, l, 0), w = _.getUTCDate();
+_.setUTCDate(w - (_.getUTCDay() - this.o.weekStart + 7) % 7);
+var C = new Date(_);
+_.getUTCFullYear() < 100 && C.setUTCFullYear(_.getUTCFullYear()), C.setUTCDate(C.getUTCDate() + 42), C = C.valueOf();
+for (var x, S, $ = []; _.valueOf() < C; ) {
+if ((x = _.getUTCDay()) === this.o.weekStart && ($.push("<tr>"), this.o.calendarWeeks)) {
+var A = new Date(+_ + (this.o.weekStart - x - 7) % 7 * 864e5), k = new Date(Number(A) + (11 - A.getUTCDay()) % 7 * 864e5), T = new Date(Number(T = n(k.getUTCFullYear(), 0, 1)) + (11 - T.getUTCDay()) % 7 * 864e5), D = (k - T) / 864e5 / 7 + 1;
+$.push('<td class="cw">' + D + "</td>");
 }
-(w = this.getClassNames(g)).push("day");
-var k = g.getUTCDate();
-this.o.beforeShowDay !== e.noop && ((r = this.o.beforeShowDay(this._utc_to_local(g))) === t ? r = {} : "boolean" == typeof r ? r = {
-enabled: r
-} : "string" == typeof r && (r = {
-classes: r
-}), !1 === r.enabled && w.push("disabled"), r.classes && (w = w.concat(r.classes.split(/\s+/))), r.tooltip && (i = r.tooltip), r.content && (k = r.content)), w = e.isFunction(e.uniqueSort) ? e.uniqueSort(w) : e.unique(w), C.push('<td class="' + w.join(" ") + '"' + (i ? ' title="' + i + '"' : "") + ' data-date="' + g.getTime().toString() + '">' + k + "</td>"), i = null, _ === this.o.weekEnd && C.push("</tr>"), g.setUTCDate(g.getUTCDate() + 1);
+(S = this.getClassNames(_)).push("day");
+var E = _.getUTCDate();
+this.o.beforeShowDay !== e.noop && ((o = this.o.beforeShowDay(this._utc_to_local(_))) === t ? o = {} : "boolean" == typeof o ? o = {
+enabled: o
+} : "string" == typeof o && (o = {
+classes: o
+}), !1 === o.enabled && S.push("disabled"), o.classes && (S = S.concat(o.classes.split(/\s+/))), o.tooltip && (r = o.tooltip), o.content && (E = o.content)), S = e.isFunction(e.uniqueSort) ? e.uniqueSort(S) : e.unique(S), $.push('<td class="' + S.join(" ") + '"' + (r ? ' title="' + r + '"' : "") + ' data-date="' + _.getTime().toString() + '">' + E + "</td>"), r = null, x === this.o.weekEnd && $.push("</tr>"), _.setUTCDate(_.getUTCDate() + 1);
 }
-this.picker.find(".datepicker-days tbody").html(C.join(""));
-var T = m[this.o.language].monthsTitle || m.en.monthsTitle || "Months", D = this.picker.find(".datepicker-months").find(".datepicker-switch").text(this.o.maxViewMode < 2 ? T : a).end().find("tbody span").removeClass("active");
+this.picker.find(".datepicker-days tbody").html($.join(""));
+var F = m[this.o.language].monthsTitle || m.en.monthsTitle || "Months", M = this.picker.find(".datepicker-months").find(".datepicker-switch").text(this.o.maxViewMode < 2 ? F : s).end().find("tbody span").removeClass("active");
 if (e.each(this.dates, function(e, t) {
-t.getUTCFullYear() === a && D.eq(t.getUTCMonth()).addClass("active");
-}), (a < l || a > u) && D.addClass("disabled"), a === l && D.slice(0, c).addClass("disabled"), a === u && D.slice(d + 1).addClass("disabled"), this.o.beforeShowMonth !== e.noop) {
-var E = this;
-e.each(D, function(n, i) {
-var r = new Date(a, n, 1), o = E.o.beforeShowMonth(r);
+t.getUTCFullYear() === s && M.eq(t.getUTCMonth()).addClass("active");
+}), (s < c || s > d) && M.addClass("disabled"), s === c && M.slice(0, u).addClass("disabled"), s === d && M.slice(h + 1).addClass("disabled"), this.o.beforeShowMonth !== e.noop) {
+var I = this;
+e.each(M, function(n, i) {
+var r = new Date(s, n, 1), o = I.o.beforeShowMonth(r);
 o === t ? o = {} : "boolean" == typeof o ? o = {
 enabled: o
 } : "string" == typeof o && (o = {
@@ -31201,7 +31199,7 @@ classes: o
 }), !1 !== o.enabled || e(i).hasClass("disabled") || e(i).addClass("disabled"), o.classes && e(i).addClass(o.classes), o.tooltip && e(i).prop("title", o.tooltip);
 });
 }
-this._fill_yearsView(".datepicker-years", "year", 10, a, l, u, this.o.beforeShowYear), this._fill_yearsView(".datepicker-decades", "decade", 100, a, l, u, this.o.beforeShowDecade), this._fill_yearsView(".datepicker-centuries", "century", 1e3, a, l, u, this.o.beforeShowCentury);
+this._fill_yearsView(".datepicker-years", "year", 10, s, c, d, this.o.beforeShowYear), this._fill_yearsView(".datepicker-decades", "decade", 100, s, c, d, this.o.beforeShowDecade), this._fill_yearsView(".datepicker-centuries", "century", 1e3, s, c, d, this.o.beforeShowCentury);
 }
 },
 updateNavArrows: function() {
@@ -31218,11 +31216,11 @@ case 2:
 c *= 10;
 
 case 1:
-e = Math.floor(i / c) * c < o, t = Math.floor(i / c) * c + c > s;
+e = Math.floor(i / c) * c <= o, t = Math.floor(i / c) * c + c > s;
 break;
 
 case 0:
-e = i <= o && r < a, t = i >= s && r > l;
+e = i <= o && r <= a, t = i >= s && r >= l;
 }
 this.picker.find(".prev").toggleClass("disabled", e), this.picker.find(".next").toggleClass("disabled", t);
 }
@@ -31568,7 +31566,7 @@ footTemplate: '<tfoot><tr><th colspan="7" class="today"></th></tr><tr><th colspa
 };
 v.template = '<div class="datepicker"><div class="datepicker-days"><table class="table-condensed">' + v.headTemplate + "<tbody></tbody>" + v.footTemplate + '</table></div><div class="datepicker-months"><table class="table-condensed">' + v.headTemplate + v.contTemplate + v.footTemplate + '</table></div><div class="datepicker-years"><table class="table-condensed">' + v.headTemplate + v.contTemplate + v.footTemplate + '</table></div><div class="datepicker-decades"><table class="table-condensed">' + v.headTemplate + v.contTemplate + v.footTemplate + '</table></div><div class="datepicker-centuries"><table class="table-condensed">' + v.headTemplate + v.contTemplate + v.footTemplate + "</table></div></div>", e.fn.datepicker.DPGlobal = v, e.fn.datepicker.noConflict = function() {
 return e.fn.datepicker = h, this;
-}, e.fn.datepicker.version = "1.8.0", e.fn.datepicker.deprecated = function(e) {
+}, e.fn.datepicker.version = "1.9.0", e.fn.datepicker.deprecated = function(e) {
 var t = window.console;
 t && t.warn && t.warn("DEPRECATED: " + e);
 }, e(document).on("focus.datepicker.data-api click.datepicker.data-api", '[data-provide="datepicker"]', function(t) {

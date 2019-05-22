@@ -74,8 +74,14 @@ angular.module('openshiftConsole')
       var minValid = true;
       var maxValid = true;
 
-      minValid = value >= min;
-      maxValid = value <= max;
+      if (value && min) {
+        minValid = value >= min;
+      }
+
+      // Test against limit range max if defined.
+      if (value && max) {
+        maxValid = value <= max;
+      }
 
       $scope.expandPersistentVolumeClaimForm.capacity.$setValidity('limitRangeMin', minValid);
       $scope.expandPersistentVolumeClaimForm.capacity.$setValidity('limitRangeMax', maxValid);
