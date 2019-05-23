@@ -9097,8 +9097,8 @@ o.updatedCapacity = o.claim.capacity + o.claim.unit, i.close(o.updatedCapacity);
 i.dismiss("cancel");
 };
 var p = function() {
-var e = o.claim.capacity && d(o.claim.capacity + o.claim.unit), t = !0, n = !0;
-t = e >= (_.has(o, "limits.min") && d(o.limits.min)), n = e <= (_.has(o, "limits.max") && d(o.limits.max)), o.expandPersistentVolumeClaimForm.capacity.$setValidity("limitRangeMin", t), o.expandPersistentVolumeClaimForm.capacity.$setValidity("limitRangeMax", n);
+var e = o.claim.capacity && d(o.claim.capacity + o.claim.unit), t = _.has(o, "limits.min") && d(o.limits.min), n = _.has(o, "limits.max") && d(o.limits.max), r = !0, a = !0;
+e && t && (r = e >= t), e && n && (a = e <= n), o.expandPersistentVolumeClaimForm.capacity.$setValidity("limitRangeMin", r), o.expandPersistentVolumeClaimForm.capacity.$setValidity("limitRangeMax", a);
 }, f = function() {
 var e = o.claim.capacity && d(o.claim.capacity + o.claim.unit), t = o.currentCapacityUnits.capacity && d(o.currentCapacityUnits.capacity + o.currentCapacityUnits.unit), n = a.willRequestExceedQuota(o.quotas, o.clusterQuotas, "requests.storage", e - t);
 o.expandPersistentVolumeClaimForm.capacity.$setValidity("willExceedStorage", !n);
