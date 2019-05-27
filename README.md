@@ -13,7 +13,6 @@ Purpose
 1. This project is a fork from [origin web console](https://github.com/openshift/origin-web-console)
 2. All we`re going to do is translate ui labels into chinese
 3. You can build the docker image with project [origin web console server](https://github.com/openshift/origin-web-console-server), but make sure to use rhel to build image or you will get a lot trouble
-4. Test
 
 Contributing
 ------------
