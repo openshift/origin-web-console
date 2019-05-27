@@ -4,6 +4,16 @@ The management console for [OpenShift Origin](https://github.com/openshift/origi
 
 [![Build Status](https://travis-ci.org/openshift/origin-web-console.svg?branch=master)](https://travis-ci.org/openshift/origin-web-console)
 
+
+Purpose
+------------
+
+#### Getting started
+
+1. This project is a fork from [origin web console](https://github.com/openshift/origin-web-console)
+2. All we`re going to do is translate ui labels into chinese
+3. You can build the docker image with project [origin web console server](https://github.com/openshift/origin-web-console-server), but make sure to use rhel to build image or you will get a lot trouble
+
 Contributing
 ------------
 
