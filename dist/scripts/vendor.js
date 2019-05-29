@@ -4,17 +4,17 @@ function aa(e) {
     return e === g && (e = j), t.call(this, e);
     };
     }
-    
+
     function ba(e) {
     (e = e.__proto__ || e.constructor.prototype) && e !== Array.prototype && ca.forEach(function(t) {
     e[t] || (e[t] = Array.prototype[t]);
     });
     }
-    
+
     function v(e, t, n) {
     return da.call(e, t, q.call(arguments, 2));
     }
-    
+
     function w(e, t) {
     for (var n = 1; n < arguments.length; n++) {
     var i, r = arguments[n];
@@ -22,41 +22,41 @@ function aa(e) {
     }
     return e;
     }
-    
+
     function x(e, t) {
     if (e == k && !t) throw new TypeError();
     return ha && "string" == typeof e && e ? r.call(e, "") : Object(e);
     }
-    
+
     function ja(e) {
     var t = Object.create(DOMException.prototype);
     throw t.code = DOMException[e], t.message = e + ": DOM Exception " + t.code, t;
     }
-    
+
     function ka() {
     return l;
     }
-    
+
     function la(e) {
     return e;
     }
-    
+
     function Ja(e) {
     try {
     return Object.defineProperty(e, "sentinel", {}), "sentinel" in e;
     } catch (e) {}
     }
-    
+
     function Ka(e) {
     try {
     return e.sentinel2 = 0, 0 === Object.getOwnPropertyDescriptor(e, "sentinel2").value;
     } catch (e) {}
     }
-    
+
     function _classCallCheck(e, t) {
     if (!(e instanceof t)) throw new TypeError("Cannot call a class as a function");
     }
-    
+
     function mergeDeep(e) {
     "use strict";
     return angular.forEach(arguments, function(t) {
@@ -65,7 +65,7 @@ function aa(e) {
     });
     }), e;
     }
-    
+
     function LabelSelector(e, t) {
     this._conjuncts = {}, this._emptySelectsAll = !!t, this._OPERATOR_MAP = {
     In: "in",
@@ -85,20 +85,20 @@ function aa(e) {
     e || "" === e ? this.addConjunct(t, "in", [ e ]) : this.addConjunct(t, "exists", []);
     }, this));
     }
-    
+
     function ResourceGroupVersion(e, t, n) {
     return this.resource = e, this.group = t, this.version = n, this;
     }
-    
+
     var g = void 0, j = !0, k = null, l = !1, n = window, o, p = Object.prototype, da = Function.prototype.apply, q = Array.prototype.slice, r = String.prototype.split, ea = Array.prototype.splice, s, fa, ga, t = Function.prototype.bind || function(e, t) {
     var n = this, i = q.call(arguments, 1);
     return function() {
     return da.call(n, e, i.concat(q.call(arguments)));
     };
     }, u = t.call(Function.prototype.call, p.hasOwnProperty), ha = "a" != Object("a")[0] || !(0 in Object("a")), ia = p.toString, ca = "every filter forEach indexOf join lastIndexOf map reduce reduceRight reverse slice some toString".split(" "), y = n.Element && n.Element.prototype || {}, z = t.call(document.__orig__createElement__ || document.createElement, document), A = z("p"), B, ma = /\\s+$/g, na = /\\s+/g, C = 1, D, oa = /^(\w+)?((?:\.(?:[\w\-]+))+)?$|^#([\w\-]+$)/, pa = /\s*([,>+~ ])\s*/g, qa, E, F, G, I, J, K, ra, sa, ta, ua, L, va, M, N = "\t\n\v\f\r   ᠎             　\u2028\u2029\ufeff", wa, xa, ya, za, O, Q, Aa, Ba, R, S = n.Date, T, Ca, U, V, W, Da, Ga, X, Y;
-    
+
     for ((W = {}).names = (W.agent = navigator.userAgent.toLowerCase()).match(/(mozilla|compatible|chrome|webkit|safari|opera|msie|iphone|ipod|ipad)/gi), D = W.names && W.names.length || 0; 0 < D--; ) W[W.names[D]] = j;
-    
+
     W.mozilla = W.mozilla && !W.compatible && !W.webkit, W.safari = W.safari && !W.chrome, W.msie = W.msie && !W.opera, o = W.msie || g, n.browser = W, n.HTMLDocument || (n.HTMLDocument = n.Document), n.Document || (n.Document = n.HTMLDocument), Object.append = w, Object.extend || (Object.extend = function(e, t) {
     for (var n = 1; n < arguments.length; n++) {
     var i, r = arguments[n];
@@ -115,11 +115,11 @@ function aa(e) {
     var i = this, r = q.call(arguments, 1);
     return i.prototype && (n.prototype = Object.create(i.prototype)), n;
     });
-    
+
     var $ = "toString toLocaleString valueOf hasOwnProperty isPrototypeOf propertyIsEnumerable constructor".split(" "), Ha = !{
     toString: k
     }.propertyIsEnumerable($[0]), Ia = $.length;
-    
+
     if (w(Object, {
     keys: function(e) {
     if ("object" != typeof e && "function" != typeof e || e === k) throw new TypeError("Object.keys called on a non-object");
@@ -283,7 +283,7 @@ function aa(e) {
     return this.filter(La);
     };
     }
-    
+
     L = t.call(Function.prototype.call, Array.prototype.forEach), fa = Array.prototype.map, va = Array.prototype.every, String.random || (String.random = function(e) {
     return !e || e < 0 ? "" : Array(++e).join(0).replace(/./g, function() {
     return (0 | 32 * Math.random()).toString(32);
@@ -328,13 +328,13 @@ function aa(e) {
     var n = document.createEvent("Events"), t = t || {};
     return n.initEvent(e, t.bubbles || l, t.cancelable || l), "isTrusted" in n || (n.j = l), n;
     };
-    
+
     try {
     G = Event.prototype, new Event("click");
     } catch (e) {
     n.Event = E, G && (E.prototype = G);
     }
-    
+
     F = function(e, t) {
     var n, i;
     try {
@@ -344,13 +344,13 @@ function aa(e) {
     }
     return t = t || {}, i = t.detail !== g ? t.detail : k, (n.initCustomEvent || (n.detail = i, n.initEvent)).call(n, e, t.bubbles || l, t.cancelable || l, i), "isTrusted" in n || (n.j = l), n;
     };
-    
+
     try {
     I = (n.CustomEvent || Event).prototype, new CustomEvent("magic");
     } catch (e) {
     n.CustomEvent = F, (I || G) && (F.prototype = I || G);
     }
-    
+
     if (G.stopImmediatePropagation || (J = function(e) {
     var t = this.f, n = this.g;
     if ("function" != typeof t) {
@@ -392,7 +392,7 @@ function aa(e) {
     }
     }
     }
-    
+
     ra = function(e, t) {
     var n = t || "", i = !!e.length;
     if (i) {
@@ -438,7 +438,7 @@ function aa(e) {
     }, ta = function() {
     return this.className;
     }, n.Utils || (n.Utils = {}), n.Utils.Dom || (n.Utils.Dom = {}), n.Utils.Dom.DOMStringCollection = K, G.AT_TARGET || (G.AT_TARGET = 2, G.BUBBLING_PHASE = 3, G.CAPTURING_PHASE = 1), Event.AT_TARGET || (Event.AT_TARGET = 2, Event.BUBBLING_PHASE = 3, Event.CAPTURING_PHASE = 1);
-    
+
     try {
     n.getComputedStyle(A);
     } catch (e) {
@@ -446,7 +446,7 @@ function aa(e) {
     return this.call(n, e, t || k);
     }, n.getComputedStyle);
     }
-    
+
     if ("classList" in A || Object.defineProperty(y, "classList", {
     get: function() {
     if (this.tagName) {
@@ -477,13 +477,13 @@ function aa(e) {
     return t === g && (t = j), Sa.call(this, e, t);
     };
     }
-    
+
     try {
     A.cloneNode();
     } catch (e) {
     [ Node.prototype, y, Document.prototype, DocumentFragment.prototype ].forEach(aa);
     }
-    
+
     A.prepend || (B = function(e) {
     var t, n = k, i = 0, r = e.length, e = fa.call(e, function(e) {
     return "string" == typeof e ? document.createTextNode(e) : e;
@@ -517,7 +517,7 @@ function aa(e) {
     case "#":
     c = n.id === e.slice(1);
     break;
-    
+
     default:
     if ((c = !(o[1] && "tagName" in n && n.tagName.toUpperCase() !== o[1].toUpperCase())) && o[2]) for (r = -1, a = o[2].slice(1).split("."), o = " " + n.className + " "; a[++r] && c; ) c = s.call(o, " " + a[r] + " ");
     }
@@ -619,9 +619,9 @@ function aa(e) {
     }), S.now || (S.now = function() {
     return new S().getTime();
     });
-    
+
     var Ua;
-    
+
     if (!(Ua = !S.prototype.toJSON)) {
     var Va;
     if (!(Va = s.call(new S(-621987552e5).toJSON(), "-000001"))) {
@@ -641,7 +641,7 @@ function aa(e) {
     }
     Ua = Va;
     }
-    
+
     if (Ua && (S.prototype.toJSON = function() {
     return v(this.toISOString, this);
     }), !S.parse) {
@@ -660,7 +660,7 @@ function aa(e) {
     return S.parse.apply(this, arguments);
     }, n.Date = T;
     }
-    
+
     if ((D = n._) && D.ielt9shims && (D.ielt9shims.forEach(v), n._ = D.orig_), w = D = A = ca = z = E = F = G = I = y = T = ka = g, function(e, t) {
     "use strict";
     "object" == typeof module && "object" == typeof module.exports ? module.exports = e.document ? t(e, !0) : function(e) {
@@ -3530,24 +3530,24 @@ function aa(e) {
     case "[object Uint16Array]":
     case "[object Uint32Array]":
     return new e.constructor(r(e.buffer), e.byteOffset, e.length);
-    
+
     case "[object ArrayBuffer]":
     if (!e.slice) {
     var t = new ArrayBuffer(e.byteLength);
     return new Uint8Array(t).set(new Uint8Array(e)), t;
     }
     return e.slice(0);
-    
+
     case "[object Boolean]":
     case "[object Number]":
     case "[object String]":
     case "[object Date]":
     return new e.constructor(e.valueOf());
-    
+
     case "[object RegExp]":
     var n = new RegExp(e.source, e.toString().match(/[^/]*$/)[0]);
     return n.lastIndex = e.lastIndex, n;
-    
+
     case "[object Blob]":
     return new e.constructor([ e ], {
     type: e.type
@@ -4558,12 +4558,12 @@ function aa(e) {
     if ("input" === a && "hidden" === e.getAttribute("type") && e.setAttribute("autocomplete", "off"), !De) break;
     if (s = e.className, y(s) && (s = s.animVal), _(s) && "" !== s) for (;o = C.exec(s); ) oe(t, h = ut(o[2]), "C", i, r) && (n[h] = Ni(o[3])), s = s.substr(o.index + o[0].length);
     break;
-    
+
     case Yi:
     if (11 === xi) for (;e.parentNode && e.nextSibling && e.nextSibling.nodeType === Yi; ) e.nodeValue = e.nodeValue + e.nextSibling.nodeValue, e.parentNode.removeChild(e.nextSibling);
     pe(t, e.nodeValue);
     break;
-    
+
     case Ki:
     if (!Te) break;
     Q(e, t, n, i, r);
@@ -4842,7 +4842,7 @@ function aa(e) {
     case "math":
     var i = e.document.createElement("div");
     return i.innerHTML = "<" + t + ">" + n + "</" + t + ">", i.childNodes[0].childNodes;
-    
+
     default:
     return n;
     }
@@ -4920,7 +4920,7 @@ function aa(e) {
     }
     }), t.$$observers[v].$$scope = e, _(c = t[v]) ? r[o] = n(c)(e) : F(c) && (r[o] = c), h[o] = new ct(Ir, r[o]), d.push(m);
     break;
-    
+
     case "=":
     if (!wi.call(t, v)) {
     if (b) break;
@@ -4937,7 +4937,7 @@ function aa(e) {
     };
     y.$stateful = !0, m = i.collection ? e.$watchCollection(t[v], y) : e.$watch(s(t[v], y), null, u.literal), d.push(m);
     break;
-    
+
     case "<":
     if (!wi.call(t, v)) {
     if (b) break;
@@ -4953,7 +4953,7 @@ function aa(e) {
     l(o, e, t), r[o] = e;
     }, w), d.push(m);
     break;
-    
+
     case "&":
     if ((u = t.hasOwnProperty(v) ? s(t[v]) : f) === f && b) break;
     r[o] = function(t) {
@@ -5411,11 +5411,11 @@ function aa(e) {
     switch (typeof e) {
     case "string":
     break;
-    
+
     case "number":
     e = "" + e;
     break;
-    
+
     default:
     e = W(e);
     }
@@ -5717,57 +5717,57 @@ function aa(e) {
     nn(e.expression, t), n = n && e.expression.constant;
     }), e.constant = n;
     break;
-    
+
     case yo.Literal:
     e.constant = !0, e.toWatch = [];
     break;
-    
+
     case yo.UnaryExpression:
     nn(e.argument, t), e.constant = e.argument.constant, e.toWatch = e.argument.toWatch;
     break;
-    
+
     case yo.BinaryExpression:
     nn(e.left, t), nn(e.right, t), e.constant = e.left.constant && e.right.constant, e.toWatch = e.left.toWatch.concat(e.right.toWatch);
     break;
-    
+
     case yo.LogicalExpression:
     nn(e.left, t), nn(e.right, t), e.constant = e.left.constant && e.right.constant, e.toWatch = e.constant ? [] : [ e ];
     break;
-    
+
     case yo.ConditionalExpression:
     nn(e.test, t), nn(e.alternate, t), nn(e.consequent, t), e.constant = e.test.constant && e.alternate.constant && e.consequent.constant, e.toWatch = e.constant ? [] : [ e ];
     break;
-    
+
     case yo.Identifier:
     e.constant = !1, e.toWatch = [ e ];
     break;
-    
+
     case yo.MemberExpression:
     nn(e.object, t), e.computed && nn(e.property, t), e.constant = e.object.constant && (!e.computed || e.property.constant), e.toWatch = [ e ];
     break;
-    
+
     case yo.CallExpression:
     o = !!e.filter && tn(t, e.callee.name), n = o, r = [], i(e.arguments, function(e) {
     nn(e, t), n = n && e.constant, e.constant || r.push.apply(r, e.toWatch);
     }), e.constant = n, e.toWatch = o ? r : [ e ];
     break;
-    
+
     case yo.AssignmentExpression:
     nn(e.left, t), nn(e.right, t), e.constant = e.left.constant && e.right.constant, e.toWatch = [ e ];
     break;
-    
+
     case yo.ArrayExpression:
     n = !0, r = [], i(e.elements, function(e) {
     nn(e, t), n = n && e.constant, e.constant || r.push.apply(r, e.toWatch);
     }), e.constant = n, e.toWatch = r;
     break;
-    
+
     case yo.ObjectExpression:
     n = !0, r = [], i(e.properties, function(e) {
     nn(e.value, t), n = n && e.value.constant && !e.computed, e.value.constant || r.push.apply(r, e.value.toWatch);
     }), e.constant = n, e.toWatch = r;
     break;
-    
+
     case yo.ThisExpression:
     case yo.LocalsExpression:
     e.constant = !1, e.toWatch = [];
@@ -5834,10 +5834,10 @@ function aa(e) {
     (o = new wo(_, a, b).parse(e)).constant ? o.$$watchDelegate = p : s ? o.$$watchDelegate = o.literal ? h : d : o.inputs && (o.$$watchDelegate = u), i && (o = l(o)), m[c] = o;
     }
     return g(o, t);
-    
+
     case "function":
     return g(e, t);
-    
+
     default:
     return g(f, t);
     }
@@ -6676,17 +6676,17 @@ function aa(e) {
     case "function":
     a = i;
     break;
-    
+
     case "boolean":
     case "null":
     case "number":
     case "string":
     s = !0;
-    
+
     case "object":
     a = Ln(i, r, o, s);
     break;
-    
+
     default:
     return e;
     }
@@ -6725,10 +6725,10 @@ function aa(e) {
     return !0;
     }
     return n(e, t);
-    
+
     case "function":
     return !1;
-    
+
     default:
     return n(e, t);
     }
@@ -6886,7 +6886,7 @@ function aa(e) {
     case "boolean":
     case "string":
     return !0;
-    
+
     default:
     return !1;
     }
@@ -7308,7 +7308,7 @@ function aa(e) {
     case "file:":
     case "data:":
     return !0;
-    
+
     default:
     return !1;
     }
@@ -7899,7 +7899,7 @@ function aa(e) {
     switch (arguments.length) {
     case 0:
     return this.$$search;
-    
+
     case 1:
     if (_(e) || C(e)) e = e.toString(), this.$$search = Z(e); else {
     if (!y(e)) throw Kr("isrcharg", "The first argument of the `$location#search()` call must be a string or an object.");
@@ -7908,7 +7908,7 @@ function aa(e) {
     }), this.$$search = e;
     }
     break;
-    
+
     default:
     v(t) || null === t ? delete this.$$search[e] : this.$$search[e] = t;
     }
@@ -8361,17 +8361,17 @@ function aa(e) {
     }), n !== e.body.length - 1 ? h.current().body.push(l, ";") : h.return_(l);
     });
     break;
-    
+
     case yo.Literal:
     u = this.escape(e.value), this.assign(t, u), r(u);
     break;
-    
+
     case yo.UnaryExpression:
     this.recurse(e.argument, void 0, void 0, function(e) {
     l = e;
     }), u = e.operator + "(" + this.ifDefined(l, 0) + ")", this.assign(t, u), r(u);
     break;
-    
+
     case yo.BinaryExpression:
     this.recurse(e.left, void 0, void 0, function(e) {
     s = e;
@@ -8379,15 +8379,15 @@ function aa(e) {
     l = e;
     }), u = "+" === e.operator ? this.plus(s, l) : "-" === e.operator ? this.ifDefined(s, 0) + e.operator + this.ifDefined(l, 0) : "(" + s + ")" + e.operator + "(" + l + ")", this.assign(t, u), r(u);
     break;
-    
+
     case yo.LogicalExpression:
     t = t || this.nextId(), h.recurse(e.left, t), h.if_("&&" === e.operator ? t : h.not(t), h.lazyRecurse(e.right, t)), r(t);
     break;
-    
+
     case yo.ConditionalExpression:
     t = t || this.nextId(), h.recurse(e.test, t), h.if_(t, h.lazyRecurse(e.alternate, t), h.lazyRecurse(e.consequent, t)), r(t);
     break;
-    
+
     case yo.Identifier:
     t = t || this.nextId(), n && (n.context = "inputs" === h.stage ? "s" : this.assign(this.nextId(), this.getHasOwnProperty("l", e.name) + "?l:s"), n.computed = !1, n.name = e.name), Yt(e.name), h.if_("inputs" === h.stage || h.not(h.getHasOwnProperty("l", e.name)), function() {
     h.if_("inputs" === h.stage || "s", function() {
@@ -8395,7 +8395,7 @@ function aa(e) {
     });
     }, t && h.lazyAssign(t, h.nonComputedMember("l", e.name))), (h.state.expensiveChecks || dn(e.name)) && h.addEnsureSafeObject(t), r(t);
     break;
-    
+
     case yo.MemberExpression:
     s = n && (n.context = this.nextId()) || this.nextId(), t = t || this.nextId(), h.recurse(e.object, s, void 0, function() {
     h.if_(h.notNull(s), function() {
@@ -8405,7 +8405,7 @@ function aa(e) {
     }), r(t);
     }, !!o);
     break;
-    
+
     case yo.CallExpression:
     t = t || this.nextId(), e.filter ? (l = h.filter(e.callee.name), c = [], i(e.arguments, function(e) {
     var t = h.nextId();
@@ -8422,7 +8422,7 @@ function aa(e) {
     }), r(t);
     }));
     break;
-    
+
     case yo.AssignmentExpression:
     l = this.nextId(), s = {}, this.recurse(e.left, void 0, s, function() {
     h.if_(h.notNull(s.context), function() {
@@ -8430,7 +8430,7 @@ function aa(e) {
     });
     }, 1);
     break;
-    
+
     case yo.ArrayExpression:
     c = [], i(e.elements, function(e) {
     h.recurse(e, h.nextId(), void 0, function(e) {
@@ -8438,7 +8438,7 @@ function aa(e) {
     });
     }), u = "[" + c.join(",") + "]", this.assign(t, u), r(u);
     break;
-    
+
     case yo.ObjectExpression:
     c = [], d = !1, i(e.properties, function(e) {
     e.computed && (d = !0);
@@ -8450,15 +8450,15 @@ function aa(e) {
     });
     }), u = "{" + c.join(",") + "}", this.assign(t, u)), r(t || u);
     break;
-    
+
     case yo.ThisExpression:
     this.assign(t, "s"), r("s");
     break;
-    
+
     case yo.LocalsExpression:
     this.assign(t, "l"), r("l");
     break;
-    
+
     case yo.NGValueParameter:
     this.assign(t, "v"), r("v");
     }
@@ -8594,23 +8594,23 @@ function aa(e) {
     switch (e.type) {
     case yo.Literal:
     return this.value(e.value, t);
-    
+
     case yo.UnaryExpression:
     return o = this.recurse(e.argument), this["unary" + e.operator](o, t);
-    
+
     case yo.BinaryExpression:
     case yo.LogicalExpression:
     return r = this.recurse(e.left), o = this.recurse(e.right), this["binary" + e.operator](r, o, t);
-    
+
     case yo.ConditionalExpression:
     return this["ternary?:"](this.recurse(e.test), this.recurse(e.alternate), this.recurse(e.consequent), t);
-    
+
     case yo.Identifier:
     return Yt(e.name, s.expression), s.identifier(e.name, s.expensiveChecks || dn(e.name), t, n, s.expression);
-    
+
     case yo.MemberExpression:
     return r = this.recurse(e.object, !1, !!n), e.computed || (Yt(e.property.name, s.expression), o = e.property.name), e.computed && (o = this.recurse(e.property)), e.computed ? this.computedMember(r, o, t, n, s.expression) : this.nonComputedMember(r, o, s.expensiveChecks, t, n, s.expression);
-    
+
     case yo.CallExpression:
     return a = [], i(e.arguments, function(e) {
     a.push(s.recurse(e));
@@ -8633,7 +8633,7 @@ function aa(e) {
     value: l
     } : l;
     };
-    
+
     case yo.AssignmentExpression:
     return r = this.recurse(e.left, !0, 1), o = this.recurse(e.right), function(e, n, i, a) {
     var l = r(e, n, i, a), c = o(e, n, i, a);
@@ -8641,7 +8641,7 @@ function aa(e) {
     value: c
     } : c;
     };
-    
+
     case yo.ArrayExpression:
     return a = [], i(e.elements, function(e) {
     a.push(s.recurse(e));
@@ -8651,7 +8651,7 @@ function aa(e) {
     value: o
     } : o;
     };
-    
+
     case yo.ObjectExpression:
     return a = [], i(e.properties, function(e) {
     e.computed ? a.push({
@@ -8669,21 +8669,21 @@ function aa(e) {
     value: o
     } : o;
     };
-    
+
     case yo.ThisExpression:
     return function(e) {
     return t ? {
     value: e
     } : e;
     };
-    
+
     case yo.LocalsExpression:
     return function(e, n) {
     return t ? {
     value: n
     } : n;
     };
-    
+
     case yo.NGValueParameter:
     return function(e, n, i) {
     return t ? {
@@ -10408,7 +10408,7 @@ function aa(e) {
     case 92:
     t += S[a];
     break;
-    
+
     default:
     if (a < 32) {
     t += "\\u00" + $(2, a.toString(16));
@@ -10479,7 +10479,7 @@ function aa(e) {
     case 32:
     T++;
     break;
-    
+
     case 123:
     case 125:
     case 91:
@@ -10487,7 +10487,7 @@ function aa(e) {
     case 58:
     case 44:
     return e = w ? o.charAt(T) : o[T], T++, e;
-    
+
     case 34:
     for (e = "@", T++; T < a; ) if ((r = o.charCodeAt(T)) < 32) M(); else if (92 == r) switch (r = o.charCodeAt(++T)) {
     case 92:
@@ -10500,12 +10500,12 @@ function aa(e) {
     case 114:
     e += F[r], T++;
     break;
-    
+
     case 117:
     for (t = ++T, n = T + 4; T < n; T++) (r = o.charCodeAt(T)) >= 48 && r <= 57 || r >= 97 && r <= 102 || r >= 65 && r <= 70 || M();
     e += E("0x" + o.slice(t, T));
     break;
-    
+
     default:
     M();
     } else {
@@ -10515,7 +10515,7 @@ function aa(e) {
     }
     if (34 == o.charCodeAt(T)) return T++, e;
     M();
-    
+
     default:
     if (t = T, 45 == r && (i = !0, r = o.charCodeAt(++T)), r >= 48 && r <= 57) {
     for (48 == r && (r = o.charCodeAt(T + 1)) >= 48 && r <= 57 && M(), i = !1; T < a && (r = o.charCodeAt(T)) >= 48 && r <= 57; T++) ;
@@ -10965,7 +10965,7 @@ function aa(e) {
     switch (arguments.length) {
     case 4:
     A = f, _ = h;
-    
+
     case 3:
     case 2:
     if (!w(d)) {
@@ -10977,14 +10977,14 @@ function aa(e) {
     break;
     }
     _ = d, A = h;
-    
+
     case 1:
     w(s) ? _ = s : n ? y = s : k = s;
     break;
-    
+
     case 0:
     break;
-    
+
     default:
     throw o("badargs", "Expected up to 4 arguments [params, data, success, error], got {0} arguments", arguments.length);
     }
@@ -10994,7 +10994,7 @@ function aa(e) {
     default:
     M[t] = v(e);
     break;
-    
+
     case "params":
     case "isArray":
     case "interceptor":
@@ -11174,7 +11174,7 @@ function aa(e) {
     case 1:
     n.start(r.nodeName.toLowerCase(), h(r.attributes));
     break;
-    
+
     case 3:
     n.chars(r.textContent);
     }
@@ -11258,11 +11258,11 @@ function aa(e) {
     if (e instanceof J) switch (e.length) {
     case 0:
     return e;
-    
+
     case 1:
     if (e[0].nodeType === R) return e;
     break;
-    
+
     default:
     return J(l(e));
     }
@@ -11663,7 +11663,7 @@ function aa(e) {
     case "top":
     i += v.scrollTop;
     break;
-    
+
     case "left":
     i += v.scrollLeft;
     }
@@ -11777,19 +11777,19 @@ function aa(e) {
     case "animate":
     a = [ t, r.from, r.to, o ];
     break;
-    
+
     case "setClass":
     a = [ t, v, b, o ];
     break;
-    
+
     case "addClass":
     a = [ t, v, o ];
     break;
-    
+
     case "removeClass":
     a = [ t, b, o ];
     break;
-    
+
     default:
     a = [ t, o ];
     }
@@ -12053,7 +12053,7 @@ function aa(e) {
     if (n) switch (t) {
     case u:
     n.runner.end();
-    
+
     case c:
     N.remove(e);
     }
@@ -12690,7 +12690,7 @@ function aa(e) {
     return {};
     };
     }), s.directive("ngView", i), s.directive("ngView", r), i.$inject = [ "$route", "$anchorScroll", "$animate" ], r.$inject = [ "$compile", "$controller", "$route" ];
-    }(window, window.angular), angular.module("ui.bootstrap", [ "ui.bootstrap.tpls", "ui.bootstrap.collapse", "ui.bootstrap.accordion", "ui.bootstrap.alert", "ui.bootstrap.buttons", "ui.bootstrap.carousel", "ui.bootstrap.dateparser", "ui.bootstrap.position", "ui.bootstrap.datepicker", "ui.bootstrap.dropdown", "ui.bootstrap.stackedMap", "ui.bootstrap.modal", "ui.bootstrap.pagination", "ui.bootstrap.tooltip", "ui.bootstrap.popover", "ui.bootstrap.progressbar", "ui.bootstrap.rating", "ui.bootstrap.tabs", "ui.bootstrap.timepicker", "ui.bootstrap.typeahead" ]), angular.module("ui.bootstrap.tpls", [ "template/accordion/accordion-group.html", "template/accordion/accordion.html", "template/alert/alert.html", "template/carousel/carousel.html", "template/carousel/slide.html", "template/datepicker/datepicker.html", "template/datepicker/day.html", "template/datepicker/month.html", "template/datepicker/popup.html", "template/datepicker/year.html", "template/modal/backdrop.html", "template/modal/window.html", "template/pagination/pager.html", "template/pagination/pagination.html", "template/tooltip/tooltip-html-popup.html", "template/tooltip/tooltip-popup.html", "template/tooltip/tooltip-template-popup.html", "template/popover/popover-html.html", "template/popover/popover-template.html", "template/popover/popover.html", "template/progressbar/bar.html", "template/progressbar/progress.html", "template/progressbar/progressbar.html", "template/rating/rating.html", "template/tabs/tab.html", "template/tabs/tabset.html", "template/timepicker/timepicker.html", "template/typeahead/typeahead-match.html", "template/typeahead/typeahead-popup.html" ]), 
+    }(window, window.angular), angular.module("ui.bootstrap", [ "ui.bootstrap.tpls", "ui.bootstrap.collapse", "ui.bootstrap.accordion", "ui.bootstrap.alert", "ui.bootstrap.buttons", "ui.bootstrap.carousel", "ui.bootstrap.dateparser", "ui.bootstrap.position", "ui.bootstrap.datepicker", "ui.bootstrap.dropdown", "ui.bootstrap.stackedMap", "ui.bootstrap.modal", "ui.bootstrap.pagination", "ui.bootstrap.tooltip", "ui.bootstrap.popover", "ui.bootstrap.progressbar", "ui.bootstrap.rating", "ui.bootstrap.tabs", "ui.bootstrap.timepicker", "ui.bootstrap.typeahead" ]), angular.module("ui.bootstrap.tpls", [ "template/accordion/accordion-group.html", "template/accordion/accordion.html", "template/alert/alert.html", "template/carousel/carousel.html", "template/carousel/slide.html", "template/datepicker/datepicker.html", "template/datepicker/day.html", "template/datepicker/month.html", "template/datepicker/popup.html", "template/datepicker/year.html", "template/modal/backdrop.html", "template/modal/window.html", "template/pagination/pager.html", "template/pagination/pagination.html", "template/tooltip/tooltip-html-popup.html", "template/tooltip/tooltip-popup.html", "template/tooltip/tooltip-template-popup.html", "template/popover/popover-html.html", "template/popover/popover-template.html", "template/popover/popover.html", "template/progressbar/bar.html", "template/progressbar/progress.html", "template/progressbar/progressbar.html", "template/rating/rating.html", "template/tabs/tab.html", "template/tabs/tabset.html", "template/timepicker/timepicker.html", "template/typeahead/typeahead-match.html", "template/typeahead/typeahead-popup.html" ]),
     angular.module("ui.bootstrap.collapse", []).directive("uibCollapse", [ "$animate", "$injector", function(e, t) {
     var n = t.has("$animateCss") ? t.get("$animateCss") : null;
     return {
@@ -13507,21 +13507,21 @@ function aa(e) {
     left: d[c]()
     };
     break;
-    
+
     case "left":
     s = {
     top: h[u](),
     left: r.left - o
     };
     break;
-    
+
     case "bottom":
     s = {
     top: h[c](),
     left: d[u]()
     };
     break;
-    
+
     default:
     s = {
     top: r.top - a,
@@ -14155,7 +14155,7 @@ function aa(e) {
     case 40:
     angular.isNumber(f.selectedOption) ? f.selectedOption = f.selectedOption === n.length - 1 ? f.selectedOption : f.selectedOption + 1 : f.selectedOption = 0;
     break;
-    
+
     case 38:
     angular.isNumber(f.selectedOption) ? f.selectedOption = 0 === f.selectedOption ? 0 : f.selectedOption - 1 : f.selectedOption = n.length - 1;
     }
@@ -14229,7 +14229,7 @@ function aa(e) {
     case 40:
     angular.isNumber(i.selectedOption) ? i.selectedOption = i.selectedOption === t.length - 1 ? i.selectedOption : i.selectedOption + 1 : i.selectedOption = 0;
     break;
-    
+
     case 38:
     angular.isNumber(i.selectedOption) ? i.selectedOption = 0 === i.selectedOption ? 0 : i.selectedOption - 1 : i.selectedOption = t.length - 1;
     }
@@ -14289,7 +14289,7 @@ function aa(e) {
     case 40:
     angular.isNumber(g.selectedOption) ? g.selectedOption = g.selectedOption === n.length - 1 ? g.selectedOption : g.selectedOption + 1 : g.selectedOption = 0;
     break;
-    
+
     case 38:
     angular.isNumber(g.selectedOption) ? g.selectedOption = 0 === g.selectedOption ? 0 : g.selectedOption - 1 : g.selectedOption = n.length - 1;
     }
@@ -14363,7 +14363,7 @@ function aa(e) {
     case 40:
     angular.isNumber(o.selectedOption) ? o.selectedOption = o.selectedOption === t.length - 1 ? o.selectedOption : o.selectedOption + 1 : o.selectedOption = 0;
     break;
-    
+
     case 38:
     angular.isNumber(o.selectedOption) ? o.selectedOption = 0 === o.selectedOption ? 0 : o.selectedOption - 1 : o.selectedOption = t.length - 1;
     }
@@ -14594,7 +14594,7 @@ function aa(e) {
     C.dismiss(t.key, "escape key press");
     });
     break;
-    
+
     case 9:
     C.loadFocusElementList(t);
     var n = !1;
@@ -17410,15 +17410,15 @@ function aa(e) {
     case "top":
     n = 0;
     break;
-    
+
     case "middle":
     n = .5;
     break;
-    
+
     case "bottom":
     n = 1;
     break;
-    
+
     default:
     n = e[0] / t.height;
     }
@@ -17426,15 +17426,15 @@ function aa(e) {
     case "left":
     i = 0;
     break;
-    
+
     case "center":
     i = .5;
     break;
-    
+
     case "right":
     i = 1;
     break;
-    
+
     default:
     i = e[1] / t.width;
     }
@@ -17942,21 +17942,21 @@ function aa(e) {
     case n.DOWN:
     o = this.headers[(r + 1) % i];
     break;
-    
+
     case n.LEFT:
     case n.UP:
     o = this.headers[(r - 1 + i) % i];
     break;
-    
+
     case n.SPACE:
     case n.ENTER:
     this._eventHandler(t);
     break;
-    
+
     case n.HOME:
     o = this.headers[0];
     break;
-    
+
     case n.END:
     o = this.headers[i - 1];
     }
@@ -18150,44 +18150,44 @@ function aa(e) {
     case e.ui.keyCode.PAGE_UP:
     this.previousPage(t);
     break;
-    
+
     case e.ui.keyCode.PAGE_DOWN:
     this.nextPage(t);
     break;
-    
+
     case e.ui.keyCode.HOME:
     this._move("first", "first", t);
     break;
-    
+
     case e.ui.keyCode.END:
     this._move("last", "last", t);
     break;
-    
+
     case e.ui.keyCode.UP:
     this.previous(t);
     break;
-    
+
     case e.ui.keyCode.DOWN:
     this.next(t);
     break;
-    
+
     case e.ui.keyCode.LEFT:
     this.collapse(t);
     break;
-    
+
     case e.ui.keyCode.RIGHT:
     this.active && !this.active.is(".ui-state-disabled") && this.expand(t);
     break;
-    
+
     case e.ui.keyCode.ENTER:
     case e.ui.keyCode.SPACE:
     this._activate(t);
     break;
-    
+
     case e.ui.keyCode.ESCAPE:
     this.collapse(t);
     break;
-    
+
     default:
     a = !1, i = this.previousFilter || "", o = !1, r = t.keyCode >= 96 && t.keyCode <= 105 ? (t.keyCode - 96).toString() : String.fromCharCode(t.keyCode), clearTimeout(this.filterTimer), r === i ? o = !0 : r = i + r, n = this._filterMenuItems(r), (n = o && -1 !== n.index(this.active.next()) ? this.active.nextAll(".ui-menu-item") : n).length || (r = String.fromCharCode(t.keyCode), n = this._filterMenuItems(r)), n.length ? (this.focus(t, n), this.previousFilter = r, this.filterTimer = this._delay(function() {
     delete this.previousFilter;
@@ -18364,31 +18364,31 @@ function aa(e) {
     case o.PAGE_UP:
     t = !0, this._move("previousPage", r);
     break;
-    
+
     case o.PAGE_DOWN:
     t = !0, this._move("nextPage", r);
     break;
-    
+
     case o.UP:
     t = !0, this._keyEvent("previous", r);
     break;
-    
+
     case o.DOWN:
     t = !0, this._keyEvent("next", r);
     break;
-    
+
     case o.ENTER:
     this.menu.active && (t = !0, r.preventDefault(), this.menu.select(r));
     break;
-    
+
     case o.TAB:
     this.menu.active && this.menu.select(r);
     break;
-    
+
     case o.ESCAPE:
     this.menu.element.is(":visible") && (this.isMultiLine || this._value(this.term), this.close(r), r.preventDefault());
     break;
-    
+
     default:
     n = !0, this._searchTimeout(r);
     }
@@ -18401,15 +18401,15 @@ function aa(e) {
     case r.PAGE_UP:
     this._move("previousPage", i);
     break;
-    
+
     case r.PAGE_DOWN:
     this._move("nextPage", i);
     break;
-    
+
     case r.UP:
     this._keyEvent("previous", i);
     break;
-    
+
     case r.DOWN:
     this._keyEvent("next", i);
     }
@@ -18953,7 +18953,7 @@ function aa(e) {
     },
     _dialogDatepicker: function(t, n, i, r, o) {
     var s, l, c, u, d, h = this._dialogInst;
-    return h || (this.uuid += 1, s = "dp" + this.uuid, this._dialogInput = e("<input type='text' id='" + s + "' style='position: absolute; top: -100px; width: 0px;'/>"), this._dialogInput.on("keydown", this._doKeyDown), e("body").append(this._dialogInput), (h = this._dialogInst = this._newInst(this._dialogInput, !1)).settings = {}, e.data(this._dialogInput[0], "datepicker", h)), a(h.settings, r || {}), n = n && n.constructor === Date ? this._formatDate(h, n) : n, this._dialogInput.val(n), this._pos = o ? o.length ? o : [ o.pageX, o.pageY ] : null, this._pos || (l = document.documentElement.clientWidth, c = document.documentElement.clientHeight, u = document.documentElement.scrollLeft || document.body.scrollLeft, d = document.documentElement.scrollTop || document.body.scrollTop, this._pos = [ l / 2 - 100 + u, c / 2 - 150 + d ]), this._dialogInput.css("left", this._pos[0] + 20 + "px").css("top", this._pos[1] + "px"), h.settings.onSelect = i, this._inDialog = !0, this.dpDiv.addClass(this._dialogClass), 
+    return h || (this.uuid += 1, s = "dp" + this.uuid, this._dialogInput = e("<input type='text' id='" + s + "' style='position: absolute; top: -100px; width: 0px;'/>"), this._dialogInput.on("keydown", this._doKeyDown), e("body").append(this._dialogInput), (h = this._dialogInst = this._newInst(this._dialogInput, !1)).settings = {}, e.data(this._dialogInput[0], "datepicker", h)), a(h.settings, r || {}), n = n && n.constructor === Date ? this._formatDate(h, n) : n, this._dialogInput.val(n), this._pos = o ? o.length ? o : [ o.pageX, o.pageY ] : null, this._pos || (l = document.documentElement.clientWidth, c = document.documentElement.clientHeight, u = document.documentElement.scrollLeft || document.body.scrollLeft, d = document.documentElement.scrollTop || document.body.scrollTop, this._pos = [ l / 2 - 100 + u, c / 2 - 150 + d ]), this._dialogInput.css("left", this._pos[0] + 20 + "px").css("top", this._pos[1] + "px"), h.settings.onSelect = i, this._inDialog = !0, this.dpDiv.addClass(this._dialogClass),
     this._showDatepicker(this._dialogInput[0]), e.blockUI && e.blockUI(this.dpDiv), e.data(this._dialogInput[0], "datepicker", h), this;
     },
     _destroyDatepicker: function(t) {
@@ -19020,46 +19020,46 @@ function aa(e) {
     case 9:
     e.datepicker._hideDatepicker(), a = !1;
     break;
-    
+
     case 13:
     return (r = e("td." + e.datepicker._dayOverClass + ":not(." + e.datepicker._currentClass + ")", o.dpDiv))[0] && e.datepicker._selectDay(t.target, o.selectedMonth, o.selectedYear, r[0]), (n = e.datepicker._get(o, "onSelect")) ? (i = e.datepicker._formatDate(o), n.apply(o.input ? o.input[0] : null, [ i, o ])) : e.datepicker._hideDatepicker(), !1;
-    
+
     case 27:
     e.datepicker._hideDatepicker();
     break;
-    
+
     case 33:
     e.datepicker._adjustDate(t.target, t.ctrlKey ? -e.datepicker._get(o, "stepBigMonths") : -e.datepicker._get(o, "stepMonths"), "M");
     break;
-    
+
     case 34:
     e.datepicker._adjustDate(t.target, t.ctrlKey ? +e.datepicker._get(o, "stepBigMonths") : +e.datepicker._get(o, "stepMonths"), "M");
     break;
-    
+
     case 35:
     (t.ctrlKey || t.metaKey) && e.datepicker._clearDate(t.target), a = t.ctrlKey || t.metaKey;
     break;
-    
+
     case 36:
     (t.ctrlKey || t.metaKey) && e.datepicker._gotoToday(t.target), a = t.ctrlKey || t.metaKey;
     break;
-    
+
     case 37:
     (t.ctrlKey || t.metaKey) && e.datepicker._adjustDate(t.target, s ? 1 : -1, "D"), a = t.ctrlKey || t.metaKey, t.originalEvent.altKey && e.datepicker._adjustDate(t.target, t.ctrlKey ? -e.datepicker._get(o, "stepBigMonths") : -e.datepicker._get(o, "stepMonths"), "M");
     break;
-    
+
     case 38:
     (t.ctrlKey || t.metaKey) && e.datepicker._adjustDate(t.target, -7, "D"), a = t.ctrlKey || t.metaKey;
     break;
-    
+
     case 39:
     (t.ctrlKey || t.metaKey) && e.datepicker._adjustDate(t.target, s ? -1 : 1, "D"), a = t.ctrlKey || t.metaKey, t.originalEvent.altKey && e.datepicker._adjustDate(t.target, t.ctrlKey ? +e.datepicker._get(o, "stepBigMonths") : +e.datepicker._get(o, "stepMonths"), "M");
     break;
-    
+
     case 40:
     (t.ctrlKey || t.metaKey) && e.datepicker._adjustDate(t.target, 7, "D"), a = t.ctrlKey || t.metaKey;
     break;
-    
+
     default:
     a = !1;
     } else 36 === t.keyCode && t.ctrlKey ? e.datepicker._showDatepicker(this) : a = !1;
@@ -19198,39 +19198,39 @@ function aa(e) {
     case "d":
     v = _("d");
     break;
-    
+
     case "D":
     C("D", d, h);
     break;
-    
+
     case "o":
     b = _("o");
     break;
-    
+
     case "m":
     m = _("m");
     break;
-    
+
     case "M":
     m = C("M", f, p);
     break;
-    
+
     case "y":
     g = _("y");
     break;
-    
+
     case "@":
     g = (s = new Date(_("@"))).getFullYear(), m = s.getMonth() + 1, v = s.getDate();
     break;
-    
+
     case "!":
     g = (s = new Date((_("!") - this._ticksTo1970) / 1e4)).getFullYear(), m = s.getMonth() + 1, v = s.getDate();
     break;
-    
+
     case "'":
     w("'") ? x() : y = !0;
     break;
-    
+
     default:
     x();
     }
@@ -19271,39 +19271,39 @@ function aa(e) {
     case "d":
     d += c("d", t.getDate(), 2);
     break;
-    
+
     case "D":
     d += u("D", t.getDay(), r, o);
     break;
-    
+
     case "o":
     d += c("o", Math.round((new Date(t.getFullYear(), t.getMonth(), t.getDate()).getTime() - new Date(t.getFullYear(), 0, 0).getTime()) / 864e5), 3);
     break;
-    
+
     case "m":
     d += c("m", t.getMonth() + 1, 2);
     break;
-    
+
     case "M":
     d += u("M", t.getMonth(), a, s);
     break;
-    
+
     case "y":
     d += l("y") ? t.getFullYear() : (t.getFullYear() % 100 < 10 ? "0" : "") + t.getFullYear() % 100;
     break;
-    
+
     case "@":
     d += t.getTime();
     break;
-    
+
     case "!":
     d += 1e4 * t.getTime() + this._ticksTo1970;
     break;
-    
+
     case "'":
     l("'") ? d += "'" : h = !0;
     break;
-    
+
     default:
     d += e.charAt(i);
     }
@@ -19321,15 +19321,15 @@ function aa(e) {
     case "@":
     n += "0123456789";
     break;
-    
+
     case "D":
     case "M":
     return null;
-    
+
     case "'":
     r("'") ? n += "'" : i = !0;
     break;
-    
+
     default:
     n += e.charAt(t);
     }
@@ -19363,17 +19363,17 @@ function aa(e) {
     case "D":
     a += parseInt(l[1], 10);
     break;
-    
+
     case "w":
     case "W":
     a += 7 * parseInt(l[1], 10);
     break;
-    
+
     case "m":
     case "M":
     o += parseInt(l[1], 10), a = Math.min(a, e.datepicker._getDaysInMonth(r, o));
     break;
-    
+
     case "y":
     case "Y":
     r += parseInt(l[1], 10), a = Math.min(a, e.datepicker._getDaysInMonth(r, o));
@@ -19429,8 +19429,8 @@ function aa(e) {
     _generateHTML: function(e) {
     var t, n, i, r, o, a, s, l, c, u, d, h, f, p, g, m, v, b, y, w, _, C, x, S, $, A, k, T, D, E, F, M, I, P, L, O, R, N, B, j = new Date(), H = this._daylightSavingAdjust(new Date(j.getFullYear(), j.getMonth(), j.getDate())), V = this._get(e, "isRTL"), U = this._get(e, "showButtonPanel"), z = this._get(e, "hideIfNoPrevNext"), W = this._get(e, "navigationAsDateFormat"), q = this._getNumberOfMonths(e), G = this._get(e, "showCurrentAtPos"), Y = this._get(e, "stepMonths"), K = 1 !== q[0] || 1 !== q[1], X = this._daylightSavingAdjust(e.currentDay ? new Date(e.currentYear, e.currentMonth, e.currentDay) : new Date(9999, 9, 9)), Q = this._getMinMaxDate(e, "min"), Z = this._getMinMaxDate(e, "max"), J = e.drawMonth - G, ee = e.drawYear;
     if (J < 0 && (J += 12, ee--), Z) for (t = this._daylightSavingAdjust(new Date(Z.getFullYear(), Z.getMonth() - q[0] * q[1] + 1, Z.getDate())), t = Q && t < Q ? Q : t; this._daylightSavingAdjust(new Date(ee, J, 1)) > t; ) --J < 0 && (J = 11, ee--);
-    for (e.drawMonth = J, e.drawYear = ee, n = this._get(e, "prevText"), n = W ? this.formatDate(n, this._daylightSavingAdjust(new Date(ee, J - Y, 1)), this._getFormatConfig(e)) : n, i = this._canAdjustMonth(e, -1, ee, J) ? "<a class='ui-datepicker-prev ui-corner-all' data-handler='prev' data-event='click' title='" + n + "'><span class='ui-icon ui-icon-circle-triangle-" + (V ? "e" : "w") + "'>" + n + "</span></a>" : z ? "" : "<a class='ui-datepicker-prev ui-corner-all ui-state-disabled' title='" + n + "'><span class='ui-icon ui-icon-circle-triangle-" + (V ? "e" : "w") + "'>" + n + "</span></a>", r = this._get(e, "nextText"), r = W ? this.formatDate(r, this._daylightSavingAdjust(new Date(ee, J + Y, 1)), this._getFormatConfig(e)) : r, o = this._canAdjustMonth(e, 1, ee, J) ? "<a class='ui-datepicker-next ui-corner-all' data-handler='next' data-event='click' title='" + r + "'><span class='ui-icon ui-icon-circle-triangle-" + (V ? "w" : "e") + "'>" + r + "</span></a>" : z ? "" : "<a class='ui-datepicker-next ui-corner-all ui-state-disabled' title='" + r + "'><span class='ui-icon ui-icon-circle-triangle-" + (V ? "w" : "e") + "'>" + r + "</span></a>", 
-    a = this._get(e, "currentText"), s = this._get(e, "gotoCurrent") && e.currentDay ? X : H, a = W ? this.formatDate(a, s, this._getFormatConfig(e)) : a, l = e.inline ? "" : "<button type='button' class='ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all' data-handler='hide' data-event='click'>" + this._get(e, "closeText") + "</button>", c = U ? "<div class='ui-datepicker-buttonpane ui-widget-content'>" + (V ? l : "") + (this._isInRange(e, s) ? "<button type='button' class='ui-datepicker-current ui-state-default ui-priority-secondary ui-corner-all' data-handler='today' data-event='click'>" + a + "</button>" : "") + (V ? "" : l) + "</div>" : "", u = parseInt(this._get(e, "firstDay"), 10), u = isNaN(u) ? 0 : u, d = this._get(e, "showWeek"), h = this._get(e, "dayNames"), f = this._get(e, "dayNamesMin"), p = this._get(e, "monthNames"), g = this._get(e, "monthNamesShort"), m = this._get(e, "beforeShowDay"), v = this._get(e, "showOtherMonths"), b = this._get(e, "selectOtherMonths"), 
+    for (e.drawMonth = J, e.drawYear = ee, n = this._get(e, "prevText"), n = W ? this.formatDate(n, this._daylightSavingAdjust(new Date(ee, J - Y, 1)), this._getFormatConfig(e)) : n, i = this._canAdjustMonth(e, -1, ee, J) ? "<a class='ui-datepicker-prev ui-corner-all' data-handler='prev' data-event='click' title='" + n + "'><span class='ui-icon ui-icon-circle-triangle-" + (V ? "e" : "w") + "'>" + n + "</span></a>" : z ? "" : "<a class='ui-datepicker-prev ui-corner-all ui-state-disabled' title='" + n + "'><span class='ui-icon ui-icon-circle-triangle-" + (V ? "e" : "w") + "'>" + n + "</span></a>", r = this._get(e, "nextText"), r = W ? this.formatDate(r, this._daylightSavingAdjust(new Date(ee, J + Y, 1)), this._getFormatConfig(e)) : r, o = this._canAdjustMonth(e, 1, ee, J) ? "<a class='ui-datepicker-next ui-corner-all' data-handler='next' data-event='click' title='" + r + "'><span class='ui-icon ui-icon-circle-triangle-" + (V ? "w" : "e") + "'>" + r + "</span></a>" : z ? "" : "<a class='ui-datepicker-next ui-corner-all ui-state-disabled' title='" + r + "'><span class='ui-icon ui-icon-circle-triangle-" + (V ? "w" : "e") + "'>" + r + "</span></a>",
+    a = this._get(e, "currentText"), s = this._get(e, "gotoCurrent") && e.currentDay ? X : H, a = W ? this.formatDate(a, s, this._getFormatConfig(e)) : a, l = e.inline ? "" : "<button type='button' class='ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all' data-handler='hide' data-event='click'>" + this._get(e, "closeText") + "</button>", c = U ? "<div class='ui-datepicker-buttonpane ui-widget-content'>" + (V ? l : "") + (this._isInRange(e, s) ? "<button type='button' class='ui-datepicker-current ui-state-default ui-priority-secondary ui-corner-all' data-handler='today' data-event='click'>" + a + "</button>" : "") + (V ? "" : l) + "</div>" : "", u = parseInt(this._get(e, "firstDay"), 10), u = isNaN(u) ? 0 : u, d = this._get(e, "showWeek"), h = this._get(e, "dayNames"), f = this._get(e, "dayNamesMin"), p = this._get(e, "monthNames"), g = this._get(e, "monthNamesShort"), m = this._get(e, "beforeShowDay"), v = this._get(e, "showOtherMonths"), b = this._get(e, "selectOtherMonths"),
     y = this._getDefaultDate(e), w = "", C = 0; C < q[0]; C++) {
     for (x = "", this.maxRows = 4, S = 0; S < q[1]; S++) {
     if ($ = this._daylightSavingAdjust(new Date(ee, J, e.selectedDay)), A = " ui-corner-all", k = "", K) {
@@ -19438,11 +19438,11 @@ function aa(e) {
     case 0:
     k += " ui-datepicker-group-first", A = " ui-corner-" + (V ? "right" : "left");
     break;
-    
+
     case q[1] - 1:
     k += " ui-datepicker-group-last", A = " ui-corner-" + (V ? "left" : "right");
     break;
-    
+
     default:
     k += " ui-datepicker-group-middle", A = "";
     }
@@ -19450,7 +19450,7 @@ function aa(e) {
     }
     for (k += "<div class='ui-datepicker-header ui-widget-header ui-helper-clearfix" + A + "'>" + (/all|left/.test(A) && 0 === C ? V ? o : i : "") + (/all|right/.test(A) && 0 === C ? V ? i : o : "") + this._generateMonthYearHeader(e, J, ee, Q, Z, C > 0 || S > 0, p, g) + "</div><table class='ui-datepicker-calendar'><thead><tr>", T = d ? "<th class='ui-datepicker-week-col'>" + this._get(e, "weekHeader") + "</th>" : "", _ = 0; _ < 7; _++) D = (_ + u) % 7, T += "<th scope='col'" + ((_ + u + 6) % 7 >= 5 ? " class='ui-datepicker-week-end'" : "") + "><span title='" + h[D] + "'>" + f[D] + "</span></th>";
     for (k += T + "</tr></thead><tbody>", E = this._getDaysInMonth(ee, J), ee === e.selectedYear && J === e.selectedMonth && (e.selectedDay = Math.min(e.selectedDay, E)), F = (this._getFirstDayOfMonth(ee, J) - u + 7) % 7, M = Math.ceil((F + E) / 7), I = K && this.maxRows > M ? this.maxRows : M, this.maxRows = I, P = this._daylightSavingAdjust(new Date(ee, J, 1 - F)), L = 0; L < I; L++) {
-    for (k += "<tr>", O = d ? "<td class='ui-datepicker-week-col'>" + this._get(e, "calculateWeek")(P) + "</td>" : "", _ = 0; _ < 7; _++) R = m ? m.apply(e.input ? e.input[0] : null, [ P ]) : [ !0, "" ], B = (N = P.getMonth() !== J) && !b || !R[0] || Q && P < Q || Z && P > Z, O += "<td class='" + ((_ + u + 6) % 7 >= 5 ? " ui-datepicker-week-end" : "") + (N ? " ui-datepicker-other-month" : "") + (P.getTime() === $.getTime() && J === e.selectedMonth && e._keyEvent || y.getTime() === P.getTime() && y.getTime() === $.getTime() ? " " + this._dayOverClass : "") + (B ? " " + this._unselectableClass + " ui-state-disabled" : "") + (N && !v ? "" : " " + R[1] + (P.getTime() === X.getTime() ? " " + this._currentClass : "") + (P.getTime() === H.getTime() ? " ui-datepicker-today" : "")) + "'" + (N && !v || !R[2] ? "" : " title='" + R[2].replace(/'/g, "&#39;") + "'") + (B ? "" : " data-handler='selectDay' data-event='click' data-month='" + P.getMonth() + "' data-year='" + P.getFullYear() + "'") + ">" + (N && !v ? "&#xa0;" : B ? "<span class='ui-state-default'>" + P.getDate() + "</span>" : "<a class='ui-state-default" + (P.getTime() === H.getTime() ? " ui-state-highlight" : "") + (P.getTime() === X.getTime() ? " ui-state-active" : "") + (N ? " ui-priority-secondary" : "") + "' href='#'>" + P.getDate() + "</a>") + "</td>", 
+    for (k += "<tr>", O = d ? "<td class='ui-datepicker-week-col'>" + this._get(e, "calculateWeek")(P) + "</td>" : "", _ = 0; _ < 7; _++) R = m ? m.apply(e.input ? e.input[0] : null, [ P ]) : [ !0, "" ], B = (N = P.getMonth() !== J) && !b || !R[0] || Q && P < Q || Z && P > Z, O += "<td class='" + ((_ + u + 6) % 7 >= 5 ? " ui-datepicker-week-end" : "") + (N ? " ui-datepicker-other-month" : "") + (P.getTime() === $.getTime() && J === e.selectedMonth && e._keyEvent || y.getTime() === P.getTime() && y.getTime() === $.getTime() ? " " + this._dayOverClass : "") + (B ? " " + this._unselectableClass + " ui-state-disabled" : "") + (N && !v ? "" : " " + R[1] + (P.getTime() === X.getTime() ? " " + this._currentClass : "") + (P.getTime() === H.getTime() ? " ui-datepicker-today" : "")) + "'" + (N && !v || !R[2] ? "" : " title='" + R[2].replace(/'/g, "&#39;") + "'") + (B ? "" : " data-handler='selectDay' data-event='click' data-month='" + P.getMonth() + "' data-year='" + P.getFullYear() + "'") + ">" + (N && !v ? "&#xa0;" : B ? "<span class='ui-state-default'>" + P.getDate() + "</span>" : "<a class='ui-state-default" + (P.getTime() === H.getTime() ? " ui-state-highlight" : "") + (P.getTime() === X.getTime() ? " ui-state-active" : "") + (N ? " ui-priority-secondary" : "") + "' href='#'>" + P.getDate() + "</a>") + "</td>",
     P.setDate(P.getDate() + 1), P = this._daylightSavingAdjust(P);
     k += O + "</tr>";
     }
@@ -19776,7 +19776,7 @@ function aa(e) {
     return s && this.offset.scroll || (this.offset.scroll = {
     top: this.scrollParent.scrollTop(),
     left: this.scrollParent.scrollLeft()
-    }), t && (this.containment && (this.relativeContainer ? (i = this.relativeContainer.offset(), n = [ this.containment[0] + i.left, this.containment[1] + i.top, this.containment[2] + i.left, this.containment[3] + i.top ]) : n = this.containment, e.pageX - this.offset.click.left < n[0] && (l = n[0] + this.offset.click.left), e.pageY - this.offset.click.top < n[1] && (c = n[1] + this.offset.click.top), e.pageX - this.offset.click.left > n[2] && (l = n[2] + this.offset.click.left), e.pageY - this.offset.click.top > n[3] && (c = n[3] + this.offset.click.top)), a.grid && (r = a.grid[1] ? this.originalPageY + Math.round((c - this.originalPageY) / a.grid[1]) * a.grid[1] : this.originalPageY, c = n ? r - this.offset.click.top >= n[1] || r - this.offset.click.top > n[3] ? r : r - this.offset.click.top >= n[1] ? r - a.grid[1] : r + a.grid[1] : r, o = a.grid[0] ? this.originalPageX + Math.round((l - this.originalPageX) / a.grid[0]) * a.grid[0] : this.originalPageX, l = n ? o - this.offset.click.left >= n[0] || o - this.offset.click.left > n[2] ? o : o - this.offset.click.left >= n[0] ? o - a.grid[0] : o + a.grid[0] : o), 
+    }), t && (this.containment && (this.relativeContainer ? (i = this.relativeContainer.offset(), n = [ this.containment[0] + i.left, this.containment[1] + i.top, this.containment[2] + i.left, this.containment[3] + i.top ]) : n = this.containment, e.pageX - this.offset.click.left < n[0] && (l = n[0] + this.offset.click.left), e.pageY - this.offset.click.top < n[1] && (c = n[1] + this.offset.click.top), e.pageX - this.offset.click.left > n[2] && (l = n[2] + this.offset.click.left), e.pageY - this.offset.click.top > n[3] && (c = n[3] + this.offset.click.top)), a.grid && (r = a.grid[1] ? this.originalPageY + Math.round((c - this.originalPageY) / a.grid[1]) * a.grid[1] : this.originalPageY, c = n ? r - this.offset.click.top >= n[1] || r - this.offset.click.top > n[3] ? r : r - this.offset.click.top >= n[1] ? r - a.grid[1] : r + a.grid[1] : r, o = a.grid[0] ? this.originalPageX + Math.round((l - this.originalPageX) / a.grid[0]) * a.grid[0] : this.originalPageX, l = n ? o - this.offset.click.left >= n[0] || o - this.offset.click.left > n[2] ? o : o - this.offset.click.left >= n[0] ? o - a.grid[0] : o + a.grid[0] : o),
     "y" === a.axis && (l = this.originalPageX), "x" === a.axis && (c = this.originalPageY)), {
     top: c - this.offset.click.top - this.offset.relative.top - this.offset.parent.top + ("fixed" === this.cssPosition ? -this.offset.scroll.top : s ? 0 : this.offset.scroll.top),
     left: l - this.offset.click.left - this.offset.relative.left - this.offset.parent.left + ("fixed" === this.cssPosition ? -this.offset.scroll.left : s ? 0 : this.offset.scroll.left)
@@ -19858,7 +19858,7 @@ function aa(e) {
     },
     drag: function(t, n, i) {
     var r = i.options, o = !1, a = i.scrollParentNotHidden[0], s = i.document[0];
-    a !== s && "HTML" !== a.tagName ? (r.axis && "x" === r.axis || (i.overflowOffset.top + a.offsetHeight - t.pageY < r.scrollSensitivity ? a.scrollTop = o = a.scrollTop + r.scrollSpeed : t.pageY - i.overflowOffset.top < r.scrollSensitivity && (a.scrollTop = o = a.scrollTop - r.scrollSpeed)), r.axis && "y" === r.axis || (i.overflowOffset.left + a.offsetWidth - t.pageX < r.scrollSensitivity ? a.scrollLeft = o = a.scrollLeft + r.scrollSpeed : t.pageX - i.overflowOffset.left < r.scrollSensitivity && (a.scrollLeft = o = a.scrollLeft - r.scrollSpeed))) : (r.axis && "x" === r.axis || (t.pageY - e(s).scrollTop() < r.scrollSensitivity ? o = e(s).scrollTop(e(s).scrollTop() - r.scrollSpeed) : e(window).height() - (t.pageY - e(s).scrollTop()) < r.scrollSensitivity && (o = e(s).scrollTop(e(s).scrollTop() + r.scrollSpeed))), r.axis && "y" === r.axis || (t.pageX - e(s).scrollLeft() < r.scrollSensitivity ? o = e(s).scrollLeft(e(s).scrollLeft() - r.scrollSpeed) : e(window).width() - (t.pageX - e(s).scrollLeft()) < r.scrollSensitivity && (o = e(s).scrollLeft(e(s).scrollLeft() + r.scrollSpeed)))), 
+    a !== s && "HTML" !== a.tagName ? (r.axis && "x" === r.axis || (i.overflowOffset.top + a.offsetHeight - t.pageY < r.scrollSensitivity ? a.scrollTop = o = a.scrollTop + r.scrollSpeed : t.pageY - i.overflowOffset.top < r.scrollSensitivity && (a.scrollTop = o = a.scrollTop - r.scrollSpeed)), r.axis && "y" === r.axis || (i.overflowOffset.left + a.offsetWidth - t.pageX < r.scrollSensitivity ? a.scrollLeft = o = a.scrollLeft + r.scrollSpeed : t.pageX - i.overflowOffset.left < r.scrollSensitivity && (a.scrollLeft = o = a.scrollLeft - r.scrollSpeed))) : (r.axis && "x" === r.axis || (t.pageY - e(s).scrollTop() < r.scrollSensitivity ? o = e(s).scrollTop(e(s).scrollTop() - r.scrollSpeed) : e(window).height() - (t.pageY - e(s).scrollTop()) < r.scrollSensitivity && (o = e(s).scrollTop(e(s).scrollTop() + r.scrollSpeed))), r.axis && "y" === r.axis || (t.pageX - e(s).scrollLeft() < r.scrollSensitivity ? o = e(s).scrollLeft(e(s).scrollLeft() - r.scrollSpeed) : e(window).width() - (t.pageX - e(s).scrollLeft()) < r.scrollSensitivity && (o = e(s).scrollLeft(e(s).scrollLeft() + r.scrollSpeed)))),
     !1 !== o && e.ui.ddmanager && !r.dropBehaviour && e.ui.ddmanager.prepareOffsets(i, t);
     }
     }), e.ui.plugin.add("draggable", "snap", {
@@ -20257,7 +20257,7 @@ function aa(e) {
     top: 0,
     left: 0
     }, h = a.containerElement, f = !0;
-    h[0] !== document && /static/.test(h.css("position")) && (d = l), c.left < (a._helper ? l.left : 0) && (a.size.width = a.size.width + (a._helper ? a.position.left - l.left : a.position.left - d.left), u && (a.size.height = a.size.width / a.aspectRatio, f = !1), a.position.left = s.helper ? l.left : 0), c.top < (a._helper ? l.top : 0) && (a.size.height = a.size.height + (a._helper ? a.position.top - l.top : a.position.top), u && (a.size.width = a.size.height * a.aspectRatio, f = !1), a.position.top = a._helper ? l.top : 0), r = a.containerElement.get(0) === a.element.parent().get(0), o = /relative|absolute/.test(a.containerElement.css("position")), r && o ? (a.offset.left = a.parentData.left + a.position.left, a.offset.top = a.parentData.top + a.position.top) : (a.offset.left = a.element.offset().left, a.offset.top = a.element.offset().top), n = Math.abs(a.sizeDiff.width + (a._helper ? a.offset.left - d.left : a.offset.left - l.left)), i = Math.abs(a.sizeDiff.height + (a._helper ? a.offset.top - d.top : a.offset.top - l.top)), 
+    h[0] !== document && /static/.test(h.css("position")) && (d = l), c.left < (a._helper ? l.left : 0) && (a.size.width = a.size.width + (a._helper ? a.position.left - l.left : a.position.left - d.left), u && (a.size.height = a.size.width / a.aspectRatio, f = !1), a.position.left = s.helper ? l.left : 0), c.top < (a._helper ? l.top : 0) && (a.size.height = a.size.height + (a._helper ? a.position.top - l.top : a.position.top), u && (a.size.width = a.size.height * a.aspectRatio, f = !1), a.position.top = a._helper ? l.top : 0), r = a.containerElement.get(0) === a.element.parent().get(0), o = /relative|absolute/.test(a.containerElement.css("position")), r && o ? (a.offset.left = a.parentData.left + a.position.left, a.offset.top = a.parentData.top + a.position.top) : (a.offset.left = a.element.offset().left, a.offset.top = a.element.offset().top), n = Math.abs(a.sizeDiff.width + (a._helper ? a.offset.left - d.left : a.offset.left - l.left)), i = Math.abs(a.sizeDiff.height + (a._helper ? a.offset.top - d.top : a.offset.top - l.top)),
     n + a.size.width >= a.parentData.width && (a.size.width = a.parentData.width - n, u && (a.size.height = a.size.width / a.aspectRatio, f = !1)), i + a.size.height >= a.parentData.height && (a.size.height = a.parentData.height - i, u && (a.size.width = a.size.height * a.aspectRatio, f = !1)), f || (a.position.left = a.prevPosition.left, a.position.top = a.prevPosition.top, a.size.width = a.prevSize.width, a.size.height = a.prevSize.height);
     },
     stop: function() {
@@ -20793,16 +20793,16 @@ function aa(e) {
     switch (i) {
     case "fit":
     return c <= o && s <= d && u <= a && l <= h;
-    
+
     case "intersect":
     return c < o + t.helperProportions.width / 2 && s - t.helperProportions.width / 2 < d && u < a + t.helperProportions.height / 2 && l - t.helperProportions.height / 2 < h;
-    
+
     case "pointer":
     return e(r.pageY, u, n.proportions().height) && e(r.pageX, c, n.proportions().width);
-    
+
     case "touch":
     return (a >= u && a <= h || l >= u && l <= h || a < u && l > h) && (o >= c && o <= d || s >= c && s <= d || o < c && s > d);
-    
+
     default:
     return !1;
     }
@@ -21175,41 +21175,41 @@ function aa(e) {
     case e.ui.keyCode.ESCAPE:
     this.close(t), n = !1;
     break;
-    
+
     case e.ui.keyCode.ENTER:
     this.isOpen && this._selectFocusedItem(t);
     break;
-    
+
     case e.ui.keyCode.UP:
     t.altKey ? this._toggle(t) : this._move("prev", t);
     break;
-    
+
     case e.ui.keyCode.DOWN:
     t.altKey ? this._toggle(t) : this._move("next", t);
     break;
-    
+
     case e.ui.keyCode.SPACE:
     this.isOpen ? this._selectFocusedItem(t) : this._toggle(t);
     break;
-    
+
     case e.ui.keyCode.LEFT:
     this._move("prev", t);
     break;
-    
+
     case e.ui.keyCode.RIGHT:
     this._move("next", t);
     break;
-    
+
     case e.ui.keyCode.HOME:
     case e.ui.keyCode.PAGE_UP:
     this._move("first", t);
     break;
-    
+
     case e.ui.keyCode.END:
     case e.ui.keyCode.PAGE_DOWN:
     this._move("last", t);
     break;
-    
+
     default:
     this.menu.trigger(t), n = !1;
     }
@@ -21413,22 +21413,22 @@ function aa(e) {
     case "orientation":
     this._detectOrientation(), this._removeClass("ui-slider-horizontal ui-slider-vertical")._addClass("ui-slider-" + this.orientation), this._refreshValue(), this.options.range && this._refreshRange(n), this.handles.css("horizontal" === n ? "bottom" : "left", "");
     break;
-    
+
     case "value":
     this._animateOff = !0, this._refreshValue(), this._change(null, 0), this._animateOff = !1;
     break;
-    
+
     case "values":
     for (this._animateOff = !0, this._refreshValue(), i = r - 1; i >= 0; i--) this._change(null, i);
     this._animateOff = !1;
     break;
-    
+
     case "step":
     case "min":
     case "max":
     this._animateOff = !0, this._calculateNewMax(), this._refreshValue(), this._animateOff = !1;
     break;
-    
+
     case "range":
     this._animateOff = !0, this._refresh(), this._animateOff = !1;
     }
@@ -21528,25 +21528,25 @@ function aa(e) {
     case e.ui.keyCode.HOME:
     i = this._valueMin();
     break;
-    
+
     case e.ui.keyCode.END:
     i = this._valueMax();
     break;
-    
+
     case e.ui.keyCode.PAGE_UP:
     i = this._trimAlignValue(n + (this._valueMax() - this._valueMin()) / this.numPages);
     break;
-    
+
     case e.ui.keyCode.PAGE_DOWN:
     i = this._trimAlignValue(n - (this._valueMax() - this._valueMin()) / this.numPages);
     break;
-    
+
     case e.ui.keyCode.UP:
     case e.ui.keyCode.RIGHT:
     if (n === this._valueMax()) return;
     i = this._trimAlignValue(n + r);
     break;
-    
+
     case e.ui.keyCode.DOWN:
     case e.ui.keyCode.LEFT:
     if (n === this._valueMin()) return;
@@ -21650,7 +21650,7 @@ function aa(e) {
     },
     _mouseDrag: function(t) {
     var n, i, r, o, a = this.options, s = !1;
-    for (this.position = this._generatePosition(t), this.positionAbs = this._convertPositionTo("absolute"), this.lastPositionAbs || (this.lastPositionAbs = this.positionAbs), this.options.scroll && (this.scrollParent[0] !== this.document[0] && "HTML" !== this.scrollParent[0].tagName ? (this.overflowOffset.top + this.scrollParent[0].offsetHeight - t.pageY < a.scrollSensitivity ? this.scrollParent[0].scrollTop = s = this.scrollParent[0].scrollTop + a.scrollSpeed : t.pageY - this.overflowOffset.top < a.scrollSensitivity && (this.scrollParent[0].scrollTop = s = this.scrollParent[0].scrollTop - a.scrollSpeed), this.overflowOffset.left + this.scrollParent[0].offsetWidth - t.pageX < a.scrollSensitivity ? this.scrollParent[0].scrollLeft = s = this.scrollParent[0].scrollLeft + a.scrollSpeed : t.pageX - this.overflowOffset.left < a.scrollSensitivity && (this.scrollParent[0].scrollLeft = s = this.scrollParent[0].scrollLeft - a.scrollSpeed)) : (t.pageY - this.document.scrollTop() < a.scrollSensitivity ? s = this.document.scrollTop(this.document.scrollTop() - a.scrollSpeed) : this.window.height() - (t.pageY - this.document.scrollTop()) < a.scrollSensitivity && (s = this.document.scrollTop(this.document.scrollTop() + a.scrollSpeed)), 
+    for (this.position = this._generatePosition(t), this.positionAbs = this._convertPositionTo("absolute"), this.lastPositionAbs || (this.lastPositionAbs = this.positionAbs), this.options.scroll && (this.scrollParent[0] !== this.document[0] && "HTML" !== this.scrollParent[0].tagName ? (this.overflowOffset.top + this.scrollParent[0].offsetHeight - t.pageY < a.scrollSensitivity ? this.scrollParent[0].scrollTop = s = this.scrollParent[0].scrollTop + a.scrollSpeed : t.pageY - this.overflowOffset.top < a.scrollSensitivity && (this.scrollParent[0].scrollTop = s = this.scrollParent[0].scrollTop - a.scrollSpeed), this.overflowOffset.left + this.scrollParent[0].offsetWidth - t.pageX < a.scrollSensitivity ? this.scrollParent[0].scrollLeft = s = this.scrollParent[0].scrollLeft + a.scrollSpeed : t.pageX - this.overflowOffset.left < a.scrollSensitivity && (this.scrollParent[0].scrollLeft = s = this.scrollParent[0].scrollLeft - a.scrollSpeed)) : (t.pageY - this.document.scrollTop() < a.scrollSensitivity ? s = this.document.scrollTop(this.document.scrollTop() - a.scrollSpeed) : this.window.height() - (t.pageY - this.document.scrollTop()) < a.scrollSensitivity && (s = this.document.scrollTop(this.document.scrollTop() + a.scrollSpeed)),
     t.pageX - this.document.scrollLeft() < a.scrollSensitivity ? s = this.document.scrollLeft(this.document.scrollLeft() - a.scrollSpeed) : this.window.width() - (t.pageX - this.document.scrollLeft()) < a.scrollSensitivity && (s = this.document.scrollLeft(this.document.scrollLeft() + a.scrollSpeed))), !1 !== s && e.ui.ddmanager && !a.dropBehaviour && e.ui.ddmanager.prepareOffsets(this, t)), this.positionAbs = this._convertPositionTo("absolute"), this.options.axis && "y" === this.options.axis || (this.helper[0].style.left = this.position.left + "px"), this.options.axis && "x" === this.options.axis || (this.helper[0].style.top = this.position.top + "px"), n = this.items.length - 1; n >= 0; n--) if (i = this.items[n], r = i.item[0], (o = this._intersectsWithPointer(i)) && i.instance === this.currentContainer && !(r === this.currentItem[0] || this.placeholder[1 === o ? "next" : "prev"]()[0] === r || e.contains(this.placeholder[0], r) || "semi-dynamic" === this.options.type && e.contains(this.element[0], r))) {
     if (this.direction = 1 === o ? "down" : "up", "pointer" !== this.options.tolerance && !this._intersectsWithSides(i)) break;
     this._rearrange(t, i), this._trigger("change", t, this._uiHash());
@@ -21862,7 +21862,7 @@ function aa(e) {
     },
     _generatePosition: function(t) {
     var n, i, r = this.options, o = t.pageX, a = t.pageY, s = "absolute" !== this.cssPosition || this.scrollParent[0] !== this.document[0] && e.contains(this.scrollParent[0], this.offsetParent[0]) ? this.scrollParent : this.offsetParent, l = /(html|body)/i.test(s[0].tagName);
-    return "relative" !== this.cssPosition || this.scrollParent[0] !== this.document[0] && this.scrollParent[0] !== this.offsetParent[0] || (this.offset.relative = this._getRelativeOffset()), this.originalPosition && (this.containment && (t.pageX - this.offset.click.left < this.containment[0] && (o = this.containment[0] + this.offset.click.left), t.pageY - this.offset.click.top < this.containment[1] && (a = this.containment[1] + this.offset.click.top), t.pageX - this.offset.click.left > this.containment[2] && (o = this.containment[2] + this.offset.click.left), t.pageY - this.offset.click.top > this.containment[3] && (a = this.containment[3] + this.offset.click.top)), r.grid && (n = this.originalPageY + Math.round((a - this.originalPageY) / r.grid[1]) * r.grid[1], a = this.containment ? n - this.offset.click.top >= this.containment[1] && n - this.offset.click.top <= this.containment[3] ? n : n - this.offset.click.top >= this.containment[1] ? n - r.grid[1] : n + r.grid[1] : n, i = this.originalPageX + Math.round((o - this.originalPageX) / r.grid[0]) * r.grid[0], 
+    return "relative" !== this.cssPosition || this.scrollParent[0] !== this.document[0] && this.scrollParent[0] !== this.offsetParent[0] || (this.offset.relative = this._getRelativeOffset()), this.originalPosition && (this.containment && (t.pageX - this.offset.click.left < this.containment[0] && (o = this.containment[0] + this.offset.click.left), t.pageY - this.offset.click.top < this.containment[1] && (a = this.containment[1] + this.offset.click.top), t.pageX - this.offset.click.left > this.containment[2] && (o = this.containment[2] + this.offset.click.left), t.pageY - this.offset.click.top > this.containment[3] && (a = this.containment[3] + this.offset.click.top)), r.grid && (n = this.originalPageY + Math.round((a - this.originalPageY) / r.grid[1]) * r.grid[1], a = this.containment ? n - this.offset.click.top >= this.containment[1] && n - this.offset.click.top <= this.containment[3] ? n : n - this.offset.click.top >= this.containment[1] ? n - r.grid[1] : n + r.grid[1] : n, i = this.originalPageX + Math.round((o - this.originalPageX) / r.grid[0]) * r.grid[0],
     o = this.containment ? i - this.offset.click.left >= this.containment[0] && i - this.offset.click.left <= this.containment[2] ? i : i - this.offset.click.left >= this.containment[0] ? i - r.grid[0] : i + r.grid[0] : i)), {
     top: a - this.offset.click.top - this.offset.relative.top - this.offset.parent.top + ("fixed" === this.cssPosition ? -this.scrollParent.scrollTop() : l ? 0 : s.scrollTop()),
     left: o - this.offset.click.left - this.offset.relative.left - this.offset.parent.left + ("fixed" === this.cssPosition ? -this.scrollParent.scrollLeft() : l ? 0 : s.scrollLeft())
@@ -22021,13 +22021,13 @@ function aa(e) {
     switch (t.keyCode) {
     case i.UP:
     return this._repeat(null, 1, t), !0;
-    
+
     case i.DOWN:
     return this._repeat(null, -1, t), !0;
-    
+
     case i.PAGE_UP:
     return this._repeat(null, n.page, t), !0;
-    
+
     case i.PAGE_DOWN:
     return this._repeat(null, -n.page, t), !0;
     }
@@ -22199,26 +22199,26 @@ function aa(e) {
     case e.ui.keyCode.DOWN:
     i++;
     break;
-    
+
     case e.ui.keyCode.UP:
     case e.ui.keyCode.LEFT:
     r = !1, i--;
     break;
-    
+
     case e.ui.keyCode.END:
     i = this.anchors.length - 1;
     break;
-    
+
     case e.ui.keyCode.HOME:
     i = 0;
     break;
-    
+
     case e.ui.keyCode.SPACE:
     return t.preventDefault(), clearTimeout(this.activating), void this._activate(i);
-    
+
     case e.ui.keyCode.ENTER:
     return t.preventDefault(), clearTimeout(this.activating), void this._activate(i !== this.options.active && i);
-    
+
     default:
     return;
     }
@@ -23920,7 +23920,7 @@ function aa(e) {
     sInstance: v,
     sTableId: v
     });
-    D.nTable = this, D.oApi = n.internal, D.oInit = g, S.push(D), D.oInstance = 1 === n.length ? n : x.dataTable(), s(g), g.oLanguage && a(g.oLanguage), g.aLengthMenu && !g.iDisplayLength && (g.iDisplayLength = e.isArray(g.aLengthMenu[0]) ? g.aLengthMenu[0][0] : g.aLengthMenu[0]), g = Me(e.extend(!0, {}, C), g), Fe(D.oFeatures, g, [ "bPaginate", "bLengthChange", "bFilter", "bSort", "bSortMulti", "bInfo", "bProcessing", "bAutoWidth", "bSortClasses", "bServerSide", "bDeferRender" ]), Fe(D, g, [ "asStripeClasses", "ajax", "fnServerData", "fnFormatNumber", "sServerMethod", "aaSorting", "aaSortingFixed", "aLengthMenu", "sPaginationType", "sAjaxSource", "sAjaxDataProp", "iStateDuration", "sDom", "bSortCellsTop", "iTabIndex", "fnStateLoadCallback", "fnStateSaveCallback", "renderer", "searchDelay", "rowId", [ "iCookieDuration", "iStateDuration" ], [ "oSearch", "oPreviousSearch" ], [ "aoSearchCols", "aoPreSearchCols" ], [ "iDisplayLength", "_iDisplayLength" ] ]), Fe(D.oScroll, g, [ [ "sScrollX", "sX" ], [ "sScrollXInner", "sXInner" ], [ "sScrollY", "sY" ], [ "bScrollCollapse", "bCollapse" ] ]), 
+    D.nTable = this, D.oApi = n.internal, D.oInit = g, S.push(D), D.oInstance = 1 === n.length ? n : x.dataTable(), s(g), g.oLanguage && a(g.oLanguage), g.aLengthMenu && !g.iDisplayLength && (g.iDisplayLength = e.isArray(g.aLengthMenu[0]) ? g.aLengthMenu[0][0] : g.aLengthMenu[0]), g = Me(e.extend(!0, {}, C), g), Fe(D.oFeatures, g, [ "bPaginate", "bLengthChange", "bFilter", "bSort", "bSortMulti", "bInfo", "bProcessing", "bAutoWidth", "bSortClasses", "bServerSide", "bDeferRender" ]), Fe(D, g, [ "asStripeClasses", "ajax", "fnServerData", "fnFormatNumber", "sServerMethod", "aaSorting", "aaSortingFixed", "aLengthMenu", "sPaginationType", "sAjaxSource", "sAjaxDataProp", "iStateDuration", "sDom", "bSortCellsTop", "iTabIndex", "fnStateLoadCallback", "fnStateSaveCallback", "renderer", "searchDelay", "rowId", [ "iCookieDuration", "iStateDuration" ], [ "oSearch", "oPreviousSearch" ], [ "aoSearchCols", "aoPreSearchCols" ], [ "iDisplayLength", "_iDisplayLength" ] ]), Fe(D.oScroll, g, [ [ "sScrollX", "sX" ], [ "sScrollXInner", "sXInner" ], [ "sScrollY", "sY" ], [ "bScrollCollapse", "bCollapse" ] ]),
     Fe(D.oLanguage, g, "fnInfoCallback"), Pe(D, "aoDrawCallback", g.fnDrawCallback, "user"), Pe(D, "aoServerParams", g.fnServerParams, "user"), Pe(D, "aoStateSaveParams", g.fnStateSaveParams, "user"), Pe(D, "aoStateLoadParams", g.fnStateLoadParams, "user"), Pe(D, "aoStateLoaded", g.fnStateLoaded, "user"), Pe(D, "aoRowCallback", g.fnRowCallback, "user"), Pe(D, "aoRowCreatedCallback", g.fnCreatedRow, "user"), Pe(D, "aoHeaderCallback", g.fnHeaderCallback, "user"), Pe(D, "aoFooterCallback", g.fnFooterCallback, "user"), Pe(D, "aoInitComplete", g.fnInitComplete, "user"), Pe(D, "aoPreDrawCallback", g.fnPreDrawCallback, "user"), D.rowIdFn = $(g.rowId), c(D);
     var E = D.oClasses;
     if (e.extend(E, qe.ext.classes, g.oClasses), x.addClass(E.sTable), D.iInitDisplayStart === i && (D.iInitDisplayStart = g.iDisplayStart, D._iDisplayStart = g.iDisplayStart), null !== g.iDeferLoading) {
@@ -24483,12 +24483,12 @@ function aa(e) {
     return [ d[d.length + u] ];
     }
     return [ p(t, u) ];
-    
+
     case "name":
     return e.map(o, function(e, t) {
     return e === c[1] ? t : null;
     });
-    
+
     default:
     return [];
     }
@@ -25155,23 +25155,23 @@ function aa(e) {
     case "ellipsis":
     n.append('<span class="ellipsis">&#x2026;</span>');
     break;
-    
+
     case "first":
     c = f.sFirst, u = d + (s > 0 ? "" : " " + h.sPageButtonDisabled);
     break;
-    
+
     case "previous":
     c = f.sPrevious, u = d + (s > 0 ? "" : " " + h.sPageButtonDisabled);
     break;
-    
+
     case "next":
     c = f.sNext, u = d + (s < l - 1 ? "" : " " + h.sPageButtonDisabled);
     break;
-    
+
     case "last":
     c = f.sLast, u = d + (s < l - 1 ? "" : " " + h.sPageButtonDisabled);
     break;
-    
+
     default:
     c = d + 1, u = s === d ? h.sPageButtonActive : "";
     }
@@ -25959,23 +25959,23 @@ function aa(e) {
     case "ellipsis":
     v.append('<li class="disabled"><a href="#" onClick="event.preventDefault()">&hellip;</a></li>');
     break;
-    
+
     case "first":
     d = p.sFirst, h = l, c <= 0 && (y.addClass(f.sPageButtonDisabled), !0);
     break;
-    
+
     case "previous":
     d = p.sPrevious, h = l, c <= 0 && (y.addClass(f.sPageButtonDisabled), !0);
     break;
-    
+
     case "next":
     d = p.sNext, h = l, c >= u - 1 && (y.addClass(f.sPageButtonDisabled), !0);
     break;
-    
+
     case "last":
     d = p.sLast, h = l, c >= u - 1 && (y.addClass(f.sPageButtonDisabled), !0);
     break;
-    
+
     default:
     d = l + 1, h = "", c === l && y.addClass(f.sPageButtonActive);
     }
@@ -26411,13 +26411,13 @@ function aa(e) {
     event: t
     });
     break;
-    
+
     case "copy":
     e(l.dndCopied)(a, {
     event: t
     });
     break;
-    
+
     case "none":
     e(l.dndCanceled)(a, {
     event: t
@@ -26937,13 +26937,13 @@ function aa(e) {
     switch (n.length) {
     case 0:
     return e.call(t);
-    
+
     case 1:
     return e.call(t, n[0]);
-    
+
     case 2:
     return e.call(t, n[0], n[1]);
-    
+
     case 3:
     return e.call(t, n[0], n[1], n[2]);
     }
@@ -28066,25 +28066,25 @@ function aa(e) {
     switch (t.length) {
     case 0:
     return new e();
-    
+
     case 1:
     return new e(t[0]);
-    
+
     case 2:
     return new e(t[0], t[1]);
-    
+
     case 3:
     return new e(t[0], t[1], t[2]);
-    
+
     case 4:
     return new e(t[0], t[1], t[2], t[3]);
-    
+
     case 5:
     return new e(t[0], t[1], t[2], t[3], t[4]);
-    
+
     case 6:
     return new e(t[0], t[1], t[2], t[3], t[4], t[5]);
-    
+
     case 7:
     return new e(t[0], t[1], t[2], t[3], t[4], t[5], t[6]);
     }
@@ -28275,25 +28275,25 @@ function aa(e) {
     case it:
     if (e.byteLength != t.byteLength || e.byteOffset != t.byteOffset) return !1;
     e = e.buffer, t = t.buffer;
-    
+
     case nt:
     return !(e.byteLength != t.byteLength || !o(new Ja(e), new Ja(t)));
-    
+
     case Ne:
     case Be:
     case We:
     return Go(+e, +t);
-    
+
     case He:
     return e.name == t.name && e.message == t.message;
-    
+
     case Ke:
     case Qe:
     return e == t + "";
-    
+
     case ze:
     var s = H;
-    
+
     case Xe:
     var l = i & ce;
     if (s || (s = z), e.size != t.size && !l) return !1;
@@ -28302,7 +28302,7 @@ function aa(e) {
     i |= ue, a.set(e, t);
     var u = Or(s(e), s(t), i, r, o, a);
     return a.delete(e), u;
-    
+
     case Ze:
     if (Bs) return Bs.call(e) == Bs.call(t);
     }
@@ -28388,15 +28388,15 @@ function aa(e) {
     case "drop":
     e += a;
     break;
-    
+
     case "dropRight":
     t -= a;
     break;
-    
+
     case "take":
     t = ws(t, e + a);
     break;
-    
+
     case "takeRight":
     e = ys(e, t - a);
     }
@@ -28430,14 +28430,14 @@ function aa(e) {
     switch (t) {
     case nt:
     return Ki(e);
-    
+
     case Ne:
     case Be:
     return new r(+e);
-    
+
     case it:
     return Xi(e, i);
-    
+
     case rt:
     case ot:
     case at:
@@ -28448,20 +28448,20 @@ function aa(e) {
     case dt:
     case ht:
     return tr(e, i);
-    
+
     case ze:
     return Qi(e, i, n);
-    
+
     case We:
     case Qe:
     return new r(e);
-    
+
     case Ke:
     return Zi(e);
-    
+
     case Xe:
     return Ji(e, i, n);
-    
+
     case Ze:
     return er(e);
     }
@@ -28735,13 +28735,13 @@ function aa(e) {
     switch (t.length) {
     case 0:
     return !e.call(this);
-    
+
     case 1:
     return !e.call(this, t[0]);
-    
+
     case 2:
     return !e.call(this, t[0], t[1]);
-    
+
     case 3:
     return !e.call(this, t[0], t[1], t[2]);
     }
@@ -29029,16 +29029,16 @@ function aa(e) {
     if (i) switch (i) {
     case Is:
     return it;
-    
+
     case Ps:
     return ze;
-    
+
     case Ls:
     return "[object Promise]";
-    
+
     case Os:
     return Xe;
-    
+
     case Rs:
     return et;
     }
@@ -29900,7 +29900,7 @@ function aa(e) {
     return Un;
     })) : Dn ? ((Dn.exports = Un)._ = Un, Tn._ = Un) : kn._ = Un;
     }.call(this), "undefined" == typeof jQuery) throw new Error("Bootstrap's JavaScript requires jQuery");
-    
+
     +function(e) {
     "use strict";
     var t = jQuery.fn.jquery.split(" ")[0].split(".");
@@ -30015,11 +30015,11 @@ function aa(e) {
     case 37:
     this.prev();
     break;
-    
+
     case 39:
     this.next();
     break;
-    
+
     default:
     return;
     }
@@ -30781,7 +30781,7 @@ function aa(e) {
     return n.push.apply(n, arguments), e.extend(n, t), n;
     };
     }(), u = function(t, n) {
-    e.data(t, "datepicker", this), this._process_options(n), this.dates = new c(), this.viewDate = this.o.defaultViewDate, this.focusDate = null, this.element = e(t), this.isInput = this.element.is("input"), this.inputField = this.isInput ? this.element : this.element.find("input"), this.component = !!this.element.hasClass("date") && this.element.find(".add-on, .input-group-addon, .btn"), this.component && 0 === this.component.length && (this.component = !1), this.isInline = !this.component && this.element.is("div"), this.picker = e(v.template), this._check_template(this.o.templates.leftArrow) && this.picker.find(".prev").html(this.o.templates.leftArrow), this._check_template(this.o.templates.rightArrow) && this.picker.find(".next").html(this.o.templates.rightArrow), this._buildEvents(), this._attachEvents(), this.isInline ? this.picker.addClass("datepicker-inline").appendTo(this.element) : this.picker.addClass("datepicker-dropdown dropdown-menu"), this.o.rtl && this.picker.addClass("datepicker-rtl"), 
+    e.data(t, "datepicker", this), this._process_options(n), this.dates = new c(), this.viewDate = this.o.defaultViewDate, this.focusDate = null, this.element = e(t), this.isInput = this.element.is("input"), this.inputField = this.isInput ? this.element : this.element.find("input"), this.component = !!this.element.hasClass("date") && this.element.find(".add-on, .input-group-addon, .btn"), this.component && 0 === this.component.length && (this.component = !1), this.isInline = !this.component && this.element.is("div"), this.picker = e(v.template), this._check_template(this.o.templates.leftArrow) && this.picker.find(".prev").html(this.o.templates.leftArrow), this._check_template(this.o.templates.rightArrow) && this.picker.find(".next").html(this.o.templates.rightArrow), this._buildEvents(), this._attachEvents(), this.isInline ? this.picker.addClass("datepicker-inline").appendTo(this.element) : this.picker.addClass("datepicker-dropdown dropdown-menu"), this.o.rtl && this.picker.addClass("datepicker-rtl"),
     this.o.calendarWeeks && this.picker.find(".datepicker-days .datepicker-switch, thead .datepicker-title, tfoot .today, tfoot .clear").attr("colspan", function(e, t) {
     return Number(t) + 1;
     }), this._process_options({
@@ -30828,7 +30828,7 @@ function aa(e) {
     case "bottom":
     r.orientation.y = s[0];
     break;
-    
+
     case "left":
     case "right":
     r.orientation.x = s[0];
@@ -31128,17 +31128,17 @@ function aa(e) {
     switch (this.viewMode) {
     case 4:
     c *= 10;
-    
+
     case 3:
     c *= 10;
-    
+
     case 2:
     c *= 10;
-    
+
     case 1:
     e = Math.floor(i / c) * c < o, t = Math.floor(i / c) * c + c > s;
     break;
-    
+
     case 0:
     e = i <= o && r < a, t = i >= s && r > l;
     }
@@ -31217,7 +31217,7 @@ function aa(e) {
     case 27:
     this.focusDate ? (this.focusDate = null, this.viewDate = this.dates.get(-1) || this.viewDate, this.fill()) : this.hide(), e.preventDefault(), e.stopPropagation();
     break;
-    
+
     case 37:
     case 38:
     case 39:
@@ -31225,12 +31225,12 @@ function aa(e) {
     if (!this.o.keyboardNavigation || 7 === this.o.daysOfWeekDisabled.length) break;
     t = 37 === e.keyCode || 38 === e.keyCode ? -1 : 1, 0 === this.viewMode ? e.ctrlKey ? (n = this.moveAvailableDate(r, t, "moveYear")) && this._trigger("changeYear", this.viewDate) : e.shiftKey ? (n = this.moveAvailableDate(r, t, "moveMonth")) && this._trigger("changeMonth", this.viewDate) : 37 === e.keyCode || 39 === e.keyCode ? n = this.moveAvailableDate(r, t, "moveDay") : this.weekOfDateIsDisabled(r) || (n = this.moveAvailableDate(r, t, "moveWeek")) : 1 === this.viewMode ? (38 !== e.keyCode && 40 !== e.keyCode || (t *= 4), n = this.moveAvailableDate(r, t, "moveMonth")) : 2 === this.viewMode && (38 !== e.keyCode && 40 !== e.keyCode || (t *= 4), n = this.moveAvailableDate(r, t, "moveYear")), n && (this.focusDate = this.viewDate = n, this.setValue(), this.fill(), e.preventDefault());
     break;
-    
+
     case 13:
     if (!this.o.forceParse) break;
     r = this.focusDate || this.dates.get(-1) || this.viewDate, this.o.keyboardNavigation && (this._toggle_multidate(r), i = !0), this.focusDate = null, this.viewDate = this.dates.get(-1) || this.viewDate, this.setValue(), this.fill(), this.picker.is(":visible") && (e.preventDefault(), e.stopPropagation(), this.o.autoclose && this.hide());
     break;
-    
+
     case 9:
     this.focusDate = null, this.viewDate = this.dates.get(-1) || this.viewDate, this.fill(), this.hide();
     }
@@ -31452,7 +31452,7 @@ function aa(e) {
     case "MM":
     w = e(m[o].months).filter(l), y = e.inArray(w[0], m[o].months) + 1;
     break;
-    
+
     case "M":
     w = e(m[o].monthsShort).filter(l), y = e.inArray(w[0], m[o].monthsShort) + 1;
     }
@@ -32165,13 +32165,13 @@ function aa(e) {
     });
     }(e);
     });
-    
+
     var _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(e) {
     return typeof e;
     } : function(e) {
     return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
     }, windowIsDefined = "object" === ("undefined" == typeof window ? "undefined" : _typeof(window));
-    
+
     !function(e) {
     if ("function" == typeof define && define.amd) define([ "jquery" ], e); else if ("object" === ("undefined" == typeof module ? "undefined" : _typeof(module)) && module.exports) {
     var t;
@@ -32287,14 +32287,14 @@ function aa(e) {
     var M = document.createElement("div");
     M.className = "tooltip tooltip-max", M.setAttribute("role", "presentation"), D(M), this.sliderElem.appendChild(m), this.sliderElem.appendChild(E), this.sliderElem.appendChild(F), this.sliderElem.appendChild(M), this.tickLabelContainer && this.sliderElem.appendChild(this.tickLabelContainer), this.ticksContainer && this.sliderElem.appendChild(this.ticksContainer), this.sliderElem.appendChild(d), this.sliderElem.appendChild(h), g.insertBefore(this.sliderElem, this.element), this.element.style.display = "none";
     }
-    if (e && (this.$element = e(this.element), this.$sliderElem = e(this.sliderElem)), this.eventToCallbackMap = {}, this.sliderElem.id = this.options.id, this.touchCapable = "ontouchstart" in window || window.DocumentTouch && document instanceof window.DocumentTouch, this.touchX = 0, this.touchY = 0, this.tooltip = this.sliderElem.querySelector(".tooltip-main"), this.tooltipInner = this.tooltip.querySelector(".tooltip-inner"), this.tooltip_min = this.sliderElem.querySelector(".tooltip-min"), this.tooltipInner_min = this.tooltip_min.querySelector(".tooltip-inner"), this.tooltip_max = this.sliderElem.querySelector(".tooltip-max"), this.tooltipInner_max = this.tooltip_max.querySelector(".tooltip-inner"), r[this.options.scale] && (this.options.scale = r[this.options.scale]), !0 === p && (this._removeClass(this.sliderElem, "slider-horizontal"), this._removeClass(this.sliderElem, "slider-vertical"), this._removeClass(this.sliderElem, "slider-rtl"), this._removeClass(this.tooltip, "hide"), this._removeClass(this.tooltip_min, "hide"), 
+    if (e && (this.$element = e(this.element), this.$sliderElem = e(this.sliderElem)), this.eventToCallbackMap = {}, this.sliderElem.id = this.options.id, this.touchCapable = "ontouchstart" in window || window.DocumentTouch && document instanceof window.DocumentTouch, this.touchX = 0, this.touchY = 0, this.tooltip = this.sliderElem.querySelector(".tooltip-main"), this.tooltipInner = this.tooltip.querySelector(".tooltip-inner"), this.tooltip_min = this.sliderElem.querySelector(".tooltip-min"), this.tooltipInner_min = this.tooltip_min.querySelector(".tooltip-inner"), this.tooltip_max = this.sliderElem.querySelector(".tooltip-max"), this.tooltipInner_max = this.tooltip_max.querySelector(".tooltip-inner"), r[this.options.scale] && (this.options.scale = r[this.options.scale]), !0 === p && (this._removeClass(this.sliderElem, "slider-horizontal"), this._removeClass(this.sliderElem, "slider-vertical"), this._removeClass(this.sliderElem, "slider-rtl"), this._removeClass(this.tooltip, "hide"), this._removeClass(this.tooltip_min, "hide"),
     this._removeClass(this.tooltip_max, "hide"), [ "left", "right", "top", "width", "height" ].forEach(function(e) {
     this._removeProperty(this.trackLow, e), this._removeProperty(this.trackSelection, e), this._removeProperty(this.trackHigh, e);
     }, this), [ this.handle1, this.handle2 ].forEach(function(e) {
     this._removeProperty(e, "left"), this._removeProperty(e, "right"), this._removeProperty(e, "top");
     }, this), [ this.tooltip, this.tooltip_min, this.tooltip_max ].forEach(function(e) {
     this._removeProperty(e, "left"), this._removeProperty(e, "right"), this._removeProperty(e, "top"), this._removeProperty(e, "margin-left"), this._removeProperty(e, "margin-right"), this._removeProperty(e, "margin-top"), this._removeClass(e, "right"), this._removeClass(e, "left"), this._removeClass(e, "top");
-    }, this)), "vertical" === this.options.orientation ? (this._addClass(this.sliderElem, "slider-vertical"), this.stylePos = "top", this.mousePos = "pageY", this.sizePos = "offsetHeight") : (this._addClass(this.sliderElem, "slider-horizontal"), this.sliderElem.style.width = f, this.options.orientation = "horizontal", this.options.rtl ? this.stylePos = "right" : this.stylePos = "left", this.mousePos = "pageX", this.sizePos = "offsetWidth"), this.options.rtl && this._addClass(this.sliderElem, "slider-rtl"), this._setTooltipPosition(), Array.isArray(this.options.ticks) && this.options.ticks.length > 0 && (this.options.max = Math.max.apply(Math, this.options.ticks), this.options.min = Math.min.apply(Math, this.options.ticks)), Array.isArray(this.options.value) ? (this.options.range = !0, this._state.value = this.options.value) : this.options.range ? this._state.value = [ this.options.value, this.options.max ] : this._state.value = this.options.value, this.trackLow = c || this.trackLow, this.trackSelection = l || this.trackSelection, 
+    }, this)), "vertical" === this.options.orientation ? (this._addClass(this.sliderElem, "slider-vertical"), this.stylePos = "top", this.mousePos = "pageY", this.sizePos = "offsetHeight") : (this._addClass(this.sliderElem, "slider-horizontal"), this.sliderElem.style.width = f, this.options.orientation = "horizontal", this.options.rtl ? this.stylePos = "right" : this.stylePos = "left", this.mousePos = "pageX", this.sizePos = "offsetWidth"), this.options.rtl && this._addClass(this.sliderElem, "slider-rtl"), this._setTooltipPosition(), Array.isArray(this.options.ticks) && this.options.ticks.length > 0 && (this.options.max = Math.max.apply(Math, this.options.ticks), this.options.min = Math.min.apply(Math, this.options.ticks)), Array.isArray(this.options.value) ? (this.options.range = !0, this._state.value = this.options.value) : this.options.range ? this._state.value = [ this.options.value, this.options.max ] : this._state.value = this.options.value, this.trackLow = c || this.trackLow, this.trackSelection = l || this.trackSelection,
     this.trackHigh = u || this.trackHigh, "none" === this.options.selection ? (this._addClass(this.trackLow, "hide"), this._addClass(this.trackSelection, "hide"), this._addClass(this.trackHigh, "hide")) : "after" !== this.options.selection && "before" !== this.options.selection || (this._removeClass(this.trackLow, "hide"), this._removeClass(this.trackSelection, "hide"), this._removeClass(this.trackHigh, "hide")), this.handle1 = d || this.handle1, this.handle2 = h || this.handle2, !0 === p) for (this._removeClass(this.handle1, "round triangle"), this._removeClass(this.handle2, "round triangle hide"), o = 0; o < this.ticks.length; o++) this._removeClass(this.ticks[o], "round triangle hide");
     if (-1 !== [ "round", "triangle", "custom" ].indexOf(this.options.handle)) for (this._addClass(this.handle1, this.options.handle), this._addClass(this.handle2, this.options.handle), o = 0; o < this.ticks.length; o++) this._addClass(this.ticks[o], this.options.handle);
     if (this._state.offset = this._offset(this.sliderElem), this._state.size = this.sliderElem[this.sizePos], this.setValue(this._state.value), this.handle1Keydown = this._keydown.bind(this, 0), this.handle1.addEventListener("keydown", this.handle1Keydown, !1), this.handle2Keydown = this._keydown.bind(this, 1), this.handle2.addEventListener("keydown", this.handle2Keydown, !1), this.mousedown = this._mousedown.bind(this), this.touchstart = this._touchstart.bind(this), this.touchmove = this._touchmove.bind(this), this.touchCapable) {
@@ -32596,7 +32596,7 @@ function aa(e) {
     case 40:
     n = -1;
     break;
-    
+
     case 39:
     case 38:
     n = 1;
@@ -32771,7 +32771,7 @@ function aa(e) {
     }
     }(e), t;
     });
-    
+
     var _createClass = function() {
     function e(e, t) {
     for (var n = 0; n < t.length; n++) {
@@ -32783,7 +32783,7 @@ function aa(e) {
     return n && e(t.prototype, n), i && e(t, i), t;
     };
     }();
-    
+
     !function(e, t) {
     var n = function() {
     function n(t) {
@@ -33227,7 +33227,7 @@ function aa(e) {
     }
     function f() {
     var t;
-    t = A.verticalbuttons ? '<div class="input-group bootstrap-touchspin"><span class="input-group-addon bootstrap-touchspin-prefix">' + A.prefix + '</span><span class="input-group-addon bootstrap-touchspin-postfix">' + A.postfix + '</span><span class="input-group-btn-vertical"><button class="' + A.buttondown_class + ' bootstrap-touchspin-up" type="button"><i class="' + A.verticalupclass + '"></i></button><button class="' + A.buttonup_class + ' bootstrap-touchspin-down" type="button"><i class="' + A.verticaldownclass + '"></i></button></span></div>' : '<div class="input-group bootstrap-touchspin"><span class="input-group-btn"><button class="' + A.buttondown_class + ' bootstrap-touchspin-down" type="button">' + A.buttondown_txt + '</button></span><span class="input-group-addon bootstrap-touchspin-prefix">' + A.prefix + '</span><span class="input-group-addon bootstrap-touchspin-postfix">' + A.postfix + '</span><span class="input-group-btn"><button class="' + A.buttonup_class + ' bootstrap-touchspin-up" type="button">' + A.buttonup_txt + "</button></span></div>", 
+    t = A.verticalbuttons ? '<div class="input-group bootstrap-touchspin"><span class="input-group-addon bootstrap-touchspin-prefix">' + A.prefix + '</span><span class="input-group-addon bootstrap-touchspin-postfix">' + A.postfix + '</span><span class="input-group-btn-vertical"><button class="' + A.buttondown_class + ' bootstrap-touchspin-up" type="button"><i class="' + A.verticalupclass + '"></i></button><button class="' + A.buttonup_class + ' bootstrap-touchspin-down" type="button"><i class="' + A.verticaldownclass + '"></i></button></span></div>' : '<div class="input-group bootstrap-touchspin"><span class="input-group-btn"><button class="' + A.buttondown_class + ' bootstrap-touchspin-down" type="button">' + A.buttondown_txt + '</button></span><span class="input-group-addon bootstrap-touchspin-prefix">' + A.prefix + '</span><span class="input-group-addon bootstrap-touchspin-postfix">' + A.postfix + '</span><span class="input-group-btn"><button class="' + A.buttonup_class + ' bootstrap-touchspin-up" type="button">' + A.buttonup_txt + "</button></span></div>",
     k = e(t).insertBefore(P), e(".bootstrap-touchspin-prefix", k).after(P), P.hasClass("input-sm") ? k.addClass("input-group-sm") : P.hasClass("input-lg") && k.addClass("input-group-lg");
     }
     function p() {
@@ -33309,13 +33309,13 @@ function aa(e) {
     switch (A.forcestepdivisibility) {
     case "round":
     return (Math.round(e / A.step) * A.step).toFixed(A.decimals);
-    
+
     case "floor":
     return (Math.floor(e / A.step) * A.step).toFixed(A.decimals);
-    
+
     case "ceil":
     return (Math.ceil(e / A.step) * A.step).toFixed(A.decimals);
-    
+
     default:
     return e;
     }
@@ -33360,7 +33360,7 @@ function aa(e) {
     case "up":
     P.trigger("touchspin.on.stopupspin"), P.trigger("touchspin.on.stopspin");
     break;
-    
+
     case "down":
     P.trigger("touchspin.on.stopdownspin"), P.trigger("touchspin.on.stopspin");
     }
@@ -33784,7 +33784,7 @@ function aa(e) {
     if (i = /([a-z]+)\((.*)\)/.exec(e = e.toLowerCase())) switch (r = i[2].split(","), i[1]) {
     case "hsl":
     return n(parseFloat(r[0]), parseFloat(r[1]) / 100, parseFloat(r[2]) / 100);
-    
+
     case "rgb":
     return t($e(r[0]), $e(r[1]), $e(r[2]));
     }
@@ -33904,28 +33904,28 @@ function aa(e) {
     case "n":
     d = !0, f = "g";
     break;
-    
+
     case "%":
     p = 100, m = "%", f = "f";
     break;
-    
+
     case "p":
     p = 100, m = "%", f = "r";
     break;
-    
+
     case "b":
     case "o":
     case "x":
     case "X":
     "#" === l && (g = "0" + f.toLowerCase());
-    
+
     case "c":
     b = !1;
-    
+
     case "d":
     v = !0, h = 0;
     break;
-    
+
     case "s":
     p = -1, f = "r";
     }
@@ -35393,15 +35393,15 @@ function aa(e) {
     case 0:
     e(c, u, d, w, _);
     break;
-    
+
     case 1:
     e(c, w, d, h, _);
     break;
-    
+
     case 2:
     e(c, u, _, w, f);
     break;
-    
+
     case 3:
     e(c, w, _, h, f);
     }
@@ -39600,15 +39600,15 @@ function aa(e) {
     return e ? 8 * Math.sin(Math.PI * (e / 180)) : 0;
     }(W)), P.attr("d", "M" + M[0] + "," + d + "V0H" + M[1] + "V" + d);
     break;
-    
+
     case "top":
     _ = n, L.attr("y2", -v), R.attr("y", -U), O.attr("x2", 0).attr("y2", -v), N.attr("x", 0).attr("y", -U), B.style("text-anchor", "middle"), j.attr("x", 0).attr("dy", "0em"), P.attr("d", "M" + M[0] + "," + -d + "V0H" + M[1] + "V" + -d);
     break;
-    
+
     case "left":
     _ = i, L.attr("x2", -v), R.attr("x", -U), O.attr("x2", -v).attr("y1", x).attr("y2", x), N.attr("x", -U).attr("y", w), B.style("text-anchor", "end"), j.attr("x", -U).attr("dy", f), P.attr("d", "M" + -d + "," + M[0] + "H0V" + M[1] + "H" + -d);
     break;
-    
+
     case "right":
     _ = i, L.attr("x2", v), R.attr("x", U), O.attr("x2", v).attr("y2", 0), N.attr("x", U).attr("y", 0), B.style("text-anchor", "start"), j.attr("x", U).attr("dy", f), P.attr("d", "M" + d + "," + M[0] + "H0V" + M[1] + "H" + d);
     }
@@ -39700,12 +39700,12 @@ function aa(e) {
     this.initBar && this.initBar(), this.initLine && this.initLine(), this.initArc && this.initArc(), this.initGauge && this.initGauge(), this.initText && this.initText();
     }, s.initWithData = function(e) {
     var t, n, i = this, o = i.d3, a = i.config, s = !0;
-    i.axis = new r(i), i.initPie && i.initPie(), i.initBrush && i.initBrush(), i.initZoom && i.initZoom(), a.bindto ? "function" == typeof a.bindto.node ? i.selectChart = a.bindto : i.selectChart = o.select(a.bindto) : i.selectChart = o.selectAll([]), i.selectChart.empty() && (i.selectChart = o.select(document.createElement("div")).style("opacity", 0), i.observeInserted(i.selectChart), s = !1), i.selectChart.html("").classed("c3", !0), i.data.xs = {}, i.data.targets = i.convertDataToTargets(e), a.data_filter && (i.data.targets = i.data.targets.filter(a.data_filter)), a.data_hide && i.addHiddenTargetIds(!0 === a.data_hide ? i.mapToIds(i.data.targets) : a.data_hide), a.legend_hide && i.addHiddenLegendIds(!0 === a.legend_hide ? i.mapToIds(i.data.targets) : a.legend_hide), i.hasType("gauge") && (a.legend_show = !1), i.updateSizes(), i.updateScales(), i.x.domain(o.extent(i.getXDomain(i.data.targets))), i.y.domain(i.getYDomain(i.data.targets, "y")), i.y2.domain(i.getYDomain(i.data.targets, "y2")), 
+    i.axis = new r(i), i.initPie && i.initPie(), i.initBrush && i.initBrush(), i.initZoom && i.initZoom(), a.bindto ? "function" == typeof a.bindto.node ? i.selectChart = a.bindto : i.selectChart = o.select(a.bindto) : i.selectChart = o.selectAll([]), i.selectChart.empty() && (i.selectChart = o.select(document.createElement("div")).style("opacity", 0), i.observeInserted(i.selectChart), s = !1), i.selectChart.html("").classed("c3", !0), i.data.xs = {}, i.data.targets = i.convertDataToTargets(e), a.data_filter && (i.data.targets = i.data.targets.filter(a.data_filter)), a.data_hide && i.addHiddenTargetIds(!0 === a.data_hide ? i.mapToIds(i.data.targets) : a.data_hide), a.legend_hide && i.addHiddenLegendIds(!0 === a.legend_hide ? i.mapToIds(i.data.targets) : a.legend_hide), i.hasType("gauge") && (a.legend_show = !1), i.updateSizes(), i.updateScales(), i.x.domain(o.extent(i.getXDomain(i.data.targets))), i.y.domain(i.getYDomain(i.data.targets, "y")), i.y2.domain(i.getYDomain(i.data.targets, "y2")),
     i.subX.domain(i.x.domain()), i.subY.domain(i.y.domain()), i.subY2.domain(i.y2.domain()), i.orgXDomain = i.x.domain(), i.brush && i.brush.scale(i.subX), a.zoom_enabled && i.zoom.scale(i.x), i.svg = i.selectChart.append("svg").style("overflow", "hidden").on("mouseenter", function() {
     return a.onmouseover.call(i);
     }).on("mouseleave", function() {
     return a.onmouseout.call(i);
-    }), i.config.svg_classname && i.svg.attr("class", i.config.svg_classname), t = i.svg.append("defs"), i.clipChart = i.appendClip(t, i.clipId), i.clipXAxis = i.appendClip(t, i.clipIdForXAxis), i.clipYAxis = i.appendClip(t, i.clipIdForYAxis), i.clipGrid = i.appendClip(t, i.clipIdForGrid), i.clipSubchart = i.appendClip(t, i.clipIdForSubchart), i.updateSvgSize(), n = i.main = i.svg.append("g").attr("transform", i.getTranslate("main")), i.initSubchart && i.initSubchart(), i.initTooltip && i.initTooltip(), i.initLegend && i.initLegend(), i.initTitle && i.initTitle(), n.append("text").attr("class", c.text + " " + c.empty).attr("text-anchor", "middle").attr("dominant-baseline", "middle"), i.initRegion(), i.initGrid(), n.append("g").attr("clip-path", i.clipPath).attr("class", c.chart), a.grid_lines_front && i.initGridLines(), i.initEventRect(), i.initChartElements(), n.insert("rect", a.zoom_privileged ? null : "g." + c.regions).attr("class", c.zoomRect).attr("width", i.width).attr("height", i.height).style("opacity", 0).on("dblclick.zoom", null), 
+    }), i.config.svg_classname && i.svg.attr("class", i.config.svg_classname), t = i.svg.append("defs"), i.clipChart = i.appendClip(t, i.clipId), i.clipXAxis = i.appendClip(t, i.clipIdForXAxis), i.clipYAxis = i.appendClip(t, i.clipIdForYAxis), i.clipGrid = i.appendClip(t, i.clipIdForGrid), i.clipSubchart = i.appendClip(t, i.clipIdForSubchart), i.updateSvgSize(), n = i.main = i.svg.append("g").attr("transform", i.getTranslate("main")), i.initSubchart && i.initSubchart(), i.initTooltip && i.initTooltip(), i.initLegend && i.initLegend(), i.initTitle && i.initTitle(), n.append("text").attr("class", c.text + " " + c.empty).attr("text-anchor", "middle").attr("dominant-baseline", "middle"), i.initRegion(), i.initGrid(), n.append("g").attr("clip-path", i.clipPath).attr("class", c.chart), a.grid_lines_front && i.initGridLines(), i.initEventRect(), i.initChartElements(), n.insert("rect", a.zoom_privileged ? null : "g." + c.regions).attr("class", c.zoomRect).attr("width", i.width).attr("height", i.height).style("opacity", 0).on("dblclick.zoom", null),
     a.axis_x_extent && i.brush.extent(i.getDefaultExtent()), i.axis.init(), i.updateTargets(i.data.targets), s && (i.updateDimension(), i.config.oninit.call(i), i.redraw({
     withTransition: !1,
     withTransform: !0,
@@ -39762,7 +39762,7 @@ function aa(e) {
     }).transition().duration(e.config.transition_duration).style("opacity", 1);
     }, s.redraw = function(e, t) {
     var n, i, r, o, a, s, l, u, d, h, f, p, g, m, v, b, y, _, C, x, S, $, A, k, T, D, E, F, M, I = this, P = I.main, L = I.d3, O = I.config, R = I.getShapeIndices(I.isAreaType), N = I.getShapeIndices(I.isBarType), B = I.getShapeIndices(I.isLineType), j = I.hasArcType(), H = I.filterTargetsToShow(I.data.targets), V = I.xv.bind(I);
-    if (e = e || {}, n = w(e, "withY", !0), i = w(e, "withSubchart", !0), r = w(e, "withTransition", !0), s = w(e, "withTransform", !1), l = w(e, "withUpdateXDomain", !1), u = w(e, "withUpdateOrgXDomain", !1), d = w(e, "withTrimXDomain", !0), g = w(e, "withUpdateXAxis", l), h = w(e, "withLegend", !1), f = w(e, "withEventRect", !0), p = w(e, "withDimension", !0), o = w(e, "withTransitionForExit", r), a = w(e, "withTransitionForAxis", r), C = r ? O.transition_duration : 0, x = o ? C : 0, S = a ? C : 0, t = t || I.axis.generateTransitions(S), h && O.legend_show ? I.updateLegend(I.mapToIds(I.data.targets), e, t) : p && I.updateDimension(!0), I.isCategorized() && 0 === H.length && I.x.domain([ 0, I.axes.x.selectAll(".tick").size() ]), H.length ? (I.updateXDomain(H, l, u, d), O.axis_x_tick_values || (k = I.axis.updateXAxisTickValues(H))) : (I.xAxis.tickValues([]), I.subXAxis.tickValues([])), O.zoom_rescale && !e.flow && (E = I.x.orgDomain()), I.y.domain(I.getYDomain(H, "y", E)), I.y2.domain(I.getYDomain(H, "y2", E)), 
+    if (e = e || {}, n = w(e, "withY", !0), i = w(e, "withSubchart", !0), r = w(e, "withTransition", !0), s = w(e, "withTransform", !1), l = w(e, "withUpdateXDomain", !1), u = w(e, "withUpdateOrgXDomain", !1), d = w(e, "withTrimXDomain", !0), g = w(e, "withUpdateXAxis", l), h = w(e, "withLegend", !1), f = w(e, "withEventRect", !0), p = w(e, "withDimension", !0), o = w(e, "withTransitionForExit", r), a = w(e, "withTransitionForAxis", r), C = r ? O.transition_duration : 0, x = o ? C : 0, S = a ? C : 0, t = t || I.axis.generateTransitions(S), h && O.legend_show ? I.updateLegend(I.mapToIds(I.data.targets), e, t) : p && I.updateDimension(!0), I.isCategorized() && 0 === H.length && I.x.domain([ 0, I.axes.x.selectAll(".tick").size() ]), H.length ? (I.updateXDomain(H, l, u, d), O.axis_x_tick_values || (k = I.axis.updateXAxisTickValues(H))) : (I.xAxis.tickValues([]), I.subXAxis.tickValues([])), O.zoom_rescale && !e.flow && (E = I.x.orgDomain()), I.y.domain(I.getYDomain(H, "y", E)), I.y2.domain(I.getYDomain(H, "y2", E)),
     !O.axis_y_tick_values && O.axis_y_tick_count && I.yAxis.tickValues(I.axis.generateTickValues(I.y.domain(), O.axis_y_tick_count)), !O.axis_y2_tick_values && O.axis_y2_tick_count && I.y2Axis.tickValues(I.axis.generateTickValues(I.y2.domain(), O.axis_y2_tick_count)), I.axis.redraw(t, j), I.axis.updateLabels(r), (l || g) && H.length) if (O.axis_x_tick_culling && k) {
     for (T = 1; T < k.length; T++) if (k.length / T < O.axis_x_tick_culling_max) {
     D = T;
@@ -39773,7 +39773,7 @@ function aa(e) {
     t >= 0 && L.select(this).style("display", t % D ? "none" : "block");
     });
     } else I.svg.selectAll("." + c.axisX + " .tick text").style("display", "block");
-    m = I.generateDrawArea ? I.generateDrawArea(R, !1) : void 0, v = I.generateDrawBar ? I.generateDrawBar(N) : void 0, b = I.generateDrawLine ? I.generateDrawLine(B, !1) : void 0, y = I.generateXYForText(R, N, B, !0), _ = I.generateXYForText(R, N, B, !1), n && (I.subY.domain(I.getYDomain(H, "y")), I.subY2.domain(I.getYDomain(H, "y2"))), I.updateXgridFocus(), P.select("text." + c.text + "." + c.empty).attr("x", I.width / 2).attr("y", I.height / 2).text(O.data_empty_label_text).transition().style("opacity", H.length ? 0 : 1), I.updateGrid(C), I.updateRegion(C), I.updateBar(x), I.updateLine(x), I.updateArea(x), I.updateCircle(), I.hasDataLabel() && I.updateText(x), I.redrawTitle && I.redrawTitle(), I.redrawArc && I.redrawArc(C, x, s), I.redrawSubchart && I.redrawSubchart(i, t, C, x, R, N, B), P.selectAll("." + c.selectedCircles).filter(I.isBarType.bind(I)).selectAll("circle").remove(), O.interaction_enabled && !e.flow && f && (I.redrawEventRect(), I.updateZoom && I.updateZoom()), I.updateCircleY(), 
+    m = I.generateDrawArea ? I.generateDrawArea(R, !1) : void 0, v = I.generateDrawBar ? I.generateDrawBar(N) : void 0, b = I.generateDrawLine ? I.generateDrawLine(B, !1) : void 0, y = I.generateXYForText(R, N, B, !0), _ = I.generateXYForText(R, N, B, !1), n && (I.subY.domain(I.getYDomain(H, "y")), I.subY2.domain(I.getYDomain(H, "y2"))), I.updateXgridFocus(), P.select("text." + c.text + "." + c.empty).attr("x", I.width / 2).attr("y", I.height / 2).text(O.data_empty_label_text).transition().style("opacity", H.length ? 0 : 1), I.updateGrid(C), I.updateRegion(C), I.updateBar(x), I.updateLine(x), I.updateArea(x), I.updateCircle(), I.hasDataLabel() && I.updateText(x), I.redrawTitle && I.redrawTitle(), I.redrawArc && I.redrawArc(C, x, s), I.redrawSubchart && I.redrawSubchart(i, t, C, x, R, N, B), P.selectAll("." + c.selectedCircles).filter(I.isBarType.bind(I)).selectAll("circle").remove(), O.interaction_enabled && !e.flow && f && (I.redrawEventRect(), I.updateZoom && I.updateZoom()), I.updateCircleY(),
     F = (I.config.axis_rotated ? I.circleY : I.circleX).bind(I), M = (I.config.axis_rotated ? I.circleX : I.circleY).bind(I), e.flow && (A = I.generateFlow({
     targets: H,
     flow: e.flow,
@@ -40220,7 +40220,7 @@ function aa(e) {
     var i, r, o, a, s, l, c, d, h, f, p = this, g = p.config, m = e.filter(function(e) {
     return p.axis.getId(e.id) === t;
     }), b = n ? p.filterByXDomain(m, n) : m, w = "y2" === t ? g.axis_y2_min : g.axis_y_min, _ = "y2" === t ? g.axis_y2_max : g.axis_y_max, C = p.getYDomainMin(b), x = p.getYDomainMax(b), S = "y2" === t ? g.axis_y2_center : g.axis_y_center, $ = p.hasType("bar", b) && g.bar_zerobased || p.hasType("area", b) && g.area_zerobased, A = "y2" === t ? g.axis_y2_inverted : g.axis_y_inverted, k = p.hasDataLabel() && g.axis_rotated, T = p.hasDataLabel() && !g.axis_rotated;
-    return C = u(w) ? w : u(_) ? C < _ ? C : _ - 10 : C, x = u(_) ? _ : u(w) ? w < x ? x : w + 10 : x, 0 === b.length ? "y2" === t ? p.y2.domain() : p.y.domain() : (isNaN(C) && (C = 0), isNaN(x) && (x = C), C === x && (C < 0 ? x = 0 : C = 0), h = C >= 0 && x >= 0, f = C <= 0 && x <= 0, (u(w) && h || u(_) && f) && ($ = !1), $ && (h && (C = 0), f && (x = 0)), r = Math.abs(x - C), o = a = .1 * r, void 0 !== S && (x = S + (s = Math.max(Math.abs(C), Math.abs(x))), C = S - s), k ? (l = p.getDataLabelLength(C, x, "width"), c = v(p.y.range()), o += r * ((d = [ l[0] / c, l[1] / c ])[1] / (1 - d[0] - d[1])), a += r * (d[0] / (1 - d[0] - d[1]))) : T && (l = p.getDataLabelLength(C, x, "height"), o += p.axis.convertPixelsToAxisPadding(l[1], r), a += p.axis.convertPixelsToAxisPadding(l[0], r)), "y" === t && y(g.axis_y_padding) && (o = p.axis.getPadding(g.axis_y_padding, "top", o, r), a = p.axis.getPadding(g.axis_y_padding, "bottom", a, r)), "y2" === t && y(g.axis_y2_padding) && (o = p.axis.getPadding(g.axis_y2_padding, "top", o, r), 
+    return C = u(w) ? w : u(_) ? C < _ ? C : _ - 10 : C, x = u(_) ? _ : u(w) ? w < x ? x : w + 10 : x, 0 === b.length ? "y2" === t ? p.y2.domain() : p.y.domain() : (isNaN(C) && (C = 0), isNaN(x) && (x = C), C === x && (C < 0 ? x = 0 : C = 0), h = C >= 0 && x >= 0, f = C <= 0 && x <= 0, (u(w) && h || u(_) && f) && ($ = !1), $ && (h && (C = 0), f && (x = 0)), r = Math.abs(x - C), o = a = .1 * r, void 0 !== S && (x = S + (s = Math.max(Math.abs(C), Math.abs(x))), C = S - s), k ? (l = p.getDataLabelLength(C, x, "width"), c = v(p.y.range()), o += r * ((d = [ l[0] / c, l[1] / c ])[1] / (1 - d[0] - d[1])), a += r * (d[0] / (1 - d[0] - d[1]))) : T && (l = p.getDataLabelLength(C, x, "height"), o += p.axis.convertPixelsToAxisPadding(l[1], r), a += p.axis.convertPixelsToAxisPadding(l[0], r)), "y" === t && y(g.axis_y_padding) && (o = p.axis.getPadding(g.axis_y_padding, "top", o, r), a = p.axis.getPadding(g.axis_y_padding, "bottom", a, r)), "y2" === t && y(g.axis_y2_padding) && (o = p.axis.getPadding(g.axis_y2_padding, "top", o, r),
     a = p.axis.getPadding(g.axis_y2_padding, "bottom", a, r)), $ && (h && (a = C), f && (o = -x)), i = [ C - a, x + o ], A ? i.reverse() : i);
     }, s.getXDomainMin = function(e) {
     var t = this, n = t.config;
@@ -43195,61 +43195,61 @@ function aa(e) {
     case "Z":
     case "z":
     return SVGPathSeg.PATHSEG_CLOSEPATH;
-    
+
     case "M":
     return SVGPathSeg.PATHSEG_MOVETO_ABS;
-    
+
     case "m":
     return SVGPathSeg.PATHSEG_MOVETO_REL;
-    
+
     case "L":
     return SVGPathSeg.PATHSEG_LINETO_ABS;
-    
+
     case "l":
     return SVGPathSeg.PATHSEG_LINETO_REL;
-    
+
     case "C":
     return SVGPathSeg.PATHSEG_CURVETO_CUBIC_ABS;
-    
+
     case "c":
     return SVGPathSeg.PATHSEG_CURVETO_CUBIC_REL;
-    
+
     case "Q":
     return SVGPathSeg.PATHSEG_CURVETO_QUADRATIC_ABS;
-    
+
     case "q":
     return SVGPathSeg.PATHSEG_CURVETO_QUADRATIC_REL;
-    
+
     case "A":
     return SVGPathSeg.PATHSEG_ARC_ABS;
-    
+
     case "a":
     return SVGPathSeg.PATHSEG_ARC_REL;
-    
+
     case "H":
     return SVGPathSeg.PATHSEG_LINETO_HORIZONTAL_ABS;
-    
+
     case "h":
     return SVGPathSeg.PATHSEG_LINETO_HORIZONTAL_REL;
-    
+
     case "V":
     return SVGPathSeg.PATHSEG_LINETO_VERTICAL_ABS;
-    
+
     case "v":
     return SVGPathSeg.PATHSEG_LINETO_VERTICAL_REL;
-    
+
     case "S":
     return SVGPathSeg.PATHSEG_CURVETO_CUBIC_SMOOTH_ABS;
-    
+
     case "s":
     return SVGPathSeg.PATHSEG_CURVETO_CUBIC_SMOOTH_REL;
-    
+
     case "T":
     return SVGPathSeg.PATHSEG_CURVETO_QUADRATIC_SMOOTH_ABS;
-    
+
     case "t":
     return SVGPathSeg.PATHSEG_CURVETO_QUADRATIC_SMOOTH_REL;
-    
+
     default:
     return SVGPathSeg.PATHSEG_UNKNOWN;
     }
@@ -43293,31 +43293,31 @@ function aa(e) {
     switch (this._previousCommand = n, n) {
     case SVGPathSeg.PATHSEG_MOVETO_REL:
     return new SVGPathSegMovetoRel(t, this._parseNumber(), this._parseNumber());
-    
+
     case SVGPathSeg.PATHSEG_MOVETO_ABS:
     return new SVGPathSegMovetoAbs(t, this._parseNumber(), this._parseNumber());
-    
+
     case SVGPathSeg.PATHSEG_LINETO_REL:
     return new SVGPathSegLinetoRel(t, this._parseNumber(), this._parseNumber());
-    
+
     case SVGPathSeg.PATHSEG_LINETO_ABS:
     return new SVGPathSegLinetoAbs(t, this._parseNumber(), this._parseNumber());
-    
+
     case SVGPathSeg.PATHSEG_LINETO_HORIZONTAL_REL:
     return new SVGPathSegLinetoHorizontalRel(t, this._parseNumber());
-    
+
     case SVGPathSeg.PATHSEG_LINETO_HORIZONTAL_ABS:
     return new SVGPathSegLinetoHorizontalAbs(t, this._parseNumber());
-    
+
     case SVGPathSeg.PATHSEG_LINETO_VERTICAL_REL:
     return new SVGPathSegLinetoVerticalRel(t, this._parseNumber());
-    
+
     case SVGPathSeg.PATHSEG_LINETO_VERTICAL_ABS:
     return new SVGPathSegLinetoVerticalAbs(t, this._parseNumber());
-    
+
     case SVGPathSeg.PATHSEG_CLOSEPATH:
     return this._skipOptionalSpaces(), new SVGPathSegClosePath(t);
-    
+
     case SVGPathSeg.PATHSEG_CURVETO_CUBIC_REL:
     i = {
     x1: this._parseNumber(),
@@ -43328,7 +43328,7 @@ function aa(e) {
     y: this._parseNumber()
     };
     return new SVGPathSegCurvetoCubicRel(t, i.x, i.y, i.x1, i.y1, i.x2, i.y2);
-    
+
     case SVGPathSeg.PATHSEG_CURVETO_CUBIC_ABS:
     i = {
     x1: this._parseNumber(),
@@ -43339,7 +43339,7 @@ function aa(e) {
     y: this._parseNumber()
     };
     return new SVGPathSegCurvetoCubicAbs(t, i.x, i.y, i.x1, i.y1, i.x2, i.y2);
-    
+
     case SVGPathSeg.PATHSEG_CURVETO_CUBIC_SMOOTH_REL:
     i = {
     x2: this._parseNumber(),
@@ -43348,7 +43348,7 @@ function aa(e) {
     y: this._parseNumber()
     };
     return new SVGPathSegCurvetoCubicSmoothRel(t, i.x, i.y, i.x2, i.y2);
-    
+
     case SVGPathSeg.PATHSEG_CURVETO_CUBIC_SMOOTH_ABS:
     i = {
     x2: this._parseNumber(),
@@ -43357,7 +43357,7 @@ function aa(e) {
     y: this._parseNumber()
     };
     return new SVGPathSegCurvetoCubicSmoothAbs(t, i.x, i.y, i.x2, i.y2);
-    
+
     case SVGPathSeg.PATHSEG_CURVETO_QUADRATIC_REL:
     i = {
     x1: this._parseNumber(),
@@ -43366,7 +43366,7 @@ function aa(e) {
     y: this._parseNumber()
     };
     return new SVGPathSegCurvetoQuadraticRel(t, i.x, i.y, i.x1, i.y1);
-    
+
     case SVGPathSeg.PATHSEG_CURVETO_QUADRATIC_ABS:
     i = {
     x1: this._parseNumber(),
@@ -43375,13 +43375,13 @@ function aa(e) {
     y: this._parseNumber()
     };
     return new SVGPathSegCurvetoQuadraticAbs(t, i.x, i.y, i.x1, i.y1);
-    
+
     case SVGPathSeg.PATHSEG_CURVETO_QUADRATIC_SMOOTH_REL:
     return new SVGPathSegCurvetoQuadraticSmoothRel(t, this._parseNumber(), this._parseNumber());
-    
+
     case SVGPathSeg.PATHSEG_CURVETO_QUADRATIC_SMOOTH_ABS:
     return new SVGPathSegCurvetoQuadraticSmoothAbs(t, this._parseNumber(), this._parseNumber());
-    
+
     case SVGPathSeg.PATHSEG_ARC_REL:
     i = {
     x1: this._parseNumber(),
@@ -43393,7 +43393,7 @@ function aa(e) {
     y: this._parseNumber()
     };
     return new SVGPathSegArcRel(t, i.x, i.y, i.x1, i.y1, i.arcAngle, i.arcLarge, i.arcSweep);
-    
+
     case SVGPathSeg.PATHSEG_ARC_ABS:
     var i = {
     x1: this._parseNumber(),
@@ -43405,7 +43405,7 @@ function aa(e) {
     y: this._parseNumber()
     };
     return new SVGPathSegArcAbs(t, i.x, i.y, i.x1, i.y1, i.arcAngle, i.arcLarge, i.arcSweep);
-    
+
     default:
     throw "Unknown path seg type.";
     }
@@ -44580,7 +44580,7 @@ function aa(e) {
     sInstance: v,
     sTableId: v
     });
-    D.nTable = this, D.oApi = n.internal, D.oInit = g, S.push(D), D.oInstance = 1 === n.length ? n : x.dataTable(), s(g), a(g.oLanguage), g.aLengthMenu && !g.iDisplayLength && (g.iDisplayLength = e.isArray(g.aLengthMenu[0]) ? g.aLengthMenu[0][0] : g.aLengthMenu[0]), g = Me(e.extend(!0, {}, C), g), Fe(D.oFeatures, g, [ "bPaginate", "bLengthChange", "bFilter", "bSort", "bSortMulti", "bInfo", "bProcessing", "bAutoWidth", "bSortClasses", "bServerSide", "bDeferRender" ]), Fe(D, g, [ "asStripeClasses", "ajax", "fnServerData", "fnFormatNumber", "sServerMethod", "aaSorting", "aaSortingFixed", "aLengthMenu", "sPaginationType", "sAjaxSource", "sAjaxDataProp", "iStateDuration", "sDom", "bSortCellsTop", "iTabIndex", "fnStateLoadCallback", "fnStateSaveCallback", "renderer", "searchDelay", "rowId", [ "iCookieDuration", "iStateDuration" ], [ "oSearch", "oPreviousSearch" ], [ "aoSearchCols", "aoPreSearchCols" ], [ "iDisplayLength", "_iDisplayLength" ] ]), Fe(D.oScroll, g, [ [ "sScrollX", "sX" ], [ "sScrollXInner", "sXInner" ], [ "sScrollY", "sY" ], [ "bScrollCollapse", "bCollapse" ] ]), 
+    D.nTable = this, D.oApi = n.internal, D.oInit = g, S.push(D), D.oInstance = 1 === n.length ? n : x.dataTable(), s(g), a(g.oLanguage), g.aLengthMenu && !g.iDisplayLength && (g.iDisplayLength = e.isArray(g.aLengthMenu[0]) ? g.aLengthMenu[0][0] : g.aLengthMenu[0]), g = Me(e.extend(!0, {}, C), g), Fe(D.oFeatures, g, [ "bPaginate", "bLengthChange", "bFilter", "bSort", "bSortMulti", "bInfo", "bProcessing", "bAutoWidth", "bSortClasses", "bServerSide", "bDeferRender" ]), Fe(D, g, [ "asStripeClasses", "ajax", "fnServerData", "fnFormatNumber", "sServerMethod", "aaSorting", "aaSortingFixed", "aLengthMenu", "sPaginationType", "sAjaxSource", "sAjaxDataProp", "iStateDuration", "sDom", "bSortCellsTop", "iTabIndex", "fnStateLoadCallback", "fnStateSaveCallback", "renderer", "searchDelay", "rowId", [ "iCookieDuration", "iStateDuration" ], [ "oSearch", "oPreviousSearch" ], [ "aoSearchCols", "aoPreSearchCols" ], [ "iDisplayLength", "_iDisplayLength" ] ]), Fe(D.oScroll, g, [ [ "sScrollX", "sX" ], [ "sScrollXInner", "sXInner" ], [ "sScrollY", "sY" ], [ "bScrollCollapse", "bCollapse" ] ]),
     Fe(D.oLanguage, g, "fnInfoCallback"), Pe(D, "aoDrawCallback", g.fnDrawCallback, "user"), Pe(D, "aoServerParams", g.fnServerParams, "user"), Pe(D, "aoStateSaveParams", g.fnStateSaveParams, "user"), Pe(D, "aoStateLoadParams", g.fnStateLoadParams, "user"), Pe(D, "aoStateLoaded", g.fnStateLoaded, "user"), Pe(D, "aoRowCallback", g.fnRowCallback, "user"), Pe(D, "aoRowCreatedCallback", g.fnCreatedRow, "user"), Pe(D, "aoHeaderCallback", g.fnHeaderCallback, "user"), Pe(D, "aoFooterCallback", g.fnFooterCallback, "user"), Pe(D, "aoInitComplete", g.fnInitComplete, "user"), Pe(D, "aoPreDrawCallback", g.fnPreDrawCallback, "user"), D.rowIdFn = $(g.rowId), c(D);
     var E = D.oClasses;
     if (e.extend(E, qe.ext.classes, g.oClasses), x.addClass(E.sTable), D.iInitDisplayStart === i && (D.iInitDisplayStart = g.iDisplayStart, D._iDisplayStart = g.iDisplayStart), null !== g.iDeferLoading) {
@@ -45151,12 +45151,12 @@ function aa(e) {
     return [ d[d.length + u] ];
     }
     return [ p(t, u) ];
-    
+
     case "name":
     return e.map(o, function(e, t) {
     return e === c[1] ? t : null;
     });
-    
+
     default:
     return [];
     }
@@ -45824,23 +45824,23 @@ function aa(e) {
     case "ellipsis":
     n.append('<span class="ellipsis">&#x2026;</span>');
     break;
-    
+
     case "first":
     c = f.sFirst, u = d + (s > 0 ? "" : " " + h.sPageButtonDisabled);
     break;
-    
+
     case "previous":
     c = f.sPrevious, u = d + (s > 0 ? "" : " " + h.sPageButtonDisabled);
     break;
-    
+
     case "next":
     c = f.sNext, u = d + (s < l - 1 ? "" : " " + h.sPageButtonDisabled);
     break;
-    
+
     case "last":
     c = f.sLast, u = d + (s < l - 1 ? "" : " " + h.sPageButtonDisabled);
     break;
-    
+
     default:
     c = d + 1, u = s === d ? h.sPageButtonActive : "";
     }
@@ -47497,35 +47497,35 @@ function aa(e) {
     case "year":
     o = ot(this, i) / 12;
     break;
-    
+
     case "month":
     o = ot(this, i);
     break;
-    
+
     case "quarter":
     o = ot(this, i) / 3;
     break;
-    
+
     case "second":
     o = (this - i) / 1e3;
     break;
-    
+
     case "minute":
     o = (this - i) / 6e4;
     break;
-    
+
     case "hour":
     o = (this - i) / 36e5;
     break;
-    
+
     case "day":
     o = (this - i - r) / 864e5;
     break;
-    
+
     case "week":
     o = (this - i - r) / 6048e5;
     break;
-    
+
     default:
     o = this - i;
     }
@@ -47580,23 +47580,23 @@ function aa(e) {
     switch (e = T(e)) {
     case "year":
     this.month(0);
-    
+
     case "quarter":
     case "month":
     this.date(1);
-    
+
     case "week":
     case "isoWeek":
     case "day":
     case "date":
     this.hours(0);
-    
+
     case "hour":
     this.minutes(0);
-    
+
     case "minute":
     this.seconds(0);
-    
+
     case "second":
     this.milliseconds(0);
     }
@@ -47826,22 +47826,22 @@ function aa(e) {
     switch (t = this._days + Math.round(bt(this._months)), e) {
     case "week":
     return t / 7 + i / 6048e5;
-    
+
     case "day":
     return t + i / 864e5;
-    
+
     case "hour":
     return 24 * t + i / 36e5;
-    
+
     case "minute":
     return 1440 * t + i / 6e4;
-    
+
     case "second":
     return 86400 * t + i / 1e3;
-    
+
     case "millisecond":
     return Math.floor(864e5 * t) + i;
-    
+
     default:
     throw new Error("Unknown unit " + e);
     }
@@ -48125,11 +48125,11 @@ function aa(e) {
     case 27:
     e.preventDefault();
     break;
-    
+
     case 38:
     e.preventDefault(), this.prev(), this.fixMenuScroll();
     break;
-    
+
     case 40:
     e.preventDefault(), this.next(), this.fixMenuScroll();
     }
@@ -48154,7 +48154,7 @@ function aa(e) {
     case 40:
     this.shown || this.toggle();
     break;
-    
+
     case 39:
     case 38:
     case 37:
@@ -48164,18 +48164,18 @@ function aa(e) {
     case 17:
     case 18:
     break;
-    
+
     case 9:
     case 13:
     if (!this.shown) return;
     this.select();
     break;
-    
+
     case 27:
     if (!this.shown) return;
     this.hide();
     break;
-    
+
     default:
     this.clearTarget(), this.lookup();
     }
@@ -48355,7 +48355,7 @@ function aa(e) {
     }, o.prototype._unsubscribeEvents = function() {
     this.$element.off("loading"), this.$element.off("loadingFailed"), this.$element.off("initialized"), this.$element.off("nodeRendered"), this.$element.off("rendered"), this.$element.off("destroyed"), this.$element.off("click"), this.$element.off("nodeChecked"), this.$element.off("nodeCollapsed"), this.$element.off("nodeDisabled"), this.$element.off("nodeEnabled"), this.$element.off("nodeExpanded"), this.$element.off("nodeSelected"), this.$element.off("nodeUnchecked"), this.$element.off("nodeUnselected"), this.$element.off("searchComplete"), this.$element.off("searchCleared");
     }, o.prototype._subscribeEvents = function() {
-    this._unsubscribeEvents(), "function" == typeof this._options.onLoading && this.$element.on("loading", this._options.onLoading), "function" == typeof this._options.onLoadingFailed && this.$element.on("loadingFailed", this._options.onLoadingFailed), "function" == typeof this._options.onInitialized && this.$element.on("initialized", this._options.onInitialized), "function" == typeof this._options.onNodeRendered && this.$element.on("nodeRendered", this._options.onNodeRendered), "function" == typeof this._options.onRendered && this.$element.on("rendered", this._options.onRendered), "function" == typeof this._options.onDestroyed && this.$element.on("destroyed", this._options.onDestroyed), this.$element.on("click", e.proxy(this._clickHandler, this)), "function" == typeof this._options.onNodeChecked && this.$element.on("nodeChecked", this._options.onNodeChecked), "function" == typeof this._options.onNodeCollapsed && this.$element.on("nodeCollapsed", this._options.onNodeCollapsed), "function" == typeof this._options.onNodeDisabled && this.$element.on("nodeDisabled", this._options.onNodeDisabled), 
+    this._unsubscribeEvents(), "function" == typeof this._options.onLoading && this.$element.on("loading", this._options.onLoading), "function" == typeof this._options.onLoadingFailed && this.$element.on("loadingFailed", this._options.onLoadingFailed), "function" == typeof this._options.onInitialized && this.$element.on("initialized", this._options.onInitialized), "function" == typeof this._options.onNodeRendered && this.$element.on("nodeRendered", this._options.onNodeRendered), "function" == typeof this._options.onRendered && this.$element.on("rendered", this._options.onRendered), "function" == typeof this._options.onDestroyed && this.$element.on("destroyed", this._options.onDestroyed), this.$element.on("click", e.proxy(this._clickHandler, this)), "function" == typeof this._options.onNodeChecked && this.$element.on("nodeChecked", this._options.onNodeChecked), "function" == typeof this._options.onNodeCollapsed && this.$element.on("nodeCollapsed", this._options.onNodeCollapsed), "function" == typeof this._options.onNodeDisabled && this.$element.on("nodeDisabled", this._options.onNodeDisabled),
     "function" == typeof this._options.onNodeEnabled && this.$element.on("nodeEnabled", this._options.onNodeEnabled), "function" == typeof this._options.onNodeExpanded && this.$element.on("nodeExpanded", this._options.onNodeExpanded), "function" == typeof this._options.onNodeSelected && this.$element.on("nodeSelected", this._options.onNodeSelected), "function" == typeof this._options.onNodeUnchecked && this.$element.on("nodeUnchecked", this._options.onNodeUnchecked), "function" == typeof this._options.onNodeUnselected && this.$element.on("nodeUnselected", this._options.onNodeUnselected), "function" == typeof this._options.onSearchComplete && this.$element.on("searchComplete", this._options.onSearchComplete), "function" == typeof this._options.onSearchCleared && this.$element.on("searchCleared", this._options.onSearchCleared);
     }, o.prototype._triggerEvent = function(t, n, i) {
     i && !i.silent && this.$element.trigger(t, e.extend(!0, {}, n));
@@ -48446,7 +48446,7 @@ function aa(e) {
     this._setChecked(t, !t.state.checked, n);
     }
     }, o.prototype._setChecked = function(e, t, n) {
-    n && t === e.state.checked || (this._options.highlightChanges && e.$el.toggleClass("node-check-changed", -1 == this._checkedNodes.indexOf(e) == t), t ? (e.state.checked = !0, e.$el && (e.$el.addClass("node-checked").removeClass("node-checked-partial"), e.$el.children("span.check-icon").removeClass(this._options.uncheckedIcon).removeClass(this._options.partiallyCheckedIcon).addClass(this._options.checkedIcon)), this._triggerEvent("nodeChecked", e, n)) : void 0 === t && this._options.hierarchicalCheck ? (e.state.checked = void 0, e.$el && (e.$el.addClass("node-checked-partial").removeClass("node-checked"), e.$el.children("span.check-icon").removeClass(this._options.uncheckedIcon).removeClass(this._options.checkedIcon).addClass(this._options.partiallyCheckedIcon)), this._triggerEvent("nodeUnchecked", e, n)) : (e.state.checked = !1, e.$el && (e.$el.removeClass("node-checked node-checked-partial"), e.$el.children("span.check-icon").removeClass(this._options.checkedIcon).removeClass(this._options.partiallyCheckedIcon).addClass(this._options.uncheckedIcon)), 
+    n && t === e.state.checked || (this._options.highlightChanges && e.$el.toggleClass("node-check-changed", -1 == this._checkedNodes.indexOf(e) == t), t ? (e.state.checked = !0, e.$el && (e.$el.addClass("node-checked").removeClass("node-checked-partial"), e.$el.children("span.check-icon").removeClass(this._options.uncheckedIcon).removeClass(this._options.partiallyCheckedIcon).addClass(this._options.checkedIcon)), this._triggerEvent("nodeChecked", e, n)) : void 0 === t && this._options.hierarchicalCheck ? (e.state.checked = void 0, e.$el && (e.$el.addClass("node-checked-partial").removeClass("node-checked"), e.$el.children("span.check-icon").removeClass(this._options.uncheckedIcon).removeClass(this._options.checkedIcon).addClass(this._options.partiallyCheckedIcon)), this._triggerEvent("nodeUnchecked", e, n)) : (e.state.checked = !1, e.$el && (e.$el.removeClass("node-checked node-checked-partial"), e.$el.children("span.check-icon").removeClass(this._options.checkedIcon).removeClass(this._options.partiallyCheckedIcon).addClass(this._options.uncheckedIcon)),
     this._triggerEvent("nodeUnchecked", e, n)));
     }, o.prototype._setDisabled = function(e, t, n) {
     n && t === e.state.disabled || (t ? (e.state.disabled = !0, n && !n.keepState && (this._setSelected(e, !1, n), this._setChecked(e, !1, n), this._setExpanded(e, !1, n)), e.$el && e.$el.addClass("node-disabled"), this._triggerEvent("nodeDisabled", e, n)) : (e.state.disabled = !1, e.$el && e.$el.removeClass("node-disabled"), this._triggerEvent("nodeEnabled", e, n)));
@@ -49677,7 +49677,7 @@ function aa(e) {
     return function(e, t) {
     return t = parseInt(t, 10), e.slice(t);
     };
-    }), angular.module("patternfly", [ "patternfly.autofocus", "patternfly.card", "patternfly.filters", "patternfly.form", "patternfly.modals", "patternfly.navigation", "patternfly.notification", "patternfly.pagination", "patternfly.select", "patternfly.sort", "patternfly.toolbars", "patternfly.utils", "patternfly.validation", "patternfly.views", "patternfly.wizard" ]), angular.module("patternfly.select", [ "ui.bootstrap" ]), angular.module("patternfly.sort", [ "ui.bootstrap" ]), angular.module("patternfly.table", [ "datatables", "patternfly.pagination", "patternfly.utils", "patternfly.filters", "patternfly.sort" ]), angular.module("patternfly.toolbars", [ "patternfly.utils", "patternfly.filters", "patternfly.sort", "patternfly.views" ]), angular.module("patternfly.utils", [ "ui.bootstrap" ]), angular.module("patternfly.views", [ "patternfly.utils", "patternfly.filters", "patternfly.sort", "patternfly.charts", "dndLists", "patternfly.pagination" ]), angular.module("patternfly.wizard", [ "ui.bootstrap.modal", "ui.bootstrap", "patternfly.form" ]), 
+    }), angular.module("patternfly", [ "patternfly.autofocus", "patternfly.card", "patternfly.filters", "patternfly.form", "patternfly.modals", "patternfly.navigation", "patternfly.notification", "patternfly.pagination", "patternfly.select", "patternfly.sort", "patternfly.toolbars", "patternfly.utils", "patternfly.validation", "patternfly.views", "patternfly.wizard" ]), angular.module("patternfly.select", [ "ui.bootstrap" ]), angular.module("patternfly.sort", [ "ui.bootstrap" ]), angular.module("patternfly.table", [ "datatables", "patternfly.pagination", "patternfly.utils", "patternfly.filters", "patternfly.sort" ]), angular.module("patternfly.toolbars", [ "patternfly.utils", "patternfly.filters", "patternfly.sort", "patternfly.views" ]), angular.module("patternfly.utils", [ "ui.bootstrap" ]), angular.module("patternfly.views", [ "patternfly.utils", "patternfly.filters", "patternfly.sort", "patternfly.charts", "dndLists", "patternfly.pagination" ]), angular.module("patternfly.wizard", [ "ui.bootstrap.modal", "ui.bootstrap", "patternfly.form" ]),
     angular.module("patternfly.autofocus", []).directive("pfFocused", [ "$timeout", function(e) {
     "use strict";
     return {
@@ -49903,9 +49903,9 @@ function aa(e) {
     } ]
     });
     }();
-    
+
     var pfCanvas = {};
-    
+
     !function() {
     pfCanvas.defaultHeight = 756, pfCanvas.defaultWidth = 1396, pfCanvas.defaultBgImageSize = 24, pfCanvas.defaultNodeWidth = 150, pfCanvas.defaultNodeHeight = 150, pfCanvas.nodeNameHeight = 40, pfCanvas.connectorHeight = 25, pfCanvas.computeConnectorY = function(e) {
     return pfCanvas.defaultNodeHeight / 2 + e * pfCanvas.connectorHeight;
@@ -50767,15 +50767,15 @@ function aa(e) {
     case "usagePerDay":
     !1 !== n.chartData.dataAvailable && n.chartData.total > 0 && (i = Math.round(e[0].value / n.chartData.total * 100)), t = '<tr>  <th colspan="2">' + e[0].x.toLocaleDateString() + '</th></tr><tr>  <td class="name">' + i + '%:</td>  <td class="value text-nowrap">' + e[0].value + " " + (n.config.units ? n.config.units + " " : "") + e[0].name + "</td></tr>";
     break;
-    
+
     case "valuePerDay":
     t = '<tr>  <td class="value">' + e[0].x.toLocaleDateString() + '</td>  <td class="value text-nowrap">' + e[0].value + " " + e[0].name + "</td></tr>";
     break;
-    
+
     case "percentage":
     t = '<tr>  <td class="name">' + (i = Math.round(e[0].value / n.chartData.total * 100)) + "%</td></tr>";
     break;
-    
+
     default:
     t = patternfly.c3ChartDefaults().getDefaultSparklineTooltip().contents(e);
     }
@@ -50932,7 +50932,7 @@ function aa(e) {
     switch (t.type) {
     case "image":
     return t.icon;
-    
+
     case "glyph":
     return null;
     }
@@ -51006,18 +51006,18 @@ function aa(e) {
     case "succeeded":
     case "valid":
     return "success";
-    
+
     case "notready":
     case "failed":
     case "error":
     case "unreachable":
     return "error";
-    
+
     case "warning":
     case "waiting":
     case "pending":
     return "warning";
-    
+
     case "unknown":
     case "terminated":
     return "unknown";
@@ -51217,7 +51217,7 @@ function aa(e) {
     case "filter-category":
     o.filterCategory = e, o.filterValue = null;
     break;
-    
+
     case "filter-value":
     o.filterValue = e;
     }
@@ -52197,13 +52197,13 @@ function aa(e) {
     t.empty(), t.append(e);
     });
     break;
-    
+
     case "parent":
     r(e, function(e) {
     t.empty(), t.append(e);
     });
     break;
-    
+
     case "child":
     r(o = e.$new(), function(e) {
     t.empty(), t.append(e), t.on("$destroy", function() {
@@ -52868,26 +52868,26 @@ function aa(e) {
     } ]
     }), angular.module("patternfly.canvas").run([ "$templateCache", function(e) {
     "use strict";
-    e.put("canvas-view/canvas-editor/canvas-editor.html", '<div class=canvas-editor-container><div class=canvas-editor-toolbar><button id=toggleToolbox class="btn btn-primary" ng-class="{\'disabled\': $ctrl.chartViewModel.inConnectingMode || $ctrl.readOnly}" type=button ng-click=$ctrl.toggleToolbox() tooltip-placement=bottom-left uib-tooltip="{{\'Add Item To Canvas\'}}">Add Item <span class=fa ng-class="{\'fa-angle-double-up\': $ctrl.toolboxVisible, \'fa-angle-double-down\': !$ctrl.toolboxVisible}"></span></button>\x3c!-- user defined more actions --\x3e <span ng-transclude></span> <span class=right-aligned-controls><input ng-class="{\'disabled\': $ctrl.chartViewModel.inConnectingMode}" ng-model=$ctrl.hideConnectors ng-change=$ctrl.toggleshowHideConnectors() type=checkbox ng-checked="$ctrl.hideConnectors"> <span class=show-hide-connectors-label>Hide Connectors</span> <a id=zoomOut ng-click=$ctrl.zoomOut() ng-class="{\'disabled\': $ctrl.minZoom()}"><span class="pficon fa fa-minus" tooltip-append-to-body=true tooltip-placement=bottom uib-tooltip="{{\'Zoom Out\'}}"></span></a> <a id=zoomIn ng-click=$ctrl.zoomIn() ng-class="{\'disabled\': $ctrl.maxZoom()}"><span class="pficon fa fa-plus" tooltip-append-to-body=true tooltip-placement=bottom-right uib-tooltip="{{\'Zoom In\'}}"></span></a></span></div><div class=canvas-editor-toolbox-container><div class=canvas-editor-toolbox id=toolbox ng-if=$ctrl.toolboxVisible><a ng-click="$ctrl.toolboxVisible = false" class=close-toolbox><span class="pficon pficon-close"></span></a><div class=toolbox-filter><input ng-model=$ctrl.searchText id=filterFld class=search-text placeholder="{{\'Filter by name\'}}"> <a ng-click="$ctrl.searchText = \'\'"><span class="pficon pficon-close clear-search-text"></span></a></div><uib-tabset><uib-tab ng-repeat="tab in $ctrl.toolboxTabs" heading="" active=tab.active><uib-tab-heading ng-click=$ctrl.tabClicked()><div class=tab-pre-title>{{tab.preTitle}}</div><div class=tab-title ng-class="{\'tab-single-line\':tab.preTitle == null}">{{tab.title}}</div></uib-tab-heading><uib-tabset class=subtabs ng-if=tab.subtabs><uib-tab ng-repeat="subtab in tab.subtabs" heading={{subtab.title}} active=subtab.active ng-click=$ctrl.tabClicked()><uib-tabset class=subtabs ng-if=subtab.subtabs><uib-tab ng-repeat="subsubtab in subtab.subtabs" heading={{subsubtab.title}} active=subsubtab.active ng-click=$ctrl.tabClicked()><toolbox-items items=subsubtab.items start-drag-callback=$ctrl.startCallback click-callback=$ctrl.addNodeByClick search-text="$ctrl.searchText"></uib-tab></uib-tabset>\x3c!-- SubTabs without Sub-Sub Tabs --\x3e<toolbox-items ng-if=!subtab.subtabs items=subtab.items start-drag-callback=$ctrl.startCallback click-callback=$ctrl.addNodeByClick search-text="$ctrl.searchText"></uib-tab></uib-tabset>\x3c!-- Primary Tabs without SubTabs --\x3e<toolbox-items ng-if=!tab.subtabs items=tab.items start-drag-callback=$ctrl.startCallback click-callback=$ctrl.addNodeByClick search-text="$ctrl.searchText"></uib-tab></uib-tabset></div><div class=canvas-container data-drop=true data-jqyoui-options jqyoui-droppable="{onDrop:\'$ctrl.dropCallback\'}"><pf-canvas chart-data-model=$ctrl.chartDataModel chart-view-model=$ctrl.chartViewModel read-only=$ctrl.readOnly hide-connectors=$ctrl.hideConnectors></pf-canvas></div></div></div>'), 
-    e.put("canvas-view/canvas-editor/toolbox-items.html", '<ul class=toolbox-items-list><li class=toolbox-item ng-repeat="item in $ctrl.items | filter:$ctrl.searchText" data-drag={{!item.disableInToolbox}} jqyoui-draggable="{onStart:\'$ctrl.startItemDrag(item)\'}" ng-class="{\'not-draggable\': item.disableInToolbox}" data-jqyoui-options="{revert: \'invalid\', helper: \'clone\'}" ng-click=$ctrl.itemClicked(item) uib-tooltip="{{(item.disableInToolbox ? \'Items cannot be added to the canvas more than once.\' : \'\')}}"><img ng-if=item.image src={{item.image}} alt="{{item.name}}"> <i ng-if="item.icon && !item.image" class="draggable-item-icon {{item.icon}}"></i> <span>{{ item.name }}</span></li></ul>'), e.put("canvas-view/canvas/canvas.html", '<svg class="canvas draggable-container" xmlns=http://www.w3.org/2000/svg ng-mousedown=$ctrl.mouseDown($event) ng-mousemove=mouseMove($event) ng-class="{\'read-only\': $ctrl.readOnly, \'canvas-in-connection-mode\': $ctrl.chart.inConnectingMode}" ng-style="{\'height\': $ctrl.chart.zoom.getChartHeight() + \'px\', \'width\': $ctrl.chart.zoom.getChartWidth() + \'px\', \'background-size\': $ctrl.chart.zoom.getBackgroundSize() + \'px \'+  chart.zoom.getBackgroundSize() + \'px\'}" mouse-capture>\x3c!-- Zoom --\x3e<g ng-attr-transform=scale({{$ctrl.zoomLevel()}})>\x3c!-- Connection Mode Notification --\x3e<g ng-if=$ctrl.chart.inConnectingMode><rect class=connecting-mode-rec ry=1 rx=1 x=0 y=0 width=640 height=32></rect><text class=connecting-mode-label x=12 y=22 ng-if=$ctrl.availableConnections()>Select a second item to complete the connection or click on the canvas to cancel</text><text class=connecting-mode-label-warning x=12 y=22 ng-if=!$ctrl.availableConnections()>No available connections! Click on the canvas to cancel</text></g>\x3c!-- Main Node Loop --\x3e<g ng-repeat="node in $ctrl.chart.nodes" ng-mousedown="$ctrl.nodeMouseDown($event, node)" ng-mouseover="$ctrl.nodeMouseOver($event, node)" ng-mouseleave="$ctrl.nodeMouseLeave($event, node)" ng-attr-transform="translate({{node.x()}}, {{node.y()}})">\x3c!-- Node --\x3e<rect ng-class="{\'invalid-node-rect\': node.invalid(), \'selected-node-rect\': node.selected(), \'mouseover-node-rect\': node == $ctrl.mouseOverNode, \'node-rect\': node != $ctrl.mouseOverNode}" ry=0 rx=0 x=0 y=0 ng-attr-width={{node.width()}} ng-attr-height={{node.height()}} fill={{node.backgroundColor()}} fill-opacity=1.0></rect>\x3c!-- Node Title: no-wrap --\x3e<text ng-if=!$ctrl.foreignObjectSupported() class=node-header ng-class="{\'invalid-node-header\': node.invalid()}" ng-attr-x={{node.width()/2}} ng-attr-y="{{node.height() - 24}}" text-anchor=middle alignment-baseline=middle>{{node.name()}}</text>\x3c!-- Node Title: text wrap --\x3e<foreignobject ng-if=$ctrl.foreignObjectSupported() x=0 ng-attr-y="{{node.height() - 42}}" ng-attr-width={{node.width()}} ng-attr-height="{{node.height() - 42}}"><body><div class=node-header ng-attr-width={{node.width()}} ng-attr-height="{{node.height() - 42}}"><p ng-class="{\'invalid-node-header\': node.invalid()}" ng-style="{width: node.width()}">{{node.name()}}</p></div></body></foreignobject>\x3c!-- Node Image --\x3e<image ng-if=node.image() class=node-center-img ng-class="{\'invalid-node-img\': node.invalid()}" ng-href="{{node.image() | trustAsResourceUrl}}" xlink:href="" ng-attr-x="{{(node.width()/2) - 40}}" ng-attr-y={{20}} height=80px width=80px></image>\x3c!-- Node Icon: icon class --\x3e<foreignobject ng-if="node.icon() && !node.image() && $ctrl.foreignObjectSupported()" ng-attr-x="{{(node.width()/2) - 44}}" ng-attr-y="{{(node.height()/2) - 54}}" ng-attr-height={{node.height()}}px ng-attr-width={{node.width()}}px class=node-center-img-icon ng-class="{\'invalid-node-header\': node.invalid()}"><body><i class={{node.icon()}} ng-style="{\'font-size\': node.fontSize() ? node.fontSize() : \'76px\'}"></i></body></foreignobject>\x3c!-- Node Icon: fontContent --\x3e<text ng-if="node.fontFamily() && !node.image()" class=node-center-icon ng-class="{\'invalid-node-header\': node.invalid()}" font-family={{node.fontFamily()}} ng-attr-x="{{(node.width()/2) - 34 + ((node.bundle()) ? 4 : 0) }}" ng-attr-y={{90}}>{{node.fontContent()}}</text>\x3c!-- Sm. Top Left Bundle Icon --\x3e<text ng-if=node.bundle() class=bundle-icon x=6 y=22 font-family=PatternFlyIcons-webfont font-size=20>{{\'\\ue918\'}}</text>\x3c!-- Bottom Node Toolbar --\x3e<g id=nodeToolBar ng-if="node == $ctrl.mouseOverNode && !$ctrl.chart.inConnectingMode"><g class=svg-triangle><polyline points="4,152 14,140 24,152"></polyline></g><foreignobject ng-attr-x={{node.x}} ng-attr-y={{node.height()+1}} ng-mousedown=$event.stopPropagation() height=100% width=100%><body><node-toolbar node=node node-actions=$ctrl.chart.nodeActions node-click-handler=$ctrl.nodeClickHandler node-close-handler=$ctrl.nodeCloseHandler></node-toolbar></body></foreignobject></g>\x3c!-- Connected Input Connectors --\x3e<g ng-if=!$ctrl.hideConnectors ng-repeat="connector in node.inputConnectors | filter: $ctrl.isConnectorConnected" ng-mousedown="$ctrl.connectorMouseDown($event, node, connector, $index, true)" ng-mouseover="$ctrl.connectorMouseOver($event, node, connector, $index, true)" ng-mouseleave="$ctrl.connectorMouseLeave($event, node, connector, $index, true)" class="connector input-connector"><circle ng-if="!$ctrl.chart.inConnectingMode || $ctrl.isConnectedTo(connector, connectingModeSourceNode)" ng-class="{\'mouseover-connector-circle\': connector == $ctrl.mouseOverConnector,\n                   \'connector-circle\': connector != $ctrl.mouseOverConnector}" ng-attr-r={{$ctrl.connectorSize}} ng-attr-cx={{connector.x()}} ng-attr-cy={{connector.y()}}></circle></g>\x3c!-- Unconnected Input Connectors --\x3e<g ng-if=$ctrl.chart.inConnectingMode ng-repeat="connector in node.inputConnectors | filter: $ctrl.isConnectorUnconnectedAndValid" ng-mousedown="$ctrl.connectorMouseDown($event, node, connector, $index, true)" ng-mouseover="$ctrl.connectorMouseOver($event, node, connector, $index, true)" ng-mouseleave="$ctrl.connectorMouseLeave($event, node, connector, $index, true)" class="connector input-connector"><text ng-if=connector.fontFamily() class=connector-icons font-family={{connector.fontFamily()}} ng-attr-x="{{connector.x() - 28}}" ng-attr-y="{{connector.y() + 7}}">{{connector.fontContent()}}</text><circle ng-class="{\'unconnected-circle\': connector != $ctrl.mouseOverConnector,\n                         \'mouseover-unconnected-circle\': connector == $ctrl.mouseOverConnector}" ng-attr-r={{$ctrl.connectorSize}} ng-attr-cx={{connector.x()}} ng-attr-cy={{connector.y()}}></circle><g ng-if="connector == $ctrl.mouseOverConnector"><rect class=connector-tooltip ry=1 rx=1 ng-attr-x="{{connector.x() - 4}}" ng-attr-y="{{connector.y() + 12}}" ng-attr-width={{80}} height=20></rect><text class=connector-tooltip-text ng-attr-x="{{connector.x() + 2}}" ng-attr-y="{{connector.y() + 26}}" text-anchor=start alignment-baseline=top>{{connector.name()}}</text></g></g>\x3c!-- Output Connector --\x3e<g ng-if=!$ctrl.hideConnectors ng-repeat="connector in node.outputConnectors" ng-mousedown="$ctrl.connectorMouseDown($event, node, connector, $index, false)" ng-mouseover="$ctrl.connectorMouseOver($event, node, connector, $index, false)" ng-mouseleave="$ctrl.connectorMouseLeave($event, node, connector, $index, false)" class="connector output-connector"><circle ng-if="!$ctrl.chart.inConnectingMode || ($ctrl.connectingModeSourceNode === connector.parentNode())" ng-class="{\'connector-circle\': connector != $ctrl.mouseOverConnector,\n                   \'mouseover-connector-circle\': connector == $ctrl.mouseOverConnector}" ng-attr-r={{$ctrl.connectorSize}} ng-attr-r={{$ctrl.connectorSize}} ng-attr-cx={{connector.x()}} ng-attr-cy={{connector.y()}}></circle></g></g>\x3c!--  End Nodes Loop --\x3e\x3c!-- Connections --\x3e<g ng-if=!$ctrl.hideConnectors ng-repeat="connection in $ctrl.chart.connections" class=connection ng-mousedown="$ctrl.connectionMouseDown($event, connection)" ng-mouseover="$ctrl.connectionMouseOver($event, connection)" ng-mouseleave="$ctrl.connectionMouseLeave($event, connection)"><g ng-if="!$ctrl.chart.inConnectingMode || connectingModeSourceNode === connection.source.parentNode()"><path ng-class="{\'selected-connection-line\': connection.selected(),\n                     \'mouseover-connection-line\': connection == $ctrl.mouseOverConnection,\n                     \'connection-line\': connection != $ctrl.mouseOverConnection}" ng-attr-d="M {{connection.sourceCoordX()}}, {{connection.sourceCoordY()}}\n                     C {{connection.sourceTangentX()}}, {{connection.sourceTangentY()}}\n                       {{connection.destTangentX()}}, {{connection.destTangentY()}}\n                       {{connection.destCoordX()}}, {{connection.destCoordY()}}"></path><text ng-if="connection == $ctrl.mouseOverConnection" ng-class="{\'selected-connection-name\': connection.selected(),\n                     \'mouseover-connection-name\': connection == $ctrl.mouseOverConnection && !connection.selected(),\n                     \'connection-name\': connection != $ctrl.mouseOverConnection && !connection.selected()}" ng-attr-x={{connection.middleX()}} ng-attr-y={{connection.middleY()}} text-anchor=middle alignment-baseline=middle>{{connection.name()}}</text><circle ng-class="{\'selected-connection-endpoint\': connection.selected(),\n                       \'mouseover-connection-endpoint\': connection == $ctrl.mouseOverConnection && !connection.selected(),\n                       \'connection-endpoint\': connection != $ctrl.mouseOverConnection && !connection.selected()}" r=5 ng-attr-cx={{connection.sourceCoordX()}} ng-attr-cy={{connection.sourceCoordY()}}></circle><circle ng-class="{\'selected-connection-endpoint\': connection.selected(),\n                       \'mouseover-connection-endpoint\': connection == $ctrl.mouseOverConnection && !connection.selected(),\n                       \'connection-endpoint\': connection != $ctrl.mouseOverConnection && !connection.selected()}" r=5 ng-attr-cx={{connection.destCoordX()}} ng-attr-cy={{connection.destCoordY()}}></circle></g></g><rect ng-if=$ctrl.dragSelecting class=drag-selection-rect ng-attr-x={{$ctrl.dragSelectionRect.x}} ng-attr-y={{$ctrl.dragSelectionRect.y}} ng-attr-width={{$ctrl.dragSelectionRect.width}} ng-attr-height={{$ctrl.dragSelectionRect.height}}></rect></g></svg>'), 
+    e.put("canvas-view/canvas-editor/canvas-editor.html", '<div class=canvas-editor-container><div class=canvas-editor-toolbar><button id=toggleToolbox class="btn btn-primary" ng-class="{\'disabled\': $ctrl.chartViewModel.inConnectingMode || $ctrl.readOnly}" type=button ng-click=$ctrl.toggleToolbox() tooltip-placement=bottom-left uib-tooltip="{{\'Add Item To Canvas\'}}">Add Item <span class=fa ng-class="{\'fa-angle-double-up\': $ctrl.toolboxVisible, \'fa-angle-double-down\': !$ctrl.toolboxVisible}"></span></button>\x3c!-- user defined more actions --\x3e <span ng-transclude></span> <span class=right-aligned-controls><input ng-class="{\'disabled\': $ctrl.chartViewModel.inConnectingMode}" ng-model=$ctrl.hideConnectors ng-change=$ctrl.toggleshowHideConnectors() type=checkbox ng-checked="$ctrl.hideConnectors"> <span class=show-hide-connectors-label>Hide Connectors</span> <a id=zoomOut ng-click=$ctrl.zoomOut() ng-class="{\'disabled\': $ctrl.minZoom()}"><span class="pficon fa fa-minus" tooltip-append-to-body=true tooltip-placement=bottom uib-tooltip="{{\'Zoom Out\'}}"></span></a> <a id=zoomIn ng-click=$ctrl.zoomIn() ng-class="{\'disabled\': $ctrl.maxZoom()}"><span class="pficon fa fa-plus" tooltip-append-to-body=true tooltip-placement=bottom-right uib-tooltip="{{\'Zoom In\'}}"></span></a></span></div><div class=canvas-editor-toolbox-container><div class=canvas-editor-toolbox id=toolbox ng-if=$ctrl.toolboxVisible><a ng-click="$ctrl.toolboxVisible = false" class=close-toolbox><span class="pficon pficon-close"></span></a><div class=toolbox-filter><input ng-model=$ctrl.searchText id=filterFld class=search-text placeholder="{{\'Filter by name\'}}"> <a ng-click="$ctrl.searchText = \'\'"><span class="pficon pficon-close clear-search-text"></span></a></div><uib-tabset><uib-tab ng-repeat="tab in $ctrl.toolboxTabs" heading="" active=tab.active><uib-tab-heading ng-click=$ctrl.tabClicked()><div class=tab-pre-title>{{tab.preTitle}}</div><div class=tab-title ng-class="{\'tab-single-line\':tab.preTitle == null}">{{tab.title}}</div></uib-tab-heading><uib-tabset class=subtabs ng-if=tab.subtabs><uib-tab ng-repeat="subtab in tab.subtabs" heading={{subtab.title}} active=subtab.active ng-click=$ctrl.tabClicked()><uib-tabset class=subtabs ng-if=subtab.subtabs><uib-tab ng-repeat="subsubtab in subtab.subtabs" heading={{subsubtab.title}} active=subsubtab.active ng-click=$ctrl.tabClicked()><toolbox-items items=subsubtab.items start-drag-callback=$ctrl.startCallback click-callback=$ctrl.addNodeByClick search-text="$ctrl.searchText"></uib-tab></uib-tabset>\x3c!-- SubTabs without Sub-Sub Tabs --\x3e<toolbox-items ng-if=!subtab.subtabs items=subtab.items start-drag-callback=$ctrl.startCallback click-callback=$ctrl.addNodeByClick search-text="$ctrl.searchText"></uib-tab></uib-tabset>\x3c!-- Primary Tabs without SubTabs --\x3e<toolbox-items ng-if=!tab.subtabs items=tab.items start-drag-callback=$ctrl.startCallback click-callback=$ctrl.addNodeByClick search-text="$ctrl.searchText"></uib-tab></uib-tabset></div><div class=canvas-container data-drop=true data-jqyoui-options jqyoui-droppable="{onDrop:\'$ctrl.dropCallback\'}"><pf-canvas chart-data-model=$ctrl.chartDataModel chart-view-model=$ctrl.chartViewModel read-only=$ctrl.readOnly hide-connectors=$ctrl.hideConnectors></pf-canvas></div></div></div>'),
+    e.put("canvas-view/canvas-editor/toolbox-items.html", '<ul class=toolbox-items-list><li class=toolbox-item ng-repeat="item in $ctrl.items | filter:$ctrl.searchText" data-drag={{!item.disableInToolbox}} jqyoui-draggable="{onStart:\'$ctrl.startItemDrag(item)\'}" ng-class="{\'not-draggable\': item.disableInToolbox}" data-jqyoui-options="{revert: \'invalid\', helper: \'clone\'}" ng-click=$ctrl.itemClicked(item) uib-tooltip="{{(item.disableInToolbox ? \'Items cannot be added to the canvas more than once.\' : \'\')}}"><img ng-if=item.image src={{item.image}} alt="{{item.name}}"> <i ng-if="item.icon && !item.image" class="draggable-item-icon {{item.icon}}"></i> <span>{{ item.name }}</span></li></ul>'), e.put("canvas-view/canvas/canvas.html", '<svg class="canvas draggable-container" xmlns=http://www.w3.org/2000/svg ng-mousedown=$ctrl.mouseDown($event) ng-mousemove=mouseMove($event) ng-class="{\'read-only\': $ctrl.readOnly, \'canvas-in-connection-mode\': $ctrl.chart.inConnectingMode}" ng-style="{\'height\': $ctrl.chart.zoom.getChartHeight() + \'px\', \'width\': $ctrl.chart.zoom.getChartWidth() + \'px\', \'background-size\': $ctrl.chart.zoom.getBackgroundSize() + \'px \'+  chart.zoom.getBackgroundSize() + \'px\'}" mouse-capture>\x3c!-- Zoom --\x3e<g ng-attr-transform=scale({{$ctrl.zoomLevel()}})>\x3c!-- Connection Mode Notification --\x3e<g ng-if=$ctrl.chart.inConnectingMode><rect class=connecting-mode-rec ry=1 rx=1 x=0 y=0 width=640 height=32></rect><text class=connecting-mode-label x=12 y=22 ng-if=$ctrl.availableConnections()>Select a second item to complete the connection or click on the canvas to cancel</text><text class=connecting-mode-label-warning x=12 y=22 ng-if=!$ctrl.availableConnections()>No available connections! Click on the canvas to cancel</text></g>\x3c!-- Main Node Loop --\x3e<g ng-repeat="node in $ctrl.chart.nodes" ng-mousedown="$ctrl.nodeMouseDown($event, node)" ng-mouseover="$ctrl.nodeMouseOver($event, node)" ng-mouseleave="$ctrl.nodeMouseLeave($event, node)" ng-attr-transform="translate({{node.x()}}, {{node.y()}})">\x3c!-- Node --\x3e<rect ng-class="{\'invalid-node-rect\': node.invalid(), \'selected-node-rect\': node.selected(), \'mouseover-node-rect\': node == $ctrl.mouseOverNode, \'node-rect\': node != $ctrl.mouseOverNode}" ry=0 rx=0 x=0 y=0 ng-attr-width={{node.width()}} ng-attr-height={{node.height()}} fill={{node.backgroundColor()}} fill-opacity=1.0></rect>\x3c!-- Node Title: no-wrap --\x3e<text ng-if=!$ctrl.foreignObjectSupported() class=node-header ng-class="{\'invalid-node-header\': node.invalid()}" ng-attr-x={{node.width()/2}} ng-attr-y="{{node.height() - 24}}" text-anchor=middle alignment-baseline=middle>{{node.name()}}</text>\x3c!-- Node Title: text wrap --\x3e<foreignobject ng-if=$ctrl.foreignObjectSupported() x=0 ng-attr-y="{{node.height() - 42}}" ng-attr-width={{node.width()}} ng-attr-height="{{node.height() - 42}}"><body><div class=node-header ng-attr-width={{node.width()}} ng-attr-height="{{node.height() - 42}}"><p ng-class="{\'invalid-node-header\': node.invalid()}" ng-style="{width: node.width()}">{{node.name()}}</p></div></body></foreignobject>\x3c!-- Node Image --\x3e<image ng-if=node.image() class=node-center-img ng-class="{\'invalid-node-img\': node.invalid()}" ng-href="{{node.image() | trustAsResourceUrl}}" xlink:href="" ng-attr-x="{{(node.width()/2) - 40}}" ng-attr-y={{20}} height=80px width=80px></image>\x3c!-- Node Icon: icon class --\x3e<foreignobject ng-if="node.icon() && !node.image() && $ctrl.foreignObjectSupported()" ng-attr-x="{{(node.width()/2) - 44}}" ng-attr-y="{{(node.height()/2) - 54}}" ng-attr-height={{node.height()}}px ng-attr-width={{node.width()}}px class=node-center-img-icon ng-class="{\'invalid-node-header\': node.invalid()}"><body><i class={{node.icon()}} ng-style="{\'font-size\': node.fontSize() ? node.fontSize() : \'76px\'}"></i></body></foreignobject>\x3c!-- Node Icon: fontContent --\x3e<text ng-if="node.fontFamily() && !node.image()" class=node-center-icon ng-class="{\'invalid-node-header\': node.invalid()}" font-family={{node.fontFamily()}} ng-attr-x="{{(node.width()/2) - 34 + ((node.bundle()) ? 4 : 0) }}" ng-attr-y={{90}}>{{node.fontContent()}}</text>\x3c!-- Sm. Top Left Bundle Icon --\x3e<text ng-if=node.bundle() class=bundle-icon x=6 y=22 font-family=PatternFlyIcons-webfont font-size=20>{{\'\\ue918\'}}</text>\x3c!-- Bottom Node Toolbar --\x3e<g id=nodeToolBar ng-if="node == $ctrl.mouseOverNode && !$ctrl.chart.inConnectingMode"><g class=svg-triangle><polyline points="4,152 14,140 24,152"></polyline></g><foreignobject ng-attr-x={{node.x}} ng-attr-y={{node.height()+1}} ng-mousedown=$event.stopPropagation() height=100% width=100%><body><node-toolbar node=node node-actions=$ctrl.chart.nodeActions node-click-handler=$ctrl.nodeClickHandler node-close-handler=$ctrl.nodeCloseHandler></node-toolbar></body></foreignobject></g>\x3c!-- Connected Input Connectors --\x3e<g ng-if=!$ctrl.hideConnectors ng-repeat="connector in node.inputConnectors | filter: $ctrl.isConnectorConnected" ng-mousedown="$ctrl.connectorMouseDown($event, node, connector, $index, true)" ng-mouseover="$ctrl.connectorMouseOver($event, node, connector, $index, true)" ng-mouseleave="$ctrl.connectorMouseLeave($event, node, connector, $index, true)" class="connector input-connector"><circle ng-if="!$ctrl.chart.inConnectingMode || $ctrl.isConnectedTo(connector, connectingModeSourceNode)" ng-class="{\'mouseover-connector-circle\': connector == $ctrl.mouseOverConnector,\n                   \'connector-circle\': connector != $ctrl.mouseOverConnector}" ng-attr-r={{$ctrl.connectorSize}} ng-attr-cx={{connector.x()}} ng-attr-cy={{connector.y()}}></circle></g>\x3c!-- Unconnected Input Connectors --\x3e<g ng-if=$ctrl.chart.inConnectingMode ng-repeat="connector in node.inputConnectors | filter: $ctrl.isConnectorUnconnectedAndValid" ng-mousedown="$ctrl.connectorMouseDown($event, node, connector, $index, true)" ng-mouseover="$ctrl.connectorMouseOver($event, node, connector, $index, true)" ng-mouseleave="$ctrl.connectorMouseLeave($event, node, connector, $index, true)" class="connector input-connector"><text ng-if=connector.fontFamily() class=connector-icons font-family={{connector.fontFamily()}} ng-attr-x="{{connector.x() - 28}}" ng-attr-y="{{connector.y() + 7}}">{{connector.fontContent()}}</text><circle ng-class="{\'unconnected-circle\': connector != $ctrl.mouseOverConnector,\n                         \'mouseover-unconnected-circle\': connector == $ctrl.mouseOverConnector}" ng-attr-r={{$ctrl.connectorSize}} ng-attr-cx={{connector.x()}} ng-attr-cy={{connector.y()}}></circle><g ng-if="connector == $ctrl.mouseOverConnector"><rect class=connector-tooltip ry=1 rx=1 ng-attr-x="{{connector.x() - 4}}" ng-attr-y="{{connector.y() + 12}}" ng-attr-width={{80}} height=20></rect><text class=connector-tooltip-text ng-attr-x="{{connector.x() + 2}}" ng-attr-y="{{connector.y() + 26}}" text-anchor=start alignment-baseline=top>{{connector.name()}}</text></g></g>\x3c!-- Output Connector --\x3e<g ng-if=!$ctrl.hideConnectors ng-repeat="connector in node.outputConnectors" ng-mousedown="$ctrl.connectorMouseDown($event, node, connector, $index, false)" ng-mouseover="$ctrl.connectorMouseOver($event, node, connector, $index, false)" ng-mouseleave="$ctrl.connectorMouseLeave($event, node, connector, $index, false)" class="connector output-connector"><circle ng-if="!$ctrl.chart.inConnectingMode || ($ctrl.connectingModeSourceNode === connector.parentNode())" ng-class="{\'connector-circle\': connector != $ctrl.mouseOverConnector,\n                   \'mouseover-connector-circle\': connector == $ctrl.mouseOverConnector}" ng-attr-r={{$ctrl.connectorSize}} ng-attr-r={{$ctrl.connectorSize}} ng-attr-cx={{connector.x()}} ng-attr-cy={{connector.y()}}></circle></g></g>\x3c!--  End Nodes Loop --\x3e\x3c!-- Connections --\x3e<g ng-if=!$ctrl.hideConnectors ng-repeat="connection in $ctrl.chart.connections" class=connection ng-mousedown="$ctrl.connectionMouseDown($event, connection)" ng-mouseover="$ctrl.connectionMouseOver($event, connection)" ng-mouseleave="$ctrl.connectionMouseLeave($event, connection)"><g ng-if="!$ctrl.chart.inConnectingMode || connectingModeSourceNode === connection.source.parentNode()"><path ng-class="{\'selected-connection-line\': connection.selected(),\n                     \'mouseover-connection-line\': connection == $ctrl.mouseOverConnection,\n                     \'connection-line\': connection != $ctrl.mouseOverConnection}" ng-attr-d="M {{connection.sourceCoordX()}}, {{connection.sourceCoordY()}}\n                     C {{connection.sourceTangentX()}}, {{connection.sourceTangentY()}}\n                       {{connection.destTangentX()}}, {{connection.destTangentY()}}\n                       {{connection.destCoordX()}}, {{connection.destCoordY()}}"></path><text ng-if="connection == $ctrl.mouseOverConnection" ng-class="{\'selected-connection-name\': connection.selected(),\n                     \'mouseover-connection-name\': connection == $ctrl.mouseOverConnection && !connection.selected(),\n                     \'connection-name\': connection != $ctrl.mouseOverConnection && !connection.selected()}" ng-attr-x={{connection.middleX()}} ng-attr-y={{connection.middleY()}} text-anchor=middle alignment-baseline=middle>{{connection.name()}}</text><circle ng-class="{\'selected-connection-endpoint\': connection.selected(),\n                       \'mouseover-connection-endpoint\': connection == $ctrl.mouseOverConnection && !connection.selected(),\n                       \'connection-endpoint\': connection != $ctrl.mouseOverConnection && !connection.selected()}" r=5 ng-attr-cx={{connection.sourceCoordX()}} ng-attr-cy={{connection.sourceCoordY()}}></circle><circle ng-class="{\'selected-connection-endpoint\': connection.selected(),\n                       \'mouseover-connection-endpoint\': connection == $ctrl.mouseOverConnection && !connection.selected(),\n                       \'connection-endpoint\': connection != $ctrl.mouseOverConnection && !connection.selected()}" r=5 ng-attr-cx={{connection.destCoordX()}} ng-attr-cy={{connection.destCoordY()}}></circle></g></g><rect ng-if=$ctrl.dragSelecting class=drag-selection-rect ng-attr-x={{$ctrl.dragSelectionRect.x}} ng-attr-y={{$ctrl.dragSelectionRect.y}} ng-attr-width={{$ctrl.dragSelectionRect.width}} ng-attr-height={{$ctrl.dragSelectionRect.height}}></rect></g></svg>'),
     e.put("canvas-view/canvas/node-toolbar.html", '<div class=node-toolbar ng-style="{width: $ctrl.node.width()}"><span ng-repeat="nodeAction in $ctrl.nodeActions" class="{{nodeAction.iconClass()}} node-toolbar-icons" ng-click=$ctrl.actionIconClicked(nodeAction.action())></span></div>');
     } ]), angular.module("patternfly.card").run([ "$templateCache", function(e) {
     "use strict";
-    e.put("card/aggregate-status/aggregate-status-card.html", '<div ng-if=!$ctrl.isMiniLayout class="card-pf card-pf-aggregate-status" ng-class="{\'card-pf-accented\': $ctrl.shouldShowTopBorder, \'card-pf-aggregate-status-alt\': $ctrl.isAltLayout}" ng-style="$ctrl.showSpinner ? $ctrl.spinnerHeight : {}"><h2 class=card-pf-title><a href={{$ctrl.status.href}} ng-if=$ctrl.status.href><image ng-if=$ctrl.status.iconImage ng-src={{$ctrl.status.iconImage}} alt="" class=card-pf-icon-image></image><span class={{$ctrl.status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{$ctrl.status.count}}</span> <span class=card-pf-aggregate-status-title>{{$ctrl.status.title}}</span></a> <span ng-if=!$ctrl.status.href><image ng-if=$ctrl.status.iconImage ng-src={{$ctrl.status.iconImage}} alt="" class=card-pf-icon-image></image><span class={{$ctrl.status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{$ctrl.status.count}}</span> <span class=card-pf-aggregate-status-title>{{$ctrl.status.title}}</span></span></h2><div class=card-pf-body ng-class="{\'show-spinner\': $ctrl.showSpinner}"><div ng-if=$ctrl.showSpinner class=spinner-container><div class=loading-indicator><span class="spinner spinner-lg" aria-hidden=true></span> <span ng-if=$ctrl.spinnerText class=loading-text>{{$ctrl.spinnerText}}</span><label ng-if=!$ctrl.spinnerText class=sr-only>Loading</label></div></div><p class=card-pf-aggregate-status-notifications ng-class="{\'hide-for-spinner\': $ctrl.showSpinner}"><span class=card-pf-aggregate-status-notification ng-repeat="notification in $ctrl.status.notifications"><a href={{notification.href}} ng-if=notification.href><image ng-if=notification.iconImage ng-src={{notification.iconImage}} alt="" class=card-pf-icon-image></image><span class={{notification.iconClass}}></span>{{ notification.count }}</a> <span ng-if=!notification.href><image ng-if=notification.iconImage ng-src={{notification.iconImage}} alt="" class=card-pf-icon-image></image><span class={{notification.iconClass}}></span>{{ notification.count }}</span></span></p></div></div><div ng-if=$ctrl.isMiniLayout class="card-pf card-pf-aggregate-status card-pf-aggregate-status-mini" ng-class="{\'card-pf-accented\': $ctrl.shouldShowTopBorder}" ng-style="$ctrl.showSpinner ? $ctrl.spinnerHeight : {}"><h2 class=card-pf-title><a ng-if=$ctrl.status.href href={{$ctrl.status.href}}><image ng-if=$ctrl.status.iconImage ng-src={{$ctrl.status.iconImage}} alt="" class=card-pf-icon-image></image><span ng-if=$ctrl.status.iconClass class={{$ctrl.status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{$ctrl.status.count}}</span> {{$ctrl.status.title}}</a> <span ng-if=!$ctrl.status.href><span class=card-pf-aggregate-status-count>{{$ctrl.status.count}}</span> {{$ctrl.status.title}}</span></h2><div class=card-pf-body ng-class="{\'show-spinner\': $ctrl.showSpinner}"><div ng-if=$ctrl.showSpinner class=spinner-container><div class=loading-indicator><span class="spinner spinner-lg" aria-hidden=true></span> <span ng-if=$ctrl.spinnerText class=loading-text>{{$ctrl.spinnerText}}</span><label ng-if=!$ctrl.spinnerText class=sr-only>Loading</label></div></div><p ng-if="$ctrl.status.notification.iconImage || $ctrl.status.notification.iconClass || $ctrl.status.notification.count" class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification><a ng-if=$ctrl.status.notification.href href={{$ctrl.status.notification.href}}><image ng-if=$ctrl.status.notification.iconImage ng-src={{$ctrl.status.notification.iconImage}} alt="" class=card-pf-icon-image></image><span ng-if=$ctrl.status.notification.iconClass class={{$ctrl.status.notification.iconClass}}></span><span ng-if=$ctrl.status.notification.count>{{$ctrl.status.notification.count}}</span></a> <span ng-if=!$ctrl.status.notification.href><image ng-if=$ctrl.status.notification.iconImage ng-src={{$ctrl.status.notification.iconImage}} alt="" class=card-pf-icon-image></image><span ng-if=$ctrl.status.notification.iconClass class={{$ctrl.status.notification.iconClass}}></span><span ng-if=$ctrl.status.notification.count>{{$ctrl.status.notification.count}}</span></span></span></p></div></div>'), 
-    e.put("card/basic/card-filter.html", '<div uib-dropdown class=card-pf-time-frame-filter><button type=button uib-dropdown-toggle class="btn btn-default">{{$ctrl.currentFilter.label}} <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-repeat="item in $ctrl.filter.filters" ng-class="{\'selected\': item === $ctrl.currentFilter}"><a role=menuitem tabindex=-1 ng-click=$ctrl.filterCallBackFn(item)>{{item.label}}</a></li></ul></div>'), e.put("card/basic/card.html", '<div class=card-pf ng-class="{\'card-pf-accented\': $ctrl.showTopBorder === \'true\'}"><div ng-if=$ctrl.showHeader() ng-class="$ctrl.shouldShowTitlesSeparator ? \'card-pf-heading\' : \'card-pf-heading-no-bottom\'"><div ng-if=$ctrl.showFilterInHeader() class=card-pf-footer-in-header ng-class="{\'hide-for-spinner\': $ctrl.showSpinner}" ng-include="\'card/basic/card-filter.html\'"></div><h2 class=card-pf-title>{{$ctrl.headTitle}}</h2></div><span ng-if=$ctrl.subTitle class=card-pf-subtitle>{{$ctrl.subTitle}}</span><div class=card-pf-body ng-class="{\'show-spinner\': $ctrl.showSpinner}"><div ng-class="{\'hide-for-spinner\': $ctrl.showSpinner}" ng-transclude></div><div ng-if=$ctrl.showSpinner class=spinner-container><div class=loading-indicator><span class="spinner spinner-lg" aria-hidden=true></span> <span ng-if=$ctrl.spinnerText class=loading-text>{{$ctrl.spinnerText}}</span><label ng-if=!$ctrl.spinnerText class=sr-only>Loading</label></div></div></div><div ng-if=$ctrl.footer class=card-pf-footer ng-class="{\'hide-for-spinner\': $ctrl.showSpinner}"><div ng-if=$ctrl.showFilterInFooter() ng-include="\'card/basic/card-filter.html\'"></div><p><a ng-if=$ctrl.footer.href href={{$ctrl.footer.href}} ng-class="{\'card-pf-link-with-icon\':$ctrl.footer.iconClass,\'card-pf-link\':!$ctrl.footer.iconClass}"><span ng-if=$ctrl.footer.iconClass class="{{$ctrl.footer.iconClass}} card-pf-footer-text"></span> <span ng-if=$ctrl.footer.text class=card-pf-footer-text>{{$ctrl.footer.text}}</span></a> <a ng-if="$ctrl.footer.callBackFn && !$ctrl.footer.href" ng-click=$ctrl.footerCallBackFn() ng-class="{\'card-pf-link-with-icon\':$ctrl.footer.iconClass,\'card-pf-link\':!$ctrl.footer.iconClass}"><span class="{{$ctrl.footer.iconClass}} card-pf-footer-text" ng-if=$ctrl.footer.iconClass></span> <span class=card-pf-footer-text ng-if=$ctrl.footer.text>{{$ctrl.footer.text}}</span></a> <span ng-if="!$ctrl.footer.href && !$ctrl.footer.callBackFn"><span ng-if=$ctrl.footer.iconClass class="{{$ctrl.footer.iconClass}} card-pf-footer-text" ng-class="{\'card-pf-link-with-icon\':$ctrl.footer.iconClass,\'card-pf-link\':!$ctrl.footer.iconClass}"></span> <span ng-if=$ctrl.footer.text class=card-pf-footer-text>{{$ctrl.footer.text}}</span></span></p></div></div>'), 
+    e.put("card/aggregate-status/aggregate-status-card.html", '<div ng-if=!$ctrl.isMiniLayout class="card-pf card-pf-aggregate-status" ng-class="{\'card-pf-accented\': $ctrl.shouldShowTopBorder, \'card-pf-aggregate-status-alt\': $ctrl.isAltLayout}" ng-style="$ctrl.showSpinner ? $ctrl.spinnerHeight : {}"><h2 class=card-pf-title><a href={{$ctrl.status.href}} ng-if=$ctrl.status.href><image ng-if=$ctrl.status.iconImage ng-src={{$ctrl.status.iconImage}} alt="" class=card-pf-icon-image></image><span class={{$ctrl.status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{$ctrl.status.count}}</span> <span class=card-pf-aggregate-status-title>{{$ctrl.status.title}}</span></a> <span ng-if=!$ctrl.status.href><image ng-if=$ctrl.status.iconImage ng-src={{$ctrl.status.iconImage}} alt="" class=card-pf-icon-image></image><span class={{$ctrl.status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{$ctrl.status.count}}</span> <span class=card-pf-aggregate-status-title>{{$ctrl.status.title}}</span></span></h2><div class=card-pf-body ng-class="{\'show-spinner\': $ctrl.showSpinner}"><div ng-if=$ctrl.showSpinner class=spinner-container><div class=loading-indicator><span class="spinner spinner-lg" aria-hidden=true></span> <span ng-if=$ctrl.spinnerText class=loading-text>{{$ctrl.spinnerText}}</span><label ng-if=!$ctrl.spinnerText class=sr-only>Loading</label></div></div><p class=card-pf-aggregate-status-notifications ng-class="{\'hide-for-spinner\': $ctrl.showSpinner}"><span class=card-pf-aggregate-status-notification ng-repeat="notification in $ctrl.status.notifications"><a href={{notification.href}} ng-if=notification.href><image ng-if=notification.iconImage ng-src={{notification.iconImage}} alt="" class=card-pf-icon-image></image><span class={{notification.iconClass}}></span>{{ notification.count }}</a> <span ng-if=!notification.href><image ng-if=notification.iconImage ng-src={{notification.iconImage}} alt="" class=card-pf-icon-image></image><span class={{notification.iconClass}}></span>{{ notification.count }}</span></span></p></div></div><div ng-if=$ctrl.isMiniLayout class="card-pf card-pf-aggregate-status card-pf-aggregate-status-mini" ng-class="{\'card-pf-accented\': $ctrl.shouldShowTopBorder}" ng-style="$ctrl.showSpinner ? $ctrl.spinnerHeight : {}"><h2 class=card-pf-title><a ng-if=$ctrl.status.href href={{$ctrl.status.href}}><image ng-if=$ctrl.status.iconImage ng-src={{$ctrl.status.iconImage}} alt="" class=card-pf-icon-image></image><span ng-if=$ctrl.status.iconClass class={{$ctrl.status.iconClass}}></span> <span class=card-pf-aggregate-status-count>{{$ctrl.status.count}}</span> {{$ctrl.status.title}}</a> <span ng-if=!$ctrl.status.href><span class=card-pf-aggregate-status-count>{{$ctrl.status.count}}</span> {{$ctrl.status.title}}</span></h2><div class=card-pf-body ng-class="{\'show-spinner\': $ctrl.showSpinner}"><div ng-if=$ctrl.showSpinner class=spinner-container><div class=loading-indicator><span class="spinner spinner-lg" aria-hidden=true></span> <span ng-if=$ctrl.spinnerText class=loading-text>{{$ctrl.spinnerText}}</span><label ng-if=!$ctrl.spinnerText class=sr-only>Loading</label></div></div><p ng-if="$ctrl.status.notification.iconImage || $ctrl.status.notification.iconClass || $ctrl.status.notification.count" class=card-pf-aggregate-status-notifications><span class=card-pf-aggregate-status-notification><a ng-if=$ctrl.status.notification.href href={{$ctrl.status.notification.href}}><image ng-if=$ctrl.status.notification.iconImage ng-src={{$ctrl.status.notification.iconImage}} alt="" class=card-pf-icon-image></image><span ng-if=$ctrl.status.notification.iconClass class={{$ctrl.status.notification.iconClass}}></span><span ng-if=$ctrl.status.notification.count>{{$ctrl.status.notification.count}}</span></a> <span ng-if=!$ctrl.status.notification.href><image ng-if=$ctrl.status.notification.iconImage ng-src={{$ctrl.status.notification.iconImage}} alt="" class=card-pf-icon-image></image><span ng-if=$ctrl.status.notification.iconClass class={{$ctrl.status.notification.iconClass}}></span><span ng-if=$ctrl.status.notification.count>{{$ctrl.status.notification.count}}</span></span></span></p></div></div>'),
+    e.put("card/basic/card-filter.html", '<div uib-dropdown class=card-pf-time-frame-filter><button type=button uib-dropdown-toggle class="btn btn-default">{{$ctrl.currentFilter.label}} <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-repeat="item in $ctrl.filter.filters" ng-class="{\'selected\': item === $ctrl.currentFilter}"><a role=menuitem tabindex=-1 ng-click=$ctrl.filterCallBackFn(item)>{{item.label}}</a></li></ul></div>'), e.put("card/basic/card.html", '<div class=card-pf ng-class="{\'card-pf-accented\': $ctrl.showTopBorder === \'true\'}"><div ng-if=$ctrl.showHeader() ng-class="$ctrl.shouldShowTitlesSeparator ? \'card-pf-heading\' : \'card-pf-heading-no-bottom\'"><div ng-if=$ctrl.showFilterInHeader() class=card-pf-footer-in-header ng-class="{\'hide-for-spinner\': $ctrl.showSpinner}" ng-include="\'card/basic/card-filter.html\'"></div><h2 class=card-pf-title>{{$ctrl.headTitle}}</h2></div><span ng-if=$ctrl.subTitle class=card-pf-subtitle>{{$ctrl.subTitle}}</span><div class=card-pf-body ng-class="{\'show-spinner\': $ctrl.showSpinner}"><div ng-class="{\'hide-for-spinner\': $ctrl.showSpinner}" ng-transclude></div><div ng-if=$ctrl.showSpinner class=spinner-container><div class=loading-indicator><span class="spinner spinner-lg" aria-hidden=true></span> <span ng-if=$ctrl.spinnerText class=loading-text>{{$ctrl.spinnerText}}</span><label ng-if=!$ctrl.spinnerText class=sr-only>Loading</label></div></div></div><div ng-if=$ctrl.footer class=card-pf-footer ng-class="{\'hide-for-spinner\': $ctrl.showSpinner}"><div ng-if=$ctrl.showFilterInFooter() ng-include="\'card/basic/card-filter.html\'"></div><p><a ng-if=$ctrl.footer.href href={{$ctrl.footer.href}} ng-class="{\'card-pf-link-with-icon\':$ctrl.footer.iconClass,\'card-pf-link\':!$ctrl.footer.iconClass}"><span ng-if=$ctrl.footer.iconClass class="{{$ctrl.footer.iconClass}} card-pf-footer-text"></span> <span ng-if=$ctrl.footer.text class=card-pf-footer-text>{{$ctrl.footer.text}}</span></a> <a ng-if="$ctrl.footer.callBackFn && !$ctrl.footer.href" ng-click=$ctrl.footerCallBackFn() ng-class="{\'card-pf-link-with-icon\':$ctrl.footer.iconClass,\'card-pf-link\':!$ctrl.footer.iconClass}"><span class="{{$ctrl.footer.iconClass}} card-pf-footer-text" ng-if=$ctrl.footer.iconClass></span> <span class=card-pf-footer-text ng-if=$ctrl.footer.text>{{$ctrl.footer.text}}</span></a> <span ng-if="!$ctrl.footer.href && !$ctrl.footer.callBackFn"><span ng-if=$ctrl.footer.iconClass class="{{$ctrl.footer.iconClass}} card-pf-footer-text" ng-class="{\'card-pf-link-with-icon\':$ctrl.footer.iconClass,\'card-pf-link\':!$ctrl.footer.iconClass}"></span> <span ng-if=$ctrl.footer.text class=card-pf-footer-text>{{$ctrl.footer.text}}</span></span></p></div></div>'),
     e.put("card/info-status/info-status-card.html", '<div class="card-pf card-pf-info-status" ng-class="{\'card-pf-accented\': $ctrl.shouldShowTopBorder}" ng-style="$ctrl.showSpinner ? $ctrl.spinnerHeight : {}"><div class=card-pf-info-image ng-if="$ctrl.status.iconImage || $ctrl.status.iconClass"><img ng-if=$ctrl.status.iconImage ng-src={{$ctrl.status.iconImage}} alt="" class="info-img"> <span class="info-icon {{$ctrl.status.iconClass}}"></span></div><div class="card-pf-info-content card-pf-body" ng-class="{\'show-spinner\': $ctrl.showSpinner}"><h2 class=card-pf-title ng-if=$ctrl.status.title><a href={{$ctrl.status.href}} ng-if=$ctrl.status.href><span>{{$ctrl.status.title}}</span></a> <span ng-if=!$ctrl.status.href><span>{{$ctrl.status.title}}</span></span></h2><div ng-if=$ctrl.showSpinner class=spinner-container ng-class="{\'with-title\' : $ctrl.status.title}"><div class=loading-indicator><span class="spinner spinner-lg" aria-hidden=true></span> <span ng-if=$ctrl.spinnerText class=loading-text>{{$ctrl.spinnerText}}</span><label ng-if=!$ctrl.spinnerText class=sr-only>Loading</label></div></div><span ng-if=!$ctrl.showSpinner><div ng-if=$ctrl.shouldShowHtmlContent class=card-pf-info-item ng-bind-html=$ctrl.trustAsHtml(item) ng-repeat="item in $ctrl.status.info track by $index"></div><div ng-if=!$ctrl.shouldShowHtmlContent class=card-pf-info-item ng-bind=item ng-repeat="item in $ctrl.status.info track by $index"></div></span></div></div>');
     } ]), angular.module("patternfly.charts").run([ "$templateCache", function(e) {
     "use strict";
-    e.put("charts/donut/donut-chart.html", '<span><pf-c3-chart ng-if="$ctrl.data.dataAvailable !== false" id={{$ctrl.donutChartId}} config=$ctrl.config get-chart-callback=$ctrl.setChart></pf-c3-chart><pf-empty-chart ng-if="$ctrl.data.dataAvailable === false" chart-height=$ctrl.chartHeight></pf-empty-chart></span>'), e.put("charts/donut/donut-pct-chart.html", '<span class=pct-donut-chart-pf><span ng-class="{\'pct-donut-chart-pf-left\': $ctrl.config.labelConfig.orientation === \'left\', \'pct-donut-chart-pf-right\': $ctrl.config.labelConfig.orientation === \'right\'}"><span class=pct-donut-chart-pf-chart><pf-c3-chart ng-if="$ctrl.data.dataAvailable !== false" id={{$ctrl.donutChartId}} config=$ctrl.config get-chart-callback=$ctrl.setChart></pf-c3-chart><pf-empty-chart ng-if="$ctrl.data.dataAvailable === false" chart-height=$ctrl.chartHeight></pf-empty-chart></span> <span ng-if="$ctrl.data.dataAvailable !== false && $ctrl.config.labelConfig && !$ctrl.config.labelConfig.labelFn()" class=pct-donut-chart-pf-label>{{$ctrl.config.labelConfig.title}} <span ng-if=$ctrl.data ng-switch=$ctrl.config.labelConfig.label><span ng-switch-when=none></span> <span ng-switch-when=available>{{$ctrl.data.available}} {{$ctrl.config.labelConfig.units}} available</span> <span ng-switch-when=percent>{{$ctrl.data.percent}}&#37; used</span> <span ng-switch-default="">{{$ctrl.data.used}} {{$ctrl.config.labelConfig.units}} of {{$ctrl.data.total}} {{$ctrl.config.labelConfig.units}} used</span></span></span> <span ng-if="$ctrl.data.dataAvailable !== false && $ctrl.config.labelConfig && $ctrl.config.labelConfig.labelFn()" class=pct-donut-chart-pf-label ng-bind-html=$ctrl.config.labelConfig.labelFn()></span></span></span>'), 
-    e.put("charts/empty-chart.html", '<div class=empty-chart-content ng-style=$ctrl.sizeStyles><span class="pficon pficon-info"></span> <span>No data available</span></div>'), e.put("charts/heatmap/heatmap-legend.html", '<ul class=heatmap-pf-legend-container><li ng-repeat="item in $ctrl.legendItems" class=heatmap-pf-legend-items><span class=legend-pf-color-box ng-style="{background: item.color}"></span> <span class=legend-pf-text>{{item.text}}</span></li></ul>'), e.put("charts/heatmap/heatmap.html", '<div class=heatmap-pf-container><h3>{{$ctrl.chartTitle}}</h3><div class=heatmap-container ng-style=$ctrl.containerStyles><svg class=heatmap-pf-svg></svg></div><pf-empty-chart ng-if="$ctrl.chartDataAvailable === false" chart-height=$ctrl.height></pf-empty-chart><div ng-if=!$ctrl.loadingDone class="spinner spinner-lg loading"></div><pf-heatmap-legend ng-if=$ctrl.showLegend legend=$ctrl.legendLabels legend-colors=$ctrl.heatmapColorPattern></pf-heatmap-legend></div>'), e.put("charts/line/line-chart.html", '<span><pf-c3-chart id={{$ctrl.lineChartId}} ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.chartConfig></pf-c3-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.chartConfig.size.height></pf-empty-chart></span>'), 
-    e.put("charts/sparkline/sparkline-chart.html", '<span><pf-c3-chart ng-if="$ctrl.chartData.dataAvailable !== false" id={{$ctrl.sparklineChartId}} config=$ctrl.chartConfig></pf-c3-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.chartHeight></pf-empty-chart></span>'), e.put("charts/trends/trends-chart.html", '<span ng-switch on=$ctrl.config.layout ng-class="{\'data-unavailable-pf\': $ctrl.chartData.dataAvailable === false}"><div ng-switch-default ng-class="{\'trend-card-large-pf\': $ctrl.showLargeCardLayout,\'trend-card-small-pf\': $ctrl.showSmallCardLayout}"><span class=trend-header-pf ng-if=$ctrl.config.title>{{$ctrl.config.title}}</span> <span ng-if=$ctrl.showActualValue><span class=trend-title-big-pf>{{$ctrl.getLatestValue()}}</span> <span class=trend-title-small-pf>{{$ctrl.config.units}}</span></span> <span ng-if=$ctrl.showPercentageValue><span class=trend-title-big-pf>{{$ctrl.getPercentageValue() + \'%\'}}</span> <span class=trend-title-small-pf>of {{$ctrl.chartData.total + \' \' + $ctrl.config.units}}</span></span><pf-sparkline-chart ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.config chart-data=$ctrl.chartData chart-height=$ctrl.getChartHeight() show-x-axis=$ctrl.showXAxis show-y-axis=$ctrl.showYAxis></pf-sparkline-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.getChartHeight()></pf-empty-chart><span class=trend-footer-pf ng-if=$ctrl.config.timeFrame>{{$ctrl.config.timeFrame}}</span></div><div ng-switch-when=compact class=trend-card-compact-pf><div class="row trend-row"><div class=col-sm-2 ng-class="{\'col-sm-push-10\': $ctrl.config.compactLabelPosition === \'right\'}"><div class=trend-compact-details><span ng-if=$ctrl.showActualValue><span class=trend-title-compact-big-pf>{{$ctrl.getLatestValue()}}</span> <span class=trend-title-compact-small-pf>{{$ctrl.config.units}}</span></span> <span ng-if=$ctrl.showPercentageValue><span class=trend-title-compact-big-pf>{{$ctrl.getPercentageValue() + \'%\'}}</span> <span class=trend-title-compact-small-pf>of {{$ctrl.chartData.total + \' \' + $ctrl.config.units}}</span></span> <span class=trend-header-compact-pf ng-if=$ctrl.config.title>{{$ctrl.config.title}}</span></div></div><div class=col-sm-10 ng-class="{\'col-sm-pull-2\': $ctrl.config.compactLabelPosition === \'right\'}"><pf-sparkline-chart ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.config chart-data=$ctrl.chartData chart-height=$ctrl.getChartHeight() show-x-axis=$ctrl.showXAxis show-y-axis=$ctrl.showYAxis></pf-sparkline-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.getChartHeight()></pf-empty-chart></div></div></div><div ng-switch-when=inline class=trend-card-inline-pf><div class="row trend-row"><div class="col-sm-8 trend-flat-col"><pf-sparkline-chart ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.config chart-data=$ctrl.chartData chart-height=$ctrl.getChartHeight() show-x-axis=$ctrl.showXAxis show-y-axis=$ctrl.showYAxis></pf-sparkline-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.getChartHeight()></pf-empty-chart></div><div class="col-sm-4 trend-flat-col"><div class=trend-flat-details><div class=trend-flat-details-cell><span class=trend-title-flat-big-pf>{{$ctrl.getPercentageValue() + \'%\'}}</span></div><div class=trend-flat-details-cell><span class=trend-label-flat-strong-pf>{{$ctrl.config.trendLabel}}</span> <span class=trend-label-flat-pf>{{$ctrl.getLatestValue()}} of {{$ctrl.chartData.total + \' \' + $ctrl.config.units}}</span></div></div></div></div></div></span>'), 
-    e.put("charts/utilization-bar/utilization-bar-chart.html", "<div class=utilization-bar-chart-pf ng-class=\"{'data-unavailable-pf': $ctrl.chartData.dataAvailable === false}\"><span ng-if=\"!$ctrl.layout || $ctrl.layout.type === 'regular'\"><div ng-if=$ctrl.chartTitle class=progress-description>{{$ctrl.chartTitle}}</div><div class=\"progress progress-label-top-right\" ng-if=\"$ctrl.chartData.dataAvailable !== false\"><div class=progress-bar aria-valuenow={{$ctrl.chartData.percentageUsed}} aria-valuemin=0 aria-valuemax=100 ng-class=\"{'animate': animate,\n           'progress-bar-success': $ctrl.isOk, 'progress-bar-danger': $ctrl.isError, 'progress-bar-warning': $ctrl.isWarn}\" ng-style=\"{width:$ctrl.chartData.percentageUsed + '%'}\" uib-tooltip-html=\"'{{$ctrl.usedTooltipMessage()}}'\"><span ng-if=$ctrl.chartFooter ng-bind-html=$ctrl.chartFooter></span> <span ng-if=\"!$ctrl.chartFooter && (!$ctrl.footerLabelFormat || $ctrl.footerLabelFormat === 'actual')\"><strong>{{$ctrl.chartData.used}} of {{$ctrl.chartData.total}} {{$ctrl.units}}</strong> Used</span> <span ng-if=\"!$ctrl.chartFooter && $ctrl.footerLabelFormat === 'percent'\"><strong>{{$ctrl.chartData.percentageUsed}}%</strong> Used</span></div><div class=\"progress-bar progress-bar-remaining\" ng-style=\"{width:(100 - $ctrl.chartData.percentageUsed) + '%'}\" uib-tooltip-html=\"'{{$ctrl.availableTooltipMessage()}}'\"></div></div></span> <span ng-if=\"$ctrl.layout && $ctrl.layout.type === 'inline'\"><div class=\"progress-container progress-description-left progress-label-right\" ng-style=\"{'padding-left':$ctrl.layout.titleLabelWidth, 'padding-right':$ctrl.layout.footerLabelWidth}\"><div ng-if=$ctrl.chartTitle class=progress-description ng-style=\"{'max-width':$ctrl.layout.titleLabelWidth}\">{{$ctrl.chartTitle}}</div><div class=progress ng-if=\"$ctrl.chartData.dataAvailable !== false\"><div class=progress-bar aria-valuenow={{$ctrl.chartData.percentageUsed}} aria-valuemin=0 aria-valuemax=100 ng-class=\"{'animate': $ctrl.animate, 'progress-bar-success': $ctrl.isOk, 'progress-bar-danger': $ctrl.isError, 'progress-bar-warning': $ctrl.isWarn}\" ng-style=\"{width:$ctrl.chartData.percentageUsed + '%'}\" uib-tooltip-html=\"'{{$ctrl.usedTooltipMessage()}}'\"><span ng-if=$ctrl.chartFooter ng-bind-html=$ctrl.chartFooter></span> <span ng-if=\"(!$ctrl.chartFooter) && (!$ctrl.footerLabelFormat || $ctrl.footerLabelFormat === 'actual')\" ng-style=\"{'max-width':$ctrl.layout.footerLabelWidth}\"><strong>{{$ctrl.chartData.used}} {{$ctrl.units}}</strong> Used</span> <span ng-if=\"(!$ctrl.chartFooter) && $ctrl.footerLabelFormat === 'percent'\" ng-style=\"{'max-width':$ctrl.layout.footerLabelWidth}\"><strong>{{$ctrl.chartData.percentageUsed}}%</strong> Used</span></div><div class=\"progress-bar progress-bar-remaining\" ng-style=\"{width:(100 - $ctrl.chartData.percentageUsed) + '%'}\" uib-tooltip-html=\"'{{$ctrl.availableTooltipMessage()}}'\"></div></div></div></span><pf-empty-chart ng-if=\"$ctrl.chartData.dataAvailable === false\" chart-height=45></pf-empty-chart></div>"), 
+    e.put("charts/donut/donut-chart.html", '<span><pf-c3-chart ng-if="$ctrl.data.dataAvailable !== false" id={{$ctrl.donutChartId}} config=$ctrl.config get-chart-callback=$ctrl.setChart></pf-c3-chart><pf-empty-chart ng-if="$ctrl.data.dataAvailable === false" chart-height=$ctrl.chartHeight></pf-empty-chart></span>'), e.put("charts/donut/donut-pct-chart.html", '<span class=pct-donut-chart-pf><span ng-class="{\'pct-donut-chart-pf-left\': $ctrl.config.labelConfig.orientation === \'left\', \'pct-donut-chart-pf-right\': $ctrl.config.labelConfig.orientation === \'right\'}"><span class=pct-donut-chart-pf-chart><pf-c3-chart ng-if="$ctrl.data.dataAvailable !== false" id={{$ctrl.donutChartId}} config=$ctrl.config get-chart-callback=$ctrl.setChart></pf-c3-chart><pf-empty-chart ng-if="$ctrl.data.dataAvailable === false" chart-height=$ctrl.chartHeight></pf-empty-chart></span> <span ng-if="$ctrl.data.dataAvailable !== false && $ctrl.config.labelConfig && !$ctrl.config.labelConfig.labelFn()" class=pct-donut-chart-pf-label>{{$ctrl.config.labelConfig.title}} <span ng-if=$ctrl.data ng-switch=$ctrl.config.labelConfig.label><span ng-switch-when=none></span> <span ng-switch-when=available>{{$ctrl.data.available}} {{$ctrl.config.labelConfig.units}} available</span> <span ng-switch-when=percent>{{$ctrl.data.percent}}&#37; used</span> <span ng-switch-default="">{{$ctrl.data.used}} {{$ctrl.config.labelConfig.units}} of {{$ctrl.data.total}} {{$ctrl.config.labelConfig.units}} used</span></span></span> <span ng-if="$ctrl.data.dataAvailable !== false && $ctrl.config.labelConfig && $ctrl.config.labelConfig.labelFn()" class=pct-donut-chart-pf-label ng-bind-html=$ctrl.config.labelConfig.labelFn()></span></span></span>'),
+    e.put("charts/empty-chart.html", '<div class=empty-chart-content ng-style=$ctrl.sizeStyles><span class="pficon pficon-info"></span> <span>No data available</span></div>'), e.put("charts/heatmap/heatmap-legend.html", '<ul class=heatmap-pf-legend-container><li ng-repeat="item in $ctrl.legendItems" class=heatmap-pf-legend-items><span class=legend-pf-color-box ng-style="{background: item.color}"></span> <span class=legend-pf-text>{{item.text}}</span></li></ul>'), e.put("charts/heatmap/heatmap.html", '<div class=heatmap-pf-container><h3>{{$ctrl.chartTitle}}</h3><div class=heatmap-container ng-style=$ctrl.containerStyles><svg class=heatmap-pf-svg></svg></div><pf-empty-chart ng-if="$ctrl.chartDataAvailable === false" chart-height=$ctrl.height></pf-empty-chart><div ng-if=!$ctrl.loadingDone class="spinner spinner-lg loading"></div><pf-heatmap-legend ng-if=$ctrl.showLegend legend=$ctrl.legendLabels legend-colors=$ctrl.heatmapColorPattern></pf-heatmap-legend></div>'), e.put("charts/line/line-chart.html", '<span><pf-c3-chart id={{$ctrl.lineChartId}} ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.chartConfig></pf-c3-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.chartConfig.size.height></pf-empty-chart></span>'),
+    e.put("charts/sparkline/sparkline-chart.html", '<span><pf-c3-chart ng-if="$ctrl.chartData.dataAvailable !== false" id={{$ctrl.sparklineChartId}} config=$ctrl.chartConfig></pf-c3-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.chartHeight></pf-empty-chart></span>'), e.put("charts/trends/trends-chart.html", '<span ng-switch on=$ctrl.config.layout ng-class="{\'data-unavailable-pf\': $ctrl.chartData.dataAvailable === false}"><div ng-switch-default ng-class="{\'trend-card-large-pf\': $ctrl.showLargeCardLayout,\'trend-card-small-pf\': $ctrl.showSmallCardLayout}"><span class=trend-header-pf ng-if=$ctrl.config.title>{{$ctrl.config.title}}</span> <span ng-if=$ctrl.showActualValue><span class=trend-title-big-pf>{{$ctrl.getLatestValue()}}</span> <span class=trend-title-small-pf>{{$ctrl.config.units}}</span></span> <span ng-if=$ctrl.showPercentageValue><span class=trend-title-big-pf>{{$ctrl.getPercentageValue() + \'%\'}}</span> <span class=trend-title-small-pf>of {{$ctrl.chartData.total + \' \' + $ctrl.config.units}}</span></span><pf-sparkline-chart ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.config chart-data=$ctrl.chartData chart-height=$ctrl.getChartHeight() show-x-axis=$ctrl.showXAxis show-y-axis=$ctrl.showYAxis></pf-sparkline-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.getChartHeight()></pf-empty-chart><span class=trend-footer-pf ng-if=$ctrl.config.timeFrame>{{$ctrl.config.timeFrame}}</span></div><div ng-switch-when=compact class=trend-card-compact-pf><div class="row trend-row"><div class=col-sm-2 ng-class="{\'col-sm-push-10\': $ctrl.config.compactLabelPosition === \'right\'}"><div class=trend-compact-details><span ng-if=$ctrl.showActualValue><span class=trend-title-compact-big-pf>{{$ctrl.getLatestValue()}}</span> <span class=trend-title-compact-small-pf>{{$ctrl.config.units}}</span></span> <span ng-if=$ctrl.showPercentageValue><span class=trend-title-compact-big-pf>{{$ctrl.getPercentageValue() + \'%\'}}</span> <span class=trend-title-compact-small-pf>of {{$ctrl.chartData.total + \' \' + $ctrl.config.units}}</span></span> <span class=trend-header-compact-pf ng-if=$ctrl.config.title>{{$ctrl.config.title}}</span></div></div><div class=col-sm-10 ng-class="{\'col-sm-pull-2\': $ctrl.config.compactLabelPosition === \'right\'}"><pf-sparkline-chart ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.config chart-data=$ctrl.chartData chart-height=$ctrl.getChartHeight() show-x-axis=$ctrl.showXAxis show-y-axis=$ctrl.showYAxis></pf-sparkline-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.getChartHeight()></pf-empty-chart></div></div></div><div ng-switch-when=inline class=trend-card-inline-pf><div class="row trend-row"><div class="col-sm-8 trend-flat-col"><pf-sparkline-chart ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.config chart-data=$ctrl.chartData chart-height=$ctrl.getChartHeight() show-x-axis=$ctrl.showXAxis show-y-axis=$ctrl.showYAxis></pf-sparkline-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=$ctrl.getChartHeight()></pf-empty-chart></div><div class="col-sm-4 trend-flat-col"><div class=trend-flat-details><div class=trend-flat-details-cell><span class=trend-title-flat-big-pf>{{$ctrl.getPercentageValue() + \'%\'}}</span></div><div class=trend-flat-details-cell><span class=trend-label-flat-strong-pf>{{$ctrl.config.trendLabel}}</span> <span class=trend-label-flat-pf>{{$ctrl.getLatestValue()}} of {{$ctrl.chartData.total + \' \' + $ctrl.config.units}}</span></div></div></div></div></div></span>'),
+    e.put("charts/utilization-bar/utilization-bar-chart.html", "<div class=utilization-bar-chart-pf ng-class=\"{'data-unavailable-pf': $ctrl.chartData.dataAvailable === false}\"><span ng-if=\"!$ctrl.layout || $ctrl.layout.type === 'regular'\"><div ng-if=$ctrl.chartTitle class=progress-description>{{$ctrl.chartTitle}}</div><div class=\"progress progress-label-top-right\" ng-if=\"$ctrl.chartData.dataAvailable !== false\"><div class=progress-bar aria-valuenow={{$ctrl.chartData.percentageUsed}} aria-valuemin=0 aria-valuemax=100 ng-class=\"{'animate': animate,\n           'progress-bar-success': $ctrl.isOk, 'progress-bar-danger': $ctrl.isError, 'progress-bar-warning': $ctrl.isWarn}\" ng-style=\"{width:$ctrl.chartData.percentageUsed + '%'}\" uib-tooltip-html=\"'{{$ctrl.usedTooltipMessage()}}'\"><span ng-if=$ctrl.chartFooter ng-bind-html=$ctrl.chartFooter></span> <span ng-if=\"!$ctrl.chartFooter && (!$ctrl.footerLabelFormat || $ctrl.footerLabelFormat === 'actual')\"><strong>{{$ctrl.chartData.used}} of {{$ctrl.chartData.total}} {{$ctrl.units}}</strong> Used</span> <span ng-if=\"!$ctrl.chartFooter && $ctrl.footerLabelFormat === 'percent'\"><strong>{{$ctrl.chartData.percentageUsed}}%</strong> Used</span></div><div class=\"progress-bar progress-bar-remaining\" ng-style=\"{width:(100 - $ctrl.chartData.percentageUsed) + '%'}\" uib-tooltip-html=\"'{{$ctrl.availableTooltipMessage()}}'\"></div></div></span> <span ng-if=\"$ctrl.layout && $ctrl.layout.type === 'inline'\"><div class=\"progress-container progress-description-left progress-label-right\" ng-style=\"{'padding-left':$ctrl.layout.titleLabelWidth, 'padding-right':$ctrl.layout.footerLabelWidth}\"><div ng-if=$ctrl.chartTitle class=progress-description ng-style=\"{'max-width':$ctrl.layout.titleLabelWidth}\">{{$ctrl.chartTitle}}</div><div class=progress ng-if=\"$ctrl.chartData.dataAvailable !== false\"><div class=progress-bar aria-valuenow={{$ctrl.chartData.percentageUsed}} aria-valuemin=0 aria-valuemax=100 ng-class=\"{'animate': $ctrl.animate, 'progress-bar-success': $ctrl.isOk, 'progress-bar-danger': $ctrl.isError, 'progress-bar-warning': $ctrl.isWarn}\" ng-style=\"{width:$ctrl.chartData.percentageUsed + '%'}\" uib-tooltip-html=\"'{{$ctrl.usedTooltipMessage()}}'\"><span ng-if=$ctrl.chartFooter ng-bind-html=$ctrl.chartFooter></span> <span ng-if=\"(!$ctrl.chartFooter) && (!$ctrl.footerLabelFormat || $ctrl.footerLabelFormat === 'actual')\" ng-style=\"{'max-width':$ctrl.layout.footerLabelWidth}\"><strong>{{$ctrl.chartData.used}} {{$ctrl.units}}</strong> Used</span> <span ng-if=\"(!$ctrl.chartFooter) && $ctrl.footerLabelFormat === 'percent'\" ng-style=\"{'max-width':$ctrl.layout.footerLabelWidth}\"><strong>{{$ctrl.chartData.percentageUsed}}%</strong> Used</span></div><div class=\"progress-bar progress-bar-remaining\" ng-style=\"{width:(100 - $ctrl.chartData.percentageUsed) + '%'}\" uib-tooltip-html=\"'{{$ctrl.availableTooltipMessage()}}'\"></div></div></div></span><pf-empty-chart ng-if=\"$ctrl.chartData.dataAvailable === false\" chart-height=45></pf-empty-chart></div>"),
     e.put("charts/utilization-trend/utilization-trend-chart.html", '<div class=utilization-trend-chart-pf ng-class="{\'data-unavailable-pf\': $ctrl.chartData.dataAvailable === false}"><h3>{{$ctrl.config.title}}</h3><div class=current-values><h1 class="available-count pull-left">{{$ctrl.currentValue}}</h1><div class="available-text pull-left"><div><span>{{$ctrl.currentText}}</span></div><div><span>of {{$ctrl.chartData.total}} {{$ctrl.config.units}}</span></div></div></div><div class=donut-chart-pf><pf-donut-pct-chart ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.donutConfig data=$ctrl.chartData center-label=$ctrl.centerLabel></pf-donut-pct-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=231></pf-empty-chart></div><div ng-if="$ctrl.chartData.dataAvailable !== false" class=sparkline-chart><pf-sparkline-chart config=$ctrl.sparklineConfig chart-data=$ctrl.chartData chart-height=$ctrl.sparklineChartHeight show-x-axis=$ctrl.showSparklineXAxis show-y-axis=$ctrl.showSparklineYAxis></pf-sparkline-chart></div><span class="pull-left legend-text">{{$ctrl.legendLeftText}}</span> <span class="pull-right legend-text">{{$ctrl.legendRightText}}</span></div>');
     } ]), angular.module("patternfly.filters").run([ "$templateCache", function(e) {
     "use strict";
-    e.put("filters/filter-panel/filter-panel-results.html", '<div class=filter-pf><div class=toolbar-pf-results><h5>{{$ctrl.config.resultsCount}} <span ng-if=$ctrl.config.appliedFilters.length>of {{$ctrl.config.totalCount}}</span> {{$ctrl.config.resultsLabel === undefined ? "Results" : $ctrl.config.resultsLabel}}</h5><p class=filter-pf-active-label ng-if=$ctrl.config.appliedFilters.length>Active filters:</p><ul class=list-inline ng-if=$ctrl.config.appliedFilters.length><li ng-repeat="filter in $ctrl.config.appliedFilters" class=filter-pf-category-item><span class="label pf-filter-category-label" ng-class="{\'label-info\': filter.values.length === 1, \'multiples\': filter.values.length > 1}">{{filter.title}}:<ul class="list-inline filter-pf-category-values"><li ng-repeat="value in filter.values"><span class="label label-info">{{value}} <a href=javascript:void(0);><span ng-click="$ctrl.clearFilter(filter, value)" class="pficon pficon-close"></span></a></span></li></ul></span></li></ul><p><a href=javascript:void(0); ng-click=$ctrl.clearAllFilters() ng-if="$ctrl.config.appliedFilters.length > 0">Clear All Filters</a></p></div></div>'), 
-    e.put("filters/filter-panel/filter-panel.html", '<div class="filter-pf inline-filter-pf"><span class="dropdown primary-action" uib-dropdown><button class="btn btn-default dropdown-toggle" uib-dropdown-toggle type=button>Filter <span class=caret></span></button><div ng-transclude class=dropdown-menu ng-click=$event.stopPropagation()></div></span><pf-filter-panel-results config=$ctrl.config></pf-filter-panel-results></div>'), e.put("filters/simple-filter/filter-fields.html", '<div class="filter-pf filter-fields"><div class="input-group form-group"><div uib-dropdown class=input-group-btn><button ng-if="$ctrl.config.fields.length > 1" uib-dropdown-toggle type=button class="btn btn-default filter-fields" uib-tooltip="Filter by" tooltip-placement=top tooltip-append-to-body=true>{{$ctrl.currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat="item in $ctrl.config.fields" ng-class="{\'selected\': item === $ctrl.currentField}"><a class=filter-field role=menuitem tabindex=-1 ng-click=$ctrl.selectField(item)>{{item.title}}</a></li></ul></div><div ng-if="$ctrl.currentField.filterType !== \'select\' && $ctrl.currentField.filterType !== \'complex-select\'"><input class=form-control type={{$ctrl.currentField.filterType}} ng-model=$ctrl.currentValue placeholder={{$ctrl.currentField.placeholder}} ng-keypress="$ctrl.onValueKeyPress($event)"></div><div ng-if="$ctrl.currentField.filterType === \'select\'"><div class="btn-group bootstrap-select form-control filter-select" uib-dropdown><button type=button uib-dropdown-toggle class="btn btn-default dropdown-toggle"><span class="filter-option pull-left">{{$ctrl.currentValue.title || $ctrl.currentValue || $ctrl.currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.placeholder}}</a></li><li ng-repeat="filterValue in $ctrl.currentField.filterValues" ng-class="{\'selected\': (filterValue === $ctrl.currentValue)}"><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue(filterValue)>{{filterValue.title || filterValue}}</a></li></ul></div></div><div ng-if="$ctrl.currentField.filterType === \'complex-select\'" class=category-select><div class="btn-group bootstrap-select form-control filter-select" uib-dropdown><button type=button uib-dropdown-toggle class="btn btn-default dropdown-toggle"><span class="filter-option pull-left">{{$ctrl.filterCategory.title || $ctrl.filterCategory || $ctrl.currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.placeholder}}</a></li><li ng-repeat="filterCategory in $ctrl.currentField.filterValues" ng-class="{\'selected\': (filterCategory == $ctrl.filterCategory)}"><a role=menuitem tabindex=-1 ng-click="$ctrl.selectValue(filterCategory, \'filter-category\')">{{filterCategory.title ||filterCategory}}</a></li></ul></div><div class="btn-group bootstrap-select form-control filter-select" uib-dropdown><button type=button uib-dropdown-toggle class="btn btn-default dropdown-toggle category-select-value"><span class="filter-option pull-left">{{$ctrl.filterValue.title || $ctrl.filterValue || $ctrl.currentField.filterCategoriesPlaceholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.filterCategoriesPlaceholder}}</a></li><li ng-repeat="filterValue in $ctrl.currentField.filterCategories[$ctrl.filterCategory.id.toLowerCase() || $ctrl.filterCategory.toLowerCase() ].filterValues" ng-class="{\'selected\': filterValue === $ctrl.filterValue}"><a role=menuitem tabindex=-1 ng-click="$ctrl.selectValue(filterValue, \'filter-value\')">{{filterValue.title || filterValue}}</a></li></ul></div></div></div></div>'), 
-    e.put("filters/simple-filter/filter-results.html", '<div class=filter-pf><div class=toolbar-pf-results><span ng-if="$ctrl.config.showTotalCountResults !== true || $ctrl.config.totalCount === undefined || $ctrl.config.appliedFilters.length === 0"><h5 ng-if="$ctrl.config.resultsCount === 1">{{$ctrl.config.resultsCount}} {{$ctrl.config.itemsLabel}}</h5><h5 ng-if="$ctrl.config.resultsCount !== 1">{{$ctrl.config.resultsCount}} {{$ctrl.config.itemsLabelPlural}}</h5></span> <span ng-if="$ctrl.config.showTotalCountResults === true && $ctrl.config.totalCount !== undefined && $ctrl.config.appliedFilters.length > 0"><h5 ng-if="$ctrl.config.totalCount === 1">{{$ctrl.config.resultsCount}} of {{$ctrl.config.totalCount}} {{$ctrl.config.itemsLabel}}</h5><h5 ng-if="$ctrl.config.totalCount !== 1">{{$ctrl.config.resultsCount}} of {{$ctrl.config.totalCount}} {{$ctrl.config.itemsLabelPlural}}</h5></span><p class=filter-pf-active-label ng-if="$ctrl.config.appliedFilters.length > 0">Active Filters:</p><ul class=list-inline ng-if="$ctrl.config.appliedFilters.length > 0"><li ng-repeat="filter in $ctrl.config.appliedFilters"><span class="active-filter label label-info">{{filter.title}}: {{((filter.value.filterCategory.title || filter.value.filterCategory) + filter.value.filterDelimiter + (filter.value.filterValue.title || filter.value.filterValue)) || filter.value.title || filter.value}} <a href=javascript:void(0);><span class="pficon pficon-close" ng-click=$ctrl.clearFilter(filter)></span></a></span></li></ul><p><a href=javascript:void(0); class=clear-filters ng-click=$ctrl.clearAllFilters() ng-if="$ctrl.config.appliedFilters.length > 0">Clear All Filters</a></p><div ng-if="$ctrl.config.selectedCount !== undefined && $ctrl.config.totalCount !== undefined" class=pf-table-view-selected-label><strong>{{$ctrl.config.selectedCount}}</strong> of <strong>{{$ctrl.config.totalCount}}</strong> selected</div></div></div>'), 
+    e.put("filters/filter-panel/filter-panel-results.html", '<div class=filter-pf><div class=toolbar-pf-results><h5>{{$ctrl.config.resultsCount}} <span ng-if=$ctrl.config.appliedFilters.length>of {{$ctrl.config.totalCount}}</span> {{$ctrl.config.resultsLabel === undefined ? "Results" : $ctrl.config.resultsLabel}}</h5><p class=filter-pf-active-label ng-if=$ctrl.config.appliedFilters.length>Active filters:</p><ul class=list-inline ng-if=$ctrl.config.appliedFilters.length><li ng-repeat="filter in $ctrl.config.appliedFilters" class=filter-pf-category-item><span class="label pf-filter-category-label" ng-class="{\'label-info\': filter.values.length === 1, \'multiples\': filter.values.length > 1}">{{filter.title}}:<ul class="list-inline filter-pf-category-values"><li ng-repeat="value in filter.values"><span class="label label-info">{{value}} <a href=javascript:void(0);><span ng-click="$ctrl.clearFilter(filter, value)" class="pficon pficon-close"></span></a></span></li></ul></span></li></ul><p><a href=javascript:void(0); ng-click=$ctrl.clearAllFilters() ng-if="$ctrl.config.appliedFilters.length > 0">Clear All Filters</a></p></div></div>'),
+    e.put("filters/filter-panel/filter-panel.html", '<div class="filter-pf inline-filter-pf"><span class="dropdown primary-action" uib-dropdown><button class="btn btn-default dropdown-toggle" uib-dropdown-toggle type=button>Filter <span class=caret></span></button><div ng-transclude class=dropdown-menu ng-click=$event.stopPropagation()></div></span><pf-filter-panel-results config=$ctrl.config></pf-filter-panel-results></div>'), e.put("filters/simple-filter/filter-fields.html", '<div class="filter-pf filter-fields"><div class="input-group form-group"><div uib-dropdown class=input-group-btn><button ng-if="$ctrl.config.fields.length > 1" uib-dropdown-toggle type=button class="btn btn-default filter-fields" uib-tooltip="Filter by" tooltip-placement=top tooltip-append-to-body=true>{{$ctrl.currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat="item in $ctrl.config.fields" ng-class="{\'selected\': item === $ctrl.currentField}"><a class=filter-field role=menuitem tabindex=-1 ng-click=$ctrl.selectField(item)>{{item.title}}</a></li></ul></div><div ng-if="$ctrl.currentField.filterType !== \'select\' && $ctrl.currentField.filterType !== \'complex-select\'"><input class=form-control type={{$ctrl.currentField.filterType}} ng-model=$ctrl.currentValue placeholder={{$ctrl.currentField.placeholder}} ng-keypress="$ctrl.onValueKeyPress($event)"></div><div ng-if="$ctrl.currentField.filterType === \'select\'"><div class="btn-group bootstrap-select form-control filter-select" uib-dropdown><button type=button uib-dropdown-toggle class="btn btn-default dropdown-toggle"><span class="filter-option pull-left">{{$ctrl.currentValue.title || $ctrl.currentValue || $ctrl.currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.placeholder}}</a></li><li ng-repeat="filterValue in $ctrl.currentField.filterValues" ng-class="{\'selected\': (filterValue === $ctrl.currentValue)}"><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue(filterValue)>{{filterValue.title || filterValue}}</a></li></ul></div></div><div ng-if="$ctrl.currentField.filterType === \'complex-select\'" class=category-select><div class="btn-group bootstrap-select form-control filter-select" uib-dropdown><button type=button uib-dropdown-toggle class="btn btn-default dropdown-toggle"><span class="filter-option pull-left">{{$ctrl.filterCategory.title || $ctrl.filterCategory || $ctrl.currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.placeholder}}</a></li><li ng-repeat="filterCategory in $ctrl.currentField.filterValues" ng-class="{\'selected\': (filterCategory == $ctrl.filterCategory)}"><a role=menuitem tabindex=-1 ng-click="$ctrl.selectValue(filterCategory, \'filter-category\')">{{filterCategory.title ||filterCategory}}</a></li></ul></div><div class="btn-group bootstrap-select form-control filter-select" uib-dropdown><button type=button uib-dropdown-toggle class="btn btn-default dropdown-toggle category-select-value"><span class="filter-option pull-left">{{$ctrl.filterValue.title || $ctrl.filterValue || $ctrl.currentField.filterCategoriesPlaceholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.filterCategoriesPlaceholder}}</a></li><li ng-repeat="filterValue in $ctrl.currentField.filterCategories[$ctrl.filterCategory.id.toLowerCase() || $ctrl.filterCategory.toLowerCase() ].filterValues" ng-class="{\'selected\': filterValue === $ctrl.filterValue}"><a role=menuitem tabindex=-1 ng-click="$ctrl.selectValue(filterValue, \'filter-value\')">{{filterValue.title || filterValue}}</a></li></ul></div></div></div></div>'),
+    e.put("filters/simple-filter/filter-results.html", '<div class=filter-pf><div class=toolbar-pf-results><span ng-if="$ctrl.config.showTotalCountResults !== true || $ctrl.config.totalCount === undefined || $ctrl.config.appliedFilters.length === 0"><h5 ng-if="$ctrl.config.resultsCount === 1">{{$ctrl.config.resultsCount}} {{$ctrl.config.itemsLabel}}</h5><h5 ng-if="$ctrl.config.resultsCount !== 1">{{$ctrl.config.resultsCount}} {{$ctrl.config.itemsLabelPlural}}</h5></span> <span ng-if="$ctrl.config.showTotalCountResults === true && $ctrl.config.totalCount !== undefined && $ctrl.config.appliedFilters.length > 0"><h5 ng-if="$ctrl.config.totalCount === 1">{{$ctrl.config.resultsCount}} of {{$ctrl.config.totalCount}} {{$ctrl.config.itemsLabel}}</h5><h5 ng-if="$ctrl.config.totalCount !== 1">{{$ctrl.config.resultsCount}} of {{$ctrl.config.totalCount}} {{$ctrl.config.itemsLabelPlural}}</h5></span><p class=filter-pf-active-label ng-if="$ctrl.config.appliedFilters.length > 0">Active Filters:</p><ul class=list-inline ng-if="$ctrl.config.appliedFilters.length > 0"><li ng-repeat="filter in $ctrl.config.appliedFilters"><span class="active-filter label label-info">{{filter.title}}: {{((filter.value.filterCategory.title || filter.value.filterCategory) + filter.value.filterDelimiter + (filter.value.filterValue.title || filter.value.filterValue)) || filter.value.title || filter.value}} <a href=javascript:void(0);><span class="pficon pficon-close" ng-click=$ctrl.clearFilter(filter)></span></a></span></li></ul><p><a href=javascript:void(0); class=clear-filters ng-click=$ctrl.clearAllFilters() ng-if="$ctrl.config.appliedFilters.length > 0">Clear All Filters</a></p><div ng-if="$ctrl.config.selectedCount !== undefined && $ctrl.config.totalCount !== undefined" class=pf-table-view-selected-label><strong>{{$ctrl.config.selectedCount}}</strong> of <strong>{{$ctrl.config.totalCount}}</strong> selected</div></div></div>'),
     e.put("filters/simple-filter/filter.html", "<div class=filter-pf ng-class=\"{'inline-filter-pf': $ctrl.config.inlineResults === true}\"><pf-filter-fields config=$ctrl.config add-filter-fn=$ctrl.addFilter></pf-filter-fields><pf-filter-results config=$ctrl.config></pf-filter-results></div>");
     } ]), angular.module("patternfly.form").run([ "$templateCache", function(e) {
     "use strict";
@@ -52897,12 +52897,12 @@ function aa(e) {
     e.put("modals/about-modal.html", '<script type=text/ng-template id=about-modal-template.html><div class="about-modal-pf">\n    <div class="modal-header">\n      <button type="button" class="close" ng-click="$ctrl.close()" aria-hidden="true">\n        <span class="pficon pficon-close"></span>\n      </button>\n    </div>\n    <div class="modal-body">\n      <h1 ng-if="$ctrl.title">{{$ctrl.title}}</h1>\n      <div ng-if="$ctrl.productInfo && $ctrl.productInfo.length > 0" class="product-versions-pf">\n        <ul class="list-unstyled">\n          <li ng-repeat="info in $ctrl.productInfo"><strong>{{info.name}}</strong> {{info.value}}</li>\n        </ul>\n      </div>\n      <div pf-about-modal-transclude="$ctrl.template" class="product-versions-pf"></div>\n      <div ng-if="$ctrl.additionalInfo" class="product-versions-pf">{{$ctrl.additionalInfo}}</div>\n      <div ng-if="$ctrl.copyright" class="trademark-pf">{{$ctrl.copyright}}</div>\n    </div>\n    <div class="modal-footer">\n      <img ng-if="$ctrl.imgSrc" ng-src="{{$ctrl.imgSrc}}" alt="{{$ctrl.imgAlt}}"/>\n    </div>\n  </div><\/script>');
     } ]), angular.module("patternfly.navigation").run([ "$templateCache", function(e) {
     "use strict";
-    e.put("navigation/application-launcher.html", '<div><div class="applauncher-pf dropdown dropdown-kebab-pf" ng-class="{\'applauncher-pf-block-list\': !$ctrl.isList}" uib-dropdown uib-keyboard-nav=true><a id=domain-switcher-{{$ctrl.$id}} class="dropdown-toggle drawer-pf-trigger-icon" uib-dropdown-toggle ng-class="{\'disabled\': $ctrl.isDisabled || !$ctrl.items.length}" href><i class="fa fa-th applauncher-pf-icon" aria-hidden=true></i> <span class=applauncher-pf-title>{{$ctrl.label || \'Application Launcher\'}} <span class=caret aria-hidden=true></span></span></a><ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role=menu aria-labelledby=domain-switcher-{{$ctrl.$id}}><li class=applauncher-pf-item role=menuitem ng-repeat="item in $ctrl.items"><a class=applauncher-pf-link ng-href={{item.href}} target="{{item.target || \'_blank\'}}" title={{item.tooltip}}><i class="applauncher-pf-link-icon pficon" ng-class=item.iconClass ng-if=!$ctrl.hiddenIcons aria-hidden=true></i> <span class=applauncher-pf-link-title>{{item.title}}</span></a></li></ul></div></div>'), 
+    e.put("navigation/application-launcher.html", '<div><div class="applauncher-pf dropdown dropdown-kebab-pf" ng-class="{\'applauncher-pf-block-list\': !$ctrl.isList}" uib-dropdown uib-keyboard-nav=true><a id=domain-switcher-{{$ctrl.$id}} class="dropdown-toggle drawer-pf-trigger-icon" uib-dropdown-toggle ng-class="{\'disabled\': $ctrl.isDisabled || !$ctrl.items.length}" href><i class="fa fa-th applauncher-pf-icon" aria-hidden=true></i> <span class=applauncher-pf-title>{{$ctrl.label || \'Application Launcher\'}} <span class=caret aria-hidden=true></span></span></a><ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role=menu aria-labelledby=domain-switcher-{{$ctrl.$id}}><li class=applauncher-pf-item role=menuitem ng-repeat="item in $ctrl.items"><a class=applauncher-pf-link ng-href={{item.href}} target="{{item.target || \'_blank\'}}" title={{item.tooltip}}><i class="applauncher-pf-link-icon pficon" ng-class=item.iconClass ng-if=!$ctrl.hiddenIcons aria-hidden=true></i> <span class=applauncher-pf-link-title>{{item.title}}</span></a></li></ul></div></div>'),
     e.put("navigation/vertical-navigation.html", "<div><nav class=\"navbar navbar-pf-vertical\"><div class=navbar-header><button type=button class=navbar-toggle ng-click=$ctrl.handleNavBarToggleClick()><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button> <span class=navbar-brand><img class=navbar-brand-icon ng-if=$ctrl.brandSrc ng-src={{$ctrl.brandSrc}} alt=\"{{$ctrl.brandAlt}}\"> <span class=navbar-brand-txt ng-if=!$ctrl.brandSrc>{{$ctrl.brandAlt}}</span></span></div><nav class=\"collapse navbar-collapse\" ng-transclude></nav><div class=nav-pf-vertical ng-class=\"{'nav-pf-persistent-secondary': $ctrl.persistentSecondary,\n                    'nav-pf-vertical-collapsible-menus': $ctrl.pinnableMenus,\n                    'hidden-icons-pf': $ctrl.hiddenIcons,\n                    'nav-pf-vertical-with-badges': $ctrl.showBadges,\n                    'secondary-visible-pf': $ctrl.activeSecondary,\n                    'show-mobile-secondary': $ctrl.showMobileSecondary,\n                    'show-mobile-tertiary': $ctrl.showMobileTertiary,\n                    'hover-secondary-nav-pf': $ctrl.hoverSecondaryNav,\n                    'hover-tertiary-nav-pf': $ctrl.hoverTertiaryNav,\n                    'collapsed-secondary-nav-pf': $ctrl.collapsedSecondaryNav,\n                    'collapsed-tertiary-nav-pf': $ctrl.collapsedTertiaryNav,\n                    'hidden': $ctrl.inMobileState,\n                    'collapsed': $ctrl.navCollapsed,\n                    'force-hide-secondary-nav-pf': $ctrl.forceHidden,\n                    'show-mobile-nav': $ctrl.showMobileNav}\"><ul class=list-group><li ng-repeat=\"item in $ctrl.items\" class=list-group-item ng-class=\"{'secondary-nav-item-pf': item.children && item.children.length > 0,\n                       'active': item.isActive,\n                       'is-hover': item.isHover,\n                       'mobile-nav-item-pf': item.isMobileItem && $ctrl.showMobileSecondary,\n" + '                       \'mobile-secondary-item-pf\': item.isMobileItem && $ctrl.showMobileTertiary}" ng-mouseenter=$ctrl.handlePrimaryHover(item) ng-mouseleave=$ctrl.handlePrimaryUnHover(item)><a ng-click="$ctrl.handlePrimaryClick(item, $event)"><span class={{item.iconClass}} ng-if=item.iconClass ng-class="{hidden: $ctrl.hiddenIcons}" uib-tooltip={{item.title}} tooltip-append-to-body=true tooltip-enable={{$ctrl.navCollapsed}} tooltip-placement=bottom tooltip-class=nav-pf-vertical-tooltip></span> <span class=list-group-item-value>{{item.title}}</span><div ng-if="$ctrl.showBadges && item.badges" class=badge-container-pf><div class="badge {{badge.badgeClass}}" ng-repeat="badge in item.badges" uib-tooltip={{badge.tooltip}} tooltip-append-to-body=true tooltip-placement=right><span ng-if="badge.count && badge.iconClass" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a><div ng-if="item.children && item.children.length > 0" class=nav-pf-secondary-nav><div class=nav-item-pf-header><a class=secondary-collapse-toggle-pf ng-click="$ctrl.collapseSecondaryNav(item, $event)" ng-class="{\'collapsed\': item.secondaryCollapsed}"></a> <span>{{item.title}}</span></div><ul class=list-group><li ng-repeat="secondaryItem in item.children" class=list-group-item ng-class="{\'tertiary-nav-item-pf\': secondaryItem.children && secondaryItem.children.length > 0,\n                             \'active\': secondaryItem.isActive,\n                             \'is-hover\': secondaryItem.isHover,\n                             \'mobile-nav-item-pf\': secondaryItem.isMobileItem}" ng-mouseenter=$ctrl.handleSecondaryHover(secondaryItem) ng-mouseleave=$ctrl.handleSecondaryUnHover(secondaryItem)><a ng-click="$ctrl.handleSecondaryClick(item, secondaryItem, $event)"><span class=list-group-item-value>{{secondaryItem.title}}</span><div ng-if="$ctrl.showBadges && secondaryItem.badges" class=badge-container-pf><div class="badge {{badge.badgeClass}}" ng-repeat="badge in secondaryItem.badges" uib-tooltip={{badge.tooltip}} tooltip-append-to-body=true tooltip-placement=right><span ng-if="badge.count && badge.iconClass" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a><div ng-if="secondaryItem.children && secondaryItem.children.length > 0" class=nav-pf-tertiary-nav><div class=nav-item-pf-header><a class=tertiary-collapse-toggle-pf ng-click="$ctrl.collapseTertiaryNav(secondaryItem, $event)" ng-class="{\'collapsed\': secondaryItem.tertiaryCollapsed}"></a> <span>{{secondaryItem.title}}</span></div><ul class=list-group><li ng-repeat="tertiaryItem in secondaryItem.children" class=list-group-item ng-class="{\'active\': tertiaryItem.isActive}"><a ng-click="$ctrl.handleTertiaryClick(item, secondaryItem, tertiaryItem, $event)"><span class=list-group-item-value>{{tertiaryItem.title}}</span><div ng-if="$ctrl.showBadges && tertiaryItem.badges" class=badge-container-pf><div class="badge {{badge.badgeClass}}" ng-repeat="badge in tertiaryItem.badges" uib-tooltip={{badge.tooltip}} tooltip-append-to-body=true tooltip-placement=right><span ng-if="badge.count && badge.iconClass" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a></li></ul></div></li></ul></div></li></ul></div></nav></div>');
     } ]), angular.module("patternfly.notification").run([ "$templateCache", function(e) {
     "use strict";
-    e.put("notification/inline-notification.html", '<div class="alert alert-{{$ctrl.pfNotificationType}}" ng-class="{\'alert-dismissable\': $ctrl.pfNotificationPersistent === true}"><button ng-show=$ctrl.pfNotificationPersistent ng-click=$ctrl.pfNotificationRemove() type=button class=close data-dismiss=alert aria-hidden=true><span class="pficon pficon-close"></span></button> <span class="pficon pficon-ok" ng-show="$ctrl.pfNotificationType === \'success\'"></span> <span class="pficon pficon-info" ng-show="$ctrl.pfNotificationType === \'info\'"></span> <span class="pficon pficon-error-circle-o" ng-show="$ctrl.pfNotificationType === \'danger\'"></span> <span class="pficon pficon-warning-triangle-o" ng-show="$ctrl.pfNotificationType === \'warning\'"></span> <strong>{{$ctrl.pfNotificationHeader}}</strong> {{$ctrl.pfNotificationMessage}}</div>'), e.put("notification/notification-drawer.html", '<div class=drawer-pf ng-class="{\'hide\': $ctrl.drawerHidden, \'drawer-pf-expanded\': $ctrl.drawerExpanded}"><div ng-if=$ctrl.drawerTitle class=drawer-pf-title><a href="" ng-if=$ctrl.allowExpand class="drawer-pf-toggle-expand fa fa-angle-double-left hidden-xs" ng-click=$ctrl.toggleExpandDrawer()></a> <a href="" ng-if=$ctrl.onClose class="drawer-pf-close pficon pficon-close" ng-click=$ctrl.onClose()></a><h3 class=text-center>{{$ctrl.drawerTitle}}</h3></div><div ng-if=$ctrl.titleInclude class=drawer-pf-title ng-include src=$ctrl.titleInclude></div><div ng-if=!$ctrl.notificationGroups class=apf-blank-notification-groups><pf-empty-state config=$ctrl.emptyStateConfig></pf-empty-state></div><div ng-if=$ctrl.notificationGroups pf-fixed-accordion scroll-selector=.panel-body><div class=panel-group><div class="panel panel-default" ng-repeat="notificationGroup in $ctrl.notificationGroups track by $index"><div class=panel-heading><h4 class=panel-title><a ng-if=!$ctrl.singleGroup ng-click=$ctrl.toggleCollapse(notificationGroup) ng-class="{collapsed: !notificationGroup.open}" ng-include src=$ctrl.headingInclude></a> <span ng-if=$ctrl.singleGroup ng-include src=$ctrl.headingInclude></span></h4><span class=panel-counter ng-include src=$ctrl.subheadingInclude></span></div><div class="panel-collapse collapse" ng-class="{in: notificationGroup.open || $ctrl.notificationGroups.length === 1}"><div ng-if=$ctrl.hasNotifications(notificationGroup) class=panel-body><div class=drawer-pf-notification ng-class="{unread: notification.unread, \'expanded-notification\': $ctrl.drawerExpanded}" ng-repeat="notification in notificationGroup.notifications track by $ctrl.notificationTrackField ? notification[$ctrl.notificationTrackField] || $index : $index" ng-include src=$ctrl.notificationBodyInclude></div><div ng-if=notificationGroup.isLoading class="drawer-pf-loading text-center"><span class="spinner spinner-xs spinner-inline"></span> Loading More</div></div><div ng-if="($ctrl.showClearAll || $ctrl.showMarkAllRead) && $ctrl.hasNotifications(notificationGroup)" class=drawer-pf-action><span class=drawer-pf-action-link ng-if="$ctrl.showMarkAllRead && $ctrl.hasUnread(notificationGroup)"><button class="btn btn-link" ng-click=$ctrl.onMarkAllRead(notificationGroup)>Mark All Read</button></span> <span class=drawer-pf-action-link><button class="btn btn-link" ng-if=$ctrl.showClearAll ng-click=$ctrl.onClearAll(notificationGroup)><span class="pficon pficon-close"></span> Clear All</button></span></div><div ng-if="$ctrl.actionButtonTitle && $ctrl.hasNotifications(notificationGroup)" class=drawer-pf-action><a class="btn btn-link btn-block" ng-click=$ctrl.actionButtonCallback(notificationGroup)>{{$ctrl.actionButtonTitle}}</a></div><div ng-if=!$ctrl.hasNotifications(notificationGroup)><div class=panel-body><pf-empty-state config=notificationGroup.emptyStateConfig></pf-empty-state></div></div><div ng-if=$ctrl.notificationFooterInclude ng-include src=$ctrl.notificationFooterInclude></div></div></div></div></div></div>'), 
-    e.put("notification/notification-list.html", '<div data-ng-show="$ctrl.notifications.data.length > 0"><div ng-repeat="notification in $ctrl.notifications.data"><pf-inline-notification pf-notification-type=notification.type pf-notification-header=notification.header pf-notification-message=notification.message pf-notification-persistent=notification.isPersistent pf-notification-index=$index></pf-inline-notification></div></div>'), e.put("notification/toast-notification-list.html", '<div class=toast-notifications-list-pf data-ng-show="$ctrl.notifications.length > 0"><div ng-repeat="notification in $ctrl.notifications"><pf-toast-notification notification-type={{notification.type}} header={{notification.header}} message={{notification.message}} show-close="{{($ctrl.showClose || notification.isPersistent === true) && !(notification.menuActions && notification.menuActions.length > 0)}}" html-content=$ctrl.htmlContent close-callback=$ctrl.handleClose action-title={{notification.actionTitle}} action-callback=notification.actionCallback menu-actions=notification.menuActions update-viewing=$ctrl.handleViewingChange data=notification></pf-toast-notification></div></div>'), 
+    e.put("notification/inline-notification.html", '<div class="alert alert-{{$ctrl.pfNotificationType}}" ng-class="{\'alert-dismissable\': $ctrl.pfNotificationPersistent === true}"><button ng-show=$ctrl.pfNotificationPersistent ng-click=$ctrl.pfNotificationRemove() type=button class=close data-dismiss=alert aria-hidden=true><span class="pficon pficon-close"></span></button> <span class="pficon pficon-ok" ng-show="$ctrl.pfNotificationType === \'success\'"></span> <span class="pficon pficon-info" ng-show="$ctrl.pfNotificationType === \'info\'"></span> <span class="pficon pficon-error-circle-o" ng-show="$ctrl.pfNotificationType === \'danger\'"></span> <span class="pficon pficon-warning-triangle-o" ng-show="$ctrl.pfNotificationType === \'warning\'"></span> <strong>{{$ctrl.pfNotificationHeader}}</strong> {{$ctrl.pfNotificationMessage}}</div>'), e.put("notification/notification-drawer.html", '<div class=drawer-pf ng-class="{\'hide\': $ctrl.drawerHidden, \'drawer-pf-expanded\': $ctrl.drawerExpanded}"><div ng-if=$ctrl.drawerTitle class=drawer-pf-title><a href="" ng-if=$ctrl.allowExpand class="drawer-pf-toggle-expand fa fa-angle-double-left hidden-xs" ng-click=$ctrl.toggleExpandDrawer()></a> <a href="" ng-if=$ctrl.onClose class="drawer-pf-close pficon pficon-close" ng-click=$ctrl.onClose()></a><h3 class=text-center>{{$ctrl.drawerTitle}}</h3></div><div ng-if=$ctrl.titleInclude class=drawer-pf-title ng-include src=$ctrl.titleInclude></div><div ng-if=!$ctrl.notificationGroups class=apf-blank-notification-groups><pf-empty-state config=$ctrl.emptyStateConfig></pf-empty-state></div><div ng-if=$ctrl.notificationGroups pf-fixed-accordion scroll-selector=.panel-body><div class=panel-group><div class="panel panel-default" ng-repeat="notificationGroup in $ctrl.notificationGroups track by $index"><div class=panel-heading><h4 class=panel-title><a ng-if=!$ctrl.singleGroup ng-click=$ctrl.toggleCollapse(notificationGroup) ng-class="{collapsed: !notificationGroup.open}" ng-include src=$ctrl.headingInclude></a> <span ng-if=$ctrl.singleGroup ng-include src=$ctrl.headingInclude></span></h4><span class=panel-counter ng-include src=$ctrl.subheadingInclude></span></div><div class="panel-collapse collapse" ng-class="{in: notificationGroup.open || $ctrl.notificationGroups.length === 1}"><div ng-if=$ctrl.hasNotifications(notificationGroup) class=panel-body><div class=drawer-pf-notification ng-class="{unread: notification.unread, \'expanded-notification\': $ctrl.drawerExpanded}" ng-repeat="notification in notificationGroup.notifications track by $ctrl.notificationTrackField ? notification[$ctrl.notificationTrackField] || $index : $index" ng-include src=$ctrl.notificationBodyInclude></div><div ng-if=notificationGroup.isLoading class="drawer-pf-loading text-center"><span class="spinner spinner-xs spinner-inline"></span> Loading More</div></div><div ng-if="($ctrl.showClearAll || $ctrl.showMarkAllRead) && $ctrl.hasNotifications(notificationGroup)" class=drawer-pf-action><span class=drawer-pf-action-link ng-if="$ctrl.showMarkAllRead && $ctrl.hasUnread(notificationGroup)"><button class="btn btn-link" ng-click=$ctrl.onMarkAllRead(notificationGroup)>Mark All Read</button></span> <span class=drawer-pf-action-link><button class="btn btn-link" ng-if=$ctrl.showClearAll ng-click=$ctrl.onClearAll(notificationGroup)><span class="pficon pficon-close"></span> Clear All</button></span></div><div ng-if="$ctrl.actionButtonTitle && $ctrl.hasNotifications(notificationGroup)" class=drawer-pf-action><a class="btn btn-link btn-block" ng-click=$ctrl.actionButtonCallback(notificationGroup)>{{$ctrl.actionButtonTitle}}</a></div><div ng-if=!$ctrl.hasNotifications(notificationGroup)><div class=panel-body><pf-empty-state config=notificationGroup.emptyStateConfig></pf-empty-state></div></div><div ng-if=$ctrl.notificationFooterInclude ng-include src=$ctrl.notificationFooterInclude></div></div></div></div></div></div>'),
+    e.put("notification/notification-list.html", '<div data-ng-show="$ctrl.notifications.data.length > 0"><div ng-repeat="notification in $ctrl.notifications.data"><pf-inline-notification pf-notification-type=notification.type pf-notification-header=notification.header pf-notification-message=notification.message pf-notification-persistent=notification.isPersistent pf-notification-index=$index></pf-inline-notification></div></div>'), e.put("notification/toast-notification-list.html", '<div class=toast-notifications-list-pf data-ng-show="$ctrl.notifications.length > 0"><div ng-repeat="notification in $ctrl.notifications"><pf-toast-notification notification-type={{notification.type}} header={{notification.header}} message={{notification.message}} show-close="{{($ctrl.showClose || notification.isPersistent === true) && !(notification.menuActions && notification.menuActions.length > 0)}}" html-content=$ctrl.htmlContent close-callback=$ctrl.handleClose action-title={{notification.actionTitle}} action-callback=notification.actionCallback menu-actions=notification.menuActions update-viewing=$ctrl.handleViewingChange data=notification></pf-toast-notification></div></div>'),
     e.put("notification/toast-notification.html", '<div class="toast-pf alert alert-{{$ctrl.notificationType}}" ng-class="{\'alert-dismissable\': $ctrl.showCloseButton}" ng-mouseenter=$ctrl.handleEnter() ng-mouseleave=$ctrl.handleLeave()><div uib-dropdown class="pull-right dropdown-kebab-pf" ng-if="$ctrl.menuActions && $ctrl.menuActions.length > 0"><button uib-dropdown-toggle class="btn btn-link" type=button id=dropdownKebabRight><span class="fa fa-ellipsis-v"></span></button><ul uib-dropdown-menu class=dropdown-menu-right aria-labelledby=dropdownKebabRight><li ng-repeat="menuAction in $ctrl.menuActions" role="{{menuAction.isSeparator === true ? \'separator\' : \'menuitem\'}}" ng-class="{\'divider\': menuAction.isSeparator === true, \'disabled\': menuAction.isDisabled === true}"><a ng-if="menuAction.isSeparator !== true" class=secondary-action title={{menuAction.title}} ng-click=$ctrl.handleMenuAction(menuAction)>{{menuAction.name}}</a></li></ul></div><button ng-if=$ctrl.showCloseButton type=button class=close aria-hidden=true ng-click=$ctrl.handleClose()><span class="pficon pficon-close"></span></button><div class="pull-right toast-pf-action" ng-if=$ctrl.actionTitle><a ng-click=$ctrl.handleAction()>{{$ctrl.actionTitle}}</a></div><span class="pficon pficon-ok" ng-if="$ctrl.notificationType === \'success\'"></span> <span class="pficon pficon-info" ng-if="$ctrl.notificationType === \'info\'"></span> <span class="pficon pficon-error-circle-o" ng-if="$ctrl.notificationType === \'danger\'"></span> <span class="pficon pficon-warning-triangle-o" ng-if="$ctrl.notificationType === \'warning\'"></span> <span ng-if=!$ctrl.htmlContent><strong ng-if=$ctrl.header ng-bind=$ctrl.header></strong> <span ng-bind=$ctrl.message></span></span> <span ng-if=$ctrl.htmlContent><strong ng-if=$ctrl.header ng-bind-html=$ctrl.trustAsHtml($ctrl.header)></strong> <span ng-bind-html=$ctrl.trustAsHtml($ctrl.message)></span></span></div>');
     } ]), angular.module("patternfly.pagination").run([ "$templateCache", function(e) {
     "use strict";
@@ -52921,17 +52921,17 @@ function aa(e) {
     e.put("toolbars/toolbar.html", '<div class=container-fluid><div class="row toolbar-pf" ng-class="{\'table-view-pf-toolbar\': $ctrl.isTableViewSelected()}"><div class=col-sm-12><form class=toolbar-pf-actions ng-class="{\'no-filter\': !$ctrl.config.filterConfig}"><div class="form-group toolbar-apf-filter"><pf-filter-fields config=$ctrl.config.filterConfig ng-if=$ctrl.config.filterConfig add-filter-fn=$ctrl.addFilter></pf-filter-fields></div><div class=form-group><pf-sort config=$ctrl.config.sortConfig ng-if="$ctrl.config.sortConfig && $ctrl.config.sortConfig.show"></pf-sort></div><div class="form-group toolbar-actions" ng-if="$ctrl.config.actionsConfig &&\n                   (($ctrl.config.actionsConfig.primaryActions && $ctrl.config.actionsConfig.primaryActions.length > 0) ||\n                    ($ctrl.config.actionsConfig.moreActions && $ctrl.config.actionsConfig.moreActions.length > 0) ||\n                    $ctrl.config.actionsConfig.actionsInclude)"><button class="btn btn-default primary-action" type=button ng-repeat="action in $ctrl.config.actionsConfig.primaryActions" title={{action.title}} ng-click=$ctrl.handleAction(action) ng-disabled="action.isDisabled === true">{{action.name}}</button><div ng-if=$ctrl.config.actionsConfig.actionsInclude pf-transclude class=toolbar-pf-include-actions ng-tranclude=actions></div><div uib-dropdown class=dropdown-kebab-pf ng-if="$ctrl.config.actionsConfig.moreActions && $ctrl.config.actionsConfig.moreActions.length > 0"><button uib-dropdown-toggle class="btn btn-link" type=button><span class="fa fa-ellipsis-v"></span></button><ul uib-dropdown-menu aria-labelledby=dropdownKebab><li ng-repeat="action in $ctrl.config.actionsConfig.moreActions" role="{{action.isSeparator === true ? \'separator\' : \'menuitem\'}}" ng-class="{\'divider\': action.isSeparator === true, \'disabled\': action.isDisabled === true}"><a ng-if="action.isSeparator !== true" class=secondary-action title={{action.title}} ng-click=$ctrl.handleAction(action)>{{action.name}}</a></li></ul></div></div><div class=toolbar-pf-action-right><div class="form-group toolbar-pf-view-selector" ng-if="$ctrl.config.viewsConfig && $ctrl.config.viewsConfig.views"><button ng-repeat="view in $ctrl.config.viewsConfig.viewsList" class="btn btn-link" ng-class="{\'active\': $ctrl.isViewSelected(view.id), \'disabled\': $ctrl.checkViewDisabled(view)}" title={{view.title}} ng-click=$ctrl.viewSelected(view.id)><i class={{view.iconClass}}></i></button></div></div></form><pf-filter-results config=$ctrl.config.filterConfig ng-if=$ctrl.config.filterConfig></pf-filter-results></div></div></div>');
     } ]), angular.module("patternfly.views").run([ "$templateCache", function(e) {
     "use strict";
-    e.put("views/cardview/card-view.html", '<span><div ng-if="$ctrl.config.itemsAvailable !== false" class=card-view-pf><div class=card ng-repeat="item in $ctrl.items | startFrom:($ctrl.pageConfig.pageNumber - 1)*$ctrl.pageConfig.pageSize | limitTo:$ctrl.pageConfig.pageSize" ng-class="{\'pf-selectable\': $ctrl.selectItems, \'active\': $ctrl.isSelected(item), \'disabled\': $ctrl.checkDisabled(item)}"><div class=card-content ng-click="$ctrl.itemClick($event, item)" ng-dblclick="$ctrl.dblClick($event, item)"><div pf-transclude=parent></div></div><div class=card-check-box ng-if=$ctrl.config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=$ctrl.checkDisabled(item) ng-change="$ctrl.checkBoxChange(item)"></div></div></div><pf-pagination ng-if="$ctrl.pageConfig.showPaginationControls && $ctrl.config.itemsAvailable === true" page-size=$ctrl.pageConfig.pageSize page-size-increments=$ctrl.pageConfig.pageSizeIncrements page-number=$ctrl.pageConfig.pageNumber num-total-items=$ctrl.pageConfig.numTotalItems></pf-pagination><pf-empty-state ng-if="$ctrl.config.itemsAvailable === false" config=$ctrl.emptyStateConfig action-buttons=$ctrl.emptyStateActionButtons></pf-empty-state></span>'), 
-    e.put("views/empty-state.html", '<div class=blank-slate-pf><div ng-if=$ctrl.config.icon class=blank-slate-pf-icon><span class={{$ctrl.config.icon}}></span></div><h4 id=blank-state-pf-title-{{$id}} class="h1 blank-state-pf-title">{{$ctrl.config.title}}</h4><p id=blank-state-pf-info-{{$id}} class=blank-state-pf-info ng-if=$ctrl.config.info>{{$ctrl.config.info}}</p><p id=blank-state-pf-helpLink-{{$id}} class=blank-state-pf-helpLink-label ng-if=$ctrl.config.helpLink>{{$ctrl.config.helpLink.label}} <a ng-if=$ctrl.config.helpLink.url class=blank-state-pf-helpLink ng-click=$ctrl.config.helpLink.urlAction() href={{$ctrl.config.helpLink.url}}>{{$ctrl.config.helpLink.urlLabel}}</a> <button ng-if=!$ctrl.config.helpLink.url class="btn blank-state-pf-helpbutton btn-link" ng-click=$ctrl.config.helpLink.urlAction()>{{$ctrl.config.helpLink.urlLabel}}</button></p><div ng-if=$ctrl.hasMainActions() class=blank-slate-pf-main-action><button class="btn btn-primary btn-lg" ng-repeat="actionButton in $ctrl.actionButtons | filter:$ctrl.filterMainActions" title={{actionButton.title}} ng-click=$ctrl.handleButtonAction(actionButton)>{{actionButton.name}}</button></div><div ng-if=$ctrl.hasSecondaryActions() class=blank-slate-pf-secondary-action><button class="btn btn-default" ng-repeat="actionButton in $ctrl.actionButtons | filter:$ctrl.filterSecondaryActions" title={{actionButton.title}} ng-click=$ctrl.handleButtonAction(actionButton)>{{actionButton.name}}</button></div></div>'), 
-    e.put("views/listview/examples/clusters-content.html", "<div class=row><div class=col-md-12>Clusters for {{$ctrl.item.name}}</div><div class=col-md-3><ul><li>Cluster 1</li><li>Cluster 2</li><li>Cluster 3</li><li>Cluster 4</li><li>Cluster 5</li><li>Cluster 6</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"), 
-    e.put("views/listview/examples/hosts-content.html", "<div class=row><div class=col-md-12>Hosts for {{$ctrl.item.name}}</div><div class=col-md-3><ul><li>Host 1</li><li>Host 2</li><li>Host 3</li><li>Host 4</li><li>Host 5</li><li>Host 6</li><li>Host 7</li><li>Host 8</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"), 
-    e.put("views/listview/examples/images-content.html", "<div class=row><div class=col-md-12>Images for {{$ctrl.item.name}}</div><div class=col-md-3><ul><li>Image 1</li><li>Image 2</li><li>Image 3</li><li>Image 4</li><li>Image 5</li><li>Image 6</li><li>Image 7</li><li>Image 8</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"), 
-    e.put("views/listview/examples/nodes-content.html", "<div class=row><div class=col-md-12>Nodes for {{$ctrl.item.name}}</div><div class=col-md-3><ul><li>Node 1</li><li>Node 2</li><li>Node 3</li><li>Node 4</li><li>Node 5</li><li>Node 6</li><li>Node 7</li><li>Node 8</li><li>Node 9</li><li>Node 10</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"), 
+    e.put("views/cardview/card-view.html", '<span><div ng-if="$ctrl.config.itemsAvailable !== false" class=card-view-pf><div class=card ng-repeat="item in $ctrl.items | startFrom:($ctrl.pageConfig.pageNumber - 1)*$ctrl.pageConfig.pageSize | limitTo:$ctrl.pageConfig.pageSize" ng-class="{\'pf-selectable\': $ctrl.selectItems, \'active\': $ctrl.isSelected(item), \'disabled\': $ctrl.checkDisabled(item)}"><div class=card-content ng-click="$ctrl.itemClick($event, item)" ng-dblclick="$ctrl.dblClick($event, item)"><div pf-transclude=parent></div></div><div class=card-check-box ng-if=$ctrl.config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=$ctrl.checkDisabled(item) ng-change="$ctrl.checkBoxChange(item)"></div></div></div><pf-pagination ng-if="$ctrl.pageConfig.showPaginationControls && $ctrl.config.itemsAvailable === true" page-size=$ctrl.pageConfig.pageSize page-size-increments=$ctrl.pageConfig.pageSizeIncrements page-number=$ctrl.pageConfig.pageNumber num-total-items=$ctrl.pageConfig.numTotalItems></pf-pagination><pf-empty-state ng-if="$ctrl.config.itemsAvailable === false" config=$ctrl.emptyStateConfig action-buttons=$ctrl.emptyStateActionButtons></pf-empty-state></span>'),
+    e.put("views/empty-state.html", '<div class=blank-slate-pf><div ng-if=$ctrl.config.icon class=blank-slate-pf-icon><span class={{$ctrl.config.icon}}></span></div><h4 id=blank-state-pf-title-{{$id}} class="h1 blank-state-pf-title">{{$ctrl.config.title}}</h4><p id=blank-state-pf-info-{{$id}} class=blank-state-pf-info ng-if=$ctrl.config.info>{{$ctrl.config.info}}</p><p id=blank-state-pf-helpLink-{{$id}} class=blank-state-pf-helpLink-label ng-if=$ctrl.config.helpLink>{{$ctrl.config.helpLink.label}} <a ng-if=$ctrl.config.helpLink.url class=blank-state-pf-helpLink ng-click=$ctrl.config.helpLink.urlAction() href={{$ctrl.config.helpLink.url}}>{{$ctrl.config.helpLink.urlLabel}}</a> <button ng-if=!$ctrl.config.helpLink.url class="btn blank-state-pf-helpbutton btn-link" ng-click=$ctrl.config.helpLink.urlAction()>{{$ctrl.config.helpLink.urlLabel}}</button></p><div ng-if=$ctrl.hasMainActions() class=blank-slate-pf-main-action><button class="btn btn-primary btn-lg" ng-repeat="actionButton in $ctrl.actionButtons | filter:$ctrl.filterMainActions" title={{actionButton.title}} ng-click=$ctrl.handleButtonAction(actionButton)>{{actionButton.name}}</button></div><div ng-if=$ctrl.hasSecondaryActions() class=blank-slate-pf-secondary-action><button class="btn btn-default" ng-repeat="actionButton in $ctrl.actionButtons | filter:$ctrl.filterSecondaryActions" title={{actionButton.title}} ng-click=$ctrl.handleButtonAction(actionButton)>{{actionButton.name}}</button></div></div>'),
+    e.put("views/listview/examples/clusters-content.html", "<div class=row><div class=col-md-12>Clusters for {{$ctrl.item.name}}</div><div class=col-md-3><ul><li>Cluster 1</li><li>Cluster 2</li><li>Cluster 3</li><li>Cluster 4</li><li>Cluster 5</li><li>Cluster 6</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"),
+    e.put("views/listview/examples/hosts-content.html", "<div class=row><div class=col-md-12>Hosts for {{$ctrl.item.name}}</div><div class=col-md-3><ul><li>Host 1</li><li>Host 2</li><li>Host 3</li><li>Host 4</li><li>Host 5</li><li>Host 6</li><li>Host 7</li><li>Host 8</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"),
+    e.put("views/listview/examples/images-content.html", "<div class=row><div class=col-md-12>Images for {{$ctrl.item.name}}</div><div class=col-md-3><ul><li>Image 1</li><li>Image 2</li><li>Image 3</li><li>Image 4</li><li>Image 5</li><li>Image 6</li><li>Image 7</li><li>Image 8</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"),
+    e.put("views/listview/examples/nodes-content.html", "<div class=row><div class=col-md-12>Nodes for {{$ctrl.item.name}}</div><div class=col-md-3><ul><li>Node 1</li><li>Node 2</li><li>Node 3</li><li>Node 4</li><li>Node 5</li><li>Node 6</li><li>Node 7</li><li>Node 8</li><li>Node 9</li><li>Node 10</li></ul></div><div class=col-md-9><dl class=dl-horizontal><dt>Host Name</dt><dd>file1.nay.redhat.com</dd><dt>Device Path</dt><dd>/dev/disk/pci-0000.05:00-sas-0.2-part1</dd><dt>Time</dt><dd>January 15, 2016 10:45:11 AM</dd><dt>Severity</dt><dd>Warning</dd><dt>Cluster</dt><dd>Cluster 1</dd></dl><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div></div>"),
     e.put("views/listview/list-view.html", '<span><div class="list-group list-view-pf list-view-pf-view" dnd-list=$ctrl.items ng-class="{\'list-view-pf-dnd\': $ctrl.config.dragEnabled === true}" ng-if="$ctrl.config.itemsAvailable !== false"><div class=dndPlaceholder></div><div class="list-group-item {{item.rowClass}}" ng-repeat="item in $ctrl.items | startFrom:($ctrl.pageConfig.pageNumber - 1)*$ctrl.pageConfig.pageSize | limitTo:$ctrl.pageConfig.pageSize track by $index" dnd-draggable=item dnd-effect-allowed=move dnd-disable-if="$ctrl.config.dragEnabled !== true" dnd-dragstart=$ctrl.dragStart(item) dnd-moved=$ctrl.dragMoved() dnd-dragend=$ctrl.dragEnd() ng-class="{\'drag-original\': $ctrl.isDragOriginal(item), \'pf-selectable\': $ctrl.selectItems, \'active\': $ctrl.isSelected(item), \'disabled\': $ctrl.checkDisabled(item), \'list-view-pf-expand-active\': item.isExpanded}"><div class=list-group-item-header ng-class="{\'list-group-item-not-selectable\' : !$ctrl.config.selectItems && (!$ctrl.config.useExpandingRows || $ctrl.config.compoundExpansionOnly)}"><div class=list-view-pf-dnd-drag-items ng-if="$ctrl.config.dragEnabled === true"><div pf-transclude=parent class=list-view-pf-main-info></div></div><div ng-class="{\'list-view-pf-dnd-original-items\': $ctrl.config.dragEnabled === true}"><div class=list-view-pf-expand ng-if="$ctrl.config.useExpandingRows && !$ctrl.config.compoundExpansionOnly"><span class="fa fa-angle-right" ng-show=!item.disableRowExpansion ng-click=$ctrl.toggleItemExpansion(item) ng-class="{\'fa-angle-down\': item.isExpanded}"></span> <span class=pf-expand-placeholder ng-show=item.disableRowExpansion></span></div><div class=list-view-pf-checkbox ng-if=$ctrl.config.showSelectBox><input type=checkbox value=item.selected ng-model=item.selected ng-disabled=$ctrl.checkDisabled(item) ng-change="$ctrl.checkBoxChange(item)"></div><div class=list-view-pf-actions ng-if="($ctrl.actionButtons && $ctrl.actionButtons.length > 0) || ($ctrl.menuActions && $ctrl.menuActions.length > 0)"><button class="btn {{actionButton.class || \'btn-default\'}}" ng-repeat="actionButton in $ctrl.actionButtons" title={{actionButton.title}} ng-class="{\'disabled\' : $ctrl.checkDisabled(item) || !$ctrl.enableButtonForItem(actionButton, item)}" ng-click="$ctrl.handleButtonAction(actionButton, item)"><div ng-if=actionButton.include class=actionButton.includeClass ng-include src=actionButton.include></div><span ng-if=!actionButton.include>{{actionButton.name}}</span></button><div uib-dropdown class="{{$ctrl.dropdownClass}} pull-right dropdown-kebab-pf {{$ctrl.getMenuClassForItem(item)}} {{$ctrl.hideMenuForItem(item) ? \'invisible\' : \'\'}}" id=kebab_{{$index}} ng-if="$ctrl.menuActions && $ctrl.menuActions.length > 0"><button uib-dropdown-toggle class="btn btn-link" type=button id=dropdownKebabRight_{{$index}} ng-class="{\'disabled\': $ctrl.checkDisabled(item)}" ng-click="$ctrl.setupActions(item, $event)"><span class="fa fa-ellipsis-v"></span></button><ul uib-dropdown-menu class="dropdown-menu dropdown-menu-right {{$index}}" ng-class="{\'invisible\': !$ctrl.kebabMenuReady}" aria-labelledby=dropdownKebabRight_{{$index}}><li ng-repeat="menuAction in $ctrl.menuActions" ng-if="menuAction.isVisible !== false" role="{{menuAction.isSeparator === true ? \'separator\' : \'menuitem\'}}" ng-class="{\'divider\': (menuAction.isSeparator === true), \'disabled\': (menuAction.isDisabled === true)}"><a ng-if="menuAction.isSeparator !== true" title={{menuAction.title}} ng-click="$ctrl.handleMenuAction(menuAction, item)">{{menuAction.name}}</a></li></ul></div></div><div pf-transclude=parent class=list-view-pf-main-info ng-click="$ctrl.itemClick($event, item)" ng-dblclick="$ctrl.dblClick($event, item)"></div></div></div><div class="list-group-item-container container-fluid" ng-transclude=expandedContent ng-if="$ctrl.config.useExpandingRows && item.isExpanded"></div></div><pf-pagination ng-if="$ctrl.pageConfig.showPaginationControls && $ctrl.config.itemsAvailable === true" page-size=$ctrl.pageConfig.pageSize page-size-increments=$ctrl.pageConfig.pageSizeIncrements page-number=$ctrl.pageConfig.pageNumber num-total-items=$ctrl.pageConfig.numTotalItems></pf-pagination></div><pf-empty-state ng-if="$ctrl.config.itemsAvailable === false" config=$ctrl.emptyStateConfig action-buttons=$ctrl.emptyStateActionButtons></pf-empty-state></span>');
     } ]), angular.module("patternfly.wizard").run([ "$templateCache", function(e) {
     "use strict";
-    e.put("wizard/wizard-review-page.html", '<div class=wizard-pf-review-page><div class=wizard-pf-review-steps><ul class=list-group><li class=list-group-item ng-repeat="reviewStep in $ctrl.reviewSteps track by $index"><a class=apf-form-collapse ng-class="{\'collapsed\': !reviewStep.showReviewDetails}" ng-click=$ctrl.toggleShowReviewDetails(reviewStep)>{{reviewStep.stepTitle}}</a><div class=wizard-pf-review-substeps ng-class="{\'collapse\': !reviewStep.showReviewDetails}"><ul class=list-group ng-if=reviewStep.substeps><li class=list-group-item ng-repeat="substep in reviewStep.getReviewSteps()"><a class=apf-form-collapse ng-class="{\'collapsed\': !substep.showReviewDetails}" ng-click=$ctrl.toggleShowReviewDetails(substep)><span class=wizard-pf-substep-number>{{$ctrl.getSubStepNumber(reviewStep, substep)}}</span> <span class=wizard-pf-substep-title>{{substep.stepTitle}}</span></a><div class=wizard-pf-review-content ng-class="{\'collapse\': !substep.showReviewDetails}"><div ng-include=substep.reviewTemplate></div></div></li></ul><div class=wizard-pf-review-content ng-if=reviewStep.reviewTemplate ng-class="{\'collapse\': !reviewStep.showReviewDetails}"><div ng-include=reviewStep.reviewTemplate></div></div></div></li></ul></div></div>'), 
-    e.put("wizard/wizard-step.html", '<section ng-show=$ctrl.selected class=wizard-pf-row ng-class="{current: $ctrl.selected, done: $ctrl.completed}" style="height: inherit"><div ng-if=!$ctrl.wizard.hideSidebar class=wizard-pf-sidebar ng-style=$ctrl.contentStyle ng-class=$ctrl.wizard.sidebarClass ng-if="$ctrl.substeps === true"><ul class=list-group><li class=list-group-item ng-class="{active: step.selected}" ng-repeat="step in $ctrl.getEnabledSteps()"><a ng-click=$ctrl.stepClick(step)><span class=wizard-pf-substep-number>{{$ctrl.getStepDisplayNumber(step)}}</span> <span class=wizard-pf-substep-title>{{step.title}}</span></a></li></ul></div><div class="wizard-pf-main {{$ctrl.wizard.stepClass}}" ng-class="{\'wizard-pf-singlestep\': !$ctrl.substeps || $ctrl.wizard.hideSidebar}" ng-style=$ctrl.contentStyle><div class=wizard-pf-contents ng-transclude></div></div></section>'), e.put("wizard/wizard-substep.html", '<subsection ng-show=$ctrl.selected ng-class="{current: $ctrl.selected, done: $ctrl.completed}" class=wizard-pf-step ng-transclude></subsection>'), 
+    e.put("wizard/wizard-review-page.html", '<div class=wizard-pf-review-page><div class=wizard-pf-review-steps><ul class=list-group><li class=list-group-item ng-repeat="reviewStep in $ctrl.reviewSteps track by $index"><a class=apf-form-collapse ng-class="{\'collapsed\': !reviewStep.showReviewDetails}" ng-click=$ctrl.toggleShowReviewDetails(reviewStep)>{{reviewStep.stepTitle}}</a><div class=wizard-pf-review-substeps ng-class="{\'collapse\': !reviewStep.showReviewDetails}"><ul class=list-group ng-if=reviewStep.substeps><li class=list-group-item ng-repeat="substep in reviewStep.getReviewSteps()"><a class=apf-form-collapse ng-class="{\'collapsed\': !substep.showReviewDetails}" ng-click=$ctrl.toggleShowReviewDetails(substep)><span class=wizard-pf-substep-number>{{$ctrl.getSubStepNumber(reviewStep, substep)}}</span> <span class=wizard-pf-substep-title>{{substep.stepTitle}}</span></a><div class=wizard-pf-review-content ng-class="{\'collapse\': !substep.showReviewDetails}"><div ng-include=substep.reviewTemplate></div></div></li></ul><div class=wizard-pf-review-content ng-if=reviewStep.reviewTemplate ng-class="{\'collapse\': !reviewStep.showReviewDetails}"><div ng-include=reviewStep.reviewTemplate></div></div></div></li></ul></div></div>'),
+    e.put("wizard/wizard-step.html", '<section ng-show=$ctrl.selected class=wizard-pf-row ng-class="{current: $ctrl.selected, done: $ctrl.completed}" style="height: inherit"><div ng-if=!$ctrl.wizard.hideSidebar class=wizard-pf-sidebar ng-style=$ctrl.contentStyle ng-class=$ctrl.wizard.sidebarClass ng-if="$ctrl.substeps === true"><ul class=list-group><li class=list-group-item ng-class="{active: step.selected}" ng-repeat="step in $ctrl.getEnabledSteps()"><a ng-click=$ctrl.stepClick(step)><span class=wizard-pf-substep-number>{{$ctrl.getStepDisplayNumber(step)}}</span> <span class=wizard-pf-substep-title>{{step.title}}</span></a></li></ul></div><div class="wizard-pf-main {{$ctrl.wizard.stepClass}}" ng-class="{\'wizard-pf-singlestep\': !$ctrl.substeps || $ctrl.wizard.hideSidebar}" ng-style=$ctrl.contentStyle><div class=wizard-pf-contents ng-transclude></div></div></section>'), e.put("wizard/wizard-substep.html", '<subsection ng-show=$ctrl.selected ng-class="{current: $ctrl.selected, done: $ctrl.completed}" class=wizard-pf-step ng-transclude></subsection>'),
     e.put("wizard/wizard.html", '<div><div class=modal-header ng-if=!$ctrl.hideHeader><button type=button class="close wizard-pf-dismiss" aria-hidden=true aria-label=Close ng-click=$ctrl.onCancel() ng-if=!$ctrl.embedInPage><span class="pficon pficon-close"></span></button><h4 class=modal-title>{{$ctrl.wizardTitle}}</h4></div><div class="modal-body wizard-pf-body clearfix">\x3c!-- step area --\x3e<div class=wizard-pf-steps ng-class="{\'invisible\': !$ctrl.wizardReady}"><ul class=wizard-pf-steps-indicator ng-if=!$ctrl.hideIndicators ng-class="{\'invisible\': !$ctrl.wizardReady}"><li class=wizard-pf-step ng-class="{active: step.selected}" ng-repeat="step in $ctrl.getEnabledSteps()" data-tabgroup="{{$index }}"><a ng-click=$ctrl.stepClick(step) ng-class="{\'disabled\': !$ctrl.allowStepIndicatorClick(step)}"><span class=wizard-pf-step-number>{{$index + 1}}</span> <span ng-if="!$ctrl.activeStepTitleOnly || step.selected" class=wizard-pf-step-title>{{step.title}}</span> <span class=wizard-pf-step-title-substep ng-repeat="substep in step.steps track by $index" ng-class="{\'active\': substep.selected}">{{substep.title}}</span></a></li></ul></div>\x3c!-- loading wizard placeholder --\x3e<div ng-if=!$ctrl.wizardReady class=wizard-pf-main style="margin-left: 0px"><div class="wizard-pf-loading blank-slate-pf"><div class="spinner spinner-lg blank-slate-pf-icon"></div><h3 class=blank-slate-pf-main-action>{{$ctrl.loadingWizardTitle}}</h3><p class=blank-slate-pf-secondary-action>{{$ctrl.loadingSecondaryInformation}}</p></div></div><div class=wizard-pf-position-override ng-transclude></div></div><div class="modal-footer wizard-pf-footer wizard-pf-position-override" ng-class="{\'wizard-pf-footer-inline\': $ctrl.embedInPage}"><button ng-if=!$ctrl.embedInPage class="btn btn-default btn-cancel wizard-pf-cancel" ng-class="{\'wizard-pf-cancel-no-back\': $ctrl.hideBackButton}" ng-disabled=$ctrl.wizardDone ng-click=$ctrl.onCancel()>{{$ctrl.cancelTitle}}</button> <button id=backButton class="btn btn-default" ng-if=!$ctrl.hideBackButton tooltip-append-to-body=true uib-tooltip={{$ctrl.prevTooltip}} tooltip-placement=left ng-disabled="!$ctrl.wizardReady || $ctrl.wizardDone || !$ctrl.selectedStep.isPrevEnabled() || $ctrl.firstStep" ng-click=$ctrl.previous()>{{$ctrl.backTitle}}</button> <button id=nextButton class="btn btn-primary wizard-pf-next" uib-tooltip={{$ctrl.nextTooltip}} tooltip-append-to-body=true tooltip-placement=left ng-disabled="!$ctrl.wizardReady || !$ctrl.selectedStep.isNextEnabled()" ng-click=$ctrl.next()>{{$ctrl.nextTitle}}</button> <button ng-if=$ctrl.embedInPage class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-cancel-inline" ng-disabled=$ctrl.wizardDone ng-click=$ctrl.onCancel()>{{$ctrl.cancelTitle}}</button></div></div>');
     } ]), angular.module("gettext", []), angular.module("gettext").constant("gettext", function(e) {
     return e;
@@ -53100,16 +53100,16 @@ function aa(e) {
     case "wo":
     case "zh":
     return 0;
-    
+
     case "is":
     return n % 10 != 1 || n % 100 == 11 ? 1 : 0;
-    
+
     case "jv":
     return 0 != n ? 1 : 0;
-    
+
     case "mk":
     return 1 == n || n % 10 == 1 ? 0 : 1;
-    
+
     case "ach":
     case "ak":
     case "am":
@@ -53131,13 +53131,13 @@ function aa(e) {
     case "wa":
     case "zh":
     return n > 1 ? 1 : 0;
-    
+
     case "lv":
     return n % 10 == 1 && n % 100 != 11 ? 0 : 0 != n ? 1 : 2;
-    
+
     case "lt":
     return n % 10 == 1 && n % 100 != 11 ? 0 : n % 10 >= 2 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2;
-    
+
     case "be":
     case "bs":
     case "hr":
@@ -53145,41 +53145,41 @@ function aa(e) {
     case "sr":
     case "uk":
     return n % 10 == 1 && n % 100 != 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2;
-    
+
     case "mnk":
     return 0 == n ? 0 : 1 == n ? 1 : 2;
-    
+
     case "ro":
     return 1 == n ? 0 : 0 == n || n % 100 > 0 && n % 100 < 20 ? 1 : 2;
-    
+
     case "pl":
     return 1 == n ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2;
-    
+
     case "cs":
     case "sk":
     return 1 == n ? 0 : n >= 2 && n <= 4 ? 1 : 2;
-    
+
     case "sl":
     return n % 100 == 1 ? 1 : n % 100 == 2 ? 2 : n % 100 == 3 || n % 100 == 4 ? 3 : 0;
-    
+
     case "mt":
     return 1 == n ? 0 : 0 == n || n % 100 > 1 && n % 100 < 11 ? 1 : n % 100 > 10 && n % 100 < 20 ? 2 : 3;
-    
+
     case "gd":
     return 1 == n || 11 == n ? 0 : 2 == n || 12 == n ? 1 : n > 2 && n < 20 ? 2 : 3;
-    
+
     case "cy":
     return 1 == n ? 0 : 2 == n ? 1 : 8 != n && 11 != n ? 2 : 3;
-    
+
     case "kw":
     return 1 == n ? 0 : 2 == n ? 1 : 3 == n ? 2 : 3;
-    
+
     case "ga":
     return 1 == n ? 0 : 2 == n ? 1 : n < 7 ? 2 : n < 11 ? 3 : 4;
-    
+
     case "ar":
     return 0 == n ? 0 : 1 == n ? 1 : 2 == n ? 2 : n % 100 >= 3 && n % 100 <= 10 ? 3 : n % 100 >= 11 ? 4 : 5;
-    
+
     default:
     return 1 != n ? 1 : 0;
     }
@@ -53290,7 +53290,7 @@ function aa(e) {
     duplicateQueryParameters: r.duplicateQueryParameters,
     escapeQuerySpace: r.escapeQuerySpace
     };
-    }, r.duplicateQueryParameters = !1, r.escapeQuerySpace = !0, r.protocol_expression = /^[a-z][a-z0-9.+-]*$/i, r.idn_expression = /[^a-z0-9\._-]/i, r.punycode_expression = /(xn--)/i, r.ip4_expression = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/, r.ip6_expression = /^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/, 
+    }, r.duplicateQueryParameters = !1, r.escapeQuerySpace = !0, r.protocol_expression = /^[a-z][a-z0-9.+-]*$/i, r.idn_expression = /[^a-z0-9\._-]/i, r.punycode_expression = /(xn--)/i, r.ip4_expression = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/, r.ip6_expression = /^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/,
     r.find_uri_expression = /\b((?:[a-z][\w-]+:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/gi, r.findUri = {
     start: /\b(?:([a-z][a-z0-9.+-]*:\/\/)|www\.)/gi,
     end: /[\s\r\n]|$/,
@@ -53493,40 +53493,40 @@ function aa(e) {
     switch (s(t)) {
     case "String":
     break;
-    
+
     case "RegExp":
     for (var o in e) if (y.call(e, o) && t.test(o) && (void 0 === n || r.hasQuery(e, o, n))) return !0;
     return !1;
-    
+
     case "Object":
     for (var a in t) if (y.call(t, a) && !r.hasQuery(e, a, t[a])) return !1;
     return !0;
-    
+
     default:
     throw new TypeError("URI.hasQuery() accepts a string, regular expression or object as the name parameter");
     }
     switch (s(n)) {
     case "Undefined":
     return t in e;
-    
+
     case "Boolean":
     return n === Boolean(l(e[t]) ? e[t].length : e[t]);
-    
+
     case "Function":
     return !!n(e[t], t, e);
-    
+
     case "Array":
     return !!l(e[t]) && (i ? u : d)(e[t], n);
-    
+
     case "RegExp":
     return l(e[t]) ? !!i && u(e[t], n) : Boolean(e[t] && e[t].match(n));
-    
+
     case "Number":
     n = String(n);
-    
+
     case "String":
     return l(e[t]) ? !!i && u(e[t], n) : e[t] === n;
-    
+
     default:
     throw new TypeError("URI.hasQuery() accepts undefined, boolean, string, number, RegExp, Function as the value parameter");
     }
@@ -53623,39 +53623,39 @@ function aa(e) {
     switch (this._parts.hostname && (u = !1, i = r.ip4_expression.test(this._parts.hostname), o = r.ip6_expression.test(this._parts.hostname), s = (a = !(t = i || o)) && n && n.has(this._parts.hostname), l = a && r.idn_expression.test(this._parts.hostname), c = a && r.punycode_expression.test(this._parts.hostname)), e.toLowerCase()) {
     case "relative":
     return u;
-    
+
     case "absolute":
     return !u;
-    
+
     case "domain":
     case "name":
     return a;
-    
+
     case "sld":
     return s;
-    
+
     case "ip":
     return t;
-    
+
     case "ip4":
     case "ipv4":
     case "inet4":
     return i;
-    
+
     case "ip6":
     case "ipv6":
     case "inet6":
     return o;
-    
+
     case "idn":
     return l;
-    
+
     case "url":
     return !this._parts.urn;
-    
+
     case "urn":
     return !!this._parts.urn;
-    
+
     case "punycode":
     return c;
     }
@@ -54657,13 +54657,13 @@ function aa(e) {
     case 65:
     if (t.isCmdDown) return void t.selectAll();
     break;
-    
+
     case 27:
     return void (t.isOpen && (e.preventDefault(), e.stopPropagation(), t.close()));
-    
+
     case 78:
     if (!e.ctrlKey || e.altKey) break;
-    
+
     case 40:
     if (!t.isOpen && t.hasOptions) t.open(); else if (t.$activeOption) {
     t.ignoreHover = !0;
@@ -54671,10 +54671,10 @@ function aa(e) {
     n.length && t.setActiveOption(n, !0, !0);
     }
     return void e.preventDefault();
-    
+
     case 80:
     if (!e.ctrlKey || e.altKey) break;
-    
+
     case 38:
     if (t.$activeOption) {
     t.ignoreHover = !0;
@@ -54682,23 +54682,23 @@ function aa(e) {
     i.length && t.setActiveOption(i, !0, !0);
     }
     return void e.preventDefault();
-    
+
     case 13:
     return void (t.isOpen && t.$activeOption && (t.onOptionSelect({
     currentTarget: t.$activeOption
     }), e.preventDefault()));
-    
+
     case 37:
     return void t.advanceSelection(-1, e);
-    
+
     case 39:
     return void t.advanceSelection(1, e);
-    
+
     case 9:
     return t.settings.selectOnTab && t.isOpen && t.$activeOption && (t.onOptionSelect({
     currentTarget: t.$activeOption
     }), t.isFull() || e.preventDefault()), void (t.settings.create && t.createItem() && e.preventDefault());
-    
+
     case 8:
     case 46:
     return void t.deleteSelection(e);
@@ -55306,17 +55306,17 @@ function aa(e) {
     case "exists":
     if (!t[i.key] && "" !== t[i.key]) return !1;
     break;
-    
+
     case "does not exist":
     if (t[i.key] || "" === t[i.key]) return !1;
     break;
-    
+
     case "in":
     var r = !1;
     if (t[i.key] || "" === t[i.key]) for (a = 0; !r && a < i.values.length; a++) t[i.key] == i.values[a] && (r = !0);
     if (!r) return !1;
     break;
-    
+
     case "not in":
     var o = !0;
     if (t[i.key]) for (var a = 0; o && a < i.values.length; a++) o = t[i.key] != i.values[a];
@@ -55337,16 +55337,16 @@ function aa(e) {
     switch (t.operator) {
     case "exists":
     return !_.isEmpty(e.findConjunctsMatching("in", t.key));
-    
+
     case "does not exist":
     return !1;
-    
+
     case "in":
     var n = e.findConjunctsMatching("in", t.key);
     return !_.isEmpty(n) && _.every(n, function(e) {
     return e.values.length === _.intersection(e.values, t.values).length;
     });
-    
+
     case "not in":
     var i = e.findConjunctsMatching("not in", t.key);
     return !_.isEmpty(i) && _.every(i, function(e) {
@@ -55379,13 +55379,13 @@ function aa(e) {
     var t = e.key + "-" + e.operator;
     return e.values && (t += "-" + e.values.join(",")), t;
     };
-    
+
     try {
     angular.module("kubernetesUI");
     } catch (e) {
     angular.module("kubernetesUI", []);
     }
-    
+
     angular.module("kubernetesUI").factory("LabelFilter", [ "$location", function(e) {
     function t() {
     this._existingLabels = {}, this._labelSelector = new LabelSelector(null, !0), this._onActiveFiltersChangedCallbacks = $.Callbacks();
@@ -56213,15 +56213,15 @@ function aa(e) {
     case 0:
     for (this._terminal.eraseRight(this._terminal.buffer.x, this._terminal.buffer.y), t = this._terminal.buffer.y + 1; t < this._terminal.rows; t++) this._terminal.eraseLine(t);
     break;
-    
+
     case 1:
     for (this._terminal.eraseLeft(this._terminal.buffer.x, this._terminal.buffer.y), t = this._terminal.buffer.y; t--; ) this._terminal.eraseLine(t);
     break;
-    
+
     case 2:
     for (t = this._terminal.rows; t--; ) this._terminal.eraseLine(t);
     break;
-    
+
     case 3:
     var n = this._terminal.buffer.lines.length - this._terminal.rows;
     n > 0 && (this._terminal.buffer.lines.trimStart(n), this._terminal.buffer.ybase = Math.max(this._terminal.buffer.ybase - n, 0), this._terminal.buffer.ydisp = Math.max(this._terminal.buffer.ydisp - n, 0), this._terminal.emit("scroll", 0));
@@ -56231,11 +56231,11 @@ function aa(e) {
     case 0:
     this._terminal.eraseRight(this._terminal.buffer.x, this._terminal.buffer.y);
     break;
-    
+
     case 1:
     this._terminal.eraseLeft(this._terminal.buffer.x, this._terminal.buffer.y);
     break;
-    
+
     case 2:
     this._terminal.eraseLine(this._terminal.buffer.y);
     }
@@ -56294,63 +56294,63 @@ function aa(e) {
     case 1:
     this._terminal.applicationCursor = !0;
     break;
-    
+
     case 2:
     this._terminal.setgCharset(0, r.DEFAULT_CHARSET), this._terminal.setgCharset(1, r.DEFAULT_CHARSET), this._terminal.setgCharset(2, r.DEFAULT_CHARSET), this._terminal.setgCharset(3, r.DEFAULT_CHARSET);
     break;
-    
+
     case 3:
     this._terminal.savedCols = this._terminal.cols, this._terminal.resize(132, this._terminal.rows);
     break;
-    
+
     case 6:
     this._terminal.originMode = !0;
     break;
-    
+
     case 7:
     this._terminal.wraparoundMode = !0;
     break;
-    
+
     case 12:
     break;
-    
+
     case 66:
     this._terminal.log("Serial port requested application keypad."), this._terminal.applicationKeypad = !0, this._terminal.viewport.syncScrollArea();
     break;
-    
+
     case 9:
     case 1e3:
     case 1002:
     case 1003:
     this._terminal.x10Mouse = 9 === e[0], this._terminal.vt200Mouse = 1e3 === e[0], this._terminal.normalMouse = e[0] > 1e3, this._terminal.mouseEvents = !0, this._terminal.element.classList.add("enable-mouse-events"), this._terminal.selectionManager.disable(), this._terminal.log("Binding to mouse events.");
     break;
-    
+
     case 1004:
     this._terminal.sendFocus = !0;
     break;
-    
+
     case 1005:
     this._terminal.utfMouse = !0;
     break;
-    
+
     case 1006:
     this._terminal.sgrMouse = !0;
     break;
-    
+
     case 1015:
     this._terminal.urxvtMouse = !0;
     break;
-    
+
     case 25:
     this._terminal.cursorHidden = !1;
     break;
-    
+
     case 1049:
     case 47:
     case 1047:
     this._terminal.buffers.activateAltBuffer(), this._terminal.viewport.syncScrollArea(), this._terminal.showCursor();
     break;
-    
+
     case 2004:
     this._terminal.bracketedPasteMode = !0;
     }
@@ -56364,59 +56364,59 @@ function aa(e) {
     case 1:
     this._terminal.applicationCursor = !1;
     break;
-    
+
     case 3:
     132 === this._terminal.cols && this._terminal.savedCols && this._terminal.resize(this._terminal.savedCols, this._terminal.rows), delete this._terminal.savedCols;
     break;
-    
+
     case 6:
     this._terminal.originMode = !1;
     break;
-    
+
     case 7:
     this._terminal.wraparoundMode = !1;
     break;
-    
+
     case 12:
     break;
-    
+
     case 66:
     this._terminal.log("Switching back to normal keypad."), this._terminal.applicationKeypad = !1, this._terminal.viewport.syncScrollArea();
     break;
-    
+
     case 9:
     case 1e3:
     case 1002:
     case 1003:
     this._terminal.x10Mouse = !1, this._terminal.vt200Mouse = !1, this._terminal.normalMouse = !1, this._terminal.mouseEvents = !1, this._terminal.element.classList.remove("enable-mouse-events"), this._terminal.selectionManager.enable();
     break;
-    
+
     case 1004:
     this._terminal.sendFocus = !1;
     break;
-    
+
     case 1005:
     this._terminal.utfMouse = !1;
     break;
-    
+
     case 1006:
     this._terminal.sgrMouse = !1;
     break;
-    
+
     case 1015:
     this._terminal.urxvtMouse = !1;
     break;
-    
+
     case 25:
     this._terminal.cursorHidden = !0;
     break;
-    
+
     case 1049:
     case 47:
     case 1047:
     this._terminal.buffers.activateNormalBuffer(), this._terminal.refresh(0, this._terminal.rows - 1), this._terminal.viewport.syncScrollArea(), this._terminal.showCursor();
     break;
-    
+
     case 2004:
     this._terminal.bracketedPasteMode = !1;
     }
@@ -56426,7 +56426,7 @@ function aa(e) {
     }
     }, e.prototype.charAttributes = function(e) {
     if (1 !== e.length || 0 !== e[0]) {
-    for (var t, n = e.length, i = this._terminal.curAttr >> 18, r = this._terminal.curAttr >> 9 & 511, o = 511 & this._terminal.curAttr, s = 0; s < n; s++) (t = e[s]) >= 30 && t <= 37 ? r = t - 30 : t >= 40 && t <= 47 ? o = t - 40 : t >= 90 && t <= 97 ? r = (t += 8) - 90 : t >= 100 && t <= 107 ? o = (t += 8) - 100 : 0 === t ? (i = this._terminal.defAttr >> 18, r = this._terminal.defAttr >> 9 & 511, o = 511 & this._terminal.defAttr) : 1 === t ? i |= a.FLAGS.BOLD : 4 === t ? i |= a.FLAGS.UNDERLINE : 5 === t ? i |= a.FLAGS.BLINK : 7 === t ? i |= a.FLAGS.INVERSE : 8 === t ? i |= a.FLAGS.INVISIBLE : 2 === t ? i |= a.FLAGS.DIM : 22 === t ? (i &= ~a.FLAGS.BOLD, i &= ~a.FLAGS.DIM) : 24 === t ? i &= ~a.FLAGS.UNDERLINE : 25 === t ? i &= ~a.FLAGS.BLINK : 27 === t ? i &= ~a.FLAGS.INVERSE : 28 === t ? i &= ~a.FLAGS.INVISIBLE : 39 === t ? r = this._terminal.defAttr >> 9 & 511 : 49 === t ? o = 511 & this._terminal.defAttr : 38 === t ? 2 === e[s + 1] ? (s += 2, -1 === (r = this._terminal.matchColor(255 & e[s], 255 & e[s + 1], 255 & e[s + 2])) && (r = 511), 
+    for (var t, n = e.length, i = this._terminal.curAttr >> 18, r = this._terminal.curAttr >> 9 & 511, o = 511 & this._terminal.curAttr, s = 0; s < n; s++) (t = e[s]) >= 30 && t <= 37 ? r = t - 30 : t >= 40 && t <= 47 ? o = t - 40 : t >= 90 && t <= 97 ? r = (t += 8) - 90 : t >= 100 && t <= 107 ? o = (t += 8) - 100 : 0 === t ? (i = this._terminal.defAttr >> 18, r = this._terminal.defAttr >> 9 & 511, o = 511 & this._terminal.defAttr) : 1 === t ? i |= a.FLAGS.BOLD : 4 === t ? i |= a.FLAGS.UNDERLINE : 5 === t ? i |= a.FLAGS.BLINK : 7 === t ? i |= a.FLAGS.INVERSE : 8 === t ? i |= a.FLAGS.INVISIBLE : 2 === t ? i |= a.FLAGS.DIM : 22 === t ? (i &= ~a.FLAGS.BOLD, i &= ~a.FLAGS.DIM) : 24 === t ? i &= ~a.FLAGS.UNDERLINE : 25 === t ? i &= ~a.FLAGS.BLINK : 27 === t ? i &= ~a.FLAGS.INVERSE : 28 === t ? i &= ~a.FLAGS.INVISIBLE : 39 === t ? r = this._terminal.defAttr >> 9 & 511 : 49 === t ? o = 511 & this._terminal.defAttr : 38 === t ? 2 === e[s + 1] ? (s += 2, -1 === (r = this._terminal.matchColor(255 & e[s], 255 & e[s + 1], 255 & e[s + 2])) && (r = 511),
     s += 2) : 5 === e[s + 1] && (r = t = 255 & e[s += 2]) : 48 === t ? 2 === e[s + 1] ? (s += 2, -1 === (o = this._terminal.matchColor(255 & e[s], 255 & e[s + 1], 255 & e[s + 2])) && (o = 511), s += 2) : 5 === e[s + 1] && (o = t = 255 & e[s += 2]) : 100 === t ? (r = this._terminal.defAttr >> 9 & 511, o = 511 & this._terminal.defAttr) : this._terminal.error("Unknown SGR attribute: %d.", t);
     this._terminal.curAttr = i << 18 | r << 9 | o;
     } else this._terminal.curAttr = this._terminal.defAttr;
@@ -56440,7 +56440,7 @@ function aa(e) {
     case 5:
     this._terminal.send(i.C0.ESC + "[0n");
     break;
-    
+
     case 6:
     this._terminal.send(i.C0.ESC + "[" + (this._terminal.buffer.y + 1) + ";" + (this._terminal.buffer.x + 1) + "R");
     }
@@ -56453,12 +56453,12 @@ function aa(e) {
     case 2:
     this._terminal.setOption("cursorStyle", "block");
     break;
-    
+
     case 3:
     case 4:
     this._terminal.setOption("cursorStyle", "underline");
     break;
-    
+
     case 5:
     case 6:
     this._terminal.setOption("cursorStyle", "bar");
@@ -56779,7 +56779,7 @@ function aa(e) {
     case c.NORMAL:
     n in o ? o[n](this, this._inputHandler) : this._inputHandler.addChar(n, u);
     break;
-    
+
     case c.ESCAPED:
     if (n in a) {
     a[n](this, this._terminal);
@@ -56796,88 +56796,88 @@ function aa(e) {
     case "(":
     this._terminal.gcharset = 0;
     break;
-    
+
     case ")":
     this._terminal.gcharset = 1;
     break;
-    
+
     case "*":
     this._terminal.gcharset = 2;
     break;
-    
+
     case "+":
     this._terminal.gcharset = 3;
     break;
-    
+
     case "-":
     this._terminal.gcharset = 1;
     break;
-    
+
     case ".":
     this._terminal.gcharset = 2;
     }
     this._state = c.CHARSET;
     break;
-    
+
     case "/":
     this._terminal.gcharset = 3, this._state = c.CHARSET, this._position--;
     break;
-    
+
     case "N":
     case "O":
     this._state = c.NORMAL;
     break;
-    
+
     case "n":
     this._terminal.setgLevel(2), this._state = c.NORMAL;
     break;
-    
+
     case "o":
     case "|":
     this._terminal.setgLevel(3), this._state = c.NORMAL;
     break;
-    
+
     case "}":
     this._terminal.setgLevel(2), this._state = c.NORMAL;
     break;
-    
+
     case "~":
     this._terminal.setgLevel(1), this._state = c.NORMAL;
     break;
-    
+
     case "7":
     this._inputHandler.saveCursor(), this._state = c.NORMAL;
     break;
-    
+
     case "8":
     this._inputHandler.restoreCursor(), this._state = c.NORMAL;
     break;
-    
+
     case "#":
     this._state = c.NORMAL, this._position++;
     break;
-    
+
     case "H":
     this._terminal.tabSet(), this._state = c.NORMAL;
     break;
-    
+
     case "=":
     this._terminal.log("Serial port requested application keypad."), this._terminal.applicationKeypad = !0, this._terminal.viewport && this._terminal.viewport.syncScrollArea(), this._state = c.NORMAL;
     break;
-    
+
     case ">":
     this._terminal.log("Switching back to normal keypad."), this._terminal.applicationKeypad = !1, this._terminal.viewport && this._terminal.viewport.syncScrollArea(), this._state = c.NORMAL;
     break;
-    
+
     default:
     this._state = c.NORMAL, this._terminal.error("Unknown ESC control: %s.", n);
     }
     break;
-    
+
     case c.CHARSET:
     n in r.CHARSETS ? (t = r.CHARSETS[n], "/" === n && this.skipNextChar()) : t = r.DEFAULT_CHARSET, this._terminal.setgCharset(this._terminal.gcharset, t), this._terminal.gcharset = null, this._state = c.NORMAL;
     break;
-    
+
     case c.OSC:
     if (n === i.C0.ESC || n === i.C0.BEL) {
     switch (n === i.C0.ESC && this._position++, this._terminal.params.push(this._terminal.currentParam), this._terminal.params[0]) {
@@ -56889,18 +56889,18 @@ function aa(e) {
     this._terminal.params = [], this._terminal.currentParam = 0, this._state = c.NORMAL;
     } else this._terminal.params.length ? this._terminal.currentParam += n : n >= "0" && n <= "9" ? this._terminal.currentParam = 10 * this._terminal.currentParam + n.charCodeAt(0) - 48 : ";" === n && (this._terminal.params.push(this._terminal.currentParam), this._terminal.currentParam = "");
     break;
-    
+
     case c.CSI_PARAM:
     if (n in s) {
     s[n](this);
     break;
     }
     this.finalizeParam(), this._state = c.CSI;
-    
+
     case c.CSI:
     n in l ? (this._terminal.debug && this._terminal.log("CSI " + (this._terminal.prefix ? this._terminal.prefix : "") + " " + (this._terminal.params ? this._terminal.params.join(";") : "") + " " + (this._terminal.postfix ? this._terminal.postfix : "") + " " + n), l[n](this._inputHandler, this._terminal.params, this._terminal.prefix, this._terminal.postfix, this)) : this._terminal.error("Unknown CSI code: %s.", n), this._state = c.NORMAL, this._terminal.prefix = "", this._terminal.postfix = "";
     break;
-    
+
     case c.DCS:
     if (n === i.C0.ESC || n === i.C0.BEL) {
     n === i.C0.ESC && this._position++;
@@ -56908,45 +56908,45 @@ function aa(e) {
     switch (this._terminal.prefix) {
     case "":
     break;
-    
+
     case "$q":
     switch (g = this._terminal.currentParam, m = !1, g) {
     case '"q':
     g = '0"q';
     break;
-    
+
     case '"p':
     g = '61"p';
     break;
-    
+
     case "r":
     g = this._terminal.buffer.scrollTop + 1 + ";" + (this._terminal.buffer.scrollBottom + 1) + "r";
     break;
-    
+
     case "m":
     g = "0m";
     break;
-    
+
     default:
     this._terminal.error("Unknown DCS Pt: %s.", g), g = "";
     }
     this._terminal.send(i.C0.ESC + "P" + +m + "$r" + g + i.C0.ESC + "\\");
     break;
-    
+
     case "+p":
     break;
-    
+
     case "+q":
     g = this._terminal.currentParam, m = !1, this._terminal.send(i.C0.ESC + "P" + +m + "+r" + g + i.C0.ESC + "\\");
     break;
-    
+
     default:
     this._terminal.error("Unknown DCS prefix: %s.", this._terminal.prefix);
     }
     this._terminal.currentParam = 0, this._terminal.prefix = "", this._state = c.NORMAL;
     } else this._terminal.currentParam ? this._terminal.currentParam += n : this._terminal.prefix || "$" === n || "+" === n ? 2 === this._terminal.prefix.length ? this._terminal.currentParam = n : this._terminal.prefix += n : this._terminal.currentParam = n;
     break;
-    
+
     case c.IGNORE:
     n !== i.C0.ESC && n !== i.C0.BEL || (n === i.C0.ESC && this._position++, this._state = c.NORMAL);
     }
@@ -57357,7 +57357,7 @@ function aa(e) {
     var e = this;
     Object.keys(F).forEach(function(t) {
     null == e.options[t] && (e.options[t] = F[t]), e[t] = e.options[t];
-    }), this.parent = E ? E.body : null, this.cols = this.options.cols, this.rows = this.options.rows, this.options.handler && this.on("data", this.options.handler), this.cursorState = 0, this.cursorHidden = !1, this.sendDataQueue = "", this.customKeyEventHandler = null, this.applicationKeypad = !1, this.applicationCursor = !1, this.originMode = !1, this.insertMode = !1, this.wraparoundMode = !0, this.bracketedPasteMode = !1, this.charset = null, this.gcharset = null, this.glevel = 0, this.charsets = [ null ], this.readable = !0, this.writable = !0, this.defAttr = 131840, this.curAttr = 131840, this.params = [], this.currentParam = 0, this.prefix = "", this.postfix = "", this.writeBuffer = [], this.writeInProgress = !1, this.xoffSentToCatchUp = !1, this.writeStopped = !1, this.surrogateHigh = "", this.userScrolling = !1, this.inputHandler = new g.InputHandler(this), this.parser = new m.Parser(this.inputHandler, this), this.renderer = this.renderer || null, this.selectionManager = this.selectionManager || null, 
+    }), this.parent = E ? E.body : null, this.cols = this.options.cols, this.rows = this.options.rows, this.options.handler && this.on("data", this.options.handler), this.cursorState = 0, this.cursorHidden = !1, this.sendDataQueue = "", this.customKeyEventHandler = null, this.applicationKeypad = !1, this.applicationCursor = !1, this.originMode = !1, this.insertMode = !1, this.wraparoundMode = !0, this.bracketedPasteMode = !1, this.charset = null, this.gcharset = null, this.glevel = 0, this.charsets = [ null ], this.readable = !0, this.writable = !0, this.defAttr = 131840, this.curAttr = 131840, this.params = [], this.currentParam = 0, this.prefix = "", this.postfix = "", this.writeBuffer = [], this.writeInProgress = !1, this.xoffSentToCatchUp = !1, this.writeStopped = !1, this.surrogateHigh = "", this.userScrolling = !1, this.inputHandler = new g.InputHandler(this), this.parser = new m.Parser(this.inputHandler, this), this.renderer = this.renderer || null, this.selectionManager = this.selectionManager || null,
     this.linkifier = this.linkifier || new b.Linkifier(this), this._mouseZoneManager = this._mouseZoneManager || null, this.soundManager = this.soundManager || new S.SoundManager(this), this.buffers = new l.BufferSet(this), this.selectionManager && (this.selectionManager.clearSelection(), this.selectionManager.initBuffersListeners());
     }, Object.defineProperty(t.prototype, "buffer", {
     get: function() {
@@ -57390,30 +57390,30 @@ function aa(e) {
     case "bellStyle":
     t || (t = "none");
     break;
-    
+
     case "cursorStyle":
     t || (t = "block");
     break;
-    
+
     case "fontWeight":
     t || (t = "normal");
     break;
-    
+
     case "fontWeightBold":
     t || (t = "bold");
     break;
-    
+
     case "lineHeight":
     if (t < 1) return void console.warn(e + " cannot be less than 1, value: " + t);
-    
+
     case "tabStopWidth":
     if (t < 1) return void console.warn(e + " cannot be less than 1, value: " + t);
     break;
-    
+
     case "theme":
     if (this.renderer) return void this._setTheme(t);
     break;
-    
+
     case "scrollback":
     if ((t = Math.min(t, c.MAX_BUFFER_SIZE)) < 0) return void console.warn(e + " cannot be less than 0, value: " + t);
     if (this.options[e] !== t) {
@@ -57429,7 +57429,7 @@ function aa(e) {
     case "fontSize":
     this.renderer.clear(), this.charMeasure.measure(this.options);
     break;
-    
+
     case "enableBold":
     case "letterSpacing":
     case "lineHeight":
@@ -57437,15 +57437,15 @@ function aa(e) {
     case "fontWeightBold":
     var o = "fontWeight" === e || "fontWeightBold" === e || "enableBold" === e;
     this.renderer.clear(), this.renderer.onResize(this.cols, this.rows, o), this.refresh(0, this.rows - 1);
-    
+
     case "scrollback":
     this.buffers.resize(this.cols, this.rows), this.viewport.syncScrollArea();
     break;
-    
+
     case "screenReaderMode":
     t ? this._accessibilityManager || (this._accessibilityManager = new k.AccessibilityManager(this)) : this._accessibilityManager && (this._accessibilityManager.dispose(), this._accessibilityManager = null);
     break;
-    
+
     case "tabStopWidth":
     this.buffers.setupTabStops();
     }
@@ -57546,7 +57546,7 @@ function aa(e) {
     case "mousedown":
     c = t;
     break;
-    
+
     case "mouseup":
     c = 32;
     }
@@ -57586,15 +57586,15 @@ function aa(e) {
     case "mousedown":
     t = null != e.button ? +e.button : null != e.which ? e.which - 1 : null, _.isMSIE && (t = 1 === t ? 0 : 4 === t ? 1 : t);
     break;
-    
+
     case "mouseup":
     t = 3;
     break;
-    
+
     case "DOMMouseScroll":
     t = e.detail < 0 ? 64 : 65;
     break;
-    
+
     case "wheel":
     t = e.wheelDeltaY > 0 ? 64 : 65;
     }
@@ -57702,7 +57702,7 @@ function aa(e) {
     case 0:
     "UIKeyInputUpArrow" === e.key ? this.applicationCursor ? t.key = p.C0.ESC + "OA" : t.key = p.C0.ESC + "[A" : "UIKeyInputLeftArrow" === e.key ? this.applicationCursor ? t.key = p.C0.ESC + "OD" : t.key = p.C0.ESC + "[D" : "UIKeyInputRightArrow" === e.key ? this.applicationCursor ? t.key = p.C0.ESC + "OC" : t.key = p.C0.ESC + "[C" : "UIKeyInputDownArrow" === e.key && (this.applicationCursor ? t.key = p.C0.ESC + "OB" : t.key = p.C0.ESC + "[B");
     break;
-    
+
     case 8:
     if (e.shiftKey) {
     t.key = p.C0.BS;
@@ -57714,7 +57714,7 @@ function aa(e) {
     }
     t.key = p.C0.DEL;
     break;
-    
+
     case 9:
     if (e.shiftKey) {
     t.key = p.C0.ESC + "[Z";
@@ -57722,103 +57722,103 @@ function aa(e) {
     }
     t.key = p.C0.HT, t.cancel = !0;
     break;
-    
+
     case 13:
     t.key = p.C0.CR, t.cancel = !0;
     break;
-    
+
     case 27:
     t.key = p.C0.ESC, t.cancel = !0;
     break;
-    
+
     case 37:
     n ? (t.key = p.C0.ESC + "[1;" + (n + 1) + "D", t.key === p.C0.ESC + "[1;3D" && (t.key = this.browser.isMac ? p.C0.ESC + "b" : p.C0.ESC + "[1;5D")) : this.applicationCursor ? t.key = p.C0.ESC + "OD" : t.key = p.C0.ESC + "[D";
     break;
-    
+
     case 39:
     n ? (t.key = p.C0.ESC + "[1;" + (n + 1) + "C", t.key === p.C0.ESC + "[1;3C" && (t.key = this.browser.isMac ? p.C0.ESC + "f" : p.C0.ESC + "[1;5C")) : this.applicationCursor ? t.key = p.C0.ESC + "OC" : t.key = p.C0.ESC + "[C";
     break;
-    
+
     case 38:
     n ? (t.key = p.C0.ESC + "[1;" + (n + 1) + "A", t.key === p.C0.ESC + "[1;3A" && (t.key = p.C0.ESC + "[1;5A")) : this.applicationCursor ? t.key = p.C0.ESC + "OA" : t.key = p.C0.ESC + "[A";
     break;
-    
+
     case 40:
     n ? (t.key = p.C0.ESC + "[1;" + (n + 1) + "B", t.key === p.C0.ESC + "[1;3B" && (t.key = p.C0.ESC + "[1;5B")) : this.applicationCursor ? t.key = p.C0.ESC + "OB" : t.key = p.C0.ESC + "[B";
     break;
-    
+
     case 45:
     e.shiftKey || e.ctrlKey || (t.key = p.C0.ESC + "[2~");
     break;
-    
+
     case 46:
     t.key = n ? p.C0.ESC + "[3;" + (n + 1) + "~" : p.C0.ESC + "[3~";
     break;
-    
+
     case 36:
     n ? t.key = p.C0.ESC + "[1;" + (n + 1) + "H" : this.applicationCursor ? t.key = p.C0.ESC + "OH" : t.key = p.C0.ESC + "[H";
     break;
-    
+
     case 35:
     n ? t.key = p.C0.ESC + "[1;" + (n + 1) + "F" : this.applicationCursor ? t.key = p.C0.ESC + "OF" : t.key = p.C0.ESC + "[F";
     break;
-    
+
     case 33:
     e.shiftKey ? t.scrollLines = -(this.rows - 1) : t.key = p.C0.ESC + "[5~";
     break;
-    
+
     case 34:
     e.shiftKey ? t.scrollLines = this.rows - 1 : t.key = p.C0.ESC + "[6~";
     break;
-    
+
     case 112:
     t.key = n ? p.C0.ESC + "[1;" + (n + 1) + "P" : p.C0.ESC + "OP";
     break;
-    
+
     case 113:
     t.key = n ? p.C0.ESC + "[1;" + (n + 1) + "Q" : p.C0.ESC + "OQ";
     break;
-    
+
     case 114:
     t.key = n ? p.C0.ESC + "[1;" + (n + 1) + "R" : p.C0.ESC + "OR";
     break;
-    
+
     case 115:
     t.key = n ? p.C0.ESC + "[1;" + (n + 1) + "S" : p.C0.ESC + "OS";
     break;
-    
+
     case 116:
     t.key = n ? p.C0.ESC + "[15;" + (n + 1) + "~" : p.C0.ESC + "[15~";
     break;
-    
+
     case 117:
     t.key = n ? p.C0.ESC + "[17;" + (n + 1) + "~" : p.C0.ESC + "[17~";
     break;
-    
+
     case 118:
     t.key = n ? p.C0.ESC + "[18;" + (n + 1) + "~" : p.C0.ESC + "[18~";
     break;
-    
+
     case 119:
     t.key = n ? p.C0.ESC + "[19;" + (n + 1) + "~" : p.C0.ESC + "[19~";
     break;
-    
+
     case 120:
     t.key = n ? p.C0.ESC + "[20;" + (n + 1) + "~" : p.C0.ESC + "[20~";
     break;
-    
+
     case 121:
     t.key = n ? p.C0.ESC + "[21;" + (n + 1) + "~" : p.C0.ESC + "[21~";
     break;
-    
+
     case 122:
     t.key = n ? p.C0.ESC + "[23;" + (n + 1) + "~" : p.C0.ESC + "[23~";
     break;
-    
+
     case 123:
     t.key = n ? p.C0.ESC + "[24;" + (n + 1) + "~" : p.C0.ESC + "[24~";
     break;
-    
+
     default:
     if (!e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) if (this.browser.isMac && !this.options.macOptionIsMeta || !e.altKey || e.metaKey) this.browser.isMac && !e.altKey && !e.ctrlKey && e.metaKey && 65 === e.keyCode && this.selectAll(); else {
     var i = D[e.keyCode], r = i && i[e.shiftKey ? 1 : 0];
@@ -58340,7 +58340,7 @@ function aa(e) {
     };
     }
     return e.prototype.setTheme = function(e) {
-    this.colors.foreground = e.foreground || o, this.colors.background = e.background || a, this.colors.cursor = e.cursor || s, this.colors.cursorAccent = e.cursorAccent || l, this.colors.selection = e.selection || c, this.colors.ansi[0] = e.black || n.DEFAULT_ANSI_COLORS[0], this.colors.ansi[1] = e.red || n.DEFAULT_ANSI_COLORS[1], this.colors.ansi[2] = e.green || n.DEFAULT_ANSI_COLORS[2], this.colors.ansi[3] = e.yellow || n.DEFAULT_ANSI_COLORS[3], this.colors.ansi[4] = e.blue || n.DEFAULT_ANSI_COLORS[4], this.colors.ansi[5] = e.magenta || n.DEFAULT_ANSI_COLORS[5], this.colors.ansi[6] = e.cyan || n.DEFAULT_ANSI_COLORS[6], this.colors.ansi[7] = e.white || n.DEFAULT_ANSI_COLORS[7], this.colors.ansi[8] = e.brightBlack || n.DEFAULT_ANSI_COLORS[8], this.colors.ansi[9] = e.brightRed || n.DEFAULT_ANSI_COLORS[9], this.colors.ansi[10] = e.brightGreen || n.DEFAULT_ANSI_COLORS[10], this.colors.ansi[11] = e.brightYellow || n.DEFAULT_ANSI_COLORS[11], this.colors.ansi[12] = e.brightBlue || n.DEFAULT_ANSI_COLORS[12], 
+    this.colors.foreground = e.foreground || o, this.colors.background = e.background || a, this.colors.cursor = e.cursor || s, this.colors.cursorAccent = e.cursorAccent || l, this.colors.selection = e.selection || c, this.colors.ansi[0] = e.black || n.DEFAULT_ANSI_COLORS[0], this.colors.ansi[1] = e.red || n.DEFAULT_ANSI_COLORS[1], this.colors.ansi[2] = e.green || n.DEFAULT_ANSI_COLORS[2], this.colors.ansi[3] = e.yellow || n.DEFAULT_ANSI_COLORS[3], this.colors.ansi[4] = e.blue || n.DEFAULT_ANSI_COLORS[4], this.colors.ansi[5] = e.magenta || n.DEFAULT_ANSI_COLORS[5], this.colors.ansi[6] = e.cyan || n.DEFAULT_ANSI_COLORS[6], this.colors.ansi[7] = e.white || n.DEFAULT_ANSI_COLORS[7], this.colors.ansi[8] = e.brightBlack || n.DEFAULT_ANSI_COLORS[8], this.colors.ansi[9] = e.brightRed || n.DEFAULT_ANSI_COLORS[9], this.colors.ansi[10] = e.brightGreen || n.DEFAULT_ANSI_COLORS[10], this.colors.ansi[11] = e.brightYellow || n.DEFAULT_ANSI_COLORS[11], this.colors.ansi[12] = e.brightBlue || n.DEFAULT_ANSI_COLORS[12],
     this.colors.ansi[13] = e.brightMagenta || n.DEFAULT_ANSI_COLORS[13], this.colors.ansi[14] = e.brightCyan || n.DEFAULT_ANSI_COLORS[14], this.colors.ansi[15] = e.brightWhite || n.DEFAULT_ANSI_COLORS[15];
     }, e;
     }();
@@ -58662,7 +58662,7 @@ function aa(e) {
     end: t
     });
     }, t.prototype._updateDimensions = function() {
-    this._terminal.charMeasure.width && this._terminal.charMeasure.height && (this.dimensions.scaledCharWidth = Math.floor(this._terminal.charMeasure.width * window.devicePixelRatio), this.dimensions.scaledCharHeight = Math.ceil(this._terminal.charMeasure.height * window.devicePixelRatio), this.dimensions.scaledCellHeight = Math.floor(this.dimensions.scaledCharHeight * this._terminal.options.lineHeight), this.dimensions.scaledCharTop = 1 === this._terminal.options.lineHeight ? 0 : Math.round((this.dimensions.scaledCellHeight - this.dimensions.scaledCharHeight) / 2), this.dimensions.scaledCellWidth = this.dimensions.scaledCharWidth + Math.round(this._terminal.options.letterSpacing), this.dimensions.scaledCharLeft = Math.floor(this._terminal.options.letterSpacing / 2), this.dimensions.scaledCanvasHeight = this._terminal.rows * this.dimensions.scaledCellHeight, this.dimensions.scaledCanvasWidth = this._terminal.cols * this.dimensions.scaledCellWidth, this.dimensions.canvasHeight = Math.round(this.dimensions.scaledCanvasHeight / window.devicePixelRatio), 
+    this._terminal.charMeasure.width && this._terminal.charMeasure.height && (this.dimensions.scaledCharWidth = Math.floor(this._terminal.charMeasure.width * window.devicePixelRatio), this.dimensions.scaledCharHeight = Math.ceil(this._terminal.charMeasure.height * window.devicePixelRatio), this.dimensions.scaledCellHeight = Math.floor(this.dimensions.scaledCharHeight * this._terminal.options.lineHeight), this.dimensions.scaledCharTop = 1 === this._terminal.options.lineHeight ? 0 : Math.round((this.dimensions.scaledCellHeight - this.dimensions.scaledCharHeight) / 2), this.dimensions.scaledCellWidth = this.dimensions.scaledCharWidth + Math.round(this._terminal.options.letterSpacing), this.dimensions.scaledCharLeft = Math.floor(this._terminal.options.letterSpacing / 2), this.dimensions.scaledCanvasHeight = this._terminal.rows * this.dimensions.scaledCellHeight, this.dimensions.scaledCanvasWidth = this._terminal.cols * this.dimensions.scaledCellWidth, this.dimensions.canvasHeight = Math.round(this.dimensions.scaledCanvasHeight / window.devicePixelRatio),
     this.dimensions.canvasWidth = Math.round(this.dimensions.scaledCanvasWidth / window.devicePixelRatio), this.dimensions.actualCellHeight = this.dimensions.canvasHeight / this._terminal.rows, this.dimensions.actualCellWidth = this.dimensions.canvasWidth / this._terminal.cols);
     }, t;
     }(c.EventEmitter);
@@ -59731,13 +59731,13 @@ function aa(e) {
     }, function(e, t, n) {
     n(4), n(2), n(3), n(5), n(0), n(1), n(6), n(7), n(8), n(11), n(9), n(12), n(13), n(10), n(14), n(15), n(16), n(17), e.exports = n(18);
     } ]);
-    
+
     try {
     angular.module("kubernetesUI");
     } catch (e) {
     angular.module("kubernetesUI", []);
     }
-    
+
     angular.module("kubernetesUI").factory("KubernetesObjectDescriber", [ function() {
     function e() {
     this.kinds = {
@@ -59883,12 +59883,12 @@ function aa(e) {
     };
     }), angular.module("kubernetesUI").run([ "$templateCache", function(e) {
     "use strict";
-    e.put("views/_collapse-long-text.html", '<span ng-hide="enableCollapse && value.length > 120">{{value}}</span>\n<span ng-show="enableCollapse && value.length > 120">\n  <span class="reveal-contents-link" style="cursor: pointer;" title="Expand">{{value.substring(0, 120)}}<a href="javascript:;">...</a></span>\n  <span style="display: none;" class="reveal-contents">{{value}}</span>\n</span>'), e.put("views/annotations.html", '  <h3>Annotations</h3>\n  <p ng-if="!resource.metadata.annotations"><em>none</em></p>\n  <dl class="dl-horizontal" ng-if="resource.metadata.annotations">\n    <dt ng-repeat-start="(annotationKey, annotationValue) in resource.metadata.annotations" title="{{annotationKey}}">{{annotationKey}}</dt>\n    <dd ng-repeat-end collapse-long-text value="{{annotationValue}}"></dd>\n  </dl>\n'), e.put("views/container-state.html", '<p ng-if="containerState | isEmptyObj"><em>none</em></p>\n<span ng-repeat="(state, stateDescription) in containerState | limitTo: 1">\n  <span ng-switch="state">\n    <span ng-switch-when="waiting">\n      Waiting\n      <span ng-if="stateDescription.reason">({{stateDescription.reason}})</span>\n    </span>\n    <span ng-switch-when="running">\n      Running\n      <span ng-if="stateDescription.startedAt">since {{stateDescription.startedAt | date:\'medium\'}}</span>\n    </span>\n    <span ng-switch-when="terminated">\n      Terminated\n      <span ng-if="stateDescription.finishedAt">at {{stateDescription.finishedAt | date:\'medium\'}}</span>\n      <span ng-if="stateDescription.exitCode">with exit code {{stateDescription.exitCode}}</span>\n      <span ng-if="stateDescription.reason">({{stateDescription.reason}})</span>\n    </span>\n    <span ng-switch-default>{{state}}</span>\n  </span>\n</span>\n'), 
-    e.put("views/container-statuses.html", '<p ng-if="!containerStatuses"><em>none</em></p>\n<dl ng-repeat="containerStatus in containerStatuses | orderBy:\'name\'" class="dl-horizontal">\n  <dt>Name</dt>\n  <dd>{{containerStatus.name}}</dd>\n  <dt>State</dt>\n  <dd>\n    <kubernetes-object-describe-container-state container-state="containerStatus.state"></container-state>\n  </dd>\n  <dt ng-if="!(containerStatus.lastState | isEmptyObj)">Last State</dt>\n  <dd ng-if="!(containerStatus.lastState | isEmptyObj)">\n    <kubernetes-object-describe-container-state container-state="containerStatus.lastState"></container-state>\n  </dd>\n  <dt>Ready</dt>\n  <dd>{{containerStatus.ready}}</dd>\n  <dt>Restart Count</dt>\n  <dd>{{containerStatus.restartCount}}</dd>\n</dl>\n'), e.put("views/containers.html", '<p ng-if="!containers.length"><em>none</em></p>\n<dl class="dl-horizontal" ng-repeat="container in containers">\n<dt>Name</dt>\n<dd>{{container.name}}</dd>\n<dt>Image</dt>\n<dd ng-if="container.image">{{container.image}}</dd>\n<dd ng-if="!container.image"><em>none</em></dd>\n<dt>Ports</dt>\n<dd>\n  <div ng-if="!container.ports.length"><em>none</em></div>\n  <div ng-repeat="port in container.ports | orderBy:\'containerPort\'">\n    {{port.containerPort}}/{{port.protocol}}<span ng-if="port.hostPort"> to host port {{port.hostPort}}</span>\n  </div>\n</dd>\n<dt>Env vars</dt>\n<dd>\n  <div ng-if="!container.env.length"><em>none</em></div>\n  <div ng-repeat="env in container.env | orderBy:\'name\'" collapse-long-text value="{{env.name}}={{env.value}}"></div>\n</dd>\n</dl>\n<div ng-if="$index != 0" style="margin-bottom: 10px;"></div>\n'), 
-    e.put("views/default-describer.html", '<div>\n  <kubernetes-object-describe-header resource="resource" kind="kind"></kubernetes-object-describe-header>\n  <kubernetes-object-describe-metadata resource="resource"></kubernetes-object-describe-metadata>\n  <kubernetes-object-describe-footer resource="resource"></kubernetes-object-describe-footer>\n</div>'), e.put("views/footer.html", '<div style="margin-top: 10px;">\n  <a ng-if="moreDetailsLink" href="{{moreDetailsLink}}">More details...</a>  \n</div>'), e.put("views/header.html", "<h3>{{kind || resource.kind || 'Resource'}}</h3>"), e.put("views/labels.html", '<h3>Labels</h3>\n<p ng-if="!resource.metadata.labels"><em>none</em></p>\n<dl class="dl-horizontal" ng-if="resource.metadata.labels">\n  <dt ng-repeat-start="(labelKey, labelValue) in resource.metadata.labels" title="{{labelKey}}">{{labelKey}}</dt>\n  <dd ng-repeat-end>{{labelValue}}</dd>\n</dl>\n'), e.put("views/metadata.html", '<dl class="dl-horizontal">\n  <dt>Name</dt>\n  <dd>{{resource.metadata.name}}</dd>\n  <dt ng-if="resource.metadata.namespace">Namespace</dt>\n  <dd ng-if="resource.metadata.namespace">{{resource.metadata.namespace}}</dd>\n  <dt>Created</dt>\n  <dd>{{resource.metadata.creationTimestamp | date:\'medium\'}}</dd>    \n</dl>\n<kubernetes-object-describe-labels resource="resource"></kubernetes-object-describe-labels>\n<kubernetes-object-describe-annotations resource="resource"></kubernetes-object-describe-annotations>\n'), 
-    e.put("views/pod-template.html", '<h3>Pod Template</h3>\n<dl class="dl-horizontal">\n  <dt>Restart policy</dt>\n  <dd>{{template.restartPolicy}}</dd>\n  <dt>DNS policy</dt>\n  <dd>{{template.dnsPolicy}}</dd>\n  <dt ng-if="template.serviceAccountName">Service account</dt>\n  <dd ng-if="template.serviceAccountName">{{template.serviceAccountName}}</dd>\n</dl>  \n<h4>Containers</h4>\n<kubernetes-object-describe-containers containers="template.containers"></kubernetes-object-describe-containers>\n<h4>Volumes</h4>\n<kubernetes-object-describe-volumes volumes="template.volumes"></kubernetes-object-describe-volumes> \n'), e.put("views/pod.html", '<div>\n  <kubernetes-object-describe-header resource="resource" kind="kind"></kubernetes-object-describe-header>\n  <dl class="dl-horizontal">\n    <dt>Name</dt>\n    <dd>{{resource.metadata.name}}</dd>\n    <dt>Namespace</dt>\n    <dd>{{resource.metadata.namespace}}</dd>\n    <dt>Created</dt>\n    <dd>{{resource.metadata.creationTimestamp | date:\'medium\'}}</dd>\n    <dt>Restart policy</dt>\n    <dd>{{resource.spec.restartPolicy || \'Always\'}}</dd>\n    <dt ng-if="resource.spec.serviceAccountName">Service account</dt>\n    <dd ng-if="resource.spec.serviceAccountName">{{resource.spec.serviceAccountName}}</dd>\n  </dl>\n  <h3>Status</h3>\n  <dl class="dl-horizontal">\n    <dt>Phase</dt>\n    <dd>{{resource.status.phase}}</dd>\n    <dt>Node</dt>\n    <dd>{{resource.spec.nodeName || \'unknown\'}}\n      <span ng-if="resource.status.hostIP && resource.spec.nodeName != resource.status.hostIP">({{resource.status.hostIP}})</span></dd>\n    <dt>IP on node</dt>\n    <dd>\n      {{resource.status.podIP}}\n      <span ng-if="!resource.status.podIP"><em>none</em></span>\n    </dd>\n  </dl>\n  <h3>Container Statuses</h3>\n  <kubernetes-object-describe-container-statuses container-statuses="resource.status.containerStatuses"></kubernetes-object-describe-container-statuses>\n  <h3>Containers</h3>\n  <kubernetes-object-describe-containers containers="resource.spec.containers"></kubernetes-object-describe-containers>\n  <h3>Volumes</h3>\n  <kubernetes-object-describe-volumes volumes="resource.spec.volumes"></kubernetes-object-describe-volumes>\n  <kubernetes-object-describe-labels resource="resource"></kubernetes-object-describe-labels>\n  <kubernetes-object-describe-annotations resource="resource"></kubernetes-object-describe-annotations>\n  <kubernetes-object-describe-footer resource="resource"></kubernetes-object-describe-footer>\n</div>\n'), 
-    e.put("views/replication-controller.html", '<div>\n  <kubernetes-object-describe-header resource="resource" kind="kind"></kubernetes-object-describe-header>\n  <dl class="dl-horizontal">\n    <dt>Name</dt>\n    <dd>{{resource.metadata.name}}</dd>\n    <dt>Namespace</dt>\n    <dd>{{resource.metadata.namespace}}</dd>\n    <dt>Created</dt>\n    <dd>{{resource.metadata.creationTimestamp | date:\'medium\'}}</dd>\n    <dt>Replicas</dt>\n    <dd>{{(resource.spec.replicas === undefined) ? 1 : resource.spec.replicas}}</dd>\n  </dl>\n  <h3>Selector</h3>\n  <dl class="dl-horizontal">\n    <dt ng-repeat-start="(selectorKey, selectorValue) in resource.spec.selector" title="{{selectorKey}}">{{selectorKey}}</dt>\n    <dd ng-repeat-end>{{selectorValue}}</dd>\n  </dl>\n  <kubernetes-object-describe-pod-template template="resource.spec.template.spec"></kubernetes-object-describe-pod-template>\n  <kubernetes-object-describe-labels resource="resource"></kubernetes-object-describe-labels>\n  <kubernetes-object-describe-annotations resource="resource"></kubernetes-object-describe-annotations>\n  <kubernetes-object-describe-footer resource="resource"></kubernetes-object-describe-footer>\n</div>\n'), 
-    e.put("views/service.html", '<div>\n  <kubernetes-object-describe-header resource="resource" kind="kind"></kubernetes-object-describe-header>\n  <dl class="dl-horizontal">\n    <dt>Name</dt>\n    <dd>{{resource.metadata.name}}</dd>\n    <dt>Namespace</dt>\n    <dd>{{resource.metadata.namespace}}</dd>\n    <dt>Created</dt>\n    <dd>{{resource.metadata.creationTimestamp | date:\'medium\'}}</dd>\n    <dt>Type</dt>\n    <dd>{{resource.spec.type}}</dd>\n    <dt>IP</dt>\n    <dd>{{resource.spec.clusterIP}}</dd>\n    <dt>Ports</dt>\n    <dd>\n      <div ng-if="!resource.spec.ports.length">None</div>\n      <div ng-repeat="portMapping in resource.spec.ports | orderBy:\'port\'">\n        {{portMapping.port}}/{{portMapping.protocol}} &#8594; {{portMapping.targetPort}}\n      </div>\n    </dd>\n    <dt>Session affinity</dt>\n    <dd>{{resource.spec.sessionAffinity}}</dd>    \n    <dt ng-if="resource.status.loadBalancer.ingress.length">Ingress points</dt>\n    <dd ng-if="resource.status.loadBalancer.ingress.length">\n      <span ng-repeat="ingress in resource.status.loadBalancer.ingress"\n        >{{ingress.ip}}<span ng-if="!$last">, </span></span>\n    </dd>\n  </dl>\n  <h3>Selector</h3>\n  <dl class="dl-horizontal">\n    <dt ng-repeat-start="(selectorKey, selectorValue) in resource.spec.selector">{{selectorKey}}</dt>\n    <dd ng-repeat-end>{{selectorValue}}</dd>\n  </dl>\n  <kubernetes-object-describe-labels resource="resource"></kubernetes-object-describe-labels>\n  <kubernetes-object-describe-annotations resource="resource"></kubernetes-object-describe-annotations>\n  <kubernetes-object-describe-footer resource="resource"></kubernetes-object-describe-footer>\n</div>\n'), 
+    e.put("views/_collapse-long-text.html", '<span ng-hide="enableCollapse && value.length > 120">{{value}}</span>\n<span ng-show="enableCollapse && value.length > 120">\n  <span class="reveal-contents-link" style="cursor: pointer;" title="Expand">{{value.substring(0, 120)}}<a href="javascript:;">...</a></span>\n  <span style="display: none;" class="reveal-contents">{{value}}</span>\n</span>'), e.put("views/annotations.html", '  <h3>Annotations</h3>\n  <p ng-if="!resource.metadata.annotations"><em>none</em></p>\n  <dl class="dl-horizontal" ng-if="resource.metadata.annotations">\n    <dt ng-repeat-start="(annotationKey, annotationValue) in resource.metadata.annotations" title="{{annotationKey}}">{{annotationKey}}</dt>\n    <dd ng-repeat-end collapse-long-text value="{{annotationValue}}"></dd>\n  </dl>\n'), e.put("views/container-state.html", '<p ng-if="containerState | isEmptyObj"><em>none</em></p>\n<span ng-repeat="(state, stateDescription) in containerState | limitTo: 1">\n  <span ng-switch="state">\n    <span ng-switch-when="waiting">\n      Waiting\n      <span ng-if="stateDescription.reason">({{stateDescription.reason}})</span>\n    </span>\n    <span ng-switch-when="running">\n      Running\n      <span ng-if="stateDescription.startedAt">since {{stateDescription.startedAt | date:\'medium\'}}</span>\n    </span>\n    <span ng-switch-when="terminated">\n      Terminated\n      <span ng-if="stateDescription.finishedAt">at {{stateDescription.finishedAt | date:\'medium\'}}</span>\n      <span ng-if="stateDescription.exitCode">with exit code {{stateDescription.exitCode}}</span>\n      <span ng-if="stateDescription.reason">({{stateDescription.reason}})</span>\n    </span>\n    <span ng-switch-default>{{state}}</span>\n  </span>\n</span>\n'),
+    e.put("views/container-statuses.html", '<p ng-if="!containerStatuses"><em>none</em></p>\n<dl ng-repeat="containerStatus in containerStatuses | orderBy:\'name\'" class="dl-horizontal">\n  <dt>Name</dt>\n  <dd>{{containerStatus.name}}</dd>\n  <dt>State</dt>\n  <dd>\n    <kubernetes-object-describe-container-state container-state="containerStatus.state"></container-state>\n  </dd>\n  <dt ng-if="!(containerStatus.lastState | isEmptyObj)">Last State</dt>\n  <dd ng-if="!(containerStatus.lastState | isEmptyObj)">\n    <kubernetes-object-describe-container-state container-state="containerStatus.lastState"></container-state>\n  </dd>\n  <dt>Ready</dt>\n  <dd>{{containerStatus.ready}}</dd>\n  <dt>Restart Count</dt>\n  <dd>{{containerStatus.restartCount}}</dd>\n</dl>\n'), e.put("views/containers.html", '<p ng-if="!containers.length"><em>none</em></p>\n<dl class="dl-horizontal" ng-repeat="container in containers">\n<dt>Name</dt>\n<dd>{{container.name}}</dd>\n<dt>Image</dt>\n<dd ng-if="container.image">{{container.image}}</dd>\n<dd ng-if="!container.image"><em>none</em></dd>\n<dt>Ports</dt>\n<dd>\n  <div ng-if="!container.ports.length"><em>none</em></div>\n  <div ng-repeat="port in container.ports | orderBy:\'containerPort\'">\n    {{port.containerPort}}/{{port.protocol}}<span ng-if="port.hostPort"> to host port {{port.hostPort}}</span>\n  </div>\n</dd>\n<dt>Env vars</dt>\n<dd>\n  <div ng-if="!container.env.length"><em>none</em></div>\n  <div ng-repeat="env in container.env | orderBy:\'name\'" collapse-long-text value="{{env.name}}={{env.value}}"></div>\n</dd>\n</dl>\n<div ng-if="$index != 0" style="margin-bottom: 10px;"></div>\n'),
+    e.put("views/default-describer.html", '<div>\n  <kubernetes-object-describe-header resource="resource" kind="kind"></kubernetes-object-describe-header>\n  <kubernetes-object-describe-metadata resource="resource"></kubernetes-object-describe-metadata>\n  <kubernetes-object-describe-footer resource="resource"></kubernetes-object-describe-footer>\n</div>'), e.put("views/footer.html", '<div style="margin-top: 10px;">\n  <a ng-if="moreDetailsLink" href="{{moreDetailsLink}}">More details...</a>  \n</div>'), e.put("views/header.html", "<h3>{{kind || resource.kind || 'Resource'}}</h3>"), e.put("views/labels.html", '<h3>Labels</h3>\n<p ng-if="!resource.metadata.labels"><em>none</em></p>\n<dl class="dl-horizontal" ng-if="resource.metadata.labels">\n  <dt ng-repeat-start="(labelKey, labelValue) in resource.metadata.labels" title="{{labelKey}}">{{labelKey}}</dt>\n  <dd ng-repeat-end>{{labelValue}}</dd>\n</dl>\n'), e.put("views/metadata.html", '<dl class="dl-horizontal">\n  <dt>Name</dt>\n  <dd>{{resource.metadata.name}}</dd>\n  <dt ng-if="resource.metadata.namespace">Namespace</dt>\n  <dd ng-if="resource.metadata.namespace">{{resource.metadata.namespace}}</dd>\n  <dt>Created</dt>\n  <dd>{{resource.metadata.creationTimestamp | date:\'medium\'}}</dd>    \n</dl>\n<kubernetes-object-describe-labels resource="resource"></kubernetes-object-describe-labels>\n<kubernetes-object-describe-annotations resource="resource"></kubernetes-object-describe-annotations>\n'),
+    e.put("views/pod-template.html", '<h3>Pod Template</h3>\n<dl class="dl-horizontal">\n  <dt>Restart policy</dt>\n  <dd>{{template.restartPolicy}}</dd>\n  <dt>DNS policy</dt>\n  <dd>{{template.dnsPolicy}}</dd>\n  <dt ng-if="template.serviceAccountName">Service account</dt>\n  <dd ng-if="template.serviceAccountName">{{template.serviceAccountName}}</dd>\n</dl>  \n<h4>Containers</h4>\n<kubernetes-object-describe-containers containers="template.containers"></kubernetes-object-describe-containers>\n<h4>Volumes</h4>\n<kubernetes-object-describe-volumes volumes="template.volumes"></kubernetes-object-describe-volumes> \n'), e.put("views/pod.html", '<div>\n  <kubernetes-object-describe-header resource="resource" kind="kind"></kubernetes-object-describe-header>\n  <dl class="dl-horizontal">\n    <dt>Name</dt>\n    <dd>{{resource.metadata.name}}</dd>\n    <dt>Namespace</dt>\n    <dd>{{resource.metadata.namespace}}</dd>\n    <dt>Created</dt>\n    <dd>{{resource.metadata.creationTimestamp | date:\'medium\'}}</dd>\n    <dt>Restart policy</dt>\n    <dd>{{resource.spec.restartPolicy || \'Always\'}}</dd>\n    <dt ng-if="resource.spec.serviceAccountName">Service account</dt>\n    <dd ng-if="resource.spec.serviceAccountName">{{resource.spec.serviceAccountName}}</dd>\n  </dl>\n  <h3>Status</h3>\n  <dl class="dl-horizontal">\n    <dt>Phase</dt>\n    <dd>{{resource.status.phase}}</dd>\n    <dt>Node</dt>\n    <dd>{{resource.spec.nodeName || \'unknown\'}}\n      <span ng-if="resource.status.hostIP && resource.spec.nodeName != resource.status.hostIP">({{resource.status.hostIP}})</span></dd>\n    <dt>IP on node</dt>\n    <dd>\n      {{resource.status.podIP}}\n      <span ng-if="!resource.status.podIP"><em>none</em></span>\n    </dd>\n  </dl>\n  <h3>Container Statuses</h3>\n  <kubernetes-object-describe-container-statuses container-statuses="resource.status.containerStatuses"></kubernetes-object-describe-container-statuses>\n  <h3>Containers</h3>\n  <kubernetes-object-describe-containers containers="resource.spec.containers"></kubernetes-object-describe-containers>\n  <h3>Volumes</h3>\n  <kubernetes-object-describe-volumes volumes="resource.spec.volumes"></kubernetes-object-describe-volumes>\n  <kubernetes-object-describe-labels resource="resource"></kubernetes-object-describe-labels>\n  <kubernetes-object-describe-annotations resource="resource"></kubernetes-object-describe-annotations>\n  <kubernetes-object-describe-footer resource="resource"></kubernetes-object-describe-footer>\n</div>\n'),
+    e.put("views/replication-controller.html", '<div>\n  <kubernetes-object-describe-header resource="resource" kind="kind"></kubernetes-object-describe-header>\n  <dl class="dl-horizontal">\n    <dt>Name</dt>\n    <dd>{{resource.metadata.name}}</dd>\n    <dt>Namespace</dt>\n    <dd>{{resource.metadata.namespace}}</dd>\n    <dt>Created</dt>\n    <dd>{{resource.metadata.creationTimestamp | date:\'medium\'}}</dd>\n    <dt>Replicas</dt>\n    <dd>{{(resource.spec.replicas === undefined) ? 1 : resource.spec.replicas}}</dd>\n  </dl>\n  <h3>Selector</h3>\n  <dl class="dl-horizontal">\n    <dt ng-repeat-start="(selectorKey, selectorValue) in resource.spec.selector" title="{{selectorKey}}">{{selectorKey}}</dt>\n    <dd ng-repeat-end>{{selectorValue}}</dd>\n  </dl>\n  <kubernetes-object-describe-pod-template template="resource.spec.template.spec"></kubernetes-object-describe-pod-template>\n  <kubernetes-object-describe-labels resource="resource"></kubernetes-object-describe-labels>\n  <kubernetes-object-describe-annotations resource="resource"></kubernetes-object-describe-annotations>\n  <kubernetes-object-describe-footer resource="resource"></kubernetes-object-describe-footer>\n</div>\n'),
+    e.put("views/service.html", '<div>\n  <kubernetes-object-describe-header resource="resource" kind="kind"></kubernetes-object-describe-header>\n  <dl class="dl-horizontal">\n    <dt>Name</dt>\n    <dd>{{resource.metadata.name}}</dd>\n    <dt>Namespace</dt>\n    <dd>{{resource.metadata.namespace}}</dd>\n    <dt>Created</dt>\n    <dd>{{resource.metadata.creationTimestamp | date:\'medium\'}}</dd>\n    <dt>Type</dt>\n    <dd>{{resource.spec.type}}</dd>\n    <dt>IP</dt>\n    <dd>{{resource.spec.clusterIP}}</dd>\n    <dt>Ports</dt>\n    <dd>\n      <div ng-if="!resource.spec.ports.length">None</div>\n      <div ng-repeat="portMapping in resource.spec.ports | orderBy:\'port\'">\n        {{portMapping.port}}/{{portMapping.protocol}} &#8594; {{portMapping.targetPort}}\n      </div>\n    </dd>\n    <dt>Session affinity</dt>\n    <dd>{{resource.spec.sessionAffinity}}</dd>    \n    <dt ng-if="resource.status.loadBalancer.ingress.length">Ingress points</dt>\n    <dd ng-if="resource.status.loadBalancer.ingress.length">\n      <span ng-repeat="ingress in resource.status.loadBalancer.ingress"\n        >{{ingress.ip}}<span ng-if="!$last">, </span></span>\n    </dd>\n  </dl>\n  <h3>Selector</h3>\n  <dl class="dl-horizontal">\n    <dt ng-repeat-start="(selectorKey, selectorValue) in resource.spec.selector">{{selectorKey}}</dt>\n    <dd ng-repeat-end>{{selectorValue}}</dd>\n  </dl>\n  <kubernetes-object-describe-labels resource="resource"></kubernetes-object-describe-labels>\n  <kubernetes-object-describe-annotations resource="resource"></kubernetes-object-describe-annotations>\n  <kubernetes-object-describe-footer resource="resource"></kubernetes-object-describe-footer>\n</div>\n'),
     e.put("views/volumes.html", '<p ng-if="!volumes.length"><em>none</em></p>\n<dl class="dl-horizontal" ng-repeat="volume in volumes">\n<dt>Name</dt>\n<dd>{{volume.name}}</dd>\n\x3c!-- Type = host path --\x3e\n<dt ng-if-start="volume.hostPath">Type</dt>\n<dd>host path</dd>\n<dt>Path</dt>\n<dd ng-if-end>{{volume.hostPath.path}}</dd>\n\x3c!-- Type = empty dir --\x3e\n<dt ng-if-start="volume.emptyDir">Type</dt>\n<dd ng-if-end>empty directory</dd>\n\x3c!-- Type = GCE persistent disk - TODO fill out details --\x3e\n<dt ng-if-start="volume.gcePersistentDisk">Type</dt>\n<dd ng-if-end>GCE persistent disk</dd>\n\x3c!-- Type = git repo --\x3e\n<dt ng-if-start="volume.gitRepo">Type</dt>\n<dd>Git repository</dd>\n<dt>Repository</dt>\n<dd>{{volume.gitRepo.repository}}</dd>\n<dt>Revision</dt>\n<dd ng-if-end>\n  <span ng-if="volume.gitRepo.revision">{{volume.gitRepo.revision}}</span>\n  <span ng-if="!volume.gitRepo.revision"><em>not specified</em></span>\n</dd>\n</dl>\n');
     } ]), function(e, t) {
     var n = e();
@@ -60583,7 +60583,7 @@ function aa(e) {
     case e.DOM_DELTA_PIXEL:
     e.wheelX = .35 * e.deltaX || 0, e.wheelY = .35 * e.deltaY || 0;
     break;
-    
+
     case e.DOM_DELTA_LINE:
     case e.DOM_DELTA_PAGE:
     e.wheelX = 5 * (e.deltaX || 0), e.wheelY = 5 * (e.deltaY || 0);
@@ -60905,31 +60905,31 @@ function aa(e) {
     case 0:
     t.onCommandKey(null, 0, s.up);
     break;
-    
+
     case 1:
     t.onCommandKey(null, 0, s.home);
     break;
-    
+
     case 2:
     t.onCommandKey(null, l.option, s.left);
     break;
-    
+
     case 4:
     t.onCommandKey(null, 0, s.left);
     break;
-    
+
     case 5:
     t.onCommandKey(null, 0, s.right);
     break;
-    
+
     case 7:
     t.onCommandKey(null, l.option, s.right);
     break;
-    
+
     case 8:
     t.onCommandKey(null, 0, s.end);
     break;
-    
+
     case 9:
     t.onCommandKey(null, 0, s.down);
     } else {
@@ -60937,15 +60937,15 @@ function aa(e) {
     case 6:
     t.onCommandKey(null, l.shift, s.right);
     break;
-    
+
     case 7:
     t.onCommandKey(null, l.shift | l.option, s.right);
     break;
-    
+
     case 8:
     t.onCommandKey(null, l.shift, s.end);
     break;
-    
+
     case 9:
     t.onCommandKey(null, l.shift, s.down);
     }
@@ -60953,15 +60953,15 @@ function aa(e) {
     case 0:
     t.onCommandKey(null, l.shift, s.up);
     break;
-    
+
     case 1:
     t.onCommandKey(null, l.shift, s.home);
     break;
-    
+
     case 2:
     t.onCommandKey(null, l.shift | l.option, s.left);
     break;
-    
+
     case 3:
     t.onCommandKey(null, l.shift, s.left);
     }
@@ -61074,11 +61074,11 @@ function aa(e) {
     case 67:
     E(e);
     break;
-    
+
     case 86:
     F(e);
     break;
-    
+
     case 88:
     D(e);
     }
@@ -61443,7 +61443,7 @@ function aa(e) {
     end: x
     } : m.moveText(C, x);
     break;
-    
+
     case "copy":
     C = m.moveText(C, x, !0);
     } else {
@@ -61890,32 +61890,32 @@ function aa(e) {
     case m:
     case v:
     c = !1;
-    
+
     case w:
     case y:
     return f;
-    
+
     case b:
     return c ? y : b;
-    
+
     case x:
     return c = !0, u = !0, v;
-    
+
     case S:
     return w;
-    
+
     case $:
     return i < 1 || i + 1 >= t.length || (r = n[i - 1]) != b && r != y || (o = t[i + 1]) != b && o != y ? w : (c && (o = y), o == r ? o : w);
-    
+
     case A:
     return (r = i > 0 ? n[i - 1] : _) == b && i + 1 < t.length && t[i + 1] == b ? b : w;
-    
+
     case k:
     if (i > 0 && n[i - 1] == b) return b;
     if (c) return w;
     for (l = i + 1, a = t.length; l < a && t[l] == k; ) l++;
     return l < a && t[l] == b ? b : w;
-    
+
     case T:
     for (a = t.length, l = i + 1; l < a && t[l] == T; ) l++;
     if (l < a) {
@@ -61923,20 +61923,20 @@ function aa(e) {
     if (r = t[l], g && (r == v || r == x)) return v;
     }
     return i < 1 || (r = t[i - 1]) == _ ? w : n[i - 1];
-    
+
     case _:
     return c = !1, d = !0, s;
-    
+
     case C:
     return h = !0, w;
-    
+
     case D:
     case E:
     case M:
     case I:
     case F:
     c = !1;
-    
+
     case P:
     return w;
     }
@@ -62597,7 +62597,7 @@ function aa(e) {
     switch (void 0) {
     case this.$behaviours:
     this.$behaviours = {};
-    
+
     case this.$behaviours[e]:
     this.$behaviours[e] = {};
     }
@@ -63047,7 +63047,7 @@ function aa(e) {
     e.splice.apply(e, a), e[i] = o.substring(0, r) + e[i], e[i + t.lines.length - 1] += o.substring(r);
     }
     break;
-    
+
     case "remove":
     var s = t.end.column, l = t.end.row;
     i === l ? e[i] = o.substring(0, r) + o.substring(s) : e.splice(i, l - i + 1, o.substring(0, r) + e[l].substring(s));
@@ -63145,10 +63145,10 @@ function aa(e) {
     switch (this.$newLineMode) {
     case "windows":
     return "\r\n";
-    
+
     case "unix":
     return "\n";
-    
+
     default:
     return this.$autoNewLine || "\n";
     }
@@ -65824,16 +65824,16 @@ function aa(e) {
     switch (n) {
     case "center-animate":
     n = "animate";
-    
+
     case "center":
     this.renderer.scrollCursorIntoView(null, .5);
     break;
-    
+
     case "animate":
     case "cursor":
     this.renderer.scrollCursorIntoView();
     break;
-    
+
     case "selectionPart":
     var i = this.selection.getRange(), r = this.renderer.layerConfig;
     (i.start.row >= r.lastRow || i.end.row <= r.firstRow) && this.renderer.scrollSelectionIntoView(this.selection.anchor, this.selection.lead);
@@ -65870,8 +65870,8 @@ function aa(e) {
     var n = this.session.getSelection();
     n.off("changeCursor", this.$onCursorChange), n.off("changeSelection", this.$onSelectionChange);
     }
-    this.session = e, e ? (this.$onDocumentChange = this.onDocumentChange.bind(this), e.on("change", this.$onDocumentChange), this.renderer.setSession(e), this.$onChangeMode = this.onChangeMode.bind(this), e.on("changeMode", this.$onChangeMode), this.$onTokenizerUpdate = this.onTokenizerUpdate.bind(this), e.on("tokenizerUpdate", this.$onTokenizerUpdate), this.$onChangeTabSize = this.renderer.onChangeTabSize.bind(this.renderer), e.on("changeTabSize", this.$onChangeTabSize), this.$onChangeWrapLimit = this.onChangeWrapLimit.bind(this), e.on("changeWrapLimit", this.$onChangeWrapLimit), this.$onChangeWrapMode = this.onChangeWrapMode.bind(this), e.on("changeWrapMode", this.$onChangeWrapMode), this.$onChangeFold = this.onChangeFold.bind(this), e.on("changeFold", this.$onChangeFold), this.$onChangeFrontMarker = this.onChangeFrontMarker.bind(this), this.session.on("changeFrontMarker", this.$onChangeFrontMarker), this.$onChangeBackMarker = this.onChangeBackMarker.bind(this), this.session.on("changeBackMarker", this.$onChangeBackMarker), 
-    this.$onChangeBreakpoint = this.onChangeBreakpoint.bind(this), this.session.on("changeBreakpoint", this.$onChangeBreakpoint), this.$onChangeAnnotation = this.onChangeAnnotation.bind(this), this.session.on("changeAnnotation", this.$onChangeAnnotation), this.$onCursorChange = this.onCursorChange.bind(this), this.session.on("changeOverwrite", this.$onCursorChange), this.$onScrollTopChange = this.onScrollTopChange.bind(this), this.session.on("changeScrollTop", this.$onScrollTopChange), this.$onScrollLeftChange = this.onScrollLeftChange.bind(this), this.session.on("changeScrollLeft", this.$onScrollLeftChange), this.selection = e.getSelection(), this.selection.on("changeCursor", this.$onCursorChange), this.$onSelectionChange = this.onSelectionChange.bind(this), this.selection.on("changeSelection", this.$onSelectionChange), this.onChangeMode(), this.$blockScrolling += 1, this.onCursorChange(), this.$blockScrolling -= 1, this.onScrollTopChange(), this.onScrollLeftChange(), this.onSelectionChange(), 
+    this.session = e, e ? (this.$onDocumentChange = this.onDocumentChange.bind(this), e.on("change", this.$onDocumentChange), this.renderer.setSession(e), this.$onChangeMode = this.onChangeMode.bind(this), e.on("changeMode", this.$onChangeMode), this.$onTokenizerUpdate = this.onTokenizerUpdate.bind(this), e.on("tokenizerUpdate", this.$onTokenizerUpdate), this.$onChangeTabSize = this.renderer.onChangeTabSize.bind(this.renderer), e.on("changeTabSize", this.$onChangeTabSize), this.$onChangeWrapLimit = this.onChangeWrapLimit.bind(this), e.on("changeWrapLimit", this.$onChangeWrapLimit), this.$onChangeWrapMode = this.onChangeWrapMode.bind(this), e.on("changeWrapMode", this.$onChangeWrapMode), this.$onChangeFold = this.onChangeFold.bind(this), e.on("changeFold", this.$onChangeFold), this.$onChangeFrontMarker = this.onChangeFrontMarker.bind(this), this.session.on("changeFrontMarker", this.$onChangeFrontMarker), this.$onChangeBackMarker = this.onChangeBackMarker.bind(this), this.session.on("changeBackMarker", this.$onChangeBackMarker),
+    this.$onChangeBreakpoint = this.onChangeBreakpoint.bind(this), this.session.on("changeBreakpoint", this.$onChangeBreakpoint), this.$onChangeAnnotation = this.onChangeAnnotation.bind(this), this.session.on("changeAnnotation", this.$onChangeAnnotation), this.$onCursorChange = this.onCursorChange.bind(this), this.session.on("changeOverwrite", this.$onCursorChange), this.$onScrollTopChange = this.onScrollTopChange.bind(this), this.session.on("changeScrollTop", this.$onScrollTopChange), this.$onScrollLeftChange = this.onScrollLeftChange.bind(this), this.session.on("changeScrollLeft", this.$onScrollLeftChange), this.selection = e.getSelection(), this.selection.on("changeCursor", this.$onCursorChange), this.$onSelectionChange = this.onSelectionChange.bind(this), this.selection.on("changeSelection", this.$onSelectionChange), this.onChangeMode(), this.$blockScrolling += 1, this.onCursorChange(), this.$blockScrolling -= 1, this.onScrollTopChange(), this.onScrollLeftChange(), this.onSelectionChange(),
     this.onChangeFrontMarker(), this.onChangeBackMarker(), this.onChangeBreakpoint(), this.onChangeAnnotation(), this.session.getUseWrapMode() && this.renderer.adjustWrapLimit(), this.renderer.updateFull()) : (this.selection = null, this.renderer.setSession(e)), this._signal("changeSession", {
     session: e,
     oldSession: t
@@ -66381,7 +66381,7 @@ function aa(e) {
     case "{":
     c[s]++;
     break;
-    
+
     case ")":
     case "]":
     case "}":
@@ -67419,7 +67419,7 @@ function aa(e) {
     }
     n = this.layerConfig, this.$updateScrollBarV(), e & this.CHANGE_H_SCROLL && this.$updateScrollBarH(), this.$gutterLayer.element.style.marginTop = -n.offset + "px", this.content.style.marginTop = -n.offset + "px", this.content.style.width = n.width + 2 * this.$padding + "px", this.content.style.height = n.minHeight + "px";
     }
-    return e & this.CHANGE_H_SCROLL && (this.content.style.marginLeft = -this.scrollLeft + "px", this.scroller.className = this.scrollLeft <= 0 ? "ace_scroller" : "ace_scroller ace_scroll-left"), e & this.CHANGE_FULL ? (this.$textLayer.update(n), this.$showGutter && this.$gutterLayer.update(n), this.$markerBack.update(n), this.$markerFront.update(n), this.$cursorLayer.update(n), this.$moveTextAreaToCursor(), this.$highlightGutterLine && this.$updateGutterLineHighlight(), void this._signal("afterRender")) : e & this.CHANGE_SCROLL ? (e & this.CHANGE_TEXT || e & this.CHANGE_LINES ? this.$textLayer.update(n) : this.$textLayer.scrollLines(n), this.$showGutter && this.$gutterLayer.update(n), this.$markerBack.update(n), this.$markerFront.update(n), this.$cursorLayer.update(n), this.$highlightGutterLine && this.$updateGutterLineHighlight(), this.$moveTextAreaToCursor(), void this._signal("afterRender")) : (e & this.CHANGE_TEXT ? (this.$textLayer.update(n), this.$showGutter && this.$gutterLayer.update(n)) : e & this.CHANGE_LINES ? (this.$updateLines() || e & this.CHANGE_GUTTER && this.$showGutter) && this.$gutterLayer.update(n) : (e & this.CHANGE_TEXT || e & this.CHANGE_GUTTER) && this.$showGutter && this.$gutterLayer.update(n), 
+    return e & this.CHANGE_H_SCROLL && (this.content.style.marginLeft = -this.scrollLeft + "px", this.scroller.className = this.scrollLeft <= 0 ? "ace_scroller" : "ace_scroller ace_scroll-left"), e & this.CHANGE_FULL ? (this.$textLayer.update(n), this.$showGutter && this.$gutterLayer.update(n), this.$markerBack.update(n), this.$markerFront.update(n), this.$cursorLayer.update(n), this.$moveTextAreaToCursor(), this.$highlightGutterLine && this.$updateGutterLineHighlight(), void this._signal("afterRender")) : e & this.CHANGE_SCROLL ? (e & this.CHANGE_TEXT || e & this.CHANGE_LINES ? this.$textLayer.update(n) : this.$textLayer.scrollLines(n), this.$showGutter && this.$gutterLayer.update(n), this.$markerBack.update(n), this.$markerFront.update(n), this.$cursorLayer.update(n), this.$highlightGutterLine && this.$updateGutterLineHighlight(), this.$moveTextAreaToCursor(), void this._signal("afterRender")) : (e & this.CHANGE_TEXT ? (this.$textLayer.update(n), this.$showGutter && this.$gutterLayer.update(n)) : e & this.CHANGE_LINES ? (this.$updateLines() || e & this.CHANGE_GUTTER && this.$showGutter) && this.$gutterLayer.update(n) : (e & this.CHANGE_TEXT || e & this.CHANGE_GUTTER) && this.$showGutter && this.$gutterLayer.update(n),
     e & this.CHANGE_CURSOR && (this.$cursorLayer.update(n), this.$moveTextAreaToCursor(), this.$highlightGutterLine && this.$updateGutterLineHighlight()), e & (this.CHANGE_MARKER | this.CHANGE_MARKER_FRONT) && this.$markerFront.update(n), e & (this.CHANGE_MARKER | this.CHANGE_MARKER_BACK) && this.$markerBack.update(n), void this._signal("afterRender"));
     }
     this.$changes |= e;
@@ -67792,16 +67792,16 @@ function aa(e) {
     data: t.data
     });
     break;
-    
+
     case "call":
     var n = this.callbacks[t.id];
     n && (n(t.data), delete this.callbacks[t.id]);
     break;
-    
+
     case "error":
     this.reportError(t.data);
     break;
-    
+
     case "log":
     window.console && console.log && console.log.apply(console, t.data);
     }
@@ -68494,7 +68494,7 @@ function aa(e) {
     }).call(r.prototype);
     }), ace.define("ace/theme/textmate", [ "require", "exports", "module", "ace/lib/dom" ], function(e, t, n) {
     "use strict";
-    t.isDark = !1, t.cssClass = "ace-tm", t.cssText = '.ace-tm .ace_gutter {background: #f0f0f0;color: #333;}.ace-tm .ace_print-margin {width: 1px;background: #e8e8e8;}.ace-tm .ace_fold {background-color: #6B72E6;}.ace-tm {background-color: #FFFFFF;color: black;}.ace-tm .ace_cursor {color: black;}.ace-tm .ace_invisible {color: rgb(191, 191, 191);}.ace-tm .ace_storage,.ace-tm .ace_keyword {color: blue;}.ace-tm .ace_constant {color: rgb(197, 6, 11);}.ace-tm .ace_constant.ace_buildin {color: rgb(88, 72, 246);}.ace-tm .ace_constant.ace_language {color: rgb(88, 92, 246);}.ace-tm .ace_constant.ace_library {color: rgb(6, 150, 14);}.ace-tm .ace_invalid {background-color: rgba(255, 0, 0, 0.1);color: red;}.ace-tm .ace_support.ace_function {color: rgb(60, 76, 114);}.ace-tm .ace_support.ace_constant {color: rgb(6, 150, 14);}.ace-tm .ace_support.ace_type,.ace-tm .ace_support.ace_class {color: rgb(109, 121, 222);}.ace-tm .ace_keyword.ace_operator {color: rgb(104, 118, 135);}.ace-tm .ace_string {color: rgb(3, 106, 7);}.ace-tm .ace_comment {color: rgb(76, 136, 107);}.ace-tm .ace_comment.ace_doc {color: rgb(0, 102, 255);}.ace-tm .ace_comment.ace_doc.ace_tag {color: rgb(128, 159, 191);}.ace-tm .ace_constant.ace_numeric {color: rgb(0, 0, 205);}.ace-tm .ace_variable {color: rgb(49, 132, 149);}.ace-tm .ace_xml-pe {color: rgb(104, 104, 91);}.ace-tm .ace_entity.ace_name.ace_function {color: #0000A2;}.ace-tm .ace_heading {color: rgb(12, 7, 255);}.ace-tm .ace_list {color:rgb(185, 6, 144);}.ace-tm .ace_meta.ace_tag {color:rgb(0, 22, 142);}.ace-tm .ace_string.ace_regex {color: rgb(255, 0, 0)}.ace-tm .ace_marker-layer .ace_selection {background: rgb(181, 213, 255);}.ace-tm.ace_multiselect .ace_selection.ace_start {box-shadow: 0 0 3px 0px white;}.ace-tm .ace_marker-layer .ace_step {background: rgb(252, 255, 0);}.ace-tm .ace_marker-layer .ace_stack {background: rgb(164, 229, 101);}.ace-tm .ace_marker-layer .ace_bracket {margin: -1px 0 0 -1px;border: 1px solid rgb(192, 192, 192);}.ace-tm .ace_marker-layer .ace_active-line {background: rgba(0, 0, 0, 0.07);}.ace-tm .ace_gutter-active-line {background-color : #dcdcdc;}.ace-tm .ace_marker-layer .ace_selected-word {background: rgb(250, 250, 255);border: 1px solid rgb(200, 200, 250);}.ace-tm .ace_indent-guide {background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==") right repeat-y;}', 
+    t.isDark = !1, t.cssClass = "ace-tm", t.cssText = '.ace-tm .ace_gutter {background: #f0f0f0;color: #333;}.ace-tm .ace_print-margin {width: 1px;background: #e8e8e8;}.ace-tm .ace_fold {background-color: #6B72E6;}.ace-tm {background-color: #FFFFFF;color: black;}.ace-tm .ace_cursor {color: black;}.ace-tm .ace_invisible {color: rgb(191, 191, 191);}.ace-tm .ace_storage,.ace-tm .ace_keyword {color: blue;}.ace-tm .ace_constant {color: rgb(197, 6, 11);}.ace-tm .ace_constant.ace_buildin {color: rgb(88, 72, 246);}.ace-tm .ace_constant.ace_language {color: rgb(88, 92, 246);}.ace-tm .ace_constant.ace_library {color: rgb(6, 150, 14);}.ace-tm .ace_invalid {background-color: rgba(255, 0, 0, 0.1);color: red;}.ace-tm .ace_support.ace_function {color: rgb(60, 76, 114);}.ace-tm .ace_support.ace_constant {color: rgb(6, 150, 14);}.ace-tm .ace_support.ace_type,.ace-tm .ace_support.ace_class {color: rgb(109, 121, 222);}.ace-tm .ace_keyword.ace_operator {color: rgb(104, 118, 135);}.ace-tm .ace_string {color: rgb(3, 106, 7);}.ace-tm .ace_comment {color: rgb(76, 136, 107);}.ace-tm .ace_comment.ace_doc {color: rgb(0, 102, 255);}.ace-tm .ace_comment.ace_doc.ace_tag {color: rgb(128, 159, 191);}.ace-tm .ace_constant.ace_numeric {color: rgb(0, 0, 205);}.ace-tm .ace_variable {color: rgb(49, 132, 149);}.ace-tm .ace_xml-pe {color: rgb(104, 104, 91);}.ace-tm .ace_entity.ace_name.ace_function {color: #0000A2;}.ace-tm .ace_heading {color: rgb(12, 7, 255);}.ace-tm .ace_list {color:rgb(185, 6, 144);}.ace-tm .ace_meta.ace_tag {color:rgb(0, 22, 142);}.ace-tm .ace_string.ace_regex {color: rgb(255, 0, 0)}.ace-tm .ace_marker-layer .ace_selection {background: rgb(181, 213, 255);}.ace-tm.ace_multiselect .ace_selection.ace_start {box-shadow: 0 0 3px 0px white;}.ace-tm .ace_marker-layer .ace_step {background: rgb(252, 255, 0);}.ace-tm .ace_marker-layer .ace_stack {background: rgb(164, 229, 101);}.ace-tm .ace_marker-layer .ace_bracket {margin: -1px 0 0 -1px;border: 1px solid rgb(192, 192, 192);}.ace-tm .ace_marker-layer .ace_active-line {background: rgba(0, 0, 0, 0.07);}.ace-tm .ace_gutter-active-line {background-color : #dcdcdc;}.ace-tm .ace_marker-layer .ace_selected-word {background: rgb(250, 250, 255);border: 1px solid rgb(200, 200, 250);}.ace-tm .ace_indent-guide {background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==") right repeat-y;}',
     e("../lib/dom").importCssString(t.cssText, t.cssClass);
     }), ace.define("ace/line_widgets", [ "require", "exports", "module", "ace/lib/oop", "ace/lib/dom", "ace/range" ], function(e, t, n) {
     "use strict";
@@ -69925,11 +69925,11 @@ function aa(e) {
     }, this.$id = "ace/mode/yaml";
     }.call(l.prototype), t.Mode = l;
     }), ace.define("ace/theme/dreamweaver", [ "require", "exports", "module", "ace/lib/dom" ], function(e, t, n) {
-    t.isDark = !1, t.cssClass = "ace-dreamweaver", t.cssText = '.ace-dreamweaver .ace_gutter {background: #e8e8e8;color: #333;}.ace-dreamweaver .ace_print-margin {width: 1px;background: #e8e8e8;}.ace-dreamweaver {background-color: #FFFFFF;color: black;}.ace-dreamweaver .ace_fold {background-color: #757AD8;}.ace-dreamweaver .ace_cursor {color: black;}.ace-dreamweaver .ace_invisible {color: rgb(191, 191, 191);}.ace-dreamweaver .ace_storage,.ace-dreamweaver .ace_keyword {color: blue;}.ace-dreamweaver .ace_constant.ace_buildin {color: rgb(88, 72, 246);}.ace-dreamweaver .ace_constant.ace_language {color: rgb(88, 92, 246);}.ace-dreamweaver .ace_constant.ace_library {color: rgb(6, 150, 14);}.ace-dreamweaver .ace_invalid {background-color: rgb(153, 0, 0);color: white;}.ace-dreamweaver .ace_support.ace_function {color: rgb(60, 76, 114);}.ace-dreamweaver .ace_support.ace_constant {color: rgb(6, 150, 14);}.ace-dreamweaver .ace_support.ace_type,.ace-dreamweaver .ace_support.ace_class {color: #009;}.ace-dreamweaver .ace_support.ace_php_tag {color: #f00;}.ace-dreamweaver .ace_keyword.ace_operator {color: rgb(104, 118, 135);}.ace-dreamweaver .ace_string {color: #00F;}.ace-dreamweaver .ace_comment {color: rgb(76, 136, 107);}.ace-dreamweaver .ace_comment.ace_doc {color: rgb(0, 102, 255);}.ace-dreamweaver .ace_comment.ace_doc.ace_tag {color: rgb(128, 159, 191);}.ace-dreamweaver .ace_constant.ace_numeric {color: rgb(0, 0, 205);}.ace-dreamweaver .ace_variable {color: #06F}.ace-dreamweaver .ace_xml-pe {color: rgb(104, 104, 91);}.ace-dreamweaver .ace_entity.ace_name.ace_function {color: #00F;}.ace-dreamweaver .ace_heading {color: rgb(12, 7, 255);}.ace-dreamweaver .ace_list {color:rgb(185, 6, 144);}.ace-dreamweaver .ace_marker-layer .ace_selection {background: rgb(181, 213, 255);}.ace-dreamweaver .ace_marker-layer .ace_step {background: rgb(252, 255, 0);}.ace-dreamweaver .ace_marker-layer .ace_stack {background: rgb(164, 229, 101);}.ace-dreamweaver .ace_marker-layer .ace_bracket {margin: -1px 0 0 -1px;border: 1px solid rgb(192, 192, 192);}.ace-dreamweaver .ace_marker-layer .ace_active-line {background: rgba(0, 0, 0, 0.07);}.ace-dreamweaver .ace_gutter-active-line {background-color : #DCDCDC;}.ace-dreamweaver .ace_marker-layer .ace_selected-word {background: rgb(250, 250, 255);border: 1px solid rgb(200, 200, 250);}.ace-dreamweaver .ace_meta.ace_tag {color:#009;}.ace-dreamweaver .ace_meta.ace_tag.ace_anchor {color:#060;}.ace-dreamweaver .ace_meta.ace_tag.ace_form {color:#F90;}.ace-dreamweaver .ace_meta.ace_tag.ace_image {color:#909;}.ace-dreamweaver .ace_meta.ace_tag.ace_script {color:#900;}.ace-dreamweaver .ace_meta.ace_tag.ace_style {color:#909;}.ace-dreamweaver .ace_meta.ace_tag.ace_table {color:#099;}.ace-dreamweaver .ace_string.ace_regex {color: rgb(255, 0, 0)}.ace-dreamweaver .ace_indent-guide {background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==") right repeat-y;}', 
+    t.isDark = !1, t.cssClass = "ace-dreamweaver", t.cssText = '.ace-dreamweaver .ace_gutter {background: #e8e8e8;color: #333;}.ace-dreamweaver .ace_print-margin {width: 1px;background: #e8e8e8;}.ace-dreamweaver {background-color: #FFFFFF;color: black;}.ace-dreamweaver .ace_fold {background-color: #757AD8;}.ace-dreamweaver .ace_cursor {color: black;}.ace-dreamweaver .ace_invisible {color: rgb(191, 191, 191);}.ace-dreamweaver .ace_storage,.ace-dreamweaver .ace_keyword {color: blue;}.ace-dreamweaver .ace_constant.ace_buildin {color: rgb(88, 72, 246);}.ace-dreamweaver .ace_constant.ace_language {color: rgb(88, 92, 246);}.ace-dreamweaver .ace_constant.ace_library {color: rgb(6, 150, 14);}.ace-dreamweaver .ace_invalid {background-color: rgb(153, 0, 0);color: white;}.ace-dreamweaver .ace_support.ace_function {color: rgb(60, 76, 114);}.ace-dreamweaver .ace_support.ace_constant {color: rgb(6, 150, 14);}.ace-dreamweaver .ace_support.ace_type,.ace-dreamweaver .ace_support.ace_class {color: #009;}.ace-dreamweaver .ace_support.ace_php_tag {color: #f00;}.ace-dreamweaver .ace_keyword.ace_operator {color: rgb(104, 118, 135);}.ace-dreamweaver .ace_string {color: #00F;}.ace-dreamweaver .ace_comment {color: rgb(76, 136, 107);}.ace-dreamweaver .ace_comment.ace_doc {color: rgb(0, 102, 255);}.ace-dreamweaver .ace_comment.ace_doc.ace_tag {color: rgb(128, 159, 191);}.ace-dreamweaver .ace_constant.ace_numeric {color: rgb(0, 0, 205);}.ace-dreamweaver .ace_variable {color: #06F}.ace-dreamweaver .ace_xml-pe {color: rgb(104, 104, 91);}.ace-dreamweaver .ace_entity.ace_name.ace_function {color: #00F;}.ace-dreamweaver .ace_heading {color: rgb(12, 7, 255);}.ace-dreamweaver .ace_list {color:rgb(185, 6, 144);}.ace-dreamweaver .ace_marker-layer .ace_selection {background: rgb(181, 213, 255);}.ace-dreamweaver .ace_marker-layer .ace_step {background: rgb(252, 255, 0);}.ace-dreamweaver .ace_marker-layer .ace_stack {background: rgb(164, 229, 101);}.ace-dreamweaver .ace_marker-layer .ace_bracket {margin: -1px 0 0 -1px;border: 1px solid rgb(192, 192, 192);}.ace-dreamweaver .ace_marker-layer .ace_active-line {background: rgba(0, 0, 0, 0.07);}.ace-dreamweaver .ace_gutter-active-line {background-color : #DCDCDC;}.ace-dreamweaver .ace_marker-layer .ace_selected-word {background: rgb(250, 250, 255);border: 1px solid rgb(200, 200, 250);}.ace-dreamweaver .ace_meta.ace_tag {color:#009;}.ace-dreamweaver .ace_meta.ace_tag.ace_anchor {color:#060;}.ace-dreamweaver .ace_meta.ace_tag.ace_form {color:#F90;}.ace-dreamweaver .ace_meta.ace_tag.ace_image {color:#909;}.ace-dreamweaver .ace_meta.ace_tag.ace_script {color:#900;}.ace-dreamweaver .ace_meta.ace_tag.ace_style {color:#909;}.ace-dreamweaver .ace_meta.ace_tag.ace_table {color:#099;}.ace-dreamweaver .ace_string.ace_regex {color: rgb(255, 0, 0)}.ace-dreamweaver .ace_indent-guide {background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==") right repeat-y;}',
     e("../lib/dom").importCssString(t.cssText, t.cssClass);
     }), ace.define("ace/theme/eclipse", [ "require", "exports", "module", "ace/lib/dom" ], function(e, t, n) {
     "use strict";
-    t.isDark = !1, t.cssText = '.ace-eclipse .ace_gutter {background: #ebebeb;border-right: 1px solid rgb(159, 159, 159);color: rgb(136, 136, 136);}.ace-eclipse .ace_print-margin {width: 1px;background: #ebebeb;}.ace-eclipse {background-color: #FFFFFF;color: black;}.ace-eclipse .ace_fold {background-color: rgb(60, 76, 114);}.ace-eclipse .ace_cursor {color: black;}.ace-eclipse .ace_storage,.ace-eclipse .ace_keyword,.ace-eclipse .ace_variable {color: rgb(127, 0, 85);}.ace-eclipse .ace_constant.ace_buildin {color: rgb(88, 72, 246);}.ace-eclipse .ace_constant.ace_library {color: rgb(6, 150, 14);}.ace-eclipse .ace_function {color: rgb(60, 76, 114);}.ace-eclipse .ace_string {color: rgb(42, 0, 255);}.ace-eclipse .ace_comment {color: rgb(113, 150, 130);}.ace-eclipse .ace_comment.ace_doc {color: rgb(63, 95, 191);}.ace-eclipse .ace_comment.ace_doc.ace_tag {color: rgb(127, 159, 191);}.ace-eclipse .ace_constant.ace_numeric {color: darkblue;}.ace-eclipse .ace_tag {color: rgb(25, 118, 116);}.ace-eclipse .ace_type {color: rgb(127, 0, 127);}.ace-eclipse .ace_xml-pe {color: rgb(104, 104, 91);}.ace-eclipse .ace_marker-layer .ace_selection {background: rgb(181, 213, 255);}.ace-eclipse .ace_marker-layer .ace_bracket {margin: -1px 0 0 -1px;border: 1px solid rgb(192, 192, 192);}.ace-eclipse .ace_meta.ace_tag {color:rgb(25, 118, 116);}.ace-eclipse .ace_invisible {color: #ddd;}.ace-eclipse .ace_entity.ace_other.ace_attribute-name {color:rgb(127, 0, 127);}.ace-eclipse .ace_marker-layer .ace_step {background: rgb(255, 255, 0);}.ace-eclipse .ace_active-line {background: rgb(232, 242, 254);}.ace-eclipse .ace_gutter-active-line {background-color : #DADADA;}.ace-eclipse .ace_marker-layer .ace_selected-word {border: 1px solid rgb(181, 213, 255);}.ace-eclipse .ace_indent-guide {background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==") right repeat-y;}', 
+    t.isDark = !1, t.cssText = '.ace-eclipse .ace_gutter {background: #ebebeb;border-right: 1px solid rgb(159, 159, 159);color: rgb(136, 136, 136);}.ace-eclipse .ace_print-margin {width: 1px;background: #ebebeb;}.ace-eclipse {background-color: #FFFFFF;color: black;}.ace-eclipse .ace_fold {background-color: rgb(60, 76, 114);}.ace-eclipse .ace_cursor {color: black;}.ace-eclipse .ace_storage,.ace-eclipse .ace_keyword,.ace-eclipse .ace_variable {color: rgb(127, 0, 85);}.ace-eclipse .ace_constant.ace_buildin {color: rgb(88, 72, 246);}.ace-eclipse .ace_constant.ace_library {color: rgb(6, 150, 14);}.ace-eclipse .ace_function {color: rgb(60, 76, 114);}.ace-eclipse .ace_string {color: rgb(42, 0, 255);}.ace-eclipse .ace_comment {color: rgb(113, 150, 130);}.ace-eclipse .ace_comment.ace_doc {color: rgb(63, 95, 191);}.ace-eclipse .ace_comment.ace_doc.ace_tag {color: rgb(127, 159, 191);}.ace-eclipse .ace_constant.ace_numeric {color: darkblue;}.ace-eclipse .ace_tag {color: rgb(25, 118, 116);}.ace-eclipse .ace_type {color: rgb(127, 0, 127);}.ace-eclipse .ace_xml-pe {color: rgb(104, 104, 91);}.ace-eclipse .ace_marker-layer .ace_selection {background: rgb(181, 213, 255);}.ace-eclipse .ace_marker-layer .ace_bracket {margin: -1px 0 0 -1px;border: 1px solid rgb(192, 192, 192);}.ace-eclipse .ace_meta.ace_tag {color:rgb(25, 118, 116);}.ace-eclipse .ace_invisible {color: #ddd;}.ace-eclipse .ace_entity.ace_other.ace_attribute-name {color:rgb(127, 0, 127);}.ace-eclipse .ace_marker-layer .ace_step {background: rgb(255, 255, 0);}.ace-eclipse .ace_active-line {background: rgb(232, 242, 254);}.ace-eclipse .ace_gutter-active-line {background-color : #DADADA;}.ace-eclipse .ace_marker-layer .ace_selected-word {border: 1px solid rgb(181, 213, 255);}.ace-eclipse .ace_indent-guide {background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAE0lEQVQImWP4////f4bLly//BwAmVgd1/w11/gAAAABJRU5ErkJggg==") right repeat-y;}',
     t.cssClass = "ace-eclipse", e("../lib/dom").importCssString(t.cssText, t.cssClass);
     }), ace.define("ace/mode/sh_highlight_rules", [ "require", "exports", "module", "ace/lib/oop", "ace/mode/text_highlight_rules" ], function(e, t, n) {
     "use strict";
@@ -71075,7 +71075,7 @@ function aa(e) {
     angular.element(r).bind("mousemove", o), angular.element(r).bind("touchmove", o), s.bind("mouseup", i), s.bind("touchend", i), s.bind("touchcancel", i), e.stopPropagation();
     }, x = function(e) {
     var i, o;
-    (I || 2 !== e.button && 3 !== e.which) && (I && n.isTouchInvalid(e) || !N && k(e) && (N = !0, e.preventDefault(), i = n.eventObj(e), a.sortableScope = a.sortableScope || a.itemScope.sortableScope, a.callbacks = a.callbacks || a.itemScope.callbacks, a.itemScope.sortableScope.options.clone || a.itemScope.sortableScope.options.ctrlClone && e.ctrlKey ? a.itemScope.sortableScope.cloning = !0 : a.itemScope.sortableScope.cloning = !1, C = angular.element(r[0].querySelector(a.sortableScope.options.scrollableContainer)).length > 0 ? r[0].querySelector(a.sortableScope.options.scrollableContainer) : r[0].documentElement, (y = a.sortableScope.options.containment ? n.findAncestor(s, a.sortableScope.options.containment) : angular.element(r[0].body)).css("cursor", "move"), y.css("cursor", "-webkit-grabbing"), y.css("cursor", "-moz-grabbing"), y.addClass("as-sortable-un-selectable"), w = a.sortableScope.options.containerPositioning || "absolute", b = n.dragItem(a), o = a.itemScope.element.prop("tagName"), 
+    (I || 2 !== e.button && 3 !== e.which) && (I && n.isTouchInvalid(e) || !N && k(e) && (N = !0, e.preventDefault(), i = n.eventObj(e), a.sortableScope = a.sortableScope || a.itemScope.sortableScope, a.callbacks = a.callbacks || a.itemScope.callbacks, a.itemScope.sortableScope.options.clone || a.itemScope.sortableScope.options.ctrlClone && e.ctrlKey ? a.itemScope.sortableScope.cloning = !0 : a.itemScope.sortableScope.cloning = !1, C = angular.element(r[0].querySelector(a.sortableScope.options.scrollableContainer)).length > 0 ? r[0].querySelector(a.sortableScope.options.scrollableContainer) : r[0].documentElement, (y = a.sortableScope.options.containment ? n.findAncestor(s, a.sortableScope.options.containment) : angular.element(r[0].body)).css("cursor", "move"), y.css("cursor", "-webkit-grabbing"), y.css("cursor", "-moz-grabbing"), y.addClass("as-sortable-un-selectable"), w = a.sortableScope.options.containerPositioning || "absolute", b = n.dragItem(a), o = a.itemScope.element.prop("tagName"),
     (p = angular.element(r[0].createElement(a.sortableScope.element.prop("tagName"))).addClass(a.sortableScope.element.attr("class")).addClass(t.dragClass)).css("width", n.width(a.itemScope.element) + "px"), p.css("height", n.height(a.itemScope.element) + "px"), (g = B(a.itemScope).addClass(t.placeHolderClass).addClass(a.sortableScope.options.additionalPlaceholderClass)).css("width", n.width(a.itemScope.element) + "px"), g.css("height", n.height(a.itemScope.element) + "px"), m = angular.element(r[0].createElement(o)), t.hiddenClass && m.addClass(t.hiddenClass), v = n.positionStarted(i, a.itemScope.element, C), a.itemScope.sortableScope.options.clone || a.itemScope.element.after(g), a.itemScope.sortableScope.cloning ? p.append(a.itemScope.element.clone()) : (a.itemScope.element.after(m), p.append(a.itemScope.element)), y.append(p), n.movePosition(i, p, v, y, w, C), a.sortableScope.$apply(function() {
     a.callbacks.dragStart(b.eventArgs());
     }), F()));
@@ -71429,23 +71429,23 @@ function aa(e) {
     case e.DOWN:
     !y.open && y.multiple ? y.activate(!1, !0) : y.activeIndex < y.items.length - 1 && y.activeIndex++;
     break;
-    
+
     case e.UP:
     !y.open && y.multiple ? y.activate(!1, !0) : (y.activeIndex > 0 || 0 === y.search.length && y.tagging.isActivated && y.activeIndex > -1) && y.activeIndex--;
     break;
-    
+
     case e.TAB:
     y.multiple && !y.open || y.select(y.items[y.activeIndex], !0);
     break;
-    
+
     case e.ENTER:
     y.open && (y.tagging.isActivated || y.activeIndex >= 0) ? y.select(y.items[y.activeIndex], y.skipFocusser) : y.activate(!1, !0);
     break;
-    
+
     case e.ESC:
     y.close();
     break;
-    
+
     default:
     n = !1;
     }
@@ -71886,13 +71886,13 @@ function aa(e) {
     switch (t) {
     case e.LEFT:
     return ~f.activeMatchIndex ? a : i;
-    
+
     case e.RIGHT:
     return ~f.activeMatchIndex && r !== i ? o : (d.activate(), !1);
-    
+
     case e.BACKSPACE:
     return ~f.activeMatchIndex ? f.removeChoice(r) ? a : r : i;
-    
+
     case e.DELETE:
     return !!~f.activeMatchIndex && (f.removeChoice(f.activeMatchIndex), r);
     }
@@ -72170,13 +72170,13 @@ function aa(e) {
     };
     } ]);
     }(), angular.module("ui.select").run([ "$templateCache", function(e) {
-    e.put("bootstrap/choices.tpl.html", '<ul class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu" role="listbox" ng-show="$select.open && $select.items.length > 0"><li class="ui-select-choices-group" id="ui-select-choices-{{ $select.generatedId }}"><div class="divider" ng-show="$select.isGrouped && $index > 0"></div><div ng-show="$select.isGrouped" class="ui-select-choices-group-label dropdown-header" ng-bind="$group.name"></div><div ng-attr-id="ui-select-choices-row-{{ $select.generatedId }}-{{$index}}" class="ui-select-choices-row" ng-class="{active: $select.isActive(this), disabled: $select.isDisabled(this)}" role="option"><span class="ui-select-choices-row-inner"></span></div></li></ul>'), e.put("bootstrap/match-multiple.tpl.html", '<span class="ui-select-match"><span ng-repeat="$item in $select.selected track by $index"><span class="ui-select-match-item btn btn-default btn-xs" tabindex="-1" type="button" ng-disabled="$select.disabled" ng-click="$selectMultiple.activeMatchIndex = $index;" ng-class="{\'btn-primary\':$selectMultiple.activeMatchIndex === $index, \'select-locked\':$select.isLocked(this, $index)}" ui-select-sort="$select.selected"><span class="close ui-select-match-close" ng-hide="$select.disabled" ng-click="$selectMultiple.removeChoice($index)">&nbsp;&times;</span> <span uis-transclude-append=""></span></span></span></span>'), 
-    e.put("bootstrap/match.tpl.html", '<div class="ui-select-match" ng-hide="$select.open && $select.searchEnabled" ng-disabled="$select.disabled" ng-class="{\'btn-default-focus\':$select.focus}"><span tabindex="-1" class="btn btn-default form-control ui-select-toggle" aria-label="{{ $select.baseTitle }} activate" ng-disabled="$select.disabled" ng-click="$select.activate()" style="outline: 0;"><span ng-show="$select.isEmpty()" class="ui-select-placeholder text-muted">{{$select.placeholder}}</span> <span ng-hide="$select.isEmpty()" class="ui-select-match-text pull-left" ng-class="{\'ui-select-allow-clear\': $select.allowClear && !$select.isEmpty()}" ng-transclude=""></span> <i class="caret pull-right" ng-click="$select.toggle($event)"></i> <a ng-show="$select.allowClear && !$select.isEmpty() && ($select.disabled !== true)" aria-label="{{ $select.baseTitle }} clear" style="margin-right: 10px" ng-click="$select.clear($event)" class="btn btn-xs btn-link pull-right"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i></a></span></div>'), 
-    e.put("bootstrap/no-choice.tpl.html", '<ul class="ui-select-no-choice dropdown-menu" ng-show="$select.items.length == 0"><li ng-transclude=""></li></ul>'), e.put("bootstrap/select-multiple.tpl.html", '<div class="ui-select-container ui-select-multiple ui-select-bootstrap dropdown form-control" ng-class="{open: $select.open}"><div><div class="ui-select-match"></div><input type="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="ui-select-search input-xs" placeholder="{{$selectMultiple.getPlaceholder()}}" ng-disabled="$select.disabled" ng-click="$select.activate()" ng-model="$select.search" role="combobox" aria-label="{{ $select.baseTitle }}" ondrop="return false;"></div><div class="ui-select-choices"></div><div class="ui-select-no-choice"></div></div>'), e.put("bootstrap/select.tpl.html", '<div class="ui-select-container ui-select-bootstrap dropdown" ng-class="{open: $select.open}"><div class="ui-select-match"></div><input type="search" autocomplete="off" tabindex="-1" aria-expanded="true" aria-label="{{ $select.baseTitle }}" aria-owns="ui-select-choices-{{ $select.generatedId }}" aria-activedescendant="ui-select-choices-row-{{ $select.generatedId }}-{{ $select.activeIndex }}" class="form-control ui-select-search" ng-class="{ \'ui-select-search-hidden\' : !$select.searchEnabled }" placeholder="{{$select.placeholder}}" ng-model="$select.search" ng-show="$select.open"><div class="ui-select-choices"></div><div class="ui-select-no-choice"></div></div>'), 
-    e.put("select2/choices.tpl.html", '<ul tabindex="-1" class="ui-select-choices ui-select-choices-content select2-results"><li class="ui-select-choices-group" ng-class="{\'select2-result-with-children\': $select.choiceGrouped($group) }"><div ng-show="$select.choiceGrouped($group)" class="ui-select-choices-group-label select2-result-label" ng-bind="$group.name"></div><ul role="listbox" id="ui-select-choices-{{ $select.generatedId }}" ng-class="{\'select2-result-sub\': $select.choiceGrouped($group), \'select2-result-single\': !$select.choiceGrouped($group) }"><li role="option" ng-attr-id="ui-select-choices-row-{{ $select.generatedId }}-{{$index}}" class="ui-select-choices-row" ng-class="{\'select2-highlighted\': $select.isActive(this), \'select2-disabled\': $select.isDisabled(this)}"><div class="select2-result-label ui-select-choices-row-inner"></div></li></ul></li></ul>'), e.put("select2/match-multiple.tpl.html", '<span class="ui-select-match"><li class="ui-select-match-item select2-search-choice" ng-repeat="$item in $select.selected track by $index" ng-class="{\'select2-search-choice-focus\':$selectMultiple.activeMatchIndex === $index, \'select2-locked\':$select.isLocked(this, $index)}" ui-select-sort="$select.selected"><span uis-transclude-append=""></span> <a href="javascript:;" class="ui-select-match-close select2-search-choice-close" ng-click="$selectMultiple.removeChoice($index)" tabindex="-1"></a></li></span>'), 
-    e.put("select2/match.tpl.html", '<a class="select2-choice ui-select-match" ng-class="{\'select2-default\': $select.isEmpty()}" ng-click="$select.toggle($event)" aria-label="{{ $select.baseTitle }} select"><span ng-show="$select.isEmpty()" class="select2-chosen">{{$select.placeholder}}</span> <span ng-hide="$select.isEmpty()" class="select2-chosen" ng-transclude=""></span> <abbr ng-if="$select.allowClear && !$select.isEmpty()" class="select2-search-choice-close" ng-click="$select.clear($event)"></abbr> <span class="select2-arrow ui-select-toggle"><b></b></span></a>'), e.put("select2/no-choice.tpl.html", '<div class="ui-select-no-choice dropdown" ng-show="$select.items.length == 0"><div class="dropdown-content"><div data-selectable="" ng-transclude=""></div></div></div>'), e.put("select2/select-multiple.tpl.html", '<div class="ui-select-container ui-select-multiple select2 select2-container select2-container-multi" ng-class="{\'select2-container-active select2-dropdown-open open\': $select.open, \'select2-container-disabled\': $select.disabled}"><ul class="select2-choices"><span class="ui-select-match"></span><li class="select2-search-field"><input type="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="combobox" aria-expanded="true" aria-owns="ui-select-choices-{{ $select.generatedId }}" aria-label="{{ $select.baseTitle }}" aria-activedescendant="ui-select-choices-row-{{ $select.generatedId }}-{{ $select.activeIndex }}" class="select2-input ui-select-search" placeholder="{{$selectMultiple.getPlaceholder()}}" ng-disabled="$select.disabled" ng-hide="$select.disabled" ng-model="$select.search" ng-click="$select.activate()" style="width: 34px;" ondrop="return false;"></li></ul><div class="ui-select-dropdown select2-drop select2-with-searchbox select2-drop-active" ng-class="{\'select2-display-none\': !$select.open || $select.items.length === 0}"><div class="ui-select-choices"></div></div></div>'), 
-    e.put("select2/select.tpl.html", '<div class="ui-select-container select2 select2-container" ng-class="{\'select2-container-active select2-dropdown-open open\': $select.open, \'select2-container-disabled\': $select.disabled, \'select2-container-active\': $select.focus, \'select2-allowclear\': $select.allowClear && !$select.isEmpty()}"><div class="ui-select-match"></div><div class="ui-select-dropdown select2-drop select2-with-searchbox select2-drop-active" ng-class="{\'select2-display-none\': !$select.open}"><div class="search-container" ng-class="{\'ui-select-search-hidden\':!$select.searchEnabled, \'select2-search\':$select.searchEnabled}"><input type="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="combobox" aria-expanded="true" aria-owns="ui-select-choices-{{ $select.generatedId }}" aria-label="{{ $select.baseTitle }}" aria-activedescendant="ui-select-choices-row-{{ $select.generatedId }}-{{ $select.activeIndex }}" class="ui-select-search select2-input" ng-model="$select.search"></div><div class="ui-select-choices"></div><div class="ui-select-no-choice"></div></div></div>'), 
-    e.put("selectize/choices.tpl.html", '<div ng-show="$select.open" class="ui-select-choices ui-select-dropdown selectize-dropdown single"><div class="ui-select-choices-content selectize-dropdown-content"><div class="ui-select-choices-group optgroup" role="listbox"><div ng-show="$select.isGrouped" class="ui-select-choices-group-label optgroup-header" ng-bind="$group.name"></div><div role="option" class="ui-select-choices-row" ng-class="{active: $select.isActive(this), disabled: $select.isDisabled(this)}"><div class="option ui-select-choices-row-inner" data-selectable=""></div></div></div></div></div>'), e.put("selectize/match.tpl.html", '<div ng-hide="$select.searchEnabled && ($select.open || $select.isEmpty())" class="ui-select-match"><span ng-show="!$select.searchEnabled && ($select.isEmpty() || $select.open)" class="ui-select-placeholder text-muted">{{$select.placeholder}}</span> <span ng-hide="$select.isEmpty() || $select.open" ng-transclude=""></span></div>'), e.put("selectize/no-choice.tpl.html", '<div class="ui-select-no-choice selectize-dropdown" ng-show="$select.items.length == 0"><div class="selectize-dropdown-content"><div data-selectable="" ng-transclude=""></div></div></div>'), 
+    e.put("bootstrap/choices.tpl.html", '<ul class="ui-select-choices ui-select-choices-content ui-select-dropdown dropdown-menu" role="listbox" ng-show="$select.open && $select.items.length > 0"><li class="ui-select-choices-group" id="ui-select-choices-{{ $select.generatedId }}"><div class="divider" ng-show="$select.isGrouped && $index > 0"></div><div ng-show="$select.isGrouped" class="ui-select-choices-group-label dropdown-header" ng-bind="$group.name"></div><div ng-attr-id="ui-select-choices-row-{{ $select.generatedId }}-{{$index}}" class="ui-select-choices-row" ng-class="{active: $select.isActive(this), disabled: $select.isDisabled(this)}" role="option"><span class="ui-select-choices-row-inner"></span></div></li></ul>'), e.put("bootstrap/match-multiple.tpl.html", '<span class="ui-select-match"><span ng-repeat="$item in $select.selected track by $index"><span class="ui-select-match-item btn btn-default btn-xs" tabindex="-1" type="button" ng-disabled="$select.disabled" ng-click="$selectMultiple.activeMatchIndex = $index;" ng-class="{\'btn-primary\':$selectMultiple.activeMatchIndex === $index, \'select-locked\':$select.isLocked(this, $index)}" ui-select-sort="$select.selected"><span class="close ui-select-match-close" ng-hide="$select.disabled" ng-click="$selectMultiple.removeChoice($index)">&nbsp;&times;</span> <span uis-transclude-append=""></span></span></span></span>'),
+    e.put("bootstrap/match.tpl.html", '<div class="ui-select-match" ng-hide="$select.open && $select.searchEnabled" ng-disabled="$select.disabled" ng-class="{\'btn-default-focus\':$select.focus}"><span tabindex="-1" class="btn btn-default form-control ui-select-toggle" aria-label="{{ $select.baseTitle }} activate" ng-disabled="$select.disabled" ng-click="$select.activate()" style="outline: 0;"><span ng-show="$select.isEmpty()" class="ui-select-placeholder text-muted">{{$select.placeholder}}</span> <span ng-hide="$select.isEmpty()" class="ui-select-match-text pull-left" ng-class="{\'ui-select-allow-clear\': $select.allowClear && !$select.isEmpty()}" ng-transclude=""></span> <i class="caret pull-right" ng-click="$select.toggle($event)"></i> <a ng-show="$select.allowClear && !$select.isEmpty() && ($select.disabled !== true)" aria-label="{{ $select.baseTitle }} clear" style="margin-right: 10px" ng-click="$select.clear($event)" class="btn btn-xs btn-link pull-right"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i></a></span></div>'),
+    e.put("bootstrap/no-choice.tpl.html", '<ul class="ui-select-no-choice dropdown-menu" ng-show="$select.items.length == 0"><li ng-transclude=""></li></ul>'), e.put("bootstrap/select-multiple.tpl.html", '<div class="ui-select-container ui-select-multiple ui-select-bootstrap dropdown form-control" ng-class="{open: $select.open}"><div><div class="ui-select-match"></div><input type="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="ui-select-search input-xs" placeholder="{{$selectMultiple.getPlaceholder()}}" ng-disabled="$select.disabled" ng-click="$select.activate()" ng-model="$select.search" role="combobox" aria-label="{{ $select.baseTitle }}" ondrop="return false;"></div><div class="ui-select-choices"></div><div class="ui-select-no-choice"></div></div>'), e.put("bootstrap/select.tpl.html", '<div class="ui-select-container ui-select-bootstrap dropdown" ng-class="{open: $select.open}"><div class="ui-select-match"></div><input type="search" autocomplete="off" tabindex="-1" aria-expanded="true" aria-label="{{ $select.baseTitle }}" aria-owns="ui-select-choices-{{ $select.generatedId }}" aria-activedescendant="ui-select-choices-row-{{ $select.generatedId }}-{{ $select.activeIndex }}" class="form-control ui-select-search" ng-class="{ \'ui-select-search-hidden\' : !$select.searchEnabled }" placeholder="{{$select.placeholder}}" ng-model="$select.search" ng-show="$select.open"><div class="ui-select-choices"></div><div class="ui-select-no-choice"></div></div>'),
+    e.put("select2/choices.tpl.html", '<ul tabindex="-1" class="ui-select-choices ui-select-choices-content select2-results"><li class="ui-select-choices-group" ng-class="{\'select2-result-with-children\': $select.choiceGrouped($group) }"><div ng-show="$select.choiceGrouped($group)" class="ui-select-choices-group-label select2-result-label" ng-bind="$group.name"></div><ul role="listbox" id="ui-select-choices-{{ $select.generatedId }}" ng-class="{\'select2-result-sub\': $select.choiceGrouped($group), \'select2-result-single\': !$select.choiceGrouped($group) }"><li role="option" ng-attr-id="ui-select-choices-row-{{ $select.generatedId }}-{{$index}}" class="ui-select-choices-row" ng-class="{\'select2-highlighted\': $select.isActive(this), \'select2-disabled\': $select.isDisabled(this)}"><div class="select2-result-label ui-select-choices-row-inner"></div></li></ul></li></ul>'), e.put("select2/match-multiple.tpl.html", '<span class="ui-select-match"><li class="ui-select-match-item select2-search-choice" ng-repeat="$item in $select.selected track by $index" ng-class="{\'select2-search-choice-focus\':$selectMultiple.activeMatchIndex === $index, \'select2-locked\':$select.isLocked(this, $index)}" ui-select-sort="$select.selected"><span uis-transclude-append=""></span> <a href="javascript:;" class="ui-select-match-close select2-search-choice-close" ng-click="$selectMultiple.removeChoice($index)" tabindex="-1"></a></li></span>'),
+    e.put("select2/match.tpl.html", '<a class="select2-choice ui-select-match" ng-class="{\'select2-default\': $select.isEmpty()}" ng-click="$select.toggle($event)" aria-label="{{ $select.baseTitle }} select"><span ng-show="$select.isEmpty()" class="select2-chosen">{{$select.placeholder}}</span> <span ng-hide="$select.isEmpty()" class="select2-chosen" ng-transclude=""></span> <abbr ng-if="$select.allowClear && !$select.isEmpty()" class="select2-search-choice-close" ng-click="$select.clear($event)"></abbr> <span class="select2-arrow ui-select-toggle"><b></b></span></a>'), e.put("select2/no-choice.tpl.html", '<div class="ui-select-no-choice dropdown" ng-show="$select.items.length == 0"><div class="dropdown-content"><div data-selectable="" ng-transclude=""></div></div></div>'), e.put("select2/select-multiple.tpl.html", '<div class="ui-select-container ui-select-multiple select2 select2-container select2-container-multi" ng-class="{\'select2-container-active select2-dropdown-open open\': $select.open, \'select2-container-disabled\': $select.disabled}"><ul class="select2-choices"><span class="ui-select-match"></span><li class="select2-search-field"><input type="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="combobox" aria-expanded="true" aria-owns="ui-select-choices-{{ $select.generatedId }}" aria-label="{{ $select.baseTitle }}" aria-activedescendant="ui-select-choices-row-{{ $select.generatedId }}-{{ $select.activeIndex }}" class="select2-input ui-select-search" placeholder="{{$selectMultiple.getPlaceholder()}}" ng-disabled="$select.disabled" ng-hide="$select.disabled" ng-model="$select.search" ng-click="$select.activate()" style="width: 34px;" ondrop="return false;"></li></ul><div class="ui-select-dropdown select2-drop select2-with-searchbox select2-drop-active" ng-class="{\'select2-display-none\': !$select.open || $select.items.length === 0}"><div class="ui-select-choices"></div></div></div>'),
+    e.put("select2/select.tpl.html", '<div class="ui-select-container select2 select2-container" ng-class="{\'select2-container-active select2-dropdown-open open\': $select.open, \'select2-container-disabled\': $select.disabled, \'select2-container-active\': $select.focus, \'select2-allowclear\': $select.allowClear && !$select.isEmpty()}"><div class="ui-select-match"></div><div class="ui-select-dropdown select2-drop select2-with-searchbox select2-drop-active" ng-class="{\'select2-display-none\': !$select.open}"><div class="search-container" ng-class="{\'ui-select-search-hidden\':!$select.searchEnabled, \'select2-search\':$select.searchEnabled}"><input type="search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="combobox" aria-expanded="true" aria-owns="ui-select-choices-{{ $select.generatedId }}" aria-label="{{ $select.baseTitle }}" aria-activedescendant="ui-select-choices-row-{{ $select.generatedId }}-{{ $select.activeIndex }}" class="ui-select-search select2-input" ng-model="$select.search"></div><div class="ui-select-choices"></div><div class="ui-select-no-choice"></div></div></div>'),
+    e.put("selectize/choices.tpl.html", '<div ng-show="$select.open" class="ui-select-choices ui-select-dropdown selectize-dropdown single"><div class="ui-select-choices-content selectize-dropdown-content"><div class="ui-select-choices-group optgroup" role="listbox"><div ng-show="$select.isGrouped" class="ui-select-choices-group-label optgroup-header" ng-bind="$group.name"></div><div role="option" class="ui-select-choices-row" ng-class="{active: $select.isActive(this), disabled: $select.isDisabled(this)}"><div class="option ui-select-choices-row-inner" data-selectable=""></div></div></div></div></div>'), e.put("selectize/match.tpl.html", '<div ng-hide="$select.searchEnabled && ($select.open || $select.isEmpty())" class="ui-select-match"><span ng-show="!$select.searchEnabled && ($select.isEmpty() || $select.open)" class="ui-select-placeholder text-muted">{{$select.placeholder}}</span> <span ng-hide="$select.isEmpty() || $select.open" ng-transclude=""></span></div>'), e.put("selectize/no-choice.tpl.html", '<div class="ui-select-no-choice selectize-dropdown" ng-show="$select.items.length == 0"><div class="selectize-dropdown-content"><div data-selectable="" ng-transclude=""></div></div></div>'),
     e.put("selectize/select.tpl.html", '<div class="ui-select-container selectize-control single" ng-class="{\'open\': $select.open}"><div class="selectize-input" ng-class="{\'focus\': $select.open, \'disabled\': $select.disabled, \'selectize-focus\' : $select.focus}" ng-click="$select.open && !$select.searchEnabled ? $select.toggle($event) : $select.activate()"><div class="ui-select-match"></div><input type="search" autocomplete="off" tabindex="-1" class="ui-select-search ui-select-toggle" ng-class="{\'ui-select-search-hidden\':!$select.searchEnabled}" ng-click="$select.toggle($event)" placeholder="{{$select.placeholder}}" ng-model="$select.search" ng-hide="!$select.isEmpty() && !$select.open" ng-disabled="$select.disabled" aria-label="{{ $select.baseTitle }}"></div><div class="ui-select-choices"></div><div class="ui-select-no-choice"></div></div>');
     } ]), function() {
     "use strict";
@@ -72478,19 +72478,19 @@ function aa(e) {
     })) {
     case oe:
     return t;
-    
+
     case ae:
     return "'" + t.replace(/'/g, "''") + "'";
-    
+
     case se:
     return "|" + g(t, e.indent) + m(a(t, r));
-    
+
     case le:
     return ">" + g(t, e.indent) + m(a(v(t, o), r));
-    
+
     case ce:
     return '"' + y(t) + '"';
-    
+
     default:
     throw new E("impossible error: invalid scalar style");
     }
@@ -72967,11 +72967,11 @@ function aa(e) {
     case 1:
     e = o.DEFAULT, t = arguments[0];
     break;
-    
+
     case 2:
     e = arguments[0], t = arguments[1];
     break;
-    
+
     default:
     throw new s("Wrong number of arguments for Schema.create function");
     }
@@ -73174,28 +73174,28 @@ function aa(e) {
     if (isNaN(e)) switch (t) {
     case "lowercase":
     return ".nan";
-    
+
     case "uppercase":
     return ".NAN";
-    
+
     case "camelcase":
     return ".NaN";
     } else if (Number.POSITIVE_INFINITY === e) switch (t) {
     case "lowercase":
     return ".inf";
-    
+
     case "uppercase":
     return ".INF";
-    
+
     case "camelcase":
     return ".Inf";
     } else if (Number.NEGATIVE_INFINITY === e) switch (t) {
     case "lowercase":
     return "-.inf";
-    
+
     case "uppercase":
     return "-.INF";
-    
+
     case "camelcase":
     return "-.Inf";
     } else if (i.isNegativeZero(e)) return "-0.0";
@@ -73798,7 +73798,7 @@ function aa(e) {
     urlencode: t.encode
     };
     }());
-    
+
     var saveAs = saveAs || function(e) {
     "use strict";
     if (!(void 0 === e || "undefined" != typeof navigator && /MSIE [1-9]\./.test(navigator.userAgent))) {
@@ -73854,7 +73854,7 @@ function aa(e) {
     });
     }
     }("undefined" != typeof self && self || "undefined" != typeof window && window || this.content);
-    
+
     "undefined" != typeof module && module.exports ? module.exports.saveAs = saveAs : "undefined" != typeof define && null !== define && null !== define.amd && define("FileSaver.js", function() {
     return saveAs;
     }), function(e, t) {
@@ -74349,7 +74349,7 @@ function aa(e) {
     e.escape, Array.prototype.join;
     r += "\n";
     var o = t.i18n, a = t.buttons, s = t.step, l = t.tour;
-    return r += '\n<div class="hopscotch-bubble-container" style="width: ' + (null == (i = s.width) ? "" : i) + "px; padding: " + (null == (i = s.padding) ? "" : i) + 'px;">\n  ', l.isTour && (r += '<span class="hopscotch-bubble-number">' + (null == (i = o.stepNum) ? "" : i) + "</span>"), r += '\n  <div class="hopscotch-bubble-content">\n    ', "" !== s.title && (r += '<h3 class="hopscotch-title">' + (null == (i = n(s.title, l.unsafe)) ? "" : i) + "</h3>"), r += "\n    ", "" !== s.content && (r += '<div class="hopscotch-content">' + (null == (i = n(s.content, l.unsafe)) ? "" : i) + "</div>"), r += '\n  </div>\n  <div class="hopscotch-actions">\n    ', a.showPrev && (r += '<button class="hopscotch-nav-button prev hopscotch-prev">' + (null == (i = o.prevBtn) ? "" : i) + "</button>"), r += "\n    ", a.showCTA && (r += '<button class="hopscotch-nav-button next hopscotch-cta">' + (null == (i = a.ctaLabel) ? "" : i) + "</button>"), r += "\n    ", a.showNext && (r += '<button class="hopscotch-nav-button next hopscotch-next">' + (null == (i = o.nextBtn) ? "" : i) + "</button>"), 
+    return r += '\n<div class="hopscotch-bubble-container" style="width: ' + (null == (i = s.width) ? "" : i) + "px; padding: " + (null == (i = s.padding) ? "" : i) + 'px;">\n  ', l.isTour && (r += '<span class="hopscotch-bubble-number">' + (null == (i = o.stepNum) ? "" : i) + "</span>"), r += '\n  <div class="hopscotch-bubble-content">\n    ', "" !== s.title && (r += '<h3 class="hopscotch-title">' + (null == (i = n(s.title, l.unsafe)) ? "" : i) + "</h3>"), r += "\n    ", "" !== s.content && (r += '<div class="hopscotch-content">' + (null == (i = n(s.content, l.unsafe)) ? "" : i) + "</div>"), r += '\n  </div>\n  <div class="hopscotch-actions">\n    ', a.showPrev && (r += '<button class="hopscotch-nav-button prev hopscotch-prev">' + (null == (i = o.prevBtn) ? "" : i) + "</button>"), r += "\n    ", a.showCTA && (r += '<button class="hopscotch-nav-button next hopscotch-cta">' + (null == (i = a.ctaLabel) ? "" : i) + "</button>"), r += "\n    ", a.showNext && (r += '<button class="hopscotch-nav-button next hopscotch-next">' + (null == (i = o.nextBtn) ? "" : i) + "</button>"),
     r += "\n  </div>\n  ", a.showClose && (r += '<button class="hopscotch-bubble-close hopscotch-close">' + (null == (i = o.closeTooltip) ? "" : i) + "</button>"), r += '\n</div>\n<div class="hopscotch-bubble-arrow-container hopscotch-arrow">\n  <div class="hopscotch-bubble-arrow-border"></div>\n  <div class="hopscotch-bubble-arrow"></div>\n</div>\n';
     };
     }.call(h), h;
@@ -74477,7 +74477,7 @@ function aa(e) {
     } else window.localStorage.logBuffer = window.LogBuffer;
     }
     }();
-    
+
     var pluginLoader = function(e) {
     "use strict";
     function t(e, t) {
@@ -74620,7 +74620,7 @@ function aa(e) {
     });
     }), t;
     }();
-    
+
     window.hawtioPluginLoader = pluginLoader, angular.module("openshiftCommonServices", [ "ab-base64" ]).config([ "AuthServiceProvider", function(e) {
     e.UserStore("MemoryUserStore");
     } ]).constant("API_CFG", _.get(window.OPENSHIFT_CONFIG, "api", {})).constant("APIS_CFG", _.get(window.OPENSHIFT_CONFIG, "apis", {})).constant("AUTH_CFG", _.get(window.OPENSHIFT_CONFIG, "auth", {})).config([ "$httpProvider", "AuthServiceProvider", "RedirectLoginServiceProvider", "AUTH_CFG", function(e, t, n, i) {
@@ -74697,13 +74697,13 @@ function aa(e) {
     description: "Name must consist of lower-case letters, numbers, periods, and hyphens. It must start and end with a letter or a number."
     }).constant("IS_IOS", /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream), pluginLoader.addModule("openshiftCommonUI"), angular.module("openshiftCommonUI").run([ "$templateCache", function(e) {
     "use strict";
-    e.put("src/components/binding/bindApplicationForm.html", '<div class="bind-form">\n  <form>\n    <div class="form-group">\n      <label>\n        <h3>Create a binding for application <strong>{{ctrl.applicationName}}</strong></h3>\n      </label>\n      <span class="help-block">\n        Bindings create a secret containing the necessary information for an application to use a service.\n      </span>\n    </div>\n  </form>\n\n  <label ng-if="!ctrl.allowNoBinding">\n    Select a service:\n  </label>\n  <form name="ctrl.formName">\n    <fieldset>\n      <div class="radio">\n        <div ng-if="ctrl.allowNoBinding" class="bind-service-selection">\n          <label>\n            <input type="radio" ng-model="ctrl.serviceToBind" ng-value="null">\n            Do not bind at this time.\n          </label>\n          <div class="bind-description">\n          <span class="help-block service-instance-name">\n            Bindings can be created later from within a project.\n          </span>\n          </div>\n        </div>\n        <div ng-repeat="serviceInstance in ctrl.bindableServiceInstances" class="bind-service-selection">\n          <label>\n            <input type="radio" ng-model="ctrl.serviceToBind" ng-value="serviceInstance">\n            {{ctrl.serviceClasses[serviceInstance.spec.clusterServiceClassRef.name].spec.externalMetadata.displayName || serviceInstance.spec.clusterServiceClassRef.name}}\n          </label>\n          <div class="bind-description">\n            <span class="pficon pficon-info"\n                  ng-if="!(serviceInstance | isServiceInstanceReady)"\n                  data-content="This service is not yet ready. If you bind to it, then the binding will be pending until the service is ready."\n                  data-toggle="popover"\n                  data-trigger="hover">\n            </span>\n            <span class="help-block service-instance-name">\n              {{serviceInstance.metadata.name}}\n            </span>\n          </div>\n        </div>\n        <h4 ng-if="!ctrl.bindableServiceInstances.length">\n          <span class="pficon pficon-info" aria-hidden="true"></span>\n          <span class="help-block service-instance-name">\n            There are no bindable services in this project\n          </span>\n        </h4>\n      </div>\n    </fieldset>\n  </form>\n</div>\n'), 
-    e.put("src/components/binding/bindResults.html", '<div ng-if="!ctrl.error && !(ctrl.binding | isBindingFailed)">\n  <div ng-if="ctrl.binding && !(ctrl.binding | isBindingReady)" class="results-status">\n    <span class="fa fa-clock-o text-muted" aria-hidden="true"></span>\n    <span class="sr-only">Pending</span>\n    <div class="results-message">\n      <h3>\n        The binding is being created.\n      </h3>\n      <p class="results-message-details">This may take several minutes.</p>\n    </div>\n  </div>\n  <div ng-if="(ctrl.binding | isBindingReady)">\n    <div class="results-status">\n      <span class="pficon pficon-ok" aria-hidden="true"></span>\n      <span class="sr-only">Success</span>\n      <div class="results-message">\n        <h3>\n          <span ng-if="ctrl.bindType === \'application\'">\n            <strong>{{ctrl.serviceToBind}}</strong> has been bound to\n            <strong>{{ctrl.applicationToBind}}</strong> successfully.\n          </span>\n          <span ng-if="ctrl.bindType !== \'application\'">\n            The binding <strong>{{ctrl.binding.metadata.name}}</strong> has been created successfully.\n          </span>\n        </h3>\n        <p class="results-message-details">\n          The binding operation created the secret\n          <a ng-if="ctrl.secretHref" ng-href="{{ctrl.secretHref}}">{{ctrl.binding.spec.secretName}}</a>\n          <span ng-if="!ctrl.secretHref">{{ctrl.binding.spec.secretName}}</span>\n          that you may need to reference in your application.\n          <span ng-if="ctrl.showPodPresets">Its data will be available to your application as environment variables.</span>\n        </p>\n      </div>\n    </div>\n    <div class="alert alert-info results-info" ng-if="ctrl.bindType === \'application\'">\n      <span class="pficon pficon-info" aria-hidden="true"></span>\n      <span class="sr-only">Info</span>\n      The binding secret will only be available to new pods. You will need to redeploy your application.\n    </div>\n  </div>\n</div>\n<div ng-if="ctrl.error || (ctrl.binding | isBindingFailed)">\n  <div class="results-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <span class="sr-only">Error</span>\n    <div class="results-message">\n      <h3>\n        The binding could not be created.\n      </h3>\n    </div>\n  </div>\n  <div ng-if="ctrl.error" class="sub-title">\n    <span ng-if="ctrl.error.data.message">\n      {{ctrl.error.data.message | upperFirst}}\n    </span>\n    <span ng-if="!ctrl.error.data.message">\n      An error occurred creating the binding.\n    </span>\n  </div>\n  <div ng-if="!ctrl.error" class="sub-title">\n    {{ctrl.binding | bindingFailedMessage}}\n  </div>\n</div>\n'), 
-    e.put("src/components/binding/bindServiceForm.html", '<div class="bind-form">\n  <form>\n    <div class="form-group">\n      <label>\n        <h3>Create a binding for <strong>{{ctrl.serviceClass.spec.externalMetadata.displayName || ctrl.serviceClass.spec.externalName}}</strong></h3>\n      </label>\n      <span class="help-block">Bindings create a secret containing the necessary information for an application to use this service.</span>\n    </div>\n  </form>\n\n  <form ng-if="ctrl.allowNoBinding || ctrl.showPodPresets" name="ctrl.formName" class="mar-bottom-lg">\n    <fieldset>\n      <div class="radio">\n        <label ng-if="ctrl.showPodPresets" class="bind-choice" ng-disabled="!ctrl.applications.length">\n          <input type="radio" ng-model="ctrl.bindType" value="application" ng-disabled="!ctrl.applications.length">\n          Create a secret and inject it into an application\n        </label>\n        <div ng-if="ctrl.showPodPresets" class="application-select">\n          <ui-select ng-model="ctrl.appToBind"\n                     ng-disabled="ctrl.bindType !== \'application\'"\n                     ng-required="ctrl.bindType === \'application\'">\n            <ui-select-match placeholder="{{ctrl.applications.length ? \'Select an application\' : \'There are no applications in this project\'}}">\n              <span>\n                {{$select.selected.metadata.name}}\n                <small class="text-muted">&ndash; {{$select.selected.kind | humanizeKind : true}}</small>\n              </span>\n            </ui-select-match>\n            <ui-select-choices\n              repeat="application in (ctrl.applications) | filter : { metadata: { name: $select.search } } track by (application | uid)"\n              group-by="ctrl.groupByKind">\n              <span ng-bind-html="application.metadata.name | highlight : $select.search"></span>\n            </ui-select-choices>\n          </ui-select>\n        </div>\n        <label class="bind-choice">\n          <input type="radio" ng-model="ctrl.bindType" value="secret-only">\n          Create a secret in <strong>{{ctrl.projectName}}</strong> to be used later\n        </label>\n        <div class="help-block bind-description">\n          Secrets can be referenced later from an application.\n        </div>\n        <label ng-if="ctrl.allowNoBinding" class="bind-choice">\n          <input type="radio" ng-model="ctrl.bindType" value="none">\n          Do not bind at this time\n        </label>\n        <div ng-if="ctrl.allowNoBinding" class="help-block bind-description">\n          Bindings can be created later from within a project.\n        </div>\n      </div>\n    </fieldset>\n  </form>\n</div>\n'), 
-    e.put("src/components/create-project/createProject.html", '<form name="createProjectForm" novalidate>\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="name" class="required">Name</label>\n      <span ng-class="{\'has-error\': (createProjectForm.name.$error.pattern && createProjectForm.name.$touched) || nameTaken}">\n        <input class="form-control"\n            name="name"\n            id="name"\n            placeholder="my-project"\n            type="text"\n            required\n            take-focus\n            minlength="2"\n            maxlength="63"\n            pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?"\n            aria-describedby="nameHelp"\n            ng-model="name"\n            ng-model-options="{ updateOn: \'default blur\' }"\n            ng-change="nameTaken = false"\n            autocorrect="off"\n            autocapitalize="off"\n            spellcheck="false">\n      </span>\n      <div>\n        <span class="help-block">A unique name for the project.</span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.required && createProjectForm.name.$dirty">\n          Name is required.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.minlength && createProjectForm.name.$touched">\n          Name must have at least two characters.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.pattern && createProjectForm.name.$touched">\n          Project names may only contain lower-case letters, numbers, and dashes.\n          They may not start or end with a dash.\n        </span>\n      </div>\n      <div class="has-error">\n        <span class="help-block" ng-if="nameTaken">\n          This name is already in use. Please choose a different name.\n        </span>\n      </div>\n    </div>\n\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control"\n          name="displayName"\n          id="displayName"\n          placeholder="My Project"\n          type="text"\n          ng-model="displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n      <textarea class="form-control"\n          name="description"\n          id="description"\n          placeholder="A short description."\n          ng-model="description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n          class="btn btn-primary"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="createProject()"\n          ng-disabled="createProjectForm.$invalid || nameTaken || disableInputs"\n          value="">\n        Create\n      </button>\n      <button\n          class="btn btn-default"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelCreateProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
-    e.put("src/components/delete-project/delete-project-button.html", '<div class="actions">\n  \x3c!-- Avoid whitespace inside the link --\x3e\n  <a href=""\n     ng-click="$event.stopPropagation(); openDeleteModal()"\n     role="button"\n     class="action-button"\n     ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n     ng-class="{ \'disabled-link\': disableDelete }"\n    ><i class="fa fa-trash-o" aria-hidden="true"\n    ></i><span class="sr-only">Delete Project {{projectName}}</span></a>\n</div>\n'), e.put("src/components/delete-project/delete-project-modal.html", '<div class="delete-resource-modal">\n  \x3c!-- Use a form so that the enter key submits when typing a project name to confirm. --\x3e\n  <form>\n    <div class="modal-header">\n      <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close" ng-click="cancel()">\n        <span class="pficon pficon-close"></span>\n      </button>\n      <h1 class="modal-title">Are you sure you want to delete the project \'<strong>{{project | displayName}}</strong>\'?</h1>\n    </div>\n    <div class="modal-body">\n      <p>\n        This will <strong>delete all resources</strong> associated with\n        the project {{project | displayName}} and <strong>cannot be\n        undone</strong>.  Make sure this is something you really want to do!\n      </p>\n      <div ng-show="typeNameToConfirm">\n        <p>Type <strong>{{project.metadata.name}}</strong> to confirm deletion.</p>\n        <p>\n          <label class="sr-only" for="resource-to-delete">project to delete</label>\n          <input\n              ng-model="confirmName"\n              id="resource-to-delete"\n              type="text"\n              class="form-control input-lg"\n              autocorrect="off"\n              autocapitalize="off"\n              spellcheck="false"\n              autofocus>\n        </p>\n      </div>\n    </div>\n    <div class="modal-footer">\n      <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>\n      <button ng-disabled="typeNameToConfirm && confirmName !== project.metadata.name && confirmName !== (project | displayName : false)" class="btn btn-danger" type="submit" ng-click="delete()">Delete</button>\n    </div>\n  </form>\n</div>\n'), 
-    e.put("src/components/delete-project/delete-project.html", '<a href="javascript:void(0)"\n   ng-click="openDeleteModal()"\n   role="button"\n   ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n   ng-class="{ \'disabled-link\': disableDelete }"\n>{{label || \'Delete\'}}</a>\n'), e.put("src/components/edit-project/editProject.html", '<form name="editProjectForm">\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control"\n             name="displayName"\n             id="displayName"\n             placeholder="My Project"\n             type="text"\n             ng-model="editableFields.displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n                    <textarea class="form-control"\n                              name="description"\n                              id="description"\n                              placeholder="A short description."\n                              ng-model="editableFields.description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n              class="btn btn-primary"\n              ng-class="{\'dialog-btn\': isDialog}"\n              ng-click="update()"\n              ng-disabled="editProjectForm.$invalid || disableInputs"\n              value="">{{submitButtonLabel}}</button>\n      <button\n          class="btn btn-default"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelEditProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'), 
-    e.put("src/components/origin-modal-popup/origin-modal-popup.html", '<div class="origin-modal-popup tile-click-prevent" ng-if="$ctrl.shown" ng-style="$ctrl.positionStyle"\n     ng-class="{\'position-above\': $ctrl.showAbove, \'position-left\': $ctrl.showLeft}">\n  <h4 class="origin-modal-popup-title">\n    {{$ctrl.modalTitle}}\n  </h4>\n  <div ng-transclude></div>\n  <a href="" class="origin-modal-popup-close" ng-click="$ctrl.onClose()">\n    <span class="pficon pficon-close"></span>\n  </a>\n</div>\n'), e.put("src/components/toast-notifications/toast-notifications.html", '<div class="toast-notifications-list-pf">\n  <div\n    ng-repeat="(notificationID, notification) in notifications track by notification.trackByID"\n    ng-if="!notification.hidden || notification.isHover"\n       ng-mouseenter="setHover(notification, true)" ng-mouseleave="setHover(notification, false)">\n    <div class="toast-pf alert {{notification.type | alertStatus}}" ng-class="{\'alert-dismissable\': !hideCloseButton}">\n      <button ng-if="!hideCloseButton" type="button" class="close" ng-click="close(notification)">\n        <span class="pficon pficon-close" aria-hidden="true"></span>\n        <span class="sr-only">Close</span>\n      </button>\n      <span class="{{notification.type | alertIcon}}" aria-hidden="true"></span>\n      <span class="sr-only">{{notification.type}}</span>\n      <span class="toast-notification-message" ng-if="notification.message">{{notification.message}}</span>\n      <div ng-if="notification.details" class="toast-notification-details">\n        <truncate-long-text\n          limit="200"\n          content="notification.details"\n          use-word-boundary="true"\n          expandable="true"\n          hide-collapse="true">\n        </truncate-long-text>\n      </div>\n      <span ng-repeat="link in notification.links">\n        <a ng-if="!link.href" href="" ng-click="onClick(notification, link)" role="button">{{link.label}}</a>\n        <a ng-if="link.href" ng-href="{{link.href}}" ng-attr-target="{{link.target}}">{{link.label}}</a>\n        <span ng-if="!$last" class="toast-action-divider">|</span>\n      </span>\n    </div>\n  </div>\n</div>\n'), 
+    e.put("src/components/binding/bindApplicationForm.html", '<div class="bind-form">\n  <form>\n    <div class="form-group">\n      <label>\n        <h3>Create a binding for application <strong>{{ctrl.applicationName}}</strong></h3>\n      </label>\n      <span class="help-block">\n        Bindings create a secret containing the necessary information for an application to use a service.\n      </span>\n    </div>\n  </form>\n\n  <label ng-if="!ctrl.allowNoBinding">\n    Select a service:\n  </label>\n  <form name="ctrl.formName">\n    <fieldset>\n      <div class="radio">\n        <div ng-if="ctrl.allowNoBinding" class="bind-service-selection">\n          <label>\n            <input type="radio" ng-model="ctrl.serviceToBind" ng-value="null">\n            Do not bind at this time.\n          </label>\n          <div class="bind-description">\n          <span class="help-block service-instance-name">\n            Bindings can be created later from within a project.\n          </span>\n          </div>\n        </div>\n        <div ng-repeat="serviceInstance in ctrl.bindableServiceInstances" class="bind-service-selection">\n          <label>\n            <input type="radio" ng-model="ctrl.serviceToBind" ng-value="serviceInstance">\n            {{ctrl.serviceClasses[serviceInstance.spec.clusterServiceClassRef.name].spec.externalMetadata.displayName || serviceInstance.spec.clusterServiceClassRef.name}}\n          </label>\n          <div class="bind-description">\n            <span class="pficon pficon-info"\n                  ng-if="!(serviceInstance | isServiceInstanceReady)"\n                  data-content="This service is not yet ready. If you bind to it, then the binding will be pending until the service is ready."\n                  data-toggle="popover"\n                  data-trigger="hover">\n            </span>\n            <span class="help-block service-instance-name">\n              {{serviceInstance.metadata.name}}\n            </span>\n          </div>\n        </div>\n        <h4 ng-if="!ctrl.bindableServiceInstances.length">\n          <span class="pficon pficon-info" aria-hidden="true"></span>\n          <span class="help-block service-instance-name">\n            There are no bindable services in this project\n          </span>\n        </h4>\n      </div>\n    </fieldset>\n  </form>\n</div>\n'),
+    e.put("src/components/binding/bindResults.html", '<div ng-if="!ctrl.error && !(ctrl.binding | isBindingFailed)">\n  <div ng-if="ctrl.binding && !(ctrl.binding | isBindingReady)" class="results-status">\n    <span class="fa fa-clock-o text-muted" aria-hidden="true"></span>\n    <span class="sr-only">Pending</span>\n    <div class="results-message">\n      <h3>\n        The binding is being created.\n      </h3>\n      <p class="results-message-details">This may take several minutes.</p>\n    </div>\n  </div>\n  <div ng-if="(ctrl.binding | isBindingReady)">\n    <div class="results-status">\n      <span class="pficon pficon-ok" aria-hidden="true"></span>\n      <span class="sr-only">Success</span>\n      <div class="results-message">\n        <h3>\n          <span ng-if="ctrl.bindType === \'application\'">\n            <strong>{{ctrl.serviceToBind}}</strong> has been bound to\n            <strong>{{ctrl.applicationToBind}}</strong> successfully.\n          </span>\n          <span ng-if="ctrl.bindType !== \'application\'">\n            The binding <strong>{{ctrl.binding.metadata.name}}</strong> has been created successfully.\n          </span>\n        </h3>\n        <p class="results-message-details">\n          The binding operation created the secret\n          <a ng-if="ctrl.secretHref" ng-href="{{ctrl.secretHref}}">{{ctrl.binding.spec.secretName}}</a>\n          <span ng-if="!ctrl.secretHref">{{ctrl.binding.spec.secretName}}</span>\n          that you may need to reference in your application.\n          <span ng-if="ctrl.showPodPresets">Its data will be available to your application as environment variables.</span>\n        </p>\n      </div>\n    </div>\n    <div class="alert alert-info results-info" ng-if="ctrl.bindType === \'application\'">\n      <span class="pficon pficon-info" aria-hidden="true"></span>\n      <span class="sr-only">Info</span>\n      The binding secret will only be available to new pods. You will need to redeploy your application.\n    </div>\n  </div>\n</div>\n<div ng-if="ctrl.error || (ctrl.binding | isBindingFailed)">\n  <div class="results-status">\n    <span class="pficon pficon-error-circle-o text-danger" aria-hidden="true"></span>\n    <span class="sr-only">Error</span>\n    <div class="results-message">\n      <h3>\n        The binding could not be created.\n      </h3>\n    </div>\n  </div>\n  <div ng-if="ctrl.error" class="sub-title">\n    <span ng-if="ctrl.error.data.message">\n      {{ctrl.error.data.message | upperFirst}}\n    </span>\n    <span ng-if="!ctrl.error.data.message">\n      An error occurred creating the binding.\n    </span>\n  </div>\n  <div ng-if="!ctrl.error" class="sub-title">\n    {{ctrl.binding | bindingFailedMessage}}\n  </div>\n</div>\n'),
+    e.put("src/components/binding/bindServiceForm.html", '<div class="bind-form">\n  <form>\n    <div class="form-group">\n      <label>\n        <h3>Create a binding for <strong>{{ctrl.serviceClass.spec.externalMetadata.displayName || ctrl.serviceClass.spec.externalName}}</strong></h3>\n      </label>\n      <span class="help-block">Bindings create a secret containing the necessary information for an application to use this service.</span>\n    </div>\n  </form>\n\n  <form ng-if="ctrl.allowNoBinding || ctrl.showPodPresets" name="ctrl.formName" class="mar-bottom-lg">\n    <fieldset>\n      <div class="radio">\n        <label ng-if="ctrl.showPodPresets" class="bind-choice" ng-disabled="!ctrl.applications.length">\n          <input type="radio" ng-model="ctrl.bindType" value="application" ng-disabled="!ctrl.applications.length">\n          Create a secret and inject it into an application\n        </label>\n        <div ng-if="ctrl.showPodPresets" class="application-select">\n          <ui-select ng-model="ctrl.appToBind"\n                     ng-disabled="ctrl.bindType !== \'application\'"\n                     ng-required="ctrl.bindType === \'application\'">\n            <ui-select-match placeholder="{{ctrl.applications.length ? \'Select an application\' : \'There are no applications in this project\'}}">\n              <span>\n                {{$select.selected.metadata.name}}\n                <small class="text-muted">&ndash; {{$select.selected.kind | humanizeKind : true}}</small>\n              </span>\n            </ui-select-match>\n            <ui-select-choices\n              repeat="application in (ctrl.applications) | filter : { metadata: { name: $select.search } } track by (application | uid)"\n              group-by="ctrl.groupByKind">\n              <span ng-bind-html="application.metadata.name | highlight : $select.search"></span>\n            </ui-select-choices>\n          </ui-select>\n        </div>\n        <label class="bind-choice">\n          <input type="radio" ng-model="ctrl.bindType" value="secret-only">\n          Create a secret in <strong>{{ctrl.projectName}}</strong> to be used later\n        </label>\n        <div class="help-block bind-description">\n          Secrets can be referenced later from an application.\n        </div>\n        <label ng-if="ctrl.allowNoBinding" class="bind-choice">\n          <input type="radio" ng-model="ctrl.bindType" value="none">\n          Do not bind at this time\n        </label>\n        <div ng-if="ctrl.allowNoBinding" class="help-block bind-description">\n          Bindings can be created later from within a project.\n        </div>\n      </div>\n    </fieldset>\n  </form>\n</div>\n'),
+    e.put("src/components/create-project/createProject.html", '<form name="createProjectForm" novalidate>\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="name" class="required">Name</label>\n      <span ng-class="{\'has-error\': (createProjectForm.name.$error.pattern && createProjectForm.name.$touched) || nameTaken}">\n        <input class="form-control"\n            name="name"\n            id="name"\n            placeholder="my-project"\n            type="text"\n            required\n            take-focus\n            minlength="2"\n            maxlength="63"\n            pattern="[a-z0-9]([-a-z0-9]*[a-z0-9])?"\n            aria-describedby="nameHelp"\n            ng-model="name"\n            ng-model-options="{ updateOn: \'default blur\' }"\n            ng-change="nameTaken = false"\n            autocorrect="off"\n            autocapitalize="off"\n            spellcheck="false">\n      </span>\n      <div>\n        <span class="help-block">A unique name for the project.</span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.required && createProjectForm.name.$dirty">\n          Name is required.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.minlength && createProjectForm.name.$touched">\n          Name must have at least two characters.\n        </span>\n      </div>\n      <div class="has-error">\n        <span id="nameHelp" class="help-block" ng-if="createProjectForm.name.$error.pattern && createProjectForm.name.$touched">\n          Project names may only contain lower-case letters, numbers, and dashes.\n          They may not start or end with a dash.\n        </span>\n      </div>\n      <div class="has-error">\n        <span class="help-block" ng-if="nameTaken">\n          This name is already in use. Please choose a different name.\n        </span>\n      </div>\n    </div>\n\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control"\n          name="displayName"\n          id="displayName"\n          placeholder="My Project"\n          type="text"\n          ng-model="displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n      <textarea class="form-control"\n          name="description"\n          id="description"\n          placeholder="A short description."\n          ng-model="description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n          class="btn btn-primary"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="createProject()"\n          ng-disabled="createProjectForm.$invalid || nameTaken || disableInputs"\n          value="">\n        Create\n      </button>\n      <button\n          class="btn btn-default"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelCreateProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'),
+    e.put("src/components/delete-project/delete-project-button.html", '<div class="actions">\n  \x3c!-- Avoid whitespace inside the link --\x3e\n  <a href=""\n     ng-click="$event.stopPropagation(); openDeleteModal()"\n     role="button"\n     class="action-button"\n     ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n     ng-class="{ \'disabled-link\': disableDelete }"\n    ><i class="fa fa-trash-o" aria-hidden="true"\n    ></i><span class="sr-only">Delete Project {{projectName}}</span></a>\n</div>\n'), e.put("src/components/delete-project/delete-project-modal.html", '<div class="delete-resource-modal">\n  \x3c!-- Use a form so that the enter key submits when typing a project name to confirm. --\x3e\n  <form>\n    <div class="modal-header">\n      <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close" ng-click="cancel()">\n        <span class="pficon pficon-close"></span>\n      </button>\n      <h1 class="modal-title">Are you sure you want to delete the project \'<strong>{{project | displayName}}</strong>\'?</h1>\n    </div>\n    <div class="modal-body">\n      <p>\n        This will <strong>delete all resources</strong> associated with\n        the project {{project | displayName}} and <strong>cannot be\n        undone</strong>.  Make sure this is something you really want to do!\n      </p>\n      <div ng-show="typeNameToConfirm">\n        <p>Type <strong>{{project.metadata.name}}</strong> to confirm deletion.</p>\n        <p>\n          <label class="sr-only" for="resource-to-delete">project to delete</label>\n          <input\n              ng-model="confirmName"\n              id="resource-to-delete"\n              type="text"\n              class="form-control input-lg"\n              autocorrect="off"\n              autocapitalize="off"\n              spellcheck="false"\n              autofocus>\n        </p>\n      </div>\n    </div>\n    <div class="modal-footer">\n      <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>\n      <button ng-disabled="typeNameToConfirm && confirmName !== project.metadata.name && confirmName !== (project | displayName : false)" class="btn btn-danger" type="submit" ng-click="delete()">Delete</button>\n    </div>\n  </form>\n</div>\n'),
+    e.put("src/components/delete-project/delete-project.html", '<a href="javascript:void(0)"\n   ng-click="openDeleteModal()"\n   role="button"\n   ng-attr-aria-disabled="{{disableDelete ? \'true\' : undefined}}"\n   ng-class="{ \'disabled-link\': disableDelete }"\n>{{label || \'Delete\'}}</a>\n'), e.put("src/components/edit-project/editProject.html", '<form name="editProjectForm">\n  <fieldset ng-disabled="disableInputs">\n    <div class="form-group">\n      <label for="displayName">Display Name</label>\n      <input class="form-control"\n             name="displayName"\n             id="displayName"\n             placeholder="My Project"\n             type="text"\n             ng-model="editableFields.displayName">\n    </div>\n\n    <div class="form-group">\n      <label for="description">Description</label>\n                    <textarea class="form-control"\n                              name="description"\n                              id="description"\n                              placeholder="A short description."\n                              ng-model="editableFields.description"></textarea>\n    </div>\n\n    <div class="button-group">\n      <button type="submit"\n              class="btn btn-primary"\n              ng-class="{\'dialog-btn\': isDialog}"\n              ng-click="update()"\n              ng-disabled="editProjectForm.$invalid || disableInputs"\n              value="">{{submitButtonLabel}}</button>\n      <button\n          class="btn btn-default"\n          ng-class="{\'dialog-btn\': isDialog}"\n          ng-click="cancelEditProject()">\n        Cancel\n      </button>\n    </div>\n  </fieldset>\n</form>\n'),
+    e.put("src/components/origin-modal-popup/origin-modal-popup.html", '<div class="origin-modal-popup tile-click-prevent" ng-if="$ctrl.shown" ng-style="$ctrl.positionStyle"\n     ng-class="{\'position-above\': $ctrl.showAbove, \'position-left\': $ctrl.showLeft}">\n  <h4 class="origin-modal-popup-title">\n    {{$ctrl.modalTitle}}\n  </h4>\n  <div ng-transclude></div>\n  <a href="" class="origin-modal-popup-close" ng-click="$ctrl.onClose()">\n    <span class="pficon pficon-close"></span>\n  </a>\n</div>\n'), e.put("src/components/toast-notifications/toast-notifications.html", '<div class="toast-notifications-list-pf">\n  <div\n    ng-repeat="(notificationID, notification) in notifications track by notification.trackByID"\n    ng-if="!notification.hidden || notification.isHover"\n       ng-mouseenter="setHover(notification, true)" ng-mouseleave="setHover(notification, false)">\n    <div class="toast-pf alert {{notification.type | alertStatus}}" ng-class="{\'alert-dismissable\': !hideCloseButton}">\n      <button ng-if="!hideCloseButton" type="button" class="close" ng-click="close(notification)">\n        <span class="pficon pficon-close" aria-hidden="true"></span>\n        <span class="sr-only">Close</span>\n      </button>\n      <span class="{{notification.type | alertIcon}}" aria-hidden="true"></span>\n      <span class="sr-only">{{notification.type}}</span>\n      <span class="toast-notification-message" ng-if="notification.message">{{notification.message}}</span>\n      <div ng-if="notification.details" class="toast-notification-details">\n        <truncate-long-text\n          limit="200"\n          content="notification.details"\n          use-word-boundary="true"\n          expandable="true"\n          hide-collapse="true">\n        </truncate-long-text>\n      </div>\n      <span ng-repeat="link in notification.links">\n        <a ng-if="!link.href" href="" ng-click="onClick(notification, link)" role="button">{{link.label}}</a>\n        <a ng-if="link.href" ng-href="{{link.href}}" ng-attr-target="{{link.target}}">{{link.label}}</a>\n        <span ng-if="!$last" class="toast-action-divider">|</span>\n      </span>\n    </div>\n  </div>\n</div>\n'),
     e.put("src/components/truncate-long-text/truncateLongText.html", '\x3c!--\n  Do not remove class `truncated-content` (here or below) even though it\'s not\n  styled directly in origin-web-common.  `truncated-content` is used by\n  origin-web-console in certain contexts.\n\n  highlightKeywords and linkify are mutually exclusive options\n--\x3e\n<span ng-if="!truncated">\n  <span ng-if="!linkify || (highlightKeywords | size)" ng-bind-html="content | highlightKeywords : keywords" class="truncated-content"></span>\n  <span ng-if="linkify && !(highlightKeywords | size)" ng-bind-html="content | linkify : \'_blank\'" class="truncated-content"></span>\n</span>\n\x3c!-- To avoid truncating in middle of a link, we only optionally apply linkify to expanded content --\x3e\n<span ng-if="truncated">\n  <span ng-if="!toggles.expanded">\n    <span ng-attr-title="{{content}}" class="truncation-block">\n      <span ng-bind-html="truncatedContent | highlightKeywords : keywords" class="truncated-content"></span>&hellip;\n    </span>\n    <a ng-if="expandable" href="" ng-click="toggles.expanded = true" class="truncation-expand-link">See All</a>\n  </span>\n  <span ng-if="toggles.expanded">\n    <span ng-if="!linkify || (highlightKeywords | size)"\n          ng-bind-html="content | highlightKeywords : keywords"\n          class="truncated-content"></span>\n    <span ng-if="linkify && !(highlightKeywords | size)"\n          ng-bind-html="content | linkify : \'_blank\'"\n          class="truncated-content"></span>\n    <a href="" ng-if="!hideCollapse" ng-click="toggles.expanded = false" class="truncation-collapse-link">Collapse</a>\n  </span>\n</span>\n');
     } ]), angular.module("openshiftCommonServices").constant("API_DEDUPLICATION", {
     groups: [ {
@@ -74951,13 +74951,13 @@ function aa(e) {
     switch ((e = e || "").toLowerCase()) {
     case "error":
     return "alert-danger";
-    
+
     case "warning":
     return "alert-warning";
-    
+
     case "success":
     return "alert-success";
-    
+
     case "normal":
     return "alert-info";
     }
@@ -74968,13 +74968,13 @@ function aa(e) {
     switch ((e = e || "").toLowerCase()) {
     case "error":
     return "pficon pficon-error-circle-o";
-    
+
     case "warning":
     return "pficon pficon-warning-triangle-o";
-    
+
     case "success":
     return "pficon pficon-ok";
-    
+
     case "normal":
     return "pficon pficon-info";
     }
@@ -75602,7 +75602,7 @@ function aa(e) {
     case 401:
     var o = e.defer();
     return n.push([ o, i.config, "responseError" ]), t.startLogin(), o.promise;
-    
+
     default:
     return e.reject(i);
     }
@@ -75685,13 +75685,13 @@ function aa(e) {
     switch (e.length % 4) {
     case 1:
     return e + "===";
-    
+
     case 2:
     return e + "==";
-    
+
     case 3:
     return e + "=";
-    
+
     default:
     return e;
     }
@@ -75988,11 +75988,11 @@ function aa(e) {
     case "create":
     u.create(r, null, e, t, i).then(h, f);
     break;
-    
+
     case "update":
     u.update(r, e.metadata.name, e, t, i).then(h, f);
     break;
-    
+
     default:
     return s.reject({
     data: "Invalid '" + n + "'  action.",
@@ -77000,19 +77000,19 @@ function aa(e) {
     switch (e) {
     case "xxs":
     return !1;
-    
+
     case "xs":
     return window.innerWidth < t.screenXsMin;
-    
+
     case "sm":
     return window.innerWidth < t.screenSmMin;
-    
+
     case "md":
     return window.innerWidth < t.screenMdMin;
-    
+
     case "lg":
     return window.innerWidth < t.screenLgMin;
-    
+
     default:
     return !0;
     }
@@ -77021,16 +77021,16 @@ function aa(e) {
     switch (e) {
     case "xs":
     return window.innerWidth >= t.screenXsMin;
-    
+
     case "sm":
     return window.innerWidth >= t.screenSmMin;
-    
+
     case "md":
     return window.innerWidth >= t.screenMdMin;
-    
+
     case "lg":
     return window.innerWidth >= t.screenLgMin;
-    
+
     default:
     return !0;
     }
@@ -77372,7 +77372,7 @@ function aa(e) {
     $(t).popover("destroy");
     });
     break;
-    
+
     case "tooltip":
     (n.dynamicContent || "" === n.dynamicContent) && e.$watch("dynamicContent", function() {
     $(t).tooltip("destroy"), setTimeout(function() {
@@ -77382,7 +77382,7 @@ function aa(e) {
     $(t).tooltip("destroy");
     });
     break;
-    
+
     case "dropdown":
     "dropdown" === n.hover && ($(t).dropdownHover({
     delay: 200
@@ -79122,13 +79122,13 @@ function aa(e) {
     };
     } ]), r;
     }), angular.module("schemaForm").run([ "$templateCache", function(e) {
-    e.put("decorators/bootstrap/actions-trcl.html", '<div class="btn-group schema-form-actions {{form.htmlClass}}" ng-transclude=""></div>'), e.put("decorators/bootstrap/actions.html", '<div class="btn-group schema-form-actions {{form.htmlClass}}"><input ng-repeat-start="item in form.items" type="submit" class="btn {{ item.style || \'btn-default\' }} {{form.fieldHtmlClass}}" value="{{item.title}}" ng-if="item.type === \'submit\'"> <button ng-repeat-end="" class="btn {{ item.style || \'btn-default\' }} {{form.fieldHtmlClass}}" type="button" ng-disabled="form.readonly" ng-if="item.type !== \'submit\'" ng-click="buttonClick($event,item)"><span ng-if="item.icon" class="{{item.icon}}"></span>{{item.title}}</button></div>'), e.put("decorators/bootstrap/array.html", '<div class="schema-form-array {{form.htmlClass}}" sf-field-model="sf-new-array" sf-new-array=""><label class="control-label" ng-show="showTitle()">{{ form.title }}</label><ol class="list-group" sf-field-model="" ui-sortable="form.sortOptions"><li class="list-group-item {{form.fieldHtmlClass}}" schema-form-array-items="" sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index"><button ng-hide="form.readonly || form.remove === null" ng-click="deleteFromArray($index)" ng-disabled="form.schema.minItems >= modelArray.length" style="position: relative; z-index: 20;" type="button" class="close pull-right"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></li></ol><div class="clearfix" style="padding: 15px;" ng-model="modelArray" schema-validate="form"><div class="help-block" ng-show="(hasError() && errorMessage(schemaError())) || form.description" ng-bind-html="(hasError() && errorMessage(schemaError())) || form.description"></div><button ng-hide="form.readonly || form.add === null" ng-click="appendToArray()" ng-disabled="form.schema.maxItems <= modelArray.length" type="button" class="btn {{ form.style.add || \'btn-default\' }} pull-right"><i class="glyphicon glyphicon-plus"></i> {{ form.add || \'Add\'}}</button></div></div>'), 
-    e.put("decorators/bootstrap/checkbox.html", '<div class="checkbox schema-form-checkbox {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="{{form.labelHtmlClass}}"><input type="checkbox" sf-changed="form" ng-disabled="form.readonly" sf-field-model="" schema-validate="form" class="{{form.fieldHtmlClass}}" name="{{form.key.slice(-1)[0]}}"> <span ng-bind-html="form.title"></span></label><div class="help-block" sf-message="form.description"></div></div>'), e.put("decorators/bootstrap/checkboxes.html", '<div sf-field-model="sf-new-array" sf-new-array="" class="form-group schema-form-checkboxes {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" sf-field-model="" schema-validate="form" ng-show="showTitle()">{{form.title}}</label><div class="checkbox" ng-repeat="val in titleMapValues track by $index"><label><input type="checkbox" ng-disabled="form.readonly" sf-changed="form" class="{{form.fieldHtmlClass}}" ng-model="titleMapValues[$index]" name="{{form.key.slice(-1)[0]}}"> <span ng-bind-html="form.titleMap[$index].name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'), 
-    e.put("decorators/bootstrap/default.html", '<div class="form-group schema-form-{{form.type}} {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess(), \'has-feedback\': form.feedback !== false }"><label class="control-label {{form.labelHtmlClass}}" ng-class="{\'sr-only\': !showTitle()}" for="{{form.key.slice(-1)[0]}}">{{form.title}}</label> <input ng-if="!form.fieldAddonLeft && !form.fieldAddonRight" ng-show="form.key" type="{{form.type}}" step="any" sf-changed="form" placeholder="{{form.placeholder}}" class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-field-model="" ng-disabled="form.readonly" schema-validate="form" name="{{form.key.slice(-1)[0]}}" aria-describedby="{{form.key.slice(-1)[0] + \'Status\'}}"><div ng-if="form.fieldAddonLeft || form.fieldAddonRight" ng-class="{\'input-group\': (form.fieldAddonLeft || form.fieldAddonRight)}"><span ng-if="form.fieldAddonLeft" class="input-group-addon" ng-bind-html="form.fieldAddonLeft"></span> <input ng-show="form.key" type="{{form.type}}" step="any" sf-changed="form" placeholder="{{form.placeholder}}" class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-field-model="" ng-disabled="form.readonly" schema-validate="form" name="{{form.key.slice(-1)[0]}}" aria-describedby="{{form.key.slice(-1)[0] + \'Status\'}}"> <span ng-if="form.fieldAddonRight" class="input-group-addon" ng-bind-html="form.fieldAddonRight"></span></div><span ng-if="form.feedback !== false" class="form-control-feedback" ng-class="evalInScope(form.feedback) || {\'glyphicon\': true, \'glyphicon-ok\': hasSuccess(), \'glyphicon-remove\': hasError() }" aria-hidden="true"></span> <span ng-if="hasError() || hasSuccess()" id="{{form.key.slice(-1)[0] + \'Status\'}}" class="sr-only">{{ hasSuccess() ? \'(success)\' : \'(error)\' }}</span><div class="help-block" sf-message="form.description"></div></div>'), 
-    e.put("decorators/bootstrap/fieldset.html", '<fieldset ng-disabled="form.readonly" class="schema-form-fieldset {{form.htmlClass}}"><legend ng-class="{\'sr-only\': !showTitle() }">{{ form.title }}</legend><div class="help-block" ng-show="form.description" ng-bind-html="form.description"></div></fieldset>'), e.put("decorators/bootstrap/help.html", '<div class="helpvalue schema-form-helpvalue {{form.htmlClass}}" ng-bind-html="form.helpvalue"></div>'), e.put("decorators/bootstrap/radio-buttons.html", '<div class="form-group schema-form-radiobuttons {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><div><label class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()">{{form.title}}</label></div><div class="btn-group"><label sf-field-model="replaceAll" class="btn {{ (item.value === $$value$$) ? form.style.selected || \'btn-default\' : form.style.unselected || \'btn-default\'; }}" ng-class="{ active: item.value === $$value$$ }" ng-repeat="item in form.titleMap"><input type="radio" class="{{form.fieldHtmlClass}}" sf-changed="form" style="display: none;" ng-disabled="form.readonly" sf-field-model="" schema-validate="form" ng-value="item.value" name="{{form.key.join(\'.\')}}"> <span ng-bind-html="item.name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'), 
-    e.put("decorators/bootstrap/radios-inline.html", '<div class="form-group schema-form-radios-inline {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()" sf-field-model="" schema-validate="form">{{form.title}}</label><div><label class="radio-inline" ng-repeat="item in form.titleMap"><input type="radio" class="{{form.fieldHtmlClass}}" sf-changed="form" ng-disabled="form.readonly" sf-field-model="" ng-value="item.value" name="{{form.key.join(\'.\')}}"> <span ng-bind-html="item.name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'), e.put("decorators/bootstrap/radios.html", '<div class="form-group schema-form-radios {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" sf-field-model="" schema-validate="form" ng-show="showTitle()">{{form.title}}</label><div class="radio" ng-repeat="item in form.titleMap"><label><input type="radio" class="{{form.fieldHtmlClass}}" sf-changed="form" ng-disabled="form.readonly" sf-field-model="" ng-value="item.value" name="{{form.key.join(\'.\')}}"> <span ng-bind-html="item.name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'), 
-    e.put("decorators/bootstrap/section.html", '<div class="schema-form-section {{form.htmlClass}}"></div>'), e.put("decorators/bootstrap/select.html", '<div class="form-group {{form.htmlClass}} schema-form-select" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess(), \'has-feedback\': form.feedback !== false}"><label class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()">{{form.title}}</label><select sf-field-model="" ng-disabled="form.readonly" sf-changed="form" class="form-control {{form.fieldHtmlClass}}" schema-validate="form" ng-options="item.value as item.name group by item.group for item in form.titleMap" name="{{form.key.slice(-1)[0]}}"></select><div class="help-block" sf-message="form.description"></div></div>'), e.put("decorators/bootstrap/submit.html", '<div class="form-group schema-form-submit {{form.htmlClass}}"><input type="submit" class="btn {{ form.style || \'btn-primary\' }} {{form.fieldHtmlClass}}" value="{{form.title}}" ng-disabled="form.readonly" ng-if="form.type === \'submit\'"> <button class="btn {{ form.style || \'btn-default\' }}" type="button" ng-click="buttonClick($event,form)" ng-disabled="form.readonly" ng-if="form.type !== \'submit\'"><span ng-if="form.icon" class="{{form.icon}}"></span> {{form.title}}</button></div>'), 
-    e.put("decorators/bootstrap/tabarray.html", '<div ng-init="selected = { tab: 0 }" ng-model="modelArray" schema-validate="form" sf-field-model="sf-new-array" sf-new-array="" class="clearfix schema-form-tabarray schema-form-tabarray-{{form.tabType || \'left\'}} {{form.htmlClass}}"><div ng-if="!form.tabType || form.tabType !== \'right\'" ng-class="{\'col-xs-3\': !form.tabType || form.tabType === \'left\'}"><ul class="nav nav-tabs" ng-class="{ \'tabs-left\': !form.tabType || form.tabType === \'left\'}"><li sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index" ng-click="$event.preventDefault() || (selected.tab = $index)" ng-class="{active: selected.tab === $index}"><a href="#">{{interp(form.title,{\'$index\':$index, value: item}) || $index}}</a></li><li ng-hide="form.readonly" ng-disabled="form.schema.maxItems <= modelArray.length" ng-click="$event.preventDefault() || (selected.tab = appendToArray().length - 1)"><a href="#"><i class="glyphicon glyphicon-plus"></i> {{ form.add || \'Add\'}}</a></li></ul></div><div ng-class="{\'col-xs-9\': !form.tabType || form.tabType === \'left\' || form.tabType === \'right\'}"><div class="tab-content {{form.fieldHtmlClass}}"><div class="tab-pane clearfix tab{{selected.tab}} index{{$index}}" sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index" ng-show="selected.tab === $index" ng-class="{active: selected.tab === $index}"><div schema-form-array-items=""></div><button ng-hide="form.readonly" ng-click="selected.tab = deleteFromArray($index).length - 1" ng-disabled="form.schema.minItems >= modelArray.length" type="button" class="btn {{ form.style.remove || \'btn-default\' }} pull-right"><i class="glyphicon glyphicon-trash"></i> {{ form.remove || \'Remove\'}}</button></div><div class="help-block" ng-show="(hasError() && errorMessage(schemaError())) || form.description" ng-bind-html="(hasError() && errorMessage(schemaError())) || form.description"></div></div></div></div><div ng-if="form.tabType === \'right\'" class="col-xs-3"><ul class="nav nav-tabs tabs-right"><li sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index" ng-click="$event.preventDefault() || (selected.tab = $index)" ng-class="{active: selected.tab === $index}"><a href="#">{{interp(form.title,{\'$index\':$index, value: item}) || $index}}</a></li><li ng-hide="form.readonly" ng-disabled="form.schema.maxItems <= modelArray.length" ng-click="$event.preventDefault() || (selected.tab = appendToArray().length - 1)"><a href="#"><i class="glyphicon glyphicon-plus"></i> {{ form.add || \'Add\'}}</a></li></ul></div>'), 
+    e.put("decorators/bootstrap/actions-trcl.html", '<div class="btn-group schema-form-actions {{form.htmlClass}}" ng-transclude=""></div>'), e.put("decorators/bootstrap/actions.html", '<div class="btn-group schema-form-actions {{form.htmlClass}}"><input ng-repeat-start="item in form.items" type="submit" class="btn {{ item.style || \'btn-default\' }} {{form.fieldHtmlClass}}" value="{{item.title}}" ng-if="item.type === \'submit\'"> <button ng-repeat-end="" class="btn {{ item.style || \'btn-default\' }} {{form.fieldHtmlClass}}" type="button" ng-disabled="form.readonly" ng-if="item.type !== \'submit\'" ng-click="buttonClick($event,item)"><span ng-if="item.icon" class="{{item.icon}}"></span>{{item.title}}</button></div>'), e.put("decorators/bootstrap/array.html", '<div class="schema-form-array {{form.htmlClass}}" sf-field-model="sf-new-array" sf-new-array=""><label class="control-label" ng-show="showTitle()">{{ form.title }}</label><ol class="list-group" sf-field-model="" ui-sortable="form.sortOptions"><li class="list-group-item {{form.fieldHtmlClass}}" schema-form-array-items="" sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index"><button ng-hide="form.readonly || form.remove === null" ng-click="deleteFromArray($index)" ng-disabled="form.schema.minItems >= modelArray.length" style="position: relative; z-index: 20;" type="button" class="close pull-right"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></li></ol><div class="clearfix" style="padding: 15px;" ng-model="modelArray" schema-validate="form"><div class="help-block" ng-show="(hasError() && errorMessage(schemaError())) || form.description" ng-bind-html="(hasError() && errorMessage(schemaError())) || form.description"></div><button ng-hide="form.readonly || form.add === null" ng-click="appendToArray()" ng-disabled="form.schema.maxItems <= modelArray.length" type="button" class="btn {{ form.style.add || \'btn-default\' }} pull-right"><i class="glyphicon glyphicon-plus"></i> {{ form.add || \'Add\'}}</button></div></div>'),
+    e.put("decorators/bootstrap/checkbox.html", '<div class="checkbox schema-form-checkbox {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="{{form.labelHtmlClass}}"><input type="checkbox" sf-changed="form" ng-disabled="form.readonly" sf-field-model="" schema-validate="form" class="{{form.fieldHtmlClass}}" name="{{form.key.slice(-1)[0]}}"> <span ng-bind-html="form.title"></span></label><div class="help-block" sf-message="form.description"></div></div>'), e.put("decorators/bootstrap/checkboxes.html", '<div sf-field-model="sf-new-array" sf-new-array="" class="form-group schema-form-checkboxes {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" sf-field-model="" schema-validate="form" ng-show="showTitle()">{{form.title}}</label><div class="checkbox" ng-repeat="val in titleMapValues track by $index"><label><input type="checkbox" ng-disabled="form.readonly" sf-changed="form" class="{{form.fieldHtmlClass}}" ng-model="titleMapValues[$index]" name="{{form.key.slice(-1)[0]}}"> <span ng-bind-html="form.titleMap[$index].name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'),
+    e.put("decorators/bootstrap/default.html", '<div class="form-group schema-form-{{form.type}} {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess(), \'has-feedback\': form.feedback !== false }"><label class="control-label {{form.labelHtmlClass}}" ng-class="{\'sr-only\': !showTitle()}" for="{{form.key.slice(-1)[0]}}">{{form.title}}</label> <input ng-if="!form.fieldAddonLeft && !form.fieldAddonRight" ng-show="form.key" type="{{form.type}}" step="any" sf-changed="form" placeholder="{{form.placeholder}}" class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-field-model="" ng-disabled="form.readonly" schema-validate="form" name="{{form.key.slice(-1)[0]}}" aria-describedby="{{form.key.slice(-1)[0] + \'Status\'}}"><div ng-if="form.fieldAddonLeft || form.fieldAddonRight" ng-class="{\'input-group\': (form.fieldAddonLeft || form.fieldAddonRight)}"><span ng-if="form.fieldAddonLeft" class="input-group-addon" ng-bind-html="form.fieldAddonLeft"></span> <input ng-show="form.key" type="{{form.type}}" step="any" sf-changed="form" placeholder="{{form.placeholder}}" class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-field-model="" ng-disabled="form.readonly" schema-validate="form" name="{{form.key.slice(-1)[0]}}" aria-describedby="{{form.key.slice(-1)[0] + \'Status\'}}"> <span ng-if="form.fieldAddonRight" class="input-group-addon" ng-bind-html="form.fieldAddonRight"></span></div><span ng-if="form.feedback !== false" class="form-control-feedback" ng-class="evalInScope(form.feedback) || {\'glyphicon\': true, \'glyphicon-ok\': hasSuccess(), \'glyphicon-remove\': hasError() }" aria-hidden="true"></span> <span ng-if="hasError() || hasSuccess()" id="{{form.key.slice(-1)[0] + \'Status\'}}" class="sr-only">{{ hasSuccess() ? \'(success)\' : \'(error)\' }}</span><div class="help-block" sf-message="form.description"></div></div>'),
+    e.put("decorators/bootstrap/fieldset.html", '<fieldset ng-disabled="form.readonly" class="schema-form-fieldset {{form.htmlClass}}"><legend ng-class="{\'sr-only\': !showTitle() }">{{ form.title }}</legend><div class="help-block" ng-show="form.description" ng-bind-html="form.description"></div></fieldset>'), e.put("decorators/bootstrap/help.html", '<div class="helpvalue schema-form-helpvalue {{form.htmlClass}}" ng-bind-html="form.helpvalue"></div>'), e.put("decorators/bootstrap/radio-buttons.html", '<div class="form-group schema-form-radiobuttons {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><div><label class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()">{{form.title}}</label></div><div class="btn-group"><label sf-field-model="replaceAll" class="btn {{ (item.value === $$value$$) ? form.style.selected || \'btn-default\' : form.style.unselected || \'btn-default\'; }}" ng-class="{ active: item.value === $$value$$ }" ng-repeat="item in form.titleMap"><input type="radio" class="{{form.fieldHtmlClass}}" sf-changed="form" style="display: none;" ng-disabled="form.readonly" sf-field-model="" schema-validate="form" ng-value="item.value" name="{{form.key.join(\'.\')}}"> <span ng-bind-html="item.name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'),
+    e.put("decorators/bootstrap/radios-inline.html", '<div class="form-group schema-form-radios-inline {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()" sf-field-model="" schema-validate="form">{{form.title}}</label><div><label class="radio-inline" ng-repeat="item in form.titleMap"><input type="radio" class="{{form.fieldHtmlClass}}" sf-changed="form" ng-disabled="form.readonly" sf-field-model="" ng-value="item.value" name="{{form.key.join(\'.\')}}"> <span ng-bind-html="item.name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'), e.put("decorators/bootstrap/radios.html", '<div class="form-group schema-form-radios {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" sf-field-model="" schema-validate="form" ng-show="showTitle()">{{form.title}}</label><div class="radio" ng-repeat="item in form.titleMap"><label><input type="radio" class="{{form.fieldHtmlClass}}" sf-changed="form" ng-disabled="form.readonly" sf-field-model="" ng-value="item.value" name="{{form.key.join(\'.\')}}"> <span ng-bind-html="item.name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'),
+    e.put("decorators/bootstrap/section.html", '<div class="schema-form-section {{form.htmlClass}}"></div>'), e.put("decorators/bootstrap/select.html", '<div class="form-group {{form.htmlClass}} schema-form-select" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess(), \'has-feedback\': form.feedback !== false}"><label class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()">{{form.title}}</label><select sf-field-model="" ng-disabled="form.readonly" sf-changed="form" class="form-control {{form.fieldHtmlClass}}" schema-validate="form" ng-options="item.value as item.name group by item.group for item in form.titleMap" name="{{form.key.slice(-1)[0]}}"></select><div class="help-block" sf-message="form.description"></div></div>'), e.put("decorators/bootstrap/submit.html", '<div class="form-group schema-form-submit {{form.htmlClass}}"><input type="submit" class="btn {{ form.style || \'btn-primary\' }} {{form.fieldHtmlClass}}" value="{{form.title}}" ng-disabled="form.readonly" ng-if="form.type === \'submit\'"> <button class="btn {{ form.style || \'btn-default\' }}" type="button" ng-click="buttonClick($event,form)" ng-disabled="form.readonly" ng-if="form.type !== \'submit\'"><span ng-if="form.icon" class="{{form.icon}}"></span> {{form.title}}</button></div>'),
+    e.put("decorators/bootstrap/tabarray.html", '<div ng-init="selected = { tab: 0 }" ng-model="modelArray" schema-validate="form" sf-field-model="sf-new-array" sf-new-array="" class="clearfix schema-form-tabarray schema-form-tabarray-{{form.tabType || \'left\'}} {{form.htmlClass}}"><div ng-if="!form.tabType || form.tabType !== \'right\'" ng-class="{\'col-xs-3\': !form.tabType || form.tabType === \'left\'}"><ul class="nav nav-tabs" ng-class="{ \'tabs-left\': !form.tabType || form.tabType === \'left\'}"><li sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index" ng-click="$event.preventDefault() || (selected.tab = $index)" ng-class="{active: selected.tab === $index}"><a href="#">{{interp(form.title,{\'$index\':$index, value: item}) || $index}}</a></li><li ng-hide="form.readonly" ng-disabled="form.schema.maxItems <= modelArray.length" ng-click="$event.preventDefault() || (selected.tab = appendToArray().length - 1)"><a href="#"><i class="glyphicon glyphicon-plus"></i> {{ form.add || \'Add\'}}</a></li></ul></div><div ng-class="{\'col-xs-9\': !form.tabType || form.tabType === \'left\' || form.tabType === \'right\'}"><div class="tab-content {{form.fieldHtmlClass}}"><div class="tab-pane clearfix tab{{selected.tab}} index{{$index}}" sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index" ng-show="selected.tab === $index" ng-class="{active: selected.tab === $index}"><div schema-form-array-items=""></div><button ng-hide="form.readonly" ng-click="selected.tab = deleteFromArray($index).length - 1" ng-disabled="form.schema.minItems >= modelArray.length" type="button" class="btn {{ form.style.remove || \'btn-default\' }} pull-right"><i class="glyphicon glyphicon-trash"></i> {{ form.remove || \'Remove\'}}</button></div><div class="help-block" ng-show="(hasError() && errorMessage(schemaError())) || form.description" ng-bind-html="(hasError() && errorMessage(schemaError())) || form.description"></div></div></div></div><div ng-if="form.tabType === \'right\'" class="col-xs-3"><ul class="nav nav-tabs tabs-right"><li sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index" ng-click="$event.preventDefault() || (selected.tab = $index)" ng-class="{active: selected.tab === $index}"><a href="#">{{interp(form.title,{\'$index\':$index, value: item}) || $index}}</a></li><li ng-hide="form.readonly" ng-disabled="form.schema.maxItems <= modelArray.length" ng-click="$event.preventDefault() || (selected.tab = appendToArray().length - 1)"><a href="#"><i class="glyphicon glyphicon-plus"></i> {{ form.add || \'Add\'}}</a></li></ul></div>'),
     e.put("decorators/bootstrap/tabs.html", '<div ng-init="selected = { tab: 0 }" class="schema-form-tabs {{form.htmlClass}}"><ul class="nav nav-tabs"><li ng-repeat="tab in form.tabs" ng-disabled="form.readonly" ng-click="$event.preventDefault() || (selected.tab = $index)" ng-class="{active: selected.tab === $index}"><a href="#">{{ tab.title }}</a></li></ul><div class="tab-content {{form.fieldHtmlClass}}"></div></div>'), e.put("decorators/bootstrap/textarea.html", '<div class="form-group has-feedback {{form.htmlClass}} schema-form-textarea" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" ng-class="{\'sr-only\': !showTitle()}" for="{{form.key.slice(-1)[0]}}">{{form.title}}</label> <textarea ng-if="!form.fieldAddonLeft && !form.fieldAddonRight" class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-changed="form" placeholder="{{form.placeholder}}" ng-disabled="form.readonly" sf-field-model="" schema-validate="form" name="{{form.key.slice(-1)[0]}}"></textarea><div ng-if="form.fieldAddonLeft || form.fieldAddonRight" ng-class="{\'input-group\': (form.fieldAddonLeft || form.fieldAddonRight)}"><span ng-if="form.fieldAddonLeft" class="input-group-addon" ng-bind-html="form.fieldAddonLeft"></span> <textarea class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-changed="form" placeholder="{{form.placeholder}}" ng-disabled="form.readonly" sf-field-model="" schema-validate="form" name="{{form.key.slice(-1)[0]}}"></textarea> <span ng-if="form.fieldAddonRight" class="input-group-addon" ng-bind-html="form.fieldAddonRight"></span></div><span class="help-block" sf-message="form.description"></span></div>');
     } ]), angular.module("schemaForm").config([ "schemaFormDecoratorsProvider", "sfBuilderProvider", "sfPathProvider", function(e, t, n) {
     var i = "decorators/bootstrap/", r = t.builders.simpleTransclusion, o = t.builders.ngModelOptions, a = t.builders.ngModel, s = t.builders.sfField, l = t.builders.condition, c = t.builders.array, u = [ s, a, o, l ];
@@ -79225,13 +79225,13 @@ function aa(e) {
     }
     }, []);
     } ]), angular.module("schemaForm").run([ "$templateCache", function(e) {
-    e.put("decorators/bootstrap/actions-trcl.html", '<div class="btn-group schema-form-actions {{form.htmlClass}}" ng-transclude=""></div>'), e.put("decorators/bootstrap/actions.html", '<div class="btn-group schema-form-actions {{form.htmlClass}}"><input ng-repeat-start="item in form.items" type="submit" class="btn {{ item.style || \'btn-default\' }} {{form.fieldHtmlClass}}" value="{{item.title}}" ng-if="item.type === \'submit\'"> <button ng-repeat-end="" class="btn {{ item.style || \'btn-default\' }} {{form.fieldHtmlClass}}" type="button" ng-disabled="form.readonly" ng-if="item.type !== \'submit\'" ng-click="buttonClick($event,item)"><span ng-if="item.icon" class="{{item.icon}}"></span>{{item.title}}</button></div>'), e.put("decorators/bootstrap/array.html", '<div class="schema-form-array {{form.htmlClass}}" sf-field-model="sf-new-array" sf-new-array=""><label class="control-label" ng-show="showTitle()">{{ form.title }}</label><ol class="list-group" sf-field-model="" ui-sortable="form.sortOptions"><li class="list-group-item {{form.fieldHtmlClass}}" schema-form-array-items="" sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index"><button ng-hide="form.readonly || form.remove === null" ng-click="deleteFromArray($index)" ng-disabled="form.schema.minItems >= modelArray.length" style="position: relative; z-index: 20;" type="button" class="close pull-right"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></li></ol><div class="clearfix" style="padding: 15px;" ng-model="modelArray" schema-validate="form"><div class="help-block" ng-show="(hasError() && errorMessage(schemaError())) || form.description" ng-bind-html="(hasError() && errorMessage(schemaError())) || form.description"></div><button ng-hide="form.readonly || form.add === null" ng-click="appendToArray()" ng-disabled="form.schema.maxItems <= modelArray.length" type="button" class="btn {{ form.style.add || \'btn-default\' }} pull-right"><i class="glyphicon glyphicon-plus"></i> {{ form.add || \'Add\'}}</button></div></div>'), 
-    e.put("decorators/bootstrap/checkbox.html", '<div class="checkbox schema-form-checkbox {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="{{form.labelHtmlClass}}"><input type="checkbox" sf-changed="form" ng-disabled="form.readonly" sf-field-model="" schema-validate="form" class="{{form.fieldHtmlClass}}" name="{{form.key.slice(-1)[0]}}"> <span ng-bind-html="form.title"></span></label><div class="help-block" sf-message="form.description"></div></div>'), e.put("decorators/bootstrap/checkboxes.html", '<div sf-field-model="sf-new-array" sf-new-array="" class="form-group schema-form-checkboxes {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" sf-field-model="" schema-validate="form" ng-show="showTitle()">{{form.title}}</label><div class="checkbox" ng-repeat="val in titleMapValues track by $index"><label><input type="checkbox" ng-disabled="form.readonly" sf-changed="form" class="{{form.fieldHtmlClass}}" ng-model="titleMapValues[$index]" name="{{form.key.slice(-1)[0]}}"> <span ng-bind-html="form.titleMap[$index].name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'), 
-    e.put("decorators/bootstrap/default.html", '<div class="form-group schema-form-{{form.type}} {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess(), \'has-feedback\': form.feedback !== false }"><label class="control-label {{form.labelHtmlClass}}" ng-class="{\'sr-only\': !showTitle()}" for="{{form.key.slice(-1)[0]}}">{{form.title}}</label> <input ng-if="!form.fieldAddonLeft && !form.fieldAddonRight" ng-show="form.key" type="{{form.type}}" step="any" sf-changed="form" placeholder="{{form.placeholder}}" class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-field-model="" ng-disabled="form.readonly" schema-validate="form" name="{{form.key.slice(-1)[0]}}" aria-describedby="{{form.key.slice(-1)[0] + \'Status\'}}"><div ng-if="form.fieldAddonLeft || form.fieldAddonRight" ng-class="{\'input-group\': (form.fieldAddonLeft || form.fieldAddonRight)}"><span ng-if="form.fieldAddonLeft" class="input-group-addon" ng-bind-html="form.fieldAddonLeft"></span> <input ng-show="form.key" type="{{form.type}}" step="any" sf-changed="form" placeholder="{{form.placeholder}}" class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-field-model="" ng-disabled="form.readonly" schema-validate="form" name="{{form.key.slice(-1)[0]}}" aria-describedby="{{form.key.slice(-1)[0] + \'Status\'}}"> <span ng-if="form.fieldAddonRight" class="input-group-addon" ng-bind-html="form.fieldAddonRight"></span></div><span ng-if="form.feedback !== false" class="form-control-feedback" ng-class="evalInScope(form.feedback) || {\'glyphicon\': true, \'glyphicon-ok\': hasSuccess(), \'glyphicon-remove\': hasError() }" aria-hidden="true"></span> <span ng-if="hasError() || hasSuccess()" id="{{form.key.slice(-1)[0] + \'Status\'}}" class="sr-only">{{ hasSuccess() ? \'(success)\' : \'(error)\' }}</span><div class="help-block" sf-message="form.description"></div></div>'), 
-    e.put("decorators/bootstrap/fieldset.html", '<fieldset ng-disabled="form.readonly" class="schema-form-fieldset {{form.htmlClass}}"><legend ng-class="{\'sr-only\': !showTitle() }">{{ form.title }}</legend><div class="help-block" ng-show="form.description" ng-bind-html="form.description"></div></fieldset>'), e.put("decorators/bootstrap/help.html", '<div class="helpvalue schema-form-helpvalue {{form.htmlClass}}" ng-bind-html="form.helpvalue"></div>'), e.put("decorators/bootstrap/radio-buttons.html", '<div class="form-group schema-form-radiobuttons {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><div><label class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()">{{form.title}}</label></div><div class="btn-group"><label sf-field-model="replaceAll" class="btn {{ (item.value === $$value$$) ? form.style.selected || \'btn-default\' : form.style.unselected || \'btn-default\'; }}" ng-class="{ active: item.value === $$value$$ }" ng-repeat="item in form.titleMap"><input type="radio" class="{{form.fieldHtmlClass}}" sf-changed="form" style="display: none;" ng-disabled="form.readonly" sf-field-model="" schema-validate="form" ng-value="item.value" name="{{form.key.join(\'.\')}}"> <span ng-bind-html="item.name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'), 
-    e.put("decorators/bootstrap/radios-inline.html", '<div class="form-group schema-form-radios-inline {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()" sf-field-model="" schema-validate="form">{{form.title}}</label><div><label class="radio-inline" ng-repeat="item in form.titleMap"><input type="radio" class="{{form.fieldHtmlClass}}" sf-changed="form" ng-disabled="form.readonly" sf-field-model="" ng-value="item.value" name="{{form.key.join(\'.\')}}"> <span ng-bind-html="item.name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'), e.put("decorators/bootstrap/radios.html", '<div class="form-group schema-form-radios {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" sf-field-model="" schema-validate="form" ng-show="showTitle()">{{form.title}}</label><div class="radio" ng-repeat="item in form.titleMap"><label><input type="radio" class="{{form.fieldHtmlClass}}" sf-changed="form" ng-disabled="form.readonly" sf-field-model="" ng-value="item.value" name="{{form.key.join(\'.\')}}"> <span ng-bind-html="item.name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'), 
-    e.put("decorators/bootstrap/section.html", '<div class="schema-form-section {{form.htmlClass}}"></div>'), e.put("decorators/bootstrap/select.html", '<div class="form-group {{form.htmlClass}} schema-form-select" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess(), \'has-feedback\': form.feedback !== false}"><label class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()">{{form.title}}</label><select sf-field-model="" ng-disabled="form.readonly" sf-changed="form" class="form-control {{form.fieldHtmlClass}}" schema-validate="form" ng-options="item.value as item.name group by item.group for item in form.titleMap" name="{{form.key.slice(-1)[0]}}"></select><div class="help-block" sf-message="form.description"></div></div>'), e.put("decorators/bootstrap/submit.html", '<div class="form-group schema-form-submit {{form.htmlClass}}"><input type="submit" class="btn {{ form.style || \'btn-primary\' }} {{form.fieldHtmlClass}}" value="{{form.title}}" ng-disabled="form.readonly" ng-if="form.type === \'submit\'"> <button class="btn {{ form.style || \'btn-default\' }}" type="button" ng-click="buttonClick($event,form)" ng-disabled="form.readonly" ng-if="form.type !== \'submit\'"><span ng-if="form.icon" class="{{form.icon}}"></span> {{form.title}}</button></div>'), 
-    e.put("decorators/bootstrap/tabarray.html", '<div ng-init="selected = { tab: 0 }" ng-model="modelArray" schema-validate="form" sf-field-model="sf-new-array" sf-new-array="" class="clearfix schema-form-tabarray schema-form-tabarray-{{form.tabType || \'left\'}} {{form.htmlClass}}"><div ng-if="!form.tabType || form.tabType !== \'right\'" ng-class="{\'col-xs-3\': !form.tabType || form.tabType === \'left\'}"><ul class="nav nav-tabs" ng-class="{ \'tabs-left\': !form.tabType || form.tabType === \'left\'}"><li sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index" ng-click="$event.preventDefault() || (selected.tab = $index)" ng-class="{active: selected.tab === $index}"><a href="#">{{interp(form.title,{\'$index\':$index, value: item}) || $index}}</a></li><li ng-hide="form.readonly" ng-disabled="form.schema.maxItems <= modelArray.length" ng-click="$event.preventDefault() || (selected.tab = appendToArray().length - 1)"><a href="#"><i class="glyphicon glyphicon-plus"></i> {{ form.add || \'Add\'}}</a></li></ul></div><div ng-class="{\'col-xs-9\': !form.tabType || form.tabType === \'left\' || form.tabType === \'right\'}"><div class="tab-content {{form.fieldHtmlClass}}"><div class="tab-pane clearfix tab{{selected.tab}} index{{$index}}" sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index" ng-show="selected.tab === $index" ng-class="{active: selected.tab === $index}"><div schema-form-array-items=""></div><button ng-hide="form.readonly" ng-click="selected.tab = deleteFromArray($index).length - 1" ng-disabled="form.schema.minItems >= modelArray.length" type="button" class="btn {{ form.style.remove || \'btn-default\' }} pull-right"><i class="glyphicon glyphicon-trash"></i> {{ form.remove || \'Remove\'}}</button></div><div class="help-block" ng-show="(hasError() && errorMessage(schemaError())) || form.description" ng-bind-html="(hasError() && errorMessage(schemaError())) || form.description"></div></div></div></div><div ng-if="form.tabType === \'right\'" class="col-xs-3"><ul class="nav nav-tabs tabs-right"><li sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index" ng-click="$event.preventDefault() || (selected.tab = $index)" ng-class="{active: selected.tab === $index}"><a href="#">{{interp(form.title,{\'$index\':$index, value: item}) || $index}}</a></li><li ng-hide="form.readonly" ng-disabled="form.schema.maxItems <= modelArray.length" ng-click="$event.preventDefault() || (selected.tab = appendToArray().length - 1)"><a href="#"><i class="glyphicon glyphicon-plus"></i> {{ form.add || \'Add\'}}</a></li></ul></div>'), 
+    e.put("decorators/bootstrap/actions-trcl.html", '<div class="btn-group schema-form-actions {{form.htmlClass}}" ng-transclude=""></div>'), e.put("decorators/bootstrap/actions.html", '<div class="btn-group schema-form-actions {{form.htmlClass}}"><input ng-repeat-start="item in form.items" type="submit" class="btn {{ item.style || \'btn-default\' }} {{form.fieldHtmlClass}}" value="{{item.title}}" ng-if="item.type === \'submit\'"> <button ng-repeat-end="" class="btn {{ item.style || \'btn-default\' }} {{form.fieldHtmlClass}}" type="button" ng-disabled="form.readonly" ng-if="item.type !== \'submit\'" ng-click="buttonClick($event,item)"><span ng-if="item.icon" class="{{item.icon}}"></span>{{item.title}}</button></div>'), e.put("decorators/bootstrap/array.html", '<div class="schema-form-array {{form.htmlClass}}" sf-field-model="sf-new-array" sf-new-array=""><label class="control-label" ng-show="showTitle()">{{ form.title }}</label><ol class="list-group" sf-field-model="" ui-sortable="form.sortOptions"><li class="list-group-item {{form.fieldHtmlClass}}" schema-form-array-items="" sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index"><button ng-hide="form.readonly || form.remove === null" ng-click="deleteFromArray($index)" ng-disabled="form.schema.minItems >= modelArray.length" style="position: relative; z-index: 20;" type="button" class="close pull-right"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button></li></ol><div class="clearfix" style="padding: 15px;" ng-model="modelArray" schema-validate="form"><div class="help-block" ng-show="(hasError() && errorMessage(schemaError())) || form.description" ng-bind-html="(hasError() && errorMessage(schemaError())) || form.description"></div><button ng-hide="form.readonly || form.add === null" ng-click="appendToArray()" ng-disabled="form.schema.maxItems <= modelArray.length" type="button" class="btn {{ form.style.add || \'btn-default\' }} pull-right"><i class="glyphicon glyphicon-plus"></i> {{ form.add || \'Add\'}}</button></div></div>'),
+    e.put("decorators/bootstrap/checkbox.html", '<div class="checkbox schema-form-checkbox {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="{{form.labelHtmlClass}}"><input type="checkbox" sf-changed="form" ng-disabled="form.readonly" sf-field-model="" schema-validate="form" class="{{form.fieldHtmlClass}}" name="{{form.key.slice(-1)[0]}}"> <span ng-bind-html="form.title"></span></label><div class="help-block" sf-message="form.description"></div></div>'), e.put("decorators/bootstrap/checkboxes.html", '<div sf-field-model="sf-new-array" sf-new-array="" class="form-group schema-form-checkboxes {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" sf-field-model="" schema-validate="form" ng-show="showTitle()">{{form.title}}</label><div class="checkbox" ng-repeat="val in titleMapValues track by $index"><label><input type="checkbox" ng-disabled="form.readonly" sf-changed="form" class="{{form.fieldHtmlClass}}" ng-model="titleMapValues[$index]" name="{{form.key.slice(-1)[0]}}"> <span ng-bind-html="form.titleMap[$index].name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'),
+    e.put("decorators/bootstrap/default.html", '<div class="form-group schema-form-{{form.type}} {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess(), \'has-feedback\': form.feedback !== false }"><label class="control-label {{form.labelHtmlClass}}" ng-class="{\'sr-only\': !showTitle()}" for="{{form.key.slice(-1)[0]}}">{{form.title}}</label> <input ng-if="!form.fieldAddonLeft && !form.fieldAddonRight" ng-show="form.key" type="{{form.type}}" step="any" sf-changed="form" placeholder="{{form.placeholder}}" class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-field-model="" ng-disabled="form.readonly" schema-validate="form" name="{{form.key.slice(-1)[0]}}" aria-describedby="{{form.key.slice(-1)[0] + \'Status\'}}"><div ng-if="form.fieldAddonLeft || form.fieldAddonRight" ng-class="{\'input-group\': (form.fieldAddonLeft || form.fieldAddonRight)}"><span ng-if="form.fieldAddonLeft" class="input-group-addon" ng-bind-html="form.fieldAddonLeft"></span> <input ng-show="form.key" type="{{form.type}}" step="any" sf-changed="form" placeholder="{{form.placeholder}}" class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-field-model="" ng-disabled="form.readonly" schema-validate="form" name="{{form.key.slice(-1)[0]}}" aria-describedby="{{form.key.slice(-1)[0] + \'Status\'}}"> <span ng-if="form.fieldAddonRight" class="input-group-addon" ng-bind-html="form.fieldAddonRight"></span></div><span ng-if="form.feedback !== false" class="form-control-feedback" ng-class="evalInScope(form.feedback) || {\'glyphicon\': true, \'glyphicon-ok\': hasSuccess(), \'glyphicon-remove\': hasError() }" aria-hidden="true"></span> <span ng-if="hasError() || hasSuccess()" id="{{form.key.slice(-1)[0] + \'Status\'}}" class="sr-only">{{ hasSuccess() ? \'(success)\' : \'(error)\' }}</span><div class="help-block" sf-message="form.description"></div></div>'),
+    e.put("decorators/bootstrap/fieldset.html", '<fieldset ng-disabled="form.readonly" class="schema-form-fieldset {{form.htmlClass}}"><legend ng-class="{\'sr-only\': !showTitle() }">{{ form.title }}</legend><div class="help-block" ng-show="form.description" ng-bind-html="form.description"></div></fieldset>'), e.put("decorators/bootstrap/help.html", '<div class="helpvalue schema-form-helpvalue {{form.htmlClass}}" ng-bind-html="form.helpvalue"></div>'), e.put("decorators/bootstrap/radio-buttons.html", '<div class="form-group schema-form-radiobuttons {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><div><label class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()">{{form.title}}</label></div><div class="btn-group"><label sf-field-model="replaceAll" class="btn {{ (item.value === $$value$$) ? form.style.selected || \'btn-default\' : form.style.unselected || \'btn-default\'; }}" ng-class="{ active: item.value === $$value$$ }" ng-repeat="item in form.titleMap"><input type="radio" class="{{form.fieldHtmlClass}}" sf-changed="form" style="display: none;" ng-disabled="form.readonly" sf-field-model="" schema-validate="form" ng-value="item.value" name="{{form.key.join(\'.\')}}"> <span ng-bind-html="item.name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'),
+    e.put("decorators/bootstrap/radios-inline.html", '<div class="form-group schema-form-radios-inline {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()" sf-field-model="" schema-validate="form">{{form.title}}</label><div><label class="radio-inline" ng-repeat="item in form.titleMap"><input type="radio" class="{{form.fieldHtmlClass}}" sf-changed="form" ng-disabled="form.readonly" sf-field-model="" ng-value="item.value" name="{{form.key.join(\'.\')}}"> <span ng-bind-html="item.name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'), e.put("decorators/bootstrap/radios.html", '<div class="form-group schema-form-radios {{form.htmlClass}}" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" sf-field-model="" schema-validate="form" ng-show="showTitle()">{{form.title}}</label><div class="radio" ng-repeat="item in form.titleMap"><label><input type="radio" class="{{form.fieldHtmlClass}}" sf-changed="form" ng-disabled="form.readonly" sf-field-model="" ng-value="item.value" name="{{form.key.join(\'.\')}}"> <span ng-bind-html="item.name"></span></label></div><div class="help-block" sf-message="form.description"></div></div>'),
+    e.put("decorators/bootstrap/section.html", '<div class="schema-form-section {{form.htmlClass}}"></div>'), e.put("decorators/bootstrap/select.html", '<div class="form-group {{form.htmlClass}} schema-form-select" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess(), \'has-feedback\': form.feedback !== false}"><label class="control-label {{form.labelHtmlClass}}" ng-show="showTitle()">{{form.title}}</label><select sf-field-model="" ng-disabled="form.readonly" sf-changed="form" class="form-control {{form.fieldHtmlClass}}" schema-validate="form" ng-options="item.value as item.name group by item.group for item in form.titleMap" name="{{form.key.slice(-1)[0]}}"></select><div class="help-block" sf-message="form.description"></div></div>'), e.put("decorators/bootstrap/submit.html", '<div class="form-group schema-form-submit {{form.htmlClass}}"><input type="submit" class="btn {{ form.style || \'btn-primary\' }} {{form.fieldHtmlClass}}" value="{{form.title}}" ng-disabled="form.readonly" ng-if="form.type === \'submit\'"> <button class="btn {{ form.style || \'btn-default\' }}" type="button" ng-click="buttonClick($event,form)" ng-disabled="form.readonly" ng-if="form.type !== \'submit\'"><span ng-if="form.icon" class="{{form.icon}}"></span> {{form.title}}</button></div>'),
+    e.put("decorators/bootstrap/tabarray.html", '<div ng-init="selected = { tab: 0 }" ng-model="modelArray" schema-validate="form" sf-field-model="sf-new-array" sf-new-array="" class="clearfix schema-form-tabarray schema-form-tabarray-{{form.tabType || \'left\'}} {{form.htmlClass}}"><div ng-if="!form.tabType || form.tabType !== \'right\'" ng-class="{\'col-xs-3\': !form.tabType || form.tabType === \'left\'}"><ul class="nav nav-tabs" ng-class="{ \'tabs-left\': !form.tabType || form.tabType === \'left\'}"><li sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index" ng-click="$event.preventDefault() || (selected.tab = $index)" ng-class="{active: selected.tab === $index}"><a href="#">{{interp(form.title,{\'$index\':$index, value: item}) || $index}}</a></li><li ng-hide="form.readonly" ng-disabled="form.schema.maxItems <= modelArray.length" ng-click="$event.preventDefault() || (selected.tab = appendToArray().length - 1)"><a href="#"><i class="glyphicon glyphicon-plus"></i> {{ form.add || \'Add\'}}</a></li></ul></div><div ng-class="{\'col-xs-9\': !form.tabType || form.tabType === \'left\' || form.tabType === \'right\'}"><div class="tab-content {{form.fieldHtmlClass}}"><div class="tab-pane clearfix tab{{selected.tab}} index{{$index}}" sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index" ng-show="selected.tab === $index" ng-class="{active: selected.tab === $index}"><div schema-form-array-items=""></div><button ng-hide="form.readonly" ng-click="selected.tab = deleteFromArray($index).length - 1" ng-disabled="form.schema.minItems >= modelArray.length" type="button" class="btn {{ form.style.remove || \'btn-default\' }} pull-right"><i class="glyphicon glyphicon-trash"></i> {{ form.remove || \'Remove\'}}</button></div><div class="help-block" ng-show="(hasError() && errorMessage(schemaError())) || form.description" ng-bind-html="(hasError() && errorMessage(schemaError())) || form.description"></div></div></div></div><div ng-if="form.tabType === \'right\'" class="col-xs-3"><ul class="nav nav-tabs tabs-right"><li sf-field-model="ng-repeat" ng-repeat="item in $$value$$ track by $index" ng-click="$event.preventDefault() || (selected.tab = $index)" ng-class="{active: selected.tab === $index}"><a href="#">{{interp(form.title,{\'$index\':$index, value: item}) || $index}}</a></li><li ng-hide="form.readonly" ng-disabled="form.schema.maxItems <= modelArray.length" ng-click="$event.preventDefault() || (selected.tab = appendToArray().length - 1)"><a href="#"><i class="glyphicon glyphicon-plus"></i> {{ form.add || \'Add\'}}</a></li></ul></div>'),
     e.put("decorators/bootstrap/tabs.html", '<div ng-init="selected = { tab: 0 }" class="schema-form-tabs {{form.htmlClass}}"><ul class="nav nav-tabs"><li ng-repeat="tab in form.tabs" ng-disabled="form.readonly" ng-click="$event.preventDefault() || (selected.tab = $index)" ng-class="{active: selected.tab === $index}"><a href="#">{{ tab.title }}</a></li></ul><div class="tab-content {{form.fieldHtmlClass}}"></div></div>'), e.put("decorators/bootstrap/textarea.html", '<div class="form-group has-feedback {{form.htmlClass}} schema-form-textarea" ng-class="{\'has-error\': form.disableErrorState !== true && hasError(), \'has-success\': form.disableSuccessState !== true && hasSuccess()}"><label class="control-label {{form.labelHtmlClass}}" ng-class="{\'sr-only\': !showTitle()}" for="{{form.key.slice(-1)[0]}}">{{form.title}}</label> <textarea ng-if="!form.fieldAddonLeft && !form.fieldAddonRight" class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-changed="form" placeholder="{{form.placeholder}}" ng-disabled="form.readonly" sf-field-model="" schema-validate="form" name="{{form.key.slice(-1)[0]}}"></textarea><div ng-if="form.fieldAddonLeft || form.fieldAddonRight" ng-class="{\'input-group\': (form.fieldAddonLeft || form.fieldAddonRight)}"><span ng-if="form.fieldAddonLeft" class="input-group-addon" ng-bind-html="form.fieldAddonLeft"></span> <textarea class="form-control {{form.fieldHtmlClass}}" id="{{form.key.slice(-1)[0]}}" sf-changed="form" placeholder="{{form.placeholder}}" ng-disabled="form.readonly" sf-field-model="" schema-validate="form" name="{{form.key.slice(-1)[0]}}"></textarea> <span ng-if="form.fieldAddonRight" class="input-group-addon" ng-bind-html="form.fieldAddonRight"></span></div><span class="help-block" sf-message="form.description"></span></div>');
     } ]), angular.module("schemaForm").config([ "schemaFormDecoratorsProvider", "sfBuilderProvider", "sfPathProvider", function(e, t, n) {
     var i = "decorators/bootstrap/", r = t.builders.simpleTransclusion, o = t.builders.ngModelOptions, a = t.builders.ngModel, s = t.builders.sfField, l = t.builders.condition, c = t.builders.array, u = [ s, a, o, l ];
@@ -80388,7 +80388,7 @@ function aa(e) {
     }, function(e, t) {
     e.exports = '\x3c!-- Use angular-schema-form to show a form based on the parameter JSON schema. --\x3e\n<ng-form class="catalog-parameters" ng-class="{\'readonly\': $ctrl.readOnly}"\n  sf-model="$ctrl.hideValues ? $ctrl.hiddenModel : $ctrl.model"\n  sf-form="$ctrl.parameterForm"\n  sf-schema="$ctrl.readOnly ? $ctrl.readonlyParameterSchema : $ctrl.parameterSchema"\n  sf-options="$ctrl.parameterFormDefaults">\n</ng-form>\n';
     }, function(e, t) {
-    e.exports = '<div class="catalog-search" ng-class="{\'mobile-shown\': $ctrl.mobileSearchInputShown}">\n  <button\n     ng-if="$ctrl.toggleAtMobile"\n     title="Catalog Search"\n     class="catalog-search-toggle visible-xs-inline-block btn btn-link"\n     ng-click="$ctrl.toggleMobileShowSearchInput()">\n    <i class="fa fa-search" aria-hidden="true"></i>\n    <span class="sr-only">Catalog Search</span>\n  </button>\n  <form role="form" class="landing-search-form search-pf has-button" ng-class="{\'hidden-xs\': $ctrl.toggleAtMobile}">\n    <div class="form-group has-clear">\n      <div class="search-pf-input-group">\n        <label for="search-input" class="sr-only">Search Catalog</label>\n        <span class="fa fa-search catalog-search-icon" aria-hidden="true" ng-click="$ctrl.setSearchInputFocus()"></span>\n        <input\n            id="search-input"\n            type="search"\n            autocomplete="off"\n            ng-keypress="$ctrl.onKeyPress($event)"\n            class="form-control catalog-search-input"\n            placeholder="Search Catalog"\n            ng-model="$ctrl.searchText"\n            uib-typeahead="item.name for item in $ctrl.search($viewValue)"\n            typeahead-on-select="$ctrl.itemSelected($item)"\n            typeahead-focus-first="false"\n            typeahead-template-url="catalog-search/catalog-search-result.html"\n            autocorrect="off"\n            autocapitalize="off"\n            spellcheck="false">\n        <button\n            type="button"\n            ng-if="$ctrl.searchText"\n            ng-click="$ctrl.searchText = \'\'"\n            class="clear">\n          <span class="sr-only">Clear Search Input</span>\n          <span class="pficon pficon-close" aria-hidden="true"></span>\n        </button>\n      </div>\n    </div>\n  </form>\n</div>\n';
+    e.exports = '<div class="catalog-search" ng-class="{\'mobile-shown\': $ctrl.mobileSearchInputShown}">\n  <button\n     ng-if="$ctrl.toggleAtMobile"\n     title="Catalog Search"\n     class="catalog-search-toggle visible-xs-inline-block btn btn-link"\n     ng-click="$ctrl.toggleMobileShowSearchInput()">\n    <i class="fa fa-search" aria-hidden="true"></i>\n    <span class="sr-only">Catalog Search</span>\n  </button>\n  <form role="form" class="landing-search-form search-pf has-button" ng-class="{\'hidden-xs\': $ctrl.toggleAtMobile}">\n    <div class="form-group has-clear">\n      <div class="search-pf-input-group">\n        <label for="search-input" class="sr-only">Search Catalog</label>\n        <span class="fa fa-search catalog-search-icon" aria-hidden="true" ng-click="$ctrl.setSearchInputFocus()"></span>\n        <input\n            id="search-input"\n            type="search"\n            autocomplete="off"\n            ng-keypress="$ctrl.onKeyPress($event)"\n            class="form-control catalog-search-input"\n            placeholder="搜索目录"\n            ng-model="$ctrl.searchText"\n            uib-typeahead="item.name for item in $ctrl.search($viewValue)"\n            typeahead-on-select="$ctrl.itemSelected($item)"\n            typeahead-focus-first="false"\n            typeahead-template-url="catalog-search/catalog-search-result.html"\n            autocorrect="off"\n            autocapitalize="off"\n            spellcheck="false">\n        <button\n            type="button"\n            ng-if="$ctrl.searchText"\n            ng-click="$ctrl.searchText = \'\'"\n            class="clear">\n          <span class="sr-only">Clear Search Input</span>\n          <span class="pficon pficon-close" aria-hidden="true"></span>\n        </button>\n      </div>\n    </div>\n  </form>\n</div>\n';
     }, function(e, t) {
     e.exports = '<div class="order-service">\n  <pf-wizard\n       wizard-title="{{$ctrl.imageStream.name}}"\n       hide-sidebar="true"\n       step-class="order-service-wizard-step"\n       current-step="$ctrl.currentStep"\n       wizard-ready="$ctrl.wizardReady"\n       next-title="$ctrl.nextTitle"\n       on-finish="$ctrl.closePanel()"\n       on-cancel="$ctrl.closePanel()"\n       wizard-done="$ctrl.wizardDone">\n    <pf-wizard-step ng-repeat="step in $ctrl.steps track by $index"\n         step-title="{{step.label}}"\n         wz-disabled="{{step.hidden}}"\n         allow-click-nav="step.allowClickNav"\n         next-enabled="step.valid && !$ctrl.updating"\n         prev-enabled="step.prevEnabled"\n         on-show="step.onShow"\n         step-id="{{step.id}}"\n         step-priority="{{$index}}">\n      <div class="wizard-pf-main-inner-shadow-covers">\n        <div class="order-service-config">\n          <div ng-include="step.view" class="wizard-pf-main-form-contents"></div>\n        </div>\n      </div>\n    </pf-wizard-step>\n  </pf-wizard>\n</div>\n';
     }, function(e, t) {
@@ -80501,7 +80501,7 @@ function aa(e) {
     return e === t;
     });
     break;
-    
+
     case "checkbox":
     r.find(n.values, {
     value: t
@@ -80513,7 +80513,7 @@ function aa(e) {
     case "text":
     e.values = [];
     break;
-    
+
     case "checkbox":
     r.each(e.values, function(e) {
     e.selected = !1;
@@ -81356,7 +81356,7 @@ function aa(e) {
     case "keyword":
     d.ctrl.filteredItems = d.filterForKeywords(e.values[0], d.ctrl.filteredItems);
     break;
-    
+
     case "vendors":
     d.ctrl.filteredItems = d.filterForVendors(e.values, d.ctrl.filteredItems);
     }
@@ -81604,7 +81604,7 @@ function aa(e) {
     n(3), n(36);
     var r = n(37), o = n(38), a = n(39), s = n(40), l = n(24), c = n(25), u = n(41), d = n(26), h = n(27), f = n(28), p = n(29), g = n(30), m = n(31), v = n(32), b = n(33), y = n(34), w = n(35), _ = n(42), C = n(23);
     t.webCatalog = "webCatalog", i.module(t.webCatalog, [ "patternfly", "ngAnimate", "ui.bootstrap", "angularMoment", "ui.select", "schemaForm" ]).service("BuilderAppService", s.BuilderAppService).service("Catalog", u.CatalogService).service("RecentlyViewedServiceItems", _.RecentlyViewedServiceItems).filter("escapeRegExp", r.escapeRegExpFilter).filter("projectUrl", o.projectUrlFilter).filter("secretUrl", a.secretUrlFilter).component("catalogParameters", l.catalogParameters).component("catalogSearch", c.catalogSearch).component("createFromBuilder", d.createFromBuilder).component("landingPage", h.landingPage).component("orderService", f.orderService).component("overlayPanel", p.overlayPanel).component("projectsSummary", g.projectsSummary).component("saasList", m.saasList).component("selectPlan", v.selectPlan).component("selectProject", b.selectProject).component("servicesView", y.servicesView).component("updateService", w.updateService).component("catalogFilter", C.catalogFilter).run([ "$templateCache", function(e) {
-    e.put("catalog-search/catalog-search-result.html", n(4)), e.put("create-from-builder/create-from-builder-info.html", n(7)), e.put("create-from-builder/create-from-builder-configure.html", n(6)), e.put("create-from-builder/create-from-builder-bind.html", n(5)), e.put("create-from-builder/create-from-builder-results.html", n(8)), e.put("order-service/order-service-info.html", n(12)), e.put("order-service/order-service-plans.html", n(13)), e.put("order-service/order-service-configure.html", n(11)), e.put("order-service/order-service-bind.html", n(10)), e.put("order-service/order-service-bind-parameters.html", n(9)), e.put("order-service/order-service-results.html", n(14)), e.put("update-service/update-service-plans.html", n(16)), e.put("update-service/update-service-configure.html", n(15)), e.put("update-service/update-service-results.html", n(17)), e.put("decorators/bootstrap/array.html", n(18)), e.put("decorators/bootstrap/checkbox.html", n(19)), e.put("decorators/bootstrap/checkboxes.html", n(20)), 
+    e.put("catalog-search/catalog-search-result.html", n(4)), e.put("create-from-builder/create-from-builder-info.html", n(7)), e.put("create-from-builder/create-from-builder-configure.html", n(6)), e.put("create-from-builder/create-from-builder-bind.html", n(5)), e.put("create-from-builder/create-from-builder-results.html", n(8)), e.put("order-service/order-service-info.html", n(12)), e.put("order-service/order-service-plans.html", n(13)), e.put("order-service/order-service-configure.html", n(11)), e.put("order-service/order-service-bind.html", n(10)), e.put("order-service/order-service-bind-parameters.html", n(9)), e.put("order-service/order-service-results.html", n(14)), e.put("update-service/update-service-plans.html", n(16)), e.put("update-service/update-service-configure.html", n(15)), e.put("update-service/update-service-results.html", n(17)), e.put("decorators/bootstrap/array.html", n(18)), e.put("decorators/bootstrap/checkbox.html", n(19)), e.put("decorators/bootstrap/checkboxes.html", n(20)),
     e.put("decorators/bootstrap/default.html", n(21)), e.put("decorators/bootstrap/select.html", n(22));
     } ]);
     } ], [ 70 ]);
