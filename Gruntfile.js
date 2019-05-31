@@ -116,13 +116,14 @@ module.exports = function (grunt) {
               modRewrite([
                 '^/$ /' + contextRoot + '/ [R=302]',
                 '^/' + contextRoot + '(.*)$ $1',
-                '!^/(config.js|(java|bower_components|scripts|images|styles|views|components|extensions)(/.*)?)$ /index.html [L]'
+                // '!^/(config.js|(java|bower_components|scripts|images|styles|views|components|extensions)(/.*)?)$ /index.html [L]'
+                '!^/(config.js|(bower_components|scripts|images|styles|views|components|extensions)(/.*)?)$ /index.html [L]'
               ]),
               serveStatic('.tmp'),
-              connect().use(
-                '/java',
-                serveStatic('./openshift-jvm')
-              ),
+              // connect().use(
+              //   '/java',
+              //   serveStatic('./openshift-jvm')
+              // ),
               connect().use(
                 '/bower_components',
                 serveStatic('./bower_components')
@@ -223,9 +224,9 @@ module.exports = function (grunt) {
           src: [
             '.tmp',
             '<%= yeoman.dist %>/{,*/}*',
-            '!<%= yeoman.dist %>/.git*',
-            '<%= yeoman.dist %>.java/{,*/}*',
-            '!<%= yeoman.dist %>.java/.git*'
+            '!<%= yeoman.dist %>/.git*'
+            // '<%= yeoman.dist %>.java/{,*/}*',
+            // '!<%= yeoman.dist %>.java/.git*'
           ]
         }]
       },
@@ -501,14 +502,15 @@ module.exports = function (grunt) {
           dest: '<%= yeoman.dist %>/styles'
         },
         // Copy separate components
-        {
-          expand: true,
-          cwd: 'openshift-jvm',
-          src: '**/*',
-          // Copy to a separate "dist.*" directory for go-bindata
-          // Make the folder structure inside the dist.* directory match the desired path
-          dest: '<%= yeoman.dist %>.java/java'
-        }]
+        // {
+        //   expand: true,
+        //   cwd: 'openshift-jvm',
+        //   src: '**/*',
+        //   // Copy to a separate "dist.*" directory for go-bindata
+        //   // Make the folder structure inside the dist.* directory match the desired path
+        //   dest: '<%= yeoman.dist %>.java/java'
+        // }
+      ]
       },
       styles: {
         files: [{

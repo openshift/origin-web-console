@@ -3444,7 +3444,7 @@ switch (e.type) {
 case "kubernetes.io/basic-auth":
 case "kubernetes.io/ssh-auth":
 case "Opaque":
-e.data.WebHookSecretKey ? t.webhook.push(e) : t.source.push(e);
+_.get(e, [ "data", "WebHookSecretKey" ]) ? t.webhook.push(e) : t.source.push(e);
 break;
 
 case "kubernetes.io/dockercfg":
