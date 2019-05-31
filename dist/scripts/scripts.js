@@ -1131,6 +1131,13 @@ CN: "中文",
 EN: "英文",
 Language: "语言"
 });
+} ]), angular.module("gettext").run([ "gettextCatalog", function(e) {
+e.setStrings("zh_CN", {
+"Browse Catalog": "浏览目录",
+"Deploy Image": "部署镜像",
+"Import YAML / JSON": "导入YAML/JSON",
+"Select from Project": "从项目中选择"
+});
 } ]), angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.navigation", "patternfly.sort", "patternfly.notification", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64", "openshiftCommonServices", "openshiftCommonUI", "webCatalog", "gettext" ]).config([ "$routeProvider", "$uibModalProvider", "HomePagePreferenceServiceProvider", function(e, t, n) {
 var r, a = {
 templateUrl: "views/projects.html",
