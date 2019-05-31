@@ -7,6 +7,18 @@ The management console for [OpenShift Origin](https://github.com/openshift/origi
 Purpose
 ------------
 
+
+#### add translation
+
+1. add translate for html files, add gettext/gettextCatalog.getString for js files
+2. use grunt to generate pot file
+$ grunt --gruntfile Gruntfile.translate.js
+3. edit po file to generate po file
+4. use grunt to generate tranlsations.js file
+$ grunt --gruntfile Gruntfile.translate.js
+5. origin-web-console rebuild
+$ grunt
+
 #### Getting started
 
 1. This project is a fork from [origin web console](https://github.com/openshift/origin-web-console)

@@ -12,34 +12,35 @@ msgstr ""
 "X-Generator: Poedit 2.2.3\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: app/views/overview.html:14
-msgid "Browse Catalog"
-msgstr "浏览目录"
-
 #: app/scripts/directives/util.js:287
 msgid "CN"
 msgstr "中文"
-
-#: app/views/overview.html:19
-msgid "Deploy Image"
-msgstr "部署镜像"
 
 #: app/scripts/directives/util.js:290
 msgid "EN"
 msgstr "英文"
 
-#: app/views/overview.html:22
-msgid "Import YAML / JSON"
-msgstr "导入 YAML / JSON"
-
-#: app/scripts/directives/util.js:284 app/scripts/directives/util.js:296
+#: app/scripts/directives/util.js:284
 msgid "Language"
 msgstr "语言"
 
-#: app/views/projects.html:20
-msgid "My Projects"
-msgstr "我的项目"
+#~ msgid "Browse Catalog"
+#~ msgstr "浏览目录"
 
-#: app/views/overview.html:25
-msgid "Select from Project"
-msgstr "从项目中选择"
+#~ msgid "Deploy Image"
+#~ msgstr "部署镜像"
+
+#~ msgid "Import YAML / JSON"
+#~ msgstr "导入 YAML / JSON"
+
+#~ msgid "lala"
+#~ msgstr "啦啦"
+
+#~ msgid "Name"
+#~ msgstr "名字"
+
+#~ msgid "Select from Project"
+#~ msgstr "从项目中选择"
+
+#~ msgid "My Projects"
+#~ msgstr "我的项目"

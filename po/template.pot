@@ -4,35 +4,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
-#: app/views/overview.html:14
-msgid "Browse Catalog"
-msgstr ""
-
 #: app/scripts/directives/util.js:287
 msgid "CN"
-msgstr ""
-
-#: app/views/overview.html:19
-msgid "Deploy Image"
 msgstr ""
 
 #: app/scripts/directives/util.js:290
 msgid "EN"
 msgstr ""
 
-#: app/views/overview.html:22
-msgid "Import YAML / JSON"
-msgstr ""
-
 #: app/scripts/directives/util.js:284
-#: app/scripts/directives/util.js:296
 msgid "Language"
-msgstr ""
-
-#: app/views/projects.html:20
-msgid "My Projects"
-msgstr ""
-
-#: app/views/overview.html:25
-msgid "Select from Project"
 msgstr ""
