@@ -302,4 +302,4 @@ angular.module('openshiftConsole')
 
       }
     };
-  })
+  });

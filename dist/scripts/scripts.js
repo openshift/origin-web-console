@@ -1125,7 +1125,13 @@ LOGOS: {
 },
 CLUSTER_RESOURCE_OVERRIDES_EXEMPT_PROJECT_NAMES: [ "openshift", "kubernetes", "kube" ],
 CLUSTER_RESOURCE_OVERRIDES_EXEMPT_PROJECT_PREFIXES: [ "openshift-", "kubernetes-", "kube-" ]
-}), angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.navigation", "patternfly.sort", "patternfly.notification", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64", "openshiftCommonServices", "openshiftCommonUI", "webCatalog" ]).config([ "$routeProvider", "$uibModalProvider", "HomePagePreferenceServiceProvider", function(e, t, n) {
+}), angular.module("gettext").run([ "gettextCatalog", function(e) {
+e.setStrings("zh_CN", {
+CN: "中文",
+EN: "英文",
+Language: "语言"
+});
+} ]), angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.navigation", "patternfly.sort", "patternfly.notification", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64", "openshiftCommonServices", "openshiftCommonUI", "webCatalog", "gettext" ]).config([ "$routeProvider", "$uibModalProvider", "HomePagePreferenceServiceProvider", function(e, t, n) {
 var r, a = {
 templateUrl: "views/projects.html",
 controller: "ProjectsController"
@@ -1444,6 +1450,8 @@ titleFormat: "LLL"
 e.WebSocketFactory = "ContainerWebSocket";
 } ]).config([ "$compileProvider", function(e) {
 e.aHrefSanitizationWhitelist(/^\s*(https?|mailto|git):/i);
+} ]).run([ "$rootScope", "$cookieStore", "gettextCatalog", function(e, t, n) {
+e.language = t.get("openshift_language") || "zh_CN", n.setCurrentLanguage(e.language);
 } ]).run([ "$rootScope", "LabelFilter", function(e, t) {
 t.persistFilterState(!0), e.$on("$routeChangeSuccess", function() {
 t.readPersistedState();
@@ -6880,46 +6888,46 @@ n.routes = e.select(n.unfilteredRoutes), r();
 a.unwatchAll(c);
 });
 }));
-} ]), angular.module("openshiftConsole").controller("RouteController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "APIService", "DataService", "ProjectsService", "RoutesService", function(e, t, n, r, a, o, i, s) {
+} ]), angular.module("openshiftConsole").controller("RouteController", [ "$scope", "$filter", "$routeParams", "AlertMessageService", "APIService", "DataService", "ProjectsService", "RoutesService", "$cookieStore", "gettextCatalog", "$rootScope", function(e, t, n, r, a, o, i, s, c, l, u) {
 e.projectName = n.project, e.route = null, e.alerts = {}, e.renderOptions = e.renderOptions || {}, e.renderOptions.hideFilterWidget = !0, e.breadcrumbs = [ {
 title: "Routes",
 link: "project/" + n.project + "/browse/routes"
 }, {
 title: n.route
 } ];
-var c = a.getPreferredVersion("services");
+var d = a.getPreferredVersion("services");
 e.routesVersion = a.getPreferredVersion("routes");
-var l, u = [], d = function(t, n) {
-e.loaded = !0, e.route = t, l = s.isCustomHost(t), "DELETED" === n && (e.alerts.deleted = {
+var m, p = [], f = function(t, n) {
+e.loaded = !0, e.route = t, m = s.isCustomHost(t), "DELETED" === n && (e.alerts.deleted = {
 type: "warning",
 message: "This route has been deleted."
 });
-}, m = function(t) {
+}, g = function(t) {
 return "router-host-" + _.get(e, "route.metadata.uid") + "-" + t.host + "-" + t.routerCanonicalHostname;
 };
 e.showRouterHostnameAlert = function(t, n) {
-if (!l) return !1;
+if (!m) return !1;
 if (!t || !t.host || !t.routerCanonicalHostname) return !1;
 if (!n || "True" !== n.status) return !1;
-var a = m(t);
+var a = g(t);
 return !r.isAlertPermanentlyHidden(a, e.projectName);
 }, i.get(n.project).then(_.spread(function(r, a) {
 e.project = r, o.get(e.routesVersion, n.route, a, {
 errorNotification: !1
 }).then(function(t) {
-d(t), u.push(o.watchObject(e.routesVersion, n.route, a, d));
+f(t), p.push(o.watchObject(e.routesVersion, n.route, a, f));
 }, function(n) {
 e.loaded = !0, e.alerts.load = {
 type: "error",
 message: "The route details could not be loaded.",
 details: t("getErrorDetails")(n)
 };
-}), u.push(o.watch(c, a, function(t) {
+}), p.push(o.watch(d, a, function(t) {
 e.services = t.by("metadata.name");
 })), e.$on("$destroy", function() {
-o.unwatchAll(u);
+o.unwatchAll(p);
 });
-}));
+})), u.language = c.get("openshift_language") || "zh_CN", l.setCurrentLanguage(u.language), console.log(u.language);
 } ]), angular.module("openshiftConsole").controller("StorageController", [ "$filter", "$routeParams", "$scope", "APIService", "AlertMessageService", "DataService", "LabelFilter", "Logger", "ProjectsService", "QuotaService", function(e, t, n, r, a, o, i, s, c, l) {
 n.projectName = t.project, n.pvcs = {}, n.unfilteredPVCs = {}, n.labelSuggestions = {}, n.alerts = n.alerts || {}, n.outOfClaims = !1, n.clearFilter = function() {
 i.clear();
@@ -11602,6 +11610,17 @@ var r = t.search();
 r.tab = e[0], t.replace().search(r);
 }
 }, !0);
+}
+};
+} ]).directive("switchLanguage", [ "$cookieStore", "$rootScope", "gettextCatalog", function(e, t, n) {
+return {
+restrict: "E",
+replace: !0,
+template: '<div class="language-switch"><span class="language-text">' + n.getString("Language") + '</span><span id="zh_CNLanguageBtn" class="language-btn" ng-class="{\'active\': isZh}" ng-click="switchLanguage(\'zh_CN\')">' + n.getString("CN") + '</span><span id="enLanguageBtn" class="language-btn" ng-class="{\'active\': isEn}" ng-click="switchLanguage(\'en\')">' + n.getString("EN") + "</span></div>",
+link: function(n) {
+n.switchLanguage = function(t) {
+$("#zh_CNLanguageBtn").toggleClass("active-language"), $("#enLanguageBtn").toggleClass("active-language"), e.put("openshift_language", t), window.location.reload();
+}, n.isZh = "zh_CN" === t.language, n.isEn = "en" === t.language;
 }
 };
 } ]), angular.module("openshiftConsole").directive("labels", [ "$location", "$timeout", "LabelFilter", function(e, t, n) {
@@ -16778,7 +16797,10 @@ node: '<li><a href="about">About</a></li>'
 } ]), angular.module("openshiftConsole").run([ "extensionRegistry", "$rootScope", "DataService", "AuthService", function(e, t, n, r) {
 e.add("nav-user-dropdown", function() {
 var e = [];
-_.get(window, "OPENSHIFT_CONSTANTS.DISABLE_COPY_LOGIN_COMMAND") || e.push({
+e.push({
+type: "dom",
+node: "<li><switch-language></switch-language></li>"
+}), _.get(window, "OPENSHIFT_CONSTANTS.DISABLE_COPY_LOGIN_COMMAND") || e.push({
 type: "dom",
 node: '<li><copy-login-to-clipboard clipboard-text="oc login ' + _.escape(n.openshiftAPIBaseUrl()) + " --token=" + _.escape(r.UserStore().getToken()) + '"></copy-login-to-clipboard></li>'
 }), e.push({

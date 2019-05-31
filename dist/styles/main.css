@@ -6348,3 +6348,7 @@ notification-drawer-wrapper .expanded-notification.unread .drawer-pf-notificatio
 .vm-detail-key{font-weight:600}
 .vm-detail-value{padding-left:3px}
 .vm-detail-state-actions{padding-left:12px}
+.language-switch{margin:1px 10px}
+.language-switch .language-text{margin-right:10px}
+.language-switch .language-btn{margin-right:10px;cursor:pointer}
+.language-switch .language-btn.active{color:#0088ce}
