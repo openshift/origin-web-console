@@ -275,4 +275,31 @@ angular.module('openshiftConsole')
         }, true);
       }
     };
-  });
+  })
+  .directive('switchLanguage', function($cookieStore, $rootScope, gettextCatalog) {
+    return {
+      restrict: 'E',
+      replace: true,
+      template: '<div class="language-switch">' +
+      '<span class="language-text">' + gettextCatalog.getString("Language") + '</span>' +
+      '<span id="zh_CNLanguageBtn" class="language-btn" ng-class="{\'active\': isZh}" ' +
+        'ng-click="switchLanguage(\'zh_CN\')">' +
+        gettextCatalog.getString('CN') + '</span>' +
+      '<span id="enLanguageBtn" class="language-btn" ng-class="{\'active\': isEn}" ' +
+        'ng-click="switchLanguage(\'en\')">' +
+        gettextCatalog.getString('EN') + '</span>' +
+      '</div>',
+      link: function(scope) {
+        scope.switchLanguage = switchLanguage;
+        scope.isZh = $rootScope.language === 'zh_CN';
+        scope.isEn = $rootScope.language === 'en';
+        function switchLanguage(language) {
+          $('#zh_CNLanguageBtn').toggleClass('active-language');
+          $('#enLanguageBtn').toggleClass('active-language');
+          $cookieStore.put("openshift_language", language);
+          window.location.reload();
+        }
+
+      }
+    };
+  })

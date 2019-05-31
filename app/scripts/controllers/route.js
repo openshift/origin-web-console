@@ -15,7 +15,10 @@ angular.module('openshiftConsole')
                        APIService,
                        DataService,
                        ProjectsService,
-                       RoutesService) {
+                       RoutesService,
+                       $cookieStore,
+                       gettextCatalog,
+                       $rootScope) {
     $scope.projectName = $routeParams.project;
     $scope.route = null;
     $scope.alerts = {};
@@ -105,4 +108,12 @@ angular.module('openshiftConsole')
         });
 
       }));
+
+      initLanguage();
+      function initLanguage() {
+        $rootScope.language = $cookieStore.get('openshift_language') || 'zh_CN';
+        gettextCatalog.setCurrentLanguage($rootScope.language);
+        console.log($rootScope.language);
+      }
+
   });

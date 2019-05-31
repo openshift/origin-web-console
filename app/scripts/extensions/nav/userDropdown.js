@@ -5,6 +5,11 @@ angular.module('openshiftConsole')
     extensionRegistry
       .add('nav-user-dropdown', function() {
         var items = [];
+        items.push({
+          type: 'dom',
+          node: '<li><switch-language></switch-language></li>'
+        });
+
         if (!_.get(window, 'OPENSHIFT_CONSTANTS.DISABLE_COPY_LOGIN_COMMAND')) {
           items.push({
             type: 'dom',

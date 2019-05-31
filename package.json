@@ -7,7 +7,7 @@
     "url": "git://github.com/openshift/origin.git"
   },
   "devDependencies": {
-    "bower": "1.8.2",
+    "bower": "1.8.8",
     "clean-css": "3.4.12",
     "connect-modrewrite": "0.7.9",
     "geckodriver": "1.3.0",
@@ -58,7 +58,8 @@
     "protractor": "1.7.0",
     "protractor-screenshot-reporter": "^0.0.5",
     "serve-static": "1.10.2",
-    "time-grunt": "0.3.2"
+    "time-grunt": "0.3.2",
+    "grunt-angular-gettext": "~2.1.0"
   },
   "engines": {
     "node": ">=0.10.0"
@@ -70,7 +71,6 @@
     "build": "grunt build",
     "serve": "grunt serve",
     "start": "grunt serve",
-    "test-integration": "grunt test-integration",
-    "postinstall": "node test/upgrade-selenium.js && node_modules/protractor/bin/webdriver-manager update"
+    "test-integration": "grunt test-integration"
   }
 }

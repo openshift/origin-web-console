@@ -33,7 +33,8 @@ angular
     'ab-base64',
     'openshiftCommonServices',
     'openshiftCommonUI',
-    'webCatalog'
+    'webCatalog',
+    'gettext'
   ])
   .config(function ($routeProvider, $uibModalProvider, HomePagePreferenceServiceProvider) {
     var landingPageRoute;
@@ -483,6 +484,13 @@ angular
   })
   .config(function($compileProvider){
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|mailto|git):/i);
+  })
+  .run(function ($rootScope, $cookieStore, gettextCatalog) {
+    initLanguage();
+    function initLanguage() {
+      $rootScope.language = $cookieStore.get('openshift_language') || 'zh_CN';
+      gettextCatalog.setCurrentLanguage($rootScope.language);
+    }
   })
   .run(function($rootScope, LabelFilter){
     // assume we always want filterState persisted, pages that dont can turn it off
