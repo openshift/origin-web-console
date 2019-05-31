@@ -19,6 +19,16 @@ $ grunt --gruntfile Gruntfile.translate.js
 5. origin-web-console rebuild
 $ grunt
 
+#### update image
+
+1. download script [image build](http://172.16.30.21/openshift_origin/origin-web-console-image-build)
+2. get 2 keys: id_rsa_openshift , id_rsa_rhel
+3. put these 2 key to "/root/.ssh/", remember to change "chmod 0600 id_rsa_openshift", "chmod 0600 id_rsa_rhel"
+4. use scripts in the downloaded folder(origin-web-console-image-build)
+5. $ cd origin-web-console-image-build
+6. $ ansible-playbook -i inventory.example deploy_image.yml
+7. wait...
+
 #### Getting started
 
 1. This project is a fork from [origin web console](https://github.com/openshift/origin-web-console)
