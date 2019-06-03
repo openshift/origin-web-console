@@ -14585,7 +14585,7 @@ _.isEmpty(t) || (l.imageChangeTriggers = _.filter(t, function(e) {
 return "ImageChange" === e.type && _.get(e, "imageChangeParams.automatic");
 }));
 }, g = function(e) {
-e && !l.current && "DeploymentConfig" !== e.kind && "Deployment" !== e.kind && (l.current = e);
+e && "DeploymentConfig" !== e.kind && "Deployment" !== e.kind && (l.current = e);
 }, v = function(e) {
 l.rgv = n.objectToResourceGroupVersion(e), g(e), f(e);
 };
