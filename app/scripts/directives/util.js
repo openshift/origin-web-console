@@ -302,4 +302,13 @@ angular.module('openshiftConsole')
 
       }
     };
+  })
+  .directive('placeholder', function(gettextCatalog){
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs){
+        var translatedPlaceholder = gettextCatalog.getString(attrs.placeholder);
+        element.attr('placeholder', translatedPlaceholder);
+      }
+    };
   });

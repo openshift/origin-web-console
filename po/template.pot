@@ -4,14 +4,212 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
+#: app/views/attach-pvc.html:141
+msgid "(generated if empty)"
+msgstr ""
+
+#: app/views/directives/add-config-to-application.html:58
+msgid "(optional)"
+msgstr ""
+
+#: app/views/create/fromimage.html:127
+#: app/views/directives/_edit-probe.html:25
+#: app/views/directives/osc-routing.html:90
+#: app/views/directives/osc-source-secrets.html:29
+#: app/views/directives/osc-source-secrets.html:81
+#: app/views/edit/build-config.html:78
+msgid "/"
+msgstr ""
+
+#: app/views/directives/_edit-probe.html:98
+#: app/views/edit/deployment-config.html:117
+#: app/views/edit/deployment-config.html:149
+msgid "1"
+msgstr ""
+
+#: app/views/edit/deployment-config.html:181
+#: app/views/edit/deployment-config.html:204
+msgid "25%"
+msgstr ""
+
+#: app/views/edit/deployment-config.html:82
+msgid "600"
+msgstr ""
+
+#: app/views/edit/project.html:22
+msgid "A short description."
+msgstr ""
+
+#: app/views/directives/edit-environment-from.html:73
+msgid "Add prefix"
+msgstr ""
+
+#: app/views/edit/build-config.html:587
+msgid "Add to command"
+msgstr ""
+
 #: app/scripts/directives/util.js:287
 msgid "CN"
+msgstr ""
+
+#: app/views/monitoring.html:13
+msgid "Choose a resource"
+msgstr ""
+
+#: app/views/other-resources.html:9
+msgid "Choose a resource to list..."
+msgstr ""
+
+#: app/views/browse/pod.html:159
+msgid "Container Name"
 msgstr ""
 
 #: app/scripts/directives/util.js:290
 msgid "EN"
 msgstr ""
 
+#: app/views/directives/events.html:11
+#: app/views/projects.html:33
+msgid "Filter by keyword"
+msgstr ""
+
+#: app/views/monitoring.html:24
+#: app/views/overview.html:66
+msgid "Filter by name"
+msgstr ""
+
+#: app/views/catalog/catalog.html:30
+#: app/views/catalog/category-content.html:25
+msgid "Filter by name or description"
+msgstr ""
+
+#: app/views/directives/deploy-image.html:41
+msgid "Image name or pull spec"
+msgstr ""
+
 #: app/scripts/directives/util.js:284
 msgid "Language"
+msgstr ""
+
+#: app/views/edit/project.html:12
+msgid "My Project"
+msgstr ""
+
+#: app/views/projects.html:20
+msgid "My Projects"
+msgstr ""
+
+#: app/views/membership.html:162
+msgid "Name"
+msgstr ""
+
+#: app/views/add-config-volume.html:127
+msgid "Pick a key"
+msgstr ""
+
+#: app/views/create-from-url.html:21
+#: app/views/create-from-url.html:56
+msgid "Project name"
+msgstr ""
+
+#: app/views/directives/osc-secrets.html:13
+#: app/views/directives/osc-source-secrets.html:22
+#: app/views/directives/osc-source-secrets.html:74
+msgid "Secret name"
+msgstr ""
+
+#: app/views/membership.html:183
+msgid "Select a project"
+msgstr ""
+
+#: app/views/directives/edit-environment-from.html:46
+#: app/views/directives/key-value-editor.html:150
+msgid "Select a resource"
+msgstr ""
+
+#: app/views/membership.html:119
+#: app/views/membership.html:233
+msgid "Select a role"
+msgstr ""
+
+#: app/views/directives/osc-persistent-volume-claim.html:20
+msgid "Select a storage class"
+msgstr ""
+
+#: app/views/add-config-volume.html:35
+msgid "Select config map or secret"
+msgstr ""
+
+#: app/views/directives/key-value-editor.html:165
+msgid "Select key"
+msgstr ""
+
+#: app/views/directives/edit-lifecycle-hook.html:70
+msgid "Select volume"
+msgstr ""
+
+#: app/views/directives/create-secret.html:344
+msgid "Service Account Name"
+msgstr ""
+
+#: app/views/membership.html:210
+msgid "Service account"
+msgstr ""
+
+#: app/views/add-config-volume.html:63
+#: app/views/attach-pvc.html:79
+msgid "example: /data"
+msgstr ""
+
+#: app/views/attach-pvc.html:109
+msgid "example: application/resources"
+msgstr ""
+
+#: app/views/edit/build-config.html:184
+#: app/views/edit/build-config.html:318
+#: app/views/edit/build-config.html:388
+msgid "example: centos/ruby-20-centos7:latest"
+msgstr ""
+
+#: app/views/add-config-volume.html:137
+msgid "example: config/app.properties"
+msgstr ""
+
+#: app/views/edit/build-config.html:169
+#: app/views/edit/build-config.html:332
+msgid "example: openshift/ruby-20-centos7@603bfa418"
+msgstr ""
+
+#: app/views/create/fromimage.html:108
+#: app/views/edit/build-config.html:58
+msgid "master"
+msgstr ""
+
+#: app/views/directives/osc-routing.html:8
+msgid "my-route"
+msgstr ""
+
+#: app/views/directives/osc-persistent-volume-claim.html:66
+msgid "my-storage-claim"
+msgstr ""
+
+#: app/views/directives/edit-config-map-or-secret.html:8
+msgid "my-{{type}}"
+msgstr ""
+
+#: app/views/directives/edit-config-map-or-secret.html:57
+msgid "my.key"
+msgstr ""
+
+#: app/views/directives/osc-routing.html:43
+msgid "www.example.com"
+msgstr ""
+
+#: app/views/_templateopt.html:29
+#: app/views/_templateopt.html:56
+msgid "{{ parameter | parameterPlaceholder }}"
+msgstr ""
+
+#: app/views/directives/add-config-to-application.html:15
+msgid "{{ctrl.applications.length ? 'Select an application' : 'There are no applications in this project'}}"
 msgstr ""

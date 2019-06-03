@@ -3,11 +3,11 @@
  * https://github.com/dtaylor113/angularjs-datatables
  * License: MIT
  */
-.dataTables_length select:focus,table.dataTable th:active{outline:0}
-.dataTables_wrapper,ul.DTTT_dropdown.dropdown-menu li{position:relative}
+.dataTables_wrapper,table.table thead .sorting:before,ul.DTTT_dropdown.dropdown-menu li{position:relative}
 table.dataTable,table.dataTable.no-footer{margin:1rem 0;width:100%!important;border-top:1px solid #DDD;border-bottom:1px solid #DDD}
 .dataTables_length{margin:.2rem 0 .8rem 1rem}
 .dataTables_length select{border:none}
+.dataTables_length select:focus{outline:0}
 .dataTables_filter{margin-right:1rem}
 .dataTables_filter input[type=search]{border:1px solid #E4E4E4;border-radius:3px}
 table.dataTable thead td,table.dataTable thead th{border-bottom:1px solid #DDD}
@@ -31,10 +31,11 @@ div.dataTables_paginate{float:right;margin:0}
 div.dataTables_paginate ul.pagination{margin:2px}
 table.table{clear:both;max-width:none!important}
 table.table thead .sorting,table.table thead .sorting_asc,table.table thead .sorting_asc_disabled,table.table thead .sorting_desc,table.table thead .sorting_desc_disabled{cursor:pointer;background:0 0}
-table.table thead .sorting:before{content:' ';position:relative;left:-5px}
+table.table thead .sorting:before{content:' ';left:-5px}
 table.table thead .sorting_desc:before{content:"\25BE";padding-right:5px}
 table.table thead .sorting_asc:before{content:"\25B4";padding-right:5px}
 .dataTables_scrollBody table.table thead .sorting:before,.dataTables_scrollBody table.table thead .sorting_asc:before,.dataTables_scrollBody table.table thead .sorting_desc:before{content:'';padding-right:0}
+table.dataTable th:active{outline:0}
 .dataTables_wrapper .row{margin-top:20px}
 div.dataTables_scrollHead table{margin-bottom:0!important;border-bottom-left-radius:0;border-bottom-right-radius:0}
 div.DTFC_LeftHeadWrapper table,div.DTFC_LeftHeadWrapper table thead tr:last-child td:first-child,div.DTFC_LeftHeadWrapper table thead tr:last-child th:first-child,div.DTFC_RightHeadWrapper table,div.DTFC_RightHeadWrapper table thead tr:last-child td:first-child,div.DTFC_RightHeadWrapper table thead tr:last-child th:first-child,div.dataTables_scrollHead table thead tr:last-child td:first-child,div.dataTables_scrollHead table thead tr:last-child th:first-child{border-bottom-left-radius:0!important;border-bottom-right-radius:0!important}
@@ -129,7 +130,6 @@ pf-c3-chart{display:block}
 .legend-pf-text{font-size:11px;font-weight:400;line-height:11px;padding-right:5px}
 .camelcase{text-transform:capitalize}
 pf-topology{display:block;user-select:none}
-.pf-topology-svg g text.attached-label,.selectize-dropdown.plugin-optgroup_columns .optgroup:before{display:none}
 .container-topology pf-topology{height:500px;position:relative}
 .container-topology .canvas{position:absolute}
 .container-topology .popup{position:absolute;left:0;top:0;background-color:#fff;width:180px;border:1px solid #ccc;border-radius:6px;box-shadow:#333 2px 2px 4px;padding:6px;font-size:14px}
@@ -144,6 +144,7 @@ pf-topology{display:block;user-select:none}
 .pf-topology-svg g.fixed use{stroke-width:2px}
 .pf-topology-svg g.selected circle,.pf-topology-svg g.selected use{stroke-width:4px}
 .pf-topology-svg line{stroke:#aaa;stroke-width:1}
+.pf-topology-svg g text.attached-label{display:none}
 .pf-topology-svg g text.attached-label.visible{font-size:12px;fill:#000;display:block}
 .pf-topology-svg g.selected{stroke-width:4px}
 .pf-topology-svg g circle{stroke-width:2px}
@@ -265,9 +266,9 @@ table.dataTable tbody td,table.dataTable tbody th{padding:2px 10px 3px}
 .node-tag-title{font-weight:600;padding-bottom:12px;padding-top:12px}
 .edit-dialog{left:5px}
 .arrow-box{background:#fff;border-radius:5px;border:1px solid #4d5258;padding-bottom:10px;padding-left:10px;padding-right:10px;position:relative}
-.arrow-box::after,.arrow-box::before{border:solid transparent;bottom:100%;content:" ";height:0;left:50%;position:absolute;width:0;pointer-events:none}
-.arrow-box::after{margin-left:-41%}
-.arrow-box::before{margin-left:-41.5%}
+.arrow-box::after,.arrow-box::before{bottom:100%;content:" ";height:0;left:50%;position:absolute;width:0;pointer-events:none}
+.arrow-box::after{border:solid transparent;margin-left:-41%}
+.arrow-box::before{border:solid transparent;margin-left:-41.5%}
 .canvas-editor-container{background-color:#fff;height:100%;width:100%}
 .canvas-editor-container .canvas-editor-toolbar{padding:15px}
 .canvas-editor-container .canvas-editor-toolbar a{color:#72767b;cursor:pointer}
@@ -313,6 +314,7 @@ table.dataTable tbody td,table.dataTable tbody th{padding:2px 10px 3px}
 .selectize-dropdown-header-close:hover{color:#000}
 .selectize-dropdown.plugin-optgroup_columns .optgroup{border-right:1px solid #f2f2f2;border-top:0 none;float:left;box-sizing:border-box}
 .selectize-dropdown.plugin-optgroup_columns .optgroup:last-child{border-right:0 none}
+.selectize-dropdown.plugin-optgroup_columns .optgroup:before{display:none}
 .selectize-dropdown.plugin-optgroup_columns .optgroup-header{border-top:0 none}
 .selectize-control.plugin-remove_button [data-value]{position:relative;padding-right:24px!important}
 .selectize-control.plugin-remove_button [data-value] .remove{z-index:1;position:absolute;top:0;right:0;bottom:0;width:17px;text-align:center;font-weight:700;font-size:12px;color:inherit;text-decoration:none;vertical-align:middle;display:inline-block;padding:2px 0 0;border-left:1px solid #bbb;border-radius:0 2px 2px 0;box-sizing:border-box}
@@ -321,7 +323,7 @@ table.dataTable tbody td,table.dataTable tbody th{padding:2px 10px 3px}
 .selectize-control.plugin-remove_button .disabled [data-value] .remove:hover{background:0 0}
 .selectize-control.plugin-remove_button .disabled [data-value] .remove{border-left-color:#fff}
 .selectize-control.plugin-remove_button .remove-single{position:absolute;right:28px;top:6px;font-size:23px}
-.selectize-control,.selectize-input{position:relative}
+.selectize-control,.selectize-input,.xterm{position:relative}
 .selectize-dropdown,.selectize-input,.selectize-input input{color:#303030;font-family:inherit;font-size:13px;line-height:18px;-webkit-font-smoothing:inherit}
 .selectize-control.single .selectize-input.input-active,.selectize-input{background:#fff;cursor:text;display:inline-block}
 .selectize-input{border:1px solid #bbb;padding:7px 10px;display:inline-block;width:100%;overflow:hidden;z-index:1;box-sizing:border-box;box-shadow:inset 0 1px 1px rgba(0,0,0,.1);border-radius:1px}
@@ -350,6 +352,7 @@ table.dataTable tbody td,table.dataTable tbody th{padding:2px 10px 3px}
 .selectize-dropdown-content{overflow-y:auto;overflow-x:hidden;max-height:200px;-webkit-overflow-scrolling:touch}
 .selectize-control.single .selectize-input,.selectize-control.single .selectize-input input{cursor:pointer}
 .selectize-control.single .selectize-input.input-active,.selectize-control.single .selectize-input.input-active input{cursor:text}
+.xterm .xterm-viewport,.xterm.enable-mouse-events,registry-image-listing tbody tr.listing-ct-noexpand,registry-image-panel tbody tr.listing-ct-noexpand,registry-imagestream-listing tbody tr.listing-ct-noexpand,registry-imagestream-panel tbody tr.listing-ct-noexpand{cursor:default}
 .selectize-control.single .selectize-input:after{content:' ';display:block;position:absolute;top:50%;right:15px;margin-top:0;width:0;height:0;border-style:solid;border-width:0;border-color:grey transparent transparent}
 .selectize-control.single .selectize-input.dropdown-active:after{margin-top:0;border-width:0;border-color:transparent transparent grey}
 .selectize-control.rtl.single .selectize-input:after{left:15px;right:auto}
@@ -397,18 +400,17 @@ table.dataTable tbody td,table.dataTable tbody th{padding:2px 10px 3px}
 .active-filters .label-filter-active-filters .label-filter-clear{display:-ms-inline-flexbox;display:inline-flex;margin:3px 3px 0 0;-ms-flex-align:center;align-items:center}
 .active-filters .label-filter-active-filters .label-filter-clear .label-filtering-remove-all{background:#39a5dc;margin:0}
 .active-filters .label-filter-active-filters .label-filter-clear .label-filtering-remove-all i.fa.fa-filter{padding-right:5px}
-.xterm{font-family:courier-new,courier,monospace;font-feature-settings:"liga" 0;position:relative;user-select:none;-ms-user-select:none;-webkit-user-select:none}
+.xterm{font-family:courier-new,courier,monospace;font-feature-settings:"liga" 0;user-select:none;-ms-user-select:none;-webkit-user-select:none}
 .xterm.focus,.xterm:focus{outline:0}
 .xterm .xterm-helpers{position:absolute;top:0;z-index:10}
 .xterm .xterm-helper-textarea{position:absolute;opacity:0;left:-9999em;top:0;width:0;height:0;z-index:-10;white-space:nowrap;overflow:hidden;resize:none}
 .xterm .composition-view{background:#000;color:#FFF;display:none;position:absolute;white-space:nowrap;z-index:1}
 .xterm .composition-view.active{display:block}
-.xterm .xterm-viewport{background-color:#000;overflow-y:scroll;cursor:default;position:absolute;right:0;left:0;top:0;bottom:0}
+.xterm .xterm-viewport{background-color:#000;overflow-y:scroll;position:absolute;right:0;left:0;top:0;bottom:0}
 .xterm .xterm-screen{position:relative}
 .xterm .xterm-screen canvas{position:absolute;left:0;top:0}
 .xterm .xterm-scroll-area{visibility:hidden}
 .xterm .xterm-char-measure-element{display:inline-block;visibility:hidden;position:absolute;left:-9999em}
-.xterm.enable-mouse-events{cursor:default}
 .xterm:not(.enable-mouse-events){cursor:text}
 .xterm .xterm-accessibility,.xterm .xterm-message{position:absolute;left:0;top:0;bottom:0;right:0;z-index:100;color:transparent}
 .xterm .xterm-accessibility-tree:focus [id^=xterm-active-item-]{outline:#F80 solid 1px}
@@ -431,7 +433,6 @@ registry-image-listing table.listing-ct thead th:first-child,registry-image-pane
 registry-image-listing table.listing-ct thead th:last-child,registry-image-panel table.listing-ct thead th:last-child,registry-imagestream-listing table.listing-ct thead th:last-child,registry-imagestream-panel table.listing-ct thead th:last-child{text-align:right}
 registry-image-listing tbody tr.listing-ct-item,registry-image-panel tbody tr.listing-ct-item,registry-imagestream-listing tbody tr.listing-ct-item,registry-imagestream-panel tbody tr.listing-ct-item{border-top:1px solid #eee;border-bottom:1px solid #eee;cursor:pointer}
 registry-image-listing tr.listing-ct-item tt,registry-image-panel tr.listing-ct-item tt,registry-imagestream-listing tr.listing-ct-item tt,registry-imagestream-panel tr.listing-ct-item tt{color:#888}
-registry-image-listing tbody.open tr.listing-ct-item:hover td.listing-ct-toggle,registry-image-listing tbody:not(.open) tr.listing-ct-item.listing-ct-nonavigate:hover td.listing-ct-toggle,registry-image-panel tbody.open tr.listing-ct-item:hover td.listing-ct-toggle,registry-image-panel tbody:not(.open) tr.listing-ct-item.listing-ct-nonavigate:hover td.listing-ct-toggle,registry-imagestream-listing tbody.open tr.listing-ct-item:hover td.listing-ct-toggle,registry-imagestream-listing tbody:not(.open) tr.listing-ct-item.listing-ct-nonavigate:hover td.listing-ct-toggle,registry-imagestream-panel tbody.open tr.listing-ct-item:hover td.listing-ct-toggle,registry-imagestream-panel tbody:not(.open) tr.listing-ct-item.listing-ct-nonavigate:hover td.listing-ct-toggle{color:#65bedf}
 registry-image-listing table.listing-ct tbody:last-child,registry-image-panel table.listing-ct tbody:last-child,registry-imagestream-listing table.listing-ct tbody:last-child,registry-imagestream-panel table.listing-ct tbody:last-child{border-bottom:1px solid #eee}
 registry-image-listing table.listing-ct tbody+thead,registry-image-panel table.listing-ct tbody+thead,registry-imagestream-listing table.listing-ct tbody+thead,registry-imagestream-panel table.listing-ct tbody+thead{border-top:1px solid #eee}
 registry-image-listing table.listing-ct tbody.open:last-child,registry-image-panel table.listing-ct tbody.open:last-child,registry-imagestream-listing table.listing-ct tbody.open:last-child,registry-imagestream-panel table.listing-ct tbody.open:last-child{border-bottom:none}
@@ -445,7 +446,9 @@ registry-image-listing tbody.open .listing-ct-panel .listing-ct-body,registry-im
 registry-image-listing tbody.open tr.listing-ct-panel+tr.listing-ct-body,registry-image-panel tbody.open tr.listing-ct-panel+tr.listing-ct-body,registry-imagestream-listing tbody.open tr.listing-ct-panel+tr.listing-ct-body,registry-imagestream-panel tbody.open tr.listing-ct-panel+tr.listing-ct-body{border-top:none}
 registry-image-listing tbody.open tr.listing-ct-panel td div.listing-ct-head,registry-image-panel tbody.open tr.listing-ct-panel td div.listing-ct-head,registry-imagestream-listing tbody.open tr.listing-ct-panel td div.listing-ct-head,registry-imagestream-panel tbody.open tr.listing-ct-panel td div.listing-ct-head{border:none;border-bottom:1px solid #ccc}
 registry-image-listing tbody:not(.open) tr.listing-ct-item:not(.listing-ct-nonavigate):hover,registry-image-panel tbody:not(.open) tr.listing-ct-item:not(.listing-ct-nonavigate):hover,registry-imagestream-listing tbody:not(.open) tr.listing-ct-item:not(.listing-ct-nonavigate):hover,registry-imagestream-panel tbody:not(.open) tr.listing-ct-item:not(.listing-ct-nonavigate):hover{background-color:#d4edfa}
-registry-image-listing tbody.open tr.listing-ct-item:hover,registry-image-listing td.listing-ct-toggle:hover~td,registry-image-listing td.listing-ct-toggle:hover~th,registry-image-listing tr.listing-ct-item.listing-ct-nonavigate:hover,registry-image-panel tbody.open tr.listing-ct-item:hover,registry-image-panel td.listing-ct-toggle:hover~td,registry-image-panel td.listing-ct-toggle:hover~th,registry-image-panel tr.listing-ct-item.listing-ct-nonavigate:hover,registry-imagestream-listing tbody.open tr.listing-ct-item:hover,registry-imagestream-listing td.listing-ct-toggle:hover~td,registry-imagestream-listing td.listing-ct-toggle:hover~th,registry-imagestream-listing tr.listing-ct-item.listing-ct-nonavigate:hover,registry-imagestream-panel tbody.open tr.listing-ct-item:hover,registry-imagestream-panel td.listing-ct-toggle:hover~td,registry-imagestream-panel td.listing-ct-toggle:hover~th,registry-imagestream-panel tr.listing-ct-item.listing-ct-nonavigate:hover{background-color:#ededed}
+registry-image-listing tbody:not(.open) tr.listing-ct-item.listing-ct-nonavigate:hover td.listing-ct-toggle,registry-image-panel tbody:not(.open) tr.listing-ct-item.listing-ct-nonavigate:hover td.listing-ct-toggle,registry-imagestream-listing tbody:not(.open) tr.listing-ct-item.listing-ct-nonavigate:hover td.listing-ct-toggle,registry-imagestream-panel tbody:not(.open) tr.listing-ct-item.listing-ct-nonavigate:hover td.listing-ct-toggle{color:#65bedf}
+registry-image-listing tbody.open tr.listing-ct-item:hover,registry-image-listing tr.listing-ct-item.listing-ct-nonavigate:hover,registry-image-panel tbody.open tr.listing-ct-item:hover,registry-image-panel tr.listing-ct-item.listing-ct-nonavigate:hover,registry-imagestream-listing tbody.open tr.listing-ct-item:hover,registry-imagestream-listing tr.listing-ct-item.listing-ct-nonavigate:hover,registry-imagestream-panel tbody.open tr.listing-ct-item:hover,registry-imagestream-panel tr.listing-ct-item.listing-ct-nonavigate:hover{background-color:#ededed}
+registry-image-listing tbody.open tr.listing-ct-item:hover td.listing-ct-toggle,registry-image-panel tbody.open tr.listing-ct-item:hover td.listing-ct-toggle,registry-imagestream-listing tbody.open tr.listing-ct-item:hover td.listing-ct-toggle,registry-imagestream-panel tbody.open tr.listing-ct-item:hover td.listing-ct-toggle{color:#65bedf}
 registry-image-listing tr.listing-ct-item .listing-ct-toggle,registry-image-panel tr.listing-ct-item .listing-ct-toggle,registry-imagestream-listing tr.listing-ct-item .listing-ct-toggle,registry-imagestream-panel tr.listing-ct-item .listing-ct-toggle{padding:0!important;width:35px;color:#030303}
 registry-image-listing table.listing-ct thead .listing-ct-toggle+th,registry-image-listing tr.listing-ct-item .listing-ct-toggle+td,registry-image-listing tr.listing-ct-item .listing-ct-toggle+th,registry-image-panel table.listing-ct thead .listing-ct-toggle+th,registry-image-panel tr.listing-ct-item .listing-ct-toggle+td,registry-image-panel tr.listing-ct-item .listing-ct-toggle+th,registry-imagestream-listing table.listing-ct thead .listing-ct-toggle+th,registry-imagestream-listing tr.listing-ct-item .listing-ct-toggle+td,registry-imagestream-listing tr.listing-ct-item .listing-ct-toggle+th,registry-imagestream-panel table.listing-ct thead .listing-ct-toggle+th,registry-imagestream-panel tr.listing-ct-item .listing-ct-toggle+td,registry-imagestream-panel tr.listing-ct-item .listing-ct-toggle+th{padding-left:0}
 registry-image-listing td.listing-ct-toggle:hover,registry-image-panel td.listing-ct-toggle:hover,registry-imagestream-listing td.listing-ct-toggle:hover,registry-imagestream-panel td.listing-ct-toggle:hover{color:#65bedf;background-color:#ededed}
@@ -453,6 +456,7 @@ registry-image-listing td.listing-ct-toggle i,registry-image-panel td.listing-ct
 registry-image-listing tbody.open td.listing-ct-toggle i,registry-image-listing tr.listing-ct-item td.listing-ct-toggle:hover i,registry-image-listing tr.listing-ct-item:hover td.listing-ct-toggle i,registry-image-panel tbody.open td.listing-ct-toggle i,registry-image-panel tr.listing-ct-item td.listing-ct-toggle:hover i,registry-image-panel tr.listing-ct-item:hover td.listing-ct-toggle i,registry-imagestream-listing tbody.open td.listing-ct-toggle i,registry-imagestream-listing tr.listing-ct-item td.listing-ct-toggle:hover i,registry-imagestream-listing tr.listing-ct-item:hover td.listing-ct-toggle i,registry-imagestream-panel tbody.open td.listing-ct-toggle i,registry-imagestream-panel tr.listing-ct-item td.listing-ct-toggle:hover i,registry-imagestream-panel tr.listing-ct-item:hover td.listing-ct-toggle i{visibility:visible}
 registry-image-listing td.listing-ct-toggle i:before,registry-image-panel td.listing-ct-toggle i:before,registry-imagestream-listing td.listing-ct-toggle i:before,registry-imagestream-panel td.listing-ct-toggle i:before{content:"\F105"}
 registry-image-listing tbody.open td.listing-ct-toggle i:before,registry-image-panel tbody.open td.listing-ct-toggle i:before,registry-imagestream-listing tbody.open td.listing-ct-toggle i:before,registry-imagestream-panel tbody.open td.listing-ct-toggle i:before{content:"\F107"}
+registry-image-listing td.listing-ct-toggle:hover~td,registry-image-listing td.listing-ct-toggle:hover~th,registry-image-panel td.listing-ct-toggle:hover~td,registry-image-panel td.listing-ct-toggle:hover~th,registry-imagestream-listing td.listing-ct-toggle:hover~td,registry-imagestream-listing td.listing-ct-toggle:hover~th,registry-imagestream-panel td.listing-ct-toggle:hover~td,registry-imagestream-panel td.listing-ct-toggle:hover~th{background-color:#ededed}
 registry-image-listing table.listing-ct>thead td,registry-image-listing table.listing-ct>thead th,registry-image-listing tr.listing-ct-item td,registry-image-listing tr.listing-ct-item th,registry-image-panel table.listing-ct>thead td,registry-image-panel table.listing-ct>thead th,registry-image-panel tr.listing-ct-item td,registry-image-panel tr.listing-ct-item th,registry-imagestream-listing table.listing-ct>thead td,registry-imagestream-listing table.listing-ct>thead th,registry-imagestream-listing tr.listing-ct-item td,registry-imagestream-listing tr.listing-ct-item th,registry-imagestream-panel table.listing-ct>thead td,registry-imagestream-panel table.listing-ct>thead th,registry-imagestream-panel tr.listing-ct-item td,registry-imagestream-panel tr.listing-ct-item th{padding:10px 0px 10px 20px}
 registry-image-listing table.listing-ct>thead td:last-child,registry-image-listing table.listing-ct>thead th:last-child,registry-image-listing tr.listing-ct-item td:last-child,registry-image-panel table.listing-ct>thead td:last-child,registry-image-panel table.listing-ct>thead th:last-child,registry-image-panel tr.listing-ct-item td:last-child,registry-imagestream-listing table.listing-ct>thead td:last-child,registry-imagestream-listing table.listing-ct>thead th:last-child,registry-imagestream-listing tr.listing-ct-item td:last-child,registry-imagestream-panel table.listing-ct>thead td:last-child,registry-imagestream-panel table.listing-ct>thead th:last-child,registry-imagestream-panel tr.listing-ct-item td:last-child{text-align:right;padding-right:10px}
 registry-image-listing .listing-ct-actions>.listing-ct-caption,registry-image-panel .listing-ct-actions>.listing-ct-caption,registry-imagestream-listing .listing-ct-actions>.listing-ct-caption,registry-imagestream-panel .listing-ct-actions>.listing-ct-caption{font-size:14px;vertical-align:middle;color:#337ab7;padding-right:5px}
@@ -503,7 +507,6 @@ registry-image-listing .listing-ct-wide,registry-image-panel .listing-ct-wide,re
 registry-image-listing div.listing-ct-head,registry-image-panel div.listing-ct-head,registry-imagestream-listing div.listing-ct-head,registry-imagestream-panel div.listing-ct-head{overflow:visible}
 registry-image-listing .listing-ct-head .btn-group,registry-image-listing .listing-ct-head button:not(.dropdown-toggle),registry-image-panel .listing-ct-head .btn-group,registry-image-panel .listing-ct-head button:not(.dropdown-toggle),registry-imagestream-listing .listing-ct-head .btn-group,registry-imagestream-listing .listing-ct-head button:not(.dropdown-toggle),registry-imagestream-panel .listing-ct-head .btn-group,registry-imagestream-panel .listing-ct-head button:not(.dropdown-toggle){margin-left:.3em}
 registry-image-listing table.listing-ct>caption a,registry-image-panel table.listing-ct>caption a,registry-imagestream-listing table.listing-ct>caption a,registry-imagestream-panel table.listing-ct>caption a{font-size:16px}
-registry-image-listing tbody tr.listing-ct-noexpand,registry-image-panel tbody tr.listing-ct-noexpand,registry-imagestream-listing tbody tr.listing-ct-noexpand,registry-imagestream-panel tbody tr.listing-ct-noexpand{cursor:default}
 registry-image-listing .nav-tabs-pf>li:first-child a,registry-image-panel .nav-tabs-pf>li:first-child a,registry-imagestream-listing .nav-tabs-pf>li:first-child a,registry-imagestream-panel .nav-tabs-pf>li:first-child a{margin-left:0px!important;padding-left:15px!important}
 registry-image-listing .nav-tabs-pf>li a:before,registry-image-panel .nav-tabs-pf>li a:before,registry-imagestream-listing .nav-tabs-pf>li a:before,registry-imagestream-panel .nav-tabs-pf>li a:before{right:0px!important}
 registry-image-listing .nav-tabs-pf>li.active a:before,registry-image-listing .nav-tabs-pf>li>a:active:before,registry-image-listing .nav-tabs-pf>li>a:focus:before,registry-image-listing .nav-tabs-pf>li>a:hover:before,registry-image-panel .nav-tabs-pf>li.active a:before,registry-image-panel .nav-tabs-pf>li>a:active:before,registry-image-panel .nav-tabs-pf>li>a:focus:before,registry-image-panel .nav-tabs-pf>li>a:hover:before,registry-imagestream-listing .nav-tabs-pf>li.active a:before,registry-imagestream-listing .nav-tabs-pf>li>a:active:before,registry-imagestream-listing .nav-tabs-pf>li>a:focus:before,registry-imagestream-listing .nav-tabs-pf>li>a:hover:before,registry-imagestream-panel .nav-tabs-pf>li.active a:before,registry-imagestream-panel .nav-tabs-pf>li>a:active:before,registry-imagestream-panel .nav-tabs-pf>li>a:focus:before,registry-imagestream-panel .nav-tabs-pf>li>a:hover:before{height:3px;left:0px}
@@ -572,8 +575,8 @@ body>.select2-container.open{z-index:9999}
 .ui-select-container.select2.direction-up.select2-dropdown-open .ui-select-match,.ui-select-container[theme=select2].direction-up.select2-dropdown-open .ui-select-match{border-bottom-color:#5897fb}
 .ui-select-container[theme=select2] .ui-select-dropdown .ui-select-search-hidden,.ui-select-container[theme=select2] .ui-select-dropdown .ui-select-search-hidden input{opacity:0;height:0;min-height:0;padding:0;margin:0;border:0}
 .selectize-input.selectize-focus{border-color:#007FBB!important}
+.ng-dirty.ng-invalid>div.selectize-input,.ui-select-bootstrap.ng-dirty.ng-invalid>button.btn.ui-select-match{border-color:#D44950}
 .selectize-control>.selectize-dropdown,.selectize-control>.selectize-input>input{width:100%}
-.ng-dirty.ng-invalid>div.selectize-input{border-color:#D44950}
 .ui-select-container[theme=selectize].direction-up .ui-select-dropdown{box-shadow:0 -4px 8px rgba(0,0,0,.25);margin-top:-2px}
 .ui-select-container[theme=selectize] input.ui-select-search-hidden{opacity:0;height:0;min-height:0;padding:0;margin:0;border:0;width:0}
 .btn-default-focus{color:#333;background-color:#EBEBEB;border-color:#ADADAD;text-decoration:none;outline:-webkit-focus-ring-color auto 5px;outline-offset:-2px;box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}
@@ -600,7 +603,6 @@ body>.ui-select-bootstrap.open{z-index:1000}
 .ui-select-bootstrap .ui-select-choices-row.active>span{color:#fff;text-decoration:none;outline:0;background-color:#428bca}
 .ui-select-bootstrap .ui-select-choices-row.active.disabled>span,.ui-select-bootstrap .ui-select-choices-row.disabled>span{color:#777;cursor:not-allowed;background-color:#fff}
 .ui-select-match.ng-hide-add,.ui-select-search.ng-hide-add{display:none!important}
-.ui-select-bootstrap.ng-dirty.ng-invalid>button.btn.ui-select-match{border-color:#D44950}
 .ui-select-container[theme=bootstrap].direction-up .ui-select-dropdown{box-shadow:0 -4px 8px rgba(0,0,0,.25)}
 .ui-select-bootstrap .ui-select-match-text{width:100%;padding-right:1em}
 .ui-select-bootstrap .ui-select-match-text span{display:inline-block;width:100%;overflow:hidden}

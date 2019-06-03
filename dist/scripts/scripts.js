@@ -1135,7 +1135,9 @@ Language: "语言"
 e.setStrings("zh_CN", {
 "Browse Catalog": "浏览目录",
 "Deploy Image": "部署镜像",
+"Filter by Keyword": "按关键词过滤",
 "Import YAML / JSON": "导入YAML/JSON",
+Publisher: "发布者",
 "Select from Project": "从项目中选择"
 });
 } ]), angular.module("openshiftConsole", [ "ngAnimate", "ngCookies", "ngResource", "ngRoute", "ngSanitize", "kubernetesUI", "registryUI.images", "ui.bootstrap", "patternfly.charts", "patternfly.navigation", "patternfly.sort", "patternfly.notification", "openshiftConsoleTemplates", "ui.ace", "extension-registry", "as.sortable", "ui.select", "angular-inview", "angularMoment", "ab-base64", "openshiftCommonServices", "openshiftCommonUI", "webCatalog", "gettext" ]).config([ "$routeProvider", "$uibModalProvider", "HomePagePreferenceServiceProvider", function(e, t, n) {
