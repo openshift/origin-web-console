@@ -66,7 +66,6 @@
 
     var updateCurrent = function(apiObject) {
       if (!apiObject ||
-          row.current ||
           apiObject.kind === 'DeploymentConfig' ||
           apiObject.kind === 'Deployment') {
         return;
