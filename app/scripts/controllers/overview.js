@@ -922,6 +922,17 @@ function OverviewController($scope,
       var services = [];
       var uid = getUID(apiObject);
       var podTemplate = getPodTemplate(apiObject);
+      if (apiObject.kind === 'DeploymentConfig') {
+        // Include labels automatically added to deployment config pods since
+        // the service might select them.
+        podTemplate = _.defaultsDeep({
+          metadata: {
+            labels: {
+              deploymentconfig: apiObject.metadata.name
+            }
+          }
+        }, podTemplate);
+      }
       _.each(selectorsByService, function(selector, serviceName) {
         if (selector.matches(podTemplate)) {
           services.push(state.allServices[serviceName]);

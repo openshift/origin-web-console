@@ -278,7 +278,13 @@ B.replicaSetsByDeploymentUID[t] = a, B.currentByDeploymentUID[t] = _.head(a);
 }, lt = {}, ut = function(e) {
 e && be.allServices && _.each(e, function(e) {
 var t = [], n = _e(e), r = G(e);
-_.each(lt, function(e, n) {
+"DeploymentConfig" === e.kind && (r = _.defaultsDeep({
+metadata: {
+labels: {
+deploymentconfig: e.metadata.name
+}
+}
+}, r)), _.each(lt, function(e, n) {
 e.matches(r) && t.push(be.allServices[n]);
 }), be.servicesByObjectUID[n] = _.sortBy(t, "metadata.name");
 });
