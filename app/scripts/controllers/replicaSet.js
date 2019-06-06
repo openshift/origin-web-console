@@ -27,7 +27,8 @@ angular.module('openshiftConsole')
                         OwnerReferencesService,
                         PodsService,
                         ProjectsService,
-                        StorageService) {
+                        StorageService,
+                        gettextCatalog) {
     var hasDC = false;
 
     var annotation = $filter('annotation');
@@ -180,7 +181,7 @@ angular.module('openshiftConsole')
 
               $scope.alerts["load"] = {
                 type: "error",
-                message: "The deployment configuration details could not be loaded.",
+                message: gettextCatalog.getString("The deployment configuration details could not be loaded."),
                 details: $filter('getErrorDetails')(e)
               };
             }
@@ -229,7 +230,7 @@ angular.module('openshiftConsole')
               if (action === "DELETED") {
                 $scope.alerts['deployment-deleted'] = {
                   type: "warning",
-                  message: "The deployment controlling this replica set has been deleted."
+                  message: gettextCatalog.getString("The deployment controlling this replica set has been deleted.")
                 };
                 $scope.healthCheckURL = Navigate.healthCheckURL($routeParams.project,
                                                                 "ReplicaSet",
@@ -303,7 +304,7 @@ angular.module('openshiftConsole')
               if (action === "DELETED") {
                 $scope.alerts["deleted"] = {
                   type: "warning",
-                  message: "This " + displayKind + " has been deleted."
+                  message: gettextCatalog.getString("This {{displayKind}} has been deleted.", {displayKind: displayKind})
                 };
               }
 
@@ -330,7 +331,7 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: "The " + displayKind + " details could not be loaded.",
+              message: gettextCatalog.getString("The {{displayKind}} details could not be loaded.", {displayKind: displayKind}),
               details: $filter('getErrorDetails')(e)
             };
             $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
@@ -443,7 +444,7 @@ angular.module('openshiftConsole')
             $scope.alerts = $scope.alerts || {};
             $scope.alerts["scale"] = {
               type: "error",
-              message: "An error occurred scaling.",
+              message: gettextCatalog.getString("An error occurred scaling."),
               details: $filter('getErrorDetails')(result)
             };
           };
@@ -475,21 +476,21 @@ angular.module('openshiftConsole')
         };
 
         $scope.removeVolume = function(volume) {
-          var details = "This will remove the volume from the " + $filter('humanizeKind')($scope.replicaSet.kind) + ".";
+          var details = gettextCatalog.getString("This will remove the volume from the {{kind}}.", {kind: $filter('humanizeKind')($scope.replicaSet.kind)});
           if (volume.persistentVolumeClaim) {
-            details += " It will not delete the persistent volume claim.";
+            details += gettextCatalog.getString(" It will not delete the persistent volume claim.");
           } else if (volume.secret) {
-            details += " It will not delete the secret.";
+            details += gettextCatalog.getString(" It will not delete the secret.");
           } else if (volume.configMap) {
-            details += " It will not delete the config map.";
+            details += gettextCatalog.getString(" It will not delete the config map.");
           }
 
           var confirm = ModalsService.confirm({
-            title: "Remove volume " + volume.name + "?",
+            title: gettextCatalog.getString("Remove volume{{name}}?", {name: volume.name}),
             details: details,
-            okButtonText: "Remove",
+            okButtonText: gettextCatalog.getString("Remove"),
             okButtonClass: "btn-danger",
-            cancelButtonText: "Cancel"
+            cancelButtonText: gettextCatalog.getString("Cancel")
           });
 
           var removeVolume = function() {

@@ -12,7 +12,8 @@ angular.module('openshiftConsole')
                                                      Logger,
                                                      ProjectsService,
                                                      SecretsService,
-                                                     ServiceInstancesService) {
+                                                     ServiceInstancesService,
+                                                     gettextCatalog) {
     $scope.alerts = {};
     $scope.projectName = $routeParams.project;
     $scope.serviceInstance = null;
@@ -105,7 +106,7 @@ angular.module('openshiftConsole')
               // TODO: Only include fields from the secret that are part of the schema
               _.extend($scope.parameterData, secretData);
             } catch (e) {
-              Logger.warn('Unable to load parameters from secret ' + _.get(parametersSource, 'secretKeyRef.name'), e);
+              Logger.warn(gettextCatalog.getString('Unable to load parameters from secret ') + _.get(parametersSource, 'secretKeyRef.name'), e);
             }
           }));
         });
@@ -189,7 +190,7 @@ angular.module('openshiftConsole')
       if (action === "DELETED") {
         $scope.alerts["deleted"] = {
           type: "warning",
-          message: "This provisioned service has been deleted."
+          message: gettextCatalog.getString("This provisioned service has been deleted.")
         };
       }
 
@@ -218,7 +219,7 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: "The provisioned service details could not be loaded.",
+              message: gettextCatalog.getString("The provisioned service details could not be loaded."),
               details: $filter('getErrorDetails')(error)
             };
           });
@@ -226,7 +227,7 @@ angular.module('openshiftConsole')
         $scope.loaded = true;
         $scope.alerts["load"] = {
           type: "error",
-          message: "The service details could not be loaded.",
+          message: gettextCatalog.getString("The service details could not be loaded."),
           details: $filter('getErrorDetails')(error)
         };
       }));

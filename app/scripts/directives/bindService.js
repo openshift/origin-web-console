@@ -11,6 +11,7 @@
       'Catalog',
       'DataService',
       'ServiceInstancesService',
+      'gettextCatalog',
       BindService
     ],
     controllerAs: 'ctrl',
@@ -29,7 +30,8 @@
                        BindingService,
                        Catalog,
                        DataService,
-                       ServiceInstancesService) {
+                       ServiceInstancesService,
+                       gettextCatalog) {
     var ctrl = this;
     var bindFormStep;
     var bindParametersStep;
@@ -76,7 +78,7 @@
     };
 
     var showBind = function() {
-      ctrl.nextTitle = bindParametersStep.hidden ? 'Bind' : 'Next >';
+      ctrl.nextTitle = bindParametersStep.hidden ? gettextCatalog.getString('Bind') : gettextCatalog.getString('Next >');
       if (ctrl.podPresets && !selectionValidityWatcher) {
         selectionValidityWatcher = $scope.$watch("ctrl.selectionForm.$valid", function(isValid) {
           bindFormStep.valid = isValid;
@@ -85,7 +87,7 @@
     };
 
     var showParameters = function() {
-      ctrl.nextTitle = 'Bind';
+      ctrl.nextTitle = gettextCatalog.getString('Bind');
       if (!parametersValidityWatcher) {
         parametersValidityWatcher = $scope.$watch("ctrl.parametersForm.$valid", function(isValid) {
           bindParametersStep.valid = isValid;
@@ -102,7 +104,7 @@
         parametersValidityWatcher();
         parametersValidityWatcher = undefined;
       }
-      ctrl.nextTitle = "Close";
+      ctrl.nextTitle = gettextCatalog.getString("Close");
       ctrl.wizardComplete = true;
 
       ctrl.bindService();
@@ -141,7 +143,7 @@
 
     bindFormStep = {
       id: 'bindForm',
-      label: 'Binding',
+      label: gettextCatalog.getString('Binding'),
       view: 'views/directives/bind-service/bind-service-form.html',
       valid: false,
       allowClickNav: true,
@@ -150,7 +152,7 @@
 
     bindParametersStep = {
       id: 'bindParameters',
-      label: 'Parameters',
+      label: gettextCatalog.getString('Parameters'),
       view: 'views/directives/bind-service/bind-parameters.html',
       hidden: true,
       allowClickNav: true,
@@ -159,7 +161,7 @@
 
     resultsStep = {
       id: 'results',
-      label: 'Results',
+      label: gettextCatalog.getString('Results'),
       view: 'views/directives/bind-service/results.html',
       valid: true,
       allowClickNav: false,
@@ -180,7 +182,7 @@
           ctrl.parameterFormDefinition = _.get(ctrl.plan, 'spec.externalMetadata.schemas.service_binding.create.openshift_form_definition');
 
           bindParametersStep.hidden = !_.has(ctrl.parameterSchema, 'properties');
-          ctrl.nextTitle = bindParametersStep.hidden ? 'Bind' : 'Next >';
+          ctrl.nextTitle = bindParametersStep.hidden ? gettextCatalog.getString('Bind') : gettextCatalog.getString('Next >');
           ctrl.hideBack = bindParametersStep.hidden;
           bindFormStep.valid = true;
         });

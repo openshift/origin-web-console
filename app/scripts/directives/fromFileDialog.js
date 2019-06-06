@@ -8,6 +8,7 @@
       '$routeParams',
       '$filter',
       'DataService',
+      'gettextCatalog',
       FromFileDialog
     ],
     controllerAs: '$ctrl',
@@ -19,7 +20,7 @@
     templateUrl: 'views/directives/from-file-dialog.html'
   });
 
-  function FromFileDialog($scope, $timeout, $routeParams, $filter, DataService) {
+  function FromFileDialog($scope, $timeout, $routeParams, $filter, DataService, gettextCatalog) {
     var ctrl = this;
     var annotation = $filter('annotation');
     var imageForIconClass = $filter('imageForIconClass');
@@ -82,7 +83,7 @@
       ctrl.name = $filter('displayName')(ctrl.template);
       ctrl.actionLabel = null;
       ctrl.kind = null;
-      ctrl.currentStep = "Results";
+      ctrl.currentStep = gettextCatalog.getString("Results");
     });
 
     ctrl.close = function() {
@@ -101,10 +102,10 @@
       // since the value hasn't changed.
       ctrl.currentStep = step.title;
       if (step.stepId === 'results') {
-        ctrl.nextButtonTitle = "Close";
+        ctrl.nextButtonTitle = gettextCatalog.getString("Close");
         ctrl.wizardDone = true;
       } else {
-        ctrl.nextButtonTitle = "Create";
+        ctrl.nextButtonTitle = gettextCatalog.getString("Create");
       }
     };
 

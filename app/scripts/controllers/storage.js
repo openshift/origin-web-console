@@ -18,7 +18,8 @@ angular.module('openshiftConsole')
     LabelFilter,
     Logger,
     ProjectsService,
-    QuotaService) {
+    QuotaService,
+    gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.pvcs = {};
     $scope.unfilteredPVCs = {};
@@ -39,13 +40,13 @@ angular.module('openshiftConsole')
         }
         $scope.alerts['quotaExceeded'] = {
           type: 'warning',
-          message: 'Storage quota limit has been reached. You will not be able to create any new storage.',
+          message: gettextCatalog.getString('Storage quota limit has been reached. You will not be able to create any new storage.'),
           links: [{
             href: "project/" + $scope.projectName + "/quota",
-            label: "View Quota"
+            label: gettextCatalog.getString("View Quota")
           },{
             href: "",
-            label: "Don't Show Me Again",
+            label: gettextCatalog.getString("Don't Show Me Again"),
             onClick: function() {
               // Hide the alert on future page loads.
               AlertMessageService.permanentlyHideAlert("storage-quota-limit-reached", $scope.projectName);

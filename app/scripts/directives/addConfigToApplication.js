@@ -10,6 +10,7 @@
       'Navigate',
       'NotificationsService',
       'StorageService',
+      'gettextCatalog',
       AddConfigToApplication
     ],
     controllerAs: 'ctrl',
@@ -22,7 +23,7 @@
     templateUrl: 'views/directives/add-config-to-application.html'
   });
 
-  function AddConfigToApplication($filter, $scope, APIService, ApplicationsService, DataService, Navigate, NotificationsService, StorageService) {
+  function AddConfigToApplication($filter, $scope, APIService, ApplicationsService, DataService, Navigate, NotificationsService, StorageService, gettextCatalog) {
     var ctrl = this;
     var humanizeKind = $filter('humanizeKind');
 
@@ -167,10 +168,10 @@
         function() {
           NotificationsService.addNotification({
             type: "success",
-            message: "Successfully added " + sourceKind + " " + ctrl.apiObject.metadata.name + " to " + targetKind + " " + applicationToUpdate.metadata.name + ".",
+            message: gettextCatalog.getString("Successfully added ") + sourceKind + " " + ctrl.apiObject.metadata.name + gettextCatalog.getString(" to ") + targetKind + " " + applicationToUpdate.metadata.name + ".",
             links: [{
               href: Navigate.resourceURL(applicationToUpdate),
-              label: "View " + humanizeKind(applicationToUpdate.kind, true)
+              label: gettextCatalog.getString("View ") + humanizeKind(applicationToUpdate.kind, true)
             }]
           });
           if (angular.isFunction(ctrl.onComplete)) {
@@ -182,7 +183,7 @@
 
           NotificationsService.addNotification({
             type: "error",
-            message: "An error occurred  adding " + sourceKind + " " + ctrl.apiObject.metadata.name + " to " + targetKind + " " + applicationToUpdate.metadata.name + ". " +
+            message: gettextCatalog.getString("An error occurred  adding {{source}} {{name}} to {{target}} {{app}}. ",{source: sourceKind, name: ctrl.apiObject.metadata.name, target: targetKind, app: applicationToUpdate.metadata.name}) +
             getErrorDetails(result)
           });
         }).finally(function() {

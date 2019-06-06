@@ -17,14 +17,15 @@ angular.module('openshiftConsole')
                                                  LabelFilter,
                                                  Logger,
                                                  OwnerReferencesService,
-                                                 ProjectsService) {
+                                                 ProjectsService,
+                                                 gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.replicationControllers = {};
     $scope.unfilteredDeploymentConfigs = {};
     $scope.unfilteredDeployments = {};
     $scope.replicationControllersByDC = {};
     $scope.labelSuggestions = {};
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettextCatalog.getString("Loading...");
     $scope.expandedDeploymentConfigRow = {};
     $scope.unfilteredReplicaSets = {};
     $scope.unfilteredReplicationControllers = {};

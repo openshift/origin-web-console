@@ -32,6 +32,7 @@ angular.module('openshiftConsole').controller('OverviewController', [
   'RoutesService',
   'ServiceInstancesService',
   'KubevirtVersions',
+  'gettextCatalog',
   OverviewController
 ]);
 
@@ -65,7 +66,8 @@ function OverviewController($scope,
                             ResourceAlertsService,
                             RoutesService,
                             ServiceInstancesService,
-                            KubevirtVersions) {
+                            KubevirtVersions,
+                            gettextCatalog) {
   var overview = this;
   var limitWatches = $filter('isIE')();
   var DEFAULT_POLL_INTERVAL = 60 * 1000; // milliseconds
@@ -449,14 +451,14 @@ function OverviewController($scope,
 
       state.alerts['metrics-connection-failed'] = {
         type: 'warning',
-        message: 'An error occurred getting metrics.',
+        message: gettextCatalog.getString('An error occurred getting metrics.'),
         links: [{
           href: data.url,
-          label: 'Open Metrics URL',
+          label: gettextCatalog.getString('Open Metrics URL'),
           target: '_blank'
         }, {
           href: '',
-          label: "Don't Show Me Again",
+          label: gettextCatalog.getString("Don't Show Me Again"),
           onClick: function() {
             // Hide the alert on future page loads.
             AlertMessageService.permanentlyHideAlert('metrics-connection-failed');

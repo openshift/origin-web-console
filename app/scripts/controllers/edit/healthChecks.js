@@ -19,9 +19,10 @@ angular.module('openshiftConsole')
                         DataService,
                         Navigate,
                         NotificationsService,
-                        ProjectsService) {
+                        ProjectsService,
+                        gettextCatalog) {
     if (!$routeParams.kind || !$routeParams.name) {
-      Navigate.toErrorPage("Kind or name parameter missing.");
+      Navigate.toErrorPage(gettextCatalog.getString("Kind or name parameter missing."));
       return;
     }
 
@@ -33,7 +34,7 @@ angular.module('openshiftConsole')
     ];
 
     if (!_.includes(supportedKinds, $routeParams.kind)) {
-      Navigate.toErrorPage("Health checks are not supported for kind " + $routeParams.kind + ".");
+      Navigate.toErrorPage(gettextCatalog.getString("Health checks are not supported for kind {{kind}}.", {kind: $routeParams.kind}));
       return;
     }
 
@@ -44,7 +45,7 @@ angular.module('openshiftConsole')
       name: $routeParams.name,
       kind: $routeParams.kind,
       namespace: $routeParams.project,
-      subpage: 'Edit Health Checks'
+      subpage: gettextCatalog.getString('Edit Health Checks')
     });
 
     // Map of removed probes so that removing and adding back a probe remembers what was previously set.
@@ -82,7 +83,7 @@ angular.module('openshiftConsole')
         };
 
         if (!AuthorizationService.canI(resourceGroupVersion, 'update', $routeParams.project)) {
-          Navigate.toErrorPage('You do not have authority to update ' + displayName + '.', 'access_denied');
+          Navigate.toErrorPage(gettextCatalog.getString('You do not have authority to update ') + displayName + '.', 'access_denied');
           return;
         }
 
@@ -93,7 +94,7 @@ angular.module('openshiftConsole')
             $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
               object: object,
               project: project,
-              subpage: 'Edit Health Checks'
+              subpage: gettextCatalog.getString('Edit Health Checks')
             });
 
             $scope.containers = _.get(object, 'spec.template.spec.containers');
@@ -121,18 +122,18 @@ angular.module('openshiftConsole')
                 function() {
                   NotificationsService.addNotification({
                       type: "success",
-                      message: upperFirst(displayName) + " was updated."
+                      message: upperFirst(displayName) + gettextCatalog.getString(" was updated.")
                   });
                   navigateBack();
                 },
                 function(result) {
                   $scope.disableInputs = false;
-                  displayError(upperFirst(displayName) + ' could not be updated.', getErrorDetails(result));
+                  displayError(upperFirst(displayName) + gettextCatalog.getString(' could not be updated.'), getErrorDetails(result));
                 });
             };
           },
           function(result) {
-            displayError(upperFirst(displayName) + ' could not be loaded.', getErrorDetails(result));
+            displayError(upperFirst(displayName) + gettextCatalog.getString(' could not be loaded.'), getErrorDetails(result));
           }
         );
     }));

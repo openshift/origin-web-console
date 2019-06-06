@@ -9,7 +9,8 @@ angular.module("openshiftConsole")
                       DataService,
                       NotificationsService,
                       ApplicationGenerator,
-                      DNS1123_SUBDOMAIN_VALIDATION) {
+                      DNS1123_SUBDOMAIN_VALIDATION,
+                      gettextCatalog) {
 
     var serviceAccountsVersion = APIService.getPreferredVersion('serviceaccounts');
     var secretsVersion = APIService.getPreferredVersion('secrets');
@@ -32,7 +33,7 @@ angular.module("openshiftConsole")
         $scope.secretReferenceValidation = {
           pattern: /^[a-zA-Z0-9\-_]+$/,
           minLength: 8,
-          description: 'Secret reference key must consist of lower-case, upper-case letters, numbers, dash, and underscore.'
+          description: gettextCatalog.getString('Secret reference key must consist of lower-case, upper-case letters, numbers, dash, and underscore.')
         };
 
         $scope.secretAuthTypeMap = {
@@ -218,14 +219,14 @@ angular.module("openshiftConsole")
             // Show a single success message saying the secret was both created and linked.
             NotificationsService.addNotification({
               type: "success",
-              message: "Secret " + secret.metadata.name + " was created and linked with service account " + sa.metadata.name + "."
+              message: gettextCatalog.getString("Secret {{secret}} was created and linked with service account {{name}}.", {secret: secret.metadata.name, name: sa.metadata.name})
             });
             $scope.onCreate({newSecret: secret});
           }, function(result){
             // Show a success message that the secret was created and a separate error message saying it couldn't be linked.
             NotificationsService.addNotification({
               type: "success",
-              message: "Secret " + secret.metadata.name + " was created."
+              message: gettextCatalog.getString("Secret {{secret}} was created.", {secret: secret.metadata.name})
             });
 
             // Don't show any error related to linking to SA when linking is done automatically.
@@ -233,7 +234,7 @@ angular.module("openshiftConsole")
               NotificationsService.addNotification({
                 id: "secret-sa-link-error",
                 type: "error",
-                message: "An error occurred while linking the secret with service account " + $scope.newSecret.pickedServiceAccountToLink + ".",
+                message: gettextCatalog.getString("An error occurred while linking the secret with service account {{link}}.", {link: $scope.newSecret.pickedServiceAccountToLink}),
                 details: $filter('getErrorDetails')(result)
               });
             }
@@ -276,7 +277,7 @@ angular.module("openshiftConsole")
             } else {
               NotificationsService.addNotification({
                 type: "success",
-                message: "Secret " + newSecret.metadata.name + " was created."
+                message: "Secret " + newSecret.metadata.name + gettextCatalog.getString(" was created.")
               });
               $scope.onCreate({newSecret: secret});
             }
@@ -289,7 +290,7 @@ angular.module("openshiftConsole")
             NotificationsService.addNotification({
               id: "create-secret-error",
               type: "error",
-              message: "An error occurred while creating the secret.",
+              message: gettextCatalog.getString("An error occurred while creating the secret."),
               details: $filter('getErrorDetails')(result)
             });
           });

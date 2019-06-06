@@ -12,6 +12,7 @@
       'NotificationsService',
       'ProjectsService',
       'RecentlyViewedProjectsService',
+      'gettextCatalog',
       ProcessTemplateDialog
     ],
     controllerAs: '$ctrl',
@@ -32,7 +33,8 @@
                                  KeywordService,
                                  NotificationsService,
                                  ProjectsService,
-                                 RecentlyViewedProjectsService) {
+                                 RecentlyViewedProjectsService,
+                                 gettextCatalog) {
     var ctrl = this;
     var validityWatcher;
     var imageForIconClass = $filter('imageForIconClass');
@@ -41,7 +43,7 @@
 
     ctrl.selectStep = {
       id: 'projectTemplates',
-      label: 'Selection',
+      label: gettextCatalog.getString('Selection'),
       view: 'views/directives/process-template-dialog/process-template-select.html',
       hidden: ctrl.useProjectTemplate !== true,
       allowed: true,
@@ -52,7 +54,7 @@
 
     ctrl.infoStep = {
       id: 'info',
-      label: 'Information',
+      label: gettextCatalog.getString('Information'),
       view: 'views/directives/process-template-dialog/process-template-info.html',
       allowed: true,
       valid: true,
@@ -62,7 +64,7 @@
 
     ctrl.configStep = {
       id: 'configuration',
-      label: 'Configuration',
+      label: gettextCatalog.getString('Configuration'),
       view: 'views/directives/process-template-dialog/process-template-config.html',
       // Start initially as invalid so the button doesn't flicker when the dialog
       // is displayed and the template has required fields.
@@ -74,7 +76,7 @@
 
     ctrl.resultsStep = {
       id: 'results',
-      label: 'Results',
+      label: gettextCatalog.getString('Results'),
       view: 'views/directives/process-template-dialog/process-template-results.html',
       valid: true,
       allowed: false,
@@ -100,26 +102,26 @@
       });
 
       ctrl.noProjectsEmptyState = {
-        title: 'No Available Projects',
-        info: 'There are no projects available from which to load templates.'
+        title: gettextCatalog.getString('No Available Projects'),
+        info: gettextCatalog.getString('There are no projects available from which to load templates.')
       };
 
       ctrl.projectEmptyState = {
-        title: 'No Project Selected',
-        info: 'Please select a project from the dropdown to load templates from that project.'
+        title: gettextCatalog.getString('No Project Selected'),
+        info: gettextCatalog.getString('Please select a project from the dropdown to load templates from that project.')
       };
 
       ctrl.templatesEmptyState = {
-        title: 'No Templates',
-        info: 'The selected project has no templates available to import.'
+        title: gettextCatalog.getString('No Templates'),
+        info: gettextCatalog.getString('The selected project has no templates available to import.')
       };
 
       ctrl.filterConfig = {
         fields: [
           {
             id: 'keyword',
-            title:  'Keyword',
-            placeholder: 'Filter by Keyword',
+            title:  gettextCatalog.getString('Keyword'),
+            placeholder: gettextCatalog.getString('Filter by Keyword'),
             filterType: 'text'
           }
         ],
@@ -229,9 +231,9 @@
     // disable creating new projects, so we can reuse it.
     ctrl.groupChoicesBy = function (item) {
       if (RecentlyViewedProjectsService.isRecentlyViewed(item.metadata.uid)) {
-        return "Recently Viewed";
+        return gettextCatalog.getString("Recently Viewed");
       }
-      return "Other Projects";
+      return gettextCatalog.getString("Other Projects");
     };
 
     function getIconClass() {
@@ -261,7 +263,7 @@
       ctrl.selectStep.selected = false;
       ctrl.configStep.selected = false;
       ctrl.resultsStep.selected = false;
-      ctrl.nextTitle = "Next >";
+      ctrl.nextTitle = gettextCatalog.getString("Next >");
       clearValidityWatcher();
     }
 
@@ -270,7 +272,7 @@
       ctrl.selectStep.selected = true;
       ctrl.configStep.selected = false;
       ctrl.resultsStep.selected = false;
-      ctrl.nextTitle = "Next >";
+      ctrl.nextTitle = gettextCatalog.getString("Next >");
       clearValidityWatcher();
       listProjects();
     }
@@ -280,7 +282,7 @@
       ctrl.selectStep.selected = false;
       ctrl.configStep.selected = true;
       ctrl.resultsStep.selected = false;
-      ctrl.nextTitle = "Create";
+      ctrl.nextTitle = gettextCatalog.getString("Create");
       ctrl.resultsStep.allowed = ctrl.configStep.valid;
 
       validityWatcher = $scope.$watch("$ctrl.form.$valid", function(isValid) {
@@ -294,7 +296,7 @@
       ctrl.selectStep.selected = false;
       ctrl.configStep.selected = false;
       ctrl.resultsStep.selected = true;
-      ctrl.nextTitle = "Close";
+      ctrl.nextTitle = gettextCatalog.getString("Close");
       clearValidityWatcher();
       ctrl.wizardDone = true;
     }

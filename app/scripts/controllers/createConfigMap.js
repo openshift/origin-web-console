@@ -18,17 +18,18 @@ angular.module('openshiftConsole')
                         DataService,
                         Navigate,
                         NotificationsService,
-                        ProjectsService) {
+                        ProjectsService,
+                        gettextCatalog) {
     $scope.projectName = $routeParams.project;
 
     // TODO: Update BreadcrumbsService to handle create pages.
     $scope.breadcrumbs = [
       {
-         title: "Config Maps",
+         title: gettextCatalog.getString("Config Maps"),
          link: "project/" + $scope.projectName + "/browse/config-maps"
       },
       {
-        title: "Create Config Map"
+        title: gettextCatalog.getString("Create Config Map")
       }
     ];
 
@@ -48,7 +49,7 @@ angular.module('openshiftConsole')
         $scope.project = project;
 
         if (!AuthorizationService.canI('configmaps', 'create', $routeParams.project)) {
-          Navigate.toErrorPage('You do not have authority to create config maps in project ' + $routeParams.project + '.', 'access_denied');
+          Navigate.toErrorPage(gettextCatalog.getString('You do not have authority to create config maps in project {{project}}.', {project: $routeParams.project}), 'access_denied');
           return;
         }
 
@@ -70,7 +71,7 @@ angular.module('openshiftConsole')
               .then(function() { // Success
                 NotificationsService.addNotification({
                   type: "success",
-                  message: "Config map " + $scope.configMap.metadata.name + " successfully created."
+                  message: gettextCatalog.getString("Config map {{name}} successfully created.", {name: $scope.configMap.metadata.name})
                 });
                 // Return to the previous page.
                 navigateBack();
@@ -79,7 +80,7 @@ angular.module('openshiftConsole')
                 NotificationsService.addNotification({
                   id: "create-config-map-error",
                   type: "error",
-                  message: "An error occurred creating the config map.",
+                  message: gettextCatalog.getString("An error occurred creating the config map."),
                   details: $filter('getErrorDetails')(result)
                 });
               });

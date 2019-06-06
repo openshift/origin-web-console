@@ -2,7 +2,7 @@
   <fieldset ng-disabled="$ctrl.selectDisabled">
     <div class="row">
       <div class="form-group col-sm-4">
-        <label class="sr-only">Namespace</label>
+        <label class="sr-only" translate>Namespace</label>
         <ui-select ng-required="$ctrl.selectRequired" ng-model="$ctrl.istag.namespace" ng-disabled="$ctrl.selectDisabled" ng-change="$ctrl.namespaceChanged($ctrl.istag.namespace)" append-to-body="$ctrl.appendToBody">
           <ui-select-match placeholder="Namespace">{{$select.selected}}</ui-select-match>
           <ui-select-choices repeat="namespace in ($ctrl.namespaces | filter : $select.search)">
@@ -13,7 +13,7 @@
       </div>
 
       <div class="form-group col-sm-4">
-        <label class="sr-only">Image Stream</label>
+        <label class="sr-only" translate>Image Stream</label>
         <ui-select ng-required="$ctrl.selectRequired" ng-model="$ctrl.istag.imageStream" ng-disabled="!$ctrl.istag.namespace || $ctrl.selectDisabled" ng-change="$ctrl.istag.tagObject = null" append-to-body="$ctrl.appendToBody">
           <ui-select-match placeholder="Image Stream">{{$select.selected}}</ui-select-match>
           <ui-select-choices repeat="imageStream in ($ctrl.isNamesByNamespace[$ctrl.istag.namespace] | filter : $select.search)">
@@ -24,7 +24,7 @@
       </div>
 
       <div class="form-group col-sm-4">
-        <label class="sr-only">Tag</label>
+        <label class="sr-only" translate>Tag</label>
         <ui-select ng-required="$ctrl.selectRequired" ng-model="$ctrl.istag.tagObject" ng-disabled="!$ctrl.istag.imageStream || $ctrl.selectDisabled" append-to-body="$ctrl.appendToBody">
           <ui-select-match placeholder="Tag">{{$select.selected.tag}}</ui-select-match>
           <ui-select-choices group-by="$ctrl.groupTags" repeat="statusTag in ($ctrl.isByNamespace[$ctrl.istag.namespace][$ctrl.istag.imageStream].status.tags | filter : { tag: $select.search })" refresh="$ctrl.getTags($select.search)" refresh-delay="200">

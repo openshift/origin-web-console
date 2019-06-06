@@ -14,7 +14,8 @@ angular.module('openshiftConsole')
     $routeParams,
     APIService,
     DataService,
-    ProjectsService) {
+    ProjectsService,
+    gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.pvc = null;
     $scope.alerts = {};
@@ -61,7 +62,7 @@ angular.module('openshiftConsole')
       if (action === "DELETED") {
         $scope.alerts["deleted"] = {
           type: "warning",
-          message: "This persistent volume claim has been deleted."
+          message: gettextCatalog.getString("This persistent volume claim has been deleted.")
         };
       }
     };
@@ -80,7 +81,7 @@ angular.module('openshiftConsole')
           $scope.loaded = true;
           $scope.alerts["load"] = {
             type: "error",
-            message: "The persistent volume claim details could not be loaded.",
+            message: gettextCatalog.getString("The persistent volume claim details could not be loaded."),
             details: $filter('getErrorDetails')(e)
           };
         });

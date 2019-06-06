@@ -11,7 +11,8 @@ angular
                        DataService,
                        MetricsService,
                        ProjectsService,
-                       PodsService) {
+                       PodsService,
+                       gettextCatalog) {
 
     $scope.projectName = $routeParams.project;
     $scope.statefulSetName = $routeParams.statefulset;
@@ -78,7 +79,7 @@ angular
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: "The stateful set details could not be loaded.",
+              message: gettextCatalog.getString("The stateful set details could not be loaded."),
               details: $filter('getErrorDetails')(e)
             };
           });

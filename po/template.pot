@@ -4,212 +4,1563 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
-#: app/views/attach-pvc.html:141
-msgid "(generated if empty)"
+#: app/scripts/directives/fromFile.js:237
+msgid ". Can't create resource in different projects."
 msgstr ""
 
-#: app/views/directives/add-config-to-application.html:58
-msgid "(optional)"
+#: app/scripts/directives/oscFileInput.js:197
+msgid ". The web console has a 5 MiB file limit."
 msgstr ""
 
-#: app/views/create/fromimage.html:127
-#: app/views/directives/_edit-probe.html:25
-#: app/views/directives/osc-routing.html:90
-#: app/views/directives/osc-source-secrets.html:29
-#: app/views/directives/osc-source-secrets.html:81
-#: app/views/edit/build-config.html:78
-msgid "/"
+#: app/views/directives/deploy-image.html:144
+msgid "A name is required."
 msgstr ""
 
-#: app/views/directives/_edit-probe.html:98
-#: app/views/edit/deployment-config.html:117
-#: app/views/edit/deployment-config.html:149
-msgid "1"
+#: app/scripts/directives/util.js:127
+msgid "A token is a form of a password. Do not share your API token."
 msgstr ""
 
-#: app/views/edit/deployment-config.html:181
-#: app/views/edit/deployment-config.html:204
-msgid "25%"
+#: app/scripts/controllers/util/error.js:17
+msgid "Access denied"
 msgstr ""
 
-#: app/views/edit/deployment-config.html:82
-msgid "600"
+#: app/scripts/controllers/addConfigVolume.js:136
+#: app/scripts/controllers/addConfigVolume.js:63
+msgid "Add Config Files"
 msgstr ""
 
-#: app/views/edit/project.html:22
-msgid "A short description."
+#: app/scripts/controllers/attachPVC.js:156
+#: app/scripts/controllers/attachPVC.js:68
+msgid "Add Storage"
 msgstr ""
 
-#: app/views/directives/edit-environment-from.html:73
-msgid "Add prefix"
+#: app/views/overview.html:10
+msgid "Add content to your project from the catalog of web frameworks, databases, and other components. You may also deploy an existing image, create or replace resources from their YAML or JSON definitions, or select an item shared from another project."
 msgstr ""
 
-#: app/views/edit/build-config.html:587
-msgid "Add to command"
+#: app/scripts/directives/fromFile.js:454
+msgid "All items in list were created successfully."
+msgstr ""
+
+#: app/scripts/directives/fromFile.js:505
+msgid "All items in list were updated successfully."
+msgstr ""
+
+#: app/scripts/directives/processTemplate.js:136
+msgid "All items in template {{name}} were created successfully."
+msgstr ""
+
+#: app/views/overview.html:293
+msgid "All pipelines are filtered."
+msgstr ""
+
+#: app/scripts/controllers/create/createFromImage.js:312
+msgid "All resources for application {{name}} were created successfully."
+msgstr ""
+
+#: app/scripts/directives/deployImage.js:317
+msgid "All resources for image {{name}} were created successfully."
+msgstr ""
+
+#: app/scripts/controllers/util/error.js:33
+msgid "An error has occurred"
+msgstr ""
+
+#: app/scripts/directives/addConfigToApplication.js:186
+msgid "An error occurred  adding {{source}} {{name}} to {{target}} {{app}}."
+msgstr ""
+
+#: app/scripts/controllers/attachPVC.js:239
+msgid "An error occurred attaching the persistent volume claim to the {{kind}}."
+msgstr ""
+
+#: app/scripts/controllers/addConfigVolume.js:260
+msgid "An error occurred attaching the {{sourceKind}} to the {{targetKind}}."
+msgstr ""
+
+#: app/scripts/directives/deployImage.js:401
+#: app/scripts/directives/fromFile.js:195
+msgid "An error occurred creating project."
+msgstr ""
+
+#: app/scripts/controllers/createConfigMap.js:83
+msgid "An error occurred creating the config map."
+msgstr ""
+
+#: app/scripts/controllers/edit/autoscaler.js:118
+#: app/scripts/controllers/edit/autoscaler.js:176
+msgid "An error occurred creating the horizontal pod autoscaler."
+msgstr ""
+
+#: app/scripts/directives/processTemplate.js:273
+msgid "An error occurred creating the project."
+msgstr ""
+
+#: app/scripts/controllers/createRoute.js:147
+msgid "An error occurred creating the route."
+msgstr ""
+
+#: app/scripts/directives/deployImage.js:158
+msgid "An error occurred finding the image."
+msgstr ""
+
+#: app/scripts/controllers/overview.js:454
+msgid "An error occurred getting metrics."
+msgstr ""
+
+#: app/scripts/directives/processTemplate.js:256
+msgid "An error occurred processing the template."
+msgstr ""
+
+#: app/scripts/controllers/createPersistentVolumeClaim.js:93
+msgid "An error occurred requesting storage."
+msgstr ""
+
+#: app/scripts/controllers/deploymentConfig.js:248
+msgid "An error occurred scaling the deployment config."
+msgstr ""
+
+#: app/scripts/controllers/deployment.js:178
+msgid "An error occurred scaling the deployment."
+msgstr ""
+
+#: app/scripts/directives/deploymentDonut.js:93
+msgid "An error occurred scaling {{kind}} {{name}}."
+msgstr ""
+
+#: app/scripts/controllers/replicaSet.js:447
+msgid "An error occurred scaling."
+msgstr ""
+
+#: app/scripts/controllers/edit/buildConfig.js:639
+msgid "An error occurred updating build config {{name}}."
+msgstr ""
+
+#: app/scripts/controllers/edit/deploymentConfig.js:390
+msgid "An error occurred updating deployment config {{name}}."
+msgstr ""
+
+#: app/scripts/controllers/buildConfig.js:118
+msgid "An error occurred updating environment variables for build config {{name}}."
+msgstr ""
+
+#: app/scripts/directives/editEnvironmentVariables.js:146
+msgid "An error occurred updating environment variables for {{kind}} {{name}}."
+msgstr ""
+
+#: app/scripts/directives/podMetrics.js:337
+msgid "An error occurred updating metrics for pod {{pod}}."
+msgstr ""
+
+#: app/scripts/directives/deploymentMetrics.js:394
+msgid "An error occurred updating metrics."
+msgstr ""
+
+#: app/scripts/controllers/edit/route.js:197
+msgid "An error occurred updating route {{routeName}}."
+msgstr ""
+
+#: app/scripts/controllers/edit/configMap.js:89
+msgid "An error occurred updating the config map."
+msgstr ""
+
+#: app/scripts/directives/fromFile.js:517
+msgid "An error occurred updating the resources."
+msgstr ""
+
+#: app/scripts/directives/createSecret.js:293
+msgid "An error occurred while creating the secret."
+msgstr ""
+
+#: app/scripts/directives/createSecret.js:237
+msgid "An error occurred while linking the secret with service account {{link}}."
+msgstr ""
+
+#: app/scripts/controllers/edit/project.js:70
+msgid "An error occurred while updating the project"
+msgstr ""
+
+#: app/scripts/controllers/deploymentConfig.js:266
+msgid "An error occurred {{status}} the deployment config."
+msgstr ""
+
+#: app/scripts/controllers/deployment.js:198
+msgid "An error occurred {{status}} the deployment."
+msgstr ""
+
+#: app/scripts/directives/deployImage.js:229
+msgid "An error occurred."
+msgstr ""
+
+#: app/scripts/controllers/createFromURL.js:65
+msgid "An image stream or template is required."
+msgstr ""
+
+#: app/scripts/controllers/buildConfig.js:206
+msgid "Any remaining build history for this build will be shown."
+msgstr ""
+
+#: app/scripts/controllers/deploymentConfig.js:109
+msgid "Any remaining deployment history for this deployment will be shown."
+msgstr ""
+
+#: app/views/overview.html:122
+msgid "Application"
+msgstr ""
+
+#: app/scripts/directives/nav.js:31
+msgid "Applications"
+msgstr ""
+
+#: app/scripts/controllers/pod.js:393
+msgid "Are you sure you want to leave with the debug terminal open? The debug pod will not be deleted unless you close the dialog."
+msgstr ""
+
+#: app/scripts/controllers/edit/autoscaler.js:41
+msgid "Autoscaling not supported for kind {{kind}}."
+msgstr ""
+
+#: app/scripts/directives/bindService.js:185
+#: app/scripts/directives/bindService.js:81
+#: app/scripts/directives/bindService.js:90
+msgid "Bind"
+msgstr ""
+
+#: app/scripts/directives/bindService.js:146
+msgid "Binding"
+msgstr ""
+
+#: app/views/overview.html:14
+msgid "Browse Catalog"
+msgstr ""
+
+#: app/scripts/controllers/edit/buildConfig.js:629
+msgid "Build config {{name}} was successfully updated."
+msgstr ""
+
+#: app/scripts/controllers/build.js:152
+msgid "Build configuration {{name}} has been deleted."
+msgstr ""
+
+#: app/scripts/directives/nav.js:38
+msgid "Builds"
 msgstr ""
 
 #: app/scripts/directives/util.js:287
 msgid "CN"
 msgstr ""
 
-#: app/views/monitoring.html:13
-msgid "Choose a resource"
+#: app/scripts/controllers/create/createFromImage.js:336
+#: app/scripts/controllers/deployment.js:225
+#: app/scripts/controllers/deploymentConfig.js:302
+#: app/scripts/controllers/membership.js:222
+#: app/scripts/controllers/replicaSet.js:493
+#: app/scripts/directives/deployImage.js:348
+#: app/scripts/directives/fromFile.js:65
+#: app/scripts/directives/processTemplate.js:166
+#: app/views/directives/deploy-image.html:195
+msgid "Cancel"
 msgstr ""
 
-#: app/views/other-resources.html:9
-msgid "Choose a resource to list..."
+#: app/scripts/controllers/edit/yaml.js:110
+msgid "Cannot change resource group (original:"
 msgstr ""
 
-#: app/views/browse/pod.html:159
-msgid "Container Name"
+#: app/scripts/controllers/edit/yaml.js:98
+msgid "Cannot change resource kind (original:"
+msgstr ""
+
+#: app/scripts/controllers/create/createFromImage.js:298
+#: app/scripts/directives/deployImage.js:302
+#: app/scripts/directives/fromFile.js:438
+#: app/scripts/directives/processTemplate.js:122
+msgid "Cannot create"
+msgstr ""
+
+#: app/scripts/controllers/create/createFromImage.js:41
+msgid "Cannot create from source: a base image tag was not specified"
+msgstr ""
+
+#: app/scripts/controllers/create/createFromImage.js:37
+msgid "Cannot create from source: a base image was not specified"
+msgstr ""
+
+#: app/scripts/controllers/create/createFromImage.js:220
+#: app/scripts/controllers/create/createFromImage.js:225
+msgid "Cannot create from source: the specified image could not be retrieved."
+msgstr ""
+
+#: app/scripts/controllers/newfromtemplate.js:35
+msgid "Cannot create from template: a template name was not specified."
+msgstr ""
+
+#: app/scripts/controllers/newfromtemplate.js:210
+msgid "Cannot create from template: the specified template could not be retrieved."
+msgstr ""
+
+#: app/scripts/directives/fromFile.js:489
+msgid "Cannot update"
+msgstr ""
+
+#: app/scripts/directives/nav.js:52
+msgid "Catalog"
+msgstr ""
+
+#: app/scripts/controllers/create/browseCategory.js:45
+msgid "Catalog category {{category}} not found."
+msgstr ""
+
+#: app/scripts/controllers/create/browseCategory.js:56
+msgid "Catalog category {{category}}/{{subcategory}}not found."
+msgstr ""
+
+#: app/scripts/controllers/util/error.js:28
+msgid "Check Server Connection"
+msgstr ""
+
+#: app/views/overview.html:115
+#: app/views/overview.html:294
+msgid "Clear All Filters"
+msgstr ""
+
+#: app/scripts/directives/bindService.js:107
+#: app/scripts/directives/deployImageDialog.js:59
+#: app/scripts/directives/fromFileDialog.js:105
+#: app/scripts/directives/processTemplateDialog.js:299
+#: app/scripts/directives/unbindService.js:80
+msgid "Close"
+msgstr ""
+
+#: app/scripts/controllers/createConfigMap.js:28
+#: app/scripts/directives/nav.js:44
+msgid "Config Maps"
+msgstr ""
+
+#: app/scripts/controllers/createConfigMap.js:74
+msgid "Config map {{name}} successfully created."
+msgstr ""
+
+#: app/scripts/controllers/edit/configMap.js:81
+msgid "Config map {{name}} successfully updated."
+msgstr ""
+
+#: app/scripts/directives/processTemplateDialog.js:67
+msgid "Configuration"
+msgstr ""
+
+#: app/scripts/controllers/create/createFromImage.js:332
+#: app/scripts/directives/deployImage.js:344
+#: app/scripts/directives/fromFile.js:61
+#: app/scripts/directives/processTemplate.js:162
+msgid "Confirm Creation"
+msgstr ""
+
+#: app/scripts/controllers/membership.js:213
+msgid "Confirm Removal"
+msgstr ""
+
+#: app/scripts/directives/confirmOnExit.js:60
+msgid "Confirm on exit prompt appears to have been blocked by the browser."
+msgstr ""
+
+#: app/scripts/controllers/pod.js:381
+#: app/scripts/controllers/pod.js:428
+msgid "Could not debug container"
+msgstr ""
+
+#: app/scripts/controllers/pod.js:353
+msgid "Could not delete pod"
+msgstr ""
+
+#: app/views/directives/deploy-image.html:213
+msgid "Could not find any images for"
+msgstr ""
+
+#: app/scripts/controllers/edit/yaml.js:165
+msgid "Could not load"
+msgstr ""
+
+#: app/scripts/controllers/edit/configMap.js:68
+msgid "Could not load config map {{config}}."
+msgstr ""
+
+#: app/scripts/controllers/addConfigVolume.js:152
+#: app/scripts/controllers/edit/deploymentConfig.js:168
+msgid "Could not load config maps"
+msgstr ""
+
+#: app/scripts/controllers/buildConfig.js:222
+#: app/scripts/controllers/create/createFromImage.js:172
+#: app/scripts/controllers/edit/buildConfig.js:379
+#: app/scripts/directives/deployImage.js:262
+msgid "Could not load config maps."
+msgstr ""
+
+#: app/views/directives/deploy-image.html:203
+msgid "Could not load image metadata."
+msgstr ""
+
+#: app/scripts/controllers/edit/route.js:115
+msgid "Could not load route {{routeName}}."
+msgstr ""
+
+#: app/scripts/controllers/addConfigVolume.js:163
+#: app/scripts/controllers/edit/deploymentConfig.js:186
+msgid "Could not load secrets"
+msgstr ""
+
+#: app/scripts/controllers/buildConfig.js:240
+#: app/scripts/controllers/create/createFromImage.js:194
+#: app/scripts/directives/deployImage.js:278
+msgid "Could not load secrets."
+msgstr ""
+
+#: app/scripts/directives/buildPipeline.js:34
+msgid "Could not parse Jenkins status as JSON"
+msgstr ""
+
+#: app/scripts/controllers/newfromtemplate.js:46
+msgid "Could not prefill parameter values."
+msgstr ""
+
+#: app/scripts/directives/oscFileInput.js:219
+msgid "Could not read file"
+msgstr ""
+
+#: app/scripts/directives/fromFileDialog.js:108
+#: app/scripts/directives/processTemplateDialog.js:285
+#: app/views/directives/deploy-image.html:190
+msgid "Create"
+msgstr ""
+
+#: app/scripts/controllers/create/createFromImage.js:334
+#: app/scripts/directives/deployImage.js:346
+#: app/scripts/directives/fromFile.js:63
+#: app/scripts/directives/processTemplate.js:164
+msgid "Create Anyway"
+msgstr ""
+
+#: app/scripts/controllers/createConfigMap.js:32
+msgid "Create Config Map"
+msgstr ""
+
+#: app/scripts/controllers/createRoute.js:43
+msgid "Create Route"
+msgstr ""
+
+#: app/views/overview.html:282
+msgid "Create Sample Pipeline"
+msgstr ""
+
+#: app/scripts/controllers/createSecret.js:32
+msgid "Create Secret"
+msgstr ""
+
+#: app/scripts/controllers/createPersistentVolumeClaim.js:35
+msgid "Create Storage"
+msgstr ""
+
+#: app/scripts/directives/deployImage.js:310
+#: app/scripts/directives/fromFile.js:447
+#: app/scripts/directives/processTemplate.js:131
+msgid "Created"
+msgstr ""
+
+#: app/scripts/controllers/create/createFromImage.js:279
+msgid "Created application {{name}} in project {{projectName}}"
+msgstr ""
+
+#: app/scripts/controllers/create/createFromImage.js:307
+msgid "Created {{kind}}  {{name}}  successfully."
+msgstr ""
+
+#: app/scripts/directives/processTemplate.js:105
+msgid "Created {{name}} in project {{project}}"
+msgstr ""
+
+#: app/scripts/controllers/create/createFromImage.js:278
+msgid "Creating application {{name}} in project {{projectName}}"
+msgstr ""
+
+#: app/scripts/directives/fromFile.js:419
+#: app/scripts/directives/fromFile.js:420
+msgid "Creating resources in project {{name}}"
+msgstr ""
+
+#: app/scripts/directives/processTemplate.js:104
+msgid "Creating {{name}} in project {{project}}"
+msgstr ""
+
+#: app/scripts/controllers/projects.js:112
+msgid "Creation Date"
+msgstr ""
+
+#: app/scripts/controllers/projects.js:108
+msgid "Creator"
+msgstr ""
+
+#: app/scripts/controllers/quota.js:27
+msgid "Defines minimum and maximum constraints for runtime resources such as memory and CPU."
+msgstr ""
+
+#: app/scripts/directives/unbindService.js:75
+msgid "Delete"
+msgstr ""
+
+#: app/scripts/directives/deployImageDialog.js:62
+msgid "Deploy"
+msgstr ""
+
+#: app/views/overview.html:19
+msgid "Deploy Image"
+msgstr ""
+
+#: app/views/directives/deploy-image.html:4
+msgid "Deploy an existing image from an image stream tag or image registry."
+msgstr ""
+
+#: app/scripts/directives/deployImage.js:289
+msgid "Deployed image {{name}} to project {{project}}"
+msgstr ""
+
+#: app/scripts/directives/deployImage.js:288
+msgid "Deploying image {{name}} to project {{project}}"
+msgstr ""
+
+#: app/scripts/controllers/edit/deploymentConfig.js:380
+msgid "Deployment config {{name}} was successfully updated."
+msgstr ""
+
+#: app/scripts/controllers/deployment.js:40
+#: app/scripts/directives/nav.js:32
+msgid "Deployments"
+msgstr ""
+
+#: app/scripts/controllers/projects.js:100
+msgid "Display Name"
+msgstr ""
+
+#: app/scripts/controllers/overview.js:461
+#: app/scripts/controllers/storage.js:49
+#: app/scripts/directives/util.js:130
+msgid "Don't Show Me Again"
 msgstr ""
 
 #: app/scripts/directives/util.js:290
 msgid "EN"
 msgstr ""
 
-#: app/views/directives/events.html:11
-#: app/views/projects.html:33
-msgid "Filter by keyword"
+#: app/scripts/controllers/edit/deploymentConfig.js:104
+#: app/scripts/controllers/edit/route.js:39
+msgid "Edit"
 msgstr ""
 
-#: app/views/monitoring.html:24
-#: app/views/overview.html:66
+#: app/scripts/controllers/edit/configMap.js:31
+#: app/scripts/controllers/edit/configMap.js:60
+msgid "Edit Config Map"
+msgstr ""
+
+#: app/scripts/controllers/edit/deploymentConfig.js:40
+msgid "Edit Deployment Config"
+msgstr ""
+
+#: app/scripts/controllers/edit/healthChecks.js:48
+#: app/scripts/controllers/edit/healthChecks.js:97
+msgid "Edit Health Checks"
+msgstr ""
+
+#: app/scripts/controllers/setLimits.js:107
+#: app/scripts/controllers/setLimits.js:58
+msgid "Edit Resource Limits"
+msgstr ""
+
+#: app/scripts/controllers/edit/yaml.js:38
+msgid "Edit YAML"
+msgstr ""
+
+#: app/scripts/controllers/edit/route.js:70
+msgid "Editing routes with non-service targets is unsupported. You can edit the route with the \"Edit YAML\" action instead."
+msgstr ""
+
+#: app/scripts/controllers/edit/buildConfig.js:144
+msgid "Enter the arguments that will be appended to the command."
+msgstr ""
+
+#: app/scripts/controllers/edit/buildConfig.js:142
+msgid "Enter the arguments that will be appended to the default image entry point."
+msgstr ""
+
+#: app/scripts/controllers/edit/buildConfig.js:146
+msgid "Enter the arguments that will be appended to the script."
+msgstr ""
+
+#: app/scripts/controllers/buildConfig.js:111
+msgid "Environment variables for build config {{name}} were successfully updated."
+msgstr ""
+
+#: app/scripts/directives/editEnvironmentVariables.js:139
+msgid "Environment variables for{{kind}} {{name}} were successfully updated."
+msgstr ""
+
+#: app/scripts/controllers/events.js:23
+#: app/scripts/directives/nav.js:49
+msgid "Events"
+msgstr ""
+
+#: app/scripts/directives/fromFile.js:421
+msgid "Failed to create some resources in project {{name}}"
+msgstr ""
+
+#: app/scripts/controllers/create/createFromImage.js:280
+msgid "Failed to create {{name}} in project {{projectName}}"
+msgstr ""
+
+#: app/scripts/directives/processTemplate.js:106
+msgid "Failed to create {{name}} in project {{project}}"
+msgstr ""
+
+#: app/scripts/directives/deployImage.js:290
+msgid "Failed to deployed image {{name}} to project {{project}}"
+msgstr ""
+
+#: app/scripts/directives/fromFile.js:472
+msgid "Failed to update some resources in project {{name}}"
+msgstr ""
+
+#: app/scripts/directives/processTemplateDialog.js:124
+msgid "Filter by Keyword"
+msgstr ""
+
+#: app/views/overview.html:65
 msgid "Filter by name"
 msgstr ""
 
-#: app/views/catalog/catalog.html:30
-#: app/views/catalog/category-content.html:25
-msgid "Filter by name or description"
+#: app/views/overview.html:9
+msgid "Get started with your project."
 msgstr ""
 
-#: app/views/directives/deploy-image.html:41
-msgid "Image name or pull spec"
+#: app/scripts/directives/deleteLink.js:97
+msgid "HPA {{name}} could not be deleted."
+msgstr ""
+
+#: app/scripts/controllers/edit/healthChecks.js:37
+#: app/scripts/controllers/setLimits.js:38
+msgid "Health checks are not supported for kind {{kind}}."
+msgstr ""
+
+#: app/scripts/directives/deleteLink.js:94
+msgid "Horizontal pod autoscaler {{name}} could not be deleted."
+msgstr ""
+
+#: app/scripts/controllers/edit/autoscaler.js:167
+msgid "Horizontal pod autoscaler {{name}} successfully created."
+msgstr ""
+
+#: app/scripts/controllers/edit/autoscaler.js:109
+msgid "Horizontal pod autoscaler {{name}} successfully updated."
+msgstr ""
+
+#: app/scripts/directives/deleteLink.js:86
+msgid "Horizontal pod autoscaler {{name}} was marked for deletion."
+msgstr ""
+
+#: app/views/directives/deploy-image.html:142
+msgid "Identifies the resources created for this image."
+msgstr ""
+
+#: app/scripts/directives/deployImageDialog.js:26
+msgid "Image"
+msgstr ""
+
+#: app/views/directives/deploy-image.html:33
+msgid "Image search is only available for existing projects."
+msgstr ""
+
+#: app/scripts/controllers/createFromURL.js:72
+msgid "Image streams and templates cannot be combined."
+msgstr ""
+
+#: app/views/directives/deploy-image.html:88
+msgid ""
+"Image {{import.name}} runs as the\n"
+"            root user which might not be permitted by your cluster\n"
+"            administrator."
+msgstr ""
+
+#: app/scripts/directives/nav.js:40
+msgid "Images"
+msgstr ""
+
+#: app/views/overview.html:22
+msgid "Import YAML / JSON"
+msgstr ""
+
+#: app/scripts/directives/processTemplateDialog.js:57
+msgid "Information"
+msgstr ""
+
+#: app/scripts/controllers/util/error.js:23
+msgid "Invalid request"
+msgstr ""
+
+#: app/scripts/controllers/deployment.js:217
+#: app/scripts/controllers/deploymentConfig.js:294
+#: app/scripts/controllers/replicaSet.js:485
+msgid "It will not delete the config map."
+msgstr ""
+
+#: app/scripts/controllers/deployment.js:213
+#: app/scripts/controllers/deploymentConfig.js:290
+#: app/scripts/controllers/replicaSet.js:481
+msgid "It will not delete the persistent volume claim."
+msgstr ""
+
+#: app/scripts/controllers/deployment.js:215
+#: app/scripts/controllers/deploymentConfig.js:292
+#: app/scripts/controllers/replicaSet.js:483
+msgid "It will not delete the secret."
+msgstr ""
+
+#: app/scripts/controllers/edit/deploymentConfig.js:237
+msgid "Keep some existing {{name}} strategy parameters?"
+msgstr ""
+
+#: app/scripts/directives/processTemplateDialog.js:123
+msgid "Keyword"
+msgstr ""
+
+#: app/scripts/controllers/addConfigVolume.js:28
+#: app/scripts/controllers/attachPVC.js:28
+#: app/scripts/controllers/edit/autoscaler.js:28
+#: app/scripts/controllers/edit/healthChecks.js:25
+#: app/scripts/controllers/edit/yaml.js:25
+#: app/scripts/controllers/setLimits.js:26
+msgid "Kind or name parameter missing."
 msgstr ""
 
 #: app/scripts/directives/util.js:284
 msgid "Language"
 msgstr ""
 
-#: app/views/edit/project.html:12
-msgid "My Project"
+#: app/views/directives/deploy-image.html:69
+msgid "Learn More"
+msgstr ""
+
+#: app/views/overview.html:276
+msgid "Learn more about"
+msgstr ""
+
+#: app/scripts/controllers/quota.js:25
+msgid "Limits resource usage within this project."
+msgstr ""
+
+#: app/views/overview.html:90
+msgid "List by"
+msgstr ""
+
+#: app/scripts/controllers/buildConfig.js:57
+#: app/scripts/controllers/deployment.js:34
+#: app/scripts/controllers/deploymentConfig.js:46
+#: app/scripts/controllers/deployments.js:28
+#: app/scripts/controllers/imagestream.js:36
+#: app/scripts/controllers/quota.js:26
+#: app/views/overview.html:36
+msgid "Loading..."
+msgstr ""
+
+#: app/scripts/controllers/util/logout.js:16
+#: app/scripts/controllers/util/logout.js:35
+msgid "Logging out..."
+msgstr ""
+
+#: app/scripts/directives/util.js:120
+msgid "Login command copied."
+msgstr ""
+
+#: app/scripts/directives/nav.js:50
+msgid "Logs"
+msgstr ""
+
+#: app/scripts/directives/logViewer.js:515
+msgid "Logs are not available for this replication controller because it was not generated from a deployment configuration."
+msgstr ""
+
+#: app/scripts/controllers/edit/yaml.js:130
+msgid "Make sure any new fields you may have added are supported API fields."
+msgstr ""
+
+#: app/scripts/directives/nav.js:43
+msgid "Membership"
+msgstr ""
+
+#: app/scripts/directives/nav.js:51
+msgid "Metrics"
+msgstr ""
+
+#: app/scripts/controllers/events.js:19
+#: app/scripts/directives/nav.js:48
+msgid "Monitoring"
 msgstr ""
 
 #: app/views/projects.html:20
 msgid "My Projects"
 msgstr ""
 
-#: app/views/membership.html:162
+#: app/scripts/controllers/projects.js:104
+#: app/views/directives/deploy-image.html:126
 msgid "Name"
 msgstr ""
 
-#: app/views/add-config-volume.html:127
-msgid "Pick a key"
+#: app/views/directives/deploy-image.html:155
+msgid "Name can't have more than 24 characters."
 msgstr ""
 
-#: app/views/create-from-url.html:21
-#: app/views/create-from-url.html:56
-msgid "Project name"
+#: app/views/directives/deploy-image.html:147
+msgid ""
+"Name must be an alphanumeric (a-z, 0-9) string with a maximum length\n"
+"              of 24 characters where the first character is a letter (a-z). The '-'\n"
+"              character is allowed anywhere except the first or last character."
 msgstr ""
 
-#: app/views/directives/osc-secrets.html:13
-#: app/views/directives/osc-source-secrets.html:22
-#: app/views/directives/osc-source-secrets.html:74
-msgid "Secret name"
+#: app/views/directives/deploy-image.html:152
+msgid "Name must have at least 2 characters."
 msgstr ""
 
-#: app/views/membership.html:183
-msgid "Select a project"
+#: app/scripts/directives/bindService.js:185
+#: app/scripts/directives/bindService.js:81
+#: app/scripts/directives/processTemplateDialog.js:266
+#: app/scripts/directives/processTemplateDialog.js:275
+msgid "Next >"
 msgstr ""
 
-#: app/views/directives/edit-environment-from.html:46
-#: app/views/directives/key-value-editor.html:150
-msgid "Select a resource"
+#: app/scripts/controllers/edit/deploymentConfig.js:241
+msgid "No"
 msgstr ""
 
-#: app/views/membership.html:119
-#: app/views/membership.html:233
-msgid "Select a role"
+#: app/scripts/directives/processTemplateDialog.js:105
+msgid "No Available Projects"
 msgstr ""
 
-#: app/views/directives/osc-persistent-volume-claim.html:20
-msgid "Select a storage class"
+#: app/scripts/directives/processTemplateDialog.js:110
+msgid "No Project Selected"
 msgstr ""
 
-#: app/views/add-config-volume.html:35
-msgid "Select config map or secret"
+#: app/scripts/directives/processTemplateDialog.js:115
+msgid "No Templates"
 msgstr ""
 
-#: app/views/directives/key-value-editor.html:165
-msgid "Select key"
+#: app/scripts/controllers/buildConfig.js:247
+msgid "No builds to show"
 msgstr ""
 
-#: app/views/directives/edit-lifecycle-hook.html:70
-msgid "Select volume"
+#: app/scripts/controllers/edit/yaml.js:129
+msgid "No changes were applied to {{kind}} {{name}}."
 msgstr ""
 
-#: app/views/directives/create-secret.html:344
-msgid "Service Account Name"
+#: app/scripts/controllers/deployment.js:100
+#: app/scripts/controllers/deploymentConfig.js:116
+msgid "No deployments to show"
 msgstr ""
 
-#: app/views/membership.html:210
-msgid "Service account"
+#: app/views/directives/deploy-image.html:210
+msgid "No image metadata found."
 msgstr ""
 
-#: app/views/add-config-volume.html:63
-#: app/views/attach-pvc.html:79
-msgid "example: /data"
+#: app/scripts/controllers/attachPVC.js:229
+msgid "No mount path was provided. The volume reference was added to the configuration, but it will not be mounted into running pods."
 msgstr ""
 
-#: app/views/attach-pvc.html:109
-msgid "example: application/resources"
+#: app/views/overview.html:310
+msgid "No pipeline runs."
 msgstr ""
 
-#: app/views/edit/build-config.html:184
-#: app/views/edit/build-config.html:318
-#: app/views/edit/build-config.html:388
-msgid "example: centos/ruby-20-centos7:latest"
+#: app/views/overview.html:271
+msgid "No pipelines."
 msgstr ""
 
-#: app/views/add-config-volume.html:137
-msgid "example: config/app.properties"
+#: app/scripts/controllers/imagestream.js:51
+msgid "No tags to show"
 msgstr ""
 
-#: app/views/edit/build-config.html:169
-#: app/views/edit/build-config.html:332
-msgid "example: openshift/ruby-20-centos7@603bfa418"
+#: app/scripts/controllers/util/error.js:20
+msgid "Not found"
 msgstr ""
 
-#: app/views/create/fromimage.html:108
-#: app/views/edit/build-config.html:58
-msgid "master"
+#: app/scripts/controllers/overview.js:457
+msgid "Open Metrics URL"
 msgstr ""
 
-#: app/views/directives/osc-routing.html:8
-msgid "my-route"
+#: app/scripts/directives/processTemplateDialog.js:236
+msgid "Other Projects"
 msgstr ""
 
-#: app/views/directives/osc-persistent-volume-claim.html:66
-msgid "my-storage-claim"
+#: app/scripts/directives/nav.js:46
+#: app/views/overview.html:137
+#: app/views/overview.html:338
+msgid "Other Resources"
 msgstr ""
 
-#: app/views/directives/edit-config-map-or-secret.html:8
-msgid "my-{{type}}"
+#: app/scripts/directives/nav.js:30
+msgid "Overview"
 msgstr ""
 
-#: app/views/directives/edit-config-map-or-secret.html:57
-msgid "my.key"
+#: app/scripts/directives/bindService.js:155
+msgid "Parameters"
 msgstr ""
 
-#: app/views/directives/osc-routing.html:43
-msgid "www.example.com"
+#: app/scripts/controllers/attachPVC.js:233
+msgid "Persistent volume claim {{name}} added to {{kind}} {{route}}."
 msgstr ""
 
-#: app/views/_templateopt.html:29
-#: app/views/_templateopt.html:56
-msgid "{{ parameter | parameterPlaceholder }}"
+#: app/scripts/controllers/createPersistentVolumeClaim.js:83
+msgid "Persistent volume claim {{name}} successfully created."
 msgstr ""
 
-#: app/views/directives/add-config-to-application.html:15
-msgid "{{ctrl.applications.length ? 'Select an application' : 'There are no applications in this project'}}"
+#: app/scripts/directives/nav.js:39
+msgid "Pipelines"
+msgstr ""
+
+#: app/scripts/directives/processTemplateDialog.js:111
+msgid "Please select a project from the dropdown to load templates from that project."
+msgstr ""
+
+#: app/scripts/directives/nav.js:34
+msgid "Pods"
+msgstr ""
+
+#: app/scripts/controllers/create/createFromImage.js:333
+#: app/scripts/directives/deployImage.js:345
+msgid "Problems were detected while checking your application configuration."
+msgstr ""
+
+#: app/scripts/directives/nav.js:37
+#: app/views/overview.html:404
+msgid "Provisioned Services"
+msgstr ""
+
+#: app/scripts/directives/nav.js:42
+msgid "Quota"
+msgstr ""
+
+#: app/scripts/directives/processTemplateDialog.js:234
+msgid "Recently Viewed"
+msgstr ""
+
+#: app/scripts/controllers/buildConfig.js:175
+msgid "Reload Environment Variables"
+msgstr ""
+
+#: app/scripts/controllers/deployment.js:223
+#: app/scripts/controllers/deploymentConfig.js:300
+#: app/scripts/controllers/membership.js:220
+#: app/scripts/controllers/replicaSet.js:491
+msgid "Remove"
+msgstr ""
+
+#: app/scripts/controllers/deployment.js:221
+#: app/scripts/controllers/deploymentConfig.js:298
+msgid "Remove volume {{name}}?"
+msgstr ""
+
+#: app/scripts/controllers/replicaSet.js:489
+msgid "Remove volume{{name}}?"
+msgstr ""
+
+#: app/scripts/directives/fromFile.js:211
+msgid "Resource is missing kind field."
+msgstr ""
+
+#: app/scripts/directives/fromFile.js:225
+msgid "Resource is missing metadata field."
+msgstr ""
+
+#: app/scripts/directives/fromFile.js:231
+msgid "Resource name is missing in metadata field."
+msgstr ""
+
+#: app/scripts/directives/nav.js:41
+msgid "Resources"
+msgstr ""
+
+#: app/scripts/controllers/createFromURL.js:51
+msgid "Resources from the namespace \"{{name}}\" are not permitted."
+msgstr ""
+
+#: app/scripts/directives/bindService.js:164
+#: app/scripts/directives/deployImageDialog.js:45
+#: app/scripts/directives/fromFileDialog.js:86
+#: app/scripts/directives/processTemplateDialog.js:79
+msgid "Results"
+msgstr ""
+
+#: app/scripts/controllers/util/logout.js:44
+msgid "Return to the"
+msgstr ""
+
+#: app/scripts/controllers/createRoute.js:137
+msgid "Route {{name}} was successfully created."
+msgstr ""
+
+#: app/scripts/controllers/edit/route.js:189
+msgid "Route {{routeName}} was successfully updated."
+msgstr ""
+
+#: app/scripts/controllers/createRoute.js:39
+#: app/scripts/controllers/edit/route.js:33
+#: app/scripts/controllers/route.js:29
+#: app/scripts/directives/nav.js:36
+msgid "Routes"
+msgstr ""
+
+#: app/scripts/directives/editEnvironmentVariables.js:68
+msgid "Saving your changes may create a conflict or cause loss of data."
+msgstr ""
+
+#: app/scripts/directives/createSecret.js:36
+msgid "Secret reference key must consist of lower-case, upper-case letters, numbers, dash, and underscore."
+msgstr ""
+
+#: app/scripts/directives/createSecret.js:222
+msgid "Secret {{secret}} was created and linked with service account {{name}}."
+msgstr ""
+
+#: app/scripts/directives/createSecret.js:229
+msgid "Secret {{secret}} was created."
+msgstr ""
+
+#: app/scripts/controllers/createSecret.js:28
+#: app/scripts/directives/nav.js:45
+msgid "Secrets"
+msgstr ""
+
+#: app/views/directives/deploy-image.html:78
+msgid "Select an image stream tag or enter an image name."
+msgstr ""
+
+#: app/views/overview.html:25
+msgid "Select from Project"
+msgstr ""
+
+#: app/scripts/directives/processTemplateDialog.js:46
+msgid "Selection"
+msgstr ""
+
+#: app/scripts/directives/nav.js:35
+msgid "Services"
+msgstr ""
+
+#: app/views/overview.html:299
+msgid "Start Pipeline"
+msgstr ""
+
+#: app/scripts/directives/nav.js:33
+msgid "Stateful Sets"
+msgstr ""
+
+#: app/views/browse/_build-details.html:4
+msgid "Status"
+msgstr ""
+
+#: app/scripts/controllers/createPersistentVolumeClaim.js:31
+#: app/scripts/directives/nav.js:47
+msgid "Storage"
+msgstr ""
+
+#: app/scripts/controllers/attachPVC.js:41
+msgid "Storage is not supported for kind {{kind}}."
+msgstr ""
+
+#: app/scripts/controllers/storage.js:43
+msgid "Storage quota limit has been reached. You will not be able to create any new storage."
+msgstr ""
+
+#: app/scripts/controllers/addConfigVolume.js:253
+#: app/scripts/directives/addConfigToApplication.js:171
+msgid "Successfully added"
+msgstr ""
+
+#: app/scripts/controllers/newfromtemplate.js:182
+msgid "Template wasn't found in cache."
+msgstr ""
+
+#: app/scripts/controllers/buildConfig.js:291
+msgid "The active filters are hiding all builds."
+msgstr ""
+
+#: app/scripts/controllers/deploymentConfig.js:201
+msgid "The active filters are hiding all deployments."
+msgstr ""
+
+#: app/scripts/controllers/deployment.js:158
+msgid "The active filters are hiding all rollout history."
+msgstr ""
+
+#: app/scripts/controllers/createFromURL.js:44
+msgid "The app name \"{{name}}\" is not valid.  An app name is an alphanumeric (a-z, and 0-9) string with a maximum length of 24 characters, where the first character is a letter (a-z), and the '-' character is allowed anywhere except the first or last character."
+msgstr ""
+
+#: app/scripts/controllers/buildConfig.js:205
+#: app/scripts/controllers/edit/buildConfig.js:362
+msgid "The build configuration details could not be loaded."
+msgstr ""
+
+#: app/scripts/controllers/build.js:143
+msgid "The build details could not be loaded."
+msgstr ""
+
+#: app/scripts/controllers/deploymentConfig.js:108
+#: app/scripts/controllers/edit/deploymentConfig.js:213
+#: app/scripts/controllers/replicaSet.js:184
+msgid "The deployment configuration details could not be loaded."
+msgstr ""
+
+#: app/scripts/controllers/replicaSet.js:233
+msgid "The deployment controlling this replica set has been deleted."
+msgstr ""
+
+#: app/scripts/controllers/deployment.js:120
+msgid "The deployment details could not be loaded."
+msgstr ""
+
+#: app/scripts/directives/editEnvironmentVariables.js:67
+msgid "The environment variables for the {{kind}} have been updated in the background."
+msgstr ""
+
+#: app/scripts/directives/oscFileInput.js:197
+msgid "The file"
+msgstr ""
+
+#: app/scripts/directives/oscFileInput.js:196
+msgid "The file is too large."
+msgstr ""
+
+#: app/views/overview.html:114
+msgid "The filter is hiding all resources."
+msgstr ""
+
+#: app/scripts/controllers/image.js:61
+msgid "The image details could not be loaded."
+msgstr ""
+
+#: app/views/directives/deploy-image.html:206
+msgid "The image may not exist or it may be in a secure registry. Check that you have entered the image name correctly or"
+msgstr ""
+
+#: app/scripts/controllers/image.js:114
+#: app/scripts/controllers/imagestream.js:70
+msgid "The image stream details could not be loaded."
+msgstr ""
+
+#: app/scripts/controllers/image.js:79
+msgid "The image tag was not found in the stream."
+msgstr ""
+
+#: app/scripts/directives/logViewer.js:401
+#: app/scripts/directives/logViewer.js:416
+msgid "The logs are no longer available or could not be loaded."
+msgstr ""
+
+#: app/scripts/controllers/persistentVolumeClaim.js:84
+msgid "The persistent volume claim details could not be loaded."
+msgstr ""
+
+#: app/scripts/controllers/pod.js:308
+msgid "The pod details could not be loaded."
+msgstr ""
+
+#: app/scripts/controllers/serviceInstance.js:222
+msgid "The provisioned service details could not be loaded."
+msgstr ""
+
+#: app/scripts/controllers/createFromURL.js:37
+msgid "The requested image stream tag \" {{tag}} \" could not be loaded."
+msgstr ""
+
+#: app/scripts/controllers/createFromURL.js:30
+msgid "The requested image stream\" {{image}} \" could not be loaded."
+msgstr ""
+
+#: app/scripts/controllers/createFromURL.js:58
+msgid "The requested template \"{{template}}\" could not be loaded."
+msgstr ""
+
+#: app/scripts/controllers/route.js:96
+msgid "The route details could not be loaded."
+msgstr ""
+
+#: app/scripts/controllers/secret.js:83
+msgid "The secret details could not be loaded."
+msgstr ""
+
+#: app/scripts/directives/processTemplateDialog.js:116
+msgid "The selected project has no templates available to import."
+msgstr ""
+
+#: app/scripts/controllers/service.js:116
+#: app/scripts/controllers/serviceInstance.js:230
+msgid "The service details could not be loaded."
+msgstr ""
+
+#: app/scripts/controllers/statefulSet.js:82
+msgid "The stateful set details could not be loaded."
+msgstr ""
+
+#: app/scripts/controllers/createFromURL.js:83
+msgid "The templateParamsMap is not valid JSON."
+msgstr ""
+
+#: app/scripts/controllers/edit/deploymentConfig.js:238
+msgid "The timeout parameter and any pre or post lifecycle hooks will be copied from {{strategy}} strategy to {{type}} strategy. After saving the changes, {{original}} strategy parameters will be removed."
+msgstr ""
+
+#: app/scripts/controllers/replicaSet.js:334
+msgid "The {{displayKind}} details could not be loaded."
+msgstr ""
+
+#: app/scripts/directives/processTemplateDialog.js:106
+msgid "There are no projects available from which to load templates."
+msgstr ""
+
+#: app/scripts/controllers/buildConfig.js:205
+msgid "This build configuration can not be found, it may have been deleted."
+msgstr ""
+
+#: app/scripts/controllers/buildConfig.js:163
+#: app/scripts/controllers/edit/buildConfig.js:349
+msgid "This build configuration has been deleted."
+msgstr ""
+
+#: app/scripts/controllers/buildConfig.js:172
+msgid "This build configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data."
+msgstr ""
+
+#: app/scripts/controllers/edit/buildConfig.js:342
+msgid "This build configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
+msgstr ""
+
+#: app/scripts/controllers/build.js:122
+msgid "This build has been deleted."
+msgstr ""
+
+#: app/scripts/controllers/configMap.js:37
+msgid "This config map has been deleted."
+msgstr ""
+
+#: app/scripts/controllers/deployment.js:120
+msgid "This deployment can not be found, it may have been deleted."
+msgstr ""
+
+#: app/scripts/controllers/deploymentConfig.js:108
+msgid "This deployment configuration can not be found, it may have been deleted."
+msgstr ""
+
+#: app/scripts/controllers/deploymentConfig.js:94
+#: app/scripts/controllers/edit/deploymentConfig.js:200
+msgid "This deployment configuration has been deleted."
+msgstr ""
+
+#: app/scripts/controllers/edit/deploymentConfig.js:194
+msgid "This deployment configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
+msgstr ""
+
+#: app/scripts/controllers/deployment.js:88
+msgid "This deployment has been deleted."
+msgstr ""
+
+#: app/views/directives/deploy-image.html:116
+msgid ""
+"This image declares volumes and will default to use non-persistent, host-local storage.\n"
+"          You can add persistent storage later to the deployment config."
+msgstr ""
+
+#: app/scripts/controllers/image.js:93
+#: app/scripts/controllers/imagestream.js:58
+msgid "This image stream has been deleted."
+msgstr ""
+
+#: app/views/directives/deploy-image.html:160
+msgid "This name is already in use within the project. Please choose a different name."
+msgstr ""
+
+#: app/scripts/controllers/persistentVolumeClaim.js:65
+msgid "This persistent volume claim has been deleted."
+msgstr ""
+
+#: app/views/overview.html:321
+msgid "This pipeline is not associated with any deployments."
+msgstr ""
+
+#: app/scripts/controllers/pod.js:275
+msgid "This pod has been deleted."
+msgstr ""
+
+#: app/scripts/controllers/service.js:35
+msgid "This pod will not receive traffic until all of its containers have been created."
+msgstr ""
+
+#: app/scripts/controllers/serviceInstance.js:193
+msgid "This provisioned service has been deleted."
+msgstr ""
+
+#: app/scripts/controllers/route.js:50
+msgid "This route has been deleted."
+msgstr ""
+
+#: app/scripts/controllers/secret.js:47
+msgid "This secret has been deleted."
+msgstr ""
+
+#: app/scripts/controllers/service.js:97
+msgid "This service has been deleted."
+msgstr ""
+
+#: app/scripts/controllers/pod.js:49
+msgid "This terminal has been disconnected. If you reconnect, your terminal history will be lost."
+msgstr ""
+
+#: app/scripts/controllers/deployment.js:209
+msgid "This will remove the volume from the deployment and start a new rollout."
+msgstr ""
+
+#: app/scripts/controllers/deploymentConfig.js:284
+msgid "This will remove the volume from the deployment config and trigger a new deployment."
+msgstr ""
+
+#: app/scripts/controllers/deploymentConfig.js:286
+msgid "This will remove the volume from the deployment config."
+msgstr ""
+
+#: app/scripts/controllers/deployment.js:207
+msgid "This will remove the volume from the deployment."
+msgstr ""
+
+#: app/scripts/controllers/replicaSet.js:479
+msgid "This will remove the volume from the {{kind}}."
+msgstr ""
+
+#: app/scripts/controllers/replicaSet.js:307
+msgid "This {{displayKind}} has been deleted."
+msgstr ""
+
+#: app/views/directives/deploy-image.html:64
+msgid "To deploy an image from a private repository, you must"
+msgstr ""
+
+#: app/scripts/controllers/pod.js:181
+msgid "Unable to calculate the bounding box for a character.  Terminal will not be able to resize."
+msgstr ""
+
+#: app/scripts/directives/util.js:143
+msgid "Unable to copy the login command."
+msgstr ""
+
+#: app/scripts/directives/fromFile.js:385
+msgid "Unable to create the"
+msgstr ""
+
+#: app/scripts/controllers/serviceInstance.js:109
+msgid "Unable to load parameters from secret"
+msgstr ""
+
+#: app/scripts/directives/fromFile.js:409
+msgid "Unable to update the"
+msgstr ""
+
+#: app/scripts/controllers/edit/deploymentConfig.js:79
+msgid "Unknown deployment strategy type:"
+msgstr ""
+
+#: app/scripts/directives/fromFile.js:498
+msgid "Updated"
+msgstr ""
+
+#: app/scripts/directives/fromFile.js:471
+msgid "Updated resources in project {{name}}"
+msgstr ""
+
+#: app/scripts/directives/fromFile.js:470
+msgid "Updating resources in project {{name}}"
+msgstr ""
+
+#: app/scripts/directives/addConfigToApplication.js:174
+msgid "View"
+msgstr ""
+
+#: app/scripts/controllers/storage.js:46
+msgid "View Quota"
+msgstr ""
+
+#: app/views/overview.html:394
+msgid "Virtual Machines"
+msgstr ""
+
+#: app/scripts/controllers/addConfigVolume.js:40
+msgid "Volumes are not supported for kind {{kind}}."
+msgstr ""
+
+#: app/scripts/directives/fromFile.js:62
+#: app/scripts/directives/processTemplate.js:163
+msgid "We checked your application for potential problems. Please confirm you still want to create this application."
+msgstr ""
+
+#: app/views/overview.html:31
+msgid "Welcome to project {{projectName}}."
+msgstr ""
+
+#: app/scripts/controllers/edit/deploymentConfig.js:239
+msgid "Yes"
+msgstr ""
+
+#: app/scripts/controllers/util/logout.js:40
+msgid "You are logged out."
+msgstr ""
+
+#: app/scripts/controllers/util/logout.js:22
+msgid "You could not be logged out. Return to the"
+msgstr ""
+
+#: app/scripts/controllers/createConfigMap.js:52
+msgid "You do not have authority to create config maps in project {{project}}."
+msgstr ""
+
+#: app/scripts/controllers/createPersistentVolumeClaim.js:70
+msgid "You do not have authority to create persistent volume claims in project {{project}}."
+msgstr ""
+
+#: app/scripts/controllers/createRoute.js:66
+msgid "You do not have authority to create routes in project {{project}}."
+msgstr ""
+
+#: app/scripts/controllers/createSecret.js:43
+msgid "You do not have authority to create secrets in project {{project}}."
+msgstr ""
+
+#: app/scripts/controllers/newfromtemplate.js:169
+msgid "You do not have authority to process templates in project {{project}}."
+msgstr ""
+
+#: app/scripts/controllers/addConfigVolume.js:121
+#: app/scripts/controllers/attachPVC.js:81
+#: app/scripts/controllers/edit/healthChecks.js:86
+#: app/scripts/controllers/edit/yaml.js:62
+#: app/scripts/controllers/setLimits.js:96
+msgid "You do not have authority to update"
+msgstr ""
+
+#: app/scripts/controllers/edit/buildConfig.js:242
+msgid "You do not have authority to update build config {{buildconfig}}."
+msgstr ""
+
+#: app/scripts/controllers/edit/deploymentConfig.js:91
+msgid "You do not have authority to update deployment config"
+msgstr ""
+
+#: app/scripts/controllers/edit/route.js:63
+msgid "You do not have authority to update route"
+msgstr ""
+
+#: app/scripts/controllers/edit/autoscaler.js:91
+msgid "You do not have authority to {{verb}} horizontal pod autoscalers in project {{project}}."
+msgstr ""
+
+#: app/scripts/controllers/util/logout.js:42
+msgid "You have been logged out due to inactivity."
+msgstr ""
+
+#: app/scripts/directives/confirmOnExit.js:20
+msgid "You have unsaved changes. Leave this page anyway?"
+msgstr ""
+
+#: app/views/overview.html:278
+msgid "and the"
+msgstr ""
+
+#: app/scripts/directives/fromFile.js:237
+msgid "can't be created in project {{name}}"
+msgstr ""
+
+#: app/scripts/directives/deleteLink.js:184
+#: app/scripts/directives/deleteLink.js:188
+msgid "could not be deleted."
+msgstr ""
+
+#: app/scripts/directives/editPvc.js:67
+msgid "could not be expanded."
+msgstr ""
+
+#: app/scripts/controllers/attachPVC.js:163
+#: app/scripts/controllers/edit/healthChecks.js:136
+#: app/scripts/controllers/setLimits.js:129
+msgid "could not be loaded."
+msgstr ""
+
+#: app/scripts/controllers/edit/healthChecks.js:131
+#: app/scripts/controllers/setLimits.js:124
+msgid "could not be updated."
+msgstr ""
+
+#: app/views/directives/deploy-image.html:206
+#: app/views/directives/deploy-image.html:64
+#: app/views/directives/deploy-image.html:65
+msgid "create an image pull secret"
+msgstr ""
+
+#: app/scripts/directives/editPvc.js:56
+msgid "expand request has been submitted."
+msgstr ""
+
+#: app/scripts/directives/oscFileInput.js:197
+msgid "is"
+msgstr ""
+
+#: app/scripts/controllers/newfromtemplate.js:47
+msgid "is not valid JSON."
+msgstr ""
+
+#: app/views/overview.html:274
+msgid "pipelines have been added to project {{projectName}}."
+msgstr ""
+
+#: app/scripts/directives/deployImage.js:310
+#: app/scripts/directives/fromFile.js:447
+#: app/scripts/directives/fromFile.js:498
+#: app/scripts/directives/processTemplate.js:131
+msgid "successfully."
+msgstr ""
+
+#: app/scripts/controllers/addConfigVolume.js:253
+#: app/scripts/directives/addConfigToApplication.js:171
+msgid "to"
+msgstr ""
+
+#: app/scripts/directives/createSecret.js:280
+msgid "was created."
+msgstr ""
+
+#: app/scripts/directives/deleteLink.js:164
+msgid "was marked for deletion."
+msgstr ""
+
+#: app/scripts/directives/fromFile.js:374
+#: app/scripts/directives/fromFile.js:456
+msgid "was successfully created."
+msgstr ""
+
+#: app/scripts/controllers/edit/yaml.js:137
+#: app/scripts/directives/fromFile.js:398
+#: app/scripts/directives/fromFile.js:507
+msgid "was successfully updated."
+msgstr ""
+
+#: app/scripts/controllers/edit/healthChecks.js:125
+#: app/scripts/controllers/setLimits.js:118
+msgid "was updated."
+msgstr ""
+
+#: app/views/directives/deploy-image.html:206
+msgid "with your image registry credentials and try again."
+msgstr ""
+
+#: app/views/directives/deploy-image.html:68
+msgid "with your image registry credentials."
 msgstr ""

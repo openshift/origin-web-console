@@ -6,6 +6,7 @@
       '$scope',
       '$routeParams',
       'DataService',
+      'gettextCatalog',
       DeployImageDialog
     ],
     controllerAs: '$ctrl',
@@ -17,12 +18,12 @@
     templateUrl: 'views/directives/deploy-image-dialog.html'
   });
 
-  function DeployImageDialog($scope, $routeParams, DataService) {
+  function DeployImageDialog($scope, $routeParams, DataService, gettextCatalog) {
     var ctrl = this;
 
     ctrl.$onInit = function() {
       ctrl.loginBaseUrl = DataService.openshiftAPIBaseUrl();
-      ctrl.currentStep = "Image";
+      ctrl.currentStep = gettextCatalog.getString("Image");
       // if on the landing page, show the project name in next-steps
       if (!$routeParams.project) {
         ctrl.showProjectName = true;
@@ -41,7 +42,7 @@
       ctrl.selectedProject = message.project;
       ctrl.appName = message.appName;
       ctrl.deployImageNewAppCreated = true;
-      ctrl.currentStep = "Results";
+      ctrl.currentStep = gettextCatalog.getString("Results");
     });
 
     ctrl.close = function() {
@@ -55,10 +56,10 @@
 
     ctrl.stepChanged = function(step) {
       if (step.stepId === 'results') {
-        ctrl.nextButtonTitle = "Close";
+        ctrl.nextButtonTitle = gettextCatalog.getString("Close");
         ctrl.wizardDone = true;
       } else {
-        ctrl.nextButtonTitle = "Deploy";
+        ctrl.nextButtonTitle = gettextCatalog.getString("Deploy");
       }
     };
 

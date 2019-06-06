@@ -37,7 +37,7 @@
           </ui-select-choices>
         </ui-select>
         <div class="has-error select-secret-ref" ng-show="$ctrl.secretsForm[secretFieldName].$invalid && $ctrl.secretsForm[secretFieldName].$touched">
-          <span class="help-block">
+          <span class="help-block" translate>
             Secret reference is required.
           </span>
         </div>
@@ -60,7 +60,7 @@
             aria-label="Toggle Token Visibility"
             ng-click="$ctrl.toggleSecretInputType(trigger)">
             <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-            <span class="sr-only">Toggle Token Visibility</span>
+            <span class="sr-only" translate>Toggle Token Visibility</span>
           </button>
         </div>
       </div>
@@ -68,20 +68,20 @@
       <div class="form-row-controls">
         <button ng-click="$ctrl.removeWebhookTrigger(trigger, $index)" type="button" class="btn-remove close" aria-hidden="true">
           <span class="pficon pficon-close" aria-hidden="true"></span>
-          <span class="sr-only">Remove Webhook trigger</span>
+          <span class="sr-only" translate>Remove Webhook trigger</span>
         </button>
       </div>
     </div>
     <div class="has-warning" ng-if="trigger.isDuplicate">
-      <span class="help-block">A {{trigger.data.type}} webhook trigger referencing the secret {{(trigger | getWebhookSecretData).secretReference.name}} already exists.</span>
+      <span class="help-block" translate>A {{trigger.data.type}} webhook trigger referencing the secret {{(trigger | getWebhookSecretData).secretReference.name}} already exists.</span>
     </div>
   </div>
 
   <div class="form-group-actions">
-    <button class="btn btn-link pad-left-none" type="button" ng-click="$ctrl.addEmptyWebhookTrigger()">Add Webhook</button>
+    <button class="btn btn-link pad-left-none" type="button" ng-click="$ctrl.addEmptyWebhookTrigger()" translate>Add Webhook</button>
     <span ng-if="$ctrl.secretsVersion | canI : 'create'">
       <span class="action-divider" aria-hidden="true">|</span>
-      <button class="btn btn-link" href="" type="button" ng-click="$ctrl.openCreateWebhookSecretModal()">Create New Webhook Secret</button>
+      <button class="btn btn-link" href="" type="button" ng-click="$ctrl.openCreateWebhookSecretModal()" translate>Create New Webhook Secret</button>
     </span>
   </div>
 </ng-form>

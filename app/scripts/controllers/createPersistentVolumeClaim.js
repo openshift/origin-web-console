@@ -20,18 +20,19 @@ angular.module('openshiftConsole')
                        Navigate,
                        NotificationsService,
                        ProjectsService,
-                       keyValueEditorUtils) {
+                       keyValueEditorUtils,
+                       gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.accessModes="ReadWriteOnce";
     $scope.claim = {};
 
     $scope.breadcrumbs = [
       {
-        title: "Storage",
+        title: gettextCatalog.getString("Storage"),
         link: "project/" + $scope.projectName + "/browse/storage"
       },
       {
-        title: "Create Storage"
+        title: gettextCatalog.getString("Create Storage")
       }
     ];
 
@@ -66,7 +67,7 @@ angular.module('openshiftConsole')
       .then(_.spread(function(project, context) {
         $scope.project = project;
         if (!AuthorizationService.canI(createPVCVersion, 'create', $routeParams.project)) {
-          Navigate.toErrorPage('You do not have authority to create persistent volume claims in project ' + $routeParams.project + '.', 'access_denied');
+          Navigate.toErrorPage(gettextCatalog.getString('You do not have authority to create persistent volume claims in project {{project}}.', {project: $routeParams.project}), 'access_denied');
           return;
         }
 
@@ -79,7 +80,7 @@ angular.module('openshiftConsole')
               .then(function(claim) { // Success
                 NotificationsService.addNotification({
                   type: "success",
-                  message: "Persistent volume claim " + claim.metadata.name + " successfully created."
+                  message: gettextCatalog.getString("Persistent volume claim {{name}} successfully created.", {name: claim.metadata.name})
                 });
 
                 navigateBack();
@@ -89,7 +90,7 @@ angular.module('openshiftConsole')
                 NotificationsService.addNotification({
                   id: "create-pvc-error",
                   type: "error",
-                  message: "An error occurred requesting storage.",
+                  message: gettextCatalog.getString("An error occurred requesting storage."),
                   details: $filter('getErrorDetails')(result)
                 });
               });

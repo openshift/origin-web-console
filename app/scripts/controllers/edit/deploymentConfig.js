@@ -23,7 +23,8 @@ angular.module('openshiftConsole')
                        NotificationsService,
                        ProjectsService,
                        SecretsService,
-                       keyValueEditorUtils) {
+                       keyValueEditorUtils,
+                       gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.deploymentConfig = null;
     $scope.alerts = {};
@@ -36,7 +37,7 @@ angular.module('openshiftConsole')
       name: $routeParams.name,
       kind: $routeParams.kind,
       namespace: $routeParams.project,
-      subpage: 'Edit Deployment Config'
+      subpage: gettextCatalog.getString('Edit Deployment Config')
     });
 
     $scope.deploymentConfigStrategyTypes = [
@@ -75,7 +76,7 @@ angular.module('openshiftConsole')
       case "Custom":
         return "customParams";
       default:
-        Logger.error('Unknown deployment strategy type: ' + strategyType);
+        Logger.error(gettextCatalog.getString('Unknown deployment strategy type: ') + strategyType);
         return;
       }
     };
@@ -87,7 +88,7 @@ angular.module('openshiftConsole')
         $scope.context = context;
 
         if (!AuthorizationService.canI('deploymentconfigs', 'update', $routeParams.project)) {
-          Navigate.toErrorPage('You do not have authority to update deployment config ' +
+          Navigate.toErrorPage(gettextCatalog.getString('You do not have authority to update deployment config ') +
                                $routeParams.deploymentconfig + '.', 'access_denied');
           return;
         }
@@ -100,7 +101,7 @@ angular.module('openshiftConsole')
             $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
               object: deploymentConfig,
               project: project,
-              subpage: 'Edit'
+              subpage: gettextCatalog.getString('Edit')
             });
 
             // Create map which will associate concatiner name to container's data(envVar, trigger and image which will be used on manual deployment)
@@ -164,7 +165,7 @@ angular.module('openshiftConsole')
                 return;
               }
 
-              displayError('Could not load config maps', getErrorDetails(e));
+              displayError(gettextCatalog.getString('Could not load config maps'), getErrorDetails(e));
             });
 
             DataService.list(secretsVersion, context, null, { errorNotification: false }).then(function(secretData) {
@@ -182,7 +183,7 @@ angular.module('openshiftConsole')
                 return;
               }
 
-              displayError('Could not load secrets', getErrorDetails(e));
+              displayError(gettextCatalog.getString('Could not load secrets'), getErrorDetails(e));
             });
 
             // If we found the item successfully, watch for changes on it
@@ -190,13 +191,13 @@ angular.module('openshiftConsole')
               if (action === 'MODIFIED') {
                 $scope.alerts["updated/deleted"] = {
                   type: "warning",
-                  message: "This deployment configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
+                  message: gettextCatalog.getString("This deployment configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again.")
                 };
               }
               if (action === "DELETED") {
                 $scope.alerts["updated/deleted"] = {
                   type: "warning",
-                  message: "This deployment configuration has been deleted."
+                  message: gettextCatalog.getString("This deployment configuration has been deleted.")
                 };
                 $scope.disableInputs = true;
               }
@@ -209,7 +210,7 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: "The deployment configuration details could not be loaded.",
+              message: gettextCatalog.getString("The deployment configuration details could not be loaded."),
               details: $filter('getErrorDetails')(e)
             };
           }
@@ -233,11 +234,11 @@ angular.module('openshiftConsole')
           modalConfig: function() {
             return {
               alerts: $scope.alerts,
-              title: "Keep some existing " + $scope.originalStrategy.toLowerCase() + " strategy parameters?",
-              details: "The timeout parameter and any pre or post lifecycle hooks will be copied from " + $scope.originalStrategy.toLowerCase() + " strategy to " + $scope.strategyData.type.toLowerCase() + " strategy. After saving the changes, " + $scope.originalStrategy.toLowerCase() + " strategy parameters will be removed.",
-              okButtonText: "Yes",
+              title: gettextCatalog.getString("Keep some existing {{name}} strategy parameters?", {name: $scope.originalStrategy.toLowerCase()}),
+              details: gettextCatalog.getString("The timeout parameter and any pre or post lifecycle hooks will be copied from {{strategy}} strategy to {{type}} strategy. After saving the changes, {{original}} strategy parameters will be removed.", {strategy: $scope.originalStrategy.toLowerCase(), type: $scope.strategyData.type.toLowerCase(), original: $scope.originalStrategy.toLowerCase()}),
+              okButtonText: gettextCatalog.getString("Yes"),
               okButtonClass: "btn-primary",
-              cancelButtonText: "No"
+              cancelButtonText: gettextCatalog.getString("No")
             };
           }
         }
@@ -376,7 +377,7 @@ angular.module('openshiftConsole')
         function() {
           NotificationsService.addNotification({
             type: "success",
-            message: "Deployment config " + $scope.updatedDeploymentConfig.metadata.name + " was successfully updated."
+            message: gettextCatalog.getString("Deployment config {{name}} was successfully updated.", {name: $scope.updatedDeploymentConfig.metadata.name})
           });
           var returnURL = Navigate.resourceURL($scope.updatedDeploymentConfig);
           $location.url(returnURL);
@@ -386,7 +387,7 @@ angular.module('openshiftConsole')
           NotificationsService.addNotification({
             id: "edit-deployment-config-error",
             type: "error",
-            message: "An error occurred updating deployment config " + $scope.updatedDeploymentConfig.metadata.name + ".",
+            message: gettextCatalog.getString("An error occurred updating deployment config {{name}}.", {name: $scope.updatedDeploymentConfig.metadata.name}),
             details: $filter('getErrorDetails')(result)
           });
         }

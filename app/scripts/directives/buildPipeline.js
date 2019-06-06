@@ -1,7 +1,7 @@
 "use strict";
 
 angular.module('openshiftConsole')
-  .directive('buildPipeline', function($filter, APIService, Logger) {
+  .directive('buildPipeline', function($filter, APIService, Logger, gettextCatalog) {
     return {
       restrict: 'E',
       scope: {
@@ -31,7 +31,7 @@ angular.module('openshiftConsole')
           try {
             $scope.jenkinsStatus = JSON.parse(value);
           } catch (e) {
-            Logger.error('Could not parse Jenkins status as JSON', value);
+            Logger.error(gettextCatalog.getString('Could not parse Jenkins status as JSON'), value);
           }
         });
 

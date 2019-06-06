@@ -4,16 +4,15 @@ module.exports = function (grunt) {
   grunt.initConfig({
     nggettext_extract: {
       pot: {
-        options: {
-          attributes: ['placeholder']
-        },
         files: {
           // 自动识别html中的Translate对应的字符串，放到po/template.pot文件中
           // 然后用工具，把.pot中的翻译，转到.po中
           'po/template.pot': ['app/views/*.html',
                               'app/views/*/*.html',
+                              'app/views/*/*/*.html',
                               'app/scripts/*.js',
-                              'app/scripts/*/*.js'
+                              'app/scripts/*/*.js',
+                              'app/scripts/*/*/*.js'
                              ]
         }
       }

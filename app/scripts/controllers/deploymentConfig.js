@@ -24,7 +24,8 @@ angular.module('openshiftConsole')
                         ProjectsService,
                         StorageService,
                         LabelFilter,
-                        labelNameFilter) {
+                        labelNameFilter,
+                        gettextCatalog) {
     var imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
 
     $scope.projectName = $routeParams.project;
@@ -42,7 +43,7 @@ angular.module('openshiftConsole')
       kind: 'DeploymentConfig',
       namespace: $routeParams.project
     });
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettextCatalog.getString("Loading...");
     $scope.deploymentConfigsInstantiateVersion = APIService.getPreferredVersion('deploymentconfigs/instantiate');
     $scope.deploymentConfigsVersion = APIService.getPreferredVersion('deploymentconfigs');
     $scope.eventsVersion = APIService.getPreferredVersion('events');
@@ -90,7 +91,7 @@ angular.module('openshiftConsole')
               if (action === "DELETED") {
                 $scope.alerts["deleted"] = {
                   type: "warning",
-                  message: "This deployment configuration has been deleted."
+                  message: gettextCatalog.getString("This deployment configuration has been deleted.")
                 };
               }
               $scope.deploymentConfig = deploymentConfig;
@@ -104,15 +105,15 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: e.status === 404 ? "This deployment configuration can not be found, it may have been deleted." : "The deployment configuration details could not be loaded.",
-              details: e.status === 404 ? "Any remaining deployment history for this deployment will be shown." : $filter('getErrorDetails')(e)
+              message: e.status === 404 ? gettextCatalog.getString("This deployment configuration can not be found, it may have been deleted.") : gettextCatalog.getString("The deployment configuration details could not be loaded."),
+              details: e.status === 404 ? gettextCatalog.getString("Any remaining deployment history for this deployment will be shown.") : $filter('getErrorDetails')(e)
             };
           }
         );
 
         watches.push(DataService.watch(replicationControllersVersion, context, function(deployments, action, deployment) {
           var deploymentConfigName = $routeParams.deploymentconfig;
-          $scope.emptyMessage = "No deployments to show";
+          $scope.emptyMessage = gettextCatalog.getString("No deployments to show");
           if (!action) {
             var deploymentsByDeploymentConfig = DeploymentsService.associateDeploymentsToDeploymentConfig(deployments.by("metadata.name"));
             $scope.unfilteredDeployments = deploymentsByDeploymentConfig[$routeParams.deploymentconfig] || {};
@@ -197,7 +198,7 @@ angular.module('openshiftConsole')
           if (!LabelFilter.getLabelSelector().isEmpty() && $.isEmptyObject($scope.deployments) && !$.isEmptyObject($scope.unfilteredDeployments)) {
             $scope.alerts["deployments"] = {
               type: "warning",
-              details: "The active filters are hiding all deployments."
+              details: gettextCatalog.getString("The active filters are hiding all deployments.")
             };
           }
           else {
@@ -244,7 +245,7 @@ angular.module('openshiftConsole')
           var showScalingError = function(result) {
             $scope.alerts["scale-error"] = {
               type: "error",
-              message: "An error occurred scaling the deployment config.",
+              message: gettextCatalog.getString("An error occurred scaling the deployment config."),
               details: $filter('getErrorDetails')(result)
             };
           };
@@ -259,9 +260,10 @@ angular.module('openshiftConsole')
             // Failure
             function(e) {
               $scope.updatingPausedState = false;
+              var status = paused ? "pausing" : "resuming";
               $scope.alerts["pause-error"] = {
                 type: "error",
-                message: "An error occurred " + (paused ? "pausing" : "resuming") + " the deployment config.",
+                message: gettextCatalog.getString("An error occurred {{status}} the deployment config.", {status: status}),
                 details: $filter('getErrorDetails')(e)
               };
             });
@@ -279,25 +281,25 @@ angular.module('openshiftConsole')
         $scope.removeVolume = function(volume) {
           var details;
           if (isConfigChangeActive()) {
-            details = "This will remove the volume from the deployment config and trigger a new deployment.";
+            details = gettextCatalog.getString("This will remove the volume from the deployment config and trigger a new deployment.");
           } else {
-            details = "This will remove the volume from the deployment config.";
+            details = gettextCatalog.getString("This will remove the volume from the deployment config.");
           }
 
           if (volume.persistentVolumeClaim) {
-            details += " It will not delete the persistent volume claim.";
+            details += gettextCatalog.getString(" It will not delete the persistent volume claim.");
           } else if (volume.secret) {
-            details += " It will not delete the secret.";
+            details += gettextCatalog.getString(" It will not delete the secret.");
           } else if (volume.configMap) {
-            details += " It will not delete the config map.";
+            details += gettextCatalog.getString(" It will not delete the config map.");
           }
 
           var confirm = ModalsService.confirm({
-            title: "Remove volume " + volume.name + "?",
+            title: gettextCatalog.getString("Remove volume {{name}}?", {name: volume.name}),
             details: details,
-            okButtonText: "Remove",
+            okButtonText: gettextCatalog.getString("Remove"),
             okButtonClass: "btn-danger",
-            cancelButtonText: "Cancel"
+            cancelButtonText: gettextCatalog.getString("Cancel")
           });
 
           var removeVolume = function() {

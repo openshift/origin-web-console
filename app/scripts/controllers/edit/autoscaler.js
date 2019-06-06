@@ -22,9 +22,10 @@ angular.module('openshiftConsole')
                         Navigate,
                         NotificationsService,
                         ProjectsService,
-                        keyValueEditorUtils) {
+                        keyValueEditorUtils,
+                        gettextCatalog) {
     if (!$routeParams.kind || !$routeParams.name) {
-      Navigate.toErrorPage("Kind or name parameter missing.");
+      Navigate.toErrorPage(gettextCatalog.getString("Kind or name parameter missing."));
       return;
     }
 
@@ -37,7 +38,7 @@ angular.module('openshiftConsole')
     ];
 
     if (!_.includes(supportedKinds, $routeParams.kind)) {
-      Navigate.toErrorPage("Autoscaling not supported for kind " + $routeParams.kind + ".");
+      Navigate.toErrorPage(gettextCatalog.getString("Autoscaling not supported for kind {{kind}}.",{kind: $routeParams.kind}));
       return;
     }
 
@@ -87,7 +88,8 @@ angular.module('openshiftConsole')
 
         var verb = $routeParams.kind === 'HorizontalPodAutoscaler' ? 'update' : 'create';
         if (!AuthorizationService.canI({ resource: 'horizontalpodautoscalers', group: 'autoscaling' }, verb, $routeParams.project)) {
-          Navigate.toErrorPage('You do not have authority to ' + verb + ' horizontal pod autoscalers in project ' + $routeParams.project + '.', 'access_denied');
+          var msg = gettextCatalog.getString('You do not have authority to {{verb}} horizontal pod autoscalers in project {{project}}.',{verb: verb, project: $routeParams.project});
+          Navigate.toErrorPage(msg, 'access_denied');
           return;
         }
 
@@ -104,7 +106,7 @@ angular.module('openshiftConsole')
             .then(function(hpa) { // Success
               NotificationsService.addNotification({
                 type: 'success',
-                message: 'Horizontal pod autoscaler ' + hpa.metadata.name + ' successfully updated.'
+                message: gettextCatalog.getString('Horizontal pod autoscaler {{name}} successfully updated.',{name: hpa.metadata.name})
               });
 
               navigateBack();
@@ -113,7 +115,7 @@ angular.module('openshiftConsole')
               NotificationsService.addNotification({
                 id: 'edit-hpa-error',
                 type: 'error',
-                message: 'An error occurred creating the horizontal pod autoscaler.',
+                message: gettextCatalog.getString('An error occurred creating the horizontal pod autoscaler.'),
                 details: getErrorDetails(result)
               });
             });
@@ -162,7 +164,7 @@ angular.module('openshiftConsole')
               .then(function(hpa) { // Success
                 NotificationsService.addNotification({
                   type: 'success',
-                  message: 'Horizontal pod autoscaler ' + hpa.metadata.name + ' successfully created.'
+                  message: gettextCatalog.getString('Horizontal pod autoscaler {{name}} successfully created.',{name: hpa.metadata.name})
                 });
 
                 navigateBack();
@@ -171,7 +173,7 @@ angular.module('openshiftConsole')
                 NotificationsService.addNotification({
                   id: 'edit-hpa-error',
                   type: 'error',
-                  message: 'An error occurred creating the horizontal pod autoscaler.',
+                  message: gettextCatalog.getString('An error occurred creating the horizontal pod autoscaler.'),
                   details: getErrorDetails(result)
                 });
               });

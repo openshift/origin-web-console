@@ -9,7 +9,8 @@ angular.module("openshiftConsole")
                       DataService,
                       ProjectsService,
                       NotificationsService,
-                      Logger) {
+                      Logger,
+                      gettextCatalog) {
 
     return {
       restrict: "E",
@@ -52,7 +53,7 @@ angular.module("openshiftConsole")
             .then(function() {
               NotificationsService.addNotification({
                 type: "success",
-                message: formattedResource + " expand request has been submitted."
+                message: formattedResource + gettextCatalog.getString(" expand request has been submitted.")
               });
             })
             .catch(function(err) {
@@ -63,7 +64,7 @@ angular.module("openshiftConsole")
                 message: "Could not save " + formattedResource,
                 details: $filter('getErrorDetails')(err)
               });
-              Logger.error(formattedResource + " could not be expanded.", err);
+              Logger.error(formattedResource + gettextCatalog.getString(" could not be expanded."), err);
             });
           });
         };

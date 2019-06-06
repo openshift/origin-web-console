@@ -15,15 +15,16 @@ angular.module('openshiftConsole')
                                            APIService,
                                            DataService,
                                            Logger,
-                                           ProjectsService) {
+                                           ProjectsService,
+                                           gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.limitRanges = {};
     $scope.limitsByType = {};
     $scope.labelSuggestions = {};
     $scope.alerts = $scope.alerts || {};
-    $scope.quotaHelp = "Limits resource usage within this project.";
-    $scope.emptyMessageLimitRanges = "Loading...";
-    $scope.limitRangeHelp = "Defines minimum and maximum constraints for runtime resources such as memory and CPU.";
+    $scope.quotaHelp = gettextCatalog.getString("Limits resource usage within this project.");
+    $scope.emptyMessageLimitRanges = gettextCatalog.getString("Loading...");
+    $scope.limitRangeHelp = gettextCatalog.getString("Defines minimum and maximum constraints for runtime resources such as memory and CPU.");
     $scope.renderOptions = $scope.renderOptions || {};
     $scope.renderOptions.hideFilterWidget = true;
 

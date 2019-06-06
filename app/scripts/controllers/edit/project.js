@@ -14,7 +14,8 @@ angular.module('openshiftConsole')
                                                  $location,
                                                  DataService,
                                                  ProjectsService,
-                                                 Navigate) {
+                                                 Navigate,
+                                                 gettextCatalog) {
     $scope.alerts = {};
 
     var annotation = $filter('annotation');
@@ -66,7 +67,7 @@ angular.module('openshiftConsole')
                 $scope.editableFields = editableFields(project);
                 $scope.alerts["update"] = {
                   type: "error",
-                  message: "An error occurred while updating the project",
+                  message: gettextCatalog.getString("An error occurred while updating the project"),
                   details: $filter('getErrorDetails')(result)
                 };
               });

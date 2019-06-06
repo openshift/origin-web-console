@@ -18,7 +18,8 @@ angular.module('openshiftConsole')
                                                     DataService,
                                                     LabelFilter,
                                                     Navigate,
-                                                    ProjectsService) {
+                                                    ProjectsService,
+                                                    gettextCatalog) {
     $scope.projectName = $routeParams.project;
 
     var findCategoryItem = function(categories, id) {
@@ -41,7 +42,7 @@ angular.module('openshiftConsole')
     var categoryID = $routeParams.category === 'none' ? '' : $routeParams.category;
     $scope.category = findCategoryItem(categories, categoryID);
     if (!$scope.category) {
-      Navigate.toErrorPage("Catalog category " + $routeParams.category + " not found.");
+      Navigate.toErrorPage(gettextCatalog.getString("Catalog category {{category}} not found.",{category: $routeParams.category}));
       return;
     }
 
@@ -52,7 +53,7 @@ angular.module('openshiftConsole')
       subcategories = _.get($scope.category, 'subcategories', []);
       $scope.category = findCategoryItem(subcategories, categoryID);
       if (!$scope.category) {
-        Navigate.toErrorPage("Catalog category " + $routeParams.category + "/" + $routeParams.subcategory + " not found.");
+        Navigate.toErrorPage(gettextCatalog.getString("Catalog category {{category}}/{{subcategory}}not found.",{category: $routeParams.category, subcategory: $routeParams.subcategory}));
         return;
       }
     }

@@ -8,6 +8,7 @@
       '$filter',
       'APIService',
       'DataService',
+      'gettextCatalog',
       UnbindService
     ],
     controllerAs: 'ctrl',
@@ -24,7 +25,8 @@
   function UnbindService($scope,
                          $filter,
                          APIService,
-                         DataService) {
+                         DataService,
+                         gettextCatalog) {
     var ctrl = this;
     var validityWatcher;
     var context;
@@ -70,12 +72,12 @@
     };
 
     var showDeleteForm = function() {
-      ctrl.nextTitle = 'Delete';
+      ctrl.nextTitle = gettextCatalog.getString('Delete');
       setupValidator();
     };
 
     var showResults = function() {
-      ctrl.nextTitle = 'Close';
+      ctrl.nextTitle = gettextCatalog.getString('Close');
       ctrl.wizardComplete = true;
       unbindService();
       tearDownValidator();

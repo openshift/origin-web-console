@@ -14,7 +14,8 @@ angular.module('openshiftConsole')
                                             APIService,
                                             DataService,
                                             ProjectsService,
-                                            SecretsService) {
+                                            SecretsService,
+                                            gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.secretName = $routeParams.secret;
     $scope.view = {
@@ -43,7 +44,7 @@ angular.module('openshiftConsole')
       if (action === "DELETED") {
         $scope.alerts["deleted"] = {
           type: "warning",
-          message: "This secret has been deleted."
+          message: gettextCatalog.getString("This secret has been deleted.")
         };
         return;
       }
@@ -79,7 +80,7 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: "The secret details could not be loaded.",
+              message: gettextCatalog.getString("The secret details could not be loaded."),
               details: $filter('getErrorDetails')(e)
             };
           });

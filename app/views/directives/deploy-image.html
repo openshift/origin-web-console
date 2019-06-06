@@ -1,7 +1,7 @@
 <div class="deploy-image">
   <select-project ng-if="!project" selected-project="input.selectedProject" name-taken="projectNameTaken"></select-project>
   <span ng-show="!noProjectsCantCreate">
-    <p>
+    <p translate>
       Deploy an existing image from an image stream tag or image registry.
     </p>
     <ng-form name="forms.imageSelection">
@@ -30,7 +30,7 @@
             <input type="radio" ng-model="mode" value="dockerImage" ng-disabled="!input.selectedProject.metadata.uid">
             Image Name
             <span ng-if="!input.selectedProject.metadata.uid" class="text-warning">
-              &ndash; Image search is only available for existing projects.
+              &ndash; <translate>Image search is only available for existing projects.</translate>
             </span>
           </label>
         </div>
@@ -61,12 +61,12 @@
               </span>
             </div>
             <div class="help-block">
-              To deploy an image from a private repository, you must <span ng-if="!input.selectedProject.metadata.uid">create an image pull secret</span>
+              <translate>To deploy an image from a private repository, you must</translate> <span ng-if="!input.selectedProject.metadata.uid" translate>create an image pull secret</span>
               <a href=""
                 ng-click="openCreateWebhookSecretModal()"
-                ng-if="input.selectedProject.metadata.uid">create an image pull secret</a>
-              with your image registry credentials.
-              <a ng-href="{{'pull_secret' | helpLink}}" target="_blank"><span class="learn-more-inline">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a></div>
+                ng-if="input.selectedProject.metadata.uid" translate>create an image pull secret</a>
+              <translate>with your image registry credentials.</translate>
+              <a ng-href="{{'pull_secret' | helpLink}}" target="_blank"><span class="learn-more-inline"><translate>Learn More</translate>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span></a></div>
           </div>
         </fieldset>
       </fieldset>
@@ -75,7 +75,7 @@
       <div class="separator"></div>
     </div>
     <div ng-if="loading || !import" class="empty-state-message text-center">
-      <h2 ng-if="!loading" class="h2">Select an image stream tag or enter an image name.</h2>
+      <h2 ng-if="!loading" class="h2" translate>Select an image stream tag or enter an image name.</h2>
       <h2 ng-if="loading" class="h2">Loading image metadata for <span class="word-break">{{imageName | stripSHA}}</span>...</h2>
     </div>
     <div class="row mar-bottom-md" ng-if-start="!loading && import.image">
@@ -85,9 +85,9 @@
       <div class="col-sm-10">
         <div ng-if="runsAsRoot" class="alert alert-warning">
           <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-          Image <strong>{{import.name}}</strong> runs as the
-          <strong>root</strong> user which might not be permitted by your cluster
-          administrator.
+          <span translate>Image {{import.name}} runs as the
+            root user which might not be permitted by your cluster
+            administrator.</span>
         </div>
         <h2>
           <span ng-if="mode === 'dockerImage'">{{import.name}}</span>
@@ -113,7 +113,7 @@
             <div>Other containers can access this service through the hostname <strong>{{app.name || "&lt;name&gt;"}}</strong>.</div>
           </li>
         </ul>
-        <div ng-if="(volumes | hashSize) > 0" class="help-block">
+        <div ng-if="(volumes | hashSize) > 0" class="help-block" translate>
           This image declares volumes and will default to use non-persistent, host-local storage.
           You can add persistent storage later to the deployment config.
         </div>
@@ -123,7 +123,7 @@
     <div ng-if-end>
       <ng-form name="forms.deployImage" class="osc-form">
         <div class="form-group">
-         <label for="name" class="required">Name</label>
+         <label for="name" class="required" translate>Name</label>
          <div ng-class="{'has-error': (forms.deployImage.name.$invalid && forms.deployImage.name.$touched) || nameTaken}">
            <input type="text"
                   required
@@ -139,25 +139,25 @@
                   autocapitalize="none"
                   spellcheck="false">
           </div>
-          <div class="help-block">Identifies the resources created for this image.</div>
+          <div class="help-block" translate>Identifies the resources created for this image.</div>
           <div class="has-error" ng-show="forms.deployImage.name.$invalid && forms.deployImage.name.$touched">
-            <div class="help-block" ng-show="forms.deployImage.name.$error.required">
+            <div class="help-block" ng-show="forms.deployImage.name.$error.required" translate>
               A name is required.
             </div>
-            <div class="help-block" ng-show="forms.deployImage.name.$error.pattern">
+            <div class="help-block" ng-show="forms.deployImage.name.$error.pattern" translate>
               Name must be an alphanumeric (a-z, 0-9) string with a maximum length
               of 24 characters where the first character is a letter (a-z). The '-'
               character is allowed anywhere except the first or last character.
             </div>
-            <div class="help-block" ng-show="forms.deployImage.name.$error.minlength">
+            <div class="help-block" ng-show="forms.deployImage.name.$error.minlength" translate>
               Name must have at least 2 characters.
             </div>
-            <div class="help-block" ng-show="forms.deployImage.name.$error.maxlength">
+            <div class="help-block" ng-show="forms.deployImage.name.$error.maxlength" translate>
               Name can't have more than 24 characters.
             </div>
           </div>
           <div class="has-error" ng-show="nameTaken">
-            <span class="help-block">This name is already in use within the project. Please choose a different name.</span>
+            <span class="help-block" translate>This name is already in use within the project. Please choose a different name.</span>
           </div>
         </div>
         <osc-form-section
@@ -191,8 +191,8 @@
               class="btn btn-primary btn-lg"
               ng-click="create()"
               value=""
-              ng-disabled="forms.deployImage.$invalid || nameTaken || disableInputs">Create</button>
-          <a class="btn btn-default btn-lg" href="#" back>Cancel</a>
+              ng-disabled="forms.deployImage.$invalid || nameTaken || disableInputs" translate>Create</button>
+          <a class="btn btn-default btn-lg" href="#" back translate>Cancel</a>
         </div>
       </ng-form>
     </div>
@@ -200,17 +200,17 @@
     <div ng-if="!loading && import.error" class="empty-state-message text-center">
       <h2>
         <i class="pficon pficon-error-circle-o" aria-hidden="true"></i>
-        Could not load image metadata.
+        <translate>Could not load image metadata.</translate>
       </h2>
       <p>{{import.error | upperFirst}}</p>
-      <p>The image may not exist or it may be in a secure registry. Check that you have entered the image name correctly or <a href="" ng-click="openCreateWebhookSecretModal()">create an image pull secret</a> with your image registry credentials and try again.</p>
+      <p><translate>The image may not exist or it may be in a secure registry. Check that you have entered the image name correctly or</translate> <a href="" ng-click="openCreateWebhookSecretModal()" translate>create an image pull secret</a> <translate>with your image registry credentials and try again.</translate></p>
     </div>
 
     <div ng-if="!loading && import && !import.error && !import.image" class="empty-state-message text-center">
-      <h2>
+      <h2 translate>
         No image metadata found.
       </h2>
-      <p>Could not find any images for {{import.name | stripTag}}:{{import.tag}}.</p>
+      <p><span translate>Could not find any images for</span> {{import.name | stripTag}}:{{import.tag}}.</p>
     </div>
   </span>
 </div>

@@ -18,7 +18,8 @@ angular
       MembershipService,
       NotificationsService,
       RoleBindingsService,
-      RolesService) {
+      RolesService,
+      gettextCatalog) {
 
       var requestContext;
       var projectName = $routeParams.project;
@@ -209,16 +210,16 @@ angular
 
       var createModalScope = function(subjectName, kind, roleName, currentUserName) {
         var modalScope = {
-          title: 'Confirm Removal',
+          title: gettextCatalog.getString('Confirm Removal'),
           alerts: {},
           detailsMarkup: messages.remove.areYouSure.html.subject({
             roleName: roleName,
             kindName: humanizeKind(kind),
             subjectName:  subjectName
           }),
-          okButtonText: 'Remove',
+          okButtonText: gettextCatalog.getString('Remove'),
           okButtonClass: 'btn-danger',
-          cancelButtonText: 'Cancel'
+          cancelButtonText: gettextCatalog.getString('Cancel')
         };
         if(_.isEqual(subjectName, currentUserName)) {
           modalScope.detailsMarkup = messages.remove.areYouSure.html.self({

@@ -18,7 +18,8 @@ angular.module('openshiftConsole')
                         BreadcrumbsService,
                         Navigate,
                         NotificationsService,
-                        ProjectsService) {
+                        ProjectsService,
+                        gettextCatalog) {
     var watches = [];
     $scope.forms = {};
     $scope.projectName = $routeParams.project;
@@ -27,7 +28,7 @@ angular.module('openshiftConsole')
       name: $routeParams.configMap,
       kind: 'ConfigMap',
       namespace: $routeParams.project,
-      subpage: 'Edit Config Map'
+      subpage: gettextCatalog.getString('Edit Config Map')
     });
 
     var getVersion = function(resource) {
@@ -56,7 +57,7 @@ angular.module('openshiftConsole')
               name: $routeParams.configMap,
               object: configMap,
               project: project,
-              subpage: 'Edit Config Map'
+              subpage: gettextCatalog.getString('Edit Config Map')
             });
             $scope.configMap = configMap;
             watches.push(DataService.watchObject(configMapsVersion, $routeParams.configMap, context, function(newValue, action) {
@@ -64,7 +65,7 @@ angular.module('openshiftConsole')
               $scope.resourceDeleted = action === "DELETED";
             }));
           }, function(e) {
-            Navigate.toErrorPage("Could not load config map " + $routeParams.configMap + ". " +
+            Navigate.toErrorPage(gettextCatalog.getString("Could not load config map {{config}}. ", {config: $routeParams.configMap}) +
                                  $filter('getErrorDetails')(e));
           });
 
@@ -77,7 +78,7 @@ angular.module('openshiftConsole')
               .then(function() { // Success
                 NotificationsService.addNotification({
                   type: "success",
-                  message: "Config map " + $scope.configMap.metadata.name + " successfully updated."
+                  message: gettextCatalog.getString("Config map {{name}} successfully updated.", {name: $scope.configMap.metadata.name})
                 });
                 navigateBack();
               }, function(result) { // Failure
@@ -85,7 +86,7 @@ angular.module('openshiftConsole')
                 NotificationsService.addNotification({
                   id: "edit-config-map-error",
                   type: "error",
-                  message: "An error occurred updating the config map.",
+                  message: gettextCatalog.getString("An error occurred updating the config map."),
                   details: $filter('getErrorDetails')(result)
                 });
               });

@@ -21,7 +21,8 @@ angular.module('openshiftConsole')
                        NotificationsService,
                        ProjectsService,
                        SecretsService,
-                       keyValueEditorUtils) {
+                       keyValueEditorUtils,
+                       gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.buildConfigName = $routeParams.buildconfig;
     $scope.buildConfig = null;
@@ -53,7 +54,7 @@ angular.module('openshiftConsole')
     $scope.eventsVersion = APIService.getPreferredVersion('events');
     $scope.secretsVersion = APIService.getPreferredVersion('secrets');
 
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettextCatalog.getString("Loading...");
 
     $scope.aceLoaded = function(editor) {
       var session = editor.getSession();
@@ -107,14 +108,14 @@ angular.module('openshiftConsole')
         .then(function success() {
           NotificationsService.addNotification({
             type: "success",
-            message: "Environment variables for build config " + $scope.buildConfigName + " were successfully updated."
+            message: gettextCatalog.getString("Environment variables for build config {{name}} were successfully updated.", {name: $scope.buildConfigName})
           });
           $scope.forms.bcEnvVars.$setPristine();
         }, function error(e) {
           NotificationsService.addNotification({
             id: "save-bc-env-error",
             type: "error",
-            message: "An error occurred updating environment variables for build config " + $scope.buildConfigName + ".",
+            message: gettextCatalog.getString("An error occurred updating environment variables for build config {{name}}.", {name: $scope.buildConfigName}),
             details: $filter('getErrorDetails')(e)
           });
         });
@@ -159,7 +160,7 @@ angular.module('openshiftConsole')
       if (action === "DELETED") {
         $scope.alerts["deleted"] = {
           type: "warning",
-          message: "This build configuration has been deleted."
+          message: gettextCatalog.getString("This build configuration has been deleted.")
         };
         $scope.buildConfigDeleted = true;
       }
@@ -168,10 +169,10 @@ angular.module('openshiftConsole')
       } else {
         $scope.alerts["background_update"] = {
           type: "warning",
-          message: "This build configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data.",
+          message: gettextCatalog.getString("This build configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data."),
           links: [
             {
-              label: 'Reload Environment Variables',
+              label: gettextCatalog.getString('Reload Environment Variables'),
               onClick: function() {
                 $scope.clearEnvVarUpdates();
                 return true;
@@ -201,8 +202,8 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: e.status === 404 ? "This build configuration can not be found, it may have been deleted." : "The build configuration details could not be loaded.",
-              details: e.status === 404 ? "Any remaining build history for this build will be shown." : $filter('getErrorDetails')(e)
+              message: e.status === 404 ? gettextCatalog.getString("This build configuration can not be found, it may have been deleted.") : gettextCatalog.getString("The build configuration details could not be loaded."),
+              details: e.status === 404 ? gettextCatalog.getString("Any remaining build history for this build will be shown.") : $filter('getErrorDetails')(e)
             };
           }
         );
@@ -218,7 +219,7 @@ angular.module('openshiftConsole')
           NotificationsService.addNotification({
             id: "build-config-list-config-maps-error",
             type: "error",
-            message: "Could not load config maps.",
+            message: gettextCatalog.getString("Could not load config maps."),
             details: getErrorDetails(e)
           });
         });
@@ -236,14 +237,14 @@ angular.module('openshiftConsole')
             NotificationsService.addNotification({
               id: "build-config-list-secrets-error",
               type: "error",
-              message: "Could not load secrets.",
+              message: gettextCatalog.getString("Could not load secrets."),
               details: getErrorDetails(e)
             });
           });
         }
 
       watches.push(DataService.watch($scope.buildsVersion, context, function(builds, action, build) {
-        $scope.emptyMessage = "No builds to show";
+        $scope.emptyMessage = gettextCatalog.getString("No builds to show");
         if (!action) {
           $scope.unfilteredBuilds = BuildsService.validatedBuildsForBuildConfig($routeParams.buildconfig, builds.by('metadata.name'));
         } else {
@@ -287,7 +288,7 @@ angular.module('openshiftConsole')
           if (!LabelFilter.getLabelSelector().isEmpty() && $.isEmptyObject($scope.builds) && !$.isEmptyObject($scope.unfilteredBuilds)) {
             $scope.alerts["builds"] = {
               type: "warning",
-              details: "The active filters are hiding all builds."
+              details: gettextCatalog.getString("The active filters are hiding all builds.")
             };
           }
           else {

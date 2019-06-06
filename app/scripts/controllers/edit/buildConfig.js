@@ -21,7 +21,8 @@ angular.module('openshiftConsole')
                        ProjectsService,
                        SOURCE_URL_PATTERN,
                        SecretsService,
-                       keyValueEditorUtils) {
+                       keyValueEditorUtils,
+                       gettextCatalog) {
 
     $scope.projectName = $routeParams.project;
     $scope.buildConfig = null;
@@ -138,11 +139,11 @@ angular.module('openshiftConsole')
       var commandType = _.get($scope, 'buildHookSelection.type.id', '');
       switch (commandType) {
       case 'args':
-        return 'Enter the arguments that will be appended to the default image entry point.';
+        return gettextCatalog.getString('Enter the arguments that will be appended to the default image entry point.');
       case 'commandArgs':
-        return 'Enter the arguments that will be appended to the command.';
+        return gettextCatalog.getString('Enter the arguments that will be appended to the command.');
       case 'scriptArgs':
-        return 'Enter the arguments that will be appended to the script.';
+        return gettextCatalog.getString('Enter the arguments that will be appended to the script.');
       }
 
       return null;
@@ -238,8 +239,8 @@ angular.module('openshiftConsole')
         $scope.context = context;
 
         if (!AuthorizationService.canI('buildconfigs', 'update', $routeParams.project)) {
-          Navigate.toErrorPage('You do not have authority to update build config ' +
-                               $routeParams.buildconfig + '.', 'access_denied');
+          var msg = gettextCatalog.getString('You do not have authority to update build config {{buildconfig}}.',{buildconfig: $routeParams.buildconfig})
+          Navigate.toErrorPage(msg, 'access_denied');
           return;
         }
 
@@ -338,14 +339,14 @@ angular.module('openshiftConsole')
                 NotificationsService.addNotification({
                   id: "edit-build-config-conflict",
                   type: "warning",
-                  message: "This build configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again."
+                  message: gettextCatalog.getString("This build configuration has changed since you started editing it. You'll need to copy any changes you've made and edit again.")
                 });
               }
               if (action === "DELETED") {
                 NotificationsService.addNotification({
                   id: "edit-build-config-deleted",
                   type: "warning",
-                  message: "This build configuration has been deleted."
+                  message: gettextCatalog.getString("This build configuration has been deleted.")
                 });
                 $scope.disableInputs = true;
               }
@@ -358,7 +359,7 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: "The build configuration details could not be loaded.",
+              message: gettextCatalog.getString("The build configuration details could not be loaded."),
               details: "Reason: " + $filter('getErrorDetails')(e)
             };
           }
@@ -375,7 +376,7 @@ angular.module('openshiftConsole')
           NotificationsService.addNotification({
             id: "edit-build-config-list-config-maps-error",
             type: "error",
-            message: "Could not load config maps.",
+            message: gettextCatalog.getString("Could not load config maps."),
             details: getErrorDetails(e)
           });
         });
@@ -488,7 +489,7 @@ angular.module('openshiftConsole')
       return imageObject;
     };
 
-    // Return only webhook triggers that have defined type and their type object. 
+    // Return only webhook triggers that have defined type and their type object.
     var filterValidWebhookTriggers = function(triggers) {
       return _.filter(triggers, function(trigger) {
         return (!_.isEmpty(trigger.data.type) && !_.isEmpty(trigger.data[_.toLower(trigger.data.type)]));
@@ -625,7 +626,7 @@ angular.module('openshiftConsole')
         function() {
           NotificationsService.addNotification({
             type: "success",
-            message: "Build config " + $scope.updatedBuildConfig.metadata.name + " was successfully updated."
+            message: gettextCatalog.getString("Build config {{name}} was successfully updated.", {name: $scope.updatedBuildConfig.metadata.name})
           });
           navigateBack();
         },
@@ -635,7 +636,7 @@ angular.module('openshiftConsole')
           NotificationsService.addNotification({
             id: "edit-build-config-error",
             type: "error",
-            message: "An error occurred updating build config " + $scope.updatedBuildConfig.metadata.name + ".",
+            message: gettextCatalog.getString("An error occurred updating build config {{name}}.", {name: $scope.updatedBuildConfig.metadata.name}),
             details: $filter('getErrorDetails')(result)
           });
         }

@@ -22,7 +22,8 @@ angular.module('openshiftConsole')
                         Navigate,
                         OwnerReferencesService,
                         ProjectsService,
-                        StorageService) {
+                        StorageService,
+                        gettextCatalog) {
     var imageStreamImageRefByDockerReference = {}; // lets us determine if a particular container's docker image reference belongs to an imageStream
 
     $scope.projectName = $routeParams.project;
@@ -30,13 +31,13 @@ angular.module('openshiftConsole')
     $scope.replicaSetsForDeployment = {};
     $scope.unfilteredReplicaSetsForDeployment  = {};
     $scope.labelSuggestions = {};
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettextCatalog.getString("Loading...");
     $scope.forms = {};
     $scope.alerts = {};
     $scope.imagesByDockerReference = {};
     $scope.breadcrumbs = [
       {
-        title: "Deployments",
+        title: gettextCatalog.getString("Deployments"),
         link: "project/" + $routeParams.project + "/browse/deployments"
       },
       {
@@ -84,7 +85,7 @@ angular.module('openshiftConsole')
               if (action === "DELETED") {
                 $scope.alerts["deleted"] = {
                   type: "warning",
-                  message: "This deployment has been deleted."
+                  message: gettextCatalog.getString("This deployment has been deleted.")
                 };
               }
 
@@ -96,7 +97,7 @@ angular.module('openshiftConsole')
 
             // Watch replica sets for this deployment
             watches.push(DataService.watch(replicaSetsVersion, context, function(replicaSetData) {
-              $scope.emptyMessage = "No deployments to show";
+              $scope.emptyMessage = gettextCatalog.getString("No deployments to show");
 
               var replicaSets = replicaSetData.by('metadata.name');
               replicaSets = OwnerReferencesService.filterForController(replicaSets, deployment);
@@ -116,7 +117,7 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: e.status === 404 ? "This deployment can not be found, it may have been deleted." : "The deployment details could not be loaded.",
+              message: e.status === 404 ? gettextCatalog.getString("This deployment can not be found, it may have been deleted.") : gettextCatalog.getString("The deployment details could not be loaded."),
               details: $filter('getErrorDetails')(e)
             };
           }
@@ -154,7 +155,7 @@ angular.module('openshiftConsole')
           if (!LabelFilter.getLabelSelector().isEmpty() && _.isEmpty($scope.replicaSetsForDeployment) && !_.isEmpty($scope.unfilteredReplicaSetsForDeployment)) {
             $scope.alerts["filter-hiding-all"] = {
               type: "warning",
-              details: "The active filters are hiding all rollout history."
+              details: gettextCatalog.getString("The active filters are hiding all rollout history.")
             };
           }
           else {
@@ -174,7 +175,7 @@ angular.module('openshiftConsole')
             $scope.alerts = $scope.alerts || {};
             $scope.alerts["scale"] = {
               type: "error",
-              message: "An error occurred scaling the deployment.",
+              message: gettextCatalog.getString("An error occurred scaling the deployment."),
               details: $filter('getErrorDetails')(result)
             };
           };
@@ -191,9 +192,10 @@ angular.module('openshiftConsole')
             function(e) {
               $scope.updatingPausedState = false;
               $scope.alerts = $scope.alerts || {};
+              var status = paused ? "pausing" : "resuming";
               $scope.alerts["scale"] = {
                 type: "error",
-                message: "An error occurred " + (paused ? "pausing" : "resuming") + " the deployment.",
+                message: gettextCatalog.getString("An error occurred {{status}} the deployment.", {status: status}),
                 details: $filter('getErrorDetails')(e)
               };
             });
@@ -202,25 +204,25 @@ angular.module('openshiftConsole')
         $scope.removeVolume = function(volume) {
           var details;
           if (_.get($scope, 'deployment.spec.paused')) {
-            details = "This will remove the volume from the deployment.";
+            details = gettextCatalog.getString("This will remove the volume from the deployment.");
           } else {
-            details = "This will remove the volume from the deployment and start a new rollout.";
+            details = gettextCatalog.getString("This will remove the volume from the deployment and start a new rollout.");
           }
 
           if (volume.persistentVolumeClaim) {
-            details += " It will not delete the persistent volume claim.";
+            details += gettextCatalog.getString(" It will not delete the persistent volume claim.");
           } else if (volume.secret) {
-            details += " It will not delete the secret.";
+            details += gettextCatalog.getString(" It will not delete the secret.");
           } else if (volume.configMap) {
-            details += " It will not delete the config map.";
+            details += gettextCatalog.getString(" It will not delete the config map.");
           }
 
           var confirm = ModalsService.confirm({
-            title: "Remove volume " + volume.name + "?",
+            title: gettextCatalog.getString("Remove volume {{name}}?", {name: volume.name}),
             details: details,
-            okButtonText: "Remove",
+            okButtonText: gettextCatalog.getString("Remove"),
             okButtonClass: "btn-danger",
-            cancelButtonText: "Cancel"
+            cancelButtonText: gettextCatalog.getString("Cancel")
           });
 
           var removeVolume = function() {

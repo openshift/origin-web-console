@@ -15,7 +15,8 @@ angular.module("openshiftConsole")
                                      QuotaService,
                                      TaskList,
                                      SecretsService,
-                                     keyValueEditorUtils) {
+                                     keyValueEditorUtils,
+                                     gettextCatalog) {
 
     var imageStreamImagesVersion = APIService.getPreferredVersion('imagestreamimages');
     var configMapsVersion = APIService.getPreferredVersion('configmaps');
@@ -154,7 +155,7 @@ angular.module("openshiftConsole")
               // failure
               function(response) {
                 $scope.import = {
-                  error: $filter('getErrorDetails')(response) || 'An error occurred finding the image.'
+                  error: $filter('getErrorDetails')(response) || gettextCatalog.getString('An error occurred finding the image.')
                 };
                 $scope.loading = false;
               });
@@ -225,7 +226,7 @@ angular.module("openshiftConsole")
               // Don't show the runs as root warning for image stream tags.
               $scope.runsAsRoot = false;
             }, function(response) {
-              $scope.import.error = $filter('getErrorDetails')(response) || 'An error occurred.';
+              $scope.import.error = $filter('getErrorDetails')(response) || gettextCatalog.getString('An error occurred.');
               $scope.loading = false;
             });
           }, true);
@@ -258,7 +259,7 @@ angular.module("openshiftConsole")
               NotificationsService.addNotification({
                 id: "deploy-image-list-config-maps-error",
                 type: "error",
-                message: "Could not load config maps.",
+                message: gettextCatalog.getString("Could not load config maps."),
                 details: getErrorDetails(e)
               });
             });
@@ -274,7 +275,7 @@ angular.module("openshiftConsole")
               NotificationsService.addNotification({
                 id: "deploy-image-list-secrets-error",
                 type: "error",
-                message: "Could not load secrets.",
+                message: gettextCatalog.getString("Could not load secrets."),
                 details: getErrorDetails(e)
               });
             });
@@ -284,9 +285,9 @@ angular.module("openshiftConsole")
           var generatedResources;
           var createResources = function() {
             var titles = {
-              started: "Deploying image " + $scope.app.name + " to project " + displayName($scope.input.selectedProject),
-              success: "Deployed image " + $scope.app.name + " to project " + displayName($scope.input.selectedProject),
-              failure: "Failed to deploy image " + $scope.app.name + " to project " + displayName($scope.input.selectedProject)
+              started: gettextCatalog.getString("Deploying image {{name}} to project {{project}}", {name: $scope.app.name, project: displayName($scope.input.selectedProject)}),
+              success: gettextCatalog.getString("Deployed image {{name}} to project {{project}}", {name: $scope.app.name, project: displayName($scope.input.selectedProject)}),
+              failure: gettextCatalog.getString("Failed to deployed image {{name}} to project {{project}}", {name: $scope.app.name, project: displayName($scope.input.selectedProject)}),
             };
             TaskList.clear();
             TaskList.add(titles, {}, $scope.input.selectedProject.metadata.name, function() {
@@ -298,7 +299,7 @@ angular.module("openshiftConsole")
                   alerts = _.map(result.failure, function(failure) {
                     return {
                       type: "error",
-                      message: "Cannot create " + humanizeKind(failure.object.kind).toLowerCase() + " \"" + failure.object.metadata.name + "\". ",
+                      message: gettextCatalog.getString("Cannot create ") + humanizeKind(failure.object.kind).toLowerCase() + " \"" + failure.object.metadata.name + "\". ",
                       details: failure.data.message
                     };
                   });
@@ -306,14 +307,14 @@ angular.module("openshiftConsole")
                   alerts = alerts.concat(_.map(result.success, function(success) {
                     return {
                       type: "success",
-                      message: "Created " + humanizeKind(success.kind).toLowerCase() + " \"" + success.metadata.name + "\" successfully. "
+                      message: gettextCatalog.getString("Created ") + humanizeKind(success.kind).toLowerCase() + " \"" + success.metadata.name + "\" " + gettextCatalog.getString("successfully.")
                     };
                   }));
                 } else {
                   // Only show one success message when everything worked.
                   alerts = [{
                     type: "success",
-                    message: "All resources for image " + $scope.app.name + " were created successfully."
+                    message: gettextCatalog.getString("All resources for image {{name}} were created successfully.", {name: $scope.app.name})
                   }];
                 }
                 d.resolve({alerts: alerts, hasErrors: hasErrors});
@@ -340,11 +341,11 @@ angular.module("openshiftConsole")
                 modalConfig: function() {
                   return {
                     alerts: alerts,
-                    title: "Confirm Creation",
-                    details: "Problems were detected while checking your application configuration.",
-                    okButtonText: "Create Anyway",
+                    title: gettextCatalog.getString("Confirm Creation"),
+                    details: gettextCatalog.getString("Problems were detected while checking your application configuration."),
+                    okButtonText: gettextCatalog.getString("Create Anyway"),
                     okButtonClass: "btn-danger",
-                    cancelButtonText: "Cancel"
+                    cancelButtonText: gettextCatalog.getString("Cancel")
                   };
                 }
               }
@@ -397,7 +398,7 @@ angular.module("openshiftConsole")
                 NotificationsService.addNotification({
                   id: "deploy-image-create-project-error",
                   type: "error",
-                  message: "An error occurred creating project.",
+                  message: gettextCatalog.getString("An error occurred creating project."),
                   details: getErrorDetails(e)
                 });
               }

@@ -17,7 +17,8 @@ angular.module('openshiftConsole')
     AuthorizationService,
     DataService,
     Navigate,
-    ProjectsService) {
+    ProjectsService,
+    gettextCatalog) {
     AuthService.withUser();
 
     $scope.alerts = {};
@@ -26,49 +27,49 @@ angular.module('openshiftConsole')
     var alertInvalidImageStream = function(imageStream) {
       $scope.alerts.invalidImageStream = {
         type: "error",
-        message: "The requested image stream \"" + imageStream + "\" could not be loaded."
+        message: gettextCatalog.getString("The requested image stream\" {{image}} \" could not be loaded.", {image: imageStream})
       };
     };
 
     var alertInvalidImageTag = function(imageTag) {
       $scope.alerts.invalidImageTag = {
         type: "error",
-        message: "The requested image stream tag \"" + imageTag + "\" could not be loaded."
+        message: gettextCatalog.getString("The requested image stream tag \" {{tag}} \" could not be loaded.", {tag: imageTag})
       };
     };
 
     var alertInvalidName = function(name) {
       $scope.alerts.invalidImageStream = {
         type: "error",
-        message: "The app name \"" + name + "\" is not valid.  An app name is an alphanumeric (a-z, and 0-9) string with a maximum length of 24 characters, where the first character is a letter (a-z), and the '-' character is allowed anywhere except the first or last character."
+        message: gettextCatalog.getString("The app name \"{{name}}\" is not valid.  An app name is an alphanumeric (a-z, and 0-9) string with a maximum length of 24 characters, where the first character is a letter (a-z), and the '-' character is allowed anywhere except the first or last character.", {name: name})
       };
     };
 
     var alertInvalidNamespace = function(namespace) {
       $scope.alerts.invalidNamespace = {
         type: "error",
-        message: "Resources from the namespace \"" + namespace + "\" are not permitted."
+        message: gettextCatalog.getString("Resources from the namespace \"{{name}}\" are not permitted.", {name: namespace})
       };
     };
 
     var alertInvalidTemplate = function(template) {
       $scope.alerts.invalidTemplate = {
         type: "error",
-        message: "The requested template \"" + template + "\" could not be loaded."
+        message: gettextCatalog.getString("The requested template \"{{template}}\" could not be loaded.", {template: template})
       };
     };
 
     var alertResourceRequired = function() {
       $scope.alerts.resourceRequired = {
         type: "error",
-        message: "An image stream or template is required."
+        message: gettextCatalog.getString("An image stream or template is required.")
       };
     };
 
     var showInvalidResource = function() {
       $scope.alerts.invalidResource = {
         type: "error",
-        message: "Image streams and templates cannot be combined."
+        message: gettextCatalog.getString("Image streams and templates cannot be combined.")
       };
     };
 
@@ -79,7 +80,7 @@ angular.module('openshiftConsole')
       catch (e) {
         $scope.alerts.invalidTemplateParams = {
           type: "error",
-          message: "The templateParamsMap is not valid JSON. " + e
+          message: gettextCatalog.getString("The templateParamsMap is not valid JSON. ") + e
         };
       }
     };

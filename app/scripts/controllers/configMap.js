@@ -14,7 +14,8 @@ angular.module('openshiftConsole')
                         APIService,
                         BreadcrumbsService,
                         DataService,
-                        ProjectsService) {
+                        ProjectsService,
+                        gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.alerts = $scope.alerts || {};
     $scope.loaded = false;
@@ -33,7 +34,7 @@ angular.module('openshiftConsole')
       if (action === "DELETED") {
         $scope.alerts["deleted"] = {
           type: "warning",
-          message: "This config map has been deleted."
+          message: gettextCatalog.getString("This config map has been deleted.")
         };
       }
     };

@@ -13,7 +13,8 @@ angular.module('openshiftConsole')
                                          Navigate,
                                          NotificationsService,
                                          hashSizeFilter,
-                                         hasDeploymentConfigFilter) {
+                                         hasDeploymentConfigFilter,
+                                         gettextCatalog) {
     return {
       restrict: 'E',
       scope: {
@@ -89,7 +90,7 @@ angular.module('openshiftConsole')
             NotificationsService.addNotification({
               id: "deployment-scale-error",
               type: "error",
-              message: "An error occurred scaling " + kind + " " + scaleTarget.metadata.name + ".",
+              message: gettextCatalog.getString("An error occurred scaling {{kind}} {{name}}.", {kind: kind, name: scaleTarget.metadata.name}),
               details: $filter('getErrorDetails')(result)
             });
 

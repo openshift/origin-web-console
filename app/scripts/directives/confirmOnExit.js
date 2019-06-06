@@ -2,7 +2,7 @@
 
 // http://stackoverflow.com/questions/14852802/detect-unsaved-changes-and-alert-user-using-angularjs
 angular.module("openshiftConsole")
-  .directive("confirmOnExit", function(Logger) {
+  .directive("confirmOnExit", function(Logger, gettextCatalog) {
     return {
       scope: {
         dirty: '=',
@@ -17,7 +17,7 @@ angular.module("openshiftConsole")
         }
 
         var getMessage = function() {
-          return $scope.message || "You have unsaved changes. Leave this page anyway?";
+          return $scope.message || gettextCatalog.getString("You have unsaved changes. Leave this page anyway?");
         };
 
         var confirmBeforeUnload = function() {
@@ -57,7 +57,7 @@ angular.module("openshiftConsole")
           if ((end - start) < 50) {
             // Remember that the user is blocking dialogs. This is a per session settings.
             _.set(window, 'OPENSHIFT_CONSTANTS.CONFIRM_DIALOG_BLOCKED', true);
-            Logger.warn("Confirm on exit prompt appears to have been blocked by the browser.");
+            Logger.warn(gettextCatalog.getString("Confirm on exit prompt appears to have been blocked by the browser."));
           } else {
             event.preventDefault();
           }

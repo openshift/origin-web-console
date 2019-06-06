@@ -14,7 +14,8 @@ angular.module('openshiftConsole')
                                            DataService,
                                            ImageStreamsService,
                                            imageLayers,
-                                           ProjectsService) {
+                                           ProjectsService,
+                                           gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.imageStream = null;
     $scope.image = null;
@@ -57,7 +58,7 @@ angular.module('openshiftConsole')
           $scope.loaded = true;
           $scope.alerts["load"] = {
             type: "error",
-            message: "The image details could not be loaded.",
+            message: gettextCatalog.getString("The image details could not be loaded."),
             details: $filter('getErrorDetails')(e)
           };
         }
@@ -75,7 +76,7 @@ angular.module('openshiftConsole')
       if (!tagData) {
         $scope.alerts["load"] = {
           type: "error",
-          message: "The image tag was not found in the stream.",
+          message: gettextCatalog.getString("The image tag was not found in the stream."),
         };
         return;
       }
@@ -89,7 +90,7 @@ angular.module('openshiftConsole')
       if (action === "DELETED") {
         $scope.alerts["deleted"] = {
           type: "warning",
-          message: "This image stream has been deleted."
+          message: gettextCatalog.getString("This image stream has been deleted.")
         };
       }
     };
@@ -110,7 +111,7 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: "The image stream details could not be loaded.",
+              message: gettextCatalog.getString("The image stream details could not be loaded."),
               details: $filter('getErrorDetails')(e)
             };
           });

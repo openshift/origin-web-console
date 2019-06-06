@@ -19,9 +19,10 @@ angular.module('openshiftConsole')
                                               DataService,
                                               Navigate,
                                               NotificationsService,
-                                              ProjectsService) {
+                                              ProjectsService,
+                                              gettextCatalog) {
     if (!$routeParams.kind || !$routeParams.name) {
-      Navigate.toErrorPage("Kind or name parameter missing.");
+      Navigate.toErrorPage(gettextCatalog.getString("Kind or name parameter missing."));
       return;
     }
 
@@ -34,7 +35,7 @@ angular.module('openshiftConsole')
       // If returnURL is unspecified, the breadcrumbs directive defaults to back.
       link: $routeParams.returnURL
     }, {
-      title: "Edit YAML"
+      title: gettextCatalog.getString("Edit YAML")
     }];
 
     var navigateBack = function() {
@@ -58,7 +59,7 @@ angular.module('openshiftConsole')
         };
 
         if (!AuthorizationService.canI(resourceGroupVersion, 'update', $routeParams.project)) {
-          Navigate.toErrorPage('You do not have authority to update ' +
+          Navigate.toErrorPage(gettextCatalog.getString('You do not have authority to update ') +
                                humanizeKind($routeParams.kind) + ' ' + $routeParams.name + '.', 'access_denied');
           return;
         }
@@ -94,7 +95,7 @@ angular.module('openshiftConsole')
               $scope.modified = false;
               if (updated.kind !== original.kind) {
                 $scope.error = {
-                  message: 'Cannot change resource kind (original: ' + original.kind + ', modified: ' + (updated.kind || '<unspecified>') + ').'
+                  message: gettextCatalog.getString('Cannot change resource kind (original: ') + original.kind + ', modified: ' + (updated.kind || '<unspecified>') + ').'
                 };
                 return;
               }
@@ -106,7 +107,7 @@ angular.module('openshiftConsole')
                 return;
               }
               if (updatedGroupVersion.group !== groupVersion.group) {
-                $scope.error = { message: 'Cannot change resource group (original: ' + (groupVersion.group || '<none>') + ', modified: ' + (updatedGroupVersion.group || '<none>') + ').' };
+                $scope.error = { message: gettextCatalog.getString('Cannot change resource group (original: ') + (groupVersion.group || '<none>') + ', modified: ' + (updatedGroupVersion.group || '<none>') + ').' };
                 return;
               }
               if (!APIService.apiInfo(updatedGroupVersion)) {
@@ -125,15 +126,15 @@ angular.module('openshiftConsole')
                   if (newResourceVersion === editedResourceVersion) {
                     $scope.alerts['no-changes-applied'] = {
                       type: "warning",
-                      message: "No changes were applied to " + humanizeKind($routeParams.kind) + " " + $routeParams.name + ".",
-                      details: "Make sure any new fields you may have added are supported API fields."
+                      message: gettextCatalog.getString("No changes were applied to {{kind}} {{name}}.", {kind: humanizeKind($routeParams.kind), name: $routeParams.name}),
+                      details: gettextCatalog.getString("Make sure any new fields you may have added are supported API fields.")
                     };
                     $scope.updatingNow = false;
                     return;
                   }
                   NotificationsService.addNotification({
                       type: "success",
-                      message: humanizeKind($routeParams.kind, true) + " " + $routeParams.name + " was successfully updated."
+                      message: humanizeKind($routeParams.kind, true) + " " + $routeParams.name + gettextCatalog.getString(" was successfully updated.")
                   });
                   navigateBack();
                 },
@@ -161,7 +162,7 @@ angular.module('openshiftConsole')
           },
           // GET failure
           function(e) {
-            Navigate.toErrorPage("Could not load " + humanizeKind($routeParams.kind) + " '" + $routeParams.name + "'. " + $filter('getErrorDetails')(e));
+            Navigate.toErrorPage(gettextCatalog.getString("Could not load ") + humanizeKind($routeParams.kind) + " '" + $routeParams.name + "'. " + $filter('getErrorDetails')(e));
           });
 
           $scope.$on('$destroy', function(){

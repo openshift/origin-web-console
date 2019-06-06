@@ -103,7 +103,7 @@ angular.module('openshiftConsole')
       }
     };
   })
-  .directive('copyLoginToClipboard', function(NotificationsService) {
+  .directive('copyLoginToClipboard', function(NotificationsService, gettextCatalog) {
     return {
       restrict: 'E',
       replace: true,
@@ -117,17 +117,17 @@ angular.module('openshiftConsole')
           NotificationsService.addNotification({
             id: 'copy-login-command-success',
             type: 'success',
-            message: 'Login command copied.'
+            message: gettextCatalog.getString('Login command copied.')
           });
 
           var tokenWarningAlertID = 'openshift/token-warning';
           NotificationsService.addNotification({
             id: tokenWarningAlertID,
             type: 'warning',
-            message: 'A token is a form of a password. Do not share your API token.',
+            message: gettextCatalog.getString('A token is a form of a password. Do not share your API token.'),
             links: [{
               href: "",
-              label: "Don't Show Me Again",
+              label: gettextCatalog.getString("Don't Show Me Again"),
               onClick: function() {
                 NotificationsService.permanentlyHideNotification(tokenWarningAlertID);
                 // Return true close the existing notification.
@@ -140,7 +140,7 @@ angular.module('openshiftConsole')
           NotificationsService.addNotification({
             id: 'copy-login-command-error',
             type: 'error',
-            message: 'Unable to copy the login command.'
+            message: gettextCatalog.getString('Unable to copy the login command.')
           });
         });
         element.on('$destroy', function() {
@@ -300,15 +300,6 @@ angular.module('openshiftConsole')
           window.location.reload();
         }
 
-      }
-    };
-  })
-  .directive('placeholder', function(gettextCatalog){
-    return {
-      restrict: 'A',
-      link: function(scope, element, attrs){
-        var translatedPlaceholder = gettextCatalog.getString(attrs.placeholder);
-        element.attr('placeholder', translatedPlaceholder);
       }
     };
   });

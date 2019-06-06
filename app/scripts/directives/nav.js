@@ -11,7 +11,8 @@ angular.module('openshiftConsole')
       APIService,
       AuthorizationService,
       Constants,
-      HTMLService) {
+      HTMLService,
+      gettextCatalog) {
     var itemMatchesPath = function(item, path) {
       return (item.href === path) || _.some(item.prefixes, function(prefix) {
         return _.startsWith(path, prefix);
@@ -25,7 +26,53 @@ angular.module('openshiftConsole')
         var hoverDelay = 200;
         var hideDelay = hoverDelay + 100;
 
+        var navMap = {
+          "Overview": gettextCatalog.getString("Overview"),
+          "Applications": gettextCatalog.getString("Applications"),
+          "Deployments": gettextCatalog.getString("Deployments"),
+          "Stateful Sets": gettextCatalog.getString("Stateful Sets"),
+          "Pods": gettextCatalog.getString("Pods"),
+          "Services": gettextCatalog.getString("Services"),
+          "Routes": gettextCatalog.getString("Routes"),
+          "Provisioned Services": gettextCatalog.getString("Provisioned Services"),
+          "Builds": gettextCatalog.getString("Builds"),
+          "Pipelines": gettextCatalog.getString("Pipelines"),
+          "Images": gettextCatalog.getString("Images"),
+          "Resources": gettextCatalog.getString("Resources"),
+          "Quota": gettextCatalog.getString("Quota"),
+          "Membership": gettextCatalog.getString("Membership"),
+          "Config Maps": gettextCatalog.getString("Config Maps"),
+          "Secrets": gettextCatalog.getString("Secrets"),
+          "Other Resources": gettextCatalog.getString("Other Resources"),
+          "Storage": gettextCatalog.getString("Storage"),
+          "Monitoring": gettextCatalog.getString("Monitoring"),
+          "Events": gettextCatalog.getString("Events"),
+          "Logs": gettextCatalog.getString("Logs"),
+          "Metrics": gettextCatalog.getString("Metrics"),
+          "Catalog": gettextCatalog.getString("Catalog")
+        };
+
         $scope.navItems = Constants.PROJECT_NAVIGATION;
+
+        $scope.navItems.map(function(nav) {
+          nav.label = existInNavMap(nav.label);
+          if (nav.secondaryNavSections) {
+            nav.secondaryNavSections.map(function(secondaryNavSection) {
+              secondaryNavSection.items.map(function(item) {
+                item.label = existInNavMap(item.label);
+              })
+            })
+          }
+        });
+
+        function existInNavMap (label) {
+          if (navMap.hasOwnProperty(label)) {
+            return navMap[label];
+          } else {
+            return label;
+          }
+        }
+
         $scope.sidebar = {};
 
         var updateActive = function() {

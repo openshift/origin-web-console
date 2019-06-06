@@ -17,6 +17,7 @@
       'SecurityCheckService',
       'TaskList',
       'keyValueEditorUtils',
+      'gettextCatalog',
       ProcessTemplate
     ],
     controllerAs: '$ctrl',
@@ -44,7 +45,8 @@
                           QuotaService,
                           SecurityCheckService,
                           TaskList,
-                          keyValueEditorUtils) {
+                          keyValueEditorUtils,
+                          gettextCatalog) {
     var ctrl = this;
 
     var context;
@@ -99,9 +101,9 @@
     var processedResources;
     var createResources = function() {
       var titles = {
-        started: "Creating " + ctrl.templateDisplayName + " in project " + displayName(ctrl.selectedProject),
-        success: "Created " + ctrl.templateDisplayName + " in project " + displayName(ctrl.selectedProject),
-        failure: "Failed to create " + ctrl.templateDisplayName + " in project " + displayName(ctrl.selectedProject)
+        started: gettextCatalog.getString("Creating {{name}} in project {{project}}", {name: ctrl.templateDisplayName, project: displayName(ctrl.selectedProject)}),
+        success: gettextCatalog.getString("Created {{name}} in project {{project}}", {name: ctrl.templateDisplayName, project: displayName(ctrl.selectedProject)}),
+        failure: gettextCatalog.getString("Failed to create {{name}} in project {{project}}", {name: ctrl.templateDisplayName, project: displayName(ctrl.selectedProject)}),
       };
       var helpLinks = getHelpLinks(ctrl.template);
       TaskList.clear();
@@ -117,7 +119,7 @@
                 function(failure) {
                   alerts.push({
                     type: "error",
-                    message: "Cannot create " + humanize(failure.object.kind).toLowerCase() + " \"" + failure.object.metadata.name + "\". ",
+                    message: gettextCatalog.getString("Cannot create ") + humanize(failure.object.kind).toLowerCase() + " \"" + failure.object.metadata.name + "\". ",
                     details: failure.data.message
                   });
                 }
@@ -126,13 +128,12 @@
                 function(success) {
                   alerts.push({
                     type: "success",
-                    message: "Created " + humanize(success.kind).toLowerCase() + " \"" + success.metadata.name + "\" successfully. "
+                    message: gettextCatalog.getString("Created ") + humanize(success.kind).toLowerCase() + " \"" + success.metadata.name + "\"" + gettextCatalog.getString("successfully. ")
                   });
                 }
               );
             } else {
-              alerts.push({ type: "success", message: "All items in template " + ctrl.templateDisplayName +
-                " were created successfully."});
+              alerts.push({ type: "success", message: gettextCatalog.getString("All items in template {{name}} were created successfully.", {name: ctrl.templateDisplayName})});
             }
             d.resolve({alerts: alerts, hasErrors: hasErrors});
           }
@@ -158,11 +159,11 @@
           modalConfig: function() {
             return {
               alerts: alerts,
-              title: "Confirm Creation",
-              details: "We checked your application for potential problems. Please confirm you still want to create this application.",
-              okButtonText: "Create Anyway",
+              title: gettextCatalog.getString("Confirm Creation"),
+              details: gettextCatalog.getString("We checked your application for potential problems. Please confirm you still want to create this application."),
+              okButtonText: gettextCatalog.getString("Create Anyway"),
               okButtonClass: "btn-danger",
-              cancelButtonText: "Cancel"
+              cancelButtonText: gettextCatalog.getString("Cancel")
             };
           }
         }
@@ -252,7 +253,7 @@
             NotificationsService.addNotification({
               id: "process-template-error",
               type: "error",
-              message: "An error occurred processing the template.",
+              message: gettextCatalog.getString("An error occurred processing the template."),
               details: details
             });
           }
@@ -269,7 +270,7 @@
           NotificationsService.addNotification({
             id: "process-template-error",
             type: "error",
-            message: "An error occurred creating the project.",
+            message: gettextCatalog.getString("An error occurred creating the project."),
             details: details
           });
         }

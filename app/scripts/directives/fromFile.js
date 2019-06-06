@@ -13,7 +13,8 @@ angular.module("openshiftConsole")
                                   QuotaService,
                                   SecurityCheckService,
                                   TaskList,
-                                  ProjectsService) {
+                                  ProjectsService,
+                                  gettextCatalog) {
     return {
       restrict: "E",
       scope: {
@@ -57,11 +58,11 @@ angular.module("openshiftConsole")
               modalConfig: function() {
                 return {
                   alerts: alerts,
-                  title: "Confirm Creation",
-                  details: "We checked your application for potential problems. Please confirm you still want to create this application.",
-                  okButtonText: "Create Anyway",
+                  title: gettextCatalog.getString("Confirm Creation"),
+                  details: gettextCatalog.getString("We checked your application for potential problems. Please confirm you still want to create this application."),
+                  okButtonText: gettextCatalog.getString("Create Anyway"),
                   okButtonClass: "btn-danger",
-                  cancelButtonText: "Cancel"
+                  cancelButtonText: gettextCatalog.getString("Cancel")
                 };
               }
             }
@@ -191,7 +192,7 @@ angular.module("openshiftConsole")
               NotificationsService.addNotification({
                 id: "import-create-project-error",
                 type: "error",
-                message: "An error occurred creating project.",
+                message: gettextCatalog.getString("An error occurred creating project."),
                 details: getErrorDetails(e)
               });
             }
@@ -207,7 +208,7 @@ angular.module("openshiftConsole")
         function isKindValid(item) {
           if (!item.kind) {
             $scope.error = {
-              message: "Resource is missing kind field."
+              message: gettextCatalog.getString("Resource is missing kind field.")
             };
             return false;
           }
@@ -221,19 +222,19 @@ angular.module("openshiftConsole")
           }
           if (!item.metadata) {
             $scope.error = {
-              message: "Resource is missing metadata field."
+              message: gettextCatalog.getString("Resource is missing metadata field.")
             };
             return false;
           }
           if (!item.metadata.name) {
             $scope.error = {
-              message: "Resource name is missing in metadata field."
+              message: gettextCatalog.getString("Resource name is missing in metadata field.")
             };
             return false;
           }
           if (item.metadata.namespace && item.metadata.namespace !== $scope.input.selectedProject.metadata.name) {
             $scope.error = {
-              message: item.kind + " " + item.metadata.name + " can't be created in project " + item.metadata.namespace + ". Can't create resource in different projects."
+              message: item.kind + " " + item.metadata.name + gettextCatalog.getString(" can't be created in project {{name}}", {name: item.metadata.namespace}) + gettextCatalog.getString(". Can't create resource in different projects.")
             };
             return false;
           }
@@ -370,7 +371,7 @@ angular.module("openshiftConsole")
                   var kind = humanizeKind(resource.kind);
                   NotificationsService.addNotification({
                     type: "success",
-                    message: _.capitalize(kind) + " " + resource.metadata.name + " was successfully created."
+                    message: _.capitalize(kind) + " " + resource.metadata.name + gettextCatalog.getString(" was successfully created.")
                   });
                 }
 
@@ -381,7 +382,7 @@ angular.module("openshiftConsole")
                 NotificationsService.addNotification({
                   id: "from-file-error",
                   type: "error",
-                  message: "Unable to create the " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "'.",
+                  message: gettextCatalog.getString("Unable to create the ") + humanizeKind(resource.kind) + " '" + resource.metadata.name + "'.",
                   details: $filter('getErrorDetails')(result)
                 });
               });
@@ -394,7 +395,7 @@ angular.module("openshiftConsole")
                   var kind = humanizeKind(resource.kind);
                   NotificationsService.addNotification({
                     type: "success",
-                    message: _.capitalize(kind) + " " + resource.metadata.name + " was successfully updated."
+                    message: _.capitalize(kind) + " " + resource.metadata.name + gettextCatalog.getString(" was successfully updated.")
                   });
                 }
 
@@ -405,7 +406,7 @@ angular.module("openshiftConsole")
                 NotificationsService.addNotification({
                   id: "from-file-error",
                   type: "error",
-                  message: "Unable to update the " + humanizeKind(resource.kind) + " '" + resource.metadata.name + "'.",
+                  message: gettextCatalog.getString("Unable to update the ") + humanizeKind(resource.kind) + " '" + resource.metadata.name + "'.",
                   details: $filter('getErrorDetails')(result)
                 });
               });
@@ -415,9 +416,9 @@ angular.module("openshiftConsole")
         var displayName = $filter('displayName');
         function createResourceList(){
           var titles = {
-            started: "Creating resources in project " + displayName($scope.input.selectedProject),
-            success: "Creating resources in project " + displayName($scope.input.selectedProject),
-            failure: "Failed to create some resources in project " + displayName($scope.input.selectedProject)
+            started: gettextCatalog.getString("Creating resources in project {{name}}" ,{name: displayName($scope.input.selectedProject)}),
+            success: gettextCatalog.getString("Creating resources in project {{name}}" ,{name: displayName($scope.input.selectedProject)}),
+            failure: gettextCatalog.getString("Failed to create some resources in project {{name}}" ,{name: displayName($scope.input.selectedProject)}),
           };
           var helpLinks = {};
           TaskList.add(titles, helpLinks, $scope.input.selectedProject.metadata.name, function() {
@@ -434,7 +435,7 @@ angular.module("openshiftConsole")
                     function(failure) {
                       alerts.push({
                         type: "error",
-                        message: "Cannot create " + humanizeKind(failure.object.kind) + " \"" + failure.object.metadata.name + "\". ",
+                        message: gettextCatalog.getString("Cannot create ") + humanizeKind(failure.object.kind) + " \"" + failure.object.metadata.name + "\". ",
                         details: failure.data.message
                       });
                     }
@@ -443,16 +444,16 @@ angular.module("openshiftConsole")
                     function(success) {
                       alerts.push({
                         type: "success",
-                        message: "Created " + humanizeKind(success.kind) + " \"" + success.metadata.name + "\" successfully. "
+                        message: gettextCatalog.getString("Created ") + humanizeKind(success.kind) + " \"" + success.metadata.name + "\"" + gettextCatalog.getString("successfully.")
                       });
                     }
                   );
                 } else {
                   var alertMsg;
                   if ($scope.isList) {
-                    alertMsg = "All items in list were created successfully.";
+                    alertMsg = gettextCatalog.getString("All items in list were created successfully.");
                   } else {
-                    alertMsg = humanizeKind($scope.resourceKind) + " " + $scope.resourceName + " was successfully created.";
+                    alertMsg = humanizeKind($scope.resourceKind) + " " + $scope.resourceName + gettextCatalog.getString(" was successfully created.");
                   }
                   alerts.push({ type: "success", message: alertMsg});
                 }
@@ -466,9 +467,9 @@ angular.module("openshiftConsole")
 
         function updateResourceList(){
           var titles = {
-            started: "Updating resources in project " + displayName($scope.input.selectedProject),
-            success: "Updated resources in project " + displayName($scope.input.selectedProject),
-            failure: "Failed to update some resources in project " + displayName($scope.input.selectedProject)
+            started: gettextCatalog.getString("Updating resources in project {{name}}", {name: displayName($scope.input.selectedProject)}),
+            success: gettextCatalog.getString("Updated resources in project {{name}}", {name: displayName($scope.input.selectedProject)}),
+            failure: gettextCatalog.getString("Failed to update some resources in project {{name}}", {name: displayName($scope.input.selectedProject)}),
           };
           var helpLinks = {};
           TaskList.add(titles, helpLinks, $scope.input.selectedProject.metadata.name, function() {
@@ -485,7 +486,7 @@ angular.module("openshiftConsole")
                     function(failure) {
                       alerts.push({
                         type: "error",
-                        message: "Cannot update " + humanizeKind(failure.object.kind) + " \"" + failure.object.metadata.name + "\". ",
+                        message: gettextCatalog.getString("Cannot update ") + humanizeKind(failure.object.kind) + " \"" + failure.object.metadata.name + "\". ",
                         details: failure.data.message
                       });
                     }
@@ -494,16 +495,16 @@ angular.module("openshiftConsole")
                     function(success) {
                       alerts.push({
                         type: "success",
-                        message: "Updated " + humanizeKind(success.kind) + " \"" + success.metadata.name + "\" successfully. "
+                        message: gettextCatalog.getString("Updated ") + humanizeKind(success.kind) + " \"" + success.metadata.name + "\" " + gettextCatalog.getString("successfully.")
                       });
                     }
                   );
                 } else {
                   var alertMsg;
                   if ($scope.isList) {
-                    alertMsg = "All items in list were updated successfully.";
+                    alertMsg = gettextCatalog.getString("All items in list were updated successfully.");
                   } else {
-                    alertMsg = humanizeKind($scope.resourceKind) + " " + $scope.resourceName + " was successfully updated.";
+                    alertMsg = humanizeKind($scope.resourceKind) + " " + $scope.resourceName + gettextCatalog.getString(" was successfully updated.");
                   }
                   alerts.push({ type: "success", message: alertMsg});
                 }
@@ -513,7 +514,7 @@ angular.module("openshiftConsole")
                 var alerts = [];
                 alerts.push({
                     type: "error",
-                    message: "An error occurred updating the resources.",
+                    message: gettextCatalog.getString("An error occurred updating the resources."),
                     details: "Status: " + result.status + ". " + result.data
                   });
                 d.resolve({alerts: alerts});

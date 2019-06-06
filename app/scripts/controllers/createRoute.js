@@ -20,7 +20,8 @@ angular.module('openshiftConsole')
                        Navigate,
                        NotificationsService,
                        ProjectsService,
-                       keyValueEditorUtils) {
+                       keyValueEditorUtils,
+                       gettextCatalog) {
     $scope.renderOptions = {
       hideFilterWidget: true
     };
@@ -35,11 +36,11 @@ angular.module('openshiftConsole')
 
     $scope.breadcrumbs = [
       {
-         title: "Routes",
+         title: gettextCatalog.getString("Routes"),
          link: "project/" + $scope.projectName + "/browse/routes"
       },
       {
-        title: "Create Route"
+        title: gettextCatalog.getString("Create Route")
       }
     ];
 
@@ -62,7 +63,7 @@ angular.module('openshiftConsole')
         $scope.project = project;
 
         if (!AuthorizationService.canI(routesVersion, 'create', $routeParams.project)) {
-          Navigate.toErrorPage('You do not have authority to create routes in project ' + $routeParams.project + '.', 'access_denied');
+          Navigate.toErrorPage(gettextCatalog.getString('You do not have authority to create routes in project {{project}}.', {project: $routeParams.project}), 'access_denied');
           return;
         }
 
@@ -133,7 +134,7 @@ angular.module('openshiftConsole')
               .then(function() { // Success
                 NotificationsService.addNotification({
                     type: "success",
-                    message: "Route " + route.metadata.name + " was successfully created."
+                    message: gettextCatalog.getString("Route {{name}} was successfully created.", {name: route.metadata.name})
                 });
 
                 // Return to the previous page
@@ -143,7 +144,7 @@ angular.module('openshiftConsole')
                 NotificationsService.addNotification({
                   type: "error",
                   id: "create-route-error",
-                  message: "An error occurred creating the route.",
+                  message: gettextCatalog.getString("An error occurred creating the route."),
                   details: $filter('getErrorDetails')(result)
                 });
               });

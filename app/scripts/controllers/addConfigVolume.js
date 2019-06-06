@@ -22,9 +22,10 @@ angular.module('openshiftConsole')
                        NotificationsService,
                        ProjectsService,
                        StorageService,
-                       RELATIVE_PATH_PATTERN) {
+                       RELATIVE_PATH_PATTERN,
+                       gettextCatalog) {
     if (!$routeParams.kind || !$routeParams.name) {
-      Navigate.toErrorPage("Kind or name parameter missing.");
+      Navigate.toErrorPage(gettextCatalog.getString("Kind or name parameter missing."));
       return;
     }
 
@@ -36,7 +37,7 @@ angular.module('openshiftConsole')
     ];
 
     if (!_.includes(supportedKinds, $routeParams.kind)) {
-      Navigate.toErrorPage("Volumes are not supported for kind " + $routeParams.kind + ".");
+      Navigate.toErrorPage(gettextCatalog.getString("Volumes are not supported for kind {{kind}}.",{kind: $routeParams.kind}));
       return;
     }
 
@@ -59,7 +60,7 @@ angular.module('openshiftConsole')
       name: $routeParams.name,
       kind: $routeParams.kind,
       namespace: $routeParams.project,
-      subpage: 'Add Config Files'
+      subpage: gettextCatalog.getString('Add Config Files')
     });
 
     $scope.configMapVersion = APIService.getPreferredVersion('configmaps');
@@ -117,7 +118,7 @@ angular.module('openshiftConsole')
         $scope.project = project;
 
         if (!AuthorizationService.canI(resourceGroupVersion, 'update', $routeParams.project)) {
-          Navigate.toErrorPage('You do not have authority to update ' +
+          Navigate.toErrorPage(gettextCatalog.getString('You do not have authority to update ') +
                                humanizeKind($routeParams.kind) + ' ' + $routeParams.name + '.', 'access_denied');
           return;
         }
@@ -132,7 +133,7 @@ angular.module('openshiftConsole')
             $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
               object: object,
               project: project,
-              subpage: 'Add Config Files'
+              subpage: gettextCatalog.getString('Add Config Files')
             });
           },
           function(e) {
@@ -148,7 +149,7 @@ angular.module('openshiftConsole')
             return;
           }
 
-          displayError('Could not load config maps', getErrorDetails(e));
+          displayError(gettextCatalog.getString('Could not load config maps'), getErrorDetails(e));
         });
 
         DataService.list($scope.secretVersion, context, null, { errorNotification: false }).then(function(secretData) {
@@ -159,7 +160,7 @@ angular.module('openshiftConsole')
             return;
           }
 
-          displayError('Could not load secrets', getErrorDetails(e));
+          displayError(gettextCatalog.getString('Could not load secrets'), getErrorDetails(e));
         });
 
         var isContainerSelected = function(container) {
@@ -249,14 +250,14 @@ angular.module('openshiftConsole')
             function() {
               NotificationsService.addNotification({
                 type: "success",
-                message: "Successfully added " + sourceKind + " " + source.metadata.name + " to " + targetKind + " " + $routeParams.name + "."
+                message: gettextCatalog.getString("Successfully added ") + sourceKind + " " + source.metadata.name + gettextCatalog.getString(" to ") + targetKind + " " + $routeParams.name + "."
               });
 
               navigateBack();
             },
             function(result) {
               $scope.disableInputs = false;
-              displayError("An error occurred attaching the " + sourceKind + " to the " + targetKind + ".", getErrorDetails(result));
+              displayError(gettextCatalog.getString("An error occurred attaching the {{sourceKind}} to the {{targetKind}}.", {sourceKind: sourceKind, targetKind:targetKind}), getErrorDetails(result));
             }
           );
         };

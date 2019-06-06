@@ -22,9 +22,10 @@ angular.module('openshiftConsole')
                        NotificationsService,
                        ProjectsService,
                        StorageService,
-                       RELATIVE_PATH_PATTERN) {
+                       RELATIVE_PATH_PATTERN,
+                       gettextCatalog) {
     if (!$routeParams.kind || !$routeParams.name) {
-      Navigate.toErrorPage("Kind or name parameter missing.");
+      Navigate.toErrorPage(gettextCatalog.getString("Kind or name parameter missing."));
       return;
     }
 
@@ -37,7 +38,7 @@ angular.module('openshiftConsole')
 
     var humanizeKind = $filter('humanizeKind');
     if (!_.includes(supportedKinds, $routeParams.kind)) {
-      Navigate.toErrorPage("Storage is not supported for kind " + humanizeKind($routeParams.kind) + ".");
+      Navigate.toErrorPage(gettextCatalog.getString("Storage is not supported for kind {{kind}}.", {kind: humanizeKind($routeParams.kind)}));
       return;
     }
 
@@ -64,7 +65,7 @@ angular.module('openshiftConsole')
       name: $routeParams.name,
       kind: $routeParams.kind,
       namespace: $routeParams.project,
-      subpage: 'Add Storage'
+      subpage: gettextCatalog.getString('Add Storage')
     });
 
     $scope.pvcVersion = APIService.getPreferredVersion('persistentvolumeclaims');
@@ -77,7 +78,7 @@ angular.module('openshiftConsole')
         $scope.project = project;
 
         if (!AuthorizationService.canI(resourceGroupVersion, 'update', $routeParams.project)) {
-          Navigate.toErrorPage('You do not have authority to update ' +
+          Navigate.toErrorPage(gettextCatalog.getString('You do not have authority to update ') +
                                humanizeKind($routeParams.kind) + ' ' + $routeParams.name + '.', 'access_denied');
           return;
         }
@@ -152,14 +153,14 @@ angular.module('openshiftConsole')
               $scope.breadcrumbs = BreadcrumbsService.getBreadcrumbs({
                 object: resource,
                 project: project,
-                subpage: 'Add Storage'
+                subpage: gettextCatalog.getString('Add Storage')
               });
               var podTemplate = _.get(resource, 'spec.template');
               $scope.existingVolumeNames = StorageService.getVolumeNames(podTemplate);
               updateVolumeName();
             },
             function(e) {
-              displayError($routeParams.name + " could not be loaded.", getErrorDetails(e));
+              displayError($routeParams.name + gettextCatalog.getString(" could not be loaded."), getErrorDetails(e));
             }
           );
 
@@ -225,17 +226,17 @@ angular.module('openshiftConsole')
               function() {
                 var details;
                 if (!mountPath) {
-                  details = "No mount path was provided. The volume reference was added to the configuration, but it will not be mounted into running pods.";
+                  details = gettextCatalog.getString("No mount path was provided. The volume reference was added to the configuration, but it will not be mounted into running pods.");
                 }
                 NotificationsService.addNotification({
                   type: "success",
-                  message: "Persistent volume claim " + persistentVolumeClaim.metadata.name + " added to " + humanizeKind($routeParams.kind) + " " + $routeParams.name + ".",
+                  message: gettextCatalog.getString("Persistent volume claim {{name}} added to {{kind}} {{route}}.", {name: persistentVolumeClaim.metadata.name, kind: humanizeKind($routeParams.kind), route: $routeParams.name}),
                   details: details
                 });
                 navigateBack();
               },
               function(result) {
-                displayError("An error occurred attaching the persistent volume claim to the " + humanizeKind($routeParams.kind) + ".", getErrorDetails(result));
+                displayError(gettextCatalog.getString("An error occurred attaching the persistent volume claim to the {{kind}}.", {kind: humanizeKind($routeParams.kind)}), getErrorDetails(result));
                 $scope.disableInputs = false;
               }
             );

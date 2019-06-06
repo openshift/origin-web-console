@@ -10,7 +10,8 @@ angular.module('openshiftConsole')
                                            ConversionService,
                                            MetricsCharts,
                                            MetricsService,
-                                           ModalsService) {
+                                           ModalsService,
+                                           gettextCatalog) {
     return {
       restrict: 'E',
       scope: {
@@ -390,7 +391,7 @@ angular.module('openshiftConsole')
             var alertID = 'metrics-failed-' + scope.uniqueID;
             scope.alerts[alertID] = {
               type: 'error',
-              message: 'An error occurred updating metrics.',
+              message: gettextCatalog.getString('An error occurred updating metrics.'),
               links: [{
                 href: '',
                 label: 'Retry',

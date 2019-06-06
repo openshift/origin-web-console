@@ -6,34 +6,34 @@
       <!-- Getting started -->
       <div class="empty-state-message text-center">
         <div ng-if="project.metadata.name | canIAddToProject">
-          <h2>Get started with your project.</h2>
-          <p>
+          <h2 translate>Get started with your project.</h2>
+          <p translate>
             Add content to your project from the catalog of web frameworks, databases, and other components. You may also deploy an existing image, create or replace resources from their YAML or JSON definitions, or select an item shared from another project.
           </p>
           <div class="empty-state-message-main-action">
-            <button class="btn btn-primary btn-lg" ng-click="browseCatalog()">
+            <button class="btn btn-primary btn-lg" ng-click="browseCatalog()" translate>
               Browse Catalog
             </button>
           </div>
           <div class="empty-state-message-secondary-action">
-            <button class="btn btn-default btn-sm" ng-click="showOrderingPanel('deployImage')">
+            <button class="btn btn-default btn-sm" ng-click="showOrderingPanel('deployImage')" translate>
               Deploy Image
             </button>
-            <button class="btn btn-default btn-sm" ng-click="showOrderingPanel('fromFile')">
+            <button class="btn btn-default btn-sm" ng-click="showOrderingPanel('fromFile')" translate>
               Import YAML / JSON
             </button>
-            <button class="btn btn-default btn-sm" ng-click="showOrderingPanel('fromProject')">
+            <button class="btn btn-default btn-sm" ng-click="showOrderingPanel('fromProject')" translate>
               Select from Project
             </button>
           </div>
         </div>
         <div ng-if="!(project.metadata.name | canIAddToProject)">
-          <h2>Welcome to project {{projectName}}.</h2>
+          <h2 translate>Welcome to project {{projectName}}.</h2>
           <ng-include src="'views/_request-access.html'"></ng-include>
         </div>
       </div>
     </div>
-    <div ng-if="overview.showLoading" class="container-fluid loading-message">
+    <div ng-if="overview.showLoading" class="container-fluid loading-message" translate>
       Loading...
     </div>
     <div ng-if="!overview.showGetStarted && !overview.showLoading">
@@ -62,7 +62,7 @@
                 <form role="form" class="search-pf has-button">
                   <div class="form-group filter-controls has-clear">
                     <div class="search-pf-input-group">
-                      <label for="name-filter" class="sr-only">Filter by name</label>
+                      <label for="name-filter" class="sr-only" translate>Filter by name</label>
                       <input
                         type="text"
                         class="form-control"
@@ -87,7 +87,7 @@
             </div>
             <div class="vertical-divider"></div>
             <div class="view-by-options">
-              <span class="data-toolbar-label">List by</span>
+              <span class="data-toolbar-label" translate>List by</span>
               <ui-select class="data-toolbar-dropdown" ng-model="overview.viewBy" search-enabled="false">
                 <ui-select-match>{{$select.selected.label}}</ui-select-match>
                 <ui-select-choices repeat="option.id as option in overview.viewByOptions">
@@ -111,15 +111,15 @@
           <alerts alerts="overview.state.alerts"></alerts>
           <div ng-if="overview.everythingFiltered && overview.viewBy !== 'pipeline'">
             <div class="empty-state-message text-center h2">
-              The filter is hiding all resources.
-              <button type="button" class="btn btn-link inline-btn-link" ng-click="overview.clearFilter()">Clear All Filters</button>
+              <translate>The filter is hiding all resources.</translate>
+              <button type="button" class="btn btn-link inline-btn-link" ng-click="overview.clearFilter()" translate>Clear All Filters</button>
             </div>
           </div>
           <div ng-if="!overview.everythingFiltered || overview.viewBy === 'pipeline'">
             <div ng-if="overview.viewBy === 'app'" ng-repeat="app in overview.apps">
               <div ng-if="app" class="app-heading">
                 <h2>
-                  <div class="component-label">Application</div>
+                  <div class="component-label" translate>Application</div>
                   <span ng-bind-html="app | highlightKeywords : overview.state.filterKeywords"></span>
                 </h2>
                 <div class="overview-routes" ng-if="overview.routesToDisplayByApp[app] | size">
@@ -134,7 +134,7 @@
                   </h3>
                 </div>
               </div>
-              <h2 ng-if="!app">
+              <h2 ng-if="!app" translate>
                 Other Resources
               </h2>
               <div class="list-pf">
@@ -268,18 +268,18 @@
             <div ng-if="overview.viewBy === 'pipeline'">
               <!-- TODO: Reuse pipelines empty state message from pipelines.html -->
               <div ng-if="!overview.pipelineBuildConfigs.length" class="empty-state-message text-center">
-                <h2>No pipelines.</h2>
+                <h2 translate>No pipelines.</h2>
                 <div ng-if="project.metadata.name | canIAddToProject">
                   <p>
-                    No pipelines have been added to project {{projectName}}.
+                    <span translate>pipelines have been added to project {{projectName}}.</span>
                     <br>
-                    Learn more about
+                    <translate>Learn more about</translate>
                     <a ng-href="{{ 'pipeline-builds' | helpLink}}" target="_blank">Pipeline Builds</a>
-                    and the
+                    <translate>and the</translate>
                     <a ng-href="{{ 'pipeline-plugin' | helpLink}}" target="_blank">OpenShift Pipeline Plugin</a>.
                   </p>
                   <p ng-if="(project.metadata.name | canIAddToProject) && overview.samplePipelineURL">
-                    <a ng-href="{{overview.samplePipelineURL}}" class="btn btn-lg btn-primary">
+                    <a ng-href="{{overview.samplePipelineURL}}" class="btn btn-lg btn-primary" translate>
                       Create Sample Pipeline
                     </a>
                   </p>
@@ -290,8 +290,8 @@
               </div>
               <div ng-if="(overview.pipelineBuildConfigs | hashSize) && !(overview.filteredPipelineBuildConfigs | hashSize)">
                 <div class="empty-state-message text-center h2">
-                  All pipelines are filtered.
-                  <button type="button" class="btn btn-link inline-btn-link" ng-click="overview.clearFilter()">Clear All Filters</button>
+                  <translate>All pipelines are filtered.</translate>
+                  <button type="button" class="btn btn-link inline-btn-link" ng-click="overview.clearFilter()" translate>Clear All Filters</button>
                 </div>
               </div>
               <div ng-repeat="pipeline in overview.filteredPipelineBuildConfigs track by (pipeline | uid)">
@@ -299,7 +299,7 @@
                   <button
                       class="btn btn-default"
                       ng-if="overview.buildConfigsInstantiateVersion | canI : 'create'"
-                      ng-click="overview.startBuild(pipeline)">
+                      ng-click="overview.startBuild(pipeline)" translate>
                     Start Pipeline
                   </button>
                 </div>
@@ -307,7 +307,7 @@
                   <div class="component-label">Pipeline</div>
                   <span ng-bind-html="pipeline.metadata.name | highlightKeywords : overview.state.filterKeywords"></span>
                 </h2>
-                <div ng-if="!(overview.recentPipelinesByBuildConfig[pipeline.metadata.name] | hashSize)" class="mar-bottom-lg">
+                <div ng-if="!(overview.recentPipelinesByBuildConfig[pipeline.metadata.name] | hashSize)" class="mar-bottom-lg" translate>
                   No pipeline runs.
                 </div>
                 <div ng-if="overview.recentPipelinesByBuildConfig[pipeline.metadata.name] | hashSize" class="build-pipelines">
@@ -318,7 +318,7 @@
                     </div>
                   </div>
                 </div>
-                <div ng-if="!overview.deploymentConfigsByPipeline[pipeline.metadata.name].length" class="mar-bottom-lg">
+                <div ng-if="!overview.deploymentConfigsByPipeline[pipeline.metadata.name].length" class="mar-bottom-lg" translate>
                   This pipeline is not associated with any deployments.
                 </div>
                 <div ng-if="overview.deploymentConfigsByPipeline[pipeline.metadata.name].length" class="list-pf">
@@ -335,7 +335,7 @@
 
               <!-- Currently we only filter the pipelines. Hide "Other Resources" if a pipeline filter is active or if we're showing the pipeline empty state message. -->
               <div class="list-pf" ng-if="overview.pipelineViewHasOtherResources && !overview.hidePipelineOtherResources">
-                <h2>Other Resources</h2>
+                <h2 translate>Other Resources</h2>
                 <overview-list-row
                      ng-repeat="deploymentConfig in overview.deploymentConfigsNoPipeline track by (deploymentConfig | uid)"
                      ng-init="dcName = deploymentConfig.metadata.name"
@@ -391,7 +391,7 @@
             </div>
             <!-- Show Kubevirt Virtual Machines -->
             <div ng-if="(overview.filteredOfflineVirtualMachines | size) && !overview.hidePipelineOtherResources">
-              <h2>Virtual Machines</h2>
+              <h2 translate>Virtual Machines</h2>
               <div class="list-pf">
                 <virtual-machine-row
                   ng-repeat="ovm in overview.filteredOfflineVirtualMachines track by (ovm | uid)"
@@ -401,7 +401,7 @@
             </div>
             <!-- Show provisioned services. -->
             <div ng-if="overview.filteredServiceInstances.length && !overview.hidePipelineOtherResources">
-              <h2>
+              <h2 translate>
                 Provisioned Services
               </h2>
               <div class="list-pf">

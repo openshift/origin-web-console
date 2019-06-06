@@ -13,7 +13,8 @@ angular.module('openshiftConsole')
                                              DataService,
                                              Logger,
                                              ProjectsService,
-                                             $filter) {
+                                             $filter,
+                                             gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.service = null;
     $scope.services = null;
@@ -31,7 +32,7 @@ angular.module('openshiftConsole')
     ];
 
     $scope.podFailureReasons = {
-      "Pending": "This pod will not receive traffic until all of its containers have been created."
+      "Pending":gettextCatalog.getString("This pod will not receive traffic until all of its containers have been created.")
     };
 
     var podsVersion = APIService.getPreferredVersion('pods');
@@ -93,7 +94,7 @@ angular.module('openshiftConsole')
       if (action === "DELETED") {
         $scope.alerts["deleted"] = {
           type: "warning",
-          message: "This service has been deleted."
+          message: gettextCatalog.getString("This service has been deleted.")
         };
       }
     };
@@ -112,7 +113,7 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: "The service details could not be loaded.",
+              message: gettextCatalog.getString("The service details could not be loaded."),
               details: $filter('getErrorDetails')(e)
             };
           }

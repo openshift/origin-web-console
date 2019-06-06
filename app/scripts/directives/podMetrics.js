@@ -12,7 +12,8 @@ angular.module('openshiftConsole')
                                     MetricsCharts,
                                     MetricsService,
                                     ModalsService,
-                                    usageValueFilter) {
+                                    usageValueFilter,
+                                    gettextCatalog) {
     return {
       restrict: 'E',
       scope: {
@@ -333,7 +334,7 @@ angular.module('openshiftConsole')
           var alertID = 'metrics-failed-' + scope.uniqueID;
           scope.alerts[alertID] = {
             type: 'error',
-            message: 'An error occurred updating metrics for pod ' + _.get(scope, 'pod.metadata.name', '<unknown>') + '.',
+            message: gettextCatalog.getString('An error occurred updating metrics for pod {{pod}}.', {pod:  _.get(scope, 'pod.metadata.name', '<unknown>')}),
             links: [{
               href: '',
               label: 'Retry',

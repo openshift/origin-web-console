@@ -15,7 +15,8 @@ angular.module('openshiftConsole')
     DataService,
     ImageStreamsService,
     Navigate,
-    ProjectsService) {
+    ProjectsService,
+    gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.imageStream = null;
     $scope.tags = [];
@@ -32,7 +33,7 @@ angular.module('openshiftConsole')
         title: $routeParams.imagestream
       }
     ];
-    $scope.emptyMessage = "Loading...";
+    $scope.emptyMessage = gettextCatalog.getString("Loading...");
 
     $scope.imageStreamsVersion = APIService.getPreferredVersion('imagestreams');
 
@@ -47,14 +48,14 @@ angular.module('openshiftConsole')
           function(imageStream) {
             $scope.loaded = true;
             $scope.imageStream = imageStream;
-            $scope.emptyMessage = "No tags to show";
+            $scope.emptyMessage = gettextCatalog.getString("No tags to show");
 
             // If we found the item successfully, watch for changes on it
             watches.push(DataService.watchObject($scope.imageStreamsVersion, $routeParams.imagestream, context, function(imageStream, action) {
               if (action === "DELETED") {
                 $scope.alerts["deleted"] = {
                   type: "warning",
-                  message: "This image stream has been deleted."
+                  message: gettextCatalog.getString("This image stream has been deleted.")
                 };
               }
               $scope.imageStream = imageStream;
@@ -66,7 +67,7 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: "The image stream details could not be loaded.",
+              message: gettextCatalog.getString("The image stream details could not be loaded."),
               details: $filter('getErrorDetails')(e)
             };
           });

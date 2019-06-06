@@ -11,7 +11,8 @@ angular.module("openshiftConsole")
                       DataService,
                       Navigate,
                       NotificationsService,
-                      Logger) {
+                      Logger,
+                      gettextCatalog) {
 
     var horizontalPodAutoscalersVersion = APIService.getPreferredVersion('horizontalpodautoscalers');
 
@@ -82,7 +83,7 @@ angular.module("openshiftConsole")
           .then(function() {
             NotificationsService.addNotification({
                 type: "success",
-                message: "Horizontal pod autoscaler " + hpa.metadata.name + " was marked for deletion."
+                message: gettextCatalog.getString("Horizontal pod autoscaler {{name}} was marked for deletion.", {name: hpa.metadata.name})
             });
           })
           .catch(function(err) {
@@ -90,10 +91,10 @@ angular.module("openshiftConsole")
               name: hpa.metadata.name,
               data: {
                 type: "error",
-                message: "Horizontal pod autoscaler " + hpa.metadata.name + " could not be deleted."
+                message: gettextCatalog.getString("Horizontal pod autoscaler {{name}} could not be deleted.", {name: hpa.metadata.name})
               }
             });
-            Logger.error("HPA " + hpa.metadata.name + " could not be deleted.", err);
+            Logger.error(gettextCatalog.getString("HPA {{name}} could not be deleted.", {name: hpa.metadata.name}), err);
           });
         };
 
@@ -160,7 +161,7 @@ angular.module("openshiftConsole")
             .then(function() {
               NotificationsService.addNotification({
                   type: "success",
-                  message: formattedResource + " was marked for deletion."
+                  message: formattedResource + gettextCatalog.getString(" was marked for deletion.")
               });
 
               if (scope.success) {
@@ -180,11 +181,11 @@ angular.module("openshiftConsole")
                 name: resourceName,
                 data: {
                   type: "error",
-                  message: _.capitalize(formattedResource) + "\'" + " could not be deleted.",
+                  message: _.capitalize(formattedResource) + "\'" + gettextCatalog.getString(" could not be deleted."),
                   details: $filter('getErrorDetails')(err)
                 }
               });
-              Logger.error(formattedResource + " could not be deleted.", err);
+              Logger.error(formattedResource + gettextCatalog.getString(" could not be deleted."), err);
             });
           });
         };

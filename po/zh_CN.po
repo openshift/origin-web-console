@@ -12,35 +12,1631 @@ msgstr ""
 "X-Generator: Poedit 2.2.3\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+#: app/scripts/directives/fromFile.js:237
+msgid ". Can't create resource in different projects."
+msgstr ".在不同的项目中无法创建资源."
+
+#: app/scripts/directives/oscFileInput.js:197
+msgid ". The web console has a 5 MiB file limit."
+msgstr "web console 限制文件5M以下."
+
+#: app/views/directives/deploy-image.html:144
+msgid "A name is required."
+msgstr "名称必须."
+
+#: app/scripts/directives/util.js:127
+msgid "A token is a form of a password. Do not share your API token."
+msgstr "token是密码的一种形式，勿与API token共享."
+
+#: app/scripts/controllers/util/error.js:17
+msgid "Access denied"
+msgstr "拒绝访问"
+
+#: app/scripts/controllers/addConfigVolume.js:136
+#: app/scripts/controllers/addConfigVolume.js:63
+msgid "Add Config Files"
+msgstr "添加添加配置文件"
+
+#: app/scripts/controllers/attachPVC.js:156
+#: app/scripts/controllers/attachPVC.js:68
+msgid "Add Storage"
+msgstr "添加存储"
+
+#: app/views/overview.html:10
+msgid ""
+"Add content to your project from the catalog of web frameworks, databases, "
+"and other components. You may also deploy an existing image, create or "
+"replace resources from their YAML or JSON definitions, or select an item "
+"shared from another project."
+msgstr ""
+"从catalog中添加 web frameworks, databases, 以及其他 components到你的项目中, "
+"你可能也需要部署已有的镜像，从他们的YAML 或者 JSON definitions中创建或者替换"
+"资源，或者选择一项与其他项目共用。"
+
+#: app/scripts/directives/fromFile.js:454
+msgid "All items in list were created successfully."
+msgstr "列表中所有项已全部被创建成功."
+
+#: app/scripts/directives/fromFile.js:505
+msgid "All items in list were updated successfully."
+msgstr "列表中所有项已全部被更新成功."
+
+#: app/scripts/directives/processTemplate.js:136
+msgid "All items in template {{name}} were created successfully."
+msgstr "{{name}} template中的所有项已创建成功."
+
+#: app/views/overview.html:293
+msgid "All pipelines are filtered."
+msgstr "所有pipelines已被过滤掉."
+
+#: app/scripts/controllers/create/createFromImage.js:312
+msgid "All resources for application {{name}} were created successfully."
+msgstr " {{name}} 应用的所有资源已被创建成功."
+
+#: app/scripts/directives/deployImage.js:317
+msgid "All resources for image {{name}} were created successfully."
+msgstr "{{name}}镜像的所有资源已被创建成功."
+
+#: app/scripts/controllers/util/error.js:33
+msgid "An error has occurred"
+msgstr "发生错误"
+
+#: app/scripts/directives/addConfigToApplication.js:186
+msgid "An error occurred  adding {{source}} {{name}} to {{target}} {{app}}."
+msgstr "添加{{source}} {{name}}到 {{target}} {{app}}出错."
+
+#: app/scripts/controllers/attachPVC.js:239
+msgid ""
+"An error occurred attaching the persistent volume claim to the {{kind}}."
+msgstr "挂载persistent volume claim到{{kind}}出错."
+
+#: app/scripts/controllers/addConfigVolume.js:260
+msgid "An error occurred attaching the {{sourceKind}} to the {{targetKind}}."
+msgstr "挂载 {{sourceKind}} 到 {{targetKind}}出错."
+
+#: app/scripts/directives/deployImage.js:401
+#: app/scripts/directives/fromFile.js:195
+msgid "An error occurred creating project."
+msgstr "创建项目出错."
+
+#: app/scripts/controllers/createConfigMap.js:83
+msgid "An error occurred creating the config map."
+msgstr "创建 config map出错."
+
+#: app/scripts/controllers/edit/autoscaler.js:118
+#: app/scripts/controllers/edit/autoscaler.js:176
+msgid "An error occurred creating the horizontal pod autoscaler."
+msgstr "创建 horizontal pod autoscaler出错."
+
+#: app/scripts/directives/processTemplate.js:273
+msgid "An error occurred creating the project."
+msgstr "创建项目出错."
+
+#: app/scripts/controllers/createRoute.js:147
+msgid "An error occurred creating the route."
+msgstr "创建路由出错."
+
+#: app/scripts/directives/deployImage.js:158
+msgid "An error occurred finding the image."
+msgstr "查找镜像出错."
+
+#: app/scripts/controllers/overview.js:454
+msgid "An error occurred getting metrics."
+msgstr "获取metrics发生错误."
+
+#: app/scripts/directives/processTemplate.js:256
+msgid "An error occurred processing the template."
+msgstr "processing template发生错误."
+
+#: app/scripts/controllers/createPersistentVolumeClaim.js:93
+msgid "An error occurred requesting storage."
+msgstr "requesting storage发生错误."
+
+#: app/scripts/controllers/deploymentConfig.js:248
+msgid "An error occurred scaling the deployment config."
+msgstr " scaling deployment config发生错误."
+
+#: app/scripts/controllers/deployment.js:178
+msgid "An error occurred scaling the deployment."
+msgstr " scaling the deployment发生错误."
+
+#: app/scripts/directives/deploymentDonut.js:93
+msgid "An error occurred scaling {{kind}} {{name}}."
+msgstr "scaling {{kind}} {{name}}发生错误."
+
+#: app/scripts/controllers/replicaSet.js:447
+msgid "An error occurred scaling."
+msgstr "scaling发生错误."
+
+#: app/scripts/controllers/edit/buildConfig.js:639
+msgid "An error occurred updating build config {{name}}."
+msgstr "更新build config {{name}}出现错误."
+
+#: app/scripts/controllers/edit/deploymentConfig.js:390
+msgid "An error occurred updating deployment config {{name}}."
+msgstr "更新deployment config {{name}}出现错误."
+
+#: app/scripts/controllers/buildConfig.js:118
+msgid ""
+"An error occurred updating environment variables for build config {{name}}."
+msgstr "为 build config {{name}}更新环境变量出现错误."
+
+#: app/scripts/directives/editEnvironmentVariables.js:146
+msgid "An error occurred updating environment variables for {{kind}} {{name}}."
+msgstr "为 {{kind}} {{name}}更新环境变量出现错误."
+
+#: app/scripts/directives/podMetrics.js:337
+msgid "An error occurred updating metrics for pod {{pod}}."
+msgstr "为pod {{pod}}更新metrics出现错误."
+
+#: app/scripts/directives/deploymentMetrics.js:394
+msgid "An error occurred updating metrics."
+msgstr "更新metrics发生错误."
+
+#: app/scripts/controllers/edit/route.js:197
+msgid "An error occurred updating route {{routeName}}."
+msgstr "更新 route {{routeName}}发生错误."
+
+#: app/scripts/controllers/edit/configMap.js:89
+msgid "An error occurred updating the config map."
+msgstr "更新config map发生错误。"
+
+#: app/scripts/directives/fromFile.js:517
+msgid "An error occurred updating the resources."
+msgstr "更新资源发生错误."
+
+#: app/scripts/directives/createSecret.js:293
+msgid "An error occurred while creating the secret."
+msgstr "创建secret出现错误."
+
+#: app/scripts/directives/createSecret.js:237
+msgid ""
+"An error occurred while linking the secret with service account {{link}}."
+msgstr "链接secret和service account {{link}}出现错误."
+
+#: app/scripts/controllers/edit/project.js:70
+msgid "An error occurred while updating the project"
+msgstr "更新项目出现错误"
+
+#: app/scripts/controllers/deploymentConfig.js:266
+msgid "An error occurred {{status}} the deployment config."
+msgstr " deployment config出现错误 {{status}}."
+
+#: app/scripts/controllers/deployment.js:198
+msgid "An error occurred {{status}} the deployment."
+msgstr "deployment出现错误{{status}}."
+
+#: app/scripts/directives/deployImage.js:229
+msgid "An error occurred."
+msgstr "出现错误."
+
+#: app/scripts/controllers/createFromURL.js:65
+msgid "An image stream or template is required."
+msgstr "image stream 或 template是必须的."
+
+#: app/scripts/controllers/buildConfig.js:206
+msgid "Any remaining build history for this build will be shown."
+msgstr "该build的全部remaining build history都将显示."
+
+#: app/scripts/controllers/deploymentConfig.js:109
+msgid "Any remaining deployment history for this deployment will be shown."
+msgstr "该deployment的全部remaining deployment history都将显示."
+
+#: app/views/overview.html:122
+msgid "Application"
+msgstr "应用"
+
+#: app/scripts/directives/nav.js:31
+msgid "Applications"
+msgstr "应用"
+
+#: app/scripts/controllers/pod.js:393
+msgid ""
+"Are you sure you want to leave with the debug terminal open? The debug pod "
+"will not be deleted unless you close the dialog."
+msgstr "确定离开打开的debug terminal？该debug pod不会被删除除非关闭对话框."
+
+#: app/scripts/controllers/edit/autoscaler.js:41
+msgid "Autoscaling not supported for kind {{kind}}."
+msgstr "{{kind}}类型不支持自动扩缩容."
+
+#: app/scripts/directives/bindService.js:185
+#: app/scripts/directives/bindService.js:81
+#: app/scripts/directives/bindService.js:90
+msgid "Bind"
+msgstr ""
+
+#: app/scripts/directives/bindService.js:146
+msgid "Binding"
+msgstr ""
+
+#: app/views/overview.html:14
+msgid "Browse Catalog"
+msgstr "浏览目录"
+
+#: app/scripts/controllers/edit/buildConfig.js:629
+msgid "Build config {{name}} was successfully updated."
+msgstr "Build config{{name}}更新成功."
+
+#: app/scripts/controllers/build.js:152
+msgid "Build configuration {{name}} has been deleted."
+msgstr "Build配置 {{name}}已被删除."
+
+#: app/scripts/directives/nav.js:38
+msgid "Builds"
+msgstr ""
+
 #: app/scripts/directives/util.js:287
 msgid "CN"
 msgstr "中文"
+
+#: app/scripts/controllers/create/createFromImage.js:336
+#: app/scripts/controllers/deployment.js:225
+#: app/scripts/controllers/deploymentConfig.js:302
+#: app/scripts/controllers/membership.js:222
+#: app/scripts/controllers/replicaSet.js:493
+#: app/scripts/directives/deployImage.js:348
+#: app/scripts/directives/fromFile.js:65
+#: app/scripts/directives/processTemplate.js:166
+#: app/views/directives/deploy-image.html:195
+msgid "Cancel"
+msgstr "取消"
+
+#: app/scripts/controllers/edit/yaml.js:110
+msgid "Cannot change resource group (original:"
+msgstr "无法修改资源组 (original:"
+
+#: app/scripts/controllers/edit/yaml.js:98
+msgid "Cannot change resource kind (original:"
+msgstr "无法修改资源类型 (original:"
+
+#: app/scripts/controllers/create/createFromImage.js:298
+#: app/scripts/directives/deployImage.js:302
+#: app/scripts/directives/fromFile.js:438
+#: app/scripts/directives/processTemplate.js:122
+msgid "Cannot create"
+msgstr "无法创建"
+
+#: app/scripts/controllers/create/createFromImage.js:41
+msgid "Cannot create from source: a base image tag was not specified"
+msgstr "无法从资源中创建:image tag不明确"
+
+#: app/scripts/controllers/create/createFromImage.js:37
+msgid "Cannot create from source: a base image was not specified"
+msgstr "无法从资源中创建:image不明确"
+
+#: app/scripts/controllers/create/createFromImage.js:220
+#: app/scripts/controllers/create/createFromImage.js:225
+msgid "Cannot create from source: the specified image could not be retrieved."
+msgstr "无法从资源中创建:image无法获取."
+
+#: app/scripts/controllers/newfromtemplate.js:35
+msgid "Cannot create from template: a template name was not specified."
+msgstr "无法从模板中创建:模板名称不明确."
+
+#: app/scripts/controllers/newfromtemplate.js:210
+msgid ""
+"Cannot create from template: the specified template could not be retrieved."
+msgstr "无法从模板中创建:模板无法获取."
+
+#: app/scripts/directives/fromFile.js:489
+msgid "Cannot update"
+msgstr "无法更新"
+
+#: app/scripts/directives/nav.js:52
+msgid "Catalog"
+msgstr "目录"
+
+#: app/scripts/controllers/create/browseCategory.js:45
+msgid "Catalog category {{category}} not found."
+msgstr "未发现 {{category}}目录."
+
+#: app/scripts/controllers/create/browseCategory.js:56
+msgid "Catalog category {{category}}/{{subcategory}}not found."
+msgstr "未发现{{category}}/{{subcategory}}目录."
+
+#: app/scripts/controllers/util/error.js:28
+msgid "Check Server Connection"
+msgstr "检查Server连接"
+
+#: app/views/overview.html:115 app/views/overview.html:294
+msgid "Clear All Filters"
+msgstr "清空过滤"
+
+#: app/scripts/directives/bindService.js:107
+#: app/scripts/directives/deployImageDialog.js:59
+#: app/scripts/directives/fromFileDialog.js:105
+#: app/scripts/directives/processTemplateDialog.js:299
+#: app/scripts/directives/unbindService.js:80
+msgid "Close"
+msgstr "关闭"
+
+#: app/scripts/controllers/createConfigMap.js:28
+#: app/scripts/directives/nav.js:44
+msgid "Config Maps"
+msgstr ""
+
+#: app/scripts/controllers/createConfigMap.js:74
+msgid "Config map {{name}} successfully created."
+msgstr "Config map{{name}}创建成功."
+
+#: app/scripts/controllers/edit/configMap.js:81
+msgid "Config map {{name}} successfully updated."
+msgstr "Config map{{name}}更新成功。"
+
+#: app/scripts/directives/processTemplateDialog.js:67
+msgid "Configuration"
+msgstr "配置"
+
+#: app/scripts/controllers/create/createFromImage.js:332
+#: app/scripts/directives/deployImage.js:344
+#: app/scripts/directives/fromFile.js:61
+#: app/scripts/directives/processTemplate.js:162
+msgid "Confirm Creation"
+msgstr "确认创建"
+
+#: app/scripts/controllers/membership.js:213
+msgid "Confirm Removal"
+msgstr "确认移除"
+
+#: app/scripts/directives/confirmOnExit.js:60
+msgid "Confirm on exit prompt appears to have been blocked by the browser."
+msgstr ""
+
+#: app/scripts/controllers/pod.js:381 app/scripts/controllers/pod.js:428
+msgid "Could not debug container"
+msgstr "无法debug容器"
+
+#: app/scripts/controllers/pod.js:353
+msgid "Could not delete pod"
+msgstr "无法删除pod"
+
+#: app/views/directives/deploy-image.html:213
+msgid ""
+"Could not find any images for {{import.name | stripTag}}:{{import.tag}}."
+msgstr ""
+
+#: app/scripts/controllers/edit/yaml.js:165
+msgid "Could not load"
+msgstr "无法加载"
+
+#: app/scripts/controllers/edit/configMap.js:68
+msgid "Could not load config map {{config}}."
+msgstr "无法加载{{config}}config map."
+
+#: app/scripts/controllers/addConfigVolume.js:152
+#: app/scripts/controllers/edit/deploymentConfig.js:168
+msgid "Could not load config maps"
+msgstr "无法加载config maps"
+
+#: app/scripts/controllers/buildConfig.js:222
+#: app/scripts/controllers/create/createFromImage.js:172
+#: app/scripts/controllers/edit/buildConfig.js:379
+#: app/scripts/directives/deployImage.js:262
+msgid "Could not load config maps."
+msgstr "无法加载config maps."
+
+#: app/views/directives/deploy-image.html:203
+msgid "Could not load image metadata."
+msgstr "无法加载 image metadata."
+
+#: app/scripts/controllers/edit/route.js:115
+msgid "Could not load route {{routeName}}."
+msgstr "无法加载{{routeName}}路由."
+
+#: app/scripts/controllers/addConfigVolume.js:163
+#: app/scripts/controllers/edit/deploymentConfig.js:186
+msgid "Could not load secrets"
+msgstr "无法加载secrets"
+
+#: app/scripts/controllers/buildConfig.js:240
+#: app/scripts/controllers/create/createFromImage.js:194
+#: app/scripts/directives/deployImage.js:278
+msgid "Could not load secrets."
+msgstr "无法加载secrets."
+
+#: app/scripts/directives/buildPipeline.js:34
+msgid "Could not parse Jenkins status as JSON"
+msgstr "Jenkins状态无法解析为JSON"
+
+#: app/scripts/controllers/newfromtemplate.js:46
+msgid "Could not prefill parameter values."
+msgstr "无法预填参数值."
+
+#: app/scripts/directives/oscFileInput.js:219
+msgid "Could not read file"
+msgstr "无法读取文件"
+
+#: app/scripts/directives/fromFileDialog.js:108
+#: app/scripts/directives/processTemplateDialog.js:285
+#: app/views/directives/deploy-image.html:190
+msgid "Create"
+msgstr "创建"
+
+#: app/scripts/controllers/create/createFromImage.js:334
+#: app/scripts/directives/deployImage.js:346
+#: app/scripts/directives/fromFile.js:63
+#: app/scripts/directives/processTemplate.js:164
+msgid "Create Anyway"
+msgstr "创建"
+
+#: app/scripts/controllers/createConfigMap.js:32
+msgid "Create Config Map"
+msgstr "创建Config Map"
+
+#: app/scripts/controllers/createRoute.js:43
+msgid "Create Route"
+msgstr "创建路由"
+
+#: app/views/overview.html:282
+msgid "Create Sample Pipeline"
+msgstr "创建Sample Pipeline"
+
+#: app/scripts/controllers/createSecret.js:32
+msgid "Create Secret"
+msgstr "创建Secret"
+
+#: app/scripts/controllers/createPersistentVolumeClaim.js:35
+msgid "Create Storage"
+msgstr "创建存储"
+
+#: app/scripts/directives/deployImage.js:310
+#: app/scripts/directives/fromFile.js:447
+#: app/scripts/directives/processTemplate.js:131
+msgid "Created"
+msgstr "创建"
+
+#: app/scripts/controllers/create/createFromImage.js:279
+msgid "Created application {{name}} in project {{projectName}}"
+msgstr "{{projectName}}中创建 {{name}}应用成功."
+
+#: app/scripts/controllers/create/createFromImage.js:307
+msgid "Created {{kind}}  {{name}}  successfully."
+msgstr "创建{{kind}}  {{name}}成功."
+
+#: app/scripts/directives/processTemplate.js:105
+msgid "Created {{name}} in project {{project}}"
+msgstr "在{{project}}中创建{{name}}"
+
+#: app/scripts/controllers/create/createFromImage.js:278
+msgid "Creating application {{name}} in project {{projectName}}"
+msgstr "在{{projectName}}中创建 {{name}}应用."
+
+#: app/scripts/directives/fromFile.js:419
+#: app/scripts/directives/fromFile.js:420
+msgid "Creating resources in project {{name}}"
+msgstr "在 {{name}}项目中创建资源"
+
+#: app/scripts/directives/processTemplate.js:104
+msgid "Creating {{name}} in project {{project}}"
+msgstr "在{{project}}项目中创建{{name}}"
+
+#: app/scripts/controllers/projects.js:112
+msgid "Creation Date"
+msgstr "创建时间"
+
+#: app/scripts/controllers/projects.js:108
+msgid "Creator"
+msgstr "创建人"
+
+#: app/scripts/controllers/quota.js:27
+msgid ""
+"Defines minimum and maximum constraints for runtime resources such as memory "
+"and CPU."
+msgstr "定义资源，如：内存、CPU的最大和最小运行时间."
+
+#: app/scripts/directives/unbindService.js:75
+msgid "Delete"
+msgstr "删除"
+
+#: app/scripts/directives/deployImageDialog.js:62
+msgid "Deploy"
+msgstr "部署"
+
+#: app/views/overview.html:19
+msgid "Deploy Image"
+msgstr "部署镜像"
+
+#: app/views/directives/deploy-image.html:4
+msgid "Deploy an existing image from an image stream tag or image registry."
+msgstr "从 image stream tag 或image registry部署已有的镜像."
+
+#: app/scripts/directives/deployImage.js:289
+msgid "Deployed image {{name}} to project {{project}}"
+msgstr "已部署{{name}}到 {{project}}."
+
+#: app/scripts/directives/deployImage.js:288
+msgid "Deploying image {{name}} to project {{project}}"
+msgstr "正在部署{{name}}到 {{project}}."
+
+#: app/scripts/controllers/edit/deploymentConfig.js:380
+msgid "Deployment config {{name}} was successfully updated."
+msgstr "Deployment config{{name}}更新成功."
+
+#: app/scripts/controllers/deployment.js:40 app/scripts/directives/nav.js:32
+msgid "Deployments"
+msgstr ""
+
+#: app/scripts/controllers/projects.js:100
+msgid "Display Name"
+msgstr "显示名称"
+
+#: app/scripts/controllers/overview.js:461
+#: app/scripts/controllers/storage.js:49 app/scripts/directives/util.js:130
+msgid "Don't Show Me Again"
+msgstr "不再显示"
 
 #: app/scripts/directives/util.js:290
 msgid "EN"
 msgstr "英文"
 
+#: app/scripts/controllers/edit/deploymentConfig.js:104
+#: app/scripts/controllers/edit/route.js:39
+msgid "Edit"
+msgstr "编辑"
+
+#: app/scripts/controllers/edit/configMap.js:31
+#: app/scripts/controllers/edit/configMap.js:60
+msgid "Edit Config Map"
+msgstr "编辑Config Map"
+
+#: app/scripts/controllers/edit/deploymentConfig.js:40
+msgid "Edit Deployment Config"
+msgstr "编辑Deployment Config"
+
+#: app/scripts/controllers/edit/healthChecks.js:48
+#: app/scripts/controllers/edit/healthChecks.js:97
+msgid "Edit Health Checks"
+msgstr "编辑Health Checks"
+
+#: app/scripts/controllers/setLimits.js:107
+#: app/scripts/controllers/setLimits.js:58
+msgid "Edit Resource Limits"
+msgstr "编辑Resource Limits"
+
+#: app/scripts/controllers/edit/yaml.js:38
+msgid "Edit YAML"
+msgstr "编辑YAML"
+
+#: app/scripts/controllers/edit/route.js:70
+msgid ""
+"Editing routes with non-service targets is unsupported. You can edit the "
+"route with the \"Edit YAML\" action instead."
+msgstr "不支持编辑non-service targets路由，你可以用“编辑YAML”来替代."
+
+#: app/scripts/controllers/edit/buildConfig.js:144
+msgid "Enter the arguments that will be appended to the command."
+msgstr "输入的参数将会被添加到命令中."
+
+#: app/scripts/controllers/edit/buildConfig.js:142
+msgid ""
+"Enter the arguments that will be appended to the default image entry point."
+msgstr "输入的参数将会被添加到默认的 image entry point."
+
+#: app/scripts/controllers/edit/buildConfig.js:146
+msgid "Enter the arguments that will be appended to the script."
+msgstr "输入的参数将会被添加到script."
+
+#: app/scripts/controllers/buildConfig.js:111
+msgid ""
+"Environment variables for build config {{name}} were successfully updated."
+msgstr "build config {{name}}环境变量更新成功."
+
+#: app/scripts/directives/editEnvironmentVariables.js:139
+msgid "Environment variables for{{kind}} {{name}} were successfully updated."
+msgstr "{{kind}} {{name}}环境变量更新成功."
+
+#: app/scripts/controllers/events.js:23 app/scripts/directives/nav.js:49
+msgid "Events"
+msgstr ""
+
+#: app/scripts/directives/fromFile.js:421
+msgid "Failed to create some resources in project {{name}}"
+msgstr "在 {{name}}中创建资源失败."
+
+#: app/scripts/controllers/create/createFromImage.js:280
+msgid "Failed to create {{name}} in project {{projectName}}"
+msgstr "在 {{projectName}}中创建 {{name}} 失败."
+
+#: app/scripts/directives/processTemplate.js:106
+msgid "Failed to create {{name}} in project {{project}}"
+msgstr "在 {{project}}中创建 {{name}} 失败."
+
+#: app/scripts/directives/deployImage.js:290
+msgid "Failed to deployed image {{name}} to project {{project}}"
+msgstr "部署{{name}}到 {{project}}失败"
+
+#: app/scripts/directives/fromFile.js:472
+msgid "Failed to update some resources in project {{name}}"
+msgstr "在 {{name}}更新资源失败"
+
+#: app/scripts/directives/processTemplateDialog.js:124
+msgid "Filter by Keyword"
+msgstr "按关键词过滤"
+
+#: app/views/overview.html:65
+msgid "Filter by name"
+msgstr "按名称过滤"
+
+#: app/views/overview.html:9
+msgid "Get started with your project."
+msgstr "开始你的项目."
+
+#: app/scripts/directives/deleteLink.js:97
+msgid "HPA {{name}} could not be deleted."
+msgstr "无法删除HPA {{name}}."
+
+#: app/scripts/controllers/edit/healthChecks.js:37
+#: app/scripts/controllers/setLimits.js:38
+msgid "Health checks are not supported for kind {{kind}}."
+msgstr "Health checks不支持{{kind}}类型."
+
+#: app/scripts/directives/deleteLink.js:94
+msgid "Horizontal pod autoscaler {{name}} could not be deleted."
+msgstr "无法删除Horizontal pod autoscaler {{name}} ."
+
+#: app/scripts/controllers/edit/autoscaler.js:167
+msgid "Horizontal pod autoscaler {{name}} successfully created."
+msgstr "Horizontal pod autoscaler {{name}} 创建成功."
+
+#: app/scripts/controllers/edit/autoscaler.js:109
+msgid "Horizontal pod autoscaler {{name}} successfully updated."
+msgstr "Horizontal pod autoscaler {{name}} 更新成功."
+
+#: app/scripts/directives/deleteLink.js:86
+msgid "Horizontal pod autoscaler {{name}} was marked for deletion."
+msgstr "Horizontal pod autoscaler {{name}} 被标记用于删除."
+
+#: app/views/directives/deploy-image.html:142
+msgid "Identifies the resources created for this image."
+msgstr "为该镜像创建资源认证."
+
+#: app/scripts/directives/deployImageDialog.js:26
+msgid "Image"
+msgstr "镜像"
+
+#: app/views/directives/deploy-image.html:33
+msgid "Image search is only available for existing projects."
+msgstr "只能在已存在的项目中搜索镜像."
+
+#: app/scripts/controllers/createFromURL.js:72
+msgid "Image streams and templates cannot be combined."
+msgstr "Image streams 和 templates无法结合。"
+
+#: app/views/directives/deploy-image.html:88
+msgid ""
+"Image {{import.name}} runs as the\n"
+"            root user which might not be permitted by your cluster\n"
+"            administrator."
+msgstr "集群管理员不允许以root用户运行{{import.name}}镜像."
+
+#: app/scripts/directives/nav.js:40
+msgid "Images"
+msgstr "镜像"
+
+#: app/views/overview.html:22
+msgid "Import YAML / JSON"
+msgstr "导入YAML/JSON"
+
+#: app/scripts/directives/processTemplateDialog.js:57
+msgid "Information"
+msgstr "信息"
+
+#: app/scripts/controllers/util/error.js:23
+msgid "Invalid request"
+msgstr "不合法请求"
+
+#: app/scripts/controllers/deployment.js:217
+#: app/scripts/controllers/deploymentConfig.js:294
+#: app/scripts/controllers/replicaSet.js:485
+msgid "It will not delete the config map."
+msgstr "将删除config map."
+
+#: app/scripts/controllers/deployment.js:213
+#: app/scripts/controllers/deploymentConfig.js:290
+#: app/scripts/controllers/replicaSet.js:481
+msgid "It will not delete the persistent volume claim."
+msgstr "不删除persistent volume claim."
+
+#: app/scripts/controllers/deployment.js:215
+#: app/scripts/controllers/deploymentConfig.js:292
+#: app/scripts/controllers/replicaSet.js:483
+msgid "It will not delete the secret."
+msgstr "不删除secret."
+
+#: app/scripts/controllers/edit/deploymentConfig.js:237
+msgid "Keep some existing {{name}} strategy parameters?"
+msgstr "保留当前{{name}}参数?"
+
+#: app/scripts/directives/processTemplateDialog.js:123
+msgid "Keyword"
+msgstr "关键词"
+
+#: app/scripts/controllers/addConfigVolume.js:28
+#: app/scripts/controllers/attachPVC.js:28
+#: app/scripts/controllers/edit/autoscaler.js:28
+#: app/scripts/controllers/edit/healthChecks.js:25
+#: app/scripts/controllers/edit/yaml.js:25
+#: app/scripts/controllers/setLimits.js:26
+msgid "Kind or name parameter missing."
+msgstr "缺少类型或名称."
+
 #: app/scripts/directives/util.js:284
 msgid "Language"
 msgstr "语言"
 
-#~ msgid "Browse Catalog"
-#~ msgstr "浏览目录"
+#: app/views/directives/deploy-image.html:69
+msgid "Learn More"
+msgstr "了解更多"
 
-#~ msgid "Deploy Image"
-#~ msgstr "部署镜像"
+#: app/views/overview.html:276
+msgid "Learn more about"
+msgstr "了解更多关于"
 
-#~ msgid "Import YAML / JSON"
-#~ msgstr "导入 YAML / JSON"
+#: app/scripts/controllers/quota.js:25
+msgid "Limits resource usage within this project."
+msgstr "项目中资源使用限制."
 
-#~ msgid "lala"
-#~ msgstr "啦啦"
+#: app/views/overview.html:90
+msgid "List by"
+msgstr ""
 
-#~ msgid "Name"
-#~ msgstr "名字"
+#: app/scripts/controllers/buildConfig.js:57
+#: app/scripts/controllers/deployment.js:34
+#: app/scripts/controllers/deploymentConfig.js:46
+#: app/scripts/controllers/deployments.js:28
+#: app/scripts/controllers/imagestream.js:36
+#: app/scripts/controllers/quota.js:26 app/views/overview.html:36
+msgid "Loading..."
+msgstr "加载中…"
 
-#~ msgid "Select from Project"
-#~ msgstr "从项目中选择"
+#: app/scripts/controllers/util/logout.js:16
+#: app/scripts/controllers/util/logout.js:35
+msgid "Logging out..."
+msgstr "退出中…"
 
-#~ msgid "My Projects"
-#~ msgstr "我的项目"
+#: app/scripts/directives/util.js:120
+msgid "Login command copied."
+msgstr "已拷贝Login command."
+
+#: app/scripts/directives/nav.js:50
+msgid "Logs"
+msgstr "日志"
+
+#: app/scripts/directives/logViewer.js:515
+msgid ""
+"Logs are not available for this replication controller because it was not "
+"generated from a deployment configuration."
+msgstr "无法为replication controller提供日志，由于它不是deployment配置生成."
+
+#: app/scripts/controllers/edit/yaml.js:130
+msgid "Make sure any new fields you may have added are supported API fields."
+msgstr "确保你添加到新fields支持API fields."
+
+#: app/scripts/directives/nav.js:43
+msgid "Membership"
+msgstr "成员"
+
+#: app/scripts/directives/nav.js:51
+msgid "Metrics"
+msgstr ""
+
+#: app/scripts/controllers/events.js:19 app/scripts/directives/nav.js:48
+msgid "Monitoring"
+msgstr "监控"
+
+#: app/views/projects.html:20
+msgid "My Projects"
+msgstr "我的项目"
+
+#: app/scripts/controllers/projects.js:104
+#: app/views/directives/deploy-image.html:126
+msgid "Name"
+msgstr "名称"
+
+#: app/views/directives/deploy-image.html:155
+msgid "Name can't have more than 24 characters."
+msgstr "名称不能超出24个字符。"
+
+#: app/views/directives/deploy-image.html:147
+msgid ""
+"Name must be an alphanumeric (a-z, 0-9) string with a maximum length\n"
+"              of 24 characters where the first character is a letter (a-z). "
+"The '-'\n"
+"              character is allowed anywhere except the first or last "
+"character."
+msgstr ""
+"名称必须是(a-z, 0-9)之间的字符和数字，最长24个字符，首字母需是(a-z)之间字"
+"母，’-‘可以在任何位置，除了首尾."
+
+#: app/views/directives/deploy-image.html:152
+msgid "Name must have at least 2 characters."
+msgstr "名称至少两个字符。"
+
+#: app/scripts/directives/bindService.js:185
+#: app/scripts/directives/bindService.js:81
+#: app/scripts/directives/processTemplateDialog.js:266
+#: app/scripts/directives/processTemplateDialog.js:275
+msgid "Next >"
+msgstr "下一步>"
+
+#: app/scripts/controllers/edit/deploymentConfig.js:241
+msgid "No"
+msgstr ""
+
+#: app/scripts/directives/processTemplateDialog.js:105
+#, fuzzy
+msgid "No Available Projects"
+msgstr "未发现项目"
+
+#: app/scripts/directives/processTemplateDialog.js:110
+msgid "No Project Selected"
+msgstr "未选择项目"
+
+#: app/scripts/directives/processTemplateDialog.js:115
+msgid "No Templates"
+msgstr "不发现模板"
+
+#: app/scripts/controllers/buildConfig.js:247
+msgid "No builds to show"
+msgstr "未发现builds"
+
+#: app/scripts/controllers/edit/yaml.js:129
+msgid "No changes were applied to {{kind}} {{name}}."
+msgstr "{{kind}} {{name}}没有变化."
+
+#: app/scripts/controllers/deployment.js:100
+#: app/scripts/controllers/deploymentConfig.js:116
+msgid "No deployments to show"
+msgstr "未发现deployments"
+
+#: app/views/directives/deploy-image.html:210
+msgid "No image metadata found."
+msgstr "未发现image metadata."
+
+#: app/scripts/controllers/attachPVC.js:229
+msgid ""
+"No mount path was provided. The volume reference was added to the "
+"configuration, but it will not be mounted into running pods."
+msgstr ""
+"未提供mount path，volume reference已被添加到配置中，但是没有挂载到运行的pods"
+"中."
+
+#: app/views/overview.html:310
+msgid "No pipeline runs."
+msgstr "未发现pipeline运行."
+
+#: app/views/overview.html:271
+msgid "No pipelines."
+msgstr "未发现pipelines."
+
+#: app/scripts/controllers/imagestream.js:51
+msgid "No tags to show"
+msgstr "未发现tags"
+
+#: app/scripts/controllers/util/error.js:20
+msgid "Not found"
+msgstr "未发现"
+
+#: app/scripts/controllers/overview.js:457
+msgid "Open Metrics URL"
+msgstr "打开 Metrics URL"
+
+#: app/scripts/directives/processTemplateDialog.js:236
+msgid "Other Projects"
+msgstr "其他项目"
+
+#: app/scripts/directives/nav.js:46 app/views/overview.html:137
+#: app/views/overview.html:338
+msgid "Other Resources"
+msgstr "其他资源"
+
+#: app/scripts/directives/nav.js:30
+msgid "Overview"
+msgstr "概览"
+
+#: app/scripts/directives/bindService.js:155
+msgid "Parameters"
+msgstr "参数"
+
+#: app/scripts/controllers/attachPVC.js:233
+msgid "Persistent volume claim {{name}} added to {{kind}} {{route}}."
+msgstr "Persistent volume claim {{name}} 已被添加到 {{kind}} {{route}}."
+
+#: app/scripts/controllers/createPersistentVolumeClaim.js:83
+msgid "Persistent volume claim {{name}} successfully created."
+msgstr "Persistent volume claim {{name}}创建成功."
+
+#: app/scripts/directives/nav.js:39
+msgid "Pipelines"
+msgstr ""
+
+#: app/scripts/directives/processTemplateDialog.js:111
+msgid ""
+"Please select a project from the dropdown to load templates from that "
+"project."
+msgstr "请从下拉框中选择项目以加载该项目模板。"
+
+#: app/scripts/directives/nav.js:34
+msgid "Pods"
+msgstr "Pods"
+
+#: app/scripts/controllers/create/createFromImage.js:333
+#: app/scripts/directives/deployImage.js:345
+msgid "Problems were detected while checking your application configuration."
+msgstr "检测应用配置时发现问题."
+
+#: app/scripts/directives/nav.js:37 app/views/overview.html:404
+msgid "Provisioned Services"
+msgstr ""
+
+#: app/scripts/directives/nav.js:42
+msgid "Quota"
+msgstr ""
+
+#: app/scripts/directives/processTemplateDialog.js:234
+msgid "Recently Viewed"
+msgstr "最近打开"
+
+#: app/scripts/controllers/buildConfig.js:175
+msgid "Reload Environment Variables"
+msgstr "重新加载环境变量"
+
+#: app/scripts/controllers/deployment.js:223
+#: app/scripts/controllers/deploymentConfig.js:300
+#: app/scripts/controllers/membership.js:220
+#: app/scripts/controllers/replicaSet.js:491
+msgid "Remove"
+msgstr "移除"
+
+#: app/scripts/controllers/deployment.js:221
+#: app/scripts/controllers/deploymentConfig.js:298
+msgid "Remove volume {{name}}?"
+msgstr "移除卷 {{name}}?"
+
+#: app/scripts/controllers/replicaSet.js:489
+msgid "Remove volume{{name}}?"
+msgstr "移除卷 {{name}}?"
+
+#: app/scripts/directives/fromFile.js:211
+msgid "Resource is missing kind field."
+msgstr "资源确实类型."
+
+#: app/scripts/directives/fromFile.js:225
+msgid "Resource is missing metadata field."
+msgstr "资源缺少metadata."
+
+#: app/scripts/directives/fromFile.js:231
+msgid "Resource name is missing in metadata field."
+msgstr "metadata中缺少资源名."
+
+#: app/scripts/directives/nav.js:41
+msgid "Resources"
+msgstr "资源"
+
+#: app/scripts/controllers/createFromURL.js:51
+msgid "Resources from the namespace \"{{name}}\" are not permitted."
+msgstr "不允许”{{name}}” namespace中的资源."
+
+#: app/scripts/directives/bindService.js:164
+#: app/scripts/directives/deployImageDialog.js:45
+#: app/scripts/directives/fromFileDialog.js:86
+#: app/scripts/directives/processTemplateDialog.js:79
+msgid "Results"
+msgstr "结果"
+
+#: app/scripts/controllers/util/logout.js:44
+msgid "Return to the"
+msgstr "返回到"
+
+#: app/scripts/controllers/createRoute.js:137
+msgid "Route {{name}} was successfully created."
+msgstr "{{name}}创建成功。"
+
+#: app/scripts/controllers/edit/route.js:189
+msgid "Route {{routeName}} was successfully updated."
+msgstr "{{name}}更新成功。"
+
+#: app/scripts/controllers/createRoute.js:39
+#: app/scripts/controllers/edit/route.js:33 app/scripts/controllers/route.js:29
+#: app/scripts/directives/nav.js:36
+msgid "Routes"
+msgstr "路由"
+
+#: app/scripts/directives/editEnvironmentVariables.js:68
+msgid "Saving your changes may create a conflict or cause loss of data."
+msgstr "保存修改可能导致冲突和数据丢失."
+
+#: app/scripts/directives/createSecret.js:36
+msgid ""
+"Secret reference key must consist of lower-case, upper-case letters, "
+"numbers, dash, and underscore."
+msgstr ""
+"Secret reference key必须由 lower-case, upper-case letters, numbers, dash, "
+"and underscore组成."
+
+#: app/scripts/directives/createSecret.js:222
+msgid "Secret {{secret}} was created and linked with service account {{name}}."
+msgstr "Secret{{secret}}已被创建和连接到service account {{name}}."
+
+#: app/scripts/directives/createSecret.js:229
+msgid "Secret {{secret}} was created."
+msgstr "Secret {{secret}} 已创建."
+
+#: app/scripts/controllers/createSecret.js:28 app/scripts/directives/nav.js:45
+msgid "Secrets"
+msgstr ""
+
+#: app/views/directives/deploy-image.html:78
+msgid "Select an image stream tag or enter an image name."
+msgstr "选择一个image stream tag或者输入镜像名."
+
+#: app/views/overview.html:25
+msgid "Select from Project"
+msgstr "从项目中选择"
+
+#: app/scripts/directives/processTemplateDialog.js:46
+msgid "Selection"
+msgstr "选择"
+
+#: app/scripts/directives/nav.js:35
+msgid "Services"
+msgstr ""
+
+#: app/views/overview.html:299
+msgid "Start Pipeline"
+msgstr "开始Pipeline"
+
+#: app/scripts/directives/nav.js:33
+msgid "Stateful Sets"
+msgstr ""
+
+#: app/views/browse/_build-details.html:4
+msgid "Status"
+msgstr "状态"
+
+#: app/scripts/controllers/createPersistentVolumeClaim.js:31
+#: app/scripts/directives/nav.js:47
+msgid "Storage"
+msgstr "存储"
+
+#: app/scripts/controllers/attachPVC.js:41
+msgid "Storage is not supported for kind {{kind}}."
+msgstr "存储不支持 {{kind}}类型."
+
+#: app/scripts/controllers/storage.js:43
+msgid ""
+"Storage quota limit has been reached. You will not be able to create any new "
+"storage."
+msgstr "Storage quota达到限制.你将无法创建新storage."
+
+#: app/scripts/controllers/addConfigVolume.js:253
+#: app/scripts/directives/addConfigToApplication.js:171
+msgid "Successfully added"
+msgstr "添加成功"
+
+#: app/scripts/controllers/newfromtemplate.js:182
+msgid "Template wasn't found in cache."
+msgstr "cache未发现Template."
+
+#: app/scripts/controllers/buildConfig.js:291
+msgid "The active filters are hiding all builds."
+msgstr "当前过滤条件隐藏了所有builds."
+
+#: app/scripts/controllers/deploymentConfig.js:201
+msgid "The active filters are hiding all deployments."
+msgstr "当前过滤条件隐藏了所有deployments."
+
+#: app/scripts/controllers/deployment.js:158
+msgid "The active filters are hiding all rollout history."
+msgstr "当前过滤条件隐藏了所有 rollout history."
+
+#: app/scripts/controllers/createFromURL.js:44
+msgid ""
+"The app name \"{{name}}\" is not valid.  An app name is an alphanumeric (a-"
+"z, and 0-9) string with a maximum length of 24 characters, where the first "
+"character is a letter (a-z), and the '-' character is allowed anywhere "
+"except the first or last character."
+msgstr ""
+"app名称”{{name}}”不合法.app名称必须由(a-z, and 0-9)之间字母和数字组成，最长24"
+"个字符，首字母需是(a-z)之间字母，’-‘可以在任何位置，除了首尾.”"
+
+#: app/scripts/controllers/buildConfig.js:205
+#: app/scripts/controllers/edit/buildConfig.js:362
+msgid "The build configuration details could not be loaded."
+msgstr "build配置详情无法加载."
+
+#: app/scripts/controllers/build.js:143
+msgid "The build details could not be loaded."
+msgstr "build详情无法加载."
+
+#: app/scripts/controllers/deploymentConfig.js:108
+#: app/scripts/controllers/edit/deploymentConfig.js:213
+#: app/scripts/controllers/replicaSet.js:184
+msgid "The deployment configuration details could not be loaded."
+msgstr "deployment配置详情无法加载."
+
+#: app/scripts/controllers/replicaSet.js:233
+msgid "The deployment controlling this replica set has been deleted."
+msgstr "deployment controlling this replica set已被删除."
+
+#: app/scripts/controllers/deployment.js:120
+msgid "The deployment details could not be loaded."
+msgstr "deployment详情无法被加载."
+
+#: app/scripts/directives/editEnvironmentVariables.js:67
+msgid ""
+"The environment variables for the {{kind}} have been updated in the "
+"background."
+msgstr " {{kind}}环境变量已在后台更新."
+
+#: app/scripts/directives/oscFileInput.js:197
+msgid "The file"
+msgstr "文件"
+
+#: app/scripts/directives/oscFileInput.js:196
+msgid "The file is too large."
+msgstr "文件过大."
+
+#: app/views/overview.html:114
+msgid "The filter is hiding all resources."
+msgstr "当前过滤条件隐藏了所有资源."
+
+#: app/scripts/controllers/image.js:61
+msgid "The image details could not be loaded."
+msgstr "镜像详情无法加载."
+
+#: app/views/directives/deploy-image.html:206
+msgid ""
+"The image may not exist or it may be in a secure registry. Check that you "
+"have entered the image name correctly or"
+msgstr "镜像不存在或在secure registry中，检查输入的镜像名是否正确或者"
+
+#: app/scripts/controllers/image.js:114
+#: app/scripts/controllers/imagestream.js:70
+msgid "The image stream details could not be loaded."
+msgstr " image stream详情无法加载."
+
+#: app/scripts/controllers/image.js:79
+msgid "The image tag was not found in the stream."
+msgstr "stream中未发现该镜像标签."
+
+#: app/scripts/directives/logViewer.js:401
+#: app/scripts/directives/logViewer.js:416
+msgid "The logs are no longer available or could not be loaded."
+msgstr "日志不可用或无法加载."
+
+#: app/scripts/controllers/persistentVolumeClaim.js:84
+msgid "The persistent volume claim details could not be loaded."
+msgstr "persistent volume claim详情无法加载."
+
+#: app/scripts/controllers/pod.js:308
+msgid "The pod details could not be loaded."
+msgstr "pod详情无法加载."
+
+#: app/scripts/controllers/serviceInstance.js:222
+msgid "The provisioned service details could not be loaded."
+msgstr "provisioned service详情无法加载."
+
+#: app/scripts/controllers/createFromURL.js:37
+msgid "The requested image stream tag \" {{tag}} \" could not be loaded."
+msgstr "请求的 “ {{tag}} “  image stream tag无法加载."
+
+#: app/scripts/controllers/createFromURL.js:30
+msgid "The requested image stream\" {{image}} \" could not be loaded."
+msgstr "请求的 “ {{image}} “  image stream无法加载."
+
+#: app/scripts/controllers/createFromURL.js:58
+msgid "The requested template \"{{template}}\" could not be loaded."
+msgstr "请求的 “ {{template}} “  template无法加载."
+
+#: app/scripts/controllers/route.js:96
+msgid "The route details could not be loaded."
+msgstr "路由详情无法加载."
+
+#: app/scripts/controllers/secret.js:83
+msgid "The secret details could not be loaded."
+msgstr "secret详情无法加载."
+
+#: app/scripts/directives/processTemplateDialog.js:116
+msgid "The selected project has no templates available to import."
+msgstr "选择的项目没有可供导入的模板。"
+
+#: app/scripts/controllers/service.js:116
+#: app/scripts/controllers/serviceInstance.js:230
+msgid "The service details could not be loaded."
+msgstr "服务详情无法加载."
+
+#: app/scripts/controllers/statefulSet.js:82
+msgid "The stateful set details could not be loaded."
+msgstr "stateful set详情无法加载."
+
+#: app/scripts/controllers/createFromURL.js:83
+msgid "The templateParamsMap is not valid JSON."
+msgstr "templateParamsMap不是合法的JSON."
+
+#: app/scripts/controllers/edit/deploymentConfig.js:238
+msgid ""
+"The timeout parameter and any pre or post lifecycle hooks will be copied "
+"from {{strategy}} strategy to {{type}} strategy. After saving the changes, "
+"{{original}} strategy parameters will be removed."
+msgstr ""
+
+#: app/scripts/controllers/replicaSet.js:334
+msgid "The {{displayKind}} details could not be loaded."
+msgstr "{{displayKind}}无法加载."
+
+#: app/scripts/directives/processTemplateDialog.js:106
+msgid "There are no projects available from which to load templates."
+msgstr "没有可供选择的项目加载模板."
+
+#: app/scripts/controllers/buildConfig.js:205
+msgid "This build configuration can not be found, it may have been deleted."
+msgstr "未发现build配置，可能已被删除."
+
+#: app/scripts/controllers/buildConfig.js:163
+#: app/scripts/controllers/edit/buildConfig.js:349
+msgid "This build configuration has been deleted."
+msgstr "build配置已被删除."
+
+#: app/scripts/controllers/buildConfig.js:172
+msgid ""
+"This build configuration has been updated in the background. Saving your "
+"changes may create a conflict or cause loss of data."
+msgstr "build配置已在后台更新.保存修改可能导致冲突或丢失数据."
+
+#: app/scripts/controllers/edit/buildConfig.js:342
+msgid ""
+"This build configuration has changed since you started editing it. You'll "
+"need to copy any changes you've made and edit again."
+msgstr "build配置已被修改,若编辑，你需要复制你的修改并且再编辑."
+
+#: app/scripts/controllers/build.js:122
+msgid "This build has been deleted."
+msgstr "build已被删除."
+
+#: app/scripts/controllers/configMap.js:37
+msgid "This config map has been deleted."
+msgstr "config map已被删除."
+
+#: app/scripts/controllers/deployment.js:120
+msgid "This deployment can not be found, it may have been deleted."
+msgstr "未发现deployment,可能已被删除."
+
+#: app/scripts/controllers/deploymentConfig.js:108
+msgid ""
+"This deployment configuration can not be found, it may have been deleted."
+msgstr "未发现deployment配置，可能已被删除."
+
+#: app/scripts/controllers/deploymentConfig.js:94
+#: app/scripts/controllers/edit/deploymentConfig.js:200
+msgid "This deployment configuration has been deleted."
+msgstr "deployment配置已被删除."
+
+#: app/scripts/controllers/edit/deploymentConfig.js:194
+msgid ""
+"This deployment configuration has changed since you started editing it. "
+"You'll need to copy any changes you've made and edit again."
+msgstr "deployment配置已修改，若要编辑，你需要复制之前的修改然后再次编辑."
+
+#: app/scripts/controllers/deployment.js:88
+msgid "This deployment has been deleted."
+msgstr "deployment已被删除."
+
+#: app/views/directives/deploy-image.html:116
+msgid ""
+"This image declares volumes and will default to use non-persistent, host-"
+"local storage.\n"
+"          You can add persistent storage later to the deployment config."
+msgstr ""
+"image declares volumes,会默认使用non-persistent, host-local存储.\n"
+"你可以添加persistent storage到deployment config."
+
+#: app/scripts/controllers/image.js:93
+#: app/scripts/controllers/imagestream.js:58
+msgid "This image stream has been deleted."
+msgstr "image stream已被删除."
+
+#: app/views/directives/deploy-image.html:160
+msgid ""
+"This name is already in use within the project. Please choose a different "
+"name."
+msgstr "名称已使用，请选择其他名称。"
+
+#: app/scripts/controllers/persistentVolumeClaim.js:65
+msgid "This persistent volume claim has been deleted."
+msgstr " persistent volume claim已被删除."
+
+#: app/views/overview.html:321
+msgid "This pipeline is not associated with any deployments."
+msgstr "pipeline没有关联任何deployments."
+
+#: app/scripts/controllers/pod.js:275
+msgid "This pod has been deleted."
+msgstr "pod已被删除."
+
+#: app/scripts/controllers/service.js:35
+msgid ""
+"This pod will not receive traffic until all of its containers have been "
+"created."
+msgstr "pod不会收到traffic，直到它所有的容器均创建成功."
+
+#: app/scripts/controllers/serviceInstance.js:193
+msgid "This provisioned service has been deleted."
+msgstr "provisioned service已被shanc."
+
+#: app/scripts/controllers/route.js:50
+msgid "This route has been deleted."
+msgstr "route已被删除."
+
+#: app/scripts/controllers/secret.js:47
+msgid "This secret has been deleted."
+msgstr "secret已被删除."
+
+#: app/scripts/controllers/service.js:97
+msgid "This service has been deleted."
+msgstr "service已被删除."
+
+#: app/scripts/controllers/pod.js:49
+msgid ""
+"This terminal has been disconnected. If you reconnect, your terminal history "
+"will be lost."
+msgstr "终端已经断开连接，若重新连接，终端记录将丢失."
+
+#: app/scripts/controllers/deployment.js:209
+msgid ""
+"This will remove the volume from the deployment and start a new rollout."
+msgstr "将从deployment移除卷,开始一个新的rollout."
+
+#: app/scripts/controllers/deploymentConfig.js:284
+msgid ""
+"This will remove the volume from the deployment config and trigger a new "
+"deployment."
+msgstr "将从deployment config移除卷以及触发新的deployment."
+
+#: app/scripts/controllers/deploymentConfig.js:286
+msgid "This will remove the volume from the deployment config."
+msgstr "将从deployment config移除卷."
+
+#: app/scripts/controllers/deployment.js:207
+msgid "This will remove the volume from the deployment."
+msgstr "将从deployment移除卷."
+
+#: app/scripts/controllers/replicaSet.js:479
+msgid "This will remove the volume from the {{kind}}."
+msgstr "从 {{kind}}移除卷."
+
+#: app/scripts/controllers/replicaSet.js:307
+msgid "This {{displayKind}} has been deleted."
+msgstr "{{displayKind}}已被删除."
+
+#: app/views/directives/deploy-image.html:64
+msgid "To deploy an image from a private repository, you must"
+msgstr "从私人仓库部署镜像,你必须"
+
+#: app/scripts/controllers/pod.js:181
+msgid ""
+"Unable to calculate the bounding box for a character.  Terminal will not be "
+"able to resize."
+msgstr "无法为character计算bounding box，终端无法重新调整大小."
+
+#: app/scripts/directives/util.js:143
+msgid "Unable to copy the login command."
+msgstr "无法复制 login command."
+
+#: app/scripts/directives/fromFile.js:385
+msgid "Unable to create the"
+msgstr "无法创建"
+
+#: app/scripts/controllers/serviceInstance.js:109
+msgid "Unable to load parameters from secret"
+msgstr "无法从secret加载parameters"
+
+#: app/scripts/directives/fromFile.js:409
+msgid "Unable to update the"
+msgstr "无法更新"
+
+#: app/scripts/controllers/edit/deploymentConfig.js:79
+msgid "Unknown deployment strategy type:"
+msgstr "未知deployment strategy类型:"
+
+#: app/scripts/directives/fromFile.js:498
+msgid "Updated"
+msgstr "更新"
+
+#: app/scripts/directives/fromFile.js:471
+msgid "Updated resources in project {{name}}"
+msgstr "{{name}}资源更新成功"
+
+#: app/scripts/directives/fromFile.js:470
+msgid "Updating resources in project {{name}}"
+msgstr "{{name}}资源更新正在更新"
+
+#: app/scripts/directives/addConfigToApplication.js:174
+msgid "View"
+msgstr "查看"
+
+#: app/scripts/controllers/storage.js:46
+msgid "View Quota"
+msgstr "查看Quota"
+
+#: app/views/overview.html:394
+msgid "Virtual Machines"
+msgstr "虚拟机"
+
+#: app/scripts/controllers/addConfigVolume.js:40
+msgid "Volumes are not supported for kind {{kind}}."
+msgstr "卷不支持 {{kind}}类型."
+
+#: app/scripts/directives/fromFile.js:62
+#: app/scripts/directives/processTemplate.js:163
+msgid ""
+"We checked your application for potential problems. Please confirm you still "
+"want to create this application."
+msgstr "检测到你的应用有潜在问题，请确认仍然创建应用."
+
+#: app/views/overview.html:31
+msgid "Welcome to project {{projectName}}."
+msgstr "欢迎来到{{projectName}}项目."
+
+#: app/scripts/controllers/edit/deploymentConfig.js:239
+msgid "Yes"
+msgstr "是"
+
+#: app/scripts/controllers/util/logout.js:40
+msgid "You are logged out."
+msgstr "你已退出."
+
+#: app/scripts/controllers/util/logout.js:22
+msgid "You could not be logged out. Return to the"
+msgstr "你无法退出,返回到"
+
+#: app/scripts/controllers/createConfigMap.js:52
+msgid "You do not have authority to create config maps in project {{project}}."
+msgstr "没有权限在 {{project}}中创建 config maps."
+
+#: app/scripts/controllers/createPersistentVolumeClaim.js:70
+msgid ""
+"You do not have authority to create persistent volume claims in project "
+"{{project}}."
+msgstr "没有权限在 {{project}}中创建 persistent volume claims."
+
+#: app/scripts/controllers/createRoute.js:66
+msgid "You do not have authority to create routes in project {{project}}."
+msgstr "没有权限在 {{project}}中创建路由."
+
+#: app/scripts/controllers/createSecret.js:43
+msgid "You do not have authority to create secrets in project {{project}}."
+msgstr "没有权限在 {{project}}中创建secrets."
+
+#: app/scripts/controllers/newfromtemplate.js:169
+msgid "You do not have authority to process templates in project {{project}}."
+msgstr "没有权限在 {{project}}中出路模板."
+
+#: app/scripts/controllers/addConfigVolume.js:121
+#: app/scripts/controllers/attachPVC.js:81
+#: app/scripts/controllers/edit/healthChecks.js:86
+#: app/scripts/controllers/edit/yaml.js:62
+#: app/scripts/controllers/setLimits.js:96
+msgid "You do not have authority to update"
+msgstr "没有权限更新"
+
+#: app/scripts/controllers/edit/buildConfig.js:242
+msgid "You do not have authority to update build config {{buildconfig}}."
+msgstr "没有权限更新{{buildconfig}}."
+
+#: app/scripts/controllers/edit/deploymentConfig.js:91
+msgid "You do not have authority to update deployment config"
+msgstr "没有权限更新 deployment config"
+
+#: app/scripts/controllers/edit/route.js:63
+msgid "You do not have authority to update route"
+msgstr "没有权限更新路由"
+
+#: app/scripts/controllers/edit/autoscaler.js:91
+msgid ""
+"You do not have authority to {{verb}} horizontal pod autoscalers in project "
+"{{project}}."
+msgstr "没有权限在 {{project}}中 {{verb}} horizontal pod autoscalers."
+
+#: app/scripts/controllers/util/logout.js:42
+msgid "You have been logged out due to inactivity."
+msgstr "长时间未操作，您已退出."
+
+#: app/scripts/directives/confirmOnExit.js:20
+msgid "You have unsaved changes. Leave this page anyway?"
+msgstr "你没有保存修改，确认离开页面?"
+
+#: app/views/overview.html:278
+msgid "and the"
+msgstr "和"
+
+#: app/scripts/directives/fromFile.js:237
+msgid "can't be created in project {{name}}"
+msgstr "在{{name}}无法被创建."
+
+#: app/scripts/directives/deleteLink.js:184
+#: app/scripts/directives/deleteLink.js:188
+msgid "could not be deleted."
+msgstr "不能被删除."
+
+#: app/scripts/directives/editPvc.js:67
+msgid "could not be expanded."
+msgstr "无法扩展."
+
+#: app/scripts/controllers/attachPVC.js:163
+#: app/scripts/controllers/edit/healthChecks.js:136
+#: app/scripts/controllers/setLimits.js:129
+msgid "could not be loaded."
+msgstr "无法加载."
+
+#: app/scripts/controllers/edit/healthChecks.js:131
+#: app/scripts/controllers/setLimits.js:124
+msgid "could not be updated."
+msgstr "无法更新."
+
+#: app/views/directives/deploy-image.html:206
+#: app/views/directives/deploy-image.html:64
+#: app/views/directives/deploy-image.html:65
+msgid "create an image pull secret"
+msgstr "创建 image pull secret"
+
+#: app/scripts/directives/editPvc.js:56
+msgid "expand request has been submitted."
+msgstr "扩展请求已提交."
+
+#: app/scripts/directives/oscFileInput.js:197
+msgid "is"
+msgstr "是"
+
+#: app/scripts/controllers/newfromtemplate.js:47
+msgid "is not valid JSON."
+msgstr "不是合法的JSON."
+
+#: app/views/overview.html:274
+msgid "pipelines have been added to project {{projectName}}."
+msgstr "pipelines已被添加到 {{projectName}}."
+
+#: app/scripts/directives/deployImage.js:310
+#: app/scripts/directives/fromFile.js:447
+#: app/scripts/directives/fromFile.js:498
+#: app/scripts/directives/processTemplate.js:131
+msgid "successfully."
+msgstr "成功。"
+
+#: app/scripts/controllers/addConfigVolume.js:253
+#: app/scripts/directives/addConfigToApplication.js:171
+msgid "to"
+msgstr "到"
+
+#: app/scripts/directives/createSecret.js:280
+msgid "was created."
+msgstr "已创建"
+
+#: app/scripts/directives/deleteLink.js:164
+msgid "was marked for deletion."
+msgstr "被标记用于删除》"
+
+#: app/scripts/directives/fromFile.js:374
+#: app/scripts/directives/fromFile.js:456
+msgid "was successfully created."
+msgstr "被创建成功."
+
+#: app/scripts/controllers/edit/yaml.js:137
+#: app/scripts/directives/fromFile.js:398
+#: app/scripts/directives/fromFile.js:507
+msgid "was successfully updated."
+msgstr "被更新成功."
+
+#: app/scripts/controllers/edit/healthChecks.js:125
+#: app/scripts/controllers/setLimits.js:118
+msgid "was updated."
+msgstr "已更新."
+
+#: app/views/directives/deploy-image.html:206
+msgid "with your image registry credentials and try again."
+msgstr ""
+
+#: app/views/directives/deploy-image.html:68
+msgid "with your image registry credentials."
+msgstr ""

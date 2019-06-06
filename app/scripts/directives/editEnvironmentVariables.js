@@ -8,6 +8,7 @@
       'DataService',
       'EnvironmentService',
       'NotificationsService',
+      'gettextCatalog',
       EditEnvironmentVariables
     ],
     controllerAs: '$ctrl',
@@ -23,7 +24,8 @@
                                     APIService,
                                     DataService,
                                     EnvironmentService,
-                                    NotificationsService) {
+                                    NotificationsService,
+                                    gettextCatalog) {
     var ctrl = this;
 
     var configMapsVersion = APIService.getPreferredVersion('configmaps');
@@ -62,8 +64,8 @@
       previousEnvConflict = true;
       NotificationsService.addNotification({
         type: "warning",
-        message: "The environment variables for the " + displayKind + " have been updated in the background.",
-        details: "Saving your changes may create a conflict or cause loss of data."
+        message: gettextCatalog.getString("The environment variables for the {{kind}} have been updated in the background.", {kind: displayKind}),
+        details: gettextCatalog.getString("Saving your changes may create a conflict or cause loss of data.")
       });
     };
 
@@ -134,14 +136,14 @@
       saveEnvPromise.then(function success(){
         NotificationsService.addNotification({
           type: "success",
-          message: "Environment variables for " + displayKind + " " + name + " were successfully updated."
+          message: gettextCatalog.getString("Environment variables for{{kind}} {{name}} were successfully updated.", {kind: displayKind, name: name})
         });
         ctrl.form.$setPristine();
       }, function error(e){
         NotificationsService.addNotification({
           id: errorID,
           type: "error",
-          message: "An error occurred updating environment variables for " + displayKind + " " + name + ".",
+          message: gettextCatalog.getString("An error occurred updating environment variables for {{kind}} {{name}}.", {kind: displayKind, name: name}),
           details: getErrorDetails(e)
         });
       }).finally(function() {

@@ -19,7 +19,8 @@ angular.module('openshiftConsole')
                        Navigate,
                        NotificationsService,
                        ProjectsService,
-                       RoutesService) {
+                       RoutesService,
+                       gettextCatalog) {
     $scope.renderOptions = {
       hideFilterWidget: true
     };
@@ -29,13 +30,13 @@ angular.module('openshiftConsole')
 
     $scope.routeURL = Navigate.resourceURL($scope.routeName, "Route", $scope.projectName);
     $scope.breadcrumbs = [{
-      title: 'Routes',
+      title: gettextCatalog.getString('Routes'),
       link: 'project/' + $scope.projectName + '/browse/routes'
     }, {
       title: $scope.routeName,
       link: $scope.routeURL
     }, {
-      title: "Edit"
+      title: gettextCatalog.getString("Edit")
     }];
 
     var hideErrorNotifications = function() {
@@ -59,14 +60,14 @@ angular.module('openshiftConsole')
         $scope.project = project;
 
         if (!AuthorizationService.canI('routes', 'update', $routeParams.project)) {
-          Navigate.toErrorPage('You do not have authority to update route ' + $routeParams.routeName + '.', 'access_denied');
+          Navigate.toErrorPage(gettextCatalog.getString('You do not have authority to update route ') + $routeParams.routeName + '.', 'access_denied');
           return;
         }
 
         var orderByDisplayName = $filter('orderByDisplayName');
 
         var showNonServiceTargetError = function() {
-          Navigate.toErrorPage('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.');
+          Navigate.toErrorPage(gettextCatalog.getString('Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.'));
         };
 
         var route;
@@ -111,7 +112,7 @@ angular.module('openshiftConsole')
             });
           },
           function() {
-            Navigate.toErrorPage("Could not load route " + $scope.routeName + ".");
+            Navigate.toErrorPage(gettextCatalog.getString("Could not load route {{routeName}}.", {routeName: $scope.routeName}));
           });
 
         // Update the fields in the route from what was entered in the form.
@@ -185,7 +186,7 @@ angular.module('openshiftConsole')
               .then(function() { // Success
                 NotificationsService.addNotification({
                   type: "success",
-                  message: "Route " + $scope.routeName + " was successfully updated."
+                  message: gettextCatalog.getString("Route {{routeName}} was successfully updated.", {routeName: $scope.routeName})
                 });
                 navigateBack();
               }, function(response) { // Failure
@@ -193,7 +194,7 @@ angular.module('openshiftConsole')
                 NotificationsService.addNotification({
                   type: "error",
                   id: "edit-route-error",
-                  message: "An error occurred updating route " + $scope.routeName + ".",
+                  message: gettextCatalog.getString("An error occurred updating route {{routeName}}.", {routeName: $scope.routeName}),
                   details: $filter('getErrorDetails')(response)
                 });
               });

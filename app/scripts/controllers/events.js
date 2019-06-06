@@ -8,7 +8,7 @@
  * Controller of the openshiftConsole
  */
 angular.module('openshiftConsole')
-  .controller('EventsController', function ($routeParams, $scope, ProjectsService) {
+  .controller('EventsController', function ($routeParams, $scope, ProjectsService, gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.renderOptions = {
       hideFilterWidget: true
@@ -16,11 +16,11 @@ angular.module('openshiftConsole')
 
     $scope.breadcrumbs = [
       {
-        title: "Monitoring",
+        title: gettextCatalog.getString("Monitoring"),
         link: "project/" + $routeParams.project + "/monitoring"
       },
       {
-        title: 'Events'
+        title: gettextCatalog.getString('Events')
       }
     ];
 

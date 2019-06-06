@@ -3,7 +3,7 @@
     <div class="alert word-break" ng-class="{ 'alert-danger': alert.type === 'error', 'alert-warning': alert.type === 'warning', 'alert-success': alert.type === 'success', 'alert-info': !alert.type || alert.type === 'info', 'toast-pf': $ctrl.toast, 'mar-left-sm': $ctrl.toast}">
       <button ng-if="!$ctrl.hideCloseButton" ng-click="$ctrl.close(alert)" type="button" class="close">
         <span class="pficon pficon-close" aria-hidden="true"></span>
-        <span class="sr-only">Close</span>
+        <span class="sr-only" translate>Close</span>
       </button>
       <span class="pficon" aria-hidden="true" ng-class="{'pficon-error-circle-o': alert.type === 'error', 'pficon-warning-triangle-o': alert.type === 'warning', 'pficon-ok': alert.type === 'success','pficon-info': !alert.type || alert.type === 'info'}"></span>
       <span class="sr-only">{{alert.type}}</span>

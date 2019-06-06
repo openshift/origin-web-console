@@ -18,17 +18,18 @@ angular.module('openshiftConsole')
                        AuthorizationService,
                        DataService,
                        Navigate,
-                       ProjectsService) {
+                       ProjectsService,
+                       gettextCatalog) {
     $scope.alerts = {};
     $scope.projectName = $routeParams.project;
 
     $scope.breadcrumbs = [
       {
-         title: "Secrets",
+         title: gettextCatalog.getString("Secrets"),
          link: "project/" + $scope.projectName + "/browse/secrets"
       },
       {
-        title: "Create Secret"
+        title: gettextCatalog.getString("Create Secret")
       }
     ];
 
@@ -39,7 +40,7 @@ angular.module('openshiftConsole')
         $scope.context = context;
 
         if (!AuthorizationService.canI('secrets', 'create', $routeParams.project)) {
-          Navigate.toErrorPage('You do not have authority to create secrets in project ' + $routeParams.project + '.', 'access_denied');
+          Navigate.toErrorPage(gettextCatalog.getString('You do not have authority to create secrets in project {{project}}.', {project: $routeParams.project}), 'access_denied');
           return;
         }
 

@@ -19,7 +19,8 @@ angular.module('openshiftConsole')
                        DataService,
                        Navigate,
                        NotificationsService,
-                       ProjectsService) {
+                       ProjectsService,
+                       gettextCatalog) {
     var name = $routeParams.template;
 
     // If the namespace is not defined, that indicates that the processed Template should be obtained from the 'CachedTemplateService'
@@ -31,7 +32,7 @@ angular.module('openshiftConsole')
     var imageObjectRef = $filter('imageObjectRef');
 
     if (!name) {
-      Navigate.toErrorPage("Cannot create from template: a template name was not specified.");
+      Navigate.toErrorPage(gettextCatalog.getString("Cannot create from template: a template name was not specified."));
       return;
     }
 
@@ -42,8 +43,8 @@ angular.module('openshiftConsole')
         NotificationsService.addNotification({
           id: "template-params-invalid-json",
           type: "error",
-          message: "Could not prefill parameter values.",
-          details: "The `templateParamsMap` URL parameter is not valid JSON. " + e
+          message: gettextCatalog.getString("Could not prefill parameter values."),
+          details: "The `templateParamsMap` URL parameter" + gettextCatalog.getString( "is not valid JSON. ") + e
         });
       }
     };
@@ -165,7 +166,7 @@ angular.module('openshiftConsole')
         $scope.project = project;
 
         if (!AuthorizationService.canI('processedtemplates', 'create', $routeParams.project)) {
-          Navigate.toErrorPage('You do not have authority to process templates in project ' + $routeParams.project + '.', 'access_denied');
+          Navigate.toErrorPage(gettextCatalog.getString('You do not have authority to process templates in project {{project}}.', {project: $routeParams.project}), 'access_denied');
           return;
         }
 
@@ -178,7 +179,7 @@ angular.module('openshiftConsole')
 
             var redirect = URI('error').query({
               error: "not_found",
-              error_description: "Template wasn't found in cache."
+              error_description: gettextCatalog.getString("Template wasn't found in cache.")
             }).toString();
             $location.url(redirect);
           }
@@ -206,7 +207,7 @@ angular.module('openshiftConsole')
               }
             },
             function() {
-              Navigate.toErrorPage("Cannot create from template: the specified template could not be retrieved.");
+              Navigate.toErrorPage(gettextCatalog.getString("Cannot create from template: the specified template could not be retrieved."));
             });
         }
       }));

@@ -17,6 +17,7 @@ angular.module('openshiftConsole')
     'ModalsService',
     'logLinks',
     'BREAKPOINTS',
+    'gettextCatalog',
     function($sce,
              $timeout,
              $window,
@@ -29,7 +30,8 @@ angular.module('openshiftConsole')
              DataService,
              HTMLService,
              ModalsService,
-             logLinks) {
+             logLinks,
+             gettextCatalog) {
       // cache the jQuery win, but not clobber angular's $window
       var $win = $(window);
 
@@ -396,7 +398,7 @@ angular.module('openshiftConsole')
                       //   because we dont have enough information to give the user something better.
                       if((lastLineNumber === 0) && (!$scope.emptyStateMessage)) {
                         $scope.state = 'empty';
-                        $scope.emptyStateMessage = 'The logs are no longer available or could not be loaded.';
+                        $scope.emptyStateMessage = gettextCatalog.getString('The logs are no longer available or could not be loaded.');
                       }
                     });
                   });
@@ -411,7 +413,7 @@ angular.module('openshiftConsole')
                       // if logs err before we get anything, will show an empty state message
                       if(lastLineNumber === 0) {
                         $scope.state = 'empty';
-                        $scope.emptyStateMessage = 'The logs are no longer available or could not be loaded.';
+                        $scope.emptyStateMessage = gettextCatalog.getString('The logs are no longer available or could not be loaded.');
                       } else {
                         // if logs were running but something went wrong, will
                         // show what we have & give option to retry
@@ -510,7 +512,7 @@ angular.module('openshiftConsole')
             // decide whether we should request the logs ------------------------
             if (logSubresource === 'deploymentconfigs/logs' && !name) {
               $scope.state = 'empty';
-              $scope.emptyStateMessage = 'Logs are not available for this replication controller because it was not generated from a deployment configuration.';
+              $scope.emptyStateMessage = gettextCatalog.getString('Logs are not available for this replication controller because it was not generated from a deployment configuration.');
               // don't even attempt to continue since we can't fetch the logs for these RCs
               return;
             }

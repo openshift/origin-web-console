@@ -15,7 +15,8 @@ angular.module('openshiftConsole')
                                            DataService,
                                            ModalsService,
                                            Navigate,
-                                           ProjectsService) {
+                                           ProjectsService,
+                                           gettextCatalog) {
     $scope.projectName = $routeParams.project;
     $scope.build = null;
     $scope.buildConfig = null;
@@ -118,7 +119,7 @@ angular.module('openshiftConsole')
           if (action === "DELETED") {
             $scope.alerts["deleted"] = {
               type: "warning",
-              message: "This build has been deleted."
+              message: gettextCatalog.getString("This build has been deleted.")
             };
           }
 
@@ -139,7 +140,7 @@ angular.module('openshiftConsole')
           $scope.loaded = true;
           $scope.alerts["load"] = {
             type: "error",
-            message: "The build details could not be loaded.",
+            message: gettextCatalog.getString("The build details could not be loaded."),
             details: $filter('getErrorDetails')(e)
           };
         };
@@ -148,7 +149,7 @@ angular.module('openshiftConsole')
           if (action === "DELETED") {
             $scope.alerts["deleted"] = {
               type: "warning",
-              message: "Build configuration " + $scope.buildConfigName + " has been deleted."
+              message: gettextCatalog.getString("Build configuration {{name}} has been deleted.", {name: $scope.buildConfigName})
             };
             $scope.buildConfigDeleted = true;
           }

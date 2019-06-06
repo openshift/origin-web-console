@@ -26,7 +26,7 @@ angular.module('openshiftConsole')
     $scope.renderOptions.hideFilterWidget = true;
     $scope.breadcrumbs = [
       {
-        title: "Routes",
+        title: gettextCatalog.getString("Routes"),
         link: "project/" + $routeParams.project + "/browse/routes"
       },
       {
@@ -47,7 +47,7 @@ angular.module('openshiftConsole')
       if (action === "DELETED") {
         $scope.alerts["deleted"] = {
           type: "warning",
-          message: "This route has been deleted."
+          message: gettextCatalog.getString("This route has been deleted.")
         };
       }
     };
@@ -93,7 +93,7 @@ angular.module('openshiftConsole')
             $scope.loaded = true;
             $scope.alerts["load"] = {
               type: "error",
-              message: "The route details could not be loaded.",
+              message: gettextCatalog.getString("The route details could not be loaded."),
               details: $filter('getErrorDetails')(e)
             };
           });

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .directive('oscFileInput', function($filter, Logger, NotificationsService) {
+  .directive('oscFileInput', function($filter, Logger, NotificationsService, gettextCatalog) {
     return {
       restrict: 'E',
       scope: {
@@ -193,8 +193,8 @@ angular.module('openshiftConsole')
           if (file.size > (5 * 1024 * 1024)) {
             NotificationsService.addNotification({
               type: "error",
-              message: "The file is too large.",
-              details: "The file " + file.name + " is " + $filter('humanizeSize')(file.size) + ". The web console has a 5 MiB file limit."
+              message: gettextCatalog.getString("The file is too large."),
+              details: gettextCatalog.getString("The file ") + file.name + gettextCatalog.getString(" is ") + $filter('humanizeSize')(file.size) + gettextCatalog.getString(". The web console has a 5 MiB file limit.")
             });
             return;
           }
@@ -216,7 +216,7 @@ angular.module('openshiftConsole')
           };
           reader.onerror = function(e){
             scope.uploadError = true;
-            Logger.error("Could not read file", e);
+            Logger.error(gettextCatalog.getString("Could not read file"), e);
           };
 
           if (scope.readAsBinaryString) {

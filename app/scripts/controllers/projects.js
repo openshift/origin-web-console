@@ -18,7 +18,8 @@ angular.module('openshiftConsole')
                                               KeywordService,
                                               Navigate,
                                               Logger,
-                                              ProjectsService) {
+                                              ProjectsService,
+                                              gettextCatalog) {
     var MAX_PROJETS_TO_WATCH = 250;
 
     var projects, sortedProjects;
@@ -97,19 +98,19 @@ angular.module('openshiftConsole')
     $scope.sortConfig = {
       fields: [{
         id: 'metadata.annotations["openshift.io/display-name"]',
-        title: 'Display Name',
+        title: gettextCatalog.getString('Display Name'),
         sortType: 'alpha'
       }, {
         id: 'metadata.name',
-        title: 'Name',
+        title: gettextCatalog.getString('Name'),
         sortType: 'alpha'
       }, {
         id: 'metadata.annotations["openshift.io/requester"]',
-        title: 'Creator',
+        title: gettextCatalog.getString('Creator'),
         sortType: 'alpha'
       }, {
         id: 'metadata.creationTimestamp',
-        title: 'Creation Date',
+        title: gettextCatalog.getString('Creation Date'),
         sortType: 'alpha'
       }],
       isAscending: true,
