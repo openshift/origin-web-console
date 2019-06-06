@@ -62,7 +62,8 @@
     "font-awesome": "4.7.0",
     "jquery": "3.2.1",
     "lodash": "4.17.4",
-    "matchHeight": "0.7.2"
+    "matchHeight": "0.7.2",
+    "bootstrap": "3.3.7"
   },
   "overrides": {
     "angular": {
