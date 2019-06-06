@@ -1060,7 +1060,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"resource-details\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"col-sm-12\">\n" +
-    "<h3>Status</h3>\n" +
+    "<h3 translate>Status</h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<dt>Status:</dt>\n" +
     "<dd>\n" +
@@ -6393,7 +6393,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"deploy-image\">\n" +
     "<select-project ng-if=\"!project\" selected-project=\"input.selectedProject\" name-taken=\"projectNameTaken\"></select-project>\n" +
     "<span ng-show=\"!noProjectsCantCreate\">\n" +
-    "<p>\n" +
+    "<p translate>\n" +
     "Deploy an existing image from an image stream tag or image registry.\n" +
     "</p>\n" +
     "<ng-form name=\"forms.imageSelection\">\n" +
@@ -6420,7 +6420,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input type=\"radio\" ng-model=\"mode\" value=\"dockerImage\" ng-disabled=\"!input.selectedProject.metadata.uid\">\n" +
     "Image Name\n" +
     "<span ng-if=\"!input.selectedProject.metadata.uid\" class=\"text-warning\">\n" +
-    "&ndash; Image search is only available for existing projects.\n" +
+    "&ndash; <translate>Image search is only available for existing projects.</translate>\n" +
     "</span>\n" +
     "</label>\n" +
     "</div>\n" +
@@ -6437,10 +6437,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</span>\n" +
     "</div>\n" +
     "<div class=\"help-block\">\n" +
-    "To deploy an image from a private repository, you must <span ng-if=\"!input.selectedProject.metadata.uid\">create an image pull secret</span>\n" +
-    "<a href=\"\" ng-click=\"openCreateWebhookSecretModal()\" ng-if=\"input.selectedProject.metadata.uid\">create an image pull secret</a>\n" +
-    "with your image registry credentials.\n" +
-    "<a ng-href=\"{{'pull_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a></div>\n" +
+    "<translate>To deploy an image from a private repository, you must</translate> <span ng-if=\"!input.selectedProject.metadata.uid\" translate>create an image pull secret</span>\n" +
+    "<a href=\"\" ng-click=\"openCreateWebhookSecretModal()\" ng-if=\"input.selectedProject.metadata.uid\" translate>create an image pull secret</a>\n" +
+    "<translate>with your image registry credentials.</translate>\n" +
+    "<a ng-href=\"{{'pull_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a></div>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</fieldset>\n" +
@@ -6449,7 +6449,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"separator\"></div>\n" +
     "</div>\n" +
     "<div ng-if=\"loading || !import\" class=\"empty-state-message text-center\">\n" +
-    "<h2 ng-if=\"!loading\" class=\"h2\">Select an image stream tag or enter an image name.</h2>\n" +
+    "<h2 ng-if=\"!loading\" class=\"h2\" translate>Select an image stream tag or enter an image name.</h2>\n" +
     "<h2 ng-if=\"loading\" class=\"h2\">Loading image metadata for <span class=\"word-break\">{{imageName | stripSHA}}</span>...</h2>\n" +
     "</div>\n" +
     "<div class=\"row mar-bottom-md\" ng-if-start=\"!loading && import.image\">\n" +
@@ -6459,8 +6459,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-sm-10\">\n" +
     "<div ng-if=\"runsAsRoot\" class=\"alert alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
-    "Image <strong>{{import.name}}</strong> runs as the\n" +
-    "<strong>root</strong> user which might not be permitted by your cluster administrator.\n" +
+    "<span translate>Image {{import.name}} runs as the root user which might not be permitted by your cluster administrator.</span>\n" +
     "</div>\n" +
     "<h2>\n" +
     "<span ng-if=\"mode === 'dockerImage'\">{{import.name}}</span>\n" +
@@ -6486,7 +6485,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div>Other containers can access this service through the hostname <strong>{{app.name || \"&lt;name&gt;\"}}</strong>.</div>\n" +
     "</li>\n" +
     "</ul>\n" +
-    "<div ng-if=\"(volumes | hashSize) > 0\" class=\"help-block\">\n" +
+    "<div ng-if=\"(volumes | hashSize) > 0\" class=\"help-block\" translate>\n" +
     "This image declares volumes and will default to use non-persistent, host-local storage. You can add persistent storage later to the deployment config.\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6494,27 +6493,27 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if-end>\n" +
     "<ng-form name=\"forms.deployImage\" class=\"osc-form\">\n" +
     "<div class=\"form-group\">\n" +
-    "<label for=\"name\" class=\"required\">Name</label>\n" +
+    "<label for=\"name\" class=\"required\" translate>Name</label>\n" +
     "<div ng-class=\"{'has-error': (forms.deployImage.name.$invalid && forms.deployImage.name.$touched) || nameTaken}\">\n" +
     "<input type=\"text\" required select-on-focus minlength=\"2\" maxlength=\"24\" pattern=\"[a-z]([-a-z0-9]*[a-z0-9])?\" ng-model=\"app.name\" id=\"name\" name=\"name\" class=\"form-control\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
     "</div>\n" +
-    "<div class=\"help-block\">Identifies the resources created for this image.</div>\n" +
+    "<div class=\"help-block\" translate>Identifies the resources created for this image.</div>\n" +
     "<div class=\"has-error\" ng-show=\"forms.deployImage.name.$invalid && forms.deployImage.name.$touched\">\n" +
-    "<div class=\"help-block\" ng-show=\"forms.deployImage.name.$error.required\">\n" +
+    "<div class=\"help-block\" ng-show=\"forms.deployImage.name.$error.required\" translate>\n" +
     "A name is required.\n" +
     "</div>\n" +
-    "<div class=\"help-block\" ng-show=\"forms.deployImage.name.$error.pattern\">\n" +
+    "<div class=\"help-block\" ng-show=\"forms.deployImage.name.$error.pattern\" translate>\n" +
     "Name must be an alphanumeric (a-z, 0-9) string with a maximum length of 24 characters where the first character is a letter (a-z). The '-' character is allowed anywhere except the first or last character.\n" +
     "</div>\n" +
-    "<div class=\"help-block\" ng-show=\"forms.deployImage.name.$error.minlength\">\n" +
+    "<div class=\"help-block\" ng-show=\"forms.deployImage.name.$error.minlength\" translate>\n" +
     "Name must have at least 2 characters.\n" +
     "</div>\n" +
-    "<div class=\"help-block\" ng-show=\"forms.deployImage.name.$error.maxlength\">\n" +
+    "<div class=\"help-block\" ng-show=\"forms.deployImage.name.$error.maxlength\" translate>\n" +
     "Name can't have more than 24 characters.\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"nameTaken\">\n" +
-    "<span class=\"help-block\">This name is already in use within the project. Please choose a different name.</span>\n" +
+    "<span class=\"help-block\" translate>This name is already in use within the project. Please choose a different name.</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<osc-form-section header=\"Environment Variables\" about-title=\"Environment Variables\" about=\"Environment variables are used to configure and pass information to running containers.\" expand=\"true\" can-toggle=\"false\" class=\"first-section\">\n" +
@@ -6524,24 +6523,24 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</label-editor>\n" +
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<div ng-if=\"!isDialog\" class=\"button-group gutter-bottom\" ng-class=\"{'gutter-top': !alerts.length}\">\n" +
-    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"create()\" value=\"\" ng-disabled=\"forms.deployImage.$invalid || nameTaken || disableInputs\">Create</button>\n" +
-    "<a class=\"btn btn-default btn-lg\" href=\"#\" back>Cancel</a>\n" +
+    "<button type=\"submit\" class=\"btn btn-primary btn-lg\" ng-click=\"create()\" value=\"\" ng-disabled=\"forms.deployImage.$invalid || nameTaken || disableInputs\" translate>Create</button>\n" +
+    "<a class=\"btn btn-default btn-lg\" href=\"#\" back translate>Cancel</a>\n" +
     "</div>\n" +
     "</ng-form>\n" +
     "</div>\n" +
     "<div ng-if=\"!loading && import.error\" class=\"empty-state-message text-center\">\n" +
     "<h2>\n" +
     "<i class=\"pficon pficon-error-circle-o\" aria-hidden=\"true\"></i>\n" +
-    "Could not load image metadata.\n" +
+    "<translate>Could not load image metadata.</translate>\n" +
     "</h2>\n" +
     "<p>{{import.error | upperFirst}}</p>\n" +
-    "<p>The image may not exist or it may be in a secure registry. Check that you have entered the image name correctly or <a href=\"\" ng-click=\"openCreateWebhookSecretModal()\">create an image pull secret</a> with your image registry credentials and try again.</p>\n" +
+    "<p><translate>The image may not exist or it may be in a secure registry. Check that you have entered the image name correctly or</translate> <a href=\"\" ng-click=\"openCreateWebhookSecretModal()\" translate>create an image pull secret</a> <translate>with your image registry credentials and try again.</translate></p>\n" +
     "</div>\n" +
     "<div ng-if=\"!loading && import && !import.error && !import.image\" class=\"empty-state-message text-center\">\n" +
-    "<h2>\n" +
+    "<h2 translate>\n" +
     "No image metadata found.\n" +
     "</h2>\n" +
-    "<p>Could not find any images for {{import.name | stripTag}}:{{import.tag}}.</p>\n" +
+    "<p><span translate>Could not find any images for</span> {{import.name | stripTag}}:{{import.tag}}.</p>\n" +
     "</div>\n" +
     "</span>\n" +
     "</div>"
@@ -11922,34 +11921,34 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div class=\"empty-state-message text-center\">\n" +
     "<div ng-if=\"project.metadata.name | canIAddToProject\">\n" +
-    "<h2>Get started with your project.</h2>\n" +
-    "<p>\n" +
+    "<h2 translate>Get started with your project.</h2>\n" +
+    "<p translate>\n" +
     "Add content to your project from the catalog of web frameworks, databases, and other components. You may also deploy an existing image, create or replace resources from their YAML or JSON definitions, or select an item shared from another project.\n" +
     "</p>\n" +
     "<div class=\"empty-state-message-main-action\">\n" +
-    "<button class=\"btn btn-primary btn-lg\" ng-click=\"browseCatalog()\">\n" +
+    "<button class=\"btn btn-primary btn-lg\" ng-click=\"browseCatalog()\" translate>\n" +
     "Browse Catalog\n" +
     "</button>\n" +
     "</div>\n" +
     "<div class=\"empty-state-message-secondary-action\">\n" +
-    "<button class=\"btn btn-default btn-sm\" ng-click=\"showOrderingPanel('deployImage')\">\n" +
+    "<button class=\"btn btn-default btn-sm\" ng-click=\"showOrderingPanel('deployImage')\" translate>\n" +
     "Deploy Image\n" +
     "</button>\n" +
-    "<button class=\"btn btn-default btn-sm\" ng-click=\"showOrderingPanel('fromFile')\">\n" +
+    "<button class=\"btn btn-default btn-sm\" ng-click=\"showOrderingPanel('fromFile')\" translate>\n" +
     "Import YAML / JSON\n" +
     "</button>\n" +
-    "<button class=\"btn btn-default btn-sm\" ng-click=\"showOrderingPanel('fromProject')\">\n" +
+    "<button class=\"btn btn-default btn-sm\" ng-click=\"showOrderingPanel('fromProject')\" translate>\n" +
     "Select from Project\n" +
     "</button>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!(project.metadata.name | canIAddToProject)\">\n" +
-    "<h2>Welcome to project {{projectName}}.</h2>\n" +
+    "<h2 translate>Welcome to project {{projectName}}.</h2>\n" +
     "<ng-include src=\"'views/_request-access.html'\"></ng-include>\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"overview.showLoading\" class=\"container-fluid loading-message\">\n" +
+    "<div ng-if=\"overview.showLoading\" class=\"container-fluid loading-message\" translate>\n" +
     "Loading...\n" +
     "</div>\n" +
     "<div ng-if=\"!overview.showGetStarted && !overview.showLoading\">\n" +
@@ -11973,7 +11972,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<form role=\"form\" class=\"search-pf has-button\">\n" +
     "<div class=\"form-group filter-controls has-clear\">\n" +
     "<div class=\"search-pf-input-group\">\n" +
-    "<label for=\"name-filter\" class=\"sr-only\">Filter by name</label>\n" +
+    "<label for=\"name-filter\" class=\"sr-only\" translate>Filter by name</label>\n" +
     "<input type=\"text\" class=\"form-control\" ng-model=\"overview.filterText\" placeholder=\"Filter by name\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" ng-disabled=\"overview.disableFilter\">\n" +
     "<button type=\"button\" class=\"clear\" aria-hidden=\"true\" ng-if=\"overview.filterText && !overview.disableFilter\" ng-click=\"overview.filterText = ''\">\n" +
     "<span class=\"pficon pficon-close\"></span>\n" +
@@ -11985,7 +11984,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"vertical-divider\"></div>\n" +
     "<div class=\"view-by-options\">\n" +
-    "<span class=\"data-toolbar-label\">List by</span>\n" +
+    "<span class=\"data-toolbar-label\" translate>List by</span>\n" +
     "<ui-select class=\"data-toolbar-dropdown\" ng-model=\"overview.viewBy\" search-enabled=\"false\">\n" +
     "<ui-select-match>{{$select.selected.label}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"option.id as option in overview.viewByOptions\">\n" +
@@ -12009,15 +12008,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<alerts alerts=\"overview.state.alerts\"></alerts>\n" +
     "<div ng-if=\"overview.everythingFiltered && overview.viewBy !== 'pipeline'\">\n" +
     "<div class=\"empty-state-message text-center h2\">\n" +
-    "The filter is hiding all resources.\n" +
-    "<button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"overview.clearFilter()\">Clear All Filters</button>\n" +
+    "<translate>The filter is hiding all resources.</translate>\n" +
+    "<button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"overview.clearFilter()\" translate>Clear All Filters</button>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!overview.everythingFiltered || overview.viewBy === 'pipeline'\">\n" +
     "<div ng-if=\"overview.viewBy === 'app'\" ng-repeat=\"app in overview.apps\">\n" +
     "<div ng-if=\"app\" class=\"app-heading\">\n" +
     "<h2>\n" +
-    "<div class=\"component-label\">Application</div>\n" +
+    "<div class=\"component-label\" translate>Application</div>\n" +
     "<span ng-bind-html=\"app | highlightKeywords : overview.state.filterKeywords\"></span>\n" +
     "</h2>\n" +
     "<div class=\"overview-routes\" ng-if=\"overview.routesToDisplayByApp[app] | size\">\n" +
@@ -12032,7 +12031,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h3>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<h2 ng-if=\"!app\">\n" +
+    "<h2 ng-if=\"!app\" translate>\n" +
     "Other Resources\n" +
     "</h2>\n" +
     "<div class=\"list-pf\">\n" +
@@ -12113,18 +12112,18 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"overview.viewBy === 'pipeline'\">\n" +
     "\n" +
     "<div ng-if=\"!overview.pipelineBuildConfigs.length\" class=\"empty-state-message text-center\">\n" +
-    "<h2>No pipelines.</h2>\n" +
+    "<h2 translate>No pipelines.</h2>\n" +
     "<div ng-if=\"project.metadata.name | canIAddToProject\">\n" +
     "<p>\n" +
-    "No pipelines have been added to project {{projectName}}.\n" +
+    "<span translate>pipelines have been added to project {{projectName}}.</span>\n" +
     "<br>\n" +
-    "Learn more about\n" +
+    "<translate>Learn more about</translate>\n" +
     "<a ng-href=\"{{ 'pipeline-builds' | helpLink}}\" target=\"_blank\">Pipeline Builds</a>\n" +
-    "and the\n" +
+    "<translate>and the</translate>\n" +
     "<a ng-href=\"{{ 'pipeline-plugin' | helpLink}}\" target=\"_blank\">OpenShift Pipeline Plugin</a>.\n" +
     "</p>\n" +
     "<p ng-if=\"(project.metadata.name | canIAddToProject) && overview.samplePipelineURL\">\n" +
-    "<a ng-href=\"{{overview.samplePipelineURL}}\" class=\"btn btn-lg btn-primary\">\n" +
+    "<a ng-href=\"{{overview.samplePipelineURL}}\" class=\"btn btn-lg btn-primary\" translate>\n" +
     "Create Sample Pipeline\n" +
     "</a>\n" +
     "</p>\n" +
@@ -12135,13 +12134,13 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"(overview.pipelineBuildConfigs | hashSize) && !(overview.filteredPipelineBuildConfigs | hashSize)\">\n" +
     "<div class=\"empty-state-message text-center h2\">\n" +
-    "All pipelines are filtered.\n" +
-    "<button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"overview.clearFilter()\">Clear All Filters</button>\n" +
+    "<translate>All pipelines are filtered.</translate>\n" +
+    "<button type=\"button\" class=\"btn btn-link inline-btn-link\" ng-click=\"overview.clearFilter()\" translate>Clear All Filters</button>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-repeat=\"pipeline in overview.filteredPipelineBuildConfigs track by (pipeline | uid)\">\n" +
     "<div ng-if=\"overview.buildConfigsInstantiateVersion | canI : 'create'\" class=\"pull-right\">\n" +
-    "<button class=\"btn btn-default\" ng-if=\"overview.buildConfigsInstantiateVersion | canI : 'create'\" ng-click=\"overview.startBuild(pipeline)\">\n" +
+    "<button class=\"btn btn-default\" ng-if=\"overview.buildConfigsInstantiateVersion | canI : 'create'\" ng-click=\"overview.startBuild(pipeline)\" translate>\n" +
     "Start Pipeline\n" +
     "</button>\n" +
     "</div>\n" +
@@ -12149,7 +12148,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"component-label\">Pipeline</div>\n" +
     "<span ng-bind-html=\"pipeline.metadata.name | highlightKeywords : overview.state.filterKeywords\"></span>\n" +
     "</h2>\n" +
-    "<div ng-if=\"!(overview.recentPipelinesByBuildConfig[pipeline.metadata.name] | hashSize)\" class=\"mar-bottom-lg\">\n" +
+    "<div ng-if=\"!(overview.recentPipelinesByBuildConfig[pipeline.metadata.name] | hashSize)\" class=\"mar-bottom-lg\" translate>\n" +
     "No pipeline runs.\n" +
     "</div>\n" +
     "<div ng-if=\"overview.recentPipelinesByBuildConfig[pipeline.metadata.name] | hashSize\" class=\"build-pipelines\">\n" +
@@ -12159,7 +12158,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<div ng-if=\"!overview.deploymentConfigsByPipeline[pipeline.metadata.name].length\" class=\"mar-bottom-lg\">\n" +
+    "<div ng-if=\"!overview.deploymentConfigsByPipeline[pipeline.metadata.name].length\" class=\"mar-bottom-lg\" translate>\n" +
     "This pipeline is not associated with any deployments.\n" +
     "</div>\n" +
     "<div ng-if=\"overview.deploymentConfigsByPipeline[pipeline.metadata.name].length\" class=\"list-pf\">\n" +
@@ -12169,7 +12168,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "<div class=\"list-pf\" ng-if=\"overview.pipelineViewHasOtherResources && !overview.hidePipelineOtherResources\">\n" +
-    "<h2>Other Resources</h2>\n" +
+    "<h2 translate>Other Resources</h2>\n" +
     "<overview-list-row ng-repeat=\"deploymentConfig in overview.deploymentConfigsNoPipeline track by (deploymentConfig | uid)\" ng-init=\"dcName = deploymentConfig.metadata.name\" api-object=\"deploymentConfig\" current=\"overview.currentByDeploymentConfig[dcName]\" previous=\"overview.getPreviousReplicationController(deploymentConfig)\" state=\"overview.state\">\n" +
     "</overview-list-row>\n" +
     "<overview-list-row ng-repeat=\"deployment in overview.deployments track by (deployment | uid)\" api-object=\"deployment\" current=\"overview.currentByDeploymentUID[deployment.metadata.uid]\" previous=\"overview.replicaSetsByDeploymentUID[deployment.metadata.uid][1]\" state=\"overview.state\">\n" +
@@ -12195,14 +12194,14 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "\n" +
     "<div ng-if=\"(overview.filteredOfflineVirtualMachines | size) && !overview.hidePipelineOtherResources\">\n" +
-    "<h2>Virtual Machines</h2>\n" +
+    "<h2 translate>Virtual Machines</h2>\n" +
     "<div class=\"list-pf\">\n" +
     "<virtual-machine-row ng-repeat=\"ovm in overview.filteredOfflineVirtualMachines track by (ovm | uid)\" api-object=\"ovm\" state=\"overview.state\"></virtual-machine-row>\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +
     "<div ng-if=\"overview.filteredServiceInstances.length && !overview.hidePipelineOtherResources\">\n" +
-    "<h2>\n" +
+    "<h2 translate>\n" +
     "Provisioned Services\n" +
     "</h2>\n" +
     "<div class=\"list-pf\">\n" +
@@ -13377,7 +13376,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"!loading\">\n" +
     "<div class=\"projects-header\">\n" +
     "<div class=\"projects-bar\">\n" +
-    "<h1>My Projects</h1>\n" +
+    "<h1 translate>My Projects</h1>\n" +
     "<div class=\"projects-options\">\n" +
     "<div class=\"projects-add\" ng-if=\"canCreate\">\n" +
     "<button ng-click=\"createProject($event)\" class=\"btn btn-primary\">\n" +
@@ -14226,7 +14225,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"alert word-break\" ng-class=\"{ 'alert-danger': alert.type === 'error', 'alert-warning': alert.type === 'warning', 'alert-success': alert.type === 'success', 'alert-info': !alert.type || alert.type === 'info', 'toast-pf': $ctrl.toast, 'mar-left-sm': $ctrl.toast}\">\n" +
     "<button ng-if=\"!$ctrl.hideCloseButton\" ng-click=\"$ctrl.close(alert)\" type=\"button\" class=\"close\">\n" +
     "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"sr-only\">Close</span>\n" +
+    "<span class=\"sr-only\" translate>Close</span>\n" +
     "</button>\n" +
     "<span class=\"pficon\" aria-hidden=\"true\" ng-class=\"{'pficon-error-circle-o': alert.type === 'error', 'pficon-warning-triangle-o': alert.type === 'warning', 'pficon-ok': alert.type === 'success','pficon-info': !alert.type || alert.type === 'info'}\"></span>\n" +
     "<span class=\"sr-only\">{{alert.type}}</span>\n" +
@@ -14247,7 +14246,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<fieldset ng-disabled=\"$ctrl.selectDisabled\">\n" +
     "<div class=\"row\">\n" +
     "<div class=\"form-group col-sm-4\">\n" +
-    "<label class=\"sr-only\">Namespace</label>\n" +
+    "<label class=\"sr-only\" translate>Namespace</label>\n" +
     "<ui-select ng-required=\"$ctrl.selectRequired\" ng-model=\"$ctrl.istag.namespace\" ng-disabled=\"$ctrl.selectDisabled\" ng-change=\"$ctrl.namespaceChanged($ctrl.istag.namespace)\" append-to-body=\"$ctrl.appendToBody\">\n" +
     "<ui-select-match placeholder=\"Namespace\">{{$select.selected}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"namespace in ($ctrl.namespaces | filter : $select.search)\">\n" +
@@ -14257,7 +14256,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"istag-separator\">/</div>\n" +
     "</div>\n" +
     "<div class=\"form-group col-sm-4\">\n" +
-    "<label class=\"sr-only\">Image Stream</label>\n" +
+    "<label class=\"sr-only\" translate>Image Stream</label>\n" +
     "<ui-select ng-required=\"$ctrl.selectRequired\" ng-model=\"$ctrl.istag.imageStream\" ng-disabled=\"!$ctrl.istag.namespace || $ctrl.selectDisabled\" ng-change=\"$ctrl.istag.tagObject = null\" append-to-body=\"$ctrl.appendToBody\">\n" +
     "<ui-select-match placeholder=\"Image Stream\">{{$select.selected}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"imageStream in ($ctrl.isNamesByNamespace[$ctrl.istag.namespace] | filter : $select.search)\">\n" +
@@ -14267,7 +14266,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"istag-separator\">:</div>\n" +
     "</div>\n" +
     "<div class=\"form-group col-sm-4\">\n" +
-    "<label class=\"sr-only\">Tag</label>\n" +
+    "<label class=\"sr-only\" translate>Tag</label>\n" +
     "<ui-select ng-required=\"$ctrl.selectRequired\" ng-model=\"$ctrl.istag.tagObject\" ng-disabled=\"!$ctrl.istag.imageStream || $ctrl.selectDisabled\" append-to-body=\"$ctrl.appendToBody\">\n" +
     "<ui-select-match placeholder=\"Tag\">{{$select.selected.tag}}</ui-select-match>\n" +
     "<ui-select-choices group-by=\"$ctrl.groupTags\" repeat=\"statusTag in ($ctrl.isByNamespace[$ctrl.istag.namespace][$ctrl.istag.imageStream].status.tags | filter : { tag: $select.search })\" refresh=\"$ctrl.getTags($select.search)\" refresh-delay=\"200\">\n" +
@@ -14305,7 +14304,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
     "<div class=\"has-error select-secret-ref\" ng-show=\"$ctrl.secretsForm[secretFieldName].$invalid && $ctrl.secretsForm[secretFieldName].$touched\">\n" +
-    "<span class=\"help-block\">\n" +
+    "<span class=\"help-block\" translate>\n" +
     "Secret reference is required.\n" +
     "</span>\n" +
     "</div>\n" +
@@ -14315,26 +14314,26 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"input-group-btn\">\n" +
     "<button type=\"button\" class=\"btn btn-default toggle\" title=\"Toggle Token Visibility\" aria-label=\"Toggle Token Visibility\" ng-click=\"$ctrl.toggleSecretInputType(trigger)\">\n" +
     "<span class=\"glyphicon glyphicon-eye-open\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"sr-only\">Toggle Token Visibility</span>\n" +
+    "<span class=\"sr-only\" translate>Toggle Token Visibility</span>\n" +
     "</button>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-row-controls\">\n" +
     "<button ng-click=\"$ctrl.removeWebhookTrigger(trigger, $index)\" type=\"button\" class=\"btn-remove close\" aria-hidden=\"true\">\n" +
     "<span class=\"pficon pficon-close\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"sr-only\">Remove Webhook trigger</span>\n" +
+    "<span class=\"sr-only\" translate>Remove Webhook trigger</span>\n" +
     "</button>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"has-warning\" ng-if=\"trigger.isDuplicate\">\n" +
-    "<span class=\"help-block\">A {{trigger.data.type}} webhook trigger referencing the secret {{(trigger | getWebhookSecretData).secretReference.name}} already exists.</span>\n" +
+    "<span class=\"help-block\" translate>A {{trigger.data.type}} webhook trigger referencing the secret {{(trigger | getWebhookSecretData).secretReference.name}} already exists.</span>\n" +
     "</div>\n" +
     "</div>\n" +
     "<div class=\"form-group-actions\">\n" +
-    "<button class=\"btn btn-link pad-left-none\" type=\"button\" ng-click=\"$ctrl.addEmptyWebhookTrigger()\">Add Webhook</button>\n" +
+    "<button class=\"btn btn-link pad-left-none\" type=\"button\" ng-click=\"$ctrl.addEmptyWebhookTrigger()\" translate>Add Webhook</button>\n" +
     "<span ng-if=\"$ctrl.secretsVersion | canI : 'create'\">\n" +
     "<span class=\"action-divider\" aria-hidden=\"true\">|</span>\n" +
-    "<button class=\"btn btn-link\" href=\"\" type=\"button\" ng-click=\"$ctrl.openCreateWebhookSecretModal()\">Create New Webhook Secret</button>\n" +
+    "<button class=\"btn btn-link\" href=\"\" type=\"button\" ng-click=\"$ctrl.openCreateWebhookSecretModal()\" translate>Create New Webhook Secret</button>\n" +
     "</span>\n" +
     "</div>\n" +
     "</ng-form>"
