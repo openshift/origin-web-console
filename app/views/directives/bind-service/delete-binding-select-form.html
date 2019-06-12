@@ -1,5 +1,5 @@
-<h3 class="mar-top-none">
-  Select a binding to delete from <strong>{{ctrl.displayName}}</strong>
+<h3 class="mar-top-none" translate>
+  Select a binding to delete from {{ctrl.displayName}}
 </h3>
 <form name="ctrl.bindingSelection" class="mar-bottom-lg">
   <fieldset ng-disabled="ctrl.isDisabled">
@@ -18,7 +18,7 @@
             {{binding.metadata.name}}
           </div>
           <div>
-            <small class="text-muted">Created <span am-time-ago="binding.metadata.creationTimestamp"></span></small>
+            <small class="text-muted"><translate>Created</translate> <span am-time-ago="binding.metadata.creationTimestamp"></span></small>
           </div>
       </label>
     </div>

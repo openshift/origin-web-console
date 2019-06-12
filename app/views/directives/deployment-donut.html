@@ -15,7 +15,7 @@
          ng-click="viewPodsForDeployment(rc)"
          ng-if="(pods | hashSize) > 0"
          role="button">
-         View pods for {{rc | displayName}}
+         <translate>View pods for</translate> {{rc | displayName}}
       </a>
     </div>
 
@@ -30,7 +30,7 @@
            ng-attr-title="{{!scalable ? undefined : 'Scale up'}}"
            ng-attr-aria-disabled="{{!scalable ? 'true' : undefined}}">
           <i class="fa fa-chevron-up"></i>
-          <span class="sr-only">Scale up</span>
+          <span class="sr-only" translate>Scale up</span>
         </a>
       </div>
       <div>
@@ -42,7 +42,7 @@
            ng-attr-aria-disabled="{{(!scalable || getDesiredReplicas() === 0) ? 'true' : undefined}}"
            role="button">
           <i class="fa fa-chevron-down"></i>
-          <span class="sr-only">Scale down</span>
+          <span class="sr-only" translate>Scale down</span>
         </a>
       </div>
     </div>
@@ -50,10 +50,10 @@
 
   <div ng-if="hpa.length" class="deployment-donut-row scaling-details">
     <div>
-      Autoscaled:
-      <span class="nowrap">min: {{hpa[0].spec.minReplicas || 1}},</span>
+      <translate>Autoscaled:</translate>
+      <span class="nowrap"><translate>min:</translate> {{hpa[0].spec.minReplicas || 1}},</span>
       <span class="nowrap">
-        max: {{hpa[0].spec.maxReplicas}}
+        <translate>max:</translate> {{hpa[0].spec.maxReplicas}}
         <span ng-if="hpaWarnings"
               dynamic-content="{{hpaWarnings}}"
               data-toggle="popover"
@@ -67,22 +67,22 @@
   </div>
   <div class="scaling-details" ng-if="showQuotaWarning">
       <span class="pficon pficon-warning-triangle-o"></span>
-      <a ng-href="project/{{rc.metadata.namespace}}/quota">Quota</a>
-      limit reached.
+      <a ng-href="project/{{rc.metadata.namespace}}/quota" translate>Quota</a>
+      <translate>limit reached.</translate>
   </div>
   <div class="scaling-details" ng-if="showQuotaWarning">
-    Scaling may be affected.
-    <a ng-if="rc.kind !== 'StatefulSet'" ng-href="{{rc | navigateResourceURL}}?tab=events" class="check-events">Check events</a>
-    <a ng-if="rc.kind === 'StatefulSet'" ng-href="project/{{rc.metadata.namespace}}/browse/events" class="check-events">Check events</a>
+    <translate>Scaling may be affected.</translate>
+    <a ng-if="rc.kind !== 'StatefulSet'" ng-href="{{rc | navigateResourceURL}}?tab=events" class="check-events" translate>Check events</a>
+    <a ng-if="rc.kind === 'StatefulSet'" ng-href="project/{{rc.metadata.namespace}}/browse/events" class="check-events" translate>Check events</a>
   </div>
   <div
     class="scaling-details"
     ng-if="isIdled && (!getDesiredReplicas())">
     <div ng-if="(!resuming)">
-      <span>Idled due to inactivity.</span>
+      <span translate>Idled due to inactivity.</span>
       <a
         href=""
-        ng-click="unIdle()">Start {{(deploymentConfig || rc) | unidleTargetReplicas : hpa}} pod{{ ((deploymentConfig || rc) | unidleTargetReplicas : hpa) > 1 ? 's' : ''}}</a>
+        ng-click="unIdle()"><translate>Start</translate> {{(deploymentConfig || rc) | unidleTargetReplicas : hpa}} pod{{ ((deploymentConfig || rc) | unidleTargetReplicas : hpa) > 1 ? 's' : ''}}</a>
     </div>
   </div>
 </div>

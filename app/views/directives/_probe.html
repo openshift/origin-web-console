@@ -13,11 +13,11 @@
     </truncate-long-text>
   </code>
 </span>
-<span ng-if="probe.tcpSocket">
+<span ng-if="probe.tcpSocket" translate>
   Open socket on port {{probe.tcpSocket.port}}
 </span>
 
 <small class="text-muted">
-  <span ng-if="probe.initialDelaySeconds" class="nowrap">{{probe.initialDelaySeconds}}s delay,</span>
-  <span class="nowrap">{{probe.timeoutSeconds || 1}}s timeout</span>
+  <span ng-if="probe.initialDelaySeconds" class="nowrap">{{probe.initialDelaySeconds}}s <translate>delay,</translate></span>
+  <span class="nowrap">{{probe.timeoutSeconds || 1}}s <translate>timeout</translate></span>
 </small>

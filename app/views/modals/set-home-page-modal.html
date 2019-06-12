@@ -3,10 +3,10 @@
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close" ng-click="cancel()">
       <span class="pficon pficon-close"></span>
     </button>
-    <h1 class="modal-title">Set Home Page</h1>
+    <h1 class="modal-title" translate>Set Home Page</h1>
   </div>
   <div class="modal-body">
-    <p>
+    <p translate>
       Note: This setting is browser-specific and will not be maintained across browsers.
     </p>
     <form name="homePageForm">
@@ -14,19 +14,19 @@
         <div class="radio">
           <label>
             <input type="radio" ng-model="homePagePreference" value="catalog-home">
-            Catalog Home (Default)
+            <translate>Catalog Home (Default)</translate>
           </label>
         </div>
         <div class="radio">
           <label>
             <input type="radio" ng-model="homePagePreference" value="project-list">
-            My Projects List
+            <translate>My Projects List</translate>
           </label>
         </div>
         <div class="radio" ng-show="availableProjects.length >= 1">
           <label>
             <input type="radio" ng-model="homePagePreference" value="project-overview">
-            Overview Page for{{availableProjects.length === 1 ? ' ' + (selectedProject | displayName) : ':'}}
+            <translate>Overview Page for{{availableProjects.length === 1 ? ' ' + (selectedProject | displayName) : ':'}}</translate>
           </label>
           <div class="select-project-container" ng-if="availableProjects.length > 1">
             <select-project is-required="homePagePreference === 'project-overview'"
@@ -44,9 +44,9 @@
     </form>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-default" type="button" ng-click="cancel()" translate>Cancel</button>
     <button class="btn btn-primary" type="button"
             ng-disabled="homePageForm.$invalid || homePageForm.$pristine"
-            ng-click="setHomePage()">Save</button>
+            ng-click="setHomePage()" translate>Save</button>
   </div>
 </div>

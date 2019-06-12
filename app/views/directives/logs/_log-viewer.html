@@ -7,14 +7,14 @@
         extension-types="link dom"
         extension-args="[object, options]"></span>
     <span ng-if="kibanaArchiveUrl">
-      <a href="{{kibanaArchiveUrl}}">View Archive</a>
+      <a href="{{kibanaArchiveUrl}}" translate>View Archive</a>
       <span ng-if="state && state !== 'empty'" class="action-divider">|</span>
     </span>
     <span ng-if="canSave && state && state !== 'empty'">
       <a href=""
          ng-click="saveLog()"
          role="button">
-         Save
+         <translate>Save</translate>
          <i class="fa fa-download"></i></a>
       <span ng-if="state && state !== 'empty'" class="action-divider">|</span>
     </span>
@@ -22,15 +22,14 @@
        href=""
        ng-click="goChromeless(options, fullLogUrl)"
        role="button">
-       Expand
+       <translate>Expand</translate>
        <i class="fa fa-external-link"></i></a>
   </div>
 </div>
 
 <div ng-if="largeLog" class="alert alert-info log-size-warning">
   <span class="pficon pficon-info" aria-hidden="true"></span>
-  Only the previous {{options.tailLines || 5000}} log lines and new log
-  messages will be displayed because of the large log size.
+  <translate>Only the previous {{options.tailLines || 5000}} log lines and new log messages will be displayed because of the large log size.</translate>
 </div>
 
 
@@ -41,14 +40,14 @@
 </div>
 
 <div class="empty-state-message text-center" ng-if="state=='empty'" ng-class="{'log-fixed-height': fixedHeight}">
-  <h2>Logs are not available.</h2>
+  <h2 translate>Logs are not available.</h2>
 
   <p>
     {{emptyStateMessage}}
   </p>
 
   <div ng-if="kibanaArchiveUrl">
-    <a href="{{kibanaArchiveUrl}}">View Archive</a>
+    <a href="{{kibanaArchiveUrl}}" translate>View Archive</a>
   </div>
 </div>
 
@@ -61,10 +60,10 @@
       id="{{logViewerID}}-affixedFollow"
       class="log-scroll log-scroll-top">
       <a ng-if="loading" href="" ng-click="toggleAutoScroll()">
-        <span ng-if="!autoScrollActive">Follow</span>
-        <span ng-if="autoScrollActive">Stop Following</span>
+        <span ng-if="!autoScrollActive" translate>Follow</span>
+        <span ng-if="autoScrollActive" translate>Stop Following</span>
       </a>
-      <a ng-if="!loading" href="" ng-show="showScrollLinks" ng-click="onScrollBottom()">
+      <a ng-if="!loading" href="" ng-show="showScrollLinks" ng-click="onScrollBottom()" translate>
         Go to End
       </a>
     </div>
@@ -72,7 +71,7 @@
       <table>
         <tbody id="{{logViewerID}}-logContent"></tbody>
       </table>
-      <div ng-if="(!loading) && (!limitReached) && (!errorWhileRunning) && state=='logs'" class="log-end-msg">
+      <div ng-if="(!loading) && (!limitReached) && (!errorWhileRunning) && state=='logs'" class="log-end-msg" translate>
         End of log
       </div>
     </div>
@@ -81,19 +80,19 @@
     <div
       ng-show="showScrollLinks"
       class="log-scroll log-scroll-bottom">
-      <a href="" ng-click="onScrollTop()">Go to Top</a>
+      <a href="" ng-click="onScrollTop()" translate>Go to Top</a>
     </div>
   </div>
 </div>
 
 <!-- Show a different messsage if the log might have stopped because we reached the byte limit -->
 <div ng-if="limitReached" class="text-muted">
-  The maximum web console log size has been reached. Use the command-line interface or
-  <a href="" ng-click="restartLogs()">reload</a> the log to see new messages.
+  <translate>The maximum web console log size has been reached. Use the command-line interface or</translate>
+  <a href="" ng-click="restartLogs()" translate>reload</a> <translate>the log to see new messages.</translate>
 </div>
 
 
 <div ng-if="errorWhileRunning" class="text-muted">
-  An error occurred loading the log.
-  <a href="" ng-click="restartLogs()">Reload</a>
+  <translate>An error occurred loading the log.</translate>
+  <a href="" ng-click="restartLogs()" translate>Reload</a>
 </div>

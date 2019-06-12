@@ -19,15 +19,15 @@
                   data-trigger="hover"
                   data-container="#{{tooltipID}}">
               <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
-              Error
+              <translate>Error</translate>
             </span>
             <span ng-switch-when="deleted" class="notification-icon-count">
               <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-              Marked for Deletion
+              <translate>Marked for Deletion</translate>
             </span>
             <span ng-switch-when="pending" class="notification-icon-count">
               <span class="spinner spinner-xs spinner-inline" aria-hidden="true"></span>
-              <span>Pending</span>
+              <span translate>Pending</span>
             </span>
           </div>
         </div>
@@ -39,11 +39,11 @@
               class="hidden-xs hidden-sm">
           <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">
             <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>
-            Create Binding
+            <translate>Create Binding</translate>
           </a>
         </span>
         <div ng-if="row.bindings.length" class="hidden-xs hidden-sm">
-          <span class="component-label">Bindings</span>
+          <span class="component-label" translate>Bindings</span>
           <p ng-if="firstBinding = row.bindings[0]" class="bindings">
             <span ng-if="application = row.state.applicationsByBinding[firstBinding.metadata.name][0]">
               {{application.metadata.name}}
@@ -52,7 +52,7 @@
               {{firstBinding.metadata.name}}
             </span>
             <span ng-if="row.bindings.length > 1">
-              and
+              <translate>and</translate>
               <a
                 ng-if="row.bindings.length > 1"
                 ng-click="row.toggleExpand($event, true)">
@@ -72,19 +72,19 @@
     <div class="list-pf-actions">
       <div class="dropdown-kebab-pf" uib-dropdown ng-if="row.actionsDropdownVisible()">
         <button uib-dropdown-toggle class="btn btn-link dropdown-toggle">
-          <i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span>
+          <i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only" translate>Actions</span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
           <li role="menuitem" ng-if="row.isBindable && (row.serviceBindingsVersion | canI : 'create')">
-            <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">
+            <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})" translate>
               Create Binding
             </a>
           </li>
           <li role="menuitem" ng-if="row.deleteableBindings.length && (row.serviceBindingsVersion | canI : 'delete')">
-            <a href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})">Delete Binding</a>
+            <a href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})" translate>Delete Binding</a>
           </li>
           <li role="menuitem">
-            <a href="" ng-click="row.deprovision()" role="button" ng-if="row.serviceInstancesVersion | canI : 'delete'">Delete</a>
+            <a href="" ng-click="row.deprovision()" role="button" ng-if="row.serviceInstancesVersion | canI : 'delete'" translate>Delete</a>
           </li>
         </ul>
       </div>
@@ -101,8 +101,8 @@
           <div class="col-sm-12">
             <div class="alert word-break alert-warning">
               <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-              <span class="sr-only">warning</span>
-              <span class="strong">The service was marked for deletion.</span>
+              <span class="sr-only" translate>warning</span>
+              <span class="strong" translate>The service was marked for deletion.</span>
             </div>
           </div>
         </div>
@@ -110,8 +110,8 @@
           <div class="col-sm-12">
             <div class="alert word-break alert-danger">
               <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
-              <span class="sr-only">error</span>
-              <span class="strong">The service failed.</span>
+              <span class="sr-only" translate>error</span>
+              <span class="strong" translate>The service failed.</span>
               <span class="instance-status-message">
                 <truncate-long-text
                   content="row.apiObject | serviceInstanceFailedMessage"
@@ -120,7 +120,7 @@
                   newline-limit="4"></truncate-long-text>
               </span>
               <div ng-if="row.serviceInstancesVersion | canI : 'delete'">
-                <a href="" ng-click="row.deprovision()">Delete This Service</a>
+                <a href="" ng-click="row.deprovision()" translate>Delete This Service</a>
               </div>
             </div>
           </div>
@@ -129,8 +129,8 @@
           <div class="col-sm-12">
             <div class="alert word-break alert-info">
               <span class="pficon pficon-info" aria-hidden="true"></span>
-              <span class="sr-only">info</span>
-              <span class="strong">The service is not yet ready.</span>
+              <span class="sr-only" translate>info</span>
+              <span class="strong" translate>The service is not yet ready.</span>
               <span class="instance-status-message">
                 <truncate-long-text
                   content="row.apiObject | serviceInstanceReadyMessage"
@@ -161,7 +161,7 @@
       </div>
       <div class="expanded-section">
         <div ng-if="row.isBindable || (row.bindings | size)">
-          <div class="component-label section-label">Bindings</div>
+          <div class="component-label section-label" translate>Bindings</div>
           <service-instance-bindings
             is-overview="true"
             project="row.state.project"

@@ -1,7 +1,7 @@
 <div class="order-service-config">
   <div class="config-top">
     <div ng-if="$ctrl.numTemplateProjects" class="select-project-for-template">
-      <h2>Select from Project</h2>
+      <h2 translate>Select from Project</h2>
       <label ng-if="$ctrl.numTemplateProjects === 1">{{$ctrl.templateProject | displayName}}</label>
       <ui-select
         ng-if="$ctrl.numTemplateProjects > 1"

@@ -3,13 +3,13 @@
     <div class="container-fluid">
       <div class="page-header page-header-bleed-right page-header-bleed-left">
         <div class="pull-right" ng-if="project && (routesVersion | canI : 'create') && ((routes | hashSize) > 0 || filterWithZeroResults)">
-          <a ng-href="project/{{project.metadata.name}}/create-route" class="btn btn-default">Create Route</a>
+          <a ng-href="project/{{project.metadata.name}}/create-route" class="btn btn-default" translate>Create Route</a>
         </div>
         <h1>
-          Routes
+          <translate>Routes</translate>
           <span class="page-header-link">
             <a ng-href="{{'routes' | helpLink}}" target="_blank">
-              Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
+              <translate>Learn More</translate> <i class="fa fa-external-link" aria-hidden="true"></i>
             </a>
           </span>
         </h1>
@@ -26,19 +26,19 @@
       <div class="row">
         <div class="col-md-12">
           <div ng-if="(routes | hashSize) == 0">
-            <p ng-if="!routesLoaded">
+            <p ng-if="!routesLoaded" translate>
               Loading...
             </p>
             <div ng-if="routesLoaded" class="empty-state-message text-center">
               <div ng-if="!filterWithZeroResults">
-                <h2>No routes.</h2>
-                <p>No routes have been added to project {{projectName}}.</p>
+                <h2 translate>No routes.</h2>
+                <p translate>No routes have been added to project {{projectName}}.</p>
                 <p ng-if="project && (routesVersion | canI : 'create') && !filterWithZeroResults">
-                  <a ng-href="project/{{project.metadata.name}}/create-route" class="btn btn-primary btn-lg">Create Route</a>
+                  <a ng-href="project/{{project.metadata.name}}/create-route" class="btn btn-primary btn-lg" translate>Create Route</a>
                 </p>
               </div>
               <div ng-if="filterWithZeroResults">
-                <h2>The filter is hiding all routes. <button type="button" class="btn btn-link inline-btn-link" ng-click="clearFilter()">Clear All Filters</button></h2>
+                <h2><translate>The filter is hiding all routes.</translate> <button type="button" class="btn btn-link inline-btn-link" ng-click="clearFilter()" translate>Clear All Filters</button></h2>
               </div>
             </div>
           </div>
@@ -53,14 +53,14 @@
             <thead>
               <tr>
                 <th>{{customNameHeader || 'Name'}}</th>
-                <th>Hostname</th>
+                <th translate>Hostname</th>
                 <!--
                   Right now only services are supported. If other types are
                   added, we'll need to change the table header.
                  -->
-                <th>Service</th>
-                <th>Target Port</th>
-                <th>TLS Termination</th>
+                <th translate>Service</th>
+                <th translate>Target Port</th>
+                <th translate>TLS Termination</th>
               </tr>
             </thead>
             <tbody>
@@ -84,7 +84,7 @@
                   </span>
                   <span ng-if="!route.status.ingress" data-toggle="popover" data-trigger="hover" data-content="The route is not accepting traffic yet because it has not been admitted by a router." style="cursor: help; padding-left: 5px;">
                     <status-icon status="'Pending'"></status-icon>
-                    <span class="sr-only">Pending</span>
+                    <span class="sr-only" translate>Pending</span>
                   </span>
                 </td>
                 <!--

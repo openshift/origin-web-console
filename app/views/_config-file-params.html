@@ -1,21 +1,21 @@
 <div ng-repeat="(serverName, data) in secretData.auths" class="image-source-item">
   <h3>{{serverName}}</h3>
-  <dt ng-if-start="data.username">username</dt>
+  <dt ng-if-start="data.username" translate>username</dt>
   <dd ng-if-end class="word-break">{{data.username}}</dd>
-  <dt ng-if-start="data.password">password</dt>
+  <dt ng-if-start="data.password" translate>password</dt>
   <dd ng-if-end>
     <span ng-if="view.showSecret">
       <copy-to-clipboard clipboard-text="data.password" display-wide="true"></copy-to-clipboard>
     </span>
     <span ng-if="!view.showSecret">*****</span>
   </dd>
-  <dt ng-if-start="data.email">email</dt>
+  <dt ng-if-start="data.email" translate>email</dt>
   <dd ng-if-end class="word-break">{{data.email}}</dd>
-  <div ng-if="!data.username && !data.password && !data.email">
+  <div ng-if="!data.username && !data.password && !data.email" translate>
     No username and password.
   </div>
 </div>
-<h3 ng-if-start="secretData.credsStore">Credentials Store</h3>
+<h3 ng-if-start="secretData.credsStore" translate>Credentials Store</h3>
 <div ng-if-end>
   <span ng-if="view.showSecret">
     <copy-to-clipboard clipboard-text="secretData.credsStore" display-wide="true"></copy-to-clipboard>

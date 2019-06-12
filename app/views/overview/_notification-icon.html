@@ -7,10 +7,10 @@
       class="pficon pficon-error-circle-o"
       aria-hidden="true"></span>
     {{notification.countByType.error}}
-    <span ng-if="notification.countByType.error === 1">
+    <span ng-if="notification.countByType.error === 1" translate>
       Error
     </span>
-    <span ng-if="notification.countByType.error !== 1">
+    <span ng-if="notification.countByType.error !== 1" translate>
       Errors
     </span>
   </span>
@@ -24,10 +24,10 @@
       class="pficon pficon-warning-triangle-o"
       aria-hidden="true"></span>
     {{notification.countByType.warning}}
-    <span ng-if="notification.countByType.warning === 1">
+    <span ng-if="notification.countByType.warning === 1" translate>
       Warning
     </span>
-    <span ng-if="notification.countByType.warning !== 1">
+    <span ng-if="notification.countByType.warning !== 1" translate>
       Warnings
     </span>
   </span>
@@ -41,10 +41,10 @@
       class="pficon pficon-info"
       aria-hidden="true"></span>
     {{notification.countByType.info}}
-    <span ng-if="notification.countByType.info === 1">
+    <span ng-if="notification.countByType.info === 1" translate>
       Message
     </span>
-    <span ng-if="notification.countByType.info !== 1">
+    <span ng-if="notification.countByType.info !== 1" translate>
       Messages
     </span>
   </span>

@@ -3,12 +3,12 @@
     <div ng-if="persistentVolumeClaimForm.capacity.$error.outOfClaims" class="has-error">
       <div class="alert alert-danger">
         <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
-        <strong>Storage quota limit has been reached. You will not be able to create any new storage.</strong>
-        <a ng-href="project/{{projectName}}/quota" target="_blank">View Quota&nbsp;</a>
+        <strong translate>Storage quota limit has been reached. You will not be able to create any new storage.</strong>
+        <a ng-href="project/{{projectName}}/quota" target="_blank" translate>View Quota&nbsp;</a>
       </div>
     </div>
     <div ng-if="storageClasses.length" class="form-group">
-      <label>Storage Class</label>
+      <label translate>Storage Class</label>
       <div>
         <ui-select
           ng-model="claim.storageClass"
@@ -29,15 +29,15 @@
               <div ng-if="sclass.parameters.type || sclass.parameters.zone || (sclass | description) || (sclass | storageClassAccessMode)" class="text-muted">
                 <small>
                   <span ng-if="sclass.parameters.type">
-                    Type: {{sclass.parameters.type}}
+                    <translate>Type</translate>: {{sclass.parameters.type}}
                   </span>
                   <span ng-if="sclass.parameters.zone">
                     <span ng-if="sclass.parameters.type">|</span>
-                    Zone: {{sclass.parameters.zone}}
+                    <translate>Zone</translate>: {{sclass.parameters.zone}}
                   </span>
                   <span ng-if="(sclass | storageClassAccessMode)">
                     <span ng-if="sclass.parameters.type || sclass.parameters.zone">|</span>
-                    Access: {{sclass | storageClassAccessMode}}
+                    <translate>Access</translate>: {{sclass | storageClassAccessMode}}
                   </span>
                   <span ng-if="sclass | description">
                     <span ng-if="sclass.parameters.type || sclass.parameters.zone || (sclass | storageClassAccessMode)">|</span>
@@ -50,10 +50,10 @@
         </ui-select>
       </div>
       <div id="claim-storage-class-help" class="help-block">
-        Storage classes are set by the administrator to define types of storage the users can select.
-        <span ng-if="defaultStorageClass"> If another storage class is not chosen, the default storage class <var>{{defaultStorageClass.metadata.name}}</var> will be used.</span>
+          <translate>Storage classes are set by the administrator to define types of storage the users can select.</translate>
+        <span ng-if="defaultStorageClass"> <translate>If another storage class is not chosen, the default storage class</translate> <var>{{defaultStorageClass.metadata.name}}</var> <translate>will be used.</translate></span>
         <div class="learn-more-block">
-          <a ng-href="{{'storage_classes' | helpLink}}" target="_blank">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"> </i></a>
+          <a ng-href="{{'storage_classes' | helpLink}}" target="_blank"><translate>Learn More</translate>&nbsp;<i class="fa fa-external-link" aria-hidden="true"> </i></a>
         </div>
       </div>
 
@@ -61,7 +61,7 @@
 
     <!-- Name -->
     <div class="form-group">
-      <label for="claim-name" class="required">Name</label>
+      <label for="claim-name" class="required" translate>Name</label>
       <span ng-class="{ 'has-error': persistentVolumeClaimForm.name.$invalid && persistentVolumeClaimForm.name.$dirty && !claimDisabled }">
         <input
           id="claim-name"
@@ -81,10 +81,10 @@
           aria-describedby="claim-name-help">
       </span>
       <div>
-        <span id="claim-name-help" class="help-block">A unique name for the storage claim within the project.</span>
+        <span id="claim-name-help" class="help-block" translate>A unique name for the storage claim within the project.</span>
       </div>
       <div class="has-error" ng-show="persistentVolumeClaimForm.name.$error.required && persistentVolumeClaimForm.name.$dirty && !claimDisabled">
-        <span class="help-block">
+        <span class="help-block" translate>
           Name is required.
         </span>
       </div>
@@ -94,14 +94,14 @@
         </span>
       </div>
       <div class="has-error" ng-show="persistentVolumeClaimForm.name.$error.maxlength && persistentVolumeClaimForm.name.$touched && !claimDisabled">
-        <span class="help-block">
+        <span class="help-block" translate>
           Can't be longer than {{nameValidation.maxlength}} characters.
         </span>
       </div>
     </div>
 
     <div class="form-group mar-bottom-xl" >
-      <label class="required">Access Mode</label>
+      <label class="required" translate>Access Mode</label>
       <span ng-if="claim.storageClass && (claim.storageClass | storageClassAccessMode)" class="static-form-value-large">
         <small>(cannot be changed)</small>
       </span>
@@ -110,29 +110,29 @@
           <input type="radio" name="accessModes" ng-model="claim.accessModes" value="ReadWriteOnce"
                  aria-describedby="access-modes-help" ng-true-value="’1’" ng-false-value="’0’"
                  ng-disabled="(claim.storageClass | storageClassAccessMode)">
-          Single User (RWO)
+          <translate>Single User (RWO)</translate>
         </label>
         <label class="radio-inline">
           <input type="radio" id="accessModes" name="accessModes" ng-model="claim.accessModes" value="ReadWriteMany"
                  aria-describedby="access-modes-help" ng-true-value="’1’" ng-false-value="’0’"
                  ng-disabled="(claim.storageClass | storageClassAccessMode)">
-          Shared Access (RWX)
+          <translate>Shared Access (RWX)</translate>
         </label>
         <label class="radio-inline">
           <input type="radio" name="accessModes" ng-model="claim.accessModes" value="ReadOnlyMany"
                  aria-describedby="access-modes-help" ng-true-value="’1’" ng-false-value="’0’"
                  ng-disabled="(claim.storageClass | storageClassAccessMode)">
-          Read Only (ROX)
+          <translate>Read Only (ROX)</translate>
         </label>
       </div>
       <div>
-        <span id="access-modes-help" class="help-block">Permissions to the mounted volume.</span>
+        <span id="access-modes-help" class="help-block" translate>Permissions to the mounted volume.</span>
       </div>
     </div>
 
     <!-- capacity -->
     <div ng-if="capacityReadOnly" class="form-group mar-bottom-xl">
-      <label>Size</label>
+      <label translate>Size</label>
       <div class="static-form-value-large">
         {{claim.amount}} {{claim.unit | humanizeUnit : 'storage'}}
         <small>(cannot be changed)</small>
@@ -141,20 +141,20 @@
     <div ng-if="!capacityReadOnly" class="form-group">
       <fieldset class="form-inline compute-resource">
         <label class="required">
-          Size
+          <translate>Size</translate>
           <small ng-if="limits.min && limits.max">
             {{limits.min | usageWithUnits : 'storage'}} min to {{limits.max | usageWithUnits : 'storage'}} max
           </small>
           <small ng-if="limits.min && !limits.max">
-            Min: {{limits.min | usageWithUnits : 'storage'}}
+            <translate>Min</translate>: {{limits.min | usageWithUnits : 'storage'}}
           </small>
           <small ng-if="limits.max && !limits.min">
-            Max: {{limits.max | usageWithUnits : 'storage'}}
+            <translate>Max</translate>: {{limits.max | usageWithUnits : 'storage'}}
           </small>
         </label>
         <div class="resource-size" ng-class="{ 'has-error': persistentVolumeClaimForm.capacity.$invalid && persistentVolumeClaimForm.capacity.$touched && !claimDisabled }">
           <div class="resource-amount">
-            <label for="claim-amount" class="sr-only">Amount</label>
+            <label for="claim-amount" class="sr-only" translate>Amount</label>
             <input type="number"
                    name="capacity"
                    id="claim-amount"
@@ -167,7 +167,7 @@
                    aria-describedby="claim-capacity-help">
           </div>
           <div class="resource-unit">
-            <label class="sr-only" >Unit</label>
+            <label class="sr-only" translate>Unit</label>
             <ui-select search-enabled="false" ng-model="claim.unit" input-id="claim-capacity-unit">
               <ui-select-match>{{$select.selected.label}}</ui-select-match>
               <ui-select-choices repeat="option.value as option in units" group-by="groupUnits">
@@ -177,52 +177,52 @@
           </div>
          </div>
          <div id="claim-capacity-help" class="help-block">
-           Desired storage capacity.
+           <translate>Desired storage capacity.</translate>
          </div>
          <div ng-if="persistentVolumeClaimForm.capacity.$touched && !claimDisabled">
            <div class="has-error" ng-show="persistentVolumeClaimForm.capacity.$error.required">
-             <span class="help-block">
+             <span class="help-block" translate>
                Size is required.
              </span>
            </div>
            <div class="has-error" ng-show="persistentVolumeClaimForm.capacity.$error.number">
-             <span class="help-block">
+             <span class="help-block" translate>
                Must be a number.
              </span>
            </div>
            <div class="has-error" ng-show="persistentVolumeClaimForm.capacity.$error.min">
-             <span class="help-block">
+             <span class="help-block" translate>
                Must be a positive number.
              </span>
            </div>
            <div ng-if="persistentVolumeClaimForm.capacity.$error.limitRangeMin" class="has-error">
              <span class="help-block">
-               Can't be less than {{limits.min | usageWithUnits : 'storage'}}.
+               <translate>Can't be less than</translate> {{limits.min | usageWithUnits : 'storage'}}.
              </span>
            </div>
            <div ng-if="persistentVolumeClaimForm.capacity.$error.limitRangeMax" class="has-error">
              <span class="help-block">
-               Can't be greater than {{limits.max | usageWithUnits : 'storage'}}.
+                <translate>Can't be greater than</translate> {{limits.max | usageWithUnits : 'storage'}}.
              </span>
            </div>
            <div ng-if="persistentVolumeClaimForm.capacity.$error.willExceedStorage" class="has-error">
              <span class="help-block">
-               Storage quota will be exceeded. <a ng-href="project/{{projectName}}/quota" target="_blank">View Quota&nbsp;</a>
+               <translate>Storage quota will be exceeded.</translate> <a ng-href="project/{{projectName}}/quota" target="_blank"><translate>View Quota</translate>&nbsp;</a>
              </span>
            </div>
          </div>
          <div class="learn-more-block mar-top-sm">
-           <a href="" ng-click="showComputeUnitsHelp()">What are GiB?</a>
+           <a href="" ng-click="showComputeUnitsHelp()" translate>What are GiB?</a>
          </div>
       </fieldset>
     </div>
     <div class="checkbox">
       <label>
         <input type="checkbox" ng-model="useLabels">
-        Use label selectors to request storage
+        <translate>Use label selectors to request storage</translate>
       </label>
       <div class="help-block learn-more-block mar-bottom-xl">
-        <a ng-href="{{'selector_label' | helpLink}}" target="_blank">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
+        <a ng-href="{{'selector_label' | helpLink}}" target="_blank"><translate>Learn More</translate>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
       </div>
     </div>
     <div ng-show="useLabels" class="form-group osc-form">
@@ -230,7 +230,7 @@
           labels="claim.selectedLabels"
           expand="true"
           can-toggle="false"
-          help-text="Enter a label and value to use for your storage.">
+          help-text="{{'Enter a label and value to use for your storage.' | translate}}">
       </label-editor>
     </div>
   </fieldset>

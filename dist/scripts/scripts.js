@@ -1,6 +1,6 @@
 "use strict";
 
-function OverviewController(e, t, n, r, a, o, i, s, c, l, u, d, m, p, g, f, h, v, y, b, S, C, w, P, j, k, I, R, T, N, E, A) {
+function OverviewController(e, t, n, r, a, o, i, s, c, l, u, d, m, p, g, f, h, v, y, b, S, C, w, P, j, k, I, R, T, N, A, E) {
 function D(e) {
 var t = e.metadata.ownerReferences;
 return t ? _(t).filter({
@@ -122,13 +122,13 @@ _.assign(n, _.keyBy(t, "metadata.name"));
 maxWait: 1500
 }), Ne = function() {
 L.filteredDeploymentConfigsByApp = Ie(L.filteredDeploymentConfigs), L.filteredReplicationControllersByApp = Ie(L.filteredReplicationControllers), L.filteredDeploymentsByApp = Ie(L.filteredDeployments), L.filteredReplicaSetsByApp = Ie(L.filteredReplicaSets), L.filteredStatefulSetsByApp = Ie(L.filteredStatefulSets), L.filteredDaemonSetsByApp = Ie(L.filteredDaemonSets), L.filteredMonopodsByApp = Ie(L.filteredMonopods), L.apps = _.union(_.keys(L.filteredDeploymentConfigsByApp), _.keys(L.filteredReplicationControllersByApp), _.keys(L.filteredDeploymentsByApp), _.keys(L.filteredReplicaSetsByApp), _.keys(L.filteredStatefulSetsByApp), _.keys(L.filteredDaemonSetsByApp), _.keys(L.filteredMonopodsByApp)), s.sortAppNames(L.apps), Te();
-}, Ee = function() {
+}, Ae = function() {
 var e = _.filter(L.deploymentConfigs, function(e) {
 var t = we(e);
 return _.isEmpty(Se.pipelinesByDeploymentConfig[t]);
 });
 L.deploymentConfigsNoPipeline = _.sortBy(e, "metadata.name"), L.pipelineViewHasOtherResources = !(_.isEmpty(L.deploymentConfigsNoPipeline) && _.isEmpty(L.vanillaReplicationControllers) && _.isEmpty(L.deployments) && _.isEmpty(L.vanillaReplicaSets) && _.isEmpty(L.statefulSets) && _.isEmpty(L.monopods));
-}, Ae = function() {
+}, Ee = function() {
 L.disableFilter = "pipeline" === L.viewBy && _.isEmpty(L.pipelineBuildConfigs);
 }, De = function(e) {
 return b.getLabelSelector().select(e);
@@ -157,20 +157,20 @@ L.filteredDeploymentConfigs = Le(L.deploymentConfigs), L.filteredReplicationCont
 L.viewBy = localStorage.getItem(Ue) || "app", e.$watch(function() {
 return L.viewBy;
 }, function(e) {
-localStorage.setItem(Ue, e), Ae(), $e = "app" === L.viewBy ? [ "metadata.name", "metadata.labels.app" ] : [ "metadata.name" ], Oe(), "pipeline" === L.viewBy ? b.setLabelSuggestions(ye) : b.setLabelSuggestions(ve);
+localStorage.setItem(Ue, e), Ee(), $e = "app" === L.viewBy ? [ "metadata.name", "metadata.labels.app" ] : [ "metadata.name" ], Oe(), "pipeline" === L.viewBy ? b.setLabelSuggestions(ye) : b.setLabelSuggestions(ve);
 }), d.DISABLE_OVERVIEW_METRICS || (C.isAvailable(!0).then(function(e) {
 Se.showMetrics = e;
 }), e.$on("metrics-connection-failed", function(e, t) {
 o.isAlertPermanentlyHidden("metrics-connection-failed") || Se.alerts["metrics-connection-failed"] || (Se.alerts["metrics-connection-failed"] = {
 type: "warning",
-message: A.getString("An error occurred getting metrics."),
+message: E.getString("An error occurred getting metrics."),
 links: [ {
 href: t.url,
-label: A.getString("Open Metrics URL"),
+label: E.getString("Open Metrics URL"),
 target: "_blank"
 }, {
 href: "",
-label: A.getString("Don't Show Me Again"),
+label: E.getString("Don't Show Me Again"),
 onClick: function() {
 return o.permanentlyHideAlert("metrics-connection-failed"), !0;
 }
@@ -304,7 +304,7 @@ L.recentPipelinesByBuildConfig[t] = L.recentPipelinesByBuildConfig[t] || [], L.r
 var r = l.usesDeploymentConfigs(n);
 _.each(r, function(t) {
 Se.recentPipelinesByDeploymentConfig[t] = Se.recentPipelinesByDeploymentConfig[t] || [], Se.recentPipelinesByDeploymentConfig[t].push(e);
-}), Ee();
+}), Ae();
 }
 }, ht = {}, vt = function() {
 ht = l.groupBuildConfigsByOutputImage(L.buildConfigs);
@@ -332,7 +332,7 @@ _.set(L, [ "deploymentConfigsByPipeline", r ], n), _.each(n, function(e) {
 Se.pipelinesByDeploymentConfig[e] = Se.pipelinesByDeploymentConfig[e] || [], Se.pipelinesByDeploymentConfig[e].push(t);
 });
 }
-}), L.pipelineBuildConfigs = _.sortBy(e, "metadata.name"), Ee(), nt(L.pipelineBuildConfigs), Ae();
+}), L.pipelineBuildConfigs = _.sortBy(e, "metadata.name"), Ae(), nt(L.pipelineBuildConfigs), Ee();
 }, wt = function() {
 Se.buildConfigsByObjectUID = {}, _.each(L.deploymentConfigs, function(e) {
 var t = [], n = _.get(e, "spec.triggers");
@@ -494,13 +494,13 @@ L.mobileClients = e.by("metadata.name"), Oe(), S.log("mobileclients (subscribe)"
 poll: V,
 pollInterval: 6e4
 })), e.KUBEVIRT_ENABLED) {
-Tt.push(m.watch(E.offlineVirtualMachine, r, function(e) {
+Tt.push(m.watch(A.offlineVirtualMachine, r, function(e) {
 L.offlineVirtualMachines = e.by("metadata.name"), B(), Oe();
 }, {
 poll: V,
 pollInterval: 6e4
 }));
-Tt.push(m.watch(E.virtualMachine, r, function(e) {
+Tt.push(m.watch(A.virtualMachine, r, function(e) {
 L.virtualMachines = e.by("metadata.name"), B(), Oe();
 }, {
 poll: V,
@@ -1133,8 +1133,8 @@ e.setStrings("zh_CN", {
 "A token is a form of a password. Do not share your API token.": "token是密码的一种形式，勿与API token共享.",
 "Access denied": "拒绝访问",
 "Add Config Files": "添加添加配置文件",
-"Add Storage": "添加存储",
 "Add content to your project from the catalog of web frameworks, databases, and other components. You may also deploy an existing image, create or replace resources from their YAML or JSON definitions, or select an item shared from another project.": "从catalog中添加 web frameworks, databases, 以及其他 components到你的项目中, 你可能也需要部署已有的镜像，从他们的YAML 或者 JSON definitions中创建或者替换资源，或者选择一项与其他项目共用。",
+"Add Storage": "添加存储",
 "All items in list were created successfully.": "列表中所有项已全部被创建成功.",
 "All items in list were updated successfully.": "列表中所有项已全部被更新成功.",
 "All items in template {{name}} were created successfully.": "{{name}} template中的所有项已创建成功.",
@@ -1143,8 +1143,10 @@ e.setStrings("zh_CN", {
 "All resources for image {{name}} were created successfully.": "{{name}}镜像的所有资源已被创建成功.",
 "An error has occurred": "发生错误",
 "An error occurred  adding {{source}} {{name}} to {{target}} {{app}}.": "添加{{source}} {{name}}到 {{target}} {{app}}出错.",
-"An error occurred attaching the persistent volume claim to the {{kind}}.": "挂载persistent volume claim到{{kind}}出错.",
+"An error occurred {{status}} the deployment config.": " deployment config出现错误 {{status}}.",
+"An error occurred {{status}} the deployment.": "deployment出现错误{{status}}.",
 "An error occurred attaching the {{sourceKind}} to the {{targetKind}}.": "挂载 {{sourceKind}} 到 {{targetKind}}出错.",
+"An error occurred attaching the persistent volume claim to the {{kind}}.": "挂载persistent volume claim到{{kind}}出错.",
 "An error occurred creating project.": "创建项目出错.",
 "An error occurred creating the config map.": "创建 config map出错.",
 "An error occurred creating the horizontal pod autoscaler.": "创建 horizontal pod autoscaler出错.",
@@ -1154,14 +1156,14 @@ e.setStrings("zh_CN", {
 "An error occurred getting metrics.": "获取metrics发生错误.",
 "An error occurred processing the template.": "processing template发生错误.",
 "An error occurred requesting storage.": "requesting storage发生错误.",
+"An error occurred scaling {{kind}} {{name}}.": "scaling {{kind}} {{name}}发生错误.",
 "An error occurred scaling the deployment config.": " scaling deployment config发生错误.",
 "An error occurred scaling the deployment.": " scaling the deployment发生错误.",
-"An error occurred scaling {{kind}} {{name}}.": "scaling {{kind}} {{name}}发生错误.",
 "An error occurred scaling.": "scaling发生错误.",
 "An error occurred updating build config {{name}}.": "更新build config {{name}}出现错误.",
 "An error occurred updating deployment config {{name}}.": "更新deployment config {{name}}出现错误.",
-"An error occurred updating environment variables for build config {{name}}.": "为 build config {{name}}更新环境变量出现错误.",
 "An error occurred updating environment variables for {{kind}} {{name}}.": "为 {{kind}} {{name}}更新环境变量出现错误.",
+"An error occurred updating environment variables for build config {{name}}.": "为 build config {{name}}更新环境变量出现错误.",
 "An error occurred updating metrics for pod {{pod}}.": "为pod {{pod}}更新metrics出现错误.",
 "An error occurred updating metrics.": "更新metrics发生错误.",
 "An error occurred updating route {{routeName}}.": "更新 route {{routeName}}发生错误.",
@@ -1170,10 +1172,9 @@ e.setStrings("zh_CN", {
 "An error occurred while creating the secret.": "创建secret出现错误.",
 "An error occurred while linking the secret with service account {{link}}.": "链接secret和service account {{link}}出现错误.",
 "An error occurred while updating the project": "更新项目出现错误",
-"An error occurred {{status}} the deployment config.": " deployment config出现错误 {{status}}.",
-"An error occurred {{status}} the deployment.": "deployment出现错误{{status}}.",
 "An error occurred.": "出现错误.",
 "An image stream or template is required.": "image stream 或 template是必须的.",
+"and the": "和",
 "Any remaining build history for this build will be shown.": "该build的全部remaining build history都将显示.",
 "Any remaining deployment history for this deployment will be shown.": "该deployment的全部remaining deployment history都将显示.",
 Application: "应用",
@@ -1183,7 +1184,7 @@ Applications: "应用",
 "Browse Catalog": "浏览目录",
 "Build config {{name}} was successfully updated.": "Build config{{name}}更新成功.",
 "Build configuration {{name}} has been deleted.": "Build配置 {{name}}已被删除.",
-CN: "中文",
+"can't be created in project {{name}}": "在{{name}}无法被创建.",
 Cancel: "取消",
 "Cannot change resource group (original:": "无法修改资源组 (original:",
 "Cannot change resource kind (original:": "无法修改资源类型 (original:",
@@ -1198,13 +1199,18 @@ Catalog: "目录",
 "Catalog category {{category}} not found.": "未发现 {{category}}目录.",
 "Catalog category {{category}}/{{subcategory}}not found.": "未发现{{category}}/{{subcategory}}目录.",
 "Check Server Connection": "检查Server连接",
-"Clear All Filters": "清空过滤",
+"Clear All Filters": "清除筛选",
 Close: "关闭",
+CN: "中文",
 "Config map {{name}} successfully created.": "Config map{{name}}创建成功.",
 "Config map {{name}} successfully updated.": "Config map{{name}}更新成功。",
 Configuration: "配置",
 "Confirm Creation": "确认创建",
 "Confirm Removal": "确认移除",
+"could not be deleted.": "不能被删除.",
+"could not be expanded.": "无法扩展.",
+"could not be loaded.": "无法加载.",
+"could not be updated.": "无法更新.",
 "Could not debug container": "无法debug容器",
 "Could not delete pod": "无法删除pod",
 "Could not load": "无法加载",
@@ -1219,6 +1225,7 @@ Configuration: "配置",
 "Could not prefill parameter values.": "无法预填参数值.",
 "Could not read file": "无法读取文件",
 Create: "创建",
+"create an image pull secret": "创建 image pull secret",
 "Create Anyway": "创建",
 "Create Config Map": "创建Config Map",
 "Create Route": "创建路由",
@@ -1226,25 +1233,24 @@ Create: "创建",
 "Create Secret": "创建Secret",
 "Create Storage": "创建存储",
 Created: "创建",
-"Created application {{name}} in project {{projectName}}": "{{projectName}}中创建 {{name}}应用成功.",
 "Created {{kind}}  {{name}}  successfully.": "创建{{kind}}  {{name}}成功.",
 "Created {{name}} in project {{project}}": "在{{project}}中创建{{name}}",
+"Created application {{name}} in project {{projectName}}": "{{projectName}}中创建 {{name}}应用成功.",
+"Creating {{name}} in project {{project}}": "在{{project}}项目中创建{{name}}",
 "Creating application {{name}} in project {{projectName}}": "在{{projectName}}中创建 {{name}}应用.",
 "Creating resources in project {{name}}": "在 {{name}}项目中创建资源",
-"Creating {{name}} in project {{project}}": "在{{project}}项目中创建{{name}}",
 "Creation Date": "创建时间",
 Creator: "创建人",
 "Defines minimum and maximum constraints for runtime resources such as memory and CPU.": "定义资源，如：内存、CPU的最大和最小运行时间.",
 Delete: "删除",
 Deploy: "部署",
-"Deploy Image": "部署镜像",
 "Deploy an existing image from an image stream tag or image registry.": "从 image stream tag 或image registry部署已有的镜像.",
+"Deploy Image": "部署镜像",
 "Deployed image {{name}} to project {{project}}": "已部署{{name}}到 {{project}}.",
 "Deploying image {{name}} to project {{project}}": "正在部署{{name}}到 {{project}}.",
 "Deployment config {{name}} was successfully updated.": "Deployment config{{name}}更新成功.",
 "Display Name": "显示名称",
 "Don't Show Me Again": "不再显示",
-EN: "英文",
 Edit: "编辑",
 "Edit Config Map": "编辑Config Map",
 "Edit Deployment Config": "编辑Deployment Config",
@@ -1252,34 +1258,39 @@ Edit: "编辑",
 "Edit Resource Limits": "编辑Resource Limits",
 "Edit YAML": "编辑YAML",
 'Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.': "不支持编辑non-service targets路由，你可以用“编辑YAML”来替代.",
+EN: "英文",
 "Enter the arguments that will be appended to the command.": "输入的参数将会被添加到命令中.",
 "Enter the arguments that will be appended to the default image entry point.": "输入的参数将会被添加到默认的 image entry point.",
 "Enter the arguments that will be appended to the script.": "输入的参数将会被添加到script.",
 "Environment variables for build config {{name}} were successfully updated.": "build config {{name}}环境变量更新成功.",
 "Environment variables for{{kind}} {{name}} were successfully updated.": "{{kind}} {{name}}环境变量更新成功.",
-"Failed to create some resources in project {{name}}": "在 {{name}}中创建资源失败.",
-"Failed to create {{name}} in project {{projectName}}": "在 {{projectName}}中创建 {{name}} 失败.",
+"expand request has been submitted.": "扩展请求已提交.",
 "Failed to create {{name}} in project {{project}}": "在 {{project}}中创建 {{name}} 失败.",
+"Failed to create {{name}} in project {{projectName}}": "在 {{projectName}}中创建 {{name}} 失败.",
+"Failed to create some resources in project {{name}}": "在 {{name}}中创建资源失败.",
 "Failed to deployed image {{name}} to project {{project}}": "部署{{name}}到 {{project}}失败",
 "Failed to update some resources in project {{name}}": "在 {{name}}更新资源失败",
-"Filter by Keyword": "按关键词过滤",
-"Filter by name": "按名称过滤",
+Filter: "筛选",
+"Filter by Keyword": "按关键词筛选",
+"Filter by name": "按名称筛选",
 "Get started with your project.": "开始你的项目.",
-"HPA {{name}} could not be deleted.": "无法删除HPA {{name}}.",
 "Health checks are not supported for kind {{kind}}.": "Health checks不支持{{kind}}类型.",
 "Horizontal pod autoscaler {{name}} could not be deleted.": "无法删除Horizontal pod autoscaler {{name}} .",
 "Horizontal pod autoscaler {{name}} successfully created.": "Horizontal pod autoscaler {{name}} 创建成功.",
 "Horizontal pod autoscaler {{name}} successfully updated.": "Horizontal pod autoscaler {{name}} 更新成功.",
 "Horizontal pod autoscaler {{name}} was marked for deletion.": "Horizontal pod autoscaler {{name}} 被标记用于删除.",
+"HPA {{name}} could not be deleted.": "无法删除HPA {{name}}.",
 "Identifies the resources created for this image.": "为该镜像创建资源认证.",
 Image: "镜像",
+"Image {{import.name}} runs as the\n            root user which might not be permitted by your cluster\n            administrator.": "集群管理员不允许以root用户运行{{import.name}}镜像.",
 "Image search is only available for existing projects.": "只能在已存在的项目中搜索镜像.",
 "Image streams and templates cannot be combined.": "Image streams 和 templates无法结合。",
-"Image {{import.name}} runs as the\n            root user which might not be permitted by your cluster\n            administrator.": "集群管理员不允许以root用户运行{{import.name}}镜像.",
 Images: "镜像",
 "Import YAML / JSON": "导入YAML/JSON",
 Information: "信息",
 "Invalid request": "不合法请求",
+is: "是",
+"is not valid JSON.": "不是合法的JSON.",
 "It will not delete the config map.": "将删除config map.",
 "It will not delete the persistent volume claim.": "不删除persistent volume claim.",
 "It will not delete the secret.": "不删除secret.",
@@ -1298,14 +1309,11 @@ Logs: "日志",
 "Make sure any new fields you may have added are supported API fields.": "确保你添加到新fields支持API fields.",
 Membership: "成员",
 Monitoring: "监控",
-"My Projects": "我的项目",
 Name: "名称",
 "Name can't have more than 24 characters.": "名称不能超出24个字符。",
 "Name must be an alphanumeric (a-z, 0-9) string with a maximum length\n              of 24 characters where the first character is a letter (a-z). The '-'\n              character is allowed anywhere except the first or last character.": "名称必须是(a-z, 0-9)之间的字符和数字，最长24个字符，首字母需是(a-z)之间字母，’-‘可以在任何位置，除了首尾.",
 "Name must have at least 2 characters.": "名称至少两个字符。",
 "Next >": "下一步>",
-"No Project Selected": "未选择项目",
-"No Templates": "不发现模板",
 "No builds to show": "未发现builds",
 "No changes were applied to {{kind}} {{name}}.": "{{kind}} {{name}}没有变化.",
 "No deployments to show": "未发现deployments",
@@ -1313,7 +1321,9 @@ Name: "名称",
 "No mount path was provided. The volume reference was added to the configuration, but it will not be mounted into running pods.": "未提供mount path，volume reference已被添加到配置中，但是没有挂载到运行的pods中.",
 "No pipeline runs.": "未发现pipeline运行.",
 "No pipelines.": "未发现pipelines.",
+"No Project Selected": "未选择项目",
 "No tags to show": "未发现tags",
+"No Templates": "不发现模板",
 "Not found": "未发现",
 "Open Metrics URL": "打开 Metrics URL",
 "Other Projects": "其他项目",
@@ -1322,6 +1332,7 @@ Overview: "概览",
 Parameters: "参数",
 "Persistent volume claim {{name}} added to {{kind}} {{route}}.": "Persistent volume claim {{name}} 已被添加到 {{kind}} {{route}}.",
 "Persistent volume claim {{name}} successfully created.": "Persistent volume claim {{name}}创建成功.",
+"pipelines have been added to project {{projectName}}.": "pipelines已被添加到 {{projectName}}.",
 "Please select a project from the dropdown to load templates from that project.": "请从下拉框中选择项目以加载该项目模板。",
 Pods: "Pods",
 "Problems were detected while checking your application configuration.": "检测应用配置时发现问题.",
@@ -1341,9 +1352,9 @@ Results: "结果",
 "Route {{routeName}} was successfully updated.": "{{name}}更新成功。",
 Routes: "路由",
 "Saving your changes may create a conflict or cause loss of data.": "保存修改可能导致冲突和数据丢失.",
-"Secret reference key must consist of lower-case, upper-case letters, numbers, dash, and underscore.": "Secret reference key必须由 lower-case, upper-case letters, numbers, dash, and underscore组成.",
 "Secret {{secret}} was created and linked with service account {{name}}.": "Secret{{secret}}已被创建和连接到service account {{name}}.",
 "Secret {{secret}} was created.": "Secret {{secret}} 已创建.",
+"Secret reference key must consist of lower-case, upper-case letters, numbers, dash, and underscore.": "Secret reference key必须由 lower-case, upper-case letters, numbers, dash, and underscore组成.",
 "Select an image stream tag or enter an image name.": "选择一个image stream tag或者输入镜像名.",
 "Select from Project": "从项目中选择",
 Selection: "选择",
@@ -1353,7 +1364,9 @@ Storage: "存储",
 "Storage is not supported for kind {{kind}}.": "存储不支持 {{kind}}类型.",
 "Storage quota limit has been reached. You will not be able to create any new storage.": "Storage quota达到限制.你将无法创建新storage.",
 "Successfully added": "添加成功",
+"successfully.": "成功。",
 "Template wasn't found in cache.": "cache未发现Template.",
+"The {{displayKind}} details could not be loaded.": "{{displayKind}}无法加载.",
 "The active filters are hiding all builds.": "当前过滤条件隐藏了所有builds.",
 "The active filters are hiding all deployments.": "当前过滤条件隐藏了所有deployments.",
 "The active filters are hiding all rollout history.": "当前过滤条件隐藏了所有 rollout history.",
@@ -1384,8 +1397,8 @@ Storage: "存储",
 "The service details could not be loaded.": "服务详情无法加载.",
 "The stateful set details could not be loaded.": "stateful set详情无法加载.",
 "The templateParamsMap is not valid JSON.": "templateParamsMap不是合法的JSON.",
-"The {{displayKind}} details could not be loaded.": "{{displayKind}}无法加载.",
 "There are no projects available from which to load templates.": "没有可供选择的项目加载模板.",
+"This {{displayKind}} has been deleted.": "{{displayKind}}已被删除.",
 "This build configuration can not be found, it may have been deleted.": "未发现build配置，可能已被删除.",
 "This build configuration has been deleted.": "build配置已被删除.",
 "This build configuration has been updated in the background. Saving your changes may create a conflict or cause loss of data.": "build配置已在后台更新.保存修改可能导致冲突或丢失数据.",
@@ -1409,12 +1422,12 @@ Storage: "存储",
 "This secret has been deleted.": "secret已被删除.",
 "This service has been deleted.": "service已被删除.",
 "This terminal has been disconnected. If you reconnect, your terminal history will be lost.": "终端已经断开连接，若重新连接，终端记录将丢失.",
+"This will remove the volume from the {{kind}}.": "从 {{kind}}移除卷.",
 "This will remove the volume from the deployment and start a new rollout.": "将从deployment移除卷,开始一个新的rollout.",
 "This will remove the volume from the deployment config and trigger a new deployment.": "将从deployment config移除卷以及触发新的deployment.",
 "This will remove the volume from the deployment config.": "将从deployment config移除卷.",
 "This will remove the volume from the deployment.": "将从deployment移除卷.",
-"This will remove the volume from the {{kind}}.": "从 {{kind}}移除卷.",
-"This {{displayKind}} has been deleted.": "{{displayKind}}已被删除.",
+to: "到",
 "To deploy an image from a private repository, you must": "从私人仓库部署镜像,你必须",
 "Unable to calculate the bounding box for a character.  Terminal will not be able to resize.": "无法为character计算bounding box，终端无法重新调整大小.",
 "Unable to copy the login command.": "无法复制 login command.",
@@ -1429,11 +1442,17 @@ View: "查看",
 "View Quota": "查看Quota",
 "Virtual Machines": "虚拟机",
 "Volumes are not supported for kind {{kind}}.": "卷不支持 {{kind}}类型.",
+"was created.": "已创建",
+"was marked for deletion.": "被标记用于删除》",
+"was successfully created.": "被创建成功.",
+"was successfully updated.": "被更新成功.",
+"was updated.": "已更新.",
 "We checked your application for potential problems. Please confirm you still want to create this application.": "检测到你的应用有潜在问题，请确认仍然创建应用.",
 "Welcome to project {{projectName}}.": "欢迎来到{{projectName}}项目.",
 Yes: "是",
 "You are logged out.": "你已退出.",
 "You could not be logged out. Return to the": "你无法退出,返回到",
+"You do not have authority to {{verb}} horizontal pod autoscalers in project {{project}}.": "没有权限在 {{project}}中 {{verb}} horizontal pod autoscalers.",
 "You do not have authority to create config maps in project {{project}}.": "没有权限在 {{project}}中创建 config maps.",
 "You do not have authority to create persistent volume claims in project {{project}}.": "没有权限在 {{project}}中创建 persistent volume claims.",
 "You do not have authority to create routes in project {{project}}.": "没有权限在 {{project}}中创建路由.",
@@ -1443,27 +1462,8 @@ Yes: "是",
 "You do not have authority to update build config {{buildconfig}}.": "没有权限更新{{buildconfig}}.",
 "You do not have authority to update deployment config": "没有权限更新 deployment config",
 "You do not have authority to update route": "没有权限更新路由",
-"You do not have authority to {{verb}} horizontal pod autoscalers in project {{project}}.": "没有权限在 {{project}}中 {{verb}} horizontal pod autoscalers.",
 "You have been logged out due to inactivity.": "长时间未操作，您已退出.",
-"You have unsaved changes. Leave this page anyway?": "你没有保存修改，确认离开页面?",
-"and the": "和",
-"can't be created in project {{name}}": "在{{name}}无法被创建.",
-"could not be deleted.": "不能被删除.",
-"could not be expanded.": "无法扩展.",
-"could not be loaded.": "无法加载.",
-"could not be updated.": "无法更新.",
-"create an image pull secret": "创建 image pull secret",
-"expand request has been submitted.": "扩展请求已提交.",
-is: "是",
-"is not valid JSON.": "不是合法的JSON.",
-"pipelines have been added to project {{projectName}}.": "pipelines已被添加到 {{projectName}}.",
-"successfully.": "成功。",
-to: "到",
-"was created.": "已创建",
-"was marked for deletion.": "被标记用于删除》",
-"was successfully created.": "被创建成功.",
-"was successfully updated.": "被更新成功.",
-"was updated.": "已更新."
+"You have unsaved changes. Leave this page anyway?": "你没有保存修改，确认离开页面?"
 });
 } ]), angular.module("gettext").run([ "gettextCatalog", function(e) {
 e.setStrings("zh_CN", {
@@ -1473,6 +1473,7 @@ e.setStrings("zh_CN", {
 "A unique name for the project.": "唯一的项目名称。",
 "Add to Project": "添加到项目",
 "advanced options": "高级选项",
+All: "全部",
 "An error occurred creating the application.": "创建应用发生错误。",
 "An error occurred provisioning the service.": "配置服务发生错误。",
 "An error occurred updating the service.": "更新服务发生错误。",
@@ -1498,6 +1499,7 @@ Continue: "继续",
 Create: "创建",
 "Create Project": "创建项目",
 "Custom Add": "自定义添加",
+Databases: "数据库",
 "Delete Project": "删除项目",
 "Deploy Image": "部署镜像",
 "Edit Project": "编辑项目",
@@ -1529,9 +1531,12 @@ Information: "信息",
 "is being updated in": "正在被更新在",
 Items: "项",
 Keyword: "关键词",
+Languages: "语言",
 "Log out": "退出",
 "Logging in…": "登陆中&hellip;",
 Logout: "退出",
+Middleware: "中间件",
+More: "更多",
 "My Projects": "我的项目",
 "Name must have at least two characters.": "名称至少两个字符。",
 "Next >": "下一步>",
@@ -1543,6 +1548,7 @@ Logout: "退出",
 "No results found for Keyword:": "没有匹配到结果根据关键词：",
 "No results match.": "没有匹配到结果。",
 "or create": "或创建",
+Other: "其他",
 "Other Projects": "其他项目",
 Parameters: "参数",
 Pending: "加载中",
@@ -1588,6 +1594,8 @@ Version: "版本",
 "View Documentation": "查看Documentation",
 "View Membership": "查看成员",
 "View the result for Keyword:": "查看结果按关键词：",
+"Virtual Machines": "虚拟机",
+Virtualization: "虚拟化",
 "You are about to change users from": "你将切换用户从",
 "You are being logged in as": "你正在登陆",
 "You are not authorized to add to this project.": "您未被授权添加项目。"
@@ -4322,7 +4330,7 @@ _.each(a, d), _.each(i, d);
 }, T = [ "cpu", "requests.cpu", "memory", "requests.memory", "limits.cpu", "limits.memory" ], N = function(e, t, n, r, a) {
 var o, s = "Your project is " + (r < t ? "over" : "at") + " quota. ";
 return o = _.includes(T, a) ? s + "It is using " + h(t / r, 0) + " of " + f(n, a) + " " + C(a) + "." : s + "It is using " + t + " of " + r + " " + C(a) + ".", o = _.escape(o), i.QUOTA_NOTIFICATION_MESSAGE && i.QUOTA_NOTIFICATION_MESSAGE[a] && (o += " " + i.QUOTA_NOTIFICATION_MESSAGE[a]), o;
-}, E = function(e, t, n) {
+}, A = function(e, t, n) {
 var r = function(e) {
 var t = e.status.total || e.status;
 return _.some(t.hard, function(e, r) {
@@ -4354,9 +4362,9 @@ quotaAlerts: R(e, n, r)
 };
 });
 },
-isAnyQuotaExceeded: E,
+isAnyQuotaExceeded: A,
 isAnyStorageQuotaExceeded: function(e, t) {
-return E(e, t, [ "requests.storage", "persistentvolumeclaims" ]);
+return A(e, t, [ "requests.storage", "persistentvolumeclaims" ]);
 },
 willRequestExceedQuota: function(e, t, n, r) {
 var a = function(e) {
@@ -5463,15 +5471,15 @@ var t = _.head(e);
 return t.isVisible = !0, t.isUsed = !0, r.selectedTerminalContainer = t, e;
 }, N = function(e) {
 r.noContainersYet && (r.noContainersYet = 0 === r.containersRunning(e.status.containerStatuses));
-}, E = function(e) {
+}, A = function(e) {
 _.each(e, function(e) {
 var t = _.find(r.pod.status.containerStatuses, {
 name: e.containerName
 }), n = R(t);
 e.containerState = n;
 });
-}, A = e("annotation"), D = function(e, t) {
-if (r.loaded = !0, r.pod = e, r.dcName = A(e, "deploymentConfig"), r.rcName = A(e, "deployment"), r.deploymentVersion = A(e, "deploymentVersion"), r.logCanRun = !_.includes([ "New", "Pending", "Unknown" ], e.status.phase), C(), delete r.controllerRef, !r.dcName) {
+}, E = e("annotation"), D = function(e, t) {
+if (r.loaded = !0, r.pod = e, r.dcName = E(e, "deploymentConfig"), r.rcName = E(e, "deployment"), r.deploymentVersion = E(e, "deploymentVersion"), r.logCanRun = !_.includes([ "New", "Pending", "Unknown" ], e.status.phase), C(), delete r.controllerRef, !r.dcName) {
 var n = m.getControllerReferences(e);
 r.controllerRef = _.find(n, function(e) {
 return "ReplicationController" === e.kind || "ReplicaSet" === e.kind || "Build" === e.kind || "StatefulSet" === e.kind;
@@ -5489,7 +5497,7 @@ errorNotification: !1
 D(e);
 var t = {};
 t[e.metadata.name] = e, r.logOptions.container = n.container || e.spec.containers[0].name, r.containerTerminals = T(), N(e), l.fetchReferencedImageStreamImages(t, r.imagesByDockerReference, r.imageStreamImageRefByDockerReference, S), y.push(s.watchObject(r.podsVersion, n.pod, a, function(e, t) {
-D(e, t), E(r.containerTerminals), N(e);
+D(e, t), A(r.containerTerminals), N(e);
 }));
 }, function(t) {
 r.loaded = !0, r.alerts.load = {
@@ -5686,15 +5694,15 @@ t && (n.logOptions.replicationControllers[e.metadata.name].version = t), n.logCa
 n.logOptions.builds[e.metadata.name] = {}, n.logCanRun.builds[e.metadata.name] = !_.includes([ "New", "Pending", "Error" ], e.status.phase);
 }, N = function() {
 n.filteredStatefulSets = c.filterForKeywords(_.values(n.statefulSets), P, j);
-}, E = function() {
+}, A = function() {
 C = _.filter(n.pods, function(e) {
 return !n.filters.hideOlderResources || "Succeeded" !== e.status.phase && "Failed" !== e.status.phase;
 }), n.filteredPods = c.filterForKeywords(C, P, j);
-}, A = r("isIncompleteBuild"), D = r("buildConfigForBuild"), B = r("isRecentBuild"), L = function() {
+}, E = r("isIncompleteBuild"), D = r("buildConfigForBuild"), B = r("isRecentBuild"), L = function() {
 moment().subtract(5, "m");
 y = _.filter(n.builds, function(e) {
 if (!n.filters.hideOlderResources) return !0;
-if (A(e)) return !0;
+if (E(e)) return !0;
 var t = D(e);
 return t ? n.latestBuildByConfig[t].metadata.name === e.metadata.name : B(e);
 }), n.filteredBuilds = c.filterForKeywords(y, P, j);
@@ -5747,7 +5755,7 @@ s = !n.expanded.statefulSets[a.metadata.name], n.expanded.statefulSets[a.metadat
 }
 }, p.get(e.project).then(_.spread(function(e, r) {
 n.project = e, n.projectContext = r, h.push(i.watch("pods", r, function(e) {
-n.podsByName = e.by("metadata.name"), n.pods = w(n.podsByName, !0), n.podsByOwnerUID = m.groupByOwnerUID(n.pods), n.podsLoaded = !0, _.each(n.pods, I), E(), l.log("pods", n.pods);
+n.podsByName = e.by("metadata.name"), n.pods = w(n.podsByName, !0), n.podsByOwnerUID = m.groupByOwnerUID(n.pods), n.podsLoaded = !0, _.each(n.pods, I), A(), l.log("pods", n.pods);
 })), h.push(i.watch({
 resource: "statefulsets",
 group: "apps",
@@ -5772,7 +5780,7 @@ pollInterval: 6e4
 })), n.$on("$destroy", function() {
 i.unwatchAll(h);
 }), n.$watch("filters.hideOlderResources", function() {
-E(), L(), U(), x(), N();
+A(), L(), U(), x(), N();
 var e = t.search();
 e.hideOlderResources = n.filters.hideOlderResources ? "true" : "false", t.replace().search(e);
 }), n.$watch("kindSelector.selected.kind", function() {
@@ -5867,14 +5875,14 @@ roleName: t.roleRef.name,
 subjectName: n.name
 }), e("getErrorDetails")(r));
 });
-}, E = {};
-n.tab && (E[n.tab] = !0);
-var A = d.getSubjectKinds();
+}, A = {};
+n.tab && (A[n.tab] = !0);
+var E = d.getSubjectKinds();
 angular.extend(r, {
-selectedTab: E,
+selectedTab: A,
 projectName: v,
 forms: {},
-subjectKinds: A,
+subjectKinds: E,
 newBinding: {
 role: "",
 kind: n.tab || "User",
@@ -5951,7 +5959,7 @@ e && !_.includes(r.projects, e) ? r.projects = [ e ].concat(t) : r.projects = t;
 }), u.get(n.project).then(_.spread(function(n, a) {
 h = a, R(), I(h), angular.extend(r, {
 project: n,
-subjectKinds: A,
+subjectKinds: E,
 canUpdateRolebindings: S("rolebindings", "update", v),
 confirmRemove: function(n, a, i, s) {
 var l = null, u = D(n, a, i, r.user.metadata.name);
@@ -6711,14 +6719,14 @@ o.unwatchAll(k);
 });
 }));
 } ]), angular.module("openshiftConsole").controller("ReplicaSetController", [ "$scope", "$filter", "$routeParams", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "DeploymentsService", "HPAService", "ImageStreamResolver", "keyValueEditorUtils", "kind", "Logger", "MetricsService", "ModalsService", "Navigate", "OwnerReferencesService", "PodsService", "ProjectsService", "StorageService", "gettextCatalog", function(e, t, n, r, a, o, i, s, c, l, u, d, m, p, g, f, h, v, y, b, S) {
-var C = !1, w = t("annotation"), P = t("humanizeKind")(d), j = t("hasDeployment"), k = r.getPreferredVersion("builds"), I = r.getPreferredVersion("imagestreams"), R = r.getPreferredVersion("horizontalpodautoscalers"), T = r.getPreferredVersion("limitranges"), N = r.getPreferredVersion("pods"), E = r.getPreferredVersion("replicasets"), A = r.getPreferredVersion("replicationcontrollers"), D = r.getPreferredVersion("resourcequotas"), $ = r.getPreferredVersion("appliedclusterresourcequotas");
+var C = !1, w = t("annotation"), P = t("humanizeKind")(d), j = t("hasDeployment"), k = r.getPreferredVersion("builds"), I = r.getPreferredVersion("imagestreams"), R = r.getPreferredVersion("horizontalpodautoscalers"), T = r.getPreferredVersion("limitranges"), N = r.getPreferredVersion("pods"), A = r.getPreferredVersion("replicasets"), E = r.getPreferredVersion("replicationcontrollers"), D = r.getPreferredVersion("resourcequotas"), $ = r.getPreferredVersion("appliedclusterresourcequotas");
 switch (d) {
 case "ReplicaSet":
-e.resource = E, e.healthCheckURL = f.healthCheckURL(n.project, "ReplicaSet", n.replicaSet, "extensions");
+e.resource = A, e.healthCheckURL = f.healthCheckURL(n.project, "ReplicaSet", n.replicaSet, "extensions");
 break;
 
 case "ReplicationController":
-e.resource = A, e.healthCheckURL = f.healthCheckURL(n.project, "ReplicationController", n.replicaSet);
+e.resource = E, e.healthCheckURL = f.healthCheckURL(n.project, "ReplicationController", n.replicaSet);
 }
 var B = {};
 e.projectName = n.project, e.kind = d, e.replicaSet = null, e.deploymentConfig = null, e.deploymentConfigMissing = !1, e.imagesByDockerReference = {}, e.builds = {}, e.alerts = {}, e.renderOptions = e.renderOptions || {}, e.renderOptions.hideFilterWidget = !0, e.forms = {}, e.logOptions = {}, e.deploymentsVersion = r.getPreferredVersion("deployments"), e.deploymentConfigsVersion = r.getPreferredVersion("deploymentconfigs"), e.eventsVersion = r.getPreferredVersion("events"), e.deploymentConfigsLogVersion = "deploymentconfigs/log";
@@ -6739,7 +6747,7 @@ e.autoscalers = e.hpaForRS.concat(t);
 var r = c.filterHPA(p, "Deployment", e.deployment.metadata.name);
 e.autoscalers = e.hpaForRS.concat(r);
 } else e.autoscalers = e.hpaForRS;
-}, A = function() {
+}, E = function() {
 L.push(i.watch(e.resource, u, function(t) {
 var n, r = [];
 angular.forEach(t.by("metadata.name"), function(t) {
@@ -6797,7 +6805,7 @@ link: f.resourceURL(e.deployment)
 },
 humanizedKind: "Deployments"
 }), M(), y();
-})), L.push(i.watch(E, u, function(e) {
+})), L.push(i.watch(A, u, function(e) {
 var t = e.by("metadata.name");
 z = q(t);
 }));
@@ -6828,7 +6836,7 @@ message: S.getString("This {{displayKind}} has been deleted.", {
 displayKind: P
 })
 }), e.replicaSet = t, O(t), x(), G(), e.deployment && M();
-})), e.deploymentConfigName && A(), L.push(i.watch(N, u, function(t) {
+})), e.deploymentConfigName && E(), L.push(i.watch(N, u, function(t) {
 var n = t.by("metadata.name");
 e.podsForDeployment = v.filterForOwner(n, e.replicaSet);
 }));
@@ -7936,15 +7944,15 @@ name: _.last(r)
 }).namespace = 1 !== _.size(r) ? _.head(r) : e.buildConfig.metadata.namespace;
 }
 return n;
-}, E = function(e) {
+}, A = function(e) {
 return _.filter(e, function(e) {
 return !_.isEmpty(e.data.type) && !_.isEmpty(e.data[_.toLower(e.data.type)]);
 });
-}, A = function() {
+}, E = function() {
 var t = [].concat(e.triggers.imageChangeTriggers, e.triggers.builderImageChangeTrigger, e.triggers.configChangeTrigger);
 return t = _.filter(t, function(e) {
 return _.has(e, "disabled") && !e.disabled || e.present;
-}), t = t.concat(E(e.triggers.webhookTriggers)), t = _.map(t, "data");
+}), t = t.concat(A(e.triggers.webhookTriggers)), t = _.map(t, "data");
 }, D = function() {
 switch (e.secrets.picked = {
 gitSecret: e.buildConfig.spec.source.sourceSecret ? [ e.buildConfig.spec.source.sourceSecret ] : [ {
@@ -8005,7 +8013,7 @@ break;
 case "Custom":
 B(S(e.updatedBuildConfig), e.secrets.picked.sourceSecrets);
 }
-e.updatedBuildConfig.spec.triggers = A(), I(), s.update(v, e.updatedBuildConfig.metadata.name, e.updatedBuildConfig, e.context).then(function() {
+e.updatedBuildConfig.spec.triggers = E(), I(), s.update(v, e.updatedBuildConfig.metadata.name, e.updatedBuildConfig, e.context).then(function() {
 l.addNotification({
 type: "success",
 message: g.getString("Build config {{name}} was successfully updated.", {
@@ -8247,7 +8255,7 @@ containerNames: [ e ],
 from: a
 }
 }, n;
-}, E = function() {
+}, A = function() {
 var t = _.reject(e.updatedDeploymentConfig.spec.triggers, function(e) {
 return "ImageChange" === e.type || "ConfigChange" === e.type;
 });
@@ -8258,7 +8266,7 @@ name: r
 }), e.triggers.hasConfigTrigger && t.push({
 type: "ConfigChange"
 }), t;
-}, A = function() {
+}, E = function() {
 m.hideNotification("edit-deployment-config-error");
 };
 e.save = function() {
@@ -8274,7 +8282,7 @@ var o = e.strategyData[e.strategyParamsPropertyName].maxUnavailable, i = Number(
 }
 "Custom" !== e.strategyData.type && _.each([ "pre", "mid", "post" ], function(t) {
 _.has(e.strategyData, [ e.strategyParamsPropertyName, t, "execNewPod", "env" ]) && (e.strategyData[e.strategyParamsPropertyName][t].execNewPod.env = f.compactEntries(e.strategyData[e.strategyParamsPropertyName][t].execNewPod.env));
-}), _.has(e, "strategyData.customParams.environment") && (e.strategyData.customParams.environment = f.compactEntries(e.strategyData.customParams.environment)), e.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = _.filter(e.secrets.pullSecrets, "name"), e.updatedDeploymentConfig.spec.strategy = e.strategyData, e.updatedDeploymentConfig.spec.triggers = E(), A(), l.update(S, e.updatedDeploymentConfig.metadata.name, e.updatedDeploymentConfig, e.context).then(function() {
+}), _.has(e, "strategyData.customParams.environment") && (e.strategyData.customParams.environment = f.compactEntries(e.strategyData.customParams.environment)), e.updatedDeploymentConfig.spec.template.spec.imagePullSecrets = _.filter(e.secrets.pullSecrets, "name"), e.updatedDeploymentConfig.spec.strategy = e.strategyData, e.updatedDeploymentConfig.spec.triggers = A(), E(), l.update(S, e.updatedDeploymentConfig.metadata.name, e.updatedDeploymentConfig, e.context).then(function() {
 m.addNotification({
 type: "success",
 message: h.getString("Deployment config {{name}} was successfully updated.", {
@@ -8296,7 +8304,7 @@ details: t("getErrorDetails")(n)
 }, e.cancel = function() {
 o.history.back();
 }, e.$on("$destroy", function() {
-l.unwatchAll(P), A();
+l.unwatchAll(P), E();
 });
 } ]), angular.module("openshiftConsole").controller("EditAutoscalerController", [ "$scope", "$filter", "$routeParams", "$window", "APIService", "AuthorizationService", "BreadcrumbsService", "DataService", "HPAService", "MetricsService", "Navigate", "NotificationsService", "ProjectsService", "keyValueEditorUtils", "gettextCatalog", function(e, t, n, r, a, o, i, s, c, l, u, d, m, p, g) {
 if (n.kind && n.name) {
@@ -8702,12 +8710,12 @@ e.displayName = a.displayName, e.advancedOptions = "true" === a.advanced;
 var R = {
 name: "app",
 value: ""
-}, T = t("orderByDisplayName"), N = t("getErrorDetails"), E = {}, A = function() {
-f.hideNotification("create-builder-list-config-maps-error"), f.hideNotification("create-builder-list-secrets-error"), _.each(E, function(e) {
+}, T = t("orderByDisplayName"), N = t("getErrorDetails"), A = {}, E = function() {
+f.hideNotification("create-builder-list-config-maps-error"), f.hideNotification("create-builder-list-secrets-error"), _.each(A, function(e) {
 !e.id || "error" !== e.type && "warning" !== e.type || f.hideNotification(e.id);
 });
 };
-e.$on("$destroy", A);
+e.$on("$destroy", E);
 var D = i.getPreferredVersion("configmaps"), $ = i.getPreferredVersion("limitranges"), B = i.getPreferredVersion("imagestreams"), L = i.getPreferredVersion("imagestreamtags"), V = i.getPreferredVersion("secrets"), O = i.getPreferredVersion("resourcequotas"), U = i.getPreferredVersion("appliedclusterresourcequotas");
 h.get(a.project).then(_.spread(function(t, n) {
 e.project = t, a.sourceURI && (e.sourceURIinParams = !0), e.hasClusterResourceOverrides = d.hasClusterResourceOverrides(t);
@@ -8882,16 +8890,16 @@ cancelButtonText: P.getString("Cancel")
 }
 }).result.then(F);
 }, q = function(t) {
-A(), E = t.quotaAlerts || [], e.nameTaken || _.some(E, {
+E(), A = t.quotaAlerts || [], e.nameTaken || _.some(A, {
 type: "error"
-}) ? (e.disableInputs = !1, _.each(E, function(e) {
+}) ? (e.disableInputs = !1, _.each(A, function(e) {
 e.id = _.uniqueId("create-builder-alert-"), f.addNotification(e);
-})) : _.isEmpty(E) ? F() : (M(E), e.disableInputs = !1);
+})) : _.isEmpty(A) ? F() : (M(A), e.disableInputs = !1);
 };
 e.projectDisplayName = function() {
 return j(this.project) || this.projectName;
 }, e.createApp = function() {
-e.disableInputs = !0, A(), e.buildConfig.envVars = w.compactEntries(e.buildConfigEnvVars), e.deploymentConfig.envVars = w.compactEntries(e.DCEnvVarsFromUser), e.labels = w.mapEntries(w.compactEntries(e.labelArray));
+e.disableInputs = !0, E(), e.buildConfig.envVars = w.compactEntries(e.buildConfigEnvVars), e.deploymentConfig.envVars = w.compactEntries(e.DCEnvVarsFromUser), e.labels = w.mapEntries(w.compactEntries(e.labelArray));
 var t = s.generate(e);
 x = [], angular.forEach(t, function(e) {
 null !== e && (m.debug("Generated resource definition:", e), x.push(e));
@@ -10555,7 +10563,7 @@ scope: g
 }).result.then(function() {
 l.getLatestQuotaAlerts(g.createResources, {
 namespace: g.input.selectedProject.metadata.name
-}).then(A);
+}).then(E);
 });
 }
 function b() {
@@ -10567,7 +10575,7 @@ t > 0 && r.push(j()), e > 0 && r.push(P()), n.all(r).then(S);
 }
 function S() {
 var e, n;
-E(), "Template" === g.resourceKind && g.templateOptions.process && !g.errorOccurred ? g.isDialog ? g.$emit("fileImportedFromYAMLOrJSON", {
+A(), "Template" === g.resourceKind && g.templateOptions.process && !g.errorOccurred ? g.isDialog ? g.$emit("fileImportedFromYAMLOrJSON", {
 project: g.input.selectedProject,
 template: g.resource
 }) : (n = g.templateOptions.add || g.updateResources.length > 0 ? g.input.selectedProject.metadata.name : "", e = s.createFromTemplateURL(g.resource, g.input.selectedProject.metadata.name, {
@@ -10760,12 +10768,12 @@ cancelButtonText: p.getString("Cancel")
 }
 }
 }).result.then(b);
-}, N = {}, E = function() {
+}, N = {}, A = function() {
 c.hideNotification("from-file-error"), _.each(N, function(e) {
 !e.id || "error" !== e.type && "warning" !== e.type || c.hideNotification(e.id);
 });
-}, A = function(e) {
-E(), N = u.getSecurityAlerts(g.createResources, g.input.selectedProject.metadata.name);
+}, E = function(e) {
+A(), N = u.getSecurityAlerts(g.createResources, g.input.selectedProject.metadata.name);
 var t = e.quotaAlerts || [];
 N = N.concat(t), _.filter(N, {
 type: "error"
@@ -10791,7 +10799,7 @@ e.push(C(t));
 g.input.selectedProject = t, n.all(e).then(function() {
 g.errorOccurred || (1 === g.createResources.length && "Template" === g.resourceList[0].kind ? v() : _.isEmpty(g.updateResources) ? l.getLatestQuotaAlerts(g.createResources, {
 namespace: g.input.selectedProject.metadata.name
-}).then(A) : (g.updateTemplate = 1 === g.updateResources.length && "Template" === g.updateResources[0].kind, g.updateTemplate ? v() : y()));
+}).then(E) : (g.updateTemplate = 1 === g.updateResources.length && "Template" === g.updateResources[0].kind, g.updateTemplate ? v() : y()));
 });
 }, function(e) {
 "AlreadyExists" === e.data.reason ? g.projectNameTaken = !0 : c.addNotification({
@@ -10803,10 +10811,10 @@ details: R(e)
 });
 }
 }, g.cancel = function() {
-E(), s.toProjectOverview(g.input.selectedProject.metadata.name);
+A(), s.toProjectOverview(g.input.selectedProject.metadata.name);
 };
 var $ = e("displayName");
-g.$on("importFileFromYAMLOrJSON", g.create), g.$on("$destroy", E);
+g.$on("importFileFromYAMLOrJSON", g.create), g.$on("$destroy", A);
 } ]
 };
 } ]), angular.module("openshiftConsole").directive("oscFileInput", [ "$filter", "Logger", "NotificationsService", "gettextCatalog", function(e, t, n, r) {
@@ -11706,7 +11714,7 @@ case "cluster-console":
 window.location.assign(i.clusterConsoleURL);
 }
 });
-var T = p.find(".project-picker"), N = [], E = function() {
+var T = p.find(".project-picker"), N = [], A = function() {
 var t = i.currentProjectName;
 if (t) {
 var n = function(e, n) {
@@ -11717,7 +11725,7 @@ _.size(v) <= 100 ? (y = e("orderByDisplayName")(v), N = _.map(y, function(e) {
 return n(e, !1);
 })) : N = [ n(v[t], !0) ], T.empty(), T.append(N), T.append($('<option data-divider="true"></option>')), T.append($('<option value="">View All Projects</option>')), T.selectpicker("refresh");
 }
-}, A = function() {
+}, E = function() {
 return g.list().then(function(e) {
 v = e.by("metadata.name");
 });
@@ -11738,12 +11746,12 @@ n.all([ r, a ]).then(function() {
 i.catalogItems = c.sortCatalogItems(_.concat(t, o));
 });
 }
-}), A().then(function() {
+}), E().then(function() {
 i.currentProjectName && v && (v[i.currentProjectName] || (v[i.currentProjectName] = {
 metadata: {
 name: i.currentProjectName
 }
-}), i.currentProject = v[i.currentProjectName], E());
+}), i.currentProject = v[i.currentProjectName], A());
 })) : _.set(r, "view.hasProject", !1);
 }
 }, B = function() {
@@ -12768,12 +12776,12 @@ if (!p.pod) return null;
 var t = p.options.selectedContainer;
 switch (e) {
 case "memory/usage":
-var n = E(t);
+var n = A(t);
 if (n) return s.bytesToMiB(d(n));
 break;
 
 case "cpu/usage_rate":
-var r = A(t);
+var r = E(t);
 if (r) return d(r);
 }
 return null;
@@ -12896,7 +12904,7 @@ p.loaded = !0;
 }
 }
 p.includedMetrics = p.includedMetrics || [ "cpu", "memory", "network" ];
-var R, T = {}, N = {}, E = n("resources.limits.memory"), A = n("resources.limits.cpu"), D = 30, $ = !1;
+var R, T = {}, N = {}, A = n("resources.limits.memory"), E = n("resources.limits.cpu"), D = 30, $ = !1;
 p.uniqueID = c.uniqueID(), p.metrics = [], _.includes(p.includedMetrics, "memory") && p.metrics.push({
 label: "Memory",
 units: "MiB",
@@ -13060,9 +13068,9 @@ return e[0];
 }), i);
 }
 function d(e) {
-j || (A = 0, t.showAverage = _.size(t.pods) > 5 || P, _.each(t.metrics, function(n) {
+j || (E = 0, t.showAverage = _.size(t.pods) > 5 || P, _.each(t.metrics, function(n) {
 var r, a = o(e, n), i = n.descriptor;
-P && n.compactCombineWith && (i = n.compactCombineWith, n.lastValue && (E[i].lastValue = (E[i].lastValue || 0) + n.lastValue)), C[i] ? (C[i].load(a), t.showAverage ? C[i].legend.hide() : C[i].legend.show()) : ((r = D(n)).data = a, C[i] = c3.generate(r));
+P && n.compactCombineWith && (i = n.compactCombineWith, n.lastValue && (A[i].lastValue = (A[i].lastValue || 0) + n.lastValue)), C[i] ? (C[i].load(a), t.showAverage ? C[i].legend.hide() : C[i].legend.show()) : ((r = D(n)).data = a, C[i] = c3.generate(r));
 }));
 }
 function m() {
@@ -13086,10 +13094,10 @@ return P || (n.containerName = t.options.selectedContainer.name), n.start = k ||
 }
 }
 function h(e) {
-if (!j) if (A++, t.noData) t.metricsError = {
+if (!j) if (E++, t.noData) t.metricsError = {
 status: _.get(e, "status", 0),
 details: _.get(e, "data.errorMsg") || _.get(e, "statusText") || "Status code " + _.get(e, "status", 0)
-}; else if (!(A < 2) && t.alerts) {
+}; else if (!(E < 2) && t.alerts) {
 var n = "metrics-failed-" + t.uniqueID;
 t.alerts[n] = {
 type: "error",
@@ -13098,14 +13106,14 @@ links: [ {
 href: "",
 label: "Retry",
 onClick: function() {
-delete t.alerts[n], A = 1, b();
+delete t.alerts[n], E = 1, b();
 }
 } ]
 };
 }
 }
 function v() {
-return _.isEmpty(t.pods) ? (t.loaded = !0, !1) : !t.metricsError && A < 2;
+return _.isEmpty(t.pods) ? (t.loaded = !0, !1) : !t.metricsError && E < 2;
 }
 function y(e, n, r) {
 t.noData = !1;
@@ -13182,11 +13190,11 @@ compactDatasetLabel: "Received",
 compactType: "spline",
 chartID: "network-rx-" + t.uniqueID
 } ];
-var E = _.keyBy(t.metrics, "descriptor");
+var A = _.keyBy(t.metrics, "descriptor");
 t.loaded = !1, t.noData = !0, t.showComputeUnitsHelp = function() {
 l.showComputeUnitsHelp();
 };
-var A = 0;
+var E = 0;
 c.getMetricsURL().then(function(e) {
 t.metricsURL = e;
 }), t.options = {
@@ -13284,15 +13292,15 @@ k(!0), b(), C();
 g.on("resize", R);
 var T, N = function() {
 S = !0, m.scrollBottom(c);
-}, E = document.createDocumentFragment(), A = _.debounce(function() {
-t.appendChild(E), E = document.createDocumentFragment(), e.autoScrollActive && N(), e.showScrollLinks || b();
+}, A = document.createDocumentFragment(), E = _.debounce(function() {
+t.appendChild(A), A = document.createDocumentFragment(), e.autoScrollActive && N(), e.showScrollLinks || b();
 }, 100, {
 maxWait: 300
 }), D = function(e) {
 var n = a.defer();
 return T ? (T.onClose(function() {
 n.resolve();
-}), T.stop()) : n.resolve(), e || (A.cancel(), t && (t.innerHTML = ""), E = document.createDocumentFragment()), n.promise;
+}), T.stop()) : n.resolve(), e || (E.cancel(), t && (t.innerHTML = ""), A = document.createDocumentFragment()), n.promise;
 }, B = function() {
 D().then(function() {
 e.$evalAsync(function() {
@@ -13315,7 +13323,7 @@ return /\n$/.test(e);
 return e.match(/^.*(\n|$)/gm);
 }, i = function(e) {
 var t = r + e;
-a(e) ? (r = "", n++, E.appendChild(h(n, t)), A()) : r = t;
+a(e) ? (r = "", n++, A.appendChild(h(n, t)), E()) : r = t;
 }, s = function(e) {
 var t = o(e);
 _.each(t, i);
@@ -15547,7 +15555,7 @@ details: b(e)
 }
 } else n.mode = "istag";
 });
-var T, N = e("displayName"), E = function() {
+var T, N = e("displayName"), A = function() {
 var e = {
 started: f.getString("Deploying image {{name}} to project {{project}}", {
 name: n.app.name,
@@ -15593,7 +15601,7 @@ hasErrors: a
 project: n.input.selectedProject,
 appName: n.app.name
 }) : c.toNextSteps(n.app.name, n.input.selectedProject.metadata.name);
-}, A = function(e) {
+}, E = function(e) {
 r.open({
 templateUrl: "views/modals/confirm.html",
 controller: "ConfirmModalController",
@@ -15609,7 +15617,7 @@ cancelButtonText: f.getString("Cancel")
 };
 }
 }
-}).result.then(E);
+}).result.then(A);
 }, D = function(e) {
 S = e.quotaAlerts || [];
 var t = _.filter(S, {
@@ -15617,7 +15625,7 @@ type: "error"
 });
 n.nameTaken || t.length ? (n.disableInputs = !1, _.each(S, function(e) {
 e.id = _.uniqueId("deploy-image-alert-"), l.addNotification(e);
-})) : S.length ? (A(S), n.disableInputs = !1) : E();
+})) : S.length ? (E(S), n.disableInputs = !1) : A();
 };
 n.create = function() {
 n.disableInputs = !0, C(), w().then(function(e) {
@@ -16105,9 +16113,9 @@ namespace: e.namespace
 });
 }, N = function(e) {
 S[a.project] && delete S[a.project][e.uid], b[a.project] && delete b[a.project][e.uid], T(e);
-}, E = function() {
+}, A = function() {
 b[a.project] = {}, S[a.project] = {};
-}, A = function(e) {
+}, E = function(e) {
 return _.reduce(e, function(e, t) {
 return e[t.metadata.uid] = {
 actions: null,
@@ -16142,7 +16150,7 @@ m && (l.unwatch(m), m = null);
 }, U = function() {
 d && d(), d = null;
 }, x = function(e) {
-b[a.project] = A(D(e.by("metadata.name"))), L();
+b[a.project] = E(D(e.by("metadata.name"))), L();
 }, F = function(e, t) {
 var n = t.namespace || a.project, r = t.id ? n + "/" + t.id : _.uniqueId("notification_") + Date.now();
 t.showInDrawer && !u.isCleared(r) && (S[n] = S[n] || {}, S[n][r] = {
@@ -16190,7 +16198,7 @@ e.unread = !1, u.markRead(e.uid);
 onClearAll: function(e) {
 _.each(e.notifications, function(e) {
 e.unread = !1, u.markRead(e.uid), u.markCleared(e.uid);
-}), E(), L(), r.$emit("NotificationDrawerWrapper.onMarkAllRead");
+}), A(), L(), r.$emit("NotificationDrawerWrapper.onMarkAllRead");
 },
 notificationGroups: [],
 headingInclude: "views/directives/notifications/header.html",

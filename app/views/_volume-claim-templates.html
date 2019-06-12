@@ -2,14 +2,14 @@
   <div
     ng-repeat="template in templates"
     class="pod-template">
-    <div class="pod-container-name">Storage claim: {{template.metadata.name}}</div>
+    <div class="pod-container-name"><translate>Storage claim</translate>: {{template.metadata.name}}</div>
 
     <div class="pod-template-image icon-row">
       <div class="icon-wrap">
         <span class="fa fa-lock" aria-hidden="true"></span>
       </div>
       <div class="pod-template-detail word-break">
-        <span class="pod-template-key">Access Modes:</span>
+        <span class="pod-template-key" translate>Access Modes:</span>
         <span ng-repeat="mode in template.spec.accessModes">
           {{mode | sentenceCase }}<span ng-if="!$last">, </span>
         </span>
@@ -21,7 +21,7 @@
         <span class="fa fa-database" aria-hidden="true"></span>
       </div>
       <div class="pod-template-detail word-break">
-        <span class="pod-template-key">Capacity:</span>
+        <span class="pod-template-key" translate>Capacity:</span>
         <span>
           {{template.spec.resources.requests.storage}}
         </span>
@@ -35,7 +35,7 @@
         <span class="fa fa-tag" aria-hidden="true"></span>
       </div>
       <div class="pod-template-detail word-break">
-        <span class="pod-template-key">Selector:</span>
+        <span class="pod-template-key" translate>Selector:</span>
         <selector selector="template.spec.selector"></selector>
       </div>
     </div>

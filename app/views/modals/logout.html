@@ -3,16 +3,16 @@
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close" ng-click="cancel()">
       <span class="pficon pficon-close"></span>
     </button>
-    <h1 class="modal-title">Session Timeout Warning</h1>
+    <h1 class="modal-title" translate>Session Timeout Warning</h1>
   </div>
   <form>
     <div class="modal-body">
-      <p>Your session is about to expire due to inactivity.</p>
-      <p>You will be logged out in <strong><time-remaining-from-now end-timestamp="endTimestamp" countdown-duration=""></time-remaining-from-now></strong> seconds.</p>
+      <p translate>Your session is about to expire due to inactivity.</p>
+      <p><translate>You will be logged out in</translate> <strong><time-remaining-from-now end-timestamp="endTimestamp" countdown-duration=""></time-remaining-from-now></strong> <translate>seconds</translate>.</p>
     </div>
     <div class="modal-footer">
-      <button class="btn btn-default" type="submit" ng-click="logout();">Log Out</button>
-      <button class="btn btn-primary" type="button" ng-click="cancel();">Continue Session</button>
+      <button class="btn btn-default" type="submit" ng-click="logout();" translate>Log Out</button>
+      <button class="btn btn-primary" type="button" ng-click="cancel();" translate>Continue Session</button>
     </div>
   </form>
 </div>

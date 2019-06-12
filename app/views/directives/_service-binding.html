@@ -10,27 +10,27 @@
           </small>
           <small>{{$ctrl.binding.spec.instanceRef.name}}</small>
         </span>
-        <small>created <span am-time-ago="$ctrl.binding.metadata.creationTimestamp"></span></small>
+        <small><translate>created</translate> <span am-time-ago="$ctrl.binding.metadata.creationTimestamp"></span></small>
       </h3>
     </div>
     <div ng-if="$ctrl.binding.metadata.deletionTimestamp"
          ng-class="{'col-sm-7 col-md-6': $ctrl.isOverview,
                     'col-sm-4 col-md-3': !$ctrl.isOverview}">
       <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-      Marked for Deletion
+      <translate>Marked for Deletion</translate>
     </div>
     <div ng-if="!$ctrl.binding.metadata.deletionTimestamp && ($ctrl.binding | isBindingFailed)"
          ng-class="{'col-sm-7 col-md-6': $ctrl.isOverview,
                     'col-sm-4 col-md-6 col-lg-4': !$ctrl.isOverview}">
       <span dynamic-content="{{$ctrl.binding | bindingFailedMessage}}" data-toggle="tooltip" data-trigger="hover">
         <span class="pficon pficon-error-circle-o" aria-hidden="true"></span>
-        <span>Error</span>
+        <span translate>Error</span>
       </span>
     </div>
     <div ng-if="!$ctrl.binding.metadata.deletionTimestamp && !($ctrl.binding | isBindingFailed) && !($ctrl.binding | isBindingReady)"
          ng-class="{'col-sm-7 col-md-6': $ctrl.isOverview,
                     'col-sm-4 col-md-6 col-lg-4': !$ctrl.isOverview}">
-      <status-icon status="'Pending'"></status-icon>Pending
+      <status-icon status="'Pending'"></status-icon><translate>Pending</translate>
     </div>
   </div>
   <div class="service-binding-actions" ng-if="!$ctrl.binding.metadata.deletionTimestamp">
@@ -44,12 +44,12 @@
       stay-on-current-page="true">
     </delete-link>
     <a ng-if="($ctrl.secretsVersion | canI : 'get') && ($ctrl.binding | isBindingReady)"
-       ng-href="{{$ctrl.binding.spec.secretName | navigateResourceURL : 'Secret' : $ctrl.namespace}}">
+       ng-href="{{$ctrl.binding.spec.secretName | navigateResourceURL : 'Secret' : $ctrl.namespace}}" translate>
       View Secret
     </a>
   </div>
   <div class="service-binding-parameters" ng-if="!$ctrl.isOverview && $ctrl.bindParameterSchema.properties">
-    <span class="component-label">Parameters</span>
+    <span class="component-label" translate>Parameters</span>
     <a ng-if="$ctrl.allowParametersReveal" href="" class="hide-show-link" ng-click="$ctrl.toggleShowParameterValues()" role="button">
       {{$ctrl.showParameterValues ? 'Hide Values' : 'Reveal Values'}}
     </a>

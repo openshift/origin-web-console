@@ -5,8 +5,8 @@
         <div class="col-md-10">
           <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
           <alerts alerts="alerts"></alerts>
-          <h1>Edit Route {{routeName}}</h1>
-          <div ng-if="loading">
+          <h1 translate>Edit Route {{routeName}}</h1>
+          <div ng-if="loading" translate>
             Loading...
           </div>
           <form name="form" novalidate>
@@ -22,8 +22,8 @@
                     class="btn btn-primary btn-lg"
                     ng-click="updateRoute()"
                     ng-disabled="form.$invalid || disableInputs"
-                    value="">Save</button>
-                <button class="btn btn-default btn-lg" ng-click="cancel()">Cancel</button>
+                    value="" translate>Save</button>
+                <button class="btn btn-default btn-lg" ng-click="cancel()" translate>Cancel</button>
               </div>
             </fieldset>
           </form>

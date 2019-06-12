@@ -20,6 +20,33 @@ msgstr ".在不同的项目中无法创建资源."
 msgid ". The web console has a 5 MiB file limit."
 msgstr "web console 限制文件5M以下."
 
+#: app/views/create/fromimage.html:215
+msgid "(Build and Runtime)"
+msgstr ""
+
+#: app/views/create/fromimage.html:256
+msgid "(Runtime only)"
+msgstr ""
+
+#: app/views/browse/deployment.html:75
+msgid "{{deployment.metadata.name}} is paused."
+msgstr ""
+
+#: app/views/browse/deployment.html:149
+msgid "{{deployment.status.updatedReplicas}} up to date"
+msgstr ""
+
+#: app/views/browse/deployment-config.html:95
+msgid "{{deploymentConfig.metadata.name}} is paused."
+msgstr ""
+
+#: app/views/create/fromimage.html:95
+#, fuzzy
+#| msgid "A name is required."
+msgid "A Git repository URL is required."
+msgstr "名称必须."
+
+#: app/views/create/fromimage.html:49
 #: app/views/directives/deploy-image.html:144
 msgid "A name is required."
 msgstr "名称必须."
@@ -28,19 +55,92 @@ msgstr "名称必须."
 msgid "A token is a form of a password. Do not share your API token."
 msgstr "token是密码的一种形式，勿与API token共享."
 
+#: app/views/create/fromimage.html:53
+#, fuzzy
+#| msgid ""
+#| "The app name \"{{name}}\" is not valid.  An app name is an alphanumeric "
+#| "(a-z, and 0-9) string with a maximum length of 24 characters, where the "
+#| "first character is a letter (a-z), and the '-' character is allowed "
+#| "anywhere except the first or last character."
+msgid ""
+"A valid name is applied to all generated resources. It is an alphanumeric (a-"
+"z, and 0-9) string with a maximum length of 24 characters, where the first "
+"character is a letter (a-z), and the '-' character is allowed anywhere "
+"except the first or last character."
+msgstr ""
+"app名称”{{name}}”不合法.app名称必须由(a-z, and 0-9)之间字母和数字组成，最长24"
+"个字符，首字母需是(a-z)之间字母，’-‘可以在任何位置，除了首尾.”"
+
 #: app/scripts/controllers/util/error.js:17
 msgid "Access denied"
 msgstr "拒绝访问"
 
+#: app/views/browse/persistent-volume-claim.html:80
+#, fuzzy
+#| msgid "Access denied"
+msgid "Access Modes:"
+msgstr "拒绝访问"
+
+#: app/views/browse/_replica-set-actions.html:3
+#: app/views/browse/_replica-set-actions.html:8
+#: app/views/browse/_replication-controller-actions.html:3
+#: app/views/browse/_replication-controller-actions.html:8
+#: app/views/browse/build-config.html:23 app/views/browse/build-config.html:28
+#: app/views/browse/build.html:21 app/views/browse/build.html:26
+#: app/views/browse/config-map.html:26 app/views/browse/config-map.html:33
+#: app/views/browse/deployment-config.html:20
+#: app/views/browse/deployment-config.html:25
+#: app/views/browse/deployment.html:10 app/views/browse/deployment.html:15
+#: app/views/browse/imagestream.html:11 app/views/browse/imagestream.html:16
+#: app/views/browse/persistent-volume-claim.html:11
+#: app/views/browse/persistent-volume-claim.html:16
+#: app/views/browse/pod.html:11 app/views/browse/pod.html:16
+#: app/views/browse/route.html:16 app/views/browse/secret.html:23
+#: app/views/browse/secret.html:30 app/views/browse/service-instance.html:25
+#: app/views/browse/service-instance.html:30 app/views/browse/service.html:11
+#: app/views/browse/service.html:16 app/views/browse/stateful-set.html:17
+#: app/views/browse/stateful-set.html:24
+#, fuzzy
+#| msgid "Applications"
+msgid "Actions"
+msgstr "应用"
+
+#: app/views/browse/_pod-details.html:50
+msgid "Active Deadline:"
+msgstr ""
+
+#: app/views/browse/_replica-set-actions.html:19
+#: app/views/browse/_replica-set-actions.html:22
+#: app/views/browse/_replica-set-details.html:191
+#: app/views/browse/_replica-set-details.html:194
+#: app/views/browse/_replica-set-details.html:197
+#: app/views/browse/_replica-set-details.html:200
+#: app/views/browse/_replication-controller-actions.html:20
+#: app/views/browse/_replication-controller-actions.html:23
+#: app/views/browse/deployment-config.html:304
+#: app/views/browse/deployment-config.html:50
+#: app/views/browse/deployment.html:256 app/views/browse/deployment.html:30
+#, fuzzy
+#| msgid "Add Storage"
+msgid "Add Autoscaler"
+msgstr "添加存储"
+
 #: app/scripts/controllers/addConfigVolume.js:136
 #: app/scripts/controllers/addConfigVolume.js:63
+#: app/views/browse/_replica-set-details.html:105
+#: app/views/browse/_replica-set-details.html:119
+#: app/views/browse/_replica-set-details.html:133
+#: app/views/browse/_replica-set-details.html:147
+#: app/views/browse/deployment-config.html:248
+#: app/views/browse/deployment.html:236
 msgid "Add Config Files"
 msgstr "添加添加配置文件"
 
-#: app/scripts/controllers/attachPVC.js:156
-#: app/scripts/controllers/attachPVC.js:68
-msgid "Add Storage"
-msgstr "添加存储"
+#: app/views/browse/_pod-details.html:88
+#, fuzzy
+#| msgid "Add Config Files"
+msgid "Add Config Files to {{dcName}}"
+msgstr "添加添加配置文件"
 
 #: app/views/overview.html:10
 msgid ""
@@ -52,6 +152,48 @@ msgstr ""
 "从catalog中添加 web frameworks, databases, 以及其他 components到你的项目中, "
 "你可能也需要部署已有的镜像，从他们的YAML 或者 JSON definitions中创建或者替换"
 "资源，或者选择一项与其他项目共用。"
+
+#: app/scripts/controllers/attachPVC.js:156
+#: app/scripts/controllers/attachPVC.js:68
+#: app/views/browse/_replica-set-actions.html:11
+#: app/views/browse/_replica-set-actions.html:15
+#: app/views/browse/_replica-set-details.html:103
+#: app/views/browse/_replica-set-details.html:117
+#: app/views/browse/_replica-set-details.html:131
+#: app/views/browse/_replica-set-details.html:145
+#: app/views/browse/_replication-controller-actions.html:11
+#: app/views/browse/_replication-controller-actions.html:15
+#: app/views/browse/deployment-config.html:246
+#: app/views/browse/deployment-config.html:45
+#: app/views/browse/deployment.html:234 app/views/browse/deployment.html:25
+#: app/views/browse/pod.html:19
+msgid "Add Storage"
+msgstr "添加存储"
+
+#: app/views/browse/_pod-details.html:86
+#, fuzzy
+#| msgid "Add Storage"
+msgid "Add Storage to {{dcName}}"
+msgstr "添加存储"
+
+#: app/views/browse/config-map.html:19 app/views/browse/config-map.html:36
+#: app/views/browse/secret.html:15 app/views/browse/secret.html:33
+#, fuzzy
+#| msgid "Application"
+msgid "Add to Application"
+msgstr "应用"
+
+#: app/views/browse/route.html:72
+msgid "Admission status unknown for router '{{ingress.routerName}}'"
+msgstr ""
+
+#: app/views/create/fromimage.html:397
+msgid "advanced options"
+msgstr ""
+
+#: app/views/catalog/catalog.html:50 app/views/catalog/category-content.html:47
+msgid "All content is hidden by the current filter."
+msgstr ""
 
 #: app/scripts/directives/fromFile.js:454
 msgid "All items in list were created successfully."
@@ -77,6 +219,14 @@ msgstr " {{name}} 应用的所有资源已被创建成功."
 msgid "All resources for image {{name}} were created successfully."
 msgstr "{{name}}镜像的所有资源已被创建成功."
 
+#: app/views/browse/persistent-volume-claim.html:69
+msgid "allocated"
+msgstr ""
+
+#: app/views/browse/persistent-volume-claim.html:71
+msgid "allocated unknown size"
+msgstr ""
+
 #: app/scripts/controllers/util/error.js:33
 msgid "An error has occurred"
 msgstr "发生错误"
@@ -85,14 +235,22 @@ msgstr "发生错误"
 msgid "An error occurred  adding {{source}} {{name}} to {{target}} {{app}}."
 msgstr "添加{{source}} {{name}}到 {{target}} {{app}}出错."
 
-#: app/scripts/controllers/attachPVC.js:239
-msgid ""
-"An error occurred attaching the persistent volume claim to the {{kind}}."
-msgstr "挂载persistent volume claim到{{kind}}出错."
+#: app/scripts/controllers/deploymentConfig.js:266
+msgid "An error occurred {{status}} the deployment config."
+msgstr " deployment config出现错误 {{status}}."
+
+#: app/scripts/controllers/deployment.js:198
+msgid "An error occurred {{status}} the deployment."
+msgstr "deployment出现错误{{status}}."
 
 #: app/scripts/controllers/addConfigVolume.js:260
 msgid "An error occurred attaching the {{sourceKind}} to the {{targetKind}}."
 msgstr "挂载 {{sourceKind}} 到 {{targetKind}}出错."
+
+#: app/scripts/controllers/attachPVC.js:239
+msgid ""
+"An error occurred attaching the persistent volume claim to the {{kind}}."
+msgstr "挂载persistent volume claim到{{kind}}出错."
 
 #: app/scripts/directives/deployImage.js:401
 #: app/scripts/directives/fromFile.js:195
@@ -116,6 +274,12 @@ msgstr "创建项目出错."
 msgid "An error occurred creating the route."
 msgstr "创建路由出错."
 
+#: app/views/directives/bind-service/delete-binding-result.html:28
+#, fuzzy
+#| msgid "An error occurred finding the image."
+msgid "An error occurred deleting the binding."
+msgstr "查找镜像出错."
+
 #: app/scripts/directives/deployImage.js:158
 msgid "An error occurred finding the image."
 msgstr "查找镜像出错."
@@ -132,6 +296,10 @@ msgstr "processing template发生错误."
 msgid "An error occurred requesting storage."
 msgstr "requesting storage发生错误."
 
+#: app/scripts/directives/deploymentDonut.js:93
+msgid "An error occurred scaling {{kind}} {{name}}."
+msgstr "scaling {{kind}} {{name}}发生错误."
+
 #: app/scripts/controllers/deploymentConfig.js:248
 msgid "An error occurred scaling the deployment config."
 msgstr " scaling deployment config发生错误."
@@ -139,10 +307,6 @@ msgstr " scaling deployment config发生错误."
 #: app/scripts/controllers/deployment.js:178
 msgid "An error occurred scaling the deployment."
 msgstr " scaling the deployment发生错误."
-
-#: app/scripts/directives/deploymentDonut.js:93
-msgid "An error occurred scaling {{kind}} {{name}}."
-msgstr "scaling {{kind}} {{name}}发生错误."
 
 #: app/scripts/controllers/replicaSet.js:447
 msgid "An error occurred scaling."
@@ -156,14 +320,14 @@ msgstr "更新build config {{name}}出现错误."
 msgid "An error occurred updating deployment config {{name}}."
 msgstr "更新deployment config {{name}}出现错误."
 
+#: app/scripts/directives/editEnvironmentVariables.js:146
+msgid "An error occurred updating environment variables for {{kind}} {{name}}."
+msgstr "为 {{kind}} {{name}}更新环境变量出现错误."
+
 #: app/scripts/controllers/buildConfig.js:118
 msgid ""
 "An error occurred updating environment variables for build config {{name}}."
 msgstr "为 build config {{name}}更新环境变量出现错误."
-
-#: app/scripts/directives/editEnvironmentVariables.js:146
-msgid "An error occurred updating environment variables for {{kind}} {{name}}."
-msgstr "为 {{kind}} {{name}}更新环境变量出现错误."
 
 #: app/scripts/directives/podMetrics.js:337
 msgid "An error occurred updating metrics for pod {{pod}}."
@@ -198,14 +362,6 @@ msgstr "链接secret和service account {{link}}出现错误."
 msgid "An error occurred while updating the project"
 msgstr "更新项目出现错误"
 
-#: app/scripts/controllers/deploymentConfig.js:266
-msgid "An error occurred {{status}} the deployment config."
-msgstr " deployment config出现错误 {{status}}."
-
-#: app/scripts/controllers/deployment.js:198
-msgid "An error occurred {{status}} the deployment."
-msgstr "deployment出现错误{{status}}."
-
 #: app/scripts/directives/deployImage.js:229
 msgid "An error occurred."
 msgstr "出现错误."
@@ -213,6 +369,16 @@ msgstr "出现错误."
 #: app/scripts/controllers/createFromURL.js:65
 msgid "An image stream or template is required."
 msgstr "image stream 或 template是必须的."
+
+#: app/views/browse/service.html:94
+#, fuzzy
+#| msgid "and the"
+msgid "and"
+msgstr "和"
+
+#: app/views/overview.html:278
+msgid "and the"
+msgstr "和"
 
 #: app/scripts/controllers/buildConfig.js:206
 msgid "Any remaining build history for this build will be shown."
@@ -236,9 +402,55 @@ msgid ""
 "will not be deleted unless you close the dialog."
 msgstr "确定离开打开的debug terminal？该debug pod不会被删除除非关闭对话框."
 
+#: app/views/browse/_build-details.html:85
+msgid "authored by {{build.spec.revision.git.author.name}}"
+msgstr ""
+
+#: app/views/create/fromimage.html:242
+msgid "Autodeploy when"
+msgstr ""
+
+#: app/views/create/fromimage.html:201
+msgid "Automatically build a new image when the builder image changes"
+msgstr ""
+
+#: app/views/browse/_replica-set-details.html:161
+#: app/views/browse/deployment-config.html:287
+#: app/views/browse/deployment.html:239
+msgid "Autoscaling"
+msgstr ""
+
+#: app/views/browse/_replica-set-details.html:205
+msgid "Autoscaling is not enabled. There are no autoscalers for this"
+msgstr ""
+
+#: app/views/browse/deployment-config.html:306
+msgid ""
+"Autoscaling is not enabled. There are no autoscalers for this deployment "
+"config."
+msgstr ""
+
 #: app/scripts/controllers/edit/autoscaler.js:41
 msgid "Autoscaling not supported for kind {{kind}}."
 msgstr "{{kind}}类型不支持自动扩缩容."
+
+#: app/views/browse/deployment.html:153
+msgid "available"
+msgstr ""
+
+#: app/views/catalog/category-content.html:16
+#, fuzzy
+#| msgid "Browse Catalog"
+msgid "Back to catalog"
+msgstr "浏览目录"
+
+#: app/views/catalog/catalog.html:17
+msgid "Back to overview"
+msgstr ""
+
+#: app/views/browse/build-config.html:270
+msgid "Binary Input as File:"
+msgstr ""
 
 #: app/scripts/directives/bindService.js:185
 #: app/scripts/directives/bindService.js:81
@@ -250,25 +462,74 @@ msgstr ""
 msgid "Binding"
 msgstr ""
 
+#: app/views/directives/bind-service/delete-binding-result.html:3
+#, fuzzy
+#| msgid "This route has been deleted."
+msgid "Binding for the following has been deleted:"
+msgstr "route已被删除."
+
+#: app/views/browse/build-config.html:388
+msgid "Bitbucket Webhook URL:"
+msgstr ""
+
 #: app/views/overview.html:14
 msgid "Browse Catalog"
 msgstr "浏览目录"
+
+#: app/views/browse/build-config.html:138
+#: app/views/browse/build-config.html:184
+msgid "Build"
+msgstr ""
 
 #: app/scripts/controllers/edit/buildConfig.js:629
 msgid "Build config {{name}} was successfully updated."
 msgstr "Build config{{name}}更新成功."
 
+#: app/views/browse/build.html:99
+#, fuzzy
+#| msgid "Configuration"
+msgid "build configuration"
+msgstr "配置"
+
+#: app/views/browse/build-config.html:99
+#, fuzzy
+#| msgid "Build configuration {{name}} has been deleted."
+msgid "build configuration {{buildConfig.metadata.name}}."
+msgstr "Build配置 {{name}}已被删除."
+
 #: app/scripts/controllers/build.js:152
 msgid "Build configuration {{name}} has been deleted."
 msgstr "Build配置 {{name}}已被删除."
+
+#: app/views/browse/_build-details.html:61
+#: app/views/browse/build-config.html:243
+msgid "Build Strategy:"
+msgstr ""
+
+#: app/views/browse/_build-details.html:63
+#: app/views/browse/build-config.html:300
+msgid "Builder Image:"
+msgstr ""
 
 #: app/scripts/directives/nav.js:38
 msgid "Builds"
 msgstr ""
 
-#: app/scripts/directives/util.js:287
-msgid "CN"
-msgstr "中文"
+#: app/views/catalog/_image.html:11
+msgid "Builds source code"
+msgstr ""
+
+#: app/views/browse/build-config.html:86
+msgid "Builds will create an image from"
+msgstr ""
+
+#: app/views/browse/route.html:180
+msgid "CA Certificate:"
+msgstr ""
+
+#: app/scripts/directives/fromFile.js:237
+msgid "can't be created in project {{name}}"
+msgstr "在{{name}}无法被创建."
 
 #: app/scripts/controllers/create/createFromImage.js:336
 #: app/scripts/controllers/deployment.js:225
@@ -278,8 +539,15 @@ msgstr "中文"
 #: app/scripts/directives/deployImage.js:348
 #: app/scripts/directives/fromFile.js:65
 #: app/scripts/directives/processTemplate.js:166
+#: app/views/create/fromimage.html:405
 #: app/views/directives/deploy-image.html:195
 msgid "Cancel"
+msgstr "取消"
+
+#: app/views/browse/build.html:11 app/views/browse/build.html:41
+#, fuzzy
+#| msgid "Cancel"
+msgid "Cancel Build"
 msgstr "取消"
 
 #: app/scripts/controllers/edit/yaml.js:110
@@ -323,6 +591,10 @@ msgstr "无法从模板中创建:模板无法获取."
 msgid "Cannot update"
 msgstr "无法更新"
 
+#: app/views/browse/persistent-volume-claim.html:66
+msgid "Capacity:"
+msgstr ""
+
 #: app/scripts/directives/nav.js:52
 msgid "Catalog"
 msgstr "目录"
@@ -335,13 +607,38 @@ msgstr "未发现 {{category}}目录."
 msgid "Catalog category {{category}}/{{subcategory}}not found."
 msgstr "未发现{{category}}/{{subcategory}}目录."
 
+#: app/views/browse/route.html:160
+msgid "Certificate:"
+msgstr ""
+
+#: app/views/browse/deployment-config.html:173
+msgid "change"
+msgstr ""
+
+#: app/views/browse/deployment-config.html:271
+msgid "Change Of:"
+msgstr ""
+
 #: app/scripts/controllers/util/error.js:28
 msgid "Check Server Connection"
 msgstr "检查Server连接"
 
-#: app/views/overview.html:115 app/views/overview.html:294
+#: app/views/catalog/catalog.html:21
+msgid ""
+"Choose from web frameworks, databases, and other components to add content "
+"to your project."
+msgstr ""
+
+#: app/views/browse/config-maps.html:41 app/views/browse/routes.html:41
+#: app/views/browse/stateful-sets.html:38 app/views/catalog/catalog.html:51
+#: app/views/catalog/category-content.html:48 app/views/overview.html:115
+#: app/views/overview.html:294
 msgid "Clear All Filters"
-msgstr "清空过滤"
+msgstr "清除筛选"
+
+#: app/views/browse/build-config.html:487
+msgid "Clear Changes"
+msgstr ""
 
 #: app/scripts/directives/bindService.js:107
 #: app/scripts/directives/deployImageDialog.js:59
@@ -351,9 +648,24 @@ msgstr "清空过滤"
 msgid "Close"
 msgstr "关闭"
 
-#: app/scripts/controllers/createConfigMap.js:28
-#: app/scripts/directives/nav.js:44
-msgid "Config Maps"
+#: app/scripts/directives/util.js:287
+msgid "CN"
+msgstr "中文"
+
+#: app/views/browse/deployment-config.html:272
+#, fuzzy
+#| msgid "Configuration"
+msgid "Config"
+msgstr "配置"
+
+#: app/views/browse/deployment-config.html:176
+#, fuzzy
+#| msgid "Configuration"
+msgid "Config change"
+msgstr "配置"
+
+#: app/views/browse/build-config.html:431
+msgid "Config Change For:"
 msgstr ""
 
 #: app/scripts/controllers/createConfigMap.js:74
@@ -364,9 +676,23 @@ msgstr "Config map{{name}}创建成功."
 msgid "Config map {{name}} successfully updated."
 msgstr "Config map{{name}}更新成功。"
 
+#: app/scripts/controllers/createConfigMap.js:28
+#: app/scripts/directives/nav.js:44 app/views/browse/config-maps.html:9
+msgid "Config Maps"
+msgstr ""
+
 #: app/scripts/directives/processTemplateDialog.js:67
+#: app/views/browse/_build-details.html:59
+#: app/views/browse/build-config.html:232
+#: app/views/browse/deployment-config.html:187
+#: app/views/browse/deployment.html:128 app/views/browse/image.html:30
+#: app/views/browse/service-instance.html:104
 msgid "Configuration"
 msgstr "配置"
+
+#: app/views/create/fromimage.html:189
+msgid "Configure a webhook build trigger"
+msgstr ""
 
 #: app/scripts/controllers/create/createFromImage.js:332
 #: app/scripts/directives/deployImage.js:344
@@ -375,13 +701,41 @@ msgstr "配置"
 msgid "Confirm Creation"
 msgstr "确认创建"
 
+#: app/scripts/directives/confirmOnExit.js:60
+msgid "Confirm on exit prompt appears to have been blocked by the browser."
+msgstr ""
+
 #: app/scripts/controllers/membership.js:213
 msgid "Confirm Removal"
 msgstr "确认移除"
 
-#: app/scripts/directives/confirmOnExit.js:60
-msgid "Confirm on exit prompt appears to have been blocked by the browser."
+#: app/views/browse/pod.html:150 app/views/browse/pod.html:91
+msgid "Container:"
 msgstr ""
+
+#: app/views/create/fromimage.html:125
+msgid "Context Dir"
+msgstr ""
+
+#: app/scripts/directives/deleteLink.js:184
+#: app/scripts/directives/deleteLink.js:188
+msgid "could not be deleted."
+msgstr "不能被删除."
+
+#: app/scripts/directives/editPvc.js:67
+msgid "could not be expanded."
+msgstr "无法扩展."
+
+#: app/scripts/controllers/attachPVC.js:163
+#: app/scripts/controllers/edit/healthChecks.js:136
+#: app/scripts/controllers/setLimits.js:129
+msgid "could not be loaded."
+msgstr "无法加载."
+
+#: app/scripts/controllers/edit/healthChecks.js:131
+#: app/scripts/controllers/setLimits.js:124
+msgid "could not be updated."
+msgstr "无法更新."
 
 #: app/scripts/controllers/pod.js:381 app/scripts/controllers/pod.js:428
 msgid "Could not debug container"
@@ -392,9 +746,10 @@ msgid "Could not delete pod"
 msgstr "无法删除pod"
 
 #: app/views/directives/deploy-image.html:213
-msgid ""
-"Could not find any images for {{import.name | stripTag}}:{{import.tag}}."
-msgstr ""
+#, fuzzy
+#| msgid "Could not load config maps"
+msgid "Could not find any images for"
+msgstr "无法加载config maps"
 
 #: app/scripts/controllers/edit/yaml.js:165
 msgid "Could not load"
@@ -447,11 +802,29 @@ msgstr "无法预填参数值."
 msgid "Could not read file"
 msgstr "无法读取文件"
 
+#: app/views/create/fromimage.html:317
+msgid ""
+"CPU metrics might not be available. In order to use horizontal pod "
+"autoscalers,\n"
+"                                your cluster administrator must have "
+"properly configured cluster metrics."
+msgstr ""
+
 #: app/scripts/directives/fromFileDialog.js:108
 #: app/scripts/directives/processTemplateDialog.js:285
 #: app/views/directives/deploy-image.html:190
 msgid "Create"
 msgstr "创建"
+
+#: app/views/create/fromimage.html:167
+msgid "Create a route to the application"
+msgstr ""
+
+#: app/views/directives/deploy-image.html:206
+#: app/views/directives/deploy-image.html:64
+#: app/views/directives/deploy-image.html:65
+msgid "create an image pull secret"
+msgstr "创建 image pull secret"
 
 #: app/scripts/controllers/create/createFromImage.js:334
 #: app/scripts/directives/deployImage.js:346
@@ -461,10 +834,12 @@ msgid "Create Anyway"
 msgstr "创建"
 
 #: app/scripts/controllers/createConfigMap.js:32
+#: app/views/browse/config-maps.html:37 app/views/browse/config-maps.html:6
 msgid "Create Config Map"
 msgstr "创建Config Map"
 
-#: app/scripts/controllers/createRoute.js:43
+#: app/scripts/controllers/createRoute.js:43 app/views/browse/routes.html:37
+#: app/views/browse/routes.html:6 app/views/browse/service.html:19
 msgid "Create Route"
 msgstr "创建路由"
 
@@ -480,15 +855,29 @@ msgstr "创建Secret"
 msgid "Create Storage"
 msgstr "创建存储"
 
+#: app/views/browse/build-config.html:164 app/views/browse/build-config.html:63
+#: app/views/browse/build.html:75 app/views/browse/config-map.html:55
+#: app/views/browse/deployment-config.html:122
+#: app/views/browse/deployment-config.html:82
+#: app/views/browse/deployment.html:62 app/views/browse/imagestream.html:32
+#: app/views/browse/persistent-volume-claim.html:45
+#: app/views/browse/pod.html:39 app/views/browse/route.html:39
+#: app/views/browse/secret.html:49 app/views/browse/service-instance.html:50
+#: app/views/browse/service.html:36
+#, fuzzy
+#| msgid "Created"
+msgid "created"
+msgstr "创建"
+
 #: app/scripts/directives/deployImage.js:310
 #: app/scripts/directives/fromFile.js:447
 #: app/scripts/directives/processTemplate.js:131
+#: app/views/browse/build-config.html:187 app/views/browse/config-maps.html:52
+#: app/views/browse/deployment-config.html:137
+#: app/views/browse/deployment.html:103 app/views/browse/stateful-sets.html:50
+#: app/views/directives/bind-service/delete-binding-select-form.html:21
 msgid "Created"
 msgstr "创建"
-
-#: app/scripts/controllers/create/createFromImage.js:279
-msgid "Created application {{name}} in project {{projectName}}"
-msgstr "{{projectName}}中创建 {{name}}应用成功."
 
 #: app/scripts/controllers/create/createFromImage.js:307
 msgid "Created {{kind}}  {{name}}  successfully."
@@ -497,6 +886,20 @@ msgstr "创建{{kind}}  {{name}}成功."
 #: app/scripts/directives/processTemplate.js:105
 msgid "Created {{name}} in project {{project}}"
 msgstr "在{{project}}中创建{{name}}"
+
+#: app/scripts/controllers/create/createFromImage.js:279
+msgid "Created application {{name}} in project {{projectName}}"
+msgstr "{{projectName}}中创建 {{name}}应用成功."
+
+#: app/views/browse/_build-details.html:59
+#, fuzzy
+#| msgid "Created"
+msgid "created from"
+msgstr "创建"
+
+#: app/scripts/directives/processTemplate.js:104
+msgid "Creating {{name}} in project {{project}}"
+msgstr "在{{project}}项目中创建{{name}}"
 
 #: app/scripts/controllers/create/createFromImage.js:278
 msgid "Creating application {{name}} in project {{projectName}}"
@@ -507,15 +910,11 @@ msgstr "在{{projectName}}中创建 {{name}}应用."
 msgid "Creating resources in project {{name}}"
 msgstr "在 {{name}}项目中创建资源"
 
-#: app/scripts/directives/processTemplate.js:104
-msgid "Creating {{name}} in project {{project}}"
-msgstr "在{{project}}项目中创建{{name}}"
-
-#: app/scripts/controllers/projects.js:112
+#: app/scripts/controllers/projects.js:113
 msgid "Creation Date"
 msgstr "创建时间"
 
-#: app/scripts/controllers/projects.js:108
+#: app/scripts/controllers/projects.js:109
 msgid "Creator"
 msgstr "创建人"
 
@@ -526,20 +925,27 @@ msgid ""
 msgstr "定义资源，如：内存、CPU的最大和最小运行时间."
 
 #: app/scripts/directives/unbindService.js:75
+#: app/views/browse/service-instance.html:41
 msgid "Delete"
 msgstr "删除"
 
+#: app/views/directives/bind-service/delete-binding-result.html:23
+msgid "Deletion of Binding Failed"
+msgstr ""
+
 #: app/scripts/directives/deployImageDialog.js:62
+#: app/views/browse/deployment-config.html:10
+#: app/views/browse/deployment-config.html:28
 msgid "Deploy"
 msgstr "部署"
-
-#: app/views/overview.html:19
-msgid "Deploy Image"
-msgstr "部署镜像"
 
 #: app/views/directives/deploy-image.html:4
 msgid "Deploy an existing image from an image stream tag or image registry."
 msgstr "从 image stream tag 或image registry部署已有的镜像."
+
+#: app/views/overview.html:19
+msgid "Deploy Image"
+msgstr "部署镜像"
 
 #: app/scripts/directives/deployImage.js:289
 msgid "Deployed image {{name}} to project {{project}}"
@@ -549,36 +955,129 @@ msgstr "已部署{{name}}到 {{project}}."
 msgid "Deploying image {{name}} to project {{project}}"
 msgstr "正在部署{{name}}到 {{project}}."
 
+#: app/views/browse/deployment-config.html:109
+#: app/views/browse/deployment-config.html:135
+#, fuzzy
+#| msgid "Deploy"
+msgid "Deployment"
+msgstr "部署"
+
 #: app/scripts/controllers/edit/deploymentConfig.js:380
 msgid "Deployment config {{name}} was successfully updated."
 msgstr "Deployment config{{name}}更新成功."
+
+#: app/views/browse/_replica-set-details.html:206
+#, fuzzy
+#| msgid "This deployment configuration has been deleted."
+msgid "deployment config or deployment."
+msgstr "deployment配置已被删除."
+
+#: app/views/browse/_replica-set-details.html:49
+#, fuzzy
+#| msgid "Edit Deployment Config"
+msgid "Deployment Config:"
+msgstr "编辑Deployment Config"
+
+#: app/views/create/fromimage.html:252
+#, fuzzy
+#| msgid "This deployment configuration has been deleted."
+msgid "Deployment configuration changes"
+msgstr "deployment配置已被删除."
+
+#: app/views/browse/_replica-set-details.html:33
+#, fuzzy
+#| msgid "Unknown deployment strategy type:"
+msgid "deployment strategy"
+msgstr "未知deployment strategy类型:"
+
+#: app/views/browse/_replica-set-details.html:38
+#, fuzzy
+#| msgid "Edit Deployment Config"
+msgid "deployment trigger"
+msgstr "编辑Deployment Config"
+
+#: app/views/browse/_pod-details.html:20
+#: app/views/browse/_replica-set-details.html:53
+#, fuzzy
+#| msgid "Deploy"
+msgid "Deployment:"
+msgstr "部署"
 
 #: app/scripts/controllers/deployment.js:40 app/scripts/directives/nav.js:32
 msgid "Deployments"
 msgstr ""
 
-#: app/scripts/controllers/projects.js:100
+#: app/views/browse/service-instance.html:124
+#: app/views/browse/service-instance.html:84
+#, fuzzy
+#| msgid "Selection"
+msgid "Description"
+msgstr "选择"
+
+#: app/views/browse/route.html:190
+msgid "Destination CA Cert:"
+msgstr ""
+
+#: app/views/browse/build-config.html:240 app/views/browse/build.html:89
+#: app/views/browse/deployment-config.html:195
+#: app/views/browse/deployment.html:136 app/views/browse/image.html:23
+#: app/views/browse/persistent-volume-claim.html:57
+#: app/views/browse/pod.html:51 app/views/browse/replica-set.html:40
+#: app/views/browse/route.html:90 app/views/browse/service-instance.html:69
+#: app/views/browse/service.html:48 app/views/browse/stateful-set.html:61
+msgid "Details"
+msgstr ""
+
+#: app/scripts/controllers/projects.js:101
 msgid "Display Name"
 msgstr "显示名称"
+
+#: app/views/browse/build-config.html:338
+msgid "Dockerfile:"
+msgstr ""
 
 #: app/scripts/controllers/overview.js:461
 #: app/scripts/controllers/storage.js:49 app/scripts/directives/util.js:130
 msgid "Don't Show Me Again"
 msgstr "不再显示"
 
-#: app/scripts/directives/util.js:290
-msgid "EN"
-msgstr "英文"
+#: app/views/browse/build-config.html:186
+#, fuzzy
+#| msgid "Configuration"
+msgid "Duration"
+msgstr "配置"
+
+#: app/views/browse/_build-details.html:24
+#: app/views/browse/_replica-set-details.html:61
+#, fuzzy
+#| msgid "Configuration"
+msgid "Duration:"
+msgstr "配置"
 
 #: app/scripts/controllers/edit/deploymentConfig.js:104
 #: app/scripts/controllers/edit/route.js:39
+#: app/views/browse/build-config.html:41 app/views/browse/config-map.html:39
+#: app/views/browse/deployment-config.html:35 app/views/browse/route.html:19
+#: app/views/browse/route.html:204 app/views/browse/service-instance.html:16
+#: app/views/browse/service-instance.html:33
 msgid "Edit"
 msgstr "编辑"
+
+#: app/views/browse/deployment-config.html:55
+#: app/views/browse/deployment.html:35
+msgid "Edit Autoscaler"
+msgstr ""
 
 #: app/scripts/controllers/edit/configMap.js:31
 #: app/scripts/controllers/edit/configMap.js:60
 msgid "Edit Config Map"
 msgstr "编辑Config Map"
+
+#: app/views/browse/build.html:30
+#, fuzzy
+#| msgid "Configuration"
+msgid "Edit Configuration"
+msgstr "配置"
 
 #: app/scripts/controllers/edit/deploymentConfig.js:40
 msgid "Edit Deployment Config"
@@ -586,15 +1085,51 @@ msgstr "编辑Deployment Config"
 
 #: app/scripts/controllers/edit/healthChecks.js:48
 #: app/scripts/controllers/edit/healthChecks.js:97
+#: app/views/browse/_replica-set-actions.html:35
+#: app/views/browse/_replication-controller-actions.html:37
+#: app/views/browse/deployment-config.html:63
+#: app/views/browse/deployment.html:43
 msgid "Edit Health Checks"
 msgstr "编辑Health Checks"
 
+#: app/views/browse/build.html:33
+#, fuzzy
+#| msgid "Start Pipeline"
+msgid "Edit Pipeline"
+msgstr "开始Pipeline"
+
+#: app/views/browse/_replica-set-details.html:174
+#: app/views/browse/_replica-set-details.html:179
+#: app/views/browse/_replica-set-details.html:183
+#: app/views/browse/deployment-config.html:298
+#: app/views/browse/deployment.html:250
+#, fuzzy
+#| msgid "Edit Resource Limits"
+msgid "Edit Resource"
+msgstr "编辑Resource Limits"
+
 #: app/scripts/controllers/setLimits.js:107
 #: app/scripts/controllers/setLimits.js:58
+#: app/views/browse/_replica-set-actions.html:27
+#: app/views/browse/_replica-set-actions.html:31
+#: app/views/browse/_replication-controller-actions.html:28
+#: app/views/browse/_replication-controller-actions.html:32
+#: app/views/browse/deployment-config.html:59
+#: app/views/browse/deployment.html:39
 msgid "Edit Resource Limits"
 msgstr "编辑Resource Limits"
 
 #: app/scripts/controllers/edit/yaml.js:38
+#: app/views/browse/_replica-set-actions.html:38
+#: app/views/browse/_replication-controller-actions.html:40
+#: app/views/browse/build-config.html:44 app/views/browse/build.html:55
+#: app/views/browse/config-map.html:42
+#: app/views/browse/deployment-config.html:66
+#: app/views/browse/deployment.html:46 app/views/browse/imagestream.html:19
+#: app/views/browse/persistent-volume-claim.html:19
+#: app/views/browse/pod.html:23 app/views/browse/route.html:22
+#: app/views/browse/secret.html:36 app/views/browse/service-instance.html:38
+#: app/views/browse/service.html:23 app/views/browse/stateful-set.html:28
 msgid "Edit YAML"
 msgstr "编辑YAML"
 
@@ -603,6 +1138,14 @@ msgid ""
 "Editing routes with non-service targets is unsupported. You can edit the "
 "route with the \"Edit YAML\" action instead."
 msgstr "不支持编辑non-service targets路由，你可以用“编辑YAML”来替代."
+
+#: app/scripts/directives/util.js:290
+msgid "EN"
+msgstr "英文"
+
+#: app/views/browse/build-config.html:146
+msgid "encountered an error."
+msgstr ""
 
 #: app/scripts/controllers/edit/buildConfig.js:144
 msgid "Enter the arguments that will be appended to the command."
@@ -617,6 +1160,32 @@ msgstr "输入的参数将会被添加到默认的 image entry point."
 msgid "Enter the arguments that will be appended to the script."
 msgstr "输入的参数将会被添加到script."
 
+#: app/views/browse/build-config.html:452 app/views/browse/build.html:95
+#: app/views/browse/deployment-config.html:340
+#: app/views/browse/deployment.html:282 app/views/browse/pod.html:55
+#: app/views/browse/replica-set.html:46 app/views/browse/stateful-set.html:143
+msgid "Environment"
+msgstr ""
+
+#: app/views/browse/build-config.html:453 app/views/browse/build.html:96
+#: app/views/create/fromimage.html:215 app/views/create/fromimage.html:256
+#, fuzzy
+#| msgid "Reload Environment Variables"
+msgid "Environment Variables"
+msgstr "重新加载环境变量"
+
+#: app/views/browse/pod.html:58 app/views/browse/replica-set.html:54
+msgid "Environment variables can be edited on deployment config"
+msgstr ""
+
+#: app/views/browse/build.html:99
+msgid "Environment variables can be edited on the"
+msgstr ""
+
+#: app/views/browse/replica-set.html:49
+msgid "Environment variables can be edited on the deployment"
+msgstr ""
+
 #: app/scripts/controllers/buildConfig.js:111
 msgid ""
 "Environment variables for build config {{name}} were successfully updated."
@@ -626,21 +1195,48 @@ msgstr "build config {{name}}环境变量更新成功."
 msgid "Environment variables for{{kind}} {{name}} were successfully updated."
 msgstr "{{kind}} {{name}}环境变量更新成功."
 
+#: app/views/browse/pod.html:63
+msgid "Environment variables were set by {{controllerRef.kind | humanizeKind}}"
+msgstr ""
+
 #: app/scripts/controllers/events.js:23 app/scripts/directives/nav.js:49
+#: app/views/browse/build-config.html:507 app/views/browse/build.html:140
+#: app/views/browse/deployment-config.html:344
+#: app/views/browse/deployment.html:286
+#: app/views/browse/persistent-volume-claim.html:86
+#: app/views/browse/pod.html:216 app/views/browse/replica-set.html:96
+#: app/views/browse/service-instance.html:154 app/views/browse/service.html:104
+#: app/views/browse/stateful-set.html:162
 msgid "Events"
 msgstr ""
 
-#: app/scripts/directives/fromFile.js:421
-msgid "Failed to create some resources in project {{name}}"
-msgstr "在 {{name}}中创建资源失败."
+#: app/scripts/directives/editPvc.js:56
+msgid "expand request has been submitted."
+msgstr "扩展请求已提交."
+
+#: app/views/browse/route.html:75
+msgid "Exposed on router"
+msgstr ""
+
+#: app/views/browse/service.html:67
+msgid "External Hostname:"
+msgstr ""
+
+#: app/views/browse/service.html:76
+msgid "External IPs:"
+msgstr ""
+
+#: app/scripts/directives/processTemplate.js:106
+msgid "Failed to create {{name}} in project {{project}}"
+msgstr "在 {{project}}中创建 {{name}} 失败."
 
 #: app/scripts/controllers/create/createFromImage.js:280
 msgid "Failed to create {{name}} in project {{projectName}}"
 msgstr "在 {{projectName}}中创建 {{name}} 失败."
 
-#: app/scripts/directives/processTemplate.js:106
-msgid "Failed to create {{name}} in project {{project}}"
-msgstr "在 {{project}}中创建 {{name}} 失败."
+#: app/scripts/directives/fromFile.js:421
+msgid "Failed to create some resources in project {{name}}"
+msgstr "在 {{name}}中创建资源失败."
 
 #: app/scripts/directives/deployImage.js:290
 msgid "Failed to deployed image {{name}} to project {{project}}"
@@ -650,26 +1246,84 @@ msgstr "部署{{name}}到 {{project}}失败"
 msgid "Failed to update some resources in project {{name}}"
 msgstr "在 {{name}}更新资源失败"
 
+#: app/views/browse/build-config.html:145
+msgid "failed."
+msgstr ""
+
+#: app/views/directives/events.html:10
+msgid "Filter"
+msgstr "筛选"
+
 #: app/scripts/directives/processTemplateDialog.js:124
 msgid "Filter by Keyword"
-msgstr "按关键词过滤"
+msgstr "按关键词筛选"
 
 #: app/views/overview.html:65
 msgid "Filter by name"
-msgstr "按名称过滤"
+msgstr "按名称筛选"
+
+#: app/views/catalog/catalog.html:27 app/views/catalog/category-content.html:24
+#, fuzzy
+#| msgid "Filter by name"
+msgid "Filter by name or description"
+msgstr "按名称筛选"
+
+#: app/views/create/fromimage.html:398
+msgid "for source, routes, builds, and deployments."
+msgstr ""
+
+#: app/views/browse/build-config.html:410
+msgid "Generic Webhook URL:"
+msgstr ""
 
 #: app/views/overview.html:9
 msgid "Get started with your project."
 msgstr "开始你的项目."
 
-#: app/scripts/directives/deleteLink.js:97
-msgid "HPA {{name}} could not be deleted."
-msgstr "无法删除HPA {{name}}."
+#: app/views/create/fromimage.html:106
+msgid "Git Reference"
+msgstr ""
+
+#: app/views/create/fromimage.html:70
+msgid "Git Repository URL"
+msgstr ""
+
+#: app/views/browse/build-config.html:396
+msgid "GitHub Webhook URL:"
+msgstr ""
+
+#: app/views/browse/build-config.html:403
+msgid "GitLab Webhook URL:"
+msgstr ""
+
+#: app/views/browse/_pod-details.html:34
+msgid "Grace Period:"
+msgstr ""
 
 #: app/scripts/controllers/edit/healthChecks.js:37
 #: app/scripts/controllers/setLimits.js:38
 msgid "Health checks are not supported for kind {{kind}}."
 msgstr "Health checks不支持{{kind}}类型."
+
+#: app/views/create/fromimage.html:396
+msgid "Hide"
+msgstr ""
+
+#: app/views/browse/build-config.html:457
+#, fuzzy
+#| msgid "Reload Environment Variables"
+msgid "Hide Image Environment Variables"
+msgstr "重新加载环境变量"
+
+#: app/views/browse/build-config.html:75
+#: app/views/browse/deployment-config.html:103
+#: app/views/browse/deployment.html:83
+msgid "History"
+msgstr ""
+
+#: app/views/browse/deployment-config.html:316
+msgid "Hooks"
+msgstr ""
 
 #: app/scripts/directives/deleteLink.js:94
 msgid "Horizontal pod autoscaler {{name}} could not be deleted."
@@ -687,21 +1341,32 @@ msgstr "Horizontal pod autoscaler {{name}} 更新成功."
 msgid "Horizontal pod autoscaler {{name}} was marked for deletion."
 msgstr "Horizontal pod autoscaler {{name}} 被标记用于删除."
 
+#: app/views/browse/routes.html:56
+msgid "Hostname"
+msgstr ""
+
+#: app/views/browse/service.html:60
+msgid "Hostname:"
+msgstr ""
+
+#: app/scripts/directives/deleteLink.js:97
+msgid "HPA {{name}} could not be deleted."
+msgstr "无法删除HPA {{name}}."
+
+#: app/views/create/fromimage.html:47
+#, fuzzy
+#| msgid "Identifies the resources created for this image."
+msgid "Identifies the resources created for this application."
+msgstr "为该镜像创建资源认证."
+
 #: app/views/directives/deploy-image.html:142
 msgid "Identifies the resources created for this image."
 msgstr "为该镜像创建资源认证."
 
 #: app/scripts/directives/deployImageDialog.js:26
+#: app/views/browse/deployment-config.html:173
 msgid "Image"
 msgstr "镜像"
-
-#: app/views/directives/deploy-image.html:33
-msgid "Image search is only available for existing projects."
-msgstr "只能在已存在的项目中搜索镜像."
-
-#: app/scripts/controllers/createFromURL.js:72
-msgid "Image streams and templates cannot be combined."
-msgstr "Image streams 和 templates无法结合。"
 
 #: app/views/directives/deploy-image.html:88
 msgid ""
@@ -710,21 +1375,73 @@ msgid ""
 "            administrator."
 msgstr "集群管理员不允许以root用户运行{{import.name}}镜像."
 
+#: app/views/create/fromimage.html:266
+#, fuzzy
+#| msgid "Reload Environment Variables"
+msgid "Image Environment Variables"
+msgstr "重新加载环境变量"
+
+#: app/views/directives/deploy-image.html:33
+msgid "Image search is only available for existing projects."
+msgstr "只能在已存在的项目中搜索镜像."
+
+#: app/views/browse/build-config.html:285
+#, fuzzy
+#| msgid "Resources"
+msgid "Image Sources:"
+msgstr "资源"
+
+#: app/scripts/controllers/createFromURL.js:72
+msgid "Image streams and templates cannot be combined."
+msgstr "Image streams 和 templates无法结合。"
+
 #: app/scripts/directives/nav.js:40
 msgid "Images"
 msgstr "镜像"
 
+#: app/views/catalog/catalog.html:13 app/views/catalog/category-content.html:12
 #: app/views/overview.html:22
 msgid "Import YAML / JSON"
 msgstr "导入YAML/JSON"
+
+#: app/views/browse/build-config.html:110
+#, fuzzy
+#| msgid "and the"
+msgid "in the"
+msgstr "和"
 
 #: app/scripts/directives/processTemplateDialog.js:57
 msgid "Information"
 msgstr "信息"
 
+#: app/views/browse/service.html:71
+msgid "Ingress Points:"
+msgstr ""
+
+#: app/views/browse/route.html:158
+msgid "Insecure Traffic:"
+msgstr ""
+
+#: app/views/browse/deployment-config.html:218
+msgid "Interval:"
+msgstr ""
+
 #: app/scripts/controllers/util/error.js:23
 msgid "Invalid request"
 msgstr "不合法请求"
+
+#: app/views/browse/_pod-details.html:44 app/views/browse/service.html:58
+msgid "IP:"
+msgstr ""
+
+#: app/scripts/directives/oscFileInput.js:197
+#: app/views/browse/deployment-config.html:115
+msgid "is"
+msgstr "是"
+
+#: app/scripts/controllers/newfromtemplate.js:47
+msgid "is not valid JSON."
+msgstr "不是合法的JSON."
 
 #: app/scripts/controllers/deployment.js:217
 #: app/scripts/controllers/deploymentConfig.js:294
@@ -744,9 +1461,22 @@ msgstr "不删除persistent volume claim."
 msgid "It will not delete the secret."
 msgstr "不删除secret."
 
+#: app/views/browse/_build-details.html:101
+#: app/views/browse/build-config.html:259
+msgid "Jenkinsfile Path:"
+msgstr ""
+
+#: app/views/browse/_build-details.html:118
+msgid "Jenkinsfile:"
+msgstr ""
+
 #: app/scripts/controllers/edit/deploymentConfig.js:237
 msgid "Keep some existing {{name}} strategy parameters?"
 msgstr "保留当前{{name}}参数?"
+
+#: app/views/browse/route.html:170
+msgid "Key:"
+msgstr ""
 
 #: app/scripts/directives/processTemplateDialog.js:123
 msgid "Keyword"
@@ -761,17 +1491,41 @@ msgstr "关键词"
 msgid "Kind or name parameter missing."
 msgstr "缺少类型或名称."
 
+#: app/views/browse/config-maps.html:53
+msgid "Labels"
+msgstr ""
+
 #: app/scripts/directives/util.js:284
 msgid "Language"
 msgstr "语言"
 
+#: app/views/create/fromimage.html:212
+msgid "Launch the first build when the build configuration is created"
+msgstr ""
+
+#: app/views/browse/image.html:35
+msgid "Layers"
+msgstr ""
+
+#: app/views/browse/config-maps.html:12
+#: app/views/browse/deployment-config.html:254
+#: app/views/browse/deployment-config.html:318 app/views/browse/routes.html:12
+#: app/views/create/fromimage.html:314
 #: app/views/directives/deploy-image.html:69
 msgid "Learn More"
 msgstr "了解更多"
 
-#: app/views/overview.html:276
+#: app/views/browse/service.html:94 app/views/overview.html:276
 msgid "Learn more about"
 msgstr "了解更多关于"
+
+#: app/views/browse/_replica-set-details.html:175
+#: app/views/browse/_replica-set-details.html:180
+#: app/views/browse/_replica-set-details.html:184
+#: app/views/browse/deployment-config.html:299
+#: app/views/browse/deployment.html:251
+msgid "Limits"
+msgstr ""
 
 #: app/scripts/controllers/quota.js:25
 msgid "Limits resource usage within this project."
@@ -786,9 +1540,25 @@ msgstr ""
 #: app/scripts/controllers/deploymentConfig.js:46
 #: app/scripts/controllers/deployments.js:28
 #: app/scripts/controllers/imagestream.js:36
-#: app/scripts/controllers/quota.js:26 app/views/overview.html:36
+#: app/scripts/controllers/quota.js:26 app/views/browse/build-config.html:70
+#: app/views/browse/build-config.html:78 app/views/browse/build.html:6
+#: app/views/browse/config-map.html:6 app/views/browse/config-maps.html:29
+#: app/views/browse/deployment-config.html:90
+#: app/views/browse/deployment.html:70 app/views/browse/image.html:16
+#: app/views/browse/image.html:6 app/views/browse/imagestream.html:6
+#: app/views/browse/persistent-volume-claim.html:6 app/views/browse/pod.html:6
+#: app/views/browse/replica-set.html:6 app/views/browse/route.html:6
+#: app/views/browse/routes.html:29 app/views/browse/secret.html:6
+#: app/views/browse/service-instance.html:11 app/views/browse/service.html:6
+#: app/views/browse/stateful-set.html:55 app/views/browse/stateful-sets.html:29
+#: app/views/catalog/category-content.html:1 app/views/create/fromimage.html:7
+#: app/views/overview.html:36
 msgid "Loading..."
 msgstr "加载中…"
+
+#: app/views/browse/build.html:131 app/views/browse/pod.html:111
+msgid "Log from"
+msgstr ""
 
 #: app/scripts/controllers/util/logout.js:16
 #: app/scripts/controllers/util/logout.js:35
@@ -799,7 +1569,8 @@ msgstr "退出中…"
 msgid "Login command copied."
 msgstr "已拷贝Login command."
 
-#: app/scripts/directives/nav.js:50
+#: app/scripts/directives/nav.js:50 app/views/browse/build.html:116
+#: app/views/browse/pod.html:79 app/views/browse/replica-set.html:78
 msgid "Logs"
 msgstr "日志"
 
@@ -813,23 +1584,64 @@ msgstr "无法为replication controller提供日志，由于它不是deployment�
 msgid "Make sure any new fields you may have added are supported API fields."
 msgstr "确保你添加到新fields支持API fields."
 
+#: app/views/browse/build-config.html:440
+msgid "Manual (CLI):"
+msgstr ""
+
+#: app/views/browse/deployment-config.html:252
+msgid ""
+"Manual (CLI):\n"
+"                        <a href=\"{{'deployment-operations' | helpLink}}\" "
+"target=\"_blank\">\n"
+"                          <span class=\"learn-more-block\"><translate>Learn "
+"More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true"
+"\"></i></span>\n"
+"                        </a>"
+msgstr ""
+
+#: app/views/browse/_build-details.html:43
+msgid "Manual build"
+msgstr ""
+
+#: app/views/browse/deployment-config.html:222
+#: app/views/browse/deployment.html:172
+msgid "Max Surge:"
+msgstr ""
+
+#: app/views/browse/deployment-config.html:220
+#: app/views/browse/deployment.html:160
+msgid "Max Unavailable:"
+msgstr ""
+
 #: app/scripts/directives/nav.js:43
 msgid "Membership"
 msgstr "成员"
 
-#: app/scripts/directives/nav.js:51
+#: app/views/browse/_pod-details.html:18
+msgid "Message:"
+msgstr ""
+
+#: app/scripts/directives/nav.js:51 app/views/browse/stateful-set.html:150
 msgid "Metrics"
+msgstr ""
+
+#: app/views/browse/deployment.html:184
+msgid "Min Ready:"
 msgstr ""
 
 #: app/scripts/controllers/events.js:19 app/scripts/directives/nav.js:48
 msgid "Monitoring"
 msgstr "监控"
 
-#: app/views/projects.html:20
-msgid "My Projects"
-msgstr "我的项目"
+#: app/scripts/controllers/projects.js:37
+#, fuzzy
+#| msgid "My <strong>Projects</strong>"
+msgid "My<strong>Projects</strong>"
+msgstr "我的<strong>项目</strong>"
 
-#: app/scripts/controllers/projects.js:104
+#: app/scripts/controllers/projects.js:105 app/views/browse/config-maps.html:51
+#: app/views/browse/deployment.html:101 app/views/browse/stateful-sets.html:48
+#: app/views/create/fromimage.html:22
 #: app/views/directives/deploy-image.html:126
 msgid "Name"
 msgstr "名称"
@@ -853,6 +1665,25 @@ msgstr ""
 msgid "Name must have at least 2 characters."
 msgstr "名称至少两个字符。"
 
+#: app/views/catalog/_image.html:25 app/views/catalog/_template.html:23
+msgid "Namespace:"
+msgstr ""
+
+#: app/views/catalog/catalog.html:8
+#, fuzzy
+#| msgid "An image stream or template is required."
+msgid "namespace. An image or template is required to add content."
+msgstr "image stream 或 template是必须的."
+
+#: app/views/browse/build-config.html:417
+#: app/views/browse/deployment-config.html:264
+msgid "New Image For:"
+msgstr ""
+
+#: app/views/create/fromimage.html:246
+msgid "New image is available"
+msgstr ""
+
 #: app/scripts/directives/bindService.js:185
 #: app/scripts/directives/bindService.js:81
 #: app/scripts/directives/processTemplateDialog.js:266
@@ -869,21 +1700,35 @@ msgstr ""
 msgid "No Available Projects"
 msgstr "未发现项目"
 
-#: app/scripts/directives/processTemplateDialog.js:110
-msgid "No Project Selected"
-msgstr "未选择项目"
-
-#: app/scripts/directives/processTemplateDialog.js:115
-msgid "No Templates"
-msgstr "不发现模板"
-
 #: app/scripts/controllers/buildConfig.js:247
 msgid "No builds to show"
+msgstr "未发现builds"
+
+#: app/views/browse/build-config.html:82
+#, fuzzy
+#| msgid "No builds to show"
+msgid "No builds."
 msgstr "未发现builds"
 
 #: app/scripts/controllers/edit/yaml.js:129
 msgid "No changes were applied to {{kind}} {{name}}."
 msgstr "{{kind}} {{name}}没有变化."
+
+#: app/views/browse/config-maps.html:35
+#, fuzzy
+#| msgid "pipelines have been added to project {{projectName}}."
+msgid "No config maps have been added to project {{projectName}}."
+msgstr "pipelines已被添加到 {{projectName}}."
+
+#: app/views/browse/config-maps.html:34
+#, fuzzy
+#| msgid "Could not load config maps."
+msgid "No config maps."
+msgstr "无法加载config maps."
+
+#: app/views/browse/secret.html:93
+msgid "No data."
+msgstr ""
 
 #: app/scripts/controllers/deployment.js:100
 #: app/scripts/controllers/deploymentConfig.js:116
@@ -894,6 +1739,24 @@ msgstr "未发现deployments"
 msgid "No image metadata found."
 msgstr "未发现image metadata."
 
+#: app/views/catalog/category-content.html:6
+msgid "No images or templates are loaded for the category {{category.label}}."
+msgstr ""
+
+#: app/views/catalog/catalog.html:7
+msgid "No images or templates are loaded for this project or the shared"
+msgstr ""
+
+#: app/views/catalog/catalog.html:4 app/views/catalog/category-content.html:4
+#, fuzzy
+#| msgid "An image stream or template is required."
+msgid "No images or templates."
+msgstr "image stream 或 template是必须的."
+
+#: app/views/browse/image.html:36
+msgid "No layer information is available for this image."
+msgstr ""
+
 #: app/scripts/controllers/attachPVC.js:229
 msgid ""
 "No mount path was provided. The volume reference was added to the "
@@ -901,6 +1764,10 @@ msgid ""
 msgstr ""
 "未提供mount path，volume reference已被添加到配置中，但是没有挂载到运行的pods"
 "中."
+
+#: app/views/browse/build-config.html:104
+msgid "No pipeline builds have run for {{buildConfigName}}."
+msgstr ""
 
 #: app/views/overview.html:310
 msgid "No pipeline runs."
@@ -910,17 +1777,104 @@ msgstr "未发现pipeline运行."
 msgid "No pipelines."
 msgstr "未发现pipelines."
 
+#: app/scripts/directives/processTemplateDialog.js:110
+msgid "No Project Selected"
+msgstr "未选择项目"
+
+#: app/views/browse/routes.html:35
+#, fuzzy
+#| msgid "pipelines have been added to project {{projectName}}."
+msgid "No routes have been added to project {{projectName}}."
+msgstr "pipelines已被添加到 {{projectName}}."
+
+#: app/views/browse/routes.html:34
+#, fuzzy
+#| msgid "Routes"
+msgid "No routes."
+msgstr "路由"
+
+#: app/views/browse/pod.html:125
+#, fuzzy
+#| msgid "Could not debug container"
+msgid "No running containers"
+msgstr "无法debug容器"
+
+#: app/views/browse/stateful-sets.html:35
+#, fuzzy
+#| msgid "pipelines have been added to project {{projectName}}."
+msgid "No stateful sets have been added to project {{projectName}}."
+msgstr "pipelines已被添加到 {{projectName}}."
+
+#: app/views/browse/stateful-sets.html:34
+msgid "No stateful sets."
+msgstr ""
+
 #: app/scripts/controllers/imagestream.js:51
 msgid "No tags to show"
 msgstr "未发现tags"
+
+#: app/scripts/directives/processTemplateDialog.js:115
+msgid "No Templates"
+msgstr "不发现模板"
+
+#: app/views/browse/secret.html:76
+msgid "No value"
+msgstr ""
+
+#: app/views/browse/_pod-details.html:46
+msgid "Node:"
+msgstr ""
+
+#: app/views/browse/_pod-details.html:83
+#: app/views/browse/_replica-set-details.html:107
+#: app/views/browse/_replica-set-details.html:123
+#: app/views/browse/_replica-set-details.html:135
+#: app/views/browse/_replica-set-details.html:151
+#: app/views/browse/build-config.html:275 app/views/browse/config-maps.html:65
+#: app/views/browse/deployment-config.html:236
+#: app/views/browse/deployment-config.html:330
+#: app/views/browse/deployment.html:224 app/views/browse/deployment.html:258
+#: app/views/browse/persistent-volume-claim.html:78
+#: app/views/browse/route.html:165 app/views/browse/route.html:175
+#: app/views/browse/route.html:185 app/views/browse/route.html:195
+#: app/views/browse/route.html:97 app/views/browse/service.html:53
+#: app/views/browse/stateful-set.html:118
+msgid "none"
+msgstr ""
+
+#: app/views/browse/service.html:85
+msgid "None"
+msgstr ""
 
 #: app/scripts/controllers/util/error.js:20
 msgid "Not found"
 msgstr "未发现"
 
+#: app/views/browse/_build-details.html:22
+msgid "not started"
+msgstr ""
+
+#: app/views/browse/pod.html:137
+msgid "Open Fullscreen Terminal"
+msgstr ""
+
 #: app/scripts/controllers/overview.js:457
 msgid "Open Metrics URL"
 msgstr "打开 Metrics URL"
+
+#: app/views/create/fromimage.html:118
+msgid "Optional branch, tag, or commit."
+msgstr ""
+
+#: app/views/create/fromimage.html:137
+msgid ""
+"Optional subdirectory for the application source code, used as the context "
+"directory for the build."
+msgstr ""
+
+#: app/views/catalog/catalog.html:124
+msgid "Other"
+msgstr ""
 
 #: app/scripts/directives/processTemplateDialog.js:236
 msgid "Other Projects"
@@ -931,6 +1885,18 @@ msgstr "其他项目"
 msgid "Other Resources"
 msgstr "其他资源"
 
+#: app/views/browse/build-config.html:435
+msgid "Other Trigger:"
+msgstr ""
+
+#: app/views/browse/_build-details.html:89
+msgid "Output Image:"
+msgstr ""
+
+#: app/views/browse/build-config.html:311
+msgid "Output To:"
+msgstr ""
+
 #: app/scripts/directives/nav.js:30
 msgid "Overview"
 msgstr "概览"
@@ -938,6 +1904,19 @@ msgstr "概览"
 #: app/scripts/directives/bindService.js:155
 msgid "Parameters"
 msgstr "参数"
+
+#: app/views/browse/build-config.html:291
+msgid "Paths:"
+msgstr ""
+
+#: app/views/browse/deployment-config.html:39
+#: app/views/browse/deployment.html:18
+msgid "Pause Rollouts"
+msgstr ""
+
+#: app/views/browse/routes.html:87
+msgid "Pending"
+msgstr ""
 
 #: app/scripts/controllers/attachPVC.js:233
 msgid "Persistent volume claim {{name}} added to {{kind}} {{route}}."
@@ -951,6 +1930,18 @@ msgstr "Persistent volume claim {{name}}创建成功."
 msgid "Pipelines"
 msgstr ""
 
+#: app/views/overview.html:274
+msgid "pipelines have been added to project {{projectName}}."
+msgstr "pipelines已被添加到 {{projectName}}."
+
+#: app/views/browse/service-instance.html:100
+msgid "Plan"
+msgstr ""
+
+#: app/views/create/fromimage.html:52
+msgid "Please enter a valid name."
+msgstr ""
+
 #: app/scripts/directives/processTemplateDialog.js:111
 msgid ""
 "Please select a project from the dropdown to load templates from that "
@@ -958,25 +1949,52 @@ msgid ""
 msgstr "请从下拉框中选择项目以加载该项目模板。"
 
 #: app/scripts/directives/nav.js:34
+#: app/views/browse/_replica-set-details.html:220
+#: app/views/browse/service.html:96 app/views/browse/stateful-set.html:126
 msgid "Pods"
 msgstr "Pods"
+
+#: app/views/browse/_build-details.html:137
+#: app/views/browse/build-config.html:378
+msgid "Post-Commit Hooks"
+msgstr ""
 
 #: app/scripts/controllers/create/createFromImage.js:333
 #: app/scripts/directives/deployImage.js:345
 msgid "Problems were detected while checking your application configuration."
 msgstr "检测应用配置时发现问题."
 
+#: app/views/browse/deployment.html:202
+msgid "Progress Deadline:"
+msgstr ""
+
+#: app/views/catalog/_image.html:21 app/views/catalog/_template.html:19
+msgid "Provider:"
+msgstr ""
+
 #: app/scripts/directives/nav.js:37 app/views/overview.html:404
 msgid "Provisioned Services"
+msgstr ""
+
+#: app/views/browse/_build-details.html:99
+msgid "Push Secret:"
 msgstr ""
 
 #: app/scripts/directives/nav.js:42
 msgid "Quota"
 msgstr ""
 
+#: app/views/browse/build.html:14 app/views/browse/build.html:48
+msgid "Rebuild"
+msgstr ""
+
 #: app/scripts/directives/processTemplateDialog.js:234
 msgid "Recently Viewed"
 msgstr "最近打开"
+
+#: app/views/browse/route.html:79
+msgid "Rejected by router"
+msgstr ""
 
 #: app/scripts/controllers/buildConfig.js:175
 msgid "Reload Environment Variables"
@@ -998,6 +2016,39 @@ msgstr "移除卷 {{name}}?"
 msgid "Remove volume{{name}}?"
 msgstr "移除卷 {{name}}?"
 
+#: app/views/browse/_replica-set-details.html:28
+msgid "replica count and selector"
+msgstr ""
+
+#: app/views/browse/deployment.html:102 app/views/browse/stateful-sets.html:49
+#: app/views/create/fromimage.html:326
+#, fuzzy
+#| msgid "Applications"
+msgid "Replicas"
+msgstr "应用"
+
+#: app/views/create/fromimage.html:341
+msgid "Replicas must be an integer value greater than or equal to 0."
+msgstr ""
+
+#: app/views/browse/_replica-set-details.html:72
+#: app/views/browse/deployment-config.html:201
+#: app/views/browse/deployment.html:142 app/views/browse/stateful-set.html:84
+msgid "Replicas:"
+msgstr ""
+
+#: app/views/browse/persistent-volume-claim.html:73
+msgid "Requested Capacity:"
+msgstr ""
+
+#: app/views/browse/_replica-set-details.html:175
+#: app/views/browse/_replica-set-details.html:180
+#: app/views/browse/_replica-set-details.html:184
+#: app/views/browse/deployment-config.html:299
+#: app/views/browse/deployment.html:251
+msgid "Requests and"
+msgstr ""
+
 #: app/scripts/directives/fromFile.js:211
 msgid "Resource is missing kind field."
 msgstr "资源确实类型."
@@ -1018,6 +2069,10 @@ msgstr "资源"
 msgid "Resources from the namespace \"{{name}}\" are not permitted."
 msgstr "不允许”{{name}}” namespace中的资源."
 
+#: app/views/browse/_pod-details.html:48
+msgid "Restart Policy:"
+msgstr ""
+
 #: app/scripts/directives/bindService.js:164
 #: app/scripts/directives/deployImageDialog.js:45
 #: app/scripts/directives/fromFileDialog.js:86
@@ -1025,9 +2080,21 @@ msgstr "不允许”{{name}}” namespace中的资源."
 msgid "Results"
 msgstr "结果"
 
+#: app/views/browse/deployment-config.html:42
+#: app/views/browse/deployment-config.html:98
+#: app/views/browse/deployment.html:21 app/views/browse/deployment.html:78
+#, fuzzy
+#| msgid "Results"
+msgid "Resume Rollouts"
+msgstr "结果"
+
 #: app/scripts/controllers/util/logout.js:44
 msgid "Return to the"
 msgstr "返回到"
+
+#: app/views/browse/deployment.html:193
+msgid "Revision History Limit:"
+msgstr ""
 
 #: app/scripts/controllers/createRoute.js:137
 msgid "Route {{name}} was successfully created."
@@ -1037,23 +2104,39 @@ msgstr "{{name}}创建成功。"
 msgid "Route {{routeName}} was successfully updated."
 msgstr "{{name}}更新成功。"
 
+#: app/views/browse/service.html:94
+#, fuzzy
+#| msgid "Routes"
+msgid "routes"
+msgstr "路由"
+
 #: app/scripts/controllers/createRoute.js:39
 #: app/scripts/controllers/edit/route.js:33 app/scripts/controllers/route.js:29
-#: app/scripts/directives/nav.js:36
+#: app/scripts/directives/nav.js:36 app/views/browse/routes.html:9
 msgid "Routes"
 msgstr "路由"
+
+#: app/views/browse/service.html:81
+#, fuzzy
+#| msgid "Routes"
+msgid "Routes:"
+msgstr "路由"
+
+#: app/views/browse/build-config.html:323
+msgid "Run Policy:"
+msgstr ""
+
+#: app/views/browse/build-config.html:483
+msgid "Save"
+msgstr ""
 
 #: app/scripts/directives/editEnvironmentVariables.js:68
 msgid "Saving your changes may create a conflict or cause loss of data."
 msgstr "保存修改可能导致冲突和数据丢失."
 
-#: app/scripts/directives/createSecret.js:36
-msgid ""
-"Secret reference key must consist of lower-case, upper-case letters, "
-"numbers, dash, and underscore."
+#: app/views/create/fromimage.html:310
+msgid "Scale replicas manually or automatically based on CPU usage."
 msgstr ""
-"Secret reference key必须由 lower-case, upper-case letters, numbers, dash, "
-"and underscore组成."
 
 #: app/scripts/directives/createSecret.js:222
 msgid "Secret {{secret}} was created and linked with service account {{name}}."
@@ -1063,9 +2146,23 @@ msgstr "Secret{{secret}}已被创建和连接到service account {{name}}."
 msgid "Secret {{secret}} was created."
 msgstr "Secret {{secret}} 已创建."
 
+#: app/scripts/directives/createSecret.js:36
+msgid ""
+"Secret reference key must consist of lower-case, upper-case letters, "
+"numbers, dash, and underscore."
+msgstr ""
+"Secret reference key必须由 lower-case, upper-case letters, numbers, dash, "
+"and underscore组成."
+
 #: app/scripts/controllers/createSecret.js:28 app/scripts/directives/nav.js:45
 msgid "Secrets"
 msgstr ""
+
+#: app/views/catalog/_image.html:49 app/views/catalog/_template.html:27
+#, fuzzy
+#| msgid "Selection"
+msgid "Select"
+msgstr "选择"
 
 #: app/views/directives/deploy-image.html:78
 msgid "Select an image stream tag or enter an image name."
@@ -1079,20 +2176,145 @@ msgstr "从项目中选择"
 msgid "Selection"
 msgstr "选择"
 
+#: app/views/browse/_replica-set-details.html:68
+#: app/views/browse/deployment-config.html:197
+#: app/views/browse/deployment.html:138 app/views/browse/service.html:51
+#, fuzzy
+#| msgid "Selection"
+msgid "Selectors:"
+msgstr "选择"
+
+#: app/views/browse/route.html:128 app/views/browse/routes.html:61
+#, fuzzy
+#| msgid "Overview"
+msgid "Service"
+msgstr "概览"
+
+#: app/views/browse/service.html:94
+#, fuzzy
+#| msgid "Overview"
+msgid "services"
+msgstr "概览"
+
 #: app/scripts/directives/nav.js:35
 msgid "Services"
 msgstr ""
 
-#: app/views/overview.html:299
+#: app/views/browse/service.html:69
+msgid "Session affinity:"
+msgstr ""
+
+#: app/views/browse/route.html:163 app/views/browse/route.html:173
+#: app/views/browse/route.html:183 app/views/browse/route.html:193
+#: app/views/create/fromimage.html:395
+msgid "Show"
+msgstr ""
+
+#: app/views/browse/build-config.html:456
+#, fuzzy
+#| msgid "Reload Environment Variables"
+msgid "Show Image Environment Variables"
+msgstr "重新加载环境变量"
+
+#: app/views/browse/_build-details.html:76
+msgid "Source Commit:"
+msgstr ""
+
+#: app/views/browse/_build-details.html:74
+#: app/views/browse/build-config.html:255
+msgid "Source Context Dir:"
+msgstr ""
+
+#: app/views/browse/_build-details.html:72
+#: app/views/browse/build-config.html:253
+msgid "Source Ref:"
+msgstr ""
+
+#: app/views/browse/_build-details.html:67
+#: app/views/browse/build-config.html:248
+msgid "Source Repo:"
+msgstr ""
+
+#: app/views/browse/build-config.html:93
+msgid "source repository"
+msgstr ""
+
+#: app/views/browse/_build-details.html:65
+msgid "Source Type:"
+msgstr ""
+
+#: app/views/browse/build-config.html:273
+#, fuzzy
+#| msgid "Resources"
+msgid "Source:"
+msgstr "资源"
+
+#: app/views/browse/build-config.html:89
+msgid "Start a new build to create an image from"
+msgstr ""
+
+#: app/views/browse/build-config.html:122 app/views/browse/build-config.html:13
+#: app/views/browse/build-config.html:32
+#, fuzzy
+#| msgid "Start Pipeline"
+msgid "Start Build"
+msgstr "开始Pipeline"
+
+#: app/views/browse/build-config.html:125 app/views/browse/build-config.html:16
+#: app/views/browse/build-config.html:35 app/views/overview.html:299
 msgid "Start Pipeline"
 msgstr "开始Pipeline"
+
+#: app/views/browse/build-config.html:167
+msgid "started"
+msgstr ""
+
+#: app/views/browse/_build-details.html:16
+msgid "Started:"
+msgstr ""
 
 #: app/scripts/directives/nav.js:33
 msgid "Stateful Sets"
 msgstr ""
 
-#: app/views/browse/_build-details.html:4
+#: app/views/browse/stateful-sets.html:6
+msgid ""
+"Stateful Sets\n"
+"          <!-- TODO: docs are in progress\n"
+"          <span class=\"page-header-link\">\n"
+"            <a ng-href=\"{{'stateful-sets' | helpLink}}\" target=\"_blank"
+"\">\n"
+"              Learn More <i class=\"fa fa-external-link\" aria-hidden=\"true"
+"\"></i>\n"
+"            </a>\n"
+"          </span>\n"
+"          -->"
+msgstr ""
+
+#: app/views/browse/_build-details.html:4 app/views/browse/_pod-details.html:5
+#: app/views/browse/build-config.html:185
+#: app/views/browse/deployment-config.html:136
+#: app/views/browse/service-instance.html:73
 msgid "Status"
+msgstr "状态"
+
+#: app/views/browse/_replica-set-details.html:57
+#: app/views/browse/service-instance.html:80
+#, fuzzy
+#| msgid "Status"
+msgid "Status Reason:"
+msgstr "状态"
+
+#: app/views/browse/_build-details.html:6 app/views/browse/_pod-details.html:12
+#: app/views/browse/_replica-set-details.html:18
+#: app/views/browse/build.html:126
+#: app/views/browse/persistent-volume-claim.html:60
+#: app/views/browse/replica-set.html:89
+#: app/views/browse/service-instance.html:75
+#: app/views/browse/stateful-set.html:79
+#, fuzzy
+#| msgid "Status"
+msgid "Status:"
 msgstr "状态"
 
 #: app/scripts/controllers/createPersistentVolumeClaim.js:31
@@ -1110,14 +2332,65 @@ msgid ""
 "storage."
 msgstr "Storage quota达到限制.你将无法创建新storage."
 
+#: app/views/create/fromimage.html:303
+msgid "Strategy"
+msgstr ""
+
+#: app/views/browse/deployment-config.html:210
+#: app/views/browse/deployment.html:157
+msgid "Strategy:"
+msgstr ""
+
 #: app/scripts/controllers/addConfigVolume.js:253
 #: app/scripts/directives/addConfigToApplication.js:171
 msgid "Successfully added"
 msgstr "添加成功"
 
+#: app/scripts/directives/deployImage.js:310
+#: app/scripts/directives/fromFile.js:447
+#: app/scripts/directives/fromFile.js:498
+#: app/scripts/directives/processTemplate.js:131
+msgid "successfully."
+msgstr "成功。"
+
+#: app/views/catalog/catalog.html:13 app/views/catalog/category-content.html:12
+#, fuzzy
+#| msgid "Unable to copy the login command."
+msgid "tab, or run the following command:"
+msgstr "无法复制 login command."
+
+#: app/views/browse/routes.html:62
+msgid "Target Port"
+msgstr ""
+
+#: app/views/browse/route.html:103
+msgid "Target Port:"
+msgstr ""
+
+#: app/views/browse/_pod-details.html:73
+#: app/views/browse/_replica-set-details.html:90
+#: app/views/browse/deployment-config.html:227
+#: app/views/browse/deployment.html:212 app/views/browse/stateful-set.html:106
+#, fuzzy
+#| msgid "No Templates"
+msgid "Template"
+msgstr "不发现模板"
+
 #: app/scripts/controllers/newfromtemplate.js:182
 msgid "Template wasn't found in cache."
 msgstr "cache未发现Template."
+
+#: app/views/browse/pod.html:122
+msgid "Terminal"
+msgstr ""
+
+#: app/views/browse/route.html:156
+msgid "Termination Type:"
+msgstr ""
+
+#: app/scripts/controllers/replicaSet.js:334
+msgid "The {{displayKind}} details could not be loaded."
+msgstr "{{displayKind}}无法加载."
 
 #: app/scripts/controllers/buildConfig.js:291
 msgid "The active filters are hiding all builds."
@@ -1150,6 +2423,28 @@ msgstr "build配置详情无法加载."
 msgid "The build details could not be loaded."
 msgstr "build详情无法加载."
 
+#: app/views/browse/build.html:112
+msgid "The build strategy had no environment variables defined."
+msgstr ""
+
+#: app/views/browse/build-config.html:455
+msgid ""
+"The builder image has additional environment variables defined.  Variables "
+"defined below will overwrite any from the image with the same name."
+msgstr ""
+
+#: app/views/browse/config-map.html:8
+#, fuzzy
+#| msgid "The image details could not be loaded."
+msgid "The config map could not be loaded."
+msgstr "镜像详情无法加载."
+
+#: app/views/browse/config-map.html:66
+#, fuzzy
+#| msgid "This config map has been deleted."
+msgid "The config map has no items."
+msgstr "config map已被删除."
+
 #: app/scripts/controllers/deploymentConfig.js:108
 #: app/scripts/controllers/edit/deploymentConfig.js:213
 #: app/scripts/controllers/replicaSet.js:184
@@ -1163,6 +2458,13 @@ msgstr "deployment controlling this replica set已被删除."
 #: app/scripts/controllers/deployment.js:120
 msgid "The deployment details could not be loaded."
 msgstr "deployment详情无法被加载."
+
+#: app/views/browse/route.html:85
+msgid ""
+"The DNS admin should set up a CNAME from the route's hostname, {{ingress."
+"host}},to the router's canonical hostname, {{ingress."
+"routerCanonicalHostname}}."
+msgstr ""
 
 #: app/scripts/directives/editEnvironmentVariables.js:67
 msgid ""
@@ -1178,8 +2480,20 @@ msgstr "文件"
 msgid "The file is too large."
 msgstr "文件过大."
 
+#: app/views/browse/config-maps.html:41
+#, fuzzy
+#| msgid "The filter is hiding all resources."
+msgid "The filter is hiding all config maps."
+msgstr "当前过滤条件隐藏了所有资源."
+
 #: app/views/overview.html:114
 msgid "The filter is hiding all resources."
+msgstr "当前过滤条件隐藏了所有资源."
+
+#: app/views/browse/routes.html:41
+#, fuzzy
+#| msgid "The filter is hiding all resources."
+msgid "The filter is hiding all routes."
 msgstr "当前过滤条件隐藏了所有资源."
 
 #: app/scripts/controllers/image.js:61
@@ -1205,6 +2519,16 @@ msgstr "stream中未发现该镜像标签."
 #: app/scripts/directives/logViewer.js:416
 msgid "The logs are no longer available or could not be loaded."
 msgstr "日志不可用或无法加载."
+
+#: app/views/create/fromimage.html:57
+#, fuzzy
+#| msgid "Name must have at least 2 characters."
+msgid "The name must have at least 2 characters."
+msgstr "名称至少两个字符。"
+
+#: app/views/create/fromimage.html:338
+msgid "The number of instances of your image."
+msgstr ""
 
 #: app/scripts/controllers/persistentVolumeClaim.js:84
 msgid "The persistent volume claim details could not be loaded."
@@ -1234,6 +2558,12 @@ msgstr "请求的 “ {{template}} “  template无法加载."
 msgid "The route details could not be loaded."
 msgstr "路由详情无法加载."
 
+#: app/views/browse/route.html:56
+msgid ""
+"The route is not accepting traffic yet because it has not been admitted by a "
+"router."
+msgstr ""
+
 #: app/scripts/controllers/secret.js:83
 msgid "The secret details could not be loaded."
 msgstr "secret详情无法加载."
@@ -1246,6 +2576,12 @@ msgstr "选择的项目没有可供导入的模板。"
 #: app/scripts/controllers/serviceInstance.js:230
 msgid "The service details could not be loaded."
 msgstr "服务详情无法加载."
+
+#: app/views/browse/service-instance.html:64
+#, fuzzy
+#| msgid "was marked for deletion."
+msgid "The service was marked for deletion"
+msgstr "被标记用于删除》"
 
 #: app/scripts/controllers/statefulSet.js:82
 msgid "The stateful set details could not be loaded."
@@ -1262,13 +2598,19 @@ msgid ""
 "{{original}} strategy parameters will be removed."
 msgstr ""
 
-#: app/scripts/controllers/replicaSet.js:334
-msgid "The {{displayKind}} details could not be loaded."
-msgstr "{{displayKind}}无法加载."
-
 #: app/scripts/directives/processTemplateDialog.js:106
 msgid "There are no projects available from which to load templates."
 msgstr "没有可供选择的项目加载模板."
+
+#: app/views/create/fromimage.html:271
+msgid ""
+"These variables exist on the image and will be available at runtime. You may "
+"override them below."
+msgstr ""
+
+#: app/scripts/controllers/replicaSet.js:307
+msgid "This {{displayKind}} has been deleted."
+msgstr "{{displayKind}}已被删除."
 
 #: app/scripts/controllers/buildConfig.js:205
 msgid "This build configuration can not be found, it may have been deleted."
@@ -1337,11 +2679,24 @@ msgstr ""
 msgid "This image stream has been deleted."
 msgstr "image stream已被删除."
 
+#: app/views/create/fromimage.html:98
+msgid ""
+"This might not be a valid Git URL. Check that it is the correct URL to a "
+"remote Git repository."
+msgstr ""
+
+#: app/views/create/fromimage.html:60
 #: app/views/directives/deploy-image.html:160
 msgid ""
 "This name is already in use within the project. Please choose a different "
 "name."
 msgstr "名称已使用，请选择其他名称。"
+
+#: app/views/browse/deployment.html:76
+msgid ""
+"This pauses any in-progress rollouts and stops new rollouts from running "
+"until the deployment is resumed."
+msgstr ""
 
 #: app/scripts/controllers/persistentVolumeClaim.js:65
 msgid "This persistent volume claim has been deleted."
@@ -1369,19 +2724,47 @@ msgstr "provisioned service已被shanc."
 msgid "This route has been deleted."
 msgstr "route已被删除."
 
+#: app/views/browse/route.html:117
+msgid "This route splits traffic across multiple services."
+msgstr ""
+
+#: app/views/browse/route.html:204
+msgid "this route to enable secure network traffic."
+msgstr ""
+
 #: app/scripts/controllers/secret.js:47
 msgid "This secret has been deleted."
 msgstr "secret已被删除."
 
+#: app/views/browse/secret.html:94
+#, fuzzy
+#| msgid "This secret has been deleted."
+msgid "This secret has no data."
+msgstr "secret已被删除."
+
+#: app/views/browse/secret.html:83
+msgid ""
+"This secret value contains non-printable characters and is displayed as a "
+"Base64-encoded string."
+msgstr ""
+
 #: app/scripts/controllers/service.js:97
 msgid "This service has been deleted."
 msgstr "service已被删除."
+
+#: app/views/browse/route.html:111
+msgid "This target port will route to"
+msgstr ""
 
 #: app/scripts/controllers/pod.js:49
 msgid ""
 "This terminal has been disconnected. If you reconnect, your terminal history "
 "will be lost."
 msgstr "终端已经断开连接，若重新连接，终端记录将丢失."
+
+#: app/scripts/controllers/replicaSet.js:479
+msgid "This will remove the volume from the {{kind}}."
+msgstr "从 {{kind}}移除卷."
 
 #: app/scripts/controllers/deployment.js:209
 msgid ""
@@ -1402,17 +2785,77 @@ msgstr "将从deployment config移除卷."
 msgid "This will remove the volume from the deployment."
 msgstr "将从deployment移除卷."
 
-#: app/scripts/controllers/replicaSet.js:479
-msgid "This will remove the volume from the {{kind}}."
-msgstr "从 {{kind}}移除卷."
+#: app/views/browse/deployment-config.html:96
+msgid "This will stop any new rollouts or triggers from running until resumed."
+msgstr ""
 
-#: app/scripts/controllers/replicaSet.js:307
-msgid "This {{displayKind}} has been deleted."
-msgstr "{{displayKind}}已被删除."
+#: app/views/browse/deployment-config.html:214
+msgid "Timeout:"
+msgstr ""
+
+#: app/views/browse/route.html:202
+msgid "TLS is not enabled."
+msgstr ""
+
+#: app/views/browse/route.html:154
+msgid "TLS Settings"
+msgstr ""
+
+#: app/views/browse/routes.html:63
+msgid "TLS Termination"
+msgstr ""
+
+#: app/scripts/controllers/addConfigVolume.js:253
+#: app/scripts/directives/addConfigToApplication.js:171
+#: app/views/browse/build.html:133 app/views/browse/pod.html:111
+msgid "to"
+msgstr "到"
+
+#: app/views/catalog/catalog.html:12 app/views/catalog/category-content.html:11
+#, fuzzy
+#| msgid "An image stream or template is required."
+msgid "To add an image stream or template from a file, use the editor in the"
+msgstr "image stream 或 template是必须的."
 
 #: app/views/directives/deploy-image.html:64
 msgid "To deploy an image from a private repository, you must"
 msgstr "从私人仓库部署镜像,你必须"
+
+#: app/views/browse/build-config.html:107
+#: app/views/browse/build-config.html:113
+msgid "to see what stages will run."
+msgstr ""
+
+#: app/views/browse/persistent-volume-claim.html:64
+msgid "to volume"
+msgstr ""
+
+#: app/views/browse/route.html:116 app/views/browse/service.html:89
+msgid "Traffic"
+msgstr ""
+
+#: app/views/browse/deployment-config.html:138
+msgid "Trigger"
+msgstr ""
+
+#: app/views/browse/_build-details.html:39
+msgid "Triggered By:"
+msgstr ""
+
+#: app/views/browse/build-config.html:383
+#: app/views/browse/deployment-config.html:250
+msgid "Triggers"
+msgstr ""
+
+#: app/views/create/fromimage.html:91
+msgid ""
+"Try It<i class=\"fa fa-level-up\" style=\"margin-left: 3px; font-size: 17px;"
+"\"></i>"
+msgstr ""
+
+#: app/views/browse/service.html:56
+msgid "Type:"
+msgstr ""
 
 #: app/scripts/controllers/pod.js:181
 msgid ""
@@ -1436,9 +2879,23 @@ msgstr "无法从secret加载parameters"
 msgid "Unable to update the"
 msgstr "无法更新"
 
+#: app/views/browse/deployment.html:154
+msgid "unavailable"
+msgstr ""
+
+#: app/views/browse/deployment-config.html:167
+msgid "Unknown"
+msgstr ""
+
 #: app/scripts/controllers/edit/deploymentConfig.js:79
 msgid "Unknown deployment strategy type:"
 msgstr "未知deployment strategy类型:"
+
+#: app/views/browse/deployment-config.html:216
+#, fuzzy
+#| msgid "Updated"
+msgid "Update Period:"
+msgstr "更新"
 
 #: app/scripts/directives/fromFile.js:498
 msgid "Updated"
@@ -1452,21 +2909,113 @@ msgstr "{{name}}资源更新成功"
 msgid "Updating resources in project {{name}}"
 msgstr "{{name}}资源更新正在更新"
 
+#: app/views/browse/_replica-set-details.html:25
+msgid ""
+"Use the following settings from {{replicaSet.metadata.name}} when rolling "
+"back:"
+msgstr ""
+
+#: app/views/browse/deployment.html:100 app/views/catalog/_image.html:29
+msgid "Version"
+msgstr ""
+
 #: app/scripts/directives/addConfigToApplication.js:174
 msgid "View"
 msgstr "查看"
+
+#: app/views/browse/_build-details.html:13
+#: app/views/browse/build-config.html:154
+#: app/views/browse/build-config.html:158
+#: app/views/browse/deployment-config.html:117
+#, fuzzy
+#| msgid "View Quota"
+msgid "View Log"
+msgstr "查看Quota"
 
 #: app/scripts/controllers/storage.js:46
 msgid "View Quota"
 msgstr "查看Quota"
 
+#: app/views/browse/build-config.html:107
+#, fuzzy
+#| msgid "View Quota"
+msgid "View the"
+msgstr "查看Quota"
+
+#: app/views/browse/build-config.html:110
+#, fuzzy
+#| msgid "The file"
+msgid "View the file"
+msgstr "文件"
+
 #: app/views/overview.html:394
 msgid "Virtual Machines"
 msgstr "虚拟机"
 
+#: app/views/browse/_pod-details.html:81
+#: app/views/browse/_replica-set-details.html:98
+#: app/views/browse/deployment-config.html:235
+#: app/views/browse/deployment.html:223 app/views/browse/stateful-set.html:117
+msgid "Volumes"
+msgstr ""
+
 #: app/scripts/controllers/addConfigVolume.js:40
 msgid "Volumes are not supported for kind {{kind}}."
 msgstr "卷不支持 {{kind}}类型."
+
+#: app/views/browse/persistent-volume-claim.html:40
+msgid ""
+"waiting for {{pvc.spec.resources.requests['storage'] | usageWithUnits: "
+"'storage'}} allocation,"
+msgstr ""
+
+#: app/views/browse/persistent-volume-claim.html:43
+msgid "waiting for allocation,"
+msgstr ""
+
+#: app/views/browse/service-instance.html:63
+msgid "warning"
+msgstr ""
+
+#: app/views/browse/_replica-set-details.html:166
+#: app/views/browse/deployment-config.html:292
+#: app/views/browse/deployment.html:244
+msgid "Warning:"
+msgstr ""
+
+#: app/views/browse/replica-set.html:26
+msgid "Warning: The deployment's deployment config is missing."
+msgstr ""
+
+#: app/views/browse/build-config.html:147
+#, fuzzy
+#| msgid "was created."
+msgid "was cancelled."
+msgstr "已创建"
+
+#: app/scripts/directives/createSecret.js:280
+msgid "was created."
+msgstr "已创建"
+
+#: app/scripts/directives/deleteLink.js:164
+msgid "was marked for deletion."
+msgstr "被标记用于删除》"
+
+#: app/scripts/directives/fromFile.js:374
+#: app/scripts/directives/fromFile.js:456
+msgid "was successfully created."
+msgstr "被创建成功."
+
+#: app/scripts/controllers/edit/yaml.js:137
+#: app/scripts/directives/fromFile.js:398
+#: app/scripts/directives/fromFile.js:507
+msgid "was successfully updated."
+msgstr "被更新成功."
+
+#: app/scripts/controllers/edit/healthChecks.js:125
+#: app/scripts/controllers/setLimits.js:118
+msgid "was updated."
+msgstr "已更新."
 
 #: app/scripts/directives/fromFile.js:62
 #: app/scripts/directives/processTemplate.js:163
@@ -1475,9 +3024,40 @@ msgid ""
 "want to create this application."
 msgstr "检测到你的应用有潜在问题，请确认仍然创建应用."
 
+#: app/views/browse/route.html:129
+msgid "Weight"
+msgstr ""
+
 #: app/views/overview.html:31
 msgid "Welcome to project {{projectName}}."
 msgstr "欢迎来到{{projectName}}项目."
+
+#: app/views/browse/_build-details.html:113
+#: app/views/browse/_build-details.html:116
+#: app/views/browse/build-config.html:267
+#: app/views/browse/build-config.html:357
+msgid "What's a Jenkinsfile?"
+msgstr ""
+
+#: app/views/browse/pod.html:133
+msgid ""
+"When you navigate away from this pod, any open terminal connections will be "
+"closed.\n"
+"                      This will kill any foreground processes you started "
+"from the&nbsp;terminal."
+msgstr ""
+
+#: app/views/browse/route.html:92
+msgid "Wildcard Policy:"
+msgstr ""
+
+#: app/views/directives/deploy-image.html:206
+msgid "with your image registry credentials and try again."
+msgstr ""
+
+#: app/views/directives/deploy-image.html:68
+msgid "with your image registry credentials."
+msgstr ""
 
 #: app/scripts/controllers/edit/deploymentConfig.js:239
 msgid "Yes"
@@ -1490,6 +3070,12 @@ msgstr "你已退出."
 #: app/scripts/controllers/util/logout.js:22
 msgid "You could not be logged out. Return to the"
 msgstr "你无法退出,返回到"
+
+#: app/scripts/controllers/edit/autoscaler.js:91
+msgid ""
+"You do not have authority to {{verb}} horizontal pod autoscalers in project "
+"{{project}}."
+msgstr "没有权限在 {{project}}中 {{verb}} horizontal pod autoscalers."
 
 #: app/scripts/controllers/createConfigMap.js:52
 msgid "You do not have authority to create config maps in project {{project}}."
@@ -1533,12 +3119,6 @@ msgstr "没有权限更新 deployment config"
 msgid "You do not have authority to update route"
 msgstr "没有权限更新路由"
 
-#: app/scripts/controllers/edit/autoscaler.js:91
-msgid ""
-"You do not have authority to {{verb}} horizontal pod autoscalers in project "
-"{{project}}."
-msgstr "没有权限在 {{project}}中 {{verb}} horizontal pod autoscalers."
-
 #: app/scripts/controllers/util/logout.js:42
 msgid "You have been logged out due to inactivity."
 msgstr "长时间未操作，您已退出."
@@ -1547,96 +3127,16 @@ msgstr "长时间未操作，您已退出."
 msgid "You have unsaved changes. Leave this page anyway?"
 msgstr "你没有保存修改，确认离开页面?"
 
-#: app/views/overview.html:278
-msgid "and the"
-msgstr "和"
-
-#: app/scripts/directives/fromFile.js:237
-msgid "can't be created in project {{name}}"
-msgstr "在{{name}}无法被创建."
-
-#: app/scripts/directives/deleteLink.js:184
-#: app/scripts/directives/deleteLink.js:188
-msgid "could not be deleted."
-msgstr "不能被删除."
-
-#: app/scripts/directives/editPvc.js:67
-msgid "could not be expanded."
-msgstr "无法扩展."
-
-#: app/scripts/controllers/attachPVC.js:163
-#: app/scripts/controllers/edit/healthChecks.js:136
-#: app/scripts/controllers/setLimits.js:129
-msgid "could not be loaded."
-msgstr "无法加载."
-
-#: app/scripts/controllers/edit/healthChecks.js:131
-#: app/scripts/controllers/setLimits.js:124
-msgid "could not be updated."
-msgstr "无法更新."
-
-#: app/views/directives/deploy-image.html:206
-#: app/views/directives/deploy-image.html:64
-#: app/views/directives/deploy-image.html:65
-msgid "create an image pull secret"
-msgstr "创建 image pull secret"
-
-#: app/scripts/directives/editPvc.js:56
-msgid "expand request has been submitted."
-msgstr "扩展请求已提交."
-
-#: app/scripts/directives/oscFileInput.js:197
-msgid "is"
-msgstr "是"
-
-#: app/scripts/controllers/newfromtemplate.js:47
-msgid "is not valid JSON."
-msgstr "不是合法的JSON."
-
-#: app/views/overview.html:274
-msgid "pipelines have been added to project {{projectName}}."
-msgstr "pipelines已被添加到 {{projectName}}."
-
-#: app/scripts/directives/deployImage.js:310
-#: app/scripts/directives/fromFile.js:447
-#: app/scripts/directives/fromFile.js:498
-#: app/scripts/directives/processTemplate.js:131
-msgid "successfully."
-msgstr "成功。"
-
-#: app/scripts/controllers/addConfigVolume.js:253
-#: app/scripts/directives/addConfigToApplication.js:171
-msgid "to"
-msgstr "到"
-
-#: app/scripts/directives/createSecret.js:280
-msgid "was created."
-msgstr "已创建"
-
-#: app/scripts/directives/deleteLink.js:164
-msgid "was marked for deletion."
-msgstr "被标记用于删除》"
-
-#: app/scripts/directives/fromFile.js:374
-#: app/scripts/directives/fromFile.js:456
-msgid "was successfully created."
-msgstr "被创建成功."
-
-#: app/scripts/controllers/edit/yaml.js:137
-#: app/scripts/directives/fromFile.js:398
-#: app/scripts/directives/fromFile.js:507
-msgid "was successfully updated."
-msgstr "被更新成功."
-
-#: app/scripts/controllers/edit/healthChecks.js:125
-#: app/scripts/controllers/setLimits.js:118
-msgid "was updated."
-msgstr "已更新."
-
-#: app/views/directives/deploy-image.html:206
-msgid "with your image registry credentials and try again."
+#: app/views/create/fromimage.html:348
+msgid ""
+"You should configure resource limits below for autoscaling.\n"
+"                              Autoscaling will not work without a CPU "
+"request."
 msgstr ""
 
-#: app/views/directives/deploy-image.html:68
-msgid "with your image registry credentials."
+#: app/views/directives/bind-service/delete-binding-result.html:19
+msgid "You will need to redeploy your pods for this to take effect."
 msgstr ""
+
+#~ msgid "My Projects"
+#~ msgstr "我的项目"

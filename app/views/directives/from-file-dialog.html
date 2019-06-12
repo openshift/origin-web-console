@@ -1,5 +1,5 @@
 <pf-wizard
-     wizard-title="Import YAML / JSON"
+     wizard-title="{{'Import YAML / JSON' | translate}}"
      on-cancel="$ctrl.close()"
      on-finish="$ctrl.close()"
      hide-sidebar="true"
@@ -29,7 +29,7 @@
   </pf-wizard-step>
   <pf-wizard-step
        wz-disabled="{{!$ctrl.template}}"
-       step-title="Template Configuration"
+       step-title="{{'Template Configuration' | translate}}"
        step-id="template"
        step-priority="2"
        substeps="false"
@@ -57,10 +57,10 @@
             </div>
             <ul ng-if="$ctrl.docUrl || $ctrl.supportUrl" class="list-inline order-service-documentation-url">
               <li ng-if="$ctrl.docUrl" >
-                <a ng-href="{{$ctrl.docUrl}}" target="_blank" class="learn-more-link">View Documentation <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                <a ng-href="{{$ctrl.docUrl}}" target="_blank" class="learn-more-link"><translate>View Documentation</translate> <i class="fa fa-external-link" aria-hidden="true"></i></a>
               </li>
               <li ng-if="$ctrl.supportUrl" >
-                <a ng-href="{{$ctrl.supportUrl}}" target="_blank" class="learn-more-link">Get Support <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                <a ng-href="{{$ctrl.supportUrl}}" target="_blank" class="learn-more-link"><translate>Get Support</translate> <i class="fa fa-external-link" aria-hidden="true"></i></a>
               </li>
             </ul>
           </div>
@@ -82,7 +82,7 @@
     </div>
   </pf-wizard-step>
   <pf-wizard-step
-       step-title="Results"
+       step-title="{{'Results' | translate}}"
        step-id="results"
        step-priority="3"
        substeps="false"
@@ -93,7 +93,7 @@
       <div class="order-service-config">
         <div class="wizard-pf-main-form-contents">
           <!-- We don't want the directive to render until the results step is shown, this makes sure processed template info gets pulled from cache correctly -->
-          <next-steps ng-if="$ctrl.currentStep === 'Results'" project="$ctrl.selectedProject"
+          <next-steps ng-if="$ctrl.currentStep === 'Results | translate'" project="$ctrl.selectedProject"
                       project-name="$ctrl.selectedProject.metadata.name"
                       login-base-url="$ctrl.loginBaseUrl"
                       on-continue="$ctrl.close"

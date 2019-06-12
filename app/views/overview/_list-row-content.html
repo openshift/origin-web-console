@@ -27,7 +27,7 @@
 </div>
 <div ng-if="row.apiObject.kind === 'DeploymentConfig' && !row.current && !row.expanded" class="list-pf-details hidden-xs hidden-sm">
   <span>
-    No deployments for <a ng-href="{{row.apiObject | navigateResourceURL}}">{{row.apiObject.metadata.name}}</a>
+    <translate>No deployments for</translate> <a ng-href="{{row.apiObject | navigateResourceURL}}">{{row.apiObject.metadata.name}}</a>
   </span>
 </div>
 <div ng-if="row.isDeploymentInProgress()" class="list-pf-details deployment-in-progress-msg">
@@ -42,10 +42,10 @@
         <ellipsis-pulser color="dark" size="sm" display="inline" msg="Deploying"></ellipsis-pulser>
       </span>
     </span>
-    <a ng-href="project/{{row.apiObject.metadata.namespace}}/browse/events">View Events</a>
+    <a ng-href="project/{{row.apiObject.metadata.namespace}}/browse/events" translate>View Events</a>
     <span ng-if="row.replicationControllersVersion | canI : 'update'">
       <span class="action-divider">|</span>
-      <a href="" ng-click="row.cancelDeployment()" role="button">Cancel</a>
+      <a href="" ng-click="row.cancelDeployment()" role="button" translate>Cancel</a>
     </span>
   </div>
   <div ng-if="row.apiObject.kind === 'Deployment'">

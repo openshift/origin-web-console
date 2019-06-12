@@ -3,5 +3,5 @@
                 count="$ctrl.podTemplate.spec.initContainers.length"
                 when="{'1': '&nbsp;{} init container','other': '&nbsp;{} init containers'}">
   </ng-pluralize>
-  <a ng-href="{{$ctrl.apiObject | navigateToTabURL:$ctrl.tab}}">View Details</a>
+  <a ng-href="{{$ctrl.apiObject | navigateToTabURL:$ctrl.tab}}" translate>View Details</a>
 </span>

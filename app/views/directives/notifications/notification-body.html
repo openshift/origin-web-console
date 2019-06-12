@@ -7,7 +7,7 @@
     type="button"
     ng-if="!notification.actions.length"
     ng-click="$ctrl.customScope.clear(notification, $index, notificationGroup)">
-    <span class="sr-only">Clear notification</span>
+    <span class="sr-only" translate>Clear notification</span>
     <span aria-hidden="true" class="pficon pficon-close"></span>
   </button>
   <div
@@ -88,19 +88,19 @@
             <span ng-if="!$last" class="toast-action-divider">|</span>
           </span>
         </span>
-        <span class="sr-only">Message Unread. </span>
+        <span class="sr-only" translate>Message Unread. </span>
         <a
           ng-if="notification.unread"
           href=""
           class="sr-only sr-only-focusable"
           ng-click="$ctrl.customScope.markRead(notification)">
-          <span>Mark Read</span>
+          <span translate>Mark Read</span>
         </a>
       </div>
       <div
         ng-if="notification.event.count > 1"
         class="text-muted small">
-        {{notification.event.count}} times in the last
+        <translate>{{notification.event.count}} times in the last</translate>
         <duration-until-now
           timestamp="notification.event.firstTimestamp"
           omit-single="true"

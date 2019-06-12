@@ -1,5 +1,5 @@
 <div class="mar-bottom-xl" ng-if="$ctrl.showBindings">
-  <h3>Bindings</h3>
+  <h3 translate>Bindings</h3>
   <service-binding
     ng-repeat="binding in $ctrl.bindings track by (binding | uid)"
     namespace="$ctrl.projectContext.projectName"
@@ -13,17 +13,17 @@
               !$ctrl.apiObject.metadata.deletionTimestamp">
     <a href="" ng-click="$ctrl.createBinding()" role="button">
       <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>
-      Create Binding
+      <translate>Create Binding</translate>
     </a>
   </div>
   <div ng-if="!$ctrl.apiObject.metadata.deletionTimestamp && !($ctrl.bindableServiceInstances | size)">
-    <span>You must have a bindable service in your namespace in order to create bindings.</span>
+    <span translate>You must have a bindable service in your namespace in order to create bindings.</span>
     <div>
-      <a ng-href="{{project | catalogURL}}">Browse Catalog</a>
+      <a ng-href="{{project | catalogURL}}" translate>Browse Catalog</a>
     </div>
   </div>
   <div ng-if="!($ctrl.bindings | size) && ($ctrl.bindableServiceInstances | size) && !($ctrl.serviceBindingsVersion | canI : 'create')">
-    <span>There are no service bindings.</span>
+    <span translate>There are no service bindings.</span>
   </div>
 </div>
 <overlay-panel show-panel="$ctrl.overlayPanelVisible" handle-close="$ctrl.closeOverlayPanel">

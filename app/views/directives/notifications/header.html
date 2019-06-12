@@ -3,14 +3,14 @@
     {{notificationGroup.heading}}
   </div>
   <div class="row mar-top-md panel-counter">
-    <div class="col-xs-6">
+    <div class="col-xs-6" translate>
       {{notificationGroup.totalUnread}} Unread
     </div>
     <div class="col-xs-6 text-right">
       <a
         title="All Events"
         ng-href="project/{{$ctrl.customScope.projectName}}/browse/events"
-        ng-click="$ctrl.customScope.close()">
+        ng-click="$ctrl.customScope.close()" translate>
         View All Events
       </a>
     </div>

@@ -34,7 +34,7 @@ angular.module('openshiftConsole')
     $scope.search = {
       text: ''
     };
-
+    // $scope.testMsg = gettextCatalog.getString('My<strong>Projects</strong>');
     // Only show the first `MAX_PROJETS_TO_WATCH` on the page. Users can always filter.
     $scope.limitListTo = MAX_PROJETS_TO_WATCH;
 

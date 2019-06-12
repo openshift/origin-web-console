@@ -1,10 +1,10 @@
 <form ng-if="$ctrl.apiObject" name="$ctrl.form" class="mar-bottom-xl">
   <confirm-on-exit ng-if="$ctrl.canIUpdate && !$ctrl.ngReadonly" dirty="$ctrl.form.$dirty"></confirm-on-exit>
   <div ng-repeat="container in $ctrl.containers track by container.name">
-    <h3>Container {{container.name}}</h3>
+    <h3 translate>Container {{container.name}}</h3>
 
     <div ng-if="!$ctrl.canIUpdate || $ctrl.ngReadonly">
-      <span ng-if="!container.env.length">
+      <span ng-if="!container.env.length" translate>
         No environment variables set in the {{$ctrl.apiObject.kind | humanizeKind}}
         template for container {{container.name}}.
       </span>
@@ -27,19 +27,19 @@
       value-placeholder="Value"
       value-from-selector-options="$ctrl.valueFromObjects"
       key-validator="[-._a-zA-Z][-._a-zA-Z0-9]*"
-      key-validator-error="Please enter a valid key."
-      key-validator-error-tooltip="A valid environment variable name must consist of alphabetic characters, digits, '_', '-', or '.', and must not start with a digit."
+      key-validator-error="{{'Please enter a valid key.' | translate}}"
+      key-validator-error-tooltip="{{'A valid environment variable name must consist of alphabetic characters, digits, '_', '-', or '.', and must not start with a digit.' | translate"
       add-row-link="Add Value"
-      add-row-with-selectors-link="Add Value from Config Map or Secret"
+      add-row-with-selectors-link="'Add Value from Config Map or Secret' | translate"
       show-header>
     </key-value-editor>
 
     <h4>
-      Environment From
+      <translate>Environment From</translate>
       <span class="pficon pficon-help tooltip-default-icon"
             aria-hidden="true"
             data-toggle="tooltip"
-            data-original-title="Environment From lets you add all key-value pairs from a config map or secret as environment variables."></span>
+            data-original-title="{{'Environment From lets you add all key-value pairs from a config map or secret as environment variables.' | translate"></span>
     </h4>
     <edit-environment-from
       entries="container.envFrom"
@@ -53,11 +53,11 @@
       class="btn btn-default"
       ng-if="$ctrl.canIUpdate && !$ctrl.ngReadonly"
       ng-click="$ctrl.save()"
-      ng-disabled="$ctrl.form.$pristine || $ctrl.form.$invalid">Save</button>
+      ng-disabled="$ctrl.form.$pristine || $ctrl.form.$invalid" translate>Save</button>
     <a
       ng-if="!$ctrl.form.$pristine"
       href=""
       ng-click="$ctrl.clearChanges()"
-      class="mar-left-sm clear-env-changes-link">Clear Changes</a>
+      class="mar-left-sm clear-env-changes-link" translate>Clear Changes</a>
   </div>
 </form>

@@ -3,17 +3,18 @@
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close" ng-click="cancel()">
       <span class="pficon pficon-close"></span>
     </button>
-    <h1 class="modal-title">{{updateTemplate ? "Update" : "Add"}} Template</h1>
+    <h1 class="modal-title" ng-if='updateTemplate' translate>Update Template</h1>
+    <h1 class="modal-title" ng-if='!updateTemplate' translate>Add Template</h1>
   </div>
   <div class="modal-body">
-    <p>What would you like to do?</p>
+    <p translate>What would you like to do?</p>
     <div class="form-group">
       <div class="checkbox">
         <label>
           <input type="checkbox" ng-model="templateOptions.process" aria-descirbedby="process-template-help">
-          <strong>Process the template</strong>
+          <strong translate>Process the template</strong>
         </label>
-        <div id="process-template-help" class="help-block">
+        <div id="process-template-help" class="help-block" translate>
           Create the objects defined in the template. You will have an opportunity to fill in template parameters.
         </div>
       </div>
@@ -22,16 +23,20 @@
       <div class="checkbox">
         <label>
           <input type="checkbox" ng-model="templateOptions.add" aria-descirbedby="save-template-help">
-          <strong>{{updateTemplate ? "Update" : "Save"}} template</strong>
+          <strong ng-if='updateTemplate' translate>Update Template</strong>
+          <strong ng-if='!updateTemplate' translate>Add Template</strong>
         </label>
-        <div id="save-template-help" class="help-block">
-          {{updateTemplate ? "This will overwrite the current version of the template." : "Save the template to the project. This will make the template available to anyone who can view the project."}}
+        <div id="save-template-help" class="help-block" ng-if='updateTemplate' translate>
+          This will overwrite the current version of the template.
+        </div>
+        <div id="save-template-help" class="help-block" ng-if='!updateTemplate' translate>
+          Save the template to the project. This will make the template available to anyone who can view the project.
         </div>
       </div>
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-default" type="button" ng-click="cancel();">Cancel</button>
-    <button class="btn btn-primary" type="button" ng-click="continue();" ng-disabled="!templateOptions.process && !templateOptions.add">Continue</button>
+    <button class="btn btn-default" type="button" ng-click="cancel();" translate>Cancel</button>
+    <button class="btn btn-primary" type="button" ng-click="continue();" ng-disabled="!templateOptions.process && !templateOptions.add" translate>Continue</button>
   </div>
 </div>

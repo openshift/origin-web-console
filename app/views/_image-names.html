@@ -4,6 +4,6 @@
   <span ng-repeat="id in imageIDs" title="{{id}}">
     <span class="hash nowrap">{{id | stripSHAPrefix | limitTo: 7}}</span><span ng-if="!$last">,</span>
   </span>
-  <span class="nowrap" ng-if="podTemplate.spec.containers.length > 1"> and {{podTemplate.spec.containers.length - 1}} other image<span ng-if="podTemplate.spec.containers.length > 2">s</span></span>
+  <span class="nowrap" ng-if="podTemplate.spec.containers.length > 1"> <translate>and</translate> {{podTemplate.spec.containers.length - 1}} <translate>other images</translate></span>
   </span>
 </div>

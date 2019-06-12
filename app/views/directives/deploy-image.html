@@ -9,15 +9,14 @@
         <div class="radio">
           <label>
             <input type="radio" ng-model="mode" value="istag">
-            Image Stream Tag
+            <translate>Image Stream Tag</translate>
           </label>
         </div>
         <fieldset>
           <istag-select model="istag" select-required="mode === 'istag'" select-disabled="mode !== 'istag'" include-shared-namespace="true" append-to-body="isDialog"></istag-select>
           <div ng-if="mode == 'istag' && istag.namespace && istag.namespace !== 'openshift' && istag.namespace !== input.selectedProject.metadata.name" class="alert alert-warning">
             <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-            Service account <strong>default</strong> will need image pull authority to deploy images
-            from <strong>{{istag.namespace}}</strong>. You can grant authority with the command:
+            <translate>Service account default will need image pull authority to deploy images from {{istag.namespace}}. You can grant authority with the command:</translate>
 
             <p>
               <code>oc policy add-role-to-user system:image-puller system:serviceaccount:{{input.selectedProject.metadata.name}}:default -n {{istag.namespace}}</code>
@@ -28,7 +27,7 @@
         <div class="radio" ng-class="{disabled : !input.selectedProject.metadata.uid}">
           <label>
             <input type="radio" ng-model="mode" value="dockerImage" ng-disabled="!input.selectedProject.metadata.uid">
-            Image Name
+            <translate>Image Name</translate>
             <span ng-if="!input.selectedProject.metadata.uid" class="text-warning">
               &ndash; <translate>Image search is only available for existing projects.</translate>
             </span>
@@ -36,7 +35,7 @@
         </div>
         <fieldset ng-disabled="!input.selectedProject.metadata.uid">
           <div class="form-group">
-            <label for="imageName" class="sr-only">Image name or pull spec</label>
+            <label for="imageName" class="sr-only" Image Name>Image name or pull spec</label>
             <div class="input-group">
               <input type="search"
                      id="imageName"
@@ -56,7 +55,7 @@
                         ng-disabled="!imageName"
                         ng-click="findImage()">
                   <i class="fa fa-search" aria-hidden="true"></i>
-                  <span class="sr-only">Find</span>
+                  <span class="sr-only" Image Name>Find</span>
                 </button>
               </span>
             </div>
@@ -76,7 +75,7 @@
     </div>
     <div ng-if="loading || !import" class="empty-state-message text-center">
       <h2 ng-if="!loading" class="h2" translate>Select an image stream tag or enter an image name.</h2>
-      <h2 ng-if="loading" class="h2">Loading image metadata for <span class="word-break">{{imageName | stripSHA}}</span>...</h2>
+      <h2 ng-if="loading" class="h2"><translate>Loading image metadata for</translate> <span class="word-break">{{imageName | stripSHA}}</span>...</h2>
     </div>
     <div class="row mar-bottom-md" ng-if-start="!loading && import.image">
       <div class="col-sm-2 hidden-xs text-right h2">
@@ -100,17 +99,17 @@
           </small>
         </h2>
         <ul>
-          <li ng-if="!import.namespace">Image Stream <strong>{{app.name || "&lt;name&gt;"}}:{{import.tag || 'latest'}}</strong> will track this image.</li>
-          <li>This image will be deployed in Deployment Config <strong>{{app.name || "&lt;name&gt;"}}</strong>.</li>
+          <li ng-if="!import.namespace"><translate>Image Stream</translate> <strong>{{app.name || "&lt;name&gt;"}}:{{import.tag || 'latest'}}</strong> <translate>will track this image.</translate></li>
+          <li><translate>This image will be deployed in Deployment Config</translate> <strong>{{app.name || "&lt;name&gt;"}}</strong>.</li>
           <li ng-if="ports.length">
-            <span ng-if="ports.length === 1">Port</span>
-            <span ng-if="ports.length > 1">Ports</span>
+            <span ng-if="ports.length === 1" translate>Port</span>
+            <span ng-if="ports.length > 1" translate>Ports</span>
             <span ng-repeat="port in ports">
-              <span ng-if="!$first && $last">and</span>
+              <span ng-if="!$first && $last" translate>and</span>
               {{port.containerPort}}/{{port.protocol}}<span ng-if="!$last && ports.length > 2">,</span>
             </span>
-            will be load balanced by Service <strong>{{app.name || "&lt;name&gt;"}}</strong>.
-            <div>Other containers can access this service through the hostname <strong>{{app.name || "&lt;name&gt;"}}</strong>.</div>
+            <translate>will be load balanced by Service </translate><strong>{{app.name || "&lt;name&gt;"}}</strong>.
+            <div><translate>Other containers can access this service through the hostname</translate> <strong>{{app.name || "&lt;name&gt;"}}</strong>.</div>
           </li>
         </ul>
         <div ng-if="(volumes | hashSize) > 0" class="help-block" translate>

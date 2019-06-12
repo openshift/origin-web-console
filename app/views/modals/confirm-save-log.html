@@ -3,21 +3,21 @@
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close" ng-click="cancel()">
       <span class="pficon pficon-close"></span>
     </button>
-    <h1 class="modal-title">Confirm Save</h1>
+    <h1 class="modal-title" translate>Confirm Save</h1>
   </div>
   <div class="modal-body">
-    <p>Save partial log for <strong>{{object.metadata.name}}</strong>?</p>
+    <p translate>Save partial log for {{object.metadata.name}}?</p>
     <div class="mar-bottom-xl">
-      The log might not be complete. Continuing will save only the content currently displayed.
-      <span ng-if="command">To get the complete log, run the command</span>
+      <translate>The log might not be complete. Continuing will save only the content currently displayed.</translate>
+      <span ng-if="command" translate>To get the complete log, run the command</span>
     </div>
     <copy-to-clipboard ng-if="command" display-wide="true" clipboard-text="command"></copy-to-clipboard>
     <div class="mar-top-xl">
-      Learn more about the <a href="command-line" target="_blank">command line tools</a>.
+        <translate>Learn more about the</translate> <a href="command-line" target="_blank" translate>command line tools</a>.
     </div>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
-    <button class="btn btn-primary" type="button" ng-click="save()">Save</button>
+    <button class="btn btn-default" type="button" ng-click="cancel()" translate>Cancel</button>
+    <button class="btn btn-primary" type="button" ng-click="save()" translate>Save</button>
   </div>
 </div>

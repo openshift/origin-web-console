@@ -2,7 +2,7 @@
   <div ng-if="$ctrl.pendingTasks(tasks()).length">
     <div class="results-status">
       <span class="fa fa-clock-o text-muted" aria-hidden="true"></span>
-      <span class="sr-only">Pending</span>
+      <span class="sr-only" translate>Pending</span>
       <div class="results-message">
         <h1 class="h3">
           <span ng-if="$ctrl.kind">{{$ctrl.kind | humanizeKind | upperFirst}}</span>
@@ -27,7 +27,7 @@
   <div ng-if="!tasks().length">
     <div class="results-status">
       <span class="pficon pficon-ok" aria-hidden="true"></span>
-      <span class="sr-only">Success</span>
+      <span class="sr-only" translate>Success</span>
       <div class="results-message">
         <h1 class="h3">
           <span ng-if="$ctrl.kind">{{$ctrl.kind | humanizeKind | upperFirst}}</span>
@@ -39,7 +39,7 @@
   <div ng-if="tasks().length && $ctrl.allTasksSuccessful(tasks())">
     <div class="results-status">
       <span class="pficon pficon-ok" aria-hidden="true"></span>
-      <span class="sr-only">Success</span>
+      <span class="sr-only" translate>Success</span>
       <div class="results-message">
         <h1 class="h3">
           <span ng-if="$ctrl.kind">{{$ctrl.kind | humanizeKind | upperFirst}}</span>
@@ -50,7 +50,7 @@
   </div>
 
   <p ng-if="!$ctrl.pendingTasks(tasks()).length && !$ctrl.erroredTasks(tasks()).length">
-    <a href="" ng-click="$ctrl.goToOverview()">Continue to the project overview</a>.
+    <a href="" ng-click="$ctrl.goToOverview()" translate>Continue to the project overview</a>.
   </p>
 
   <div ng-if="hasTaskWithError()">
@@ -69,10 +69,10 @@
 </div>
 
 <div ng-if="$ctrl.createdBuildConfig">
-  <h2 class="h3">Making code changes</h2>
+  <h2 class="h3" translate>Making code changes</h2>
   <p ng-if="$ctrl.fromSampleRepo">
-    You are set up to use the example git repository. If you would like to modify the source code, fork the <osc-git-link uri="$ctrl.createdBuildConfig.spec.source.git.uri">{{$ctrl.createdBuildConfig.spec.source.git.uri}}</osc-git-link> repository to an OpenShift-visible git account and <a href="{{$ctrl.createdBuildConfig | editResourceURL}}">edit the <strong>{{$ctrl.createdBuildConfig.metadata.name}}</strong> build config</a> to point to your fork.
-    <span ng-if="$ctrl.createdBuildConfigWithConfigChangeTrigger()">Note that this will start a new build.</span>
+    <translate>You are set up to use the example git repository. If you would like to modify the source code, fork the</translate> <osc-git-link uri="$ctrl.createdBuildConfig.spec.source.git.uri">{{$ctrl.createdBuildConfig.spec.source.git.uri}}</osc-git-link> repository to an OpenShift-visible git account and <a href="{{$ctrl.createdBuildConfig | editResourceURL}}">edit the <strong>{{$ctrl.createdBuildConfig.metadata.name}}</strong> build config</a> to point to your fork.
+    <span ng-if="$ctrl.createdBuildConfigWithConfigChangeTrigger()" translate>Note that this will start a new build.</span>
   </p>
   <div ng-repeat="trigger in $ctrl.createdBuildConfig.spec.triggers" ng-if="trigger.type == 'GitHub'">
     <p>
@@ -94,13 +94,13 @@
 </div>
 
 <div ng-if="$ctrl.parameters.all.length">
-  <h2 class="h3">Applied Parameter Values</h2>
+  <h2 class="h3" translate>Applied Parameter Values</h2>
   <p>These parameters often include things like passwords. If you will need to reference these values later, copy them to a safe location.
     <span ng-if="$ctrl.parameters.generated.length > 1">Parameters <span ng-repeat="paramName in $ctrl.parameters.generated">{{paramName}}<span ng-if="!$last">, </span></span> were generated automatically.</span>
     <span ng-if="$ctrl.parameters.generated.length === 1">Parameter {{$ctrl.parameters.generated[0]}} was generated automatically.</span>
   </p>
   <div ng-if="!$ctrl.showParamsTable" class="center">
-    <a href="" ng-click="$ctrl.toggleParamsTable()">Show parameter values</a>
+    <a href="" ng-click="$ctrl.toggleParamsTable()" translate>Show parameter values</a>
   </div>
   <key-value-editor
     ng-if="$ctrl.showParamsTable"

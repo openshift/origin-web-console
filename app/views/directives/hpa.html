@@ -3,7 +3,7 @@
   <!-- HPA actions -->
   <span ng-if="'horizontalPodAutoscalers' | canIDoAny" class="header-actions">
     <a ng-if="{resource: 'horizontalpodautoscalers', group: 'autoscaling'} | canI : 'update'" ng-href="project/{{hpa.metadata.namespace}}/edit/autoscaler?kind=HorizontalPodAutoscaler&group=autoscaling&name={{hpa.metadata.name}}"
-       role="button">Edit</a>
+       role="button" translate>Edit</a>
     <span class="action-divider">|</span>
     <delete-link
         ng-if="{resource: 'horizontalpodautoscalers', group: 'autoscaling'} | canI : 'delete'"
@@ -22,23 +22,23 @@
   <dd ng-if-end>
     <a ng-href="{{hpa.spec.scaleTargetRef.name | navigateResourceURL : hpa.spec.scaleTargetRef.kind : hpa.metadata.namespace}}">{{hpa.spec.scaleTargetRef.name}}</a>
   </dd>
-  <dt>Min Pods:</dt>
+  <dt translate>Min Pods:</dt>
   <dd>{{hpa.spec.minReplicas || 1}}</dd>
-  <dt>Max Pods:</dt>
+  <dt translate>Max Pods:</dt>
   <dd>{{hpa.spec.maxReplicas}}</dd>
-  <dt ng-if-start="hpa.spec.targetCPUUtilizationPercentage">
+  <dt ng-if-start="hpa.spec.targetCPUUtilizationPercentage" translate>
       CPU Request
   </dt>
   <dd ng-if-end>{{hpa.spec.targetCPUUtilizationPercentage}}%</dd>
-  <dt>
+  <dt translate>
     Current Usage:
   </dt>
   <dd ng-if="hpa.status.currentCPUUtilizationPercentage | isNil">
-    <em>Not available</em>
+    <em translate>Not available</em>
   </dd>
   <dd ng-if="!(hpa.status.currentCPUUtilizationPercentage | isNil)">
     {{hpa.status.currentCPUUtilizationPercentage}}%
   </dd>
-  <dt ng-if-start="hpa.status.lastScaleTime">Last Scaled:</dt>
+  <dt ng-if-start="hpa.status.lastScaleTime" translate>Last Scaled:</dt>
   <dd ng-if-end><span am-time-ago="hpa.status.lastScaleTime"></span></dd>
 </dl>

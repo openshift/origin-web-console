@@ -5,39 +5,38 @@
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close" ng-click="cancel()">
         <span class="pficon pficon-close"></span>
       </button>
-      <h1 class="modal-title">Confirm Delete</h1>
+      <h1 class="modal-title" translate>Confirm Delete</h1>
     </div>
     <div class="modal-body">
-      <p>Are you sure you want to delete the {{typeDisplayName || (kind | humanizeKind)}}
+      <p><translate>Are you sure you want to delete the</translate> {{typeDisplayName || (kind | humanizeKind)}}
         '<strong>{{displayName ? displayName : resourceName}}</strong>'?</p>
 
       <p>
-        <span ng-if="kind === 'DeploymentConfig'">
+        <span ng-if="kind === 'DeploymentConfig'" translate>
           This will delete the deployment config, all rollout history, and any running pods.
         </span>
 
-        <span ng-if="kind === 'Deployment'">
+        <span ng-if="kind === 'Deployment'" translate>
           This will delete the deployment, all rollout history, and any running pods.
         </span>
 
-        <span ng-if="kind === 'ReplicationController' || kind === 'ReplicaSet' || kind === 'StatefulSet'">
+        <span ng-if="kind === 'ReplicationController' || kind === 'ReplicaSet' || kind === 'StatefulSet'" translate>
           This will delete the {{typeDisplayName || (kind | humanizeKind)}} and any running pods.
         </span>
 
         <span ng-if="kind === 'ServiceInstance'">
-          {{displayName ? displayName : resourceName}} and its data will no longer be available to your applications.
+          {{displayName ? displayName : resourceName}} <translate>and its data will no longer be available to your applications.</translate>
         </span>
 
-        <span ng-if="isProject">
-          This will <strong>delete all resources</strong> associated with the
-          project {{displayName ? displayName : resourceName}}.
+        <span ng-if="isProject" translate>
+          This will 'delete all resources' associated with the project {{displayName ? displayName : resourceName}}.
         </span>
 
-        <strong>It cannot be undone.</strong> Make sure this is something you really want to do!
+        <strong translate>It cannot be undone.</strong> <translate>Make sure this is something you really want to do!</translate>
       </p>
 
       <div ng-show="typeNameToConfirm">
-        <p>Type the name of the {{typeDisplayName || (kind | humanizeKind)}} to confirm.</p>
+        <p translate>Type the name of the {{typeDisplayName || (kind | humanizeKind)}} to confirm.</p>
         <p>
           <label class="sr-only" for="resource-to-delete">{{typeDisplayName || (kind | humanizeKind)}} to delete</label>
           <input
@@ -58,7 +57,7 @@
       <div ng-if="kind === 'Pod'" class="checkbox">
         <label>
           <input type="checkbox" ng-model="options.deleteImmediately">
-          Delete pod immediately without waiting for the processes to terminate gracefully
+          <translate>Delete pod immediately without waiting for the processes to terminate gracefully</translate>
         </label>
       </div>
 
@@ -68,11 +67,11 @@
       -->
       <div ng-if="hpaList.length > 0">
         <p>
-          <span ng-if="hpaList.length === 1">
+          <span ng-if="hpaList.length === 1" translate>
             This resource has an autoscaler associated with it.
             It is recommended you delete the autoscaler with the resource it scales.
           </span>
-          <span ng-if="hpaList.length > 1">
+          <span ng-if="hpaList.length > 1" translate>
             This resource has autoscalers associated with it.
             It is recommended you delete the autoscalers with the resource they scale.
           </span>
@@ -80,7 +79,7 @@
         <div class="checkbox">
           <label>
             <input type="checkbox" ng-model="options.deleteHPAs">
-            Delete
+            <translate>Delete</translate>
             <span ng-if="hpaList.length === 1">
               Horizontal Pod Autoscaler '<strong>{{hpaList[0].metadata.name}}</strong>'
             </span>
@@ -93,8 +92,8 @@
 
     </div>
     <div class="modal-footer">
-      <button class="btn btn-default" type="button" ng-click="cancel();">Cancel</button>
-      <button ng-disabled="typeNameToConfirm && confirmName !== resourceName && confirmName !== displayName" class="btn btn-danger" type="submit" ng-click="delete();">Delete</button>
+      <button class="btn btn-default" type="button" ng-click="cancel();" translate>Cancel</button>
+      <button ng-disabled="typeNameToConfirm && confirmName !== resourceName && confirmName !== displayName" class="btn btn-danger" type="submit" ng-click="delete();" translate>Delete</button>
     </div>
   </form>
 </div>

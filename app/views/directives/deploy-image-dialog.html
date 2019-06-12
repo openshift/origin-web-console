@@ -1,5 +1,5 @@
 <pf-wizard
-     wizard-title="Deploy Image"
+     wizard-title="{{'Deploy Image' | translate}}"
      on-cancel="$ctrl.close()"
      on-finish="$ctrl.close()"
      hide-back-button="true"
@@ -12,7 +12,7 @@
      wizard-done="$ctrl.wizardDone">
   <!-- Make sure next-enabled evaluates as a boolean since angular-patternfly will enable the button on undefined. -->
   <pf-wizard-step
-       step-title="Image"
+       step-title="{{'Image' | translate}}"
        step-id="image"
        step-priority="1"
        substeps="false"
@@ -30,7 +30,7 @@
     </div>
   </pf-wizard-step>
   <pf-wizard-step
-       step-title="Results"
+       step-title="{{'Results' | translate}}"
        step-id="results"
        step-priority="2"
        substeps="false"

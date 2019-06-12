@@ -1,7 +1,7 @@
   <div class="middle surface-shaded">
     <div class="container">
       <div>
-        <h1>Error</h1>
+        <h1 translate>Error</h1>
         <h4>{{errorMessage}}</h4>
         <div>{{errorDetails}}</div>
         <div ng-if="errorLinks.length">
@@ -9,7 +9,7 @@
           <span ng-repeat-end ng-if="!$last" class="action-divider mar-right-xs">|</span>
         </div>
         <br>
-        <div>Return to the <a href="" ng-click="reloadConsole()">console</a>.</div>
+        <div><translate>Return to the</translate> <a href="" ng-click="reloadConsole()">console</a>.</div>
       </div>
     </div>
   </div><!-- /middle -->

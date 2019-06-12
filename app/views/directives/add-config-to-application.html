@@ -3,12 +3,12 @@
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close" ng-click="ctrl.onCancel()">
       <span class="pficon pficon-close"></span>
     </button>
-    <h1 class="modal-title">Add to Application</h1>
+    <h1 class="modal-title" translate>Add to Application</h1>
   </div>
   <form name="addToApplicationForm" novalidate>
     <fieldset ng-disabled="disableInputs">
       <div class="modal-body">
-        <legend>Add this {{ctrl.apiObject.kind | humanizeKind}} to application:</legend>
+        <legend translate>Add this {{ctrl.apiObject.kind | humanizeKind}} to application:</legend>
         <div class="form-group"  ng-class="{'has-error' : ctrl.addType === 'env' && ctrl.application && !ctrl.canAddRefToApplication}">
           <div class="application-select">
             <ui-select autofocus id="application" ng-model="ctrl.application" on-select="ctrl.checkApplicationContainersRefs($item)" required="true" ng-disabled="ctrl.disableInputs">
@@ -27,27 +27,27 @@
           </div>
         </div>
         <div class="has-error" ng-if="ctrl.addType === 'env' && ctrl.application && !ctrl.canAddRefToApplication">
-          <span class="help-block">
+          <span class="help-block" translate>
             The {{ctrl.apiObject.kind | humanizeKind}} has already been added to this application.
           </span>
         </div>
-        <legend>Add {{ctrl.apiObject.kind | humanizeKind}} as:</legend>
+        <legend translate>Add {{ctrl.apiObject.kind | humanizeKind}} as:</legend>
         <div class="radio">
           <label for="env">
             <input id="env" type="radio" ng-model="ctrl.addType" value="env" >
-            Environment variables
+            <translate>Environment variables</translate>
           </label>
         </div>
         <div ng-if="ctrl.addType === 'env'" class="choice-contents clearfix">
           <div class="has-warning" ng-if="ctrl.hasInvalidEnvVars">
             <div class="help-block">
               <span class="pf-icon pficon-warning-triangle-o" aria-hidden="true"></span>
-              {{ctrl.apiObject.kind | humanizeKind | upperFirst}} <strong>{{ctrl.apiObject.metadata.name}}</strong> contains keys that are not valid environment variable names. Only {{ctrl.apiObject.kind | humanizeKind}} keys with valid names will be added as environment variables.
+              {{ctrl.apiObject.kind | humanizeKind | upperFirst}} <strong>{{ctrl.apiObject.metadata.name}}</strong> <translate>contains keys that are not valid environment variable names. Only {{ctrl.apiObject.kind | humanizeKind}} keys with valid names will be added as environment variables.</translate>
             </div>
           </div>
           <div class="form-group">
             <div class="control-label">
-              <label>Prefix</label>
+              <label translate>Prefix</label>
               <a href="" class="pficon pficon-info field-help"
                  aria-hidden="true"
                  uib-popover="Optionally, you can specify a prefix to use with environment variables."
@@ -67,23 +67,23 @@
                      autocorrect="off"
                      autocapitalize="off"
                      spellcheck="false">
-                <div class="help-block" ng-show="addToApplicationForm.envPrefix.$error.pattern && addToApplicationForm.envPrefix.$touched">
+                <div class="help-block" ng-show="addToApplicationForm.envPrefix.$error.pattern && addToApplicationForm.envPrefix.$touched" translate>
                   Prefix can contain numbers, letters, and underscores, but can not start with a number.
                 </div>
-                <span class="sr-only" id="env-prefix-help">Optionally, you can specify a prefix to use with environment variables.</span>
+                <span class="sr-only" id="env-prefix-help" translate>Optionally, you can specify a prefix to use with environment variables.</span>
             </span>
           </div>
         </div>
         <div class="radio">
           <label for="volume">
             <input id="volume" type="radio" ng-model="ctrl.addType" value="volume">
-            Volume
+            <translate>Volume</translate>
           </label>
         </div>
         <div ng-if="ctrl.addType === 'volume'" class="choice-contents clearfix">
           <div class="form-group">
             <div class="control-label">
-              <label class="required">Mount Path</label>
+              <label class="required" translate>Mount Path</label>
               <a href="" class="pficon pficon-info field-help"
                  aria-hidden="true"
                  uib-popover="Mount Path for the volume. A file will be created in this
@@ -107,12 +107,12 @@
                      autocapitalize="off"
                      spellcheck="false">
               <div class="help-block" ng-show="addToApplicationForm.mountVolume.$error.pattern && addToApplicationForm.mountVolume.$touched">
-                Mount path must be a valid path to a directory starting with <code>/</code>.
+                <translate>Mount path must be a valid path to a directory starting with</translate> <code>/</code>.
               </div>
-              <div class="help-block" ng-show="addToApplicationForm.mountVolume.$error.oscUnique">
+              <div class="help-block" ng-show="addToApplicationForm.mountVolume.$error.oscUnique" translate>
                 The mount path is already used. Please choose another mount path.
               </div>
-              <span class="sr-only" id="mount-path-help">
+              <span class="sr-only" id="mount-path-help" translate>
                 Mount Path for the volume. A file will be created in this
                 directory for each key from the {{ctrl.apiObject.kind | humanizeKind}}.
                 The file contents will be the value of the key.
@@ -121,15 +121,15 @@
           </div>
         </div>
         <div ng-if="ctrl.canAddRefToApplication">
-          <legend ng-if-start="ctrl.application.spec.template.spec.containers.length > 1">Containers:</legend>
+          <legend ng-if-start="ctrl.application.spec.template.spec.containers.length > 1" translate>Containers:</legend>
           <div ng-if-end class="form-group container-options">
             <div ng-if="ctrl.attachAllContainers">
-              The {{ctrl.apiObject.kind | humanizeKind}} will be added to all containers. You can
-              <a href="" ng-click="ctrl.attachAllContainers = false">select specific containers</a>
-              instead.
+              <translate>The {{ctrl.apiObject.kind | humanizeKind}} will be added to all containers. You can</translate>
+              <a href="" ng-click="ctrl.attachAllContainers = false" translate>select specific containers</a>
+              <translate>instead.</translate>
             </div>
             <div ng-if="!ctrl.attachAllContainers" class="form-group">
-              <label class="sr-only required">Containers</label>
+              <label class="sr-only required" translate>Containers</label>
               <select-containers
                 ng-model="ctrl.attachContainers"
                 pod-template="ctrl.application.spec.template"
@@ -144,7 +144,7 @@
         <button
           class="btn btn-default"
           ng-class="{'dialog-btn': isDialog}"
-          ng-click="ctrl.onCancel()">
+          ng-click="ctrl.onCancel()" translate>
           Cancel
         </button>
         <button type="submit"
@@ -152,7 +152,7 @@
                 ng-class="{'dialog-btn': isDialog}"
                 ng-click="ctrl.addToApplication()"
                 ng-disabled="addToApplicationForm.$invalid || (ctrl.addType === 'env' && !ctrl.canAddRefToApplication)"
-                value="">
+                value="" translate>
                 Save
         </button>
       </div>
@@ -161,7 +161,7 @@
   <div class="updating" ng-if="ctrl.updating">
     <div class="spinner spinner-lg" aria-hidden="true"></div>
     <h3>
-      <span class="sr-only">Updating</span>
+      <span class="sr-only" translate>Updating</span>
     </h3>
   </div>
 </div>

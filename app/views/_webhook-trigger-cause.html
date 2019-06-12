@@ -7,12 +7,12 @@
   ref="trigger.githubWebHook.revision.git.commit || trigger.genericWebHook.revision.git.commit">{{trigger.githubWebHook.revision.git.commit || trigger.genericWebHook.revision.git.commit | limitTo:7}}
 </osc-git-link>
 <span ng-if="trigger.githubWebHook.revision || trigger.genericWebHook.revision">
-  authored by {{trigger.githubWebHook.revision.git.author.name || trigger.genericWebHook.revision.git.author.name}},
+  <translate>authored by</translate> {{trigger.githubWebHook.revision.git.author.name || trigger.genericWebHook.revision.git.author.name}},
 </span>
-<span ng-if="trigger.genericWebHook && !trigger.genericWebHook.revision">
+<span ng-if="trigger.genericWebHook && !trigger.genericWebHook.revision" translate>
   no revision information,
 </span>
-<a href="" ng-if="!showSecret" ng-click="toggleSecret()">Show Obfuscated Secret</a>
+<a href="" ng-if="!showSecret" ng-click="toggleSecret()" translate>Show Obfuscated Secret</a>
 <span ng-if="showSecret">
   {{trigger.githubWebHook.secret || trigger.genericWebHook.secret}}
 </span>

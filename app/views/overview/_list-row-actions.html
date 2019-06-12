@@ -5,36 +5,36 @@
       <div ng-switch-when="DeploymentConfig">
         <div uib-dropdown class="dropdown-kebab-pf">
           <button uib-dropdown-toggle class="btn btn-link dropdown-toggle">
-            <i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span>
+            <i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only" translate>Actions</span>
           </button>
           <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
             <li ng-if="row.showStartPipelineAction()" role="menuitem">
-              <a href="" ng-click="row.startBuild(row.pipelines[0])">Start Pipeline</a>
+              <a href="" ng-click="row.startBuild(row.pipelines[0])" translate>Start Pipeline</a>
             </li>
             <li ng-if="row.showStartBuildAction()" role="menuitem">
-              <a href="" ng-click="row.startBuild(row.buildConfigs[0])">Start Build</a>
+              <a href="" ng-click="row.startBuild(row.buildConfigs[0])" translate>Start Build</a>
             </li>
             <li ng-if="row.deploymentConfigsInstantiateVersion | canI : 'create'" role="menuitem">
-              <a href="" ng-if="row.canDeploy()" ng-click="row.startDeployment()">Deploy</a>
+              <a href="" ng-if="row.canDeploy()" ng-click="row.startDeployment()" translate>Deploy</a>
               <a href="" ng-if="!(row.canDeploy())" class="disabled-link" aria-disabled="true">
-                Deploy <span ng-if="row.isPaused()">(Paused)</span>
+                <translate>Deploy</translate> <span ng-if="row.isPaused()" translate>(Paused)</span>
               </a>
             </li>
             <li ng-if="row.deploymentConfigsVersion | canI : 'update'" role="menuitem">
-              <a ng-href="{{row.apiObject | editResourceURL}}">Edit</a>
+              <a ng-href="{{row.apiObject | editResourceURL}}" translate>Edit</a>
             </li>
             <li ng-if="('pod_presets' | enableTechPreviewFeature)
                       && row.state.bindableServiceInstances.length
                       && (row.serviceBindingsVersion | canI : 'create')" role="menuitem">
-              <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</a>
+              <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})" translate>Create Binding</a>
             </li>
             <li ng-if="('pod_presets' | enableTechPreviewFeature)
                       && row.state.deleteableBindingsByApplicationUID[row.apiObject.metadata.uid].length
                       && (row.serviceBindingsVersion | canI : 'delete')" role="menuitem">
-              <a href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})">Delete Binding</a>
+              <a href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})" translate>Delete Binding</a>
             </li>
             <li ng-if="row.current && (row.deploymentConfigsLogVersion | canI : 'get')" role="menuitem">
-              <a ng-href="{{row.current | navigateResourceURL}}?tab=logs">View Logs</a>
+              <a ng-href="{{row.current | navigateResourceURL}}?tab=logs" translate>View Logs</a>
             </li>
           </ul>
         </div>
@@ -42,14 +42,14 @@
       <div ng-switch-when="Pod">
         <div uib-dropdown class="dropdown-kebab-pf">
           <button uib-dropdown-toggle class="btn btn-link dropdown-toggle">
-            <i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span>
+            <i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only" translate>Actions</span>
           </button>
           <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
             <li role="menuitem" ng-if="row.podsVersion | canI : 'update'">
-              <a ng-href="{{row.apiObject | editYamlURL}}">Edit YAML</a>
+              <a ng-href="{{row.apiObject | editYamlURL}}" translate>Edit YAML</a>
             </li>
             <li role="menuitem" ng-if="(row.podsLogVersion | canI : 'get')">
-              <a ng-href="{{row.apiObject | navigateResourceURL}}?tab=logs">View Logs</a>
+              <a ng-href="{{row.apiObject | navigateResourceURL}}?tab=logs" translate>View Logs</a>
             </li>
           </ul>
         </div>
@@ -57,24 +57,24 @@
       <div ng-switch-default>
         <div uib-dropdown class="dropdown-kebab-pf">
           <button uib-dropdown-toggle class="btn btn-link dropdown-toggle">
-            <i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span>
+            <i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only" translate>Actions</span>
           </button>
           <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
             <li role="menuitem" ng-if="row.rgv | canI : 'update'">
-              <a ng-href="{{row.apiObject | editYamlURL}}">Edit YAML</a>
+              <a ng-href="{{row.apiObject | editYamlURL}}" translate>Edit YAML</a>
             </li>
             <li ng-if="('pod_presets' | enableTechPreviewFeature)
                       && row.state.bindableServiceInstances.length
                       && (row.serviceBindingsVersion | canI : 'create')" role="menuitem">
-              <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})">Create Binding</a>
+              <a href="" ng-click="row.showOverlayPanel('bindService', {target: row.apiObject})" translate>Create Binding</a>
             </li>
             <li ng-if="('pod_presets' | enableTechPreviewFeature)
                       && row.state.deleteableBindingsByApplicationUID[row.apiObject.metadata.uid].length
                       && (row.serviceBindingsVersion | canI : 'delete')" role="menuitem">
-              <a href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})">Delete Binding</a>
+              <a href="" ng-click="row.showOverlayPanel('unbindService', {target: row.apiObject})" translate>Delete Binding</a>
             </li>
             <li ng-if="(pod = row.firstPod(row.current)) && (row.podsLogVersion | canI : 'get')" role="menuitem">
-              <a ng-href="{{pod | navigateResourceURL}}?tab=logs">View Logs</a>
+              <a ng-href="{{pod | navigateResourceURL}}?tab=logs" translate>View Logs</a>
             </li>
           </ul>
         </div>

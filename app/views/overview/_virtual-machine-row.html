@@ -26,12 +26,12 @@
       <div class="dropdown-kebab-pf" uib-dropdown ng-if="row.actionsDropdownVisible()">
         <button uib-dropdown-toggle class="btn btn-link dropdown-toggle">
           <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-          <span class="sr-only">Actions</span>
+          <span class="sr-only" translate>Actions</span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right" uib-dropdown-menu role="menu">
-          <dropdown-item action="row.startOvm()" enabled="{{row.canStartOvm()}}">Start</dropdown-item>
-          <dropdown-item action="row.restartOvm()" enabled="{{row.canRestartOvm()}}">Restart</dropdown-item>
-          <dropdown-item action="row.stopOvm()" enabled="{{row.canStopOvm()}}">Stop</dropdown-item>
+          <dropdown-item action="row.startOvm()" enabled="{{row.canStartOvm()}}" translate>Start</dropdown-item>
+          <dropdown-item action="row.restartOvm()" enabled="{{row.canRestartOvm()}}" translate>Restart</dropdown-item>
+          <dropdown-item action="row.stopOvm()" enabled="{{row.canStopOvm()}}" translate>Stop</dropdown-item>
           <li ng-if="row.OfflineVirtualMachineVersion | canI : 'delete'">
             <delete-link
               kind="OfflineVirtualMachine"
@@ -49,29 +49,29 @@
     <div class="list-pf-container">
 
       <div class="word-break">
-        <span class="vm-detail-key">State:</span>
+        <span class="vm-detail-key" translate>State:</span>
 
         <span vm-state ovm="row.apiObject"></span>
         <span class="vm-detail-state-actions">
           <span class="bar-separated" ng-if="row.canStartOvm()">
-            <a href="" ng-click="row.startOvm()">Start</a>
+            <a href="" ng-click="row.startOvm()" translate>Start</a>
           </span>
           <span class="bar-separated" ng-if="row.canRestartOvm()">
-            <a href="" ng-click="row.restartOvm()">Restart</a>
+            <a href="" ng-click="row.restartOvm()" translate>Restart</a>
           </span>
           <span class="bar-separated" ng-if="row.canStopOvm()">
-            <a href="" ng-click="row.stopOvm()">Stop</a>
+            <a href="" ng-click="row.stopOvm()" translate>Stop</a>
           </span>
          </span>
       </div>
 
       <div class="word-break">
-        <span class="vm-detail-key">Uptime:</span>
+        <span class="vm-detail-key" translate>Uptime:</span>
         <span class="vm-detail-value">{{ row.apiObject._pod | vmPodUptime }}</span>
       </div>
 
       <div class="word-break">
-        <span class="vm-detail-key">Operating System:</span>
+        <span class="vm-detail-key" translate>Operating System:</span>
         <span class="vm-detail-value">{{row.apiObject.metadata.labels['kubevirt.io/os'] || '--'}}</span>
       </div>
 

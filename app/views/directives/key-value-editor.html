@@ -64,7 +64,7 @@
           <span
             class="help-block key-min-length"
             ng-show="(forms.keyValueEditor[uniqueForKey(unique, $index)].$error.minlength)">
-            <span class="validation-text">Minimum character count is {{keyMinlength}}</span>
+            <span class="validation-text" translate>Minimum character count is {{keyMinlength}}</span>
           </span>
           <span
             class="help-block key-validation-error"
@@ -112,7 +112,7 @@
               class="faux-form-control readonly">
               <span ng-switch="entry.refType">
                 <span ng-switch-when="configMapKeyRef">
-                  Set to the key {{entry.valueFrom.configMapKeyRef.key}} in config map
+                  <translate>Set to the key {{entry.valueFrom.configMapKeyRef.key}} in config map</translate>
                   <span
                     ng-if="!(configMapVersion | canI : 'get')">
                     {{entry.valueFrom.configMapKeyRef.name}}
@@ -124,7 +124,7 @@
                   </a>
                 </span>
                 <span ng-switch-when="secretKeyRef">
-                  Set to the key {{entry.valueFrom.secretKeyRef.key}} in secret
+                  <translate>Set to the key {{entry.valueFrom.secretKeyRef.key}} in secret</translate>
                   <span
                     ng-if="!(secretsVersion | canI : 'get')">
                     {{entry.valueFrom.secretKeyRef.name}}
@@ -192,7 +192,7 @@
           <span
             class="help-block value-min-length"
             ng-show="(forms.keyValueEditor[uniqueForValue(unique, $index)].$error.minlength)">
-            <span class="validation-text">Minimum character count is {{valueMinlength}}</span>
+            <span class="validation-text" translate>Minimum character count is {{valueMinlength}}</span>
           </span>
         </span>
       </div>
@@ -205,7 +205,7 @@
           aria-grabbed="false"
           as-sortable-item-handle>
           <span class="fa fa-bars"></span>
-          <span class="sr-only">Move row</span>
+          <span class="sr-only" translate>Move row</span>
         </button>
         <button
           class="btn-remove close delete-row as-sortable-item-delete"
@@ -214,7 +214,7 @@
           ng-hide="cannotDeleteAny || cannotDeleteSome(entry.name) || entry.cannotDelete"
           ng-click="deleteEntry($index, 1)">
           <span class="pficon pficon-close" aria-hidden="true"></span>
-          <span class="sr-only">Delete row</span>
+          <span class="sr-only" translate>Delete row</span>
         </button>
       </div>
     </div>

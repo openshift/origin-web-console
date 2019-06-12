@@ -3,9 +3,9 @@
     <div class="container-fluid">
       <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
       <alerts alerts="alerts"></alerts>
-      <div ng-if="!loaded" class="mar-top-xl">Loading...</div>
+      <div ng-if="!loaded" class="mar-top-xl" translate>Loading...</div>
       <div ng-if="loaded && error" class="empty-state-message text-center">
-        <h2>The config map could not be loaded.</h2>
+        <h2 translate>The config map could not be loaded.</h2>
         <p>{{error | getErrorDetails}}</p>
       </div>
       <div ng-if="loaded && !error">
@@ -19,27 +19,27 @@
             <button ng-if="project.metadata.name | canIAddToProject"
                     type="button"
                     class="btn btn-default hidden-xs"
-                    ng-click="addToApplication()">
+                    ng-click="addToApplication()" translate>
               Add to Application
             </button>
             <button ng-if="'configmaps' | canIDoAny" type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
-              Actions
+              <translate>Actions</translate>Actions
               <span class="caret"></span>
             </button>
             <!-- Check `canIAddToProject` for the mobile menu since "Add to Application" uses it. -->
             <a href=""
                ng-if="project.metadata.name | canIAddToProject"
                class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
-               data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span></a>
+               data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only" translate>Actions</span></a>
             <ul class="dropdown-menu dropdown-menu-right actions action-button">
               <li ng-if="project.metadata.name | canIAddToProject" class="visible-xs">
-                <a href="" role="button" ng-click="addToApplication()">Add to Application</a>
+                <a href="" role="button" ng-click="addToApplication()" translate>Add to Application</a>
               </li>
               <li ng-if="configMapsVersion | canI : 'update'">
-                <a ng-href="{{configMap | editResourceURL}}" role="button">Edit</a>
+                <a ng-href="{{configMap | editResourceURL}}" role="button" translate>Edit</a>
               </li>
               <li ng-if="configMapsVersion | canI : 'update'">
-                <a ng-href="{{configMap | editYamlURL}}" role="button">Edit YAML</a>
+                <a ng-href="{{configMap | editYamlURL}}" role="button" translate>Edit YAML</a>
               </li>
               <li ng-if="configMapsVersion | canI : 'delete'">
                 <delete-link
@@ -52,7 +52,7 @@
             </ul>
           </div>
           {{configMap.metadata.name}}
-          <small class="meta">created <span am-time-ago="configMap.metadata.creationTimestamp"></span></small>
+          <small class="meta"><translate>created</translate> <span am-time-ago="configMap.metadata.creationTimestamp"></span></small>
         </h1>
         <labels labels="configMap.metadata.labels" clickable="true" kind="config-maps" title-kind="config maps" project-name="{{configMap.metadata.namespace}}" limit="3"></labels>
       </div>
@@ -63,7 +63,7 @@
       <div ng-if="configMap" class="row">
         <div class="col-sm-12">
           <div ng-if="!(configMap.data | hashSize)" class="empty-state-message text-center">
-            <h2>The config map has no items.</h2>
+            <h2 translate>The config map has no items.</h2>
           </div>
           <div ng-if="configMap.data | hashSize" class="table-responsive scroll-shadows-horizontal">
             <table class="table table-bordered table-bordered-columns config-map-table key-value-table">

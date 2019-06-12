@@ -8,7 +8,7 @@
         <div class="container-fluid">
           <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
           <alerts alerts="alerts"></alerts>
-          <div ng-if="!loaded" class="mar-top-xl">Loading...</div>
+          <div ng-if="!loaded" class="mar-top-xl" translate>Loading...</div>
           <div ng-if="serviceInstance">
             <h1 class="contains-actions">
               <div class="pull-right dropdown" ng-hide="!('serviceInstances' | canIDoAny)">
@@ -16,29 +16,29 @@
                 <button
                   ng-if="editAvailable && (serviceInstancesVersion | canI : 'update')"
                   class="btn btn-default hidden-xs"
-                  ng-click="showEditDialog()">
+                  ng-click="showEditDialog()" translate>
                   Edit
                 </button>
 
                 <!-- Secondary Actions -->
                 <button type="button" class="dropdown-toggle btn btn-default actions-dropdown-btn hidden-xs" data-toggle="dropdown">
-                  Actions
+                  <translate>Actions</translate>
                   <span class="caret"></span>
                 </button>
                 <a href=""
                    class="dropdown-toggle actions-dropdown-kebab visible-xs-inline"
-                   data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only">Actions</span></a>
+                   data-toggle="dropdown"><i class="fa fa-ellipsis-v" aria-hidden="true"></i><span class="sr-only" translate>Actions</span></a>
                 <ul class="dropdown-menu dropdown-menu-right actions action-button">
                   <li class="visible-xs-inline" ng-if="editAvailable && (serviceInstancesVersion  | canI : 'update')">
                     <a href=""
                        role="button"
-                       ng-click="showEditDialog()">Edit</a>
+                       ng-click="showEditDialog()" translate>Edit</a>
                   </li>
                   <li ng-if="serviceInstancesVersion | canI : 'update'">
-                    <a ng-href="{{serviceInstance | editYamlURL}}" role="button">Edit YAML</a>
+                    <a ng-href="{{serviceInstance | editYamlURL}}" role="button" translate>Edit YAML</a>
                   </li>
                   <li ng-if="serviceInstancesVersion | canI : 'delete'">
-                    <a href="" ng-click="deprovision()" ng-attr-aria-disabled="{{serviceInstance.metadata.deletionTimestamp ? 'true' : undefined}}" ng-class="{ 'disabled-link': serviceInstance.metadata.deletionTimestamp }" role="button">Delete</a>
+                    <a href="" ng-click="deprovision()" ng-attr-aria-disabled="{{serviceInstance.metadata.deletionTimestamp ? 'true' : undefined}}" ng-class="{ 'disabled-link': serviceInstance.metadata.deletionTimestamp }" role="button" translate>Delete</a>
                   </li>
                 </ul>
               </div>
@@ -47,7 +47,7 @@
                 {{serviceInstance.metadata.name}}
               </small>
               <div>
-                <small class="meta">created <span am-time-ago="serviceInstance.metadata.creationTimestamp"></span></small>
+                <small class="meta"><translate>created</translate> <span am-time-ago="serviceInstance.metadata.creationTimestamp"></span></small>
               </div>
             </h1>
             <labels labels="serviceInstance.metadata.labels" clickable="true" kind="service-instances" project-name="{{serviceInstance.metadata.namespace}}" limit="3"></labels>
@@ -60,28 +60,28 @@
             <div class="col-md-12">
               <div ng-if="serviceInstance.metadata.deletionTimestamp" class="alert word-break alert-warning">
                 <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-                <span class="sr-only">warning</span>
-                <span class="strong">The service was marked for deletion</span>
+                <span class="sr-only" translate>warning</span>
+                <span class="strong" translate>The service was marked for deletion</span>
                 <span class="strong" am-time-ago="serviceInstance.metadata.deletionTimestamp"></span>.
               </div>
               <uib-tabset>
                 <uib-tab active="selectedTab.details">
-                  <uib-tab-heading>Details</uib-tab-heading>
+                  <uib-tab-heading translate>Details</uib-tab-heading>
                   <div class="resource-details">
                     <div class="row">
                       <div class="col-lg-6">
-                        <h3>Status</h3>
+                        <h3 translate>Status</h3>
                         <dl class="dl-horizontal left">
-                          <dt>Status:</dt>
+                          <dt translate>Status:</dt>
                           <dd>
                             <status-icon status="serviceInstance | serviceInstanceStatus" disable-animation></status-icon>
                             <span>{{serviceInstance | serviceInstanceStatus | sentenceCase}}</span>
                           </dd>
-                          <dt ng-if-start="serviceInstance | serviceInstanceConditionMessage">Status Reason:</dt>
+                          <dt ng-if-start="serviceInstance | serviceInstanceConditionMessage" translate>Status Reason:</dt>
                           <dd ng-if-end class="instance-status-message">{{serviceInstance | serviceInstanceConditionMessage}}</dd>
                         </dl>
                         <div class="hidden-lg">
-                          <h3 ng-if-start="serviceClass.spec.description || serviceClass.spec.externalMetadata.longDescription">Description</h3>
+                          <h3 ng-if-start="serviceClass.spec.description || serviceClass.spec.externalMetadata.longDescription" translate>Description</h3>
                           <p class="service-description"><truncate-long-text
                             limit="500"
                             content="serviceClass.spec.description"
@@ -97,11 +97,11 @@
                             linkify="true">
                           </truncate-long-text></p>
                         </div>
-                        <h3>Plan</h3>
+                        <h3 translate>Plan</h3>
                         <p ng-bind-html="plan.spec.description | linkify : '_blank'"></p>
                         <div ng-if="parameterSchema.properties" class="config-parameters-form">
                           <h3>
-                            <span>Configuration</span>
+                            <span translate>Configuration</span>
                             <a ng-if="allowParametersReveal" href="" class="hide-show-link" ng-click="toggleShowParameterValues()" role="button">
                               {{showParameterValues ? 'Hide Values' : 'Reveal Values'}}
                             </a>
@@ -121,7 +121,7 @@
                       </div>
                       <div class="col-lg-6">
                         <div class="hidden-xs hidden-sm hidden-md">
-                          <h3 ng-if-start="serviceClass.spec.description || serviceClass.spec.externalMetadata.longDescription">Description</h3>
+                          <h3 ng-if-start="serviceClass.spec.description || serviceClass.spec.externalMetadata.longDescription" translate>Description</h3>
                           <p class="service-description"><truncate-long-text
                             limit="500"
                             content="serviceClass.spec.description"
@@ -151,7 +151,7 @@
                   </div>
                 </uib-tab>
                 <uib-tab active="selectedTab.events" ng-if="eventsVersion | canI : 'watch'">
-                  <uib-tab-heading>Events</uib-tab-heading>
+                  <uib-tab-heading translate>Events</uib-tab-heading>
                   <events api-objects="[ serviceInstance ]" project-context="projectContext" ng-if="selectedTab.events"></events>
                 </uib-tab>
               </uib-tabset>

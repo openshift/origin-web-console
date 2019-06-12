@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <div
         class="page-header page-header-bleed-right page-header-bleed-left">
-        <h1>
+        <h1 translate>
           Stateful Sets
           <!-- TODO: docs are in progress
           <span class="page-header-link">
@@ -26,16 +26,16 @@
       <div class="row" ng-if="loaded">
         <div class="col-md-12">
           <div ng-if="(statefulSets | hashSize) == 0">
-            <p ng-if="!loaded">
+            <p ng-if="!loaded" translate>
               Loading...
             </p>
             <div ng-if="loaded" class="empty-state-message text-center">
               <div ng-if="!filterWithZeroResults">
-                <h2>No stateful sets.</h2>
-                <p>No stateful sets have been added to project {{projectName}}.</p>
+                <h2 translate>No stateful sets.</h2>
+                <p translate>No stateful sets have been added to project {{projectName}}.</p>
               </div>
               <div ng-if="filterWithZeroResults">
-                <h2>The filter is hiding all stateful sets. <button type="button" class="btn btn-link inline-btn-link" ng-click="clearFilter()">Clear All Filters</button></h2>
+                <h2>The filter is hiding all stateful sets. <button type="button" class="btn btn-link inline-btn-link" ng-click="clearFilter()" translate>Clear All Filters</button></h2>
               </div>
             </div>
           </div>
@@ -45,9 +45,9 @@
             </colgroup>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Replicas</th>
-                <th>Created</th>
+                <th translate>Name</th>
+                <th translate>Replicas</th>
+                <th translate>Created</th>
               </tr>
             </thead>
             <tbody ng-repeat="(statefulSetName, statefulSet) in statefulSets">

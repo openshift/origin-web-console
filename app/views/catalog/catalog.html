@@ -1,32 +1,30 @@
 <p ng-if="!loaded">Loading...</p>
 
 <div ng-if="emptyCatalog && loaded" class="empty-state-message empty-state-full-page">
-  <h2 class="text-center">No images or templates.</h2>
+  <h2 class="text-center" translate>No images or templates.</h2>
 
   <p class="gutter-top">
-    No images or templates are loaded for this project or the shared
-    <code>openshift</code> namespace. An image or template is
-    required to add content.
+    <translate>No images or templates are loaded for this project or the shared</translate>
+    <code>openshift</code> <translate>namespace. An image or template is required to add content.</translate>
   </p>
 
   <p>
-    To add an image stream or template from a file, use the editor in the
-    <strong>Import YAML / JSON</strong> tab, or run the following command:
+    <translate>To add an image stream or template from a file, use the editor in the</translate>
+    <strong translate>Import YAML / JSON</strong> <translate>tab, or run the following command:</translate>
     <div><code>oc create -f &lt;filename&gt; -n {{projectName}}</code></div>
   </p>
 
-  <p><a href="{{projectName | projectOverviewURL}}">Back to overview</a></p>
+  <p><a href="{{projectName | projectOverviewURL}}" translate>Back to overview</a></p>
 </div>
 
 <div ng-show="!emptyCatalog && loaded && !singleCategory">
-  <p ng-if="!parentCategory">Choose from web frameworks, databases, and other components to
-  add content to your project.</p>
+  <p ng-if="!parentCategory" translate>Choose from web frameworks, databases, and other components to add content to your project.</p>
 
   <form role="form" class="filter-catalog search-pf has-button">
     <div class="form-group has-clear">
       <!-- Add a hidden label for screen readers. -->
       <div class="search-pf-input-group">
-        <label for="search" class="sr-only">Filter by name or description</label>
+        <label for="search" class="sr-only" translate>Filter by name or description</label>
         <input
            ng-model="filter.keyword"
            type="search"
@@ -49,8 +47,8 @@
   </form>
 
   <div ng-if="allContentHidden" class="empty-state-message text-center h2">
-    All content is hidden by the current filter.
-    <button type="button" class="btn btn-link inline-btn-link" ng-click="filter.keyword = ''">Clear All Filters</button>
+    <translate>All content is hidden by the current filter.</translate>
+    <button type="button" class="btn btn-link inline-btn-link" ng-click="filter.keyword = ''" translate>Clear All Filters</button>
   </div>
 
   <div ng-if="!filterActive">
@@ -123,7 +121,7 @@
     </div>
     <div ng-if="countFilteredNoSubcategory">
       <h2 class="h3">
-        Other {{parentCategory.label}}
+        <translate>Other</translate> {{parentCategory.label}}
         <span class="tile-item-count badge">{{countFilteredNoSubcategory}}</span>
       </h2>
       <div class="row row-cards-pf row-cards-pf-flex mar-top-xl">

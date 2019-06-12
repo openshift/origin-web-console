@@ -3,9 +3,9 @@
    ng-if="isPrimary && (services | hashSize) > ((childServices | hashSize) + 1)"
    ng-click="linkService()"
    role="button"
-   ng-attr-title="Group service to {{service.metadata.name}}"><i class="fa fa-chain action-button link-service-button" aria-hidden="true"></i><span class="sr-only">Group service to {{service.metadata.name}}</span></a>
+   ng-attr-title="Group service to {{service.metadata.name}}"><i class="fa fa-chain action-button link-service-button" aria-hidden="true"></i><span class="sr-only" translate>Group service to {{service.metadata.name}}</span></a>
 <a href=""
    ng-if="isChild"
    ng-click="removeLink(service)"
    role="button"
-   ng-attr-title="Remove {{service.metadata.name}} from service group"><i class="fa fa-chain-broken action-button link-service-button" aria-hidden="true"></i><span class="sr-only">Remove {{service.metadata.name}} from service group</span></a>
+   ng-attr-title="Remove {{service.metadata.name}} from service group"><i class="fa fa-chain-broken action-button link-service-button" aria-hidden="true"></i><span class="sr-only" translate>Remove {{service.metadata.name}} from service group</span></a>

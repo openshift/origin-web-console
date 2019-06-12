@@ -3,7 +3,7 @@
   Otherwise use the default `dl` style because it looks strange with the block editor.
 -->
 <dl ng-class="{ 'dl-horizontal left': !build.spec.postCommit.script || !(build.spec.postCommit.script | isMultiline)}">
-  <dt ng-if-start="build.spec.postCommit.command">Command:</dt>
+  <dt ng-if-start="build.spec.postCommit.command" translate>Command:</dt>
   <dd ng-if-end>
     <code class="command">
       <truncate-long-text
@@ -15,7 +15,7 @@
       </truncate-long-text>
     </code>
   </dd>
-  <dt ng-if-start="build.spec.postCommit.script">Script:</dt>
+  <dt ng-if-start="build.spec.postCommit.script" translate>Script:</dt>
   <dd ng-if-end>
     <code ng-if="!(build.spec.postCommit.script | isMultiline)" class="command">
       <truncate-long-text
@@ -40,7 +40,7 @@
       class="ace-bordered ace-read-only ace-inline mar-top-md mar-bottom-md">
     </div>
   </dd>
-  <dt ng-if-start="build.spec.postCommit.args">Args:</dt>
+  <dt ng-if-start="build.spec.postCommit.args" translate>Args:</dt>
   <dd ng-if-end>
     <code class="command">
       <truncate-long-text
