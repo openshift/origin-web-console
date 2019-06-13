@@ -12,8 +12,8 @@
           <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
           <span class="sr-only" translate>Warning:</span>
           {{updated.resource.kind | humanizeKind | upperFirst}} <strong>{{updated.resource.metadata.name}}</strong>
-          <translate>has changed since you started editing it. You'll need to copy any changes you've made and edit the
-          {{updated.resource.kind | humanizeKind}} again.</translate>
+          <translate>has changed since you started editing it. You'll need to copy any changes you've made and edit again the</translate>
+          {{updated.resource.kind | humanizeKind}} .
         </div>
 
         <div ng-if="resourceDeleted" class="alert alert-warning">

@@ -29,7 +29,7 @@
             <div ng-if="showCPURequestWarning" class="alert alert-warning">
               <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
               <span class="sr-only" translate>Warning:</span>
-              <translate>This {{targetKind | humanizeKind}} does not have any containers with a CPU</translate>
+              {{targetKind | humanizeKind}} <translate>does not have any containers with a CPU</translate>
               <span ng-if="'cpu' | isRequestCalculated : project" translate>limit</span>
               <span ng-if="!('cpu' | isRequestCalculated : project)" translate>request</span>
               <translate>set. Autoscaling will not work without a CPU</translate>

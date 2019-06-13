@@ -8,7 +8,7 @@
   <form name="addToApplicationForm" novalidate>
     <fieldset ng-disabled="disableInputs">
       <div class="modal-body">
-        <legend translate>Add this {{ctrl.apiObject.kind | humanizeKind}} to application:</legend>
+        <legend><translate>Add this</translate> {{ctrl.apiObject.kind | humanizeKind}} <translate>to application</translate>:</legend>
         <div class="form-group"  ng-class="{'has-error' : ctrl.addType === 'env' && ctrl.application && !ctrl.canAddRefToApplication}">
           <div class="application-select">
             <ui-select autofocus id="application" ng-model="ctrl.application" on-select="ctrl.checkApplicationContainersRefs($item)" required="true" ng-disabled="ctrl.disableInputs">
@@ -27,11 +27,11 @@
           </div>
         </div>
         <div class="has-error" ng-if="ctrl.addType === 'env' && ctrl.application && !ctrl.canAddRefToApplication">
-          <span class="help-block" translate>
-            The {{ctrl.apiObject.kind | humanizeKind}} has already been added to this application.
+          <span class="help-block">
+            {{ctrl.apiObject.kind | humanizeKind}} <translate>has already been added to this application.</translate>
           </span>
         </div>
-        <legend translate>Add {{ctrl.apiObject.kind | humanizeKind}} as:</legend>
+        <legend><translate>Add</translate> {{ctrl.apiObject.kind | humanizeKind}} <translate>as</translate>:</legend>
         <div class="radio">
           <label for="env">
             <input id="env" type="radio" ng-model="ctrl.addType" value="env" >
@@ -42,7 +42,7 @@
           <div class="has-warning" ng-if="ctrl.hasInvalidEnvVars">
             <div class="help-block">
               <span class="pf-icon pficon-warning-triangle-o" aria-hidden="true"></span>
-              {{ctrl.apiObject.kind | humanizeKind | upperFirst}} <strong>{{ctrl.apiObject.metadata.name}}</strong> <translate>contains keys that are not valid environment variable names. Only {{ctrl.apiObject.kind | humanizeKind}} keys with valid names will be added as environment variables.</translate>
+              {{ctrl.apiObject.kind | humanizeKind | upperFirst}} <strong>{{ctrl.apiObject.metadata.name}}</strong> <translate>contains keys that are not valid environment variable names. Only</translate> {{ctrl.apiObject.kind | humanizeKind}} <translate>keys with valid names will be added as environment variables.</translate>
             </div>
           </div>
           <div class="form-group">
@@ -112,10 +112,9 @@
               <div class="help-block" ng-show="addToApplicationForm.mountVolume.$error.oscUnique" translate>
                 The mount path is already used. Please choose another mount path.
               </div>
-              <span class="sr-only" id="mount-path-help" translate>
-                Mount Path for the volume. A file will be created in this
-                directory for each key from the {{ctrl.apiObject.kind | humanizeKind}}.
-                The file contents will be the value of the key.
+              <span class="sr-only" id="mount-path-help">
+                <translate>Mount Path for the volume. A file will be created in this directory for each key from the</translate> {{ctrl.apiObject.kind | humanizeKind}}.
+                <translate>The file contents will be the value of the key.</translate>
               </span>
             </div>
           </div>
@@ -124,7 +123,7 @@
           <legend ng-if-start="ctrl.application.spec.template.spec.containers.length > 1" translate>Containers:</legend>
           <div ng-if-end class="form-group container-options">
             <div ng-if="ctrl.attachAllContainers">
-              <translate>The {{ctrl.apiObject.kind | humanizeKind}} will be added to all containers. You can</translate>
+              {{ctrl.apiObject.kind | humanizeKind}} <translate>will be added to all containers. You can</translate>
               <a href="" ng-click="ctrl.attachAllContainers = false" translate>select specific containers</a>
               <translate>instead.</translate>
             </div>

@@ -30,7 +30,7 @@
         <fieldset class="form-inline compute-resource">
           <label>
             <translate>Capacity</translate>
-            <small ng-if="limits.min && limits.max" translate>
+            <small ng-if="limits.min && limits.max">
               {{limits.min | usageWithUnits : 'storage'}} min to {{limits.max | usageWithUnits : 'storage'}} max
             </small>
             <small ng-if="limits.min && !limits.max">

@@ -60,7 +60,7 @@
               </p>
               <p ng-if="!dcName && controllerRef">
                 <span class="pficon pficon-info" aria-hidden="true"></span>
-                <translate>Environment variables were set by {{controllerRef.kind | humanizeKind}}</translate>
+                <translate>Environment variables were set by </translate>{{controllerRef.kind | humanizeKind}}
                 <a ng-href="{{controllerRef.name | navigateResourceURL : controllerRef.kind : pod.metadata.namespace}}?tab=environment">{{controllerRef.name}}</a>.
               </p>
               <edit-environment-variables api-object="pod" ng-readonly="true"></edit-environment-variables>

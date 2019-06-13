@@ -3,10 +3,10 @@
     <div class="container-fluid">
       <div class="page-header page-header-bleed-right page-header-bleed-left">
         <h1>
-          Deployments
+          <translate>Deployments</translate>
           <span class="page-header-link">
             <a ng-href="{{'deployments' | helpLink}}" target="_blank">
-              Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
+              <translate>Learn More</translate> <i class="fa fa-external-link" aria-hidden="true"></i>
             </a>
           </span>
         </h1>
@@ -22,22 +22,22 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-          <p ng-if="!deploymentConfigsLoaded">
+          <p ng-if="!deploymentConfigsLoaded" translate>
             Loading...
           </p>
           <div ng-if="(showEmptyState || filterWithZeroResults) && deploymentConfigsLoaded">
             <div class="empty-state-message text-center">
               <div ng-if="showEmptyState">
-                <h2>No deployments.</h2>
-                <p>No deployments have been added to project {{projectName}}.</p>
+                <h2 translate>No deployments.</h2>
+                <p translate>No deployments have been added to project {{projectName}}.</p>
               </div>
               <div ng-if="filterWithZeroResults">
-                <h2>The filter is hiding all deployments. <button type="button" class="btn btn-link inline-btn-link" ng-click="clearFilter()">Clear All Filters</button></h2>
+                <h2><translate>The filter is hiding all deployments.</translate> <button type="button" class="btn btn-link inline-btn-link" ng-click="clearFilter()" translate>Clear All Filters</button></h2>
               </div>
             </div>
           </div>
           <div ng-if="!filterWithZeroResults">
-            <h3 ng-if="showDeploymentConfigTable() && ((deployments | size) || (replicaSets | size) || (replicationControllersByDC[''] | size))">Deployment Configs</h3>
+            <h3 ng-if="showDeploymentConfigTable() && ((deployments | size) || (replicaSets | size) || (replicationControllersByDC[''] | size))" translate>Deployment Configs</h3>
             <table ng-if="showDeploymentConfigTable() && !showEmptyState" class="table table-bordered table-mobile table-layout-fixed">
               <colgroup>
                 <col class="col-sm-3">
@@ -48,11 +48,11 @@
               </colgroup>
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Last Version</th>
-                  <th>Status</th>
-                  <th>Created</th>
-                  <th>Trigger</th>
+                  <th translate>Name</th>
+                  <th translate>Last Version</th>
+                  <th translate>Status</th>
+                  <th translate>Created</th>
+                  <th translate>Trigger</th>
                 </tr>
               </thead>
               <tbody>
@@ -63,7 +63,7 @@
                     <a ng-if="deploymentConfigs[dcName]" href="{{dcName | navigateResourceURL : 'DeploymentConfig' : projectName}}">{{dcName}}</a>
                     <span ng-if="deploymentConfigs[dcName].status.details.message" class="pficon pficon-warning-triangle-o" style="cursor: help;" data-toggle="popover" data-trigger="hover" dynamic-content="{{deploymentConfigs[dcName].status.details.message}}"></span>
                   </td>
-                  <td data-title="Last Version"><em>No deployments</em></td>
+                  <td data-title="Last Version"><em translate>No deployments</em></td>
                   <td class="hidden-xs">&nbsp;</td>
                   <td class="hidden-xs">&nbsp;</td>
                   <td class="hidden-xs">&nbsp;</td>
@@ -98,16 +98,16 @@
                     <span am-time-ago="replicationController.metadata.creationTimestamp"></span>
                   </td>
                   <td data-title="Trigger">
-                    <span ng-if="!replicationController.causes.length">Unknown</span>
+                    <span ng-if="!replicationController.causes.length" translate>Unknown</span>
                     <span ng-if="replicationController.causes.length">
                       <span ng-repeat="cause in replicationController.causes">
                         <span ng-switch="cause.type">
                           <span ng-switch-when="ImageChange">
                             <span ng-if="cause.imageTrigger.from">
-                              <abbr title="{{cause.imageTrigger.from | imageObjectRef : null : true}}">Image</abbr> change
+                              <abbr title="{{cause.imageTrigger.from | imageObjectRef : null : true}}" translate>Image</abbr> <translate>change</translate>
                             </span>
                           </span>
-                          <span ng-switch-when="ConfigChange">Config change</span>
+                          <span ng-switch-when="ConfigChange" translate>Config change</span>
                           <span ng-switch-default>{{cause.type}}</span>
                         </span>
                       </span>
@@ -118,7 +118,7 @@
               </tbody>
             </table>
             <div ng-if="(deployments | size)">
-              <h3>Deployments</h3>
+              <h3 translate>Deployments</h3>
               <table class="table table-bordered table-mobile table-layout-fixed">
                 <colgroup>
                   <col class="col-sm-4">
@@ -129,11 +129,11 @@
                 </colgroup>
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Last Version</th>
-                    <th>Replicas</th>
-                    <th>Created</th>
-                    <th>Strategy</th>
+                    <th translate>Name</th>
+                    <th translate>Last Version</th>
+                    <th translate>Replicas</th>
+                    <th translate>Created</th>
+                    <th translate>Strategy</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -163,16 +163,16 @@
               </table>
             </div>
             <div ng-if="(replicaSets | size)" id="replica-sets">
-              <h3>Replica Sets</h3>
+              <h3 translate>Replica Sets</h3>
               <table class="table table-bordered table-mobile table-layout-fixed">
                 <colgroup>
                   <col class="col-sm-4">
                 </colgroup>
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Replicas</th>
-                    <th>Created</th>
+                    <th translate>Name</th>
+                    <th translate>Replicas</th>
+                    <th translate>Created</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -191,16 +191,16 @@
               </table>
             </div>
             <div ng-if="(replicationControllersByDC[''] | size)" id="replica-controllers">
-              <h3>Other Replication Controllers</h3>
+              <h3 translate>Other Replication Controllers</h3>
               <table class="table table-bordered table-mobile table-layout-fixed">
                 <colgroup>
                   <col class="col-sm-5">
                 </colgroup>
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Replicas</th>
-                    <th>Created</th>
+                    <th translate>Name</th>
+                    <th translate>Replicas</th>
+                    <th translate>Created</th>
                   </tr>
                 </thead>
                 <tbody>

@@ -10,6 +10,7 @@ module.exports = function (grunt) {
           'po/template.pot': ['app/views/*.html',
                               'app/views/*/*.html',
                               'app/views/*/*/*.html',
+                              'app/*.html',
                               'app/scripts/*.js',
                               'app/scripts/*/*.js',
                               'app/scripts/*/*/*.js'

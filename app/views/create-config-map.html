@@ -5,8 +5,8 @@
         <div class="col-md-10">
           <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
           <div class="mar-top-xl">
-            <h1>Create Config Map</h1>
-            <div class="help-block">
+            <h1 translate>Create Config Map</h1>
+            <div class="help-block" translate>
               Config maps hold key-value pairs that can be used in pods to read application
               configuration.
             </div>
@@ -18,8 +18,8 @@
                       class="btn btn-primary btn-lg"
                       ng-click="createConfigMap()"
                       ng-disabled="createConfigMapForm.$invalid || disableInputs"
-                      value="">Create</button>
-                  <a class="btn btn-default btn-lg" href="" ng-click="cancel()" role="button">Cancel</a>
+                      value="" translate>Create</button>
+                  <a class="btn btn-default btn-lg" href="" ng-click="cancel()" role="button" translate>Cancel</a>
                 </div>
               </fieldset>
             </form>

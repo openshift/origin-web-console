@@ -20,25 +20,25 @@
           This will delete the deployment, all rollout history, and any running pods.
         </span>
 
-        <span ng-if="kind === 'ReplicationController' || kind === 'ReplicaSet' || kind === 'StatefulSet'" translate>
-          This will delete the {{typeDisplayName || (kind | humanizeKind)}} and any running pods.
+        <span ng-if="kind === 'ReplicationController' || kind === 'ReplicaSet' || kind === 'StatefulSet'">
+          <translate>This will delete the</translate> {{typeDisplayName || (kind | humanizeKind)}} <translate>and any running pods.</translate>
         </span>
 
         <span ng-if="kind === 'ServiceInstance'">
           {{displayName ? displayName : resourceName}} <translate>and its data will no longer be available to your applications.</translate>
         </span>
 
-        <span ng-if="isProject" translate>
-          This will 'delete all resources' associated with the project {{displayName ? displayName : resourceName}}.
+        <span ng-if="isProject">
+          <translate>This will 'delete all resources' associated with the </translate> {{displayName ? displayName : resourceName}}<translate>project</translate>.
         </span>
 
         <strong translate>It cannot be undone.</strong> <translate>Make sure this is something you really want to do!</translate>
       </p>
 
       <div ng-show="typeNameToConfirm">
-        <p translate>Type the name of the {{typeDisplayName || (kind | humanizeKind)}} to confirm.</p>
+        <p> <translate>confirm</translate> {{typeDisplayName || (kind | humanizeKind)}} <translate>Type name</translate>.</p>
         <p>
-          <label class="sr-only" for="resource-to-delete">{{typeDisplayName || (kind | humanizeKind)}} to delete</label>
+          <label class="sr-only" for="resource-to-delete"><translate>delete</translate>{{typeDisplayName || (kind | humanizeKind)}}</label>
           <input
               ng-model="confirmName"
               id="resource-to-delete"

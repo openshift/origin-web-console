@@ -195,7 +195,7 @@
                       </div>
 
                       <div class="form-group">
-                        <label for="buildFrom" translate>Source and Destination Paths<span class="help action-inline">
+                        <label for="buildFrom"><translate>Source and Destination Paths</translate><span class="help action-inline">
                           <a href="">
                           <i class="pficon pficon-help" data-toggle="tooltip" aria-hidden="true" data-original-title="Paths is a list of source and destination paths to copy from the image. At least one pair has to be specified."></i>
                           </a>
@@ -527,7 +527,7 @@
                   <div class="help-block" ng-switch-when="Serial" translate>Builds triggered from this Build Configuration will run one at the time, in the order they have been triggered.</div>
                   <div class="help-block" ng-switch-when="Parallel" translate>Builds triggered from this Build Configuration will run all at the same time. The order in which they will finish is not guaranteed.</div>
                   <div class="help-block" ng-switch-when="SerialLatestOnly" translate>Builds triggered from this Build Configuration will run one at the time. When a currently running build completes, the next build that will run is the latest build created. Other queued builds will be cancelled.</div>
-                  <div class="help-block" ng-switch-default translate>Builds triggered from this Build Configuration will run using the {{updatedBuildConfig.spec.runPolicy | sentenceCase}} policy.</div>
+                  <div class="help-block" ng-switch-default><translate>Builds triggered from this Build Configuration will run using the</translate> {{updatedBuildConfig.spec.runPolicy | sentenceCase}} <translate>policy</translate>.</div>
                 </div>
               </div>
 
@@ -537,7 +537,7 @@
                   <h3 class="with-divider">
                     <translate>Post-Commit Hooks</translate>
                     <span class="help action-inline">
-                      <a href="{{'build-hooks' | helpLink}}" aria-hidden="true" target="_blank"><span class="learn-more-inline"><translate>Learn Mor</translate>e&nbsp;<i class="fa fa-external-link"></i></span></a>
+                      <a href="{{'build-hooks' | helpLink}}" aria-hidden="true" target="_blank"><span class="learn-more-inline"><translate>Learn More</translate>&nbsp;<i class="fa fa-external-link"></i></span></a>
                     </span>
                   </h3>
 

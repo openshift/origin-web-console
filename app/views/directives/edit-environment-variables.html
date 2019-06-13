@@ -4,9 +4,9 @@
     <h3 translate>Container {{container.name}}</h3>
 
     <div ng-if="!$ctrl.canIUpdate || $ctrl.ngReadonly">
-      <span ng-if="!container.env.length" translate>
-        No environment variables set in the {{$ctrl.apiObject.kind | humanizeKind}}
-        template for container {{container.name}}.
+      <span ng-if="!container.env.length">
+        <translate>No environment variables set in the</translate> {{$ctrl.apiObject.kind | humanizeKind}}
+        <translate>template for container {{container.name}}.</translate>
       </span>
       <key-value-editor
         ng-if="container.env.length"

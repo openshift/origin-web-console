@@ -2,7 +2,7 @@
 
 angular
   .module('openshiftConsole')
-  .factory('MembershipService', function($filter, APIService, Constants) {
+  .factory('MembershipService', function($filter, APIService, Constants, gettextCatalog) {
 
     var annotation = $filter('annotation');
 
@@ -54,7 +54,7 @@ angular
          "ServiceAccount":{
             "kind":"ServiceAccount",
             "sortOrder":3,
-            "description":"Service accounts provide a flexible way to control API access without sharing a regular user’s credentials.",
+            "description":gettextCatalog.getString("Service accounts provide a flexible way to control API access without sharing a regular user’s credentials."),
             "helpLinkKey":"service_accounts",
             "name":"ServiceAccount",
             "subjects":{

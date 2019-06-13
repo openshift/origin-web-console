@@ -6,7 +6,7 @@
         <div class="col-md-12">
           <uib-tabset class="mar-top-md" ng-if="project">
             <uib-tab active="selectedTab.fromCatalog">
-              <uib-tab-heading>Browse Catalog</uib-tab-heading>
+              <uib-tab-heading translate>Browse Catalog</uib-tab-heading>
               <catalog
                   project-name="projectName"
                   project-image-streams="projectImageStreams"
@@ -17,14 +17,14 @@
             </uib-tab>
 
             <uib-tab active="selectedTab.deployImage">
-              <uib-tab-heading>Deploy Image</uib-tab-heading>
+              <uib-tab-heading translate>Deploy Image</uib-tab-heading>
               <form><!-- wrapping form element is necessary for the enter key to trigger the submit button -->
                 <deploy-image ng-if="project" project="project"></deploy-image>
               </form>
             </uib-tab>
 
             <uib-tab active="selectedTab.fromFile">
-              <uib-tab-heading>Import YAML / JSON</uib-tab-heading>
+              <uib-tab-heading translate>Import YAML / JSON</uib-tab-heading>
               <from-file ng-if="project" project="project"></from-file>
             </uib-tab>
 

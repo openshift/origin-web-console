@@ -3,10 +3,10 @@
     <div class="container-fluid">
       <div class="page-header page-header-bleed-right page-header-bleed-left">
         <h1>
-          Builds
+          <translate>Builds</translate>
           <span class="page-header-link">
             <a ng-href="{{'builds' | helpLink}}" target="_blank">
-              Learn More <i class="fa fa-external-link" aria-hidden="true"></i>
+              <translate>Learn More</translate> <i class="fa fa-external-link" aria-hidden="true"></i>
             </a>
           </span>
         </h1>
@@ -23,16 +23,16 @@
       <div class="row">
         <div class="col-md-12">
           <div ng-if="!(latestByConfig | hashSize) && !(buildsNoConfig | hashSize)">
-            <p ng-if="!buildsLoaded">
+            <p ng-if="!buildsLoaded" translate>
               Loading...
             </p>
             <div ng-if="buildsLoaded" class="empty-state-message text-center">
               <div ng-if="!filterWithZeroResults">
-                <h2>No builds.</h2>
-                <p>No builds have been added to project {{projectName}}.</p>
+                <h2 translate>No builds.</h2>
+                <p translate>No builds have been added to project {{projectName}}.</p>
               </div>
               <div ng-if="filterWithZeroResults">
-                <h2>The filter is hiding all builds. <button type="button" class="btn btn-link inline-btn-link" ng-click="clearFilter()">Clear All Filters</button></h2>
+                <h2><translate>The filter is hiding all builds.</translate> <button type="button" class="btn btn-link inline-btn-link" ng-click="clearFilter()" translate>Clear All Filters</button></h2>
               </div>
             </div>
           </div>
@@ -48,13 +48,13 @@
             </colgroup>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Last Build</th>
-                <th>Status</th>
-                <th>Duration</th>
-                <th>Created</th>
-                <th>Type</th>
-                <th ng-class="{'hidden-sm' : (latestByConfig | hashSize)}">Source</th>
+                <th translate>Name</th>
+                <th translate>Last Build</th>
+                <th translate>Status</th>
+                <th translate>Duration</th>
+                <th translate>Created</th>
+                <th translate>Type</th>
+                <th ng-class="{'hidden-sm' : (latestByConfig | hashSize)}" translate>Source</th>
               </tr>
             </thead>
             <tbody>
@@ -63,7 +63,7 @@
                 <td ng-if-start="!latestBuild" data-title="Name">
                   <a href="{{buildConfigs[buildConfigName] | navigateResourceURL}}">{{buildConfigName}}</a>
                 </td>
-                <td data-title="Last Build"><em>No builds</em></td>
+                <td data-title="Last Build"><em translate>No builds</em></td>
                 <td class="hidden-xs">&nbsp;</td>
                 <td class="hidden-xs">&nbsp;</td>
                 <td class="hidden-xs">&nbsp;</td>
@@ -72,7 +72,7 @@
                   <span ng-if="source = buildConfigs[buildConfigName].spec.source">
                     <span ng-switch="source.type">
                       <span ng-switch-when="None">
-                        <i>None</i>
+                        <i translate>None</i>
                       </span>
                       <span ng-switch-when="Git">
                         <osc-git-link
@@ -122,7 +122,7 @@
                   <span ng-if="latestBuild.spec.source">
                     <span ng-switch="latestBuild.spec.source.type">
                       <span ng-switch-when="None">
-                        <i>none</i>
+                        <i translate>none</i>
                       </span>
                       <span ng-switch-when="Git">
                         <osc-git-link
@@ -141,7 +141,7 @@
               <!-- Builds that were not spawned from a build config -->
               <tr ng-repeat="latestBuild in buildsNoConfig track by (latestBuild | uid)">
                 <td data-title="Name">
-                  <em>none</em>
+                  <em translate>none</em>
                 </td>
                 <td data-title="Last Build">
                   <!-- Build number and link -->
@@ -168,7 +168,7 @@
                   <span ng-if="latestBuild.spec.source">
                     <span ng-switch="latestBuild.spec.source.type">
                       <span ng-switch-when="None">
-                        <i>none</i>
+                        <i translate>none</i>
                       </span>
                       <span ng-switch-when="Git">
                         <osc-git-link

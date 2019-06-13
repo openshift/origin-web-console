@@ -57,7 +57,7 @@
             </ui-select>
           </div>
           <div class="has-warning" ng-if="$ctrl.hasInvalidEnvVar(entry.selectedEnvFrom.data)">
-            <div class="help-block">{{entry.selectedEnvFrom.kind | humanizeKind | upperFirst}} <strong>{{entry.selectedEnvFrom.metadata.name}}</strong> contains keys that are not valid environment variable names. Only {{entry.selectedEnvFrom.kind | humanizeKind}} keys with valid names will be added as environment variables.
+            <div class="help-block">{{entry.selectedEnvFrom.kind | humanizeKind | upperFirst}} <strong>{{entry.selectedEnvFrom.metadata.name}}</strong> <translate>contains keys that are not valid environment variable names. Only</translate> {{entry.selectedEnvFrom.kind | humanizeKind}} <translate>keys with valid names will be added as environment variables.</translate>
             </div>
           </div>
         </div>
@@ -142,8 +142,8 @@
         </small>
       </h4>
 
-      <div ng-if="!($ctrl.overlayPaneEntryDetails.data | size)" class="empty-state-message text-center" translate>
-        The {{$ctrl.overlayPaneEntryDetails.kind | humanizeKind}} has no properties.
+      <div ng-if="!($ctrl.overlayPaneEntryDetails.data | size)" class="empty-state-message text-center">
+         {{$ctrl.overlayPaneEntryDetails.kind | humanizeKind}} <translate>has no properties.</translate>
       </div>
 
       <div ng-if="$ctrl.overlayPaneEntryDetails.data | size" class="table-responsive scroll-shadows-horizontal">

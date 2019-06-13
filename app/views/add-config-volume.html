@@ -6,7 +6,7 @@
         <div ng-if="!error && (!targetObject || !configMaps || !secrets)" translate>Loading...</div>
 
         <div ng-if="error" class="empty-state-message text-center">
-          <h2 translate>The {{kind | humanizeKind}} could not be loaded.</h2>
+          <h2>{{kind | humanizeKind}} <translate>could not be loaded.</translate></h2>
           <p>{{error | getErrorDetails}}</p>
         </div>
 
@@ -14,9 +14,8 @@
           <div ng-if="!configMaps.length && !secrets.length && !(configMapVersion | canI : 'create') && !(secretVersion | canI : 'create')" class="empty-state-message empty-state-full-page text-center">
             <h2 translate>No config maps or secrets.</h2>
 
-            <p translate>
-              There are no config maps or secrets in project {{project | displayName}} to use
-              as a volume for this {{kind | humanizeKind}}.
+            <p>
+              <translate>There are no config maps or secrets in project</translate> {{project | displayName}} <translate>to use as a volume for this</translate> {{kind | humanizeKind}}.
             </p>
 
             <p ng-if="targetObject"><a ng-href="{{targetObject | navigateResourceURL}}"><translate>Back to</translate> {{kind | humanizeKind}} {{name}}</a></p>
@@ -24,8 +23,8 @@
 
           <div ng-if="configMaps.length || secrets.length || (configMapVersion | canI : 'create') || (secretVersion | canI : 'create')" class="mar-top-xl">
             <h1 translate>Add Config Files to {{name}}</h1>
-            <div class="help-block" translate>
-              Add values from a config map or secret as volume. This will make the data available as files for {{kind | humanizeKind}} {{name}}.
+            <div class="help-block">
+              <translate>Add values from a config map or secret as volume. This will make the data available as files for</translate> {{kind | humanizeKind}} {{name}}.
             </div>
             <form name="forms.addConfigVolumeForm" class="mar-top-lg">
               <fieldset ng-disabled="disableInputs">

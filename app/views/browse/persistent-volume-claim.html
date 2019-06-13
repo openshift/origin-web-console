@@ -37,8 +37,8 @@
           </div>
           {{pvc.metadata.name}}
           <small class="meta" ng-if="!pvc.spec.volumeName">
-              <span ng-if="pvc.spec.resources.requests['storage']" translate>
-                waiting for {{pvc.spec.resources.requests['storage'] | usageWithUnits: 'storage'}} allocation,
+              <span ng-if="pvc.spec.resources.requests['storage']">
+                <translate>waiting for</translate> {{pvc.spec.resources.requests['storage'] | usageWithUnits: 'storage'}}<translate>allocation</translate>,
               </span>
               <span ng-if="!pvc.spec.resources.requests['storage']" translate>waiting for allocation,</span>
           </small>

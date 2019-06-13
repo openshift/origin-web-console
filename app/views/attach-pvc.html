@@ -4,37 +4,37 @@
       <div class="row">
         <div class="col-md-10">
           <breadcrumbs breadcrumbs="breadcrumbs"></breadcrumbs>
-          <div ng-show="!pvcs || !attach.resource">Loading...</div>
+          <div ng-show="!pvcs || !attach.resource" translate>Loading...</div>
 
           <div ng-show="pvcs && !pvcs.length && attach.resource" class="empty-state-message empty-state-full-page text-center">
-            <h2>No persistent volume claims.</h2>
+            <h2 translate>No persistent volume claims.</h2>
 
             <p>
-              A <b>persistent volume claim</b> is required to attach to this {{kind | humanizeKind}},
-              but none are loaded on this project.
+              <translate>A persistent volume claim is required to attach to this</translate> {{kind | humanizeKind}},
+              <translate>but none are loaded on this project.</translate>
             </p>
 
             <div ng-if="project && (pvcVersion | canI : 'create')">
               <a ng-href="project/{{project.metadata.name}}/create-pvc"
-                 class="btn btn-primary">Create Storage</a>
+                 class="btn btn-primary" translate>Create Storage</a>
             </div>
 
             <p ng-if="project && !(pvcVersion | canI : 'create')">
-              To claim storage from a persistent volume, refer to the documentation on <a target="_blank" ng-href="{{'persistent_volumes' | helpLink}}">using persistent volumes</a>.
+              <translate>To claim storage from a persistent volume, refer to the documentation on</translate> <a target="_blank" ng-href="{{'persistent_volumes' | helpLink}}" translate>using persistent volumes</a>.
             </p>
 
-            <p ng-if="attach.resource"><a ng-href="{{attach.resource | navigateResourceURL}}">Back to {{kind | humanizeKind}} {{name}}</a></p>
+            <p ng-if="attach.resource"><a ng-href="{{attach.resource | navigateResourceURL}}"><translate> Back to </translate> {{kind | humanizeKind}} {{name}}</a></p>
           </div>
 
           <div ng-show="pvcs && pvcs.length && attach.resource" class="mar-top-xl">
-            <h1>Add Storage to {{name}}</h1>
+            <h1 translate>Add Storage to {{name}}</h1>
             <div class="help-block">
-              Add an existing persistent volume claim to the template of {{kind | humanizeKind}} {{name}}.
+              <translate>Add an existing persistent volume claim to the template of </translate>{{kind | humanizeKind}} {{name}}.
             </div>
             <form name="attachPVCForm" class="mar-top-lg">
               <fieldset ng-disabled="disableInputs">
                 <div class="form-group">
-                  <label for="persistentVolumeClaim" class="required">Storage</label>
+                  <label for="persistentVolumeClaim" class="required" translate>Storage</label>
                   <table style="margin-bottom:0;background-color:transparent;" class="table table-condensed table-borderless">
                     <tbody>
                       <tr ng-repeat="pvc in pvcs track by (pvc | uid)">
@@ -61,21 +61,21 @@
                     </tbody>
                   </table>
                 </div>
-                <div ng-if="!(project && (pvcVersion | canI : 'create'))" class="help-block">
+                <div ng-if="!(project && (pvcVersion | canI : 'create'))" class="help-block" translate>
                   Select storage to use.
                 </div>
                 <div ng-if="project && (pvcVersion | canI : 'create')" class="help-block">
-                  Select storage to use<span ng-if="!outOfClaims"> or <a ng-href="project/{{project.metadata.name}}/create-pvc" >create storage</a>.</span>
-                  <span ng-if="outOfClaims">. You cannot create new storage since you are at quota.</span>
+                  <translate>Select storage to use</translate><span ng-if="!outOfClaims"> <translate>or</translate> <a ng-href="project/{{project.metadata.name}}/create-pvc" translate>create storage</a>.</span>
+                  <span ng-if="outOfClaims" translate>. You cannot create new storage since you are at quota.</span>
                 </div>
 
-                <h3>Volume</h3>
-                <div class="help-block">
+                <h3 translate>Volume</h3>
+                <div class="help-block" translate>
                   Specify details about how volumes are going to be mounted inside containers.
                 </div>
 
                 <div class="form-group mar-top-xl">
-                  <label for="mount-path">Mount Path</label>
+                  <label for="mount-path" translate>Mount Path</label>
                   <input
                       id="mount-path"
                       class="form-control"
@@ -90,22 +90,22 @@
                       spellcheck="false"
                       aria-describedby="mount-path-help">
                   <div>
-                    <span id="mount-path-help" class="help-block">Mount path for the volume inside the container. If not specified, the volume will not be mounted automatically.</span>
+                    <span id="mount-path-help" class="help-block" translate>Mount path for the volume inside the container. If not specified, the volume will not be mounted automatically.</span>
                   </div>
                   <div class="has-error" ng-show="attachPVCForm.mountPath.$error.pattern && attachPVCForm.mountPath.$touched">
                     <span class="help-block">
-                      Mount path must be a valid path to a directory starting with <code>/</code>.
+                      <translate>Mount path must be a valid path to a directory starting with</translate> <code>/</code>.
                     </span>
                   </div>
                   <div class="has-error" ng-show="attachPVCForm.mountPath.$error.oscUnique">
-                    <span class="help-block">
+                    <span class="help-block" translate>
                       Volume mount in that path already exists. Please choose another mount path.
                     </span>
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <label for="sub-path">Subpath</label>
+                  <label for="sub-path" translate>Subpath</label>
                   <input
                       id="sub-path"
                       class="form-control"
@@ -118,20 +118,20 @@
                       autocapitalize="none"
                       spellcheck="false"
                       aria-describedby="sub-path-help">
-                  <div id="sub-path-help" class="help-block">
+                  <div id="sub-path-help" class="help-block" translate>
                     Optional path within the volume from which it will be mounted into the
                     container. Defaults to the volume's root.
                   </div>
                   <div class="has-error" ng-show="attachPVCForm.subPath.$error.pattern && attachPVCForm.subPath.$touched">
                     <span class="help-block">
-                      Path must be a relative path. It cannot start with <code>/</code> or
-                      contain <code>..</code> path elements.
+                      <translate>Path must be a relative path. It cannot start with</translate> <code>/</code> <translate>or contain </translate>
+                      <code>..</code> <translate>path elements.</translate>
                     </span>
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <label for="volume-name">Volume Name</label>
+                  <label for="volume-name" translate>Volume Name</label>
                   <!--
                     Volume name must conform to a DNS label
                     https://github.com/kubernetes/kubernetes/blob/master/docs/design/identifiers.md
@@ -155,21 +155,21 @@
                       spellcheck="false"
                       aria-describedby="volume-name-help">
                   <div>
-                    <span id="volume-name-help" class="help-block">Unique name used to identify this volume. If not specified, a volume name is generated.</span>
+                    <span id="volume-name-help" class="help-block" translate>Unique name used to identify this volume. If not specified, a volume name is generated.</span>
                   </div>
                   <div class="has-error" ng-show="attachPVCForm.volumeName.$error.pattern && attachPVCForm.volumeName.$touched">
-                    <span class="help-block">
+                    <span class="help-block" translate>
                       Volume names may only contain lower-case letters, numbers, and dashes.
                       They may not start or end with a dash.
                     </span>
                   </div>
                   <div class="has-error" ng-show="attachPVCForm.volumeName.$error.maxlength">
-                    <span class="help-block">
+                    <span class="help-block" translate>
                       Volume names cannot be longer than 63 characters.
                     </span>
                   </div>
                   <div class="has-error" ng-show="attachPVCForm.volumeName.$error.oscUnique">
-                    <span class="help-block">
+                    <span class="help-block" translate>
                       Volume name already exists. Please choose another name.
                     </span>
                   </div>
@@ -179,9 +179,9 @@
                   <div class="checkbox">
                     <label>
                       <input type="checkbox" ng-model="attach.readOnly" aria-describedby="read-only-help">
-                      Read only
+                      <translate>Read only</translate>
                     </label>
-                    <div id="read-only-help" class="help-block">
+                    <div id="read-only-help" class="help-block" translate>
                       Mount the volume as read-only.
                     </div>
                   </div>
@@ -190,13 +190,13 @@
                 <!-- Prompt for containers only if there is more than one. -->
                 <div ng-if="attach.resource.spec.template.spec.containers.length > 1">
                   <div ng-if="attach.allContainers">
-                    The volume will be mounted into all containers. You can
-                    <a href="" ng-click="attach.allContainers = false">select specific containers</a>
-                    instead.
+                    <translate>The volume will be mounted into all containers. You can</translate>
+                    <a href="" ng-click="attach.allContainers = false" translate>select specific containers</a>
+                    <translate>instead.</translate>
                   </div>
 
                   <div ng-if="!attach.allContainers" class="form-group">
-                    <label class="required">Containers</label>
+                    <label class="required" translate>Containers</label>
                     <select-containers
                         ng-model="attach.containers"
                         pod-template="attach.resource.spec.template"
@@ -215,8 +215,8 @@
                   <button type="submit"
                       class="btn btn-primary btn-lg"
                       ng-click="attachPVC()"
-                      ng-disabled="attachPVCForm.$invalid || disableInputs || !attachPVC">Add</button>
-                  <a class="btn btn-default btn-lg" role="button" ng-click="cancel()">Cancel</a>
+                      ng-disabled="attachPVCForm.$invalid || disableInputs || !attachPVC" translate>Add</button>
+                  <a class="btn btn-default btn-lg" role="button" ng-click="cancel()" translate>Cancel</a>
                 </div>
               </fieldset>
             </form>

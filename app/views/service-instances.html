@@ -7,7 +7,7 @@
       <div class="middle-header header-toolbar">
         <div class="container-fluid">
           <div class="page-header page-header-bleed-right page-header-bleed-left">
-            <h1>
+            <h1 translate>
               Provisioned Services
             </h1>
           </div>
@@ -23,16 +23,16 @@
           <div class="row">
             <div class="col-md-12">
               <div ng-if="(serviceInstances | hashSize) == 0">
-                <p ng-if="!serviceInstancesLoaded">
+                <p ng-if="!serviceInstancesLoaded" translate>
                   Loading...
                 </p>
                 <div ng-if="serviceInstancesLoaded" class="empty-state-message text-center">
                   <div ng-if="!filterWithZeroResults">
-                    <h2>No provisioned services.</h2>
-                    <p>No provisioned services have been added to project {{projectName}}.</p>
+                    <h2 translate>No provisioned services.</h2>
+                    <p translate>No provisioned services have been added to project {{projectName}}.</p>
                   </div>
                   <div ng-if="filterWithZeroResults">
-                    <h2>The filter is hiding all provisioned services. <button type="button" class="btn btn-link inline-btn-link" ng-click="clearFilter()">Clear All Filters</button></h2>
+                    <h2><translate>The filter is hiding all provisioned services.</translate> <button type="button" class="btn btn-link inline-btn-link" ng-click="clearFilter()" translate>Clear All Filters</button></h2>
                   </div>
                 </div>
               </div>
@@ -42,11 +42,11 @@
                 </colgroup>
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Instance Name</th>
-                    <th>Status</th>
-                    <th>Created</th>
-                    <th>Bindings</th>
+                    <th translate>Name</th>
+                    <th translate>Instance Name</th>
+                    <th translate>Status</th>
+                    <th translate>Created</th>
+                    <th translate>Bindings</th>
                   </tr>
                 </thead>
                 <tbody ng-if="(serviceInstances | size) > 0">
@@ -62,7 +62,7 @@
                       </div>
                     </td>
                     <td data-title="Created">
-                      <span am-time-ago="serviceInstance.metadata.creationTimestamp" am-without-suffix="true"></span> ago
+                      <span am-time-ago="serviceInstance.metadata.creationTimestamp" am-without-suffix="true"></span> <translate>ago</translate>
                     </td>
                     <td data-title="Bindings">
                       <div ng-if="bindingsByInstanceRef[serviceInstance.metadata.name].length">
@@ -79,7 +79,7 @@
                           </ng-pluralize>
                         </div>
                       </div>
-                      <div ng-if="!bindingsByInstanceRef[serviceInstance.metadata.name].length">
+                      <div ng-if="!bindingsByInstanceRef[serviceInstance.metadata.name].length" translate>
                         No bindings
                       </div>
                     </td>
