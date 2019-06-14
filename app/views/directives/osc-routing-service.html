@@ -28,9 +28,7 @@
       </div>
       <div ng-if="warnUnnamedPort" class="has-warning">
         <span class="help-block" translate>
-          Service {{model.name}} has a single, unnamed port. A route cannot specifically target
-          an unnamed service port. If more service ports are added later, the route will also direct
-          traffic to them.
+          Service {{model.name}} has a single, unnamed port. A route cannot specifically target an unnamed service port. If more service ports are added later, the route will also direct traffic to them.
         </span>
       </div>
     </div>
@@ -50,8 +48,7 @@
              aria-describedby="{{id}}-weight-help">
       <div>
         <span id="{{id}}-weight-help" class="help-block" translate>
-          Weight is a number between 0 and 256 that specifies the relative weight against other
-          route services.
+          Weight is a number between 0 and 256 that specifies the relative weight against other route services.
         </span>
         <div ng-if="routingServiceForm.weight.$dirty && routingServiceForm.weight.$invalid" class="has-error">
           <div ng-if="routingServiceForm.weight.$error.number" class="help-block" translate>

@@ -51,8 +51,7 @@
              aria-describedby="min-replicas-help">
     </span>
     <div id="min-replicas-help" class="help-block" translate>
-      The lower limit for the number of pods that can be set by the autoscaler.
-      If not specified, defaults to 1.
+      The lower limit for the number of pods that can be set by the autoscaler.If not specified, defaults to 1.
     </div>
     <div class="has-error" ng-show="form.minReplicas.$dirty && form.minReplicas.$invalid">
       <span ng-if="form.minReplicas.$error.number" class="help-block" translate>
@@ -115,9 +114,7 @@
       <span class="input-group-addon">%</span>
     </div>
     <div id="target-cpu-help" class="help-block" translate>
-      The percentage of the CPU request that each pod should ideally be using.
-      Pods will be added or removed periodically when CPU usage exceeds or
-      drops below this target value.
+      The percentage of the CPU request that each pod should ideally be using.Pods will be added or removed periodically when CPU usage exceeds or drops below this target value.
     </div>
     <!-- <div class="learn-more-block">
       <a ng-href="{{'compute_resources' | helpLink}}" target="_blank"><translate>Learn More</translate>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>

@@ -85,9 +85,7 @@
       <div class="col-sm-10">
         <div ng-if="runsAsRoot" class="alert alert-warning">
           <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-          <span translate>Image {{import.name}} runs as the
-            root user which might not be permitted by your cluster
-            administrator.</span>
+          <span translate>Image {{import.name}} runs as the root user which might not be permitted by your cluster administrator.</span>
         </div>
         <h2>
           <span ng-if="mode === 'dockerImage'">{{import.name}}</span>
@@ -114,8 +112,7 @@
           </li>
         </ul>
         <div ng-if="(volumes | hashSize) > 0" class="help-block" translate>
-          This image declares volumes and will default to use non-persistent, host-local storage.
-          You can add persistent storage later to the deployment config.
+          This image declares volumes and will default to use non-persistent, host-local storage.You can add persistent storage later to the deployment config.
         </div>
       </div>
     </div>
@@ -145,9 +142,7 @@
               A name is required.
             </div>
             <div class="help-block" ng-show="forms.deployImage.name.$error.pattern" translate>
-              Name must be an alphanumeric (a-z, 0-9) string with a maximum length
-              of 24 characters where the first character is a letter (a-z). The '-'
-              character is allowed anywhere except the first or last character.
+              Name must be an alphanumeric (a-z, 0-9) string with a maximum length of 24 characters where the first character is a letter (a-z). The '-' character is allowed anywhere except the first or last character.
             </div>
             <div class="help-block" ng-show="forms.deployImage.name.$error.minlength" translate>
               Name must have at least 2 characters.

@@ -69,7 +69,7 @@ msgstr "{{notificationGroup.totalUnread}}未读"
 msgid "A cluster admin can create a project for you by running the command"
 msgstr "集群管理员可以通过运行该命令为您创建项目"
 
-#: app/views/directives/_edit-command.html:112
+#: app/views/directives/_edit-command.html:111
 msgid "A command is required."
 msgstr "命令是必需的。"
 
@@ -87,9 +87,8 @@ msgstr ""
 
 #: app/views/add-config-volume.html:79
 msgid ""
-"A file will be created in this directory for each key from the config\n"
-"                        map or secret. The file contents will be the value "
-"of the key."
+"A file will be created in this directory for each key from the config map or "
+"secret. The file contents will be the value of the key."
 msgstr ""
 "在该目录下将给每个来自config map 或者secret的key创建一个文件 。 文件内容将是"
 "密钥的值。"
@@ -101,19 +100,17 @@ msgstr "需要Git仓库URL。"
 #: app/views/edit/jenkinsfile-examples.html:2
 msgid ""
 "A Jenkinsfile is a Groovy script that defines your pipeline. In the "
-"Jenkinsfile, you can declare\n"
-"    pipeline stages and run one or more steps within each stage. Here are "
-"some examples you can use\n"
-"    in your pipelines."
+"Jenkinsfile, you can declare pipeline stages and run one or more steps "
+"within each stage. Here are some examples you can use in your pipelines."
 msgstr ""
 "Jenkinsfile是一个定义pipeline的Groovy脚本。 在Jenkinsfile中，您可以声明"
 "pipeline阶段并在每个阶段中运行一个或多个步骤。 以下是您可以在pipelines使用的"
 "一些示例。"
 
-#: app/views/edit/health-checks.html:39
+#: app/views/edit/health-checks.html:37
 msgid ""
-"A liveness probe checks if the container is still running. If the liveness\n"
-"                  probe fails, the container is killed."
+"A liveness probe checks if the container is still running. If the liveness "
+"probe fails, the container is killed."
 msgstr ""
 "Liveness Probe检查容器是否仍在运行。 如果Liveness Probe失败，容器被杀死。"
 
@@ -122,7 +119,7 @@ msgid "a mistyped address"
 msgstr "一个错误的地址"
 
 #: app/views/create/fromimage.html:49
-#: app/views/directives/deploy-image.html:143
+#: app/views/directives/deploy-image.html:141
 msgid "A name is required."
 msgstr "名称必须."
 
@@ -140,10 +137,9 @@ msgstr "需要一个项目才能完成安装。"
 
 #: app/views/edit/health-checks.html:20
 msgid ""
-"A readiness probe checks if the container is ready to handle requests. A\n"
-"                  failed readiness probe means that a container should not "
-"receive any traffic\n"
-"                  from a proxy, even if it's running."
+"A readiness probe checks if the container is ready to handle requests. A "
+"failed readiness probe means that a container should not receive any traffic "
+"from a proxy, even if it's running."
 msgstr ""
 "readiness probe检查容器是否准备好处理请求。 探测出失败意味着容器不应接收任何"
 "来自代理的流量，即使它正在运行。"
@@ -180,7 +176,7 @@ msgstr "项目中路径的唯一名称。"
 msgid "A unique name for the storage claim within the project."
 msgstr "项目中存储声明的唯一名称。"
 
-#: app/views/edit/build-config.html:435
+#: app/views/edit/build-config.html:433
 #: app/views/edit/deployment-config.html:360
 #: app/views/edit/deployment-config.html:71
 msgid ""
@@ -240,7 +236,7 @@ msgstr "访问模式"
 msgid "Access Modes:"
 msgstr "访问模式"
 
-#: app/views/about.html:43
+#: app/views/about.html:40
 msgid "Account"
 msgstr "帐户"
 
@@ -281,7 +277,7 @@ msgstr "操作"
 msgid "Active Deadline:"
 msgstr "活动截止日期："
 
-#: app/views/add-config-volume.html:192 app/views/attach-pvc.html:215
+#: app/views/add-config-volume.html:189 app/views/attach-pvc.html:213
 #: app/views/directives/_edit-command.html:65
 #: app/views/directives/_edit-command.html:86
 #: app/views/directives/add-config-to-application.html:34
@@ -307,7 +303,7 @@ msgstr "将现有持久卷声明添加到模板"
 msgid "Add Another Secret"
 msgstr "添加另一个Secret"
 
-#: app/views/directives/osc-routing.html:176
+#: app/views/directives/osc-routing.html:175
 msgid "Add Another Service"
 msgstr "添加另一个Service"
 
@@ -362,22 +358,22 @@ msgstr ""
 msgid "Add Health Checks"
 msgstr "添加健康检查"
 
-#: app/views/add-config-volume.html:166
+#: app/views/add-config-volume.html:163
 #: app/views/directives/edit-config-map-or-secret.html:120
 #: app/views/directives/edit-config-map-or-secret.html:46
 msgid "Add Item"
 msgstr "添加项"
 
-#: app/views/edit/health-checks.html:44
+#: app/views/edit/health-checks.html:41
 msgid "Add Liveness Probe"
 msgstr "添加Liveness Probe"
 
-#: app/views/add-config-volume.html:108
+#: app/views/add-config-volume.html:107
 msgid ""
 "Add only certain keys or use paths that are different than the key names."
 msgstr "仅添加某些键或使用与键名称不同的路径。"
 
-#: app/views/edit/health-checks.html:26
+#: app/views/edit/health-checks.html:24
 msgid "Add Readiness Probe"
 msgstr "添加Readiness Probe"
 
@@ -426,7 +422,7 @@ msgid "Add to Project"
 msgstr "添加到项目"
 
 #: app/views/directives/edit-environment-variables.html:23
-#: app/views/edit/build-config.html:437
+#: app/views/edit/build-config.html:435
 #: app/views/edit/deployment-config.html:362
 #: app/views/edit/deployment-config.html:74
 msgid "Add Value from Config Map or Secret"
@@ -450,7 +446,7 @@ msgstr "路由器“{{ingress.routerName}}”的许可状态未知"
 msgid "advanced image options."
 msgstr "高级镜像选项。"
 
-#: app/views/create/fromimage.html:397 app/views/edit/build-config.html:43
+#: app/views/create/fromimage.html:395 app/views/edit/build-config.html:43
 msgid "advanced options"
 msgstr "高级选项"
 
@@ -535,7 +531,7 @@ msgstr "路由流量的备用服务。"
 msgid "Alternate Services"
 msgstr "替代服务"
 
-#: app/views/edit/build-config.html:364
+#: app/views/edit/build-config.html:362
 msgid ""
 "Always pull the builder image from the docker registry, even if it is "
 "present locally"
@@ -709,7 +705,7 @@ msgid "an out-of-date link"
 msgstr "一个过时的链接"
 
 #: app/views/_image-names.html:7 app/views/browse/service.html:94
-#: app/views/command-line.html:54 app/views/directives/deploy-image.html:108
+#: app/views/command-line.html:54 app/views/directives/deploy-image.html:107
 #: app/views/images.html:66 app/views/overview/_networking.html:17
 #: app/views/overview/_service-instance-row.html:55 app/views/services.html:62
 #: app/views/services.html:69
@@ -724,7 +720,7 @@ msgstr "以及任何正在运行的pod。"
 msgid "and its data will no longer be available to your applications."
 msgstr "并且您的应用程序将无法再使用其数据。"
 
-#: app/views/edit/jenkinsfile-examples.html:55 app/views/overview.html:278
+#: app/views/edit/jenkinsfile-examples.html:53 app/views/overview.html:278
 #: app/views/pipelines.html:33
 msgid "and the"
 msgstr "和"
@@ -771,7 +767,7 @@ msgstr "你确定要扩缩容"
 msgid "Args:"
 msgstr ""
 
-#: app/views/edit/build-config.html:596
+#: app/views/edit/build-config.html:594
 msgid "Arguments"
 msgstr "参数"
 
@@ -795,11 +791,11 @@ msgstr "作者是{{build.spec.revision.git.author.name}}"
 msgid "Autodeploy when"
 msgstr "自动部署当"
 
-#: app/views/create/fromimage.html:201 app/views/edit/build-config.html:472
+#: app/views/create/fromimage.html:201 app/views/edit/build-config.html:470
 msgid "Automatically build a new image when the builder image changes"
 msgstr "镜像构建器更改时自动生成新镜像"
 
-#: app/views/edit/build-config.html:476
+#: app/views/edit/build-config.html:474
 msgid ""
 "Automatically building a new image when the builder image changes allows "
 "your code to always run on the latest updates."
@@ -900,7 +896,7 @@ msgstr "基本CLI操作"
 msgid "Binary Input as File:"
 msgstr "二进制输入为文件："
 
-#: app/views/modals/about-compute-units-modal.html:39
+#: app/views/modals/about-compute-units-modal.html:38
 msgid "Binary Units"
 msgstr "二进制单位"
 
@@ -971,11 +967,11 @@ msgstr "build configuration {{name}}已被删除."
 msgid "Build configuration {{name}} has been deleted."
 msgstr "Build configuration {{name}}已被删除."
 
-#: app/views/edit/build-config.html:299
+#: app/views/edit/build-config.html:297
 msgid "Build From"
 msgstr ""
 
-#: app/views/edit/build-config.html:549
+#: app/views/edit/build-config.html:547
 msgid ""
 "Build hooks allow you to run commands at the end of the build to verify the "
 "image."
@@ -986,7 +982,7 @@ msgstr "Build hooks 允许您在构建结束时运行命令以验证镜像。"
 msgid "Build Secret"
 msgstr ""
 
-#: app/views/edit/build-config.html:492
+#: app/views/edit/build-config.html:490
 msgid "Build Secrets"
 msgstr ""
 
@@ -1006,7 +1002,7 @@ msgstr ""
 #: app/views/browse/_build-details.html:63
 #: app/views/browse/build-config.html:300
 msgid "Builder Image:"
-msgstr "Builder 镜像:"
+msgstr "Builder镜像:"
 
 #: app/scripts/directives/nav.js:38 app/views/builds.html:6
 #: app/views/monitoring.html:402 app/views/overview/_builds.html:2
@@ -1018,20 +1014,20 @@ msgstr ""
 msgid "Builds source code"
 msgstr "Builds源码"
 
-#: app/views/edit/build-config.html:528
+#: app/views/edit/build-config.html:526
 msgid ""
 "Builds triggered from this Build Configuration will run all at the same "
 "time. The order in which they will finish is not guaranteed."
 msgstr ""
 "从Build Configuration触发的Builds将同时运行。 他们将完成的顺序无法保证。"
 
-#: app/views/edit/build-config.html:527
+#: app/views/edit/build-config.html:525
 msgid ""
 "Builds triggered from this Build Configuration will run one at the time, in "
 "the order they have been triggered."
 msgstr "从Build Configuration触发的Builds将按照它们被触发的顺序运行一个。"
 
-#: app/views/edit/build-config.html:529
+#: app/views/edit/build-config.html:527
 msgid ""
 "Builds triggered from this Build Configuration will run one at the time. "
 "When a currently running build completes, the next build that will run is "
@@ -1040,7 +1036,7 @@ msgstr ""
 "从此Build Configuration触发的Builds将在当时运行一个。 当前正在运行的构建完成"
 "时，将运行的下一个构建是创建的最新构建。 其他排队的构建将被取消。"
 
-#: app/views/edit/build-config.html:530
+#: app/views/edit/build-config.html:528
 msgid "Builds triggered from this Build Configuration will run using the"
 msgstr "从此Build Configuration触发的Builds将使用"
 
@@ -1052,7 +1048,7 @@ msgstr "Builds将创建一个镜像从"
 msgid "but none are loaded on this project."
 msgstr "但是这个项目都没有加载。"
 
-#: app/views/directives/osc-routing.html:328
+#: app/views/directives/osc-routing.html:326
 msgid "CA Certificate"
 msgstr "CA证书"
 
@@ -1104,25 +1100,25 @@ msgstr "不能否定。"
 #: app/scripts/directives/deployImage.js:348
 #: app/scripts/directives/fromFile.js:65
 #: app/scripts/directives/processTemplate.js:166
-#: app/views/add-config-volume.html:196 app/views/attach-pvc.html:219
-#: app/views/create-config-map.html:22 app/views/create-from-url.html:44
+#: app/views/add-config-volume.html:193 app/views/attach-pvc.html:217
+#: app/views/create-config-map.html:21 app/views/create-from-url.html:44
 #: app/views/create-from-url.html:79
 #: app/views/create-persistent-volume-claim.html:22
-#: app/views/create-route.html:33 app/views/create/fromimage.html:405
+#: app/views/create-route.html:33 app/views/create/fromimage.html:403
 #: app/views/directives/add-config-to-application.html:143
 #: app/views/directives/create-secret.html:366
-#: app/views/directives/deploy-image.html:194
-#: app/views/directives/from-file.html:20
+#: app/views/directives/deploy-image.html:190
+#: app/views/directives/from-file.html:19
 #: app/views/directives/process-template.html:15
 #: app/views/directives/replicas.html:37 app/views/edit/autoscaler.html:69
-#: app/views/edit/build-config.html:619 app/views/edit/config-map.html:34
+#: app/views/edit/build-config.html:617 app/views/edit/config-map.html:33
 #: app/views/edit/deployment-config.html:375
-#: app/views/edit/health-checks.html:68 app/views/edit/project.html:35
+#: app/views/edit/health-checks.html:65 app/views/edit/project.html:35
 #: app/views/edit/route.html:26 app/views/edit/yaml.html:36
 #: app/views/modals/confirm-replace.html:26
 #: app/views/modals/confirm-save-log.html:20
 #: app/views/modals/confirmScale.html:16
-#: app/views/modals/delete-resource.html:95
+#: app/views/modals/delete-resource.html:93
 #: app/views/modals/edit-pvc-resource.html:104
 #: app/views/modals/process-or-save-template.html:39
 #: app/views/modals/set-home-page-modal.html:47
@@ -1201,7 +1197,7 @@ msgstr "未找到目录类别{{category}} / {{subcategory}}。"
 msgid "Catalog Home (Default)"
 msgstr "目录主页（默认）"
 
-#: app/views/directives/osc-routing.html:306
+#: app/views/directives/osc-routing.html:304
 msgid "Certificate"
 msgstr "证书"
 
@@ -1209,7 +1205,7 @@ msgstr "证书"
 msgid "Certificate:"
 msgstr "证书："
 
-#: app/views/directives/osc-routing.html:287
+#: app/views/directives/osc-routing.html:286
 msgid "Certificates"
 msgstr "证书"
 
@@ -1234,7 +1230,7 @@ msgstr "检查事件"
 msgid "Check Server Connection"
 msgstr "检查服务器连接"
 
-#: app/views/edit/jenkinsfile-examples.html:23
+#: app/views/edit/jenkinsfile-examples.html:21
 msgid "Checkout source code and run shell commands on a node labelled 'maven':"
 msgstr "在标记为“maven”的节点上签出源代码并运行shell命令："
 
@@ -1256,7 +1252,7 @@ msgstr "从Web框架，数据库和其他组件中进行选择，以向项目添
 msgid "Claim name:"
 msgstr "Claim 名称："
 
-#: app/views/directives/_edit-command.html:106
+#: app/views/directives/_edit-command.html:105
 msgid "Clear"
 msgstr "清除"
 
@@ -1267,7 +1263,7 @@ msgstr "清除"
 #: app/views/directives/events.html:67 app/views/images.html:35
 #: app/views/other-resources.html:38 app/views/overview.html:115
 #: app/views/overview.html:294 app/views/pods.html:35
-#: app/views/projects.html:95 app/views/secrets.html:41
+#: app/views/projects.html:94 app/views/secrets.html:41
 #: app/views/service-instances.html:35 app/views/services.html:35
 #: app/views/storage.html:46
 msgid "Clear All Filters"
@@ -1300,8 +1296,8 @@ msgstr "CLI参考"
 #: app/scripts/directives/processTemplateDialog.js:299
 #: app/scripts/directives/unbindService.js:80
 #: app/views/directives/edit-environment-from.html:185
-#: app/views/modals/about-compute-units-modal.html:60
-#: app/views/modals/debug-terminal.html:61
+#: app/views/modals/about-compute-units-modal.html:59
+#: app/views/modals/debug-terminal.html:60
 #: app/views/modals/jenkinsfile-examples-modal.html:12
 msgid "Close"
 msgstr "关闭"
@@ -1335,7 +1331,7 @@ msgstr "折叠为单行输入"
 
 #: app/views/directives/_edit-probe.html:48
 #: app/views/directives/edit-lifecycle-hook.html:50
-#: app/views/edit/build-config.html:586
+#: app/views/edit/build-config.html:584
 #: app/views/edit/deployment-config.html:63
 msgid "Command"
 msgstr "命令"
@@ -1344,7 +1340,7 @@ msgstr "命令"
 msgid "command line tools"
 msgstr "命令行工具"
 
-#: app/scripts/extensions/nav/helpDropdown.js:32 app/views/about.html:40
+#: app/scripts/extensions/nav/helpDropdown.js:32 app/views/about.html:37
 #: app/views/command-line.html:7
 msgid "Command Line Tools"
 msgstr "命令行工具"
@@ -1378,12 +1374,10 @@ msgstr "配置变更："
 #: app/views/edit/config-map.html:18
 msgid ""
 "Config map {{configMap.metadata.name}} has changed since you started editing "
-"it.\n"
-"                      You'll need to copy any changes you've made and edit "
-"the config map again."
+"it.You'll need to copy any changes you've made and edit the config map again."
 msgstr ""
-"自您开始编辑后，Config map{{configMap.metadata.name}}已更改。\n"
-"                       您需要复制您所做的任何更改并再次编辑config map。"
+"自您开始编辑后，Config map{{configMap.metadata.name}}已更改。您需要复制您所做"
+"的任何更改并再次编辑config map。"
 
 #: app/views/directives/edit-environment-from.html:34
 msgid "config map {{entry.configMapRef.name}}."
@@ -1397,7 +1391,7 @@ msgstr "Config map{{name}}创建成功."
 msgid "Config map {{name}} successfully updated."
 msgstr "Config map{{name}}更新成功。"
 
-#: app/views/edit/config-map.html:24
+#: app/views/edit/config-map.html:23
 msgid ""
 "Config map {configMap.metadata.name}} has been deleted since you started "
 "editing it."
@@ -1416,14 +1410,7 @@ msgstr ""
 msgid "Config Maps"
 msgstr ""
 
-#: app/views/create-config-map.html:9
-msgid ""
-"Config maps hold key-value pairs that can be used in pods to read "
-"application\n"
-"              configuration."
-msgstr "Config maps 包含可在pod中用于读取应用配置的键值对。"
-
-#: app/views/edit/config-map.html:9
+#: app/views/create-config-map.html:9 app/views/edit/config-map.html:9
 msgid ""
 "Config maps hold key-value pairs that can be used in pods to read "
 "application configuration."
@@ -1524,14 +1511,14 @@ msgstr "容器名称"
 msgid "Container Restarts"
 msgstr "容器重启"
 
-#: app/views/browse/pod.html:150 app/views/browse/pod.html:91
+#: app/views/browse/pod.html:149 app/views/browse/pod.html:91
 #: app/views/directives/deployment-metrics.html:7
 #: app/views/directives/pod-metrics.html:8
 msgid "Container:"
 msgstr "容器："
 
-#: app/views/_pod-template.html:36 app/views/add-config-volume.html:173
-#: app/views/add-config-volume.html:181 app/views/attach-pvc.html:199
+#: app/views/_pod-template.html:36 app/views/add-config-volume.html:170
+#: app/views/add-config-volume.html:178 app/views/attach-pvc.html:197
 #: app/views/directives/add-config-to-application.html:131
 #: app/views/overview/_list-row-expanded.html:122
 #: app/views/overview/_list-row-expanded.html:13
@@ -1610,7 +1597,7 @@ msgstr "无法调试容器"
 msgid "Could not delete pod"
 msgstr "无法删除pod"
 
-#: app/views/directives/deploy-image.html:212
+#: app/views/directives/deploy-image.html:208
 msgid "Could not find any images for"
 msgstr "未找到任何镜像"
 
@@ -1634,7 +1621,7 @@ msgstr "无法加载config maps"
 msgid "Could not load config maps."
 msgstr "无法加载config maps."
 
-#: app/views/directives/deploy-image.html:202
+#: app/views/directives/deploy-image.html:198
 msgid "Could not load image metadata."
 msgstr "无法加载镜像元数据."
 
@@ -1674,7 +1661,7 @@ msgstr "无法启动容器{{container.name}}。"
 msgid "CPU"
 msgstr ""
 
-#: app/views/modals/about-compute-units-modal.html:22
+#: app/views/modals/about-compute-units-modal.html:21
 msgid ""
 "CPU is often measured in units called 'millicores'. Each millicore is "
 "equivalent to"
@@ -1683,28 +1670,25 @@ msgstr "CPU通常以称为“millicores”的单位来衡量。 每个millicore�
 #: app/views/create/fromimage.html:317
 msgid ""
 "CPU metrics might not be available. In order to use horizontal pod "
-"autoscalers,\n"
-"                                your cluster administrator must have "
-"properly configured cluster metrics."
+"autoscalers,your cluster administrator must have properly configured cluster "
+"metrics."
 msgstr ""
-"CPU指标可能不可用。 为了使用horizontal pod autoscalers，您的群集管理员必须具"
-"有正确配置的群集指标"
 
 #: app/views/directives/hpa.html:29
 msgid "CPU Request"
 msgstr "CPU请求"
 
-#: app/views/directives/osc-autoscaling.html:103
+#: app/views/directives/osc-autoscaling.html:102
 msgid "CPU Request Target"
 msgstr "CPU请求目标"
 
 #: app/scripts/directives/fromFileDialog.js:108
 #: app/scripts/directives/processTemplateDialog.js:285
-#: app/views/create-config-map.html:17
+#: app/views/create-config-map.html:16
 #: app/views/create-persistent-volume-claim.html:17
 #: app/views/create-route.html:28 app/views/directives/create-secret.html:362
-#: app/views/directives/deploy-image.html:189
-#: app/views/directives/from-file.html:13
+#: app/views/directives/deploy-image.html:185
+#: app/views/directives/from-file.html:12
 #: app/views/directives/process-template.html:14
 #: app/views/modals/create-secret.html:7
 msgid "Create"
@@ -1714,7 +1698,7 @@ msgstr "创建"
 msgid "Create a New Project"
 msgstr "创建一个新项目"
 
-#: app/views/projects.html:176
+#: app/views/projects.html:173
 msgid "Create a project for your application."
 msgstr "为您的应用程序创建一个项目。"
 
@@ -1728,7 +1712,7 @@ msgstr "通过指定最佳匹配的大小和权限，创建对管理员定义的
 msgid "Create a route to the application"
 msgstr "创建到应用程序的路由"
 
-#: app/views/directives/deploy-image.html:205
+#: app/views/directives/deploy-image.html:201
 #: app/views/directives/deploy-image.html:63
 #: app/views/directives/deploy-image.html:64
 msgid "create an image pull secret"
@@ -1765,12 +1749,11 @@ msgstr "创建新的Secret"
 #: app/views/directives/from-file.html:3
 msgid ""
 "Create or replace resources from their YAML or JSON definitions. If adding a "
-"template, you'll have\n"
-"    the option to process the template."
+"template, you'll have the option to process the template."
 msgstr ""
 "从YAML或JSON定义创建或替换资源。 如果添加模板，您将拥有处理模板的选项。"
 
-#: app/views/create-project.html:5 app/views/projects.html:181
+#: app/views/create-project.html:5 app/views/projects.html:178
 #: app/views/projects.html:2 app/views/projects.html:25
 msgid "Create Project"
 msgstr "创建项目"
@@ -1821,7 +1804,7 @@ msgstr "创建模板中定义的对象。 您将有机会填写模板参数。"
 #: app/views/monitoring.html:256 app/views/monitoring.html:359
 #: app/views/monitoring.html:436 app/views/monitoring.html:90
 #: app/views/overview/_builds.html:37 app/views/pipelines.html:61
-#: app/views/projects.html:116
+#: app/views/projects.html:115
 msgid "created"
 msgstr "创建于"
 
@@ -1885,7 +1868,7 @@ msgstr "凭证存储"
 msgid "Current Usage:"
 msgstr "当前使用率："
 
-#: app/views/directives/osc-routing.html:298
+#: app/views/directives/osc-routing.html:296
 msgid "Custom certificates cannot be used with passthrough termination."
 msgstr "自定义证书不能与passthrough termination一起使用。"
 
@@ -1897,7 +1880,7 @@ msgstr "调试容器{{container.name}}"
 msgid "Debug in Terminal"
 msgstr "在终端中调试"
 
-#: app/views/modals/about-compute-units-modal.html:48
+#: app/views/modals/about-compute-units-modal.html:47
 msgid "Decimal Units"
 msgstr "十进制单位"
 
@@ -1926,8 +1909,8 @@ msgstr "删除"
 #: app/scripts/directives/unbindService.js:75
 #: app/views/browse/service-instance.html:41
 #: app/views/directives/delete-button.html:10
-#: app/views/modals/delete-resource.html:82
-#: app/views/modals/delete-resource.html:96
+#: app/views/modals/delete-resource.html:80
+#: app/views/modals/delete-resource.html:94
 #: app/views/overview/_service-instance-row.html:87
 msgid "Delete"
 msgstr "删除"
@@ -2050,7 +2033,7 @@ msgstr "期望的存储容量。"
 msgid "Destination CA Cert:"
 msgstr ""
 
-#: app/views/directives/osc-routing.html:339
+#: app/views/directives/osc-routing.html:337
 msgid "Destination CA Certificate"
 msgstr ""
 
@@ -2097,8 +2080,8 @@ msgstr "您想替换现有资源吗？"
 msgid "Do you want to replace with the new content?"
 msgstr "您想要替换新内容吗？"
 
-#: app/views/edit/build-config.html:182 app/views/edit/build-config.html:316
-#: app/views/edit/build-config.html:386
+#: app/views/edit/build-config.html:182 app/views/edit/build-config.html:314
+#: app/views/edit/build-config.html:384
 msgid "Docker Image Repository"
 msgstr ""
 
@@ -2118,11 +2101,11 @@ msgstr "Dockerfile 路径"
 msgid "Dockerfile:"
 msgstr ""
 
-#: app/views/projects.html:184
+#: app/views/projects.html:181
 msgid "documentation"
 msgstr "文档"
 
-#: app/scripts/extensions/nav/helpDropdown.js:13 app/views/about.html:31
+#: app/views/about.html:31
 msgid "Documentation"
 msgstr "文档"
 
@@ -2178,9 +2161,8 @@ msgstr "持续时间："
 #: app/views/modals/about-compute-units-modal.html:14
 msgid ""
 "Each container running on a node uses compute resources like CPU and memory. "
-"You can specify\n"
-"      how much CPU and memory a container needs to improve scheduling and "
-"performance."
+"You can specify how much CPU and memory a container needs to improve "
+"scheduling and performance."
 msgstr ""
 "在节点上运行的每个容器都使用CPU和内存等计算资源。 你可以指定容器需要多少CPU和"
 "内存来改善调度和性能。"
@@ -2241,7 +2223,7 @@ msgstr "编辑参数"
 msgid "Edit Pipeline"
 msgstr "编辑Pipeline"
 
-#: app/views/projects.html:136 app/views/projects.html:155
+#: app/views/projects.html:135 app/views/projects.html:154
 msgid "Edit Project"
 msgstr "编辑项目"
 
@@ -2272,11 +2254,11 @@ msgstr "编辑资源限制"
 msgid "Edit Route {{routeName}}"
 msgstr "编辑{{routeName}}路由"
 
-#: app/views/directives/osc-routing.html:226
+#: app/views/directives/osc-routing.html:225
 msgid "edit weights as integers"
 msgstr "将权重编辑为整数"
 
-#: app/views/directives/osc-routing.html:180
+#: app/views/directives/osc-routing.html:179
 msgid "Edit Weights Using Percentage Slider"
 msgstr "使用百分比滑块编辑权重"
 
@@ -2303,7 +2285,7 @@ msgid ""
 "route with the \"Edit YAML\" action instead."
 msgstr "不支持编辑非服务目标路由，你可以用“编辑YAML”来替代."
 
-#: app/views/directives/_edit-command.html:103
+#: app/views/directives/_edit-command.html:102
 msgid "Editor"
 msgstr "编辑"
 
@@ -2355,8 +2337,7 @@ msgstr "输入将附加到脚本的参数。"
 #: app/views/directives/_edit-command.html:96
 msgid ""
 "Enter the command to run inside the container. The command is considered "
-"successful if its\n"
-"        exit code is 0. Drag and drop to reorder arguments."
+"successful if its exit code is 0. Drag and drop to reorder arguments."
 msgstr ""
 "输入要在容器内运行的命令。 如果命令被认为是成功，退出代码为0.拖放以重新排序参"
 "数。"
@@ -2379,13 +2360,13 @@ msgstr "环境变量"
 #: app/views/browse/build-config.html:456 app/views/browse/build.html:96
 #: app/views/create/fromimage.html:215 app/views/create/fromimage.html:256
 #: app/views/directives/edit-lifecycle-hook.html:55
-#: app/views/edit/build-config.html:421
+#: app/views/edit/build-config.html:419
 #: app/views/edit/deployment-config.html:349
 #: app/views/edit/deployment-config.html:67
 msgid "Environment Variables"
 msgstr "环境变量"
 
-#: app/views/edit/build-config.html:423
+#: app/views/edit/build-config.html:421
 msgid ""
 "Environment variables are used to configure and pass information to running "
 "containers.  These environment variables will be available during your build "
@@ -2447,7 +2428,7 @@ msgstr "错误"
 #: app/views/browse/deployment-config.html:344
 #: app/views/browse/deployment.html:286
 #: app/views/browse/persistent-volume-claim.html:86
-#: app/views/browse/pod.html:216 app/views/browse/replica-set.html:96
+#: app/views/browse/pod.html:215 app/views/browse/replica-set.html:96
 #: app/views/browse/service-instance.html:154 app/views/browse/service.html:104
 #: app/views/browse/stateful-set.html:162
 #: app/views/directives/events-badge.html:1
@@ -2587,7 +2568,7 @@ msgstr "跟随"
 msgid "For other information about the command line tools, check the"
 msgstr "有关命令行工具的其他信息，请查看"
 
-#: app/views/create/fromimage.html:398
+#: app/views/create/fromimage.html:396
 msgid "for source, routes, builds, and deployments."
 msgstr "用于资源，路由，构建和部署。"
 
@@ -2649,7 +2630,7 @@ msgstr ""
 msgid "Go to End"
 msgstr "前往底部"
 
-#: app/views/projects.html:86
+#: app/views/projects.html:85
 msgid "Go to Project"
 msgstr "前往项目"
 
@@ -2700,21 +2681,18 @@ msgstr "健康检查："
 msgid "Help"
 msgstr "帮助"
 
-#: app/views/about.html:31
+#: app/views/about.html:32
 msgid ""
-"helps you learn about\n"
-"              OpenShift and start exploring its features. From getting "
-"started with creating your first application\n"
-"              to trying out more advanced build and deployment techniques, "
-"it provides guidance on setting up and\n"
-"              managing your OpenShift environment as an application "
-"developer."
+"helps you learn about OpenShift and start exploring its features. From "
+"getting started with creating your first application to trying out more "
+"advanced build and deployment techniques, it provides guidance on setting up "
+"and managing your OpenShift environment as an application developer."
 msgstr ""
 "帮助您了解OpenShift并开始探索其功能。 从开始创建您的第一个应用程序为了尝试更"
 "高级的构建和部署技术，它提供了有关设置和安装的指导作为应用程序开发人员管理您"
 "的OpenShift环境。"
 
-#: app/views/_container-statuses.html:20 app/views/create/fromimage.html:396
+#: app/views/_container-statuses.html:20 app/views/create/fromimage.html:394
 msgid "Hide"
 msgstr "隐藏"
 
@@ -2726,7 +2704,7 @@ msgstr "隐藏镜像高级选项"
 msgid "Hide Advanced Strategy Options"
 msgstr "隐藏策略高级选项"
 
-#: app/views/edit/build-config.html:281
+#: app/views/edit/build-config.html:279
 msgid "Hide examples"
 msgstr "隐藏例子"
 
@@ -2744,7 +2722,7 @@ msgstr "隐藏旧资源"
 msgid "History"
 msgstr "历史"
 
-#: app/views/edit/build-config.html:556
+#: app/views/edit/build-config.html:554
 msgid "Hook Types"
 msgstr "Hook类型"
 
@@ -2806,7 +2784,7 @@ msgstr "无法删除HPA {{name}}."
 msgid "Identifies the resources created for this application."
 msgstr "标识为此应用创建的资源。"
 
-#: app/views/directives/deploy-image.html:141
+#: app/views/directives/deploy-image.html:139
 msgid "Identifies the resources created for this image."
 msgstr "标识为此image创建的资源。"
 
@@ -2876,18 +2854,17 @@ msgstr "忽略hook故障并继续部署。"
 msgid "Image"
 msgstr "镜像"
 
-#: app/views/directives/deploy-image.html:87
+#: app/views/directives/deploy-image.html:88
 msgid ""
-"Image {{import.name}} runs as the\n"
-"            root user which might not be permitted by your cluster\n"
-"            administrator."
-msgstr "Image{{import.name}}1️⃣root运行，群集管理员可能不允许以root运行。"
+"Image {{import.name}} runs as the root user which might not be permitted by "
+"your cluster administrator."
+msgstr "Image{{import.name}}以root运行，群集管理员可能不允许以root运行。"
 
-#: app/views/edit/build-config.html:468
+#: app/views/edit/build-config.html:466
 msgid "Image change"
 msgstr "镜像变化"
 
-#: app/views/edit/build-config.html:294
+#: app/views/edit/build-config.html:292
 msgid "Image Configuration"
 msgstr "镜像配置"
 
@@ -2921,11 +2898,11 @@ msgstr "镜像资源来自"
 msgid "Image Sources:"
 msgstr "镜像资源"
 
-#: app/views/directives/deploy-image.html:102
+#: app/views/directives/deploy-image.html:101
 msgid "Image Stream"
 msgstr ""
 
-#: app/views/edit/build-config.html:167 app/views/edit/build-config.html:330
+#: app/views/edit/build-config.html:167 app/views/edit/build-config.html:328
 msgid "Image Stream Image"
 msgstr ""
 
@@ -2994,7 +2971,7 @@ msgstr "初始延迟"
 msgid "Input Required"
 msgstr "必须输入"
 
-#: app/views/directives/osc-routing.html:259
+#: app/views/directives/osc-routing.html:258
 msgid "Insecure Traffic"
 msgstr "不安全Traffic"
 
@@ -3006,7 +2983,7 @@ msgstr "不安全Traffic："
 msgid "Instance Name"
 msgstr "实例名"
 
-#: app/views/add-config-volume.html:177 app/views/attach-pvc.html:195
+#: app/views/add-config-volume.html:174 app/views/attach-pvc.html:193
 #: app/views/directives/add-config-to-application.html:128
 msgid "instead."
 msgstr "替换。"
@@ -3040,14 +3017,11 @@ msgstr "是"
 msgid "is not valid JSON."
 msgstr "不是合法的JSON."
 
-#: app/views/about.html:10
+#: app/views/about.html:11
 msgid ""
-"is Red Hat's container application platform\n"
-"                  that allows developers to quickly develop, host, and scale "
-"applications in a cloud environment."
+"is Red Hat's container application platform that allows developers to "
+"quickly develop, host, and scale applications in a cloud environment."
 msgstr ""
-"是Red Hat的容器应用程序平台，这允许开发人员在云环境中快速开发，托管和扩展应用"
-"程序。"
 
 #: app/views/_templateopt.html:73 app/views/_templateopt.html:91
 msgid "is required."
@@ -3079,7 +3053,7 @@ msgstr "不删除secret."
 msgid "Jenkins Pipeline Configuration"
 msgstr "Jenkins Pipeline配置"
 
-#: app/views/edit/build-config.html:266
+#: app/views/edit/build-config.html:264
 msgid "Jenkinsfile"
 msgstr ""
 
@@ -3092,7 +3066,7 @@ msgstr "Jenkinsfile 例子"
 msgid "Jenkinsfile Path:"
 msgstr "Jenkinsfile路径"
 
-#: app/views/edit/build-config.html:249
+#: app/views/edit/build-config.html:248
 msgid "Jenkinsfile Source Path"
 msgstr "Jenkinsfile资源路径"
 
@@ -3108,7 +3082,7 @@ msgstr ""
 msgid "Keep some existing {{name}} strategy parameters?"
 msgstr "保留一些现有的{{name}}策略参数？"
 
-#: app/views/add-config-volume.html:124
+#: app/views/add-config-volume.html:121
 msgid "Key"
 msgstr ""
 
@@ -3124,7 +3098,7 @@ msgstr ""
 msgid "Key:"
 msgstr ""
 
-#: app/views/add-config-volume.html:115
+#: app/views/add-config-volume.html:114
 msgid "Keys and Paths"
 msgstr "Keys 和 Paths"
 
@@ -3210,7 +3184,7 @@ msgstr "在build configuration创建好时启动第一个build"
 msgid "Layers"
 msgstr ""
 
-#: app/views/browse/service.html:94 app/views/edit/jenkinsfile-examples.html:53
+#: app/views/browse/service.html:94 app/views/edit/jenkinsfile-examples.html:51
 #: app/views/overview.html:276 app/views/pipelines.html:31
 msgid "Learn more about"
 msgstr "了解更多关于"
@@ -3289,7 +3263,7 @@ msgstr "列表按"
 msgid "List of named volumes to copy to the hook pod."
 msgstr "命名为volumes的列表复制到 hook pod。"
 
-#: app/views/edit/health-checks.html:38
+#: app/views/edit/health-checks.html:36
 msgid "Liveness Probe"
 msgstr ""
 
@@ -3297,7 +3271,7 @@ msgstr ""
 msgid "Liveness Probe:"
 msgstr ""
 
-#: app/views/directives/deploy-image.html:78
+#: app/views/directives/deploy-image.html:79
 msgid "Loading image metadata for"
 msgstr "加载镜像元数据为"
 
@@ -3433,19 +3407,19 @@ msgstr "最大"
 msgid "Max Limit/Request"
 msgstr "最大限制/请求"
 
-#: app/views/directives/osc-autoscaling.html:70
+#: app/views/directives/osc-autoscaling.html:69
 msgid "Max Pods"
 msgstr "最大Pods"
 
-#: app/views/directives/osc-autoscaling.html:97
+#: app/views/directives/osc-autoscaling.html:96
 msgid "Max pods is a required field."
 msgstr "最大pods是必填字段。"
 
-#: app/views/directives/osc-autoscaling.html:86
+#: app/views/directives/osc-autoscaling.html:85
 msgid "Max pods must be a number."
 msgstr "最大pods必须是一个数字。"
 
-#: app/views/directives/osc-autoscaling.html:93
+#: app/views/directives/osc-autoscaling.html:92
 msgid "Max pods must be greater than or equal to"
 msgstr "最大 pods必须大于或等于"
 
@@ -3488,11 +3462,11 @@ msgstr "成员"
 msgid "Memory"
 msgstr "内存"
 
-#: app/views/modals/about-compute-units-modal.html:30
+#: app/views/modals/about-compute-units-modal.html:29
 msgid "Memory and Storage"
 msgstr "内存和存储"
 
-#: app/views/modals/about-compute-units-modal.html:33
+#: app/views/modals/about-compute-units-modal.html:32
 msgid "Memory and storage are measured in binary units like"
 msgstr "内存和存储以二进制单位测量"
 
@@ -3555,20 +3529,20 @@ msgstr "最小"
 msgid "Min Pods"
 msgstr "最小Pods"
 
-#: app/views/directives/osc-autoscaling.html:58
+#: app/views/directives/osc-autoscaling.html:57
 msgid "Min pods must be a number."
 msgstr "最小pods必须是一个数字。"
 
-#: app/views/directives/osc-autoscaling.html:61
-#: app/views/directives/osc-autoscaling.html:89
+#: app/views/directives/osc-autoscaling.html:60
+#: app/views/directives/osc-autoscaling.html:88
 msgid "Min pods must be a whole number."
 msgstr "最小pods必须是一个整数。"
 
-#: app/views/directives/osc-autoscaling.html:64
+#: app/views/directives/osc-autoscaling.html:63
 msgid "Min pods must be greater than or equal to 1."
 msgstr "最小pods必须大于或等于1。"
 
-#: app/views/directives/osc-autoscaling.html:94
+#: app/views/directives/osc-autoscaling.html:93
 msgid "min pods, which is"
 msgstr "最小pods，是"
 
@@ -3632,12 +3606,12 @@ msgid ""
 "key from the"
 msgstr "卷的挂载路径。 将在此目录中为每个键创建一个文件来自"
 
-#: app/views/add-config-volume.html:87 app/views/attach-pvc.html:97
+#: app/views/add-config-volume.html:86 app/views/attach-pvc.html:97
 #: app/views/directives/add-config-to-application.html:110
 msgid "Mount path must be a valid path to a directory starting with"
 msgstr "挂载路径必须是合法的目录路径，开头是"
 
-#: app/views/attach-pvc.html:184
+#: app/views/attach-pvc.html:182
 msgid "Mount the volume as read-only."
 msgstr "将卷挂载为只读。"
 
@@ -3660,7 +3634,7 @@ msgstr "必须是非负整数或百分比。"
 #: app/views/directives/_edit-probe.html:115
 #: app/views/directives/_edit-probe.html:83
 #: app/views/directives/osc-persistent-volume-claim.html:189
-#: app/views/directives/osc-routing-service.html:57
+#: app/views/directives/osc-routing-service.html:54
 #: app/views/edit/deployment-config.html:133
 #: app/views/edit/deployment-config.html:165
 #: app/views/edit/deployment-config.html:98
@@ -3673,7 +3647,7 @@ msgstr "必须是一个数字。"
 msgid "Must be a positive number."
 msgstr "必须是正数。"
 
-#: app/views/directives/osc-routing-service.html:62
+#: app/views/directives/osc-routing-service.html:59
 msgid "Must be a whole number greater than or equal to 0."
 msgstr "必须是大于或等于0的整数。"
 
@@ -3702,7 +3676,7 @@ msgstr "我的项目列表"
 #: app/views/builds.html:51 app/views/create/fromimage.html:22
 #: app/views/deployments.html:132 app/views/deployments.html:173
 #: app/views/deployments.html:201 app/views/deployments.html:51
-#: app/views/directives/deploy-image.html:125
+#: app/views/directives/deploy-image.html:123
 #: app/views/directives/edit-config-map-or-secret.html:5
 #: app/views/directives/events.html:44
 #: app/views/directives/osc-persistent-volume-claim.html:64
@@ -3714,7 +3688,7 @@ msgstr "我的项目列表"
 msgid "Name"
 msgstr "名称"
 
-#: app/views/directives/deploy-image.html:154
+#: app/views/directives/deploy-image.html:150
 msgid "Name can't have more than 24 characters."
 msgstr "名称不能超出24个字符。"
 
@@ -3725,18 +3699,14 @@ msgstr "名称不能超出24个字符。"
 msgid "Name is required."
 msgstr "名称是必须的。"
 
-#: app/views/directives/deploy-image.html:146
+#: app/views/directives/deploy-image.html:144
 msgid ""
-"Name must be an alphanumeric (a-z, 0-9) string with a maximum length\n"
-"              of 24 characters where the first character is a letter (a-z). "
-"The '-'\n"
-"              character is allowed anywhere except the first or last "
-"character."
+"Name must be an alphanumeric (a-z, 0-9) string with a maximum length of 24 "
+"characters where the first character is a letter (a-z). The '-' character is "
+"allowed anywhere except the first or last character."
 msgstr ""
-"名称必须是具有最大长度的字母数字（a-z，0-9）字符串24个字符，其中第一个字符是"
-"字母（a-z）。 除第一个或最后一个字符外，允许使用字符 - 。"
 
-#: app/views/directives/deploy-image.html:151
+#: app/views/directives/deploy-image.html:147
 msgid "Name must have at least 2 characters."
 msgstr "名称至少两个字符。"
 
@@ -3878,7 +3848,7 @@ msgstr "没有要显示的事件。"
 msgid "No events."
 msgstr "无事件"
 
-#: app/views/directives/deploy-image.html:209
+#: app/views/directives/deploy-image.html:205
 msgid "No image metadata found."
 msgstr "无镜像元数据。"
 
@@ -4006,7 +3976,7 @@ msgstr "没有为项目{{projectName}}添加任何服务。"
 msgid "No services."
 msgstr "无服务。"
 
-#: app/views/edit/build-config.html:289
+#: app/views/edit/build-config.html:287
 msgid "No source inputs have been defined for this build configuration."
 msgstr "没有为此build configuration定义任何source inputs。"
 
@@ -4114,11 +4084,10 @@ msgstr "通知"
 msgid "one of the images referenced by this deployment config changes."
 msgstr "此deployment config修改引用其中一个images。"
 
-#: app/views/projects.html:162
+#: app/views/projects.html:161
 msgid ""
-"Only the first {{limitListTo}} projects are displayed.\n"
-"                Filter by keyword or change sort options to see other\n"
-"                projects."
+"Only the first {{limitListTo}} projects are displayed.Filter by keyword or "
+"change sort options to see other projects."
 msgstr ""
 "仅显示第一个{{limitListTo}}项目。按关键字过滤或更改排序选项以查看其他项目。"
 
@@ -4126,7 +4095,7 @@ msgstr ""
 msgid "Only the previous"
 msgstr "只有前"
 
-#: app/views/browse/pod.html:137
+#: app/views/browse/pod.html:136
 msgid "Open Fullscreen Terminal"
 msgstr "打开全屏终端"
 
@@ -4138,7 +4107,7 @@ msgstr "打开 Metrics URL"
 msgid "Open socket on port {{probe.tcpSocket.port}}"
 msgstr "打开socket在端口 {{probe.tcpSocket.port}}"
 
-#: app/views/projects.html:175
+#: app/views/projects.html:172
 msgid "OpenShift helps you quickly develop, host, and scale applications."
 msgstr "OpenShift可帮助您快速开发，托管和扩展应用程序。"
 
@@ -4150,17 +4119,17 @@ msgstr "操作系统："
 msgid "Optional branch, tag, or commit."
 msgstr "可选的branch, tag, or commit."
 
-#: app/views/edit/build-config.html:259
+#: app/views/edit/build-config.html:258
 msgid ""
-"Optional path to the Jenkinsfile relative to the context dir.\n"
-"                    Defaults to the Jenkinsfile in context dir."
+"Optional path to the Jenkinsfile relative to the context dir.Defaults to the "
+"Jenkinsfile in context dir."
 msgstr ""
 "相对于context dir的Jenkinsfile可选路径。默认为context dir中的Jenkinsfile。"
 
 #: app/views/attach-pvc.html:121
 msgid ""
-"Optional path within the volume from which it will be mounted into the\n"
-"                    container. Defaults to the volume's root."
+"Optional path within the volume from which it will be mounted into the "
+"container. Defaults to the volume's root."
 msgstr "将挂载到容器的卷中的可选路径。 默认为卷的根目录。"
 
 #: app/views/create/fromimage.html:137 app/views/edit/build-config.html:89
@@ -4181,15 +4150,15 @@ msgstr "（可选）您可以指定用于环境变量的前缀。"
 msgid "or"
 msgstr "或"
 
-#: app/views/attach-pvc.html:127
+#: app/views/attach-pvc.html:126
 msgid "or contain"
 msgstr "或包含"
 
-#: app/views/modals/about-compute-units-modal.html:34
+#: app/views/modals/about-compute-units-modal.html:33
 msgid "or decimal units like"
 msgstr "或十进制单位类似"
 
-#: app/views/modals/debug-terminal.html:39
+#: app/views/modals/debug-terminal.html:38
 msgid "Original Command:"
 msgstr "原始命令："
 
@@ -4201,7 +4170,7 @@ msgstr "其他"
 msgid "Other"
 msgstr "其他"
 
-#: app/views/directives/deploy-image.html:112
+#: app/views/directives/deploy-image.html:111
 msgid "Other containers can access this service through the hostname"
 msgstr "其他容器可以通过主机名访问此服务"
 
@@ -4260,7 +4229,7 @@ msgstr "未发现页面:("
 msgid "Parameters"
 msgstr "参数"
 
-#: app/views/directives/osc-routing.html:280
+#: app/views/directives/osc-routing.html:279
 msgid "Passthrough routes can't use the insecure traffic policy 'Allow'."
 msgstr "Passthrough routes不能使用不安全的流量策略’允许’。"
 
@@ -4291,7 +4260,7 @@ msgstr ""
 msgid "Password or token is required."
 msgstr "密码或token是必需的。"
 
-#: app/views/add-config-volume.html:135
+#: app/views/add-config-volume.html:132
 #: app/views/directives/_edit-probe.html:23
 #: app/views/directives/osc-routing.html:87
 msgid "Path"
@@ -4301,15 +4270,15 @@ msgstr "路径"
 msgid "Path at which to mount the secret."
 msgstr "安装secret的路径。"
 
-#: app/views/attach-pvc.html:128
+#: app/views/attach-pvc.html:127
 msgid "path elements."
 msgstr "路径元素。"
 
-#: app/views/attach-pvc.html:127
+#: app/views/attach-pvc.html:126
 msgid "Path must be a relative path. It cannot start with"
 msgstr "路径必须是相对路径。不能开头是"
 
-#: app/views/add-config-volume.html:151
+#: app/views/add-config-volume.html:148
 msgid ""
 "Path must be a relative path. It cannot start with / or contain .. path "
 "elements."
@@ -4331,7 +4300,7 @@ msgstr "路径值无法使用。 无法为passthrough TLS设置路径。"
 msgid "Path:"
 msgstr "路径："
 
-#: app/views/add-config-volume.html:156
+#: app/views/add-config-volume.html:153
 msgid "Paths must be unique."
 msgstr "路径必须是唯一的。"
 
@@ -4362,7 +4331,7 @@ msgstr "暂停可让您在不触发rollouts的情况下进行更改。 您可以
 msgid "Pending"
 msgstr "加载中"
 
-#: app/views/directives/osc-routing.html:225
+#: app/views/directives/osc-routing.html:224
 msgid ""
 "Percentage of traffic sent to each service. Drag the slider to adjust the "
 "values or"
@@ -4445,21 +4414,21 @@ msgstr ""
 msgid "Pods"
 msgstr ""
 
-#: app/views/edit/build-config.html:530
+#: app/views/edit/build-config.html:528
 msgid "policy"
 msgstr "策略"
 
-#: app/views/directives/osc-routing.html:275
+#: app/views/directives/osc-routing.html:274
 msgid "Policy for traffic on insecure schemes like HTTP."
 msgstr "不安全方案的流量策略如HTTP。"
 
 #: app/views/directives/_edit-probe.html:37
 #: app/views/directives/_edit-probe.html:53
-#: app/views/directives/deploy-image.html:105
+#: app/views/directives/deploy-image.html:104
 msgid "Port"
 msgstr "端口"
 
-#: app/views/directives/deploy-image.html:106 app/views/services.html:48
+#: app/views/directives/deploy-image.html:105 app/views/services.html:48
 msgid "Ports"
 msgstr "端口"
 
@@ -4476,7 +4445,7 @@ msgid "Post Lifecycle Hook"
 msgstr ""
 
 #: app/views/browse/_build-details.html:137
-#: app/views/browse/build-config.html:378 app/views/edit/build-config.html:538
+#: app/views/browse/build-config.html:378 app/views/edit/build-config.html:536
 msgid "Post-Commit Hooks"
 msgstr ""
 
@@ -4499,7 +4468,7 @@ msgid ""
 "a number."
 msgstr "前缀可以包含数字，字母和下划线，但不能以数字开头。"
 
-#: app/views/directives/osc-routing.html:317
+#: app/views/directives/osc-routing.html:315
 msgid "Private Key"
 msgstr "私钥"
 
@@ -4524,7 +4493,7 @@ msgstr "进度截止日期："
 msgid "project"
 msgstr "项目"
 
-#: app/views/projects.html:68
+#: app/views/projects.html:67
 msgid "Project Name"
 msgstr "项目名称"
 
@@ -4532,7 +4501,7 @@ msgstr "项目名称"
 msgid "Project Quota"
 msgstr "项目配额"
 
-#: app/views/edit/jenkinsfile-examples.html:41
+#: app/views/edit/jenkinsfile-examples.html:39
 msgid "Prompt for manual input:"
 msgstr "提示手动输入："
 
@@ -4557,7 +4526,7 @@ msgstr "路由的公共主机名。"
 msgid "Push Secret:"
 msgstr "推送Secret:"
 
-#: app/views/edit/build-config.html:371
+#: app/views/edit/build-config.html:369
 msgid "Push To"
 msgstr "推送到"
 
@@ -4570,7 +4539,7 @@ msgstr "配额"
 msgid "Ratio"
 msgstr "比率"
 
-#: app/views/attach-pvc.html:182
+#: app/views/attach-pvc.html:180
 msgid "Read only"
 msgstr "只读"
 
@@ -4664,16 +4633,16 @@ msgstr "从服务组中删除{{service.metadata.name}}"
 msgid "Remove build secret"
 msgstr "删除build secret"
 
-#: app/views/add-config-volume.html:163
+#: app/views/add-config-volume.html:160
 #: app/views/directives/edit-config-map-or-secret.html:117
 msgid "Remove Item"
 msgstr "移除项"
 
-#: app/views/edit/health-checks.html:52
+#: app/views/edit/health-checks.html:49
 msgid "Remove Liveness Probe"
 msgstr "移除Liveness Probe"
 
-#: app/views/edit/health-checks.html:35
+#: app/views/edit/health-checks.html:33
 msgid "Remove Readiness Probe"
 msgstr "移除 Readiness Probe"
 
@@ -4681,7 +4650,7 @@ msgstr "移除 Readiness Probe"
 msgid "Remove role {{role.metadata.name}} from {{subject.name}}"
 msgstr "从{{subject.name}}中删除角色{{role.metadata.name}}"
 
-#: app/views/directives/osc-routing.html:173
+#: app/views/directives/osc-routing.html:172
 msgid "Remove Service"
 msgstr "移除Service"
 
@@ -4707,7 +4676,7 @@ msgid "Replica Sets"
 msgstr ""
 
 #: app/views/browse/deployment.html:102 app/views/browse/stateful-sets.html:49
-#: app/views/create/fromimage.html:326 app/views/deployments.html:134
+#: app/views/create/fromimage.html:325 app/views/deployments.html:134
 #: app/views/deployments.html:174 app/views/deployments.html:202
 msgid "Replicas"
 msgstr ""
@@ -4720,7 +4689,7 @@ msgstr "Replicas不能是负数。"
 msgid "Replicas must be a whole number."
 msgstr "Replicas必须是整数。"
 
-#: app/views/create/fromimage.html:341
+#: app/views/create/fromimage.html:340
 msgid "Replicas must be an integer value greater than or equal to 0."
 msgstr "副本必须是大于或等于0的整数值。"
 
@@ -4865,7 +4834,7 @@ msgstr "路由"
 msgid "Routes - External Traffic"
 msgstr "路由-外网流量"
 
-#: app/views/directives/osc-routing.html:237
+#: app/views/directives/osc-routing.html:236
 msgid ""
 "Routes can be secured using several TLS termination types for serving "
 "certificates."
@@ -4874,8 +4843,7 @@ msgstr "可以使用多种TLS终止类型来保护路由以提供证书。"
 #: app/views/directives/osc-routing.html:156
 msgid ""
 "Routes can direct traffic to multiple services for A/B testing. Each service "
-"has a weight\n"
-"            controlling how much traffic it gets."
+"has a weight controlling how much traffic it gets."
 msgstr ""
 "路由可以将流量引导到多个服务以进行A / B测试。 每项服务都有一个权重控制它获得"
 "的流量。"
@@ -4892,19 +4860,19 @@ msgstr "路由是一种使您的应用程序公开可见的方法。"
 msgid "Run a specific command in a new pod"
 msgstr "在新pod中运行特定命令"
 
-#: app/views/edit/jenkinsfile-examples.html:8
+#: app/views/edit/jenkinsfile-examples.html:6
 msgid "Run an OpenShift build and deployment:"
 msgstr "运行OpenShift构建和部署："
 
-#: app/views/edit/build-config.html:547
+#: app/views/edit/build-config.html:545
 msgid "Run build hooks after image is built"
 msgstr "构建镜像后运行构建hooks"
 
-#: app/views/edit/build-config.html:509
+#: app/views/edit/build-config.html:507
 msgid "Run Policy"
 msgstr "运行策略"
 
-#: app/views/edit/build-config.html:517
+#: app/views/edit/build-config.html:515
 msgid "Run policy type"
 msgstr "运行策略类型"
 
@@ -4936,9 +4904,9 @@ msgstr "运行在部署开始之前"
 #: app/views/directives/add-config-to-application.html:149
 #: app/views/directives/edit-environment-variables.html:52
 #: app/views/directives/logs/_log-viewer.html:17
-#: app/views/edit/autoscaler.html:67 app/views/edit/build-config.html:617
-#: app/views/edit/config-map.html:29 app/views/edit/deployment-config.html:372
-#: app/views/edit/health-checks.html:63 app/views/edit/project.html:30
+#: app/views/edit/autoscaler.html:67 app/views/edit/build-config.html:615
+#: app/views/edit/config-map.html:28 app/views/edit/deployment-config.html:372
+#: app/views/edit/health-checks.html:60 app/views/edit/project.html:30
 #: app/views/edit/route.html:21 app/views/edit/yaml.html:32
 #: app/views/modals/confirm-save-log.html:21
 #: app/views/modals/set-home-page-modal.html:48 app/views/set-limits.html:51
@@ -4992,7 +4960,7 @@ msgstr "扩容可能会受到影响。"
 msgid "Scopes:"
 msgstr "作用域："
 
-#: app/views/edit/build-config.html:569
+#: app/views/edit/build-config.html:567
 msgid "Script"
 msgstr "脚本"
 
@@ -5061,11 +5029,11 @@ msgid ""
 "image registry."
 msgstr "Secrets允许您对私有Git仓库或私有 image registry进行身份验证。"
 
-#: app/views/directives/osc-routing.html:235
+#: app/views/directives/osc-routing.html:234
 msgid "Secure route"
 msgstr "安全路由"
 
-#: app/views/directives/osc-routing.html:231
+#: app/views/directives/osc-routing.html:230
 msgid "Security"
 msgstr "安全"
 
@@ -5097,7 +5065,7 @@ msgstr "选择一个角色"
 msgid "Select a service account"
 msgstr "选择一个服务帐户"
 
-#: app/views/directives/deploy-image.html:77
+#: app/views/directives/deploy-image.html:78
 msgid "Select an image stream tag or enter an image name."
 msgstr "选择一个image stream tag或者输入镜像名."
 
@@ -5107,12 +5075,12 @@ msgstr "选择一个image stream tag或者输入镜像名."
 msgid "Select from Project"
 msgstr "从项目中选择"
 
-#: app/views/add-config-volume.html:176 app/views/attach-pvc.html:194
+#: app/views/add-config-volume.html:173 app/views/attach-pvc.html:192
 #: app/views/directives/add-config-to-application.html:127
 msgid "select specific containers"
 msgstr "选择特定容器"
 
-#: app/views/add-config-volume.html:106
+#: app/views/add-config-volume.html:105
 msgid "Select specific keys and paths"
 msgstr "选择特定的keys和路径"
 
@@ -5124,11 +5092,11 @@ msgstr "选择要使用的存储"
 msgid "Select storage to use."
 msgstr "选择要使用的存储"
 
-#: app/views/add-config-volume.html:116
+#: app/views/add-config-volume.html:115
 msgid ""
-"Select the keys to use and the file paths where each key will be exposed.\n"
-"                    The file paths are relative to the mount path.\n"
-"                    The contents of each file will be the value of the key."
+"Select the keys to use and the file paths where each key will be exposed.The "
+"file paths are relative to the mount path.The contents of each file will be "
+"the value of the key."
 msgstr ""
 "选择要使用的keys以及将公开每个keys的文件路径。文件路径相对于挂载路径。每个文"
 "件的内容都是key的值。"
@@ -5160,7 +5128,7 @@ msgstr "服务"
 msgid "Service - Internal Traffic"
 msgstr "服务 - 内部流量"
 
-#: app/views/directives/osc-routing.html:185
+#: app/views/directives/osc-routing.html:184
 msgid "Service {{duplicate.metadata.name}} cannot be added twice."
 msgstr "服务{{duplicate.metadata.name}}无法添加两次。"
 
@@ -5171,10 +5139,8 @@ msgstr "服务{{model.name}}不存在。"
 #: app/views/directives/osc-routing-service.html:30
 msgid ""
 "Service {{model.name}} has a single, unnamed port. A route cannot "
-"specifically target\n"
-"          an unnamed service port. If more service ports are added later, "
-"the route will also direct\n"
-"          traffic to them."
+"specifically target an unnamed service port. If more service ports are added "
+"later, the route will also direct traffic to them."
 msgstr ""
 "Service {{model.name}}有一个未命名的端口。 路由无法专门定位一个未命名的服务端"
 "口。 如果稍后添加更多服务端口，则路由也将引导流量给他们。"
@@ -5213,7 +5179,7 @@ msgstr "服务端口"
 msgid "Service to route to."
 msgstr "路由服务。"
 
-#: app/views/directives/osc-routing.html:193
+#: app/views/directives/osc-routing.html:192
 msgid "Service Weights"
 msgstr "服务权重"
 
@@ -5268,7 +5234,7 @@ msgstr "共享访问（RWX）"
 
 #: app/views/_container-statuses.html:19 app/views/browse/route.html:163
 #: app/views/browse/route.html:173 app/views/browse/route.html:183
-#: app/views/browse/route.html:193 app/views/create/fromimage.html:395
+#: app/views/browse/route.html:193 app/views/create/fromimage.html:393
 msgid "Show"
 msgstr "显示"
 
@@ -5550,7 +5516,7 @@ msgstr "添加成功"
 msgid "successfully."
 msgstr "成功。"
 
-#: app/views/directives/_edit-command.html:103
+#: app/views/directives/_edit-command.html:102
 msgid "Switch to"
 msgstr "切换到"
 
@@ -5584,15 +5550,15 @@ msgid ""
 "Tags the current image as an image stream tag if the deployment succeeds."
 msgstr "如果部署成功，则将当前image标记为image stream tag。"
 
-#: app/views/directives/osc-autoscaling.html:127
+#: app/views/directives/osc-autoscaling.html:124
 msgid "Target CPU percentage must be a number."
 msgstr "目标CPU百分比必须是数字。"
 
-#: app/views/directives/osc-autoscaling.html:130
+#: app/views/directives/osc-autoscaling.html:127
 msgid "Target CPU percentage must be a whole number."
 msgstr "目标CPU百分比必须是整数。"
 
-#: app/views/directives/osc-autoscaling.html:133
+#: app/views/directives/osc-autoscaling.html:130
 msgid "Target CPU percentage must be greater than 1."
 msgstr "目标CPU百分比必须大于1。"
 
@@ -5675,7 +5641,7 @@ msgstr "build配置详情无法加载."
 msgid "The build details could not be loaded."
 msgstr "build详情无法加载."
 
-#: app/views/edit/build-config.html:512
+#: app/views/edit/build-config.html:510
 msgid ""
 "The build run policy describes the order in which the builds created from "
 "the build configuration should run."
@@ -5693,14 +5659,14 @@ msgstr ""
 "builder image具有定义的其他环境变量。 下面定义的变量将覆盖具有相同名称的镜像"
 "中的任何变量。"
 
-#: app/views/directives/osc-routing.html:294
+#: app/views/directives/osc-routing.html:292
 msgid "The certificate or key you've set will not be used."
 msgstr "您将设置的证书或密钥将不会被使用。"
 
 #: app/views/projects.html:63
 msgid ""
-"The complete list of your projects could not be loaded.\n"
-"                  Type a project name to go to that project."
+"The complete list of your projects could not be loaded.Type a project name "
+"to go to that project."
 msgstr "无法加载完整的项目列表。输入要转到该项目的项目名称。"
 
 #: app/views/browse/config-map.html:8
@@ -5711,7 +5677,7 @@ msgstr "config map 无法加载."
 msgid "The config map has no items."
 msgstr "该config map没有项目。"
 
-#: app/views/projects.html:94
+#: app/views/projects.html:93
 msgid "The current filter is hiding all projects."
 msgstr "当前过滤条件隐藏了所有项目."
 
@@ -5765,11 +5731,10 @@ msgstr "deployment controlling this replica set已被删除."
 msgid "The deployment details could not be loaded."
 msgstr "deployment详情无法被加载."
 
-#: app/views/directives/osc-routing.html:351
+#: app/views/directives/osc-routing.html:349
 msgid ""
-"The destination CA certificate will be removed from the route.\n"
-"                Destination CA certificates are only used for re-encrypt "
-"termination."
+"The destination CA certificate will be removed from the route.Destination CA "
+"certificates are only used for re-encrypt termination."
 msgstr "目标CA证书将从路由中删除。目标CA证书仅用于re-encrypt termination。"
 
 #: app/views/browse/route.html:85
@@ -5855,7 +5820,7 @@ msgstr "创建路由后，无法更改主机名。"
 msgid "The image details could not be loaded."
 msgstr "镜像详情无法加载."
 
-#: app/views/directives/deploy-image.html:205
+#: app/views/directives/deploy-image.html:201
 msgid ""
 "The image may not exist or it may be in a secure registry. Check that you "
 "have entered the image name correctly or"
@@ -5894,8 +5859,8 @@ msgstr "日志不可用或无法加载."
 
 #: app/views/directives/osc-autoscaling.html:53
 msgid ""
-"The lower limit for the number of pods that can be set by the autoscaler.\n"
-"      If not specified, defaults to 1."
+"The lower limit for the number of pods that can be set by the autoscaler.If "
+"not specified, defaults to 1."
 msgstr "自动扩容可以设置的pod数量的下限。如果未指定，则默认为1。"
 
 #: app/views/quota.html:219
@@ -5929,7 +5894,7 @@ msgstr "已达到最大Web控制台日志大小。 使用命令行界面或"
 msgid "The minimum amount of this compute resource that can be requested."
 msgstr "可以请求的此计算资源的最小数量。"
 
-#: app/views/add-config-volume.html:91
+#: app/views/add-config-volume.html:90
 #: app/views/directives/add-config-to-application.html:112
 msgid "The mount path is already used. Please choose another mount path."
 msgstr "挂载路径已使用。 请选择其他挂载路径。"
@@ -5938,15 +5903,15 @@ msgstr "挂载路径已使用。 请选择其他挂载路径。"
 msgid "The name must have at least 2 characters."
 msgstr "名称必须至少包含2个字符。"
 
-#: app/views/create/fromimage.html:338
+#: app/views/create/fromimage.html:337
 msgid "The number of instances of your image."
 msgstr "镜像的实例数。"
 
-#: app/views/directives/osc-autoscaling.html:117
+#: app/views/directives/osc-autoscaling.html:116
 msgid ""
-"The percentage of the CPU request that each pod should ideally be using.\n"
-"      Pods will be added or removed periodically when CPU usage exceeds or\n"
-"      drops below this target value."
+"The percentage of the CPU request that each pod should ideally be using.Pods "
+"will be added or removed periodically when CPU usage exceeds or drops below "
+"this target value."
 msgstr ""
 "理想情况下每个pod应使用的CPU请求百分比。 当CPU使用率超过或低于此目标值时，将"
 "定期添加或删除Pod。"
@@ -6002,7 +5967,7 @@ msgid ""
 "router."
 msgstr "该路由尚未接受流量，因为它尚未被路由器接受。"
 
-#: app/views/directives/osc-routing.html:295
+#: app/views/directives/osc-routing.html:293
 msgid "The route is unsecured."
 msgstr "该路由是不安全的。"
 
@@ -6052,12 +6017,12 @@ msgstr ""
 "超时参数以及任何生命周期前或后期挂钩都将从{{strategy}}策略复制到{{type}}策"
 "略。 保存更改后，系统会删除{{original}}策略参数。"
 
-#: app/views/directives/osc-autoscaling.html:82
+#: app/views/directives/osc-autoscaling.html:81
 msgid ""
 "The upper limit for the number of pods that can be set by the autoscaler."
 msgstr "autoscaler可以设置的pod数量的上限。"
 
-#: app/views/add-config-volume.html:175 app/views/attach-pvc.html:193
+#: app/views/add-config-volume.html:172 app/views/attach-pvc.html:191
 msgid "The volume will be mounted into all containers. You can"
 msgstr "卷将挂载到所有容器中。 您可以"
 
@@ -6196,21 +6161,20 @@ msgstr "deployment已被删除."
 msgid "This file contains binary content."
 msgstr "该文件包含二进制内容。"
 
-#: app/views/directives/deploy-image.html:115
+#: app/views/directives/deploy-image.html:114
 msgid ""
 "This image declares volumes and will default to use non-persistent, host-"
-"local storage.\n"
-"          You can add persistent storage later to the deployment config."
+"local storage.You can add persistent storage later to the deployment config."
 msgstr ""
-"image declares volumes,会默认使用non-persistent, host-local存储.\n"
-"你可以添加persistent storage到deployment config."
+"此映像声明卷并将默认使用非持久性主机本地存储。您可以稍后在部署配置中添加持久"
+"存储。"
 
 #: app/scripts/controllers/image.js:93
 #: app/scripts/controllers/imagestream.js:58
 msgid "This image stream has been deleted."
 msgstr "image stream已被删除."
 
-#: app/views/directives/deploy-image.html:103
+#: app/views/directives/deploy-image.html:102
 msgid "This image will be deployed in Deployment Config"
 msgstr "此映像将部署在Deployment Config中"
 
@@ -6221,7 +6185,7 @@ msgid ""
 msgstr "这可能不是有效的Git URL。 检查它是否是远程Git存储库的正确URL。"
 
 #: app/views/create/fromimage.html:60
-#: app/views/directives/deploy-image.html:159
+#: app/views/directives/deploy-image.html:155
 msgid ""
 "This name is already in use within the project. Please choose a different "
 "name."
@@ -6261,16 +6225,14 @@ msgstr "provisioned service已被shanc."
 
 #: app/views/modals/delete-resource.html:70
 msgid ""
-"This resource has an autoscaler associated with it.\n"
-"            It is recommended you delete the autoscaler with the resource it "
-"scales."
+"This resource has an autoscaler associated with it.It is recommended you "
+"delete the autoscaler with the resource it scales."
 msgstr "此资源具有与之关联的autoscaler。建议您使用扩展的资源删除autoscaler。"
 
-#: app/views/modals/delete-resource.html:74
+#: app/views/modals/delete-resource.html:73
 msgid ""
-"This resource has autoscalers associated with it.\n"
-"            It is recommended you delete the autoscalers with the resource "
-"they scale."
+"This resource has autoscalers associated with it.It is recommended you "
+"delete the autoscalers with the resource they scale."
 msgstr "此资源具有与之关联的autoscalers。建议您使用扩容的资源删除autoscalers。"
 
 #: app/scripts/controllers/route.js:50
@@ -6311,9 +6273,8 @@ msgstr "此目标端口将路由到"
 #: app/views/modals/debug-terminal.html:35
 msgid ""
 "This temporary pod has a modified entrypoint command to debug a failing "
-"container. The pod\n"
-"        will be available for one hour and will be deleted when the terminal "
-"window is closed."
+"container. The pod will be available for one hour and will be deleted when "
+"the terminal window is closed."
 msgstr ""
 "此临时pod具有修改的入口点命令以调试失败的容器。 该pod将在一小时后可用，并在终"
 "端窗口关闭时删除。"
@@ -6416,11 +6377,10 @@ msgstr "超时必须大于或等于1。"
 msgid "Timeout:"
 msgstr "超时："
 
-#: app/views/directives/osc-routing.html:288
+#: app/views/directives/osc-routing.html:287
 msgid ""
 "TLS certificates for edge and re-encrypt termination. If not specified, the "
-"router's default\n"
-"        certificate is used."
+"router's default certificate is used."
 msgstr "用于边缘和重新加密终止的TLS证书。 如果未指定，则使用路由器的默认证书。"
 
 #: app/views/browse/route.html:202
@@ -6431,7 +6391,7 @@ msgstr "TLS未启用。"
 msgid "TLS Settings"
 msgstr "TLS设置"
 
-#: app/views/browse/routes.html:63 app/views/directives/osc-routing.html:245
+#: app/views/browse/routes.html:63 app/views/directives/osc-routing.html:244
 #: app/views/directives/traffic-table.html:11
 msgid "TLS Termination"
 msgstr "TLS终止"
@@ -6472,7 +6432,7 @@ msgstr "确保您的应用程序正常运行。"
 msgid "To get the complete log, run the command"
 msgstr "要获取完整日志，请运行该命令"
 
-#: app/views/projects.html:184
+#: app/views/projects.html:181
 msgid "To learn more, visit the OpenShift"
 msgstr "要了解更多，请访问OpenShift"
 
@@ -6543,7 +6503,7 @@ msgstr ""
 
 #: app/views/browse/build-config.html:383
 #: app/views/browse/deployment-config.html:250
-#: app/views/edit/build-config.html:443
+#: app/views/edit/build-config.html:441
 msgid "Triggers"
 msgstr ""
 
@@ -6598,7 +6558,7 @@ msgstr "不可用"
 msgid "Unique name of the new secret."
 msgstr "新secret的唯一名称。"
 
-#: app/views/attach-pvc.html:158
+#: app/views/attach-pvc.html:157
 msgid ""
 "Unique name used to identify this volume. If not specified, a volume name is "
 "generated."
@@ -6686,9 +6646,9 @@ msgstr "使用自定义ca.crt文件"
 
 #: app/views/edit/build-config.html:242
 msgid ""
-"Use a Jenkinsfile from the source repository or specify the\n"
-"                    Jenkinsfile content directly in the build configuration."
-msgstr "使用源存储库中的Jenkinsfile或直接在构建配置中指定Jenkinsfile内容。"
+"Use a Jenkinsfile from the source repository or specify the Jenkinsfile "
+"content directly in the build configuration."
+msgstr ""
 
 #: app/views/directives/edit-environment-from.html:33
 msgid "Use all keys and values from"
@@ -6810,7 +6770,7 @@ msgstr "查看日志"
 msgid "View Logs"
 msgstr "查看日志"
 
-#: app/views/projects.html:131
+#: app/views/projects.html:130
 msgid "View Membership"
 msgstr "查看成员"
 
@@ -6862,22 +6822,22 @@ msgid ""
 "Volume mount in that path already exists. Please choose another mount path."
 msgstr "卷挂载的路径已经存在。 请选择其他挂载路径。"
 
-#: app/views/attach-pvc.html:134
+#: app/views/attach-pvc.html:133
 msgid "Volume Name"
 msgstr "卷名称"
 
-#: app/views/attach-pvc.html:172
+#: app/views/attach-pvc.html:170
 msgid "Volume name already exists. Please choose another name."
 msgstr "卷名已存在。 请选择其他名称。"
 
-#: app/views/attach-pvc.html:167
+#: app/views/attach-pvc.html:165
 msgid "Volume names cannot be longer than 63 characters."
 msgstr "卷名已存在。请选择其他名称。"
 
-#: app/views/attach-pvc.html:161
+#: app/views/attach-pvc.html:160
 msgid ""
-"Volume names may only contain lower-case letters, numbers, and dashes.\n"
-"                      They may not start or end with a dash."
+"Volume names may only contain lower-case letters, numbers, and dashes.They "
+"may not start or end with a dash."
 msgstr "卷名称只能包含小写字母，数字和短划线。它们可能无法以破折号开始或结束。"
 
 #: app/views/browse/_pod-details.html:81
@@ -6925,7 +6885,7 @@ msgstr "警告"
 #: app/views/browse/deployment-config.html:292
 #: app/views/browse/deployment.html:244 app/views/edit/autoscaler.html:24
 #: app/views/edit/autoscaler.html:31 app/views/edit/autoscaler.html:43
-#: app/views/edit/config-map.html:17 app/views/edit/config-map.html:23
+#: app/views/edit/config-map.html:17 app/views/edit/config-map.html:22
 #: app/views/edit/yaml.html:13 app/views/edit/yaml.html:21
 #: app/views/pipelines.html:77 app/views/projects.html:62
 msgid "Warning:"
@@ -6987,18 +6947,17 @@ msgid "Webhook Secret Key"
 msgstr ""
 
 #: app/views/browse/route.html:129
-#: app/views/directives/osc-routing-service.html:39
+#: app/views/directives/osc-routing-service.html:37
 msgid "Weight"
 msgstr "权重"
 
-#: app/views/directives/osc-routing-service.html:52
+#: app/views/directives/osc-routing-service.html:50
 msgid ""
 "Weight is a number between 0 and 256 that specifies the relative weight "
-"against other\n"
-"          route services."
+"against other route services."
 msgstr "权重是0到256之间的数字，用于指定与其他路线服务相对的权重。"
 
-#: app/views/projects.html:173
+#: app/views/projects.html:170
 msgid "Welcome to OpenShift."
 msgstr "欢迎来到OpenShift。"
 
@@ -7021,16 +6980,15 @@ msgstr "你想做什么？"
 #: app/views/browse/_build-details.html:113
 #: app/views/browse/_build-details.html:116
 #: app/views/browse/build-config.html:267
-#: app/views/browse/build-config.html:357 app/views/edit/build-config.html:277
+#: app/views/browse/build-config.html:357 app/views/edit/build-config.html:275
 msgid "What's a Jenkinsfile?"
 msgstr "什么是Jenkinsfile？"
 
 #: app/views/browse/pod.html:133
 msgid ""
 "When you navigate away from this pod, any open terminal connections will be "
-"closed.\n"
-"                      This will kill any foreground processes you started "
-"from the&nbsp;terminal."
+"closed.This will kill any foreground processes you started from the&nbsp;"
+"terminal."
 msgstr ""
 "当您离开此pod时，将关闭所有打开的终端连接。这将终止您从终端开始的所有前台进"
 "程。"
@@ -7047,7 +7005,7 @@ msgstr "Wildcard subdomains开头是"
 msgid "will be added to all containers. You can"
 msgstr "被添加到所有容器，你可以"
 
-#: app/views/directives/deploy-image.html:111
+#: app/views/directives/deploy-image.html:110
 msgid "will be load balanced by Service"
 msgstr "将被负载平衡通过服务"
 
@@ -7055,7 +7013,7 @@ msgstr "将被负载平衡通过服务"
 msgid "will be used."
 msgstr "将被使用。"
 
-#: app/views/directives/deploy-image.html:102
+#: app/views/directives/deploy-image.html:101
 msgid "will track this image."
 msgstr "将跟踪此镜像。"
 
@@ -7067,15 +7025,6 @@ msgstr "可以访问这个项目。"
 msgid "with routers that support wildcard subdomains."
 msgstr "路由支持wildcard subdomains。"
 
-#: app/views/about.html:38
-msgid ""
-"With the OpenShift command line interface (CLI), you can create applications "
-"and manage OpenShift\n"
-"              projects from a terminal. To get started using the CLI, visit"
-msgstr ""
-"使用OpenShift命令行界面（CLI），您可以创建应用程序并管理OpenShift来自终端的项"
-"目。 要开始使用CLI，请访问"
-
 #: app/views/command-line.html:9
 msgid ""
 "With the OpenShift command line interface (CLI), you can create applications "
@@ -7083,7 +7032,16 @@ msgid ""
 msgstr ""
 "使用OpenShift命令行界面（CLI），您可以从终端创建应用程序并管理OpenShift项目。"
 
-#: app/views/directives/deploy-image.html:205
+#: app/views/about.html:36
+msgid ""
+"With the OpenShift command line interface (CLI), you can create applications "
+"and manage OpenShift projects from a terminal. To get started using the CLI, "
+"visit"
+msgstr ""
+"使用OpenShift命令行界面（CLI），您可以创建应用程序并管理OpenShift来自终端的项"
+"目。 要开始使用CLI，请访问"
+
+#: app/views/directives/deploy-image.html:201
 msgid "with your image registry credentials and try again."
 msgstr "使用您的image registry credentials，然后重试。"
 
@@ -7104,7 +7062,7 @@ msgstr "您即将更改用户从"
 msgid "You are being logged in as"
 msgstr "您将登陆为"
 
-#: app/views/about.html:44
+#: app/views/about.html:41
 msgid ""
 "You are currently logged in under the user account '{{user.metadata.name}}'."
 msgstr "您目前以用户帐户“{{user.metadata.name}}”登录。"
@@ -7209,11 +7167,10 @@ msgstr "您必须在命名空间中具有可绑定服务才能创建绑定。"
 msgid "You must select at least one container."
 msgstr "您必须至少选择一个容器。"
 
-#: app/views/create/fromimage.html:348
+#: app/views/create/fromimage.html:347
 msgid ""
-"You should configure resource limits below for autoscaling.\n"
-"                              Autoscaling will not work without a CPU "
-"request."
+"You should configure resource limits below for autoscaling.Autoscaling will "
+"not work without a CPU request."
 msgstr ""
 "您应该在下面配置资源限制以进行自动扩容。 没有CPU要求，自动扩容将无法工作。"
 
@@ -7232,6 +7189,3 @@ msgstr "由于不活动，您的会话即将过期。"
 #: app/views/directives/osc-persistent-volume-claim.html:36
 msgid "Zone"
 msgstr "空间"
-
-#~ msgid "Learn More"
-#~ msgstr "了解更多"

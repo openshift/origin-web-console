@@ -18,9 +18,7 @@
                 <h2 ng-if="containers.length > 1"><translate>Container</translate> {{container.name}}</h2>
                 <h3 translate>Readiness Probe</h3>
                 <div class="help-block mar-bottom-md" ng-if="$first" translate>
-                  A readiness probe checks if the container is ready to handle requests. A
-                  failed readiness probe means that a container should not receive any traffic
-                  from a proxy, even if it's running.
+                  A readiness probe checks if the container is ready to handle requests. A failed readiness probe means that a container should not receive any traffic from a proxy, even if it's running.
                 </div>
                 <div ng-if="!container.readinessProbe">
                   <a href="" ng-click="addProbe(container, 'readinessProbe')" translate>Add Readiness Probe</a>
@@ -37,8 +35,7 @@
                 </div>
                 <h3 translate>Liveness Probe</h3>
                 <div class="help-block mar-bottom-md" ng-if="$first" translate>
-                  A liveness probe checks if the container is still running. If the liveness
-                  probe fails, the container is killed.
+                  A liveness probe checks if the container is still running. If the liveness probe fails, the container is killed.
                 </div>
                 <div ng-if="!container.livenessProbe">
                   <a href="" ng-click="addProbe(container, 'livenessProbe')" translate>Add Liveness Probe</a>

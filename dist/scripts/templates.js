@@ -712,7 +712,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h1>Red Hat OpenShift <span class=\"about-reg\">&reg;</span></h1>\n" +
     "<h2 translate>About</h2>\n" +
     "<p>\n" +
-    "<a target=\"_blank\" href=\"http://okd.io\">OpenShift</a> <translate>is Red Hat's container application platform that allows developers to quickly develop, host, and scale applications in a cloud environment.</translate>\n" +
+    "<a target=\"_blank\" href=\"http://okd.io\">OpenShift</a>\n" +
+    "<translate>is Red Hat's container application platform that allows developers to quickly develop, host, and scale applications in a cloud environment.</translate>\n" +
     "</p>\n" +
     "<h2 id=\"version\" translate>Version</h2>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
@@ -730,7 +731,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</dd>\n" +
     "</dl>\n" +
     "<p>\n" +
-    "<a target=\"_blank\" ng-href=\"{{'welcome' | helpLink}}\" translate>Documentation</a> <translate>helps you learn about OpenShift and start exploring its features. From getting started with creating your first application to trying out more advanced build and deployment techniques, it provides guidance on setting up and managing your OpenShift environment as an application developer.</translate>\n" +
+    "<a target=\"_blank\" ng-href=\"{{'welcome' | helpLink}}\" translate>Documentation</a>\n" +
+    "<translate>helps you learn about OpenShift and start exploring its features. From getting started with creating your first application to trying out more advanced build and deployment techniques, it provides guidance on setting up and managing your OpenShift environment as an application developer.</translate>\n" +
     "</p>\n" +
     "<p>\n" +
     "<translate>With the OpenShift command line interface (CLI), you can create applications and manage OpenShift projects from a terminal. To get started using the CLI, visit</translate>\n" +
@@ -837,7 +839,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"attach.pickKeys && attach.source\" class=\"mar-bottom-md\">\n" +
     "<h3 translate>Keys and Paths</h3>\n" +
     "<div class=\"help-block mar-bottom-md\" translate>\n" +
-    "Select the keys to use and the file paths where each key will be exposed. The file paths are relative to the mount path. The contents of each file will be the value of the key.\n" +
+    "Select the keys to use and the file paths where each key will be exposed.The file paths are relative to the mount path.The contents of each file will be the value of the key.\n" +
     "</div>\n" +
     "<div ng-repeat=\"item in attach.items\">\n" +
     "<div class=\"row\">\n" +
@@ -1005,7 +1007,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"attachPVCForm.volumeName.$error.pattern && attachPVCForm.volumeName.$touched\">\n" +
     "<span class=\"help-block\" translate>\n" +
-    "Volume names may only contain lower-case letters, numbers, and dashes. They may not start or end with a dash.\n" +
+    "Volume names may only contain lower-case letters, numbers, and dashes.They may not start or end with a dash.\n" +
     "</span>\n" +
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"attachPVCForm.volumeName.$error.maxlength\">\n" +
@@ -3085,7 +3087,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"mar-bottom-md\">\n" +
     "<span class=\"pficon pficon-info\" aria-hidden=\"true\"></span>\n" +
     "<span ng-class=\"{ 'mar-right-md': hasFullscreen }\" translate>\n" +
-    "When you navigate away from this pod, any open terminal connections will be closed. This will kill any foreground processes you started from the&nbsp;terminal.\n" +
+    "When you navigate away from this pod, any open terminal connections will be closed.This will kill any foreground processes you started from the&nbsp;terminal.\n" +
     "</span>\n" +
     "<a href=\"\" ng-if=\"hasFullscreen\" ng-click=\"fullscreenTerminal()\" class=\"nowrap\" aria-hidden=\"true\" translate>Open Fullscreen Terminal</a>\n" +
     "</div>\n" +
@@ -5008,7 +5010,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div class=\"has-warning\" ng-if=\"metricsWarning && scaling.autoscale\">\n" +
     "<span class=\"help-block\" translate>\n" +
-    "CPU metrics might not be available. In order to use horizontal pod autoscalers, your cluster administrator must have properly configured cluster metrics.\n" +
+    "CPU metrics might not be available. In order to use horizontal pod autoscalers,your cluster administrator must have properly configured cluster metrics.\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -5025,7 +5027,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<osc-autoscaling ng-if=\"scaling.autoscale\" model=\"scaling\"></osc-autoscaling>\n" +
     "<div class=\"has-warning\" ng-if=\"showCPURequestWarning\">\n" +
     "<span class=\"help-block\" translate>\n" +
-    "You should configure resource limits below for autoscaling. Autoscaling will not work without a CPU request.\n" +
+    "You should configure resource limits below for autoscaling.Autoscaling will not work without a CPU request.\n" +
     "</span>\n" +
     "</div>\n" +
     "</osc-form-section>\n" +
@@ -6473,7 +6475,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</li>\n" +
     "</ul>\n" +
     "<div ng-if=\"(volumes | hashSize) > 0\" class=\"help-block\" translate>\n" +
-    "This image declares volumes and will default to use non-persistent, host-local storage. You can add persistent storage later to the deployment config.\n" +
+    "This image declares volumes and will default to use non-persistent, host-local storage.You can add persistent storage later to the deployment config.\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -8033,7 +8035,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input type=\"number\" class=\"form-control\" min=\"1\" name=\"minReplicas\" ng-model=\"autoscaling.minReplicas\" pattern=\"\\d*\" select-on-focus aria-describedby=\"min-replicas-help\">\n" +
     "</span>\n" +
     "<div id=\"min-replicas-help\" class=\"help-block\" translate>\n" +
-    "The lower limit for the number of pods that can be set by the autoscaler. If not specified, defaults to 1.\n" +
+    "The lower limit for the number of pods that can be set by the autoscaler.If not specified, defaults to 1.\n" +
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"form.minReplicas.$dirty && form.minReplicas.$invalid\">\n" +
     "<span ng-if=\"form.minReplicas.$error.number\" class=\"help-block\" translate>\n" +
@@ -8081,7 +8083,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span class=\"input-group-addon\">%</span>\n" +
     "</div>\n" +
     "<div id=\"target-cpu-help\" class=\"help-block\" translate>\n" +
-    "The percentage of the CPU request that each pod should ideally be using. Pods will be added or removed periodically when CPU usage exceeds or drops below this target value.\n" +
+    "The percentage of the CPU request that each pod should ideally be using.Pods will be added or removed periodically when CPU usage exceeds or drops below this target value.\n" +
     "</div>\n" +
     "\n" +
     "\n" +
@@ -8661,7 +8663,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div ng-if=\"route.tls.destinationCACertificate && route.tls.termination !== 'reencrypt' && !showCertificatesNotUsedWarning\" class=\"has-warning\">\n" +
     "<span class=\"help-block\" translate>\n" +
-    "The destination CA certificate will be removed from the route. Destination CA certificates are only used for re-encrypt termination.\n" +
+    "The destination CA certificate will be removed from the route.Destination CA certificates are only used for re-encrypt termination.\n" +
     "</span>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -9678,7 +9680,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label for=\"jenkinsfilePath\" translate>Jenkinsfile Source Path</label>\n" +
     "<input class=\"form-control\" id=\"jenkinsfilePath\" name=\"jenkinsfilePath\" type=\"text\" ng-model=\"updatedBuildConfig.spec.strategy.jenkinsPipelineStrategy.jenkinsfilePath\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" aria-describedby=\"jenkinsfile-path-help\">\n" +
     "<div class=\"help-block\" id=\"jenkinsfile-path-help\" translate>\n" +
-    "Optional path to the Jenkinsfile relative to the context dir. Defaults to the Jenkinsfile in context dir.\n" +
+    "Optional path to the Jenkinsfile relative to the context dir.Defaults to the Jenkinsfile in context dir.\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"jenkinsfileOptions.type === 'inline'\">\n" +
@@ -9954,7 +9956,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"resourceChanged && !resourceDeleted && !updatingNow\" class=\"alert alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\" translate>Warning:</span>\n" +
-    "<translate>Config map {{configMap.metadata.name}} has changed since you started editing it. You'll need to copy any changes you've made and edit the config map again.</translate>\n" +
+    "<translate>Config map {{configMap.metadata.name}} has changed since you started editing it.You'll need to copy any changes you've made and edit the config map again.</translate>\n" +
     "</div>\n" +
     "<div ng-if=\"resourceDeleted\" class=\"alert alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
@@ -11070,10 +11072,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"hpaList.length > 0\">\n" +
     "<p>\n" +
     "<span ng-if=\"hpaList.length === 1\" translate>\n" +
-    "This resource has an autoscaler associated with it. It is recommended you delete the autoscaler with the resource it scales.\n" +
+    "This resource has an autoscaler associated with it.It is recommended you delete the autoscaler with the resource it scales.\n" +
     "</span>\n" +
     "<span ng-if=\"hpaList.length > 1\" translate>\n" +
-    "This resource has autoscalers associated with it. It is recommended you delete the autoscalers with the resource they scale.\n" +
+    "This resource has autoscalers associated with it.It is recommended you delete the autoscalers with the resource they scale.\n" +
     "</span>\n" +
     "</p>\n" +
     "<div class=\"checkbox\">\n" +
@@ -13363,7 +13365,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"alert alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
     "<span class=\"sr-only\" translate>Warning:</span>\n" +
-    "<translate>The complete list of your projects could not be loaded. Type a project name to go to that project.</translate>\n" +
+    "<translate>The complete list of your projects could not be loaded.Type a project name to go to that project.</translate>\n" +
     "</div>\n" +
     "<form>\n" +
     "<div class=\"form-group\">\n" +
@@ -13439,7 +13441,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<p ng-if=\"projects.length > limitListTo\" translate>\n" +
-    "Only the first {{limitListTo}} projects are displayed. Filter by keyword or change sort options to see other projects.\n" +
+    "Only the first {{limitListTo}} projects are displayed.Filter by keyword or change sort options to see other projects.\n" +
     "</p>\n" +
     "<p class=\"projects-instructions\" ng-if=\"canCreate === false\" ng-include=\"'views/_cannot-create-project.html'\"></p>\n" +
     "</div>\n" +

@@ -154,8 +154,7 @@
             <translate>Split traffic across multiple services</translate>
           </label>
           <div class="help-block" translate>
-            Routes can direct traffic to multiple services for A/B testing. Each service has a weight
-            controlling how much traffic it gets.
+            Routes can direct traffic to multiple services for A/B testing. Each service has a weight controlling how much traffic it gets.
           </div>
         </div>
       </div>
@@ -286,8 +285,7 @@
       <!-- Key and Certificates -->
       <h3 translate>Certificates</h3>
       <div class="help-block" translate>
-        TLS certificates for edge and re-encrypt termination. If not specified, the router's default
-        certificate is used.
+        TLS certificates for edge and re-encrypt termination. If not specified, the router's default certificate is used.
       </div>
       <div ng-if="showCertificatesNotUsedWarning" class="has-warning">
         <span class="help-block">
@@ -349,8 +347,7 @@
                  not already showing the generic certificate warning above. -->
             <div ng-if="route.tls.destinationCACertificate && route.tls.termination !== 'reencrypt' && !showCertificatesNotUsedWarning" class="has-warning">
               <span class="help-block" translate>
-                The destination CA certificate will be removed from the route.
-                Destination CA certificates are only used for re-encrypt termination.
+                The destination CA certificate will be removed from the route.Destination CA certificates are only used for re-encrypt termination.
               </span>
             </div>
           </div>

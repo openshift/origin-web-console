@@ -60,8 +60,7 @@
                 <div class="alert alert-warning">
                   <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
                   <span class="sr-only" translate>Warning:</span>
-                  <translate>The complete list of your projects could not be loaded.
-                  Type a project name to go to that project.</translate>
+                  <translate>The complete list of your projects could not be loaded.Type a project name to go to that project.</translate>
                 </div>
                 <form>
                   <div class="form-group">
@@ -160,9 +159,7 @@
                 </div>
               </div>
               <p ng-if="projects.length > limitListTo" translate>
-                Only the first {{limitListTo}} projects are displayed.
-                Filter by keyword or change sort options to see other
-                projects.
+                Only the first {{limitListTo}} projects are displayed.Filter by keyword or change sort options to see other projects.
               </p>
               <p class="projects-instructions" ng-if="canCreate === false" ng-include="'views/_cannot-create-project.html'"></p>
             </div>
