@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('openshiftConsole')
-  .run(function(extensionRegistry, $rootScope, DataService, AuthService) {
+  .run(function(extensionRegistry, $rootScope, DataService, AuthService, gettextCatalog) {
     extensionRegistry
       .add('nav-user-dropdown', function() {
         var items = [];
@@ -25,7 +25,7 @@ angular.module('openshiftConsole')
           node: '<li><set-home-page></set-home-page></li>'
         });
 
-        var msg = 'Log Out';
+        var msg = gettextCatalog.getString('Log Out');
         if ($rootScope.user.fullName && $rootScope.user.fullName !== $rootScope.user.metadata.name) {
           msg += ' (' + $rootScope.user.metadata.name + ')';
         }

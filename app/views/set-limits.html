@@ -10,9 +10,9 @@
             <div class="help-block">
               <span ng-if="!hideCPU" translate>Resource limits control how much CPU and memory a container will consume on a node.</span>
               <span ng-if="hideCPU" translate>Resource limits control how much memory a container will consume on a node.</span>
-              <div class="learn-more-block" ng-class="{ 'gutter-bottom': showPodWarning }">
+              <!-- <div class="learn-more-block" ng-class="{ 'gutter-bottom': showPodWarning }">
                 <a href="{{'compute_resources' | helpLink}}" target="_blank"><translate>Learn More</translate> <i class="fa fa-external-link" aria-hidden="true"></i></a>
-              </div>
+              </div> -->
             </div>
             <div ng-if="showPodWarning" class="alert alert-warning">
               <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>

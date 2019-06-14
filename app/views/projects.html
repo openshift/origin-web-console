@@ -1,5 +1,5 @@
 <div class="middle surface-shaded">
-  <origin-modal-popup class="projects-list-create-popup" shown="newProjectPanelShown" modal-title="Create Project" on-close="closeNewProjectPanel" reference-element="popupElement">
+  <origin-modal-popup class="projects-list-create-popup" shown="newProjectPanelShown" modal-title="{{'Create Project' | translate}}" on-close="closeNewProjectPanel" reference-element="popupElement">
     <create-project is-dialog="true" redirect-action="onNewProject" on-cancel="closeNewProjectPanel"></create-project>
   </origin-modal-popup>
   <div class="middle-content">
@@ -33,7 +33,7 @@
                             <input
                               type="search"
                               class="form-control"
-                              placeholder="Filter by keyword"
+                              placeholder="{{'Filter by keyword' | translate}}"
                               id="search-projects"
                               ng-model="search.text">
                             <button
@@ -152,7 +152,7 @@
                       </div>
                       <origin-modal-popup shown="editProjectPanelShown && editingProject === project"
                                           ng-class="{'with-description': (project | description | size)}"
-                                          modal-title="Edit Project" on-close="closeEditProjectPanel">
+                                          modal-title="{{'Edit Project' | translate}}" on-close="closeEditProjectPanel">
                         <edit-project project="project" is-dialog="true" redirect-action="onEditProject" on-cancel="closeEditProjectPanel"></edit-project>
                       </origin-modal-popup>
                     </div>

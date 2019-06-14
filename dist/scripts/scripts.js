@@ -1265,6 +1265,7 @@ allocation: "分配",
 "An image stream or template is required.": "image stream 或 模板是必须的.",
 "An image that can carry out the deployment.": "可以执行部署的镜像。",
 "an out-of-date link": "一个过时的链接",
+and: "和",
 "and any running pods.": "以及任何正在运行的pod。",
 "and its data will no longer be available to your applications.": "并且您的应用程序将无法再使用其数据。",
 "and the": "和",
@@ -1386,6 +1387,7 @@ Command: "命令",
 "Command:": "命令：",
 "completed successfully": "成功完成。",
 "Compute Resources": "计算资源",
+Config: "配置",
 "Config change": "配置变更",
 "Config Change For:": "配置变更：",
 "Config map {{configMap.metadata.name}} has changed since you started editing it.\n                      You'll need to copy any changes you've made and edit the config map again.": "自您开始编辑后，Config map{{configMap.metadata.name}}已更改。\n                       您需要复制您所做的任何更改并再次编辑config map。",
@@ -1419,10 +1421,12 @@ Containers: "容器",
 "Containers Ready": "容器准备就绪",
 "Containers:": "容器：",
 "contains keys that are not valid environment variable names. Only": "包含无效环境变量名称的键值。只有",
+"Context Dir": "上下文目录",
 Continue: "继续",
 "Continue Session": "继续Session",
 "Continue to the project overview": "继续至项目概述",
 "Continue with deployment on failure": "失败继续部署",
+"Copy Login Command": "复制登录命令",
 "Copy to Clipboard": "复制到剪贴板",
 "could not be deleted.": "不能被删除.",
 "could not be expanded.": "无法扩展.",
@@ -1462,6 +1466,7 @@ Create: "创建",
 "Create Route": "创建路由",
 "Create Sample Pipeline": "创建Sample Pipeline",
 "Create Secret": "创建Secret",
+"create storage": "创建存储",
 "Create Storage": "创建存储",
 "Create the objects defined in the template. You will have an opportunity to fill in template parameters.": "创建模板中定义的对象。 您将有机会填写模板参数。",
 created: "创建于",
@@ -1485,6 +1490,7 @@ Default: "默认",
 "Defines minimum and maximum constraints for runtime resources such as memory and CPU.": "定义运行时资源（如内存和CPU）的最小和最大限制。",
 "Delay can't be negative.": "延迟不能是负数。",
 "delay,": "延迟，",
+delete: "删除",
 Delete: "删除",
 "Delete Binding": "删除Binding",
 "Delete pod immediately without waiting for the processes to terminate gracefully": "立即删除pod而不等待进程正常终止",
@@ -1497,6 +1503,7 @@ Deploy: "部署",
 "Deploy images from an image stream tag": "从 image stream tag 部署镜像.",
 "Deployed image {{name}} to project {{project}}": "已部署镜像{{name}}到 {{project}}.",
 "Deploying image {{name}} to project {{project}}": "正在部署镜像{{name}}到 {{project}}.",
+Deployment: "部署",
 "Deployment config {{name}} was successfully updated.": "部署配置{{name}}更新成功.",
 "deployment config or deployment.": "部署config或deployment。",
 "Deployment configuration changes": "部署配置更改",
@@ -1549,6 +1556,7 @@ Edit: "编辑",
 "Edit Weights Using Percentage Slider": "使用百分比滑块编辑权重",
 "Edit YAML": "编辑YAML",
 'Editing routes with non-service targets is unsupported. You can edit the route with the "Edit YAML" action instead.': "不支持编辑非服务目标路由，你可以用“编辑YAML”来替代.",
+Editor: "编辑",
 email: "邮箱",
 Email: "邮箱",
 "Email is required.": "邮箱是必须的.",
@@ -1602,6 +1610,7 @@ failed: "失败",
 "Failure Policy:": "失败政策：",
 "File with credentials and other configuration for connecting to a secured image registry.": "具有凭据和其他配置的文件，用于连接到安全的image registry。",
 Filter: "筛选",
+"Filter by keyword": "按关键词筛选",
 "Filter by Keyword": "按关键词筛选",
 "Filter by labels": "按标签筛选",
 "Filter by name": "按名称筛选",
@@ -1624,6 +1633,7 @@ Generate: "生成",
 "Go to Project": "前往项目",
 "Go to Top": "前往顶部",
 "Grace Period:": "宽限期：",
+Group: "组",
 "Group service to {{service.metadata.name}}": "将服务分组到{{service.metadata.name}}",
 "has already been added to this application.": "已添加到此应用程序中。",
 "has been deleted since you started editing it.": "自您开始编辑后已被删除。",
@@ -1638,6 +1648,7 @@ Hide: "隐藏",
 "Hide Advanced Strategy Options": "隐藏策略高级选项",
 "Hide examples": "隐藏例子",
 "Hide Image Environment Variables": "隐藏镜像环境变量",
+"Hide older resources": "隐藏旧资源",
 History: "历史",
 "Hook Types": "Hook类型",
 "Horizontal pod autoscaler {{name}} could not be deleted.": "无法删除Horizontal pod autoscaler {{name}} .",
@@ -1726,8 +1737,8 @@ Language: "语言",
 "Last State": "最新状态",
 "Last Version": "最新版本",
 "Launch the first build when the build configuration is created": "在build configuration创建好时启动第一个build",
-"Learn More": "了解更多",
 "Learn more about": "了解更多关于",
+"Learn more about the": "了解更多关于",
 limit: "限制",
 Limit: "限制",
 "Limit can't be less than request": "限制不能低于要求",
@@ -1813,6 +1824,7 @@ Monitoring: "监控",
 "Must be a positive number.": "必须是正数。",
 "Must be a whole number greater than or equal to 0.": "必须是大于或等于0的整数。",
 "Must be a whole number.": "必须是一个整数。",
+"My Project": "我的项目",
 "My Projects": "我的项目",
 "My Projects List": "我的项目列表",
 Name: "名称",
@@ -2055,6 +2067,7 @@ Results: "结果",
 Roles: "角色",
 "Route {{name}} was successfully created.": "已成功创建路由{{name}}。",
 "Route {{routeName}} was successfully updated.": "路由{{routeName}}已成功更新。",
+routes: "路由",
 Routes: "路由",
 "Routes - External Traffic": "路由-外网流量",
 "Routes can be secured using several TLS termination types for serving certificates.": "可以使用多种TLS终止类型来保护路由以提供证书。",
@@ -2098,6 +2111,7 @@ seconds: "秒",
 "Secrets allow you to authenticate to a private Git repository or a private image registry.": "Secrets允许您对私有Git仓库或私有 image registry进行身份验证。",
 "Secure route": "安全路由",
 Security: "安全",
+Select: "选择",
 "Select a binding to delete from {{ctrl.displayName}}": "从{{ctrl.displayName}}中选择要删除的binding",
 "Select a new role for {{subject.name}}": "为{{subject.name}}选择一个新角色",
 "Select a project": "选择一个项目",
@@ -2128,6 +2142,7 @@ Service: "服务",
 "Service Port": "服务端口",
 "Service to route to.": "路由服务。",
 "Service Weights": "服务权重",
+ServiceAccount: "服务账户",
 services: "服务",
 Services: "服务",
 "services in your project to expose with a route.": "项目中的服务通过路由开放。",
@@ -2210,8 +2225,8 @@ Template: "模板",
 "Template Configuration": "模板配置",
 "template for container {{container.name}}.": "容器{{container.name}}的模板。",
 "Template wasn't found in cache.": "cache未发现Template.",
-Terminal: "终止",
-"Termination Type:": "终止类型：",
+Terminal: "终端",
+"Termination Type:": "终端类型：",
 "The {{displayKind}} details could not be loaded.": "无法加载{{displayKind}}详细信息。",
 "The {{type}} has no items.": " {{type}}没有没有条目",
 "The active filters are hiding all builds.": "当前过滤条件隐藏了所有builds.",
@@ -2228,6 +2243,8 @@ Terminal: "终止",
 "The config map could not be loaded.": "config map 无法加载.",
 "The config map has no items.": "该config map没有项目。",
 "The current filter is hiding all projects.": "当前过滤条件隐藏了所有项目.",
+"The current filters are hiding all builds.": "当前过滤条件隐藏了所有builds.",
+"The current filters are hiding all deployments.": "当前过滤条件隐藏了所有deployments.",
 "The current filters are hiding all pods.": "当前过滤条件隐藏了所有pods.",
 "The current filters are hiding all stateful sets.": "当前过滤条件隐藏了所有stateful sets.",
 'The current value is "{{parameter.value}}", which is not empty.': "当前值为“{{parameter.value}}”，该值不为空。",
@@ -2245,6 +2262,7 @@ Terminal: "终止",
 "The filter is hiding all {{resourceName}}.": "当前过滤条件隐藏了所有{{resourceName}}.",
 "The filter is hiding all builds.": "当前过滤条件隐藏了所有builds.",
 "The filter is hiding all config maps.": "当前过滤条件隐藏了所有config maps.",
+"The filter is hiding all deployments.": "当前过滤条件隐藏了所有deployments.",
 "The filter is hiding all image streams.": "当前过滤条件隐藏了所有image streams.",
 "The filter is hiding all persistent volume claims.": "当前过滤条件隐藏了所有persistent volume claims.",
 "The filter is hiding all pods.": "当前过滤条件隐藏了所有pods",
@@ -2435,6 +2453,7 @@ Usage: "使用率",
 Used: "使用",
 "Used (All Projects)": "使用(所有项目)",
 "Used (This Project)": "使用(本项目)",
+User: "用户",
 username: "用户名",
 Username: "用户名",
 "Username is required.": "用户名是必需的。",
@@ -2542,7 +2561,6 @@ Zone: "空间"
 });
 } ]), angular.module("gettext").run([ "gettextCatalog", function(e) {
 e.setStrings("zh_CN", {
-"{{ form.add || 'Add'}}": "{{ form.add || ’添加’}}",
 "A cluster admin can create a project for you by running the command:": "集群管理员通过运行命令创建项目：",
 "a project.": "一个项目。",
 "A unique name for the project.": "唯一的项目名称。",
@@ -2563,7 +2581,7 @@ Binding: "绑定",
 "Browse resources for {{$ctrl.serviceClass.name}}:": "浏览资源 {{$ctrl.serviceClass.name}}:",
 Cancel: "取消",
 "Catalog Search": "搜索目录",
-"Clear All Filters": "清空过滤",
+"Clear All Filters": "清空筛选",
 "Clear Search Input": "清空输入",
 Close: "关闭",
 Configuration: "配置",
@@ -2573,18 +2591,20 @@ Continue: "继续",
 "Continue to the project overview": "继续前往项目概述",
 Create: "创建",
 "Create Project": "创建项目",
+created: "创建于",
 "Custom Add": "自定义添加",
 Databases: "数据库",
 "Delete Project": "删除项目",
 "Deploy Image": "部署镜像",
+Documentation: "文档",
 "Edit Project": "编辑项目",
 Error: "错误",
 "failed to create in": "创建失败在",
 "Failed to determine create project permission": "创建项目授权失败",
 "Failed to list instances in namespace": "命名空间中列实例名单失败",
 "failed to provision in": "准备失败在",
-"Filter by Keyword": "按关键词过滤",
-"Filter projects by name": "按项目名过滤",
+"Filter by Keyword": "按关键词筛选",
+"Filter projects by name": "按项目名筛选",
 "Get Support": "获取支持",
 "Getting Started": "开始",
 "Git Repository": "Git仓库",
@@ -4120,13 +4140,13 @@ return {
 User: {
 kind: "User",
 sortOrder: 1,
-name: "User",
+name: a.getString("User"),
 subjects: {}
 },
 Group: {
 kind: "Group",
 sortOrder: 2,
-name: "Group",
+name: a.getString("Group"),
 subjects: {}
 },
 ServiceAccount: {
@@ -4134,7 +4154,7 @@ kind: "ServiceAccount",
 sortOrder: 3,
 description: a.getString("Service accounts provide a flexible way to control API access without sharing a regular user’s credentials."),
 helpLinkKey: "service_accounts",
-name: "ServiceAccount",
+name: a.getString("ServiceAccount"),
 subjects: {}
 }
 };
@@ -13174,7 +13194,7 @@ $(this).hide(), $(".reveal-contents", t).show();
 });
 }
 };
-}).directive("copyToClipboard", function() {
+}).directive("copyToClipboard", [ "gettextCatalog", function(e) {
 return {
 restrict: "E",
 scope: {
@@ -13188,28 +13208,28 @@ templateUrl: "views/directives/_copy-to-clipboard.html",
 controller: [ "$scope", function(e) {
 e.id = _.uniqueId("clipboardJs");
 } ],
-link: function(e, t) {
-var n = $("a", t), a = n.get(0);
-e.inputText && (a = n.get(1));
-var r = new Clipboard(a);
-r.on("success", function(e) {
-$(e.trigger).attr("title", "Copied!").tooltip("fixTitle").tooltip("show").attr("title", "Copy to Clipboard").tooltip("fixTitle"), e.clearSelection();
-}), r.on("error", function(e) {
-var t = /Mac/i.test(navigator.userAgent) ? "Press ⌘C to copy" : "Press Ctrl-C to copy";
-$(e.trigger).attr("title", t).tooltip("fixTitle").tooltip("show").attr("title", "Copy to Clipboard").tooltip("fixTitle");
-}), t.on("$destroy", function() {
-r.destroy();
+link: function(t, n) {
+var a = $("a", n), r = a.get(0);
+t.inputText && (r = a.get(1));
+var o = new Clipboard(r);
+o.on("success", function(t) {
+$(t.trigger).attr("title", "Copied!").tooltip("fixTitle").tooltip("show").attr("title", e.getString("Copy to Clipboard")).tooltip("fixTitle"), t.clearSelection();
+}), o.on("error", function(t) {
+var n = /Mac/i.test(navigator.userAgent) ? "Press ⌘C to copy" : "Press Ctrl-C to copy";
+$(t.trigger).attr("title", n).tooltip("fixTitle").tooltip("show").attr("title", e.getString("Copy to Clipboard")).tooltip("fixTitle");
+}), n.on("$destroy", function() {
+o.destroy();
 });
 }
 };
-}).directive("copyLoginToClipboard", [ "NotificationsService", "gettextCatalog", function(e, t) {
+} ]).directive("copyLoginToClipboard", [ "NotificationsService", "gettextCatalog", function(e, t) {
 return {
 restrict: "E",
 replace: !0,
 scope: {
 clipboardText: "@"
 },
-template: '<a href="" data-clipboard-text="">Copy Login Command</a>',
+template: '<a href="" data-clipboard-text="">' + t.getString("Copy Login Command") + "</a>",
 link: function(n, a) {
 var r = new Clipboard(a.get(0));
 r.on("success", function() {
@@ -13241,11 +13261,11 @@ r.destroy();
 });
 }
 };
-} ]).directive("setHomePage", [ "$uibModal", function(e) {
+} ]).directive("setHomePage", [ "$uibModal", "gettextCatalog", function(e, t) {
 return {
 restrict: "E",
 replace: !0,
-template: '<a href="">Set Home Page</a>',
+template: '<a href="">' + t.getString("Set Home Page") + "</a>",
 link: function(t, n) {
 n.bind("click", function() {
 e.open({
@@ -18528,28 +18548,25 @@ url: d
 }
 }
 }));
-} ]), hawtioPluginLoader.addModule("javaLinkExtension"), angular.module("openshiftConsole").run([ "extensionRegistry", function(e) {
+} ]), hawtioPluginLoader.addModule("javaLinkExtension"), angular.module("openshiftConsole").run([ "extensionRegistry", "gettextCatalog", function(e, t) {
 e.add("nav-help-dropdown", function() {
 var e = [];
-if (e.push({
+if (!_.get(window, "OPENSHIFT_CONSTANTS.DISABLE_SERVICE_CATALOG_LANDING_PAGE")) {
+var n = _.get(window, "OPENSHIFT_CONSTANTS.GUIDED_TOURS.landing_page_tour");
+n && n.enabled && n.steps && e.push({
 type: "dom",
-node: '<li><a target="_blank" href="{{\'default\' | helpLink}}">Documentation</a></li>'
-}), !_.get(window, "OPENSHIFT_CONSTANTS.DISABLE_SERVICE_CATALOG_LANDING_PAGE")) {
-var t = _.get(window, "OPENSHIFT_CONSTANTS.GUIDED_TOURS.landing_page_tour");
-t && t.enabled && t.steps && e.push({
-type: "dom",
-node: '<li><a href="catalog?startTour=true">Tour Catalog Home</a></li>'
+node: '<li><a href="catalog?startTour=true">' + t.getString("Tour Catalog Home") + "</a></li>"
 });
 }
 return e.push({
 type: "dom",
-node: '<li><a href="command-line">Command Line Tools</a></li>'
+node: '<li><a href="command-line">' + t.getString("Command Line Tools") + "</a></li>"
 }), e.push({
 type: "dom",
-node: '<li><a href="about">About</a></li>'
+node: '<li><a href="about">' + t.getString("About") + "</a></li>"
 }), e;
 });
-} ]), angular.module("openshiftConsole").run([ "extensionRegistry", "$rootScope", "DataService", "AuthService", function(e, t, n, a) {
+} ]), angular.module("openshiftConsole").run([ "extensionRegistry", "$rootScope", "DataService", "AuthService", "gettextCatalog", function(e, t, n, a, r) {
 e.add("nav-user-dropdown", function() {
 var e = [];
 e.push({
@@ -18562,10 +18579,10 @@ node: '<li><copy-login-to-clipboard clipboard-text="oc login ' + _.escape(n.open
 type: "dom",
 node: "<li><set-home-page></set-home-page></li>"
 });
-var r = "Log Out";
-return t.user.fullName && t.user.fullName !== t.user.metadata.name && (r += " (" + t.user.metadata.name + ")"), e.push({
+var o = r.getString("Log Out");
+return t.user.fullName && t.user.fullName !== t.user.metadata.name && (o += " (" + t.user.metadata.name + ")"), e.push({
 type: "dom",
-node: '<li><a href="logout">' + _.escape(r) + "</a></li>"
+node: '<li><a href="logout">' + _.escape(o) + "</a></li>"
 }), e;
 });
 } ]), angular.module("openshiftConsole").run([ "extensionRegistry", "Constants", function(e, t) {

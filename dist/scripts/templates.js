@@ -1888,7 +1888,10 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "</div>\n" +
     "<div class=\"col-lg-6\">\n" +
-    "<h3><translate>Triggers</translate> <span class=\"pficon pficon-warning-triangle-o\" ng-if=\"!(secretsVersion | canI : 'list')\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"You do not have access to secrets in this project. Webhook URLs require access to secret information to be used.\"></span><a href=\"{{'build-triggers' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a></h3>\n" +
+    "<h3><translate>Triggers</translate>\n" +
+    "<span class=\"pficon pficon-warning-triangle-o\" ng-if=\"!(secretsVersion | canI : 'list')\" aria-hidden=\"true\" data-toggle=\"tooltip\" data-original-title=\"You do not have access to secrets in this project. Webhook URLs require access to secret information to be used.\"></span>\n" +
+    "\n" +
+    "</h3>\n" +
     "<dl class=\"dl-horizontal left build-triggers\">\n" +
     "<div ng-repeat=\"trigger in buildConfig.spec.triggers | orderBy : 'type' : false : compareTriggers\">\n" +
     "<div ng-switch=\"trigger.type\">\n" +
@@ -2178,11 +2181,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<h1>\n" +
     "<translate>Config Maps</translate>\n" +
-    "<span class=\"page-header-link\">\n" +
-    "<a ng-href=\"{{'config-maps' | helpLink}}\" target=\"_blank\">\n" +
-    "<translate>Learn More</translate> <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
-    "</a>\n" +
-    "</span>\n" +
+    "\n" +
     "</h1>\n" +
     "</div>\n" +
     "<div ng-if=\"(configMaps | hashSize) > 0 || filterWithZeroResults\" class=\"data-toolbar\">\n" +
@@ -2460,9 +2459,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h3 translate>Triggers</h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<dt>Manual (CLI):\n" +
-    "<a href=\"{{'deployment-operations' | helpLink}}\" target=\"_blank\">\n" +
-    "<span class=\"learn-more-block\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span>\n" +
-    "</a>\n" +
+    "\n" +
     "</dt>\n" +
     "<dd>\n" +
     "<copy-to-clipboard clipboard-text=\"'oc rollout latest dc/' + deploymentConfig.metadata.name + ' -n ' + project.metadata.name\"></copy-to-clipboard>\n" +
@@ -2512,9 +2509,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"deploymentConfig.spec.strategy.type !== 'Custom'\">\n" +
     "<h3>\n" +
     "<translate>Hooks</translate>\n" +
-    "<span class=\"learn-more-inline\">\n" +
-    "<a ng-href=\"{{'lifecycle_hooks' | helpLink}}\" target=\"_blank\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
-    "</span>\n" +
+    "\n" +
     "</h3>\n" +
     "<div ng-if=\"strategyParams.pre\">\n" +
     "<lifecycle-hook deployment-config=\"deploymentConfig\" type=\"pre\"></lifecycle-hook>\n" +
@@ -3448,11 +3443,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<h1>\n" +
     "<translate>Routes</translate>\n" +
-    "<span class=\"page-header-link\">\n" +
-    "<a ng-href=\"{{'routes' | helpLink}}\" target=\"_blank\">\n" +
-    "<translate>Learn More</translate> <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
-    "</a>\n" +
-    "</span>\n" +
+    "\n" +
     "</h1>\n" +
     "</div>\n" +
     "<div ng-if=\"(routes | hashSize) > 0 || filterWithZeroResults\" class=\"data-toolbar\">\n" +
@@ -4069,11 +4060,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<h1>\n" +
     "<translate>Builds</translate>\n" +
-    "<span class=\"page-header-link\">\n" +
-    "<a ng-href=\"{{'builds' | helpLink}}\" target=\"_blank\">\n" +
-    "<translate>Learn More</translate> <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
-    "</a>\n" +
-    "</span>\n" +
+    "\n" +
     "</h1>\n" +
     "</div>\n" +
     "<div ng-if=\"(((latestByConfig | hashSize) || (buildsNoConfig | hashSize)) || filterWithZeroResults)\" class=\"data-toolbar\">\n" +
@@ -4670,7 +4657,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h1 translate>Create Storage</h1>\n" +
     "<div class=\"help-block\">\n" +
     "<translate>Create a request for an administrator-defined storage asset by specifying size and permissions for a best fit.</translate>\n" +
-    "<a href=\"{{'persistent_volumes' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "\n" +
     "</div>\n" +
     "<form name=\"createPersistentVolumeClaimForm\" class=\"mar-top-lg\">\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
@@ -5018,9 +5005,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"help-block\" id=\"scale-type-help\" translate>\n" +
     "Scale replicas manually or automatically based on CPU usage.\n" +
     "</div>\n" +
-    "<div class=\"learn-more-block\">\n" +
-    "<a href=\"{{'pod_autoscaling' | helpLink}}\" target=\"_blank\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
-    "</div>\n" +
+    "\n" +
     "<div class=\"has-warning\" ng-if=\"metricsWarning && scaling.autoscale\">\n" +
     "<span class=\"help-block\" translate>\n" +
     "CPU metrics might not be available. In order to use horizontal pod autoscalers, your cluster administrator must have properly configured cluster metrics.\n" +
@@ -5102,11 +5087,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<h1>\n" +
     "<translate>Deployments</translate>\n" +
-    "<span class=\"page-header-link\">\n" +
-    "<a ng-href=\"{{'deployments' | helpLink}}\" target=\"_blank\">\n" +
-    "<translate>Learn More</translate> <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
-    "</a>\n" +
-    "</span>\n" +
+    "\n" +
     "</h1>\n" +
     "</div>\n" +
     "<div ng-if=\"!showEmptyState || filterWithZeroResults\" class=\"data-toolbar\">\n" +
@@ -6142,7 +6123,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"help-block\" id=\"secret-name-help\">\n" +
     "<translate>Value of the secret will be supplied when invoking the webhook.</translate>\n" +
-    "<a ng-href=\"{{'webhooks' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "\n" +
     "</div>\n" +
     "<div class=\"has-error\" ng-show=\"secretForm.webhookSecretKey.$error.pattern && secretForm.webhookSecretKey.$touched\">\n" +
     "<span class=\"help-block\">\n" +
@@ -6323,7 +6304,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<label>\n" +
     "<input type=\"checkbox\" ng-model=\"newSecret.linkSecret\">\n" +
     "<translate>Link secret to a service account.</translate>\n" +
-    "<a href=\"{{'managing_secrets' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "\n" +
     "</label>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -6445,7 +6426,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<translate>To deploy an image from a private repository, you must</translate> <span ng-if=\"!input.selectedProject.metadata.uid\" translate>create an image pull secret</span>\n" +
     "<a href=\"\" ng-click=\"openCreateWebhookSecretModal()\" ng-if=\"input.selectedProject.metadata.uid\" translate>create an image pull secret</a>\n" +
     "<translate>with your image registry credentials.</translate>\n" +
-    "<a ng-href=\"{{'pull_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a></div>\n" +
+    "\n" +
+    "</div>\n" +
     "</div>\n" +
     "</fieldset>\n" +
     "</fieldset>\n" +
@@ -6952,7 +6934,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div id=\"action-help\" class=\"help-block\">\n" +
     "<span ng-if=\"action.type === 'execNewPod'\" translate>Runs a command in a new pod using the container from the deployment template. You can add additional environment variables and volumes.</span>\n" +
     "<span ng-if=\"action.type === 'tagImages'\" translate>Tags the current image as an image stream tag if the deployment succeeds.</span>\n" +
-    "<a href=\"{{'new_pod_exec' | helpLink}}\" aria-hidden=\"true\" target=\"_blank\"><span class=\"learn-more-inline\">Learn More&nbsp;<i class=\"fa fa-external-link\"></i></span></a>\n" +
+    "\n" +
     "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"action.type === 'execNewPod'\">\n" +
@@ -7128,7 +7110,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group filter-controls has-clear\">\n" +
     "<div class=\"search-pf-input-group\">\n" +
     "<label for=\"events-filter\" class=\"sr-only\" translate>Filter</label>\n" +
-    "<input type=\"search\" placeholder=\"Filter by keyword\" class=\"form-control\" id=\"events-filter\" ng-model=\"filter.text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
+    "<input type=\"search\" placeholder=\"'Filter by keyword' | translate\" class=\"form-control\" id=\"events-filter\" ng-model=\"filter.text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
     "<button type=\"button\" class=\"clear\" aria-hidden=\"true\" ng-if=\"filter.text\" ng-click=\"filter.text = ''\">\n" +
     "<span class=\"pficon pficon-close\"></span>\n" +
     "</button>\n" +
@@ -7603,10 +7585,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{helpText}}\n" +
     "</div>\n" +
     "<div ng-show=\"expand\" ng-class=\"{ 'gutter-top': !helpText }\">\n" +
-    "<key-value-editor entries=\"labels\" key-placeholder=\"Name\" key-maxlength=\"63\" key-validator-regex=\"validator.key\" value-placeholder=\"Value\" value-maxlength=\"63\" value-validator-regex=\"validator.value\" key-validator-error-tooltip=\"{{'A valid object label has the form [domain/]name where a name is an alphanumeric (a-z, and 0-9) string,\n" +
-    "      with a maximum length of 63 characters, with the '-' character allowed anywhere except the first or last\n" +
-    "      character. A domain is a sequence of names separated by the '.' character with a maximum length of 253 characters.' | translate}}\" value-validator-error-tooltip=\"{{'A valid label value is an alphanumeric (a-z, and 0-9) string, with a maximum length of 63 characters, with the '-'\n" +
-    "      character allowed anywhere except the first or last character.' | translate}}\" add-row-link=\"Add Label\"></key-value-editor>\n" +
+    "<key-value-editor entries=\"labels\" key-placeholder=\"Name\" key-maxlength=\"63\" key-validator-regex=\"validator.key\" value-placeholder=\"Value\" value-maxlength=\"63\" value-validator-regex=\"validator.value\" key-validator-error-tooltip=\"A valid object label has the form [domain/]name where a name is an alphanumeric (a-z, and 0-9) string, with a maximum length of 63 characters, with the '-' character allowed anywhere except the first or last character. A domain is a sequence of names separated by the '.' character with a maximum length of 253 characters.\" value-validator-error-tooltip=\"A valid label value is an alphanumeric (a-z, and 0-9) string, with a maximum length of 63 characters, with the '-' character allowed anywhere except the first or last character.\" add-row-link=\"Add Label\"></key-value-editor>\n" +
     "</div>\n" +
     "<div ng-hide=\"expand\">\n" +
     "<key-value-editor entries=\"labels\" key-placeholder=\"Labels\" cannot-sort cannot-delete cannot-add is-readonly></key-value-editor>\n" +
@@ -8104,9 +8083,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div id=\"target-cpu-help\" class=\"help-block\" translate>\n" +
     "The percentage of the CPU request that each pod should ideally be using. Pods will be added or removed periodically when CPU usage exceeds or drops below this target value.\n" +
     "</div>\n" +
-    "<div class=\"learn-more-block\">\n" +
-    "<a ng-href=\"{{'compute_resources' | helpLink}}\" target=\"_blank\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
-    "</div>\n" +
+    "\n" +
     "\n" +
     "<div class=\"has-error mar-top-md\" ng-show=\"form.targetCPU.$touched && form.targetCPU.$invalid\">\n" +
     "<span ng-if=\"form.targetCPU.$error.number\" class=\"help-block\" translate>\n" +
@@ -8235,9 +8212,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div id=\"claim-storage-class-help\" class=\"help-block\">\n" +
     "<translate>Storage classes are set by the administrator to define types of storage the users can select.</translate>\n" +
     "<span ng-if=\"defaultStorageClass\"> <translate>If another storage class is not chosen, the default storage class</translate> <var>{{defaultStorageClass.metadata.name}}</var> <translate>will be used.</translate></span>\n" +
-    "<div class=\"learn-more-block\">\n" +
-    "<a ng-href=\"{{'storage_classes' | helpLink}}\" target=\"_blank\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"> </i></a>\n" +
-    "</div>\n" +
+    "\n" +
     "</div>\n" +
     "</div>\n" +
     "\n" +
@@ -8370,9 +8345,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<input type=\"checkbox\" ng-model=\"useLabels\">\n" +
     "<translate>Use label selectors to request storage</translate>\n" +
     "</label>\n" +
-    "<div class=\"help-block learn-more-block mar-bottom-xl\">\n" +
-    "<a ng-href=\"{{'selector_label' | helpLink}}\" target=\"_blank\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
-    "</div>\n" +
+    "\n" +
     "</div>\n" +
     "<div ng-show=\"useLabels\" class=\"form-group osc-form\">\n" +
     "<label-editor labels=\"claim.selectedLabels\" expand=\"true\" can-toggle=\"false\" help-text=\"{{'Enter a label and value to use for your storage.' | translate}}\">\n" +
@@ -8624,9 +8597,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "{{option | humanizeTLSTermination}}\n" +
     "</ui-select-choices>\n" +
     "</ui-select>\n" +
-    "<div class=\"learn-more-block help-block\">\n" +
-    "<a href=\"{{'route-types' | helpLink}}\" target=\"_blank\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
-    "</div>\n" +
+    "\n" +
     "</div>\n" +
     "\n" +
     "<div class=\"form-group\">\n" +
@@ -8732,15 +8703,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"help-blocks\" ng-switch=\"displayType\">\n" +
     "<div class=\"help-block\" ng-switch-when=\"source\">\n" +
     "<translate>Secret with credentials for pulling your source code.</translate>\n" +
-    "<a href=\"{{'git_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "\n" +
     "</div>\n" +
     "<div class=\"help-block\" ng-switch-when=\"pull\">\n" +
     "<translate>Secret for authentication when pulling images from a secured registry.</translate>\n" +
-    "<a href=\"{{'pull_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "\n" +
     "</div>\n" +
     "<div class=\"help-block\" ng-switch-when=\"push\">\n" +
     "<translate>Secret for authentication when pushing images to a secured registry.</translate>\n" +
-    "<a href=\"{{'pull_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "\n" +
     "</div>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -9491,9 +9462,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"help-block\" translate>\n" +
     "Scale replicas automatically based on CPU usage.\n" +
     "</div>\n" +
-    "<div class=\"learn-more-block\" ng-class=\"{ 'gutter-bottom': metricsWarning || showCPURequestWarning }\">\n" +
-    "<a href=\"{{'pod_autoscaling' | helpLink}}\" target=\"_blank\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden> </i></a>\n" +
-    "</div>\n" +
+    "\n" +
     "\n" +
     "<div ng-if=\"metricsWarning\" class=\"alert alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
@@ -9828,7 +9797,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "\n" +
     "<div ng-show=\"view.advancedOptions\">\n" +
     "<h3 class=\"with-divider\"><translate>Triggers</translate>\n" +
-    "<a ng-href=\"{{'build-triggers' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "\n" +
     "</h3>\n" +
     "<dl class=\"dl-horizontal left\">\n" +
     "<div>\n" +
@@ -9863,7 +9832,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-show=\"view.advancedOptions\">\n" +
     "<h3 class=\"with-divider\">\n" +
     "<translate>Build Secrets</translate>\n" +
-    "<a href=\"{{'source_secrets' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "\n" +
     "</h3>\n" +
     "<div class=\"form-group\">\n" +
     "<osc-source-secrets model=\"secrets.picked.sourceSecrets\" namespace=\"projectName\" secrets-by-type=\"secrets.secretsByType\" strategy-type=\"strategyType\" service-account-to-link=\"builder\" alerts=\"alerts\" display-type=\"source\" type=\"source\">\n" +
@@ -9900,9 +9869,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-show=\"view.advancedOptions\">\n" +
     "<h3 class=\"with-divider\">\n" +
     "<translate>Post-Commit Hooks</translate>\n" +
-    "<span class=\"help action-inline\">\n" +
-    "<a href=\"{{'build-hooks' | helpLink}}\" aria-hidden=\"true\" target=\"_blank\"><span class=\"learn-more-inline\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\"></i></span></a>\n" +
-    "</span>\n" +
+    "\n" +
     "</h3>\n" +
     "<div class=\"checkbox\">\n" +
     "<label>\n" +
@@ -10043,15 +10010,15 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-switch=\"strategyData.type\">\n" +
     "<span class=\"help-block\" ng-switch-when=\"Recreate\">\n" +
     "<translate>The recreate strategy has basic rollout behavior and supports lifecycle hooks for injecting code into the deployment process.</translate>\n" +
-    "<a ng-href=\"{{'recreate_strategy' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "\n" +
     "</span>\n" +
     "<span class=\"help-block\" ng-switch-when=\"Rolling\">\n" +
     "<translate>The rolling strategy will wait for pods to pass their readiness check, scale down old components and then scale up.</translate>\n" +
-    "<a ng-href=\"{{'rolling_strategy' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "\n" +
     "</span>\n" +
     "<span class=\"help-block\" ng-switch-when=\"Custom\">\n" +
     "<translate>The custom strategy allows you to specify container image that will provide your own deployment behavior.</translate>\n" +
-    "<a ng-href=\"{{'custom_strategy' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
+    "\n" +
     "</span>\n" +
     "</span>\n" +
     "</div>\n" +
@@ -10284,9 +10251,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h1><translate>Health Checks:</translate> {{name}}</h1>\n" +
     "<div class=\"help-block\">\n" +
     "<translate>Container health is periodically checked using readiness and liveness probes.</translate>\n" +
-    "<div class=\"learn-more-block\">\n" +
-    "<a href=\"{{'application_health' | helpLink}}\" target=\"_blank\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
-    "</div>\n" +
+    "\n" +
     "</div>\n" +
     "<fieldset ng-disabled=\"disableInputs\">\n" +
     "<div ng-repeat=\"container in containers\">\n" +
@@ -10520,11 +10485,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<h1>\n" +
     "<translate>Image Streams</translate>\n" +
-    "<span class=\"page-header-link\">\n" +
-    "<a ng-href=\"{{'image-streams' | helpLink}}\" target=\"_blank\">\n" +
-    "<translate>Learn More</translate> <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
-    "</a>\n" +
-    "</span>\n" +
+    "\n" +
     "</h1>\n" +
     "</div>\n" +
     "<div ng-if=\"(imageStreams | hashSize) > 0 || filterWithZeroResults\" class=\"data-toolbar\">\n" +
@@ -10678,11 +10639,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<span ng-if=\"mode.edit\" translate>Done Editing</span>\n" +
     "</a>\n" +
     "<translate>Membership</translate>\n" +
-    "<span class=\"page-header-link\">\n" +
-    "<a ng-href=\"{{'roles' | helpLink}}\" target=\"_blank\">\n" +
-    "<translate>Learn More</translate> <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
-    "</a>\n" +
-    "</span>\n" +
+    "\n" +
     "</h1>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -10701,9 +10658,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"subjectKind.description\">\n" +
     "<p>\n" +
     "{{subjectKind.description}}\n" +
-    "<a ng-if=\"subjectKind.helpLinkKey\" target=\"_blank\" ng-href=\"{{subjectKind.helpLinkKey | helpLink}}\" class=\"learn-more-inline\">\n" +
-    "<translate>Learn More</translate> <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
-    "</a>\n" +
+    "\n" +
     "</p>\n" +
     "</div>\n" +
     "<div class=\"content-pane\" ng-class=\"'content-' + subjectKind.name.toLowerCase()\">\n" +
@@ -10843,9 +10798,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<h1 class=\"modal-title\">\n" +
     "<translate>Compute Resources</translate>\n" +
-    "<span class=\"page-header-link\">\n" +
-    "<a href=\"{{'compute_resources' | helpLink}}\" target=\"_blank\"><translate>Learn More</translate> <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
-    "</span>\n" +
+    "\n" +
     "</h1>\n" +
     "</div>\n" +
     "<div class=\"modal-body\">\n" +
@@ -11002,12 +10955,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</button>\n" +
     "<h1 class=\"modal-title\">\n" +
     "<translate>Create</translate> {{type | capitalize}} Secret\n" +
-    "<span ng-switch=\"type\">\n" +
-    "<a ng-switch-when=\"webhook\" ng-href=\"{{'webhook_secrets' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
-    "<a ng-switch-when=\"source\" ng-href=\"{{'git_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
-    "<a ng-switch-when=\"image\" ng-href=\"{{'pull_secret' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
-    "<a ng-switch-default ng-href=\"{{'source_secrets' | helpLink}}\" target=\"_blank\"><span class=\"learn-more-inline\"><translate>Learn More</translate>&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></span></a>\n" +
-    "</span>\n" +
+    "\n" +
     "</h1>\n" +
     "</div>\n" +
     "<div class=\"modal-body contains-form\">\n" +
@@ -11162,11 +11110,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"modal-body\">\n" +
     "<h3><translate>Increase the capacity of claim</translate>\n" +
     "<strong>{{typeDisplayName}}</strong>.\n" +
-    "<a ng-href=\"{{'expanding_persistent_volumes' | helpLink}}\" target=\"_blank\">\n" +
-    "<span class=\"learn-more-inline\"><translate>Learn More</translate>\n" +
-    "<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
-    "</span>\n" +
-    "</a>\n" +
+    "\n" +
     "</h3>\n" +
     "<p translate>This can be a time-consuming process.</p>\n" +
     "<ng-form name=\"expandPersistentVolumeClaimForm\">\n" +
@@ -13207,11 +13151,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<h1>\n" +
     "<translate>Pipelines</translate>\n" +
-    "<span class=\"page-header-link\">\n" +
-    "<a ng-href=\"{{'pipeline-builds' | helpLink}}\" target=\"_blank\">\n" +
-    "<translate>Learn More</translate> <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
-    "</a>\n" +
-    "</span>\n" +
+    "\n" +
     "</h1>\n" +
     "</div>\n" +
     "</div>\n" +
@@ -13324,11 +13264,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<h1>\n" +
     "Pods\n" +
-    "<span class=\"page-header-link\">\n" +
-    "<a ng-href=\"{{'pods' | helpLink}}\" target=\"_blank\">\n" +
-    "<translate>Learn More</translate> <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
-    "</a>\n" +
-    "</span>\n" +
+    "\n" +
     "</h1>\n" +
     "</div>\n" +
     "<div ng-if=\"((pods | hashSize) > 0) || filterWithZeroResults\" class=\"data-toolbar\">\n" +
@@ -13377,7 +13313,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
 
   $templateCache.put('views/projects.html',
     "<div class=\"middle surface-shaded\">\n" +
-    "<origin-modal-popup class=\"projects-list-create-popup\" shown=\"newProjectPanelShown\" modal-title=\"Create Project\" on-close=\"closeNewProjectPanel\" reference-element=\"popupElement\">\n" +
+    "<origin-modal-popup class=\"projects-list-create-popup\" shown=\"newProjectPanelShown\" modal-title=\"{{'Create Project' | translate}}\" on-close=\"closeNewProjectPanel\" reference-element=\"popupElement\">\n" +
     "<create-project is-dialog=\"true\" redirect-action=\"onNewProject\" on-cancel=\"closeNewProjectPanel\"></create-project>\n" +
     "</origin-modal-popup>\n" +
     "<div class=\"middle-content\">\n" +
@@ -13407,7 +13343,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group has-clear\">\n" +
     "<div class=\"search-pf-input-group\">\n" +
     "<label for=\"search-projects\" class=\"sr-only\" translate>Filter by keyword</label>\n" +
-    "<input type=\"search\" class=\"form-control\" placeholder=\"Filter by keyword\" id=\"search-projects\" ng-model=\"search.text\">\n" +
+    "<input type=\"search\" class=\"form-control\" placeholder=\"{{'Filter by keyword' | translate}}\" id=\"search-projects\" ng-model=\"search.text\">\n" +
     "<button type=\"button\" class=\"clear\" aria-hidden=\"true\" ng-if=\"search.text\" ng-click=\"search.text = ''\">\n" +
     "<span class=\"pficon pficon-close\"></span>\n" +
     "</button>\n" +
@@ -13495,7 +13431,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</ul>\n" +
     "</div>\n" +
     "</div>\n" +
-    "<origin-modal-popup shown=\"editProjectPanelShown && editingProject === project\" ng-class=\"{'with-description': (project | description | size)}\" modal-title=\"Edit Project\" on-close=\"closeEditProjectPanel\">\n" +
+    "<origin-modal-popup shown=\"editProjectPanelShown && editingProject === project\" ng-class=\"{'with-description': (project | description | size)}\" modal-title=\"{{'Edit Project' | translate}}\" on-close=\"closeEditProjectPanel\">\n" +
     "<edit-project project=\"project\" is-dialog=\"true\" redirect-action=\"onEditProject\" on-cancel=\"closeEditProjectPanel\"></edit-project>\n" +
     "</origin-modal-popup>\n" +
     "</div>\n" +
@@ -13540,11 +13476,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<alerts alerts=\"alerts\"></alerts>\n" +
     "<h1>\n" +
     "<span ng-if=\"clusterQuotas.length\">Cluster </span>Quota\n" +
-    "<span class=\"page-header-link\">\n" +
-    "<a ng-href=\"{{'quota' | helpLink}}\" target=\"_blank\">\n" +
-    "<translate>Learn More</translate> <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
-    "</a>\n" +
-    "</span>\n" +
+    "\n" +
     "</h1>\n" +
     "<div ng-if=\"!quotas.length && !clusterQuotas.length\" class=\"mar-top-xl\">\n" +
     "<div class=\"help-block\">{{quotaHelp}}</div>\n" +
@@ -13787,11 +13719,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<h1>\n" +
     "Secrets\n" +
-    "<span class=\"page-header-link\">\n" +
-    "<a ng-href=\"{{'secrets' | helpLink}}\" target=\"_blank\">\n" +
-    "<translate>Learn More</translate> <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
-    "</a>\n" +
-    "</span>\n" +
+    "\n" +
     "</h1>\n" +
     "</div>\n" +
     "<div ng-if=\"unfilteredSecrets\" class=\"data-toolbar\">\n" +
@@ -13960,11 +13888,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"page-header page-header-bleed-right page-header-bleed-left\">\n" +
     "<h1>\n" +
     "<translate>Services</translate>\n" +
-    "<span class=\"page-header-link\">\n" +
-    "<a ng-href=\"{{'services' | helpLink}}\" target=\"_blank\">\n" +
-    "<translate>Learn More</translate> <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
-    "</a>\n" +
-    "</span>\n" +
+    "\n" +
     "</h1>\n" +
     "</div>\n" +
     "<div ng-if=\"(services | hashSize) > 0 || filterWithZeroResults\" class=\"data-toolbar\">\n" +
@@ -14051,9 +13975,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"help-block\">\n" +
     "<span ng-if=\"!hideCPU\" translate>Resource limits control how much CPU and memory a container will consume on a node.</span>\n" +
     "<span ng-if=\"hideCPU\" translate>Resource limits control how much memory a container will consume on a node.</span>\n" +
-    "<div class=\"learn-more-block\" ng-class=\"{ 'gutter-bottom': showPodWarning }\">\n" +
-    "<a href=\"{{'compute_resources' | helpLink}}\" target=\"_blank\"><translate>Learn More</translate> <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
-    "</div>\n" +
+    "\n" +
     "</div>\n" +
     "<div ng-if=\"showPodWarning\" class=\"alert alert-warning\">\n" +
     "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
@@ -14100,11 +14022,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<h1>\n" +
     "<translate>Storage</translate>\n" +
-    "<span class=\"page-header-link\">\n" +
-    "<a ng-href=\"{{'storage' | helpLink}}\" target=\"_blank\">\n" +
-    "<translate>Learn More</translate> <i class=\"fa fa-external-link\" aria-hidden=\"true\"></i>\n" +
-    "</a>\n" +
-    "</span>\n" +
+    "\n" +
     "</h1>\n" +
     "</div>\n" +
     "<div ng-if=\"(pvcs | hashSize) > 0 || filterWithZeroResults\" class=\"data-toolbar\">\n" +

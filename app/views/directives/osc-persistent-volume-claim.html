@@ -52,9 +52,9 @@
       <div id="claim-storage-class-help" class="help-block">
           <translate>Storage classes are set by the administrator to define types of storage the users can select.</translate>
         <span ng-if="defaultStorageClass"> <translate>If another storage class is not chosen, the default storage class</translate> <var>{{defaultStorageClass.metadata.name}}</var> <translate>will be used.</translate></span>
-        <div class="learn-more-block">
+        <!-- <div class="learn-more-block">
           <a ng-href="{{'storage_classes' | helpLink}}" target="_blank"><translate>Learn More</translate>&nbsp;<i class="fa fa-external-link" aria-hidden="true"> </i></a>
-        </div>
+        </div> -->
       </div>
 
     </div>
@@ -221,9 +221,9 @@
         <input type="checkbox" ng-model="useLabels">
         <translate>Use label selectors to request storage</translate>
       </label>
-      <div class="help-block learn-more-block mar-bottom-xl">
+      <!-- <div class="help-block learn-more-block mar-bottom-xl">
         <a ng-href="{{'selector_label' | helpLink}}" target="_blank"><translate>Learn More</translate>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
-      </div>
+      </div> -->
     </div>
     <div ng-show="useLabels" class="form-group osc-form">
       <label-editor

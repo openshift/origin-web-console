@@ -171,6 +171,7 @@ msgstr ""
 msgid "Abort deployment on failure"
 msgstr ""
 
+#: app/scripts/extensions/nav/helpDropdown.js:38
 #: app/views/about.html:8
 #: app/views/directives/osc-form-section.html:14
 msgid "About"
@@ -893,7 +894,7 @@ msgstr ""
 msgid "Bindings"
 msgstr ""
 
-#: app/views/browse/build-config.html:388
+#: app/views/browse/build-config.html:391
 msgid "Bitbucket Webhook URL:"
 msgstr ""
 
@@ -1250,7 +1251,7 @@ msgstr ""
 msgid "Clear All Filters"
 msgstr ""
 
-#: app/views/browse/build-config.html:487
+#: app/views/browse/build-config.html:490
 #: app/views/directives/edit-environment-variables.html:57
 msgid "Clear Changes"
 msgstr ""
@@ -1326,6 +1327,7 @@ msgstr ""
 msgid "command line tools"
 msgstr ""
 
+#: app/scripts/extensions/nav/helpDropdown.js:32
 #: app/views/about.html:40
 #: app/views/command-line.html:7
 msgid "Command Line Tools"
@@ -1354,7 +1356,7 @@ msgstr ""
 msgid "Config change"
 msgstr ""
 
-#: app/views/browse/build-config.html:431
+#: app/views/browse/build-config.html:434
 msgid "Config Change For:"
 msgstr ""
 
@@ -1553,6 +1555,12 @@ msgstr ""
 msgid "Continue with deployment on failure"
 msgstr ""
 
+#: app/scripts/directives/util.js:113
+msgid "Copy Login Command"
+msgstr ""
+
+#: app/scripts/directives/util.js:87
+#: app/scripts/directives/util.js:97
 #: app/views/directives/_copy-to-clipboard.html:25
 #: app/views/directives/_copy-to-clipboard.html:38
 msgid "Copy to Clipboard"
@@ -1748,6 +1756,7 @@ msgstr ""
 
 #: app/views/create-project.html:5
 #: app/views/projects.html:181
+#: app/views/projects.html:2
 #: app/views/projects.html:25
 msgid "Create Project"
 msgstr ""
@@ -2126,6 +2135,7 @@ msgstr ""
 msgid "documentation"
 msgstr ""
 
+#: app/scripts/extensions/nav/helpDropdown.js:13
 #: app/views/about.html:31
 msgid "Documentation"
 msgstr ""
@@ -2247,6 +2257,7 @@ msgid "Edit Pipeline"
 msgstr ""
 
 #: app/views/projects.html:136
+#: app/views/projects.html:155
 msgid "Edit Project"
 msgstr ""
 
@@ -2365,7 +2376,7 @@ msgid ""
 "        exit code is 0. Drag and drop to reorder arguments."
 msgstr ""
 
-#: app/views/browse/build-config.html:452
+#: app/views/browse/build-config.html:455
 #: app/views/browse/build.html:95
 #: app/views/browse/deployment-config.html:340
 #: app/views/browse/deployment.html:282
@@ -2383,7 +2394,7 @@ msgstr ""
 msgid "Environment variables"
 msgstr ""
 
-#: app/views/browse/build-config.html:453
+#: app/views/browse/build-config.html:456
 #: app/views/browse/build.html:96
 #: app/views/create/fromimage.html:215
 #: app/views/create/fromimage.html:256
@@ -2449,7 +2460,7 @@ msgstr ""
 
 #: app/scripts/controllers/events.js:23
 #: app/scripts/directives/nav.js:49
-#: app/views/browse/build-config.html:507
+#: app/views/browse/build-config.html:510
 #: app/views/browse/build.html:140
 #: app/views/browse/deployment-config.html:344
 #: app/views/browse/deployment.html:286
@@ -2569,7 +2580,9 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
+#: app/views/directives/events.html:11
 #: app/views/projects.html:32
+#: app/views/projects.html:36
 msgid "Filter by keyword"
 msgstr ""
 
@@ -2615,7 +2628,7 @@ msgstr ""
 msgid "Generate"
 msgstr ""
 
-#: app/views/browse/build-config.html:410
+#: app/views/browse/build-config.html:413
 msgid "Generic Webhook URL:"
 msgstr ""
 
@@ -2652,11 +2665,11 @@ msgstr ""
 msgid "Git URL of the source code to build."
 msgstr ""
 
-#: app/views/browse/build-config.html:396
+#: app/views/browse/build-config.html:399
 msgid "GitHub Webhook URL:"
 msgstr ""
 
-#: app/views/browse/build-config.html:403
+#: app/views/browse/build-config.html:406
 msgid "GitLab Webhook URL:"
 msgstr ""
 
@@ -2674,6 +2687,10 @@ msgstr ""
 
 #: app/views/browse/_pod-details.html:34
 msgid "Grace Period:"
+msgstr ""
+
+#: app/scripts/services/membership/membership.js:49
+msgid "Group"
 msgstr ""
 
 #: app/views/overview/_service-linking-button.html:6
@@ -2734,7 +2751,7 @@ msgstr ""
 msgid "Hide examples"
 msgstr ""
 
-#: app/views/browse/build-config.html:457
+#: app/views/browse/build-config.html:460
 msgid "Hide Image Environment Variables"
 msgstr ""
 
@@ -3207,50 +3224,6 @@ msgstr ""
 msgid "Layers"
 msgstr ""
 
-#: app/views/browse/config-maps.html:12
-#: app/views/browse/deployment-config.html:254
-#: app/views/browse/deployment-config.html:318
-#: app/views/browse/routes.html:12
-#: app/views/builds.html:9
-#: app/views/create-persistent-volume-claim.html:11
-#: app/views/create/fromimage.html:314
-#: app/views/deployments.html:9
-#: app/views/directives/create-secret.html:335
-#: app/views/directives/create-secret.html:73
-#: app/views/directives/deploy-image.html:68
-#: app/views/directives/osc-autoscaling.html:123
-#: app/views/directives/osc-persistent-volume-claim.html:225
-#: app/views/directives/osc-persistent-volume-claim.html:56
-#: app/views/directives/osc-routing.html:253
-#: app/views/directives/osc-secrets.html:34
-#: app/views/directives/osc-secrets.html:38
-#: app/views/directives/osc-secrets.html:42
-#: app/views/edit/build-config.html:444
-#: app/views/edit/build-config.html:493
-#: app/views/edit/build-config.html:540
-#: app/views/edit/deployment-config.html:31
-#: app/views/edit/deployment-config.html:35
-#: app/views/edit/deployment-config.html:39
-#: app/views/edit/health-checks.html:13
-#: app/views/images.html:9
-#: app/views/membership.html:17
-#: app/views/membership.html:47
-#: app/views/modals/about-compute-units-modal.html:9
-#: app/views/modals/create-secret.html:10
-#: app/views/modals/create-secret.html:11
-#: app/views/modals/create-secret.html:12
-#: app/views/modals/create-secret.html:9
-#: app/views/modals/edit-pvc-resource.html:13
-#: app/views/pipelines.html:9
-#: app/views/pods.html:9
-#: app/views/quota.html:9
-#: app/views/secrets.html:12
-#: app/views/services.html:9
-#: app/views/set-limits.html:14
-#: app/views/storage.html:13
-msgid "Learn More"
-msgstr ""
-
 #: app/views/browse/service.html:94
 #: app/views/edit/jenkinsfile-examples.html:53
 #: app/views/overview.html:276
@@ -3420,6 +3393,7 @@ msgstr ""
 msgid "Log out"
 msgstr ""
 
+#: app/scripts/extensions/nav/userDropdown.js:28
 #: app/views/modals/logout.html:14
 msgid "Log Out"
 msgstr ""
@@ -3472,7 +3446,7 @@ msgstr ""
 msgid "Making code changes"
 msgstr ""
 
-#: app/views/browse/build-config.html:440
+#: app/views/browse/build-config.html:443
 msgid "Manual (CLI):"
 msgstr ""
 
@@ -3839,7 +3813,7 @@ msgstr ""
 msgid "new {{subjectKind.name}} role"
 msgstr ""
 
-#: app/views/browse/build-config.html:417
+#: app/views/browse/build-config.html:420
 #: app/views/browse/deployment-config.html:264
 msgid "New Image For:"
 msgstr ""
@@ -4311,7 +4285,7 @@ msgstr ""
 msgid "Other Resources"
 msgstr ""
 
-#: app/views/browse/build-config.html:435
+#: app/views/browse/build-config.html:438
 msgid "Other Trigger:"
 msgstr ""
 
@@ -5023,7 +4997,7 @@ msgstr ""
 msgid "runs before the deployment begins"
 msgstr ""
 
-#: app/views/browse/build-config.html:483
+#: app/views/browse/build-config.html:486
 #: app/views/directives/add-config-to-application.html:149
 #: app/views/directives/edit-environment-variables.html:52
 #: app/views/directives/logs/_log-viewer.html:17
@@ -5303,6 +5277,10 @@ msgstr ""
 msgid "Service Weights"
 msgstr ""
 
+#: app/scripts/services/membership/membership.js:59
+msgid "ServiceAccount"
+msgstr ""
+
 #: app/views/browse/service.html:94
 msgid "services"
 msgstr ""
@@ -5324,6 +5302,7 @@ msgstr ""
 msgid "Session Timeout Warning"
 msgstr ""
 
+#: app/scripts/directives/util.js:156
 #: app/views/modals/set-home-page-modal.html:6
 msgid "Set Home Page"
 msgstr ""
@@ -5361,7 +5340,7 @@ msgstr ""
 msgid "Show hidden roles"
 msgstr ""
 
-#: app/views/browse/build-config.html:456
+#: app/views/browse/build-config.html:459
 msgid "Show Image Environment Variables"
 msgstr ""
 
@@ -5771,7 +5750,7 @@ msgstr ""
 msgid "The build strategy had no environment variables defined."
 msgstr ""
 
-#: app/views/browse/build-config.html:455
+#: app/views/browse/build-config.html:458
 msgid "The builder image has additional environment variables defined.  Variables defined below will overwrite any from the image with the same name."
 msgstr ""
 
@@ -6520,6 +6499,10 @@ msgstr ""
 msgid "Toggle navigation"
 msgstr ""
 
+#: app/scripts/extensions/nav/helpDropdown.js:23
+msgid "Tour Catalog Home"
+msgstr ""
+
 #: app/views/browse/route.html:116
 #: app/views/browse/service.html:89
 #: app/views/overview/_traffic-percent.html:9
@@ -6718,6 +6701,10 @@ msgstr ""
 
 #: app/views/quota.html:63
 msgid "Used (This Project)"
+msgstr ""
+
+#: app/scripts/services/membership/membership.js:41
+msgid "User"
 msgstr ""
 
 #: app/views/_config-file-params.html:3

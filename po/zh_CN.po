@@ -209,7 +209,8 @@ msgstr "replicas是必须的。"
 msgid "Abort deployment on failure"
 msgstr "失败时中止部署"
 
-#: app/views/about.html:8 app/views/directives/osc-form-section.html:14
+#: app/scripts/extensions/nav/helpDropdown.js:38 app/views/about.html:8
+#: app/views/directives/osc-form-section.html:14
 msgid "About"
 msgstr "关于"
 
@@ -712,8 +713,6 @@ msgstr "一个过时的链接"
 #: app/views/images.html:66 app/views/overview/_networking.html:17
 #: app/views/overview/_service-instance-row.html:55 app/views/services.html:62
 #: app/views/services.html:69
-#, fuzzy
-#| msgid "and the"
 msgid "and"
 msgstr "和"
 
@@ -928,7 +927,7 @@ msgstr "已删除以下绑定："
 msgid "Bindings"
 msgstr "绑定"
 
-#: app/views/browse/build-config.html:388
+#: app/views/browse/build-config.html:391
 msgid "Bitbucket Webhook URL:"
 msgstr "Bitbucket Webhook网址："
 
@@ -1274,7 +1273,7 @@ msgstr "清除"
 msgid "Clear All Filters"
 msgstr "清除筛选"
 
-#: app/views/browse/build-config.html:487
+#: app/views/browse/build-config.html:490
 #: app/views/directives/edit-environment-variables.html:57
 msgid "Clear Changes"
 msgstr "清除修改"
@@ -1345,7 +1344,8 @@ msgstr "命令"
 msgid "command line tools"
 msgstr "命令行工具"
 
-#: app/views/about.html:40 app/views/command-line.html:7
+#: app/scripts/extensions/nav/helpDropdown.js:32 app/views/about.html:40
+#: app/views/command-line.html:7
 msgid "Command Line Tools"
 msgstr "命令行工具"
 
@@ -1364,8 +1364,6 @@ msgid "Compute Resources"
 msgstr "计算资源"
 
 #: app/views/browse/deployment-config.html:272
-#, fuzzy
-#| msgid "Configuration"
 msgid "Config"
 msgstr "配置"
 
@@ -1373,7 +1371,7 @@ msgstr "配置"
 msgid "Config change"
 msgstr "配置变更"
 
-#: app/views/browse/build-config.html:431
+#: app/views/browse/build-config.html:434
 msgid "Config Change For:"
 msgstr "配置变更："
 
@@ -1555,7 +1553,7 @@ msgstr "包含无效环境变量名称的键值。只有"
 
 #: app/views/create/fromimage.html:125 app/views/edit/build-config.html:76
 msgid "Context Dir"
-msgstr ""
+msgstr "上下文目录"
 
 #: app/views/modals/process-or-save-template.html:40
 #: app/views/util/oauth.html:11
@@ -1574,6 +1572,11 @@ msgstr "继续至项目概述"
 msgid "Continue with deployment on failure"
 msgstr "失败继续部署"
 
+#: app/scripts/directives/util.js:113
+msgid "Copy Login Command"
+msgstr "复制登录命令"
+
+#: app/scripts/directives/util.js:87 app/scripts/directives/util.js:97
 #: app/views/directives/_copy-to-clipboard.html:25
 #: app/views/directives/_copy-to-clipboard.html:38
 msgid "Copy to Clipboard"
@@ -1768,7 +1771,7 @@ msgstr ""
 "从YAML或JSON定义创建或替换资源。 如果添加模板，您将拥有处理模板的选项。"
 
 #: app/views/create-project.html:5 app/views/projects.html:181
-#: app/views/projects.html:25
+#: app/views/projects.html:2 app/views/projects.html:25
 msgid "Create Project"
 msgstr "创建项目"
 
@@ -1789,8 +1792,6 @@ msgid "Create Secret"
 msgstr "创建Secret"
 
 #: app/views/attach-pvc.html:68
-#, fuzzy
-#| msgid "Create Storage"
 msgid "create storage"
 msgstr "创建存储"
 
@@ -1919,8 +1920,6 @@ msgid "delay,"
 msgstr "延迟，"
 
 #: app/views/modals/delete-resource.html:41
-#, fuzzy
-#| msgid "Delete"
 msgid "delete"
 msgstr "删除"
 
@@ -1991,8 +1990,6 @@ msgstr "正在部署镜像{{name}}到 {{project}}."
 
 #: app/views/browse/deployment-config.html:109
 #: app/views/browse/deployment-config.html:135
-#, fuzzy
-#| msgid "Deploy"
 msgid "Deployment"
 msgstr "部署"
 
@@ -2125,7 +2122,7 @@ msgstr ""
 msgid "documentation"
 msgstr "文档"
 
-#: app/views/about.html:31
+#: app/scripts/extensions/nav/helpDropdown.js:13 app/views/about.html:31
 msgid "Documentation"
 msgstr "文档"
 
@@ -2244,7 +2241,7 @@ msgstr "编辑参数"
 msgid "Edit Pipeline"
 msgstr "编辑Pipeline"
 
-#: app/views/projects.html:136
+#: app/views/projects.html:136 app/views/projects.html:155
 msgid "Edit Project"
 msgstr "编辑项目"
 
@@ -2307,8 +2304,6 @@ msgid ""
 msgstr "不支持编辑非服务目标路由，你可以用“编辑YAML”来替代."
 
 #: app/views/directives/_edit-command.html:103
-#, fuzzy
-#| msgid "Edit"
 msgid "Editor"
 msgstr "编辑"
 
@@ -2366,7 +2361,7 @@ msgstr ""
 "输入要在容器内运行的命令。 如果命令被认为是成功，退出代码为0.拖放以重新排序参"
 "数。"
 
-#: app/views/browse/build-config.html:452 app/views/browse/build.html:95
+#: app/views/browse/build-config.html:455 app/views/browse/build.html:95
 #: app/views/browse/deployment-config.html:340
 #: app/views/browse/deployment.html:282 app/views/browse/pod.html:55
 #: app/views/browse/replica-set.html:46 app/views/browse/stateful-set.html:143
@@ -2381,7 +2376,7 @@ msgstr "环境来自"
 msgid "Environment variables"
 msgstr "环境变量"
 
-#: app/views/browse/build-config.html:453 app/views/browse/build.html:96
+#: app/views/browse/build-config.html:456 app/views/browse/build.html:96
 #: app/views/create/fromimage.html:215 app/views/create/fromimage.html:256
 #: app/views/directives/edit-lifecycle-hook.html:55
 #: app/views/edit/build-config.html:421
@@ -2448,7 +2443,7 @@ msgid "Errors"
 msgstr "错误"
 
 #: app/scripts/controllers/events.js:23 app/scripts/directives/nav.js:49
-#: app/views/browse/build-config.html:507 app/views/browse/build.html:140
+#: app/views/browse/build-config.html:510 app/views/browse/build.html:140
 #: app/views/browse/deployment-config.html:344
 #: app/views/browse/deployment.html:286
 #: app/views/browse/persistent-volume-claim.html:86
@@ -2563,9 +2558,8 @@ msgstr "具有凭据和其他配置的文件，用于连接到安全的image reg
 msgid "Filter"
 msgstr "筛选"
 
-#: app/views/projects.html:32
-#, fuzzy
-#| msgid "Filter by Keyword"
+#: app/views/directives/events.html:11 app/views/projects.html:32
+#: app/views/projects.html:36
 msgid "Filter by keyword"
 msgstr "按关键词筛选"
 
@@ -2609,7 +2603,7 @@ msgstr "通过参数"
 msgid "Generate"
 msgstr "生成"
 
-#: app/views/browse/build-config.html:410
+#: app/views/browse/build-config.html:413
 msgid "Generic Webhook URL:"
 msgstr "通用Webhook URL："
 
@@ -2643,11 +2637,11 @@ msgstr "Git仓库地址"
 msgid "Git URL of the source code to build."
 msgstr "需要build的源代码Git URL。"
 
-#: app/views/browse/build-config.html:396
+#: app/views/browse/build-config.html:399
 msgid "GitHub Webhook URL:"
 msgstr ""
 
-#: app/views/browse/build-config.html:403
+#: app/views/browse/build-config.html:406
 msgid "GitLab Webhook URL:"
 msgstr ""
 
@@ -2666,6 +2660,10 @@ msgstr "前往顶部"
 #: app/views/browse/_pod-details.html:34
 msgid "Grace Period:"
 msgstr "宽限期："
+
+#: app/scripts/services/membership/membership.js:49
+msgid "Group"
+msgstr "组"
 
 #: app/views/overview/_service-linking-button.html:6
 msgid "Group service to {{service.metadata.name}}"
@@ -2732,15 +2730,13 @@ msgstr "隐藏策略高级选项"
 msgid "Hide examples"
 msgstr "隐藏例子"
 
-#: app/views/browse/build-config.html:457
+#: app/views/browse/build-config.html:460
 msgid "Hide Image Environment Variables"
 msgstr "隐藏镜像环境变量"
 
 #: app/views/monitoring.html:46
-#, fuzzy
-#| msgid "Other Resources"
 msgid "Hide older resources"
-msgstr "其他资源"
+msgstr "隐藏旧资源"
 
 #: app/views/browse/build-config.html:75
 #: app/views/browse/deployment-config.html:103
@@ -3214,47 +3210,12 @@ msgstr "在build configuration创建好时启动第一个build"
 msgid "Layers"
 msgstr ""
 
-#: app/views/browse/config-maps.html:12
-#: app/views/browse/deployment-config.html:254
-#: app/views/browse/deployment-config.html:318 app/views/browse/routes.html:12
-#: app/views/builds.html:9 app/views/create-persistent-volume-claim.html:11
-#: app/views/create/fromimage.html:314 app/views/deployments.html:9
-#: app/views/directives/create-secret.html:335
-#: app/views/directives/create-secret.html:73
-#: app/views/directives/deploy-image.html:68
-#: app/views/directives/osc-autoscaling.html:123
-#: app/views/directives/osc-persistent-volume-claim.html:225
-#: app/views/directives/osc-persistent-volume-claim.html:56
-#: app/views/directives/osc-routing.html:253
-#: app/views/directives/osc-secrets.html:34
-#: app/views/directives/osc-secrets.html:38
-#: app/views/directives/osc-secrets.html:42
-#: app/views/edit/build-config.html:444 app/views/edit/build-config.html:493
-#: app/views/edit/build-config.html:540
-#: app/views/edit/deployment-config.html:31
-#: app/views/edit/deployment-config.html:35
-#: app/views/edit/deployment-config.html:39
-#: app/views/edit/health-checks.html:13 app/views/images.html:9
-#: app/views/membership.html:17 app/views/membership.html:47
-#: app/views/modals/about-compute-units-modal.html:9
-#: app/views/modals/create-secret.html:10
-#: app/views/modals/create-secret.html:11
-#: app/views/modals/create-secret.html:12 app/views/modals/create-secret.html:9
-#: app/views/modals/edit-pvc-resource.html:13 app/views/pipelines.html:9
-#: app/views/pods.html:9 app/views/quota.html:9 app/views/secrets.html:12
-#: app/views/services.html:9 app/views/set-limits.html:14
-#: app/views/storage.html:13
-msgid "Learn More"
-msgstr "了解更多"
-
 #: app/views/browse/service.html:94 app/views/edit/jenkinsfile-examples.html:53
 #: app/views/overview.html:276 app/views/pipelines.html:31
 msgid "Learn more about"
 msgstr "了解更多关于"
 
 #: app/views/modals/confirm-save-log.html:16
-#, fuzzy
-#| msgid "Learn more about"
 msgid "Learn more about the"
 msgstr "了解更多关于"
 
@@ -3389,6 +3350,7 @@ msgstr "行日志和新日志信息将显示，因为日志过多。"
 msgid "Log out"
 msgstr "退出"
 
+#: app/scripts/extensions/nav/userDropdown.js:28
 #: app/views/modals/logout.html:14
 msgid "Log Out"
 msgstr "退出"
@@ -3443,7 +3405,7 @@ msgstr "确保这是你真正想做的事情！"
 msgid "Making code changes"
 msgstr "进行代码更改"
 
-#: app/views/browse/build-config.html:440
+#: app/views/browse/build-config.html:443
 msgid "Manual (CLI):"
 msgstr ""
 
@@ -3724,8 +3686,6 @@ msgid "Must be a whole number."
 msgstr "必须是一个整数。"
 
 #: app/views/edit/project.html:15
-#, fuzzy
-#| msgid "My Projects"
 msgid "My Project"
 msgstr "我的项目"
 
@@ -3805,7 +3765,7 @@ msgstr "网络"
 msgid "new {{subjectKind.name}} role"
 msgstr "新的{{subjectKind.name}}角色"
 
-#: app/views/browse/build-config.html:417
+#: app/views/browse/build-config.html:420
 #: app/views/browse/deployment-config.html:264
 msgid "New Image For:"
 msgstr "新Image："
@@ -4262,7 +4222,7 @@ msgstr "其他Replication Controllers"
 msgid "Other Resources"
 msgstr "其他资源"
 
-#: app/views/browse/build-config.html:435
+#: app/views/browse/build-config.html:438
 msgid "Other Trigger:"
 msgstr "其他Trigger:"
 
@@ -4892,8 +4852,6 @@ msgid "Route {{routeName}} was successfully updated."
 msgstr "路由{{routeName}}已成功更新。"
 
 #: app/views/browse/service.html:94
-#, fuzzy
-#| msgid "Routes"
 msgid "routes"
 msgstr "路由"
 
@@ -4974,7 +4932,7 @@ msgstr "运行在之前的部署缩容到零之后，并且在新部署创建第
 msgid "runs before the deployment begins"
 msgstr "运行在部署开始之前"
 
-#: app/views/browse/build-config.html:483
+#: app/views/browse/build-config.html:486
 #: app/views/directives/add-config-to-application.html:149
 #: app/views/directives/edit-environment-variables.html:52
 #: app/views/directives/logs/_log-viewer.html:17
@@ -5112,8 +5070,6 @@ msgid "Security"
 msgstr "安全"
 
 #: app/views/catalog/_image.html:49 app/views/catalog/_template.html:27
-#, fuzzy
-#| msgid "Selection"
 msgid "Select"
 msgstr "选择"
 
@@ -5261,6 +5217,10 @@ msgstr "路由服务。"
 msgid "Service Weights"
 msgstr "服务权重"
 
+#: app/scripts/services/membership/membership.js:59
+msgid "ServiceAccount"
+msgstr "服务账户"
+
 #: app/views/browse/service.html:94
 msgid "services"
 msgstr "服务"
@@ -5281,6 +5241,7 @@ msgstr ""
 msgid "Session Timeout Warning"
 msgstr "会话超时警告"
 
+#: app/scripts/directives/util.js:156
 #: app/views/modals/set-home-page-modal.html:6
 msgid "Set Home Page"
 msgstr "设置主页"
@@ -5315,7 +5276,7 @@ msgstr "显示"
 msgid "Show hidden roles"
 msgstr "显示隐藏角色"
 
-#: app/views/browse/build-config.html:456
+#: app/views/browse/build-config.html:459
 msgid "Show Image Environment Variables"
 msgstr "显示镜像环境变量"
 
@@ -5669,11 +5630,11 @@ msgstr "cache未发现Template."
 
 #: app/views/browse/pod.html:122
 msgid "Terminal"
-msgstr "终止"
+msgstr "终端"
 
 #: app/views/browse/route.html:156
 msgid "Termination Type:"
-msgstr "终止类型："
+msgstr "终端类型："
 
 #: app/scripts/controllers/replicaSet.js:334
 msgid "The {{displayKind}} details could not be loaded."
@@ -5724,7 +5685,7 @@ msgstr "build运行策略描述了从构建配置创建的构建应该运行的�
 msgid "The build strategy had no environment variables defined."
 msgstr "构建策略没有定义环境变量。"
 
-#: app/views/browse/build-config.html:455
+#: app/views/browse/build-config.html:458
 msgid ""
 "The builder image has additional environment variables defined.  Variables "
 "defined below will overwrite any from the image with the same name."
@@ -5755,14 +5716,10 @@ msgid "The current filter is hiding all projects."
 msgstr "当前过滤条件隐藏了所有项目."
 
 #: app/views/monitoring.html:408
-#, fuzzy
-#| msgid "The active filters are hiding all builds."
 msgid "The current filters are hiding all builds."
 msgstr "当前过滤条件隐藏了所有builds."
 
 #: app/views/monitoring.html:158
-#, fuzzy
-#| msgid "The active filters are hiding all deployments."
 msgid "The current filters are hiding all deployments."
 msgstr "当前过滤条件隐藏了所有deployments."
 
@@ -5855,8 +5812,6 @@ msgid "The filter is hiding all config maps."
 msgstr "当前过滤条件隐藏了所有config maps."
 
 #: app/views/deployments.html:35
-#, fuzzy
-#| msgid "The active filters are hiding all deployments."
 msgid "The filter is hiding all deployments."
 msgstr "当前过滤条件隐藏了所有deployments."
 
@@ -6565,6 +6520,10 @@ msgstr "到卷"
 msgid "Toggle navigation"
 msgstr "切换导航"
 
+#: app/scripts/extensions/nav/helpDropdown.js:23
+msgid "Tour Catalog Home"
+msgstr ""
+
 #: app/views/browse/route.html:116 app/views/browse/service.html:89
 #: app/views/overview/_traffic-percent.html:9
 msgid "Traffic"
@@ -6764,6 +6723,10 @@ msgstr "使用(所有项目)"
 #: app/views/quota.html:63
 msgid "Used (This Project)"
 msgstr "使用(本项目)"
+
+#: app/scripts/services/membership/membership.js:41
+msgid "User"
+msgstr "用户"
 
 #: app/views/_config-file-params.html:3
 msgid "username"
@@ -7270,44 +7233,5 @@ msgstr "由于不活动，您的会话即将过期。"
 msgid "Zone"
 msgstr "空间"
 
-#, fuzzy
-#~| msgid "Learn More"
-#~ msgid "Learn Mor"
+#~ msgid "Learn More"
 #~ msgstr "了解更多"
-
-#~ msgid ""
-#~ "Mount Path for the volume. A file will be created in this\n"
-#~ "                directory for each key from the {{ctrl.apiObject.kind | "
-#~ "humanizeKind}}.\n"
-#~ "                The file contents will be the value of the key."
-#~ msgstr ""
-#~ "卷的安装路径。 将在此创建一个文件来自{{ctrl.apiObject.kind |的每个键的目录"
-#~ "humanizeKind}}。文件内容将是密钥的值。"
-
-#, fuzzy
-#~| msgid ""
-#~| "This build configuration has changed since you started editing it. "
-#~| "You'll need to copy any changes you've made and edit again."
-#~ msgid ""
-#~ "has changed since you started editing it. You'll need to copy any changes "
-#~ "you've made and edit the\n"
-#~ "          {{updated.resource.kind | humanizeKind}} again."
-#~ msgstr "build配置已被修改,若编辑，你需要复制你的修改并且再编辑."
-
-#, fuzzy
-#~| msgid "The {{displayKind}} details could not be loaded."
-#~ msgid "The {{kind | humanizeKind}} could not be loaded."
-#~ msgstr "{{displayKind}}无法加载."
-
-#, fuzzy
-#~| msgid "{{testMsg}} test"
-#~ msgid "{{testMsg | upperFirst}} test"
-#~ msgstr "{{testMsg}} 测试"
-
-#~ msgid "test"
-#~ msgstr "测试"
-
-#, fuzzy
-#~| msgid "My <strong>Projects</strong>"
-#~ msgid "My<strong>Projects</strong>"
-#~ msgstr "我的<strong>项目</strong>"

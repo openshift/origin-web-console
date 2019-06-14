@@ -57,7 +57,7 @@ angular.module('openshiftConsole')
       }
     };
   })
-  .directive('copyToClipboard', function() {
+  .directive('copyToClipboard', function(gettextCatalog) {
     return {
       restrict: 'E',
       scope: {
@@ -84,7 +84,7 @@ angular.module('openshiftConsole')
             .attr('title', 'Copied!')
             .tooltip('fixTitle')
             .tooltip('show')
-            .attr('title', 'Copy to Clipboard')
+            .attr('title', gettextCatalog.getString('Copy to Clipboard'))
             .tooltip('fixTitle');
           e.clearSelection();
         });
@@ -94,7 +94,7 @@ angular.module('openshiftConsole')
             .attr('title', fallbackMsg)
             .tooltip('fixTitle')
             .tooltip('show')
-            .attr('title', 'Copy to Clipboard')
+            .attr('title', gettextCatalog.getString('Copy to Clipboard'))
             .tooltip('fixTitle');
         });
         element.on('$destroy', function() {
@@ -110,7 +110,7 @@ angular.module('openshiftConsole')
       scope: {
         clipboardText: "@"
       },
-      template: '<a href="" data-clipboard-text="">Copy Login Command</a>',
+      template: '<a href="" data-clipboard-text="">' + gettextCatalog.getString('Copy Login Command') + '</a>',
       link: function($scope, element) {
         var clipboard = new Clipboard( element.get(0) );
         clipboard.on('success', function () {
@@ -149,11 +149,11 @@ angular.module('openshiftConsole')
       }
     };
   })
-  .directive('setHomePage', function($uibModal) {
+  .directive('setHomePage', function($uibModal, gettextCatalog) {
     return {
       restrict: 'E',
       replace: true,
-      template: '<a href="">Set Home Page</a>',
+      template: '<a href="">' + gettextCatalog.getString('Set Home Page') + '</a>',
       link: function($scope, element) {
         element.bind('click', function() {
           $uibModal.open({

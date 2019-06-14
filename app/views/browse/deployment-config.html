@@ -250,9 +250,9 @@
                     <h3 translate>Triggers</h3>
                     <dl class="dl-horizontal left">
                       <dt>Manual (CLI):
-                        <a href="{{'deployment-operations' | helpLink}}" target="_blank">
+                        <!-- <a href="{{'deployment-operations' | helpLink}}" target="_blank">
                           <span class="learn-more-block"><translate>Learn More</translate>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></span>
-                        </a>
+                        </a> -->
                       </dt>
                       <dd>
                         <copy-to-clipboard clipboard-text="'oc rollout latest dc/' + deploymentConfig.metadata.name + ' -n ' + project.metadata.name"></copy-to-clipboard>
@@ -314,9 +314,9 @@
                     <div ng-if="deploymentConfig.spec.strategy.type !== 'Custom'">
                       <h3>
                         <translate>Hooks</translate>
-                        <span class="learn-more-inline">
+                        <!-- <span class="learn-more-inline">
                           <a ng-href="{{'lifecycle_hooks' | helpLink}}" target="_blank"><translate>Learn More</translate>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
-                        </span>
+                        </span> -->
                       </h3>
                       <div ng-if="strategyParams.pre">
                         <lifecycle-hook deployment-config="deploymentConfig" type="pre"></lifecycle-hook>
