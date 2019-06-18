@@ -93,43 +93,6 @@ describe('HPAService', function() {
       });
     });
 
-    describe('When metrics are not configured', function() {
-      it('should return a warning with reason MetricsNotAvailable', function() {
-        // flip the bool that controls the MetricsService mock
-        metricsAreAvailable = false;
-        HPAService
-          .getHPAWarnings(defaultScaleTarget, defaultHpaResources, defaultLimitRanges, defaultProject)
-          .then(function(warnings) {
-            expect(_.head(warnings).reason).toEqual('MetricsNotAvailable');
-          });
-        $rootScope.$digest();
-      });
-    });
-
-
-    // TODO: we should be testing more than just the happy paths
-    // describe('When there is a CPU request', function() {
-    //   // this is the first check in the hasCPURequest fn
-    //   // it should use $window && set OPENSHIFT_CONFIG.clusterResourceOverridesEnabled
-    //   // to trigger the LimitRangesService.hasClusterResourceOverrides function
-    //   // it('should not return a warning when cluster resource overrides are enabled', function() {
-    //   //
-    //   // });
-    //
-    //   // 2nd check in the hasCPURequest fn
-    //   // need to test this with some mock limit ranges passed to the fn
-    //   // it('should not return a warning when containers or limit ranges have a cpu request', function() {
-    //   //
-    //   // });
-    //
-    //   // 3rd check in the hasCPURequest fn
-    //   // more tests with mock limit ranges
-    //   // it('should not return a warning when the containers or limit ranges have a cpu limit', function() {
-    //   //
-    //   // });
-    //
-    // });
-
     describe('When the scale target does not have a CPU request set', function() {
       var scaleTargetWithoutLimit = {
         kind: '',

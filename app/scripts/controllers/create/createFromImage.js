@@ -148,11 +148,6 @@ angular.module("openshiftConsole")
             return scope.buildConfig.sourceUrl === _.get(scope, 'image.metadata.annotations.sampleRepo');
           };
 
-          // Warn if metrics aren't configured when setting autoscaling options.
-          MetricsService.isAvailable().then(function(available) {
-            $scope.metricsWarning = !available;
-          });
-
            var configMapDataOrdered = [];
            var secretDataOrdered = [];
            $scope.valueFromObjects = [];

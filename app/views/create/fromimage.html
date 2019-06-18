@@ -313,12 +313,6 @@
                             <div class="learn-more-block">
                               <a href="{{'pod_autoscaling' | helpLink}}" target="_blank">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
                             </div>
-                            <div class="has-warning" ng-if="metricsWarning && scaling.autoscale">
-                              <span class="help-block">
-                                CPU metrics might not be available. In order to use horizontal pod autoscalers,
-                                your cluster administrator must have properly configured cluster metrics.
-                              </span>
-                            </div>
                           </div>
                           <div ng-if="!scaling.autoscale"
                                class="form-group"

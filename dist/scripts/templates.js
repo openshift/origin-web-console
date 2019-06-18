@@ -5024,11 +5024,6 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"learn-more-block\">\n" +
     "<a href=\"{{'pod_autoscaling' | helpLink}}\" target=\"_blank\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden=\"true\"></i></a>\n" +
     "</div>\n" +
-    "<div class=\"has-warning\" ng-if=\"metricsWarning && scaling.autoscale\">\n" +
-    "<span class=\"help-block\">\n" +
-    "CPU metrics might not be available. In order to use horizontal pod autoscalers, your cluster administrator must have properly configured cluster metrics.\n" +
-    "</span>\n" +
-    "</div>\n" +
     "</div>\n" +
     "<div ng-if=\"!scaling.autoscale\" class=\"form-group\" ng-class=\"{ 'has-error': form.replicas.$dirty && form.replicas.$invalid }\">\n" +
     "<label class=\"number\">Replicas</label>\n" +
@@ -9502,14 +9497,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"help-block\">\n" +
     "Scale replicas automatically based on CPU usage.\n" +
     "</div>\n" +
-    "<div class=\"learn-more-block\" ng-class=\"{ 'gutter-bottom': metricsWarning || showCPURequestWarning }\">\n" +
+    "<div class=\"learn-more-block\" ng-class=\"{ 'gutter-bottom': showCPURequestWarning }\">\n" +
     "<a href=\"{{'pod_autoscaling' | helpLink}}\" target=\"_blank\">Learn More&nbsp;<i class=\"fa fa-external-link\" aria-hidden> </i></a>\n" +
-    "</div>\n" +
-    "\n" +
-    "<div ng-if=\"metricsWarning\" class=\"alert alert-warning\">\n" +
-    "<span class=\"pficon pficon-warning-triangle-o\" aria-hidden=\"true\"></span>\n" +
-    "<span class=\"sr-only\">Warning:</span>\n" +
-    "Metrics might not be configured by your cluster administrator. Metrics are required for autoscaling.\n" +
     "</div>\n" +
     "\n" +
     "<div ng-if=\"showCPURequestWarning\" class=\"alert alert-warning\">\n" +

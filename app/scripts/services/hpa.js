@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("HPAService", function($filter, $q, LimitRangesService, MetricsService) {
+  .factory("HPAService", function($filter, $q, LimitRangesService) {
 
     var annotation = $filter('annotation');
 
@@ -77,17 +77,6 @@ angular.module("openshiftConsole")
     var hasDeploymentConfig = $filter('hasDeploymentConfig');
 
 
-    var hasMetricsAvailableWarning = function(metricsAvailable) {
-      if (!metricsAvailable) {
-        return {
-          message: 'Metrics might not be configured by your cluster administrator. ' +
-                   'Metrics are required for autoscaling.',
-          reason: 'MetricsNotAvailable'
-        };
-      }
-    };
-
-
     var hasCPURequestWarning = function(scaleTarget, limitRanges, project) {
       var containers = _.get(scaleTarget, 'spec.template.spec.containers', []);
       var kind;
@@ -155,17 +144,14 @@ angular.module("openshiftConsole")
       if (!scaleTarget || _.isEmpty(hpaResources)) {
         return $q.when([]);
       }
-      return MetricsService.isAvailable().then(function(metricsAvailable) {
-        var isV2HPA = hasV2HPAAnnotations(hpaResources);
-        return _.compact([
-          hasMetricsAvailableWarning(metricsAvailable),
-          // we don't need to show this warning, but if we have it, we should also
-          // not show the cpuRequestWarning, until we update to the newer API
-          isV2HPA ? false : hasCPURequestWarning(scaleTarget, limitRanges, project),
-          hasCompetingAutoscalersWarning(hpaResources),
-          hasCompetingDCAndAutoscalerWarning(scaleTarget, hpaResources)
-        ]);
-      });
+      var isV2HPA = hasV2HPAAnnotations(hpaResources);
+      return $q.when(_.compact([
+        // we don't need to show this warning, but if we have it, we should also
+        // not show the cpuRequestWarning, until we update to the newer API
+        isV2HPA ? false : hasCPURequestWarning(scaleTarget, limitRanges, project),
+        hasCompetingAutoscalersWarning(hpaResources),
+        hasCompetingDCAndAutoscalerWarning(scaleTarget, hpaResources)
+      ]));
     };
 
 

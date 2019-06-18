@@ -3270,45 +3270,40 @@ controller: "SetHomePageModalController"
 });
 }
 };
-} ]), angular.module("openshiftConsole").factory("HPAService", [ "$filter", "$q", "LimitRangesService", "MetricsService", function(e, t, n, r) {
-var a = e("annotation"), o = function(e, t, n) {
+} ]), angular.module("openshiftConsole").factory("HPAService", [ "$filter", "$q", "LimitRangesService", function(e, t, n) {
+var r = e("annotation"), a = function(e, t, n) {
 return _.every(n, function(n) {
 return _.get(n, [ "resources", t, e ]);
 });
+}, o = function(e, t) {
+return a(e, "requests", t);
 }, i = function(e, t) {
-return o(e, "requests", t);
-}, s = function(e, t) {
-return o(e, "limits", t);
-}, c = function(e, t, r) {
+return a(e, "limits", t);
+}, s = function(e, t, r) {
 return !!n.getEffectiveLimitRange(r, e, "Container")[t];
+}, c = function(e, t) {
+return s(e, "defaultRequest", t);
 }, l = function(e, t) {
-return c(e, "defaultRequest", t);
-}, u = function(e, t) {
-return c(e, "defaultLimit", t);
-}, d = function(e, t, r) {
-return !!n.hasClusterResourceOverrides(r) || (!(!i("cpu", e) && !l("cpu", t)) || !(!s("cpu", e) && !u("cpu", t)));
-}, m = e("humanizeKind"), p = e("hasDeploymentConfig"), f = function(e) {
-if (!e) return {
-message: "Metrics might not be configured by your cluster administrator. Metrics are required for autoscaling.",
-reason: "MetricsNotAvailable"
-};
-}, g = function(e, t, n) {
+return s(e, "defaultLimit", t);
+}, u = function(e, t, r) {
+return !!n.hasClusterResourceOverrides(r) || (!(!o("cpu", e) && !c("cpu", t)) || !(!i("cpu", e) && !l("cpu", t)));
+}, d = e("humanizeKind"), m = e("hasDeploymentConfig"), p = function(e, t, n) {
 var r, a = _.get(e, "spec.template.spec.containers", []);
-if (!d(a, t, n)) return r = m(e.kind), {
+if (!u(a, t, n)) return r = d(e.kind), {
 message: "This " + r + " does not have any containers with a CPU request set. Autoscaling will not work without a CPU request.",
 reason: "NoCPURequest"
 };
-}, v = function(e) {
+}, f = function(e) {
 return _.some(e, function(e) {
-return a(e, "autoscaling.alpha.kubernetes.io/metrics");
+return r(e, "autoscaling.alpha.kubernetes.io/metrics");
 });
-}, h = function(e) {
+}, g = function(e) {
 if (_.size(e) > 1) return {
 message: "More than one autoscaler is scaling this resource. This is not recommended because they might compete with each other. Consider removing all but one autoscaler.",
 reason: "MultipleHPA"
 };
-}, y = function(e, t) {
-if ("ReplicationController" === e.kind && p(e) && _.some(t, function() {
+}, v = function(e, t) {
+if ("ReplicationController" === e.kind && m(e) && _.some(t, function() {
 return _.some(t, function(e) {
 return "ReplicationController" === _.get(e, "spec.scaleTargetRef.kind");
 });
@@ -3319,19 +3314,18 @@ reason: "DeploymentHasHPA"
 };
 return {
 usesV2Metrics: function(e) {
-return v([ e ]);
+return f([ e ]);
 },
-hasCPURequest: d,
+hasCPURequest: u,
 filterHPA: function(e, t, n) {
 return _.filter(e, function(e) {
 return e.spec.scaleTargetRef.kind === t && e.spec.scaleTargetRef.name === n;
 });
 },
-getHPAWarnings: function(e, n, a, o) {
-return !e || _.isEmpty(n) ? t.when([]) : r.isAvailable().then(function(t) {
-var r = v(n);
-return _.compact([ f(t), !r && g(e, a, o), h(n), y(e, n) ]);
-});
+getHPAWarnings: function(e, n, r, a) {
+if (!e || _.isEmpty(n)) return t.when([]);
+var o = f(n);
+return t.when(_.compact([ !o && p(e, r, a), g(n), v(e, n) ]));
 },
 groupHPAs: function(e) {
 var t = {};
@@ -7807,9 +7801,7 @@ var f = [ "Deployment", "DeploymentConfig", "HorizontalPodAutoscaler", "ReplicaS
 if (_.includes(f, n.kind)) {
 e.kind = n.kind, e.name = n.name, "HorizontalPodAutoscaler" === n.kind ? e.disableInputs = !0 : (e.targetKind = n.kind, e.targetName = n.name), e.autoscaling = {
 name: e.name
-}, e.labels = [], l.isAvailable().then(function(t) {
-e.metricsWarning = !t;
-});
+}, e.labels = [];
 var g = t("getErrorDetails"), v = function() {
 r.history.back();
 };
@@ -8192,14 +8184,14 @@ e.cpuProblems = d.validatePodLimits(e.limitRanges, "cpu", [ e.container ], t), e
 c.list(A, n).then(function(t) {
 e.limitRanges = t.by("metadata.name"), _.isEmpty(e.limitRanges) || e.$watch("container", i, !0);
 });
-var v, y, C = function() {
+var p, v, y = function() {
 e.scaling.autoscale && !e.hasClusterResourceOverrides ? e.showCPURequestWarning = !l.hasCPURequest([ e.container ], e.limitRanges, t) : e.showCPURequestWarning = !1;
 };
 c.list(L, n).then(function(e) {
-v = e.by("metadata.name"), m.log("quotas", v);
+p = e.by("metadata.name"), m.log("quotas", p);
 }), c.list(O, n).then(function(e) {
-y = e.by("metadata.name"), m.log("cluster quotas", y);
-}), e.$watch("scaling.autoscale", C), e.$watch("container", C, !0), e.$watch("name", function(e, t) {
+v = e.by("metadata.name"), m.log("cluster quotas", v);
+}), e.$watch("scaling.autoscale", y), e.$watch("container", y, !0), e.$watch("name", function(e, t) {
 I.value && I.value !== t || (I.value = e);
 }), function(r) {
 r.name = a.name, r.imageName = k, r.imageTag = a.imageTag, r.namespace = a.namespace, r.buildConfig = {
@@ -8237,9 +8229,7 @@ var e;
 (r.image || r.image.metadata || r.image.metadata.annotations) && (e = r.image.metadata.annotations, r.buildConfig.sourceUrl = e.sampleRepo || "", r.buildConfig.gitRef = e.sampleRef || "", r.buildConfig.contextDir = e.sampleContextDir || "", (e.sampleRef || e.sampleContextDir) && (r.advancedSourceOptions = !0));
 }, r.usingSampleRepo = function() {
 return r.buildConfig.sourceUrl === _.get(r, "image.metadata.annotations.sampleRepo");
-}, p.isAvailable().then(function(t) {
-e.metricsWarning = !t;
-});
+};
 var o = [], i = [];
 e.valueFromObjects = [], c.list(D, n, null, {
 errorNotification: !1
@@ -8293,7 +8283,7 @@ f.toErrorPage("Cannot create from source: the specified image could not be retri
 f.toErrorPage("Cannot create from source: the specified image could not be retrieved.");
 });
 }(e);
-var U, F = function() {
+var C, U = function() {
 var t = {
 started: "Creating application " + e.name + " in project " + e.projectDisplayName(),
 success: "Created application " + e.name + " in project " + e.projectDisplayName(),
@@ -8301,7 +8291,7 @@ failure: "Failed to create " + e.name + " in project " + e.projectDisplayName()
 }, o = {};
 S.clear(), S.add(t, o, a.project, function() {
 var t = r.defer();
-return c.batch(U, n).then(function(n) {
+return c.batch(C, n).then(function(n) {
 var r = [], a = !1;
 _.isEmpty(n.failure) ? r.push({
 type: "success",
@@ -8325,7 +8315,7 @@ hasErrors: a
 }), f.toNextSteps(e.name, e.projectName, {
 usingSampleRepo: e.usingSampleRepo()
 });
-}, x = function(e) {
+}, F = function(e) {
 o.open({
 templateUrl: "views/modals/confirm.html",
 controller: "ConfirmModalController",
@@ -8341,26 +8331,26 @@ cancelButtonText: "Cancel"
 };
 }
 }
-}).result.then(F);
-}, M = function(t) {
+}).result.then(U);
+}, x = function(t) {
 N(), T = t.quotaAlerts || [], e.nameTaken || _.some(T, {
 type: "error"
 }) ? (e.disableInputs = !1, _.each(T, function(e) {
 e.id = _.uniqueId("create-builder-alert-"), g.addNotification(e);
-})) : _.isEmpty(T) ? F() : (x(T), e.disableInputs = !1);
+})) : _.isEmpty(T) ? U() : (F(T), e.disableInputs = !1);
 };
 e.projectDisplayName = function() {
 return P(this.project) || this.projectName;
 }, e.createApp = function() {
 e.disableInputs = !0, N(), e.buildConfig.envVars = w.compactEntries(e.buildConfigEnvVars), e.deploymentConfig.envVars = w.compactEntries(e.DCEnvVarsFromUser), e.labels = w.mapEntries(w.compactEntries(e.labelArray));
 var t = s.generate(e);
-U = [], angular.forEach(t, function(e) {
-null !== e && (m.debug("Generated resource definition:", e), U.push(e));
+C = [], angular.forEach(t, function(e) {
+null !== e && (m.debug("Generated resource definition:", e), C.push(e));
 });
-var r = s.ifResourcesDontExist(U, e.projectName), a = h.getLatestQuotaAlerts(U, n), o = function(t) {
+var r = s.ifResourcesDontExist(C, e.projectName), a = h.getLatestQuotaAlerts(C, n), o = function(t) {
 return e.nameTaken = t.nameTaken, a;
 };
-r.then(o, o).then(M, M);
+r.then(o, o).then(x, x);
 };
 })), e.cancel = function() {
 f.toProjectOverview(e.projectName);
