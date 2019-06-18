@@ -22,11 +22,11 @@ msgstr "web console 限制文件5M以下."
 
 #: app/views/attach-pvc.html:69
 msgid ". You cannot create new storage since you are at quota."
-msgstr ".在配额时，你无法创建新存储."
+msgstr ". 你无法创建新存储因为配额不足."
 
 #: app/views/create/fromimage.html:215
 msgid "(Build and Runtime)"
-msgstr "(构建和运行时间)"
+msgstr "(构建和运行时)"
 
 #: app/views/modals/edit-pvc-resource.html:26
 msgid "(cannot be changed)"
@@ -38,7 +38,7 @@ msgstr "(已暂停)"
 
 #: app/views/create/fromimage.html:256
 msgid "(Runtime only)"
-msgstr "(运行时间)"
+msgstr ""
 
 #: app/views/browse/deployment.html:75
 msgid "{{deployment.metadata.name}} is paused."
@@ -90,7 +90,7 @@ msgid ""
 "A file will be created in this directory for each key from the config map or "
 "secret. The file contents will be the value of the key."
 msgstr ""
-"在该目录下将给每个来自config map 或者secret的key创建一个文件 。 文件内容将是"
+"在该目录下将给每个来自config map或者secret的key创建一个文件。 文件内容将是"
 "密钥的值。"
 
 #: app/views/create/fromimage.html:95 app/views/edit/build-config.html:46
@@ -112,7 +112,7 @@ msgid ""
 "A liveness probe checks if the container is still running. If the liveness "
 "probe fails, the container is killed."
 msgstr ""
-"Liveness Probe检查容器是否仍在运行。 如果Liveness Probe失败，容器被杀死。"
+"Liveness probe检查容器是否仍在运行。 如果Liveness probe失败，容器会被杀死。"
 
 #: app/404.html:148
 msgid "a mistyped address"
@@ -129,11 +129,11 @@ msgstr "新部署将自动启动当"
 
 #: app/views/attach-pvc.html:13
 msgid "A persistent volume claim is required to attach to this"
-msgstr "持久化卷声明需要挂载到"
+msgstr "Persistent volume claim需要挂载到"
 
 #: app/views/create-from-url.html:91
 msgid "A project is required in order to complete the installation."
-msgstr "需要一个项目才能完成安装。"
+msgstr "需要指定一个项目才能完成安装。"
 
 #: app/views/edit/health-checks.html:20
 msgid ""
@@ -141,12 +141,12 @@ msgid ""
 "failed readiness probe means that a container should not receive any traffic "
 "from a proxy, even if it's running."
 msgstr ""
-"readiness probe检查容器是否准备好处理请求。 探测出失败意味着容器不应接收任何"
+"Readiness probe检查容器是否准备好处理请求。探测出失败意味着容器不应接收任何"
 "来自代理的流量，即使它正在运行。"
 
 #: app/views/edit/project.html:25
 msgid "A short description."
-msgstr "简述."
+msgstr "简述。"
 
 #: app/views/command-line.html:38
 msgid "A token is a form of a password."
@@ -469,7 +469,7 @@ msgstr "登录到您的帐户后，您将获得可以在以下项之间切换的
 #: app/views/directives/pods-table.html:12 app/views/services.html:50
 #: app/views/storage.html:60
 msgid "Age"
-msgstr "年龄"
+msgstr "创建时间"
 
 #: app/views/service-instances.html:65
 msgid "ago"
@@ -580,7 +580,7 @@ msgstr "创建 config map出错."
 #: app/scripts/controllers/edit/autoscaler.js:118
 #: app/scripts/controllers/edit/autoscaler.js:176
 msgid "An error occurred creating the horizontal pod autoscaler."
-msgstr "创建 horizontal pod自动扩缩容出错."
+msgstr "创建horizontal pod autoscaler时出错."
 
 #: app/scripts/directives/processTemplate.js:273
 msgid "An error occurred creating the project."
@@ -620,11 +620,11 @@ msgstr "扩展 {{kind}} {{name}}发生错误."
 
 #: app/scripts/controllers/deploymentConfig.js:248
 msgid "An error occurred scaling the deployment config."
-msgstr "扩展部署配置时发生错误。"
+msgstr "扩展deployment config时发生错误。"
 
 #: app/scripts/controllers/deployment.js:178
 msgid "An error occurred scaling the deployment."
-msgstr "扩展部署时发生错误。"
+msgstr "扩展deployment时发生错误。"
 
 #: app/scripts/controllers/replicaSet.js:447
 msgid "An error occurred scaling."
@@ -657,11 +657,11 @@ msgstr "为pod {{pod}}更新指标出现错误."
 
 #: app/scripts/directives/deploymentMetrics.js:394
 msgid "An error occurred updating metrics."
-msgstr "更新指标发生错误."
+msgstr "更新计量数据时发生错误."
 
 #: app/scripts/controllers/edit/route.js:197
 msgid "An error occurred updating route {{routeName}}."
-msgstr "更新路径 {{routeName}}发生错误."
+msgstr "更新路径{{routeName}}发生错误."
 
 #: app/scripts/controllers/edit/configMap.js:89
 msgid "An error occurred updating the config map."
@@ -694,7 +694,7 @@ msgstr "镜像推送到"
 
 #: app/scripts/controllers/createFromURL.js:65
 msgid "An image stream or template is required."
-msgstr "image stream 或 模板是必须的."
+msgstr "image stream或模板是必须的."
 
 #: app/views/edit/deployment-config.html:59
 msgid "An image that can carry out the deployment."
@@ -702,7 +702,7 @@ msgstr "可以执行部署的镜像。"
 
 #: app/404.html:149
 msgid "an out-of-date link"
-msgstr "一个过时的链接"
+msgstr "一个过期的链接"
 
 #: app/views/_image-names.html:7 app/views/browse/service.html:94
 #: app/views/command-line.html:54 app/views/directives/deploy-image.html:107
@@ -805,11 +805,11 @@ msgstr "在镜像构建器更改时自动构建镜像允许代码始终在最新
 msgid ""
 "Automatically start a new deployment when the deployment configuration "
 "changes"
-msgstr "部署配置更改时自动启动新部署"
+msgstr "deployment配置更改时自动启动一个新的deployment流程"
 
 #: app/views/edit/deployment-config.html:299
 msgid "Automatically start a new deployment when the image changes"
-msgstr "镜像更改时自动启动新部署"
+msgstr "镜像更改时自动启动新的deployment"
 
 #: app/views/edit/autoscaler.html:12
 msgid "Autoscale"
@@ -882,11 +882,11 @@ msgstr "返回"
 
 #: app/views/catalog/category-content.html:16
 msgid "Back to catalog"
-msgstr "返回目录"
+msgstr "返回catalog"
 
 #: app/views/catalog/catalog.html:17
 msgid "Back to overview"
-msgstr "返回概述"
+msgstr "返回概况"
 
 #: app/views/command-line.html:54
 msgid "Basic CLI Operations"
@@ -894,7 +894,7 @@ msgstr "基本CLI操作"
 
 #: app/views/browse/build-config.html:270
 msgid "Binary Input as File:"
-msgstr "二进制输入为文件："
+msgstr "二进制文件输入："
 
 #: app/views/modals/about-compute-units-modal.html:38
 msgid "Binary Units"
@@ -936,7 +936,7 @@ msgstr "浏览"
 #: app/views/directives/resource-service-bindings.html:22
 #: app/views/overview.html:14 app/views/overview/_service-bindings.html:22
 msgid "Browse Catalog"
-msgstr "浏览目录"
+msgstr "浏览Catalog"
 
 #: app/views/overview/_mobile-client-row.html:45
 msgid "Browse Mobile Services"
@@ -1019,13 +1019,13 @@ msgid ""
 "Builds triggered from this Build Configuration will run all at the same "
 "time. The order in which they will finish is not guaranteed."
 msgstr ""
-"从Build Configuration触发的Builds将同时运行。 他们将完成的顺序无法保证。"
+"从Build Configuration触发的Builds将同时运行。 他们的完成顺序无法保证。"
 
 #: app/views/edit/build-config.html:525
 msgid ""
 "Builds triggered from this Build Configuration will run one at the time, in "
 "the order they have been triggered."
-msgstr "从Build Configuration触发的Builds将按照它们被触发的顺序运行一个。"
+msgstr "从Build Configuration触发的Builds将按照它们被触发的顺序逐个运行。"
 
 #: app/views/edit/build-config.html:527
 msgid ""
@@ -1033,12 +1033,12 @@ msgid ""
 "When a currently running build completes, the next build that will run is "
 "the latest build created. Other queued builds will be cancelled."
 msgstr ""
-"从此Build Configuration触发的Builds将在当时运行一个。 当前正在运行的构建完成"
-"时，将运行的下一个构建是创建的最新构建。 其他排队的构建将被取消。"
+"从此Build Configuration触发的Builds将逐个运行。当前正在运行的构建完成"
+"时，下一个即将运行的构建是最创建的那个。其他排队的构建将被取消。"
 
 #: app/views/edit/build-config.html:528
 msgid "Builds triggered from this Build Configuration will run using the"
-msgstr "从此Build Configuration触发的Builds将使用"
+msgstr "从该Build Configuration触发的Builds将使用"
 
 #: app/views/browse/build-config.html:86
 msgid "Builds will create an image from"
@@ -1090,7 +1090,7 @@ msgstr "不能超过{{nameValidation.maxlength}}个字符。"
 
 #: app/views/_compute-resource.html:35
 msgid "Can't be negative."
-msgstr "不能否定。"
+msgstr "值不能为负数。"
 
 #: app/scripts/controllers/create/createFromImage.js:336
 #: app/scripts/controllers/deployment.js:225
@@ -1148,25 +1148,25 @@ msgstr "无法创建"
 
 #: app/scripts/controllers/create/createFromImage.js:41
 msgid "Cannot create from source: a base image tag was not specified"
-msgstr "无法从资源中创建:镜像 tag不明确"
+msgstr "无法从source中创建：基础镜像的tag未指定"
 
 #: app/scripts/controllers/create/createFromImage.js:37
 msgid "Cannot create from source: a base image was not specified"
-msgstr "无法从资源中创建:镜像不明确"
+msgstr "无法从source中创建：基础镜像的tag未指定"
 
 #: app/scripts/controllers/create/createFromImage.js:220
 #: app/scripts/controllers/create/createFromImage.js:225
 msgid "Cannot create from source: the specified image could not be retrieved."
-msgstr "无法从资源中创建:镜像无法获取."
+msgstr "无法从source中创建：指定的镜像无法取得。"
 
 #: app/scripts/controllers/newfromtemplate.js:35
 msgid "Cannot create from template: a template name was not specified."
-msgstr "无法从模板中创建:模板名称不明确."
+msgstr "无法从模板中创建：模板名称不明确。"
 
 #: app/scripts/controllers/newfromtemplate.js:210
 msgid ""
 "Cannot create from template: the specified template could not be retrieved."
-msgstr "无法从模板中创建:模板无法获取."
+msgstr "无法从模板中创建：模板无法获取。"
 
 #: app/scripts/directives/fromFile.js:489
 msgid "Cannot update"
@@ -1187,15 +1187,15 @@ msgstr "目录"
 
 #: app/scripts/controllers/create/browseCategory.js:45
 msgid "Catalog category {{category}} not found."
-msgstr "找不到目录类别{{category}}。"
+msgstr "找不到Category类别{{category}}。"
 
 #: app/scripts/controllers/create/browseCategory.js:56
 msgid "Catalog category {{category}}/{{subcategory}}not found."
-msgstr "未找到目录类别{{category}} / {{subcategory}}。"
+msgstr "未找到Catalog类别{{category}} / {{subcategory}}。"
 
 #: app/views/modals/set-home-page-modal.html:17
 msgid "Catalog Home (Default)"
-msgstr "目录主页（默认）"
+msgstr "Catalog主页（默认）"
 
 #: app/views/directives/osc-routing.html:304
 msgid "Certificate"
@@ -1219,7 +1219,7 @@ msgstr "改变"
 
 #: app/views/set-limits.html:19
 msgid "Changes will only apply to new pods."
-msgstr "更改仅适用于新的pods。"
+msgstr "更改仅会应用于新的pods。"
 
 #: app/views/directives/deployment-donut.html:75
 #: app/views/directives/deployment-donut.html:76
@@ -1458,7 +1458,7 @@ msgstr "确认登陆"
 
 #: app/scripts/directives/confirmOnExit.js:60
 msgid "Confirm on exit prompt appears to have been blocked by the browser."
-msgstr "退出提示确认似乎已被浏览器阻止。"
+msgstr "退出提示的确认窗口已被浏览器阻止。"
 
 #: app/scripts/controllers/membership.js:213
 msgid "Confirm Removal"
@@ -1553,7 +1553,7 @@ msgstr "继续Session"
 
 #: app/views/directives/next-steps.html:53
 msgid "Continue to the project overview"
-msgstr "继续至项目概述"
+msgstr "跳转至项目概况"
 
 #: app/views/directives/lifecycle-hook.html:16
 msgid "Continue with deployment on failure"
@@ -1896,7 +1896,7 @@ msgstr "定义运行时资源（如内存和CPU）的最小和最大限制。"
 
 #: app/views/directives/_edit-probe.html:86
 msgid "Delay can't be negative."
-msgstr "延迟不能是负数。"
+msgstr "延迟数值不能是负数。"
 
 #: app/views/directives/_probe.html:21
 msgid "delay,"
@@ -2121,7 +2121,7 @@ msgstr "文档。"
 
 #: app/views/edit/autoscaler.html:32
 msgid "does not have any containers with a CPU"
-msgstr "没有任何带CPU的容器"
+msgstr "没有任何带CPU Request设置的容器"
 
 #: app/views/_pod-template.html:13
 msgid "does not have health checks"
@@ -2164,7 +2164,7 @@ msgid ""
 "You can specify how much CPU and memory a container needs to improve "
 "scheduling and performance."
 msgstr ""
-"在节点上运行的每个容器都使用CPU和内存等计算资源。 你可以指定容器需要多少CPU和"
+"在节点上运行的每个容器都使用CPU和内存等计算资源。你可以指定容器需要多少CPU和"
 "内存来改善调度和性能。"
 
 #: app/scripts/controllers/edit/deploymentConfig.js:104
@@ -2339,7 +2339,7 @@ msgid ""
 "Enter the command to run inside the container. The command is considered "
 "successful if its exit code is 0. Drag and drop to reorder arguments."
 msgstr ""
-"输入要在容器内运行的命令。 如果命令被认为是成功，退出代码为0.拖放以重新排序参"
+"输入要在容器内运行的命令。 如果命令被认为是成功，退出代码为0。拖放以重新排序参"
 "数。"
 
 #: app/views/browse/build-config.html:455 app/views/browse/build.html:95
@@ -2372,7 +2372,7 @@ msgid ""
 "containers.  These environment variables will be available during your build "
 "and at runtime."
 msgstr ""
-"环境变量用于配置信息并将信息传递给正在运行的容器。 这些环境变量将在构建期间和"
+"环境变量用于配置信息并将信息传递给正在运行的容器。这些环境变量将在构建期间和"
 "运行时可用。"
 
 #: app/views/browse/pod.html:58 app/views/browse/replica-set.html:54
@@ -2688,7 +2688,7 @@ msgid ""
 "advanced build and deployment techniques, it provides guidance on setting up "
 "and managing your OpenShift environment as an application developer."
 msgstr ""
-"帮助您了解OpenShift并开始探索其功能。 从开始创建您的第一个应用程序为了尝试更"
+"帮助您了解OpenShift并开始探索其功能。从开始创建您的第一个应用程序为了尝试更"
 "高级的构建和部署技术，它提供了有关设置和安装的指导作为应用程序开发人员管理您"
 "的OpenShift环境。"
 
@@ -2798,7 +2798,7 @@ msgstr "如果未选择其他存储类，则为默认存储类"
 
 #: app/views/directives/osc-routing.html:62
 msgid "If not specified, a hostname is generated."
-msgstr "如果未指定，则生成主机名。"
+msgstr "如果未指定，则自动生成一个主机名。"
 
 #: app/views/quota.html:240
 msgid ""
@@ -2814,7 +2814,7 @@ msgstr ""
 msgid ""
 "If this is unexpected, click Cancel. This could be an attempt to trick you "
 "into acting as another user."
-msgstr "如果这是意外，请单击“取消”。 这可能是一种诱骗你扮演另一个用户的企图。"
+msgstr "如果这是您意料之外的，请单击“取消”。 这可能是一种诱骗攻击。"
 
 #: app/views/_templateopt.html:78
 msgid "If this isn't what you want,"
@@ -3505,7 +3505,7 @@ msgstr "Metrics不可用。"
 msgid ""
 "Metrics might not be configured by your cluster administrator. Metrics are "
 "required for autoscaling."
-msgstr "群集管理员可能未配置Metrics。 autoscaling需要Metrics。"
+msgstr "群集管理员可能未配置Metrics。Autoscaling需要Metrics。"
 
 #: app/views/directives/edit-lifecycle-hook.html:4
 msgid ""
@@ -3527,36 +3527,36 @@ msgstr "最小"
 
 #: app/views/directives/osc-autoscaling.html:42
 msgid "Min Pods"
-msgstr "最小Pods"
+msgstr "Pods数最小值"
 
 #: app/views/directives/osc-autoscaling.html:57
 msgid "Min pods must be a number."
-msgstr "最小pods必须是一个数字。"
+msgstr "Pods数最小值必须是一个数字。"
 
 #: app/views/directives/osc-autoscaling.html:60
 #: app/views/directives/osc-autoscaling.html:88
 msgid "Min pods must be a whole number."
-msgstr "最小pods必须是一个整数。"
+msgstr "Pods数最小值必须是一个整数。"
 
 #: app/views/directives/osc-autoscaling.html:63
 msgid "Min pods must be greater than or equal to 1."
-msgstr "最小pods必须大于或等于1。"
+msgstr "Pods数最小值必须大于或等于1。"
 
 #: app/views/directives/osc-autoscaling.html:93
 msgid "min pods, which is"
-msgstr "最小pods，是"
+msgstr "Pods数最小值，是"
 
 #: app/views/directives/hpa.html:25
 msgid "Min Pods:"
-msgstr "最小Pods"
+msgstr "Pods数最小值："
 
 #: app/views/browse/deployment.html:184
 msgid "Min Ready:"
-msgstr "最小准备："
+msgstr "Ready最小值："
 
 #: app/views/directives/deployment-donut.html:54
 msgid "min:"
-msgstr "最小"
+msgstr "最小值"
 
 #: app/views/directives/key-value-editor.html:67
 msgid "Minimum character count is {{keyMinlength}}"
@@ -3829,7 +3829,7 @@ msgstr "没有为项目{{projectName}}添加任何deployments。"
 #: app/scripts/controllers/deployment.js:100
 #: app/scripts/controllers/deploymentConfig.js:116
 msgid "No deployments to show"
-msgstr "没有deployments要显示"
+msgstr "没有可显示的deployments"
 
 #: app/views/deployments.html:31
 #: app/views/overview/_list-row-empty-state.html:1
@@ -3874,7 +3874,7 @@ msgstr "无镜像或模板。"
 
 #: app/views/browse/image.html:36
 msgid "No layer information is available for this image."
-msgstr "此镜像没有可用的分层信息。"
+msgstr "此镜像没有可用的layer信息。"
 
 #: app/views/pipelines.html:78
 msgid "no longer exists."
@@ -3890,7 +3890,7 @@ msgid ""
 "No mount path was provided. The volume reference was added to the "
 "configuration, but it will not be mounted into running pods."
 msgstr ""
-"没有提供安装路径。 卷参考已添加到配置中，但不会将其装入正在运行的pod中。"
+"没有提供安装路径。卷参考已添加到配置中，但不会将其装入正在运行的pod中。"
 
 #: app/views/storage.html:37
 msgid "No persistent volume claims have been added to project {{projectName}}."
@@ -3898,7 +3898,7 @@ msgstr "项目{{projectName}}中未添加persistent volume claims。"
 
 #: app/views/attach-pvc.html:10 app/views/storage.html:36
 msgid "No persistent volume claims."
-msgstr " 无persistent volume claim。"
+msgstr "无persistent volume claim。"
 
 #: app/views/browse/build-config.html:104 app/views/pipelines.html:83
 msgid "No pipeline builds have run for {{buildConfigName}}."
@@ -4074,7 +4074,7 @@ msgstr "请注意，这将启动新build。"
 msgid ""
 "Note: This setting is browser-specific and will not be maintained across "
 "browsers."
-msgstr "注意：此设置是特定于浏览器的，不会跨浏览器进行维护。"
+msgstr "注意：此设置是特定于浏览器的，不会跨浏览器保持。"
 
 #: app/views/directives/notifications/notification-counter.html:3
 msgid "Notifications"
@@ -4130,7 +4130,7 @@ msgstr ""
 msgid ""
 "Optional path within the volume from which it will be mounted into the "
 "container. Defaults to the volume's root."
-msgstr "将挂载到容器的卷中的可选路径。 默认为卷的根目录。"
+msgstr "将挂载到容器的卷中的可选路径。默认为卷的根目录。"
 
 #: app/views/create/fromimage.html:137 app/views/edit/build-config.html:89
 msgid ""
@@ -4371,7 +4371,7 @@ msgstr "pipelines已被添加到 {{projectName}}."
 
 #: app/views/browse/service-instance.html:100
 msgid "Plan"
-msgstr "计划"
+msgstr ""
 
 #: app/views/directives/edit-environment-variables.html:30
 msgid "Please enter a valid key."
@@ -4845,7 +4845,7 @@ msgid ""
 "Routes can direct traffic to multiple services for A/B testing. Each service "
 "has a weight controlling how much traffic it gets."
 msgstr ""
-"路由可以将流量引导到多个服务以进行A / B测试。 每项服务都有一个权重控制它获得"
+"路由可以将流量引导到多个服务以进行A/B测试。每项服务都有一个权重控制它获得"
 "的流量。"
 
 #: app/views/browse/service.html:81
@@ -5830,7 +5830,7 @@ msgstr ""
 #: app/scripts/controllers/image.js:114
 #: app/scripts/controllers/imagestream.js:70
 msgid "The image stream details could not be loaded."
-msgstr " image stream详情无法加载."
+msgstr "image stream详情无法加载."
 
 #: app/scripts/controllers/image.js:79
 msgid "The image tag was not found in the stream."
@@ -5888,7 +5888,7 @@ msgstr "滚动部署期间可用的最大pod数。 这可以是百分比（10％
 msgid ""
 "The maximum web console log size has been reached. Use the command-line "
 "interface or"
-msgstr "已达到最大Web控制台日志大小。 使用命令行界面或"
+msgstr "已达到Web控制台日志长度的上限值。请使用命令行接口或"
 
 #: app/views/quota.html:213
 msgid "The minimum amount of this compute resource that can be requested."
@@ -5969,7 +5969,7 @@ msgstr "该路由尚未接受流量，因为它尚未被路由器接受。"
 
 #: app/views/directives/osc-routing.html:293
 msgid "The route is unsecured."
-msgstr "该路由是不安全的。"
+msgstr "该路由是非安全的。"
 
 #: app/scripts/controllers/secret.js:83
 msgid "The secret details could not be loaded."
@@ -6123,7 +6123,7 @@ msgstr "build已被删除."
 
 #: app/views/modals/edit-pvc-resource.html:19
 msgid "This can be a time-consuming process."
-msgstr "这可能是一个耗时的过程。"
+msgstr "这可能是一个耗时较久的过程。"
 
 #: app/scripts/controllers/configMap.js:37
 msgid "This config map has been deleted."
@@ -6131,16 +6131,16 @@ msgstr "config map已被删除."
 
 #: app/scripts/controllers/deployment.js:120
 msgid "This deployment can not be found, it may have been deleted."
-msgstr "无法找到此部署，它可能已被删除。"
+msgstr "无法找到此deployment，它可能已被删除。"
 
 #: app/views/overview/_list-row-empty-state.html:21
 msgid "This deployment config is part of the pipeline"
-msgstr "此部署配置是pipeline的一部分"
+msgstr "此deployment cofnig是pipeline的一部分"
 
 #: app/scripts/controllers/deploymentConfig.js:108
 msgid ""
 "This deployment configuration can not be found, it may have been deleted."
-msgstr "无法找到此部署配置，它可能已被删除。"
+msgstr "无法找到此deployment配置，它可能已被删除。"
 
 #: app/scripts/controllers/deploymentConfig.js:94
 #: app/scripts/controllers/edit/deploymentConfig.js:200
@@ -6189,11 +6189,11 @@ msgstr "这可能不是有效的Git URL。 检查它是否是远程Git存储库�
 msgid ""
 "This name is already in use within the project. Please choose a different "
 "name."
-msgstr "该名称已在项目中使用。 请选择其他名称。"
+msgstr "该名称已在项目中使用。请选择其他名称。"
 
 #: app/views/directives/create-secret.html:31
 msgid "This name is already in use. Please choose a different name."
-msgstr "这个名字已被使用。 请选择其他名称。"
+msgstr "这个名字已被使用。请选择其他名称。"
 
 #: app/views/browse/deployment.html:76
 msgid ""
@@ -6297,12 +6297,12 @@ msgstr "将删除"
 msgid ""
 "This will delete the deployment config, all rollout history, and any running "
 "pods."
-msgstr "这将删除部署配置，所有部署历史记录和任何正在运行的pod。"
+msgstr "这将删除deployment config，所有部署历史记录和任何正在运行的pod。"
 
 #: app/views/modals/delete-resource.html:19
 msgid ""
 "This will delete the deployment, all rollout history, and any running pods."
-msgstr "这将删除部署，所有部署历史记录和任何正在运行的pods。"
+msgstr "这将删除deployment，所有部署历史记录和任何正在运行的pods。"
 
 #: app/views/modals/process-or-save-template.html:29
 msgid "This will overwrite the current version of the template."
@@ -6310,11 +6310,11 @@ msgstr "这将覆盖当前版本的模板。"
 
 #: app/views/_templateopt.html:77
 msgid "This will prevent a value from being generated."
-msgstr "这将阻止生成值。"
+msgstr "这将阻止生成一个值。"
 
 #: app/scripts/controllers/replicaSet.js:479
 msgid "This will remove the volume from the {{kind}}."
-msgstr "这将从 {{kind}}移除卷."
+msgstr "这将从{{kind}}移除卷."
 
 #: app/scripts/controllers/deployment.js:209
 msgid ""
@@ -6530,9 +6530,9 @@ msgstr "类型"
 
 #: app/scripts/controllers/pod.js:181
 msgid ""
-"Unable to calculate the bounding box for a character.  Terminal will not be "
+"Unable to calculate the bounding box for a character. Terminal will not be "
 "able to resize."
-msgstr "无法计算角色的边界框。 终端无法调整大小。"
+msgstr "无法计算字符的bounding box。因此终端无法调整大小。"
 
 #: app/scripts/directives/util.js:143
 msgid "Unable to copy the login command."
@@ -7030,7 +7030,7 @@ msgid ""
 "With the OpenShift command line interface (CLI), you can create applications "
 "and manage OpenShift projects from a terminal."
 msgstr ""
-"使用OpenShift命令行界面（CLI），您可以从终端创建应用程序并管理OpenShift项目。"
+"使用OpenShift命令行接口（CLI），您可以从终端创建应用程序并管理OpenShift项目。"
 
 #: app/views/about.html:36
 msgid ""
@@ -7184,8 +7184,8 @@ msgstr "您需要重新部署pod才能使其生效。"
 
 #: app/views/modals/logout.html:10
 msgid "Your session is about to expire due to inactivity."
-msgstr "由于不活动，您的会话即将过期。"
+msgstr "由于长时间无活动，您的会话即将过期。"
 
 #: app/views/directives/osc-persistent-volume-claim.html:36
 msgid "Zone"
-msgstr "空间"
+msgstr ""
