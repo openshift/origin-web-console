@@ -14,16 +14,8 @@
             <div class="help-block">
               Scale replicas automatically based on CPU usage.
             </div>
-            <div class="learn-more-block" ng-class="{ 'gutter-bottom': metricsWarning || showCPURequestWarning }">
+            <div class="learn-more-block" ng-class="{ 'gutter-bottom': showCPURequestWarning }">
               <a href="{{'pod_autoscaling' | helpLink}}" target="_blank">Learn More&nbsp;<i class="fa fa-external-link" aria-hidden> </i></a>
-            </div>
-
-            <!-- Warning: metrics not configured -->
-            <div ng-if="metricsWarning" class="alert alert-warning">
-              <span class="pficon pficon-warning-triangle-o" aria-hidden="true"></span>
-              <span class="sr-only">Warning:</span>
-              Metrics might not be configured by your cluster administrator. Metrics are
-              required for autoscaling.
             </div>
 
             <!-- Warning: CPU request not set -->

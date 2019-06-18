@@ -58,11 +58,6 @@ angular.module('openshiftConsole')
 
     $scope.labels = [];
 
-    // Warn if metrics aren't configured when setting autoscaling options.
-    MetricsService.isAvailable().then(function(available) {
-      $scope.metricsWarning = !available;
-    });
-
     var getErrorDetails = $filter('getErrorDetails');
 
     var navigateBack = function() {
