@@ -26,7 +26,7 @@ msgstr ". 你无法创建新存储因为配额不足."
 
 #: app/views/create/fromimage.html:215
 msgid "(Build and Runtime)"
-msgstr "(构建和运行时)"
+msgstr "(Build和Runtime)"
 
 #: app/views/modals/edit-pvc-resource.html:26
 msgid "(cannot be changed)"
@@ -71,7 +71,7 @@ msgstr "集群管理员可以通过运行该命令为您创建项目"
 
 #: app/views/directives/_edit-command.html:111
 msgid "A command is required."
-msgstr "命令是必需的。"
+msgstr "命令是必选项。"
 
 #: app/views/quota.html:226
 msgid ""
@@ -95,7 +95,7 @@ msgstr ""
 
 #: app/views/create/fromimage.html:95 app/views/edit/build-config.html:46
 msgid "A Git repository URL is required."
-msgstr "需要Git仓库URL。"
+msgstr "Git仓库URL是必选项。"
 
 #: app/views/edit/jenkinsfile-examples.html:2
 msgid ""
@@ -121,11 +121,11 @@ msgstr "一个错误的地址"
 #: app/views/create/fromimage.html:49
 #: app/views/directives/deploy-image.html:141
 msgid "A name is required."
-msgstr "名称必须."
+msgstr "名称是必选项."
 
 #: app/views/overview/_list-row-empty-state.html:3
 msgid "A new deployment will start automatically when"
-msgstr "新部署将自动启动当"
+msgstr "新deployment将自动启动当"
 
 #: app/views/attach-pvc.html:13
 msgid "A persistent volume claim is required to attach to this"
@@ -199,11 +199,11 @@ msgstr ""
 
 #: app/views/directives/replicas.html:40
 msgid "A value for replicas is required."
-msgstr "replicas是必须的。"
+msgstr "replicas值是必选项。"
 
 #: app/views/directives/lifecycle-hook.html:17
 msgid "Abort deployment on failure"
-msgstr "失败时中止部署"
+msgstr "失败时中止deployment"
 
 #: app/scripts/extensions/nav/helpDropdown.js:38 app/views/about.html:8
 #: app/views/directives/osc-form-section.html:14
@@ -351,7 +351,7 @@ msgid ""
 "replace resources from their YAML or JSON definitions, or select an item "
 "shared from another project."
 msgstr ""
-"从Web框架，数据库和其他组件的目录中向项目添加内容。 您还可以部署现有映像，从"
+"从Web框架，数据库和其他组件的目录中向项目添加内容。 您还可以部署现有镜像，从"
 "其YAML或JSON定义创建或替换资源，或选择从另一个项目共享的项目。"
 
 #: app/views/_pod-template.html:16
@@ -535,7 +535,7 @@ msgstr "替代服务"
 msgid ""
 "Always pull the builder image from the docker registry, even if it is "
 "present locally"
-msgstr "始终从docker注册表中提取构建器映像，即使它在本地存在"
+msgstr "始终从docker registry中拉取builder镜像，即使它在本地存在"
 
 #: app/views/_compute-resource.html:6
 #: app/views/directives/osc-persistent-volume-claim.html:157
@@ -592,7 +592,7 @@ msgstr "创建路由出错."
 
 #: app/views/directives/bind-service/delete-binding-result.html:28
 msgid "An error occurred deleting the binding."
-msgstr "删除绑定时发生错误。"
+msgstr "删除binding时发生错误。"
 
 #: app/scripts/directives/deployImage.js:158
 msgid "An error occurred finding the image."
@@ -636,11 +636,11 @@ msgstr "启动调试pod时发生错误。"
 
 #: app/scripts/controllers/edit/buildConfig.js:639
 msgid "An error occurred updating build config {{name}}."
-msgstr "更新构建配置{{name}}时发生错误。"
+msgstr "更新build config{{name}}时发生错误。"
 
 #: app/scripts/controllers/edit/deploymentConfig.js:390
 msgid "An error occurred updating deployment config {{name}}."
-msgstr "更新部署配置{{name}}时发生错误。"
+msgstr "更新deployment config{{name}}时发生错误。"
 
 #: app/scripts/directives/editEnvironmentVariables.js:146
 msgid "An error occurred updating environment variables for {{kind}} {{name}}."
@@ -649,7 +649,7 @@ msgstr "为 {{kind}} {{name}}更新环境变量出现错误."
 #: app/scripts/controllers/buildConfig.js:118
 msgid ""
 "An error occurred updating environment variables for build config {{name}}."
-msgstr "更新构建配置{{name}}的环境变量时发生错误。"
+msgstr "更新build config{{name}}的环境变量时发生错误。"
 
 #: app/scripts/directives/podMetrics.js:337
 msgid "An error occurred updating metrics for pod {{pod}}."
@@ -694,11 +694,11 @@ msgstr "镜像推送到"
 
 #: app/scripts/controllers/createFromURL.js:65
 msgid "An image stream or template is required."
-msgstr "image stream或模板是必须的."
+msgstr "image stream或模板是必选项."
 
 #: app/views/edit/deployment-config.html:59
 msgid "An image that can carry out the deployment."
-msgstr "可以执行部署的镜像。"
+msgstr "可以执行deployment的镜像。"
 
 #: app/404.html:149
 msgid "an out-of-date link"
@@ -727,11 +727,11 @@ msgstr "和"
 
 #: app/scripts/controllers/buildConfig.js:206
 msgid "Any remaining build history for this build will be shown."
-msgstr "将显示此版本的任何剩余构建历史记录。"
+msgstr "将显示此版本的任何剩余build历史记录。"
 
 #: app/scripts/controllers/deploymentConfig.js:109
 msgid "Any remaining deployment history for this deployment will be shown."
-msgstr "将显示此部署的任何剩余部署历史记录。"
+msgstr "将显示此deployment的任何剩余deployment历史记录。"
 
 #: app/views/overview.html:122
 msgid "Application"
@@ -793,13 +793,13 @@ msgstr "自动部署当"
 
 #: app/views/create/fromimage.html:201 app/views/edit/build-config.html:470
 msgid "Automatically build a new image when the builder image changes"
-msgstr "镜像构建器更改时自动生成新镜像"
+msgstr "builder image变化时自动生成新镜像"
 
 #: app/views/edit/build-config.html:474
 msgid ""
 "Automatically building a new image when the builder image changes allows "
 "your code to always run on the latest updates."
-msgstr "在镜像构建器更改时自动构建镜像允许代码始终在最新更新上运行。"
+msgstr "在builder image更改时自动building新镜像允许代码始终在最新更新上运行。"
 
 #: app/views/edit/deployment-config.html:321
 msgid ""
@@ -837,7 +837,7 @@ msgstr "Autoscaling没有开启，没有autoscalers适用"
 msgid ""
 "Autoscaling is not enabled. There are no autoscalers for this deployment "
 "config."
-msgstr "Autoscaling没有开启，没有autoscalers适用部署配置。"
+msgstr "Autoscaling没有开启，没有autoscalers适用部署deployment config。"
 
 #: app/scripts/controllers/edit/autoscaler.js:41
 msgid "Autoscaling not supported for kind {{kind}}."
@@ -857,7 +857,7 @@ msgstr "平均"
 
 #: app/views/_build-trends-chart.html:27
 msgid "Average build duration {{averageDurationText}}"
-msgstr "平均构建持续时间{{averageDurationText}}"
+msgstr "平均build持续时间{{averageDurationText}}"
 
 #: app/views/pipelines.html:103 app/views/pipelines.html:97
 msgid "Average Duration"
@@ -904,15 +904,15 @@ msgstr "二进制单位"
 #: app/scripts/directives/bindService.js:81
 #: app/scripts/directives/bindService.js:90
 msgid "Bind"
-msgstr "绑定"
+msgstr ""
 
 #: app/scripts/directives/bindService.js:146
 msgid "Binding"
-msgstr "绑定"
+msgstr ""
 
 #: app/views/directives/bind-service/delete-binding-result.html:3
 msgid "Binding for the following has been deleted:"
-msgstr "已删除以下绑定："
+msgstr "已删除以下Binding："
 
 #: app/views/directives/resource-service-bindings.html:2
 #: app/views/directives/service-instance-bindings.html:2
@@ -921,7 +921,7 @@ msgstr "已删除以下绑定："
 #: app/views/overview/_service-instance-row.html:46
 #: app/views/service-instances.html:49
 msgid "Bindings"
-msgstr "绑定"
+msgstr ""
 
 #: app/views/browse/build-config.html:391
 msgid "Bitbucket Webhook URL:"
@@ -975,7 +975,7 @@ msgstr ""
 msgid ""
 "Build hooks allow you to run commands at the end of the build to verify the "
 "image."
-msgstr "Build hooks 允许您在构建结束时运行命令以验证镜像。"
+msgstr "Build hooks 允许您在build结束时运行命令以验证镜像。"
 
 #: app/views/directives/osc-source-secrets.html:63
 #: app/views/directives/osc-source-secrets.html:8
@@ -1034,7 +1034,7 @@ msgid ""
 "the latest build created. Other queued builds will be cancelled."
 msgstr ""
 "从此Build Configuration触发的Builds将逐个运行。当前正在运行的构建完成"
-"时，下一个即将运行的构建是最创建的那个。其他排队的构建将被取消。"
+"时，下一个即将运行的build是最新创建的那个。其他排队的build将被取消。"
 
 #: app/views/edit/build-config.html:528
 msgid "Builds triggered from this Build Configuration will run using the"
@@ -1183,7 +1183,7 @@ msgstr "容量："
 
 #: app/scripts/directives/nav.js:52
 msgid "Catalog"
-msgstr "目录"
+msgstr ""
 
 #: app/scripts/controllers/create/browseCategory.js:45
 msgid "Catalog category {{category}} not found."
@@ -1557,7 +1557,7 @@ msgstr "跳转至项目概况"
 
 #: app/views/directives/lifecycle-hook.html:16
 msgid "Continue with deployment on failure"
-msgstr "失败继续部署"
+msgstr "失败继续deployment"
 
 #: app/scripts/directives/util.js:113
 msgid "Copy Login Command"
@@ -1974,15 +1974,15 @@ msgstr "正在部署镜像{{name}}到 {{project}}."
 #: app/views/browse/deployment-config.html:109
 #: app/views/browse/deployment-config.html:135
 msgid "Deployment"
-msgstr "部署"
+msgstr ""
 
 #: app/scripts/controllers/edit/deploymentConfig.js:380
 msgid "Deployment config {{name}} was successfully updated."
-msgstr "部署配置{{name}}更新成功."
+msgstr "Deployment config{{name}}更新成功."
 
 #: app/views/browse/_replica-set-details.html:206
 msgid "deployment config or deployment."
-msgstr "部署config或deployment。"
+msgstr "deployment config或deployment。"
 
 #: app/views/browse/_replica-set-details.html:49
 msgid "Deployment Config:"
@@ -1994,30 +1994,30 @@ msgstr ""
 
 #: app/views/create/fromimage.html:252
 msgid "Deployment configuration changes"
-msgstr "部署配置更改"
+msgstr "Deployment configuration变化"
 
 #: app/views/browse/_replica-set-details.html:33
 msgid "deployment strategy"
-msgstr "部署策略"
+msgstr "deployment策略"
 
 #: app/views/edit/deployment-config.html:16
 msgid "Deployment Strategy"
-msgstr "部署策略"
+msgstr "Deployment策略"
 
 #: app/views/browse/_replica-set-details.html:38
 msgid "deployment trigger"
-msgstr "部署触发"
+msgstr "Deployment触发"
 
 #: app/views/browse/_pod-details.html:20
 #: app/views/browse/_replica-set-details.html:53
 msgid "Deployment:"
-msgstr "部署："
+msgstr "Deployment"
 
 #: app/scripts/controllers/deployment.js:40 app/scripts/directives/nav.js:32
 #: app/views/deployments.html:121 app/views/deployments.html:6
 #: app/views/monitoring.html:152
 msgid "Deployments"
-msgstr "部署"
+msgstr "Deployments"
 
 #: app/views/browse/service-instance.html:124
 #: app/views/browse/service-instance.html:84 app/views/edit/project.html:21
@@ -2054,7 +2054,7 @@ msgstr "详情"
 
 #: app/views/directives/osc-source-secrets.html:53
 msgid "Directory where the files will be available at build time."
-msgstr "文件在构建时可用的目录。"
+msgstr "文件在build时可用的目录。"
 
 #: app/views/directives/_build-close.html:3
 msgid "Dismiss"
@@ -2299,7 +2299,7 @@ msgstr "邮箱"
 
 #: app/views/directives/create-secret.html:295
 msgid "Email is required."
-msgstr "邮箱是必须的."
+msgstr "邮箱是必选项."
 
 #: app/views/directives/create-secret.html:293
 msgid "Email must be in the form of"
@@ -2372,12 +2372,12 @@ msgid ""
 "containers.  These environment variables will be available during your build "
 "and at runtime."
 msgstr ""
-"环境变量用于配置信息并将信息传递给正在运行的容器。这些环境变量将在构建期间和"
+"环境变量用于配置信息并将信息传递给正在运行的容器。 这些环境变量将在build期间和"
 "运行时可用。"
 
 #: app/views/browse/pod.html:58 app/views/browse/replica-set.html:54
 msgid "Environment variables can be edited on deployment config"
-msgstr "可以在部署配置上编辑环境变量"
+msgstr "可以在deployment config配置上编辑环境变量"
 
 #: app/views/browse/build.html:99
 msgid "Environment variables can be edited on the"
@@ -2385,7 +2385,7 @@ msgstr "编辑环境变量可被编辑在"
 
 #: app/views/browse/replica-set.html:49
 msgid "Environment variables can be edited on the deployment"
-msgstr "可以在部署中编辑环境变量"
+msgstr "可以在deployment中编辑环境变量"
 
 #: app/scripts/controllers/buildConfig.js:111
 msgid ""
@@ -2487,7 +2487,7 @@ msgstr "外网IP："
 
 #: app/views/directives/edit-lifecycle-hook.html:124
 msgid "Fail the deployment if the hook fails."
-msgstr "如果hook失败，则部署失败。"
+msgstr "如果hook失败，则deployment失败。"
 
 #: app/views/overview/_builds.html:31
 msgid "failed"
@@ -2570,7 +2570,7 @@ msgstr "有关命令行工具的其他信息，请查看"
 
 #: app/views/create/fromimage.html:396
 msgid "for source, routes, builds, and deployments."
-msgstr "用于资源，路由，构建和部署。"
+msgstr "用于资源，路由，build和deployments。"
 
 #: app/views/directives/select-containers.html:11
 msgid "from image"
@@ -2688,8 +2688,8 @@ msgid ""
 "advanced build and deployment techniques, it provides guidance on setting up "
 "and managing your OpenShift environment as an application developer."
 msgstr ""
-"帮助您了解OpenShift并开始探索其功能。从开始创建您的第一个应用程序为了尝试更"
-"高级的构建和部署技术，它提供了有关设置和安装的指导作为应用程序开发人员管理您"
+"帮助您了解OpenShift并开始探索其功能。 从开始创建您的第一个应用程序为了尝试更"
+"高级build和deployment技术，它提供了有关设置和安装的指导作为应用程序开发人员管理您"
 "的OpenShift环境。"
 
 #: app/views/_container-statuses.html:20 app/views/create/fromimage.html:394
@@ -2846,7 +2846,7 @@ msgstr "如果您的Git存储库是私有的，请查看"
 
 #: app/views/directives/edit-lifecycle-hook.html:125
 msgid "Ignore hook failures and continue the deployment."
-msgstr "忽略hook故障并继续部署。"
+msgstr "忽略hook故障并继续deployment。"
 
 #: app/scripts/directives/deployImageDialog.js:26
 #: app/views/browse/deployment-config.html:173 app/views/deployments.html:107
@@ -2884,7 +2884,7 @@ msgstr "Image Registry Server地址"
 
 #: app/views/directives/create-secret.html:233
 msgid "Image registry server address is required."
-msgstr "Image registry服务器地址是必需的。"
+msgstr "Image registry服务器地址是必选项。"
 
 #: app/views/directives/deploy-image.html:32
 msgid "Image search is only available for existing projects."
@@ -3025,7 +3025,7 @@ msgstr ""
 
 #: app/views/_templateopt.html:73 app/views/_templateopt.html:91
 msgid "is required."
-msgstr "是必须的。"
+msgstr "是必选项。"
 
 #: app/views/modals/delete-resource.html:35
 msgid "It cannot be undone."
@@ -3088,7 +3088,7 @@ msgstr ""
 
 #: app/views/directives/edit-config-map-or-secret.html:78
 msgid "Key is required."
-msgstr "key是必须的。"
+msgstr "key是必选项。"
 
 #: app/views/_volumes.html:100 app/views/_volumes.html:30
 msgid "Key to File:"
@@ -3697,7 +3697,7 @@ msgstr "名称不能超出24个字符。"
 #: app/views/directives/osc-autoscaling.html:28
 #: app/views/directives/osc-persistent-volume-claim.html:87
 msgid "Name is required."
-msgstr "名称是必须的。"
+msgstr "名称是必选项。"
 
 #: app/views/directives/deploy-image.html:144
 msgid ""
@@ -4243,7 +4243,7 @@ msgstr "密码"
 
 #: app/views/directives/create-secret.html:273
 msgid "Password is required."
-msgstr "密码是必须."
+msgstr "密码是必选项."
 
 #: app/views/directives/create-secret.html:117
 msgid "Password or Token"
@@ -4258,7 +4258,7 @@ msgstr ""
 
 #: app/views/directives/create-secret.html:130
 msgid "Password or token is required."
-msgstr "密码或token是必需的。"
+msgstr "密码或token是必选项。"
 
 #: app/views/add-config-volume.html:132
 #: app/views/directives/_edit-probe.html:23
@@ -4438,7 +4438,7 @@ msgstr "端口："
 
 #: app/views/directives/edit-lifecycle-hook.html:5
 msgid "Post hooks execute after the deployment strategy completes."
-msgstr "在部署策略完成后执行Post hooks 。"
+msgstr "在deployment策略完成后执行Post hooks 。"
 
 #: app/views/edit/deployment-config.html:256
 msgid "Post Lifecycle Hook"
@@ -4451,7 +4451,7 @@ msgstr ""
 
 #: app/views/directives/edit-lifecycle-hook.html:3
 msgid "Pre hooks execute before the deployment begins."
-msgstr "在部署开始之前执行预hooks。"
+msgstr "在deployment开始之前执行预hooks。"
 
 #: app/views/edit/deployment-config.html:230
 msgid "Pre Lifecycle Hook"
@@ -4581,7 +4581,7 @@ msgstr "原因和"
 
 #: app/views/browse/build.html:14 app/views/browse/build.html:48
 msgid "Rebuild"
-msgstr "重新构建"
+msgstr ""
 
 #: app/views/directives/pods-table.html:13
 msgid "Receiving Traffic"
@@ -4669,7 +4669,7 @@ msgstr "替换"
 
 #: app/views/browse/_replica-set-details.html:28
 msgid "replica count and selector"
-msgstr "副本计数和选择器"
+msgstr "replica计数和选择器"
 
 #: app/views/deployments.html:166
 msgid "Replica Sets"
@@ -4862,11 +4862,11 @@ msgstr "在新pod中运行特定命令"
 
 #: app/views/edit/jenkinsfile-examples.html:6
 msgid "Run an OpenShift build and deployment:"
-msgstr "运行OpenShift构建和部署："
+msgstr "运行OpenShiftbuild和deployment："
 
 #: app/views/edit/build-config.html:545
 msgid "Run build hooks after image is built"
-msgstr "构建镜像后运行构建hooks"
+msgstr "build镜像后运行build hooks"
 
 #: app/views/edit/build-config.html:507
 msgid "Run Policy"
@@ -4884,21 +4884,21 @@ msgstr "运行策略："
 msgid ""
 "Runs a command in a new pod using the container from the deployment "
 "template. You can add additional environment variables and volumes."
-msgstr "使用部署模板中的容器在新pod中运行命令。 您可以添加其他环境变量和卷。"
+msgstr "使用deployment模板中的容器在新pod中运行命令。 您可以添加其他环境变量和卷。"
 
 #: app/views/directives/lifecycle-hook.html:6
 msgid "runs after the deployment strategy completes"
-msgstr "部署策略完成后运行"
+msgstr "deployment策略完成后运行"
 
 #: app/views/directives/lifecycle-hook.html:5
 msgid ""
 "runs after the previous deployment is scaled down to zero and before the "
 "first pod of the new deployment is created"
-msgstr "运行在之前的部署缩容到零之后，并且在新部署创建第一个pod之前"
+msgstr "运行在之前的deployment缩容到零之后，并且在新deployment创建第一个pod之前"
 
 #: app/views/directives/lifecycle-hook.html:4
 msgid "runs before the deployment begins"
-msgstr "运行在部署开始之前"
+msgstr "运行在deployment开始之前"
 
 #: app/views/browse/build-config.html:486
 #: app/views/directives/add-config-to-application.html:149
@@ -5169,7 +5169,7 @@ msgstr "服务帐户提供了一种灵活的方式来控制API访问，而无需
 
 #: app/views/directives/header/header.html:16
 msgid "Service Catalog"
-msgstr "服务目录"
+msgstr "服务Catalog"
 
 #: app/views/directives/traffic-table.html:7
 msgid "Service Port"
@@ -5267,7 +5267,7 @@ msgstr "大小"
 #: app/views/directives/osc-persistent-volume-claim.html:184
 #: app/views/modals/edit-pvc-resource.html:72
 msgid "Size is required."
-msgstr "大小是必填的。"
+msgstr "大小是必选项。"
 
 #: app/views/modals/confirm-replace.html:15
 msgid "Some items already exist:"
@@ -5294,7 +5294,7 @@ msgstr "源和目标路径"
 msgid ""
 "source code will be built and deployed unless otherwise specified in the "
 "next step."
-msgstr "除非在下一步中另有说明，否则将构建和部署源代码。"
+msgstr "除非在下一步中另有说明，否则将build和部署源代码。"
 
 #: app/views/browse/_build-details.html:76
 msgid "Source Commit:"
@@ -5330,11 +5330,11 @@ msgstr "源仓库："
 
 #: app/views/directives/osc-source-secrets.html:52
 msgid "Source secret to copy into the builder pod at build time."
-msgstr "在构建时复制到builder pod中的Source secret 。"
+msgstr "在build时复制到builder pod中的Source secret 。"
 
 #: app/views/directives/osc-source-secrets.html:104
 msgid "Source secret to mount into the builder pod at build time."
-msgstr "在构建时挂载到 builder pod中的Source secret。"
+msgstr "在build时挂载到 builder pod中的Source secret。"
 
 #: app/views/browse/_build-details.html:65
 msgid "Source Type:"
@@ -5372,11 +5372,11 @@ msgstr "启动新build去创建镜像从"
 #: app/views/browse/build-config.html:32
 #: app/views/overview/_list-row-actions.html:15
 msgid "Start Build"
-msgstr "开始构建"
+msgstr "开始Build"
 
 #: app/views/overview/_list-row-empty-state.html:31
 msgid "Start Deployment"
-msgstr "开始部署"
+msgstr "开始Deployment"
 
 #: app/views/browse/build-config.html:125 app/views/browse/build-config.html:16
 #: app/views/browse/build-config.html:35 app/views/overview.html:299
@@ -5539,7 +5539,7 @@ msgstr "标记为"
 
 #: app/views/directives/edit-lifecycle-hook.html:29
 msgid "Tag image if the deployment succeeds"
-msgstr "如果部署成功，则标记图像"
+msgstr "如果deployment成功，则标记图像"
 
 #: app/views/images.html:50
 msgid "Tags"
@@ -5548,7 +5548,7 @@ msgstr "标记"
 #: app/views/directives/edit-lifecycle-hook.html:33
 msgid ""
 "Tags the current image as an image stream tag if the deployment succeeds."
-msgstr "如果部署成功，则将当前image标记为image stream tag。"
+msgstr "如果deployment成功，则将当前image标记为image stream tag。"
 
 #: app/views/directives/osc-autoscaling.html:124
 msgid "Target CPU percentage must be a number."
@@ -5645,11 +5645,11 @@ msgstr "build详情无法加载."
 msgid ""
 "The build run policy describes the order in which the builds created from "
 "the build configuration should run."
-msgstr "build运行策略描述了从构建配置创建的构建应该运行的顺序。"
+msgstr "build运行策略描述了从build配置创建的build应该运行的顺序。"
 
 #: app/views/browse/build.html:112
 msgid "The build strategy had no environment variables defined."
-msgstr "构建策略没有定义环境变量。"
+msgstr "build策略没有定义环境变量。"
 
 #: app/views/browse/build-config.html:458
 msgid ""
@@ -5705,7 +5705,7 @@ msgstr "当前值为“{{parameter.value}}”，该值不为空。"
 msgid ""
 "The custom strategy allows you to specify container image that will provide "
 "your own deployment behavior."
-msgstr "自定义策略允许您指定将提供您自己的部署行为的容器镜像。"
+msgstr "自定义策略允许您指定将提供您自己的deployment行为的容器镜像。"
 
 #: app/views/quota.html:233
 msgid ""
@@ -5725,7 +5725,7 @@ msgstr "deployment配置详情无法加载."
 
 #: app/scripts/controllers/replicaSet.js:233
 msgid "The deployment controlling this replica set has been deleted."
-msgstr "deployment controlling this replica set已被删除."
+msgstr "控制replica set的deployment已被删除."
 
 #: app/scripts/controllers/deployment.js:120
 msgid "The deployment details could not be loaded."
@@ -5875,14 +5875,14 @@ msgid ""
 "of pods while the rolling deployment is in progress. This can be either a "
 "percentage (10%) or a whole number (1)."
 msgstr ""
-"滚动部署正在进行时，可以在原始pod数量之上调度的最大pod数。 这可以是百分比"
+"Rolling deployment正在进行时，可以在原始pod数量之上调度的最大pod数。 这可以是百分比"
 "（10％）或整数（1）。"
 
 #: app/views/edit/deployment-config.html:191
 msgid ""
 "The maximum number of pods that can be unavailable during the rolling "
 "deployment. This can be either a percentage (10%) or a whole number (1)."
-msgstr "滚动部署期间可用的最大pod数。 这可以是百分比（10％）或整数（1）。"
+msgstr "Rolling deployment期间可用的最大pod数。 这可以是百分比（10％）或整数（1）。"
 
 #: app/views/directives/logs/_log-viewer.html:90
 msgid ""
@@ -5933,7 +5933,7 @@ msgid ""
 "The recreate strategy has basic rollout behavior and supports lifecycle "
 "hooks for injecting code into the deployment process."
 msgstr ""
-"重新创建策略具有基本的部署行为，并支持生命周期钩子，用于将代码注入部署过程。"
+"重新创建策略具有基本的rollout行为，并支持生命周期钩子，用于将代码注入deployment过程。"
 
 #: app/views/modals/edit-pvc-resource.html:81
 msgid "The requested capacity may not be less than the current capacity."
@@ -6033,7 +6033,7 @@ msgstr "没有"
 
 #: app/views/directives/annotations.html:21
 msgid "There are no annotations on this resource."
-msgstr "此资源没有注释。"
+msgstr "此资源没有annotations。"
 
 #: app/views/monitoring.html:409
 msgid "There are no builds in this project."
@@ -6045,7 +6045,7 @@ msgstr "项目中没有 config maps或secrets"
 
 #: app/views/monitoring.html:159
 msgid "There are no deployments in this project."
-msgstr "此项目中没有部署。"
+msgstr "此项目中没有deployment。"
 
 #: app/views/edit/build-config.html:227
 msgid "There are no editable source types for this build config."
@@ -6070,7 +6070,7 @@ msgstr "此项目没有设置资源配额。"
 #: app/views/directives/resource-service-bindings.html:26
 #: app/views/directives/service-instance-bindings.html:17
 msgid "There are no service bindings."
-msgstr "没有服务绑定。"
+msgstr "没有service bindings。"
 
 #: app/views/monitoring.html:332
 msgid "There are no stateful sets in this project."
@@ -6098,24 +6098,24 @@ msgstr "此自动扩容使用较新的API，请考虑使用"
 
 #: app/scripts/controllers/buildConfig.js:205
 msgid "This build configuration can not be found, it may have been deleted."
-msgstr "无法找到此构建配置，它可能已被删除。"
+msgstr "无法找到此build configuration，它可能已被删除。"
 
 #: app/scripts/controllers/buildConfig.js:163
 #: app/scripts/controllers/edit/buildConfig.js:349
 msgid "This build configuration has been deleted."
-msgstr "build配置已被删除."
+msgstr "build configuration已被删除."
 
 #: app/scripts/controllers/buildConfig.js:172
 msgid ""
 "This build configuration has been updated in the background. Saving your "
 "changes may create a conflict or cause loss of data."
-msgstr "build配置已在后台更新.保存修改可能导致冲突或丢失数据."
+msgstr "build configuration已在后台更新.保存修改可能导致冲突或丢失数据."
 
 #: app/scripts/controllers/edit/buildConfig.js:342
 msgid ""
 "This build configuration has changed since you started editing it. You'll "
 "need to copy any changes you've made and edit again."
-msgstr "build配置已被修改,若编辑，你需要复制你的修改并且再编辑."
+msgstr "build configuration已被修改,若编辑，你需要复制你的修改并且再编辑."
 
 #: app/scripts/controllers/build.js:122
 msgid "This build has been deleted."
@@ -6135,23 +6135,23 @@ msgstr "无法找到此deployment，它可能已被删除。"
 
 #: app/views/overview/_list-row-empty-state.html:21
 msgid "This deployment config is part of the pipeline"
-msgstr "此deployment cofnig是pipeline的一部分"
+msgstr "此deployment configuration是pipeline的一部分"
 
 #: app/scripts/controllers/deploymentConfig.js:108
 msgid ""
 "This deployment configuration can not be found, it may have been deleted."
-msgstr "无法找到此deployment配置，它可能已被删除。"
+msgstr "无法找到此deployment configuration，它可能已被删除。"
 
 #: app/scripts/controllers/deploymentConfig.js:94
 #: app/scripts/controllers/edit/deploymentConfig.js:200
 msgid "This deployment configuration has been deleted."
-msgstr "deployment配置已被删除."
+msgstr "deployment configuration已被删除."
 
 #: app/scripts/controllers/edit/deploymentConfig.js:194
 msgid ""
 "This deployment configuration has changed since you started editing it. "
 "You'll need to copy any changes you've made and edit again."
-msgstr "deployment配置已修改，若要编辑，你需要复制之前的修改然后再次编辑."
+msgstr "deployment configuration已修改，若要编辑，你需要复制之前的修改然后再次编辑."
 
 #: app/scripts/controllers/deployment.js:88
 msgid "This deployment has been deleted."
@@ -6166,7 +6166,7 @@ msgid ""
 "This image declares volumes and will default to use non-persistent, host-"
 "local storage.You can add persistent storage later to the deployment config."
 msgstr ""
-"此映像声明卷并将默认使用非持久性主机本地存储。您可以稍后在部署配置中添加持久"
+"此映像声明卷并将默认使用非持久性主机本地存储。您可以稍后在deployment config中添加持久"
 "存储。"
 
 #: app/scripts/controllers/image.js:93
@@ -6176,7 +6176,7 @@ msgstr "image stream已被删除."
 
 #: app/views/directives/deploy-image.html:102
 msgid "This image will be deployed in Deployment Config"
-msgstr "此映像将部署在Deployment Config中"
+msgstr "此镜像将部署在Deployment Config中"
 
 #: app/views/create/fromimage.html:98 app/views/edit/build-config.html:49
 msgid ""
@@ -6199,7 +6199,7 @@ msgstr "这个名字已被使用。请选择其他名称。"
 msgid ""
 "This pauses any in-progress rollouts and stops new rollouts from running "
 "until the deployment is resumed."
-msgstr "这将暂停所有正在进行的部署，并停止运行新的部署，直到部署恢复为止。"
+msgstr "这将暂停所有正在进行的rollouts，并停止运行新的rollouts，直到deployment恢复为止。"
 
 #: app/scripts/controllers/persistentVolumeClaim.js:65
 msgid "This persistent volume claim has been deleted."
@@ -6297,12 +6297,12 @@ msgstr "将删除"
 msgid ""
 "This will delete the deployment config, all rollout history, and any running "
 "pods."
-msgstr "这将删除deployment config，所有部署历史记录和任何正在运行的pod。"
+msgstr "这将删除deployment config，所有rollout历史记录和任何正在运行的pod。"
 
 #: app/views/modals/delete-resource.html:19
 msgid ""
 "This will delete the deployment, all rollout history, and any running pods."
-msgstr "这将删除deployment，所有部署历史记录和任何正在运行的pods。"
+msgstr "这将删除deployment，所有rollout历史记录和任何正在运行的pods。"
 
 #: app/views/modals/process-or-save-template.html:29
 msgid "This will overwrite the current version of the template."
@@ -6350,7 +6350,7 @@ msgstr "时间范围："
 
 #: app/views/edit/deployment-config.html:161
 msgid "Time to wait between polling deployment status after running a pod."
-msgstr "运行pod后轮询部署状态之间的等待时间。"
+msgstr "运行pod后polling deployment状态之间的等待时间。"
 
 #: app/views/edit/deployment-config.html:129
 msgid "Time to wait between retrying to run individual pod."
@@ -6580,7 +6580,7 @@ msgstr "未知"
 
 #: app/scripts/controllers/edit/deploymentConfig.js:79
 msgid "Unknown deployment strategy type:"
-msgstr "未知的部署策略类型："
+msgstr "未知的deployment策略类型："
 
 #: app/views/edit/deployment-config.html:114
 msgid "Update Period"
@@ -6699,7 +6699,7 @@ msgstr "用户名"
 
 #: app/views/directives/create-secret.html:253
 msgid "Username is required."
-msgstr "用户名是必需的。"
+msgstr "用户名是必选项。"
 
 #: app/views/storage.html:66
 msgid "using"
@@ -6893,7 +6893,7 @@ msgstr "警告"
 
 #: app/views/browse/replica-set.html:26
 msgid "Warning: The deployment's deployment config is missing."
-msgstr "警告：缺少部署的部署配置。"
+msgstr "警告：缺少deployment的deployment config。"
 
 #: app/views/directives/events-sidebar.html:12
 msgid "warnings"
@@ -7161,7 +7161,7 @@ msgstr "你没有保存修改，确认离开页面?"
 msgid ""
 "You must have a bindable service in your namespace in order to create "
 "bindings."
-msgstr "您必须在命名空间中具有可绑定服务才能创建绑定。"
+msgstr "您必须在命名空间中具有可绑定服务才能创建bindings。"
 
 #: app/views/directives/select-containers.html:21
 msgid "You must select at least one container."
