@@ -5,8 +5,8 @@
         <h1 translate>Other Resources</h1>
       </div>
       <div class="data-toolbar other-resources-toolbar">
-        <ui-select class="data-toolbar-dropdown" ng-model="kindSelector.selected" theme="bootstrap" search-enabled="true" ng-disabled="kindSelector.disabled" title="Choose a resource">
-          <ui-select-match placeholder="Choose a resource to list...">{{$select.selected.kind | humanizeKind : true}}</ui-select-match>
+        <ui-select class="data-toolbar-dropdown" ng-model="kindSelector.selected" theme="bootstrap" search-enabled="true" ng-disabled="kindSelector.disabled" title="{{'Choose a resource' | translate}}">
+          <ui-select-match placeholder="{{'Choose a resource to list...' | translate}}">{{$select.selected.kind | humanizeKind : true}}</ui-select-match>
           <ui-select-choices repeat="kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'">
             <div ng-bind-html="(kind.kind | humanizeKind : true) | highlight: $select.search"></div>
             <small ng-if="isDuplicateKind(kind.kind)" ng-bind-html="kind.group | highlight: $select.search" class="text-muted"></small>

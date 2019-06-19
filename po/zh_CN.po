@@ -90,8 +90,8 @@ msgid ""
 "A file will be created in this directory for each key from the config map or "
 "secret. The file contents will be the value of the key."
 msgstr ""
-"在该目录下将给每个来自config map或者secret的key创建一个文件。 文件内容将是"
-"密钥的值。"
+"在该目录下将给每个来自config map或者secret的key创建一个文件。 文件内容将是密"
+"钥的值。"
 
 #: app/views/create/fromimage.html:95 app/views/edit/build-config.html:46
 msgid "A Git repository URL is required."
@@ -141,8 +141,8 @@ msgid ""
 "failed readiness probe means that a container should not receive any traffic "
 "from a proxy, even if it's running."
 msgstr ""
-"Readiness probe检查容器是否准备好处理请求。探测出失败意味着容器不应接收任何"
-"来自代理的流量，即使它正在运行。"
+"Readiness probe检查容器是否准备好处理请求。探测出失败意味着容器不应接收任何来"
+"自代理的流量，即使它正在运行。"
 
 #: app/views/edit/project.html:25
 msgid "A short description."
@@ -1018,8 +1018,7 @@ msgstr "Builds源码"
 msgid ""
 "Builds triggered from this Build Configuration will run all at the same "
 "time. The order in which they will finish is not guaranteed."
-msgstr ""
-"从Build Configuration触发的Builds将同时运行。 他们的完成顺序无法保证。"
+msgstr "从Build Configuration触发的Builds将同时运行。 他们的完成顺序无法保证。"
 
 #: app/views/edit/build-config.html:525
 msgid ""
@@ -1033,8 +1032,8 @@ msgid ""
 "When a currently running build completes, the next build that will run is "
 "the latest build created. Other queued builds will be cancelled."
 msgstr ""
-"从此Build Configuration触发的Builds将逐个运行。当前正在运行的构建完成"
-"时，下一个即将运行的build是最新创建的那个。其他排队的build将被取消。"
+"从此Build Configuration触发的Builds将逐个运行。当前正在运行的构建完成时，下一"
+"个即将运行的build是最新创建的那个。其他排队的build将被取消。"
 
 #: app/views/edit/build-config.html:528
 msgid "Builds triggered from this Build Configuration will run using the"
@@ -1237,6 +1236,15 @@ msgstr "在标记为“maven”的节点上签出源代码并运行shell命令�
 #: app/views/create-from-url.html:17
 msgid "Choose a Project"
 msgstr "选择一个项目"
+
+#: app/views/monitoring.html:12 app/views/monitoring.html:13
+#: app/views/other-resources.html:8
+msgid "Choose a resource"
+msgstr "选择一个资源"
+
+#: app/views/other-resources.html:9
+msgid "Choose a resource to list..."
+msgstr "选择一个资源到列表…"
 
 #: app/views/create-from-url.html:52
 msgid "Choose Existing Project"
@@ -1673,6 +1681,8 @@ msgid ""
 "autoscalers,your cluster administrator must have properly configured cluster "
 "metrics."
 msgstr ""
+"CPU指标可能不可用。要使用 horizontal pod autoscalers，cluster administrator必"
+"须具有正确配置的cluster metrics。"
 
 #: app/views/directives/hpa.html:29
 msgid "CPU Request"
@@ -1821,7 +1831,7 @@ msgstr "创建于"
 #: app/views/other-resources.html:52 app/views/secrets.html:55
 #: app/views/service-instances.html:48
 msgid "Created"
-msgstr "创建于"
+msgstr "创建"
 
 #: app/scripts/controllers/create/createFromImage.js:307
 msgid "Created {{kind}}  {{name}}  successfully."
@@ -2321,6 +2331,10 @@ msgstr "日志结束"
 msgid "Enter a label and value to use for your storage."
 msgstr "输入要用于存储的标签和值。"
 
+#: app/views/directives/edit-config-map-or-secret.html:106
+msgid "Enter a value for the {{type}} entry or use the contents of a file."
+msgstr "输入{{type}} entry的值或使用文件的内容。"
+
 #: app/scripts/controllers/edit/buildConfig.js:144
 msgid "Enter the arguments that will be appended to the command."
 msgstr "输入将附加到命令的参数。"
@@ -2339,8 +2353,8 @@ msgid ""
 "Enter the command to run inside the container. The command is considered "
 "successful if its exit code is 0. Drag and drop to reorder arguments."
 msgstr ""
-"输入要在容器内运行的命令。 如果命令被认为是成功，退出代码为0。拖放以重新排序参"
-"数。"
+"输入要在容器内运行的命令。 如果命令被认为是成功，退出代码为0。拖放以重新排序"
+"参数。"
 
 #: app/views/browse/build-config.html:455 app/views/browse/build.html:95
 #: app/views/browse/deployment-config.html:340
@@ -2372,8 +2386,8 @@ msgid ""
 "containers.  These environment variables will be available during your build "
 "and at runtime."
 msgstr ""
-"环境变量用于配置信息并将信息传递给正在运行的容器。 这些环境变量将在build期间和"
-"运行时可用。"
+"环境变量用于配置信息并将信息传递给正在运行的容器。 这些环境变量将在build期间"
+"和运行时可用。"
 
 #: app/views/browse/pod.html:58 app/views/browse/replica-set.html:54
 msgid "Environment variables can be edited on deployment config"
@@ -2689,8 +2703,8 @@ msgid ""
 "and managing your OpenShift environment as an application developer."
 msgstr ""
 "帮助您了解OpenShift并开始探索其功能。 从开始创建您的第一个应用程序为了尝试更"
-"高级build和deployment技术，它提供了有关设置和安装的指导作为应用程序开发人员管理您"
-"的OpenShift环境。"
+"高级build和deployment技术，它提供了有关设置和安装的指导作为应用程序开发人员管"
+"理您的OpenShift环境。"
 
 #: app/views/_container-statuses.html:20 app/views/create/fromimage.html:394
 msgid "Hide"
@@ -3257,7 +3271,7 @@ msgstr "将secret链接到服务帐户。"
 
 #: app/views/overview.html:90
 msgid "List by"
-msgstr "列表按"
+msgstr "列表排序按照"
 
 #: app/views/directives/edit-lifecycle-hook.html:76
 msgid "List of named volumes to copy to the hook pod."
@@ -4845,8 +4859,8 @@ msgid ""
 "Routes can direct traffic to multiple services for A/B testing. Each service "
 "has a weight controlling how much traffic it gets."
 msgstr ""
-"路由可以将流量引导到多个服务以进行A/B测试。每项服务都有一个权重控制它获得"
-"的流量。"
+"路由可以将流量引导到多个服务以进行A/B测试。每项服务都有一个权重控制它获得的流"
+"量。"
 
 #: app/views/browse/service.html:81
 msgid "Routes:"
@@ -4884,7 +4898,8 @@ msgstr "运行策略："
 msgid ""
 "Runs a command in a new pod using the container from the deployment "
 "template. You can add additional environment variables and volumes."
-msgstr "使用deployment模板中的容器在新pod中运行命令。 您可以添加其他环境变量和卷。"
+msgstr ""
+"使用deployment模板中的容器在新pod中运行命令。 您可以添加其他环境变量和卷。"
 
 #: app/views/directives/lifecycle-hook.html:6
 msgid "runs after the deployment strategy completes"
@@ -4894,7 +4909,8 @@ msgstr "deployment策略完成后运行"
 msgid ""
 "runs after the previous deployment is scaled down to zero and before the "
 "first pod of the new deployment is created"
-msgstr "运行在之前的deployment缩容到零之后，并且在新deployment创建第一个pod之前"
+msgstr ""
+"运行在之前的deployment缩容到零之后，并且在新deployment创建第一个pod之前"
 
 #: app/views/directives/lifecycle-hook.html:4
 msgid "runs before the deployment begins"
@@ -5057,7 +5073,7 @@ msgstr "选择一个项目"
 msgid "Select a resource from the list above..."
 msgstr "从上面的列表中选择一个资源…"
 
-#: app/views/membership.html:120 app/views/membership.html:233
+#: app/views/membership.html:120 app/views/membership.html:234
 msgid "Select a role"
 msgstr "选择一个角色"
 
@@ -5068,6 +5084,10 @@ msgstr "选择一个服务帐户"
 #: app/views/directives/deploy-image.html:78
 msgid "Select an image stream tag or enter an image name."
 msgstr "选择一个image stream tag或者输入镜像名."
+
+#: app/views/project-browse-catalog.html:3
+msgid "Select an item to add to the current project"
+msgstr "选择一项添加到当前项目中"
 
 #: app/views/directives/header/header.html:53
 #: app/views/directives/process-template-dialog/process-template-select.html:4
@@ -5279,7 +5299,7 @@ msgstr "抱歉，您尝试查看的页面不存在。"
 
 #: app/views/directives/events.html:32 app/views/projects.html:51
 msgid "Sort by"
-msgstr "排序按"
+msgstr "排序按照"
 
 #: app/views/add-config-volume.html:32 app/views/builds.html:57
 #: app/views/monitoring.html:461
@@ -5875,14 +5895,15 @@ msgid ""
 "of pods while the rolling deployment is in progress. This can be either a "
 "percentage (10%) or a whole number (1)."
 msgstr ""
-"Rolling deployment正在进行时，可以在原始pod数量之上调度的最大pod数。 这可以是百分比"
-"（10％）或整数（1）。"
+"Rolling deployment正在进行时，可以在原始pod数量之上调度的最大pod数。 这可以是"
+"百分比（10％）或整数（1）。"
 
 #: app/views/edit/deployment-config.html:191
 msgid ""
 "The maximum number of pods that can be unavailable during the rolling "
 "deployment. This can be either a percentage (10%) or a whole number (1)."
-msgstr "Rolling deployment期间可用的最大pod数。 这可以是百分比（10％）或整数（1）。"
+msgstr ""
+"Rolling deployment期间可用的最大pod数。 这可以是百分比（10％）或整数（1）。"
 
 #: app/views/directives/logs/_log-viewer.html:90
 msgid ""
@@ -5933,7 +5954,8 @@ msgid ""
 "The recreate strategy has basic rollout behavior and supports lifecycle "
 "hooks for injecting code into the deployment process."
 msgstr ""
-"重新创建策略具有基本的rollout行为，并支持生命周期钩子，用于将代码注入deployment过程。"
+"重新创建策略具有基本的rollout行为，并支持生命周期钩子，用于将代码注入"
+"deployment过程。"
 
 #: app/views/modals/edit-pvc-resource.html:81
 msgid "The requested capacity may not be less than the current capacity."
@@ -6151,7 +6173,8 @@ msgstr "deployment configuration已被删除."
 msgid ""
 "This deployment configuration has changed since you started editing it. "
 "You'll need to copy any changes you've made and edit again."
-msgstr "deployment configuration已修改，若要编辑，你需要复制之前的修改然后再次编辑."
+msgstr ""
+"deployment configuration已修改，若要编辑，你需要复制之前的修改然后再次编辑."
 
 #: app/scripts/controllers/deployment.js:88
 msgid "This deployment has been deleted."
@@ -6166,8 +6189,8 @@ msgid ""
 "This image declares volumes and will default to use non-persistent, host-"
 "local storage.You can add persistent storage later to the deployment config."
 msgstr ""
-"此映像声明卷并将默认使用非持久性主机本地存储。您可以稍后在deployment config中添加持久"
-"存储。"
+"此映像声明卷并将默认使用非持久性主机本地存储。您可以稍后在deployment config中"
+"添加持久存储。"
 
 #: app/scripts/controllers/image.js:93
 #: app/scripts/controllers/imagestream.js:58
@@ -6199,7 +6222,9 @@ msgstr "这个名字已被使用。请选择其他名称。"
 msgid ""
 "This pauses any in-progress rollouts and stops new rollouts from running "
 "until the deployment is resumed."
-msgstr "这将暂停所有正在进行的rollouts，并停止运行新的rollouts，直到deployment恢复为止。"
+msgstr ""
+"这将暂停所有正在进行的rollouts，并停止运行新的rollouts，直到deployment恢复为"
+"止。"
 
 #: app/scripts/controllers/persistentVolumeClaim.js:65
 msgid "This persistent volume claim has been deleted."
@@ -6530,9 +6555,9 @@ msgstr "类型"
 
 #: app/scripts/controllers/pod.js:181
 msgid ""
-"Unable to calculate the bounding box for a character. Terminal will not be "
+"Unable to calculate the bounding box for a character.  Terminal will not be "
 "able to resize."
-msgstr "无法计算字符的bounding box。因此终端无法调整大小。"
+msgstr ""
 
 #: app/scripts/directives/util.js:143
 msgid "Unable to copy the login command."
@@ -6711,7 +6736,7 @@ msgstr "使用持久卷"
 
 #: app/views/directives/edit-config-map-or-secret.html:99
 msgid "Value"
-msgstr "值"
+msgstr ""
 
 #: app/views/directives/create-secret.html:72
 msgid "Value of the secret will be supplied when invoking the webhook."
@@ -7189,3 +7214,8 @@ msgstr "由于长时间无活动，您的会话即将过期。"
 #: app/views/directives/osc-persistent-volume-claim.html:36
 msgid "Zone"
 msgstr ""
+
+#~ msgid ""
+#~ "Unable to calculate the bounding box for a character. Terminal will not "
+#~ "be able to resize."
+#~ msgstr "无法计算字符的bounding box。因此终端无法调整大小。"

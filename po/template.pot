@@ -1203,6 +1203,16 @@ msgstr ""
 msgid "Choose a Project"
 msgstr ""
 
+#: app/views/monitoring.html:12
+#: app/views/monitoring.html:13
+#: app/views/other-resources.html:8
+msgid "Choose a resource"
+msgstr ""
+
+#: app/views/other-resources.html:9
+msgid "Choose a resource to list..."
+msgstr ""
+
 #: app/views/create-from-url.html:52
 msgid "Choose Existing Project"
 msgstr ""
@@ -2332,6 +2342,10 @@ msgstr ""
 
 #: app/views/directives/osc-persistent-volume-claim.html:233
 msgid "Enter a label and value to use for your storage."
+msgstr ""
+
+#: app/views/directives/edit-config-map-or-secret.html:106
+msgid "Enter a value for the {{type}} entry or use the contents of a file."
 msgstr ""
 
 #: app/scripts/controllers/edit/buildConfig.js:144
@@ -5111,7 +5125,7 @@ msgid "Select a resource from the list above..."
 msgstr ""
 
 #: app/views/membership.html:120
-#: app/views/membership.html:233
+#: app/views/membership.html:234
 msgid "Select a role"
 msgstr ""
 
@@ -5121,6 +5135,10 @@ msgstr ""
 
 #: app/views/directives/deploy-image.html:78
 msgid "Select an image stream tag or enter an image name."
+msgstr ""
+
+#: app/views/project-browse-catalog.html:3
+msgid "Select an item to add to the current project"
 msgstr ""
 
 #: app/views/directives/header/header.html:53

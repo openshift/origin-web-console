@@ -9,8 +9,8 @@
           </h1>
         </div>
         <div class="data-toolbar">
-          <ui-select class="data-toolbar-dropdown" ng-model="kindSelector.selected" theme="bootstrap" search-enabled="true" ng-disabled="kindSelector.disabled" title="Choose a resource">
-            <ui-select-match placeholder="Choose a resource">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>
+          <ui-select class="data-toolbar-dropdown" ng-model="kindSelector.selected" theme="bootstrap" search-enabled="true" ng-disabled="kindSelector.disabled" title="{{'Choose a resource' | translate}}">
+            <ui-select-match placeholder="{{'Choose a resource' | translate}}">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>
             <ui-select-choices repeat="kind in kinds | filter : {kind: $select.search} : matchKind">
               <div ng-bind-html="(kind.label ? kind.label : (kind.kind | humanizeKind : true)) | highlight: $select.search"></div>
             </ui-select-choices>

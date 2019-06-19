@@ -569,12 +569,12 @@ angular.module('openshiftConsole')
       }
     };
   })
-  .directive('projectFilter', function(LabelFilter) {
+  .directive('projectFilter', function(LabelFilter, gettextCatalog) {
     return {
       restrict: 'E',
       templateUrl: 'views/directives/_project-filter.html',
       link: function($scope, $elem) {
-        LabelFilter.setupFilterWidget($elem.find('.navbar-filter-widget'), $elem.find('.active-filters'), { addButtonText: "Add" });
+        LabelFilter.setupFilterWidget($elem.find('.navbar-filter-widget'), $elem.find('.active-filters'), { addButtonText: gettextCatalog.getString("Add") });
         LabelFilter.toggleFilterWidget(!$scope.renderOptions || !$scope.renderOptions.hideFilterWidget);
 
         $scope.$watch("renderOptions", function(renderOptions) {
