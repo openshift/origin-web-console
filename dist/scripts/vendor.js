@@ -49670,12 +49670,12 @@ _(), x();
 i.addClass("hide-nav-pf"), r.addClass("hide-nav-pf"), _(), $(), k(e), D(), T(), i.removeClass("hide-nav-pf"), r.removeClass("hide-nav-pf"), u(250);
 }(t)), e.fn.setupVerticalNavigation.self;
 };
-}(jQuery), angular.module("patternfly.canvas", [ "dragging", "ngDragDrop", "ui.bootstrap" ]), angular.module("patternfly.card", [ "ui.bootstrap" ]), angular.module("patternfly.charts", [ "patternfly.utils", "ui.bootstrap", "ngSanitize" ]), angular.module("patternfly.filters", [ "ui.bootstrap" ]), angular.module("patternfly.form", []), angular.module("patternfly.modals", [ "ui.bootstrap.modal", "ui.bootstrap.tpls" ]), angular.module("patternfly.navigation", [ "ui.bootstrap" ]), angular.module("patternfly.notification", [ "patternfly.utils", "ui.bootstrap" ]), angular.module("patternfly.pagination", [ "ui.bootstrap" ]).filter("startFrom", function() {
+}(jQuery), angular.module("patternfly.canvas", [ "dragging", "ngDragDrop", "ui.bootstrap" ]), angular.module("patternfly.card", [ "ui.bootstrap" ]), angular.module("patternfly.charts", [ "patternfly.utils", "ui.bootstrap", "ngSanitize" ]), angular.module("patternfly.filters", [ "ui.bootstrap", "gettext" ]), angular.module("patternfly.form", []), angular.module("patternfly.modals", [ "ui.bootstrap.modal", "ui.bootstrap.tpls" ]), angular.module("patternfly.navigation", [ "ui.bootstrap" ]), angular.module("patternfly.notification", [ "patternfly.utils", "ui.bootstrap" ]), angular.module("patternfly.pagination", [ "ui.bootstrap" ]).filter("startFrom", function() {
 "use strict";
 return function(e, t) {
 return t = parseInt(t, 10), e.slice(t);
 };
-}), angular.module("patternfly", [ "patternfly.autofocus", "patternfly.card", "patternfly.filters", "patternfly.form", "patternfly.modals", "patternfly.navigation", "patternfly.notification", "patternfly.pagination", "patternfly.select", "patternfly.sort", "patternfly.toolbars", "patternfly.utils", "patternfly.validation", "patternfly.views", "patternfly.wizard" ]), angular.module("patternfly.select", [ "ui.bootstrap" ]), angular.module("patternfly.sort", [ "ui.bootstrap" ]), angular.module("patternfly.table", [ "datatables", "patternfly.pagination", "patternfly.utils", "patternfly.filters", "patternfly.sort" ]), angular.module("patternfly.toolbars", [ "patternfly.utils", "patternfly.filters", "patternfly.sort", "patternfly.views" ]), angular.module("patternfly.utils", [ "ui.bootstrap" ]), angular.module("patternfly.views", [ "patternfly.utils", "patternfly.filters", "patternfly.sort", "patternfly.charts", "dndLists", "patternfly.pagination" ]), angular.module("patternfly.wizard", [ "ui.bootstrap.modal", "ui.bootstrap", "patternfly.form" ]), 
+}), angular.module("patternfly", [ "patternfly.autofocus", "patternfly.card", "patternfly.filters", "patternfly.form", "patternfly.modals", "patternfly.navigation", "patternfly.notification", "patternfly.pagination", "patternfly.select", "patternfly.sort", "patternfly.toolbars", "patternfly.utils", "patternfly.validation", "patternfly.views", "patternfly.wizard" ]), angular.module("patternfly.select", [ "ui.bootstrap" ]), angular.module("patternfly.sort", [ "ui.bootstrap" ]), angular.module("patternfly.table", [ "datatables", "patternfly.pagination", "patternfly.utils", "patternfly.filters", "patternfly.sort" ]), angular.module("patternfly.toolbars", [ "patternfly.utils", "patternfly.filters", "patternfly.sort", "patternfly.views" ]), angular.module("patternfly.utils", [ "ui.bootstrap" ]), angular.module("patternfly.views", [ "patternfly.utils", "patternfly.filters", "patternfly.sort", "patternfly.charts", "dndLists", "patternfly.pagination" ]), angular.module("patternfly.wizard", [ "ui.bootstrap.modal", "ui.bootstrap", "patternfly.form", "gettext" ]), 
 angular.module("patternfly.autofocus", []).directive("pfFocused", [ "$timeout", function(e) {
 "use strict";
 return {
@@ -51139,28 +51139,28 @@ bindings: {
 config: "="
 },
 templateUrl: "filters/filter-panel/filter-panel-results.html",
-controller: function() {
+controller: [ "gettextCatalog", function(e) {
 "use strict";
-function e() {
-i.config.appliedFilters || (i.config.appliedFilters = []), void 0 === i.config.resultsCount && (i.config.resultsCount = 0);
+function t() {
+r.config.appliedFilters || (r.config.appliedFilters = []), void 0 === r.config.resultsCount && (r.config.resultsCount = 0);
 }
-function t(e, t) {
+function n(e, t) {
 var n = e.id;
-_.pull(e.values, t), 0 === e.values.length && _.pull(i.config.appliedFilters, e), i.config.onFilterChange && i.config.onFilterChange(i.config.appliedFilters, n, t);
+_.pull(e.values, t), 0 === e.values.length && _.pull(r.config.appliedFilters, e), r.config.onFilterChange && r.config.onFilterChange(r.config.appliedFilters, n, t);
 }
-function n() {
-i.config.appliedFilters = [], i.config.onFilterChange && i.config.onFilterChange(i.config.appliedFilters);
+function i() {
+r.config.appliedFilters = [], r.config.onFilterChange && r.config.onFilterChange(r.config.appliedFilters);
 }
-var i = this;
-i.$onInit = function() {
-angular.extend(i, {
-clearFilter: t,
-clearAllFilters: n
+var r = this;
+r.active_filter = e.getString("Active filters:"), r.$onInit = function() {
+angular.extend(r, {
+clearFilter: n,
+clearAllFilters: i
 });
-}, i.$onChanges = function() {
-e();
+}, r.$onChanges = function() {
+t();
 };
-}
+} ]
 }), angular.module("patternfly.filters").component("pfFilter", {
 bindings: {
 config: "="
@@ -52765,103 +52765,103 @@ embedInPage: "<?",
 onStepChanged: "&?"
 },
 templateUrl: "wizard/wizard.html",
-controller: [ "$timeout", "$scope", function(e, t) {
+controller: [ "$timeout", "$scope", "gettextCatalog", function(e, t, n) {
 "use strict";
-var n, i = this, r = function(e) {
+var i, r = this, o = function(e) {
 var t = 0, n = -1;
-return angular.forEach(i.getEnabledSteps(), function(i) {
+return angular.forEach(r.getEnabledSteps(), function(i) {
 i === e && (n = t), t++;
 }), n;
-}, o = function() {
-angular.forEach(i.getEnabledSteps(), function(e) {
+}, a = function() {
+angular.forEach(r.getEnabledSteps(), function(e) {
 e.selected = !1;
-}), i.selectedStep = null;
-}, a = function(e) {
+}), r.selectedStep = null;
+}, s = function(e) {
 var t = null;
-return angular.forEach(i.getEnabledSteps(), function(n) {
+return angular.forEach(r.getEnabledSteps(), function(n) {
 n.title === e && (t = n);
 }), t;
 };
-i.$onInit = function() {
-n = !0, i.steps = [], i.context = {}, i.hideHeader = "true" === i.hideHeader, i.hideSidebar = "true" === i.hideSidebar, i.hideBackButton = "true" === i.hideBackButton, i.activeStepTitleOnly = !0 === i.activeStepTitleOnly, i.wizardTitle = i.wizardTitle || i.title, angular.isDefined(i.stepClass) ? angular.isUndefined(i.sidebarClass) && (i.sidebarClass = i.stepClass) : (angular.isUndefined(i.contentHeight) && (i.contentHeight = "300px"), i.contentStyle = {
-height: i.contentHeight,
-"max-height": i.contentHeight,
+r.$onInit = function() {
+i = !0, r.steps = [], r.context = {}, r.hideHeader = "true" === r.hideHeader, r.hideSidebar = "true" === r.hideSidebar, r.hideBackButton = "true" === r.hideBackButton, r.activeStepTitleOnly = !0 === r.activeStepTitleOnly, r.wizardTitle = r.wizardTitle || r.title, angular.isDefined(r.stepClass) ? angular.isUndefined(r.sidebarClass) && (r.sidebarClass = r.stepClass) : (angular.isUndefined(r.contentHeight) && (r.contentHeight = "300px"), r.contentStyle = {
+height: r.contentHeight,
+"max-height": r.contentHeight,
 "overflow-y": "auto"
-}), angular.isUndefined(i.wizardReady) && (i.wizardReady = !0), i.cancelTitle || (i.cancelTitle = "Cancel"), i.backTitle || (i.backTitle = "<Back"), i.nextTitle || (i.nextTitle = "Next>");
-}, i.$onChanges = function(e) {
+}), angular.isUndefined(r.wizardReady) && (r.wizardReady = !0), r.cancelTitle || (r.cancelTitle = n.getString("Cancel")), r.backTitle || (r.backTitle = "<" + n.getString("Back")), r.nextTitle || (r.nextTitle = n.getString("Next") + ">");
+}, r.$onChanges = function(e) {
 var t;
-if (e.hideHeader && (i.hideHeader = "true" === i.hideHeader), e.hideSidebar && (i.hideSidebar = "true" === i.hideSidebar), e.hideBackButton && (i.hideBackButton = "true" === i.hideBackButton), e.wizardReady && e.wizardReady.currentValue && i.goTo(i.getEnabledSteps()[0]), e.currentStep) {
+if (e.hideHeader && (r.hideHeader = "true" === r.hideHeader), e.hideSidebar && (r.hideSidebar = "true" === r.hideSidebar), e.hideBackButton && (r.hideBackButton = "true" === r.hideBackButton), e.wizardReady && e.wizardReady.currentValue && r.goTo(r.getEnabledSteps()[0]), e.currentStep) {
 if (!(t = e.currentStep.currentValue)) return;
-i.selectedStep && i.selectedStep.title !== t && i.goTo(a(t));
+r.selectedStep && r.selectedStep.title !== t && r.goTo(s(t));
 }
-}, i.getEnabledSteps = function() {
-return i.steps.filter(function(e) {
+}, r.getEnabledSteps = function() {
+return r.steps.filter(function(e) {
 return "true" !== e.disabled;
 });
-}, i.getReviewSteps = function() {
-return i.steps.filter(function(e) {
+}, r.getReviewSteps = function() {
+return r.steps.filter(function(e) {
 return !e.disabled && (!angular.isUndefined(e.reviewTemplate) || e.getReviewSteps().length > 0);
 });
-}, i.currentStepNumber = function() {
-return r(i.selectedStep) + 1;
-}, i.getStepNumber = function(e) {
-return r(e) + 1;
-}, i.goTo = function(t, a) {
-i.wizardDone || i.selectedStep && !i.selectedStep.okToNavAway || t === i.selectedStep || ((n || i.getStepNumber(t) < i.currentStepNumber() && i.selectedStep.isPrevEnabled() || i.selectedStep.isNextEnabled()) && (o(), !n && a && t.substeps && t.resetNav(), i.selectedStep = t, t.selected = !0, e(function() {
+}, r.currentStepNumber = function() {
+return o(r.selectedStep) + 1;
+}, r.getStepNumber = function(e) {
+return o(e) + 1;
+}, r.goTo = function(t, n) {
+r.wizardDone || r.selectedStep && !r.selectedStep.okToNavAway || t === r.selectedStep || ((i || r.getStepNumber(t) < r.currentStepNumber() && r.selectedStep.isPrevEnabled() || r.selectedStep.isNextEnabled()) && (a(), !i && n && t.substeps && t.resetNav(), r.selectedStep = t, t.selected = !0, e(function() {
 angular.isFunction(t.onShow) && t.onShow();
-}, 100), i.currentStep = t.title, i.nextTooltip = t.nextTooltip, i.prevTooltip = t.prevTooltip, t.substeps || i.setPageSelected(t), n = !1), i.selectedStep.substeps ? i.firstStep = 0 === r(i.selectedStep) && 1 === i.selectedStep.currentStepNumber() : i.firstStep = 0 === r(i.selectedStep));
-}, i.allowStepIndicatorClick = function(e) {
-return e.allowClickNav && !i.wizardDone && i.selectedStep && i.selectedStep.okToNavAway && (i.selectedStep.nextEnabled || e.stepPriority < i.selectedStep.stepPriority) && (i.selectedStep.prevEnabled || e.stepPriority > i.selectedStep.stepPriority);
-}, i.stepClick = function(e) {
-e.allowClickNav && i.selectedStep && !i.wizardDone && i.selectedStep.okToNavAway && (i.selectedStep.nextEnabled || e.stepPriority < i.selectedStep.stepPriority) && (i.selectedStep.prevEnabled || e.stepPriority > i.selectedStep.stepPriority) && i.goTo(e, !0);
-}, i.setPageSelected = function(e) {
-angular.isFunction(i.onStepChanged) && i.onStepChanged({
+}, 100), r.currentStep = t.title, r.nextTooltip = t.nextTooltip, r.prevTooltip = t.prevTooltip, t.substeps || r.setPageSelected(t), i = !1), r.selectedStep.substeps ? r.firstStep = 0 === o(r.selectedStep) && 1 === r.selectedStep.currentStepNumber() : r.firstStep = 0 === o(r.selectedStep));
+}, r.allowStepIndicatorClick = function(e) {
+return e.allowClickNav && !r.wizardDone && r.selectedStep && r.selectedStep.okToNavAway && (r.selectedStep.nextEnabled || e.stepPriority < r.selectedStep.stepPriority) && (r.selectedStep.prevEnabled || e.stepPriority > r.selectedStep.stepPriority);
+}, r.stepClick = function(e) {
+e.allowClickNav && r.selectedStep && !r.wizardDone && r.selectedStep.okToNavAway && (r.selectedStep.nextEnabled || e.stepPriority < r.selectedStep.stepPriority) && (r.selectedStep.prevEnabled || e.stepPriority > r.selectedStep.stepPriority) && r.goTo(e, !0);
+}, r.setPageSelected = function(e) {
+angular.isFunction(r.onStepChanged) && r.onStepChanged({
 step: e,
-index: r(e)
+index: o(e)
 });
-}, i.addStep = function(e) {
-var t = _.find(i.steps, function(t) {
+}, r.addStep = function(e) {
+var t = _.find(r.steps, function(t) {
 return t.stepPriority > e.stepPriority;
 });
-t ? i.steps.splice(i.steps.indexOf(t), 0, e) : i.steps.push(e), i.wizardReady && i.getEnabledSteps().length > 0 && e === i.getEnabledSteps()[0] && i.goTo(i.getEnabledSteps()[0]);
-}, i.isWizardDone = function() {
-return i.wizardDone;
-}, i.updateSubStepNumber = function(e) {
-i.firstStep = 0 === r(i.selectedStep) && 0 === e;
-}, i.currentStepTitle = function() {
-return i.selectedStep.title;
-}, i.currentStepDescription = function() {
-return i.selectedStep.description;
-}, i.currentStep = function() {
-return i.selectedStep;
-}, i.totalStepCount = function() {
-return i.getEnabledSteps().length;
-}, i.goToStep = function(e, t) {
-var n, r = i.getEnabledSteps();
-n = angular.isNumber(e) ? r[e] : a(e), i.goTo(n, t);
-}, i.next = function(e) {
-var t = i.getEnabledSteps(), n = r(i.selectedStep);
-if (e = e || i.nextCallback, !i.selectedStep.substeps || !i.selectedStep.next(e)) {
+t ? r.steps.splice(r.steps.indexOf(t), 0, e) : r.steps.push(e), r.wizardReady && r.getEnabledSteps().length > 0 && e === r.getEnabledSteps()[0] && r.goTo(r.getEnabledSteps()[0]);
+}, r.isWizardDone = function() {
+return r.wizardDone;
+}, r.updateSubStepNumber = function(e) {
+r.firstStep = 0 === o(r.selectedStep) && 0 === e;
+}, r.currentStepTitle = function() {
+return r.selectedStep.title;
+}, r.currentStepDescription = function() {
+return r.selectedStep.description;
+}, r.currentStep = function() {
+return r.selectedStep;
+}, r.totalStepCount = function() {
+return r.getEnabledSteps().length;
+}, r.goToStep = function(e, t) {
+var n, i = r.getEnabledSteps();
+n = angular.isNumber(e) ? i[e] : s(e), r.goTo(n, t);
+}, r.next = function(e) {
+var t = r.getEnabledSteps(), n = o(r.selectedStep);
+if (e = e || r.nextCallback, !r.selectedStep.substeps || !r.selectedStep.next(e)) {
 if (angular.isFunction(e)) {
-if (!e(i.selectedStep)) return;
-n < t.length - 1 ? t[n + 1].substeps && t[n + 1].resetNav() : i.finish();
+if (!e(r.selectedStep)) return;
+n < t.length - 1 ? t[n + 1].substeps && t[n + 1].resetNav() : r.finish();
 }
-i.selectedStep.completed = !0, n === t.length - 1 ? i.finish() : i.goTo(t[n + 1]);
+r.selectedStep.completed = !0, n === t.length - 1 ? r.finish() : r.goTo(t[n + 1]);
 }
-}, i.previous = function(e) {
-var t = r(i.selectedStep);
-if (e = e || i.backCallback, (!i.selectedStep.substeps || !i.selectedStep.previous(e)) && (!angular.isFunction(e) || e(i.selectedStep))) {
+}, r.previous = function(e) {
+var t = o(r.selectedStep);
+if (e = e || r.backCallback, (!r.selectedStep.substeps || !r.selectedStep.previous(e)) && (!angular.isFunction(e) || e(r.selectedStep))) {
 if (0 === t) throw new Error("Can't go back. It's already in step 0");
-i.goTo(i.getEnabledSteps()[t - 1]);
+r.goTo(r.getEnabledSteps()[t - 1]);
 }
-}, i.finish = function() {
-i.onFinish && !1 !== i.onFinish() && i.reset();
-}, i.cancel = function() {
-i.onCancel && !1 !== i.onCancel() && i.reset();
-}, i.reset = function() {
-angular.forEach(i.getEnabledSteps(), function(e) {
+}, r.finish = function() {
+r.onFinish && !1 !== r.onFinish() && r.reset();
+}, r.cancel = function() {
+r.onCancel && !1 !== r.onCancel() && r.reset();
+}, r.reset = function() {
+angular.forEach(r.getEnabledSteps(), function(e) {
 e.completed = !1;
-}), i.goToStep(0);
+}), r.goToStep(0);
 }, t.wizard = this;
 } ]
 }), angular.module("patternfly.canvas").run([ "$templateCache", function(e) {
@@ -52883,7 +52883,7 @@ e.put("charts/utilization-bar/utilization-bar-chart.html", "<div class=utilizati
 e.put("charts/utilization-trend/utilization-trend-chart.html", '<div class=utilization-trend-chart-pf ng-class="{\'data-unavailable-pf\': $ctrl.chartData.dataAvailable === false}"><h3>{{$ctrl.config.title}}</h3><div class=current-values><h1 class="available-count pull-left">{{$ctrl.currentValue}}</h1><div class="available-text pull-left"><div><span>{{$ctrl.currentText}}</span></div><div><span>of {{$ctrl.chartData.total}} {{$ctrl.config.units}}</span></div></div></div><div class=donut-chart-pf><pf-donut-pct-chart ng-if="$ctrl.chartData.dataAvailable !== false" config=$ctrl.donutConfig data=$ctrl.chartData center-label=$ctrl.centerLabel></pf-donut-pct-chart><pf-empty-chart ng-if="$ctrl.chartData.dataAvailable === false" chart-height=231></pf-empty-chart></div><div ng-if="$ctrl.chartData.dataAvailable !== false" class=sparkline-chart><pf-sparkline-chart config=$ctrl.sparklineConfig chart-data=$ctrl.chartData chart-height=$ctrl.sparklineChartHeight show-x-axis=$ctrl.showSparklineXAxis show-y-axis=$ctrl.showSparklineYAxis></pf-sparkline-chart></div><span class="pull-left legend-text">{{$ctrl.legendLeftText}}</span> <span class="pull-right legend-text">{{$ctrl.legendRightText}}</span></div>');
 } ]), angular.module("patternfly.filters").run([ "$templateCache", function(e) {
 "use strict";
-e.put("filters/filter-panel/filter-panel-results.html", '<div class=filter-pf><div class=toolbar-pf-results><h5>{{$ctrl.config.resultsCount}} <span ng-if=$ctrl.config.appliedFilters.length>of {{$ctrl.config.totalCount}}</span> {{$ctrl.config.resultsLabel === undefined ? "Results" : $ctrl.config.resultsLabel}}</h5><p class=filter-pf-active-label ng-if=$ctrl.config.appliedFilters.length translate>Active filters:</p><ul class=list-inline ng-if=$ctrl.config.appliedFilters.length><li ng-repeat="filter in $ctrl.config.appliedFilters" class=filter-pf-category-item><span class="label pf-filter-category-label" ng-class="{\'label-info\': filter.values.length === 1, \'multiples\': filter.values.length > 1}">{{filter.title}}:<ul class="list-inline filter-pf-category-values"><li ng-repeat="value in filter.values"><span class="label label-info">{{value}} <a href=javascript:void(0);><span ng-click="$ctrl.clearFilter(filter, value)" class="pficon pficon-close"></span></a></span></li></ul></span></li></ul><p><a href=javascript:void(0); ng-click=$ctrl.clearAllFilters() ng-if="$ctrl.config.appliedFilters.length > 0" translate>Clear All Filters</a></p></div></div>'), 
+e.put("filters/filter-panel/filter-panel-results.html", '<div class=filter-pf><div class=toolbar-pf-results><h5>{{$ctrl.config.resultsCount}} <span ng-if=$ctrl.config.appliedFilters.length>of {{$ctrl.config.totalCount}}</span> {{$ctrl.config.resultsLabel === undefined ? "Results" : $ctrl.config.resultsLabel}}</h5><p class=filter-pf-active-label ng-if=$ctrl.config.appliedFilters.length>{{$ctrl.active_filter}}</p><ul class=list-inline ng-if=$ctrl.config.appliedFilters.length><li ng-repeat="filter in $ctrl.config.appliedFilters" class=filter-pf-category-item><span class="label pf-filter-category-label" ng-class="{\'label-info\': filter.values.length === 1, \'multiples\': filter.values.length > 1}">{{filter.title}}:<ul class="list-inline filter-pf-category-values"><li ng-repeat="value in filter.values"><span class="label label-info">{{value}} <a href=javascript:void(0);><span ng-click="$ctrl.clearFilter(filter, value)" class="pficon pficon-close"></span></a></span></li></ul></span></li></ul><p><a href=javascript:void(0); ng-click=$ctrl.clearAllFilters() ng-if="$ctrl.config.appliedFilters.length > 0" translate>Clear All Filters</a></p></div></div>'), 
 e.put("filters/filter-panel/filter-panel.html", '<div class="filter-pf inline-filter-pf"><span class="dropdown primary-action" uib-dropdown><button class="btn btn-default dropdown-toggle" uib-dropdown-toggle type=button><span translate>Filter</span> <span class=caret></span></button><div ng-transclude class=dropdown-menu ng-click=$event.stopPropagation()></div></span><pf-filter-panel-results config=$ctrl.config></pf-filter-panel-results></div>'), e.put("filters/simple-filter/filter-fields.html", '<div class="filter-pf filter-fields"><div class="input-group form-group"><div uib-dropdown class=input-group-btn><button ng-if="$ctrl.config.fields.length > 1" uib-dropdown-toggle type=button class="btn btn-default filter-fields" uib-tooltip="Filter by" tooltip-placement=top tooltip-append-to-body=true>{{$ctrl.currentField.title}} <span class=caret></span></button><ul uib-dropdown-menu><li ng-repeat="item in $ctrl.config.fields" ng-class="{\'selected\': item === $ctrl.currentField}"><a class=filter-field role=menuitem tabindex=-1 ng-click=$ctrl.selectField(item)>{{item.title}}</a></li></ul></div><div ng-if="$ctrl.currentField.filterType !== \'select\' && $ctrl.currentField.filterType !== \'complex-select\'"><input class=form-control type={{$ctrl.currentField.filterType}} ng-model=$ctrl.currentValue placeholder={{$ctrl.currentField.placeholder}} ng-keypress="$ctrl.onValueKeyPress($event)"></div><div ng-if="$ctrl.currentField.filterType === \'select\'"><div class="btn-group bootstrap-select form-control filter-select" uib-dropdown><button type=button uib-dropdown-toggle class="btn btn-default dropdown-toggle"><span class="filter-option pull-left">{{$ctrl.currentValue.title || $ctrl.currentValue || $ctrl.currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.placeholder}}</a></li><li ng-repeat="filterValue in $ctrl.currentField.filterValues" ng-class="{\'selected\': (filterValue === $ctrl.currentValue)}"><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue(filterValue)>{{filterValue.title || filterValue}}</a></li></ul></div></div><div ng-if="$ctrl.currentField.filterType === \'complex-select\'" class=category-select><div class="btn-group bootstrap-select form-control filter-select" uib-dropdown><button type=button uib-dropdown-toggle class="btn btn-default dropdown-toggle"><span class="filter-option pull-left">{{$ctrl.filterCategory.title || $ctrl.filterCategory || $ctrl.currentField.placeholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.placeholder}}</a></li><li ng-repeat="filterCategory in $ctrl.currentField.filterValues" ng-class="{\'selected\': (filterCategory == $ctrl.filterCategory)}"><a role=menuitem tabindex=-1 ng-click="$ctrl.selectValue(filterCategory, \'filter-category\')">{{filterCategory.title ||filterCategory}}</a></li></ul></div><div class="btn-group bootstrap-select form-control filter-select" uib-dropdown><button type=button uib-dropdown-toggle class="btn btn-default dropdown-toggle category-select-value"><span class="filter-option pull-left">{{$ctrl.filterValue.title || $ctrl.filterValue || $ctrl.currentField.filterCategoriesPlaceholder}}</span> <span class=caret></span></button><ul uib-dropdown-menu class=dropdown-menu-right role=menu><li ng-if=$ctrl.currentField.placeholder><a role=menuitem tabindex=-1 ng-click=$ctrl.selectValue()>{{$ctrl.currentField.filterCategoriesPlaceholder}}</a></li><li ng-repeat="filterValue in $ctrl.currentField.filterCategories[$ctrl.filterCategory.id.toLowerCase() || $ctrl.filterCategory.toLowerCase() ].filterValues" ng-class="{\'selected\': filterValue === $ctrl.filterValue}"><a role=menuitem tabindex=-1 ng-click="$ctrl.selectValue(filterValue, \'filter-value\')">{{filterValue.title || filterValue}}</a></li></ul></div></div></div></div>'), 
 e.put("filters/simple-filter/filter-results.html", '<div class=filter-pf><div class=toolbar-pf-results><span ng-if="$ctrl.config.showTotalCountResults !== true || $ctrl.config.totalCount === undefined || $ctrl.config.appliedFilters.length === 0"><h5 ng-if="$ctrl.config.resultsCount === 1">{{$ctrl.config.resultsCount}} {{$ctrl.config.itemsLabel}}</h5><h5 ng-if="$ctrl.config.resultsCount !== 1">{{$ctrl.config.resultsCount}} {{$ctrl.config.itemsLabelPlural}}</h5></span> <span ng-if="$ctrl.config.showTotalCountResults === true && $ctrl.config.totalCount !== undefined && $ctrl.config.appliedFilters.length > 0"><h5 ng-if="$ctrl.config.totalCount === 1">{{$ctrl.config.resultsCount}} of {{$ctrl.config.totalCount}} {{$ctrl.config.itemsLabel}}</h5><h5 ng-if="$ctrl.config.totalCount !== 1">{{$ctrl.config.resultsCount}} of {{$ctrl.config.totalCount}} {{$ctrl.config.itemsLabelPlural}}</h5></span><p class=filter-pf-active-label ng-if="$ctrl.config.appliedFilters.length > 0" translate>Active Filters:</p><ul class=list-inline ng-if="$ctrl.config.appliedFilters.length > 0"><li ng-repeat="filter in $ctrl.config.appliedFilters"><span class="active-filter label label-info">{{filter.title}}: {{((filter.value.filterCategory.title || filter.value.filterCategory) + filter.value.filterDelimiter + (filter.value.filterValue.title || filter.value.filterValue)) || filter.value.title || filter.value}} <a href=javascript:void(0);><span class="pficon pficon-close" ng-click=$ctrl.clearFilter(filter)></span></a></span></li></ul><p><a href=javascript:void(0); class=clear-filters ng-click=$ctrl.clearAllFilters() ng-if="$ctrl.config.appliedFilters.length > 0" translate>Clear All Filters</a></p><div ng-if="$ctrl.config.selectedCount !== undefined && $ctrl.config.totalCount !== undefined" class=pf-table-view-selected-label><strong>{{$ctrl.config.selectedCount}}</strong> of <strong>{{$ctrl.config.totalCount}}</strong> selected</div></div></div>'), 
 e.put("filters/simple-filter/filter.html", "<div class=filter-pf ng-class=\"{'inline-filter-pf': $ctrl.config.inlineResults === true}\"><pf-filter-fields config=$ctrl.config add-filter-fn=$ctrl.addFilter></pf-filter-fields><pf-filter-results config=$ctrl.config></pf-filter-results></div>");
@@ -52931,6 +52931,15 @@ e.put("views/listview/list-view.html", '<span><div class="list-group list-view-p
 e.put("wizard/wizard-review-page.html", '<div class=wizard-pf-review-page><div class=wizard-pf-review-steps><ul class=list-group><li class=list-group-item ng-repeat="reviewStep in $ctrl.reviewSteps track by $index"><a class=apf-form-collapse ng-class="{\'collapsed\': !reviewStep.showReviewDetails}" ng-click=$ctrl.toggleShowReviewDetails(reviewStep)>{{reviewStep.stepTitle}}</a><div class=wizard-pf-review-substeps ng-class="{\'collapse\': !reviewStep.showReviewDetails}"><ul class=list-group ng-if=reviewStep.substeps><li class=list-group-item ng-repeat="substep in reviewStep.getReviewSteps()"><a class=apf-form-collapse ng-class="{\'collapsed\': !substep.showReviewDetails}" ng-click=$ctrl.toggleShowReviewDetails(substep)><span class=wizard-pf-substep-number>{{$ctrl.getSubStepNumber(reviewStep, substep)}}</span> <span class=wizard-pf-substep-title>{{substep.stepTitle}}</span></a><div class=wizard-pf-review-content ng-class="{\'collapse\': !substep.showReviewDetails}"><div ng-include=substep.reviewTemplate></div></div></li></ul><div class=wizard-pf-review-content ng-if=reviewStep.reviewTemplate ng-class="{\'collapse\': !reviewStep.showReviewDetails}"><div ng-include=reviewStep.reviewTemplate></div></div></div></li></ul></div></div>'), 
 e.put("wizard/wizard-step.html", '<section ng-show=$ctrl.selected class=wizard-pf-row ng-class="{current: $ctrl.selected, done: $ctrl.completed}" style="height: inherit"><div ng-if=!$ctrl.wizard.hideSidebar class=wizard-pf-sidebar ng-style=$ctrl.contentStyle ng-class=$ctrl.wizard.sidebarClass ng-if="$ctrl.substeps === true"><ul class=list-group><li class=list-group-item ng-class="{active: step.selected}" ng-repeat="step in $ctrl.getEnabledSteps()"><a ng-click=$ctrl.stepClick(step)><span class=wizard-pf-substep-number>{{$ctrl.getStepDisplayNumber(step)}}</span> <span class=wizard-pf-substep-title>{{step.title}}</span></a></li></ul></div><div class="wizard-pf-main {{$ctrl.wizard.stepClass}}" ng-class="{\'wizard-pf-singlestep\': !$ctrl.substeps || $ctrl.wizard.hideSidebar}" ng-style=$ctrl.contentStyle><div class=wizard-pf-contents ng-transclude></div></div></section>'), e.put("wizard/wizard-substep.html", '<subsection ng-show=$ctrl.selected ng-class="{current: $ctrl.selected, done: $ctrl.completed}" class=wizard-pf-step ng-transclude></subsection>'), 
 e.put("wizard/wizard.html", '<div><div class=modal-header ng-if=!$ctrl.hideHeader><button type=button class="close wizard-pf-dismiss" aria-hidden=true aria-label=Close ng-click=$ctrl.onCancel() ng-if=!$ctrl.embedInPage><span class="pficon pficon-close"></span></button><h4 class=modal-title>{{$ctrl.wizardTitle}}</h4></div><div class="modal-body wizard-pf-body clearfix">\x3c!-- step area --\x3e<div class=wizard-pf-steps ng-class="{\'invisible\': !$ctrl.wizardReady}"><ul class=wizard-pf-steps-indicator ng-if=!$ctrl.hideIndicators ng-class="{\'invisible\': !$ctrl.wizardReady}"><li class=wizard-pf-step ng-class="{active: step.selected}" ng-repeat="step in $ctrl.getEnabledSteps()" data-tabgroup="{{$index }}"><a ng-click=$ctrl.stepClick(step) ng-class="{\'disabled\': !$ctrl.allowStepIndicatorClick(step)}"><span class=wizard-pf-step-number>{{$index + 1}}</span> <span ng-if="!$ctrl.activeStepTitleOnly || step.selected" class=wizard-pf-step-title>{{step.title}}</span> <span class=wizard-pf-step-title-substep ng-repeat="substep in step.steps track by $index" ng-class="{\'active\': substep.selected}">{{substep.title}}</span></a></li></ul></div>\x3c!-- loading wizard placeholder --\x3e<div ng-if=!$ctrl.wizardReady class=wizard-pf-main style="margin-left: 0px"><div class="wizard-pf-loading blank-slate-pf"><div class="spinner spinner-lg blank-slate-pf-icon"></div><h3 class=blank-slate-pf-main-action>{{$ctrl.loadingWizardTitle}}</h3><p class=blank-slate-pf-secondary-action>{{$ctrl.loadingSecondaryInformation}}</p></div></div><div class=wizard-pf-position-override ng-transclude></div></div><div class="modal-footer wizard-pf-footer wizard-pf-position-override" ng-class="{\'wizard-pf-footer-inline\': $ctrl.embedInPage}"><button ng-if=!$ctrl.embedInPage class="btn btn-default btn-cancel wizard-pf-cancel" ng-class="{\'wizard-pf-cancel-no-back\': $ctrl.hideBackButton}" ng-disabled=$ctrl.wizardDone ng-click=$ctrl.onCancel()>{{$ctrl.cancelTitle}}</button> <button id=backButton class="btn btn-default" ng-if=!$ctrl.hideBackButton tooltip-append-to-body=true uib-tooltip={{$ctrl.prevTooltip}} tooltip-placement=left ng-disabled="!$ctrl.wizardReady || $ctrl.wizardDone || !$ctrl.selectedStep.isPrevEnabled() || $ctrl.firstStep" ng-click=$ctrl.previous()>{{$ctrl.backTitle}}</button> <button id=nextButton class="btn btn-primary wizard-pf-next" uib-tooltip={{$ctrl.nextTooltip}} tooltip-append-to-body=true tooltip-placement=left ng-disabled="!$ctrl.wizardReady || !$ctrl.selectedStep.isNextEnabled()" ng-click=$ctrl.next()>{{$ctrl.nextTitle}}</button> <button ng-if=$ctrl.embedInPage class="btn btn-default btn-cancel wizard-pf-cancel wizard-pf-cancel-inline" ng-disabled=$ctrl.wizardDone ng-click=$ctrl.onCancel()>{{$ctrl.cancelTitle}}</button></div></div>');
+} ]), angular.module("gettext").run([ "gettextCatalog", function(e) {
+e.setStrings("zh_CN", {
+Active: "当前",
+"Active Filters:": "当前过滤:",
+Back: "返回",
+Cancel: "取消",
+Next: "下一步",
+"filters:": "过滤:"
+});
 } ]), angular.module("gettext", []), angular.module("gettext").constant("gettext", function(e) {
 return e;
 }), angular.module("gettext").factory("gettextCatalog", [ "gettextPlurals", "gettextFallbackLanguage", "$http", "$cacheFactory", "$interpolate", "$rootScope", function(e, t, n, i, r, o) {
@@ -55384,18 +55393,18 @@ angular.module("kubernetesUI");
 angular.module("kubernetesUI", []);
 }
 
-angular.module("kubernetesUI").factory("LabelFilter", [ "$location", function(e) {
-function t() {
+angular.module("kubernetesUI").factory("LabelFilter", [ "$location", "gettextCatalog", function(e, t) {
+function n() {
 this._existingLabels = {}, this._labelSelector = new LabelSelector(null, !0), this._onActiveFiltersChangedCallbacks = $.Callbacks();
 }
-return t.prototype.addLabelSuggestionsFromResources = function(e, t) {
+return n.prototype.addLabelSuggestionsFromResources = function(e, t) {
 if (e.metadata && e.metadata.name) this._extractLabelsFromItem(e, t); else {
 var n = this;
 angular.forEach(e, function(e) {
 n._extractLabelsFromItem(e, t);
 });
 }
-}, t.prototype.setLabelSuggestions = function(e) {
+}, n.prototype.setLabelSuggestions = function(e) {
 if (this._existingLabels = e, this._labelFilterKeySelectize) {
 this._labelFilterKeySelectize.clearOptions();
 var t = this;
@@ -55403,30 +55412,30 @@ this._labelFilterKeySelectize.load(function(e) {
 e(t._getLabelFilterKeys());
 });
 }
-}, t.prototype.persistFilterState = function(e) {
+}, n.prototype.persistFilterState = function(e) {
 this._shouldPersistState = !!e;
-}, t.prototype._persistState = function() {
+}, n.prototype._persistState = function() {
 if (this._shouldPersistState) if (this._labelSelector.isEmpty()) (t = e.search()).labelFilter = null, e.replace().search(t); else {
 var t = e.search();
 t.labelFilter = this._labelSelector.exportJSON(), e.replace().search(t);
 }
-}, t.prototype.readPersistedState = function() {
+}, n.prototype.readPersistedState = function() {
 var t = e.search().labelFilter;
 if (t) try {
 this._labelSelector = new LabelSelector(JSON.parse(t), !0);
 } catch (e) {
 this._labelSelector = new LabelSelector({}, !0);
 } else this._labelSelector = new LabelSelector({}, !0);
-}, t.prototype._extractLabelsFromItem = function(e, t) {
+}, n.prototype._extractLabelsFromItem = function(e, t) {
 var n = e.metadata ? e.metadata.labels : {};
 angular.forEach(n, function(e, n) {
 t[n] || (t[n] = []), t[n].push({
 value: e
 });
 });
-}, t.prototype.getLabelSelector = function() {
+}, n.prototype.getLabelSelector = function() {
 return this._labelSelector;
-}, t.prototype.setLabelSelector = function(e, t) {
+}, n.prototype.setLabelSelector = function(e, t) {
 if (this._labelFilterActiveFiltersElement && this._labelFilterActiveFiltersElement.find(".label-filter-active-filter").remove(), this._labelSelector = e, this._labelFilterActiveElement) if (this._labelSelector.isEmpty()) this._labelFilterActiveElement.hide(); else {
 this._labelFilterActiveElement.show();
 var n = this;
@@ -55435,14 +55444,14 @@ n._renderActiveFilter(e);
 });
 }
 this._persistState(), t || this._onActiveFiltersChangedCallbacks.fire(this._labelSelector);
-}, t.prototype.onActiveFiltersChanged = function(e) {
+}, n.prototype.onActiveFiltersChanged = function(e) {
 this._onActiveFiltersChangedCallbacks.add(e);
-}, t.prototype.setupFilterWidget = function(e, t, n) {
-var i = this, n = n || {};
-this._labelFilterRootElement = e, this._labelFilterActiveFiltersRootElement = t;
-var r = $("<div>").addClass("label-filter").appendTo(e);
-this._labelFilterKeyInput = $("<select>").addClass("label-filter-key").attr("placeholder", "Filter by label ").appendTo(r), this._labelFilterOperatorInput = $("<select>").addClass("label-filter-operator").attr("placeholder", "matching(...)").hide().appendTo(r), this._labelFilterValuesInput = $("<select>").addClass("label-filter-values").attr("placeholder", "Value(s)").attr("multiple", !0).hide().appendTo(r), this._labelFilterAddBtn = $("<button>").addClass("label-filter-add btn btn-default disabled").attr("disabled", !0).appendTo(e).append($("<span>").text(n.addButtonText || "Add Filter")), this._labelFilterActiveFiltersElement = $("<span>").addClass("label-filter-active-filters").appendTo(t), this._labelFilterActiveElement = $("<span>").addClass("label-filter-clear").hide().appendTo(this._labelFilterActiveFiltersElement).append($("<a>").addClass("label-filtering-remove-all label label-primary").prop("href", "javascript:;").append($("<i>").addClass("fa fa-filter")).append($("<span>").text("Clear filters"))).click(function() {
-i.clear();
+}, n.prototype.setupFilterWidget = function(e, n, i) {
+var r = this, i = i || {};
+this._labelFilterRootElement = e, this._labelFilterActiveFiltersRootElement = n;
+var o = $("<div>").addClass("label-filter").appendTo(e);
+this._labelFilterKeyInput = $("<select>").addClass("label-filter-key").attr("placeholder", t.getString("Filter by label")).appendTo(o), this._labelFilterOperatorInput = $("<select>").addClass("label-filter-operator").attr("placeholder", t.getString("matching(...)")).hide().appendTo(o), this._labelFilterValuesInput = $("<select>").addClass("label-filter-values").attr("placeholder", t.getString("Value(s)")).attr("multiple", !0).hide().appendTo(o), this._labelFilterAddBtn = $("<button>").addClass("label-filter-add btn btn-default disabled").attr("disabled", !0).appendTo(e).append($("<span>").text(i.addButtonText || t.getString("Add Filter"))), this._labelFilterActiveFiltersElement = $("<span>").addClass("label-filter-active-filters").appendTo(n), this._labelFilterActiveElement = $("<span>").addClass("label-filter-clear").hide().appendTo(this._labelFilterActiveFiltersElement).append($("<a>").addClass("label-filtering-remove-all label label-primary").prop("href", "javascript:;").append($("<i>").addClass("fa fa-filter")).append($("<span>").text(t.getString("Clear filters")))).click(function() {
+r.clear();
 }), this._labelFilterKeyInput.selectize({
 dropdownParent: "body",
 valueField: "key",
@@ -55452,30 +55461,30 @@ create: !0,
 persist: !0,
 preload: !0,
 onItemAdd: function(e, t) {
-var n = i._labelFilterValuesSelectize;
+var n = r._labelFilterValuesSelectize;
 n.clearOptions(), n.load(function(e) {
-var t = [], n = i._labelFilterKeySelectize.getValue();
+var t = [], n = r._labelFilterKeySelectize.getValue();
 if (!n) return t;
-var r = i._existingLabels;
-if (r[n]) {
-for (var o = 0; o < r[n].length; o++) t.push(r[n][o]);
+var i = r._existingLabels;
+if (i[n]) {
+for (var o = 0; o < i[n].length; o++) t.push(i[n][o]);
 e(t);
 } else e({});
-}), i._labelFilterOperatorSelectizeInput.css("display", "inline-block"), i._labelFilterOperatorSelectize.getValue() ? n.focus() : i._labelFilterOperatorSelectize.focus();
+}), r._labelFilterOperatorSelectizeInput.css("display", "inline-block"), r._labelFilterOperatorSelectize.getValue() ? n.focus() : r._labelFilterOperatorSelectize.focus();
 },
 onItemRemove: function(e) {
-i._labelFilterOperatorSelectizeInput.hide(), i._labelFilterOperatorSelectize.clear(), i._labelFilterValuesSelectizeInput.hide(), i._labelFilterValuesSelectize.clear(), i._labelFilterAddBtn.addClass("disabled").prop("disabled", !0);
+r._labelFilterOperatorSelectizeInput.hide(), r._labelFilterOperatorSelectize.clear(), r._labelFilterValuesSelectizeInput.hide(), r._labelFilterValuesSelectize.clear(), r._labelFilterAddBtn.addClass("disabled").prop("disabled", !0);
 },
 load: function(e, t) {
-t(i._getLabelFilterKeys());
+t(r._getLabelFilterKeys());
 },
 onFocus: function() {
-r.addClass("filter-active");
+o.addClass("filter-active");
 },
 onBlur: function() {
-r.removeClass("filter-active");
+o.removeClass("filter-active");
 }
-}), this._labelFilterKeySelectize = this._labelFilterKeyInput.prop("selectize"), this._labelFilterKeySelectizeInput = $(".selectize-control.label-filter-key", r), this._labelFilterOperatorInput.selectize({
+}), this._labelFilterKeySelectize = this._labelFilterKeyInput.prop("selectize"), this._labelFilterKeySelectizeInput = $(".selectize-control.label-filter-key", o), this._labelFilterOperatorInput.selectize({
 dropdownParent: "body",
 valueField: "type",
 labelField: "label",
@@ -55494,18 +55503,18 @@ type: "not in",
 label: "not in ..."
 } ],
 onItemAdd: function(e, t) {
-"exists" != e && "does not exist" != e ? (i._labelFilterValuesSelectizeInput.css("display", "inline-block"), i._labelFilterValuesSelectize.focus()) : i._labelFilterAddBtn.removeClass("disabled").prop("disabled", !1).focus();
+"exists" != e && "does not exist" != e ? (r._labelFilterValuesSelectizeInput.css("display", "inline-block"), r._labelFilterValuesSelectize.focus()) : r._labelFilterAddBtn.removeClass("disabled").prop("disabled", !1).focus();
 },
 onItemRemove: function(e) {
-i._labelFilterValuesSelectizeInput.hide(), i._labelFilterValuesSelectize.clear(), i._labelFilterAddBtn.addClass("disabled").prop("disabled", !0);
+r._labelFilterValuesSelectizeInput.hide(), r._labelFilterValuesSelectize.clear(), r._labelFilterAddBtn.addClass("disabled").prop("disabled", !0);
 },
 onFocus: function() {
-r.addClass("filter-active");
+o.addClass("filter-active");
 },
 onBlur: function() {
-r.removeClass("filter-active");
+o.removeClass("filter-active");
 }
-}), this._labelFilterOperatorSelectize = this._labelFilterOperatorInput.prop("selectize"), this._labelFilterOperatorSelectizeInput = $(".selectize-control.label-filter-operator", r), this._labelFilterOperatorSelectizeInput.hide(), this._labelFilterValuesInput.selectize({
+}), this._labelFilterOperatorSelectize = this._labelFilterOperatorInput.prop("selectize"), this._labelFilterOperatorSelectizeInput = $(".selectize-control.label-filter-operator", o), this._labelFilterOperatorSelectizeInput.hide(), this._labelFilterValuesInput.selectize({
 dropdownParent: "body",
 valueField: "value",
 labelField: "value",
@@ -55515,50 +55524,50 @@ create: !0,
 persist: !0,
 preload: !0,
 onItemAdd: function(e, t) {
-i._labelFilterAddBtn.removeClass("disabled").prop("disabled", !1);
+r._labelFilterAddBtn.removeClass("disabled").prop("disabled", !1);
 },
 onItemRemove: function(e) {},
 load: function(e, t) {
-var n = [], r = i._labelFilterKeySelectize.getValue();
-if (!r) return n;
-var o = i._existingLabels;
-if (o[r]) {
-for (var a = 0; a < o[r].length; a++) n.push(o[r][a]);
+var n = [], i = r._labelFilterKeySelectize.getValue();
+if (!i) return n;
+var o = r._existingLabels;
+if (o[i]) {
+for (var a = 0; a < o[i].length; a++) n.push(o[i][a]);
 t(n);
 } else t({});
 },
 onFocus: function() {
-r.addClass("filter-active");
+o.addClass("filter-active");
 },
 onBlur: function() {
-r.removeClass("filter-active");
+o.removeClass("filter-active");
 }
-}), this._labelFilterValuesSelectize = this._labelFilterValuesInput.prop("selectize"), this._labelFilterValuesSelectizeInput = $(".selectize-control.label-filter-values", r), this._labelFilterValuesSelectizeInput.hide(), this._labelFilterAddBtn.click(function() {
-var e = i._labelFilterKeySelectize.getValue(), t = i._labelFilterOperatorSelectize.getValue(), n = i._labelFilterValuesSelectize.getValue();
-i._labelFilterKeySelectize.clear(), i._labelFilterOperatorSelectizeInput.hide(), i._labelFilterOperatorSelectize.clear(), i._labelFilterValuesSelectizeInput.hide(), i._labelFilterValuesSelectize.clear(), i._labelFilterAddBtn.addClass("disabled").prop("disabled", !0), i.addActiveFilter(e, t, n);
+}), this._labelFilterValuesSelectize = this._labelFilterValuesInput.prop("selectize"), this._labelFilterValuesSelectizeInput = $(".selectize-control.label-filter-values", o), this._labelFilterValuesSelectizeInput.hide(), this._labelFilterAddBtn.click(function() {
+var e = r._labelFilterKeySelectize.getValue(), t = r._labelFilterOperatorSelectize.getValue(), n = r._labelFilterValuesSelectize.getValue();
+r._labelFilterKeySelectize.clear(), r._labelFilterOperatorSelectizeInput.hide(), r._labelFilterOperatorSelectize.clear(), r._labelFilterValuesSelectizeInput.hide(), r._labelFilterValuesSelectize.clear(), r._labelFilterAddBtn.addClass("disabled").prop("disabled", !0), r.addActiveFilter(e, t, n);
 }), this._labelSelector.isEmpty() || (this._labelFilterActiveElement.show(), this._labelSelector.each(function(e) {
-i._renderActiveFilter(e);
+r._renderActiveFilter(e);
 }));
-}, t.prototype._getLabelFilterKeys = function() {
+}, n.prototype._getLabelFilterKeys = function() {
 for (var e = [], t = Object.keys(this._existingLabels), n = 0; n < t.length; n++) e.push({
 key: t[n]
 });
 return e;
-}, t.prototype.addActiveFilter = function(e, t, n) {
+}, n.prototype.addActiveFilter = function(e, t, n) {
 this._labelFilterActiveElement.show(), this._addActiveFilter(e, t, n);
-}, t.prototype._addActiveFilter = function(e, t, n) {
+}, n.prototype._addActiveFilter = function(e, t, n) {
 var i = this._labelSelector.addConjunct(e, t, n);
 this._persistState(), this._onActiveFiltersChangedCallbacks.fire(this._labelSelector), this._renderActiveFilter(i);
-}, t.prototype.clear = function() {
+}, n.prototype.clear = function() {
 this._labelFilterActiveFiltersElement && this._labelFilterActiveFiltersElement.find(".label-filter-active-filter").remove(), this._labelFilterActiveElement && this._labelFilterActiveElement.hide(), this._labelSelector.clearConjuncts(), this._persistState(), this._onActiveFiltersChangedCallbacks.fire(this._labelSelector);
-}, t.prototype._renderActiveFilter = function(e) {
+}, n.prototype._renderActiveFilter = function(e) {
 $("<a>").addClass("label label-default label-filter-active-filter").prop("href", "javascript:;").prop("filter-label-id", e.id).click($.proxy(this, "_removeActiveFilter")).append($("<span>").text(e.string)).append($("<i>").addClass("fa fa-times")).appendTo(this._labelFilterActiveFiltersElement);
-}, t.prototype._removeActiveFilter = function(e) {
+}, n.prototype._removeActiveFilter = function(e) {
 var t = $(e.target).closest(".label-filter-active-filter"), n = t.prop("filter-label-id");
 t.remove(), 0 == $(".label-filter-active-filter", this._labelFilterActiveFiltersElement).length && this._labelFilterActiveElement.hide(), this._labelSelector.removeConjunct(n), this._persistState(), this._onActiveFiltersChangedCallbacks.fire(this._labelSelector);
-}, t.prototype.toggleFilterWidget = function(e) {
+}, n.prototype.toggleFilterWidget = function(e) {
 this._labelFilterRootElement && (e ? this._labelFilterRootElement.show() : this._labelFilterRootElement.hide()), this._labelFilterActiveFiltersRootElement && (e ? this._labelFilterActiveFiltersRootElement.show() : this._labelFilterActiveFiltersRootElement.hide());
-}, new t();
+}, new n();
 } ]), function(e) {
 if ("object" == typeof exports && "undefined" != typeof module) module.exports = e(); else if ("function" == typeof define && define.amd) define([], e); else {
 ("undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof self ? self : this).Terminal = e();
@@ -80508,7 +80517,7 @@ e.exports = '<div class="order-service">\n  <pf-wizard\n       wizard-title="{{$
 }, function(e, t) {
 e.exports = '<div class="catalogs-overlay-modal" role="dialog">\n  <div ng-if="$ctrl.shown" class="modal-backdrop fade in"></div>\n  <div ng-if="$ctrl.shown" class="catalogs-overlay-panel-wrapper">\n    <div class="catalogs-overlay-panel-grow-height">\n      <div class="modal-content catalogs-overlay-panel">\n        <a ng-if="$ctrl.showClose" ng-click="$ctrl.closePanel()">\n          <span class="catalogs-overlay-panel-close pficon pficon-close"></span>\n        </a>\n        <div class="catalogs-overlay-panel-body" ng-transclude>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n';
 }, function(e, t) {
-e.exports = '<div ng-if="$ctrl.loading" class="catalog-projects-spinner-container">\n  <div class="spinner spinner-inverse spinner-xl"></div>\n</div>\n<div class="catalog-projects-summary-panel" ng-show="!$ctrl.loading">\n  <button ng-if="$ctrl.canCreate" class="create-button btn btn-primary" ng-click="$ctrl.openNewProjectPanel($event)">\n    <span class="fa fa-plus"></span>\n    <span class="create-button-text" translate>Create Project</span>\n  </button>\n  <origin-modal-popup class="catalog-create-project" modal-title="{{\'Create Project\' | translate}}" shown="$ctrl.newProjectPanelShown" on-close="$ctrl.closeNewProjectPanel" reference-element="$ctrl.modalPopupElement">\n    <create-project is-dialog="true" redirect-action="$ctrl.onNewProject" on-cancel="$ctrl.closeNewProjectPanel"></create-project>\n  </origin-modal-popup>\n  <h2 class="summary-title secondary" ng-if="!$ctrl.projects || !$ctrl.projects.length" translate>Getting Started</h2>\n  <h2 class="summary-title secondary" ng-if="$ctrl.projects && $ctrl.projects.length">\n    <a href="{{$ctrl.projectsUrl}}" translate>My Projects</a>\n  </h2>\n  <div ng-if="!$ctrl.canCreate">\n    <span ng-if="!$ctrl.newProjectMessage">\n      <translate>A cluster admin can create a project for you by running the command:</translate>\n      <div class="code-block">\n        <code class="projects-instructions-link">oc adm <span class="command-arg">new-project</span> &lt;projectname&gt; <span class="command-arg">--admin={{$ctrl.user.metadata.name || \'&lt;YourUsername&gt;\'}}</span></code>\n      </div>\n    </span>\n    <span ng-if="$ctrl.newProjectMessage" ng-bind-html="$ctrl.newProjectMessage | linky : \'_blank\'"></span>\n  </div>\n  <div ng-if="$ctrl.isProjectListIncomplete">\n    <p class="text-muted" translate>\n      The complete list of your projects could not be loaded. Type a project name to go to that project.\n    </p>\n    <form>\n      <div class="form-group">\n        <label for="typed-project-name" translate>Project Name</label>\n        <div class="input-group">\n          <input\n            class="form-control"\n            type="text"\n            id="typed-project-name"\n            required\n            minlength="2"\n            ng-model="$ctrl.typedProjectName"\n            autocorrect="off"\n            autocapitalize="none"\n            spellcheck="false">\n          <span class="input-group-btn">\n            <button class="btn btn-default go-to-project-button"\n                    type="submit"\n                    ng-disabled="!$ctrl.typedProjectName"\n                    ng-click="$ctrl.goToProject($ctrl.typedProjectName)">\n              <i class="fa fa-arrow-right" aria-hidden="true"></i>\n              <span class="sr-only" translate>Go to Project</span>\n            </button>\n          </span>\n        </div>\n      </div>\n    </form>\n  </div>\n  <div ng-if="$ctrl.projects && $ctrl.projects.length" class="catalog-project-summary-list">\n    <div class="projects-count">\n      <strong>{{$ctrl.projects.length}}</strong>\n      of\n      <strong>{{$ctrl.totalProjects}}</strong>\n      Projects\n      <a href="{{$ctrl.projectsUrl}}" class="projects-view-all" translate>View All</a>\n    </div>\n    <div id="catalog-projects-summary-list">\n      <div ng-repeat="project in $ctrl.projects track by (project | uid)" class="project-tile tile-click">\n        <div class="dropdown  dropdown-kebab-pf" uib-dropdown="">\n          <button class="btn btn-link uib-dropdown-toggle" type="button" id="dropdownKebab" aria-haspopup="true" aria-expanded="true" uib-dropdown-toggle>\n            <span class="fa fa-ellipsis-v"></span>\n          </button>\n          <ul class="uib-dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebab">\n            <li><a href="" ng-click="$ctrl.onViewMemebership(project)" translate>View Membership</a></li>\n            <li><a href="" ng-click="$ctrl.editProject(project)" translate>Edit Project</a></li>\n            <li>\n              <delete-project\n                  label="{{\'Delete Project\' | translate}}"\n                  project="project"\n                  type-name-to-confirm="true"\n                  stay-on-current-page="true"\n                  success="$ctrl.onDeleteProject">\n              </delete-project>\n            </li>\n          </ul>\n        </div>\n        <h3 class="project-tile-header">\n          <a href="{{project | projectUrl : $ctrl.baseProjectUrl}}" class="project-title tile-target">{{project | displayName}}</a>\n          <span ng-if="project.status.phase != \'Active\'"\n            data-toggle="popover"\n            data-trigger="hover"\n            data-content="This project has been marked for deletion."\n            class="pficon pficon-warning-triangle-o"></span>\n        </h3>\n        <p class="project-date">\n          <span ng-if="project | displayName : true"><span class="word-break" ng-bind-html="project.metadata.name"></span> &ndash;</span>\n          <translate>created</translate>\n          <span ng-if="project | annotation : \'openshift.io/requester\'"><translate>by</translate> <span class="word-break" ng-bind-html="project | annotation : \'openshift.io/requester\'"></span></span>\n          <span am-time-ago="project.metadata.creationTimestamp"></span>\n        </p>\n        <div class="project-description" ng-if="project | description">\n          <truncate-long-text content="project | description" use-word-boundary="true" limit="120"></truncate-long-text>\n        </div>\n        <origin-modal-popup class="catalog-edit-project" modal-title="{{\'Edit Project\' | translate}}" shown="$ctrl.editProjectPanelShown && $ctrl.edittingProject === project" on-close="$ctrl.closeEditProjectPanel">\n          <edit-project project="$ctrl.edittingProject" is-dialog="true" redirect-action="$ctrl.onEditProject" on-cancel="$ctrl.closeEditProjectPanel"></edit-project>\n        </origin-modal-popup>\n      </div>\n    </div>\n  </div>\n  <div ng-if="$ctrl.showGetStarted">\n    <div class="getting-started-panel">\n      <h2 class="secondary" ng-if="$ctrl.projects && $ctrl.projects.length > 0" translate>Getting Started</h2>\n      <button ng-if="$ctrl.startTour()" class="getting-started-button btn btn-default hidden-xs" ng-class="{\'with-projects\': $ctrl.projects && $ctrl.projects.length}" ng-click="$ctrl.handleGettingStartedClick()">\n        <span class="fa fa-info-circle fa-2"></span>\n        <span class="getting-started-button-text" translate>Take Home Page Tour</span>\n      </button>\n    </div>\n    <div class="resources-panel">\n      <ul>\n        <li ng-repeat="resource in $ctrl.resourceLinks">\n          <a href="{{resource.href}}" target="_blank" title="{{resource.href}}">{{resource.title}}</a>\n        </li>\n      </ul>\n    </div>\n  </div>\n  <div ng-if="$ctrl.recentlyViewedItems.length">\n    <h2 class="secondary" translate>Recently Viewed</h2>\n    <div class="services-view">\n      <a href="" class="services-item" ng-repeat="item in $ctrl.recentlyViewedItems track by (item.resource | uid)"\n           ng-click="$ctrl.orderService(item)">\n        <div ng-if="!item.imageUrl" class="services-item-icon">\n          <span class="{{item.iconClass}}"></span>\n        </div>\n        <div ng-if="item.imageUrl" class="services-item-icon services-item-img">\n          <img ng-src="{{item.imageUrl}}">\n        </div>\n        <div class="services-item-name" title="{{item.name}}" aria-hidden="true">{{item.name}}</div>\n      </a>\n    </div>\n  </div>\n</div>\n';
+e.exports = '<div ng-if="$ctrl.loading" class="catalog-projects-spinner-container">\n  <div class="spinner spinner-inverse spinner-xl"></div>\n</div>\n<div class="catalog-projects-summary-panel" ng-show="!$ctrl.loading">\n  <button ng-if="$ctrl.canCreate" class="create-button btn btn-primary" ng-click="$ctrl.openNewProjectPanel($event)">\n    <span class="fa fa-plus"></span>\n    <span class="create-button-text" translate>Create Project</span>\n  </button>\n  <origin-modal-popup class="catalog-create-project" modal-title="{{\'Create Project\' | translate}}" shown="$ctrl.newProjectPanelShown" on-close="$ctrl.closeNewProjectPanel" reference-element="$ctrl.modalPopupElement">\n    <create-project is-dialog="true" redirect-action="$ctrl.onNewProject" on-cancel="$ctrl.closeNewProjectPanel"></create-project>\n  </origin-modal-popup>\n  <h2 class="summary-title secondary" ng-if="!$ctrl.projects || !$ctrl.projects.length" translate>Getting Started</h2>\n  <h2 class="summary-title secondary" ng-if="$ctrl.projects && $ctrl.projects.length">\n    <a href="{{$ctrl.projectsUrl}}" translate>My Projects</a>\n  </h2>\n  <div ng-if="!$ctrl.canCreate">\n    <span ng-if="!$ctrl.newProjectMessage">\n      <translate>A cluster admin can create a project for you by running the command:</translate>\n      <div class="code-block">\n        <code class="projects-instructions-link">oc adm <span class="command-arg">new-project</span> &lt;projectname&gt; <span class="command-arg">--admin={{$ctrl.user.metadata.name || \'&lt;YourUsername&gt;\'}}</span></code>\n      </div>\n    </span>\n    <span ng-if="$ctrl.newProjectMessage" ng-bind-html="$ctrl.newProjectMessage | linky : \'_blank\'"></span>\n  </div>\n  <div ng-if="$ctrl.isProjectListIncomplete">\n    <p class="text-muted" translate>\n      The complete list of your projects could not be loaded. Type a project name to go to that project.\n    </p>\n    <form>\n      <div class="form-group">\n        <label for="typed-project-name" translate>Project Name</label>\n        <div class="input-group">\n          <input\n            class="form-control"\n            type="text"\n            id="typed-project-name"\n            required\n            minlength="2"\n            ng-model="$ctrl.typedProjectName"\n            autocorrect="off"\n            autocapitalize="none"\n            spellcheck="false">\n          <span class="input-group-btn">\n            <button class="btn btn-default go-to-project-button"\n                    type="submit"\n                    ng-disabled="!$ctrl.typedProjectName"\n                    ng-click="$ctrl.goToProject($ctrl.typedProjectName)">\n              <i class="fa fa-arrow-right" aria-hidden="true"></i>\n              <span class="sr-only" translate>Go to Project</span>\n            </button>\n          </span>\n        </div>\n      </div>\n    </form>\n  </div>\n  <div ng-if="$ctrl.projects && $ctrl.projects.length" class="catalog-project-summary-list">\n    <div class="projects-count">\n      <strong>{{$ctrl.projects.length}}</strong>\n      of\n      <strong>{{$ctrl.totalProjects}}</strong>\n      Projects\n      <a href="{{$ctrl.projectsUrl}}" class="projects-view-all" translate>View All</a>\n    </div>\n    <div id="catalog-projects-summary-list">\n      <div ng-repeat="project in $ctrl.projects track by (project | uid)" class="project-tile tile-click">\n        <div class="dropdown  dropdown-kebab-pf" uib-dropdown="">\n          <button class="btn btn-link uib-dropdown-toggle" type="button" id="dropdownKebab" aria-haspopup="true" aria-expanded="true" uib-dropdown-toggle>\n            <span class="fa fa-ellipsis-v"></span>\n          </button>\n          <ul class="uib-dropdown-menu dropdown-menu-right" aria-labelledby="dropdownKebab">\n            <li><a href="" ng-click="$ctrl.onViewMemebership(project)" translate>View Membership</a></li>\n            <li><a href="" ng-click="$ctrl.editProject(project)" translate>Edit Project</a></li>\n            <li>\n              <delete-project\n                  label="{{\'Delete Project\' | translate}}"\n                  project="project"\n                  type-name-to-confirm="true"\n                  stay-on-current-page="true"\n                  success="$ctrl.onDeleteProject">\n              </delete-project>\n            </li>\n          </ul>\n        </div>\n        <h3 class="project-tile-header">\n          <a href="{{project | projectUrl : $ctrl.baseProjectUrl}}" class="project-title tile-target">{{project | displayName}}</a>\n          <span ng-if="project.status.phase != \'Active\'"\n            data-toggle="popover"\n            data-trigger="hover"\n            data-content="This project has been marked for deletion."\n            class="pficon pficon-warning-triangle-o"></span>\n        </h3>\n        <p class="project-date">\n          <span ng-if="project | displayName : true"><span class="word-break" ng-bind-html="project.metadata.name"></span> &ndash;</span>\n          <span ng-if="project | annotation : \'openshift.io/requester\'"><span class="word-break" ng-bind-html="project | annotation : \'openshift.io/requester\'"></span></span>\n          <translate>created</translate>\n          <span am-time-ago="project.metadata.creationTimestamp"></span>\n        </p>\n        <div class="project-description" ng-if="project | description">\n          <truncate-long-text content="project | description" use-word-boundary="true" limit="120"></truncate-long-text>\n        </div>\n        <origin-modal-popup class="catalog-edit-project" modal-title="{{\'Edit Project\' | translate}}" shown="$ctrl.editProjectPanelShown && $ctrl.edittingProject === project" on-close="$ctrl.closeEditProjectPanel">\n          <edit-project project="$ctrl.edittingProject" is-dialog="true" redirect-action="$ctrl.onEditProject" on-cancel="$ctrl.closeEditProjectPanel"></edit-project>\n        </origin-modal-popup>\n      </div>\n    </div>\n  </div>\n  <div ng-if="$ctrl.showGetStarted">\n    <div class="getting-started-panel">\n      <h2 class="secondary" ng-if="$ctrl.projects && $ctrl.projects.length > 0" translate>Getting Started</h2>\n      <button ng-if="$ctrl.startTour()" class="getting-started-button btn btn-default hidden-xs" ng-class="{\'with-projects\': $ctrl.projects && $ctrl.projects.length}" ng-click="$ctrl.handleGettingStartedClick()">\n        <span class="fa fa-info-circle fa-2"></span>\n        <span class="getting-started-button-text" translate>Take Home Page Tour</span>\n      </button>\n    </div>\n    <div class="resources-panel">\n      <ul>\n        <li ng-repeat="resource in $ctrl.resourceLinks">\n          <a href="{{resource.href}}" target="_blank" title="{{resource.href}}">{{resource.title}}</a>\n        </li>\n      </ul>\n    </div>\n  </div>\n  <div ng-if="$ctrl.recentlyViewedItems.length">\n    <h2 class="secondary" translate>Recently Viewed</h2>\n    <div class="services-view">\n      <a href="" class="services-item" ng-repeat="item in $ctrl.recentlyViewedItems track by (item.resource | uid)"\n           ng-click="$ctrl.orderService(item)">\n        <div ng-if="!item.imageUrl" class="services-item-icon">\n          <span class="{{item.iconClass}}"></span>\n        </div>\n        <div ng-if="item.imageUrl" class="services-item-icon services-item-img">\n          <img ng-src="{{item.imageUrl}}">\n        </div>\n        <div class="services-item-name" title="{{item.name}}" aria-hidden="true">{{item.name}}</div>\n      </a>\n    </div>\n  </div>\n</div>\n';
 }, function(e, t) {
 e.exports = '<span ng-if="$ctrl.hasSaasOfferings()" class="saas-offerings-container">\n  <h1 ng-if="$ctrl.saasTitle">{{$ctrl.saasTitle}}</h1>\n  <div class="saas-list" ng-class="{\'expanded\': $ctrl.sassListExpanded, \'items-overflow\': $ctrl.itemsOverflow}" items="$ctrl.saasOfferings">\n    <div class="card" ng-repeat="item in $ctrl.saasOfferings">\n      <a ng-href="{{item.url}}" target="_blank" class="card-content">\n        <div class="card-icon">\n          <img ng-if="item.image" ng-src="{{item.image}}" alt="">\n          <span ng-if="!item.image" class="icon {{item.icon}}" aria-hidden="true"></span>\n        </div>\n        <div class="card-title">{{item.title}}</div>\n        <truncate-long-text\n                class="card-description hidden-xs"\n                content="item.description"\n                limit="120"\n                use-word-boundary="true">\n        </truncate-long-text>\n      </a>\n    </div>\n  </div>\n  <div ng-if="$ctrl.itemsOverflow" class="sass-list-expander-container">\n    <a href="" class="sass-list-expander" ng-class="{\'expanded\': $ctrl.sassListExpanded}" ng-click="$ctrl.toggleListExpand()">\n      <span translate>Show</span> <span class="more" translate>More</span><span class="less" translate>Less</span>\n    </a>\n  </div>\n</span>\n';
 }, function(e, t) {

@@ -60,8 +60,8 @@ angular.module('openshiftConsole')
             nav.secondaryNavSections.map(function(secondaryNavSection) {
               secondaryNavSection.items.map(function(item) {
                 item.label = existInNavMap(item.label);
-              })
-            })
+              });
+            });
           }
         });
 

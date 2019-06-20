@@ -277,8 +277,8 @@ msgstr "操作"
 msgid "Active Deadline:"
 msgstr "活动截止日期："
 
-#: app/views/add-config-volume.html:189 app/views/attach-pvc.html:213
-#: app/views/directives/_edit-command.html:65
+#: app/scripts/directives/nav.js:577 app/views/add-config-volume.html:189
+#: app/views/attach-pvc.html:213 app/views/directives/_edit-command.html:65
 #: app/views/directives/_edit-command.html:86
 #: app/views/directives/add-config-to-application.html:34
 #: app/views/directives/edit-lifecycle-hook.html:132
@@ -2551,28 +2551,32 @@ msgstr "具有凭据和其他配置的文件，用于连接到安全的image reg
 
 #: app/views/directives/events.html:10
 msgid "Filter"
-msgstr "筛选"
+msgstr "过滤"
 
 #: app/views/directives/events.html:11 app/views/projects.html:32
 #: app/views/projects.html:36
 msgid "Filter by keyword"
-msgstr "按关键词筛选"
+msgstr "按关键词过滤"
 
 #: app/scripts/directives/processTemplateDialog.js:124
 msgid "Filter by Keyword"
-msgstr "按关键词筛选"
+msgstr "按关键词过滤"
+
+#: bower_components/kubernetes-label-selector/labelFilter.js:140
+msgid "Filter by label"
+msgstr "按标签过滤"
 
 #: app/views/directives/_project-filter.html:3
 msgid "Filter by labels"
-msgstr "按标签筛选"
+msgstr "按标签过滤"
 
 #: app/views/monitoring.html:23 app/views/overview.html:65
 msgid "Filter by name"
-msgstr "按名称筛选"
+msgstr "按名称过滤"
 
 #: app/views/catalog/catalog.html:27 app/views/catalog/category-content.html:24
 msgid "Filter by name or description"
-msgstr "按名称或描述筛选"
+msgstr "按名称或描述过滤"
 
 #: app/views/directives/logs/_log-viewer.html:63
 msgid "Follow"

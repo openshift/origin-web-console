@@ -13,7 +13,8 @@ module.exports = function (grunt) {
                               'app/*.html',
                               'app/scripts/*.js',
                               'app/scripts/*/*.js',
-                              'app/scripts/*/*/*.js'
+                              'app/scripts/*/*/*.js',
+                              'bower_components/kubernetes-label-selector/labelFilter.js'
                              ]
         }
       }

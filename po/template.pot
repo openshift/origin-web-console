@@ -245,6 +245,7 @@ msgstr ""
 msgid "Active Deadline:"
 msgstr ""
 
+#: app/scripts/directives/nav.js:577
 #: app/views/add-config-volume.html:189
 #: app/views/attach-pvc.html:213
 #: app/views/directives/_edit-command.html:65
@@ -2576,6 +2577,10 @@ msgstr ""
 
 #: app/scripts/directives/processTemplateDialog.js:124
 msgid "Filter by Keyword"
+msgstr ""
+
+#: bower_components/kubernetes-label-selector/labelFilter.js:140
+msgid "Filter by label"
 msgstr ""
 
 #: app/views/directives/_project-filter.html:3

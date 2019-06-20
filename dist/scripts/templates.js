@@ -6728,7 +6728,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div ng-if=\"isBinaryFile\" class=\"h4\" translate>\n" +
     "This file contains binary content.\n" +
     "</div>\n" +
-    "<osc-file-input model=\"item.value\" drop-zone-id=\"drop-zone-{{$id}}\" help-text=\"Enter a value for the {{type}} entry or use the contents of a file.\" read-as-binary-string=\"readAsBinaryString\" is-binary-file=\"isBinaryFile\"></osc-file-input>\n" +
+    "<osc-file-input model=\"item.value\" drop-zone-id=\"drop-zone-{{$id}}\" help-text=\"{{'Enter a value for the {{type}} entry or use the contents of a file.' | translate}}\" read-as-binary-string=\"readAsBinaryString\" is-binary-file=\"isBinaryFile\"></osc-file-input>\n" +
     "<div ui-ace=\"{\n" +
     "          theme: 'eclipse',\n" +
     "          rendererOptions: {\n" +
@@ -10758,7 +10758,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"col-add-role\">\n" +
     "<div ng-show=\"mode.edit\" class=\"col-add-role-inputs\">\n" +
     "<ui-select ng-if=\"filteredRoles.length\" ng-model=\"newBinding.newRole\" theme=\"bootstrap\" search-enabled=\"true\" title=\"'new {{subjectKind.name}} role' | translate\" class=\"select-role\">\n" +
-    "<ui-select-match placeholder=\"'Select a role' | translate\">\n" +
+    "<ui-select-match placeholder=\"{{'Select a role' | translate}}\">\n" +
     "<span ng-bind=\"newBinding.newRole.metadata.name\"></span>\n" +
     "</ui-select-match>\n" +
     "<ui-select-choices repeat=\"role as role in filteredRoles | filter: { metadata: { name: $select.search } } track by (role | uid)\">\n" +
@@ -11342,8 +11342,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</h1>\n" +
     "</div>\n" +
     "<div class=\"data-toolbar\">\n" +
-    "<ui-select class=\"data-toolbar-dropdown\" ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"Choose a resource\">\n" +
-    "<ui-select-match placeholder=\"Choose a resource\">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>\n" +
+    "<ui-select class=\"data-toolbar-dropdown\" ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"{{'Choose a resource' | translate}}\">\n" +
+    "<ui-select-match placeholder=\"{{'Choose a resource' | translate}}\">{{$select.selected.label ? $select.selected.label : ($select.selected.kind | humanizeKind : true)}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"kind in kinds | filter : {kind: $select.search} : matchKind\">\n" +
     "<div ng-bind-html=\"(kind.label ? kind.label : (kind.kind | humanizeKind : true)) | highlight: $select.search\"></div>\n" +
     "</ui-select-choices>\n" +
@@ -11354,7 +11354,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group filter-controls has-clear\">\n" +
     "<div class=\"search-pf-input-group\">\n" +
     "<label for=\"name-filter\" class=\"sr-only\" translate>Filter by name</label>\n" +
-    "<input type=\"search\" placeholder=\"Filter by name\" class=\"form-control\" id=\"name-filter\" ng-model=\"filters.text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
+    "<input type=\"search\" placeholder=\"{{'Filter by name' | translate}}\" class=\"form-control\" id=\"name-filter\" ng-model=\"filters.text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
     "<button type=\"button\" class=\"clear\" aria-hidden=\"true\" ng-if=\"filters.text\" ng-click=\"filters.text = ''\">\n" +
     "<span class=\"pficon pficon-close\"></span>\n" +
     "</button>\n" +
@@ -11792,8 +11792,8 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<h1 translate>Other Resources</h1>\n" +
     "</div>\n" +
     "<div class=\"data-toolbar other-resources-toolbar\">\n" +
-    "<ui-select class=\"data-toolbar-dropdown\" ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"Choose a resource\">\n" +
-    "<ui-select-match placeholder=\"Choose a resource to list...\">{{$select.selected.kind | humanizeKind : true}}</ui-select-match>\n" +
+    "<ui-select class=\"data-toolbar-dropdown\" ng-model=\"kindSelector.selected\" theme=\"bootstrap\" search-enabled=\"true\" ng-disabled=\"kindSelector.disabled\" title=\"{{'Choose a resource' | translate}}\">\n" +
+    "<ui-select-match placeholder=\"{{'Choose a resource to list...' | translate}}\">{{$select.selected.kind | humanizeKind : true}}</ui-select-match>\n" +
     "<ui-select-choices repeat=\"kind in kinds | filter : {kind: $select.search} : matchKind | orderBy : 'kind'\">\n" +
     "<div ng-bind-html=\"(kind.kind | humanizeKind : true) | highlight: $select.search\"></div>\n" +
     "<small ng-if=\"isDuplicateKind(kind.kind)\" ng-bind-html=\"kind.group | highlight: $select.search\" class=\"text-muted\"></small>\n" +
@@ -11937,7 +11937,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group filter-controls has-clear\">\n" +
     "<div class=\"search-pf-input-group\">\n" +
     "<label for=\"name-filter\" class=\"sr-only\" translate>Filter by name</label>\n" +
-    "<input type=\"text\" class=\"form-control\" ng-model=\"overview.filterText\" placeholder=\"Filter by name\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" ng-disabled=\"overview.disableFilter\">\n" +
+    "<input type=\"text\" class=\"form-control\" ng-model=\"overview.filterText\" placeholder=\"{{'Filter by name' | translate}}\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\" ng-disabled=\"overview.disableFilter\">\n" +
     "<button type=\"button\" class=\"clear\" aria-hidden=\"true\" ng-if=\"overview.filterText && !overview.disableFilter\" ng-click=\"overview.filterText = ''\">\n" +
     "<span class=\"pficon pficon-close\"></span>\n" +
     "</button>\n" +
@@ -13306,7 +13306,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
   $templateCache.put('views/project-browse-catalog.html',
     "<div class=\"middle surface-shaded project-browse-catalog\">\n" +
     "<div class=\"middle-content\">\n" +
-    "<services-view catalog-items=\"catalogItems\" base-project-url=\"project\" section-title=\"Select an item to add to the current project\" keyword-filter=\"keywordFilter\">\n" +
+    "<services-view catalog-items=\"catalogItems\" base-project-url=\"project\" section-title=\"{{'Select an item to add to the current project' | translate}}\" keyword-filter=\"keywordFilter\">\n" +
     "</services-view>\n" +
     "</div>\n" +
     "</div>"
