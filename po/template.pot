@@ -255,6 +255,10 @@ msgstr ""
 msgid "Active Deadline:"
 msgstr ""
 
+#: bower_components/angular-patternfly/dist/angular-patternfly.js:8089
+msgid "Active filters:"
+msgstr ""
+
 #: app/scripts/directives/nav.js:577
 #: app/views/add-config-volume.html:189
 #: app/views/attach-pvc.html:213
@@ -853,6 +857,7 @@ msgid "Average Usage"
 msgstr ""
 
 #: app/views/_sidebar.html:52
+#: bower_components/angular-patternfly/dist/angular-patternfly.js:18329
 msgid "Back"
 msgstr ""
 
@@ -1108,6 +1113,7 @@ msgstr ""
 #: app/views/set-limits.html:56
 #: app/views/util/oauth.html:12
 #: app/views/util/oauth.html:20
+#: bower_components/angular-patternfly/dist/angular-patternfly.js:18326
 msgid "Cancel"
 msgstr ""
 
@@ -1967,6 +1973,10 @@ msgstr ""
 msgid "Delete pod immediately without waiting for the processes to terminate gracefully"
 msgstr ""
 
+#: app/views/projects.html:141
+msgid "Delete Project"
+msgstr ""
+
 #: app/views/directives/_edit-command.html:39
 #: app/views/directives/edit-environment-from.html:114
 #: app/views/directives/key-value-editor.html:217
@@ -2713,12 +2723,12 @@ msgstr ""
 msgid "Grace Period:"
 msgstr ""
 
-#: app/scripts/services/membership/membership.js:49
-msgid "Group"
-msgstr ""
-
 #: app/views/overview/_service-linking-button.html:6
 msgid "Group service to {{service.metadata.name}}"
+msgstr ""
+
+#: app/scripts/services/membership/membership.js:49
+msgid "Groups"
 msgstr ""
 
 #: app/views/directives/add-config-to-application.html:31
@@ -3843,6 +3853,7 @@ msgstr ""
 
 #: app/views/create-from-url.html:38
 #: app/views/create-from-url.html:73
+#: bower_components/angular-patternfly/dist/angular-patternfly.js:18332
 msgid "Next"
 msgstr ""
 
@@ -5287,7 +5298,7 @@ msgid "Service Weights"
 msgstr ""
 
 #: app/scripts/services/membership/membership.js:59
-msgid "ServiceAccount"
+msgid "ServiceAccounts"
 msgstr ""
 
 #: app/views/browse/service.html:94
@@ -6104,6 +6115,11 @@ msgstr ""
 msgid "There are no limit ranges set on this project."
 msgstr ""
 
+#: bower_components/angular-patternfly/dist/angular-patternfly.js:11121
+#: bower_components/angular-patternfly/dist/angular-patternfly.js:11165
+msgid "There are no notifications to display."
+msgstr ""
+
 #: app/views/monitoring.html:63
 msgid "There are no pods in this project."
 msgstr ""
@@ -6244,6 +6260,10 @@ msgstr ""
 
 #: app/scripts/controllers/service.js:35
 msgid "This pod will not receive traffic until all of its containers have been created."
+msgstr ""
+
+#: app/views/projects.html:109
+msgid "This project has been marked for deletion."
 msgstr ""
 
 #: app/scripts/controllers/serviceInstance.js:193
@@ -6693,10 +6713,6 @@ msgstr ""
 msgid "Used (This Project)"
 msgstr ""
 
-#: app/scripts/services/membership/membership.js:41
-msgid "User"
-msgstr ""
-
 #: app/views/_config-file-params.html:3
 msgid "username"
 msgstr ""
@@ -6708,6 +6724,10 @@ msgstr ""
 
 #: app/views/directives/create-secret.html:253
 msgid "Username is required."
+msgstr ""
+
+#: app/scripts/services/membership/membership.js:41
+msgid "Users"
 msgstr ""
 
 #: app/views/storage.html:66

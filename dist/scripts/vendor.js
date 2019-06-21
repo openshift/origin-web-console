@@ -49670,7 +49670,7 @@ _(), x();
 i.addClass("hide-nav-pf"), r.addClass("hide-nav-pf"), _(), $(), k(e), D(), T(), i.removeClass("hide-nav-pf"), r.removeClass("hide-nav-pf"), u(250);
 }(t)), e.fn.setupVerticalNavigation.self;
 };
-}(jQuery), angular.module("patternfly.canvas", [ "dragging", "ngDragDrop", "ui.bootstrap" ]), angular.module("patternfly.card", [ "ui.bootstrap" ]), angular.module("patternfly.charts", [ "patternfly.utils", "ui.bootstrap", "ngSanitize" ]), angular.module("patternfly.filters", [ "ui.bootstrap" ]), angular.module("patternfly.form", []), angular.module("patternfly.modals", [ "ui.bootstrap.modal", "ui.bootstrap.tpls" ]), angular.module("patternfly.navigation", [ "ui.bootstrap" ]), angular.module("patternfly.notification", [ "patternfly.utils", "ui.bootstrap" ]), angular.module("patternfly.pagination", [ "ui.bootstrap" ]).filter("startFrom", function() {
+}(jQuery), angular.module("patternfly.canvas", [ "dragging", "ngDragDrop", "ui.bootstrap" ]), angular.module("patternfly.card", [ "ui.bootstrap" ]), angular.module("patternfly.charts", [ "patternfly.utils", "ui.bootstrap", "ngSanitize" ]), angular.module("patternfly.filters", [ "ui.bootstrap", "gettext" ]), angular.module("patternfly.form", []), angular.module("patternfly.modals", [ "ui.bootstrap.modal", "ui.bootstrap.tpls" ]), angular.module("patternfly.navigation", [ "ui.bootstrap" ]), angular.module("patternfly.notification", [ "patternfly.utils", "ui.bootstrap" ]), angular.module("patternfly.pagination", [ "ui.bootstrap" ]).filter("startFrom", function() {
 "use strict";
 return function(e, t) {
 return t = parseInt(t, 10), e.slice(t);
@@ -51139,28 +51139,28 @@ bindings: {
 config: "="
 },
 templateUrl: "filters/filter-panel/filter-panel-results.html",
-controller: function() {
+controller: [ "gettextCatalog", function(e) {
 "use strict";
-function e() {
-i.config.appliedFilters || (i.config.appliedFilters = []), void 0 === i.config.resultsCount && (i.config.resultsCount = 0);
+function t() {
+r.config.appliedFilters || (r.config.appliedFilters = []), void 0 === r.config.resultsCount && (r.config.resultsCount = 0);
 }
-function t(e, t) {
+function n(e, t) {
 var n = e.id;
-_.pull(e.values, t), 0 === e.values.length && _.pull(i.config.appliedFilters, e), i.config.onFilterChange && i.config.onFilterChange(i.config.appliedFilters, n, t);
+_.pull(e.values, t), 0 === e.values.length && _.pull(r.config.appliedFilters, e), r.config.onFilterChange && r.config.onFilterChange(r.config.appliedFilters, n, t);
 }
-function n() {
-i.config.appliedFilters = [], i.config.onFilterChange && i.config.onFilterChange(i.config.appliedFilters);
+function i() {
+r.config.appliedFilters = [], r.config.onFilterChange && r.config.onFilterChange(r.config.appliedFilters);
 }
-var i = this;
-i.activeFilter = "Active filters:", i.$onInit = function() {
-angular.extend(i, {
-clearFilter: t,
-clearAllFilters: n
+var r = this;
+r.activeFilter = e.getString("Active filters:"), r.$onInit = function() {
+angular.extend(r, {
+clearFilter: n,
+clearAllFilters: i
 });
-}, i.$onChanges = function() {
-e();
+}, r.$onChanges = function() {
+t();
 };
-}
+} ]
 }), angular.module("patternfly.filters").component("pfFilter", {
 bindings: {
 config: "="
@@ -51638,41 +51638,41 @@ noNotificationsText: "@",
 customScope: "=?"
 },
 templateUrl: "notification/notification-drawer.html",
-controller: [ "$window", "$timeout", "$element", function(e, t, n) {
+controller: [ "$window", "$timeout", "$element", "gettextCatalog", function(e, t, n, i) {
 "use strict";
-var i = this, r = function() {
+var r = this, o = function() {
 var e = !1;
-angular.isDefined(_.get(i.notificationGroups, "notifications")) && (i.notificationGroups = [ i.notificationGroups ]), i.singleGroup = _.size(i.notificationGroups) < 2, angular.forEach(i.notificationGroups, function(e) {
+angular.isDefined(_.get(r.notificationGroups, "notifications")) && (r.notificationGroups = [ r.notificationGroups ]), r.singleGroup = _.size(r.notificationGroups) < 2, angular.forEach(r.notificationGroups, function(e) {
 e.emptyStateConfig = {
 icon: "pficon-info",
-title: e.noNotificationsText || i.noNotificationsText || "There are no notifications to display."
+title: e.noNotificationsText || r.noNotificationsText || i.getString("There are no notifications to display.")
 };
-}), angular.forEach(i.notificationGroups, function(t) {
+}), angular.forEach(r.notificationGroups, function(t) {
 t.open && (e ? t.open = !1 : e = !0);
 });
-}, o = function() {
+}, a = function() {
 t(function() {
 angular.element(e).triggerHandler("resize");
 }, 100);
 };
-i.toggleCollapse = function(e) {
-e.open ? e.open = !1 : (angular.forEach(i.notificationGroups, function(e) {
+r.toggleCollapse = function(e) {
+e.open ? e.open = !1 : (angular.forEach(r.notificationGroups, function(e) {
 e.open = !1;
-}), e.open = !0, o());
-}, i.toggleExpandDrawer = function() {
-i.drawerExpanded = !i.drawerExpanded;
-}, i.$onInit = function() {
-i.allowExpand && !angular.isUndefined(i.drawerExpanded) || (i.drawerExpanded = !1), i.emptyStateConfig = {
+}), e.open = !0, a());
+}, r.toggleExpandDrawer = function() {
+r.drawerExpanded = !r.drawerExpanded;
+}, r.$onInit = function() {
+r.allowExpand && !angular.isUndefined(r.drawerExpanded) || (r.drawerExpanded = !1), r.emptyStateConfig = {
 icon: "pficon-info",
-title: i.noNotificationsText || "There are no notifications to display."
-}, r();
-}, i.$onChanges = function(e) {
-e.notificationGroups && (r(), o()), !i.drawerHidden && (e.drawerHidden || e.showMarkAllRead || e.showClearAll || e.actionButtonTitle || e.titleInclude || e.headingInclude || e.subheadingInclude || e.notificationBodyInclude || e.notificationFooterInclude) && o();
-}, i.$postLink = function() {
-i.groupHeight && n.find(".panel-group").css("height", i.groupHeight), i.groupClass && n.find(".panel-group").addClass(i.groupClass);
-}, i.hasNotifications = function(e) {
+title: r.noNotificationsText || i.getString("There are no notifications to display.")
+}, o();
+}, r.$onChanges = function(e) {
+e.notificationGroups && (o(), a()), !r.drawerHidden && (e.drawerHidden || e.showMarkAllRead || e.showClearAll || e.actionButtonTitle || e.titleInclude || e.headingInclude || e.subheadingInclude || e.notificationBodyInclude || e.notificationFooterInclude) && a();
+}, r.$postLink = function() {
+r.groupHeight && n.find(".panel-group").css("height", r.groupHeight), r.groupClass && n.find(".panel-group").addClass(r.groupClass);
+}, r.hasNotifications = function(e) {
 return _.size(_.get(e, "notifications")) > 0;
-}, i.hasUnread = function(e) {
+}, r.hasUnread = function(e) {
 return _.size(_.filter(_.get(e, "notifications"), {
 unread: !0
 })) > 0;
@@ -52899,7 +52899,7 @@ e.put("navigation/application-launcher.html", '<div><div class="applauncher-pf d
 e.put("navigation/vertical-navigation.html", "<div><nav class=\"navbar navbar-pf-vertical\"><div class=navbar-header><button type=button class=navbar-toggle ng-click=$ctrl.handleNavBarToggleClick()><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button> <span class=navbar-brand><img class=navbar-brand-icon ng-if=$ctrl.brandSrc ng-src={{$ctrl.brandSrc}} alt=\"{{$ctrl.brandAlt}}\"> <span class=navbar-brand-txt ng-if=!$ctrl.brandSrc>{{$ctrl.brandAlt}}</span></span></div><nav class=\"collapse navbar-collapse\" ng-transclude></nav><div class=nav-pf-vertical ng-class=\"{'nav-pf-persistent-secondary': $ctrl.persistentSecondary,\n                    'nav-pf-vertical-collapsible-menus': $ctrl.pinnableMenus,\n                    'hidden-icons-pf': $ctrl.hiddenIcons,\n                    'nav-pf-vertical-with-badges': $ctrl.showBadges,\n                    'secondary-visible-pf': $ctrl.activeSecondary,\n                    'show-mobile-secondary': $ctrl.showMobileSecondary,\n                    'show-mobile-tertiary': $ctrl.showMobileTertiary,\n                    'hover-secondary-nav-pf': $ctrl.hoverSecondaryNav,\n                    'hover-tertiary-nav-pf': $ctrl.hoverTertiaryNav,\n                    'collapsed-secondary-nav-pf': $ctrl.collapsedSecondaryNav,\n                    'collapsed-tertiary-nav-pf': $ctrl.collapsedTertiaryNav,\n                    'hidden': $ctrl.inMobileState,\n                    'collapsed': $ctrl.navCollapsed,\n                    'force-hide-secondary-nav-pf': $ctrl.forceHidden,\n                    'show-mobile-nav': $ctrl.showMobileNav}\"><ul class=list-group><li ng-repeat=\"item in $ctrl.items\" class=list-group-item ng-class=\"{'secondary-nav-item-pf': item.children && item.children.length > 0,\n                       'active': item.isActive,\n                       'is-hover': item.isHover,\n                       'mobile-nav-item-pf': item.isMobileItem && $ctrl.showMobileSecondary,\n" + '                       \'mobile-secondary-item-pf\': item.isMobileItem && $ctrl.showMobileTertiary}" ng-mouseenter=$ctrl.handlePrimaryHover(item) ng-mouseleave=$ctrl.handlePrimaryUnHover(item)><a ng-click="$ctrl.handlePrimaryClick(item, $event)"><span class={{item.iconClass}} ng-if=item.iconClass ng-class="{hidden: $ctrl.hiddenIcons}" uib-tooltip={{item.title}} tooltip-append-to-body=true tooltip-enable={{$ctrl.navCollapsed}} tooltip-placement=bottom tooltip-class=nav-pf-vertical-tooltip></span> <span class=list-group-item-value>{{item.title}}</span><div ng-if="$ctrl.showBadges && item.badges" class=badge-container-pf><div class="badge {{badge.badgeClass}}" ng-repeat="badge in item.badges" uib-tooltip={{badge.tooltip}} tooltip-append-to-body=true tooltip-placement=right><span ng-if="badge.count && badge.iconClass" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a><div ng-if="item.children && item.children.length > 0" class=nav-pf-secondary-nav><div class=nav-item-pf-header><a class=secondary-collapse-toggle-pf ng-click="$ctrl.collapseSecondaryNav(item, $event)" ng-class="{\'collapsed\': item.secondaryCollapsed}"></a> <span>{{item.title}}</span></div><ul class=list-group><li ng-repeat="secondaryItem in item.children" class=list-group-item ng-class="{\'tertiary-nav-item-pf\': secondaryItem.children && secondaryItem.children.length > 0,\n                             \'active\': secondaryItem.isActive,\n                             \'is-hover\': secondaryItem.isHover,\n                             \'mobile-nav-item-pf\': secondaryItem.isMobileItem}" ng-mouseenter=$ctrl.handleSecondaryHover(secondaryItem) ng-mouseleave=$ctrl.handleSecondaryUnHover(secondaryItem)><a ng-click="$ctrl.handleSecondaryClick(item, secondaryItem, $event)"><span class=list-group-item-value>{{secondaryItem.title}}</span><div ng-if="$ctrl.showBadges && secondaryItem.badges" class=badge-container-pf><div class="badge {{badge.badgeClass}}" ng-repeat="badge in secondaryItem.badges" uib-tooltip={{badge.tooltip}} tooltip-append-to-body=true tooltip-placement=right><span ng-if="badge.count && badge.iconClass" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a><div ng-if="secondaryItem.children && secondaryItem.children.length > 0" class=nav-pf-tertiary-nav><div class=nav-item-pf-header><a class=tertiary-collapse-toggle-pf ng-click="$ctrl.collapseTertiaryNav(secondaryItem, $event)" ng-class="{\'collapsed\': secondaryItem.tertiaryCollapsed}"></a> <span>{{secondaryItem.title}}</span></div><ul class=list-group><li ng-repeat="tertiaryItem in secondaryItem.children" class=list-group-item ng-class="{\'active\': tertiaryItem.isActive}"><a ng-click="$ctrl.handleTertiaryClick(item, secondaryItem, tertiaryItem, $event)"><span class=list-group-item-value>{{tertiaryItem.title}}</span><div ng-if="$ctrl.showBadges && tertiaryItem.badges" class=badge-container-pf><div class="badge {{badge.badgeClass}}" ng-repeat="badge in tertiaryItem.badges" uib-tooltip={{badge.tooltip}} tooltip-append-to-body=true tooltip-placement=right><span ng-if="badge.count && badge.iconClass" class={{badge.iconClass}}></span> <span ng-if=badge.count>{{badge.count}}</span></div></div></a></li></ul></div></li></ul></div></li></ul></div></nav></div>');
 } ]), angular.module("patternfly.notification").run([ "$templateCache", function(e) {
 "use strict";
-e.put("notification/inline-notification.html", '<div class="alert alert-{{$ctrl.pfNotificationType}}" ng-class="{\'alert-dismissable\': $ctrl.pfNotificationPersistent === true}"><button ng-show=$ctrl.pfNotificationPersistent ng-click=$ctrl.pfNotificationRemove() type=button class=close data-dismiss=alert aria-hidden=true><span class="pficon pficon-close"></span></button> <span class="pficon pficon-ok" ng-show="$ctrl.pfNotificationType === \'success\'"></span> <span class="pficon pficon-info" ng-show="$ctrl.pfNotificationType === \'info\'"></span> <span class="pficon pficon-error-circle-o" ng-show="$ctrl.pfNotificationType === \'danger\'"></span> <span class="pficon pficon-warning-triangle-o" ng-show="$ctrl.pfNotificationType === \'warning\'"></span> <strong>{{$ctrl.pfNotificationHeader}}</strong> {{$ctrl.pfNotificationMessage}}</div>'), e.put("notification/notification-drawer.html", '<div class=drawer-pf ng-class="{\'hide\': $ctrl.drawerHidden, \'drawer-pf-expanded\': $ctrl.drawerExpanded}"><div ng-if=$ctrl.drawerTitle class=drawer-pf-title><a href="" ng-if=$ctrl.allowExpand class="drawer-pf-toggle-expand fa fa-angle-double-left hidden-xs" ng-click=$ctrl.toggleExpandDrawer()></a> <a href="" ng-if=$ctrl.onClose class="drawer-pf-close pficon pficon-close" ng-click=$ctrl.onClose()></a><h3 class=text-center>{{$ctrl.drawerTitle}}</h3></div><div ng-if=$ctrl.titleInclude class=drawer-pf-title ng-include src=$ctrl.titleInclude></div><div ng-if=!$ctrl.notificationGroups class=apf-blank-notification-groups><pf-empty-state config=$ctrl.emptyStateConfig></pf-empty-state></div><div ng-if=$ctrl.notificationGroups pf-fixed-accordion scroll-selector=.panel-body><div class=panel-group><div class="panel panel-default" ng-repeat="notificationGroup in $ctrl.notificationGroups track by $index"><div class=panel-heading><h4 class=panel-title><a ng-if=!$ctrl.singleGroup ng-click=$ctrl.toggleCollapse(notificationGroup) ng-class="{collapsed: !notificationGroup.open}" ng-include src=$ctrl.headingInclude></a> <span ng-if=$ctrl.singleGroup ng-include src=$ctrl.headingInclude></span></h4><span class=panel-counter ng-include src=$ctrl.subheadingInclude></span></div><div class="panel-collapse collapse" ng-class="{in: notificationGroup.open || $ctrl.notificationGroups.length === 1}"><div ng-if=$ctrl.hasNotifications(notificationGroup) class=panel-body><div class=drawer-pf-notification ng-class="{unread: notification.unread, \'expanded-notification\': $ctrl.drawerExpanded}" ng-repeat="notification in notificationGroup.notifications track by $ctrl.notificationTrackField ? notification[$ctrl.notificationTrackField] || $index : $index" ng-include src=$ctrl.notificationBodyInclude></div><div ng-if=notificationGroup.isLoading class="drawer-pf-loading text-center"><span class="spinner spinner-xs spinner-inline"></span> Loading More</div></div><div ng-if="($ctrl.showClearAll || $ctrl.showMarkAllRead) && $ctrl.hasNotifications(notificationGroup)" class=drawer-pf-action><span class=drawer-pf-action-link ng-if="$ctrl.showMarkAllRead && $ctrl.hasUnread(notificationGroup)"><button class="btn btn-link" ng-click=$ctrl.onMarkAllRead(notificationGroup)>Mark All Read</button></span> <span class=drawer-pf-action-link><button class="btn btn-link" ng-if=$ctrl.showClearAll ng-click=$ctrl.onClearAll(notificationGroup)><span class="pficon pficon-close"></span> Clear All</button></span></div><div ng-if="$ctrl.actionButtonTitle && $ctrl.hasNotifications(notificationGroup)" class=drawer-pf-action><a class="btn btn-link btn-block" ng-click=$ctrl.actionButtonCallback(notificationGroup)>{{$ctrl.actionButtonTitle}}</a></div><div ng-if=!$ctrl.hasNotifications(notificationGroup)><div class=panel-body><pf-empty-state config=notificationGroup.emptyStateConfig></pf-empty-state></div></div><div ng-if=$ctrl.notificationFooterInclude ng-include src=$ctrl.notificationFooterInclude></div></div></div></div></div></div>'), 
+e.put("notification/inline-notification.html", '<div class="alert alert-{{$ctrl.pfNotificationType}}" ng-class="{\'alert-dismissable\': $ctrl.pfNotificationPersistent === true}"><button ng-show=$ctrl.pfNotificationPersistent ng-click=$ctrl.pfNotificationRemove() type=button class=close data-dismiss=alert aria-hidden=true><span class="pficon pficon-close"></span></button> <span class="pficon pficon-ok" ng-show="$ctrl.pfNotificationType === \'success\'"></span> <span class="pficon pficon-info" ng-show="$ctrl.pfNotificationType === \'info\'"></span> <span class="pficon pficon-error-circle-o" ng-show="$ctrl.pfNotificationType === \'danger\'"></span> <span class="pficon pficon-warning-triangle-o" ng-show="$ctrl.pfNotificationType === \'warning\'"></span> <strong>{{$ctrl.pfNotificationHeader}}</strong> {{$ctrl.pfNotificationMessage}}</div>'), e.put("notification/notification-drawer.html", '<div class=drawer-pf ng-class="{\'hide\': $ctrl.drawerHidden, \'drawer-pf-expanded\': $ctrl.drawerExpanded}"><div ng-if=$ctrl.drawerTitle class=drawer-pf-title><a href="" ng-if=$ctrl.allowExpand class="drawer-pf-toggle-expand fa fa-angle-double-left hidden-xs" ng-click=$ctrl.toggleExpandDrawer()></a> <a href="" ng-if=$ctrl.onClose class="drawer-pf-close pficon pficon-close" ng-click=$ctrl.onClose()></a><h3 class=text-center>{{$ctrl.drawerTitle}}</h3></div><div ng-if=$ctrl.titleInclude class=drawer-pf-title ng-include src=$ctrl.titleInclude></div><div ng-if=!$ctrl.notificationGroups class=apf-blank-notification-groups><pf-empty-state config=$ctrl.emptyStateConfig></pf-empty-state></div><div ng-if=$ctrl.notificationGroups pf-fixed-accordion scroll-selector=.panel-body><div class=panel-group><div class="panel panel-default" ng-repeat="notificationGroup in $ctrl.notificationGroups track by $index"><div class=panel-heading><h4 class=panel-title><a ng-if=!$ctrl.singleGroup ng-click=$ctrl.toggleCollapse(notificationGroup) ng-class="{collapsed: !notificationGroup.open}" ng-include src=$ctrl.headingInclude></a> <span ng-if=$ctrl.singleGroup ng-include src=$ctrl.headingInclude></span></h4><span class=panel-counter ng-include src=$ctrl.subheadingInclude></span></div><div class="panel-collapse collapse" ng-class="{in: notificationGroup.open || $ctrl.notificationGroups.length === 1}"><div ng-if=$ctrl.hasNotifications(notificationGroup) class=panel-body><div class=drawer-pf-notification ng-class="{unread: notification.unread, \'expanded-notification\': $ctrl.drawerExpanded}" ng-repeat="notification in notificationGroup.notifications track by $ctrl.notificationTrackField ? notification[$ctrl.notificationTrackField] || $index : $index" ng-include src=$ctrl.notificationBodyInclude></div><div ng-if=notificationGroup.isLoading class="drawer-pf-loading text-center"><span class="spinner spinner-xs spinner-inline"></span><translate>Loading More</translate></div></div><div ng-if="($ctrl.showClearAll || $ctrl.showMarkAllRead) && $ctrl.hasNotifications(notificationGroup)" class=drawer-pf-action><span class=drawer-pf-action-link ng-if="$ctrl.showMarkAllRead && $ctrl.hasUnread(notificationGroup)"><button class="btn btn-link" ng-click=$ctrl.onMarkAllRead(notificationGroup) translate>Mark All Read</button></span> <span class=drawer-pf-action-link><button class="btn btn-link" ng-if=$ctrl.showClearAll ng-click=$ctrl.onClearAll(notificationGroup)><span class="pficon pficon-close"></span> Clear All</button></span></div><div ng-if="$ctrl.actionButtonTitle && $ctrl.hasNotifications(notificationGroup)" class=drawer-pf-action><a class="btn btn-link btn-block" ng-click=$ctrl.actionButtonCallback(notificationGroup)>{{$ctrl.actionButtonTitle}}</a></div><div ng-if=!$ctrl.hasNotifications(notificationGroup)><div class=panel-body><pf-empty-state config=notificationGroup.emptyStateConfig></pf-empty-state></div></div><div ng-if=$ctrl.notificationFooterInclude ng-include src=$ctrl.notificationFooterInclude></div></div></div></div></div></div>'), 
 e.put("notification/notification-list.html", '<div data-ng-show="$ctrl.notifications.data.length > 0"><div ng-repeat="notification in $ctrl.notifications.data"><pf-inline-notification pf-notification-type=notification.type pf-notification-header=notification.header pf-notification-message=notification.message pf-notification-persistent=notification.isPersistent pf-notification-index=$index></pf-inline-notification></div></div>'), e.put("notification/toast-notification-list.html", '<div class=toast-notifications-list-pf data-ng-show="$ctrl.notifications.length > 0"><div ng-repeat="notification in $ctrl.notifications"><pf-toast-notification notification-type={{notification.type}} header={{notification.header}} message={{notification.message}} show-close="{{($ctrl.showClose || notification.isPersistent === true) && !(notification.menuActions && notification.menuActions.length > 0)}}" html-content=$ctrl.htmlContent close-callback=$ctrl.handleClose action-title={{notification.actionTitle}} action-callback=notification.actionCallback menu-actions=notification.menuActions update-viewing=$ctrl.handleViewingChange data=notification></pf-toast-notification></div></div>'), 
 e.put("notification/toast-notification.html", '<div class="toast-pf alert alert-{{$ctrl.notificationType}}" ng-class="{\'alert-dismissable\': $ctrl.showCloseButton}" ng-mouseenter=$ctrl.handleEnter() ng-mouseleave=$ctrl.handleLeave()><div uib-dropdown class="pull-right dropdown-kebab-pf" ng-if="$ctrl.menuActions && $ctrl.menuActions.length > 0"><button uib-dropdown-toggle class="btn btn-link" type=button id=dropdownKebabRight><span class="fa fa-ellipsis-v"></span></button><ul uib-dropdown-menu class=dropdown-menu-right aria-labelledby=dropdownKebabRight><li ng-repeat="menuAction in $ctrl.menuActions" role="{{menuAction.isSeparator === true ? \'separator\' : \'menuitem\'}}" ng-class="{\'divider\': menuAction.isSeparator === true, \'disabled\': menuAction.isDisabled === true}"><a ng-if="menuAction.isSeparator !== true" class=secondary-action title={{menuAction.title}} ng-click=$ctrl.handleMenuAction(menuAction)>{{menuAction.name}}</a></li></ul></div><button ng-if=$ctrl.showCloseButton type=button class=close aria-hidden=true ng-click=$ctrl.handleClose()><span class="pficon pficon-close"></span></button><div class="pull-right toast-pf-action" ng-if=$ctrl.actionTitle><a ng-click=$ctrl.handleAction()>{{$ctrl.actionTitle}}</a></div><span class="pficon pficon-ok" ng-if="$ctrl.notificationType === \'success\'"></span> <span class="pficon pficon-info" ng-if="$ctrl.notificationType === \'info\'"></span> <span class="pficon pficon-error-circle-o" ng-if="$ctrl.notificationType === \'danger\'"></span> <span class="pficon pficon-warning-triangle-o" ng-if="$ctrl.notificationType === \'warning\'"></span> <span ng-if=!$ctrl.htmlContent><strong ng-if=$ctrl.header ng-bind=$ctrl.header></strong> <span ng-bind=$ctrl.message></span></span> <span ng-if=$ctrl.htmlContent><strong ng-if=$ctrl.header ng-bind-html=$ctrl.trustAsHtml($ctrl.header)></strong> <span ng-bind-html=$ctrl.trustAsHtml($ctrl.message)></span></span></div>');
 } ]), angular.module("patternfly.pagination").run([ "$templateCache", function(e) {

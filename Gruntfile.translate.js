@@ -14,7 +14,8 @@ module.exports = function (grunt) {
                               'app/scripts/*.js',
                               'app/scripts/*/*.js',
                               'app/scripts/*/*/*.js',
-                              'bower_components/kubernetes-label-selector/labelFilter.js'
+                              'bower_components/kubernetes-label-selector/labelFilter.js',
+                              'bower_components/angular-patternfly/dist/angular-patternfly.js'
                              ]
         }
       }

@@ -287,6 +287,10 @@ msgstr "操作"
 msgid "Active Deadline:"
 msgstr "活动截止日期："
 
+#: bower_components/angular-patternfly/dist/angular-patternfly.js:8089
+msgid "Active filters:"
+msgstr "当前过滤:"
+
 #: app/scripts/directives/nav.js:577 app/views/add-config-volume.html:189
 #: app/views/attach-pvc.html:213 app/views/directives/_edit-command.html:65
 #: app/views/directives/_edit-command.html:86
@@ -892,6 +896,7 @@ msgid "Average Usage"
 msgstr "平均使用率"
 
 #: app/views/_sidebar.html:52
+#: bower_components/angular-patternfly/dist/angular-patternfly.js:18329
 msgid "Back"
 msgstr "返回"
 
@@ -1143,6 +1148,7 @@ msgstr "值不能为负数。"
 #: app/views/modals/set-home-page-modal.html:47
 #: app/views/overview/_list-row-content.html:48 app/views/set-limits.html:56
 #: app/views/util/oauth.html:12 app/views/util/oauth.html:20
+#: bower_components/angular-patternfly/dist/angular-patternfly.js:18326
 msgid "Cancel"
 msgstr "取消"
 
@@ -1966,6 +1972,10 @@ msgid ""
 "gracefully"
 msgstr "立即删除pod而不等待进程正常终止"
 
+#: app/views/projects.html:141
+msgid "Delete Project"
+msgstr ""
+
 #: app/views/directives/_edit-command.html:39
 #: app/views/directives/edit-environment-from.html:114
 #: app/views/directives/key-value-editor.html:217
@@ -2690,13 +2700,13 @@ msgstr "前往顶部"
 msgid "Grace Period:"
 msgstr "宽限期："
 
-#: app/scripts/services/membership/membership.js:49
-msgid "Group"
-msgstr "组"
-
 #: app/views/overview/_service-linking-button.html:6
 msgid "Group service to {{service.metadata.name}}"
 msgstr "将服务分组到{{service.metadata.name}}"
+
+#: app/scripts/services/membership/membership.js:49
+msgid "Groups"
+msgstr ""
 
 #: app/views/directives/add-config-to-application.html:31
 msgid "has already been added to this application."
@@ -3797,6 +3807,7 @@ msgid "New image is available"
 msgstr "新image可用"
 
 #: app/views/create-from-url.html:38 app/views/create-from-url.html:73
+#: bower_components/angular-patternfly/dist/angular-patternfly.js:18332
 msgid "Next"
 msgstr "下一步"
 
@@ -5242,8 +5253,8 @@ msgid "Service Weights"
 msgstr "服务权重"
 
 #: app/scripts/services/membership/membership.js:59
-msgid "ServiceAccount"
-msgstr "服务账户"
+msgid "ServiceAccounts"
+msgstr ""
 
 #: app/views/browse/service.html:94
 msgid "services"
@@ -6115,6 +6126,11 @@ msgstr "此 build config没有可编辑的源类型。"
 msgid "There are no limit ranges set on this project."
 msgstr "此项目没有设置限制范围。"
 
+#: bower_components/angular-patternfly/dist/angular-patternfly.js:11121
+#: bower_components/angular-patternfly/dist/angular-patternfly.js:11165
+msgid "There are no notifications to display."
+msgstr "没有要显示的通知。"
+
 #: app/views/monitoring.html:63
 msgid "There are no pods in this project."
 msgstr "这个项目没有pods。"
@@ -6281,6 +6297,10 @@ msgid ""
 "This pod will not receive traffic until all of its containers have been "
 "created."
 msgstr "pod不会收到traffic，直到它所有的容器均创建成功."
+
+#: app/views/projects.html:109
+msgid "This project has been marked for deletion."
+msgstr ""
 
 #: app/scripts/controllers/serviceInstance.js:193
 msgid "This provisioned service has been deleted."
@@ -6747,10 +6767,6 @@ msgstr "使用(所有项目)"
 msgid "Used (This Project)"
 msgstr "使用(本项目)"
 
-#: app/scripts/services/membership/membership.js:41
-msgid "User"
-msgstr "用户"
-
 #: app/views/_config-file-params.html:3
 msgid "username"
 msgstr "用户名"
@@ -6763,6 +6779,10 @@ msgstr "用户名"
 #: app/views/directives/create-secret.html:253
 msgid "Username is required."
 msgstr "用户名是必选项。"
+
+#: app/scripts/services/membership/membership.js:41
+msgid "Users"
+msgstr ""
 
 #: app/views/storage.html:66
 msgid "using"
@@ -7256,6 +7276,18 @@ msgstr "由于长时间无活动，您的会话即将过期。"
 #: app/views/directives/osc-persistent-volume-claim.html:36
 msgid "Zone"
 msgstr ""
+
+#~ msgid "Active filters1:"
+#~ msgstr "当前过滤:"
+
+#~ msgid "Group"
+#~ msgstr "组"
+
+#~ msgid "ServiceAccount"
+#~ msgstr "服务账户"
+
+#~ msgid "User"
+#~ msgstr "用户"
 
 #~ msgid ""
 #~ "Unable to calculate the bounding box for a character. Terminal will not "
