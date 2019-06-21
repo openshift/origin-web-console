@@ -16,6 +16,16 @@ msgstr ""
 msgid ". You cannot create new storage since you are at quota."
 msgstr ""
 
+#: app/scripts/services/serviceInstances.js:110
+#: app/scripts/services/serviceInstances.js:113
+msgid "' could not be deleted."
+msgstr ""
+
+#: app/scripts/services/serviceInstances.js:104
+#: app/scripts/services/serviceInstances.js:69
+msgid "' was marked for deletion."
+msgstr ""
+
 #: app/views/create/fromimage.html:215
 msgid "(Build and Runtime)"
 msgstr ""
@@ -318,6 +328,10 @@ msgstr ""
 
 #: app/views/overview.html:10
 msgid "Add content to your project from the catalog of web frameworks, databases, and other components. You may also deploy an existing image, create or replace resources from their YAML or JSON definitions, or select an item shared from another project."
+msgstr ""
+
+#: bower_components/kubernetes-label-selector/labelFilter.js:162
+msgid "Add Filter"
 msgstr ""
 
 #: app/views/_pod-template.html:16
@@ -635,6 +649,11 @@ msgstr ""
 
 #: app/scripts/directives/createSecret.js:293
 msgid "An error occurred while creating the secret."
+msgstr ""
+
+#: app/scripts/services/serviceInstances.js:75
+#: app/scripts/services/serviceInstances.js:78
+msgid "An error occurred while deleting provisioned service {{name}}."
 msgstr ""
 
 #: app/scripts/directives/createSecret.js:237
@@ -1055,6 +1074,7 @@ msgstr ""
 #: app/scripts/directives/deployImage.js:348
 #: app/scripts/directives/fromFile.js:65
 #: app/scripts/directives/processTemplate.js:166
+#: app/scripts/services/serviceInstances.js:127
 #: app/views/add-config-volume.html:193
 #: app/views/attach-pvc.html:217
 #: app/views/create-config-map.html:21
@@ -1255,6 +1275,10 @@ msgstr ""
 #: app/views/browse/build-config.html:490
 #: app/views/directives/edit-environment-variables.html:57
 msgid "Clear Changes"
+msgstr ""
+
+#: bower_components/kubernetes-label-selector/labelFilter.js:184
+msgid "Clear filters"
 msgstr ""
 
 #: app/views/directives/notifications/notification-body.html:10
@@ -1649,6 +1673,10 @@ msgstr ""
 msgid "Could not start container {{container.name}}."
 msgstr ""
 
+#: app/scripts/directives/events.js:146
+msgid "Count"
+msgstr ""
+
 #: app/views/quota.html:125
 #: app/views/quota.html:133
 #: app/views/quota.html:141
@@ -1920,6 +1948,7 @@ msgid "delete"
 msgstr ""
 
 #: app/scripts/directives/unbindService.js:75
+#: app/scripts/services/serviceInstances.js:125
 #: app/views/browse/service-instance.html:41
 #: app/views/directives/delete-button.html:10
 #: app/views/modals/delete-resource.html:80
@@ -2569,7 +2598,7 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
-#: app/views/directives/events.html:11
+#: app/views/directives/events.html:12
 #: app/views/projects.html:32
 #: app/views/projects.html:36
 msgid "Filter by keyword"
@@ -2588,7 +2617,9 @@ msgid "Filter by labels"
 msgstr ""
 
 #: app/views/monitoring.html:23
+#: app/views/monitoring.html:25
 #: app/views/overview.html:65
+#: app/views/overview.html:70
 msgid "Filter by name"
 msgstr ""
 
@@ -3143,6 +3174,7 @@ msgstr ""
 msgid "Keyword"
 msgstr ""
 
+#: app/scripts/directives/events.js:161
 #: app/views/directives/events.html:47
 msgid "Kind"
 msgstr ""
@@ -3447,6 +3479,10 @@ msgstr ""
 msgid "Marked for Deletion"
 msgstr ""
 
+#: bower_components/kubernetes-label-selector/labelFilter.js:145
+msgid "matching(...)"
+msgstr ""
+
 #: app/views/_edit-request-limit.html:11
 #: app/views/directives/osc-persistent-volume-claim.html:152
 #: app/views/modals/edit-pvc-resource.html:40
@@ -3532,6 +3568,7 @@ msgstr ""
 msgid "Memory:"
 msgstr ""
 
+#: app/scripts/directives/events.js:142
 #: app/views/directives/events.html:51
 #: app/views/overview/_notification-icon.html:44
 msgid "Message"
@@ -3723,6 +3760,7 @@ msgid "My Projects List"
 msgstr ""
 
 #: app/scripts/controllers/projects.js:105
+#: app/scripts/directives/events.js:157
 #: app/views/browse/config-maps.html:51
 #: app/views/browse/deployment.html:101
 #: app/views/browse/stateful-sets.html:48
@@ -4634,6 +4672,7 @@ msgstr ""
 msgid "Ready:"
 msgstr ""
 
+#: app/scripts/directives/events.js:138
 #: app/views/directives/events.html:50
 msgid "Reason"
 msgstr ""
@@ -5289,6 +5328,7 @@ msgstr ""
 msgid "set. Autoscaling will not work without a CPU"
 msgstr ""
 
+#: app/scripts/directives/events.js:134
 #: app/views/directives/events.html:49
 msgid "Severity"
 msgstr ""
@@ -6307,6 +6347,7 @@ msgstr ""
 msgid "This will stop any new rollouts or triggers from running until resumed."
 msgstr ""
 
+#: app/scripts/directives/events.js:130
 #: app/views/directives/events.html:40
 msgid "Time"
 msgstr ""
@@ -6683,6 +6724,10 @@ msgstr ""
 
 #: app/views/directives/create-secret.html:72
 msgid "Value of the secret will be supplied when invoking the webhook."
+msgstr ""
+
+#: bower_components/kubernetes-label-selector/labelFilter.js:151
+msgid "Value(s)"
 msgstr ""
 
 #: app/views/about.html:14

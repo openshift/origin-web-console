@@ -7112,7 +7112,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<div class=\"form-group filter-controls has-clear\">\n" +
     "<div class=\"search-pf-input-group\">\n" +
     "<label for=\"events-filter\" class=\"sr-only\" translate>Filter</label>\n" +
-    "<input type=\"search\" placeholder=\"'Filter by keyword' | translate\" class=\"form-control\" id=\"events-filter\" ng-model=\"filter.text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
+    "<input type=\"search\" placeholder=\"{{'Filter by keyword' | translate}}\" class=\"form-control\" id=\"events-filter\" ng-model=\"filter.text\" autocorrect=\"off\" autocapitalize=\"none\" spellcheck=\"false\">\n" +
     "<button type=\"button\" class=\"clear\" aria-hidden=\"true\" ng-if=\"filter.text\" ng-click=\"filter.text = ''\">\n" +
     "<span class=\"pficon pficon-close\"></span>\n" +
     "</button>\n" +
@@ -10655,7 +10655,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<uib-tabset ng-if=\"roleBindingsVersion | canI : 'list'\">\n" +
     "<uib-tab ng-repeat=\"subjectKind in subjectKindsForUI | orderBy: 'sortOrder'\" active=\"selectedTab[subjectKind.name]\" select=\"selectTab(subjectKind.name)\">\n" +
     "<uib-tab-heading>\n" +
-    "{{subjectKind.name | startCase}}s&nbsp;({{subjectKind.subjects | hashSize}})\n" +
+    "{{subjectKind.name | startCase}}&nbsp;({{subjectKind.subjects | hashSize}})\n" +
     "</uib-tab-heading>\n" +
     "<div ng-if=\"subjectKind.description\">\n" +
     "<p>\n" +
@@ -10676,7 +10676,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div ng-if=\"(subjectKind.subjects | hashSize) === 0\" class=\"membership-empty\">\n" +
     "<p>\n" +
-    "<em><translate>There are no</translate> {{ subjectKind.name | humanizeKind }}s <translate>with access to this project.</translate></em>\n" +
+    "<em><translate>There are no</translate> {{ subjectKind.name | humanizeKind }} <translate>with access to this project.</translate></em>\n" +
     "</p>\n" +
     "</div>\n" +
     "<div ng-repeat=\"subject in subjectKind.subjects\" class=\"item-row highlight-hover\">\n" +
@@ -13397,7 +13397,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<a class=\"tile-target\" ng-href=\"project/{{project.metadata.name}}\" title=\"{{project | displayName}}\">\n" +
     "<span ng-bind-html=\"project | displayName | highlightKeywords : keywords\"></span>\n" +
     "</a>\n" +
-    "<span ng-if=\"project.status.phase != 'Active'\" data-toggle=\"tooltip\" title=\"This project has been marked for deletion.\" class=\"pficon pficon-warning-triangle-o\"></span>\n" +
+    "<span ng-if=\"project.status.phase != 'Active'\" data-toggle=\"tooltip\" title=\"{{'This project has been marked for deletion.' | translate}}\" class=\"pficon pficon-warning-triangle-o\"></span>\n" +
     "</h2>\n" +
     "<small class=\"project-date\">\n" +
     "<span ng-if=\"project | displayName : true\"><span ng-bind-html=\"project.metadata.name | highlightKeywords : keywords\"></span> &ndash;</span>\n" +
@@ -13427,7 +13427,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</a>\n" +
     "</li>\n" +
     "<li role=\"menuitem\">\n" +
-    "<delete-project label=\"Delete Project\" project=\"project\" type-name-to-confirm=\"true\" stay-on-current-page=\"true\" success=\"onDeleteProject\">\n" +
+    "<delete-project label=\"{{'Delete Project' | translate}}\" project=\"project\" type-name-to-confirm=\"true\" stay-on-current-page=\"true\" success=\"onDeleteProject\">\n" +
     "</delete-project>\n" +
     "</li>\n" +
     "</ul>\n" +

@@ -9,7 +9,8 @@ angular.module("openshiftConsole")
                                                CatalogService,
                                                DataService,
                                                Logger,
-                                               NotificationsService) {
+                                               NotificationsService,
+                                               gettextCatalog) {
     var serviceClassesVersion = APIService.getPreferredVersion('clusterserviceclasses');
     var servicePlansVersion = APIService.getPreferredVersion('clusterserviceplans');
 
@@ -65,16 +66,16 @@ angular.module("openshiftConsole")
       return DataService.delete(resource, apiObject.metadata.name, context, opts).then(function() {
         NotificationsService.addNotification({
           type: "success",
-          message: "Provisioned service '" + apiObject.metadata.name + "' was marked for deletion."
+          message: "Provisioned service '" + apiObject.metadata.name + gettextCatalog.getString("' was marked for deletion.")
         });
       }, function(err) {
         NotificationsService.addNotification({
           id: "deprovision-service-error",
           type: "error",
-          message: "An error occurred while deleting provisioned service " + apiObject.metadata.name + ".",
+          message: gettextCatalog.getString("An error occurred while deleting provisioned service {{name}}.", {name: apiObject.metadata.name}),
           details: $filter('getErrorDetails')(err)
         });
-        Logger("An error occurred while deleting provisioned service " + apiObject.metadata.name + ".", err);
+        Logger(gettextCatalog.getString("An error occurred while deleting provisioned service {{name}}.", {name: apiObject.metadata.name}), err);
       });
     };
 
@@ -100,16 +101,16 @@ angular.module("openshiftConsole")
             .then(function () {
               NotificationsService.addNotification({
                 type: "success",
-                message: 'Binding ' + binding.metadata.name + "' was marked for deletion."
+                message: 'Binding ' + binding.metadata.name + gettextCatalog.getString("' was marked for deletion.")
               });
             })
             .catch(function (err) {
               NotificationsService.addNotification({
                 type: "error",
-                message: 'Binding ' + binding.metadata.name + "' could not be deleted.",
+                message: 'Binding ' + binding.metadata.name + gettextCatalog.getString("' could not be deleted."),
                 details: $filter('getErrorDetails')(err)
               });
-              Logger.error('Binding ' + binding.metadata.name + "' could not be deleted.", err);
+              Logger.error('Binding ' + binding.metadata.name + gettextCatalog.getString("' could not be deleted."), err);
             });
         });
       });
@@ -121,9 +122,9 @@ angular.module("openshiftConsole")
       var modalScope = {
         kind: apiObject.kind,
         displayName: apiObject.metadata.name,
-        okButtonText: 'Delete',
+        okButtonText: gettextCatalog.getString('Delete'),
         okButtonClass: 'btn-danger',
-        cancelButtonText: 'Cancel',
+        cancelButtonText: gettextCatalog.getString('Cancel'),
         delete: function() {
           modalInstance.close('delete');
         }

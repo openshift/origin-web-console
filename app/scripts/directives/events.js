@@ -7,7 +7,8 @@ angular.module('openshiftConsole')
     APIService,
     DataService,
     KeywordService,
-    Logger) {
+    Logger,
+    gettextCatalog) {
     return {
       restrict: 'E',
       scope: {
@@ -126,23 +127,23 @@ angular.module('openshiftConsole')
           $scope.sortConfig = {
             fields: [{
               id: 'lastTimestamp',
-              title: 'Time',
+              title: gettextCatalog.getString('Time'),
               sortType: 'alpha'
             }, {
               id: 'type',
-              title: 'Severity',
+              title: gettextCatalog.getString('Severity'),
               sortType: 'alpha'
             }, {
               id: 'reason',
-              title: 'Reason',
+              title: gettextCatalog.getString('Reason'),
               sortType: 'alpha'
             }, {
               id: 'message',
-              title: 'Message',
+              title: gettextCatalog.getString('Message'),
               sortType: 'alpha'
             }, {
               id: 'count',
-              title: 'Count',
+              title: gettextCatalog.getString('Count'),
               sortType: 'numeric'
             }],
             isAscending: true,
@@ -153,11 +154,11 @@ angular.module('openshiftConsole')
           if (showKindAndName) {
             $scope.sortConfig.fields.splice(1, 0, {
               id: 'involvedObject.name',
-              title: 'Name',
+              title: gettextCatalog.getString('Name'),
               sortType: 'alpha'
             }, {
               id: 'involvedObject.kind',
-              title: 'Kind',
+              title: gettextCatalog.getString('Kind'),
               sortType: 'alpha'
             });
           }

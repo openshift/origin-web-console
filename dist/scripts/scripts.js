@@ -1443,6 +1443,7 @@ Continue: "继续",
 "Could not prefill parameter values.": "无法预填充参数值。",
 "Could not read file": "无法读取文件",
 "Could not start container {{container.name}}.": "无法启动容器{{container.name}}。",
+Count: "次数",
 "CPU is often measured in units called 'millicores'. Each millicore is equivalent to": "CPU通常以称为“millicores”的单位来衡量。 每个millicore相当于",
 "CPU metrics might not be available. In order to use horizontal pod autoscalers,your cluster administrator must have properly configured cluster metrics.": "CPU指标可能不可用。要使用 horizontal pod autoscalers，cluster administrator必须具有正确配置的cluster metrics。",
 "CPU Request": "CPU请求",
@@ -2406,6 +2407,7 @@ to: "到",
 "to use as a volume for this": "用作卷",
 "to volume": "到卷",
 "Toggle navigation": "切换导航",
+"Tour Catalog Home": "首页导览",
 Traffic: "流量",
 "Traffic Split": "流量划分",
 "Try It": "试一试",
@@ -2571,7 +2573,7 @@ Binding: "绑定",
 "Browse resources for {{$ctrl.serviceClass.name}}:": "浏览资源 {{$ctrl.serviceClass.name}}:",
 Cancel: "取消",
 "Catalog Search": "搜索Catalog",
-"Clear All Filters": "清空筛选",
+"Clear All Filters": "清空过滤",
 "Clear Search Input": "清空输入",
 Close: "关闭",
 Configuration: "配置",
@@ -2591,8 +2593,8 @@ Error: "错误",
 "Failed to determine create project permission": "创建项目授权失败",
 "Failed to list instances in namespace": "无法在命名空间中列出实例",
 "failed to provision in": "provision失败，在",
-"Filter by Keyword": "按关键词筛选",
-"Filter projects by name": "按项目名筛选",
+"Filter by Keyword": "按关键词过滤",
+"Filter projects by name": "按项目名过滤",
 "Get Support": "获取支持",
 "Getting Started": "开始",
 "Git Repository": "Git仓库",
@@ -4138,13 +4140,13 @@ return {
 User: {
 kind: "User",
 sortOrder: 1,
-name: a.getString("User"),
+name: a.getString("Users"),
 subjects: {}
 },
 Group: {
 kind: "Group",
 sortOrder: 2,
-name: a.getString("Group"),
+name: a.getString("Groups"),
 subjects: {}
 },
 ServiceAccount: {
@@ -4152,7 +4154,7 @@ kind: "ServiceAccount",
 sortOrder: 3,
 description: a.getString("Service accounts provide a flexible way to control API access without sharing a regular user’s credentials."),
 helpLinkKey: "service_accounts",
-name: a.getString("ServiceAccount"),
+name: a.getString("ServiceAccounts"),
 subjects: {}
 }
 };
@@ -6140,12 +6142,12 @@ controller: !0
 });
 }
 };
-}), angular.module("openshiftConsole").factory("ServiceInstancesService", [ "$filter", "$q", "$uibModal", "APIService", "BindingService", "CatalogService", "DataService", "Logger", "NotificationsService", function(e, t, n, a, r, o, i, s, c) {
-var l = a.getPreferredVersion("clusterserviceclasses"), u = a.getPreferredVersion("clusterserviceplans"), d = function(e) {
+}), angular.module("openshiftConsole").factory("ServiceInstancesService", [ "$filter", "$q", "$uibModal", "APIService", "BindingService", "CatalogService", "DataService", "Logger", "NotificationsService", "gettextCatalog", function(e, t, n, a, r, o, i, s, c, l) {
+var u = a.getPreferredVersion("clusterserviceclasses"), d = a.getPreferredVersion("clusterserviceplans"), m = function(e) {
 return _.get(e, "spec.clusterServiceClassRef.name");
-}, m = function(e) {
+}, p = function(e) {
 return _.get(e, "spec.clusterServicePlanRef.name");
-}, p = function(e, n) {
+}, g = function(e, n) {
 if (angular.isDefined(n)) return t.when(n);
 var o = {
 namespace: e.metadata.namespace
@@ -6153,7 +6155,7 @@ namespace: e.metadata.namespace
 return i.list(s, o).then(function(t) {
 return n = t.by("metadata.name"), r.getBindingsForResource(n, e);
 });
-}, g = function(t) {
+}, f = function(t) {
 var n = {
 namespace: t.metadata.namespace
 }, r = a.getPreferredVersion("serviceinstances");
@@ -6164,38 +6166,42 @@ propagationPolicy: null
 return i.delete(r, t.metadata.name, n, o).then(function() {
 c.addNotification({
 type: "success",
-message: "Provisioned service '" + t.metadata.name + "' was marked for deletion."
+message: "Provisioned service '" + t.metadata.name + l.getString("' was marked for deletion.")
 });
 }, function(n) {
 c.addNotification({
 id: "deprovision-service-error",
 type: "error",
-message: "An error occurred while deleting provisioned service " + t.metadata.name + ".",
+message: l.getString("An error occurred while deleting provisioned service {{name}}.", {
+name: t.metadata.name
+}),
 details: e("getErrorDetails")(n)
-}), s("An error occurred while deleting provisioned service " + t.metadata.name + ".", n);
+}), s(l.getString("An error occurred while deleting provisioned service {{name}}.", {
+name: t.metadata.name
+}), n);
 });
-}, f = function(t, n) {
+}, h = function(t, n) {
 if (o.SERVICE_CATALOG_ENABLED) {
 var r = {
 namespace: t.metadata.namespace
-}, l = a.getPreferredVersion("servicebindings");
-p(t, n).then(function(t) {
+}, u = a.getPreferredVersion("servicebindings");
+g(t, n).then(function(t) {
 _.each(t, function(t) {
 if (!t.metadata.deletionTimestamp) {
 var n = {
 propagationPolicy: null
 };
-i.delete(l, t.metadata.name, r, n).then(function() {
+i.delete(u, t.metadata.name, r, n).then(function() {
 c.addNotification({
 type: "success",
-message: "Binding " + t.metadata.name + "' was marked for deletion."
+message: "Binding " + t.metadata.name + l.getString("' was marked for deletion.")
 });
 }).catch(function(n) {
 c.addNotification({
 type: "error",
-message: "Binding " + t.metadata.name + "' could not be deleted.",
+message: "Binding " + t.metadata.name + l.getString("' could not be deleted."),
 details: e("getErrorDetails")(n)
-}), s.error("Binding " + t.metadata.name + "' could not be deleted.", n);
+}), s.error("Binding " + t.metadata.name + l.getString("' could not be deleted."), n);
 });
 }
 });
@@ -6203,26 +6209,26 @@ details: e("getErrorDetails")(n)
 }
 };
 return {
-getServiceClassNameForInstance: d,
+getServiceClassNameForInstance: m,
 fetchServiceClassForInstance: function(e) {
-var t = d(e);
-return i.get(l, t, {});
-},
-getServicePlanNameForInstance: m,
-fetchServicePlanForInstance: function(e) {
 var t = m(e);
 return i.get(u, t, {});
 },
+getServicePlanNameForInstance: p,
+fetchServicePlanForInstance: function(e) {
+var t = p(e);
+return i.get(d, t, {});
+},
 isCurrentPlan: function(e, t) {
-return m(e) === _.get(t, "metadata.name");
+return p(e) === _.get(t, "metadata.name");
 },
 deprovision: function(e, t) {
 var a, r = {
 kind: e.kind,
 displayName: e.metadata.name,
-okButtonText: "Delete",
+okButtonText: l.getString("Delete"),
 okButtonClass: "btn-danger",
-cancelButtonText: "Cancel",
+cancelButtonText: l.getString("Cancel"),
 delete: function() {
 a.close("delete");
 }
@@ -6236,7 +6242,7 @@ return r;
 }
 }
 })).result.then(function() {
-f(e, t), g(e);
+h(e, t), f(e);
 });
 }
 };
@@ -11437,7 +11443,7 @@ isReadonly: "<?"
 },
 templateUrl: "views/directives/edit-environment-from.html"
 });
-}(), angular.module("openshiftConsole").directive("events", [ "$routeParams", "$filter", "APIService", "DataService", "KeywordService", "Logger", function(e, t, n, a, r, o) {
+}(), angular.module("openshiftConsole").directive("events", [ "$routeParams", "$filter", "APIService", "DataService", "KeywordService", "Logger", "gettextCatalog", function(e, t, n, a, r, o, i) {
 return {
 restrict: "E",
 scope: {
@@ -11446,38 +11452,38 @@ projectContext: "="
 },
 templateUrl: "views/directives/events.html",
 controller: [ "$scope", function(e) {
-var t, i = {}, s = [], c = n.getPreferredVersion("events");
+var t, s = {}, c = [], l = n.getPreferredVersion("events");
 e.filter = {
 text: ""
 };
-var l = function(e) {
-return _.isEmpty(i) ? e : _.filter(e, function(e) {
-return i[e.involvedObject.uid];
+var u = function(e) {
+return _.isEmpty(s) ? e : _.filter(e, function(e) {
+return s[e.involvedObject.uid];
 });
-}, u = [], d = _.get(e, "sortConfig.currentField.id"), m = {
+}, d = [], m = _.get(e, "sortConfig.currentField.id"), p = {
 lastTimestamp: !0
-}, p = function() {
+}, g = function() {
 var t = _.get(e, "sortConfig.currentField.id", "lastTimestamp");
-d !== t && (d = t, e.sortConfig.isAscending = !m[d]);
+m !== t && (m = t, e.sortConfig.isAscending = !p[m]);
 var n = e.sortConfig.isAscending ? "asc" : "desc";
-u = _.orderBy(e.events, [ t, "metadata.resourceVersion" ], [ n, n ]);
-}, g = [], f = function() {
-e.filterExpressions = g = r.generateKeywords(_.get(e, "filter.text"));
-}, h = [ "reason", "message", "type" ];
-e.resourceKind && e.resourceName || h.splice(0, 0, "involvedObject.name", "involvedObject.kind");
-var v = function() {
-e.filteredEvents = r.filterForKeywords(u, h, g);
+d = _.orderBy(e.events, [ t, "metadata.resourceVersion" ], [ n, n ]);
+}, f = [], h = function() {
+e.filterExpressions = f = r.generateKeywords(_.get(e, "filter.text"));
+}, v = [ "reason", "message", "type" ];
+e.resourceKind && e.resourceName || v.splice(0, 0, "involvedObject.name", "involvedObject.kind");
+var y = function() {
+e.filteredEvents = r.filterForKeywords(d, v, f);
 };
 e.$watch("filter.text", _.debounce(function() {
-f(), e.$evalAsync(v);
+h(), e.$evalAsync(y);
 }, 50, {
 maxWait: 250
 }));
-var y = function() {
-p(), v();
-}, b = _.debounce(function() {
+var b = function() {
+g(), y();
+}, S = _.debounce(function() {
 t && e.$evalAsync(function() {
-e.events = l(t), y();
+e.events = u(t), b();
 });
 }, 250, {
 leading: !0,
@@ -11485,49 +11491,49 @@ trailing: !0,
 maxWait: 1e3
 });
 e.$watch("apiObjects", function(n) {
-i = {}, _.each(n, function(e) {
-_.get(e, "metadata.uid") && (i[e.metadata.uid] = !0);
-}), e.showKindAndName = 1 !== _.size(i), t && b();
+s = {}, _.each(n, function(e) {
+_.get(e, "metadata.uid") && (s[e.metadata.uid] = !0);
+}), e.showKindAndName = 1 !== _.size(s), t && S();
 }), e.$watch("showKindAndName", function(t) {
 e.sortConfig = {
 fields: [ {
 id: "lastTimestamp",
-title: "Time",
+title: i.getString("Time"),
 sortType: "alpha"
 }, {
 id: "type",
-title: "Severity",
+title: i.getString("Severity"),
 sortType: "alpha"
 }, {
 id: "reason",
-title: "Reason",
+title: i.getString("Reason"),
 sortType: "alpha"
 }, {
 id: "message",
-title: "Message",
+title: i.getString("Message"),
 sortType: "alpha"
 }, {
 id: "count",
-title: "Count",
+title: i.getString("Count"),
 sortType: "numeric"
 } ],
 isAscending: !0,
-onSortChange: y
+onSortChange: b
 }, t && e.sortConfig.fields.splice(1, 0, {
 id: "involvedObject.name",
-title: "Name",
+title: i.getString("Name"),
 sortType: "alpha"
 }, {
 id: "involvedObject.kind",
-title: "Kind",
+title: i.getString("Kind"),
 sortType: "alpha"
 });
-}), s.push(a.watch(c, e.projectContext, function(n) {
-t = n.by("metadata.name"), b(), o.log("events (subscribe)", e.filteredEvents);
+}), c.push(a.watch(l, e.projectContext, function(n) {
+t = n.by("metadata.name"), S(), o.log("events (subscribe)", e.filteredEvents);
 }, {
 skipDigest: !0
 })), e.$on("$destroy", function() {
-a.unwatchAll(s);
+a.unwatchAll(c);
 });
 } ]
 };

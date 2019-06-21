@@ -34,7 +34,7 @@
           active="selectedTab[subjectKind.name]"
           select="selectTab(subjectKind.name)">
           <uib-tab-heading>
-            {{subjectKind.name | startCase}}s&nbsp;({{subjectKind.subjects | hashSize}})
+            {{subjectKind.name | startCase}}&nbsp;({{subjectKind.subjects | hashSize}})
           </uib-tab-heading>
           <div ng-if="subjectKind.description">
             <p>
@@ -66,7 +66,7 @@
 
             <div ng-if="(subjectKind.subjects | hashSize) === 0" class="membership-empty">
               <p>
-                <em><translate>There are no</translate> {{ subjectKind.name | humanizeKind }}s <translate>with access to this project.</translate></em>
+                <em><translate>There are no</translate> {{ subjectKind.name | humanizeKind }} <translate>with access to this project.</translate></em>
               </p>
             </div>
             <div

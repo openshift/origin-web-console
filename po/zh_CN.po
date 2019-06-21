@@ -24,6 +24,16 @@ msgstr "web console 限制文件5M以下."
 msgid ". You cannot create new storage since you are at quota."
 msgstr ". 你无法创建新存储因为配额不足."
 
+#: app/scripts/services/serviceInstances.js:110
+#: app/scripts/services/serviceInstances.js:113
+msgid "' could not be deleted."
+msgstr ""
+
+#: app/scripts/services/serviceInstances.js:104
+#: app/scripts/services/serviceInstances.js:69
+msgid "' was marked for deletion."
+msgstr ""
+
 #: app/views/create/fromimage.html:215
 msgid "(Build and Runtime)"
 msgstr "(Build和Runtime)"
@@ -354,6 +364,10 @@ msgstr ""
 "从Web框架，数据库和其他组件的目录中向项目添加内容。 您还可以部署现有镜像，从"
 "其YAML或JSON定义创建或替换资源，或选择从另一个项目共享的项目。"
 
+#: bower_components/kubernetes-label-selector/labelFilter.js:162
+msgid "Add Filter"
+msgstr ""
+
 #: app/views/_pod-template.html:16
 msgid "Add Health Checks"
 msgstr "添加健康检查"
@@ -674,6 +688,11 @@ msgstr "更新资源发生错误."
 #: app/scripts/directives/createSecret.js:293
 msgid "An error occurred while creating the secret."
 msgstr "创建secret出现错误."
+
+#: app/scripts/services/serviceInstances.js:75
+#: app/scripts/services/serviceInstances.js:78
+msgid "An error occurred while deleting provisioned service {{name}}."
+msgstr ""
 
 #: app/scripts/directives/createSecret.js:237
 msgid ""
@@ -1099,6 +1118,7 @@ msgstr "值不能为负数。"
 #: app/scripts/directives/deployImage.js:348
 #: app/scripts/directives/fromFile.js:65
 #: app/scripts/directives/processTemplate.js:166
+#: app/scripts/services/serviceInstances.js:127
 #: app/views/add-config-volume.html:193 app/views/attach-pvc.html:217
 #: app/views/create-config-map.html:21 app/views/create-from-url.html:44
 #: app/views/create-from-url.html:79
@@ -1281,6 +1301,10 @@ msgstr "清除筛选"
 #: app/views/directives/edit-environment-variables.html:57
 msgid "Clear Changes"
 msgstr "清除修改"
+
+#: bower_components/kubernetes-label-selector/labelFilter.js:184
+msgid "Clear filters"
+msgstr ""
 
 #: app/views/directives/notifications/notification-body.html:10
 msgid "Clear notification"
@@ -1664,6 +1688,10 @@ msgstr "无法读取文件"
 msgid "Could not start container {{container.name}}."
 msgstr "无法启动容器{{container.name}}。"
 
+#: app/scripts/directives/events.js:146
+msgid "Count"
+msgstr "次数"
+
 #: app/views/quota.html:125 app/views/quota.html:133 app/views/quota.html:141
 #: app/views/quota.html:33 app/views/quota.html:41 app/views/quota.html:49
 msgid "CPU"
@@ -1917,6 +1945,7 @@ msgid "delete"
 msgstr "删除"
 
 #: app/scripts/directives/unbindService.js:75
+#: app/scripts/services/serviceInstances.js:125
 #: app/views/browse/service-instance.html:41
 #: app/views/directives/delete-button.html:10
 #: app/views/modals/delete-resource.html:80
@@ -2553,7 +2582,7 @@ msgstr "具有凭据和其他配置的文件，用于连接到安全的image reg
 msgid "Filter"
 msgstr "过滤"
 
-#: app/views/directives/events.html:11 app/views/projects.html:32
+#: app/views/directives/events.html:12 app/views/projects.html:32
 #: app/views/projects.html:36
 msgid "Filter by keyword"
 msgstr "按关键词过滤"
@@ -2570,7 +2599,8 @@ msgstr "按标签过滤"
 msgid "Filter by labels"
 msgstr "按标签过滤"
 
-#: app/views/monitoring.html:23 app/views/overview.html:65
+#: app/views/monitoring.html:23 app/views/monitoring.html:25
+#: app/views/overview.html:65 app/views/overview.html:70
 msgid "Filter by name"
 msgstr "按名称过滤"
 
@@ -3138,7 +3168,7 @@ msgstr "具有有效名称的keys将添加为环境变量。"
 msgid "Keyword"
 msgstr "关键词"
 
-#: app/views/directives/events.html:47
+#: app/scripts/directives/events.js:161 app/views/directives/events.html:47
 msgid "Kind"
 msgstr "类型"
 
@@ -3414,6 +3444,10 @@ msgstr "标记阅读"
 msgid "Marked for Deletion"
 msgstr "标记为删除"
 
+#: bower_components/kubernetes-label-selector/labelFilter.js:145
+msgid "matching(...)"
+msgstr ""
+
 #: app/views/_edit-request-limit.html:11
 #: app/views/directives/osc-persistent-volume-claim.html:152
 #: app/views/modals/edit-pvc-resource.html:40 app/views/quota.html:156
@@ -3492,7 +3526,7 @@ msgstr "内存和存储以二进制单位测量"
 msgid "Memory:"
 msgstr "内存："
 
-#: app/views/directives/events.html:51
+#: app/scripts/directives/events.js:142 app/views/directives/events.html:51
 #: app/views/overview/_notification-icon.html:44
 msgid "Message"
 msgstr "消息"
@@ -3689,12 +3723,12 @@ msgstr "我的项目"
 msgid "My Projects List"
 msgstr "我的项目列表"
 
-#: app/scripts/controllers/projects.js:105 app/views/browse/config-maps.html:51
-#: app/views/browse/deployment.html:101 app/views/browse/stateful-sets.html:48
-#: app/views/builds.html:51 app/views/create/fromimage.html:22
-#: app/views/deployments.html:132 app/views/deployments.html:173
-#: app/views/deployments.html:201 app/views/deployments.html:51
-#: app/views/directives/deploy-image.html:123
+#: app/scripts/controllers/projects.js:105 app/scripts/directives/events.js:157
+#: app/views/browse/config-maps.html:51 app/views/browse/deployment.html:101
+#: app/views/browse/stateful-sets.html:48 app/views/builds.html:51
+#: app/views/create/fromimage.html:22 app/views/deployments.html:132
+#: app/views/deployments.html:173 app/views/deployments.html:201
+#: app/views/deployments.html:51 app/views/directives/deploy-image.html:123
 #: app/views/directives/edit-config-map-or-secret.html:5
 #: app/views/directives/events.html:44
 #: app/views/directives/osc-persistent-volume-claim.html:64
@@ -4589,7 +4623,7 @@ msgstr "准备"
 msgid "Ready:"
 msgstr "准备："
 
-#: app/views/directives/events.html:50
+#: app/scripts/directives/events.js:138 app/views/directives/events.html:50
 msgid "Reason"
 msgstr "原因"
 
@@ -5248,7 +5282,7 @@ msgstr "设置为secret中的key {{entry.valueFrom.secretKeyRef.key}}"
 msgid "set. Autoscaling will not work without a CPU"
 msgstr "设置。没有CPU自动扩容无法工作"
 
-#: app/views/directives/events.html:49
+#: app/scripts/directives/events.js:134 app/views/directives/events.html:49
 msgid "Severity"
 msgstr "严重"
 
@@ -6368,7 +6402,7 @@ msgstr "将从deployment移除卷."
 msgid "This will stop any new rollouts or triggers from running until resumed."
 msgstr "这将阻止任何新的rollouts或triggers运行直到恢复。"
 
-#: app/views/directives/events.html:40
+#: app/scripts/directives/events.js:130 app/views/directives/events.html:40
 msgid "Time"
 msgstr "时间"
 
@@ -6511,7 +6545,7 @@ msgstr "切换导航"
 
 #: app/scripts/extensions/nav/helpDropdown.js:23
 msgid "Tour Catalog Home"
-msgstr ""
+msgstr "首页导览"
 
 #: app/views/browse/route.html:116 app/views/browse/service.html:89
 #: app/views/overview/_traffic-percent.html:9
@@ -6520,7 +6554,7 @@ msgstr "流量"
 
 #: app/views/directives/route-service-bar-chart.html:2
 msgid "Traffic Split"
-msgstr "流量划分"
+msgstr "流量分发"
 
 #: app/views/browse/deployment-config.html:138 app/views/deployments.html:55
 msgid "Trigger"
@@ -6745,6 +6779,10 @@ msgstr ""
 #: app/views/directives/create-secret.html:72
 msgid "Value of the secret will be supplied when invoking the webhook."
 msgstr "调用webhook时将提供secret值。"
+
+#: bower_components/kubernetes-label-selector/labelFilter.js:151
+msgid "Value(s)"
+msgstr ""
 
 #: app/views/about.html:14 app/views/browse/deployment.html:100
 #: app/views/catalog/_image.html:29

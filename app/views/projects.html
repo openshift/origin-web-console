@@ -106,7 +106,7 @@
                                 </a>
                                 <span ng-if="project.status.phase != 'Active'"
                                       data-toggle="tooltip"
-                                      title="This project has been marked for deletion."
+                                      title="{{'This project has been marked for deletion.' | translate}}"
                                       class="pficon pficon-warning-triangle-o"></span>
                               </h2>
                               <small class="project-date">
@@ -138,7 +138,7 @@
                             </li>
                             <li role="menuitem">
                               <delete-project
-                                label="Delete Project"
+                                label="{{'Delete Project' | translate}}"
                                 project="project"
                                 type-name-to-confirm="true"
                                 stay-on-current-page="true"

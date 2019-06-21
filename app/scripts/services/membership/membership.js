@@ -38,7 +38,7 @@ angular
          "User":{
             "kind":"User",
             "sortOrder":1,
-            "name":gettextCatalog.getString("User"),
+            "name":gettextCatalog.getString("Users"),
             "subjects":{
 
             }
@@ -46,7 +46,7 @@ angular
          "Group":{
             "kind":"Group",
             "sortOrder":2,
-            "name":gettextCatalog.getString("Group"),
+            "name":gettextCatalog.getString("Groups"),
             "subjects":{
 
             }
@@ -56,7 +56,7 @@ angular
             "sortOrder":3,
             "description":gettextCatalog.getString("Service accounts provide a flexible way to control API access without sharing a regular user’s credentials."),
             "helpLinkKey":"service_accounts",
-            "name":gettextCatalog.getString("ServiceAccount"),
+            "name":gettextCatalog.getString("ServiceAccounts"),
             "subjects":{
 
             }
