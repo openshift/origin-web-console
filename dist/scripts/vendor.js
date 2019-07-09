@@ -76042,10 +76042,9 @@ return isNaN(Number(e)) ? e : Number(e);
 }
 function i(e) {
 if ("string" != typeof e) throw new TypeError("Invalid argument expected string");
-if (!r.test(e)) throw new Error("Invalid argument not valid semver ('" + e + "' received)");
+if (!a.test(e)) throw new Error("Invalid argument not valid semver ('" + e + "' received)");
 }
-var r = /^v?(?:\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+))?(?:-[\da-z\-]+(?:\.[\da-z\-]+)*)?(?:\+[\da-z\-]+(?:\.[\da-z\-]+)*)?)?)?$/i;
-return function(e, r) {
+function r(e, r) {
 [ e, r ].forEach(i);
 for (var o = t(e), a = t(r), s = 0; s < Math.max(o.length - 1, a.length - 1); s++) {
 var l = parseInt(o[s] || 0, 10), c = parseInt(a[s] || 0, 10);
@@ -76063,7 +76062,30 @@ if (f[s] > h[s]) return -1;
 }
 } else if (u || d) return u ? -1 : 1;
 return 0;
-};
+}
+function o(e) {
+if ("string" != typeof e) throw new TypeError("Invalid operator type, expected string but got " + typeof e);
+if (-1 === s.indexOf(e)) throw new TypeError("Invalid operator, expected one of " + s.join("|"));
+}
+var a = /^v?(?:\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+))?(?:-[\da-z\-]+(?:\.[\da-z\-]+)*)?(?:\+[\da-z\-]+(?:\.[\da-z\-]+)*)?)?)?$/i, s = [ ">", ">=", "=", "<", "<=" ];
+return r.compare = function(e, t, n) {
+switch (o(n), n) {
+case ">":
+return r(e, t) > 0;
+
+case ">=":
+return r(e, t) >= 0;
+
+case "<":
+return r(e, t) < 0;
+
+case "<=":
+return r(e, t) <= 0;
+
+default:
+return 0 === r(e, t);
+}
+}, r;
 }), function() {
 "use strict";
 if (Logger.setLevel(Logger.INFO), window.LogBuffer = 100, "localStorage" in window) {

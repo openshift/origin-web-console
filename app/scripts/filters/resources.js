@@ -96,7 +96,10 @@ angular.module('openshiftConsole')
 
       var slashSplit = imageWithoutID.split("/");
       var semiColonSplit;
-      if (slashSplit.length === 3) {
+      if (slashSplit.length > 3) {
+        return imageWithoutID;
+      }
+      else if (slashSplit.length === 3) {
         semiColonSplit = slashSplit[2].split(":");
         return slashSplit[1] + '/' + semiColonSplit[0];
       }
