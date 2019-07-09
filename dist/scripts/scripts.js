@@ -15628,7 +15628,7 @@ return e ? e.contains(":") ? e.split(":")[1] : e : "";
 return function(e) {
 if (!e) return "";
 var t, n = e.split("@")[0], r = n.split("/");
-return 3 === r.length ? (t = r[2].split(":"), r[1] + "/" + t[0]) : 2 === r.length ? n : 1 === r.length ? (t = n.split(":"))[0] : void 0;
+return r.length > 3 ? n : 3 === r.length ? (t = r[2].split(":"), r[1] + "/" + t[0]) : 2 === r.length ? n : 1 === r.length ? (t = n.split(":"))[0] : void 0;
 };
 }).filter("stripTag", function() {
 return function(e) {
