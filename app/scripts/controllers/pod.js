@@ -147,10 +147,9 @@ angular.module('openshiftConsole')
           }, 50);
           return;
         }
-        var windowWidth = win.width();
         var windowHeight = win.height();
-        var termWidth = windowWidth - r.left - 54; // we want 54px right padding, includes 6px border within the container terminal
-        var termHeight = windowHeight - r.top - 36; // we want 36px bottom padding, includes 6px border within the container terminal
+        var termWidth = r.width - 17; // 17px is roughly the width of an average scrollbar
+        var termHeight = windowHeight - r.top - 36;
         $scope.terminalCols = Math.max(_.floor(termWidth / characterBoundingBox.width), 80);
         $scope.terminalRows = Math.max(_.floor(termHeight / characterBoundingBox.height), 24);
       });
