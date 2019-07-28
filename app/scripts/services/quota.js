@@ -71,7 +71,7 @@ angular.module("openshiftConsole")
       if (resource.kind === 'Pod') {
         return filterQuotasForPodTemplate(resource, quotas);
       }
-      else if (_.has(resource, "spec.template")) {
+      else if (_.has(resource, "spec.template.spec")) {
         return filterQuotasForPodTemplate(resource.spec.template, quotas);
       }
       // We plan on having other resources that scopes will affect
@@ -156,7 +156,7 @@ angular.module("openshiftConsole")
     var getResourceLimitAlerts = function(resource, quota){
       var alerts = [];
       var podTemplate = resource.kind === "Pod" ? resource : _.get(resource, 'spec.template');
-      if (!podTemplate) {
+      if (!podTemplate || !podTemplate.spec) {
         // Didn't have a pod template, so we don't care about this resource
         return alerts;
       }
