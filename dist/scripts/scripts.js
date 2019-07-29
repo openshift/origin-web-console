@@ -3790,7 +3790,7 @@ return !0;
 });
 });
 }, S = function(e, t) {
-return e ? "Pod" === e.kind ? b(e, t) : _.has(e, "spec.template") ? b(e.spec.template, t) : t : t;
+return e ? "Pod" === e.kind ? b(e, t) : _.has(e, "spec.template.spec") ? b(e.spec.template, t) : t : t;
 }, C = e("humanizeQuotaResource"), w = e("humanizeKind"), P = function(e, t, n) {
 var r = e.status.total || e.status;
 if (f(r.hard[n]) <= f(r.used[n])) {
@@ -3836,7 +3836,7 @@ target: "_blank"
 }
 }, I = function(e, t) {
 var n = [], r = "Pod" === e.kind ? e : _.get(e, "spec.template");
-return r ? (_.each([ "cpu", "memory", "requests.cpu", "requests.memory", "limits.cpu", "limits.memory", "pods" ], function(a) {
+return r && r.spec ? (_.each([ "cpu", "memory", "requests.cpu", "requests.memory", "limits.cpu", "limits.memory", "pods" ], function(a) {
 var o = t.status.total || t.status;
 if (("Pod" !== e.kind || "pods" !== a) && _.has(o, [ "hard", a ]) && _.has(o, [ "used", a ])) {
 var i = P(t, e, a);
