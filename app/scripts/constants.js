@@ -670,7 +670,7 @@ angular.extend(window.OPENSHIFT_CONSTANTS, {
     'icon-nginx': 'nginx.svg',
     'icon-nodejs': 'nodejs.svg',
     'icon-openjdk': 'openjdk.svg',
-    'icon-openliberty': 'openliberty.png',
+    'icon-openliberty': 'openliberty.svg',
     'icon-openshift': 'openshift.svg',
     'icon-openstack': 'openstack.svg',
     'icon-other-linux': 'other-linux.svg',
