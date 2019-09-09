@@ -76067,24 +76067,17 @@ function o(e) {
 if ("string" != typeof e) throw new TypeError("Invalid operator type, expected string but got " + typeof e);
 if (-1 === s.indexOf(e)) throw new TypeError("Invalid operator, expected one of " + s.join("|"));
 }
-var a = /^v?(?:\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+))?(?:-[\da-z\-]+(?:\.[\da-z\-]+)*)?(?:\+[\da-z\-]+(?:\.[\da-z\-]+)*)?)?)?$/i, s = [ ">", ">=", "=", "<", "<=" ];
+var a = /^v?(?:\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+)(\.(?:[x*]|\d+))?(?:-[\da-z\-]+(?:\.[\da-z\-]+)*)?(?:\+[\da-z\-]+(?:\.[\da-z\-]+)*)?)?)?$/i, s = [ ">", ">=", "=", "<", "<=" ], l = {
+">": [ 1 ],
+">=": [ 0, 1 ],
+"=": [ 0 ],
+"<=": [ -1, 0 ],
+"<": [ -1 ]
+};
 return r.compare = function(e, t, n) {
-switch (o(n), n) {
-case ">":
-return r(e, t) > 0;
-
-case ">=":
-return r(e, t) >= 0;
-
-case "<":
-return r(e, t) < 0;
-
-case "<=":
-return r(e, t) <= 0;
-
-default:
-return 0 === r(e, t);
-}
+o(n);
+var i = r(e, t);
+return l[n].indexOf(i) > -1;
 }, r;
 }), function() {
 "use strict";
