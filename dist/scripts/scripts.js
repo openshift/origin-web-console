@@ -1115,6 +1115,7 @@ LOGOS: {
 "icon-nginx": "nginx.svg",
 "icon-nodejs": "nodejs.svg",
 "icon-openjdk": "openjdk.svg",
+"icon-openliberty": "openliberty.png",
 "icon-openshift": "openshift.svg",
 "icon-openstack": "openstack.svg",
 "icon-other-linux": "other-linux.svg",
