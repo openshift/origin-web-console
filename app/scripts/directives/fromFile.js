@@ -5,6 +5,7 @@ angular.module("openshiftConsole")
                                   $location,
                                   $q,
                                   $uibModal,
+                                  APIDiscovery,
                                   APIService,
                                   CachedTemplateService,
                                   DataService,
@@ -321,7 +322,7 @@ angular.module("openshiftConsole")
         function checkIfExists(item) {
 
           // check for invalid and unsupported object kind and version
-          var resourceGroupVersion = APIService.objectToResourceGroupVersion(item);
+          var resourceGroupVersion = APIDiscovery.toResourceGroupVersion(item);
           if (!resourceGroupVersion) {
             $scope.errorOccurred = true;
             $scope.error = { message: APIService.invalidObjectKindOrVersion(item) };
@@ -363,7 +364,7 @@ angular.module("openshiftConsole")
           var resource;
           if (!_.isEmpty($scope.createResources)) {
             resource = _.head($scope.createResources);
-            DataService.create(APIService.objectToResourceGroupVersion(resource), null, resource, {namespace: $scope.input.selectedProject.metadata.name}).then(
+            DataService.create(APIDiscovery.toResourceGroupVersion(resource), null, resource, {namespace: $scope.input.selectedProject.metadata.name}).then(
               // create resource success
               function() {
                 if (!$scope.isDialog) {
@@ -387,7 +388,7 @@ angular.module("openshiftConsole")
               });
           } else {
             resource = _.head($scope.updateResources);
-            DataService.update(APIService.objectToResourceGroupVersion(resource), resource.metadata.name, resource, {namespace: $scope.input.selectedProject.metadata.name}).then(
+            DataService.update(APIDiscovery.toResourceGroupVersion(resource), resource.metadata.name, resource, {namespace: $scope.input.selectedProject.metadata.name}).then(
               // update resource success
               function() {
                 if (!$scope.isDialog) {

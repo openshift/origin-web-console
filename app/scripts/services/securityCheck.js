@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module("openshiftConsole")
-  .factory("SecurityCheckService", function(APIService, $filter, Constants) {
+  .factory("SecurityCheckService", function(APIDiscovery, APIService, $filter, Constants) {
     var humanizeKind = $filter('humanizeKind');
     var getSecurityAlerts = function(resources, project) {
       var alerts = [];
@@ -15,7 +15,7 @@ angular.module("openshiftConsole")
           // This isn't a valid API object
           return;
         }
-        var rgv = APIService.objectToResourceGroupVersion(resource);
+        var rgv = APIDiscovery.toResourceGroupVersion(resource);
         var apiInfo = APIService.apiInfo(rgv);
         if (!apiInfo) {
           unrecognizedResources.push(resource);

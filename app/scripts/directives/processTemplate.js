@@ -7,6 +7,7 @@
       '$q',
       '$scope',
       '$uibModal',
+      'APIDiscovery',
       'APIService',
       'DataService',
       'Navigate',
@@ -35,6 +36,7 @@
                           $q,
                           $scope,
                           $uibModal,
+                          APIDiscovery,
                           APIService,
                           DataService,
                           Navigate,
@@ -110,7 +112,7 @@
         var alerts = [];
         var hasErrors = false;
         _.each(processedResources, function(obj) {
-          var groupVersionKind = APIService.objectToResourceGroupVersion(obj);
+          var groupVersionKind = APIDiscovery.toResourceGroupVersion(obj);
           chain = chain.then(function() {
             return DataService.create(groupVersionKind, null, obj, context)
               .then(function() {
