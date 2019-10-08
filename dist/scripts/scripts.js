@@ -2402,9 +2402,8 @@ apiVersion: n.toAPIVersion(c),
 kind: "DeploymentConfigRollback",
 name: m,
 spec: {
-from: {
-name: u
-},
+from: {},
+revision: _.toInteger(_.get(t, [ "metadata", "annotations", "openshift.io/deployment-config.latest-version" ])),
 includeTemplate: !0,
 includeReplicationMeta: a,
 includeStrategy: i,

@@ -112,9 +112,8 @@ angular.module("openshiftConsole")
         kind: "DeploymentConfigRollback",
         name: deploymentConfigName,
         spec: {
-          from: {
-            name: deploymentName
-          },
+          from: {},
+          revision: _.toInteger(_.get(deployment, ['metadata', 'annotations', 'openshift.io/deployment-config.latest-version'])),
           includeTemplate: true,
           includeReplicationMeta: changeScaleSettings,
           includeStrategy: changeStrategy,
