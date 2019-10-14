@@ -6806,6 +6806,8 @@ e.configMaps = _.sortBy(t, "metadata.name"), c();
 o.get(t.project).then(_.spread(function(t, n) {
 e.project = t, s.push(r.watch(e.configMapsVersion, n, function(t) {
 i = t.by("metadata.name"), l(), u(), e.loaded = !0;
+}, {
+partialObjectMetadataList: !0
 })), a.onActiveFiltersChanged(function() {
 e.$evalAsync(u);
 }), e.$on("$destroy", function() {
