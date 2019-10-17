@@ -611,7 +611,8 @@ module.exports = function (grunt) {
         noColor: false,
         args: {
           suite: grunt.option('suite') || 'full',
-          baseUrl: grunt.option('baseUrl') || ("https://localhost:9000/" + contextRoot + "/")
+          baseUrl: grunt.option('baseUrl') || ("https://localhost:9000/" + contextRoot + "/"),
+          browser: grunt.option('browser') || "firefox"
         }
       },
       default: {
