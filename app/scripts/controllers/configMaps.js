@@ -50,7 +50,7 @@ angular.module('openshiftConsole')
           updateLabelSuggestions();
           updateConfigMaps();
           $scope.loaded = true;
-        }));
+        }, { partialObjectMetadataList: true }));
 
         LabelFilter.onActiveFiltersChanged(function() {
           $scope.$evalAsync(updateConfigMaps);

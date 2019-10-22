@@ -46316,7 +46316,7 @@ for (n = 0, i = o.length; n < i; n++) r = o[n]._ColReorder_iOrigCol, t.columns[r
 _fnMouseListener: function(t, n) {
 var i = this;
 e(n).on("mousedown.ColReorder", function(e) {
-i.s.enable && i._fnMouseDown.call(i, e, n);
+i.s.enable && 1 === e.which && i._fnMouseDown.call(i, e, n);
 }).on("touchstart.ColReorder", function(e) {
 i.s.enable && i._fnMouseDown.call(i, e, n);
 });
@@ -46330,6 +46330,7 @@ o._fnMouseUp.call(o, e);
 }));
 },
 _fnMouseMove: function(e) {
+var t = this;
 if (null === this.dom.drag) {
 if (Math.pow(Math.pow(this._fnCursorPosition(e, "pageX") - this.s.mouse.startX, 2) + Math.pow(this._fnCursorPosition(e, "pageY") - this.s.mouse.startY, 2), .5) < 5) return;
 this._fnCreateDragNode();
@@ -46338,25 +46339,62 @@ this.dom.drag.css({
 left: this._fnCursorPosition(e, "pageX") - this.s.mouse.offsetX,
 top: this._fnCursorPosition(e, "pageY") - this.s.mouse.offsetY
 });
-for (var t = !1, n = this.s.mouse.toIndex, i = 1, r = this.s.aoTargets.length; i < r; i++) if (this._fnCursorPosition(e, "pageX") < this.s.aoTargets[i - 1].x + (this.s.aoTargets[i].x - this.s.aoTargets[i - 1].x) / 2) {
-this.dom.pointer.css("left", this.s.aoTargets[i - 1].x), this.s.mouse.toIndex = this.s.aoTargets[i - 1].to, t = !0;
+for (var n, i = this.s.mouse.toIndex, r = this._fnCursorPosition(e, "pageX"), o = function() {
+for (var e = t.s.aoTargets.length - 1; e > 0; e--) if (t.s.aoTargets[e].x !== t.s.aoTargets[e - 1].x) return t.s.aoTargets[e];
+}, a = 1; a < this.s.aoTargets.length; a++) {
+var s = function(e) {
+for (;e >= 0; ) {
+if (--e <= 0) return null;
+if (t.s.aoTargets[e + 1].x !== t.s.aoTargets[e].x) return t.s.aoTargets[e];
+}
+}(a);
+s || (s = function() {
+for (var e = 0; e < t.s.aoTargets.length - 1; e++) if (t.s.aoTargets[e].x !== t.s.aoTargets[e + 1].x) return t.s.aoTargets[e];
+}());
+var l = s.x + (this.s.aoTargets[a].x - s.x) / 2;
+if (this._fnIsLtr()) {
+if (r < l) {
+n = s;
 break;
 }
-t || (this.dom.pointer.css("left", this.s.aoTargets[this.s.aoTargets.length - 1].x), this.s.mouse.toIndex = this.s.aoTargets[this.s.aoTargets.length - 1].to), this.s.init.bRealtime && n !== this.s.mouse.toIndex && (this.s.dt.oInstance.fnColReorder(this.s.mouse.fromIndex, this.s.mouse.toIndex), this.s.mouse.fromIndex = this.s.mouse.toIndex, "" === this.s.dt.oScroll.sX && "" === this.s.dt.oScroll.sY || this.s.dt.oInstance.fnAdjustColumnSizing(!1), this._fnRegions());
+} else if (r > l) {
+n = s;
+break;
+}
+}
+n ? (this.dom.pointer.css("left", n.x), this.s.mouse.toIndex = n.to) : (this.dom.pointer.css("left", o().x), this.s.mouse.toIndex = o().to), this.s.init.bRealtime && i !== this.s.mouse.toIndex && (this.s.dt.oInstance.fnColReorder(this.s.mouse.fromIndex, this.s.mouse.toIndex), this.s.mouse.fromIndex = this.s.mouse.toIndex, "" === this.s.dt.oScroll.sX && "" === this.s.dt.oScroll.sY || this.s.dt.oInstance.fnAdjustColumnSizing(!1), this._fnRegions());
 },
 _fnMouseUp: function(t) {
 e(n).off(".ColReorder"), null !== this.dom.drag && (this.dom.drag.remove(), this.dom.pointer.remove(), this.dom.drag = null, this.dom.pointer = null, this.s.dt.oInstance.fnColReorder(this.s.mouse.fromIndex, this.s.mouse.toIndex, !0), this._fnSetColumnIndexes(), "" === this.s.dt.oScroll.sX && "" === this.s.dt.oScroll.sY || this.s.dt.oInstance.fnAdjustColumnSizing(!1), this.s.dt.oInstance.oApi._fnSaveState(this.s.dt), null !== this.s.reorderCallback && this.s.reorderCallback.call(this));
 },
 _fnRegions: function() {
-var t = this.s.dt.aoColumns;
-this.s.aoTargets.splice(0, this.s.aoTargets.length), this.s.aoTargets.push({
-x: e(this.s.dt.nTable).offset().left,
-to: 0
+var t = this.s.dt.aoColumns, n = this._fnIsLtr();
+this.s.aoTargets.splice(0, this.s.aoTargets.length);
+var i = e(this.s.dt.nTable).offset().left, r = [];
+e.each(t, function(t, o) {
+if (o.bVisible && "none" !== o.nTh.style.display) {
+var a = e(o.nTh), s = a.offset().left;
+n && (s += a.outerWidth()), r.push({
+index: t,
+bound: s
+}), i = s;
+} else r.push({
+index: t,
+bound: i
 });
-for (var n = 0, i = this.s.aoTargets[0].x, r = 0, o = t.length; r < o; r++) r != this.s.mouse.fromIndex && n++, t[r].bVisible && "none" !== t[r].nTh.style.display && (i += e(t[r].nTh).outerWidth(), this.s.aoTargets.push({
-x: i,
-to: n
-}));
+});
+var o = r[0], a = e(t[o.index].nTh).outerWidth();
+this.s.aoTargets.push({
+to: 0,
+x: o.bound - a
+});
+for (var s = 0; s < r.length; s++) {
+var l = r[s], c = l.index;
+l.index < this.s.mouse.fromIndex && c++, this.s.aoTargets.push({
+to: c,
+x: l.bound
+});
+}
 0 !== this.s.fixedRight && this.s.aoTargets.splice(this.s.aoTargets.length - this.s.fixedRight), 0 !== this.s.fixed && this.s.aoTargets.splice(0, this.s.fixed);
 },
 _fnCreateDragNode: function() {
@@ -46380,6 +46418,9 @@ e(n.nTh).attr("data-column-index", t);
 },
 _fnCursorPosition: function(e, t) {
 return -1 !== e.type.indexOf("touch") ? e.originalEvent.touches[0][t] : e[t];
+},
+_fnIsLtr: function() {
+return "rtl" !== e(this.s.dt.nTable).css("direction");
 }
 }), l.defaults = {
 aiOrder: null,
@@ -46388,7 +46429,7 @@ bRealtime: !0,
 iFixedColumnsLeft: 0,
 iFixedColumnsRight: 0,
 fnReorderCallback: null
-}, l.version = "1.5.1", e.fn.dataTable.ColReorder = l, e.fn.DataTable.ColReorder = l, "function" == typeof e.fn.dataTable && "function" == typeof e.fn.dataTableExt.fnVersionCheck && e.fn.dataTableExt.fnVersionCheck("1.10.8") ? e.fn.dataTableExt.aoFeatures.push({
+}, l.version = "1.5.2", e.fn.dataTable.ColReorder = l, e.fn.DataTable.ColReorder = l, "function" == typeof e.fn.dataTable && "function" == typeof e.fn.dataTableExt.fnVersionCheck && e.fn.dataTableExt.fnVersionCheck("1.10.8") ? e.fn.dataTableExt.aoFeatures.push({
 fnInit: function(e) {
 var t = e.oInstance;
 if (e._colReorder) t.oApi._fnLog(e, 1, "ColReorder attempted to initialise twice. Ignoring second"); else {
@@ -46418,7 +46459,7 @@ n._colReorder.fnOrder(e, t);
 }), e.fn.dataTable.Api.register("colReorder.transpose()", function(e, t) {
 return this.context.length && this.context[0]._colReorder ? this.context[0]._colReorder.fnTranspose(e, t) : e;
 }), e.fn.dataTable.Api.register("colReorder.move()", function(e, t, n, i) {
-return this.context.length && this.context[0]._colReorder.s.dt.oInstance.fnColReorder(e, t, n, i), this;
+return this.context.length && (this.context[0]._colReorder.s.dt.oInstance.fnColReorder(e, t, n, i), this.context[0]._colReorder._fnSetColumnIndexes()), this;
 }), e.fn.dataTable.Api.register("colReorder.enable()", function(e) {
 return this.iterator("table", function(t) {
 t._colReorder && t._colReorder.fnEnable(e);
