@@ -10543,7 +10543,7 @@ if (!_.isEmpty(r)) {
 t.storageClasses = _.sortBy(r, "metadata.name");
 var a = e("annotation");
 if (t.defaultStorageClass = _.find(t.storageClasses, function(e) {
-return "true" === a(e, "storageclass.beta.kubernetes.io/is-default-class");
+return "true" === a(e, "storageclass.kubernetes.io/is-default-class");
 }), t.defaultStorageClass) t.claim.storageClass = t.defaultStorageClass; else {
 var o = {
 metadata: {

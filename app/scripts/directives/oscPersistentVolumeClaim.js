@@ -135,7 +135,7 @@ angular.module("openshiftConsole")
            scope.storageClasses = _.sortBy(storageClasses, 'metadata.name');
            var annotation = $filter('annotation');
            scope.defaultStorageClass = _.find(scope.storageClasses, function(storageClass) {
-             return annotation(storageClass, 'storageclass.beta.kubernetes.io/is-default-class') === 'true';
+             return annotation(storageClass, 'storageclass.kubernetes.io/is-default-class') === 'true';
            });
            if (!scope.defaultStorageClass)  { //if there is no default, set a no storage class option
              var noclass = {
