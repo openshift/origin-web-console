@@ -1569,14 +1569,29 @@ loadJSON: function(t, n) {
 return JSON.parse(e[t].getItem("openshift/" + n) || "{}");
 }
 };
-} ]), angular.module("openshiftConsole").factory("APIDiscovery", [ "LOGGING_URL", "METRICS_URL", "$q", "$filter", function(e, t, n, r) {
+} ]), angular.module("openshiftConsole").factory("APIDiscovery", [ "LOGGING_URL", "METRICS_URL", "APIService", "$q", "$filter", function(e, t, n, r, a) {
 return {
 getLoggingURL: function(t) {
-var a = e, o = r("annotation")(t, "loggingUIHostname");
-return o && (a = "https://" + o), n.when(a);
+var n = e, o = a("annotation")(t, "loggingUIHostname");
+return o && (n = "https://" + o), r.when(n);
 },
 getMetricsURL: function() {
-return n.when(t);
+return r.when(t);
+},
+toResourceGroupVersion: function(e) {
+var t, r = n.parseGroupVersion(e.apiVersion);
+if (r.group) {
+t = _.get(window.OPENSHIFT_CONFIG, [ "apis", "groups", r.group, "versions", r.version, "resources" ]);
+var a = _.find(t, {
+kind: e.kind
+});
+if (a) return {
+resource: a.name,
+group: r.group,
+version: r.version
+};
+}
+return n.objectToResourceGroupVersion(e);
 }
 };
 } ]), angular.module("openshiftConsole").factory("AggregatedLoggingService", [ "$q", "Logger", "DataService", function(e, t, n) {
@@ -3957,70 +3972,70 @@ n.$emit("NotificationDrawerWrapper.clear", e);
 return _.each(e, s), _.each(a, s), i;
 }
 };
-} ]), angular.module("openshiftConsole").factory("SecurityCheckService", [ "APIService", "$filter", "Constants", function(e, t, n) {
-var r = t("humanizeKind");
+} ]), angular.module("openshiftConsole").factory("SecurityCheckService", [ "APIDiscovery", "APIService", "$filter", "Constants", function(e, t, n, r) {
+var a = n("humanizeKind");
 return {
-getSecurityAlerts: function(t, a) {
-var o = [], i = [], s = [], c = [], l = [], u = [];
-if (_.each(t, function(t) {
-if (_.get(t, "kind")) {
-var r = e.objectToResourceGroupVersion(t), a = e.apiInfo(r);
-if (a) if (a.namespaced) if ("rolebindings" !== r.resource || "" !== r.group && "rbac.authorization.k8s.io" !== r.group) "roles" !== r.resource || "" !== r.group && "rbac.authorization.k8s.io" !== r.group ? _.find(n.SECURITY_CHECK_WHITELIST, {
-resource: r.resource,
-group: r.group
-}) || u.push(t) : l.push(t); else {
-var o = _.get(t, "roleRef.name");
-"view" !== o && "system:image-puller" !== o && c.push(t);
-} else s.push(t); else i.push(t);
+getSecurityAlerts: function(n, o) {
+var i = [], s = [], c = [], l = [], u = [], d = [];
+if (_.each(n, function(n) {
+if (_.get(n, "kind")) {
+var a = e.toResourceGroupVersion(n), o = t.apiInfo(a);
+if (o) if (o.namespaced) if ("rolebindings" !== a.resource || "" !== a.group && "rbac.authorization.k8s.io" !== a.group) "roles" !== a.resource || "" !== a.group && "rbac.authorization.k8s.io" !== a.group ? _.find(r.SECURITY_CHECK_WHITELIST, {
+resource: a.resource,
+group: a.group
+}) || d.push(n) : u.push(n); else {
+var i = _.get(n, "roleRef.name");
+"view" !== i && "system:image-puller" !== i && l.push(n);
+} else c.push(n); else s.push(n);
 }
-}), i.length) {
-var d = _.uniq(_.map(i, function(e) {
-return "API version " + _.get(e, "apiVersion", "<none>") + " for kind " + r(e.kind);
+}), s.length) {
+var m = _.uniq(_.map(s, function(e) {
+return "API version " + _.get(e, "apiVersion", "<none>") + " for kind " + a(e.kind);
 }));
-o.push({
+i.push({
 type: "warning",
 message: "Some resources will not be created.",
-details: "The following resource versions are not supported by the server: " + d.join(", ")
-});
-}
-if (s.length) {
-var m = _.uniq(_.map(s, function(e) {
-return r(e.kind);
-}));
-o.push({
-type: "warning",
-message: "This will create resources outside of the project, which might impact all users of the cluster.",
-details: "Typically only cluster administrators can create these resources. The cluster-level resources being created are: " + m.join(", ")
+details: "The following resource versions are not supported by the server: " + m.join(", ")
 });
 }
 if (c.length) {
-var p = [];
-_.each(c, function(e) {
-_.each(e.subjects, function(e) {
-var t = r(e.kind) + " ";
-"ServiceAccount" === e.kind && (t += (e.namespace || a) + "/"), t += e.name, p.push(t);
-});
-}), p = _.uniq(p), o.push({
+var p = _.uniq(_.map(c, function(e) {
+return a(e.kind);
+}));
+i.push({
 type: "warning",
-message: "This will grant permissions to your project.",
-details: "Permissions are being granted to: " + p.join(", ")
+message: "This will create resources outside of the project, which might impact all users of the cluster.",
+details: "Typically only cluster administrators can create these resources. The cluster-level resources being created are: " + p.join(", ")
 });
 }
-if (l.length && o.push({
+if (l.length) {
+var f = [];
+_.each(l, function(e) {
+_.each(e.subjects, function(e) {
+var t = a(e.kind) + " ";
+"ServiceAccount" === e.kind && (t += (e.namespace || o) + "/"), t += e.name, f.push(t);
+});
+}), f = _.uniq(f), i.push({
+type: "warning",
+message: "This will grant permissions to your project.",
+details: "Permissions are being granted to: " + f.join(", ")
+});
+}
+if (u.length && i.push({
 type: "info",
 message: "This will create additional membership roles within the project.",
 details: "Admins will be able to grant these custom roles to users, groups, and service accounts."
-}), u.length) {
-var f = _.uniq(_.map(u, function(e) {
-return r(e.kind);
+}), d.length) {
+var g = _.uniq(_.map(d, function(e) {
+return a(e.kind);
 }));
-o.push({
+i.push({
 type: "warning",
 message: "This will create resources that may have security or project behavior implications.",
-details: "Make sure you understand what they do before creating them. The resources being created are: " + f.join(", ")
+details: "Make sure you understand what they do before creating them. The resources being created are: " + g.join(", ")
 });
 }
-return o;
+return i;
 }
 };
 } ]), angular.module("openshiftConsole").factory("LabelsService", function() {
@@ -9920,7 +9935,7 @@ n.unwatchAll(o);
 });
 } ]
 };
-} ]), angular.module("openshiftConsole").directive("fromFile", [ "$filter", "$location", "$q", "$uibModal", "APIService", "CachedTemplateService", "DataService", "Navigate", "NotificationsService", "QuotaService", "SecurityCheckService", "TaskList", "ProjectsService", function(e, t, n, r, a, o, i, s, c, l, u, d, m) {
+} ]), angular.module("openshiftConsole").directive("fromFile", [ "$filter", "$location", "$q", "$uibModal", "APIDiscovery", "APIService", "CachedTemplateService", "DataService", "Navigate", "NotificationsService", "QuotaService", "SecurityCheckService", "TaskList", "ProjectsService", function(e, t, n, r, a, o, i, s, c, l, u, d, m, p) {
 return {
 restrict: "E",
 scope: {
@@ -9928,145 +9943,145 @@ project: "=",
 isDialog: "="
 },
 templateUrl: "views/directives/from-file.html",
-controller: [ "$scope", function(p) {
-function f(e) {
-return !!e.kind || (p.error = {
+controller: [ "$scope", function(f) {
+function g(e) {
+return !!e.kind || (f.error = {
 message: "Resource is missing kind field."
 }, !1);
 }
-function g(e) {
-return !!p.isList || (e.metadata ? e.metadata.name ? !e.metadata.namespace || e.metadata.namespace === p.input.selectedProject.metadata.name || (p.error = {
+function v(e) {
+return !!f.isList || (e.metadata ? e.metadata.name ? !e.metadata.namespace || e.metadata.namespace === f.input.selectedProject.metadata.name || (f.error = {
 message: e.kind + " " + e.metadata.name + " can't be created in project " + e.metadata.namespace + ". Can't create resource in different projects."
-}, !1) : (p.error = {
+}, !1) : (f.error = {
 message: "Resource name is missing in metadata field."
-}, !1) : (p.error = {
+}, !1) : (f.error = {
 message: "Resource is missing metadata field."
 }, !1));
 }
-function v() {
+function h() {
 r.open({
 templateUrl: "views/modals/process-or-save-template.html",
 controller: "ProcessOrSaveTemplateModalController",
-scope: p
+scope: f
 }).result.then(function() {
-p.templateOptions.add ? y() : (o.setTemplate(p.resourceList[0]), b());
-});
-}
-function h() {
-r.open({
-templateUrl: "views/modals/confirm-replace.html",
-controller: "ConfirmReplaceModalController",
-scope: p
-}).result.then(function() {
-l.getLatestQuotaAlerts(p.createResources, {
-namespace: p.input.selectedProject.metadata.name
-}).then(N);
+f.templateOptions.add ? b() : (i.setTemplate(f.resourceList[0]), S());
 });
 }
 function y() {
-var e = p.createResources.length, t = p.updateResources.length;
-if (p.resourceKind.endsWith("List")) {
-var r = [];
-t > 0 && r.push(P()), e > 0 && r.push(w()), n.all(r).then(b);
-} else C();
+r.open({
+templateUrl: "views/modals/confirm-replace.html",
+controller: "ConfirmReplaceModalController",
+scope: f
+}).result.then(function() {
+u.getLatestQuotaAlerts(f.createResources, {
+namespace: f.input.selectedProject.metadata.name
+}).then(D);
+});
 }
 function b() {
-var e, n;
-T(), "Template" === p.resourceKind && p.templateOptions.process && !p.errorOccurred ? p.isDialog ? p.$emit("fileImportedFromYAMLOrJSON", {
-project: p.input.selectedProject,
-template: p.resource
-}) : (n = p.templateOptions.add || p.updateResources.length > 0 ? p.input.selectedProject.metadata.name : "", e = s.createFromTemplateURL(p.resource, p.input.selectedProject.metadata.name, {
-namespace: n
-}), t.url(e)) : p.isDialog ? p.$emit("fileImportedFromYAMLOrJSON", {
-project: p.input.selectedProject,
-resource: p.resource,
-isList: p.isList
-}) : (e = s.projectOverviewURL(p.input.selectedProject.metadata.name), t.url(e));
+var e = f.createResources.length, t = f.updateResources.length;
+if (f.resourceKind.endsWith("List")) {
+var r = [];
+t > 0 && r.push(j()), e > 0 && r.push(P()), n.all(r).then(S);
+} else w();
 }
-function S(e) {
-var t = a.objectToResourceGroupVersion(e);
-return t ? a.apiInfo(t) ? i.get(t, e.metadata.name, {
-namespace: p.input.selectedProject.metadata.name
+function S() {
+var e, n;
+N(), "Template" === f.resourceKind && f.templateOptions.process && !f.errorOccurred ? f.isDialog ? f.$emit("fileImportedFromYAMLOrJSON", {
+project: f.input.selectedProject,
+template: f.resource
+}) : (n = f.templateOptions.add || f.updateResources.length > 0 ? f.input.selectedProject.metadata.name : "", e = c.createFromTemplateURL(f.resource, f.input.selectedProject.metadata.name, {
+namespace: n
+}), t.url(e)) : f.isDialog ? f.$emit("fileImportedFromYAMLOrJSON", {
+project: f.input.selectedProject,
+resource: f.resource,
+isList: f.isList
+}) : (e = c.projectOverviewURL(f.input.selectedProject.metadata.name), t.url(e));
+}
+function C(e) {
+var t = a.toResourceGroupVersion(e);
+return t ? o.apiInfo(t) ? s.get(t, e.metadata.name, {
+namespace: f.input.selectedProject.metadata.name
 }, {
 errorNotification: !1
 }).then(function(t) {
 var n = angular.copy(e), r = angular.copy(t.metadata);
-r.annotations = e.metadata.annotations, r.labels = e.metadata.labels, n.metadata = r, p.updateResources.push(n);
+r.annotations = e.metadata.annotations, r.labels = e.metadata.labels, n.metadata = r, f.updateResources.push(n);
 }, function() {
 var t = angular.copy(e);
-_.unset(t, "metadata.resourceVersion"), p.createResources.push(t);
-}) : (p.errorOccurred = !0, void (p.error = {
-message: a.unsupportedObjectKindOrVersion(e)
-})) : (p.errorOccurred = !0, void (p.error = {
-message: a.invalidObjectKindOrVersion(e)
+_.unset(t, "metadata.resourceVersion"), f.createResources.push(t);
+}) : (f.errorOccurred = !0, void (f.error = {
+message: o.unsupportedObjectKindOrVersion(e)
+})) : (f.errorOccurred = !0, void (f.error = {
+message: o.invalidObjectKindOrVersion(e)
 }));
 }
-function C() {
+function w() {
 var t;
-_.isEmpty(p.createResources) ? (t = _.head(p.updateResources), i.update(a.objectToResourceGroupVersion(t), t.metadata.name, t, {
-namespace: p.input.selectedProject.metadata.name
+_.isEmpty(f.createResources) ? (t = _.head(f.updateResources), s.update(a.toResourceGroupVersion(t), t.metadata.name, t, {
+namespace: f.input.selectedProject.metadata.name
 }).then(function() {
-if (!p.isDialog) {
-var e = k(t.kind);
-c.addNotification({
+if (!f.isDialog) {
+var e = I(t.kind);
+l.addNotification({
 type: "success",
 message: _.capitalize(e) + " " + t.metadata.name + " was successfully updated."
 });
 }
-b();
+S();
 }, function(n) {
-c.addNotification({
+l.addNotification({
 id: "from-file-error",
 type: "error",
-message: "Unable to update the " + k(t.kind) + " '" + t.metadata.name + "'.",
+message: "Unable to update the " + I(t.kind) + " '" + t.metadata.name + "'.",
 details: e("getErrorDetails")(n)
 });
-})) : (t = _.head(p.createResources), i.create(a.objectToResourceGroupVersion(t), null, t, {
-namespace: p.input.selectedProject.metadata.name
+})) : (t = _.head(f.createResources), s.create(a.toResourceGroupVersion(t), null, t, {
+namespace: f.input.selectedProject.metadata.name
 }).then(function() {
-if (!p.isDialog) {
-var e = k(t.kind);
-c.addNotification({
+if (!f.isDialog) {
+var e = I(t.kind);
+l.addNotification({
 type: "success",
 message: _.capitalize(e) + " " + t.metadata.name + " was successfully created."
 });
 }
-b();
+S();
 }, function(n) {
-c.addNotification({
+l.addNotification({
 id: "from-file-error",
 type: "error",
-message: "Unable to create the " + k(t.kind) + " '" + t.metadata.name + "'.",
+message: "Unable to create the " + I(t.kind) + " '" + t.metadata.name + "'.",
 details: e("getErrorDetails")(n)
 });
 }));
 }
-function w() {
+function P() {
 var e = {
-started: "Creating resources in project " + A(p.input.selectedProject),
-success: "Creating resources in project " + A(p.input.selectedProject),
-failure: "Failed to create some resources in project " + A(p.input.selectedProject)
+started: "Creating resources in project " + $(f.input.selectedProject),
+success: "Creating resources in project " + $(f.input.selectedProject),
+failure: "Failed to create some resources in project " + $(f.input.selectedProject)
 }, t = {};
-d.add(e, t, p.input.selectedProject.metadata.name, function() {
+m.add(e, t, f.input.selectedProject.metadata.name, function() {
 var e = n.defer();
-return i.batch(p.createResources, {
-namespace: p.input.selectedProject.metadata.name
+return s.batch(f.createResources, {
+namespace: f.input.selectedProject.metadata.name
 }, "create").then(function(t) {
 var n = [], r = !1;
-if (t.failure.length > 0) r = !0, p.errorOccurred = !0, t.failure.forEach(function(e) {
+if (t.failure.length > 0) r = !0, f.errorOccurred = !0, t.failure.forEach(function(e) {
 n.push({
 type: "error",
-message: "Cannot create " + k(e.object.kind) + ' "' + e.object.metadata.name + '". ',
+message: "Cannot create " + I(e.object.kind) + ' "' + e.object.metadata.name + '". ',
 details: e.data.message
 });
 }), t.success.forEach(function(e) {
 n.push({
 type: "success",
-message: "Created " + k(e.kind) + ' "' + e.metadata.name + '" successfully. '
+message: "Created " + I(e.kind) + ' "' + e.metadata.name + '" successfully. '
 });
 }); else {
 var a;
-a = p.isList ? "All items in list were created successfully." : k(p.resourceKind) + " " + p.resourceName + " was successfully created.", n.push({
+a = f.isList ? "All items in list were created successfully." : I(f.resourceKind) + " " + f.resourceName + " was successfully created.", n.push({
 type: "success",
 message: a
 });
@@ -10078,32 +10093,32 @@ hasErrors: r
 }), e.promise;
 });
 }
-function P() {
+function j() {
 var e = {
-started: "Updating resources in project " + A(p.input.selectedProject),
-success: "Updated resources in project " + A(p.input.selectedProject),
-failure: "Failed to update some resources in project " + A(p.input.selectedProject)
+started: "Updating resources in project " + $(f.input.selectedProject),
+success: "Updated resources in project " + $(f.input.selectedProject),
+failure: "Failed to update some resources in project " + $(f.input.selectedProject)
 }, t = {};
-d.add(e, t, p.input.selectedProject.metadata.name, function() {
+m.add(e, t, f.input.selectedProject.metadata.name, function() {
 var e = n.defer();
-return i.batch(p.updateResources, {
-namespace: p.input.selectedProject.metadata.name
+return s.batch(f.updateResources, {
+namespace: f.input.selectedProject.metadata.name
 }, "update").then(function(t) {
 var n = [], r = !1;
-if (t.failure.length > 0) r = !0, p.errorOccurred = !0, t.failure.forEach(function(e) {
+if (t.failure.length > 0) r = !0, f.errorOccurred = !0, t.failure.forEach(function(e) {
 n.push({
 type: "error",
-message: "Cannot update " + k(e.object.kind) + ' "' + e.object.metadata.name + '". ',
+message: "Cannot update " + I(e.object.kind) + ' "' + e.object.metadata.name + '". ',
 details: e.data.message
 });
 }), t.success.forEach(function(e) {
 n.push({
 type: "success",
-message: "Updated " + k(e.kind) + ' "' + e.metadata.name + '" successfully. '
+message: "Updated " + I(e.kind) + ' "' + e.metadata.name + '" successfully. '
 });
 }); else {
 var a;
-a = p.isList ? "All items in list were updated successfully." : k(p.resourceKind) + " " + p.resourceName + " was successfully updated.", n.push({
+a = f.isList ? "All items in list were updated successfully." : I(f.resourceKind) + " " + f.resourceName + " was successfully updated.", n.push({
 type: "success",
 message: a
 });
@@ -10124,19 +10139,19 @@ alerts: n
 }), e.promise;
 });
 }
-var j;
-p.noProjectsCantCreate = !1;
-var k = e("humanizeKind"), I = e("getErrorDetails");
-d.clear(), p.$on("no-projects-cannot-create", function() {
-p.noProjectsCantCreate = !0;
-}), p.input = {
-selectedProject: p.project
-}, p.$watch("input.selectedProject.metadata.name", function() {
-p.projectNameTaken = !1;
-}), p.aceLoaded = function(e) {
-(j = e.getSession()).setOption("tabSize", 2), j.setOption("useSoftTabs", !0), e.setDragDelay = 0, e.$blockScrolling = 1 / 0;
+var k;
+f.noProjectsCantCreate = !1;
+var I = e("humanizeKind"), R = e("getErrorDetails");
+m.clear(), f.$on("no-projects-cannot-create", function() {
+f.noProjectsCantCreate = !0;
+}), f.input = {
+selectedProject: f.project
+}, f.$watch("input.selectedProject.metadata.name", function() {
+f.projectNameTaken = !1;
+}), f.aceLoaded = function(e) {
+(k = e.getSession()).setOption("tabSize", 2), k.setOption("useSoftTabs", !0), e.setDragDelay = 0, e.$blockScrolling = 1 / 0;
 };
-var R = function(e) {
+var E = function(e) {
 r.open({
 templateUrl: "views/modals/confirm.html",
 controller: "ConfirmModalController",
@@ -10152,54 +10167,54 @@ cancelButtonText: "Cancel"
 };
 }
 }
-}).result.then(y);
-}, E = {}, T = function() {
-c.hideNotification("from-file-error"), _.each(E, function(e) {
-!e.id || "error" !== e.type && "warning" !== e.type || c.hideNotification(e.id);
+}).result.then(b);
+}, T = {}, N = function() {
+l.hideNotification("from-file-error"), _.each(T, function(e) {
+!e.id || "error" !== e.type && "warning" !== e.type || l.hideNotification(e.id);
 });
-}, N = function(e) {
-T(), E = u.getSecurityAlerts(p.createResources, p.input.selectedProject.metadata.name);
+}, D = function(e) {
+N(), T = d.getSecurityAlerts(f.createResources, f.input.selectedProject.metadata.name);
 var t = e.quotaAlerts || [];
-E = E.concat(t), _.filter(E, {
+T = T.concat(t), _.filter(T, {
 type: "error"
-}).length ? (_.each(E, function(e) {
-e.id = _.uniqueId("from-file-alert-"), c.addNotification(e);
-}), p.disableInputs = !1) : E.length ? (R(E), p.disableInputs = !1) : y();
-}, D = function() {
-if (_.has(p.input.selectedProject, "metadata.uid")) return n.when(p.input.selectedProject);
-var t = p.input.selectedProject.metadata.name, r = p.input.selectedProject.metadata.annotations["new-display-name"], a = e("description")(p.input.selectedProject);
-return m.create(t, r, a);
+}).length ? (_.each(T, function(e) {
+e.id = _.uniqueId("from-file-alert-"), l.addNotification(e);
+}), f.disableInputs = !1) : T.length ? (E(T), f.disableInputs = !1) : b();
+}, A = function() {
+if (_.has(f.input.selectedProject, "metadata.uid")) return n.when(f.input.selectedProject);
+var t = f.input.selectedProject.metadata.name, r = f.input.selectedProject.metadata.annotations["new-display-name"], a = e("description")(f.input.selectedProject);
+return p.create(t, r, a);
 };
-p.create = function() {
-if (delete p.error, f(p.resource) && (p.resourceKind = p.resource.kind, p.resourceKind.endsWith("List") ? p.isList = !0 : p.isList = !1, g(p.resource))) {
-p.isList ? (p.resourceList = p.resource.items, p.resourceName = "") : (p.resourceList = [ p.resource ], p.resourceName = p.resource.metadata.name, "Template" === p.resourceKind && (p.templateOptions = {
+f.create = function() {
+if (delete f.error, g(f.resource) && (f.resourceKind = f.resource.kind, f.resourceKind.endsWith("List") ? f.isList = !0 : f.isList = !1, v(f.resource))) {
+f.isList ? (f.resourceList = f.resource.items, f.resourceName = "") : (f.resourceList = [ f.resource ], f.resourceName = f.resource.metadata.name, "Template" === f.resourceKind && (f.templateOptions = {
 process: !0,
 add: !1
-})), p.updateResources = [], p.createResources = [];
+})), f.updateResources = [], f.createResources = [];
 var e = [];
-p.errorOccurred = !1, _.forEach(p.resourceList, function(t) {
-if (!g(t)) return p.errorOccurred = !0, !1;
-e.push(S(t));
-}), D().then(function(t) {
-p.input.selectedProject = t, n.all(e).then(function() {
-p.errorOccurred || (1 === p.createResources.length && "Template" === p.resourceList[0].kind ? v() : _.isEmpty(p.updateResources) ? l.getLatestQuotaAlerts(p.createResources, {
-namespace: p.input.selectedProject.metadata.name
-}).then(N) : (p.updateTemplate = 1 === p.updateResources.length && "Template" === p.updateResources[0].kind, p.updateTemplate ? v() : h()));
+f.errorOccurred = !1, _.forEach(f.resourceList, function(t) {
+if (!v(t)) return f.errorOccurred = !0, !1;
+e.push(C(t));
+}), A().then(function(t) {
+f.input.selectedProject = t, n.all(e).then(function() {
+f.errorOccurred || (1 === f.createResources.length && "Template" === f.resourceList[0].kind ? h() : _.isEmpty(f.updateResources) ? u.getLatestQuotaAlerts(f.createResources, {
+namespace: f.input.selectedProject.metadata.name
+}).then(D) : (f.updateTemplate = 1 === f.updateResources.length && "Template" === f.updateResources[0].kind, f.updateTemplate ? h() : y()));
 });
 }, function(e) {
-"AlreadyExists" === e.data.reason ? p.projectNameTaken = !0 : c.addNotification({
+"AlreadyExists" === e.data.reason ? f.projectNameTaken = !0 : l.addNotification({
 id: "import-create-project-error",
 type: "error",
 message: "An error occurred creating project.",
-details: I(e)
+details: R(e)
 });
 });
 }
-}, p.cancel = function() {
-T(), s.toProjectOverview(p.input.selectedProject.metadata.name);
+}, f.cancel = function() {
+N(), c.toProjectOverview(f.input.selectedProject.metadata.name);
 };
-var A = e("displayName");
-p.$on("importFileFromYAMLOrJSON", p.create), p.$on("$destroy", T);
+var $ = e("displayName");
+f.$on("importFileFromYAMLOrJSON", f.create), f.$on("$destroy", N);
 } ]
 };
 } ]), angular.module("openshiftConsole").directive("oscFileInput", [ "$filter", "Logger", "NotificationsService", function(e, t, n) {
@@ -13730,8 +13745,8 @@ templateUrl: "views/directives/unbind-service.html"
 });
 }(), function() {
 angular.module("openshiftConsole").component("processTemplate", {
-controller: [ "$filter", "$q", "$scope", "$uibModal", "APIService", "DataService", "Navigate", "NotificationsService", "ProcessedTemplateService", "ProjectsService", "QuotaService", "SecurityCheckService", "TaskList", "keyValueEditorUtils", function(e, t, n, r, a, o, i, s, c, l, u, d, m, p) {
-function f(e) {
+controller: [ "$filter", "$q", "$scope", "$uibModal", "APIDiscovery", "APIService", "DataService", "Navigate", "NotificationsService", "ProcessedTemplateService", "ProjectsService", "QuotaService", "SecurityCheckService", "TaskList", "keyValueEditorUtils", function(e, t, n, r, a, o, i, s, c, l, u, d, m, p, f) {
+function g(e) {
 var t = /^helplink\.(.*)\.title$/, n = /^helplink\.(.*)\.url$/, r = {};
 for (var a in e.annotations) {
 var o, i = a.match(t);
@@ -13739,47 +13754,47 @@ i ? ((o = r[i[1]] || {}).title = e.annotations[a], r[i[1]] = o) : (i = a.match(n
 }
 return r;
 }
-function g() {
-h.prefillParameters && _.each(h.template.parameters, function(e) {
-h.prefillParameters[e.name] && (e.value = h.prefillParameters[e.name]);
-}), h.labels = _.map(h.template.labels, function(e, t) {
+function v() {
+y.prefillParameters && _.each(y.template.parameters, function(e) {
+y.prefillParameters[e.name] && (e.value = y.prefillParameters[e.name]);
+}), y.labels = _.map(y.template.labels, function(e, t) {
 return {
 name: t,
 value: e
 };
-}), E() && h.labels.push({
+}), T() && y.labels.push({
 name: "app",
-value: h.template.metadata.name
+value: y.template.metadata.name
 });
 }
-var v, h = this, y = e("displayName"), b = e("humanize");
-h.noProjectsCantCreate = !1, h.$onInit = function() {
-h.labels = [], h.template = angular.copy(h.template), h.templateDisplayName = y(h.template), h.selectedProject = h.project, n.$watch("$ctrl.selectedProject.metadata.name", function() {
-h.projectNameTaken = !1;
+var h, y = this, b = e("displayName"), S = e("humanize");
+y.noProjectsCantCreate = !1, y.$onInit = function() {
+y.labels = [], y.template = angular.copy(y.template), y.templateDisplayName = b(y.template), y.selectedProject = y.project, n.$watch("$ctrl.selectedProject.metadata.name", function() {
+y.projectNameTaken = !1;
 }), n.$on("no-projects-cannot-create", function() {
-h.noProjectsCantCreate = !0;
-}), g();
+y.noProjectsCantCreate = !0;
+}), v();
 };
-var S, C = function() {
+var C, w = function() {
 var e = {
-started: "Creating " + h.templateDisplayName + " in project " + y(h.selectedProject),
-success: "Created " + h.templateDisplayName + " in project " + y(h.selectedProject),
-failure: "Failed to create " + h.templateDisplayName + " in project " + y(h.selectedProject)
-}, r = f(h.template);
-m.clear(), m.add(e, r, h.selectedProject.metadata.name, function() {
+started: "Creating " + y.templateDisplayName + " in project " + b(y.selectedProject),
+success: "Created " + y.templateDisplayName + " in project " + b(y.selectedProject),
+failure: "Failed to create " + y.templateDisplayName + " in project " + b(y.selectedProject)
+}, r = g(y.template);
+p.clear(), p.add(e, r, y.selectedProject.metadata.name, function() {
 var e = t.when(), n = [], r = !1;
-return _.each(S, function(t) {
-var i = a.objectToResourceGroupVersion(t);
+return _.each(C, function(t) {
+var o = a.toResourceGroupVersion(t);
 e = e.then(function() {
-return o.create(i, null, t, v).then(function() {
+return i.create(o, null, t, h).then(function() {
 n.push({
 type: "success",
-message: "Created " + b(t.kind).toLowerCase() + ' "' + t.metadata.name + '" successfully. '
+message: "Created " + S(t.kind).toLowerCase() + ' "' + t.metadata.name + '" successfully. '
 });
 }).catch(function(e) {
 r = !0, n.push({
 type: "error",
-message: "Cannot create " + b(t.kind).toLowerCase() + ' "' + t.metadata.name + '". ',
+message: "Cannot create " + S(t.kind).toLowerCase() + ' "' + t.metadata.name + '". ',
 details: e.message
 });
 });
@@ -13790,11 +13805,11 @@ alerts: n,
 hasErrors: r
 };
 });
-}), h.isDialog ? n.$emit("templateInstantiated", {
-project: h.selectedProject,
-template: h.template
-}) : i.toNextSteps(h.templateDisplayName, h.selectedProject.metadata.name);
-}, w = function(e) {
+}), y.isDialog ? n.$emit("templateInstantiated", {
+project: y.selectedProject,
+template: y.template
+}) : s.toNextSteps(y.templateDisplayName, y.selectedProject.metadata.name);
+}, P = function(e) {
 r.open({
 templateUrl: "views/modals/confirm.html",
 controller: "ConfirmModalController",
@@ -13810,39 +13825,39 @@ cancelButtonText: "Cancel"
 };
 }
 }
-}).result.then(C);
-}, P = {}, j = function() {
-s.hideNotification("process-template-error"), _.each(P, function(e) {
-!e.id || "error" !== e.type && "warning" !== e.type || s.hideNotification(e.id);
+}).result.then(w);
+}, j = {}, k = function() {
+c.hideNotification("process-template-error"), _.each(j, function(e) {
+!e.id || "error" !== e.type && "warning" !== e.type || c.hideNotification(e.id);
 });
-}, k = function(e) {
-j(), P = d.getSecurityAlerts(S, h.selectedProject.metadata.name);
+}, I = function(e) {
+k(), j = m.getSecurityAlerts(C, y.selectedProject.metadata.name);
 var t = e.quotaAlerts || [];
-P = P.concat(t), _.filter(P, {
+j = j.concat(t), _.filter(j, {
 type: "error"
-}).length ? (h.disableInputs = !1, _.each(P, function(e) {
-e.id = _.uniqueId("process-template-alert-"), s.addNotification(e);
-})) : P.length ? (w(P), h.disableInputs = !1) : C();
-}, I = function() {
-if (_.has(h.selectedProject, "metadata.uid")) return t.when(h.selectedProject);
-var n = h.selectedProject.metadata.name, r = h.selectedProject.metadata.annotations["new-display-name"], a = e("description")(h.selectedProject);
-return l.create(n, r, a);
-}, R = function(e) {
-var t = a.objectToResourceGroupVersion(e);
+}).length ? (y.disableInputs = !1, _.each(j, function(e) {
+e.id = _.uniqueId("process-template-alert-"), c.addNotification(e);
+})) : j.length ? (P(j), y.disableInputs = !1) : w();
+}, R = function() {
+if (_.has(y.selectedProject, "metadata.uid")) return t.when(y.selectedProject);
+var n = y.selectedProject.metadata.name, r = y.selectedProject.metadata.annotations["new-display-name"], a = e("description")(y.selectedProject);
+return u.create(n, r, a);
+}, E = function(e) {
+var t = o.objectToResourceGroupVersion(e);
 return t.resource = "processedtemplates", t;
 };
-h.createFromTemplate = function() {
-h.disableInputs = !0, I().then(function(e) {
-h.selectedProject = e, v = {
-namespace: h.selectedProject.metadata.name
-}, h.template.labels = p.mapEntries(p.compactEntries(h.labels));
-var t = R(h.template);
-o.create(t, null, h.template, v).then(function(e) {
-c.setTemplateData(e.parameters, h.template.parameters, e.message), S = e.objects, u.getLatestQuotaAlerts(S, v).then(k);
+y.createFromTemplate = function() {
+y.disableInputs = !0, R().then(function(e) {
+y.selectedProject = e, h = {
+namespace: y.selectedProject.metadata.name
+}, y.template.labels = f.mapEntries(f.compactEntries(y.labels));
+var t = E(y.template);
+i.create(t, null, y.template, h).then(function(e) {
+l.setTemplateData(e.parameters, y.template.parameters, e.message), C = e.objects, d.getLatestQuotaAlerts(C, h).then(I);
 }, function(e) {
-h.disableInputs = !1;
+y.disableInputs = !1;
 var t;
-e.data && e.data.message && (t = e.data.message), s.addNotification({
+e.data && e.data.message && (t = e.data.message), c.addNotification({
 id: "process-template-error",
 type: "error",
 message: "An error occurred processing the template.",
@@ -13850,9 +13865,9 @@ details: t
 });
 });
 }, function(e) {
-if (h.disableInputs = !1, "AlreadyExists" === e.data.reason) h.projectNameTaken = !0; else {
+if (y.disableInputs = !1, "AlreadyExists" === e.data.reason) y.projectNameTaken = !0; else {
 var t;
-e.data && e.data.message && (t = e.data.message), s.addNotification({
+e.data && e.data.message && (t = e.data.message), c.addNotification({
 id: "process-template-error",
 type: "error",
 message: "An error occurred creating the project.",
@@ -13860,11 +13875,11 @@ details: t
 });
 }
 });
-}, h.cancel = function() {
-j(), i.toProjectOverview(h.project.metadata.name);
-}, n.$on("instantiateTemplate", h.createFromTemplate), n.$on("$destroy", j);
-var E = function() {
-return !_.get(h.template, "labels.app") && !_.some(h.template.objects, "metadata.labels.app");
+}, y.cancel = function() {
+k(), s.toProjectOverview(y.project.metadata.name);
+}, n.$on("instantiateTemplate", y.createFromTemplate), n.$on("$destroy", k);
+var T = function() {
+return !_.get(y.template, "labels.app") && !_.some(y.template.objects, "metadata.labels.app");
 };
 } ],
 controllerAs: "$ctrl",
