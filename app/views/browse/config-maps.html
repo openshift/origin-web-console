@@ -56,7 +56,7 @@
             <tbody>
               <tr ng-repeat="configMap in configMaps">
                 <td data-title="Name">
-                  <a href="{{configMap | navigateResourceURL}}">{{configMap.metadata.name}}</a>
+                  <a href="{{configMap.metadata.name | navigateResourceURL : 'ConfigMap' : configMap.metadata.namespace}}">{{configMap.metadata.name}}</a>
                 </td>
                 <td data-title="Created">
                   <span am-time-ago="configMap.metadata.creationTimestamp"></span>
