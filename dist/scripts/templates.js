@@ -2230,7 +2230,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "<tbody>\n" +
     "<tr ng-repeat=\"configMap in configMaps\">\n" +
     "<td data-title=\"Name\">\n" +
-    "<a href=\"{{configMap | navigateResourceURL}}\">{{configMap.metadata.name}}</a>\n" +
+    "<a href=\"{{configMap.metadata.name | navigateResourceURL : 'ConfigMap' : configMap.metadata.namespace}}\">{{configMap.metadata.name}}</a>\n" +
     "</td>\n" +
     "<td data-title=\"Created\">\n" +
     "<span am-time-ago=\"configMap.metadata.creationTimestamp\"></span>\n" +
