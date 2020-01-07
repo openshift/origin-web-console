@@ -164,3 +164,6 @@ We rely on [hawtio-core-navigation](https://github.com/hawtio/hawtio-core-naviga
 ##### Inject additional content into the page
 
 We include the [hawtio-extension-service](https://github.com/hawtio/hawtio-extension-service).  Currently we do not render any extension points, but if there are any locations where you would like to see customizable content, this is how we will add a hook to do that.  As hooks are added we will provide a list of them here.
+
+
+
