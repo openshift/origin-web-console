@@ -19,7 +19,7 @@
     "moment": "2.19.3",
     "moment-timezone": "0.5.3",
     "patternfly": "3.59.0",
-    "jquery": "3.2.1",
+    "jquery": "3.4.0",
     "lodash": "4.17.11",
     "sifter": "0.4.1",
     "microplugin": "0.0.3",
@@ -60,7 +60,7 @@
     "angular-sanitize": "1.5.11",
     "moment": "2.14.2",
     "font-awesome": "4.7.0",
-    "jquery": "3.2.1",
+    "jquery": "3.4.0",
     "lodash": "4.17.4",
     "matchHeight": "0.7.2",
     "bootstrap": ">= 3.4.0"
@@ -68,7 +68,7 @@
   "overrides": {
     "angular": {
       "dependencies": {
-        "jquery": "3.2.1"
+        "jquery": "3.4.0"
       }
     },
     "angular-patternfly": {
