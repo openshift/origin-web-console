@@ -245,7 +245,7 @@ angular.module('openshiftConsoleTemplates', []).run(['$templateCache', function(
     "</div>\n" +
     "<div class=\"pod-template-detail word-break\">\n" +
     "<span class=\"pod-template-key\">Image:</span>\n" +
-    "<span ng-if=\"!imagesByDockerReference[container.image]\">{{container.image | imageStreamName}}</span>\n" +
+    "<span ng-if=\"!imagesByDockerReference[container.image]\">{{container.image}}</span>\n" +
     "<span ng-if=\"imagesByDockerReference[container.image]\">\n" +
     "<a ng-href=\"{{imagesByDockerReference[container.image].imageStreamName | navigateResourceURL : 'ImageStream' : imagesByDockerReference[container.image].imageStreamNamespace}}\">{{container.image | imageStreamName}}</a>\n" +
     "<span class=\"hash\" title=\"{{imagesByDockerReference[container.image].metadata.name}}\">{{imagesByDockerReference[container.image].metadata.name | stripSHAPrefix | limitTo: 7}}</span>\n" +

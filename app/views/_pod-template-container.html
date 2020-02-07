@@ -14,7 +14,7 @@
     </div>
     <div class="pod-template-detail word-break">
       <span class="pod-template-key">Image:</span>
-      <span ng-if="!imagesByDockerReference[container.image]">{{container.image | imageStreamName}}</span>
+      <span ng-if="!imagesByDockerReference[container.image]">{{container.image}}</span>
       <span ng-if="imagesByDockerReference[container.image]">
             <a ng-href="{{imagesByDockerReference[container.image].imageStreamName | navigateResourceURL : 'ImageStream' : imagesByDockerReference[container.image].imageStreamNamespace}}">{{container.image | imageStreamName}}</a>
             <span class="hash" title="{{imagesByDockerReference[container.image].metadata.name}}">{{imagesByDockerReference[container.image].metadata.name | stripSHAPrefix | limitTo: 7}}</span>
