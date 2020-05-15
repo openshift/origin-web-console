@@ -1058,7 +1058,7 @@ noModule: !0
 return new Ce.fn.init(e, t);
 };
 Ce.fn = Ce.prototype = {
-jquery: "3.5.0",
+jquery: "3.5.1",
 constructor: Ce,
 length: 0,
 toArray: function() {
@@ -1113,7 +1113,7 @@ var e, t, n, i, r, o, a = arguments[0] || {}, s = 1, l = arguments.length, c = !
 for ("boolean" == typeof a && (c = a, a = arguments[s] || {}, s++), "object" == typeof a || ye(a) || (a = {}), s === l && (a = this, s--); s < l; s++) if (null != (e = arguments[s])) for (t in e) i = e[t], "__proto__" !== t && a !== i && (c && i && (Ce.isPlainObject(i) || (r = Array.isArray(i))) ? (n = a[t], o = r && !Array.isArray(n) ? [] : r || Ce.isPlainObject(n) ? n : {}, r = !1, a[t] = Ce.extend(c, o, i)) : void 0 !== i && (a[t] = i));
 return a;
 }, Ce.extend({
-expando: "jQuery" + ("3.5.0" + Math.random()).replace(/\D/g, ""),
+expando: "jQuery" + ("3.5.1" + Math.random()).replace(/\D/g, ""),
 isReady: !0,
 error: function(e) {
 throw new Error(e);
@@ -2018,7 +2018,7 @@ return 1 === e.nodeType || 9 === e.nodeType || !+e.nodeType;
 g.uid = 1, g.prototype = {
 cache: function(e) {
 var t = e[this.expando];
-return t || (t = Object.create(null), Ne(e) && (e.nodeType ? e[this.expando] = t : Object.defineProperty(e, this.expando, {
+return t || (t = {}, Ne(e) && (e.nodeType ? e[this.expando] = t : Object.defineProperty(e, this.expando, {
 value: t,
 configurable: !0
 }))), t;
