@@ -84,9 +84,9 @@ angular.module('openshiftConsole')
 
     })
     .catch(function(rejection) {
+      sessionStorage.setItem("error_description", rejection.error_description || "");
       var redirect = URI('error').query({
         error: rejection.error || "",
-        error_description: rejection.error_description || "",
         error_uri: rejection.error_uri || ""
       }).toString();
       authLogger.error("OAuthController, error", rejection, "redirecting", redirect);

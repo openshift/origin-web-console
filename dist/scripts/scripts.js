@@ -1899,8 +1899,8 @@ return _.get(t, "isPipeline") ? "pipelines" : _.isObject(e) && l(e) ? "pipelines
 };
 return {
 toErrorPage: function(n, r, a) {
+sessionStorage.setItem("error_description", n);
 var o = URI("error").query({
-error_description: n,
 error: r
 }).toString();
 a ? t.location.href = o : e.url(o).replace();
@@ -8476,9 +8476,9 @@ maxWait: 250
 c.toErrorPage("Cannot create from template: the specified template could not be retrieved.");
 }); else {
 if (a.template = i.getTemplate(), _.isEmpty(a.template)) {
+sessionStorage.setItem("error_description", "Template wasn't found in cache.");
 var n = URI("error").query({
-error: "not_found",
-error_description: "Template wasn't found in cache."
+error: "not_found"
 }).toString();
 t.url(n);
 }
@@ -8549,16 +8549,16 @@ error: "user_fetch_failed"
 c.error("OAuthController, error fetching user", e, "redirecting", n), t.replace(), t.url(n);
 });
 }).catch(function(e) {
+sessionStorage.setItem("error_description", e.error_description || "");
 var n = URI("error").query({
 error: e.error || "",
-error_description: e.error_description || "",
 error_uri: e.error_uri || ""
 }).toString();
 c.error("OAuthController, error", e, "redirecting", n), t.replace(), t.url(n);
 });
 } ]), angular.module("openshiftConsole").controller("ErrorController", [ "$scope", "$window", function(e, t) {
-var n = URI(window.location.href).query(!0);
-switch (n.error) {
+var n = URI(window.location.href).query(!0).error, r = sessionStorage.getItem("error_description");
+switch (n) {
 case "access_denied":
 e.errorMessage = "Access denied";
 break;
@@ -8582,7 +8582,7 @@ break;
 default:
 e.errorMessage = "An error has occurred";
 }
-n.error_description && (e.errorDetails = n.error_description), e.reloadConsole = function() {
+r && (e.errorDetails = r), e.reloadConsole = function() {
 t.location.href = "/";
 };
 } ]), angular.module("openshiftConsole").controller("LogoutController", [ "$scope", "$routeParams", "$log", "AuthService", "AUTH_CFG", function(e, t, n, r, a) {

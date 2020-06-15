@@ -175,10 +175,9 @@ angular.module('openshiftConsole')
           $scope.template = CachedTemplateService.getTemplate();
           // In case the template can be loaded from 'CachedTemaplteService', show an alert and disable "Create" button.
           if (_.isEmpty($scope.template)) {
-
+            sessionStorage.setItem("error_description", "Template wasn't found in cache.");
             var redirect = URI('error').query({
               error: "not_found",
-              error_description: "Template wasn't found in cache."
             }).toString();
             $location.url(redirect);
           }
