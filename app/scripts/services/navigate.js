@@ -37,8 +37,8 @@ angular.module("openshiftConsole")
        * @returns {undefined}
        */
       toErrorPage: function(message, errorCode, reload) {
+        sessionStorage.setItem("error_description", message);
         var redirect = URI('error').query({
-          error_description: message,
           error: errorCode
         }).toString();
         if (!reload) {

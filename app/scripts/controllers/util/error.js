@@ -11,6 +11,7 @@ angular.module('openshiftConsole')
   .controller('ErrorController', function ($scope, $window) {
     var params = URI(window.location.href).query(true);
     var error = params.error;
+    var error_description = sessionStorage.getItem("error_description");
 
     switch(error) {
       case 'access_denied':
@@ -33,8 +34,8 @@ angular.module('openshiftConsole')
         $scope.errorMessage = "An error has occurred";
     }
 
-    if (params.error_description) {
-      $scope.errorDetails = params.error_description;
+    if (error_description) {
+      $scope.errorDetails = error_description;
     }
 
     $scope.reloadConsole = function() {
