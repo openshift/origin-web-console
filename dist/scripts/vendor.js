@@ -44124,7 +44124,7 @@ function z(e, t) {
 var n = function(e, n) {
 return t[e] !== i ? t[e] : t[n];
 }, r = W(e, t), o = n("sEcho", "draw"), a = n("iTotalRecords", "recordsTotal"), s = n("iTotalDisplayRecords", "recordsFiltered");
-if (o) {
+if (o !== i) {
 if (1 * o < e.iDraw) return;
 e.iDraw = 1 * o;
 }
@@ -44151,7 +44151,11 @@ bRegex: a.bRegex,
 bSmart: a.bSmart,
 bCaseInsensitive: a.bCaseInsensitive
 }), t._iDisplayStart = 0, O(t));
-}, h = null !== t.searchDelay ? t.searchDelay : "ssp" === Ne(t) ? 400 : 0, f = e("input", u).val(a.sSearch).attr("placeholder", o.sSearchPlaceholder).on("keyup.DT search.DT input.DT paste.DT cut.DT", h ? bt(d, h) : d).on("keypress.DT", function(e) {
+}, h = null !== t.searchDelay ? t.searchDelay : "ssp" === Ne(t) ? 400 : 0, f = e("input", u).val(a.sSearch).attr("placeholder", o.sSearchPlaceholder).on("keyup.DT search.DT input.DT paste.DT cut.DT", h ? bt(d, h) : d).on("mouseup", function(e) {
+setTimeout(function() {
+d.call(f[0]);
+}, 10);
+}).on("keypress.DT", function(e) {
 if (13 == e.keyCode) return !1;
 }).attr("aria-controls", r);
 return e(t.nTable).on("search.dt.DT", function(e, i) {
@@ -44355,7 +44359,7 @@ var g = p.children(), m = g[0], v = g[1], y = d ? g[2] : null;
 return r && e(v).on("scroll.DT", function(e) {
 var t = this.scrollLeft;
 m.scrollLeft = t, d && (y.scrollLeft = t);
-}), e(v).css(o && i.bCollapse ? "max-height" : "height", o), t.nScrollHead = m, t.nScrollBody = v, t.nScrollFoot = y, t.aoDrawCallback.push({
+}), e(v).css("max-height", o), i.bCollapse || e(v).css("height", o), t.nScrollHead = m, t.nScrollBody = v, t.nScrollFoot = y, t.aoDrawCallback.push({
 fn: fe,
 sName: "scrolling"
 }), p[0];
@@ -44591,7 +44595,7 @@ return t;
 }
 function Ie(t, n, i) {
 e(t).on("click.DT", n, function(n) {
-e(t).blur(), i(n);
+e(t).trigger("blur"), i(n);
 }).on("keypress.DT", n, function(e) {
 13 === e.which && (e.preventDefault(), i(e));
 }).on("selectstart.DT", function() {
@@ -45026,6 +45030,9 @@ return t === this ? this : t instanceof Ue ? t.length ? e.isArray(t[0]) ? new Ue
 });
 };
 var xt = function(t, n) {
+if (e.isArray(t)) return e.map(t, function(e) {
+return xt(e, n);
+});
 if ("number" == typeof t) return [ n[t] ];
 var i = e.map(n, function(e, t) {
 return e.nTable;
@@ -45036,7 +45043,7 @@ return n[r];
 }).toArray();
 };
 ze("tables()", function(e) {
-return e ? new Ue(xt(e, this.context)) : this;
+return e !== i && null !== e ? new Ue(xt(e, this.context)) : this;
 }), ze("table()", function(e) {
 var t = this.tables(e), n = t.context;
 return n.length ? new Ue(n[0]) : t;
@@ -45235,7 +45242,7 @@ return kt(this.rows(e, t));
 var n = this.context;
 if (t === i) return n.length && this.length ? n[0].aoData[this[0]]._aData : i;
 var r = n[0].aoData[this[0]];
-return r._aData = t, e.isArray(t) && r.nTr.id && A(n[0].rowId)(t, r.nTr.id), E(n[0], this[0], "data"), this;
+return r._aData = t, e.isArray(t) && r.nTr && r.nTr.id && A(n[0].rowId)(t, r.nTr.id), E(n[0], this[0], "data"), this;
 }), ze("row().node()", function() {
 var e = this.context;
 return e.length && this.length ? e[0].aoData[this[0]].nTr || null : null;
@@ -45607,7 +45614,7 @@ e.call(r[t](a, "cell" === t ? s : n, "cell" === t ? n : i), a, s, l, c);
 }), ze("i18n()", function(t, n, r) {
 var o = this.context[0], a = $(t)(o.oLanguage);
 return a === i && (a = n), r !== i && e.isPlainObject(a) && (a = a[r] !== i ? a[r] : a._), a.replace("%d", r);
-}), qe.version = "1.10.20", qe.settings = [], qe.models = {}, qe.models.oSearch = {
+}), qe.version = "1.10.21", qe.settings = [], qe.models = {}, qe.models.oSearch = {
 bCaseInsensitive: !0,
 sSearch: "",
 bRegex: !1,
@@ -45691,7 +45698,9 @@ fnServerParams: null,
 fnStateLoadCallback: function(e) {
 try {
 return JSON.parse((-1 === e.iStateDuration ? sessionStorage : localStorage).getItem("DataTables_" + e.sInstance + "_" + location.pathname));
-} catch (e) {}
+} catch (e) {
+return {};
+}
 },
 fnStateLoadParams: null,
 fnStateLoaded: null,
@@ -46010,7 +46019,7 @@ c = f.sPrevious, 0 === s && (v = -1, u += " " + y);
 break;
 
 case "next":
-c = f.sNext, s === l - 1 && (v = -1, u += " " + y);
+c = f.sNext, 0 !== l && s !== l - 1 || (v = -1, u += " " + y);
 break;
 
 case "last":
@@ -46037,7 +46046,7 @@ ce(t, e.data.action, !0);
 try {
 d = e(r).find(n.activeElement).data("dt-idx");
 } catch (e) {}
-m(e(r).empty(), a), d !== i && e(r).find("[data-dt-idx=" + d + "]").focus();
+m(e(r).empty(), a), d !== i && e(r).find("[data-dt-idx=" + d + "]").trigger("focus");
 }
 }
 }), e.extend(qe.ext.type.detect, [ function(e, t) {
@@ -46107,7 +46116,7 @@ n.removeClass(r.sSortAsc + " " + r.sSortDesc).addClass("asc" == s[l] ? r.sSortAs
 }
 });
 var Ht = function(e) {
-return "string" == typeof e ? e.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;") : e;
+return "string" == typeof e ? e.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;") : e;
 };
 return qe.render = {
 number: function(e, t, n, i, r) {

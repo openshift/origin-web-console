@@ -63,7 +63,8 @@
     "jquery": "3.5.1",
     "lodash": "4.17.4",
     "matchHeight": "0.7.2",
-    "bootstrap": ">= 3.4.0"
+    "bootstrap": ">= 3.4.0",
+    "minimist": "1.2.5"
   },
   "overrides": {
     "angular": {
